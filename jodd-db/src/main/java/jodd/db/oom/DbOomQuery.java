@@ -471,7 +471,7 @@ public class DbOomQuery extends DbQuery {
 	 * Closes results set or whole query.
 	 */
 	protected void close(ResultSetMapper rsm, boolean closeQuery) {
-		if (closeQuery == true) {
+		if (closeQuery) {
 			close();
 		} else {
 			closeResultSet(rsm.getResultSet());

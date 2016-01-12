@@ -60,7 +60,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 			log.debug("authorize user: " + userSession);
 		}
 
-		if (authorize(actionRequest, userSession) == false) {
+		if (!authorize(actionRequest, userSession)) {
 			if (log.isInfoEnabled()) {
 				log.info("access denied for: " + userSession);
 			}

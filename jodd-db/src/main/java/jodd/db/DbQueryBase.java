@@ -229,7 +229,7 @@ abstract class DbQueryBase {
 		this.query = new DbQueryParser(sqlString);
 
 		// statement
-		if ((forcePreparedStatement == false) && (query.prepared == false)) {
+		if ((!forcePreparedStatement) && (!query.prepared)) {
 			try {
 				if (holdability != DEFAULT_HOLDABILITY) {
 					statement = connection.createStatement(type, concurrencyType, holdability);
@@ -244,7 +244,7 @@ abstract class DbQueryBase {
 
 		// prepared statement
 		try {
-			if (debug == true) {
+			if (debug) {
 				if (generatedColumns != null) {
 					if (generatedColumns.length == 0) {
 						statement = LoggablePreparedStatementFactory.create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
@@ -390,7 +390,7 @@ abstract class DbQueryBase {
 		if (rs == null) {
 			return;
 		}
-		if (resultSets.remove(rs) == false) {
+		if (!resultSets.remove(rs)) {
 			throw new DbSqlException(this, "ResultSet is not created by this query");
 		}
 		try {

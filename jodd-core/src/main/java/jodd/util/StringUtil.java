@@ -297,7 +297,7 @@ public class StringUtil {
 	 */
 	public static boolean isAllEmpty(String... strings) {
 		for (String string : strings) {
-			if (isEmpty(string) == false) {
+			if (!isEmpty(string)) {
 				return false;
 			}
 		}
@@ -323,7 +323,7 @@ public class StringUtil {
 	 */
 	public static boolean isAllBlank(String... strings) {
 		for (String string : strings) {
-			if (isBlank(string) == false) {
+			if (!isBlank(string)) {
 				return false;
 			}
 		}
@@ -338,7 +338,7 @@ public class StringUtil {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if (CharUtil.isWhitespace(c) == false) {
+			if (!CharUtil.isWhitespace(c)) {
 				return false;
 			}
 		}
@@ -352,7 +352,7 @@ public class StringUtil {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if (CharUtil.isDigit(c) == false) {
+			if (!CharUtil.isDigit(c)) {
 				return false;
 			}
 		}
@@ -367,7 +367,7 @@ public class StringUtil {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if ((CharUtil.isDigit(c) == false) && (c != '-') && (c != '+')) {
+			if ((!CharUtil.isDigit(c)) && (c != '-') && (c != '+')) {
 				return false;
 			}
 		}
@@ -491,7 +491,7 @@ public class StringUtil {
 		}
 		Class<?> type = value.getClass();
 
-		if (type.isArray() == false) {
+		if (!type.isArray()) {
 			return new String[] {value.toString()};
 		}
 
@@ -801,7 +801,7 @@ public class StringUtil {
 
 		start[0] = 0;
 		int s = 0, e;
-		if (CharUtil.equalsOne(srcc[0], delimiters) == true) {	// string starts with delimiter
+		if (CharUtil.equalsOne(srcc[0], delimiters)) {	// string starts with delimiter
 			end[0] = 0;
 			count++;
 			s = CharUtil.findFirstDiff(srcc, 1, delimiters);
@@ -1301,7 +1301,7 @@ public class StringUtil {
 			endIndex = 0;
 		}
 		for (int i = startIndex; i >= endIndex; i--) {
-			if (Character.isWhitespace(src.charAt(i)) == false) {
+			if (!Character.isWhitespace(src.charAt(i))) {
 				return i;
 			}
 		}
@@ -1646,7 +1646,7 @@ public class StringUtil {
 	        return false;
 	    }
 	    for (int i = 0; i < as.length; i++) {
-	        if (as[i].equals(as1[i]) == false) {
+	        if (!as[i].equals(as1[i])) {
 	            return false;
 	        }
 	    }
@@ -1665,7 +1665,7 @@ public class StringUtil {
 			return false;
 		}
 		for (int i = 0; i < as.length; i++) {
-			if (as[i].equalsIgnoreCase(as1[i]) == false) {
+			if (!as[i].equalsIgnoreCase(as1[i])) {
 				return false;
 			}
 		}
@@ -1919,7 +1919,7 @@ public class StringUtil {
 	}
 	public static int indexOfNonWhitespace(String string, int startindex, int endindex) {
 		for (int i = startindex; i < endindex; i++) {
-			if (CharUtil.isWhitespace(string.charAt(i)) == false) {
+			if (!CharUtil.isWhitespace(string.charAt(i))) {
 				return i;
 			}
 		}
@@ -2396,10 +2396,10 @@ public class StringUtil {
 	 * Surrounds the string with provided prefix and suffix if such missing from string.
 	 */
 	public static String surround(String string, String prefix, String suffix) {
-		if (string.startsWith(prefix) == false) {
+		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
-		if (string.endsWith(suffix) == false) {
+		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
 		return string;
@@ -2409,7 +2409,7 @@ public class StringUtil {
 	 * Inserts prefix if doesn't exist.
 	 */
 	public static String prefix(String string, String prefix) {
-		if (string.startsWith(prefix) == false) {
+		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
 		return string;
@@ -2419,7 +2419,7 @@ public class StringUtil {
 	 * Appends suffix if doesn't exist.
 	 */
 	public static String suffix(String string, String suffix) {
-		if (string.endsWith(suffix) == false) {
+		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
 		return string;

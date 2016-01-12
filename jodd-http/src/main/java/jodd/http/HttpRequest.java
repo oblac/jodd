@@ -304,7 +304,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest path(String path) {
 		// this must be the only place that sets the path
 
-		if (path.startsWith(StringPool.SLASH) == false) {
+		if (!path.startsWith(StringPool.SLASH)) {
 			path = StringPool.SLASH + path;
 		}
 
@@ -684,7 +684,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// if we don't want to continue with this persistent session, mark this connection as closed
-		if (doContinue == false) {
+		if (!doContinue) {
 			keepAlive = false;
 		}
 
@@ -729,7 +729,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		boolean keepAlive = httpResponse.isConnectionPersistent();
 
-		if (keepAlive == false) {
+		if (!keepAlive) {
 			// closes connection if keep alive is false, or if counter reached 0
 			httpConnection.close();
 			httpConnection = null;

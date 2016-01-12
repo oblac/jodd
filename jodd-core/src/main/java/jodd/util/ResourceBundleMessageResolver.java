@@ -190,7 +190,7 @@ public class ResourceBundleMessageResolver {
 		if (locale == null) {
 			locale = fallbackLocale;
 		}
-		if (cacheResourceBundles == false) {
+		if (!cacheResourceBundles) {
 			try {
 				return getBundle(bundleName, locale, ClassLoaderUtil.getDefaultClassLoader());
 			} catch (MissingResourceException ignore) {
@@ -199,7 +199,7 @@ public class ResourceBundleMessageResolver {
 		}
 		String key = bundleName + '_' + LocaleUtil.resolveLocaleCode(locale);
 		try {
-			if (misses.contains(key) == false) {
+			if (!misses.contains(key)) {
 				ResourceBundle bundle = notmisses.get(key);
 				if (bundle == null) {
 					bundle = getBundle(bundleName, locale, ClassLoaderUtil.getDefaultClassLoader());

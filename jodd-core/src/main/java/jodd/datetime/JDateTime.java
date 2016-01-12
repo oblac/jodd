@@ -374,7 +374,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Calculates day of year.
 	 */
 	private int calcDayOfYear() {
-		if (leap == true) {
+		if (leap) {
 			return LEAP_NUM_DAYS[time.month] + time.day;
 		}
 		return NUM_DAYS[time.month] + time.day;
@@ -440,7 +440,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		// set WeekNumber to 1 to 53 if date falls in YearNumber
 		int m = 365;
 		if (YearNumber == time_year) {
-			if (TimeUtil.isLeapYear(time_year) == true) {
+			if (TimeUtil.isLeapYear(time_year)) {
 				m = 366;
 			}
 			if ((m - DayOfYearNumber) < (must - WeekDay)) {
@@ -542,7 +542,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		minute += time.minute;
 		hour += time.hour;
 		day += time.day;
-		if (monthFix == false) {
+		if (!monthFix) {
 			month += time.month;
 			year += time.year;
 			set(year, month, day, hour, minute, second, millisecond);

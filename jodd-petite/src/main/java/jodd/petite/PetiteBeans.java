@@ -258,7 +258,7 @@ public abstract class PetiteBeans {
 		}
 
 		// check if type is valid
-		if (type.isInterface() == true) {
+		if (type.isInterface()) {
 			throw new PetiteException("Failed to register interface: " + type.getName());
 		}
 

@@ -236,7 +236,7 @@ public class ActionsManager {
 			}
 		} else {
 			// action path is without macros
-			if (map.containsKey(actionConfig.actionPath) == false) {
+			if (!map.containsKey(actionConfig.actionPath)) {
 				map.put(actionConfig.actionPath, set);
 			} else {
 				set = map.get(actionConfig.actionPath);
@@ -255,7 +255,7 @@ public class ActionsManager {
 
 		configs.put(actionConfig.getActionString(), actionConfig);
 
-		if (isDuplicate == false) {
+		if (!isDuplicate) {
 			actionsCount++;
 		}
 

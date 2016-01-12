@@ -69,11 +69,11 @@ public class ParamManager {
 		List<String> list = new ArrayList<>();
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
 			String key = entry.getKey();
-			if (key.startsWith(beanName) == false) {
+			if (!key.startsWith(beanName)) {
 				continue;
 			}
 			list.add(key);
-			if (resolveReferenceParams == false) {
+			if (!resolveReferenceParams) {
 				continue;
 			}
 			// resolve all references

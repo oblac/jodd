@@ -202,7 +202,7 @@ public class HttpBrowser {
 	 * Opens connection and sends a response.
 	 */
 	protected HttpResponse _sendRequest(HttpRequest httpRequest, HttpResponse previouseResponse) {
-		if (keepAlive == false) {
+		if (!keepAlive) {
 			httpRequest.open(httpConnectionProvider);
 		} else {
 			// keeping alive

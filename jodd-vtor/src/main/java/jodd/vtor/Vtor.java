@@ -102,14 +102,14 @@ public class Vtor {
 			
 			for (Check check : entry.getValue()) {
 				String[] checkProfiles = check.getProfiles();
-				if (matchProfiles(checkProfiles) == false) {
+				if (!matchProfiles(checkProfiles)) {
 					continue;
 				}
 				if (check.getSeverity() < severity) {
 					continue;
 				}
 				ValidationConstraint constraint = check.getConstraint();
-				if (constraint.isValid(vcc, value) == false) {
+				if (!constraint.isValid(vcc, value)) {
 					addViolation(new Violation(valueName, target, value, check));
 				}
 			}
@@ -230,12 +230,12 @@ public class Vtor {
 			}
 
 			if (enabledProfiles.contains(profile)) {
-				if (b == false) {
+				if (!b) {
 					return false;
 				}
 				result = true;
 			} else {
-				if (must == true) {
+				if (must) {
 					return false;
 				}
 			}

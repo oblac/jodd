@@ -124,7 +124,7 @@ public class DecoraServletFilter implements Filter {
 		final HttpServletRequest request = (HttpServletRequest) servletRequest;
 		final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-		if (decoraManager.decorateRequest(request) == false) {
+		if (!decoraManager.decorateRequest(request)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 		}
@@ -139,7 +139,7 @@ public class DecoraServletFilter implements Filter {
 
 		filterChain.doFilter(decoraRequest, pageWrapper);
 
-		if (pageWrapper.isBufferingEnabled() == false) {
+		if (!pageWrapper.isBufferingEnabled()) {
 			// content was NOT buffered, so original request/response were used
 			return;
 		}

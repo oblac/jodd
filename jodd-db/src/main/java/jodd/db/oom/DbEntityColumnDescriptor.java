@@ -117,7 +117,7 @@ public class DbEntityColumnDescriptor implements Comparable {
 	public int compareTo(Object o) {
 		DbEntityColumnDescriptor that = (DbEntityColumnDescriptor) o;
 		if (this.isId != that.isId) {
-			return this.isId == true ? -1 : 1;      // IDs should be the first in the array
+			return this.isId ? -1 : 1;      // IDs should be the first in the array
 		}
 		return this.columnName.compareTo(that.columnName);
 	}

@@ -103,9 +103,9 @@ public class LocaleUtil {
 	 */
 	public static String resolveLocaleCode(String lang, String country, String variant) {
 		StringBuilder code = new StringBuilder(lang);
-		if (StringUtil.isEmpty(country) == false) {
+		if (!StringUtil.isEmpty(country)) {
 			code.append('_').append(country);
-			if (StringUtil.isEmpty(variant) == false) {
+			if (!StringUtil.isEmpty(variant)) {
 				code.append('_').append(variant);
 			}
 		}

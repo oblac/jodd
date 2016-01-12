@@ -296,7 +296,7 @@ public class PropsData implements Cloneable {
 
 		// make sure prefix ends with a dot
 		if (prefix != null) {
-			if (StringUtil.endsWithChar(prefix, '.') == false) {
+			if (!StringUtil.endsWithChar(prefix, '.')) {
 				prefix += StringPool.DOT;
 			}
 		}

@@ -87,7 +87,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	 * {@inheritDoc}
 	 */
 	public T next() {
-		if (hasNext() == false) {
+		if (!hasNext()) {
 			throw new NoSuchElementException();
 		}
 

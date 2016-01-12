@@ -331,10 +331,10 @@ public class FindFile<T extends FindFile> {
 				}
 
 				if (file.isFile()) {
-					if (includeFiles == false) {
+					if (!includeFiles) {
 						continue;
 					}
-					if (acceptFile(file) == false) {
+					if (!acceptFile(file)) {
 						continue;
 					}
 				}
@@ -356,10 +356,10 @@ public class FindFile<T extends FindFile> {
 				index++;
 
 				if (file.isFile()) {
-					if (includeFiles == false) {
+					if (!includeFiles) {
 						continue;
 					}
-					if (acceptFile(file) == false) {
+					if (!acceptFile(file)) {
 						continue;
 					}
 				}
@@ -496,7 +496,7 @@ public class FindFile<T extends FindFile> {
 	 * If path is a folder, it will be scanned for all files.
 	 */
 	protected void addPath(File path) {
-		if (path.exists() == false) {
+		if (!path.exists()) {
 			return;
 		}
 		if (pathList == null) {
@@ -531,7 +531,7 @@ public class FindFile<T extends FindFile> {
 
 			// iterate files
 
-			if (todoFiles.isEmpty() == false) {
+			if (!todoFiles.isEmpty()) {
 				FilesIterator filesIterator = todoFiles.getLast();
 				File nextFile = filesIterator.next();
 
@@ -541,15 +541,15 @@ public class FindFile<T extends FindFile> {
 				}
 
 				if (nextFile.isDirectory()) {
-					if (walking == false) {
+					if (!walking) {
 						todoFolders.add(nextFile);
 						continue;
 					}
 					// walking
-					if (recursive == true) {
+					if (recursive) {
 						todoFiles.add(new FilesIterator(nextFile));
 					}
-					if (includeDirs == true) {
+					if (includeDirs) {
 						if (acceptFile(nextFile)) {
 							lastFile = nextFile;
 							return nextFile;
@@ -583,11 +583,11 @@ public class FindFile<T extends FindFile> {
 				folder = todoFolders.removeFirst();
 			}
 
-			if ((initialDir) || (recursive == true)) {
+			if ((initialDir) || (recursive)) {
 				todoFiles.add(new FilesIterator(folder));
 			}
 
-			if ((!initialDir) && (includeDirs == true)) {
+			if ((!initialDir) && (includeDirs)) {
 				if (acceptFile(folder)) {
 					lastFile = folder;
 					return folder;

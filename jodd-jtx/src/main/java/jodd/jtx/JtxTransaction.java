@@ -187,7 +187,7 @@ public class JtxTransaction {
 	 * of the transaction is to roll back the transaction.
 	 */
 	public void setRollbackOnly(Throwable th) {
-		if (isNoTransaction() == false) {
+		if (!isNoTransaction()) {
 			if ((status != STATUS_MARKED_ROLLBACK) && (status != STATUS_ACTIVE)) {
 				throw new JtxException("TNo active TX that can be marked as rollback only");
 			}
@@ -251,20 +251,20 @@ public class JtxTransaction {
 			}
 		}
 		boolean forcedRollback = false;
-		if (isNoTransaction() == false) {
+		if (!isNoTransaction()) {
 			if (isRollbackOnly()) {
-				if (doCommit == true) {
+				if (doCommit) {
 					doCommit = false;
 					forcedRollback = true;
 				}
-			} else if (isActive() == false) {
+			} else if (!isActive()) {
 				if (isCompleted()) {
 					throw new JtxException("TX is already completed, commit or rollback should be called once per TX");
 				}
 				throw new JtxException("No active TX to " + (doCommit ? "commit" : "rollback"));
 			}
 		}
-		if (doCommit == true) {
+		if (doCommit) {
 			commitAllResources();
 		} else {
 			rollbackAllResources(forcedRollback);

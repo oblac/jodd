@@ -56,7 +56,7 @@ public class DbOomUtil {
 		}
 
 		Object keyValues = query.findGeneratedColumns(keyTypes);
-		if (keyValues.getClass().isArray() == false) {
+		if (!keyValues.getClass().isArray()) {
 			BeanUtil.declared.setProperty(entity, properties[0], keyValues);
 		} else {
 			for (int i = 0; i < properties.length; i++) {

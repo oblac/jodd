@@ -347,7 +347,7 @@ public class Jerry implements Iterable<Jerry> {
 		for (int i = 0; i < nodes.length; i++) {
 			Node node = nodes[i];
 			Jerry $this = new Jerry(this, node);
-			if (function.onNode($this, i) == false) {
+			if (!function.onNode($this, i)) {
 				break;
 			}
 		}
@@ -361,7 +361,7 @@ public class Jerry implements Iterable<Jerry> {
 	public Jerry each(JerryNodeFunction function) {
 		for (int i = 0; i < nodes.length; i++) {
 			Node node = nodes[i];
-			if (function.onNode(node, i) == false) {
+			if (!function.onNode(node, i)) {
 				break;
 			}
 		}
@@ -392,7 +392,7 @@ public class Jerry implements Iterable<Jerry> {
 		Node[]  notNodes = root().find(cssSelector).nodes;
 		List<Node> result = new NodeList(nodes.length);
 		for (Node node : nodes) {
-			if (ArraysUtil.contains(notNodes, node) == false) {
+			if (!ArraysUtil.contains(notNodes, node)) {
 				result.add(node);
 			}
 		}
@@ -672,7 +672,7 @@ public class Jerry implements Iterable<Jerry> {
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			boolean wasChange = false;
 			for (String className : classNames) {
-				if (classes.add(className) == true) {
+				if (classes.add(className)) {
 					wasChange = true;
 				}
 			}
@@ -710,7 +710,7 @@ public class Jerry implements Iterable<Jerry> {
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			boolean wasChange = false;
 			for (String className : classNames) {
-				if (classes.remove(className) == true) {
+				if (classes.remove(className)) {
 					wasChange = true;
 				}
 			}
@@ -732,7 +732,7 @@ public class Jerry implements Iterable<Jerry> {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			for (String className : classNames) {
-				if (classes.contains(className) == true) {
+				if (classes.contains(className)) {
 					classes.remove(className);
 				} else {
 					classes.add(className);
@@ -957,7 +957,7 @@ public class Jerry implements Iterable<Jerry> {
 					boolean isRadio = type.equals("radio");
 
 					if (isRadio || isCheckbox) {
-						if ($inputTag.nodes[0].hasAttribute("checked") == false) {
+						if (!($inputTag.nodes[0].hasAttribute("checked"))) {
 							return true;
 						}
 					}
@@ -1056,7 +1056,7 @@ public class Jerry implements Iterable<Jerry> {
 		StringBuilder sb = new StringBuilder(set.size() * 16);
 		boolean first = true;
 		for (String entry : set) {
-			if (first == false) {
+			if (!first) {
 				sb.append(propertiesDelimiter);
 			} else {
 				first = false;

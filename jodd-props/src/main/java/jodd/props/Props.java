@@ -423,7 +423,7 @@ public class Props implements Cloneable {
 	 * Adds child map to the props on given prefix.
 	 */
 	public void addInnerMap(String prefix, Map<?, ?> map, String profile) {
-		if (StringUtil.endsWithChar(prefix, '.') == false) {
+		if (!StringUtil.endsWithChar(prefix, '.')) {
 			prefix += StringPool.DOT;
 		}
 
@@ -442,9 +442,9 @@ public class Props implements Cloneable {
 	 * Initializes props. By default it only resolves active profiles.
 	 */
 	protected void initialize() {
-		if (initialized == false) {
+		if (!initialized) {
 			synchronized (this) {
-				if (initialized == false) {
+				if (!initialized) {
 
 					resolveActiveProfiles();
 

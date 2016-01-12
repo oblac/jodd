@@ -81,7 +81,7 @@ public class DecoraManager {
 	 * By default applies decorator on all *.html pages.
 	 */
 	public String resolveDecorator(HttpServletRequest request, String actionPath) {
-		if (actionPath.endsWith(".html") == true) {
+		if (actionPath.endsWith(".html")) {
 			return DEFAULT_DECORATOR;
 		}
 		return null;

@@ -120,7 +120,7 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	 * Compares value of two same instances.
 	 */
 	public int compareTo(MutableBoolean o) {
-		return (value == o.value) ? 0 : (value == false ? -1 : 1);
+		return (value == o.value) ? 0 : (!value ? -1 : 1);
 	}
 
 	// ---------------------------------------------------------------- clone

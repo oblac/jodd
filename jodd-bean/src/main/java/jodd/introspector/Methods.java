@@ -103,7 +103,7 @@ public class Methods {
 		}
 		for (MethodDescriptor methodDescriptor : methodDescriptors) {
 			Method m = methodDescriptor.getMethod();
-			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes) == true) {
+			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
 				return methodDescriptor;
 			}
 		}

@@ -111,7 +111,7 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 			tableName.append(suffix);
 		}
 
-		if (changeCase == false) {
+		if (!changeCase) {
 			return tableName.toString();
 		}
 		return uppercase ?
@@ -129,17 +129,17 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 
 		int i = 0;
 		if (prefix != null) {
-			if (tableName.startsWith(prefix) == true) {
+			if (tableName.startsWith(prefix)) {
 				i = prefix.length();
 			}
 		}
 		if (suffix != null) {
-			if (tableName.endsWith(suffix) == true) {
+			if (tableName.endsWith(suffix)) {
 				len -= suffix.length();
 			}
 		}
 
-		if (splitCamelCase == true) {
+		if (splitCamelCase) {
 			boolean toUpper = true;
 			for (; i < len; i++) {
 				char c = tableName.charAt(i);
@@ -147,7 +147,7 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 					toUpper = true;
 					continue;
 				}
-				if (toUpper == true) {
+				if (toUpper) {
 					className.append(Character.toUpperCase(c));
 					toUpper = false;
 				} else {

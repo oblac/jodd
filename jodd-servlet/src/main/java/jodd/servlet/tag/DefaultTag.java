@@ -39,7 +39,7 @@ public class DefaultTag extends SimpleTagSupport {
 		}
 
 		SwitchTag switchTag = (SwitchTag) parent;
-		if (switchTag.isValueFounded() == false) {
+		if (!switchTag.isValueFounded()) {
 			TagUtil.invokeBody(getJspBody());
 		}
 	}

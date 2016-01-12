@@ -204,7 +204,7 @@ public class CharUtil {
 	 */
 	public static int findFirstEqual(char[] source, int index, char[] match) {
 		for (int i = index; i < source.length; i++) {
-			if (equalsOne(source[i], match) == true) {
+			if (equalsOne(source[i], match)) {
 				return i;
 			}
 		}
@@ -235,7 +235,7 @@ public class CharUtil {
 	 */
 	public static int findFirstDiff(char[] source, int index, char[] match) {
 		for (int i = index; i < source.length; i++) {
-			if (equalsOne(source[i], match) == false) {
+			if (!equalsOne(source[i], match)) {
 				return i;
 			}
 		}

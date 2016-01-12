@@ -73,7 +73,7 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 
 		String stringValue = value.toString().trim();
 
-		if (StringUtil.containsOnlyDigits(stringValue) == false) {
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			// try to parse default string format
 			JDateTime jdt = new JDateTime(stringValue, JDateTime.DEFAULT_FORMAT);
 			return jdt.convertToCalendar();

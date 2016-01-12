@@ -74,7 +74,7 @@ public class ZipUtil {
 	 * Compresses a file into zlib archive.
 	 */
 	public static File zlib(File file) throws IOException {
-		if (file.isDirectory() == true) {
+		if (file.isDirectory()) {
 			throw new IOException("Can't zlib folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
@@ -107,7 +107,7 @@ public class ZipUtil {
 	 * Compresses a file into gzip archive.
 	 */
 	public static File gzip(File file) throws IOException {
-		if (file.isDirectory() == true) {
+		if (file.isDirectory()) {
 			throw new IOException("Can't gzip folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
@@ -208,7 +208,7 @@ public class ZipUtil {
 			File file = (destDir != null) ? new File(destDir, entryName) : new File(entryName);
 			if (entry.isDirectory()) {
 				if (!file.mkdirs()) {
-					if (file.isDirectory() == false) {
+					if (!file.isDirectory()) {
 						throw new IOException("Failed to create directory: " + file);
 					}
 				}
@@ -216,7 +216,7 @@ public class ZipUtil {
 				File parent = file.getParentFile();
 				if (parent != null && !parent.exists()) {
 					if (!parent.mkdirs()) {
-						if (file.isDirectory() == false) {
+						if (!file.isDirectory()) {
 							throw new IOException("Failed to create directory: " + parent);
 						}
 					}
@@ -249,7 +249,7 @@ public class ZipUtil {
 	 * @param recursive when set to <code>true</code> content of added folders will be added, too
 	 */
 	public static void addToZip(ZipOutputStream zos, File file, String path, String comment, boolean recursive) throws IOException {
-		if (file.exists() == false) {
+		if (!file.exists()) {
 			throw new FileNotFoundException(file.toString());
 		}
 

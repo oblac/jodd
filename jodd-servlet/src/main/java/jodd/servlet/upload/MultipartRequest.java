@@ -130,7 +130,7 @@ public class MultipartRequest extends MultipartStreamParser {
 			mreq = new MultipartRequest(request, fileUploadFactory, encoding);
 			request.setAttribute(MREQ_ATTR_NAME, mreq);
 		}
-		if (mreq.isParsed() == false) {
+		if (!mreq.isParsed()) {
 			mreq.parseRequest();
 		}
 		return mreq;
@@ -161,7 +161,7 @@ public class MultipartRequest extends MultipartStreamParser {
 	 * @see MultipartRequestWrapper
 	 */
 	public void parseRequest() throws IOException {
-		if (ServletUtil.isMultipartRequest(request) == true) {
+		if (ServletUtil.isMultipartRequest(request)) {
 			parseRequestStream(request.getInputStream(), characterEncoding);
 		} else {
 			Enumeration names = request.getParameterNames();

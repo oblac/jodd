@@ -60,7 +60,7 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	 * <b>Must</b> POP value from the stack after the execution.
 	 */
 	protected int getArgumentIndex() {
-		if (isPrevious == false) {
+		if (!isPrevious) {
 			throw new ProxettaException("Unexpected previous instruction type used for setting argument index");
 		}
 		int argIndex;

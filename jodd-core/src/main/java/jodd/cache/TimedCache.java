@@ -54,7 +54,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
 			CacheObject co = values.next();
-			if (co.isExpired() == true) {
+			if (co.isExpired()) {
 				values.remove();
 				count++;
 			}

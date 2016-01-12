@@ -112,7 +112,7 @@ public class BundleAction {
 			sources.add(src);
 		}
 
-		if (firstScriptTag == true) {
+		if (firstScriptTag) {
 			// this is the first tag, change the url to point to the bundle
 			firstScriptTag = false;
 

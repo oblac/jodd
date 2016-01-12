@@ -100,7 +100,7 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	protected void onEntry(EntryData entryData) {
 		String entryName = entryData.getName();
 		InputStream inputStream = entryData.openInputStream();
-		if (isTypeSignatureInUse(inputStream, petiteBeanAnnotationBytes) == false) {
+		if (!isTypeSignatureInUse(inputStream, petiteBeanAnnotationBytes)) {
 			return;
 		}
 		Class<?> beanClass;

@@ -67,7 +67,7 @@ public class RestResourcePath extends BaseNamingStrategy {
 				methodActionPath = actionMethod.getName() + StringPool.SLASH + methodActionPath;
 			}
 
-			if (classActionPath.endsWith(StringPool.SLASH) == false) {
+			if (!classActionPath.endsWith(StringPool.SLASH)) {
 				actionPath += StringPool.SLASH;
 				resultPath += StringPool.SLASH;
 			}

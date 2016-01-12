@@ -246,8 +246,8 @@ public class AsmUtil {
 	 * Converts type to type ref.
 	 */
 	public static String typeToTyperef(Class type) {
-		if (type.isArray() == false) {
-			if (type.isPrimitive() == false) {
+		if (!type.isArray()) {
+			if (!type.isPrimitive()) {
 				return 'L' + typeToSignature(type) + ';';
 			}
 			if (type == int.class) {

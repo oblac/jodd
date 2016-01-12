@@ -116,7 +116,7 @@ public class DecoraTag {
 	 * matches decorator tag.
 	 */
 	public boolean isMatchedTag(Tag tag) {
-		if (tag.nameEquals(name) == false) {
+		if (!tag.nameEquals(name)) {
 			return false;
 		}
 		if (id != null) {
@@ -126,7 +126,7 @@ public class DecoraTag {
 				return false;
 			}
 
-			if (TagUtil.equals(id, tagId) == false) {
+			if (!TagUtil.equals(id, tagId)) {
 				return false;
 			}
 		}

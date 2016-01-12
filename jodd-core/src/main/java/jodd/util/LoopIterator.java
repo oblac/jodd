@@ -148,10 +148,10 @@ public class LoopIterator {
 	 * Iterates to next value at the beginning of the loop.
 	 */
 	public boolean next() {
-		if (looping == false) {
+		if (!looping) {
 			return false;
 		}
-		if (last == true) {
+		if (last) {
 			return false;
 		}
 		if (count == 0) {

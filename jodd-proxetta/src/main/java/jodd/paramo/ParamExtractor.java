@@ -51,7 +51,7 @@ final class ParamExtractor extends EmptyMethodVisitor {
 	@Override
 	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
 		if ((index >= ignoreCount) && (index < (ignoreCount + paramCount))) {
-			if (name.equals("arg" + currentParam) == false) {
+			if (!name.equals("arg" + currentParam)) {
 				debugInfoPresent = true;
 			}
 			if (signature == null) {

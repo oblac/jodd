@@ -246,7 +246,7 @@ public abstract class SqlChunk {
 			return;
 		}
 		len--;
-		if (CharUtil.isWhitespace(out.charAt(len)) == false) {
+		if (!CharUtil.isWhitespace(out.charAt(len))) {
 			out.append(' ');
 		}
 	}

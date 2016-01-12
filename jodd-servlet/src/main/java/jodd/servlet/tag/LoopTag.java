@@ -42,7 +42,7 @@ public class LoopTag extends LoopingTagSupport {
 	@Override
 	public void setEnd(int end) {
 		super.setEnd(end);
-		if (isEndSpecified == true) {
+		if (isEndSpecified) {
 			throw new IllegalArgumentException("End boundary already specified");
 		}
 		isEndSpecified = true;
@@ -76,7 +76,7 @@ public class LoopTag extends LoopingTagSupport {
 
 	@Override
 	public void doTag() throws JspException {
-		if (isEndSpecified == false) {
+		if (!isEndSpecified) {
 			throw new IllegalArgumentException("End boundary of the loop is not specified");
 		}
 

@@ -137,7 +137,7 @@ final class ProxyAspectData {
 	 * Must be called only *once* per advice.
 	 */
 	private void readAdviceData() {
-		if (ready == true) {
+		if (ready) {
 			return;
 		}
 
@@ -177,8 +177,8 @@ final class ProxyAspectData {
 			 */
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-				if (name.equals(CLINIT) == true) {              // [A6]
-					if (desc.equals(DESC_VOID) == false) {
+				if (name.equals(CLINIT)) {              // [A6]
+					if (!desc.equals(DESC_VOID)) {
 						throw new ProxettaException("Invalid static initialization block description for advice: " + advice.getName());
 					}
 					name = clinitMethodName + methodDivider + aspectIndex;
@@ -216,8 +216,8 @@ final class ProxyAspectData {
 					};
 				} else
 
-				if (name.equals(INIT) == true) { // [A7]
-					if (desc.equals(DESC_VOID) == false) {
+				if (name.equals(INIT)) { // [A7]
+					if (!desc.equals(DESC_VOID)) {
 						throw new ProxettaException("Advices can have only default constructors. Invalid advice: " + advice.getName());
 					}
 
@@ -279,7 +279,7 @@ final class ProxyAspectData {
 				} else
 
 				// other methods
-				if (name.equals(executeMethodName) == false) {
+				if (!name.equals(executeMethodName)) {
 					name = adviceMethodName(name, aspectIndex);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 

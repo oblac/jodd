@@ -71,7 +71,7 @@ public class EmailUtil {
 
 			while (ndx < len) {
 				char c = charset.charAt(ndx);
-				if ((c == '"') || (CharUtil.isWhitespace(c) == true) || (c == ';')) {
+				if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
 					break;
 				}
 				ndx++;

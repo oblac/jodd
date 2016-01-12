@@ -46,7 +46,7 @@ public class ActionPathMacroManager {
 	public PathMacros buildActionPathMacros(String actionPath) {
 		PathMacros pathMacros = createPathMacro();
 
-		if (pathMacros.init(actionPath, madvocConfig.getPathMacroSeparators()) == false) {
+		if (!pathMacros.init(actionPath, madvocConfig.getPathMacroSeparators())) {
 			return null;
 		}
 

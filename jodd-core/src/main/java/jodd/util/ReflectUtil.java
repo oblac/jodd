@@ -381,22 +381,22 @@ public class ReflectUtil {
 //				if (Modifier.isAbstract(method.getModifiers())) {
 //					continue;
 //				}
-				if (top == true) {				// add all top declared methods
+				if (top) {				// add all top declared methods
 					methodList.add(method);
 					continue;
 				}
 				int modifier = method.getModifiers();
-				if (Modifier.isPrivate(modifier) == true) {
+				if (Modifier.isPrivate(modifier)) {
 					continue;										// ignore super private methods
 				}
-				if (Modifier.isAbstract(modifier) == true) {		// ignore super abstract methods
+				if (Modifier.isAbstract(modifier)) {		// ignore super abstract methods
 					continue;
 				}
-				if (Modifier.isPublic(modifier) == true) {
+				if (Modifier.isPublic(modifier)) {
 					addMethodIfNotExist(methodList, method);		// add super public methods
 					continue;
 				}
-				if (Modifier.isProtected(modifier) == true) {
+				if (Modifier.isProtected(modifier)) {
 					addMethodIfNotExist(methodList, method);		// add super protected methods
 					continue;
 				}
@@ -419,7 +419,7 @@ public class ReflectUtil {
 
 	private static void addMethodIfNotExist(List<Method> allMethods, Method newMethod) {
 		for (Method m : allMethods) {
-			if (compareSignatures(m, newMethod) == true) {
+			if (compareSignatures(m, newMethod)) {
 				return;
 			}
 		}
@@ -444,19 +444,19 @@ public class ReflectUtil {
 			}
 			Field[] declaredFields = clazz.getDeclaredFields();
 			for (Field field : declaredFields) {
-				if (top == true) {				// add all top declared fields
+				if (top) {				// add all top declared fields
 					fieldList.add(field);
 					continue;
 				}
 				int modifier = field.getModifiers();
-				if (Modifier.isPrivate(modifier) == true) {
+				if (Modifier.isPrivate(modifier)) {
 					continue;										// ignore super private fields
 				}
-				if (Modifier.isPublic(modifier) == true) {
+				if (Modifier.isPublic(modifier)) {
 					addFieldIfNotExist(fieldList, field);			// add super public methods
 					continue;
 				}
-				if (Modifier.isProtected(modifier) == true) {
+				if (Modifier.isProtected(modifier)) {
 					addFieldIfNotExist(fieldList, field);			// add super protected methods
 					continue;
 				}
@@ -479,7 +479,7 @@ public class ReflectUtil {
 
 	private static void addFieldIfNotExist(List<Field> allFields, Field newField) {
 		for (Field f : allFields) {
-			if (compareSignatures(f, newField) == true) {
+			if (compareSignatures(f, newField)) {
 				return;
 			}
 		}
@@ -513,7 +513,7 @@ public class ReflectUtil {
 						break;
 					}
 				}
-				if (found == false) {
+				if (!found) {
 					supportedMethods.add(method);
 				}
 			}
@@ -538,7 +538,7 @@ public class ReflectUtil {
 						break;
 					}
 				}
-				if (found == false) {
+				if (!found) {
 					supportedFields.add(field);
 				}
 			}
@@ -563,7 +563,7 @@ public class ReflectUtil {
 	 * Compares method signatures: names and parameters.
 	 */
 	public static boolean compareSignatures(Method first, Method second) {
-		if (first.getName().equals(second.getName()) == false) {
+		if (!first.getName().equals(second.getName())) {
 			return false;
 		}
 		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
@@ -573,7 +573,7 @@ public class ReflectUtil {
 	 * Compares constructor signatures: names and parameters.
 	 */
 	public static boolean compareSignatures(Constructor first, Constructor second) {
-		if (first.getName().equals(second.getName()) == false) {
+		if (!first.getName().equals(second.getName())) {
 			return false;
 		}
 		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
@@ -609,7 +609,7 @@ public class ReflectUtil {
 	 * Checks first if the object is already accessible.
 	 */
 	public static void forceAccess(AccessibleObject accObject){
-		if (accObject.isAccessible() == true) {
+		if (accObject.isAccessible()) {
 			return;
 		}
 		try {
@@ -632,7 +632,7 @@ public class ReflectUtil {
 	 * Returns <code>true</code> if class member is public and if its declaring class is also public.
 	 */
 	public static boolean isPublicPublic(Member member) {
-		if (Modifier.isPublic(member.getModifiers()) == true) {
+		if (Modifier.isPublic(member.getModifiers())) {
 			if (Modifier.isPublic(member.getDeclaringClass().getModifiers())) {
 				return true;
 			}
@@ -728,11 +728,11 @@ public class ReflectUtil {
 			return Character.valueOf((char) 0);
 		}
 
-		if (type.isEnum() == true) {
+		if (type.isEnum()) {
 			return type.getEnumConstants()[0];
 		}
 
-		if (type.isArray() == true) {
+		if (type.isArray()) {
 			return Array.newInstance(type.getComponentType(), 0);
 		}
 

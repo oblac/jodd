@@ -51,7 +51,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}

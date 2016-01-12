@@ -133,7 +133,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
 	@Override
 	protected LagartoParsingProcessor createParsingProcessor() {
-		if (enabled == false) {
+		if (!enabled) {
 			return null;
 		}
 
@@ -175,7 +175,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
 		String bundlePath = '/' + bundlesManager.getStaplerPath() + '/';
 
-		if (actionPath.startsWith(bundlePath) == false) {
+		if (!actionPath.startsWith(bundlePath)) {
 			return false;
 		}
 
@@ -199,7 +199,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 			servletResponse.setHeader("Content-Encoding", "gzip");
 		}
 
-		if (file.exists() == false) {
+		if (!file.exists()) {
 			throw new IOException("bundle not found: " + bundleId);
 		}
 

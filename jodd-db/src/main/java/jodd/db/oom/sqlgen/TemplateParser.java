@@ -92,7 +92,7 @@ class TemplateParser {
 				mark++;           // reference found
 				end = mark;       // find macro end
 				while (end < length) {
-					if (isReferenceChar(template, end) == false) {
+					if (!isReferenceChar(template, end)) {
 						break;
 					}
 					end++;

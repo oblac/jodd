@@ -125,12 +125,12 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		}
 
 		// destination constructors [A1]
-		if (name.equals(INIT) == true) {
+		if (name.equals(INIT)) {
 			MethodVisitor mv = wd.dest.visitMethod(access, name, desc, msign.getRawSignature(), null);
 			return new ProxettaCtorBuilder(mv, msign, wd);
 		}
 		// ignore destination static block
-		if (name.equals(CLINIT) == true) {
+		if (name.equals(CLINIT)) {
 			return null;
 		}
 		return applyProxy(msign);
@@ -310,7 +310,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	protected List<ProxyAspectData> matchMethodPointcuts(MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = null;
 		for (ProxyAspectData aspectData : wd.proxyAspects) {
-			if (aspectData.apply(msign) == true) {
+			if (aspectData.apply(msign)) {
 				if (aspectList == null) {
 					aspectList = new ArrayList<>(wd.proxyAspects.length);
 				}

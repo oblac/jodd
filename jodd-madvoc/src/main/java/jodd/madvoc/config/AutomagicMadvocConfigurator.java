@@ -118,7 +118,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	@Override
 	protected void onEntry(EntryData entryData) {
 		String entryName = entryData.getName();
-		if (entryName.endsWith(actionClassSuffix) == true) {
+		if (entryName.endsWith(actionClassSuffix)) {
 			try {
 				onActionClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
@@ -126,7 +126,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 					log.debug("Invalid action skipped: {}" + entryName);
 				}
 			}
-		} else if (entryName.endsWith(resultClassSuffix) == true) {
+		} else if (entryName.endsWith(resultClassSuffix)) {
 			try {
 				onResultClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
@@ -189,7 +189,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 			return;
 		}
 
-		if (checkClass(actionClass) == false) {
+		if (!checkClass(actionClass)) {
 			return; 
 		}
 
@@ -214,7 +214,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 					break;
 				}
 			}
-			if (hasAnnotation == false) {
+			if (!hasAnnotation) {
 				continue;
 			}
 			actionsManager.register(actionClass, method);
@@ -232,10 +232,10 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 			return;
 		}
 
-		if (checkClass(resultClass) == false) {
+		if (!checkClass(resultClass)) {
 			return;
 		}
-		if (ReflectUtil.isTypeOf(resultClass, ActionResult.class) == true) {
+		if (ReflectUtil.isTypeOf(resultClass, ActionResult.class)) {
 			resultsManager.register(resultClass);
 		}
 	}

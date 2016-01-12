@@ -93,7 +93,7 @@ public class Properties {
 					}
 				}
 
-				if (add == true) {
+				if (add) {
 					MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
 					addProperty(map, propertyName, methodDescriptor, issetter);
 				}

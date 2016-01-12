@@ -57,7 +57,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 			if (extension != null) {		// add extension
 				methodActionPath += '.' + extension;
 			}
-			if (classActionPath.endsWith(StringPool.SLASH) == false) {
+			if (!classActionPath.endsWith(StringPool.SLASH)) {
 				actionPath += StringPool.DOT;
 			}
 			actionPath += methodActionPath;

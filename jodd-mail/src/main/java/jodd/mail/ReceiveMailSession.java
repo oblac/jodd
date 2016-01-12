@@ -268,7 +268,7 @@ public class ReceiveMailSession {
 				}
 				emails[i] = new ReceivedEmail(msg);
 
-				if (flagsToSet == null && emails[i].isSeen() == false) {
+				if (flagsToSet == null && !emails[i].isSeen()) {
 					msg.setFlag(Flags.Flag.SEEN, false);
 				}
 			}

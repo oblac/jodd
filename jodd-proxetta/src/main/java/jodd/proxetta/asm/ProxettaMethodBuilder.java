@@ -186,7 +186,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-				if (name.equals(executeMethodName) == false) {
+				if (!name.equals(executeMethodName)) {
 					return null;
 				}
 
@@ -220,7 +220,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 							visitReturn(mv, td.msign, true);
 							return;
 						}
-						if (traceNext == true) {
+						if (traceNext) {
 							if ((opcode == POP) || (opcode == POP2)) {      // [F3] - invoke invoked without assignment
 								return;
 							}
@@ -244,12 +244,12 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								mname = adviceMethodName(mname, aspectData.aspectIndex);
 							} else
 
-							if (string.endsWith('/' + TARGET_CLASS_NAME) == true) {
+							if (string.endsWith('/' + TARGET_CLASS_NAME)) {
 
 								if (isInvokeMethod(mname, mdesc)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 
-										if (wd.isWrapper() == false) {
+										if (!wd.isWrapper()) {
 											// PROXY
 											loadSpecialMethodArguments(mv, td.msign);
 											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription(), isInterface);

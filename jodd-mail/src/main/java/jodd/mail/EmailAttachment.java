@@ -112,7 +112,7 @@ public abstract class EmailAttachment {
 	 * Sets target message for embedded attachments.
 	 */
 	public void setEmbeddedMessage(EmailMessage emailMessage) {
-		if (isInline() == false) {
+		if (!isInline()) {
 			throw new MailException("Only inline attachments may be embedded");
 		}
 		targetMessage = emailMessage;

@@ -70,7 +70,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
 			CacheObject<K,V> co = values.next();
-			if (co.isExpired() == true) {
+			if (co.isExpired()) {
 				values.remove();
 				onRemove(co.key, co.cachedObject);
 				count++;
@@ -86,7 +86,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 			}
 		}
 
-		if (isFull() == false) {
+		if (!isFull()) {
 			return count;
 		}
 
