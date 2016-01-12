@@ -129,7 +129,7 @@ public class ClassLoaderUtilTest {
 
 		defaultClassLoaderStrategy.setLoadArrayClassByComponentTypes(true);
 
-		URLClassLoader parentClassloader = (URLClassLoader)this.getClass().getClassLoader();
+		URLClassLoader parentClassloader = (URLClassLoader)Thread.currentThread().getContextClassLoader();
 		URL[] urls = parentClassloader.getURLs();
 		ExtendedURLClassLoader excl = new ExtendedURLClassLoader(urls, parentClassloader, false);
 

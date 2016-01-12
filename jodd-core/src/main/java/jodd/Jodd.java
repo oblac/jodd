@@ -120,7 +120,7 @@ public class Jodd {
 	public static void initAllModules() {
 		final Field[] fields = Jodd.class.getFields();
 
-		final ClassLoader classLoader = Jodd.class.getClassLoader();
+		final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
 		for (Field field : fields) {
 			int index;
