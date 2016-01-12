@@ -923,7 +923,7 @@ public class FileNameUtil {
 	 */
 	private static boolean equals(String filename1, String filename2, boolean system) {
 		//noinspection StringEquality
-		if (filename1 == filename2) {
+		if (filename1 != null && filename1.equals(filename2)) {
 			return true;
 		}
 		if (filename1 == null || filename2 == null) {

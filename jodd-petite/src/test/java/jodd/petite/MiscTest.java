@@ -215,7 +215,7 @@ public class MiscTest {
 
 		BeanOne petiteBean = pc.getBean(BeanOne.class);
 
-		assertTrue(petiteBean.ctor != petiteBean.setter);
+		assertTrue(petiteBean.ctor != null && !petiteBean.ctor.equals(petiteBean.setter));
 	}
 
 }

@@ -107,7 +107,7 @@ public abstract class SetMapAdapter<E> extends AbstractSet<E> {
 	 */
 	@Override
 	public boolean remove(Object o) {
-		return map.remove(o) == DUMMY_VALUE;
+		return map.remove(o).equals(DUMMY_VALUE);
 	}
 
 	/**

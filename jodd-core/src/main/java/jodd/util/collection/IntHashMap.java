@@ -756,7 +756,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 
 			for (Entry e = tab[ndx], prev = null; e != null;
 				 prev = e, e = e.next) {
-				if (e == lastReturned) {
+				if (e.equals(lastReturned)) {
 					modCount++;
 					expectedModCount++;
 					if (prev == null) {

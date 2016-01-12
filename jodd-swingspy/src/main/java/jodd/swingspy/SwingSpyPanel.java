@@ -143,7 +143,7 @@ public class SwingSpyPanel extends JPanel {
 	protected void addNode(DefaultMutableTreeNode parent, Component component, Component selectedComponent) {
 		DefaultMutableTreeNode componentNode = new DefaultMutableTreeNode(new ComponentWrapper(component));
 		parent.add(componentNode);
-		if (component == selectedComponent) {
+		if (component != null && component.equals(selectedComponent)) {
 			TreePath selectedPath = new TreePath(componentNode.getPath());
 			componentTree.setSelectionPath(selectedPath);
 			componentTree.scrollPathToVisible(selectedPath);

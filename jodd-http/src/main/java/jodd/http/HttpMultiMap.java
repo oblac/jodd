@@ -160,7 +160,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	 * Returns <code>true</code> if map is empty.
 	 */
 	public boolean isEmpty() {
-		return head == head.after;
+		return head.equals(head.after);
 	}
 
 	public String toString() {
@@ -361,7 +361,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return new Iterator<Map.Entry<String, V>>() {
 			@Override
 			public boolean hasNext() {
-				return e[0] != head;
+				return !e[0].equals(head);
 			}
 
 			@Override
@@ -386,7 +386,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		Set<String> names = new TreeSet<>(caseSensitive ? null : String.CASE_INSENSITIVE_ORDER);
 
 		MapEntry e = head.after;
-		while (e != head) {
+		while (!e.equals(head)) {
 			names.add(e.getKey());
 			e = e.after;
 		}
@@ -401,7 +401,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		List<Map.Entry<String, V>> all = new LinkedList<>();
 
 		MapEntry<V> e = head.after;
-		while (e != head) {
+		while (!e.equals(head)) {
 			all.add(e);
 			e = e.after;
 		}

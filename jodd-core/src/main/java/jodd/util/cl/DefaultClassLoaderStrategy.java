@@ -152,7 +152,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 		// try #2 - using thread class loader
 		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
 
-		if ((currentThreadClassLoader != null) && (currentThreadClassLoader != classLoader)) {
+		if ( currentThreadClassLoader != null && !currentThreadClassLoader.equals(classLoader) ) {
 			Class klass = loadClass(className, arrayClassName, currentThreadClassLoader);
 
 			if (klass != null) {
@@ -165,7 +165,8 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 		Class callerClass = ReflectUtil.getCallerClass();
 		ClassLoader callerClassLoader = callerClass.getClassLoader();
 
-		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
+		if (callerClassLoader != null && !callerClassLoader.equals(classLoader)
+				&& !callerClassLoader.equals(currentThreadClassLoader)) {
 			Class klass = loadClass(className, arrayClassName, callerClassLoader);
 
 			if (klass != null) {

@@ -302,7 +302,7 @@ public abstract class Node implements Cloneable {
 	 * if provided child node is not a child nothing happens.
 	 */
 	public void removeChild(Node childNode) {
-		if (childNode.getParentNode() != this) {
+		if (!this.equals(childNode.getParentNode())) {
 			return;
 		}
 		childNode.detachFromParent();
@@ -711,8 +711,8 @@ public abstract class Node implements Cloneable {
 			int childCount = getChildNodesCount();
 			for (int i = 0; i < childCount; i++) {
 				Node child = getChild(i);
-				if (child.siblingElementIndex >= 0) {
-					if (childElementNodes[child.siblingElementIndex] != child) {
+				if (child != null && child.siblingElementIndex >= 0) {
+					if (!child.equals(childElementNodes[child.siblingElementIndex])) {
 						return false;
 					}
 				}

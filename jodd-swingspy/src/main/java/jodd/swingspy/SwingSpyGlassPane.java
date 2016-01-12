@@ -91,7 +91,7 @@ public class SwingSpyGlassPane extends JPanel implements AWTEventListener {
             if (SwingUtilities.isDescendingFrom(mecmp, (Component) rootPaneContainer) == false) {
                 return;
             }
-            if ((me.getID() == MouseEvent.MOUSE_EXITED) && (mecmp == rootPaneContainer)) {
+            if ( me.getID() == MouseEvent.MOUSE_EXITED && (mecmp != null && mecmp.equals(rootPaneContainer)) ) {
                 highcmp = null;
                 point = null;
             } else {
@@ -102,7 +102,7 @@ public class SwingSpyGlassPane extends JPanel implements AWTEventListener {
                 rect.width = mecmp.getWidth();
                 rect.height = mecmp.getHeight();
                 Rectangle parentBounds = new Rectangle();
-                while ((parent != null) && (parent != this.getRootPane()) && (parent != rootPaneContainer)) {
+                while ( parent != null && parent.equals(this.getRootPane()) && !parent.equals(rootPaneContainer) ) {
                     parent.getBounds(parentBounds);
                     rect.x += parentBounds.x;
                     rect.y += parentBounds.y;
@@ -121,9 +121,9 @@ public class SwingSpyGlassPane extends JPanel implements AWTEventListener {
      */
     @Override
     public boolean contains(int x, int y) {
-        if (getMouseListeners().length == 0 && getMouseMotionListeners().length == 0
+        if ( getMouseListeners().length == 0 && getMouseMotionListeners().length == 0
                 && getMouseWheelListeners().length == 0
-                && getCursor() == Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) {
+                && (getCursor() != null && getCursor().equals(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))) ) {
             return false;
         }
         return super.contains(x, y);

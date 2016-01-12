@@ -81,7 +81,7 @@ public class JsonContext extends JsonWriter {
 	public boolean pushValue(Object value) {
 		for (int i = 0; i < bagSize; i++) {
 			JsonValueContext valueContext = bag.get(i);
-			if (valueContext.getValue() == value) {
+			if (valueContext.getValue() != null && valueContext.getValue().equals(value)) {
 				return true;
 			}
 		}
