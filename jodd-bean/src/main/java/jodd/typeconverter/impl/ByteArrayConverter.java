@@ -57,7 +57,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}

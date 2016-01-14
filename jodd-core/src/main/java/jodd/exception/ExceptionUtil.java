@@ -77,7 +77,7 @@ public class ExceptionUtil {
 						break;
 					}
 				}
-				if (validElemenet == false) {
+				if (!validElemenet) {
 					continue;
 				}
 			}

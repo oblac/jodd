@@ -229,7 +229,7 @@ public class DbOomManager {
 	 * Registers entity. Existing entity will be removed if exist, so no exception will be thrown. 
 	 */
 	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type, boolean force) {
-		if (force == true) {
+		if (force) {
 			removeEntity(type);
 		}
 		return registerEntity(type);

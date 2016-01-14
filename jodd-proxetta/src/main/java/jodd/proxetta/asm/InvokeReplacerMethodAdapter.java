@@ -104,7 +104,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 		// to targets subclass with target (FOO.<init>).
 		if (methodInfo.getMethodName().equals(INIT)) {
 			if (
-					(firstSuperCtorInitCalled == false) &&
+					(!firstSuperCtorInitCalled) &&
 							(opcode == INVOKESPECIAL) &&
 							name.equals(INIT) &&
 							owner.equals(wd.nextSupername)
@@ -117,7 +117,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 		}
 
 		// detection of super calls
-		if ((opcode == INVOKESPECIAL) && (owner.equals(wd.nextSupername) && (name.equals(INIT) == false))) {
+		if ((opcode == INVOKESPECIAL) && (owner.equals(wd.nextSupername) && (!name.equals(INIT)))) {
 			throw new ProxettaException("Super call detected in class " + methodInfo.getClassname() + " method: " + methodInfo.getSignature() +
 				"\nProxetta can't handle super calls due to VM limitations.");
 		}

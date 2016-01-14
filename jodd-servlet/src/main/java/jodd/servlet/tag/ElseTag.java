@@ -42,7 +42,7 @@ public class ElseTag extends SimpleTagSupport {
 		}
 
 		IfElseTag ifTag = (IfElseTag) parent;
-		if (ifTag.getTestValue() == false) {
+		if (!ifTag.getTestValue()) {
 			TagUtil.invokeBody(getJspBody());
 		}
 	}

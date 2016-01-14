@@ -110,9 +110,9 @@ public class GenericDao {
 		if (ded == null) {
 			throw new DbOomException("Not an entity: " + type);
 		}
-		if (isPersistent(ded, entity) == false) {
+		if (!isPersistent(ded, entity)) {
 			DbQuery q;
-			if (keysGeneratedByDatabase == true) {
+			if (keysGeneratedByDatabase) {
 				q = query(insert(entity));
 				q.setGeneratedKey();
 				q.executeUpdate();

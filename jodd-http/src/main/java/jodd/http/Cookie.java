@@ -332,7 +332,7 @@ public class Cookie {
 		if (path != null) {
 			cookie.append("; Path=").append(path);
 		}
-		if (secure == true) {
+		if (secure) {
 			cookie.append("; Secure");
 		}
 		if (version != null) {

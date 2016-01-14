@@ -103,7 +103,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	protected void onEntry(EntryData entryData) {
 		String entryName = entryData.getName();
 		InputStream inputStream = entryData.openInputStream();
-		if (isTypeSignatureInUse(inputStream, dbTableAnnotationBytes) == false) {
+		if (!isTypeSignatureInUse(inputStream, dbTableAnnotationBytes)) {
 			return;
 		}
 
@@ -122,7 +122,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		if (dbTable == null) {
 			return;
 		}
-		if (registerAsEntities == true) {
+		if (registerAsEntities) {
 			dbOomManager.registerEntity(beanClass);
 		} else {
 			dbOomManager.registerType(beanClass);

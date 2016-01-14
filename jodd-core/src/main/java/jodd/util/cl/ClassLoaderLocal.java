@@ -74,7 +74,7 @@ public class ClassLoaderLocal<T> {
 			return value;
 		}
 
-		if (initialized == false) {
+		if (!initialized) {
 			value = initialValue();
 			initialized = true;
 		}

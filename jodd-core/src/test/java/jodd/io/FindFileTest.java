@@ -65,13 +65,13 @@ public class FindFileTest {
 
 		File f;
 		while ((f = ff.nextFile()) != null) {
-			if (f.isDirectory() == true) {
+			if (f.isDirectory()) {
 				countDirs++;
 			} else {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
-				if (path.startsWith("/") == false) {
+				if (!path.startsWith("/")) {
 					path = '/' + path;
 				}
 				boolean matched =
@@ -100,13 +100,13 @@ public class FindFileTest {
 
 		File f;
 		while ((f = ff.nextFile()) != null) {
-			if (f.isDirectory() == true) {
+			if (f.isDirectory()) {
 				countDirs++;
 			} else {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
-				if (path.startsWith("/") == false) {
+				if (!path.startsWith("/")) {
 					path = '/' + path;
 				}
 				boolean matched =
@@ -131,13 +131,13 @@ public class FindFileTest {
 		while (iterator.hasNext()) {
 			f = iterator.next();
 
-			if (f.isDirectory() == true) {
+			if (f.isDirectory()) {
 				countDirs++;
 			} else {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
-				if (path.startsWith("/") == false) {
+				if (!path.startsWith("/")) {
 					path = '/' + path;
 				}
 
@@ -168,13 +168,13 @@ public class FindFileTest {
 
 		File f;
 		while ((f = ff.nextFile()) != null) {
-			if (f.isDirectory() == true) {
+			if (f.isDirectory()) {
 				countDirs++;
 			} else {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
-				if (path.startsWith("/") == false) {
+				if (!path.startsWith("/")) {
 					path = '/' + path;
 				}
 
@@ -204,13 +204,13 @@ public class FindFileTest {
 
 		File f;
 		while ((f = ff.nextFile()) != null) {
-			if (f.isDirectory() == true) {
+			if (f.isDirectory()) {
 				countDirs++;
 			} else {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
-				if (path.startsWith("/") == false) {
+				if (!path.startsWith("/")) {
 					path = '/' + path;
 				}
 

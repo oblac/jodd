@@ -219,7 +219,7 @@ public class StringTemplateParser {
 			} else {
 				result.append(template.substring(i, ndx));
 			}
-			if (escape == true) {
+			if (escape) {
 				result.append(macroPrefix);
 
 				i = ndx + prefixLen;
@@ -231,7 +231,7 @@ public class StringTemplateParser {
 
 			boolean strictFormat = strict;
 
-			if (strictFormat == false) {
+			if (!strictFormat) {
 				if (StringUtil.isSubstringAt(template, macroStart, ndx)) {
 					strictFormat = true;
 				}
@@ -295,7 +295,7 @@ public class StringTemplateParser {
 			// find value and append
 
 			Object value;
-			if (missingKeyReplacement != null || replaceMissingKey == false) {
+			if (missingKeyReplacement != null || !replaceMissingKey) {
 				try {
 					value = macroResolver.resolve(name);
 				} catch (Exception ignore) {
@@ -303,7 +303,7 @@ public class StringTemplateParser {
 				}
 
 				if (value == null) {
-					if (replaceMissingKey == true) {
+					if (replaceMissingKey) {
 						value = missingKeyReplacement;
 					} else {
 						value = template.substring(ndx1 - startLen, ndx2 + 1);
@@ -318,7 +318,7 @@ public class StringTemplateParser {
 
 			if (ndx == ndx1) {
 				String stringValue = value.toString();
-				if (parseValues == true) {
+				if (parseValues) {
 					if (stringValue.contains(macroStart)) {
 						stringValue = parse(stringValue, macroResolver);
 					}

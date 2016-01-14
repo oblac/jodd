@@ -367,7 +367,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 			@Override
 			@SuppressWarnings("unchecked")
 			public Map.Entry<String, V> next() {
-				if (hasNext() == false) {
+				if (!hasNext()) {
 					throw new NoSuchElementException("No next() entry in the iteration");
 				}
 				MapEntry<V> next = e[0];

@@ -252,7 +252,7 @@ public class ClassLoaderUtil {
 			if (metaDir.isDirectory()) {
 				for (String m : MANIFESTS) {
 					File mFile = new File(metaDir, m);
-					if (mFile.isFile() == true) {
+					if (mFile.isFile()) {
 						manifestFile = mFile;
 						break;
 					}
@@ -379,7 +379,7 @@ public class ClassLoaderUtil {
 			try {
 				file = new File(base, t);
 				file = file.getCanonicalFile();
-				if (file.exists() == false) {
+				if (!file.exists()) {
 					file = null;
 				}
 			} catch (Exception ignore) {
@@ -391,7 +391,7 @@ public class ClassLoaderUtil {
 				try {
 					file = new File(t);
 					file = file.getCanonicalFile();
-					if (file.exists() == false) {
+					if (!file.exists()) {
 						file = null;
 					}
 				} catch (Exception ignore) {
@@ -406,7 +406,7 @@ public class ClassLoaderUtil {
 
 					file = new File(url.getFile());
 					file = file.getCanonicalFile();
-					if (file.exists() == false) {
+					if (!file.exists()) {
 						file = null;
 					}
 				} catch (Exception ignore) {
@@ -414,7 +414,7 @@ public class ClassLoaderUtil {
 				}
 			}
 
-			if (file != null && file.exists() == true) {
+			if (file != null && file.exists()) {
 				classpaths.add(file);
 			}
 		}

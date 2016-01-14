@@ -97,7 +97,7 @@ public class ReferenceChunk extends SqlChunk {
 		}
 
 
-		if (onlyId == true) {
+		if (onlyId) {
 			if (tableRef != null) {
 				out.append('.');
 			}

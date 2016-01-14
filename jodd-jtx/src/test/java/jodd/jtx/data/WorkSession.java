@@ -55,7 +55,7 @@ public class WorkSession {
 			return;
 		}
 		// under transaction
-		if (readOnly == true) {
+		if (readOnly) {
 			throw new UncheckedException();
 		}
 		sessionValue = "[" + txno + "] " + value;

@@ -48,7 +48,7 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 			tableName.append(propertyName);
 		}
 
-		if (changeCase == false) {
+		if (!changeCase) {
 			return tableName.toString();
 		}
 		return uppercase ?
@@ -64,7 +64,7 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 		StringBuilder propertyName = new StringBuilder(columnName.length());
 		int len = columnName.length();
 
-		if (splitCamelCase == true) {
+		if (splitCamelCase) {
 			boolean toUpper = false;
 			for (int i = 0; i < len; i++) {
 				char c = columnName.charAt(i);
@@ -72,7 +72,7 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 					toUpper = true;
 					continue;
 				}
-				if (toUpper == true) {
+				if (toUpper) {
 					propertyName.append(Character.toUpperCase(c));
 					toUpper = false;
 				} else {

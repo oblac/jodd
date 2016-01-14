@@ -113,7 +113,7 @@ class DbListIterator<T> implements Iterator<T> {
 		if (last) {
 			// last has been set to true, so no more rows to iterate - close everything
 
-			if (closeOnEnd == true) {
+			if (closeOnEnd) {
 				query.close();
 			} else {
 				query.closeResultSet(resultSetMapper.getResultSet());
@@ -124,7 +124,7 @@ class DbListIterator<T> implements Iterator<T> {
 
 		while (true) {
 
-			if (resultSetMapper.next() == false) {
+			if (!resultSetMapper.next()) {
 				// no more rows, no more parsing, previousElement is the last one to iterate
 				last = true;
 				return entityAwareMode;

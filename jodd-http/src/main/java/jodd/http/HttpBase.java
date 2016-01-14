@@ -149,7 +149,7 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		if (overwrite == true) {
+		if (overwrite) {
 			headers.set(key, value);
 		} else {
 			headers.add(key, value);

@@ -303,8 +303,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 * saves return type. When saving arguments data, stores also current argument offset.
 	 */
 	private void maybeUseType(char type, String typeName) {
-		if (visitingArgument == true) {
-			if (isArray() == true) {
+		if (visitingArgument) {
+			if (isArray()) {
 				type = '[';
 				typeName = getArrayDepthString() + typeName;
 			}
@@ -322,7 +322,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			}
 			visitingArgument = false;
 		} else if (returnOpcodeType != null) {
-			if (isArray() == true) {
+			if (isArray()) {
 				type = '[';
 				typeName = getArrayDepthString() + typeName;
 			}

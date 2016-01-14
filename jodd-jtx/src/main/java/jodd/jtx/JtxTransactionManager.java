@@ -216,7 +216,7 @@ public class JtxTransactionManager {
 		if (txlist == null) {
 			return null;
 		}
-		if (txlist.isEmpty() == true) {
+		if (txlist.isEmpty()) {
 			return null;
 		}
 		return txlist.get(txlist.size() - 1);	// get last
@@ -273,7 +273,7 @@ public class JtxTransactionManager {
 			log.debug("Requesting TX " + mode.toString());
 		}
 		JtxTransaction currentTx = getTransaction();
-		if (isNewTxScope(currentTx, scope) == false) {
+		if (!isNewTxScope(currentTx, scope)) {
 			return currentTx;
 		}
 		switch (mode.getPropagationBehavior()) {
@@ -291,7 +291,7 @@ public class JtxTransactionManager {
 	 * Returns <code>true</code> if scope is specified and it is different then of existing transaction.
 	 */
 	protected boolean isNewTxScope(JtxTransaction currentTx, Object destScope) {
-		if (ignoreScope == true) {
+		if (ignoreScope) {
 			return true;
 		}
 		if (currentTx == null) {
@@ -311,7 +311,7 @@ public class JtxTransactionManager {
 	 * @see #setValidateExistingTransaction(boolean) 
 	 */
 	protected void continueTx(JtxTransaction sourceTx, JtxTransactionMode destMode) {
-		if (validateExistingTransaction == false) {
+		if (!validateExistingTransaction) {
 			return;
 		}
 		JtxTransactionMode sourceMode = sourceTx.getTransactionMode();
@@ -323,7 +323,7 @@ public class JtxTransactionManager {
 						" which is incompatible with existing TX: " + currentIsolationLevel);
 			}
 		}
-		if ((destMode.isReadOnly() == false) && (sourceMode.isReadOnly())) {
+		if ((!destMode.isReadOnly()) && (sourceMode.isReadOnly())) {
 			throw new JtxException("Participating TX is not marked as read-only, but existing TX is");
 		}
 	}
@@ -337,7 +337,7 @@ public class JtxTransactionManager {
 	 * }</pre>
 	 */
 	protected JtxTransaction propRequired(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
-		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
+		if ((currentTx == null) || (currentTx.isNoTransaction())) {
 			currentTx = createNewTransaction(mode, scope, true);
 		} else {
 			continueTx(currentTx, mode);
@@ -365,7 +365,7 @@ public class JtxTransactionManager {
 	 * }</pre>
 	 */
 	protected JtxTransaction propSupports(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
-		if ((currentTx != null) && (currentTx.isNoTransaction() != true)) {
+		if ((currentTx != null) && (!currentTx.isNoTransaction())) {
 			continueTx(currentTx, mode);
 		}
 		if (currentTx == null) {
@@ -383,7 +383,7 @@ public class JtxTransactionManager {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected JtxTransaction propMandatory(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
-		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
+		if ((currentTx == null) || (currentTx.isNoTransaction())) {
 			throw new JtxException("No existing TX found for TX marked with propagation 'mandatory'");
 		}
 		continueTx(currentTx, mode);
@@ -401,7 +401,7 @@ public class JtxTransactionManager {
 		if (currentTx == null) {
 			return createNewTransaction(mode, scope, false);
 		}
-		if (currentTx.isNoTransaction() == true) {
+		if (currentTx.isNoTransaction()) {
 			return currentTx;
 		}
 		return createNewTransaction(mode, scope, false);
@@ -415,7 +415,7 @@ public class JtxTransactionManager {
 	 * }</pre>
 	 */
 	protected JtxTransaction propNever(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
-		if ((currentTx != null) && (currentTx.isNoTransaction() == false)) {
+		if ((currentTx != null) && (!currentTx.isNoTransaction())) {
 			throw new JtxException("Existing TX found for TX marked with propagation 'never'");
 		}
 		if (currentTx == null) {
@@ -430,7 +430,7 @@ public class JtxTransactionManager {
 	 * Registers new {@link JtxResourceManager resource manager}.
 	 */
 	public void registerResourceManager(JtxResourceManager resourceManager) {
-		if ((oneResourceManager == true) && (resourceManagers.isEmpty() == false)) {
+		if ((oneResourceManager) && (!resourceManagers.isEmpty())) {
 			throw new JtxException("TX manager allows only one resource manager");
 		}
 		this.resourceManagers.put(resourceManager.getResourceType(), resourceManager);

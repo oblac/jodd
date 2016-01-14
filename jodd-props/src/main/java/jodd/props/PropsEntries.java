@@ -235,7 +235,7 @@ public final class PropsEntries {
 					if (keys == null) {
 						keys = new HashSet<>();
 					}
-					if (keys.add(entry.getKey()) == false) {
+					if (!keys.add(entry.getKey())) {
 						return false;		// the key was already there
 					}
 				}

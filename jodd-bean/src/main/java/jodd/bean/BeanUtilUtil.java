@@ -135,7 +135,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 */
 	protected Object arrayForcedGet(BeanProperty bp, Object array, int index) {
 		Class componentType = array.getClass().getComponentType();
-		if (bp.last == false) {
+		if (!bp.last) {
 			array = ensureArraySize(bp, array, componentType, index);
 		}
 		Object value = Array.get(array, index);

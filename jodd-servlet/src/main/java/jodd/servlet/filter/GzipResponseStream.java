@@ -102,7 +102,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	 */
 	@Override
 	public void close() throws IOException {
-		if (closed == true) {
+		if (closed) {
 			return;
 		}
 		if (gzipstream != null) {

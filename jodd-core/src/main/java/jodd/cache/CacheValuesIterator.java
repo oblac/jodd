@@ -47,7 +47,7 @@ public class CacheValuesIterator<V> implements Iterator<V> {
 	private void nextValue() {
 		while (iterator.hasNext()) {
 			nextValue = iterator.next();
-			if (nextValue.isExpired() == false) {
+			if (!nextValue.isExpired()) {
 				return;
 			}
 		}

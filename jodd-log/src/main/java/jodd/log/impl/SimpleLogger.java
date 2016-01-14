@@ -104,7 +104,7 @@ public class SimpleLogger implements Logger {
 	 * Prints error message.
 	 */
 	protected void print(Level level, String message, Throwable throwable) {
-		if (isEnabled(level) == false) {
+		if (!isEnabled(level)) {
 			return;
 		}
 

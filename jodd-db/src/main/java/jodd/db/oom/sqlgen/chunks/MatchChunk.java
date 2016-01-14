@@ -100,7 +100,7 @@ public class MatchChunk extends SqlChunk {
 		int count = 0;
 		out.append('(');
 		for (DbEntityColumnDescriptor dec : decList) {
-			if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+			if ((includeColumns == COLS_ONLY_IDS) && (!dec.isId())) {
 				continue;
 			}
 			String property = dec.getPropertyName();

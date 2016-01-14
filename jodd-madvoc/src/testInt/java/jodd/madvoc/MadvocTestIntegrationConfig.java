@@ -34,7 +34,7 @@ public class MadvocTestIntegrationConfig extends AutomagicMadvocConfigurator {
 
 	@Override
 	protected void onActionClass(String className) throws ClassNotFoundException {
-		if (className.startsWith("jodd.madvoc.action.") == false) {
+		if (!className.startsWith("jodd.madvoc.action.")) {
 			return;
 		}
 		super.onActionClass(className);

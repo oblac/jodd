@@ -65,7 +65,7 @@ public class ContentTypeHeaderResolver {
 				endIndex = type.length();
 			}
 		} else {
-			while (endIndex < type.length() && (ArraysUtil.contains(TSPECIALS, type.charAt(endIndex)) == false)) {
+			while (endIndex < type.length() && (!ArraysUtil.contains(TSPECIALS, type.charAt(endIndex)))) {
 				endIndex++;
 			}
 		}

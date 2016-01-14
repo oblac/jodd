@@ -273,7 +273,7 @@ public class ActionRequest {
 	 * Joins action and parameters into one array of Targets.
 	 */
 	protected Target[] makeTargets() {
-		if (actionConfig.hasArguments == false) {
+		if (!actionConfig.hasArguments) {
 			return new Target[] {new Target(action)};
 		}
 

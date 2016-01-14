@@ -53,7 +53,7 @@ public abstract class ShutdownAwareScope implements Scope {
 	 * registers it for later {@link #shutdown()}.
 	 */
 	protected void registerDestroyableBeans(BeanData beanData) {
-		if (isBeanDestroyable(beanData) == false) {
+		if (!isBeanDestroyable(beanData)) {
 			return;
 		}
 		if (destroyableBeans == null) {
@@ -80,7 +80,7 @@ public abstract class ShutdownAwareScope implements Scope {
 		if (destroyableBeans == null) {
 			return;
 		}
-		if (isBeanDestroyable(beanData) == false) {
+		if (!isBeanDestroyable(beanData)) {
 			return;
 		}
 		if (destroyableBeans.remove(beanData)) {

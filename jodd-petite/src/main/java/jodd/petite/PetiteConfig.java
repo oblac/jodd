@@ -157,7 +157,7 @@ public class PetiteConfig {
 	 * always <code>false</code>).
 	 */
 	public void setUseParamo(boolean useParamo) {
-		if (JoddPetite.useProxetta == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -178,7 +178,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
-		if (JoddPetite.useProxetta == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -197,7 +197,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
-		if (JoddPetite.useProxetta == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}

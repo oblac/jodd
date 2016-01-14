@@ -101,7 +101,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 				}
 				delta++;
 			}
-			if (match == true) {				        // match
+			if (match) {				        // match
 				if (patterns[n].length > maxLen) {		// find longest match
 					lastn = n;
 					maxLen = patterns[n].length;
@@ -199,7 +199,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 			useSeparators = false;
 
 			for (char valueChar : valueChars) {
-				if (CharUtil.isDigit(valueChar) == false) {
+				if (!CharUtil.isDigit(valueChar)) {
 					useSeparators = true;
 					break;
 				}
@@ -214,7 +214,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 				int patternLen = patterns[n].length;
 				i += patternLen;
 				sb.setLength(0);
-				if (useSeparators == false) {
+				if (!useSeparators) {
 					for (int k = 0; k < patternLen; k++) {
 						sb.append(valueChars[j++]);
 					}

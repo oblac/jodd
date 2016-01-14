@@ -73,7 +73,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 		String actionPath = actionRequest.getActionPath();
 
 		// LOGOUT
-		if (isLogoutAction(actionPath) == true) {
+		if (isLogoutAction(actionPath)) {
 			log.debug("logout user");
 
 			closeAuthSession(servletRequest, servletResponse);
@@ -134,7 +134,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 			}
 		}
 
-		if (isLoginAction(actionPath) == false) {
+		if (!isLoginAction(actionPath)) {
 			// ANY PAGE BUT LOGIN, continue
 			return actionRequest.invoke();
 		}
@@ -143,7 +143,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 		// session is not active, but user wants to login
 		String token = servletRequest.getParameter(AuthAction.LOGIN_TOKEN);
 		// check token
-		if (CsrfShield.checkCsrfToken(session, token) == false) {
+		if (!CsrfShield.checkCsrfToken(session, token)) {
 			log.warn("csrf token validation failed");
 			return resultLoginFailed(2);
 		}
@@ -174,10 +174,10 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 	 */
 	protected void startAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse, U userSession, boolean isNew) {
 		AuthUtil.startUserSession(servletRequest, userSession);
-		if (useCookie == false) {
+		if (!useCookie) {
 			return;
 		}
-		if (isNew == true || recreateCookieOnLogin == true) {
+		if (isNew || recreateCookieOnLogin) {
 			String[] cookieData = createCookieData(userSession);
 			if (cookieData != null) {
 				AuthUtil.storeAuthCookie(servletResponse, cookieMaxAge, cookieData[0], cookieData[1]);

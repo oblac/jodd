@@ -163,7 +163,7 @@ public abstract class ProxettaBuilder {
 			return null;
 		}
 
-		if (proxetta.isVariableClassName() == false) {
+		if (!proxetta.isVariableClassName()) {
 			return classNameSuffix;
 		}
 
@@ -226,7 +226,7 @@ public abstract class ProxettaBuilder {
 
 		dumpClass(result);
 
-		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
+		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
 				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
 			}
@@ -246,7 +246,7 @@ public abstract class ProxettaBuilder {
 	public Class define() {
 		process();
 
-		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
+		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
 				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
 			}

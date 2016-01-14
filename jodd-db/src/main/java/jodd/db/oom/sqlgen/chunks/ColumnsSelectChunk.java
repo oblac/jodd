@@ -95,7 +95,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	}
 
 	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
-		this(tableRef, null, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
+		this(tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
 	public ColumnsSelectChunk(String reference) {
@@ -203,14 +203,14 @@ public class ColumnsSelectChunk extends SqlChunk {
 			int count = 0;
 			boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
 			for (DbEntityColumnDescriptor dec : decList) {
-				if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+				if ((includeColumns == COLS_ONLY_IDS) && (!dec.isId())) {
 					continue;
 				}
-				if ((includeColumns == COLS_ALL_BUT_ID) && (dec.isId() == true)) {
+				if ((includeColumns == COLS_ALL_BUT_ID) && (dec.isId())) {
 					continue;
 				}
 				if ((includeColumns == COLS_NA_MULTI) 
-					&& (!withIds || (dec.isId() == false))
+					&& (!withIds || (!dec.isId()))
 					&& (!ArraysUtil.contains(columnRefArr, dec.getPropertyName()))) {
 					continue;
 				}

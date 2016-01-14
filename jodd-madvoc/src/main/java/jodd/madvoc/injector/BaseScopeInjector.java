@@ -99,7 +99,7 @@ public abstract class BaseScopeInjector {
 	 */
 	protected String getMatchedPropertyName(ScopeData.In in, String attrName) {
 		// match
-		if (attrName.startsWith(in.name) == false) {
+		if (!attrName.startsWith(in.name)) {
 			return null;
 		}
 		int requiredLen = in.name.length();

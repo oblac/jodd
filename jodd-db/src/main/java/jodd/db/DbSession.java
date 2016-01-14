@@ -104,7 +104,7 @@ public class DbSession implements AutoCloseable {
 			}
 		}
 		if (connection != null) {
-			if (txActive == true) {
+			if (txActive) {
 				throw new DbSqlException("TX was not closed before closing the session");
 			}
 			connectionProvider.closeConnection(connection);
@@ -303,14 +303,14 @@ public class DbSession implements AutoCloseable {
 
 	protected void checkClosedTx() {
 		checkOpenSession();
-		if (txActive == true) {
+		if (txActive) {
 			throw new DbSqlException("TX already started for this session");
 		}
 	}
 
 	protected void checkActiveTx() {
 		checkOpenSession();
-		if (txActive == false) {
+		if (!txActive) {
 			throw new DbSqlException("TX not available for this session");
 		}
 	}

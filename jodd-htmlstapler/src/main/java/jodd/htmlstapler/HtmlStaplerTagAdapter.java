@@ -58,7 +58,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	@Override
 	public void script(Tag tag, CharSequence body) {
-		if (insideConditionalComment == false) {
+		if (!insideConditionalComment) {
 			String src = Util.toString(tag.getAttributeValue("src"));
 
 			if (src == null) {
@@ -84,11 +84,11 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	@Override
 	public void tag(Tag tag) {
-		if (insideConditionalComment == false) {
+		if (!insideConditionalComment) {
 			if (tag.nameEquals(T_LINK)) {
 				CharSequence type = tag.getAttributeValue("type");
 
-				if (type != null && TagUtil.equalsIgnoreCase(type, "text/css") == true) {
+				if (type != null && TagUtil.equalsIgnoreCase(type, "text/css")) {
 					String media = Util.toString(tag.getAttributeValue("media"));
 
 					if (media == null || media.contains("screen")) {

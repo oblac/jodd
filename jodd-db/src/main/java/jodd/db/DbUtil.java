@@ -74,7 +74,7 @@ public class DbUtil {
 	 * Returns long value of very first column in result set.
 	 */
 	public static long getFirstLong(ResultSet resultSet) throws SQLException {
-		if (resultSet.next() == true) {
+		if (resultSet.next()) {
 			return resultSet.getLong(1);
 		}
 		return -1;
@@ -84,7 +84,7 @@ public class DbUtil {
 	 * Returns int value of very first column in result set.
 	 */
 	public static int getFirstInt(ResultSet resultSet) throws SQLException {
-		if (resultSet.next() == true) {
+		if (resultSet.next()) {
 			return resultSet.getInt(1);
 		}
 		return -1;

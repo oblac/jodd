@@ -178,18 +178,18 @@ public class PropertiesUtil {
 	 * @return subset properties
 	 */
 	public static Properties subset(Properties p, String prefix, boolean stripPrefix) {
-		if (StringUtil.isBlank(prefix) == true) {
+		if (StringUtil.isBlank(prefix)) {
 			return p;
 		}
-		if (prefix.endsWith(StringPool.DOT) == false) {
+		if (!prefix.endsWith(StringPool.DOT)) {
 			prefix += '.';
 		}
 		Properties result = new Properties();
 		int baseLen = prefix.length();
 		for (Object o : p.keySet()) {
 			String key = (String) o;
-			if (key.startsWith(prefix) == true) {
-				result.setProperty(stripPrefix == true ? key.substring(baseLen) : key, p.getProperty(key));
+			if (key.startsWith(prefix)) {
+				result.setProperty(stripPrefix ? key.substring(baseLen) : key, p.getProperty(key));
 			}
 		}
 		return result;

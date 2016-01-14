@@ -209,7 +209,7 @@ public abstract class DefaultAppCore {
 		String protocol = url.getProtocol();
 
 
-		if (protocol.equals("file") == false) {
+		if (!protocol.equals("file")) {
 			try {
 				url = new URL(url.getFile());
 			} catch (MalformedURLException ignore) {
@@ -464,7 +464,7 @@ public abstract class DefaultAppCore {
 		petite = createPetiteContainer();
 
 		log.info("app in web: " + Boolean.valueOf(isWebApplication));
-		if (isWebApplication == false) {
+		if (!isWebApplication) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).
 			petite.registerScope(SessionScope.class, new SingletonScope());

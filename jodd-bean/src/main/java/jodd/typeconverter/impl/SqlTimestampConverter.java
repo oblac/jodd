@@ -76,7 +76,7 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 		String stringValue = value.toString().trim();
 
 		// try yyyy-mm-dd for valueOf
-		if (StringUtil.containsOnlyDigits(stringValue) == false) {
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			try {
 				return Timestamp.valueOf(stringValue);
 			} catch (IllegalArgumentException iaex) {

@@ -76,7 +76,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * be committed.
 	 */
 	public void commitResponse() {
-		if (getResponse().isCommitted() == false) {
+		if (!getResponse().isCommitted()) {
 			preResponseCommit();
 		}
 	}
@@ -454,7 +454,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	protected void stopBufferingForStatusCode(int statusCode) {
-		if (bufferStatusCode(statusCode) == false) {
+		if (!bufferStatusCode(statusCode)) {
 			disableBuffering();
 		}
 	}

@@ -118,7 +118,7 @@ class DbQueryParser {
 		int paramCount = 0;
 		while (index < stringLength) {
 			char c = sqlString.charAt(index);
-			if (inQuote == true) {
+			if (inQuote) {
 				if (c == '\'') {
 					inQuote = false;
 				}

@@ -193,7 +193,7 @@ public class PetiteContainer extends PetiteBeans {
 			Collection beans = sip.createSet(beanNames.length);
 
 			for (String beanName : beanNames) {
-				if (beanName.equals(def.name) == false) {
+				if (!beanName.equals(def.name)) {
 					Object value = getBean(beanName);
 					beans.add(value);
 				}

@@ -287,7 +287,7 @@ public class HashCode {
 		int result = seed;
 		if (aObject == null) {
 			result = hash(result, 0);
-		} else if (aObject.getClass().isArray() == false) {
+		} else if (!aObject.getClass().isArray()) {
 			result = hash(result, aObject.hashCode());
 		} else {
 			Object[] objects = (Object[]) aObject;
