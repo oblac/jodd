@@ -658,8 +658,10 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 		// Map.Entry Ops
 
 		public Integer getKey() {
-			return (objectKey != null) ? objectKey :
-					(objectKey = Integer.valueOf(key));
+			if (objectKey == null) {
+				objectKey = Integer.valueOf(key);
+			}
+			return objectKey;
 		}
 
 		public Object getValue() {

@@ -1040,7 +1040,8 @@ public class ClassReader {
         // reads the bytecode to find the labels
         int codeStart = u;
         int codeEnd = u + codeLength;
-        Label[] labels = context.labels = new Label[codeLength + 2];
+        Label[] labels = new Label[codeLength + 2];
+        context.labels = labels;
         readLabel(codeLength + 1, labels);
         while (u < codeEnd) {
             int offset = u - codeStart;
@@ -2374,7 +2375,8 @@ public class ClassReader {
             return s;
         }
         index = items[item];
-        return strings[item] = readUTF(index + 2, readUnsignedShort(index), buf);
+        strings[item] = readUTF(index + 2, readUnsignedShort(index), buf);
+        return strings[item];
     }
 
     /**

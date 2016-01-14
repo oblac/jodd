@@ -79,8 +79,8 @@ public final class ClassMap<V> {
 	 * Returns a value associated to a key in unsafe, but very fast way.
 	 */
 	public V unsafeGet(final Class key) {
-		final Entry<V>[] tab;
-		Entry<V> e = (tab = table)[key.hashCode() & (tab.length - 1)];
+		final Entry<V>[] tab = table;
+		Entry<V> e = (tab)[key.hashCode() & (tab.length - 1)];
 
 		while (e != null) {
 			if (key == e.key) {
@@ -146,8 +146,10 @@ public final class ClassMap<V> {
 		final int id;
 		int index;
 
-		Entry<V>[] tab;
-		Entry<V> e = (tab = table)[index = (id = key.hashCode()) & (tab.length - 1)];
+		Entry<V>[] tab = table;
+		id = key.hashCode();
+		index = (id) & (tab.length - 1);
+		Entry<V> e = (tab)[index];
 
 		while (e != null) {
 			if (key == e.key) {				// identity check
