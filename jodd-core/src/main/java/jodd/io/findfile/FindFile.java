@@ -25,23 +25,24 @@
 
 package jodd.io.findfile;
 
-import jodd.io.FileNameUtil;
-import jodd.util.InExRules;
-import jodd.util.MultiComparator;
-import jodd.util.NaturalOrderComparator;
-import jodd.util.StringUtil;
-import jodd.io.FileUtil;
-import jodd.util.collection.JoddArrayList;
-
 import java.io.File;
+import java.io.Serializable;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
+import jodd.util.InExRules;
+import jodd.util.MultiComparator;
+import jodd.util.NaturalOrderComparator;
+import jodd.util.StringUtil;
+import jodd.util.collection.JoddArrayList;
 
 /**
  * Generic iterative file finder. Searches all files on specified search path.
@@ -762,7 +763,8 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- comparators
 
-	public static class FolderFirstComparator implements Comparator<File> {
+	public static class FolderFirstComparator implements Comparator<File>, Serializable {
+		private static final long serialVersionUID = 1;
 
 		protected final int order;
 
@@ -785,7 +787,8 @@ public class FindFile<T extends FindFile> {
 		}
 	}
 
-	public static class FileNameComparator implements Comparator<File> {
+	public static class FileNameComparator implements Comparator<File>, Serializable {
+		private static final long serialVersionUID = 1;
 
 		protected final int order;
 		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true);
@@ -810,7 +813,8 @@ public class FindFile<T extends FindFile> {
 		}
 	}
 
-	public static class FileExtensionComparator implements Comparator<File> {
+	public static class FileExtensionComparator implements Comparator<File>, Serializable {
+		private static final long serialVersionUID = 1;
 
 		protected final int order;
 
@@ -836,7 +840,8 @@ public class FindFile<T extends FindFile> {
 		}
 	}
 
-	public static class FileLastModifiedTimeComparator implements Comparator<File> {
+	public static class FileLastModifiedTimeComparator implements Comparator<File>, Serializable {
+		private static final long serialVersionUID = 1;
 
 		protected final int order;
 

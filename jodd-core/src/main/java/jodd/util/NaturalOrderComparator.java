@@ -25,12 +25,14 @@
 
 package jodd.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Compares two strings in natural, alphabetical, way.
  */
-public class NaturalOrderComparator<T> implements Comparator<T> {
+public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
+	private static final long serialVersionUID = 1;
 
 	protected final boolean ignoreCase;
 
