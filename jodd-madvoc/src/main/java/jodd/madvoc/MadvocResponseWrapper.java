@@ -68,7 +68,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 
 	@Override
 	public void setHeader(String name, String value) {
-		if (name.toLowerCase().equals(CONTENT_TYPE)) {
+		if (name.equalsIgnoreCase(CONTENT_TYPE)) {
 			setContentType(value);
 		} else {
 			super.setHeader(name, value);
@@ -77,7 +77,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 
 	@Override
 	public void addHeader(String name, String value) {
-		if (name.toLowerCase().equals(CONTENT_TYPE)) {
+		if (name.equalsIgnoreCase(CONTENT_TYPE)) {
 			setContentType(value);
 		} else {
 			super.addHeader(name, value);

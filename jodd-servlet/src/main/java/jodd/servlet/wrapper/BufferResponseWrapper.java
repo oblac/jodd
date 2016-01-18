@@ -386,7 +386,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public void setIntHeader(String name, int value) {
-		if (buffer == null || !name.toLowerCase().equals(CONTENT_LENGTH)) {
+		if (buffer == null || !name.equalsIgnoreCase(CONTENT_LENGTH)) {
 			super.setIntHeader(name, value);
 		}
 	}
@@ -396,7 +396,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public void addIntHeader(String name, int value) {
-		if (buffer == null || !name.toLowerCase().equals(CONTENT_LENGTH)) {
+		if (buffer == null || !name.equalsIgnoreCase(CONTENT_LENGTH)) {
 			super.addIntHeader(name, value);
 		}
 	}
@@ -405,7 +405,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 
 	@Override
 	public void setDateHeader(String name, long value) {
-		if (name.toLowerCase().equals(LAST_MODIFIED)) {
+		if (name.equalsIgnoreCase(LAST_MODIFIED)) {
 			lastModifiedData.updateLastModified(value);
 		} else {
 			super.setDateHeader(name, value);
@@ -414,7 +414,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 
 	@Override
 	public void addDateHeader(String name, long value) {
-		if (name.toLowerCase().equals(LAST_MODIFIED)) {
+		if (name.equalsIgnoreCase(LAST_MODIFIED)) {
 			lastModifiedData.updateLastModified(value);
 		} else {
 			super.addDateHeader(name, value);

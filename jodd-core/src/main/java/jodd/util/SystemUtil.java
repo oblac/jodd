@@ -436,7 +436,7 @@ public class SystemUtil {
 	 * Returns <code>true</code> if host is AIX.
 	 */
 	public static boolean isHostAix() {
-		return osName().toUpperCase().equals("AIX");
+		return osName().equalsIgnoreCase("AIX");
 	}
 
 	/**
