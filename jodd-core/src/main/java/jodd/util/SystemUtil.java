@@ -70,6 +70,11 @@ public class SystemUtil {
 
 	// ---------------------------------------------------------------- unsafe
 
+	// IMPORTANT - order of declaration here is important! we need to detect
+	// first the Android, and then to check for the unsafe field;
+	// because `hasUnsafe0` method relies on the `isHostAndroid` information.
+
+	private static final boolean IS_ANDROID = isAndroid0();
 	private static final boolean HAS_UNSAFE = hasUnsafe0();
 
 	/**
@@ -93,8 +98,6 @@ public class SystemUtil {
 	}
 
 	// ---------------------------------------------------------------- android
-
-	private static final boolean IS_ANDROID = isAndroid0();
 
 	/**
 	 * Returns <code>true</code> if system is android.
