@@ -35,7 +35,7 @@ public class JoddMail {
 	/**
 	 * Mail system properties for fine-tuning the java Mail behavior.
 	 */
-	public static MailSystem mailSystem = new MailSystem();
+	public static final MailSystem mailSystem = new MailSystem();
 
 	// ---------------------------------------------------------------- module
 

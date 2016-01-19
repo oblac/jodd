@@ -59,7 +59,7 @@ public class VtorJsonResult extends BaseActionResult<String> {
 	 * In this case change response content type to "text/html". Or disable
 	 * iframe posting if possible.
 	 */
-	public static String jsonResponseContentType = MimeTypes.MIME_APPLICATION_JSON;
+	public static final String jsonResponseContentType = MimeTypes.MIME_APPLICATION_JSON;
 
 	public VtorJsonResult() {
 		super(NAME);
