@@ -272,7 +272,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		if (this == object) {
 			return true;
 		}
-		if (!(object instanceof JulianDateStamp)) {
+		if (this.getClass() != object.getClass()) {
 			return false;
 		}
 		JulianDateStamp stamp = (JulianDateStamp) object;

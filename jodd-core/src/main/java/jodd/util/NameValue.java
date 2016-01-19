@@ -71,7 +71,7 @@ public class NameValue<N, V> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof NameValue)) {
+		if (this.getClass() != o.getClass()) {
 			return false;
 		}
 		NameValue that = (NameValue) o;

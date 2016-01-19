@@ -843,7 +843,7 @@ public class Type {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Type)) {
+        if (this.getClass() != o.getClass()) {
             return false;
         }
         Type t = (Type) o;

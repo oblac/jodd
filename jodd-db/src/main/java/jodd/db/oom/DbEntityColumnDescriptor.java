@@ -129,7 +129,7 @@ public class DbEntityColumnDescriptor implements Comparable {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof DbEntityColumnDescriptor)) {
+		if (this.getClass() != o.getClass()) {
 			return false;
 		}
 		DbEntityColumnDescriptor that = (DbEntityColumnDescriptor) o;

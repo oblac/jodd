@@ -220,7 +220,7 @@ s	 */
 		if (this == object) {
 			return true;
 		}
-		if (!(object instanceof JtxTransactionMode)) {
+		if (this.getClass() != object.getClass()) {
 			return false;
 		}
 		JtxTransactionMode mode = (JtxTransactionMode) object;
