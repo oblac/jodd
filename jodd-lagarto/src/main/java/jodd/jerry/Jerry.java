@@ -42,6 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -920,6 +921,9 @@ public class Jerry implements Iterable<Jerry> {
 			}
 
 			public Jerry next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
 				Jerry nextJerry = new Jerry(jerry, jerry.get(index));
 				index++;
 				return nextJerry;

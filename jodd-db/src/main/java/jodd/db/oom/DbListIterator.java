@@ -29,6 +29,7 @@ import jodd.db.oom.mapper.ResultSetMapper;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Internal result set iterator.
@@ -88,6 +89,9 @@ class DbListIterator<T> implements Iterator<T> {
 	public T next() {
 		if (hasNext == null) {
 			hasNext = Boolean.valueOf(moveToNext());
+		}
+		if (hasNext == false) {
+			throw new NoSuchElementException();
 		}
 
 		if (!entityAwareMode) {
