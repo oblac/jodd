@@ -337,6 +337,28 @@ public class Props implements Cloneable {
 		return data.lookupValue(key, activeProfiles);
 	}
 
+	public Integer getIntegerValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Integer.valueOf(value);
+	}
+	public Long getLongValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Long.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
 	/**
 	 * Returns <code>string</code> value of given profiles. If key is not
 	 * found under listed profiles, base properties will be searched.
@@ -346,6 +368,29 @@ public class Props implements Cloneable {
 		initialize();
 		return data.lookupValue(key, profiles);
 	}
+
+	public Integer getIntegerValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Integer.valueOf(value);
+	}
+	public Long getLongValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Long.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
 
 	/**
 	 * Sets default value.
