@@ -87,11 +87,11 @@ class DbListIterator<T> implements Iterator<T> {
 	 * Returns next mapped object.
 	 */
 	public T next() {
-		if (!hasNext()) {
-			throw new NoSuchElementException();
-		}
 		if (hasNext == null) {
 			hasNext = Boolean.valueOf(moveToNext());
+		}
+		if (hasNext == false) {
+			throw new NoSuchElementException();
 		}
 
 		if (!entityAwareMode) {
