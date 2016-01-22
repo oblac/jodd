@@ -343,7 +343,12 @@ public class JerryMiscTest {
 		Jerry $ = Jerry.jerry(html);
 
 		$.$("body").html("");
+		assertEquals("<html><body></body></html>", $.html());
 
+		$.$("body").append("");
+		assertEquals("<html><body></body></html>", $.html());
+
+		$.$("body").before("");
 		assertEquals("<html><body></body></html>", $.html());
 	}
 
