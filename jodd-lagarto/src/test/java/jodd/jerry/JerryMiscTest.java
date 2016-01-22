@@ -336,5 +336,17 @@ public class JerryMiscTest {
 		assertEquals("/go?to=foobar&index=null", selectedNodes.get(0).getAttribute("href"));
 	}
 
+	@Test
+	public void test279() {
+		String html = "<html>\n" +
+			"  <body>\n" +
+			"		<div>x</div>\n" +
+			"  </body>\n" +
+			"</html>";
+
+		Jerry $ = Jerry.jerry(html);
+
+		$.$("body").html("");
+	}
 
 }
