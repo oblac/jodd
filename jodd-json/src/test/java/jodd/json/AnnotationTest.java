@@ -27,6 +27,10 @@ package jodd.json;
 
 import jodd.json.mock.Location;
 import jodd.json.model.App;
+import jodd.json.model.MyFolder1;
+import jodd.json.model.MyFolder2;
+import jodd.json.model.MyFolder3;
+import jodd.json.model.MyFolder4;
 import jodd.json.model.User;
 import jodd.json.model.UserHolder;
 import org.junit.Test;
@@ -148,6 +152,28 @@ public class AnnotationTest {
 		user = userHolder.getUser();
 		assertEquals(123, user.getId());
 		assertNull(user.getName());
+	}
+
+	@Test
+	public void testBeanSettersGetters() {
+		String json = "{\"foo.folder\":\"vvvv\"}";
+
+		{
+			MyFolder1 mf1 = JsonParser.create().parse(json, MyFolder1.class);
+			assertEquals("vvvv", mf1.getFolder());
+		}
+		{
+			MyFolder2 mf2 = JsonParser.create().parse(json, MyFolder2.class);
+			assertEquals("vvvv", mf2.get());
+		}
+		{
+			MyFolder3 mf3 = JsonParser.create().parse(json, MyFolder3.class);
+			assertEquals("vvvv", mf3.getFolder());
+		}
+		{
+			MyFolder4 mf4 = JsonParser.create().parse(json, MyFolder4.class);
+			assertEquals("vvvv", mf4.get());
+		}
 	}
 
 }

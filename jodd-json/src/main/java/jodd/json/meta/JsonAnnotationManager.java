@@ -218,39 +218,50 @@ public class JsonAnnotationManager {
 		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
 
 		for (PropertyDescriptor pd : pds) {
-			MethodDescriptor md = pd.getReadMethodDescriptor();
+			JSONAnnotationData data = null;
+			{
+				MethodDescriptor md = pd.getReadMethodDescriptor();
 
-			if (md != null) {
-				Method getter = md.getMethod();
-				JSONAnnotationData data = jsonAnnotation.readAnnotationData(getter);
+				if (md != null) {
+					Method method = md.getMethod();
+					data = jsonAnnotation.readAnnotationData(method);
+				}
+			}
 
-				if (data == null) {
-					FieldDescriptor fd = pd.getFieldDescriptor();
-					if (fd == null) {
-						continue;
-					}
+			if (data == null) {
+				MethodDescriptor md = pd.getWriteMethodDescriptor();
 
+				if (md != null) {
+					Method method = md.getMethod();
+					data = jsonAnnotation.readAnnotationData(method);
+				}
+			}
+
+			if (data == null) {
+				FieldDescriptor fd = pd.getFieldDescriptor();
+
+				if (fd != null) {
 					Field field = fd.getField();
 					data = jsonAnnotation.readAnnotationData(field);
 				}
+			}
 
-				if (data != null) {
-					// annotation found
-					String propertyName = pd.getName();
+			if (data != null) {
+				// annotation found
+				String propertyName = pd.getName();
 
-					String newPropertyName = data.getName();
-					if (newPropertyName != null) {
-						realNames.add(propertyName);
-						jsonNames.add(newPropertyName);
+				String newPropertyName = data.getName();
+				if (newPropertyName != null) {
+					realNames.add(propertyName);
+					jsonNames.add(newPropertyName);
 
-						propertyName = newPropertyName;
-					}
+					propertyName = newPropertyName;
+				}
 
-					if (data.isIncluded()) {
-						includedList.add(propertyName);
-					} else {
-						excludedList.add(propertyName);
-					}
+				if (data.isIncluded()) {
+					includedList.add(propertyName);
+				} else {
+					excludedList.add(propertyName);
 				}
 			}
 		}
