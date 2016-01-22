@@ -338,15 +338,13 @@ public class JerryMiscTest {
 
 	@Test
 	public void test279() {
-		String html = "<html>\n" +
-			"  <body>\n" +
-			"		<div>x</div>\n" +
-			"  </body>\n" +
-			"</html>";
+		String html = "<html><body><div>x</div></body></html>";
 
 		Jerry $ = Jerry.jerry(html);
 
 		$.$("body").html("");
+
+		assertEquals("<html><body></body></html>", $.html());
 	}
 
 }
