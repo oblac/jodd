@@ -95,6 +95,10 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 		return props;
 	}
 
+	public Pop3Server setProperty(String name, String value) {
+		sessionProperties.setProperty(name, value);
+		return this;
+	}
 
 	/**
 	 * {@inheritDoc}

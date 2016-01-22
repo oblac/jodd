@@ -34,4 +34,10 @@ public interface ReceiveMailSessionProvider {
 	 * Creates new receiving mail session.
 	 */
 	ReceiveMailSession createSession();
+
+	/**
+	 * Sets the mail session property. They must be set <b>before</b>
+	 * the session is {@link #createSession() created}.
+	 */
+	public ReceiveMailSessionProvider setProperty(String name, String value);
 }
