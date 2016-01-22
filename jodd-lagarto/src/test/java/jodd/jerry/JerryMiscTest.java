@@ -280,13 +280,18 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testCrash() {
-		try {
-			String html = null;
-			Jerry.jerry(html);
-			fail();
-		} catch (NullPointerException ignore) {
-		}
+	public void testNull() {
+		String html = null;
+		Jerry jerry = Jerry.jerry(html);
+
+		assertEquals(1, jerry.nodes.length);
+		assertEquals(0, jerry.nodes[0].getChildNodes().length);
+
+		html = "";
+		jerry = Jerry.jerry(html);
+
+		assertEquals(1, jerry.nodes.length);
+		assertEquals(0, jerry.nodes[0].getChildNodes().length);
 	}
 
 	@Test
