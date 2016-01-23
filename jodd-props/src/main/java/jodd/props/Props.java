@@ -351,6 +351,13 @@ public class Props implements Cloneable {
 		}
 		return Long.valueOf(value);
 	}
+	public Double getDoubleValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Double.valueOf(value);
+	}
 	public Boolean getBooleanValue(final String key) {
 		String value = getValue(key);
 		if (value == null) {
@@ -382,6 +389,13 @@ public class Props implements Cloneable {
 			return null;
 		}
 		return Long.valueOf(value);
+	}
+	public Double getDoubleValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Double.valueOf(value);
 	}
 	public Boolean getBooleanValue(final String key, final String... profiles) {
 		String value = getValue(key, profiles);
