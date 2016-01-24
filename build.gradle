@@ -111,12 +111,6 @@ allprojects {
 	}
 }
 
-def javaTestModules() {
-	subprojects.findAll {
-		it.name.equals('jodd-log')	
-	}
-}
-
 def javaModules() {
 	subprojects.findAll {
 		it.name.contains('jodd-') &&
