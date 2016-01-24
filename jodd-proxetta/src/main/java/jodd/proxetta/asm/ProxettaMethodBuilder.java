@@ -31,6 +31,7 @@ import jodd.asm5.AnnotationVisitor;
 
 import static jodd.asm5.Opcodes.ACC_ABSTRACT;
 import static jodd.asm5.Opcodes.ACC_NATIVE;
+import static jodd.asm5.Opcodes.ASTORE;
 import static jodd.asm5.Opcodes.GETFIELD;
 import static jodd.asm5.Opcodes.INVOKESPECIAL;
 import static jodd.asm5.Opcodes.ARETURN;
@@ -160,7 +161,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		methodVisitor.visitEnd();
 	}
 
-
+	protected boolean proxyInfoRequested;
 
 	/**
 	 * Creates proxy methods over target method, For each matched proxy, new proxy method is created
@@ -205,6 +206,14 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					@Override
 					public void visitVarInsn(int opcode, int var) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
+
+						if (proxyInfoRequested) {
+							proxyInfoRequested = false;
+							if (opcode == ASTORE) {
+								ProxyTargetReplacement.info(mv, td.msign, var);
+							}
+						}
+
 						super.visitVarInsn(opcode, var);   // [F1]
 					}
 
@@ -347,7 +356,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								}
 
 								if (isInfoMethod(mname, mdesc)) {
-									ProxyTargetReplacement.info(mv, td.msign);
+									// we are NOT replacing info() here! First, we need to figure out
+									// what is the operand for the very next ASTORE instructions
+									// since we need to create an object and store it in this
+									// register - and reuse it, in replacement code.
+
+									//ProxyTargetReplacement.info(mv, td.msign);
+									proxyInfoRequested = true;
 									return;
 								}
 
