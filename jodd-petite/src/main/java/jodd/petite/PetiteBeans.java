@@ -217,6 +217,13 @@ public abstract class PetiteBeans {
 	}
 
 	/**
+	 * Registers a bean using provided class that is annotated.
+	 */
+	public BeanDefinition registerPetiteBean(Class type) {
+		return registerPetiteBean(type, null, null, null, false);
+	}
+
+	/**
 	 * Registers or defines a bean.
 	 *
 	 * @param type bean type, must be specified
