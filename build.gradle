@@ -37,7 +37,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.7.0-20151224'
+version = '3.7.0-20160125'
 //version = '3.6.8'
 
 // --- properties -------------------------------------------------------------
