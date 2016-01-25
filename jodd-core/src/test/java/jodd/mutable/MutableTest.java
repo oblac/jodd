@@ -48,6 +48,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Integer.valueOf(27)));
 		assertEquals(0, m.compareTo((MutableInteger) m2));
 	}
 
@@ -67,6 +68,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Long.valueOf(27)));
 		assertEquals(0, m.compareTo((MutableLong) m2));
 	}
 
@@ -86,6 +88,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Short.valueOf((short) 27)));
 		assertEquals(0, m.compareTo((MutableShort) m2));
 	}
 
@@ -105,6 +108,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Byte.valueOf((byte) 27)));
 		assertEquals(0, m.compareTo((MutableByte) m2));
 	}
 
@@ -156,6 +160,7 @@ public class MutableTest {
 		Object m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Boolean.TRUE));
 		assertEquals(0, m.compareTo((MutableBoolean) m2));
 	}
 
