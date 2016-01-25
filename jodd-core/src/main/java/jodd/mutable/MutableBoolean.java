@@ -104,10 +104,10 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
-			if (obj instanceof Boolean) {
+			if ( ((Boolean)this.value).getClass() == obj.getClass() ) {
 				return value == ((Boolean) obj).booleanValue();
 			}
-			if (obj instanceof MutableBoolean) {
+			if (this.getClass() == obj.getClass()) {
 				return value == ((MutableBoolean) obj).value;
 			}
 		}

@@ -676,7 +676,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 
 		@Override
 		public boolean equals(Object o) {
-			if (!(o instanceof Map.Entry)) {
+			if (this.getClass() != o.getClass()) {
 				return false;
 			}
 			Map.Entry e = (Map.Entry) o;

@@ -101,10 +101,10 @@ public final class MutableShort extends Number implements Comparable<MutableShor
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
-			if (obj instanceof Short) {
+			if ( ((Short)this.value).getClass() == obj.getClass() ) {
 				return value == ((Short) obj).shortValue();
 			}
-			if (obj instanceof MutableShort) {
+			if (this.getClass() == obj.getClass()) {
 				return value == ((MutableShort) obj).value;
 			}
 		}

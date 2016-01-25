@@ -240,7 +240,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		if (this == object) {
 			return true;
 		}
-		if (!(object instanceof DateTimeStamp)) {
+		if (this.getClass() != object.getClass()) {
 			return false;
 		}
 		DateTimeStamp stamp = (DateTimeStamp) object;

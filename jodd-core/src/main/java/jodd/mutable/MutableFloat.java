@@ -101,10 +101,10 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
-			if (obj instanceof Float) {
+			if ( ((Float)this.value).getClass() == obj.getClass() ) {
 				return Float.floatToIntBits(value) == Float.floatToIntBits(((Float) obj).floatValue());
 			}
-			if (obj instanceof MutableFloat) {
+			if (this.getClass() == obj.getClass()) {
 				return Float.floatToIntBits(value) == Float.floatToIntBits(((MutableFloat) obj).value);
 			}
 		}

@@ -1618,7 +1618,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof JDateTime)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		JDateTime jdt = (JDateTime) obj;
