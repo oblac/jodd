@@ -359,8 +359,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>String</code> array.
 	 */
-	public static String[] resize(String buffer[], int newSize) {
-		String temp[] = new String[newSize];
+	public static String[] resize(String[] buffer, int newSize) {
+		String[] temp = new String[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -368,8 +368,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>byte</code> array.
 	 */
-	public static byte[] resize(byte buffer[], int newSize) {
-		byte temp[] = new byte[newSize];
+	public static byte[] resize(byte[] buffer, int newSize) {
+		byte[] temp = new byte[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -377,8 +377,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>char</code> array.
 	 */
-	public static char[] resize(char buffer[], int newSize) {
-		char temp[] = new char[newSize];
+	public static char[] resize(char[] buffer, int newSize) {
+		char[] temp = new char[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -386,8 +386,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>short</code> array.
 	 */
-	public static short[] resize(short buffer[], int newSize) {
-		short temp[] = new short[newSize];
+	public static short[] resize(short[] buffer, int newSize) {
+		short[] temp = new short[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -395,8 +395,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>int</code> array.
 	 */
-	public static int[] resize(int buffer[], int newSize) {
-		int temp[] = new int[newSize];
+	public static int[] resize(int[] buffer, int newSize) {
+		int[] temp = new int[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -404,8 +404,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>long</code> array.
 	 */
-	public static long[] resize(long buffer[], int newSize) {
-		long temp[] = new long[newSize];
+	public static long[] resize(long[] buffer, int newSize) {
+		long[] temp = new long[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -413,8 +413,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>float</code> array.
 	 */
-	public static float[] resize(float buffer[], int newSize) {
-		float temp[] = new float[newSize];
+	public static float[] resize(float[] buffer, int newSize) {
+		float[] temp = new float[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -422,8 +422,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>double</code> array.
 	 */
-	public static double[] resize(double buffer[], int newSize) {
-		double temp[] = new double[newSize];
+	public static double[] resize(double[] buffer, int newSize) {
+		double[] temp = new double[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -431,8 +431,8 @@ public class ArraysUtil {
 	/**
 	 * Resizes a <code>boolean</code> array.
 	 */
-	public static boolean[] resize(boolean buffer[], int newSize) {
-		boolean temp[] = new boolean[newSize];
+	public static boolean[] resize(boolean[] buffer, int newSize) {
+		boolean[] temp = new boolean[newSize];
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
@@ -452,7 +452,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>String</code> array.
 	 */
-	public static String[] append(String buffer[], String newElement) {
+	public static String[] append(String[] buffer, String newElement) {
 		String[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -461,7 +461,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>byte</code> array.
 	 */
-	public static byte[] append(byte buffer[], byte newElement) {
+	public static byte[] append(byte[] buffer, byte newElement) {
 		byte[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -470,7 +470,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>char</code> array.
 	 */
-	public static char[] append(char buffer[], char newElement) {
+	public static char[] append(char[] buffer, char newElement) {
 		char[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -479,7 +479,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>short</code> array.
 	 */
-	public static short[] append(short buffer[], short newElement) {
+	public static short[] append(short[] buffer, short newElement) {
 		short[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -488,7 +488,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>int</code> array.
 	 */
-	public static int[] append(int buffer[], int newElement) {
+	public static int[] append(int[] buffer, int newElement) {
 		int[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -497,7 +497,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>long</code> array.
 	 */
-	public static long[] append(long buffer[], long newElement) {
+	public static long[] append(long[] buffer, long newElement) {
 		long[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -506,7 +506,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>float</code> array.
 	 */
-	public static float[] append(float buffer[], float newElement) {
+	public static float[] append(float[] buffer, float newElement) {
 		float[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -515,7 +515,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>double</code> array.
 	 */
-	public static double[] append(double buffer[], double newElement) {
+	public static double[] append(double[] buffer, double newElement) {
 		double[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -524,7 +524,7 @@ public class ArraysUtil {
 	/**
 	 * Appends an element to <code>boolean</code> array.
 	 */
-	public static boolean[] append(boolean buffer[], boolean newElement) {
+	public static boolean[] append(boolean[] buffer, boolean newElement) {
 		boolean[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
@@ -558,7 +558,7 @@ public class ArraysUtil {
 	 */
 	public static String[] remove(String[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		String temp[] = new String[len2];
+		String[] temp = new String[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -569,7 +569,7 @@ public class ArraysUtil {
 	 */
 	public static byte[] remove(byte[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		byte temp[] = new byte[len2];
+		byte[] temp = new byte[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -580,7 +580,7 @@ public class ArraysUtil {
 	 */
 	public static char[] remove(char[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		char temp[] = new char[len2];
+		char[] temp = new char[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -591,7 +591,7 @@ public class ArraysUtil {
 	 */
 	public static short[] remove(short[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		short temp[] = new short[len2];
+		short[] temp = new short[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -602,7 +602,7 @@ public class ArraysUtil {
 	 */
 	public static int[] remove(int[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		int temp[] = new int[len2];
+		int[] temp = new int[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -613,7 +613,7 @@ public class ArraysUtil {
 	 */
 	public static long[] remove(long[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		long temp[] = new long[len2];
+		long[] temp = new long[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -624,7 +624,7 @@ public class ArraysUtil {
 	 */
 	public static float[] remove(float[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		float temp[] = new float[len2];
+		float[] temp = new float[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -635,7 +635,7 @@ public class ArraysUtil {
 	 */
 	public static double[] remove(double[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		double temp[] = new double[len2];
+		double[] temp = new double[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -646,7 +646,7 @@ public class ArraysUtil {
 	 */
 	public static boolean[] remove(boolean[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
-		boolean temp[] = new boolean[len2];
+		boolean[] temp = new boolean[len2];
 		System.arraycopy(buffer, 0, temp, 0, offset);
 		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
 		return temp;
@@ -677,7 +677,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static String[] subarray(String[] buffer, int offset, int length) {
-		String temp[] = new String[length];
+		String[] temp = new String[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -686,7 +686,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static byte[] subarray(byte[] buffer, int offset, int length) {
-		byte temp[] = new byte[length];
+		byte[] temp = new byte[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -695,7 +695,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static char[] subarray(char[] buffer, int offset, int length) {
-		char temp[] = new char[length];
+		char[] temp = new char[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -704,7 +704,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static short[] subarray(short[] buffer, int offset, int length) {
-		short temp[] = new short[length];
+		short[] temp = new short[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -713,7 +713,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static int[] subarray(int[] buffer, int offset, int length) {
-		int temp[] = new int[length];
+		int[] temp = new int[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -722,7 +722,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static long[] subarray(long[] buffer, int offset, int length) {
-		long temp[] = new long[length];
+		long[] temp = new long[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -731,7 +731,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static float[] subarray(float[] buffer, int offset, int length) {
-		float temp[] = new float[length];
+		float[] temp = new float[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -740,7 +740,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static double[] subarray(double[] buffer, int offset, int length) {
-		double temp[] = new double[length];
+		double[] temp = new double[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
@@ -749,7 +749,7 @@ public class ArraysUtil {
 	 * Returns subarray.
 	 */
 	public static boolean[] subarray(boolean[] buffer, int offset, int length) {
-		boolean temp[] = new boolean[length];
+		boolean[] temp = new boolean[length];
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}

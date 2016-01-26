@@ -124,7 +124,7 @@ public class DomTreeTest {
 		assertEquals(3, html.getChildElementsCount());
 		assertEquals(3, html.getChildElementsCount("div"));
 
-		Node node[] = html.getChildNodes();
+		Node[] node = html.getChildNodes();
 		assertEquals(div1, node[0]);
 		assertEquals(div2, node[1]);
 		assertEquals(div3, node[2]);

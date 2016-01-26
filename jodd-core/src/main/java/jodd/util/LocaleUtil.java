@@ -123,7 +123,7 @@ public class LocaleUtil {
 	 * Decodes locale code in string array that can be used for <code>Locale</code> constructor.
 	 */
 	public static String[] decodeLocaleCode(String localeCode) {
-		String result[] = new String[3];
+		String[] result = new String[3];
 		String[] data = StringUtil.splitc(localeCode, '_');
 		result[0] = data[0];
 		result[1] = result[2] = StringPool.EMPTY;

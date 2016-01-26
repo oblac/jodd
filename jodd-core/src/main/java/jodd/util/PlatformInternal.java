@@ -137,7 +137,7 @@ final class PlatformInternal {
 				return value;
 
 			} else {
-				char result[] = new char[count];
+				char[] result = new char[count];
 				System.arraycopy(value, offset, result, 0, count);
 				return result;
 			}

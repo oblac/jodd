@@ -94,7 +94,7 @@ public class StreamUtil {
 	public static int copy(InputStream input, OutputStream output, int byteCount) throws IOException {
 		int bufferSize = (byteCount > ioBufferSize) ? ioBufferSize : byteCount;
 
-		byte buffer[] = new byte[bufferSize];
+		byte[] buffer = new byte[bufferSize];
 		int count = 0;
 		int read;
 		while (byteCount > 0) {
@@ -162,7 +162,7 @@ public class StreamUtil {
 	public static int copy(Reader input, Writer output, int charCount) throws IOException {
 		int bufferSize = (charCount > ioBufferSize) ? ioBufferSize : charCount;
 
-		char buffer[] = new char[bufferSize];
+		char[] buffer = new char[bufferSize];
 		int count = 0;
 		int read;
 		while (charCount > 0) {
@@ -224,7 +224,7 @@ public class StreamUtil {
 	 */
 	public static byte[] readAvailableBytes(InputStream in) throws IOException {
 		int l = in.available();
-		byte byteArray[] = new byte[l];
+		byte[] byteArray = new byte[l];
 		int i = 0, j;
 		while ((i < l) && (j = in.read(byteArray, i, l - i)) >= 0) {
 			i +=j;

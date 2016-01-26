@@ -367,8 +367,8 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		//return (jd + 1) % 7;		// return 0 (Sunday), 1 (Monday),...
 	}
 
-	private static final int NUM_DAYS[] = {-1, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};		// 1-based
-	private static final int LEAP_NUM_DAYS[] = {-1, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};	// 1-based
+	private static final int[] NUM_DAYS = {-1, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};        // 1-based
+	private static final int[] LEAP_NUM_DAYS = {-1, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};    // 1-based
 
 	/**
 	 * Calculates day of year.

@@ -33,18 +33,18 @@ import java.util.NoSuchElementException;
  * Iterator over an array.
  */
 public class ArrayIterator<E> implements Iterator<E>, Serializable {
-	
-	private E array[];
+
+	private E[] array;
 	private int ndx;
 	private int endNdx;
 
-	public ArrayIterator(E array[]) {
+	public ArrayIterator(E[] array) {
 		this.array = array;
 		ndx = 0;
 		endNdx = array.length;
 	}
 
-	public ArrayIterator(E array[], int offset, int len) {
+	public ArrayIterator(E[] array, int offset, int len) {
 		this.array = array;
 		ndx = offset;
 		endNdx = offset + len;
