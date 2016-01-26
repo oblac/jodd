@@ -100,8 +100,9 @@ public class EchoInterceptor extends BaseActionInterceptor {
 			resultString = resultString.substring(0, 70);
 			resultString += "...";
 		}
-		message.append(request.getActionPath()).append("  (").append(resultString);
-		message.append(") in ").append(executionTime).append("ms.");
+		message.append(request.getActionPath()).append("  (")
+				.append(resultString).append(") in ").append(executionTime)
+				.append("ms.");
 		out(message.toString());
 	}
 

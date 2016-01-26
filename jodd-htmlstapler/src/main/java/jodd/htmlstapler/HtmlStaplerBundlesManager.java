@@ -632,8 +632,7 @@ public class HtmlStaplerBundlesManager {
 			res.append(offsetPath);
 		}
 
-		res.append(url);
-		res.append("')");
+		res.append(url).append("')");
 
 		return res.toString();
 	}

@@ -109,17 +109,10 @@ public class SimpleLogger implements Logger {
 		}
 
 		StringBuilder msg = new StringBuilder();
-		msg.append(slf.getElapsedTime());
-		msg.append(' ');
-		msg.append('[');
-		msg.append(level.toString());
-		msg.append(']');
-		msg.append(' ');
-		msg.append(slf.getCallerClass());
-		msg.append(' ');
-		msg.append('-');
-		msg.append(' ');
-		msg.append(message);
+		msg.append(slf.getElapsedTime()).append(' ').append('[')
+				.append(level.toString()).append(']').append(' ')
+				.append(slf.getCallerClass()).append(' ').append('-')
+				.append(' ').append(message);
 
 		System.out.println(msg.toString());
 

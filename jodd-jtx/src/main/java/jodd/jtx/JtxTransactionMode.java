@@ -248,12 +248,9 @@ s	 */
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("jtx{");
-		sb.append(propagationBehavior.toString());
-		sb.append(',').append(readOnlyMode ? "readonly" : "readwrite");
-		sb.append(',').append(isolationLevel.toString());
-		sb.append(',').append(timeout).append('}');
-		return sb.toString();
+		return new StringBuilder().append("jtx{").append(propagationBehavior)
+				.append(',').append(readOnlyMode ? "readonly" : "readwrite")
+				.append(',').append(isolationLevel.toString()).append(',')
+				.append(timeout).append('}').toString();
 	}
 }
