@@ -628,8 +628,9 @@ public class HtmlStaplerBundlesManager {
 		res.append("url('");
 
 		if (!url.startsWith(StringPool.SLASH)) {
-			res.append("../");
-			res.append(offsetPath);
+			res
+				.append("../")
+				.append(offsetPath);
 		}
 
 		res.append(url).append("')");
