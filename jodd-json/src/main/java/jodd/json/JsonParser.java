@@ -885,9 +885,12 @@ public class JsonParser extends JsonParserBase {
 				// *** add to map
 				if (isTargetRealTypeMap) {
 					path.push(VALUES, key);
+
+					valueType = replaceWithMappedTypeForPath(valueType);
 				} else {
 					path.push(key);
 				}
+
 
 				value = parseValue(valueType, null, null);
 

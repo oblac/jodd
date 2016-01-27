@@ -125,6 +125,37 @@ public class AnnotationTest {
 	}
 
 	@Test
+	public void testCustomMap() {
+		String json = "{\"userId\" : 123, \"name\": 456}";
+
+		Map<String, Integer> map = JsonParser.create().parse(json);
+		assertEquals(2, map.size());
+		assertEquals(Integer.valueOf(123), map.get("userId"));
+		assertEquals(Integer.valueOf(456), map.get("name"));
+
+		Map<String, Long> map2 = JsonParser
+			.create()
+			.map(JsonParser.VALUES, Long.class)
+			.parse(json);
+
+		assertEquals(2, map2.size());
+		assertEquals(Long.valueOf(123), map2.get("userId"));
+		assertEquals(Long.valueOf(456), map2.get("name"));
+
+
+		json = "{\"123\" : \"hey\", \"456\": \"man\"}";
+
+		Map<Long, String> map3 = JsonParser
+			.create()
+			.map(JsonParser.KEYS, Long.class)
+			.parse(json);
+
+		assertEquals(2, map3.size());
+		assertEquals("hey", map3.get(Long.valueOf(123)));
+		assertEquals("man", map3.get(Long.valueOf(456)));
+	}
+
+		@Test
 	public void testClassInArrayOrMapParse() {
 		String json = "{\"userId\" : 123, \"name\":\"Joe\"}";
 

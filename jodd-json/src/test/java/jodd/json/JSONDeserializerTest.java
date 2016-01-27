@@ -218,6 +218,7 @@ public class JSONDeserializerTest {
 				.map("secretIdentity", SecretIdentity.class)
 				.parse(json, Hero.class);
 
+		assertEquals("Fortress of Solitude", jsonSuperMan.getLair().getName());
 		assertHeroHasSuperPowers(jsonSuperMan);
 	}
 
