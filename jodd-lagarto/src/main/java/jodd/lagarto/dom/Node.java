@@ -1119,8 +1119,7 @@ public abstract class Node implements Cloneable {
 			String nodeName = node.getNodeName();
 			if (nodeName != null) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(' ');
-				sb.append(nodeName);
+				sb.append(' ').append(nodeName);
 				String id = node.getAttribute("id");
 				if (id != null) {
 					sb.append('#').append(id);

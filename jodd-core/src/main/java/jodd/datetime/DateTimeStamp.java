@@ -227,10 +227,10 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(25);
-		sb.append(year).append('-').append(month).append('-').append(day).append(' ');
-		sb.append(hour).append(':').append(minute).append(':').append(second).append('.').append(millisecond);
-		return sb.toString();
+		return new StringBuilder(25).append(year).append('-').append(month)
+				.append('-').append(day).append(' ').append(hour).append(':')
+				.append(minute).append(':').append(second).append('.')
+				.append(millisecond).toString();
 	}
 
 	// ---------------------------------------------------------------- equals & hashCode

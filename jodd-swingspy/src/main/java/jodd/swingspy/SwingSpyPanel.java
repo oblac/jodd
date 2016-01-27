@@ -178,10 +178,11 @@ public class SwingSpyPanel extends JPanel {
 		}
 
 		public String toHtmlString() {
-			StringBuilder str = new StringBuilder("<html>");
-			str.append("&nbsp;name: ").append("<b>").append(component.getName()).append("</b><br>");
-			str.append("&nbsp;class: ").append("<b>").append(component.getClass().getName()).append("</b><br>");
-			return str.toString();
+			return new StringBuilder("<html>").append("&nbsp;name: ")
+					.append("<b>").append(component.getName())
+					.append("</b><br>").append("&nbsp;class: ").append("<b>")
+					.append(component.getClass().getName()).append("</b><br>")
+					.toString();
 		}
 
 		public String toDetailedString() {
