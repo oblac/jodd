@@ -152,7 +152,7 @@ public class FormProcessorVisitor extends TagWriter {
 
 			if (valueObject.getClass().isArray()) {
 				// checkbox group
-				String vs[] = StringUtil.toStringArray(valueObject);
+				String[] vs = StringUtil.toStringArray(valueObject);
 				for (String vsk : vs) {
 					if ((vsk != null) && (vsk.equals(tagValue))) {
 						tag.setAttribute(CHECKED, null);
@@ -243,7 +243,7 @@ public class FormProcessorVisitor extends TagWriter {
 		tagValue = tagValue.toString();
 
 		if (vals.getClass().isArray()) {
-			String vs[] = StringUtil.toStringArray(vals);
+			String[] vs = StringUtil.toStringArray(vals);
 			for (String vsk : vs) {
 				if ((vsk != null) && (vsk.equals(tagValue))) {
 					tag.setAttribute(SELECTED, null);

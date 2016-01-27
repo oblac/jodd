@@ -78,7 +78,7 @@ public class FileUtilTest {
 		assertEquals(s, s2);
 
 		// test unicode chars (i.e. greater then 255)
-		char buf[] = s.toCharArray();
+		char[] buf = s.toCharArray();
 		buf[0] = 256;
 		s = new String(buf);
 
@@ -108,7 +108,7 @@ public class FileUtilTest {
 	public void testUnicodeString() {
 		String s = "This is a test file\nIt only has\nthree lines!!";
 
-		char buf[] = s.toCharArray();
+		char[] buf = s.toCharArray();
 		buf[0] = 256;
 		s = new String(buf);
 

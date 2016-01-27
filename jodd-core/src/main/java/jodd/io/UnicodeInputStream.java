@@ -101,7 +101,7 @@ public class UnicodeInputStream extends InputStream {
 
 			// DETECT MODE
 
-			byte bom[] = new byte[MAX_BOM_SIZE];
+			byte[] bom = new byte[MAX_BOM_SIZE];
 			int n = internalInputStream.read(bom, 0, bom.length);
 			int unread;
 
@@ -151,7 +151,7 @@ public class UnicodeInputStream extends InputStream {
 			}
 
 			if (bom != null) {
-				byte fileBom[] = new byte[bom.length];
+				byte[] fileBom = new byte[bom.length];
 				int n = internalInputStream.read(fileBom, 0, bom.length);
 
 				boolean bomDetected = true;

@@ -48,7 +48,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	/**
 	 * The hash table data.
 	 */
-	private transient Entry table[];
+	private transient Entry[] table;
 
 	/**
 	 * The total number of mappings in the hash table.
@@ -160,7 +160,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	@Override
 	public boolean containsValue(Object value) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 		if (value == null) {
 			for (int i = tab.length; i-- > 0; ) {
 				for (Entry e = tab[i]; e != null; e = e.next) {
@@ -207,7 +207,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * key.
 	 */
 	public boolean containsKey(int key) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
@@ -250,7 +250,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * @return the value to which this map maps the specified key.
 	 */
 	public Object get(int key) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
@@ -269,10 +269,10 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	private void rehash() {
 		int oldCapacity = table.length;
-		Entry oldMap[] = table;
+		Entry[] oldMap = table;
 
 		int newCapacity = (oldCapacity << 1) + 1;
-		Entry newMap[] = new Entry[newCapacity];
+		Entry[] newMap = new Entry[newCapacity];
 
 		modCount++;
 		threshold = (int) (newCapacity * loadFactor);
@@ -324,7 +324,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	public Object put(int key, Object value) {
 		// makes sure the key is not already in the IntHashMap.
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
@@ -377,7 +377,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * key.
 	 */
 	public Object remove(int key) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 
@@ -423,7 +423,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	@Override
 	public void clear() {
-		Entry tab[] = table;
+		Entry[] tab = table;
 		modCount++;
 		for (int index = tab.length; --index >= 0; ) {
 			tab[index] = null;
@@ -577,7 +577,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 					}
 					Map.Entry entry = (Map.Entry) o;
 					Object key = entry.getKey();
-					Entry tab[] = table;
+					Entry[] tab = table;
 					int hash = (key == null ? 0 : key.hashCode());
 					int index = (hash & 0x7FFFFFFF) % tab.length;
 
@@ -596,7 +596,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 					}
 					Map.Entry entry = (Map.Entry) o;
 					Object key = entry.getKey();
-					Entry tab[] = table;
+					Entry[] tab = table;
 					int hash = (key == null ? 0 : key.hashCode());
 					int index = (hash & 0x7FFFFFFF) % tab.length;
 

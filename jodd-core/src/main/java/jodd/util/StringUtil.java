@@ -576,7 +576,7 @@ public class StringUtil {
 
 		}
 
-		char chars[] = string.toCharArray();
+		char[] chars = string.toCharArray();
 		chars[0] = modifiedCh;
 		return new String(chars);
 	}
@@ -605,7 +605,7 @@ public class StringUtil {
 			return name;
 		}
 
-		char chars[] = name.toCharArray();
+		char[] chars = name.toCharArray();
 		char c = chars[0];
 		char modifiedChar = Character.toLowerCase(c);
 		if (modifiedChar == c) {
@@ -1488,7 +1488,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOf(String s, String arr[]) {
+	public static int[] indexOf(String s, String[] arr) {
 		return indexOf(s, arr, 0);
 	}
 	/**
@@ -1501,7 +1501,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOf(String s, String arr[], int start) {
+	public static int[] indexOf(String s, String[] arr, int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1526,7 +1526,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOfIgnoreCase(String s, String arr[]) {
+	public static int[] indexOfIgnoreCase(String s, String[] arr) {
 		return indexOfIgnoreCase(s, arr, 0);
 	}
 	/**
@@ -1539,7 +1539,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOfIgnoreCase(String s, String arr[], int start) {
+	public static int[] indexOfIgnoreCase(String s, String[] arr, int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1564,7 +1564,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] lastIndexOf(String s, String arr[]) {
+	public static int[] lastIndexOf(String s, String[] arr) {
 		return lastIndexOf(s, arr, s.length());
 	}
 	/**
@@ -1577,7 +1577,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOf(String s, String arr[], int fromIndex) {
+	public static int[] lastIndexOf(String s, String[] arr, int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1604,7 +1604,7 @@ public class StringUtil {
 	 *
 	 * @return int[2]
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String arr[]) {
+	public static int[] lastIndexOfIgnoreCase(String s, String[] arr) {
 		return lastIndexOfIgnoreCase(s, arr, s.length());
 	}
 	/**
@@ -1617,7 +1617,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String arr[], int fromIndex) {
+	public static int[] lastIndexOfIgnoreCase(String s, String[] arr, int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1641,7 +1641,7 @@ public class StringUtil {
 	 *
 	 * @return <code>true</code> if all array elements matches
 	 */
-	public static boolean equals(String as[], String as1[]) {
+	public static boolean equals(String[] as, String[] as1) {
 	    if (as.length != as1.length) {
 	        return false;
 	    }
@@ -1660,7 +1660,7 @@ public class StringUtil {
 	 *
 	 * @return true if all array elements matches
 	 */
-	public static boolean equalsIgnoreCase(String as[], String as1[]) {
+	public static boolean equalsIgnoreCase(String[] as, String[] as1) {
 		if (as.length != as1.length) {
 			return false;
 		}
