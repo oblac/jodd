@@ -132,10 +132,8 @@ public class AdaptiveFileUpload extends FileUpload {
 	 * Determines if upload is allowed.
 	 */
 	protected boolean checkUpload() throws IOException {
-		if (fileExtensions != null) {
-			if (!matchFileExtension()) {
-				return false;
-			}
+		if (fileExtensions != null && !matchFileExtension()) {
+			return false;
 		}
 		return true;
 	}

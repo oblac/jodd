@@ -101,11 +101,9 @@ public class Jodd {
 
 		Object module = MODULES[moduleId];
 
-		if (module != null) {
-			if (module.getClass() == joddModuleClass) {
-				// already registered
-				return;
-			}
+		if (module != null && module.getClass() == joddModuleClass) {
+			// already registered
+			return;
 		}
 
 		MODULES[moduleId] = joddModuleClass;

@@ -82,10 +82,8 @@ public class DbOomUtil {
 		}
 
 		// special case for ID column
-		if (dec.isId() && value instanceof Number) {
-			if (((Number) value).intValue() == 0) {
-				return true;
-			}
+		if (dec.isId() && value instanceof Number && ((Number) value).intValue() == 0) {
+			return true;
 		}
 
 		// special case for primitives
@@ -97,10 +95,8 @@ public class DbOomUtil {
 		}
 
 		// special case for strings
-		if (value instanceof CharSequence) {
-			if (StringUtil.isBlank((CharSequence) value)) {
-				return true;
-			}
+		if (value instanceof CharSequence && StringUtil.isBlank((CharSequence) value)) {
+			return true;
 		}
 
 		return false;

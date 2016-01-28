@@ -197,10 +197,8 @@ public class ClassDescriptor {
 	public FieldDescriptor getFieldDescriptor(String name, boolean declared) {
 		FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
 
-		if (fieldDescriptor != null) {
-			if (!fieldDescriptor.matchDeclared(declared)) {
-				return null;
-			}
+		if (fieldDescriptor != null && !fieldDescriptor.matchDeclared(declared)) {
+			return null;
 		}
 
 		return fieldDescriptor;

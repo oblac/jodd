@@ -550,11 +550,9 @@ public class FindFile<T extends FindFile> {
 					if (recursive) {
 						todoFiles.add(new FilesIterator(nextFile));
 					}
-					if (includeDirs) {
-						if (acceptFile(nextFile)) {
-							lastFile = nextFile;
-							return nextFile;
-						}
+					if (includeDirs && acceptFile(nextFile)) {
+						lastFile = nextFile;
+						return nextFile;
 					}
 					continue;
 				}
@@ -588,11 +586,9 @@ public class FindFile<T extends FindFile> {
 				todoFiles.add(new FilesIterator(folder));
 			}
 
-			if ((!initialDir) && (includeDirs)) {
-				if (acceptFile(folder)) {
-					lastFile = folder;
-					return folder;
-				}
+			if ((!initialDir) && (includeDirs) && acceptFile(folder)) {
+				lastFile = folder;
+				return folder;
 			}
 		}
 	}

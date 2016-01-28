@@ -318,10 +318,8 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			declaredClassName = name;
 
 			// append inner interfaces
-			if (nextInterfaces != null) {
-				if (interfaces != null) {
-					Collections.addAll(nextInterfaces, interfaces);
-				}
+			if (nextInterfaces != null && interfaces != null) {
+				Collections.addAll(nextInterfaces, interfaces);
 			}
 
 		}

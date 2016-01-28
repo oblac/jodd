@@ -143,10 +143,8 @@ public class DirWatcher {
 
 		String fileName = file.getName();
 
-		if (ignoreDotFiles) {
-			if (fileName.startsWith(StringPool.DOT)) {
-				return false;        // ignore hidden files
-			}
+		if (ignoreDotFiles && fileName.startsWith(StringPool.DOT)) {
+			return false;        // ignore hidden file
 		}
 
 		if (patterns == null) {

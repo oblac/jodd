@@ -1074,10 +1074,8 @@ public class Jerry implements Iterable<Jerry> {
 					boolean isCheckbox = type.equals("checkbox");
 					boolean isRadio = type.equals("radio");
 
-					if (isRadio || isCheckbox) {
-						if (!($inputTag.nodes[0].hasAttribute("checked"))) {
-							return true;
-						}
+					if ((isRadio || isCheckbox) && (!($inputTag.nodes[0].hasAttribute("checked")))) {
+						return true;
 					}
 
 					String name = $inputTag.attr("name");
@@ -1087,10 +1085,8 @@ public class Jerry implements Iterable<Jerry> {
 
 					String tagValue = $inputTag.attr("value");
 
-					if (tagValue == null) {
-						if (isCheckbox) {
-							tagValue = "on";
-						}
+					if (tagValue == null && isCheckbox) {
+						tagValue = "on";
 					}
 
 					// add tag value

@@ -632,10 +632,8 @@ public class ReflectUtil {
 	 * Returns <code>true</code> if class member is public and if its declaring class is also public.
 	 */
 	public static boolean isPublicPublic(Member member) {
-		if (Modifier.isPublic(member.getModifiers())) {
-			if (Modifier.isPublic(member.getDeclaringClass().getModifiers())) {
-				return true;
-			}
+		if (Modifier.isPublic(member.getModifiers()) && Modifier.isPublic(member.getDeclaringClass().getModifiers())) {
+			return true;
 		}
 		return false;
 	}
@@ -799,10 +797,8 @@ public class ReflectUtil {
 			if ((returnType != null)  && (paramTypes.length == 0)) {	// ister must have return type and no arguments
 				return true;
 			}
-		} else if (methodName.startsWith(METHOD_SET_PREFIX)) {	// setter must start with a 'set'
-			if (paramTypes.length == 1) {				        // setter must have just one argument
-				return true;
-			}
+		} else if (methodName.startsWith(METHOD_SET_PREFIX) && paramTypes.length == 1) {	// setter must start with a 'set' and have just one argument
+			return true;
 		}
 		return false;
 	}
@@ -821,12 +817,10 @@ public class ReflectUtil {
 		String methodName = method.getName();
 		Class returnType = method.getReturnType();
 		Class[] paramTypes =  method.getParameterTypes();
-		if (methodName.startsWith(METHOD_GET_PREFIX)) {		        // getter method must starts with 'get' and it is not getClass()
-			if ((returnType != null) && (paramTypes.length == 0)) {	// getter must have a return type and no arguments
+		if ((returnType != null) && (paramTypes.length == 0)) { //must have a return type and no arguments
+			if (methodName.startsWith(METHOD_GET_PREFIX)) {		        // getter method must starts with 'get' and it is not getClass()
 				return 3;
-			}
-		} else if (methodName.startsWith(METHOD_IS_PREFIX)) {		    // ister must starts with 'is'
-			if ((returnType != null)  && (paramTypes.length == 0)) {	// ister must have return type and no arguments
+			} else if (methodName.startsWith(METHOD_IS_PREFIX)) {		    // ister must starts with 'is'
 				return 2;
 			}
 		}
@@ -859,10 +853,8 @@ public class ReflectUtil {
 		}
 		String methodName = method.getName();
 		Class[] paramTypes =  method.getParameterTypes();
-		if (methodName.startsWith(METHOD_SET_PREFIX)) {	        // setter must start with a 'set'
-			if (paramTypes.length == 1) {				        // setter must have just one argument
-				return 3;
-			}
+		if (methodName.startsWith(METHOD_SET_PREFIX) && paramTypes.length == 1) {	        // setter must start with a 'set' and have just one argument
+			return 3;
 		}
 		return 0;
 	}

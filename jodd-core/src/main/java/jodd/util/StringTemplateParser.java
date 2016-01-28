@@ -231,10 +231,8 @@ public class StringTemplateParser {
 
 			boolean strictFormat = strict;
 
-			if (!strictFormat) {
-				if (StringUtil.isSubstringAt(template, macroStart, ndx)) {
-					strictFormat = true;
-				}
+			if (!strictFormat && StringUtil.isSubstringAt(template, macroStart, ndx)) {
+				strictFormat = true;
 			}
 
 			int ndx1;
@@ -318,10 +316,8 @@ public class StringTemplateParser {
 
 			if (ndx == ndx1) {
 				String stringValue = value.toString();
-				if (parseValues) {
-					if (stringValue.contains(macroStart)) {
-						stringValue = parse(stringValue, macroResolver);
-					}
+				if (parseValues && stringValue.contains(macroStart)) {
+					stringValue = parse(stringValue, macroResolver);
 				}
 				result.append(stringValue);
 

@@ -229,10 +229,9 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 							visitReturn(mv, td.msign, true);
 							return;
 						}
-						if (traceNext) {
-							if ((opcode == POP) || (opcode == POP2)) {      // [F3] - invoke invoked without assignment
-								return;
-							}
+
+						if ((traceNext) && ((opcode == POP) || (opcode == POP2))) {      // [F3] - invoke invoked without assignment
+							return;
 						}
 						super.visitInsn(opcode);
 					}

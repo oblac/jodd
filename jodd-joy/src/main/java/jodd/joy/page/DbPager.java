@@ -93,12 +93,10 @@ public abstract class DbPager {
 
 		// fix the out-of-bounds
 
-		if (pageData.getItems().isEmpty() && pageData.currentPage != 0) {
-			if (pageData.currentPage != page) {
-				// out of bounds
-				int newPage = pageData.getCurrentPage();
-				pageData = page(sql, params, newPage, pageSize, sortColumName, ascending, target);
-			}
+		if (pageData.getItems().isEmpty() && pageData.currentPage != 0 && pageData.currentPage != page) {
+			// out of bounds
+			int newPage = pageData.getCurrentPage();
+			pageData = page(sql, params, newPage, pageSize, sortColumName, ascending, target);
 		}
 
 		return pageData;

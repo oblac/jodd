@@ -63,10 +63,8 @@ public class Wildcard {
 	 */
 	private static boolean match(CharSequence string, CharSequence pattern, int sNdx, int pNdx) {
 		int pLen = pattern.length();
-		if (pLen == 1) {
-			if (pattern.charAt(0) == '*') {     // speed-up
-				return true;
-			}
+		if (pLen == 1 && pattern.charAt(0) == '*') {    // speed-up
+			return true;
 		}
 		int sLen = string.length();
 		boolean nextIsNotWildcard = false;

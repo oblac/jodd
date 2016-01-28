@@ -73,10 +73,8 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		int h = 0;
 		for (int i = name.length() - 1; i >= 0; i--) {
 			char c = name.charAt(i);
-			if (!caseSensitive) {
-				if (c >= 'A' && c <= 'Z') {
-					c += 32;
-				}
+			if (!caseSensitive && c >= 'A' && c <= 'Z') {
+				c += 32;
 			}
 			h = 31 * h + c;
 		}

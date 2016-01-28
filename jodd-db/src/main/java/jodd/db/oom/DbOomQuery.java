@@ -325,19 +325,17 @@ public class DbOomQuery extends DbQuery {
 
 			T newElement = (T) row;
 
-			if (entityAwareMode && size > 0) {
-				if (previousElement != null && newElement != null) {
-					boolean equals;
+			if (entityAwareMode && size > 0 && previousElement != null && newElement != null) {
+				boolean equals;
 
-					if (newElement.getClass().isArray()) {
-						equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
-					} else {
-						equals = previousElement.equals(newElement);
-					}
+				if (newElement.getClass().isArray()) {
+					equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
+				} else {
+					equals = previousElement.equals(newElement);
+				}
 
-					if (equals) {
-						continue;
-					}
+				if (equals) {
+					continue;
 				}
 			}
 
@@ -386,19 +384,17 @@ public class DbOomQuery extends DbQuery {
 
 			T newElement = (T) row;
 
-			if (entityAwareMode && size > 0) {
-				if (previousElement != null && newElement != null) {
-					boolean equals;
+			if (entityAwareMode && size > 0 && previousElement != null && newElement != null) {
+				boolean equals;
 
-					if (newElement.getClass().isArray()) {
-						equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
-					} else {
-						equals = previousElement.equals(newElement);
-					}
+				if (newElement.getClass().isArray()) {
+					equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
+				} else {
+					equals = previousElement.equals(newElement);
+				}
 
-					if (equals) {
-						continue;
-					}
+				if (equals) {
+					continue;
 				}
 			}
 

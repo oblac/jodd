@@ -1157,10 +1157,8 @@ class MethodWriter extends MethodVisitor {
     @Override
     public void visitIincInsn(final int var, final int increment) {
         lastCodeOffset = code.length;
-        if (currentBlock != null) {
-            if (compute == FRAMES) {
-                currentBlock.frame.execute(Opcodes.IINC, var, null, null);
-            }
+        if (currentBlock != null && compute == FRAMES) {
+            currentBlock.frame.execute(Opcodes.IINC, var, null, null);
         }
         if (compute != NOTHING) {
             // updates max locals
@@ -2071,12 +2069,10 @@ class MethodWriter extends MethodVisitor {
             cw.newUTF8("Exceptions");
             size += 8 + 2 * exceptionCount;
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((cw.version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                cw.newUTF8("Synthetic");
-                size += 6;
-            }
+        if (((access & Opcodes.ACC_SYNTHETIC) != 0) && ((cw.version & 0xFFFF) < Opcodes.V1_5
+                || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+            cw.newUTF8("Synthetic");
+            size += 6;
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
             cw.newUTF8("Deprecated");
@@ -2155,11 +2151,9 @@ class MethodWriter extends MethodVisitor {
         if (exceptionCount > 0) {
             ++attributeCount;
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((cw.version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                ++attributeCount;
-            }
+        if ( ((access & Opcodes.ACC_SYNTHETIC) != 0) && ((cw.version & 0xFFFF) < Opcodes.V1_5
+                || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0) ) {
+            ++attributeCount;
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
             ++attributeCount;
@@ -2432,25 +2426,23 @@ class MethodWriter extends MethodVisitor {
                         label = u + readShort(b, u + 1);
                     }
                     newOffset = getNewOffset(allIndexes, allSizes, u, label);
-                    if (newOffset < Short.MIN_VALUE
-                            || newOffset > Short.MAX_VALUE) {
-                        if (!resize[u]) {
-                            if (opcode == Opcodes.GOTO || opcode == Opcodes.JSR) {
-                                // two additional bytes will be required to
-                                // replace this GOTO or JSR instruction with
-                                // a GOTO_W or a JSR_W
-                                insert = 2;
-                            } else {
-                                // five additional bytes will be required to
-                                // replace this IFxxx <l> instruction with
-                                // IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx
-                                // is the "opposite" opcode of IFxxx (i.e.,
-                                // IFNE for IFEQ) and where <l'> designates
-                                // the instruction just after the GOTO_W.
-                                insert = 5;
-                            }
-                            resize[u] = true;
+                    if ((newOffset < Short.MIN_VALUE
+                            || newOffset > Short.MAX_VALUE) && (!resize[u])) {
+                        if (opcode == Opcodes.GOTO || opcode == Opcodes.JSR) {
+                            // two additional bytes will be required to
+                            // replace this GOTO or JSR instruction with
+                            // a GOTO_W or a JSR_W
+                            insert = 2;
+                        } else {
+                            // five additional bytes will be required to
+                            // replace this IFxxx <l> instruction with
+                            // IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx
+                            // is the "opposite" opcode of IFxxx (i.e.,
+                            // IFNE for IFEQ) and where <l'> designates
+                            // the instruction just after the GOTO_W.
+                            insert = 5;
                         }
+                        resize[u] = true;
                     }
                     u += 3;
                     break;

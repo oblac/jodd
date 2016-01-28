@@ -247,10 +247,8 @@ public class ActionsManager {
 		}
 		boolean isDuplicate = set.add(actionConfig);
 
-		if (madvocConfig.isDetectDuplicatePathsEnabled()) {
-			if (isDuplicate) {
-				throw new MadvocException("Duplicate action path for " + actionConfig);
-			}
+		if (madvocConfig.isDetectDuplicatePathsEnabled() && isDuplicate) {
+			throw new MadvocException("Duplicate action path for " + actionConfig);
 		}
 
 		// finally

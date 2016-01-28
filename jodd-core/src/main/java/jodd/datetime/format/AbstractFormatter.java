@@ -101,11 +101,9 @@ public abstract class AbstractFormatter implements JdtFormatter {
 				}
 				delta++;
 			}
-			if (match) {				        // match
-				if (patterns[n].length > maxLen) {		// find longest match
-					lastn = n;
-					maxLen = patterns[n].length;
-				}
+			if (match && patterns[n].length > maxLen) {		// match and find longest match
+				lastn = n;
+				maxLen = patterns[n].length;
 			}
 		}
 		return lastn;

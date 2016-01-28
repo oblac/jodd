@@ -300,28 +300,25 @@ public class PropsParser implements Cloneable {
 						sb.append(c);
 						state = ParseState.VALUE;
 
-						if (multilineValues) {
-							if (sb.length() == 3) {
-
-								// check for ''' beginning
-								if (sb.toString().equals("'''")) {
-									sb.setLength(0);
-									int endIndex = in.indexOf("'''", ndx);
-									if (endIndex == -1) {
-										endIndex = in.length();
-									}
-									sb.append(in, ndx, endIndex);
-
-									// append
-									add(currentSection, key, sb, false, operator);
-									sb.setLength(0);
-									key = null;
-									operator = Operator.ASSIGN;
-
-									// end of value, continue to text
-									state = ParseState.TEXT;
-									ndx = endIndex + 3;
+						if (multilineValues && sb.length() == 3) {
+							// check for ''' beginning
+							if (sb.toString().equals("'''")) {
+								sb.setLength(0);
+								int endIndex = in.indexOf("'''", ndx);
+								if (endIndex == -1) {
+									endIndex = in.length();
 								}
+								sb.append(in, ndx, endIndex);
+
+								// append
+								add(currentSection, key, sb, false, operator);
+								sb.setLength(0);
+								key = null;
+								operator = Operator.ASSIGN;
+
+								// end of value, continue to text
+								state = ParseState.TEXT;
+								ndx = endIndex + 3;
 							}
 						}
 				}

@@ -1028,15 +1028,15 @@ public abstract class Node implements Cloneable {
 	 * during the creation of text content and have better performances.
 	 */
 	public void appendTextContent(Appendable appendable) {
-		if (nodeValue != null) {
-			if ((nodeType == NodeType.TEXT) || (nodeType == NodeType.CDATA)) {
-				try {
-					appendable.append(nodeValue);
-				} catch (IOException ioex) {
-					throw new LagartoDOMException(ioex);
-				}
+
+		if ((nodeValue != null) && (nodeType == NodeType.TEXT || nodeType == NodeType.CDATA)) {
+			try {
+				appendable.append(nodeValue);
+			} catch (IOException ioex) {
+				throw new LagartoDOMException(ioex);
 			}
 		}
+
 		if (childNodes != null) {
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node childNode = childNodes.get(i);

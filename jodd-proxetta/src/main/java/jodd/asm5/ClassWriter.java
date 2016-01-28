@@ -860,13 +860,11 @@ public class ClassWriter extends ClassVisitor {
             size += 6;
             newUTF8("Deprecated");
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                ++attributeCount;
-                size += 6;
-                newUTF8("Synthetic");
-            }
+        if ( ((access & Opcodes.ACC_SYNTHETIC) != 0) && ((version & 0xFFFF) < Opcodes.V1_5
+                || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+            ++attributeCount;
+            size += 6;
+            newUTF8("Synthetic");
         }
         if (innerClasses != null) {
             ++attributeCount;
@@ -947,11 +945,9 @@ public class ClassWriter extends ClassVisitor {
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
             out.putShort(newUTF8("Deprecated")).putInt(0);
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                out.putShort(newUTF8("Synthetic")).putInt(0);
-            }
+        if (((access & Opcodes.ACC_SYNTHETIC) != 0) && ((version & 0xFFFF) < Opcodes.V1_5
+                || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+            out.putShort(newUTF8("Synthetic")).putInt(0);
         }
         if (innerClasses != null) {
             out.putShort(newUTF8("InnerClasses"));

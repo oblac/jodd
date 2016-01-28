@@ -85,10 +85,8 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 		);
 
 		String staplerStrategyName = filterConfig.getInitParameter("strategy");
-		if (staplerStrategyName != null) {
-			if (staplerStrategyName.equalsIgnoreCase("ACTION_MANAGED")) {
-				staplerStrategy = Strategy.ACTION_MANAGED;
-			}
+		if (staplerStrategyName != null && staplerStrategyName.equalsIgnoreCase("ACTION_MANAGED")) {
+			staplerStrategy = Strategy.ACTION_MANAGED;
 		}
 
 		readFilterConfigParameters(filterConfig, bundlesManager,

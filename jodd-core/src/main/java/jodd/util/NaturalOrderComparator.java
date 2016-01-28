@@ -148,10 +148,8 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 			}
 
 			// check when one of the numbers is just zeros
-			if (isDigitChar1 || isDigitChar2) {
-				if (zeroCount1 != zeroCount2) {
-					return zeroCount2 - zeroCount1;
-				}
+			if ((isDigitChar1 || isDigitChar2) && (zeroCount1 != zeroCount2)) {
+				return zeroCount2 - zeroCount1;
 			}
 
 			// checks when both numbers are zero

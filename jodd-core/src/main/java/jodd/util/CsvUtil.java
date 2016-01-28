@@ -59,10 +59,8 @@ public class CsvUtil {
 			if (ndx == -1) {
 				ndx = field.indexOf(FIELD_QUOTE);
 			}
-			if (ndx == -1) {
-				if (field.startsWith(StringPool.SPACE) || field.endsWith(StringPool.SPACE)) {
-					ndx = 1;
-				}
+			if ( ndx == -1 && (field.startsWith(StringPool.SPACE) || field.endsWith(StringPool.SPACE)) ) {
+				ndx = 1;
 			}
 			if (ndx == -1) {
 				ndx = StringUtil.indexOfChars(field, SPECIAL_CHARS);

@@ -121,15 +121,11 @@ public class HtmlFosterRules {
 	protected boolean findFosterNodes(Node node) {
 		boolean isTable = false;
 
-		if (!lastTables.isEmpty()) {
-			// if inside table
-			if (node.getNodeType() == Node.NodeType.TEXT) {
-				String value = node.getNodeValue();
-				if (!StringUtil.isBlank(value)) {
-					if (isParentNodeOneOfFosterTableElements(node.getParentNode())) {
-						fosterTexts.add((Text) node);
-					}
-				}
+		// if inside table
+		if (!lastTables.isEmpty() && node.getNodeType() == Node.NodeType.TEXT) {
+			String value = node.getNodeValue();
+			if (!StringUtil.isBlank(value) && isParentNodeOneOfFosterTableElements(node.getParentNode())) {
+				fosterTexts.add((Text) node);
 			}
 		}
 
@@ -222,13 +218,11 @@ public class HtmlFosterRules {
 			// filter our foster element
 			Node[] fosterChilds = fosterElement.getChildNodes();
 			for (Node fosterChild : fosterChilds) {
-				if (fosterChild.getNodeType() == Node.NodeType.ELEMENT) {
-					if (isOneOfTableElements((Element) fosterChild)) {
-						// move all child table elements outside
-						// the foster element
-						fosterChild.detachFromParent();
-						fosterElementParent.insertBefore(fosterChild, fosterElement);
-					}
+				if (fosterChild.getNodeType() == Node.NodeType.ELEMENT && isOneOfTableElements((Element) fosterChild)) {
+					// move all child table elements outside
+					// the foster element
+					fosterChild.detachFromParent();
+					fosterElementParent.insertBefore(fosterChild, fosterElement);
 				}
 			}
 

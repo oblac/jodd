@@ -196,11 +196,9 @@ final class ProxyAspectData {
 
 						@Override
 						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
-							if (opcode == INVOKESTATIC) {
-								if (owner.equals(adviceReference)) {
-									owner = wd.thisReference;
-									name = adviceMethodName(name, aspectIndex);
-								}
+							if (opcode == INVOKESTATIC && owner.equals(adviceReference)) {
+								owner = wd.thisReference;
+								name = adviceMethodName(name, aspectIndex);
 							}
 							super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 						}
@@ -255,13 +253,9 @@ final class ProxyAspectData {
 									owner = wd.thisReference;
 									name = adviceMethodName(name, aspectIndex);
 								}
-							} else
-
-							if (opcode == INVOKESTATIC) {
-								if (owner.equals(adviceReference)) {
-									owner = wd.thisReference;
-									name = adviceMethodName(name, aspectIndex);
-								}
+							} else if (opcode == INVOKESTATIC && owner.equals(adviceReference)) {
+								owner = wd.thisReference;
+								name = adviceMethodName(name, aspectIndex);
 							}
 							super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 						}
@@ -298,13 +292,9 @@ final class ProxyAspectData {
 									owner = wd.thisReference;
 									name = adviceMethodName(name, aspectIndex);
 								}
-							} else
-
-							if (opcode == INVOKESTATIC || opcode == INVOKESPECIAL) {
-								if (owner.equals(adviceReference)) {
-									owner = wd.thisReference;
-									name = adviceMethodName(name, aspectIndex);
-								}
+							} else if ((opcode == INVOKESTATIC || opcode == INVOKESPECIAL) && owner.equals(adviceReference)) {
+								owner = wd.thisReference;
+								name = adviceMethodName(name, aspectIndex);
 							}
 							super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 						}
@@ -325,10 +315,8 @@ final class ProxyAspectData {
 				return new EmptyMethodVisitor() {
 					@Override
 					public void visitVarInsn(int opcode, int var) {
-						if (isStoreOpcode(opcode)) {
-							if (var > maxLocalVarOffset) {
-								maxLocalVarOffset = var;          // find max local var offset
-							}
+						if (isStoreOpcode(opcode) && var > maxLocalVarOffset) {
+							maxLocalVarOffset = var;          // find max local var offset
 						}
 						super.visitVarInsn(opcode, var);
 					}

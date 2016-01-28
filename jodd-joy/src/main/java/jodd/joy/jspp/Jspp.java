@@ -119,28 +119,26 @@ public class Jspp {
 		lagartoParser.parse(new EmptyTagVisitor() {
 			@Override
 			public void tag(Tag tag) {
-				if (tag.getType() == TagType.SELF_CLOSING) {
-					if (tag.matchTagNamePrefix(tagPrefix)) {
-						int tagStart = tag.getTagPosition();
+				if (tag.getType() == TagType.SELF_CLOSING && tag.matchTagNamePrefix(tagPrefix)) {
+					int tagStart = tag.getTagPosition();
 
-						sb.append(input.substring(lastPosition.getValue(), tagStart));
+					sb.append(input.substring(lastPosition.getValue(), tagStart));
 
-						String tagName = tag.getName().toString();
-						tagName = tagName.substring(tagPrefix.length);
+					String tagName = tag.getName().toString();
+					tagName = tagName.substring(tagPrefix.length);
 
-						String macroBody = loadMacro(tagName);
+					String macroBody = loadMacro(tagName);
 
-						int attrCount = tag.getAttributeCount();
+					int attrCount = tag.getAttributeCount();
 
-						for (int i = 0; i < attrCount; i++) {
-							String key = macroPrefix + tag.getAttributeName(i) + macroSuffix;
-							macroBody = StringUtil.replace(macroBody, key, tag.getAttributeValue(i).toString());
-						}
-
-						sb.append(macroBody);
-
-						lastPosition.setValue(tagStart + tag.getTagLength());
+					for (int i = 0; i < attrCount; i++) {
+						String key = macroPrefix + tag.getAttributeName(i) + macroSuffix;
+						macroBody = StringUtil.replace(macroBody, key, tag.getAttributeValue(i).toString());
 					}
+
+					sb.append(macroBody);
+
+					lastPosition.setValue(tagStart + tag.getTagLength());
 				}
 			}
 		});

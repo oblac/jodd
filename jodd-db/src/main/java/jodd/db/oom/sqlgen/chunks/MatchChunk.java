@@ -111,10 +111,8 @@ public class MatchChunk extends SqlChunk {
 				continue;
 			}
 
-			if (includeColumns == COLS_ONLY_EXISTING) {
-				if (DbOomUtil.isEmptyColumnValue(dec, value)) {
-					continue;
-				}
+			if (includeColumns == COLS_ONLY_EXISTING && DbOomUtil.isEmptyColumnValue(dec, value)) {
+				continue;
 			}
 			if (count > 0) {
 				out.append(AND);

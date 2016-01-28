@@ -1507,11 +1507,9 @@ public class StringUtil {
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
 			int i = s.indexOf(arr[j], start);
-			if (i != -1) {
-				if (i < index) {
-					index = i;
-					last = j;
-				}
+			if (i != -1 && i < index) {
+				index = i;
+				last = j;
 			}
 		}
 		return last == -1 ? null : new int[] {last, index};
@@ -1545,11 +1543,9 @@ public class StringUtil {
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
 			int i = indexOfIgnoreCase(s, arr[j], start);
-			if (i != -1) {
-				if (i < index) {
-					index = i;
-					last = j;
-				}
+			if (i != -1 && i < index) {
+				index = i;
+				last = j;
 			}
 		}
 		return last == -1 ? null : new int[] {last, index};
@@ -1583,11 +1579,9 @@ public class StringUtil {
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
 			int i = s.lastIndexOf(arr[j], fromIndex);
-			if (i != -1) {
-				if (i > index) {
-					index = i;
-					last = j;
-				}
+			if (i != -1 && i > index) {
+				index = i;
+				last = j;
 			}
 		}
 		return last == -1 ? null : new int[] {last, index};
@@ -1623,11 +1617,9 @@ public class StringUtil {
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
 			int i = lastIndexOfIgnoreCase(s, arr[j], fromIndex);
-			if (i != -1) {
-				if (i > index) {
-					index = i;
-					last = j;
-				}
+			if (i != -1 && i > index) {
+				index = i;
+				last = j;
 			}
 		}
 		return last == -1 ? null : new int[] {last, index};
@@ -1933,10 +1925,8 @@ public class StringUtil {
 	 * Strips leading char if string starts with one.
 	 */
 	public static String stripLeadingChar(String string, char c) {
-		if (string.length() > 0) {
-			if (string.charAt(0) == c) {
-				return string.substring(1);
-			}
+		if (string.length() > 0 && string.charAt(0) == c) {
+			return string.substring(1);
 		}
 		return string;
 	}
@@ -1945,10 +1935,8 @@ public class StringUtil {
 	 * Strips trailing char if string ends with one.
 	 */
 	public static String stripTrailingChar(String string, char c) {
-		if (string.length() > 0) {
-			if (string.charAt(string.length() - 1) == c) {
-				return string.substring(0, string.length() - 1);
-			}
+		if (string.length() > 0 && string.charAt(string.length() - 1) == c) {
+			return string.substring(0, string.length() - 1);
 		}
 		return string;
 	}
@@ -2159,20 +2147,16 @@ public class StringUtil {
 				return null;
 			}
 			int leftBoundaryLen = leftBoundary.length();
-			if (ndx > 0) {
-				if (string.charAt(ndx - 1) == escape) {				// check previous char
-					boolean cont = true;
-					if (ndx > 1) {
-						if (string.charAt(ndx - 2) == escape) {		// check double escapes
-							ndx--;
-							leftBoundaryLen++;
-							cont = false;
-						}
-					}
-					if (cont) {
-						ndx += leftBoundaryLen;
-						continue;
-					}
+			if (ndx > 0 && string.charAt(ndx - 1) == escape) { // check previous char
+				boolean cont = true;
+				if (ndx > 1 && string.charAt(ndx - 2) == escape) {    // check double escapes
+					ndx--;
+					leftBoundaryLen++;
+					cont = false;
+				}
+				if (cont) {
+					ndx += leftBoundaryLen;
+					continue;
 				}
 			}
 			res[0] = ndx;
@@ -2184,11 +2168,9 @@ public class StringUtil {
 				if (ndx == -1) {
 					return null;
 				}
-				if (ndx > 0) {
-					if (string.charAt(ndx - 1) == escape) {
-						ndx += rightBoundary.length();
-						continue;
-					}
+				if (ndx > 0 && string.charAt(ndx - 1) == escape) {
+					ndx += rightBoundary.length();
+					continue;
 				}
 				res[2] = ndx;
 				res[3] = ndx + rightBoundary.length();
@@ -2567,10 +2549,8 @@ public class StringUtil {
 			previous = c;
 			c = src.charAt(i);
 			if (c == sub) {
-				if (i > startIndex) {
-					if (previous == escapeChar) {
-						continue;
-					}
+				if (i > startIndex && previous == escapeChar) {
+					continue;
 				}
 				return i;
 			}

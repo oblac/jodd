@@ -314,11 +314,9 @@ public class ActionMethodParser {
 
 							packageName = packageName.substring(0, dotNdx);
 
-							if (rootPackage != null) {
-								// don't go beyond found root package
-								if (packageName.equals(rootPackage)) {
-									break;
-								}
+							// don't go beyond found root package
+							if (rootPackage != null && packageName.equals(rootPackage)) {
+								break;
 							}
 						}
 					}

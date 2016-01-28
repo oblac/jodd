@@ -87,10 +87,8 @@ public class MapToBean {
 		for (Object key : map.keySet()) {
 			String keyName = key.toString();
 
-			if (classMetadataName != null) {
-				if (keyName.equals(classMetadataName)) {
-					continue;
-				}
+			if (classMetadataName != null && keyName.equals(classMetadataName)) {
+				continue;
 			}
 
 			PropertyDescriptor pd = cd.getPropertyDescriptor(keyName, declared);
