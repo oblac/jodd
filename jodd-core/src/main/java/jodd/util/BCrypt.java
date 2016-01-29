@@ -728,16 +728,16 @@ public class BCrypt {
 		if (minor >= 'a') {
 			rs.append(minor);
 		}
-		rs.append("$");
+		rs.append('$');
 		if (rounds < 10) {
-			rs.append("0");
+			rs.append('0');
 		}
 		if (rounds > 30) {
 			throw new IllegalArgumentException(
 					"rounds exceeds maximum (30)");
 		}
 		rs.append(rounds)
-				.append("$")
+				.append('$')
 				.append(encode_base64(saltb, saltb.length))
 				.append(encode_base64(hashed,
 						bf_crypt_ciphertext.length * 4 - 1));
@@ -761,13 +761,13 @@ public class BCrypt {
 
 		rs.append("$2a$");
 		if (log_rounds < 10) {
-			rs.append("0");
+			rs.append('0');
 		}
 		if (log_rounds > 30) {
 			throw new IllegalArgumentException(
 					"log_rounds exceeds maximum (30)");
 		}
-		rs.append(log_rounds).append("$")
+		rs.append(log_rounds).append('$')
 				.append(encode_base64(rnd, rnd.length));
 		return rs.toString();
 	}
