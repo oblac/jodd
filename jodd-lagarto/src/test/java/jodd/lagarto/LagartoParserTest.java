@@ -193,7 +193,7 @@ public class LagartoParserTest {
 			}
 
 			public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
-				result.append("xml:").append(version).append(":").append(encoding).append(":").append(standalone);
+				result.append("xml:").append(version).append(':').append(encoding).append(':').append(standalone);
 				result.append(NEWLINE);
 			}
 
