@@ -78,8 +78,7 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * Registers custom madvoc components.
 	 * @see #registerMadvocComponents()
 	 */
-	protected void registerCustomMadvocComponents() {
-	}
+	protected abstract void registerCustomMadvocComponents();
 
 	/**
 	 * Defines application container for Madvoc usage. We share applications
