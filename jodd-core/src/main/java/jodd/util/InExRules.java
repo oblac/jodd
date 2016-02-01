@@ -104,7 +104,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 		if (rules == null) {
 			return false;
 		}
-		return rules.size() > 0;
+		return !rules.isEmpty();
 	}
 
 	/**

@@ -33,7 +33,7 @@ public class ProxyInfo {
 	/**
 	 * Proxy types.
 	 */
-	public static enum ProxyType {
+	public enum ProxyType {
 		NONE, HTTP, SOCKS4, SOCKS5
 	}
 

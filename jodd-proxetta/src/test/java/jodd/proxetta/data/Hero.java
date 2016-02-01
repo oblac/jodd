@@ -33,7 +33,7 @@ package jodd.proxetta.data;
 		enemies = {2,1000})
 public class Hero {
 
-	public static enum POWER {
+	public enum POWER {
 		STRENGTH,
 		XRAY,
 		SPEED {

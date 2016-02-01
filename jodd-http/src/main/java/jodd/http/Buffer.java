@@ -96,7 +96,7 @@ public class Buffer {
 	 * Appends other buffer to this one.
 	 */
 	public Buffer append(Buffer buffer) {
-		if (buffer.list.size() == 0) {
+		if (buffer.list.isEmpty()) {
 			// nothing to append
 			return buffer;
 		}

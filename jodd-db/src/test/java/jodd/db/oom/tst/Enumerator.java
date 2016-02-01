@@ -32,7 +32,7 @@ import jodd.db.oom.meta.DbTable;
 @DbTable
 public class Enumerator {
 
-	public static enum STATUS {
+	public enum STATUS {
 		ONE(1),
 		TWO(123),
 		THREE(222);
