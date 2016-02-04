@@ -154,7 +154,7 @@ public class InvReplTest {
 
 
 	protected InvokeProxetta initProxetta() {
-		InvokeProxetta fp = InvokeProxetta.withAspects(
+		return InvokeProxetta.withAspects(
 				new InvokeAspect() {
 					@Override
 					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
@@ -202,6 +202,5 @@ public class InvReplTest {
 					}
 				}
 		);
-		return fp;
 	}
 }

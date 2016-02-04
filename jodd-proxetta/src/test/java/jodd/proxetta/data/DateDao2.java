@@ -53,8 +53,7 @@ public class DateDao2 {
 		long end = start;
 
 		try {
-			Object result = currentTime0();
-			return result;
+			return currentTime0();
 		}
 		catch (Exception e) {
 			throw e;

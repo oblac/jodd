@@ -24,11 +24,10 @@ public class PetiteHelper {
 
         ProxyPointcut pointcut_logged = new MethodAnnotationPointcut(Logged.class);
         ProxyAspect aspect_logged = new ProxyAspect(LogProxyAdvice.class, pointcut_logged);
-
-        ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect_logged);
+        
         //proxetta.setDebugFolder(SystemUtil.userHome() + "\\inka\\proxetta");
 
-        return proxetta;
+        return ProxyProxetta.withAspects(aspect_logged);
     }
 
 }

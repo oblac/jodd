@@ -93,6 +93,14 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 				entries.add(new Entry<String, Object>() {
 					@Override
 					public boolean equals(Object obj) {
+						if (obj == null) {
+							return false;
+						}
+
+						if (this.getClass() != obj.getClass()) {
+							return false;
+						}
+
 						Entry entry = (Entry) obj;
 						return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value.equals(entry.getValue()));
 					}
