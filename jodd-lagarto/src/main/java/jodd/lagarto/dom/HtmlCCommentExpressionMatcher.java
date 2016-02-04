@@ -123,7 +123,7 @@ public class HtmlCCommentExpressionMatcher {
 
 	// If in expression IE version is represented as a natural number
 	// we should compare only major number
-	private float versionToCompare(float ieVersion, float number) {
+	private static float versionToCompare(float ieVersion, float number) {
 		return (int) number == number ? (int) ieVersion : ieVersion;
 	}
 }

@@ -70,7 +70,7 @@ class PropertiesToProps {
 		}
 	}
 
-	private BufferedWriter getBufferedWriter(final Writer writer) {
+	private static BufferedWriter getBufferedWriter(final Writer writer) {
 		final BufferedWriter bw;
 		if (writer instanceof BufferedWriter) {
 			bw = (BufferedWriter) writer;
@@ -103,14 +103,14 @@ class PropertiesToProps {
 		}
 	}
 
-	private void writeProfileProperty(final BufferedWriter bw, final String profileName,
+	private static void writeProfileProperty(final BufferedWriter bw, final String profileName,
 									  final String key, final String value)
 			throws IOException {
 		bw.write(key + '<' + profileName + '>' + '=' + value);
 		bw.newLine();
 	}
 
-	private void writeBaseProperty(final BufferedWriter bw, final String key, final String value)
+	private static void writeBaseProperty(final BufferedWriter bw, final String key, final String value)
 			throws IOException {
 		bw.write(key + '=' + value);
 		bw.newLine();

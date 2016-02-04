@@ -360,7 +360,7 @@ public class PrintfFormat {
 		return new String(buffer);
 	}
 	
-	private String getAltPrefixFor(char fmt, String currentPrefix) {
+	private static String getAltPrefixFor(char fmt, String currentPrefix) {
 		switch(fmt) {
 			case 'x':
 				return "0x";
