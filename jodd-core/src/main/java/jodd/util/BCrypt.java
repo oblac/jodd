@@ -687,7 +687,7 @@ public class BCrypt {
 		String real_salt;
 		byte[] passwordb, saltb, hashed;
 		char minor = (char) 0;
-		int rounds, off = 0;
+		int rounds, off;
 		StringBuffer rs = new StringBuffer();
 
 		if (salt.charAt(0) != '$' || salt.charAt(1) != '2') {
