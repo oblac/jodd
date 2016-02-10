@@ -34,7 +34,7 @@ public class DefaultTag extends SimpleTagSupport {
 	@Override
 	public void doTag() throws JspException {
 		JspTag parent = getParent();
-		if (parent == null || !(parent instanceof SwitchTag)) {
+		if (!(parent instanceof SwitchTag)) {
 			throw new JspException(SwitchTag.MSG_PARENT_SWITCH_REQUIRED, null);
 		}
 
