@@ -37,7 +37,7 @@ public class ThenTag extends SimpleTagSupport {
 	@Override
 	public void doTag() throws JspException {
 		JspTag parent = getParent();
-		if (parent == null || !(parent instanceof IfElseTag)) {
+		if (!(parent instanceof IfElseTag)) {
 			throw new JspException("Parent IfElse tag is required", null);
 		}
 
