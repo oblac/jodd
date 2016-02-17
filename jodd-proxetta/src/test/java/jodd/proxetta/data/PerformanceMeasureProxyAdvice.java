@@ -40,8 +40,7 @@ public class PerformanceMeasureProxyAdvice implements ProxyAdvice {
 		long end = start;
 
 		try {
-			Object result = ProxyTarget.invoke();
-			return result;
+			return ProxyTarget.invoke();
 		}
 		catch (Exception e) {
 			throw e;
