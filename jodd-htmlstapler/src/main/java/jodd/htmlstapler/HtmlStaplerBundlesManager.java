@@ -500,10 +500,8 @@ public class HtmlStaplerBundlesManager {
 					}
 				}
 
-				if (content != null) {
-					if (isCssResource(src)) {
-						content = fixCssRelativeUrls(content, src);
-					}
+				if (content != null && isCssResource(src)) {
+					content = fixCssRelativeUrls(content, src);
 				}
 			}
 

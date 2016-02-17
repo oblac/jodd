@@ -123,10 +123,8 @@ public abstract class LoopingTagSupport extends SimpleTagSupport {
 				}
 				return;
 			}
-			if (start > end) {
-				if (step > 0) {
-					throw new IllegalArgumentException("Positive step value for decreasing loop");
-				}
+			if (start > end && step > 0) {
+				throw new IllegalArgumentException("Positive step value for decreasing loop");
 			}
 		}
 	}

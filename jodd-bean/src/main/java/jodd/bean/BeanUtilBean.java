@@ -351,24 +351,22 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 				return map.get(key);
 			}
 			Object value = map.get(key);
-			if (!bp.last) {
-				if (value == null) {
-					Class mapComponentType = extractGenericComponentType(getter);
-					if (mapComponentType == Object.class) {
-						mapComponentType = Map.class;
-					}
-					try {
-						value = ReflectUtil.newInstance(mapComponentType);
-					} catch (Exception ex) {
-						if (isSilent) {
-							return null;
-						}
-						throw new BeanException("Invalid map element: " + bp.name + '[' + bp.indexString + ']', bp, ex);
-					}
-
-					//noinspection unchecked
-					map.put(key, value);
+			if (!bp.last && value == null) {
+				Class mapComponentType = extractGenericComponentType(getter);
+				if (mapComponentType == Object.class) {
+					mapComponentType = Map.class;
 				}
+				try {
+					value = ReflectUtil.newInstance(mapComponentType);
+				} catch (Exception ex) {
+					if (isSilent) {
+						return null;
+					}
+					throw new BeanException("Invalid map element: " + bp.name + '[' + bp.indexString + ']', bp, ex);
+				}
+
+				//noinspection unchecked
+				map.put(key, value);
 			}
 			return value;
 		}

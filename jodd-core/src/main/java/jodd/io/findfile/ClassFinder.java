@@ -241,10 +241,8 @@ public abstract class ClassFinder {
 	 */
 	protected void scanUrl(URL url) {
 		File file = FileUtil.toFile(url);
-		if (file == null) {
-			if (!ignoreException) {
-				throw new FindFileException("URL is not a valid file: " + url);
-			}
+		if (file == null && !ignoreException) {
+			throw new FindFileException("URL is not a valid file: " + url);
 		}
 		scanPath(file);
 	}

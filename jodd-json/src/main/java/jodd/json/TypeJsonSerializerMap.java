@@ -211,10 +211,8 @@ public class TypeJsonSerializerMap {
 	protected TypeJsonSerializer lookupSerializer(Class type) {
 		TypeJsonSerializer tjs = map.unsafeGet(type);
 
-		if (tjs == null) {
-			if (defaultSerializerMap != null) {
-				tjs = defaultSerializerMap.map.unsafeGet(type);
-			}
+		if (tjs == null && defaultSerializerMap != null) {
+			tjs = defaultSerializerMap.map.unsafeGet(type);
 		}
 
 		return tjs;

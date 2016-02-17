@@ -220,13 +220,11 @@ public class PrintfFormat {
 		}
 
 		// 4: parse format
-		if (parseState == 4) {
-			if (i < length) {
-				fmt = s.charAt(i);
-				i++;				
+		if (parseState == 4 && i < length) {
+			fmt = s.charAt(i);
+			i++;				
 //			} else {
 //				parseState = 5;
-			}
 		}
 
 		// append suffix

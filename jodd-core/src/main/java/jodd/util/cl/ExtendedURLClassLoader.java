@@ -284,10 +284,8 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 				url = parentClassLoader.getResource(resourceName);
 			}
 
-			if (url == null) {
-				if (loading.withLoader) {
-					url = this.findResource(resourceName);
-				}
+			if (url == null && loading.withLoader) {
+				url = this.findResource(resourceName);
 			}
 		} else {
 			// THIS FIRST
@@ -295,10 +293,8 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 				url = this.findResource(resourceName);
 			}
 
-			if (url == null) {
-				if (loading.withParent) {
-					url = parentClassLoader.getResource(resourceName);
-				}
+			if (url == null && loading.withParent) {
+				url = parentClassLoader.getResource(resourceName);
 			}
 		}
 

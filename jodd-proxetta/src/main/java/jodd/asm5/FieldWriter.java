@@ -209,12 +209,11 @@ final class FieldWriter extends FieldVisitor {
             cw.newUTF8("ConstantValue");
             size += 8;
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((cw.version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                cw.newUTF8("Synthetic");
-                size += 6;
-            }
+
+        if (((access & Opcodes.ACC_SYNTHETIC) != 0) && ((cw.version & 0xFFFF) < Opcodes.V1_5
+                || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+            cw.newUTF8("Synthetic");
+            size += 6;
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
             cw.newUTF8("Deprecated");
@@ -261,11 +260,9 @@ final class FieldWriter extends FieldVisitor {
         if (value != 0) {
             ++attributeCount;
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((cw.version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                ++attributeCount;
-            }
+        if ((access & Opcodes.ACC_SYNTHETIC) != 0 && ((cw.version & 0xFFFF) < Opcodes.V1_5
+                || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+            ++attributeCount;
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
             ++attributeCount;
@@ -293,11 +290,9 @@ final class FieldWriter extends FieldVisitor {
             out.putShort(cw.newUTF8("ConstantValue"));
             out.putInt(2).putShort(value);
         }
-        if ((access & Opcodes.ACC_SYNTHETIC) != 0) {
-            if ((cw.version & 0xFFFF) < Opcodes.V1_5
-                    || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0) {
-                out.putShort(cw.newUTF8("Synthetic")).putInt(0);
-            }
+        if (((access & Opcodes.ACC_SYNTHETIC) != 0) && ((cw.version & 0xFFFF) < Opcodes.V1_5
+                || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+            out.putShort(cw.newUTF8("Synthetic")).putInt(0);
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
             out.putShort(cw.newUTF8("Deprecated")).putInt(0);

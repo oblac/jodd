@@ -459,15 +459,13 @@ public class LagartoParser extends Scanner {
 				state = TAG_NAME;
 				return;
 			}
-			if (config.parseXmlTags) {
-				if (match(XML)) {
-					ndx += XML.length - 1;
-					if (xmlDeclaration == null) {
-						xmlDeclaration = new XmlDeclaration();
-					}
-					state = xmlDeclaration.XML_BETWEEN;
-					return;
+			if (config.parseXmlTags && match(XML)) {
+				ndx += XML.length - 1;
+				if (xmlDeclaration == null) {
+					xmlDeclaration = new XmlDeclaration();
 				}
+				state = xmlDeclaration.XML_BETWEEN;
+				return;
 			}
 			if (c == '?') {
 				errorInvalidToken();
@@ -961,17 +959,15 @@ public class LagartoParser extends Scanner {
 				}
 			}
 
-			if (config.parseXmlTags) {
-				if (match(CDATA)) {
-					ndx += CDATA.length - 1;
+			if (config.parseXmlTags && match(CDATA)) {
+				ndx += CDATA.length - 1;
 
-					if (xmlDeclaration == null) {
-						xmlDeclaration = new XmlDeclaration();
-					}
-
-					state = xmlDeclaration.CDATA;
-					return;
+				if (xmlDeclaration == null) {
+					xmlDeclaration = new XmlDeclaration();
 				}
+
+				state = xmlDeclaration.CDATA;
+				return;
 			}
 
 			errorInvalidToken();

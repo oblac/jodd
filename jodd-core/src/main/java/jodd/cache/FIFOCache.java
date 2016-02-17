@@ -76,11 +76,9 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 				first = co;
 			}
 		}
-		if (isFull()) {
-			if (first != null) {
-				cacheMap.remove(first.key);
-				count++;
-			}
+		if (isFull() && first != null) {
+			cacheMap.remove(first.key);
+			count++;
 		}
 		return count;
 	}

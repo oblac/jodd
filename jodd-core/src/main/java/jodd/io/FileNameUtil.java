@@ -988,10 +988,8 @@ public class FileNameUtil {
 			}
 			return path;
 		}
-		if (path.length() >= 2) {
-			if ((path.charAt(0) == '~') && (path.charAt(1) == File.separatorChar)) {
-				return SystemUtil.userHome() + path.substring(1);
-			}
+		if (path.length() >= 2 && (path.charAt(0) == '~') && (path.charAt(1) == File.separatorChar)) {
+			return SystemUtil.userHome() + path.substring(1);
 		}
 		return path;
 	}

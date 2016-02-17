@@ -128,15 +128,11 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 		int len = tableName.length();
 
 		int i = 0;
-		if (prefix != null) {
-			if (tableName.startsWith(prefix)) {
-				i = prefix.length();
-			}
+		if (prefix != null && tableName.startsWith(prefix)) {
+			i = prefix.length();
 		}
-		if (suffix != null) {
-			if (tableName.endsWith(suffix)) {
-				len -= suffix.length();
-			}
+		if (suffix != null && tableName.endsWith(suffix)) {
+			len -= suffix.length();
 		}
 
 		if (splitCamelCase) {

@@ -162,15 +162,13 @@ public class JsonParser extends JsonParserBase {
 
 		Path altPath = path.getAltPath();
 
-		if (altPath != null) {
-			if (!altPath.equals(path)) {
-				newType = mappings.get(altPath);
+		if (altPath != null && !altPath.equals(path)) {
+            newType = mappings.get(altPath);
 
-				if (newType != null) {
-					return newType;
-				}
-			}
-		}
+            if (newType != null) {
+                return newType;
+            }
+        }
 
 		// now check regular paths
 
@@ -284,12 +282,10 @@ public class JsonParser extends JsonParserBase {
 
 		// convert map to target type
 
-		if (classMetadataName != null && rootType == null) {
-			if (value instanceof Map) {
-				Map map = (Map) value;
+		if (classMetadataName != null && rootType == null && value instanceof Map) {
+			Map map = (Map) value;
 
-				value = mapToBean.map2bean(map, null);
-			}
+			value = mapToBean.map2bean(map, null);
 		}
 
 		return (T) value;
@@ -867,12 +863,9 @@ public class JsonParser extends JsonParserBase {
 
 					path.pop();
 
-				if (typeData.rules.match(keyOriginal, !typeData.strict)) {
-
-					if (pd != null) {
-						// only inject values if target property exist
-						injectValueIntoObject(target, pd, value);
-					}
+				if (typeData.rules.match(keyOriginal, !typeData.strict) && pd != null) {
+                    // only inject values if target property exist
+                    injectValueIntoObject(target, pd, value);
 				}
 			}
 			else {

@@ -733,10 +733,8 @@ public class FileUtil {
 	}
 	
 	protected static void outChars(File dest, char[] data, String encoding, boolean append) throws IOException {
-		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
+		if (dest.exists() && !dest.isFile()) {
+			throw new IOException(MSG_NOT_A_FILE + dest);
 		}
 		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest, append), encoding));
 		try {
@@ -881,10 +879,8 @@ public class FileUtil {
 	}
 
 	protected static void outString(File dest, String data, String encoding, boolean append) throws IOException {
-		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
+		if (dest.exists() && !dest.isFile()) {
+			throw new IOException(MSG_NOT_A_FILE + dest);
 		}
 		FileOutputStream out = null;
 		try {
@@ -1032,10 +1028,8 @@ public class FileUtil {
 	}
 
 	protected static void outBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
-		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
+		if (dest.exists() && !dest.isFile()) {
+			throw new IOException(MSG_NOT_A_FILE + dest);
 		}
 		FileOutputStream out = null;
 		try {

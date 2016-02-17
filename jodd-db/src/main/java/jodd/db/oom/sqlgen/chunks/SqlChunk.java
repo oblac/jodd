@@ -184,10 +184,8 @@ public abstract class SqlChunk {
 	 */
 	protected DbEntityDescriptor lookupTableRef(String tableRef, boolean throwExceptionIfNotFound) {
 		DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
-		if (ded == null) {
-			if (throwExceptionIfNotFound) {
-				throw new DbSqlBuilderException("Invalid table reference: " + tableRef);
-			}
+		if (ded == null && throwExceptionIfNotFound) {
+			throw new DbSqlBuilderException("Invalid table reference: " + tableRef);
 		}
 		return ded;
 	}

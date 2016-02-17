@@ -127,28 +127,26 @@ public class AnnotationTxAdviceManager {
 	public synchronized JtxTransactionMode getTxMode(Class type, String methodName, Class[] methodArgTypes, String unique) {
 		String signature = type.getName() + '#' + methodName + '%' + unique;
 		JtxTransactionMode txMode = txmap.get(signature);
-		if (txMode == null) {
-			if (!txmap.containsKey(signature)) {
+		if (txMode == null && !txmap.containsKey(signature)) {
 
-				Method m;
-				try {
-					m = type.getMethod(methodName, methodArgTypes);
-				} catch (NoSuchMethodException nsmex) {
-					throw new ProxettaException(nsmex);
-				}
-
-				TransactionAnnotationData txAnn = getTransactionAnnotation(m);
-				if (txAnn != null) {
-					txMode = new JtxTransactionMode();
-					txMode.setPropagationBehaviour(txAnn.getPropagation());
-					txMode.setIsolationLevel(txAnn.getIsolation());
-					txMode.setReadOnly(txAnn.isReadOnly());
-					txMode.setTransactionTimeout(txAnn.getTimeout());
-				} else {
-					txMode = defaultTransactionMode;
-				}
-				txmap.put(signature, txMode);
+			Method m;
+			try {
+				m = type.getMethod(methodName, methodArgTypes);
+			} catch (NoSuchMethodException nsmex) {
+				throw new ProxettaException(nsmex);
 			}
+
+			TransactionAnnotationData txAnn = getTransactionAnnotation(m);
+			if (txAnn != null) {
+				txMode = new JtxTransactionMode();
+				txMode.setPropagationBehaviour(txAnn.getPropagation());
+				txMode.setIsolationLevel(txAnn.getIsolation());
+				txMode.setReadOnly(txAnn.isReadOnly());
+				txMode.setTransactionTimeout(txAnn.getTimeout());
+			} else {
+				txMode = defaultTransactionMode;
+			}
+			txmap.put(signature, txMode);
 		}
 		return txMode;
 	}

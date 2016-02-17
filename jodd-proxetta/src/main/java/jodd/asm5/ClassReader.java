@@ -1275,10 +1275,8 @@ public class ClassReader {
             for (int i = stackMap; i < stackMap + stackMapSize - 2; ++i) {
                 if (b[i] == 8) { // UNINITIALIZED FRAME TYPE
                     int v = readUnsignedShort(i + 1);
-                    if (v >= 0 && v < codeLength) {
-                        if ((b[codeStart + v] & 0xFF) == Opcodes.NEW) {
-                            readLabel(v, labels);
-                        }
+                    if (v >= 0 && v < codeLength && ((b[codeStart + v] & 0xFF) == Opcodes.NEW)) {
+                        readLabel(v, labels);
                     }
                 }
             }

@@ -98,10 +98,9 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 			else if (includeFields) {
 				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
-				if (field != null) {
-					if (field.matchDeclared(declared)) {
-						names.add(field.getName());
-					}
+				if (field != null && field.matchDeclared(declared)) {
+					names.add(field.getName());
+
 				}
 			}
 		}

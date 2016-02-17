@@ -320,19 +320,17 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	 * Process includes rules.
 	 */
 	protected boolean processIncludes(T value, boolean include) {
-		if (includesCount > 0) {
-			if (!include) {
-				for (Rule<R> rule : rules) {
-					if (!rule.include) {
-						continue;
-					}
+		if (includesCount > 0 && !include) {
+			for (Rule<R> rule : rules) {
+				if (!rule.include) {
+					continue;
+				}
 
-					if (inExRuleMatcher.accept(value, rule.value, true)) {
-						include = true;
-						break;
+				if (inExRuleMatcher.accept(value, rule.value, true)) {
+					include = true;
+					break;
 					}
 				}
-			}
 		}
 		return include;
 	}
@@ -341,19 +339,17 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	 * Process excludes rules.
 	 */
 	protected boolean processExcludes(T value, boolean include) {
-		if (excludesCount > 0) {
-			if (include) {
-				for (Rule<R> rule : rules) {
-					if (rule.include) {
-						continue;
-					}
+		if (excludesCount > 0 && include) {
+			for (Rule<R> rule : rules) {
+				if (rule.include) {
+					continue;
+				}
 
-					if (inExRuleMatcher.accept(value, rule.value, false)) {
-						include = false;
-						break;
+				if (inExRuleMatcher.accept(value, rule.value, false)) {
+					include = false;
+					break;
 					}
 				}
-			}
 		}
 		return include;
 	}

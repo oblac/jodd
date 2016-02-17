@@ -256,12 +256,10 @@ public abstract class PetiteBeans {
 
 		// remove existing bean
 		BeanDefinition existing = removeBean(name);
-		if (existing != null) {
-			if (petiteConfig.getDetectDuplicatedBeanNames()) {
-				throw new PetiteException(
-						"Duplicated bean name detected while registering class '" + type.getName() + "'. Petite bean class '" +
-						existing.type.getName() + "' is already registered with the name: " + name);
-			}
+		if (existing != null && petiteConfig.getDetectDuplicatedBeanNames()) {
+			throw new PetiteException(
+					"Duplicated bean name detected while registering class '" + type.getName() + "'. Petite bean class '" +
+							existing.type.getName() + "' is already registered with the name: " + name);
 		}
 
 		// check if type is valid

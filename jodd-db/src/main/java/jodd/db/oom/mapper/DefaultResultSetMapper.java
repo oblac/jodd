@@ -406,43 +406,41 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				}
 			}
 
-			if (tableMatched) {
-				if (!resultColumns.contains(columnName)) {
-					//DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
-					DbEntityDescriptor ded = dbEntityDescriptors[currentResult];
+			if (tableMatched && !resultColumns.contains(columnName)) {
+				//DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
+				DbEntityDescriptor ded = dbEntityDescriptors[currentResult];
 
-					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
-					String propertyName = (dec == null ? null : dec.getPropertyName());
+				DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
+				String propertyName = (dec == null ? null : dec.getPropertyName());
 
-					// check if a property that matches column name exist
-					if (propertyName != null) {
+				// check if a property that matches column name exist
+				if (propertyName != null) {
 
-						// if current entity instance does not exist (i.e. we are at the first column
-						// of some entity), create the instance and store it
-						if (result[currentResult] == null) {
-							result[currentResult] = dbOomManager.createEntityInstance(currentType);
-						}
+					// if current entity instance does not exist (i.e. we are at the first column
+					// of some entity), create the instance and store it
+					if (result[currentResult] == null) {
+						result[currentResult] = dbOomManager.createEntityInstance(currentType);
+					}
 /*
 						boolean success = value != null ?
 										BeanUtil.setDeclaredPropertySilent(result[currentResult], propertyName, value) :
 										BeanUtil.hasDeclaredProperty(result[currentResult], propertyName);
 */
-						Class type = BeanUtil.declared.getPropertyType(result[currentResult], propertyName);
-						if (type != null) {
-							// match: entity
-							dec.updateDbSqlType(columnDbSqlType);	// updates column db sql type information for the entity!!!
-							Class<? extends SqlType> sqlTypeClass = dec.getSqlTypeClass();
-							Object value = readColumnValue(colNdx, type, sqlTypeClass, columnDbSqlType);
+					Class type = BeanUtil.declared.getPropertyType(result[currentResult], propertyName);
+					if (type != null) {
+						// match: entity
+						dec.updateDbSqlType(columnDbSqlType);    // updates column db sql type information for the entity!!!
+						Class<? extends SqlType> sqlTypeClass = dec.getSqlTypeClass();
+						Object value = readColumnValue(colNdx, type, sqlTypeClass, columnDbSqlType);
 
-							if (value != null) {
-								// inject column value into existing entity
-								BeanUtil.declared.setProperty(result[currentResult], propertyName, value);
-								resultUsage[currentResult] = true;
-							}
-							colNdx++;
-							resultColumns.add(columnName);
-							continue;
+						if (value != null) {
+							// inject column value into existing entity
+							BeanUtil.declared.setProperty(result[currentResult], propertyName, value);
+							resultUsage[currentResult] = true;
 						}
+						colNdx++;
+						resultColumns.add(columnName);
+						continue;
 					}
 				}
 			}

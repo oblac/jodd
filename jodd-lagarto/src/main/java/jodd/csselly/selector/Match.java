@@ -158,10 +158,8 @@ public enum Match {
 		Match[] values = Match.values();
 		for (Match match : values) {
 			String matchSign = match.getSign();
-			if (matchSign.length() > 1) {
-				if (firstChar == matchSign.charAt(0)) {
-					return match;
-				}
+			if (matchSign.length() > 1 && firstChar == matchSign.charAt(0)) {
+				return match;
 			}
 		}
 		return EQUALS;

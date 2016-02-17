@@ -215,10 +215,8 @@ public class JsonContext extends JsonWriter {
 				if (propertyTypeClassDescriptor.isCollection()) {
 					return false;
 				}
-				if (excludeMaps) {
-					if (propertyTypeClassDescriptor.isMap()) {
-						return false;
-					}
+				if (excludeMaps && propertyTypeClassDescriptor.isMap()) {
+					return false;
 				}
 			}
 

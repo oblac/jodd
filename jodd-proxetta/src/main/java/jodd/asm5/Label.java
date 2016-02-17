@@ -514,14 +514,12 @@ public class Label {
                 }
                 l.status |= VISITED2;
                 // adds JSR to the successors of l, if it is a RET block
-                if ((l.status & RET) != 0) {
-                    if (!l.inSameSubroutine(JSR)) {
-                        Edge e = new Edge();
-                        e.info = l.inputStackTop;
-                        e.successor = JSR.successors.successor;
-                        e.next = l.successors;
-                        l.successors = e;
-                    }
+                if ((l.status & RET) != 0 && !l.inSameSubroutine(JSR)) {
+                    Edge e = new Edge();
+                    e.info = l.inputStackTop;
+                    e.successor = JSR.successors.successor;
+                    e.next = l.successors;
+                    l.successors = e;
                 }
             } else {
                 // if the l block already belongs to subroutine 'id', continue

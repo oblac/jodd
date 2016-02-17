@@ -272,10 +272,8 @@ public class PropsData implements Cloneable {
 				break;
 			}
 
-			if (skipEmptyProps) {
-				if (newValue.length() == 0) {
-					return null;
-				}
+			if (skipEmptyProps && newValue.length() == 0) {
+				return null;
 			}
 
 			value = newValue;
@@ -295,10 +293,8 @@ public class PropsData implements Cloneable {
 		}
 
 		// make sure prefix ends with a dot
-		if (prefix != null) {
-			if (!StringUtil.endsWithChar(prefix, '.')) {
-				prefix += StringPool.DOT;
-			}
+		if (prefix != null && !StringUtil.endsWithChar(prefix, '.')) {
+			prefix += StringPool.DOT;
 		}
 
 		if (profiles != null) {
@@ -335,10 +331,8 @@ public class PropsData implements Cloneable {
 		for (Map.Entry<String, PropsEntry> entry : map.entrySet()) {
 			String key = entry.getKey();
 
-			if (wildcardPatterns != null) {
-				if (Wildcard.matchOne(key, wildcardPatterns) == -1) {
-					continue;
-				}
+			if (wildcardPatterns != null && Wildcard.matchOne(key, wildcardPatterns) == -1) {
+				continue;
 			}
 
 			// shorten the key

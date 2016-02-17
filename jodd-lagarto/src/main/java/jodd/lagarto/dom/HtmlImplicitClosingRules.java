@@ -96,10 +96,8 @@ public class HtmlImplicitClosingRules {
 		nodeName = nodeName.toLowerCase();
 
 		for (int i = 0; i < IMPLIED_ON_START.length; i+=2) {
-			if (StringUtil.equalsOne(parentNodeName, IMPLIED_ON_START[i]) != -1) {
-				if (StringUtil.equalsOne(nodeName, IMPLIED_ON_START[i + 1]) != -1) {
-					return true;
-				}
+			if (StringUtil.equalsOne(parentNodeName, IMPLIED_ON_START[i]) != -1 && StringUtil.equalsOne(nodeName, IMPLIED_ON_START[i + 1]) != -1) {
+				return true;
 			}
 		}
 
@@ -147,10 +145,8 @@ public class HtmlImplicitClosingRules {
 		nodeName = nodeName.toLowerCase();
 
 		for (int i = 0; i < IMPLIED_ON_END.length; i += 2) {
-			if (StringUtil.equalsOne(nodeName, IMPLIED_ON_END[i]) != -1) {
-				if (StringUtil.equalsOne(parentNodeName, IMPLIED_ON_END[i + 1]) != -1) {
-					return true;
-				}
+			if (StringUtil.equalsOne(nodeName, IMPLIED_ON_END[i]) != -1 && StringUtil.equalsOne(parentNodeName, IMPLIED_ON_END[i + 1]) != -1) {
+				return true;
 			}
 		}
 

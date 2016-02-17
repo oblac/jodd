@@ -327,10 +327,8 @@ class ParsedTag implements Tag {
 	}
 
 	private void setAttrVal(int index, CharSequence name, CharSequence value) {
-		if (idNdx == -1) {
-			if (TagUtil.equalsToLowercase(name, ATTR_NAME_ID)) {
-				idNdx = index;
-			}
+		if (idNdx == -1 && TagUtil.equalsToLowercase(name, ATTR_NAME_ID)) {
+			idNdx = index;
 		}
 		attrValues[index] = value;
 	}

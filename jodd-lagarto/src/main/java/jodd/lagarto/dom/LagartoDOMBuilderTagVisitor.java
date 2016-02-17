@@ -106,11 +106,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			Node thisNode = parentNode;
 
 			while (thisNode != rootNode) {
-				if (domBuilder.config.isImpliedEndTags()) {
-					if (implRules.implicitlyCloseTagOnEOF(thisNode.getNodeName())) {
-						thisNode = thisNode.getParentNode();
-						continue;
-					}
+				if (domBuilder.config.isImpliedEndTags() && implRules.implicitlyCloseTagOnEOF(thisNode.getNodeName())) {
+					thisNode = thisNode.getParentNode();
+					continue;
 				}
 
 				error("Unclosed tag closed: <" + thisNode.getNodeName() + ">");
@@ -283,10 +281,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		if (closedTag) {
-			if (parentNode.getChildNodesCount() == 1) {
-				return;
-			}
+		if (closedTag && parentNode.getChildNodesCount() == 1) {
+			return;
 		}
 
 		Text text = (Text) lastChild;
@@ -309,10 +305,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		while (parent != null) {
 			String parentNodeName = parent.getNodeName();
 
-			if (parentNodeName != null) {
-				if (!rootNode.config.isCaseSensitive()) {
-					parentNodeName = parentNodeName.toLowerCase();
-				}
+			if (parentNodeName != null && !rootNode.config.isCaseSensitive()) {
+				parentNodeName = parentNodeName.toLowerCase();
 			}
 			
 			if (tagName.equals(parentNodeName)) {
@@ -369,15 +363,13 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 			Node parentParentNode = parentNode.getParentNode();
 
-			if (domBuilder.config.isImpliedEndTags()) {
-				if (implRules.implicitlyCloseParentTagOnNewTag(
-						parentParentNode.getNodeName(), parentNode.getNodeName())) {
-					// break the tree: detach this node and append it after parent
+			if (domBuilder.config.isImpliedEndTags() && implRules.implicitlyCloseParentTagOnNewTag(
+					parentParentNode.getNodeName(), parentNode.getNodeName())) {
+				// break the tree: detach this node and append it after parent
 
-					parentNode.detachFromParent();
+				parentNode.detachFromParent();
 
-					parentParentNode.getParentNode().addChild(parentNode);
-				}
+				parentParentNode.getParentNode().addChild(parentNode);
 			}
 
 			// debug message

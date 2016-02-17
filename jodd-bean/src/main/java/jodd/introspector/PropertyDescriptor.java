@@ -213,15 +213,11 @@ public class PropertyDescriptor extends Descriptor {
 	 * Creates a {@link Getter}.
 	 */
 	protected Getter createGetter(boolean declared) {
-		if (readMethodDescriptor != null) {
-			if (readMethodDescriptor.matchDeclared(declared)) {
-				return readMethodDescriptor;
-			}
+		if (readMethodDescriptor != null && readMethodDescriptor.matchDeclared(declared)) {			
+			return readMethodDescriptor;
 		}
-		if (fieldDescriptor != null) {
-			if (fieldDescriptor.matchDeclared(declared)) {
-				return fieldDescriptor;
-			}
+		if (fieldDescriptor != null && fieldDescriptor.matchDeclared(declared)) {
+			return fieldDescriptor;
 		}
 		return null;
 	}
@@ -246,15 +242,11 @@ public class PropertyDescriptor extends Descriptor {
 	 * Creates a {@link Setter}.
 	 */
 	protected Setter createSetter(boolean declared) {
-		if (writeMethodDescriptor != null) {
-			if (writeMethodDescriptor.matchDeclared(declared)) {
-				return writeMethodDescriptor;
-			}
+		if (writeMethodDescriptor != null && writeMethodDescriptor.matchDeclared(declared)) {
+			return writeMethodDescriptor;
 		}
-		if (fieldDescriptor != null) {
-			if (fieldDescriptor.matchDeclared(declared)) {
-				return fieldDescriptor;
-			}
+		if (fieldDescriptor != null && fieldDescriptor.matchDeclared(declared)) {
+			return fieldDescriptor;
 		}
 		return null;
 	}

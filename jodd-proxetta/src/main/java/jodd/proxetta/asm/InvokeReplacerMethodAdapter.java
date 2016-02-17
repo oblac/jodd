@@ -105,18 +105,16 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 		// creating FooClone.<init>; inside the FOO constructor
 		// replace the very first invokespecial <init> call (SUB.<init>)
 		// to targets subclass with target (FOO.<init>).
-		if (methodInfo.getMethodName().equals(INIT)) {
-			if (
-					(!firstSuperCtorInitCalled) &&
-							(opcode == INVOKESPECIAL) &&
-							name.equals(INIT) &&
-							owner.equals(wd.nextSupername)
-					) {
-				firstSuperCtorInitCalled = true;
-				owner = wd.superReference;
-				super.visitMethodInsn(opcode, owner, name, desc, isInterface);
-				return;
-			}
+		if (methodInfo.getMethodName().equals(INIT) &&
+				(!firstSuperCtorInitCalled) &&
+				(opcode == INVOKESPECIAL) &&
+				name.equals(INIT) &&
+				owner.equals(wd.nextSupername)
+				) {
+			firstSuperCtorInitCalled = true;
+			owner = wd.superReference;
+			super.visitMethodInsn(opcode, owner, name, desc, isInterface);
+			return;
 		}
 
 		// detection of super calls

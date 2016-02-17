@@ -754,19 +754,15 @@ public class ProxettaAsmUtil {
 	// ---------------------------------------------------------------- detect advice macros
 
 	public static boolean isInvokeMethod(String name, String desc) {
-		if (name.equals("invoke")) {
-			if (desc.equals("()Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("invoke") && desc.equals("()Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isArgumentsCountMethod(String name, String desc) {
-		if (name.equals("argumentsCount")) {
-			if (desc.equals("()I")) {
-				return true;
-			}
+		if (name.equals("argumentsCount") && desc.equals("()I")) {
+			return true;
 		}
 		return false;
 	}
@@ -781,128 +777,100 @@ public class ProxettaAsmUtil {
 	}
 
 	public static boolean isArgumentMethod(String name, String desc) {
-		if (name.equals("argument")) {
-			if (desc.equals("(I)Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("argument") && desc.equals("(I)Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isSetArgumentMethod(String name, String desc) {
-		if (name.equals("setArgument")) {
-			if (desc.equals("(Ljava/lang/Object;I)V")) {
-				return true;
-			}
+		if (name.equals("setArgument") && desc.equals("(Ljava/lang/Object;I)V")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isCreateArgumentsArrayMethod(String name, String desc) {
-		if (name.equals("createArgumentsArray")) {
-			if (desc.equals("()[Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("createArgumentsArray") && desc.equals("()[Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isCreateArgumentsClassArrayMethod(String name, String desc) {
-		if (name.equals("createArgumentsClassArray")) {
-			if (desc.equals("()[Ljava/lang/Class;")) {
-				return true;
-			}
+		if (name.equals("createArgumentsClassArray") && desc.equals("()[Ljava/lang/Class;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isReturnTypeMethod(String name, String desc) {
-		if (name.equals("returnType")) {
-			if (desc.equals("()Ljava/lang/Class;")) {
-				return true;
-			}
+		if (name.equals("returnType") && desc.equals("()Ljava/lang/Class;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isTargetMethod(String name, String desc) {
-		if (name.equals("target")) {
-			if (desc.equals("()Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("target") && desc.equals("()Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}
 
 
 	public static boolean isTargetClassMethod(String name, String desc) {
-		if (name.equals("targetClass")) {
-			if (desc.equals("()Ljava/lang/Class;")) {
-				return true;
-			}
+		if (name.equals("targetClass") && desc.equals("()Ljava/lang/Class;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isTargetMethodNameMethod(String name, String desc) {
-		if (name.equals("targetMethodName")) {
-			if (desc.equals("()Ljava/lang/String;")) {
-				return true;
-			}
+		if (name.equals("targetMethodName") && desc.equals("()Ljava/lang/String;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isTargetMethodSignatureMethod(String name, String desc) {
-		if (name.equals("targetMethodSignature")) {
-			if (desc.equals("()Ljava/lang/String;")) {
-				return true;
-			}
+		if (name.equals("targetMethodSignature") && desc.equals("()Ljava/lang/String;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isTargetMethodDescriptionMethod(String name, String desc) {
-		if (name.equals("targetMethodDescription")) {
-			if (desc.equals("()Ljava/lang/String;")) {
-				return true;
-			}
+		if (name.equals("targetMethodDescription") && desc.equals("()Ljava/lang/String;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isReturnValueMethod(String name, String desc) {
-		if (name.equals("returnValue")) {
-			if (desc.equals("(Ljava/lang/Object;)Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("returnValue") && desc.equals("(Ljava/lang/Object;)Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isInfoMethod(String name, String desc) {
-		if (name.equals("info")) {
-			if (desc.equals("()Ljodd/proxetta/ProxyTargetInfo;")) {
-				return true;
-			}
+		if (name.equals("info") && desc.equals("()Ljodd/proxetta/ProxyTargetInfo;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isTargetMethodAnnotationMethod(String name, String desc) {
-		if (name.equals("targetMethodAnnotation")) {
-			if (desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("targetMethodAnnotation") && desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isTargetClassAnnotationMethod(String name, String desc) {
-		if (name.equals("targetClassAnnotation")) {
-			if (desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
-				return true;
-			}
+		if (name.equals("targetClassAnnotation") && desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
+			return true;
 		}
 		return false;
 	}

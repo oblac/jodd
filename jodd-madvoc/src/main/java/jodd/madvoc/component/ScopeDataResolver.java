@@ -321,10 +321,8 @@ public class ScopeDataResolver {
 
 			// checks
 
-			if (inout != null) {
-				if (in != null || out != null) {
-					throw new MadvocException("@InOut can not be used with @In or @Out: " + pd.getClassDescriptor().getClass() + '#' + pd.getName());
-				}
+			if ((inout != null) && (in != null || out != null)) {
+				throw new MadvocException("@InOut can not be used with @In or @Out: " + pd.getClassDescriptor().getClass() + '#' + pd.getName());
 			}
 
 

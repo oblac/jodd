@@ -207,10 +207,8 @@ public abstract class BasePathMacros implements PathMacros {
 			String macroValue = actionPath.substring(offset, ndx);
 			values[i] = macroValue;
 
-			if (match && patterns[i] != null) {
-				if (!matchValue(i, macroValue)) {
-					return null;
-				}
+			if ((match && patterns[i] != null) && !matchValue(i, macroValue)) {
+				return null;
 			}
 
 			if (nextFixed == null) {

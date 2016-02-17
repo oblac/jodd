@@ -101,12 +101,10 @@ public class PetiteContainer extends PetiteBeans {
 		if (def.wiringMode != WiringMode.NONE) {
 			for (int i = 0; i < paramNo; i++) {
 				args[i] = getBean(def.ctor.references[i]);
-				if (args[i] == null) {
-					if ((def.wiringMode == WiringMode.STRICT)) {
-						throw new PetiteException(
-								"Wiring constructor failed. References '" + Convert.toString(def.ctor.references[i]) +
-								"' not found for constructor: " + def.ctor.constructor);
-					}
+				if (args[i] == null && (def.wiringMode == WiringMode.STRICT)) {
+					throw new PetiteException(
+							"Wiring constructor failed. References '" + Convert.toString(def.ctor.references[i]) +
+									"' not found for constructor: " + def.ctor.constructor);
 				}
 			}
 		}
@@ -240,11 +238,9 @@ public class PetiteContainer extends PetiteBeans {
 				}
 
 				args[i] = value;
-				if (value == null) {
-					if ((def.wiringMode == WiringMode.STRICT)) {
-						throw new PetiteException("Wiring failed. Beans references: '" +
-								Convert.toString(refName) + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
-					}
+				if (value == null && (def.wiringMode == WiringMode.STRICT)) {
+					throw new PetiteException("Wiring failed. Beans references: '" +
+							Convert.toString(refName) + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
 				}
 			}
 
