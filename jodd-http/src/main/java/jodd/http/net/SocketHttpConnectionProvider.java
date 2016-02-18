@@ -37,6 +37,7 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -56,7 +57,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Creates new connection from current {@link jodd.http.HttpRequest request}.
 	 *
-	 * @see #createSocket(String, int)
+	 * @see #createSocket(String, int, int)
 	 */
 	public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
 		SocketHttpConnection httpConnection;
@@ -64,11 +65,11 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		final boolean https = httpRequest.protocol().equalsIgnoreCase("https");
 
 		if (https) {
-			SSLSocket sslSocket = createSSLSocket(httpRequest.host(), httpRequest.port());
+			SSLSocket sslSocket = createSSLSocket(httpRequest.host(), httpRequest.port(), httpRequest.connectionTimeout());
 
 			httpConnection = new SocketHttpSecureConnection(sslSocket);
 		} else {
-			Socket socket = createSocket(httpRequest.host(), httpRequest.port());
+			Socket socket = createSocket(httpRequest.host(), httpRequest.port(), httpRequest.connectionTimeout());
 
 			httpConnection = new SocketHttpConnection(socket);
 		}
@@ -94,16 +95,26 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Creates a socket using {@link #getSocketFactory(jodd.http.ProxyInfo) socket factory}.
 	 */
-	protected Socket createSocket(String host, int port) throws IOException {
+	protected Socket createSocket(String host, int port, int connectionTimeout) throws IOException {
 		SocketFactory socketFactory = getSocketFactory(proxy);
 
-		return socketFactory.createSocket(host, port);
+		if (connectionTimeout < 0) {
+			return socketFactory.createSocket(host, port);
+		}
+		else {
+			// creates unconnected socket
+			Socket socket = socketFactory.createSocket();
+
+			socket.connect(new InetSocketAddress(host, port), connectionTimeout);
+
+			return socket;
+		}
 	}
 
 	/**
 	 * Creates a SSL socket. Enables default secure enabled protocols if specified..
 	 */
-	protected SSLSocket createSSLSocket(String host, int port) throws IOException {
+	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout) throws IOException {
 		SocketFactory socketFactory;
 		try {
 			socketFactory = getSSLSocketFactory();
@@ -116,7 +127,17 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			}
 		}
 
-		SSLSocket sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
+		SSLSocket sslSocket;
+
+		if (connectionTimeout < 0) {
+			sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
+		}
+		else {
+			// creates unconnected socket
+			sslSocket = (SSLSocket) socketFactory.createSocket();
+
+			sslSocket.connect(new InetSocketAddress(host, port), connectionTimeout);
+		}
 
 		String enabledProtocols = JoddHttp.defaultSecureEnabledProtocols;
 
@@ -132,7 +153,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int)}.
+	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int, int)}.
 	 * May be overwritten to provide custom SSL socket factory by using e.g.
 	 * <code>SSLContext</code>. By default returns default SSL socket factory.
 	 */

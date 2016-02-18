@@ -568,9 +568,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- connection properties
 
 	protected int timeout = -1;
+	protected int connectTimeout = -1;
 
 	/**
-	 * Defines connection timeout in milliseconds.
+	 * Defines read timeout (SO_TIMEOUT) in milliseconds.
 	 * @see jodd.http.HttpConnection#setTimeout(int)
 	 */
 	public HttpRequest timeout(int milliseconds) {
@@ -579,12 +580,29 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Returns timeout in milliseconds. Negative value means that
-	 * default value is used.
+	 * Returns read timeout (SO_TIMEOUT) in milliseconds. Negative value
+	 * means that default value is used.
 	 */
 	public int timeout() {
 		return timeout;
 	}
+
+	/**
+	 * Defines socket connection timeout.
+	 */
+	public HttpRequest connectionTimeout(int milliseconds) {
+		this.connectTimeout = milliseconds;
+		return this;
+	}
+
+	/**
+	 * Returns socket connection timeout. Negative value means that default
+	 * value is used.
+	 */
+	public int connectionTimeout() {
+		return connectTimeout;
+	}
+
 
 	// ---------------------------------------------------------------- send
 
