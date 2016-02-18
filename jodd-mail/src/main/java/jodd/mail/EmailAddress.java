@@ -467,9 +467,9 @@ public class EmailAddress {
 	private String[] _calcMatcherParts(Matcher m) {
 		String currentLocalpart = null;
 		String currentDomainpart = null;
-		String localPartDa = null;
+		String localPartDa;
 		String localPartQs = null;
-		String domainPartDa = null;
+		String domainPartDa;
 		String domainPartDl = null;
 		String personal_string = null;
 
