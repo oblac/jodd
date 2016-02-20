@@ -48,6 +48,25 @@ public class PetiteConfig {
 		useParamo = JoddPetite.useProxetta;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
+		useAltBeanNames = true;
+	}
+
+	// ----------------------------------------------------------------
+
+	protected boolean useAltBeanNames;
+
+	/**
+	 * Returns if alternative bean names are in use.
+	 */
+	public boolean isUseAltBeanNames() {
+		return useAltBeanNames;
+	}
+
+	/**
+	 * Enables alternative bean names.
+	 */
+	public void setUseAltBeanNames(boolean useAltBeanNames) {
+		this.useAltBeanNames = useAltBeanNames;
 	}
 
 	// ----------------------------------------------------------------
