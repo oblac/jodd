@@ -196,6 +196,13 @@ configure(javaModules()) {
 		from javadoc.destinationDir
 	}
 
+	// DONT: use separate output folders for idea, don't mess with gradle
+	idea {
+		module {
+			inheritOutputDirs false
+		}
+	}
+
 	// integration tests
 
 	sourceSets {
@@ -211,21 +218,13 @@ configure(javaModules()) {
 //		}
 //	}
 
-	// DONT: use separate output folders for idea, don't mess with gradle
-	// If this is set to `true` you will not be able to run tests that
-	// uses properties from IDEA
-	idea {
-		module {
-			inheritOutputDirs false
-		}
-	}
-
 	dependencies {
 		testIntCompile sourceSets.main.output
-		testIntCompile configurations.testCompile
 		testIntCompile sourceSets.test.output
+		testIntCompile configurations.testCompile
 		testIntRuntime configurations.testRuntime
 	}
+
 
 	task testIntegration(type: Test, dependsOn: jar) {
 		group 'verification'
@@ -537,5 +536,5 @@ task version() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.10'
+	gradleVersion = '2.11'
 }
