@@ -82,6 +82,9 @@ public class ReceivedEmail extends CommonEmail {
 		setCc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.CC)));
 		setBcc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.BCC)));
 
+		// reply to
+		setReplyTo(MailAddress.createFrom(msg.getReplyTo()));
+
 		setSubject(msg.getSubject());
 
 		Date recvDate = msg.getReceivedDate();
