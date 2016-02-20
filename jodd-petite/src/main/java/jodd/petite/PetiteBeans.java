@@ -61,6 +61,11 @@ public abstract class PetiteBeans {
 	protected final Map<String, BeanDefinition> beans = new HashMap<>();
 
 	/**
+	 * Map of alternative beans names.
+	 */
+	protected final Map<String, BeanDefinition> beansAlt = new HashMap<>();
+
+	/**
 	 * Map of all bean scopes.
 	 */
 	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<>();
@@ -158,7 +163,16 @@ public abstract class PetiteBeans {
 	 * Returns <code>null</code> if bean name doesn't exist.
 	 */
 	public BeanDefinition lookupBeanDefinition(String name) {
-		return beans.get(name);
+		BeanDefinition beanDefinition = beans.get(name);
+
+		// try alt bean names
+		if (beanDefinition == null) {
+			if (petiteConfig.isUseAltBeanNames()) {
+				beanDefinition = beansAlt.get(name);
+			}
+		}
+
+		return beanDefinition;
 	}
 
 	/**
@@ -266,7 +280,7 @@ public abstract class PetiteBeans {
 
 		// check if type is valid
 		if (type.isInterface()) {
-			throw new PetiteException("Failed to register interface: " + type.getName());
+			throw new PetiteException("PetiteBean can not be an interface: " + type.getName());
 		}
 
 		// registration
@@ -280,7 +294,8 @@ public abstract class PetiteBeans {
 		// register
 		Scope scope = resolveScope(scopeType);
 		BeanDefinition beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode);
-		beans.put(name, beanDefinition);
+
+		registerBean(name, beanDefinition);
 
 		// providers
 		ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(beanDefinition);
@@ -302,6 +317,50 @@ public abstract class PetiteBeans {
 
 		// return
 		return beanDefinition;
+	}
+
+	/**
+	 * Registers bean definition by putting it in the beans map. If bean does
+	 * not have petite name explicitly defined, alternative bean names
+	 * will be registered.
+	 */
+	protected void registerBean(String name, BeanDefinition beanDefinition) {
+		beans.put(name, beanDefinition);
+
+		if (!petiteConfig.isUseAltBeanNames()) {
+			return;
+		}
+
+		Class type = beanDefinition.getType();
+
+		if (PetiteUtil.beanHasAnnotationName(type)) {
+			return;
+		}
+
+		Class[] interfaces = ReflectUtil.resolveAllInterfaces(type);
+
+		for (Class anInterface : interfaces) {
+			String altName = PetiteUtil.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
+
+			if (name.equals(altName)) {
+				continue;
+			}
+
+			if (beans.containsKey(altName)) {
+				continue;
+			}
+
+			if (beansAlt.containsKey(altName)) {
+				BeanDefinition existing = beansAlt.get(altName);
+
+				if (existing != null) {
+					beansAlt.put(altName, null);		// store null as value to mark that alt name is duplicate
+				}
+			}
+			else {
+				beansAlt.put(altName, beanDefinition);
+			}
+		}
 	}
 
 	/**
