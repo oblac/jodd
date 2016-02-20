@@ -64,7 +64,11 @@ ext {
 
 		junit: 			'junit:junit:4.12',
 		hamcrest:       'org.hamcrest:hamcrest-core:1.3',
-		mockito:		'org.mockito:mockito-all:1.9.5',
+		mockito:		'org.mockito:mockito-all:1.10.19',
+		powermock:		[
+							'org.powermock:powermock-module-junit4:1.6.4',
+							'org.powermock:powermock-api-mockito:1.6.4'
+						],
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
@@ -207,10 +211,12 @@ configure(javaModules()) {
 //		}
 //	}
 
-	// use separate output folders for idea, don't mess with gradle
+	// DONT: use separate output folders for idea, don't mess with gradle
+	// If this is set to `true` you will not be able to run tests that
+	// uses properties from IDEA
 	idea {
 		module {
-			inheritOutputDirs true
+			inheritOutputDirs false
 		}
 	}
 

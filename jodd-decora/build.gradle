@@ -9,6 +9,5 @@ dependencies {
 	provided lib.servlet
 
 	testCompile lib.junit
-	testCompile 'org.powermock:powermock-module-junit4:1.6.3'
-	testCompile 'org.powermock:powermock-api-mockito:1.6.3'
+	testCompile lib.powermock
 }
