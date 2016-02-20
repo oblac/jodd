@@ -91,4 +91,14 @@ public class OneTwoActionTest {
 		assertEquals("/two.html?value=444", redirectLocation);
 	}
 
+	@Test
+	public void testOneRedirectPermanentAction2() {
+		HttpResponse response = HttpRequest.get("localhost:8173/oneRedirect.permGoogle.html").send();
+		assertEquals("", response.bodyText());
+		assertEquals(301, response.statusCode());
+
+		String redirectLocation = response.header("location");
+		assertEquals("http://google.com", redirectLocation);
+	}
+
 }
