@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -72,7 +73,7 @@ public class EMLParser {
 	 * Copies properties from given set. If session is already created,
 	 * exception will be thrown.
 	 */
-	public EMLParser set(Properties properties) {
+	public EMLParser set(Map properties) {
 		initProperties();
 
 		this.properties.putAll(properties);

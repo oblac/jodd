@@ -46,6 +46,7 @@ import java.sql.Ref;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -53,8 +54,8 @@ import java.net.URL;
  */
 public class SqlTypeManager {
 
-	private static HashMap<Class, SqlType> types = new HashMap<>();
-	private static HashMap<Class<? extends SqlType>, SqlType> sqlTypes = new HashMap<>();
+	private static Map<Class, SqlType> types = new HashMap<>();
+	private static Map<Class<? extends SqlType>, SqlType> sqlTypes = new HashMap<>();
 
 	static {
 		registerDefaults();

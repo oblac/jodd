@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,7 +74,7 @@ import java.util.Map;
  */
 public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 
-	protected HashMap<String, String> variables;
+	protected Map<String, String> variables;
 	protected Class<? extends ActionWrapper>[] currentWrappers;
 
 	/**
@@ -117,7 +118,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 	protected void parse(String routes) throws Exception {
 		initDefaultWrappers();
 
-		ArrayList<String> lines = new ArrayList<>();
+		List<String> lines = new ArrayList<>();
 
 		String line = null;
 

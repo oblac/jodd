@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,7 +53,7 @@ public class DirWatcher {
 	}
 
 	protected final File dir;
-	protected HashMap<File, MutableLong> map = new HashMap<>();
+	protected Map<File, MutableLong> map = new HashMap<>();
 	protected int filesCount;
 	protected List<DirWatcherListener> listeners = new ArrayList<>();
 	protected String[] patterns;
@@ -247,7 +249,7 @@ public class DirWatcher {
 				return;
 			}
 
-			HashSet<File> deletedFiles = null;
+			Set<File> deletedFiles = null;
 
 			// check if there might be a delete file
 			if (filesArray.length < filesCount) {

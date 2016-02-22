@@ -39,6 +39,7 @@ import jodd.util.StringUtil;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
@@ -49,7 +50,7 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractTemplateViewResult.class);
 
-	protected HashMap<String, String> targetCache;
+	protected Map<String, String> targetCache;
 
 	public AbstractTemplateViewResult(String name) {
 		super(name);

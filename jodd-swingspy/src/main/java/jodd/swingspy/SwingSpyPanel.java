@@ -67,6 +67,7 @@ import java.awt.Font;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -191,7 +192,7 @@ public class SwingSpyPanel extends JPanel {
 				return "<null>";
 			}
 
-			TreeSet<String> treeSet = new TreeSet<>();
+			Set<String> treeSet = new TreeSet<>();
 
 			Class clazz = bean.getClass();
 			Field[] fields = clazz.getDeclaredFields();

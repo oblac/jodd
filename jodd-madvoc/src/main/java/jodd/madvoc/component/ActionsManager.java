@@ -65,9 +65,9 @@ public class ActionsManager {
 
 	protected int actionsCount;
 	protected boolean asyncMode;
-	protected final HashMap<String, ActionConfigSet> map;		// map of all action paths w/o macros
+	protected final Map<String, ActionConfigSet> map;		// map of all action paths w/o macros
 	protected final SortedArrayList<ActionConfigSet> list;		// list of all action paths with macros
-	protected final HashMap<String, ActionConfig> configs;		// another map of all action configs
+	protected final Map<String, ActionConfig> configs;		// another map of all action configs
 	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {

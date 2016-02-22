@@ -54,7 +54,7 @@ public class MimeTypes {
 	public static final String MIME_TEXT_PLAIN 					= "text/plain";
 	public static final String MIME_TEXT_HTML					= "text/html";
 
-	private static final HashMap<String, String> MIME_TYPE_MAP;	// extension -> mime-type map
+	private static final Map<String, String> MIME_TYPE_MAP;	// extension -> mime-type map
 
 	static {
 		Properties mimes = new Properties();

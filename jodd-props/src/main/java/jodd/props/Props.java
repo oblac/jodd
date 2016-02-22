@@ -296,7 +296,7 @@ public class Props implements Cloneable {
 	 * If prefix is <code>null</code> it will not be ignored.
 	 */
 	public void loadSystemProperties(final String prefix) {
-		final Properties environmentProperties = System.getProperties();
+		final Map environmentProperties = System.getProperties();
 		load(environmentProperties, prefix);
 	}
 

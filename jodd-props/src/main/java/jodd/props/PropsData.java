@@ -33,6 +33,7 @@ import jodd.util.Wildcard;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Props data storage for base and profile properties.
@@ -44,8 +45,8 @@ public class PropsData implements Cloneable {
 	private static final int MAX_INNER_MACROS = 100;
 	private static final String APPEND_SEPARATOR = ",";
 
-	protected final HashMap<String, PropsEntry> baseProperties;
-	protected final HashMap<String, Map<String, PropsEntry>> profileProperties;
+	protected final Map<String, PropsEntry> baseProperties;
+	protected final Map<String, Map<String, PropsEntry>> profileProperties;
 
 	protected PropsEntry first;
 	protected PropsEntry last;
@@ -69,7 +70,7 @@ public class PropsData implements Cloneable {
 		this(new HashMap<String, PropsEntry>(), new HashMap<String, Map<String, PropsEntry>>());
 	}
 
-	protected PropsData(final HashMap<String, PropsEntry> properties, final HashMap<String, Map<String, PropsEntry>> profiles) {
+	protected PropsData(final Map<String, PropsEntry> properties, final Map<String, Map<String, PropsEntry>> profiles) {
 		this.baseProperties = properties;
 		this.profileProperties = profiles;
 	}
@@ -150,7 +151,7 @@ public class PropsData implements Cloneable {
 	 * that easy on execution.
 	 */
 	public int countProfileProperties() {
-		final HashSet<String> profileKeys = new HashSet<>();
+		final Set<String> profileKeys = new HashSet<>();
 
 		for (final Map<String, PropsEntry> map : profileProperties.values()) {
 			for (final String key : map.keySet()) {

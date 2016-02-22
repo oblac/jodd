@@ -108,7 +108,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Short> shortArrayList = new ArrayList<>();
+			List<Short> shortArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				short convertedValue = convertType(element);

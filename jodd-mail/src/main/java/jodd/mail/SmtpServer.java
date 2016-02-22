@@ -29,6 +29,7 @@ import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import java.util.Map;
 import java.util.Properties;
 
 import static jodd.util.StringPool.TRUE;
@@ -61,7 +62,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	protected int timeout = 0;
 	protected boolean debug = false;
 	protected boolean strictAddress = true;
-	private Properties additionalProperties;
+	private Map additionalProperties;
 
 	// ---------------------------------------------------------------- create
 
@@ -125,7 +126,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 		return (T) this;
 	}
 
-	public T properties(Properties properties) {
+	public T properties(Map properties) {
 		this.additionalProperties = properties;
 		return (T) this;
 	}

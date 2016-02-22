@@ -108,7 +108,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Float> floatArrayList = new ArrayList<>();
+			List<Float> floatArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				float convertedValue = convertType(element);

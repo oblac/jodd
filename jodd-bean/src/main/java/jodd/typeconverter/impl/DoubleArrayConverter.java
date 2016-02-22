@@ -108,7 +108,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Double> doubleArrayList = new ArrayList<>();
+			List<Double> doubleArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				double convertedValue = convertType(element);

@@ -1164,7 +1164,7 @@ public class Jerry implements Iterable<Jerry> {
 			return new LinkedHashSet<>();
 		}
 		String[] properties = StringUtil.splitc(attrValue, propertiesDelimiter);
-		LinkedHashSet<String> set = new LinkedHashSet<>(properties.length);
+		Set<String> set = new LinkedHashSet<>(properties.length);
 
 		Collections.addAll(set, properties);
 		return set;
@@ -1189,7 +1189,7 @@ public class Jerry implements Iterable<Jerry> {
 			return new LinkedHashMap<>();
 		}
 		String[] properties = StringUtil.splitc(attrValue, propertiesDelimiter);
-		LinkedHashMap<String, String> map = new LinkedHashMap<>(properties.length);
+		Map<String, String> map = new LinkedHashMap<>(properties.length);
 		for (String property : properties) {
 			int valueDelimiterIndex = property.indexOf(valueDelimiter);
 			if (valueDelimiterIndex != -1) {

@@ -135,7 +135,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Byte> byteArrayList = new ArrayList<>();
+			List<Byte> byteArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				byte convertedValue = convertType(element);

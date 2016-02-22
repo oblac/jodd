@@ -33,6 +33,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
 import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
@@ -46,7 +47,7 @@ import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
 public class Properties {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final HashMap<String, PropertyDescriptor> propertyDescriptors;
+	protected final Map<String, PropertyDescriptor> propertyDescriptors;
 
 	// cache
 	private PropertyDescriptor[] allProperties;
@@ -59,11 +60,11 @@ public class Properties {
 	/**
 	 * Inspects all properties of target type.
 	 */
-	protected HashMap<String, PropertyDescriptor> inspectProperties() {
+	protected Map<String, PropertyDescriptor> inspectProperties() {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		HashMap<String, PropertyDescriptor> map = new HashMap<>();
+		Map<String, PropertyDescriptor> map = new HashMap<>();
 
 		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 
@@ -139,7 +140,7 @@ public class Properties {
 	 * Adds a setter and/or getter method to the property.
 	 * If property is already defined, the new, updated, definition will be created.
 	 */
-	protected void addProperty(HashMap<String, PropertyDescriptor> map, String name, MethodDescriptor methodDescriptor, boolean isSetter) {
+	protected void addProperty(Map<String, PropertyDescriptor> map, String name, MethodDescriptor methodDescriptor, boolean isSetter) {
 		MethodDescriptor setterMethod = isSetter ? methodDescriptor : null;
 		MethodDescriptor getterMethod = isSetter ? null : methodDescriptor;
 

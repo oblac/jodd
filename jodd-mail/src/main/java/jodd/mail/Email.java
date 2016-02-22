@@ -345,7 +345,7 @@ public class Email extends CommonEmail {
 
 	// ---------------------------------------------------------------- attachments
 
-	protected ArrayList<EmailAttachment> attachments;
+	protected List<EmailAttachment> attachments;
 
 	/**
 	 * Returns an array of attachments or <code>null</code> if no attachment enclosed with this email. 

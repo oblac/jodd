@@ -468,7 +468,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 	// ---------------------------------------------------------------- cache
 
-	protected HashMap<Object, Object> entitiesCache;
+	protected Map<Object, Object> entitiesCache;
 
 	/**
 	 * Caches returned entities. Replaces new instances with existing ones.

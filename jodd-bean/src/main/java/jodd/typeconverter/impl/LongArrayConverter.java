@@ -108,7 +108,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Long> longArrayList = new ArrayList<>();
+			List<Long> longArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				long convertedValue = convertType(element);

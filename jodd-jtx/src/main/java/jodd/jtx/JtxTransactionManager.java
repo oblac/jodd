@@ -32,6 +32,7 @@ import static jodd.jtx.JtxIsolationLevel.*;
 import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -136,7 +137,7 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions associated with current thread.
 	 */
 	public int totalThreadTransactions() {
-		ArrayList<JtxTransaction> txList = txStack.get();
+		List<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return 0;
 		}
@@ -147,7 +148,7 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions of the specified status associated with current thread.
 	 */
 	public int totalThreadTransactionsWithStatus(JtxStatus status) {
-		ArrayList<JtxTransaction> txlist = txStack.get();
+		Iterable<JtxTransaction> txlist = txStack.get();
 		if (txlist == null) {
 			return 0;
 		}
@@ -172,7 +173,7 @@ public class JtxTransactionManager {
 	 * is associated with current thread.
 	 */
 	public boolean isAssociatedWithThread(JtxTransaction tx) {
-		ArrayList<JtxTransaction> txList = txStack.get();
+		List<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return false;
 		}
@@ -188,7 +189,7 @@ public class JtxTransactionManager {
 	 * Also removes thread list from this thread.
 	 */
 	protected boolean removeTransaction(JtxTransaction tx) {
-		ArrayList<JtxTransaction> txList = txStack.get();
+		List<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
 			return false;
 		}
@@ -212,7 +213,7 @@ public class JtxTransactionManager {
 	 * by this transaction manager.
 	 */
 	public JtxTransaction getTransaction() {
-		ArrayList<JtxTransaction> txlist = txStack.get();
+		List<JtxTransaction> txlist = txStack.get();
 		if (txlist == null) {
 			return null;
 		}
