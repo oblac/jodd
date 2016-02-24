@@ -176,7 +176,7 @@ public class TypeReference {
     /**
      * The type reference value in Java class file format.
      */
-    private int value;
+    private final int value;
 
     /**
      * Creates a new TypeReference.

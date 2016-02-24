@@ -37,9 +37,9 @@ import java.sql.SQLException;
  */
 public class XADataSourceConnectionProvider implements ConnectionProvider {
 
-	private XADataSource xaDataSource;
-	private String username;
-	private String password;
+	private final XADataSource xaDataSource;
+	private final String username;
+	private final String password;
 
 	public XADataSourceConnectionProvider(XADataSource dataSource) {
 		this.xaDataSource = dataSource;

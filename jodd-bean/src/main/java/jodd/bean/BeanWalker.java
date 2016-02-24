@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class BeanWalker extends BeanVisitorImplBase<BeanWalker> {
 
-	private BeanWalkerCallback callback;
+	private final BeanWalkerCallback callback;
 
 	/**
 	 * Functional callback for walking.

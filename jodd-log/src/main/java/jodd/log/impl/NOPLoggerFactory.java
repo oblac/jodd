@@ -34,7 +34,7 @@ import jodd.log.LoggerFactoryInterface;
  */
 public class NOPLoggerFactory implements LoggerFactoryInterface {
 
-	private NOPLogger logger = new NOPLogger("*");
+	private final NOPLogger logger = new NOPLogger("*");
 
 	/**
 	 * {@inheritDoc}

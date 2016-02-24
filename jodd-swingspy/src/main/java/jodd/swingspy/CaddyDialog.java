@@ -47,8 +47,8 @@ import java.awt.event.WindowEvent;
  */
 public class CaddyDialog extends JDialog {
 
-	private JPanel jpanel = new JPanel();
-	private BorderLayout borderLayout = new BorderLayout();
+	private final JPanel jpanel = new JPanel();
+	private final BorderLayout borderLayout = new BorderLayout();
 	private boolean modal;
 	private WindowAdapter parentWindowListener;
 	private Window owner;

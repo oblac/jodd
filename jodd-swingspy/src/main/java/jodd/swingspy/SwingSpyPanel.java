@@ -74,16 +74,16 @@ import java.util.TreeSet;
  */
 public class SwingSpyPanel extends JPanel {
 
-	private JTree componentTree;
-	private JEditorPane componentData;
-	private JEditorPane detailsData;
-	private JScrollPane detailsScrollPane;
-	private DefaultMutableTreeNode root;
+	private final JTree componentTree;
+	private final JEditorPane componentData;
+	private final JEditorPane detailsData;
+	private final JScrollPane detailsScrollPane;
+	private final DefaultMutableTreeNode root;
 
 	private static final int INITIAL_WIDTH = 600;
 	private static final int INITIAL_HEIGHT = 500;
 
-	private Font font = new Font("Arial", Font.PLAIN,  12);
+	private final Font font = new Font("Arial", Font.PLAIN,  12);
 
 	/**
 	 * Initialization.

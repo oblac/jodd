@@ -42,7 +42,7 @@ import javax.net.SocketFactory;
  */
 public class Socks5ProxySocketFactory extends SocketFactory {
 
-	private ProxyInfo proxy;
+	private final ProxyInfo proxy;
 
 	public Socks5ProxySocketFactory(ProxyInfo proxy) {
 		this.proxy = proxy;

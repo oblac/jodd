@@ -33,7 +33,7 @@ import java.util.NoSuchElementException;
  */
 public class CacheValuesIterator<V> implements Iterator<V> {
 
-	private Iterator<? extends AbstractCacheMap<?, V>.CacheObject<?, V>> iterator;
+	private final Iterator<? extends AbstractCacheMap<?, V>.CacheObject<?, V>> iterator;
 
 	private AbstractCacheMap<?,V>.CacheObject<?,V> nextValue;
 

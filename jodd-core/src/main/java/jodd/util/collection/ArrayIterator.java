@@ -34,9 +34,9 @@ import java.util.NoSuchElementException;
  */
 public class ArrayIterator<E> implements Iterator<E>, Serializable {
 
-	private E[] array;
+	private final E[] array;
 	private int ndx;
-	private int endNdx;
+	private final int endNdx;
 
 	public ArrayIterator(E[] array) {
 		this.array = array;
