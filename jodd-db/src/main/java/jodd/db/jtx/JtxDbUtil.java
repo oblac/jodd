@@ -45,6 +45,7 @@ public class JtxDbUtil {
 			case ISOLATION_READ_UNCOMMITTED: isolation = DbTransactionMode.ISOLATION_READ_UNCOMMITTED; break;
 			case ISOLATION_REPEATABLE_READ: isolation = DbTransactionMode.ISOLATION_REPEATABLE_READ; break;
 			case ISOLATION_SERIALIZABLE: isolation = DbTransactionMode.ISOLATION_SERIALIZABLE; break;
+			default: break;
 		}
 		DbTransactionMode result = new DbTransactionMode();
 		result.setIsolation(isolation);

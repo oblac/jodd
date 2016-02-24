@@ -1959,6 +1959,8 @@ public class ClassReader {
             default:
                 v = readAnnotationValues(v - 3, buf, false, av.visitArray(name));
             }
+            default:
+                break;
         }
         return v;
     }
@@ -2436,6 +2438,8 @@ public class ClassReader {
                 cc = (char) ((cc << 6) | (c & 0x3F));
                 st = 1;
                 break;
+                default:
+                    break;
             }
         }
         return new String(buf, 0, strLen);

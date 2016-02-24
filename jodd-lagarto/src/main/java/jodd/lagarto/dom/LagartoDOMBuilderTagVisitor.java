@@ -261,6 +261,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				node = createElementNode(tag);
 				parentNode.addChild(node);
 				break;
+			default:
+				break;
 		}
 	}
 

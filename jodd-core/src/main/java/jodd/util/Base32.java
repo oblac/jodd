@@ -109,6 +109,8 @@ public class Base32 {
 			case 3:
 			case 6:
 				throw new IllegalArgumentException(ERR_CANONICAL_LEN);
+			default:
+				break;
 		}
 
 		byte[] bytes = new byte[base32.length() * 5 / 8];

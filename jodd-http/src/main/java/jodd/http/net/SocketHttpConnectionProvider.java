@@ -174,6 +174,8 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 				return new Socks4ProxySocketFactory(proxy);
 			case SOCKS5:
 				return new Socks5ProxySocketFactory(proxy);
+			default:
+				break;
 		}
 		return null;
 	}

@@ -221,6 +221,8 @@ public class NodeSelector {
 					selectAndAdd(node, cssSelector, result);
 				}
 				break;
+			default:
+				break;
 		}	}
 
 	/**

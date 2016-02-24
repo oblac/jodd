@@ -2616,6 +2616,8 @@ public class LagartoParser extends Scanner {
 								return;
 							}
 							break;
+						default:
+							break;
 					}
 
 					errorInvalidToken();
@@ -2705,6 +2707,7 @@ public class LagartoParser extends Scanner {
 							case 0: version = value; break;
 							case 1: encoding = value; break;
 							case 2: standalone = value; break;
+							default: break;
 						}
 
 						xmlAttrCount++;

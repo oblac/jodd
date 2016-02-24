@@ -718,6 +718,8 @@ public class PrintfFormat {
 				return pad(s);
 			case 'p' :
 				return Integer.toString(System.identityHashCode(object));
+			default:
+				break;
 		}
 
 		// check for numeric type

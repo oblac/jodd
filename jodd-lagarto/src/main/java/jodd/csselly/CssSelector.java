@@ -200,6 +200,8 @@ public class CssSelector implements NodeFilter {
 					out.append(':').append(pfns.getPseudoFunction().getPseudoFunctionName()).append('(');
 					out.append(pfns.getExpression()).append(')');
 					break;
+				default:
+					break;
 			}
 		}
 
@@ -248,6 +250,8 @@ public class CssSelector implements NodeFilter {
 					if (!((PseudoFunctionSelector) selector).accept(node)) {
 						return false;
 					}
+					break;
+				default:
 					break;
 			}
 		}

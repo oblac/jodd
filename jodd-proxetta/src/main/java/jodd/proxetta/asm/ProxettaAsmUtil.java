@@ -503,7 +503,8 @@ public class ProxettaAsmUtil {
 			case 'D':
 				AsmUtil.valueOfDouble(mv);
 				break;
-
+			default:
+				break;
 		}
 	}
 

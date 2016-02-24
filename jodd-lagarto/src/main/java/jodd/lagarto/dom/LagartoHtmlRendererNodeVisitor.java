@@ -167,6 +167,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 			case RAW: return node.getNodeRawName();
 			case LOWERCASE: return node.getNodeRawName().toLowerCase();
 			case UPPERCASE: return node.getNodeRawName().toUpperCase();
+			default: break;
 		}
 		return null;
 	}
@@ -180,6 +181,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 			case RAW: return attribute.getRawName();
 			case LOWERCASE: return attribute.getRawName().toLowerCase();
 			case UPPERCASE: return attribute.getRawName().toUpperCase();
+			default: break;
 		}
 		return null;
 	}
