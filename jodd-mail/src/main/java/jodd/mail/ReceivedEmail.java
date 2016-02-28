@@ -149,7 +149,7 @@ public class ReceivedEmail extends CommonEmail {
 			}
 		}
 		else if (content instanceof InputStream) {
-			String fileName = part.getFileName();
+			String fileName = EmailUtil.resolveFileName(part);
 			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
 			String mimeType = EmailUtil.extractMimeType(part.getContentType());
 
