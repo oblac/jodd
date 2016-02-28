@@ -109,10 +109,10 @@ public class EmailUtil {
 			if (contentId == null) {
 				ret = "no-name";
 			}
-			ret += "."  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
+			ret += StringPool.DOT  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
 		}
 
-		return ret == null ? "" : ret;
+		return ret == null ? StringPool.EMPTY : ret;
 	}
 
 }
