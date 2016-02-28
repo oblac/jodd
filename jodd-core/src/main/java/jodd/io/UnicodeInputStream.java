@@ -44,11 +44,11 @@ public class UnicodeInputStream extends InputStream {
 
 	public static final int MAX_BOM_SIZE = 4;
 
-	private PushbackInputStream internalInputStream;
+	private final PushbackInputStream internalInputStream;
 	private boolean initialized;
 	private int BOMSize = -1;
 	private String encoding;
-	private String targetEncoding;
+	private final String targetEncoding;
 
 	/**
 	 * Creates new unicode stream. It works in two modes: detect mode and read mode.
