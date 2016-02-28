@@ -601,6 +601,27 @@ public class Jerry implements Iterable<Jerry> {
 		return new Jerry(this, result);
 	}
 
+	/**
+	 * Reduce the set of matched elements to those that have a descendant that
+	 * matches the selector or DOM element.
+	 */
+	public Jerry has(String cssSelectors) {
+		List<Node> result = new NodeList(nodes.length);
+
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				NodeSelector nodeSelector = createNodeSelector(node);
+				List<Node> selectedNodes = nodeSelector.select(cssSelectors);
+
+				if (!selectedNodes.isEmpty()) {
+					result.add(node);
+				}
+			}
+		}
+
+		return new Jerry(this, result);
+	}
+
 	// ---------------------------------------------------------------- Attributes
 
 	/**

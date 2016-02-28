@@ -373,6 +373,33 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testHas() {
+		String html = readFile("has.html");
+		String htmlOK = readFile("has-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").has("ul").css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testHas2() {
+		String html = readFile("has2.html");
+		String htmlOK = readFile("has2-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").has("ul").css("background-color", "red");
+
+		doc.$( "ul" ).append( "<li>" +
+			( doc.$( "ul" ).has( "li" ).length() > 0 ? "Yes" : "No" ) +
+			"</li>" );
+		doc.$( "ul" ).has( "li" ).addClass( "full" );
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testSibling() {
 		String html = readFile("sibling.html");
 		String htmlOK = readFile("sibling-ok.html");
