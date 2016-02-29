@@ -98,10 +98,10 @@ public class EmailUtil {
 		String contentType = part.getContentType();
 		String ret = null;
 
-		if (part.getFileName() != null) {
+		try {
 			ret = javax.mail.internet.MimeUtility.decodeText(part.getFileName());
 		}
-		else {
+		catch (Exception ex) {
 			String[] contentId = part.getHeader("Content-ID");
 			if (contentId != null && contentId.length > 0) {
 				ret = contentId[0];
@@ -112,7 +112,7 @@ public class EmailUtil {
 			ret += StringPool.DOT  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
 		}
 
-		return ret == null ? StringPool.EMPTY : ret;
+		return ret;
 	}
 
 }
