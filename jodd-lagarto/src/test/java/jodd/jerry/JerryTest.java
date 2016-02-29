@@ -306,6 +306,17 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testPseudoHas() {
+		String html = readFile("pseudoHas.html");
+		String htmlOK = readFile("pseudoHas-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div:has(p)").addClass("test");
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+
+	@Test
 	public void testPseudoEven() {
 		String html = readFile("pseudoEven.html");
 		String htmlOK = readFile("pseudoEven-ok.html");
