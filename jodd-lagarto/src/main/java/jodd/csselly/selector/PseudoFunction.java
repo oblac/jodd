@@ -27,6 +27,7 @@ package jodd.csselly.selector;
 
 import jodd.csselly.CSSelly;
 import jodd.lagarto.dom.Node;
+import jodd.lagarto.dom.NodeMatcher;
 import jodd.lagarto.dom.NodeSelector;
 import jodd.util.StringUtil;
 
@@ -219,7 +220,7 @@ public abstract class PseudoFunction<E> {
 	// ---------------------------------------------------------------- advanced
 
 	/**
-	 * Selects all elements that contain the specified text.
+	 * Selects elements which contain at least one element that matches the specified selector.
 	 */
 	public static class HAS extends PseudoFunction<String> {
 
@@ -236,6 +237,25 @@ public abstract class PseudoFunction<E> {
 			List<Node> matchedNodes = new NodeSelector(node).select(CSSelly.parse(expression));
 
 			return !matchedNodes.isEmpty();
+		}
+	}
+
+	/**
+	 * Selects all elements that do not match the given selector.
+	 */
+	public static class NOT extends PseudoFunction<String> {
+
+		@Override
+		public String parseExpression(String expression) {
+			if (StringUtil.startsWithChar(expression, '\'') || StringUtil.startsWithChar(expression, '"')) {
+				expression = expression.substring(1, expression.length() - 1);
+			}
+			return expression;
+		}
+
+		@Override
+		public boolean match(Node node, String expression) {
+			return !new NodeMatcher(node).match(CSSelly.parse(expression));
 		}
 	}
 

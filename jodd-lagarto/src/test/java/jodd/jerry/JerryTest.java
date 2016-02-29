@@ -315,6 +315,15 @@ public class JerryTest {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
+	public void testPseudoNot() {
+		String html = readFile("pseudoNot.html");
+		String htmlOK = readFile("pseudoNot-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("input:not(\':checked\') + span").css("background-color", "yellow");
+		assertEquals(htmlOK, actualHtml(doc));
+	}
 
 	@Test
 	public void testPseudoEven() {
