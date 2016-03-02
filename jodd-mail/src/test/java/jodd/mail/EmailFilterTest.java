@@ -32,9 +32,13 @@ import javax.mail.search.AndTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.NotTerm;
 import javax.mail.search.OrTerm;
+import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.RecipientStringTerm;
 import javax.mail.search.SearchTerm;
+import javax.mail.search.SentDateTerm;
 import javax.mail.search.SubjectTerm;
+
+import java.util.Date;
 
 import static jodd.mail.EmailFilter.filter;
 import static org.junit.Assert.assertEquals;
@@ -159,5 +163,19 @@ public class EmailFilterTest {
 		assertEquals(expected, emailFilter.searchTerm);
 	}
 
+	@Test
+	public void testReceivedDate() {
+		EmailFilter emailFilter = EmailFilter.filter()
+			.receivedDate(EmailFilter.Operator.EQ, 1000)
+			.sentDate(EmailFilter.Operator.GT, 2000);
+
+		SearchTerm expected =
+			new AndTerm(
+				new ReceivedDateTerm(3, new Date(1000)),
+				new SentDateTerm(5, new Date(2000))
+			);
+
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
 }
