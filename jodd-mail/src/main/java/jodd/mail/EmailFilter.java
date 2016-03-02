@@ -209,12 +209,12 @@ public class EmailFilter {
 	 * Comparison operator.
 	 */
 	public enum Operator {
-		LE(1),
-		LT(2),
-		EQ(3),
-		NE(4),
-		GT(5),
-		GE(6);
+		EQ(javax.mail.search.ComparisonTerm.EQ),
+		GE(javax.mail.search.ComparisonTerm.GE),
+		GT(javax.mail.search.ComparisonTerm.GT),
+		LE(javax.mail.search.ComparisonTerm.LE),
+		LT(javax.mail.search.ComparisonTerm.LT),
+		NE(javax.mail.search.ComparisonTerm.NE);
 
 		private final int value;
 
