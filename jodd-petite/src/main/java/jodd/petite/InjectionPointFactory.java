@@ -108,6 +108,7 @@ public class InjectionPointFactory {
 				case NAME:				references[i] = propertyDescriptor.getName(); break;
 				case TYPE_SHORT_NAME:	references[i] = StringUtil.uncapitalize(propertyDescriptor.getType().getSimpleName()); break;
 				case TYPE_FULL_NAME:	references[i] = propertyDescriptor.getType().getName(); break;
+				default: break;
 			}
 		}
 		return references;
@@ -135,6 +136,7 @@ public class InjectionPointFactory {
 					case NAME:				ref[i] = methodParameters != null ? methodParameters[j].getName() : null; break;
 					case TYPE_SHORT_NAME:	ref[i] = StringUtil.uncapitalize(paramTypes[j].getSimpleName()); break;
 					case TYPE_FULL_NAME:	ref[i] = paramTypes[j].getName(); break;
+					default: break;
 				}
 			}
 		}

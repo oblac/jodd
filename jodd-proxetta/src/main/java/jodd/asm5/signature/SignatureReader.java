@@ -221,6 +221,8 @@ public class SignatureReader {
                             break;
                         }
                     }
+                    default:
+                        break;
                 }
             }
         }

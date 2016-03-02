@@ -61,6 +61,7 @@ public class Slf4jLogger implements Logger {
 			case INFO: logger.info(message); break;
 			case WARN: logger.warn(message); break;
 			case ERROR: logger.error(message); break;
+			default: break;
 		}
 	}
 

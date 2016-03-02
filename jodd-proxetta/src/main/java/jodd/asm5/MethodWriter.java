@@ -700,6 +700,8 @@ class MethodWriter extends MethodVisitor {
                 }
                 writeFrameType(stack[0]);
                 break;
+                default:
+                    break;
             }
 
             previousFrameOffset = code.length;
@@ -1889,6 +1891,8 @@ class MethodWriter extends MethodVisitor {
             case 3:
                 type = APPEND_FRAME;
                 break;
+                default:
+                    break;
             }
         } else if (clocalsSize == localsSize && cstackSize == 1) {
             type = delta < 63 ? SAME_LOCALS_1_STACK_ITEM_FRAME

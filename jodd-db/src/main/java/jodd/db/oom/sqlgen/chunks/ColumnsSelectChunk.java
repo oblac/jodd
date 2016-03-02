@@ -285,6 +285,8 @@ public class ColumnsSelectChunk extends SqlChunk {
 					String code = templateData.registerColumnDataForColumnCode(tableName, column);
 					query.append(code);
 					break;
+				default:
+					break;
 			}
 		}
 	}

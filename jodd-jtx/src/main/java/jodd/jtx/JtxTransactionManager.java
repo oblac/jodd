@@ -283,6 +283,7 @@ public class JtxTransactionManager {
 			case PROPAGATION_REQUIRES_NEW: return propRequiresNew(currentTx, mode, scope);
 			case PROPAGATION_NOT_SUPPORTED: return propNotSupported(currentTx, mode, scope);
 			case PROPAGATION_NEVER: return propNever(currentTx, mode, scope);
+			default: break;
 		}
 		throw new JtxException("Invalid TX propagation value: " + mode.getPropagationBehavior().value());
 	}

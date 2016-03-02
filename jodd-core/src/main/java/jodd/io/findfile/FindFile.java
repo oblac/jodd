@@ -465,6 +465,8 @@ public class FindFile<T extends FindFile> {
 				break;
 			case NAME:
 				path = file.getName();
+			default:
+				break;
 		}
 
 		path = FileNameUtil.separatorsToUnix(path);

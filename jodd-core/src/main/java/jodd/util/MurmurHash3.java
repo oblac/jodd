@@ -157,6 +157,8 @@ public class MurmurHash3 {
 				k1 = Long.rotateLeft(k1, 31);
 				k1 *= c2;
 				h1 ^= k1;
+			default:
+				break;
 		}
 
 		//----------

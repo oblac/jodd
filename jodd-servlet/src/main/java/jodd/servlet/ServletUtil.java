@@ -724,6 +724,8 @@ public class ServletUtil {
 						}
 						result.append("\nPAGE\n----\n");
 						enumeration = pageContext.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
+				default:
+					break;
 			}
 			while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
@@ -733,6 +735,7 @@ public class ServletUtil {
 					case 1: value = session.getAttribute(name); break;
 					case 2: value = context.getAttribute(name); break;
 					case 3: value = pageContext.getAttribute(name); break;
+					default: break;
 				}
 				result.append(name).append('=');
 				if (value == null) {

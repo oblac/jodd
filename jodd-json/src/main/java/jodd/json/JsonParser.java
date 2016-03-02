@@ -401,6 +401,8 @@ public class JsonParser extends JsonParserBase {
 					return value;
 				}
 				break;
+			default:
+				break;
 		}
 
 		if (looseMode) {
