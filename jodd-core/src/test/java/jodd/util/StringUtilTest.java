@@ -1219,4 +1219,19 @@ public class StringUtilTest {
 		assertTrue(StringUtil.isSubstringAt("qwerty", "", 5));
 	}
 
+	@Test
+	public void testRemoveQuotes() {
+		assertEquals("123", StringUtil.removeQuotes("123"));
+		assertEquals("'123", StringUtil.removeQuotes("'123"));
+		assertEquals("123", StringUtil.removeQuotes("'123'"));
+		assertEquals("123'", StringUtil.removeQuotes("123'"));
+
+		assertEquals("\"123", StringUtil.removeQuotes("\"123"));
+		assertEquals("123", StringUtil.removeQuotes("\"123\""));
+		assertEquals("123\"", StringUtil.removeQuotes("123\""));
+
+		assertEquals("'123\"", StringUtil.removeQuotes("'123\""));
+		assertEquals("\"123'", StringUtil.removeQuotes("\"123'"));
+	}
+
 }

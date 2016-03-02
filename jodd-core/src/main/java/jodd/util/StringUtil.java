@@ -2964,6 +2964,21 @@ public class StringUtil {
 		return sb.toString();
 	}
 
+	// ---------------------------------------------------------------- text
+
+	/**
+	 * Removes starting and ending single or double quotes.
+	 */
+	public static String removeQuotes(String string) {
+		if (
+			(startsWithChar(string, '\'') && endsWithChar(string, '\'')) ||
+			(startsWithChar(string, '"') && endsWithChar(string, '"'))
+		) {
+			return substring(string, 1, -1);
+		}
+		return string;
+	}
+
 	// ---------------------------------------------------------------- hex
 
 	/**
