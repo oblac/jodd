@@ -192,13 +192,29 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			line = line.trim();
 
 			int ndx = line.indexOf(' ');
-			httpResponse.httpVersion(line.substring(0, ndx));
+			int ndx2;
 
-			int ndx2 = line.indexOf(' ', ndx + 1);
+			if (ndx > -1) {
+				httpResponse.httpVersion(line.substring(0, ndx));
+
+				ndx2 = line.indexOf(' ', ndx + 1);
+			}
+			else {
+				httpResponse.httpVersion(HTTP_1_1);
+				ndx2 = -1;
+				ndx = 0;
+			}
+
 			if (ndx2 == -1) {
 				ndx2 = line.length();
 			}
-			httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+
+			try {
+				httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+			}
+			catch (NumberFormatException nfex) {
+				httpResponse.statusCode(-1);
+			}
 
 			httpResponse.statusPhrase(line.substring(ndx2).trim());
 		}
