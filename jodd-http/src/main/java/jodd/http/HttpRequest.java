@@ -610,8 +610,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected HttpConnectionProvider httpConnectionProvider;
 
 	/**
+	 * Uses provided connection provider when {@link #open() opening} the
+	 * connection.
+	 */
+	public HttpRequest use(HttpConnectionProvider httpConnectionProvider) {
+		this.httpConnectionProvider = httpConnectionProvider;
+		return this;
+	}
+
+	/**
 	 * Returns http connection provider that was used for creating
-	 * current http connection.
+	 * current http connection. If <code>null</code>, default
+	 * connection provider will be used.
 	 */
 	public HttpConnectionProvider httpConnectionProvider() {
 		return httpConnectionProvider;
@@ -627,11 +637,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Opens a new {@link HttpConnection connection} using
-	 * {@link JoddHttp#httpConnectionProvider default connection provider}.
+	 * Opens a new {@link HttpConnection connection} using either
+	 * provided or {@link JoddHttp#httpConnectionProvider default} connection
+	 * provider.
 	 */
 	public HttpRequest open() {
-		return open(JoddHttp.httpConnectionProvider);
+		if (httpConnectionProvider == null) {
+			return open(JoddHttp.httpConnectionProvider);
+		}
+
+		return open(httpConnectionProvider);
 	}
 
 	/**

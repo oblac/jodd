@@ -68,7 +68,8 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			SSLSocket sslSocket = createSSLSocket(httpRequest.host(), httpRequest.port(), httpRequest.connectionTimeout());
 
 			httpConnection = new SocketHttpSecureConnection(sslSocket);
-		} else {
+		}
+		else {
 			Socket socket = createSocket(httpRequest.host(), httpRequest.port(), httpRequest.connectionTimeout());
 
 			httpConnection = new SocketHttpConnection(socket);
@@ -83,10 +84,10 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 			httpConnection.init();
 		}
-		catch (Throwable thex) {  			// @wjw_add
+		catch (Throwable throwable) {  			// @wjw_add
 			httpConnection.close();
 
-			throw new HttpException(thex);
+			throw new HttpException(throwable);
 		}
 
 		return httpConnection;
@@ -174,8 +175,9 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 				return new Socks4ProxySocketFactory(proxy);
 			case SOCKS5:
 				return new Socks5ProxySocketFactory(proxy);
+			default:
+				return null;
 		}
-		return null;
 	}
 
 }
