@@ -204,7 +204,7 @@ public class JSONDeserializerTest {
 		String json = new JsonSerializer()
 				.include("powers")        // redudant
 				.include("powers.class")
-				.use("powers.class", new SimpleClassnameTransformer())
+				.withSerializer("powers.class", new SimpleClassnameTransformer())
 				.exclude("*.class")
 				.serialize(superman);
 
@@ -374,7 +374,7 @@ public class JSONDeserializerTest {
 		foo.setBirthdate(df.parse("2009/01/02"));
 
 
-		String json = new JsonSerializer().use("birthdate", new DateJsonSerializer() {
+		String json = new JsonSerializer().withSerializer("birthdate", new DateJsonSerializer() {
 			@Override
 			public boolean serialize(JsonContext jsonContext, Date date) {
 				jsonContext.writeString(df.format(date));
@@ -383,7 +383,7 @@ public class JSONDeserializerTest {
 		}).serialize(foo);
 
 		Person newUser = new JsonParser()
-				.use("birthdate", new ValueConverter<String, Date>() {
+				.withValueConverter("birthdate", new ValueConverter<String, Date>() {
 					public Date convert(String data) {
 						try {
 							return df.parse(data);

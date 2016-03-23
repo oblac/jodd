@@ -190,7 +190,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Defines {@link jodd.json.ValueConverter} to use on given path.
 	 */
-	public JsonParser use(String path, ValueConverter valueConverter) {
+	public JsonParser withValueConverter(String path, ValueConverter valueConverter) {
 		if (convs == null) {
 			convs = new HashMap<>();
 		}

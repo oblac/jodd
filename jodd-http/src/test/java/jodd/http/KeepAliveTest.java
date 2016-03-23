@@ -110,11 +110,11 @@ public class KeepAliveTest {
 
 		// <-
 		HttpResponse response = request.open(httpConnectionProvider).send();
-		HttpConnection connection = request.httpConnection();
+		HttpConnection connection = request.connection();
 
 		assertTrue(request.isConnectionPersistent());
 		assertTrue(response.isConnectionPersistent());
-		assertNotNull(request.httpConnection());
+		assertNotNull(request.connection());
 
 		currentResponse = 1;
 
@@ -123,10 +123,10 @@ public class KeepAliveTest {
 		response = request.keepAlive(response, true).send();
 
 		// <-
-		assertSame(connection, request.httpConnection());
+		assertSame(connection, request.connection());
 		assertTrue(request.isConnectionPersistent());
 		assertTrue(response.isConnectionPersistent());
-		assertNotNull(request.httpConnection());
+		assertNotNull(request.connection());
 
 		currentResponse = 2;
 
@@ -135,7 +135,7 @@ public class KeepAliveTest {
 		response = request.keepAlive(response, true).send();
 
 		// <-
-		assertNull(request.httpConnection()); // connection is closed
+		assertNull(request.connection()); // connection is closed
 		assertTrue(request.isConnectionPersistent());
 		assertFalse(response.isConnectionPersistent());
 
@@ -149,12 +149,12 @@ public class KeepAliveTest {
 		// <-
 		assertTrue(request.isConnectionPersistent());
 		assertTrue(response.isConnectionPersistent());
-		assertNotNull(request.httpConnection());
+		assertNotNull(request.connection());
 
 		// CLOSE
 
 		response.close();
-		assertNull(request.httpConnection());	// connection closed
+		assertNull(request.connection());	// connection closed
 	}
 
 	@Test
@@ -171,11 +171,11 @@ public class KeepAliveTest {
 
 		// <-
 		HttpResponse response = browser.getHttpResponse();
-		HttpConnection connection = request.httpConnection();
+		HttpConnection connection = request.connection();
 
 		assertTrue(request.isConnectionPersistent());
 		assertTrue(response.isConnectionPersistent());
-		assertNotNull(request.httpConnection());
+		assertNotNull(request.connection());
 
 		currentResponse = 1;
 
@@ -184,10 +184,10 @@ public class KeepAliveTest {
 		response = browser.sendRequest(request);
 
 		// <-
-		assertSame(connection, request.httpConnection());
+		assertSame(connection, request.connection());
 		assertTrue(request.isConnectionPersistent());
 		assertTrue(response.isConnectionPersistent());
-		assertNotNull(request.httpConnection());
+		assertNotNull(request.connection());
 
 		currentResponse = 2;
 
@@ -196,7 +196,7 @@ public class KeepAliveTest {
 		response = browser.sendRequest(request);
 
 		// <-
-		assertNull(request.httpConnection()); // connection is closed
+		assertNull(request.connection()); // connection is closed
 		assertTrue(request.isConnectionPersistent());
 		assertFalse(response.isConnectionPersistent());
 
@@ -210,11 +210,11 @@ public class KeepAliveTest {
 		// <-
 		assertTrue(request.isConnectionPersistent());
 		assertTrue(response.isConnectionPersistent());
-		assertNotNull(request.httpConnection());
+		assertNotNull(request.connection());
 
 		// CLOSE
 
 		browser.close();
-		assertNull(request.httpConnection());	// connection closed
+		assertNull(request.connection());	// connection closed
 	}
 }

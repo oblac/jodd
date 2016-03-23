@@ -610,10 +610,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected HttpConnectionProvider httpConnectionProvider;
 
 	/**
-	 * Uses provided connection provider when {@link #open() opening} the
+	 * Uses custom connection provider when {@link #open() opening} the
 	 * connection.
 	 */
-	public HttpRequest use(HttpConnectionProvider httpConnectionProvider) {
+	public HttpRequest withConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
 		this.httpConnectionProvider = httpConnectionProvider;
 		return this;
 	}
@@ -623,7 +623,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * current http connection. If <code>null</code>, default
 	 * connection provider will be used.
 	 */
-	public HttpConnectionProvider httpConnectionProvider() {
+	public HttpConnectionProvider connectionProvider() {
 		return httpConnectionProvider;
 	}
 
@@ -632,7 +632,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * used for sending this request. Value is available
 	 * ONLY after calling {@link #open()} and before {@link #send()}.
 	 */
-	public HttpConnection httpConnection() {
+	public HttpConnection connection() {
 		return httpConnection;
 	}
 
@@ -704,7 +704,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if (previousConnection != null) {
 				// keep using the connection!
 				this.httpConnection = previousConnection;
-				this.httpConnectionProvider = httpResponse.getHttpRequest().httpConnectionProvider();
+				this.httpConnectionProvider = httpResponse.getHttpRequest().connectionProvider();
 			}
 
 			//keepAlive = true; (already set)
@@ -725,7 +725,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// if connection is not opened, open it using previous connection provider
 		if (httpConnection == null) {
-			open(httpResponse.getHttpRequest().httpConnectionProvider());
+			open(httpResponse.getHttpRequest().connectionProvider());
 		}
 		return this;
 	}

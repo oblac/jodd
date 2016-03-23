@@ -66,7 +66,7 @@ public class JsonSerializer {
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
 	 */
-	public JsonSerializer use(String pathString, TypeJsonSerializer typeJsonSerializer) {
+	public JsonSerializer withSerializer(String pathString, TypeJsonSerializer typeJsonSerializer) {
 		if (pathSerializersMap == null) {
 			pathSerializersMap = new HashMap<>();
 		}
@@ -79,7 +79,7 @@ public class JsonSerializer {
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given type.
 	 */
-	public JsonSerializer use(Class type, TypeJsonSerializer typeJsonSerializer) {
+	public JsonSerializer withSerializer(Class type, TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
 			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaultSerializers);
 		}
