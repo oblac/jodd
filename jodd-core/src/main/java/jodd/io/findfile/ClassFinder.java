@@ -57,7 +57,7 @@ import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
  * User can set explicit excludes. Of course, mode can be changed.
  * <p>
  * All paths are matched using {@link Wildcard#matchPath(String, String) path-style}
- * wildcard matcher. All entries are matched using {@link Wildcard#match(String, String) common-style}
+ * wildcard matcher. All entries are matched using {@link Wildcard#match(CharSequence, CharSequence)} common-style}
  * wildcard matcher.
  *
  * @see ClassScanner
