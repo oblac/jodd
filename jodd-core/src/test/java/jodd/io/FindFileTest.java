@@ -65,7 +65,7 @@ public class FindFileTest {
 		final MutableInteger countFiles = new MutableInteger();
 		final MutableInteger countDirs = new MutableInteger();
 
-		ff.scan(new FileConsumer() {
+		ff.find(new FileConsumer() {
 			@Override
 			public boolean onFile(File f) {
 

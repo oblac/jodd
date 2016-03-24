@@ -601,12 +601,15 @@ public class FindFile<T extends FindFile> {
 	 * Performs scanning.
 	 */
 	@SuppressWarnings("StatementWithEmptyBody")
-	public void scan() {
+	public void find() {
 		while (nextFile() != null) {
 		}
 	}
 
-	public void scan(FileConsumer fileConsumer) {
+	/**
+	 * Finds a file.
+	 */
+	public void find(FileConsumer fileConsumer) {
 		File f;
 		while ((f = nextFile()) != null) {
 			boolean next = fileConsumer.onFile(f);
