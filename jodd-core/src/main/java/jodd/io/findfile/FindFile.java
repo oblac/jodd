@@ -606,6 +606,17 @@ public class FindFile<T extends FindFile> {
 		}
 	}
 
+	public void scan(FileConsumer fileConsumer) {
+		File f;
+		while ((f = nextFile()) != null) {
+			boolean next = fileConsumer.onFile(f);
+
+			if (!next) {
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Initializes file walking.
 	 * Separates input files and folders.

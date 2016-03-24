@@ -25,9 +25,11 @@
 
 package jodd.io;
 
+import jodd.io.findfile.FileConsumer;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.RegExpFindFile;
 import jodd.io.findfile.WildcardFindFile;
+import jodd.mutable.MutableInteger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,31 +62,34 @@ public class FindFileTest {
 						.setIncludeDirs(true)
 						.searchPath(dataRoot);
 
-		int countFiles = 0;
-		int countDirs = 0;
+		final MutableInteger countFiles = new MutableInteger();
+		final MutableInteger countDirs = new MutableInteger();
 
-		File f;
-		while ((f = ff.nextFile()) != null) {
-			if (f.isDirectory()) {
-				countDirs++;
-			} else {
-				countFiles++;
-				String path = f.getAbsolutePath();
-				path = FileNameUtil.separatorsToUnix(path);
-				if (!path.startsWith("/")) {
-					path = '/' + path;
-				}
-				boolean matched =
+		ff.scan(new FileConsumer() {
+			@Override
+			public boolean onFile(File f) {
+
+				if (f.isDirectory()) {
+					countDirs.value++;
+				} else {
+					countFiles.value++;
+					String path = f.getAbsolutePath();
+					path = FileNameUtil.separatorsToUnix(path);
+					if (!path.startsWith("/")) {
+						path = '/' + path;
+					}
+					boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
-								path.equals(dataRoot + "/file/a.txt");
+							path.equals(dataRoot + "/file/a.txt");
 
-				assertTrue(matched);
-
+					assertTrue(matched);
+				}
+				return true;
 			}
-		}
+		});
 
-		assertEquals(0, countDirs);
-		assertEquals(2, countFiles);
+		assertEquals(0, countDirs.value);
+		assertEquals(2, countFiles.value);
 	}
 
 	@Test
