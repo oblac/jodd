@@ -87,12 +87,8 @@ public class ReceivedEmail extends CommonEmail {
 
 		setSubject(msg.getSubject());
 
-		Date recvDate = msg.getReceivedDate();
-		if (recvDate == null) {
-			recvDate = new Date();
-		}
-		setReceiveDate(recvDate);
-		setSentDate(msg.getSentDate());
+		setReceiveDate(parseReceiveDate(msg));
+		setSentDate(parseSendDate(msg));
 
 		// copy headers
 		Enumeration<Header> headers = msg.getAllHeaders();
@@ -176,6 +172,14 @@ public class ReceivedEmail extends CommonEmail {
 
 			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
+	}
+
+	protected Date parseReceiveDate(Message msg) throws MessagingException {
+		return msg.getReceivedDate();
+	}
+
+	protected Date parseSendDate(Message msg) throws MessagingException {
+		return msg.getSentDate();
 	}
 
 	// ---------------------------------------------------------------- flags
