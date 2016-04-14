@@ -209,6 +209,7 @@ public class SwingSpyPanel extends JPanel {
 				} else {
 					str.append(' ');
 				}
+				field.setAccessible(true);
 
 				str.append(field.getName()).append(':');
 
