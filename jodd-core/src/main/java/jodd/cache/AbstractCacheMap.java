@@ -177,7 +177,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 				missCount++;
 				return null;
 			}
-			if (co.isExpired() == true) {
+			if (co.isExpired()) {
 				// remove(key);		// can't upgrade the lock
 				cacheMap.remove(key);
 

@@ -48,6 +48,25 @@ public class PetiteConfig {
 		useParamo = JoddPetite.useProxetta;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
+		useAltBeanNames = true;
+	}
+
+	// ----------------------------------------------------------------
+
+	protected boolean useAltBeanNames;
+
+	/**
+	 * Returns if alternative bean names are in use.
+	 */
+	public boolean isUseAltBeanNames() {
+		return useAltBeanNames;
+	}
+
+	/**
+	 * Enables alternative bean names.
+	 */
+	public void setUseAltBeanNames(boolean useAltBeanNames) {
+		this.useAltBeanNames = useAltBeanNames;
 	}
 
 	// ----------------------------------------------------------------
@@ -157,7 +176,7 @@ public class PetiteConfig {
 	 * always <code>false</code>).
 	 */
 	public void setUseParamo(boolean useParamo) {
-		if (JoddPetite.useProxetta == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -178,7 +197,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
-		if (JoddPetite.useProxetta == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -197,7 +216,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
-		if (JoddPetite.useProxetta == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}

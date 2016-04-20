@@ -38,6 +38,7 @@ public class ImapServer implements ReceiveMailSessionProvider {
 
 	protected static final String MAIL_IMAP_PORT = "mail.imap.port";
 	protected static final String MAIL_IMAP_HOST = "mail.imap.host";
+	protected static final String MAIL_IMAP_PARTIALFETCH = "mail.imap.partialfetch";
 
 	protected static final String PROTOCOL_IMAP = "imap";
 
@@ -86,9 +87,18 @@ public class ImapServer implements ReceiveMailSessionProvider {
 		Properties props = new Properties();
 		props.setProperty(MAIL_IMAP_HOST, host);
 		props.setProperty(MAIL_IMAP_PORT, String.valueOf(port));
+		props.setProperty(MAIL_IMAP_PARTIALFETCH, "false");
 		return props;
 	}
 
+	/**
+	 * Sets the session property. May be set only before the session is
+	 * created.
+	 */
+	public ImapServer setProperty(String name, String value) {
+		sessionProperties.setProperty(name, value);
+		return this;
+	}
 
 	/**
 	 * {@inheritDoc}

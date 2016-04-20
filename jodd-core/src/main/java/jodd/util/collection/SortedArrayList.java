@@ -85,7 +85,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	@Override
 	public boolean add(E o) {
 		int idx = 0;
-		if (isEmpty() == false) {
+		if (!isEmpty()) {
 			idx = findInsertionPoint(o);
 		}
 		super.add(idx, o);

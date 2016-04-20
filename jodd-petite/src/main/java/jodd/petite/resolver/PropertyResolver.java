@@ -82,7 +82,7 @@ public class PropertyResolver {
 				ref = fieldDescriptor.getField().getAnnotation(PetiteInject.class);
 			}
 
-			if ((autowire == false) && (ref == null)) {
+			if ((!autowire) && (ref == null)) {
 				continue;
 			}
 

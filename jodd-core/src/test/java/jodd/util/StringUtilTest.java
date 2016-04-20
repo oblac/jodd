@@ -917,11 +917,11 @@ public class StringUtilTest {
 		s = StringUtil.join(new String[0], ".");
 		assertEquals("", s);
 
-		assertNull(StringUtil.join((Object[]) null, "."));
+		assertNull(StringUtil.join(null, "."));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, "."));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, "."));
 
-		assertNull(StringUtil.join((Object[]) null, '.'));
+		assertNull(StringUtil.join(null, '.'));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, '.'));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, '.'));
 	}
@@ -1217,6 +1217,21 @@ public class StringUtilTest {
 		assertFalse(StringUtil.isSubstringAt("qwerty", "y", 4));
 		assertTrue(StringUtil.isSubstringAt("qwerty", "y", 5));
 		assertTrue(StringUtil.isSubstringAt("qwerty", "", 5));
+	}
+
+	@Test
+	public void testRemoveQuotes() {
+		assertEquals("123", StringUtil.removeQuotes("123"));
+		assertEquals("'123", StringUtil.removeQuotes("'123"));
+		assertEquals("123", StringUtil.removeQuotes("'123'"));
+		assertEquals("123'", StringUtil.removeQuotes("123'"));
+
+		assertEquals("\"123", StringUtil.removeQuotes("\"123"));
+		assertEquals("123", StringUtil.removeQuotes("\"123\""));
+		assertEquals("123\"", StringUtil.removeQuotes("123\""));
+
+		assertEquals("'123\"", StringUtil.removeQuotes("'123\""));
+		assertEquals("\"123'", StringUtil.removeQuotes("\"123'"));
 	}
 
 }

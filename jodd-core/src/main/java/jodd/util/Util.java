@@ -97,7 +97,7 @@ public class Util {
 			}
 			return count;
 		}
-		if (obj.getClass().isArray() == true) {
+		if (obj.getClass().isArray()) {
 			return Array.getLength(obj);
 		}
 		return -1;
@@ -144,7 +144,7 @@ s	 */
 			}
 			return false;
 		}
-		if (obj.getClass().isArray() == true) {
+		if (obj.getClass().isArray()) {
 			int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
 				Object o = Array.get(obj, i);

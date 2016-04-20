@@ -27,6 +27,10 @@ package jodd.json;
 
 import jodd.json.mock.Location;
 import jodd.json.model.App;
+import jodd.json.model.MyFolder1;
+import jodd.json.model.MyFolder2;
+import jodd.json.model.MyFolder3;
+import jodd.json.model.MyFolder4;
 import jodd.json.model.User;
 import jodd.json.model.UserHolder;
 import org.junit.Test;
@@ -121,6 +125,37 @@ public class AnnotationTest {
 	}
 
 	@Test
+	public void testCustomMap() {
+		String json = "{\"userId\" : 123, \"name\": 456}";
+
+		Map<String, Integer> map = JsonParser.create().parse(json);
+		assertEquals(2, map.size());
+		assertEquals(Integer.valueOf(123), map.get("userId"));
+		assertEquals(Integer.valueOf(456), map.get("name"));
+
+		Map<String, Long> map2 = JsonParser
+			.create()
+			.map(JsonParser.VALUES, Long.class)
+			.parse(json);
+
+		assertEquals(2, map2.size());
+		assertEquals(Long.valueOf(123), map2.get("userId"));
+		assertEquals(Long.valueOf(456), map2.get("name"));
+
+
+		json = "{\"123\" : \"hey\", \"456\": \"man\"}";
+
+		Map<Long, String> map3 = JsonParser
+			.create()
+			.map(JsonParser.KEYS, Long.class)
+			.parse(json);
+
+		assertEquals(2, map3.size());
+		assertEquals("hey", map3.get(Long.valueOf(123)));
+		assertEquals("man", map3.get(Long.valueOf(456)));
+	}
+
+		@Test
 	public void testClassInArrayOrMapParse() {
 		String json = "{\"userId\" : 123, \"name\":\"Joe\"}";
 
@@ -148,6 +183,28 @@ public class AnnotationTest {
 		user = userHolder.getUser();
 		assertEquals(123, user.getId());
 		assertNull(user.getName());
+	}
+
+	@Test
+	public void testBeanSettersGetters() {
+		String json = "{\"foo.folder\":\"vvvv\"}";
+
+		{
+			MyFolder1 mf1 = JsonParser.create().parse(json, MyFolder1.class);
+			assertEquals("vvvv", mf1.getFolder());
+		}
+		{
+			MyFolder2 mf2 = JsonParser.create().parse(json, MyFolder2.class);
+			assertEquals("vvvv", mf2.get());
+		}
+		{
+			MyFolder3 mf3 = JsonParser.create().parse(json, MyFolder3.class);
+			assertEquals("vvvv", mf3.getFolder());
+		}
+		{
+			MyFolder4 mf4 = JsonParser.create().parse(json, MyFolder4.class);
+			assertEquals("vvvv", mf4.get());
+		}
 	}
 
 }

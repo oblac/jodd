@@ -109,7 +109,7 @@ public class JSONDeserializerTest {
 
 		String json = new JsonSerializer().serialize(map);
 
-		map = (Map) new JsonParser().map("values", Person.class).parse(json);
+		map = new JsonParser().map("values", Person.class).parse(json);
 		Person jsonIgor = (Person) map.get("person");
 
 		assertNotNull(jsonIgor);
@@ -204,7 +204,7 @@ public class JSONDeserializerTest {
 		String json = new JsonSerializer()
 				.include("powers")        // redudant
 				.include("powers.class")
-				.use("powers.class", new SimpleClassnameTransformer())
+				.withSerializer("powers.class", new SimpleClassnameTransformer())
 				.exclude("*.class")
 				.serialize(superman);
 
@@ -218,6 +218,7 @@ public class JSONDeserializerTest {
 				.map("secretIdentity", SecretIdentity.class)
 				.parse(json, Hero.class);
 
+		assertEquals("Fortress of Solitude", jsonSuperMan.getLair().getName());
 		assertHeroHasSuperPowers(jsonSuperMan);
 	}
 
@@ -373,15 +374,16 @@ public class JSONDeserializerTest {
 		foo.setBirthdate(df.parse("2009/01/02"));
 
 
-		String json = new JsonSerializer().use("birthdate", new DateJsonSerializer() {
+		String json = new JsonSerializer().withSerializer("birthdate", new DateJsonSerializer() {
 			@Override
-			public void serialize(JsonContext jsonContext, Date date) {
+			public boolean serialize(JsonContext jsonContext, Date date) {
 				jsonContext.writeString(df.format(date));
+				return true;
 			}
 		}).serialize(foo);
 
 		Person newUser = new JsonParser()
-				.use("birthdate", new ValueConverter<String, Date>() {
+				.withValueConverter("birthdate", new ValueConverter<String, Date>() {
 					public Date convert(String data) {
 						try {
 							return df.parse(data);
@@ -624,9 +626,10 @@ public class JSONDeserializerTest {
 	}
 
 	public static class SimpleClassnameTransformer implements TypeJsonSerializer {
-		public void serialize(JsonContext jsonContext, Object value) {
+		public boolean serialize(JsonContext jsonContext, Object value) {
 			String name = value.toString() + "***";
 			jsonContext.writeString(name);
+			return true;
 		}
 	}
 

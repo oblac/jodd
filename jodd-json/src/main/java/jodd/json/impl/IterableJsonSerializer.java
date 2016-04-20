@@ -32,16 +32,20 @@ import jodd.json.JsonContext;
  */
 public class IterableJsonSerializer extends ValueJsonSerializer<Iterable> {
 
+	@Override
 	public void serializeValue(JsonContext jsonContext, Iterable iterable) {
 		jsonContext.writeOpenArray();
 
 		int count = 0;
+
 		for (Object element : iterable) {
 			if (count > 0) {
 				jsonContext.writeComma();
 			}
-			count++;
-			jsonContext.serialize(element);
+
+			if (jsonContext.serialize(element)) {
+				count++;
+			}
 		}
 
 		jsonContext.writeCloseArray();

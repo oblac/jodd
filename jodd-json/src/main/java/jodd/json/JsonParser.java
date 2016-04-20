@@ -190,7 +190,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Defines {@link jodd.json.ValueConverter} to use on given path.
 	 */
-	public JsonParser use(String path, ValueConverter valueConverter) {
+	public JsonParser withValueConverter(String path, ValueConverter valueConverter) {
 		if (convs == null) {
 			convs = new HashMap<>();
 		}
@@ -885,9 +885,12 @@ public class JsonParser extends JsonParserBase {
 				// *** add to map
 				if (isTargetRealTypeMap) {
 					path.push(VALUES, key);
+
+					valueType = replaceWithMappedTypeForPath(valueType);
 				} else {
 					path.push(key);
 				}
+
 
 				value = parseValue(valueType, null, null);
 

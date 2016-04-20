@@ -67,11 +67,11 @@ public abstract class LagartoServletFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String actionPath = DispatcherUtil.getServletPath(request);
 
-		if (processActionPath(request, response, actionPath) == true) {
+		if (processActionPath(request, response, actionPath)) {
 			return;
 		}
 
-		if (acceptActionPath(request, actionPath) == false) {
+		if (!acceptActionPath(request, actionPath)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 		}

@@ -25,6 +25,7 @@
 
 package jodd.http;
 
+import jodd.exception.ExceptionUtil;
 import jodd.util.StringPool;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class HttpBrowser {
 	protected HttpMultiMap<String> defaultHeaders = HttpMultiMap.newCaseInsensitveMap();
 	protected boolean keepAlive;
 	protected long elapsedTime;
+	protected boolean catchTransportExceptions = true;
 
 	public HttpBrowser() {
 		httpConnectionProvider = JoddHttp.httpConnectionProvider;
@@ -60,6 +62,14 @@ public class HttpBrowser {
 	 */
 	public HttpBrowser setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
+		return this;
+	}
+
+	/**
+	 * Defines if transport exceptions should be thrown.
+	 */
+	public HttpBrowser setCatchTransportExceptions(boolean catchTransportExceptions) {
+		this.catchTransportExceptions = catchTransportExceptions;
 		return this;
 	}
 
@@ -134,18 +144,20 @@ public class HttpBrowser {
 			addCookies(httpRequest);
 
 			// send request
-			if (keepAlive == false) {
-				httpRequest.open(httpConnectionProvider);
-			} else {
-				// keeping alive
-				if (previouseResponse == null) {
-					httpRequest.open(httpConnectionProvider).connectionKeepAlive(true);
-				} else {
-					httpRequest.keepAlive(previouseResponse, true);
+			if (catchTransportExceptions) {
+				try {
+					this.httpResponse = _sendRequest(httpRequest, previouseResponse);
+				}
+				catch (HttpException httpException) {
+					httpResponse = new HttpResponse();
+					httpResponse.assignHttpRequest(httpRequest);
+					httpResponse.statusCode(503);
+					httpResponse.statusPhrase("Service unavailable. " + ExceptionUtil.message(httpException));
 				}
 			}
-
-			this.httpResponse = httpRequest.send();
+			else {
+				this.httpResponse =_sendRequest(httpRequest, previouseResponse);
+			}
 
 			readCookies(httpResponse);
 
@@ -184,6 +196,24 @@ public class HttpBrowser {
 		elapsedTime = System.currentTimeMillis() - elapsedTime;
 
 		return this.httpResponse;
+	}
+
+	/**
+	 * Opens connection and sends a response.
+	 */
+	protected HttpResponse _sendRequest(HttpRequest httpRequest, HttpResponse previouseResponse) {
+		if (!keepAlive) {
+			httpRequest.open(httpConnectionProvider);
+		} else {
+			// keeping alive
+			if (previouseResponse == null) {
+				httpRequest.open(httpConnectionProvider).connectionKeepAlive(true);
+			} else {
+				httpRequest.keepAlive(previouseResponse, true);
+			}
+		}
+
+		return httpRequest.send();
 	}
 
 	/**

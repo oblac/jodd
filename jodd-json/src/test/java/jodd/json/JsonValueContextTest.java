@@ -44,7 +44,7 @@ public class JsonValueContextTest {
 		surfer.setSplit("long wave");
 
 		JsonSerializer jsonSerializer = new JsonSerializer()
-				.use(String.class, new MyTypeJsonSerializer());
+				.withSerializer(String.class, new MyTypeJsonSerializer());
 
 		String json = jsonSerializer.serialize(surfer);
 
@@ -64,7 +64,7 @@ public class JsonValueContextTest {
 		list.add("three");
 
 		JsonSerializer jsonSerializer = new JsonSerializer()
-				.use(String.class, new MyTypeJsonSerializer2());
+				.withSerializer(String.class, new MyTypeJsonSerializer2());
 
 		String json = jsonSerializer.serialize(list);
 
@@ -82,7 +82,7 @@ public class JsonValueContextTest {
 		String[] array = new String[] {"one", "two", "three"};
 
 		JsonSerializer jsonSerializer = new JsonSerializer()
-				.use(String.class, new MyTypeJsonSerializer2());
+				.withSerializer(String.class, new MyTypeJsonSerializer2());
 
 		String json = jsonSerializer.serialize(array);
 
@@ -100,7 +100,7 @@ public class JsonValueContextTest {
 		Object[] array = new Object[] {new Surfer(), "two", "three"};
 
 		JsonSerializer jsonSerializer = new JsonSerializer()
-				.use(String.class, new MyTypeJsonSerializer2());
+				.withSerializer(String.class, new MyTypeJsonSerializer2());
 
 		String json = jsonSerializer.serialize(array);
 
@@ -115,7 +115,7 @@ public class JsonValueContextTest {
 
 	public static class MyTypeJsonSerializer implements TypeJsonSerializer<String> {
 
-		public void serialize(JsonContext jsonContext, String value) {
+		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 
 			String propertyName = jsonValueContext.getPropertyName();
@@ -125,12 +125,14 @@ public class JsonValueContextTest {
 			}
 
 			jsonContext.writeString(value);
+
+			return true;
 		}
 	}
 
 	public static class MyTypeJsonSerializer2 implements TypeJsonSerializer<String> {
 
-		public void serialize(JsonContext jsonContext, String value) {
+		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 
 			if (jsonValueContext.getIndex() == 1) {
@@ -138,6 +140,8 @@ public class JsonValueContextTest {
 			}
 
 			jsonContext.writeString(value);
+
+			return true;
 		}
 	}
 

@@ -156,9 +156,9 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 
 			if (declared) {
-				value = BeanUtil.getDeclaredProperty(source, propertyName);
+				value = BeanUtil.declared.getProperty(source, propertyName);
 			} else {
-				value = BeanUtil.getProperty(source, propertyName);
+				value = BeanUtil.pojo.getProperty(source, propertyName);
 			}
 
 			if (value == null && ignoreNullValues) {

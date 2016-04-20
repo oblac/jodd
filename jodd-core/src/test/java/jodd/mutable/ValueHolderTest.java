@@ -28,20 +28,19 @@ package jodd.mutable;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class ValueHolderTest {
 
 	@Test
 	public void testValueHolder() {
 		ValueHolder<String> str = ValueHolderWrapper.create();
-		str.setValue("123");
+		str.value("123");
 
-		assertEquals("123", str.getValue());
+		assertEquals("123", str.value());
 
 		str = ValueHolderWrapper.wrap("123");
-		str.setValue("123");
+		str.value("123");
 
-		assertEquals("123", str.getValue());
+		assertEquals("123", str.value());
 	}
 }

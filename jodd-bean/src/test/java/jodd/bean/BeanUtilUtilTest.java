@@ -33,7 +33,7 @@ public class BeanUtilUtilTest {
 
 	@Test
 	public void testIndexOfDot() {
-		BeanUtilUtil buu = new BeanUtilUtil();
+		BeanUtilUtil buu = new BeanUtilBean();
 
 		assertEquals(3, buu.indexOfDot("aaa.ccc"));
 		assertEquals(-1, buu.indexOfDot("aaaccc"));

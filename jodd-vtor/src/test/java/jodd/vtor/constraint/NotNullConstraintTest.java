@@ -23,22 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.io;
+package jodd.vtor.constraint;
 
-import jodd.exception.UncheckedException;
+import org.junit.Test;
 
-import java.io.IOException;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-/**
- * Unchecked IO exception.
- */
-public class UncheckedIOException extends UncheckedException {
+public class NotNullConstraintTest extends ConstraintTestBase {
 
-	public UncheckedIOException(IOException cause) {
-		super(cause);
-	}
+    @Test
+    public void testIsValid() {
+        NotNullConstraint notNullConstraint = new NotNullConstraint();
+        //this is an empty method nothing can be verified
+        notNullConstraint.configure(null);
 
-	public UncheckedIOException(String message, IOException cause) {
-		super(message, cause);
-	}
+        assertTrue("result must be true when validate not null value", notNullConstraint.isValid(mockContext(), new Object()));
+        assertFalse("result must be false when validate null value", notNullConstraint.isValid(mockContext(), null));
+    }
 }

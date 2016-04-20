@@ -297,7 +297,7 @@ public class StringUtil {
 	 */
 	public static boolean isAllEmpty(String... strings) {
 		for (String string : strings) {
-			if (isEmpty(string) == false) {
+			if (!isEmpty(string)) {
 				return false;
 			}
 		}
@@ -323,7 +323,7 @@ public class StringUtil {
 	 */
 	public static boolean isAllBlank(String... strings) {
 		for (String string : strings) {
-			if (isBlank(string) == false) {
+			if (!isBlank(string)) {
 				return false;
 			}
 		}
@@ -338,7 +338,7 @@ public class StringUtil {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if (CharUtil.isWhitespace(c) == false) {
+			if (!CharUtil.isWhitespace(c)) {
 				return false;
 			}
 		}
@@ -352,7 +352,7 @@ public class StringUtil {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if (CharUtil.isDigit(c) == false) {
+			if (!CharUtil.isDigit(c)) {
 				return false;
 			}
 		}
@@ -367,7 +367,7 @@ public class StringUtil {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if ((CharUtil.isDigit(c) == false) && (c != '-') && (c != '+')) {
+			if ((!CharUtil.isDigit(c)) && (c != '-') && (c != '+')) {
 				return false;
 			}
 		}
@@ -491,7 +491,7 @@ public class StringUtil {
 		}
 		Class<?> type = value.getClass();
 
-		if (type.isArray() == false) {
+		if (!type.isArray()) {
 			return new String[] {value.toString()};
 		}
 
@@ -576,7 +576,7 @@ public class StringUtil {
 
 		}
 
-		char chars[] = string.toCharArray();
+		char[] chars = string.toCharArray();
 		chars[0] = modifiedCh;
 		return new String(chars);
 	}
@@ -605,7 +605,7 @@ public class StringUtil {
 			return name;
 		}
 
-		char chars[] = name.toCharArray();
+		char[] chars = name.toCharArray();
 		char c = chars[0];
 		char modifiedChar = Character.toLowerCase(c);
 		if (modifiedChar == c) {
@@ -801,7 +801,7 @@ public class StringUtil {
 
 		start[0] = 0;
 		int s = 0, e;
-		if (CharUtil.equalsOne(srcc[0], delimiters) == true) {	// string starts with delimiter
+		if (CharUtil.equalsOne(srcc[0], delimiters)) {	// string starts with delimiter
 			end[0] = 0;
 			count++;
 			s = CharUtil.findFirstDiff(srcc, 1, delimiters);
@@ -1301,7 +1301,7 @@ public class StringUtil {
 			endIndex = 0;
 		}
 		for (int i = startIndex; i >= endIndex; i--) {
-			if (Character.isWhitespace(src.charAt(i)) == false) {
+			if (!Character.isWhitespace(src.charAt(i))) {
 				return i;
 			}
 		}
@@ -1488,7 +1488,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOf(String s, String arr[]) {
+	public static int[] indexOf(String s, String[] arr) {
 		return indexOf(s, arr, 0);
 	}
 	/**
@@ -1501,7 +1501,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOf(String s, String arr[], int start) {
+	public static int[] indexOf(String s, String[] arr, int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1526,7 +1526,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOfIgnoreCase(String s, String arr[]) {
+	public static int[] indexOfIgnoreCase(String s, String[] arr) {
 		return indexOfIgnoreCase(s, arr, 0);
 	}
 	/**
@@ -1539,7 +1539,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOfIgnoreCase(String s, String arr[], int start) {
+	public static int[] indexOfIgnoreCase(String s, String[] arr, int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1564,7 +1564,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] lastIndexOf(String s, String arr[]) {
+	public static int[] lastIndexOf(String s, String[] arr) {
 		return lastIndexOf(s, arr, s.length());
 	}
 	/**
@@ -1577,7 +1577,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOf(String s, String arr[], int fromIndex) {
+	public static int[] lastIndexOf(String s, String[] arr, int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1604,7 +1604,7 @@ public class StringUtil {
 	 *
 	 * @return int[2]
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String arr[]) {
+	public static int[] lastIndexOfIgnoreCase(String s, String[] arr) {
 		return lastIndexOfIgnoreCase(s, arr, s.length());
 	}
 	/**
@@ -1617,7 +1617,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String arr[], int fromIndex) {
+	public static int[] lastIndexOfIgnoreCase(String s, String[] arr, int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1641,12 +1641,12 @@ public class StringUtil {
 	 *
 	 * @return <code>true</code> if all array elements matches
 	 */
-	public static boolean equals(String as[], String as1[]) {
+	public static boolean equals(String[] as, String[] as1) {
 	    if (as.length != as1.length) {
 	        return false;
 	    }
 	    for (int i = 0; i < as.length; i++) {
-	        if (as[i].equals(as1[i]) == false) {
+	        if (!as[i].equals(as1[i])) {
 	            return false;
 	        }
 	    }
@@ -1660,12 +1660,12 @@ public class StringUtil {
 	 *
 	 * @return true if all array elements matches
 	 */
-	public static boolean equalsIgnoreCase(String as[], String as1[]) {
+	public static boolean equalsIgnoreCase(String[] as, String[] as1) {
 		if (as.length != as1.length) {
 			return false;
 		}
 		for (int i = 0; i < as.length; i++) {
-			if (as[i].equalsIgnoreCase(as1[i]) == false) {
+			if (!as[i].equalsIgnoreCase(as1[i])) {
 				return false;
 			}
 		}
@@ -1919,7 +1919,7 @@ public class StringUtil {
 	}
 	public static int indexOfNonWhitespace(String string, int startindex, int endindex) {
 		for (int i = startindex; i < endindex; i++) {
-			if (CharUtil.isWhitespace(string.charAt(i)) == false) {
+			if (!CharUtil.isWhitespace(string.charAt(i))) {
 				return i;
 			}
 		}
@@ -2396,10 +2396,10 @@ public class StringUtil {
 	 * Surrounds the string with provided prefix and suffix if such missing from string.
 	 */
 	public static String surround(String string, String prefix, String suffix) {
-		if (string.startsWith(prefix) == false) {
+		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
-		if (string.endsWith(suffix) == false) {
+		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
 		return string;
@@ -2409,7 +2409,7 @@ public class StringUtil {
 	 * Inserts prefix if doesn't exist.
 	 */
 	public static String prefix(String string, String prefix) {
-		if (string.startsWith(prefix) == false) {
+		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
 		return string;
@@ -2419,7 +2419,7 @@ public class StringUtil {
 	 * Appends suffix if doesn't exist.
 	 */
 	public static String suffix(String string, String suffix) {
-		if (string.endsWith(suffix) == false) {
+		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
 		return string;
@@ -2962,6 +2962,21 @@ public class StringUtil {
 		}
 
 		return sb.toString();
+	}
+
+	// ---------------------------------------------------------------- text
+
+	/**
+	 * Removes starting and ending single or double quotes.
+	 */
+	public static String removeQuotes(String string) {
+		if (
+			(startsWithChar(string, '\'') && endsWithChar(string, '\'')) ||
+			(startsWithChar(string, '"') && endsWithChar(string, '"'))
+		) {
+			return substring(string, 1, -1);
+		}
+		return string;
 	}
 
 	// ---------------------------------------------------------------- hex

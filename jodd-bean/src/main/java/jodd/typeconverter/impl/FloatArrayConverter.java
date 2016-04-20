@@ -51,7 +51,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}

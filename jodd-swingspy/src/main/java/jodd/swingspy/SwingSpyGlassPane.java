@@ -88,7 +88,7 @@ public class SwingSpyGlassPane extends JPanel implements AWTEventListener {
             MouseEvent me = (MouseEvent) event;
             Component mecmp = me.getComponent();
 
-            if (SwingUtilities.isDescendingFrom(mecmp, (Component) rootPaneContainer) == false) {
+            if (!SwingUtilities.isDescendingFrom(mecmp, (Component) rootPaneContainer)) {
                 return;
             }
             if ((me.getID() == MouseEvent.MOUSE_EXITED) && (mecmp == rootPaneContainer)) {

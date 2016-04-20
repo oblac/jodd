@@ -74,7 +74,7 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 		String stringValue = value.toString().trim();
 
 		// try yyyy-mm-dd for valueOf
-		if (StringUtil.containsOnlyDigits(stringValue) == false) {
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			try {
 				return Time.valueOf(stringValue);
 			} catch (IllegalArgumentException iaex) {

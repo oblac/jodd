@@ -331,7 +331,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+		if (ReflectUtil.isInstanceOf(value, destinationType)) {
 			return (T) value;
 		}
 
@@ -359,7 +359,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+		if (ReflectUtil.isInstanceOf(value, destinationType)) {
 			return (Collection<T>) value;
 		}
 

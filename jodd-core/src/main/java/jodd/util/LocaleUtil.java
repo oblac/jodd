@@ -103,9 +103,9 @@ public class LocaleUtil {
 	 */
 	public static String resolveLocaleCode(String lang, String country, String variant) {
 		StringBuilder code = new StringBuilder(lang);
-		if (StringUtil.isEmpty(country) == false) {
+		if (!StringUtil.isEmpty(country)) {
 			code.append('_').append(country);
-			if (StringUtil.isEmpty(variant) == false) {
+			if (!StringUtil.isEmpty(variant)) {
 				code.append('_').append(variant);
 			}
 		}
@@ -123,7 +123,7 @@ public class LocaleUtil {
 	 * Decodes locale code in string array that can be used for <code>Locale</code> constructor.
 	 */
 	public static String[] decodeLocaleCode(String localeCode) {
-		String result[] = new String[3];
+		String[] result = new String[3];
 		String[] data = StringUtil.splitc(localeCode, '_');
 		result[0] = data[0];
 		result[1] = result[2] = StringPool.EMPTY;

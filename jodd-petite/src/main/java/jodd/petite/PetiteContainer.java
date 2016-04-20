@@ -193,7 +193,7 @@ public class PetiteContainer extends PetiteBeans {
 			Collection beans = sip.createSet(beanNames.length);
 
 			for (String beanName : beanNames) {
-				if (beanName.equals(def.name) == false) {
+				if (!beanName.equals(def.name)) {
 					Object value = getBean(beanName);
 					beans.add(value);
 				}
@@ -257,7 +257,6 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
-
 	protected void resolveInitAndDestroyMethods(Object bean, BeanDefinition def) {
 		if (def.initMethods == null) {
 			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
@@ -299,7 +298,7 @@ public class PetiteContainer extends PetiteBeans {
 			Object value = getParameter(param);
 			String destination = param.substring(len);
 			try {
-				BeanUtil.setDeclaredProperty(bean, destination, value);
+				BeanUtil.declared.setProperty(bean, destination, value);
 			} catch (Exception ex) {
 				throw new PetiteException("Unable to set parameter: '" + param + "' to bean: " + def.name, ex);
 			}
@@ -342,7 +341,7 @@ public class PetiteContainer extends PetiteBeans {
 	 *
 	 * @see PetiteContainer#createBean(Class)
 	 */
-	public Object getBean(String name) {
+	public <T> T getBean(String name) {
 
 		// Lookup for registered bean definition.
 		BeanDefinition def = lookupBeanDefinition(name);
@@ -353,7 +352,7 @@ public class PetiteContainer extends PetiteBeans {
 			ProviderDefinition providerDefinition = providers.get(name);
 
 			if (providerDefinition != null) {
-				return invokeProvider(providerDefinition);
+				return (T) invokeProvider(providerDefinition);
 			}
 			return null;
 		}
@@ -367,7 +366,7 @@ public class PetiteContainer extends PetiteBeans {
 			registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 		}
 
-		return bean;
+		return (T) bean;
 	}
 
 	/**
@@ -388,7 +387,7 @@ public class PetiteContainer extends PetiteBeans {
 
 	/**
 	 * Wires provided bean with the container using default wiring mode.
-	 * Bean is <b>not</b> registered.
+	 * Bean is <b>not</b> registered withing container.
 	 */
 	public void wire(Object bean) {
 		wire(bean, null);
@@ -396,7 +395,7 @@ public class PetiteContainer extends PetiteBeans {
 
 	/**
 	 * Wires provided bean with the container and optionally invokes init methods.
-	 * Bean is <b>not</b> registered.
+	 * Bean is <b>not</b> registered withing container.
 	 */
 	public void wire(Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
@@ -519,7 +518,7 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		try {
-			BeanUtil.setDeclaredProperty(bean, name.substring(ndx + 1), value);
+			BeanUtil.declared.setProperty(bean, name.substring(ndx + 1), value);
 		} catch (Exception ex) {
 			throw new PetiteException("Invalid bean property: " + name, ex);
 		}
@@ -539,7 +538,7 @@ public class PetiteContainer extends PetiteBeans {
 			throw new PetiteException("Bean doesn't exist: " + name);
 		}
 		try {
-			return BeanUtil.getDeclaredProperty(bean, name.substring(ndx + 1));
+			return BeanUtil.declared.getProperty(bean, name.substring(ndx + 1));
 		} catch (Exception ex) {
 			throw new PetiteException("Invalid bean property: " + name, ex);
 		}

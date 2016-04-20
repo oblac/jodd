@@ -37,7 +37,7 @@ public class WorkResourceManager implements JtxResourceManager<WorkSession> {
 	}
 
 	public WorkSession beginTransaction(JtxTransactionMode jtxMode, boolean active) {
-		if (active == false) {
+		if (!active) {
 			return new WorkSession();
 		}
 		WorkSession work = new WorkSession(txno++);

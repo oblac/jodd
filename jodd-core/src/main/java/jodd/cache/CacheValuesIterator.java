@@ -26,13 +26,14 @@
 package jodd.cache;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Values iterator for {@link jodd.cache.AbstractCacheMap}.
  */
 public class CacheValuesIterator<V> implements Iterator<V> {
 
-	private Iterator<? extends AbstractCacheMap<?, V>.CacheObject<?, V>> iterator;
+	private final Iterator<? extends AbstractCacheMap<?, V>.CacheObject<?, V>> iterator;
 
 	private AbstractCacheMap<?,V>.CacheObject<?,V> nextValue;
 
@@ -47,7 +48,7 @@ public class CacheValuesIterator<V> implements Iterator<V> {
 	private void nextValue() {
 		while (iterator.hasNext()) {
 			nextValue = iterator.next();
-			if (nextValue.isExpired() == false) {
+			if (!nextValue.isExpired()) {
 				return;
 			}
 		}
@@ -65,6 +66,9 @@ public class CacheValuesIterator<V> implements Iterator<V> {
 	 * Returns next non-expired element from the cache.
 	 */
 	public V next() {
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
 		V cachedObject = nextValue.cachedObject;
 		nextValue();
 		return cachedObject;

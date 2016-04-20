@@ -210,9 +210,9 @@ public class EMLParserTest {
 		assertEquals(2, attachments.size());
 
 		EmailAttachment att = attachments.get(0);
-		assertNull(att.getName());
+		assertEquals("no-name.pdf", att.getName());
 
 		att = attachments.get(1);
-		assertNull(att.getName());
+		assertEquals("no-name.excel", att.getName());
 	}
 }

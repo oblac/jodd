@@ -112,4 +112,6 @@ public interface StringPool {
 	// ---------------------------------------------------------------- array
 
 	String[] EMPTY_ARRAY = new String[0];
+
+	byte[] BYTES_NEW_LINE = "\n".getBytes();
 }

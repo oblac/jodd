@@ -62,10 +62,10 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 			destFolder = SystemUtil.tempDir();
 		}
 		File destination = new File(destFolder);
-		if (destination.exists() == false) {
+		if (!destination.exists()) {
 			destination.mkdirs();
 		}
-		if (destination.isDirectory() == false) {
+		if (!destination.isDirectory()) {
 			throw new IOException("Invalid destination folder: " + destFolder);
 		}
 		this.destFolder = destination;

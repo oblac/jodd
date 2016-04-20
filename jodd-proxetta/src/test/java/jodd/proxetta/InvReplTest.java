@@ -47,7 +47,7 @@ public class InvReplTest {
 		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
-		byte klazz[] = proxetta.builder(One.class).create();
+		byte[] klazz = proxetta.builder(One.class).create();
 		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
@@ -154,7 +154,7 @@ public class InvReplTest {
 
 
 	protected InvokeProxetta initProxetta() {
-		InvokeProxetta fp = InvokeProxetta.withAspects(
+		return InvokeProxetta.withAspects(
 				new InvokeAspect() {
 					@Override
 					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
@@ -202,6 +202,5 @@ public class InvReplTest {
 					}
 				}
 		);
-		return fp;
 	}
 }

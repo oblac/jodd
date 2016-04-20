@@ -290,7 +290,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 		@Override
 		public void visitEnd() {
-			if (methodAnns.isEmpty() == false) {
+			if (!methodAnns.isEmpty()) {
 				msign.annotations = methodAnns.toArray(new AnnotationInfo[methodAnns.size()]);
 			}
 

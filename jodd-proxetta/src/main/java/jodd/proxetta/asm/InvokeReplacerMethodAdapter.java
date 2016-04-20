@@ -37,6 +37,7 @@ import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
 import jodd.asm5.Type;
 
+import static jodd.asm5.Opcodes.ASTORE;
 import static jodd.asm5.Opcodes.POP;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.asm5.Opcodes.ALOAD;
@@ -73,6 +74,8 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	 */
 	protected boolean firstSuperCtorInitCalled;
 
+	protected boolean proxyInfoRequested;
+
 	/**
 	 * New object creation matched.
 	 */
@@ -104,7 +107,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 		// to targets subclass with target (FOO.<init>).
 		if (methodInfo.getMethodName().equals(INIT)) {
 			if (
-					(firstSuperCtorInitCalled == false) &&
+					(!firstSuperCtorInitCalled) &&
 							(opcode == INVOKESPECIAL) &&
 							name.equals(INIT) &&
 							owner.equals(wd.nextSupername)
@@ -117,7 +120,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 		}
 
 		// detection of super calls
-		if ((opcode == INVOKESPECIAL) && (owner.equals(wd.nextSupername) && (name.equals(INIT) == false))) {
+		if ((opcode == INVOKESPECIAL) && (owner.equals(wd.nextSupername) && (!name.equals(INIT)))) {
 			throw new ProxettaException("Super call detected in class " + methodInfo.getClassname() + " method: " + methodInfo.getSignature() +
 				"\nProxetta can't handle super calls due to VM limitations.");
 		}
@@ -198,7 +201,12 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 			}
 
 			if (isInfoMethod(name, desc)) {
-				ProxyTargetReplacement.info(mv, methodInfo);
+				proxyInfoRequested = true;
+				// we are NOT calling the replacement here, as we would expect.
+				// NO, we need to wait for the very next ASTORE method so we
+				// can read the index and use it for replacement method!!!
+
+				//ProxyTargetReplacement.info(mv, methodInfo);
 				wd.proxyApplied = true;
 				return;
 			}
@@ -302,6 +310,17 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 			}
 		}
 		super.visitTypeInsn(opcode, type);
+	}
+
+	@Override
+	public void visitVarInsn(int opcode, int var) {
+		if (proxyInfoRequested) {
+			proxyInfoRequested = false;
+			if (opcode == ASTORE) {
+				ProxyTargetReplacement.info(mv, methodInfo, var);
+			}
+		}
+		super.visitVarInsn(opcode, var);
 	}
 
 	@Override

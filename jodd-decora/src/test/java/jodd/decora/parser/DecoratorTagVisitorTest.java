@@ -23,44 +23,49 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.decora.parser;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
+import static org.junit.Assert.fail;
+import static org.powermock.reflect.Whitebox.invokeMethod;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
-import static java.awt.Toolkit.getDefaultToolkit;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- * Clipboard utilities.
- */
-public class ClipboardUtil {
+import jodd.decora.DecoraException;
 
-	/**
-	 * Copies string to system clipboard.
-	 */
-	public static void copyToClipboard(String str) {
-		StringSelection copyItem = new StringSelection(str);
-		Clipboard clipboard = getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(copyItem, null);
+public class DecoratorTagVisitorTest {
+
+	private DecoratorTagVisitor decoraTagVisitor;
+
+	@Before
+	public void setUp() {
+		decoraTagVisitor = new DecoratorTagVisitor();
 	}
 
-	/**
-	 * Reads a string from system clipboard.
-	 */
-	public static String getStringFromClipboard() {
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		Transferable paste = clipboard.getContents(null);
-		if (paste == null) {
-			return null;
-		}
-		try {
-			return (String) paste.getTransferData(DataFlavor.stringFlavor);
-		} catch (Exception ex) {
-			return null;
-		}
+	@Test(expected = DecoraException.class)
+	public final void testCheckNestedDecoraTagsDecoraTagNameNotNull() throws Exception {
+		// setup
+		setInternalState(decoraTagVisitor, "decoraTagName", "TEST");
+
+		// when
+		invokeMethod(decoraTagVisitor, "checkNestedDecoraTags");
+
+		// then
+		fail("A DecoraException must have occured because decoraTagName is not null.");
+	}
+
+	@Test
+	public final void testCheckNestedDecoraTagsDecoraTagNameNull() throws Exception {
+		// setup
+		String nullString = null;
+		setInternalState(decoraTagVisitor, "decoraTagName", nullString);
+
+		// when
+		invokeMethod(decoraTagVisitor, "checkNestedDecoraTags");
+
+		// then
+		// DecoraException not expected
 	}
 
 }

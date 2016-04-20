@@ -28,6 +28,11 @@ package jodd.mail;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
+import javax.mail.MessagingException;
+import javax.mail.Part;
+import javax.mail.internet.MimeBodyPart;
+import java.io.UnsupportedEncodingException;
+
 /**
  * Email utilities.
  */
@@ -71,7 +76,7 @@ public class EmailUtil {
 
 			while (ndx < len) {
 				char c = charset.charAt(ndx);
-				if ((c == '"') || (CharUtil.isWhitespace(c) == true) || (c == ';')) {
+				if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
 					break;
 				}
 				ndx++;
@@ -79,6 +84,35 @@ public class EmailUtil {
 			encoding = charset.substring(start, ndx);
 		}
 		return encoding;
+	}
+
+	/**
+	 * Correctly resolves file name from the message part.
+	 * Thanx to: Flavio Pompermaier
+	 */
+	public static String resolveFileName(Part part) throws MessagingException, UnsupportedEncodingException {
+		if (!(part instanceof MimeBodyPart)) {
+			return part.getFileName();
+		}
+
+		String contentType = part.getContentType();
+		String ret = null;
+
+		try {
+			ret = javax.mail.internet.MimeUtility.decodeText(part.getFileName());
+		}
+		catch (Exception ex) {
+			String[] contentId = part.getHeader("Content-ID");
+			if (contentId != null && contentId.length > 0) {
+				ret = contentId[0];
+			}
+			if (contentId == null) {
+				ret = "no-name";
+			}
+			ret += StringPool.DOT  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
+		}
+
+		return ret;
 	}
 
 }

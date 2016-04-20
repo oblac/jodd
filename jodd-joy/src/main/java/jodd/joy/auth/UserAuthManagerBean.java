@@ -62,7 +62,7 @@ public abstract class UserAuthManagerBean<U extends UserAuth> {
 		if (userAuth == null) {
 			return null;
 		}
-		if (passwordEncoder.isPasswordValid(userAuth.getHashedPassword(), rawPassword) == false) {
+		if (!passwordEncoder.isPasswordValid(userAuth.getHashedPassword(), rawPassword)) {
 			return null;
 		}
 		return userAuth;
@@ -79,7 +79,7 @@ public abstract class UserAuthManagerBean<U extends UserAuth> {
 		if (hashedPassword == null) {
 			return null;
 		}
-		if (hashedPassword.equals(userAuth.getHashedPassword()) == false) {
+		if (!hashedPassword.equals(userAuth.getHashedPassword())) {
 			return null;
 		}
 		return userAuth;

@@ -149,7 +149,7 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		if (overwrite == true) {
+		if (overwrite) {
 			headers.set(key, value);
 		} else {
 			headers.add(key, value);
@@ -772,6 +772,32 @@ public abstract class HttpBase<T> {
 	 * Buffer can, optionally, contains just headers.
 	 */
 	protected abstract Buffer buffer(boolean full);
+
+	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
+		for (String key : headers.names()) {
+			List<String> values = headers.getAll(key);
+
+			String headerName = HttpUtil.prepareHeaderParameterName(key);
+
+			for (String value : values) {
+				target.append(headerName);
+				target.append(": ");
+				target.append(value);
+				target.append(CRLF);
+			}
+		}
+
+		if (fullRequest) {
+			target.append(CRLF);
+
+			if (form != null) {
+				target.append(formBuffer);
+			} else if (body != null) {
+				target.append(body);
+			}
+		}
+	}
+
 
 	// ---------------------------------------------------------------- send
 

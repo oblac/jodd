@@ -144,7 +144,7 @@ public class DbEntityDescriptor<E> {
 					DbMetaUtil.resolveColumnDescriptors(this, propertyDescriptor, isAnnotated, columnNamingStrategy);
 
 			if (dec != null) {
-				if (names.add(dec.getColumnName()) == false) {
+				if (!names.add(dec.getColumnName())) {
 					throw new DbOomException("Duplicate column name: " + dec.getColumnName());
 				}
 
@@ -184,7 +184,7 @@ public class DbEntityDescriptor<E> {
 		}
 		init();
 		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-			if (columnDescriptor.columnName.equalsIgnoreCase(columnName) == true) {
+			if (columnDescriptor.columnName.equalsIgnoreCase(columnName)) {
 				return columnDescriptor;
 			}
 		}
@@ -199,7 +199,7 @@ public class DbEntityDescriptor<E> {
 		}
 		init();
 		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-			if (columnDescriptor.propertyName.equals(propertyName) == true) {
+			if (columnDescriptor.propertyName.equals(propertyName)) {
 				return columnDescriptor;
 			}
 		}
@@ -280,7 +280,7 @@ public class DbEntityDescriptor<E> {
 	 */
 	public Object getIdValue(E object) {
 		String propertyName = getIdPropertyName();
-		return BeanUtil.getDeclaredProperty(object, propertyName);
+		return BeanUtil.declared.getProperty(object, propertyName);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class DbEntityDescriptor<E> {
 	 */
 	public void setIdValue(E object, Object value) {
 		String propertyName = getIdPropertyName();
-		BeanUtil.setDeclaredProperty(object, propertyName, value);
+		BeanUtil.declared.setProperty(object, propertyName, value);
 	}
 
 	/**

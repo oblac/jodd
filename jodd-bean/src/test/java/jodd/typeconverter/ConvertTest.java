@@ -149,7 +149,7 @@ public class ConvertTest {
 	public void testChangeConverter() {
 		String[] array = new String[]{"true", "false", "yeah"};
 
-		boolean barr[];
+		boolean[] barr;
 
 		try {
 			barr = Convert.toBooleanArray(array);

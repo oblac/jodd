@@ -44,7 +44,7 @@ import java.util.HashSet;
  * <p>
  * For managed transaction see <code>DbJtxTransactionManager</code> from <b>jodd-tx</b>.
  */
-public class DbSession {
+public class DbSession implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(DbSession.class);
 
@@ -104,7 +104,7 @@ public class DbSession {
 			}
 		}
 		if (connection != null) {
-			if (txActive == true) {
+			if (txActive) {
 				throw new DbSqlException("TX was not closed before closing the session");
 			}
 			connectionProvider.closeConnection(connection);
@@ -114,6 +114,11 @@ public class DbSession {
 		if (sqlException != null) {
 			throw new DbSqlException("Closing DbSession failed", sqlException);
 		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		closeSession();
 	}
 
 	/**
@@ -298,14 +303,14 @@ public class DbSession {
 
 	protected void checkClosedTx() {
 		checkOpenSession();
-		if (txActive == true) {
+		if (txActive) {
 			throw new DbSqlException("TX already started for this session");
 		}
 	}
 
 	protected void checkActiveTx() {
 		checkOpenSession();
-		if (txActive == false) {
+		if (!txActive) {
 			throw new DbSqlException("TX not available for this session");
 		}
 	}

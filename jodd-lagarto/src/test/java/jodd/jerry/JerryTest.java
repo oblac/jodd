@@ -306,6 +306,26 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testPseudoHas() {
+		String html = readFile("pseudoHas.html");
+		String htmlOK = readFile("pseudoHas-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div:has(p)").addClass("test");
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testPseudoNot() {
+		String html = readFile("pseudoNot.html");
+		String htmlOK = readFile("pseudoNot-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("input:not(\':checked\') + span").css("background-color", "yellow");
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testPseudoEven() {
 		String html = readFile("pseudoEven.html");
 		String htmlOK = readFile("pseudoEven-ok.html");
@@ -368,6 +388,33 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("li").eq(1).css("background-color", "red");
 		doc.$("li").eq(-1).css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testHas() {
+		String html = readFile("has.html");
+		String htmlOK = readFile("has-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").has("ul").css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testHas2() {
+		String html = readFile("has2.html");
+		String htmlOK = readFile("has2-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").has("ul").css("background-color", "red");
+
+		doc.$( "ul" ).append( "<li>" +
+			( doc.$( "ul" ).has( "li" ).length() > 0 ? "Yes" : "No" ) +
+			"</li>" );
+		doc.$( "ul" ).has( "li" ).addClass( "full" );
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}

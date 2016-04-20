@@ -52,7 +52,7 @@ public class LocalizationUtil {
 	public static final ResourceBundleMessageResolver MESSAGE_RESOLVER = new ResourceBundleMessageResolver() {
 		@Override
 		public ResourceBundle getBundle(String bundleName, Locale locale, ClassLoader classLoader) {
-			if (isCacheResourceBundles() == false) {
+			if (!isCacheResourceBundles()) {
 				//ResourceBundle.clearCache(classLoader);
 				clearResourceBundleCache();
 				clearTomcatCache();

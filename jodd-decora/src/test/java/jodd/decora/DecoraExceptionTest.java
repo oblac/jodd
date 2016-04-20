@@ -23,52 +23,53 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.vtor;
+package jodd.decora;
 
-import jodd.datetime.JDateTime;
-import jodd.vtor.constraint.*;
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.reflect.Whitebox.getInternalState;
+
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import jodd.decora.DecoraException;
 
-public class ConstraintTest {
+public class DecoraExceptionTest {
 
-	@Test
-	public void testAssertFalse() {
-		assertTrue(AssertFalseConstraint.validate("false"));
-		assertTrue(AssertFalseConstraint.validate(null));
-		assertTrue(AssertFalseConstraint.validate(Boolean.FALSE));
+	private Throwable throwableMock;
+	private final String TEST_STRING = "TEST";
+
+	@Before
+	public void setUp() {
+		throwableMock = mock(Throwable.class);
 	}
 
 	@Test
-	public void testAssertTrue() {
-		assertTrue(AssertTrueConstraint.validate("on"));
-		assertTrue(AssertTrueConstraint.validate(null));
-		assertTrue(AssertTrueConstraint.validate(Boolean.TRUE));
+	public final void testDecoraExceptionThrowable() {
+		// when
+		DecoraException decoraException = new DecoraException(throwableMock);
+
+		// then
+		assertEquals("Cause field must be set.", throwableMock, getInternalState(decoraException, "cause"));
 	}
 
 	@Test
-	public void testHasSubstring() {
-		assertTrue(HasSubstringConstraint.validate("value", "al", false));
-		assertTrue(HasSubstringConstraint.validate("value", "al", true));
+	public final void testDecoraExceptionString() {
+		// when
+		DecoraException decoraException = new DecoraException(TEST_STRING);
+
+		// then
+		assertEquals("DetailMessage field must be set.", TEST_STRING, getInternalState(decoraException, "detailMessage"));
 	}
 
 	@Test
-	public void testMaxConstraint() {
-		assertTrue(MaxConstraint.validate("12.1", 12.5));
-		assertFalse(MaxConstraint.validate("12.6", 12.5));
+	public final void testDecoraExceptionStringThrowable() {
+		// when
+		DecoraException decoraException = new DecoraException(TEST_STRING, throwableMock);
+
+		// then
+		assertEquals("Cause field must be set.", throwableMock, getInternalState(decoraException, "cause"));
+		assertEquals("DetailMessage field must be set.", TEST_STRING, getInternalState(decoraException, "detailMessage"));
 	}
 
-	@Test
-	public void testMinConstraint() {
-		assertTrue(MinConstraint.validate("12.6", 12.5));
-		assertFalse(MinConstraint.validate("12.1", 12.5));
-	}
-
-	@Test
-	public void testTimeAfter() {
-		assertTrue(TimeAfterConstraint.validate("2011-05-01 10:11:12.345", new JDateTime("2011-05-01 10:11:12.344")));
-		assertFalse(TimeAfterConstraint.validate("2011-05-01 10:11:12.345", new JDateTime("2011-05-01 10:11:12.345")));
-	}
 }

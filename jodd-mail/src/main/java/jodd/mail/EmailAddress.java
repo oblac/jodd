@@ -306,100 +306,99 @@ public class EmailAddress {
 
 	// RFC 2822 2.2.2 Structured Header Field Bodies
 
-	private static final String crlf = "\\r\\n";
-	private static final String wsp = "[ \\t]";
-	private static final String fwsp = "(?:" + wsp + "*" + crlf + ")?" + wsp + "+";
+	private static final String CRLF = "\\r\\n";
+	private static final String WSP = "[ \\t]";
+	private static final String FWSP = "(?:" + WSP + "*" + CRLF + ")?" + WSP + "+";
 
 	// RFC 2822 3.2.1 Primitive tokens
 
-	private static final String dquote = "\\\"";
-	private static final String noWsCtl = "\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F";
-	private static final String asciiText = "[\\x01-\\x09\\x0B\\x0C\\x0E-\\x7F]";
+	private static final String D_QUOTE = "\\\"";
+	private static final String NO_WS_CTL = "\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F";
+	private static final String ASCII_TEXT = "[\\x01-\\x09\\x0B\\x0C\\x0E-\\x7F]";
 
 	// RFC 2822 3.2.2 Quoted characters:
 
-	private static final String quotedPair = "(?:\\\\" + asciiText + ")";
+	private static final String QUOTED_PAIR = "(?:\\\\" + ASCII_TEXT + ")";
 
 	// RFC 2822 3.2.3 CFWS specification
 
-	private static final String ctext = "[" + noWsCtl + "\\!-\\'\\*-\\[\\]-\\~]";
-	private static final String ccontent = ctext + "|" + quotedPair; // + "|" + comment;
-	private static final String comment = "\\((?:(?:" + fwsp + ")?" + ccontent + ")*(?:" + fwsp + ")?\\)";
-	private static final String cfws = "(?:(?:" + fwsp + ")?" + comment + ")*(?:(?:(?:" + fwsp + ")?" + comment + ")|(?:" + fwsp + "))";
+	private static final String C_TEXT = "[" + NO_WS_CTL + "\\!-\\'\\*-\\[\\]-\\~]";
+	private static final String C_CONTENT = C_TEXT + "|" + QUOTED_PAIR; // + "|" + comment;
+	private static final String COMMENT = "\\((?:(?:" + FWSP + ")?" + C_CONTENT + ")*(?:" + FWSP + ")?\\)";
+	private static final String CFWS = "(?:(?:" + FWSP + ")?" + COMMENT + ")*(?:(?:(?:" + FWSP + ")?" + COMMENT + ")|(?:" + FWSP + "))";
 
 	// RFC 2822 3.2.4 Atom:
 
-	private static final String atext =
+	private static final String A_TEXT =
 			"[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~"
 			+ (ALLOW_DOT_IN_ATEXT ? "\\." : "")
 			+ (ALLOW_SQUARE_BRACKETS_IN_ATEXT ? "\\[\\]" : "") + "]";
-	private static final String regularAtext = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~]";
+	private static final String REGULAR_A_TEXT = "[a-zA-Z0-9\\!\\#-\\'\\*\\+\\-\\/\\=\\?\\^-\\`\\{-\\~]";
 
-	private static final String atom = "(?:" + cfws + ")?" + atext + "+" + "(?:" + cfws + ")?";
-	private static final String dotAtomText = regularAtext + "+" + "(?:" + "\\." + regularAtext + "+)*";
-	private static final String dotAtom = "(?:" + cfws + ")?" + dotAtomText + "(?:" + cfws + ")?";
-	private static final String capDotAtomNoCFWS = "(?:" + cfws + ")?(" + dotAtomText + ")(?:" + cfws + ")?";
-	private static final String capDotAtomTrailingCFWS = "(?:" + cfws + ")?(" + dotAtomText + ")(" + cfws + ")?";
+	private static final String ATOM = "(?:" + CFWS + ")?" + A_TEXT + "+" + "(?:" + CFWS + ")?";
+	private static final String DOT_ATOM_TEXT = REGULAR_A_TEXT + "+" + "(?:" + "\\." + REGULAR_A_TEXT + "+)*";
+	private static final String CAP_DOT_ATOM_NO_CFWS = "(?:" + CFWS + ")?(" + DOT_ATOM_TEXT + ")(?:" + CFWS + ")?";
+	private static final String CAP_DOT_ATOM_TRAILING_CFWS = "(?:" + CFWS + ")?(" + DOT_ATOM_TEXT + ")(" + CFWS + ")?";
 
 	// RFC 2822 3.2.5 Quoted strings:
 
-	private static final String qtext = "[" + noWsCtl + "\\!\\#-\\[\\]-\\~]";
-	private static final String localPartqtext = "[" + noWsCtl + (ALLOW_PARENS_IN_LOCALPART ? "\\!\\#-\\[\\]-\\~]" : "\\!\\#-\\'\\*-\\[\\]-\\~]");
+	private static final String Q_TEXT = "[" + NO_WS_CTL + "\\!\\#-\\[\\]-\\~]";
+	private static final String LOCAL_PART_Q_TEXT = "[" + NO_WS_CTL + (ALLOW_PARENS_IN_LOCALPART ? "\\!\\#-\\[\\]-\\~]" : "\\!\\#-\\'\\*-\\[\\]-\\~]");
 
-	private static final String qcontent = "(?:" + qtext + "|" + quotedPair + ")";
-	private static final String localPartqcontent = "(?>" + localPartqtext + "|" + quotedPair + ")";
-	private static final String quotedStringWOCFWS = dquote + "(?>(?:" + fwsp + ")?" + qcontent + ")*(?:" + fwsp + ")?" + dquote;
-	private static final String quotedString = "(?:" + cfws + ")?" + quotedStringWOCFWS + "(?:" + cfws + ")?";
-	private static final String localPartQuotedString = "(?:" + cfws + ")?(" + dquote + "(?:(?:" + fwsp + ")?" + localPartqcontent + ")*(?:" + fwsp + ")?" + dquote + ")(?:" + cfws + ")?";
+	private static final String Q_CONTENT = "(?:" + Q_TEXT + "|" + QUOTED_PAIR + ")";
+	private static final String LOCAL_PART_Q_CONTENT = "(?>" + LOCAL_PART_Q_TEXT + "|" + QUOTED_PAIR + ")";
+	private static final String QUOTED_STRING_WOCFWS = D_QUOTE + "(?>(?:" + FWSP + ")?" + Q_CONTENT + ")*(?:" + FWSP + ")?" + D_QUOTE;
+	private static final String QUOTED_STRING = "(?:" + CFWS + ")?" + QUOTED_STRING_WOCFWS + "(?:" + CFWS + ")?";
+	private static final String LOCAL_PART_QUOTED_STRING = "(?:" + CFWS + ")?(" + D_QUOTE + "(?:(?:" + FWSP + ")?" + LOCAL_PART_Q_CONTENT + ")*(?:" + FWSP + ")?" + D_QUOTE + ")(?:" + CFWS + ")?";
 
 	// RFC 2822 3.2.6 Miscellaneous tokens
 
-	private static final String word = "(?:(?:" + atom + ")|(?:" + quotedString + "))";
+	private static final String WORD = "(?:(?:" + ATOM + ")|(?:" + QUOTED_STRING + "))";
 
 	// by 2822: phrase = 1*word / obs-phrase
 	// implemented here as: phrase = word (FWS word)*
 	// so that aaaa can't be four words, which can cause tons of recursive backtracking
 
-	private static final String phrase = word + "(?:(?:" + fwsp + ")" + word + ")*";
+	private static final String PHRASE = WORD + "(?:(?:" + FWSP + ")" + WORD + ")*";
 
 	// RFC 1035 tokens for domain names
 
-	private static final String letter = "[a-zA-Z]";
-	private static final String letDig = "[a-zA-Z0-9]";
-	private static final String letDigHyp = "[a-zA-Z0-9-]";
-	private static final String rfcLabel = letDig + "(?:" + letDigHyp + "{0,61}" + letDig + ")?";
-	private static final String rfc1035DomainName = rfcLabel + "(?:\\." + rfcLabel + ")*\\." + letter + "{2,6}";
+	private static final String LETTER = "[a-zA-Z]";
+	private static final String LET_DIG = "[a-zA-Z0-9]";
+	private static final String LET_DIG_HYP = "[a-zA-Z0-9-]";
+	private static final String RFC_LABEL = LET_DIG + "(?:" + LET_DIG_HYP + "{0,61}" + LET_DIG + ")?";
+	private static final String RFC_1035_DOMAIN_NAME = RFC_LABEL + "(?:\\." + RFC_LABEL + ")*\\." + LETTER + "{2,6}";
 
 	// RFC 2822 3.4 Address specification
 
-	private static final String dtext = "[" + noWsCtl + "\\!-Z\\^-\\~]";
+	private static final String D_TEXT = "[" + NO_WS_CTL + "\\!-Z\\^-\\~]";
 
-	private static final String dcontent = dtext + "|" + quotedPair;
-	private static final String capDomainLiteralNoCFWS = "(?:" + cfws + ")?" + "(\\[" + "(?:(?:" + fwsp + ")?(?:" + dcontent + ")+)*(?:" + fwsp + ")?\\])" + "(?:" + cfws + ")?";
-	private static final String capDomainLiteralTrailingCFWS = "(?:" + cfws + ")?" + "(\\[" + "(?:(?:" + fwsp + ")?(?:" + dcontent + ")+)*(?:" + fwsp + ")?\\])" + "(" + cfws + ")?";
-	private static final String rfc2822Domain = "(?:" + capDotAtomNoCFWS + "|" + capDomainLiteralNoCFWS + ")";
-	private static final String capCFWSRfc2822Domain = "(?:" + capDotAtomTrailingCFWS + "|" + capDomainLiteralTrailingCFWS + ")";
+	private static final String D_CONTENT = D_TEXT + "|" + QUOTED_PAIR;
+	private static final String CAP_DOMAIN_LITERAL_NO_CFWS = "(?:" + CFWS + ")?" + "(\\[" + "(?:(?:" + FWSP + ")?(?:" + D_CONTENT + ")+)*(?:" + FWSP + ")?\\])" + "(?:" + CFWS + ")?";
+	private static final String CAP_DOMAIN_LITERAL_TRAILING_CFWS = "(?:" + CFWS + ")?" + "(\\[" + "(?:(?:" + FWSP + ")?(?:" + D_CONTENT + ")+)*(?:" + FWSP + ")?\\])" + "(" + CFWS + ")?";
+	private static final String RFC_2822_DOMAIN = "(?:" + CAP_DOT_ATOM_NO_CFWS + "|" + CAP_DOMAIN_LITERAL_NO_CFWS + ")";
+	private static final String CAP_CFWSR_FC2822_DOMAIN = "(?:" + CAP_DOT_ATOM_TRAILING_CFWS + "|" + CAP_DOMAIN_LITERAL_TRAILING_CFWS + ")";
 
-	private static final String domain = ALLOW_DOMAIN_LITERALS ? rfc2822Domain : "(?:" + cfws + ")?(" + rfc1035DomainName + ")(?:" + cfws + ")?";
-	private static final String capCFWSDomain = ALLOW_DOMAIN_LITERALS ? capCFWSRfc2822Domain : "(?:" + cfws + ")?(" + rfc1035DomainName + ")(" + cfws + ")?";
-	private static final String localPart = "(" + capDotAtomNoCFWS + "|" + localPartQuotedString + ")";
+	private static final String DOMAIN = ALLOW_DOMAIN_LITERALS ? RFC_2822_DOMAIN : "(?:" + CFWS + ")?(" + RFC_1035_DOMAIN_NAME + ")(?:" + CFWS + ")?";
+	private static final String CAP_CFWS_DOMAIN = ALLOW_DOMAIN_LITERALS ? CAP_CFWSR_FC2822_DOMAIN : "(?:" + CFWS + ")?(" + RFC_1035_DOMAIN_NAME + ")(" + CFWS + ")?";
+	private static final String LOCAL_PART = "(" + CAP_DOT_ATOM_NO_CFWS + "|" + LOCAL_PART_QUOTED_STRING + ")";
 
 	// uniqueAddrSpec exists so we can have a duplicate tree that has a capturing group
 	// instead of a non-capturing group for the trailing CFWS after the domain token
 	// that we wouldn't want if it was inside
 	// an angleAddr. The matching should be otherwise identical.
 
-	private static final String addrSpec = localPart + "@" + domain;
-	private static final String uniqueAddrSpec = localPart + "@" + capCFWSDomain;
-	private static final String angleAddr = "(?:" + cfws + ")?<" + addrSpec + ">(" + cfws + ")?";
+	private static final String ADDR_SPEC = LOCAL_PART + "@" + DOMAIN;
+	private static final String UNIQUE_ADDR_SPEC = LOCAL_PART + "@" + CAP_CFWS_DOMAIN;
+	private static final String ANGLE_ADDR = "(?:" + CFWS + ")?<" + ADDR_SPEC + ">(" + CFWS + ")?";
 
-	private static final String nameAddr = "(" + phrase + ")??(" + angleAddr + ")";
-	private static final String mailbox = (ALLOW_QUOTED_IDENTIFIERS ? "(" + nameAddr + ")|" : "") + "(" + uniqueAddrSpec + ")";
+	private static final String NAME_ADDR = "(" + PHRASE + ")??(" + ANGLE_ADDR + ")";
+	private static final String MAIL_BOX = (ALLOW_QUOTED_IDENTIFIERS ? "(" + NAME_ADDR + ")|" : "") + "(" + UNIQUE_ADDR_SPEC + ")";
 
-	private static final String returnPath = "(?:(?:" + cfws + ")?<((?:" + cfws + ")?|" + addrSpec + ")>(?:" + cfws + ")?)";
+	private static final String RETURN_PATH = "(?:(?:" + CFWS + ")?<((?:" + CFWS + ")?|" + ADDR_SPEC + ")>(?:" + CFWS + ")?)";
 
 	//private static final String mailboxList = "(?:(?:" + mailbox + ")(?:,(?:" + mailbox + "))*)";
-	//private static final String groupPostfix = "(?:" + cfws + "|(?:" + mailboxList + ")" + ")?;(?:" + cfws + ")?";
+	//private static final String groupPostfix = "(?:" + CFWS + "|(?:" + mailboxList + ")" + ")?;(?:" + CFWS + ")?";
 	//private static final String groupPrefix = phrase + ":";
 	//private static final String group = groupPrefix + groupPostfix;
 	//private static final String address = "(?:(?:" + mailbox + ")|(?:" + group + "))";
@@ -410,12 +409,12 @@ public class EmailAddress {
 	 * Java regex pattern for 2822 &quot;mailbox&quot; token; Not necessarily useful,
 	 * but available in case.
 	 */
-	public static final Pattern MAILBOX_PATTERN = Pattern.compile(mailbox);
+	public static final Pattern MAILBOX_PATTERN = Pattern.compile(MAIL_BOX);
 	/**
 	 * Java regex pattern for 2822 &quot;addr-spec&quot; token; Not necessarily useful,
 	 * but available in case.
 	 */
-	public static final Pattern ADDR_SPEC_PATTERN = Pattern.compile(addrSpec);
+	public static final Pattern ADDR_SPEC_PATTERN = Pattern.compile(ADDR_SPEC);
 	/*
 	 * Java regex pattern for 2822 &quot;mailbox-list&quot; token; Not necessarily useful,
 	 * but available in case.
@@ -425,10 +424,10 @@ public class EmailAddress {
 	 * Java regex pattern for 2822 &quot;comment&quot; token; Not necessarily useful,
 	 * but available in case.
 	 */
-	public static final Pattern COMMENT_PATTERN = Pattern.compile(comment);
+	public static final Pattern COMMENT_PATTERN = Pattern.compile(COMMENT);
 
-	private static final Pattern QUOTED_STRING_WO_CFWS_PATTERN = Pattern.compile(quotedStringWOCFWS);
-	private static final Pattern RETURN_PATH_PATTERN = Pattern.compile(returnPath);
+	private static final Pattern QUOTED_STRING_WO_CFWS_PATTERN = Pattern.compile(QUOTED_STRING_WOCFWS);
+	private static final Pattern RETURN_PATH_PATTERN = Pattern.compile(RETURN_PATH);
 
 	private static final Pattern ESCAPED_QUOTE_PATTERN = Pattern.compile("\\\\\"");
 	private static final Pattern ESCAPED_BSLASH_PATTERN = Pattern.compile("\\\\\\\\");
@@ -468,9 +467,9 @@ public class EmailAddress {
 	private String[] _calcMatcherParts(Matcher m) {
 		String currentLocalpart = null;
 		String currentDomainpart = null;
-		String localPartDa = null;
+		String localPartDa;
 		String localPartQs = null;
-		String domainPartDa = null;
+		String domainPartDa;
 		String domainPartDl = null;
 		String personal_string = null;
 

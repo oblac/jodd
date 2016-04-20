@@ -195,82 +195,82 @@ public class JsonParserTest {
 	public void testFeatures() {
 		JsonParser jsonParser = new JsonParser();
 
-		Map map = (Map) jsonParser.parse("{}");
+		Map map = jsonParser.parse("{}");
 		assertTrue(map.isEmpty());
 
-		map = (Map) jsonParser.parse("{ \"v\":\"1\"}");
+		map = jsonParser.parse("{ \"v\":\"1\"}");
 		assertEquals(1, map.size());
 		assertEquals("1", map.get("v"));
 
-		map = (Map) jsonParser.parse("{ \"v\":\"1\"\r\n}");
+		map = jsonParser.parse("{ \"v\":\"1\"\r\n}");
 		assertEquals(1, map.size());
 		assertEquals("1", map.get("v"));
 
-		map = (Map) jsonParser.parse("{ \"v\":1}");
+		map = jsonParser.parse("{ \"v\":1}");
 		assertEquals(1, map.size());
 		assertEquals("1", map.get("v").toString());
 
-		map = (Map) jsonParser.parse("{ \"v\":\"ab'c\"}");
+		map = jsonParser.parse("{ \"v\":\"ab'c\"}");
 		assertEquals(1, map.size());
 		assertEquals("ab'c", map.get("v").toString());
 
-		map = (Map) jsonParser.parse("{ \"PI\":3.141E-10}");
+		map = jsonParser.parse("{ \"PI\":3.141E-10}");
 		assertEquals(1, map.size());
 		assertEquals(3.141E-10, ((Double)map.get("PI")).doubleValue(), 0.001E-10);
 
-		map = (Map) jsonParser.parse("{ \"PI\":3.141e-10}");
+		map = jsonParser.parse("{ \"PI\":3.141e-10}");
 		assertEquals(1, map.size());
 		assertEquals(3.141e-10, ((Double)map.get("PI")).doubleValue(), 0.001E-10);
 
-		map = (Map) jsonParser.parse("{ \"v\":12345123456789}");
+		map = jsonParser.parse("{ \"v\":12345123456789}");
 		assertEquals(1, map.size());
 		assertEquals(12345123456789L, ((Long)map.get("v")).longValue());
 
-		map = (Map) jsonParser.parse("{ \"v\":123456789123456789123456789}");
+		map = jsonParser.parse("{ \"v\":123456789123456789123456789}");
 		assertEquals(1, map.size());
 		assertEquals("123456789123456789123456789", map.get("v").toString());
 
-		List list = (List) jsonParser.parse("[ 1,2,3,4]");
+		List list = jsonParser.parse("[ 1,2,3,4]");
 		assertEquals(4, list.size());
 		assertEquals(1, ((Integer)list.get(0)).intValue());
 		assertEquals(2, ((Integer)list.get(1)).intValue());
 		assertEquals(3, ((Integer)list.get(2)).intValue());
 		assertEquals(4, ((Integer)list.get(3)).intValue());
 
-		list = (List) jsonParser.parse("[ \"1\",\"2\",\"3\",\"4\"]");
+		list = jsonParser.parse("[ \"1\",\"2\",\"3\",\"4\"]");
 		assertEquals(4, list.size());
 		assertEquals("1", list.get(0).toString());
 		assertEquals("2", list.get(1).toString());
 		assertEquals("3", list.get(2).toString());
 		assertEquals("4", list.get(3).toString());
 
-		list = (List) jsonParser.parse("[ { }, { },[]]");
+		list = jsonParser.parse("[ { }, { },[]]");
 		assertEquals(3, list.size());
 		assertEquals(0, ((Map)list.get(0)).size());
 		assertEquals(0, ((Map)list.get(1)).size());
 		assertEquals(0, ((List)list.get(2)).size());
 
-		map = (Map) jsonParser.parse("{ \"v\":\"\\u2000\\u20ff\"}");
+		map = jsonParser.parse("{ \"v\":\"\\u2000\\u20ff\"}");
 		assertEquals(1, map.size());
 		assertEquals("\u2000\u20ff", map.get("v"));
 
-		map = (Map) jsonParser.parse("{ \"v\":\"\\u2000\\u20FF\"}");
+		map = jsonParser.parse("{ \"v\":\"\\u2000\\u20FF\"}");
 		assertEquals(1, map.size());
 		assertEquals("\u2000\u20FF", map.get("v"));
 
-		map = (Map) jsonParser.parse("{ \"a\":\"hp://foo\"}");
+		map = jsonParser.parse("{ \"a\":\"hp://foo\"}");
 		assertEquals(1, map.size());
 		assertEquals("hp://foo", map.get("a"));
 
-		map = (Map) jsonParser.parse("{ \"a\":null}");
+		map = jsonParser.parse("{ \"a\":null}");
 		assertEquals(1, map.size());
 		assertNull(map.get("a"));
 
-		map = (Map) jsonParser.parse("{ \"a\" : true }");
+		map = jsonParser.parse("{ \"a\" : true }");
 		assertEquals(1, map.size());
 		assertEquals(Boolean.TRUE, map.get("a"));
 
-		map = (Map) jsonParser.parse("{ \"v\":1.7976931348623157E308}");
+		map = jsonParser.parse("{ \"v\":1.7976931348623157E308}");
 		assertEquals(1, map.size());
 		assertEquals(1.7976931348623157E308, ((Double)map.get("v")).doubleValue(), 1e300);
 	}

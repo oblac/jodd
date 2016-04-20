@@ -75,7 +75,7 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	 * new configuration replaces existing one.
 	 */
 	public boolean add(ActionConfig cfg) {
-		if (cfg.actionPath.equals(this.actionPath) == false) {
+		if (!cfg.actionPath.equals(this.actionPath)) {
 			throw new MadvocException("Invalid configuration");
 		}
 

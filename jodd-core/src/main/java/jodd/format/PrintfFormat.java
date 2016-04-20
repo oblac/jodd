@@ -416,7 +416,7 @@ public class PrintfFormat {
 	 * starting from the right.
 	 */
 	protected String groupDigits(String value, int size, char separator) {
-		if (groupDigits == false) {
+		if (!groupDigits) {
 			return value;
 		}
 		StringBuilder r = new StringBuilder(value.length() + 10);

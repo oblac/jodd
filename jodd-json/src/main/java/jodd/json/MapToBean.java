@@ -114,7 +114,7 @@ public class MapToBean {
 				}
 				else if (value instanceof Map) {
 					// if the value we want to inject is a Map...
-					if (ReflectUtil.isTypeOf(propertyType, Map.class) == false) {
+					if (!ReflectUtil.isTypeOf(propertyType, Map.class)) {
 						// ... and if target is NOT a map
 						value = map2bean((Map) value, propertyType);
 					}

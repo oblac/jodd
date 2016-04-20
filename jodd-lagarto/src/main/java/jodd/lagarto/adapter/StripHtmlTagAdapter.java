@@ -82,7 +82,7 @@ public class StripHtmlTagAdapter extends TagAdapter {
 	 */
 	@Override
 	public void text(CharSequence text) {
-		if (strip == false) {
+		if (!strip) {
 			super.text(text);
 			return;
 		}

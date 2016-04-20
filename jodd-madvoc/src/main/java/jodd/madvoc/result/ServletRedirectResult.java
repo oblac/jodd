@@ -66,7 +66,14 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
 
-		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
+		String resultPath;
+
+		if (resultValue.startsWith("http://") || resultValue.startsWith("https://")) {
+			resultPath = resultValue;
+		}
+		else {
+			resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
+		}
 
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();

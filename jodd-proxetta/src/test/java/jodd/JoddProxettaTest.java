@@ -39,11 +39,11 @@ public class JoddProxettaTest {
 		assertFalse(Jodd.isModuleLoaded(HTTP));
 		assertFalse(Jodd.isModuleLoaded(MADVOC));
 		assertFalse(Jodd.isModuleLoaded(MAIL));
-		assertFalse(Jodd.isModuleLoaded(PETITE));
-		assertFalse(Jodd.isModuleLoaded(PROPS));
+		assertTrue(Jodd.isModuleLoaded(PETITE));
+		assertTrue(Jodd.isModuleLoaded(PROPS));
 		assertTrue(Jodd.isModuleLoaded(PROXETTA));
-		assertFalse(Jodd.isModuleLoaded(SERVLET));
-		assertFalse(Jodd.isModuleLoaded(UPLOAD));
+		assertTrue(Jodd.isModuleLoaded(SERVLET));
+		assertTrue(Jodd.isModuleLoaded(UPLOAD));
 		assertFalse(Jodd.isModuleLoaded(VTOR));
 	}
 }

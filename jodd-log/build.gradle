@@ -9,4 +9,5 @@ dependencies {
 	testCompile project(':jodd-core')
 	testCompile lib.junit
 	testCompile lib.log_slf4j_simple
+	testCompile lib.powermock
 }

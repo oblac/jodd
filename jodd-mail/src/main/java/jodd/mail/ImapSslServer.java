@@ -57,12 +57,21 @@ public class ImapSslServer extends ImapServer {
 		this.password = password;
 	}
 
+	/**
+	 * Sets the session property. May be set only before the session is
+	 * created.
+	 */
+	public ImapSslServer setProperty(String name, String value) {
+		super.setProperty(name, value);
+		return this;
+	}
 
 	@Override
 	protected Properties createSessionProperties() {
 		Properties props = new Properties();
 		props.setProperty(MAIL_IMAP_PORT, String.valueOf(port));
 		props.setProperty(MAIL_IMAP_SOCKET_FACTORY_PORT, String.valueOf(port));
+		props.setProperty(MAIL_IMAP_PARTIALFETCH, "false");
 		props.setProperty(MAIL_IMAP_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
 		props.setProperty(MAIL_IMAP_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
 		return props;

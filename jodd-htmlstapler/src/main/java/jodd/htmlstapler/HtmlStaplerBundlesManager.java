@@ -289,7 +289,7 @@ public class HtmlStaplerBundlesManager {
 	 */
 	protected File createBundleFile(String bundleId) {
 		File folder = new File(bundleFolder, staplerPath);
-		if (folder.exists() == false) {
+		if (!folder.exists()) {
 			folder.mkdirs();
 		}
 		return new File(folder, bundleId);
@@ -299,7 +299,7 @@ public class HtmlStaplerBundlesManager {
 	 * Lookups for bundle file.
 	 */
 	public File lookupBundleFile(String bundleId) {
-		if ((mirrors != null) && (mirrors.isEmpty() == false)) {
+		if ((mirrors != null) && (!mirrors.isEmpty())) {
 			String realBundleId = mirrors.remove(bundleId);
 
 			if (realBundleId != null) {
@@ -317,7 +317,7 @@ public class HtmlStaplerBundlesManager {
 		String path = file.getPath() + ZipUtil.GZIP_EXT;
 		File gzipFile = new File(path);
 
-		if (gzipFile.exists() == false) {
+		if (!gzipFile.exists()) {
 			if (log.isDebugEnabled()) {
 				log.debug("gzip bundle to " + path);
 			}
@@ -444,7 +444,7 @@ public class HtmlStaplerBundlesManager {
 					content = null;
 				}
 			} else {
-				if (downloadLocal == false) {
+				if (!downloadLocal) {
 					// load local resource from file system
 					String localFile = webRoot;
 
@@ -627,13 +627,13 @@ public class HtmlStaplerBundlesManager {
 		StringBuilder res = new StringBuilder();
 		res.append("url('");
 
-		if (url.startsWith(StringPool.SLASH) == false) {
-			res.append("../");
-			res.append(offsetPath);
+		if (!url.startsWith(StringPool.SLASH)) {
+			res
+				.append("../")
+				.append(offsetPath);
 		}
 
-		res.append(url);
-		res.append("')");
+		res.append(url).append("')");
 
 		return res.toString();
 	}

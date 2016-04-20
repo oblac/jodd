@@ -79,7 +79,7 @@ final class MethodFinder extends EmptyClassVisitor {
 		if (paramExtractor != null) {
 			return null;				// method already found, skip all further methods
 		}
-		if (name.equals(methodName) == false) {
+		if (!name.equals(methodName)) {
 			return null;				// different method
 		}
 
@@ -97,7 +97,7 @@ final class MethodFinder extends EmptyClassVisitor {
 		}
 
 		for (int i = 0; i < argumentTypes.length; i++) {
-			if (isEqualTypeName(argumentTypes[i], this.parameterTypes[i]) == false) {
+			if (!isEqualTypeName(argumentTypes[i], this.parameterTypes[i])) {
 				return null;			// wrong param types
 			}
 		}
@@ -132,7 +132,7 @@ final class MethodFinder extends EmptyClassVisitor {
 		if (paramExtractor == null) {
 			return MethodParameter.EMPTY_ARRAY;
 		}
-		if (paramExtractor.debugInfoPresent == false) {
+		if (!paramExtractor.debugInfoPresent) {
 			throw new ParamoException("Parameter names not available for method: "
 					+ declaringClass.getName() + '#' + methodName);
 		}

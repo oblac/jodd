@@ -51,7 +51,7 @@ public class IfTag extends SimpleTagSupport {
 		} catch (TypeConversionException ignore) {
 			testValue = false;
 		}
-		if (testValue == true) {
+		if (testValue) {
 			TagUtil.invokeBody(getJspBody());
 		}
 	}

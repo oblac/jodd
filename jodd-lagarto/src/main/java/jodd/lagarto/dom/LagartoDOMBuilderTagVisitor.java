@@ -200,7 +200,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 				parentNode.addChild(node);
 
-				if (node.isVoidElement() == false) {
+				if (!node.isVoidElement()) {
 					parentNode = node;
 				}
 				break;

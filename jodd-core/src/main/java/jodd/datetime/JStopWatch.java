@@ -97,7 +97,7 @@ public class JStopWatch {
 	 * Returns starting time in milliseconds.
 	 */
 	public long start() {
-		if (running == false) {
+		if (!running) {
 			startTime = System.currentTimeMillis();
 			running = true;
 		}
@@ -118,7 +118,7 @@ public class JStopWatch {
 	 * If laps are used, marks the last lap.
 	 */
 	public long stop() {
-		if (running == true) {
+		if (running) {
 			stopTime = System.currentTimeMillis();
 			if (laps != null) {
 				lap(stopTime);
@@ -175,7 +175,7 @@ public class JStopWatch {
 	}
 
 	protected long lap(long lap) {
-		if (running == false) {
+		if (!running) {
 			return 0;
 		}
 		long lapSpanTime = lap - startTime;
@@ -225,7 +225,7 @@ public class JStopWatch {
 		long elapsed = elapsed();
 		StringBuilder sb = new StringBuilder();
 		sb.append("JStopWatch ").append(name).append(running ? " is running." : "").append('\n');
-		if (running == true) {
+		if (running) {
 			sb.append("elapsed: ").append(formatTimeSpan(elapsed));
 		} else {
 			if (spanTime != totalTime) {
@@ -234,7 +234,7 @@ public class JStopWatch {
 			sb.append("\ntotal: ").append(formatTimeSpan(totalTime));
 		}
 		if (laps != null) {
-			if (laps.isEmpty() == false) {
+			if (!laps.isEmpty()) {
 				sb.append('\n');
 				sb.append("\n\t\t\tlap\t\telapsed\n");
 			}
@@ -275,7 +275,7 @@ public class JStopWatch {
 			result.append(hours).append(':');
 			out = true;
 		}
-		if ((out == true) || (minutes > 0)) {
+		if (out || (minutes > 0)) {
 			if (minutes < 10) {
 				result.append('0');
 			}

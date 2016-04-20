@@ -71,7 +71,7 @@ public class EqualToFieldConstraint implements ValidationConstraint<EqualToField
 		}
 		Object valueToCompare;
 		try {
-			valueToCompare = BeanUtil.getProperty(target, fieldName);
+			valueToCompare = BeanUtil.pojo.getProperty(target, fieldName);
 		} catch (BeanException bex) {
 			throw new VtorException("Invalid value: " + fieldName, bex);
 		}

@@ -78,9 +78,9 @@ public class ScopedProxyManager {
 
 		// when target scope is null then all beans can be injected into it
 		// similar to prototype scope
-		if (targetScope != null && targetScope.accept(refBeanScope) == false) {
+		if (targetScope != null && !targetScope.accept(refBeanScope)) {
 
-			if (wireScopedProxy == false) {
+			if (!wireScopedProxy) {
 				if (detectMixedScopes) {
 					throw new PetiteException(createMixingMessage(targetBeanDefinition, refBeanDefinition));
 				}

@@ -64,7 +64,7 @@ public class ServletDispatcherResultTest {
 		};
 
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
-		BeanUtil.setDeclaredProperty(sdr, "resultMapper", resultMapper);
+		BeanUtil.declared.setProperty(sdr, "resultMapper", resultMapper);
 
 		ActionRequest actionRequest = createActionRequest("/hello.world.html");
 		sdr.render(actionRequest, "ok");

@@ -72,7 +72,7 @@ public class NetUtil {
 	 */
 	public static int getIpAsInt(String ipAddress) {
 		int ipIntValue = 0;
-		String tokens[] = StringUtil.splitc(ipAddress, '.');
+		String[] tokens = StringUtil.splitc(ipAddress, '.');
 		for (String token : tokens) {
 			if (ipIntValue > 0) {
 				ipIntValue <<= 8;
@@ -108,7 +108,7 @@ public class NetUtil {
 		}
 
 		int hitDots = 0;
-		char data[] = host.toCharArray();
+		char[] data = host.toCharArray();
 		for (int i = 0; i < data.length; i++) {
 			char c = data[i];
 			int b = 0;

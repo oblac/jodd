@@ -68,7 +68,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 			return null;
 		}
 
-		if (value instanceof Collection == false) {
+		if (!(value instanceof Collection)) {
 			// source is not an array
 	        return convertValueToCollection(value);
 		}

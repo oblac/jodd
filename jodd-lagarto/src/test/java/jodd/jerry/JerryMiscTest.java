@@ -32,10 +32,12 @@ import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.Node;
+import jodd.lagarto.dom.NodeSelector;
 import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -278,13 +280,18 @@ public class JerryMiscTest {
 	}
 
 	@Test
-	public void testCrash() {
-		try {
-			String html = null;
-			Jerry.jerry(html);
-			fail();
-		} catch (NullPointerException ignore) {
-		}
+	public void testNull() {
+		String html = null;
+		Jerry jerry = Jerry.jerry(html);
+
+		assertEquals(1, jerry.nodes.length);
+		assertEquals(0, jerry.nodes[0].getChildNodes().length);
+
+		html = "";
+		jerry = Jerry.jerry(html);
+
+		assertEquals(1, jerry.nodes.length);
+		assertEquals(0, jerry.nodes[0].getChildNodes().length);
 	}
 
 	@Test
@@ -317,5 +324,37 @@ public class JerryMiscTest {
 		}
 	}
 
+	@Test
+	public void test250() {
+		String html = "<html>\n" +
+			"  <body>\n" +
+			"    <a href=\"/go?to=foobar&index=null\" title=\"Choice 1\">link</a>\n" +
+			"  </body>\n" +
+			"</html>";
+
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		NodeSelector nodeSelector = new NodeSelector(domBuilder.parse(html));
+		List<Node> selectedNodes = nodeSelector.select("a[title='Choice 1']");
+
+		System.out.println();
+
+		assertEquals("/go?to=foobar&index=null", selectedNodes.get(0).getAttribute("href"));
+	}
+
+	@Test
+	public void test279() {
+		String html = "<html><body><div>x</div></body></html>";
+
+		Jerry $ = Jerry.jerry(html);
+
+		$.$("body").html("");
+		assertEquals("<html><body></body></html>", $.html());
+
+		$.$("body").append("");
+		assertEquals("<html><body></body></html>", $.html());
+
+		$.$("body").before("");
+		assertEquals("<html><body></body></html>", $.html());
+	}
 
 }

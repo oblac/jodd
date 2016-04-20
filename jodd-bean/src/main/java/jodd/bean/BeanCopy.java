@@ -155,10 +155,16 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 
 	// ---------------------------------------------------------------- visitor
 
+	protected BeanUtil beanUtil;
+
 	/**
 	 * Performs the copying.
 	 */
 	public void copy() {
+		beanUtil = new BeanUtilBean()
+						.declared(declared)
+						.forced(forced)
+						.silent(true);
 		visit();
 	}
 
@@ -173,7 +179,7 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 			name = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
 		}
 
-		BeanUtil.setProperty(destination, name, value, declared, forced, true);
+		beanUtil.setProperty(destination, name, value);
 
 		return true;
 	}

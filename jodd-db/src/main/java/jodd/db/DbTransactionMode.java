@@ -109,7 +109,7 @@ public class DbTransactionMode {
 		if (this == object) {
 			return true;
 		}
-		if (!(object instanceof DbTransactionMode)) {
+		if (this.getClass() != object.getClass()) {
 			return false;
 		}
 		DbTransactionMode mode = (DbTransactionMode) object;

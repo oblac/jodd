@@ -9,4 +9,5 @@ dependencies {
 	provided lib.servlet
 
 	testCompile lib.junit
+	testCompile lib.powermock
 }

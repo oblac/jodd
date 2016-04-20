@@ -68,7 +68,7 @@ public class CtorResolver {
 			if (paramTypes.length == 0) {
 				defaultCtor = ctor;	// detects default ctors
 			}
-			if (useAnnotation == false) {
+			if (!useAnnotation) {
 				continue;
 			}
 			PetiteInject ref = ctor.getAnnotation(PetiteInject.class);

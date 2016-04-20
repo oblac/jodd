@@ -210,7 +210,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				throw new DbOomException(dbOomQuery, "Table name missing in meta-data");
 			}
 
-			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
+			if ((!tableName.equals(lastTableName)) || (resultColumns.contains(columnName))) {
 				resultColumns.clear();
 				lastTableName = tableName;
 
@@ -392,7 +392,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			if (tableName == null) {
 				tableMatched = true;
-			} else if (resultTableName.equals(tableName) == true) {
+			} else if (resultTableName.equals(tableName)) {
 				tableMatched = true;
 			} else {
 				String[] mapped = mappedNames[currentResult];
@@ -407,7 +407,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			}
 
 			if (tableMatched) {
-				if (resultColumns.contains(columnName) == false) {
+				if (!resultColumns.contains(columnName)) {
 					//DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
 					DbEntityDescriptor ded = dbEntityDescriptors[currentResult];
 
@@ -427,7 +427,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 										BeanUtil.setDeclaredPropertySilent(result[currentResult], propertyName, value) :
 										BeanUtil.hasDeclaredProperty(result[currentResult], propertyName);
 */
-						Class type = BeanUtil.getDeclaredPropertyType(result[currentResult], propertyName);
+						Class type = BeanUtil.declared.getPropertyType(result[currentResult], propertyName);
 						if (type != null) {
 							// match: entity
 							dec.updateDbSqlType(columnDbSqlType);	// updates column db sql type information for the entity!!!
@@ -436,7 +436,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 							if (value != null) {
 								// inject column value into existing entity
-								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
+								BeanUtil.declared.setProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;
 							}
 							colNdx++;
@@ -453,7 +453,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 		resultColumns.clear();
 		for (int i = 0; i < resultUsage.length; i++) {
-			if (resultUsage[i] == false) {
+			if (!resultUsage[i]) {
 				result[i] = null;
 			}
 		}

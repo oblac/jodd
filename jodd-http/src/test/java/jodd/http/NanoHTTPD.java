@@ -401,7 +401,7 @@ public class NanoHTTPD
 					{
 						// Handle application/x-www-form-urlencoded
 						String postLine = "";
-						char pbuf[] = new char[512];
+						char[] pbuf = new char[512];
 						int read = in.read(pbuf);
 						while ( read >= 0 && !postLine.endsWith("\r\n") )
 						{

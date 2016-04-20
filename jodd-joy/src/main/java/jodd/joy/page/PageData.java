@@ -204,15 +204,10 @@ public class PageData<T> {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append('[');
-		result.append(currentPage).append(',');
-		result.append(totalPages).append(',');
-		result.append(totalItems).append(',');
-		result.append(firstIndex).append(',');
-		result.append(lastIndex).append(',');
-		result.append(pageSize).append(']');
-		return result.toString();
+		return new StringBuilder().append('[').append(currentPage).append(',')
+				.append(totalPages).append(',').append(totalItems).append(',')
+				.append(firstIndex).append(',').append(lastIndex).append(',')
+				.append(pageSize).append(']').toString();
 	}
 
 	// ---------------------------------------------------------------- utilities

@@ -39,7 +39,15 @@ import java.util.List;
 /**
  * Various bean property utilities that makes writings of {@link BeanUtil} classes easy.
  */
-class BeanUtilUtil {
+abstract class BeanUtilUtil implements BeanUtil {
+
+	// ---------------------------------------------------------------- flags
+
+	protected boolean isDeclared = false;
+	protected boolean isForced = false;
+	protected boolean isSilent = false;
+
+	// ---------------------------------------------------------------- introspector
 
 	protected Introspector introspector = JoddBean.introspector;
 	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
@@ -54,6 +62,7 @@ class BeanUtilUtil {
 	/**
 	 * Returns {@link Introspector introspector} implementation.
 	 */
+	@Override
 	public Introspector getIntrospector() {
 		return introspector;
 	}
@@ -110,7 +119,7 @@ class BeanUtilUtil {
 
 			setter.invokeSetter(bp.bean, value);
 		} catch (Exception ex) {
-			if (bp.silent) {
+			if (isSilent) {
 				return null;
 			}
 			throw new BeanException("Setter failed: " + setter, ex);
@@ -126,7 +135,7 @@ class BeanUtilUtil {
 	 */
 	protected Object arrayForcedGet(BeanProperty bp, Object array, int index) {
 		Class componentType = array.getClass().getComponentType();
-		if (bp.last == false) {
+		if (!bp.last) {
 			array = ensureArraySize(bp, array, componentType, index);
 		}
 		Object value = Array.get(array, index);
@@ -134,7 +143,7 @@ class BeanUtilUtil {
 			try {
 				value = ReflectUtil.newInstance(componentType);
 			} catch (Exception ex) {
-				if (bp.silent) {
+				if (isSilent) {
 					return null;
 				}
 				throw new BeanException("Invalid array element: " + bp.name + '[' + index + ']', bp, ex);
@@ -268,7 +277,7 @@ class BeanUtilUtil {
 		try {
 			newInstance = ReflectUtil.newInstance(type);
 		} catch (Exception ex) {
-			if (bp.silent) {
+			if (isSilent) {
 				return null;
 			}
 			throw new BeanException("Invalid property: " + bp.name, bp, ex);
@@ -328,7 +337,7 @@ class BeanUtilUtil {
 	 * Extracts type of current property.
 	 */
 	protected Class extractType(BeanProperty bp) {
-		Getter getter = bp.getGetter(bp.declared);
+		Getter getter = bp.getGetter(isDeclared);
 		if (getter != null) {
 			if (bp.index != null) {
 				Class type = getter.getGetterRawComponentType();

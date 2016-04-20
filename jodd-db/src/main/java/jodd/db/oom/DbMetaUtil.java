@@ -134,7 +134,7 @@ public class DbMetaUtil {
 				columnName = dbColumn.value().trim();
 				sqlTypeClass = dbColumn.sqlType();
 			} else {
-				if (isAnnotated == true) {
+				if (isAnnotated) {
 					return null;
 				}
 			}

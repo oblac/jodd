@@ -107,9 +107,9 @@ public class AdaptiveFileUpload extends FileUpload {
 	protected boolean matchFileExtension() throws IOException {
 		String fileNameExtension = FileNameUtil.getExtension(getHeader().getFileName());
 		for (String fileExtension : fileExtensions) {
-			if (fileNameExtension.equalsIgnoreCase(fileExtension) == true) {
-				if (allowFileExtensions == false) {	// extension matched and it is not allowed
-					if (breakOnError == true) {
+			if (fileNameExtension.equalsIgnoreCase(fileExtension)) {
+				if (!allowFileExtensions) {	// extension matched and it is not allowed
+					if (breakOnError) {
 						throw new IOException("Upload filename extension not allowed: " + fileNameExtension);
 					}
 					size = input.skipToBoundary();
@@ -118,8 +118,8 @@ public class AdaptiveFileUpload extends FileUpload {
 				return true;		// extension matched and it is allowed.
 			}
 		}
-		if (allowFileExtensions == true) {	// extension is not one of the allowed ones.
-			if (breakOnError == true) {
+		if (allowFileExtensions) {	// extension is not one of the allowed ones.
+			if (breakOnError) {
 				throw new IOException("Upload filename extension not allowed: " + fileNameExtension);
 			}
 			size = input.skipToBoundary();
@@ -133,7 +133,7 @@ public class AdaptiveFileUpload extends FileUpload {
 	 */
 	protected boolean checkUpload() throws IOException {
 		if (fileExtensions != null) {
-			if (matchFileExtension() == false) {
+			if (!matchFileExtension()) {
 				return false;
 			}
 		}
@@ -142,7 +142,7 @@ public class AdaptiveFileUpload extends FileUpload {
 
 	@Override
 	protected void processStream() throws IOException {
-		if (checkUpload() == false) {
+		if (!checkUpload()) {
 			return;
 		}
 		size = 0;
@@ -174,7 +174,7 @@ public class AdaptiveFileUpload extends FileUpload {
 					deleteTempFile = true;
 					fileTooBig = true;
 					valid = false;
-					if (breakOnError == true) {
+					if (breakOnError) {
 						throw new IOException("File upload (" + header.getFileName() + ") too big, > " + maxFileSize);
 					}
 					input.skipToBoundary();
@@ -218,7 +218,7 @@ public class AdaptiveFileUpload extends FileUpload {
 	 * Returns the destination file.
 	 */
 	public File write(File destination) throws IOException {
-		if (destination.isDirectory() == true) {
+		if (destination.isDirectory()) {
 			destination = new File(destination, this.header.getFileName());
 		}
 		if (data != null) {

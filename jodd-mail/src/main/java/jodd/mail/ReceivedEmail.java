@@ -82,14 +82,13 @@ public class ReceivedEmail extends CommonEmail {
 		setCc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.CC)));
 		setBcc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.BCC)));
 
+		// reply to
+		setReplyTo(MailAddress.createFrom(msg.getReplyTo()));
+
 		setSubject(msg.getSubject());
 
-		Date recvDate = msg.getReceivedDate();
-		if (recvDate == null) {
-			recvDate = new Date();
-		}
-		setReceiveDate(recvDate);
-		setSentDate(msg.getSentDate());
+		setReceiveDate(parseReceiveDate(msg));
+		setSentDate(parseSendDate(msg));
 
 		// copy headers
 		Enumeration<Header> headers = msg.getAllHeaders();
@@ -146,7 +145,7 @@ public class ReceivedEmail extends CommonEmail {
 			}
 		}
 		else if (content instanceof InputStream) {
-			String fileName = part.getFileName();
+			String fileName = EmailUtil.resolveFileName(part);
 			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
 			String mimeType = EmailUtil.extractMimeType(part.getContentType());
 
@@ -173,6 +172,14 @@ public class ReceivedEmail extends CommonEmail {
 
 			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
+	}
+
+	protected Date parseReceiveDate(Message msg) throws MessagingException {
+		return msg.getReceivedDate();
+	}
+
+	protected Date parseSendDate(Message msg) throws MessagingException {
+		return msg.getSentDate();
 	}
 
 	// ---------------------------------------------------------------- flags

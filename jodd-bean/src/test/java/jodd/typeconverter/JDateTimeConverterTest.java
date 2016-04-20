@@ -157,7 +157,7 @@ public class JDateTimeConverterTest {
 		assertEquals(5, gt2.getDay());
 		assertEquals(4, gt2.getHour());
 		assertEquals(3, gt2.getMinute());
-		assertEquals(2, (int) gt2.getSecond());
+		assertEquals(2, gt2.getSecond());
 		assertEquals(100, gt2.getMillisecond());
 
 

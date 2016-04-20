@@ -162,11 +162,11 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
 		}
 
-		if (debug == true) {
+		if (debug) {
 			props.put(MAIL_DEBUG, "true");
 		}
 
-		if (strictAddress == false) {
+		if (!strictAddress) {
 			props.put(MAIL_MIME_ADDRESS_STRICT, "false");
 		}
 

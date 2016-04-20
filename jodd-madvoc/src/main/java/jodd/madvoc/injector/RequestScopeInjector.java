@@ -238,11 +238,11 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 * Inject uploaded files from multipart request parameters.
 	 */
 	protected void injectUploadedFiles(Target[] targets, ScopeData[] injectData, HttpServletRequest servletRequest) {
-		if ((servletRequest instanceof MultipartRequestWrapper) == false) {
+		if (!(servletRequest instanceof MultipartRequestWrapper)) {
 			return;
 		}
 		MultipartRequestWrapper multipartRequest = (MultipartRequestWrapper) servletRequest;
-		if (multipartRequest.isMultipart() == false) {
+		if (!multipartRequest.isMultipart()) {
 			return;
 		}
 		Enumeration paramNames = multipartRequest.getFileParameterNames();
@@ -271,7 +271,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 							for (int j = 0; j < paramValues.length; j++) {
 								FileUpload paramValue = paramValues[j];
 
-								if ((paramValue.isValid() == false) || (paramValue.isUploaded() == false)) {
+								if ((!paramValue.isValid()) || (!paramValue.isUploaded())) {
 									paramValues[j] = null;
 								}
 							}
@@ -324,10 +324,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 		}
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		if (injectAttributes == true) {
+		if (injectAttributes) {
 			injectAttributes(targets, injectData, servletRequest);
 		}
-		if (injectParameters == true) {
+		if (injectParameters) {
 			injectParameters(targets, injectData, servletRequest);
 			injectUploadedFiles(targets, injectData, servletRequest);
 		}

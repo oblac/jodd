@@ -44,11 +44,11 @@ public class UnicodeInputStream extends InputStream {
 
 	public static final int MAX_BOM_SIZE = 4;
 
-	private PushbackInputStream internalInputStream;
+	private final PushbackInputStream internalInputStream;
 	private boolean initialized;
 	private int BOMSize = -1;
 	private String encoding;
-	private String targetEncoding;
+	private final String targetEncoding;
 
 	/**
 	 * Creates new unicode stream. It works in two modes: detect mode and read mode.
@@ -101,7 +101,7 @@ public class UnicodeInputStream extends InputStream {
 
 			// DETECT MODE
 
-			byte bom[] = new byte[MAX_BOM_SIZE];
+			byte[] bom = new byte[MAX_BOM_SIZE];
 			int n = internalInputStream.read(bom, 0, bom.length);
 			int unread;
 
@@ -151,7 +151,7 @@ public class UnicodeInputStream extends InputStream {
 			}
 
 			if (bom != null) {
-				byte fileBom[] = new byte[bom.length];
+				byte[] fileBom = new byte[bom.length];
 				int n = internalInputStream.read(fileBom, 0, bom.length);
 
 				boolean bomDetected = true;
