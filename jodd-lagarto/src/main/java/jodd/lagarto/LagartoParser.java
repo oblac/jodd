@@ -1141,6 +1141,7 @@ public class LagartoParser extends Scanner {
 
 				if (c == '&') {
 					consumeCharacterReference();
+					continue;
 				}
 
 				textEmitChar(c);

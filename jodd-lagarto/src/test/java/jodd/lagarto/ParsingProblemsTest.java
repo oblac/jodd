@@ -306,4 +306,14 @@ public class ParsingProblemsTest {
 		assertEquals("data-adsense-append", script.getAttribute(5).getName());
 	}
 
+	@Test
+	public void testEntity() throws Exception {
+		assertEquals(
+			"<head><title>Peanut Butter &amp; Jelly</title>" +
+				"it's yummy &amp; delicious</head>",
+			Jerry.jerry().parse(
+				"<head><title>Peanut Butter & Jelly</title>" +
+					"it's yummy & delicious").html());
+	}
+
 }
