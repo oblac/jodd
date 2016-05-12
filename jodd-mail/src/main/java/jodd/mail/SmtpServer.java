@@ -112,7 +112,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	 * Enables debug mode. By default it is turned off.
 	 */
 	public T debug(boolean debug) {
-		this.debug = true;
+		this.debug = debug;
 		return (T) this;
 	}
 
