@@ -270,6 +270,13 @@ public class HttpBrowser {
 	// ---------------------------------------------------------------- cookies
 
 	/**
+	 * Deletes all cookies.
+	 */
+	public void clearCookies() {
+		cookies.clear();
+	}
+
+	/**
 	 * Reads cookies from response and adds to cookies list.
 	 */
 	protected void readCookies(HttpResponse httpResponse) {
