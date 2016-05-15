@@ -118,7 +118,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout) throws IOException {
 		SocketFactory socketFactory;
 		try {
-			socketFactory = getSSLSocketFactory();
+			socketFactory = getSSLSocketFactory(proxy);
 		}
 		catch (Exception ex) {
 			if (ex instanceof IOException) {
@@ -156,10 +156,22 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int, int)}.
 	 * May be overwritten to provide custom SSL socket factory by using e.g.
-	 * <code>SSLContext</code>. By default returns default SSL socket factory.
+	 * <code>SSLContext</code>. By default returns default SSL socket factory for non-roxy connections or specified
+	 * proxy socket factory based on proxy type.
 	 */
-	protected SocketFactory getSSLSocketFactory() throws Exception {
-		return SSLSocketFactory.getDefault();
+	protected SocketFactory getSSLSocketFactory(ProxyInfo proxy) throws Exception {
+		switch (proxy.getProxyType()) {
+			case NONE:
+				return SSLSocketFactory.getDefault();
+			case HTTP:
+				return new HTTPProxySocketFactory(proxy, true);
+			case SOCKS4:
+				return new Socks4ProxySocketFactory(proxy, true);
+			case SOCKS5:
+				return new Socks5ProxySocketFactory(proxy, true);
+			default:
+				return null;
+		}
 	}
 
 	/**
