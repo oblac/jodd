@@ -547,12 +547,19 @@ public class PetiteContainer extends PetiteBeans {
 	// ---------------------------------------------------------------- shutdown
 
 	/**
-	 * Shutdowns container.
+	 * Shutdowns container. After container is down, it can't be used anymore.
 	 */
 	public void shutdown() {
 		for (Scope scope : scopes.values()) {
 			scope.shutdown();
 		}
+
+		beans.clear();
+		beansAlt.clear();
+		scopes.clear();
+		providers.clear();
+		beanCollections.clear();
+
 	}
 
 }
