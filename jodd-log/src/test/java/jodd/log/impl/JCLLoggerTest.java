@@ -159,7 +159,7 @@ public class JCLLoggerTest extends LoggerTestBase {
 		loggerFactory = new JCLLoggerFactory();
 
 		//when
-		logger = (JCLLogger) loggerFactory.getLogger(LoggerConstants.LOGGER);
+		logger = loggerFactory.getLogger(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type JCLLogger", logger.getClass(),

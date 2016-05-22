@@ -175,7 +175,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 	private void initializeLogFactoryAndLogger(Logger.Level level) {
 		slf = new SimpleLoggerFactory(level);
-		logger = (SimpleLogger) slf.getLogger(LoggerConstants.SIMPLE_LOGGER);
+		logger = slf.getLogger(LoggerConstants.SIMPLE_LOGGER);
 	}
 
 	private void setUpOutputStream() {

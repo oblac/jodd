@@ -18,6 +18,7 @@ dependencies {
 	provided lib.jsp
 
 	testCompile project(':jodd-http')
+	testCompile project(':jodd-db').sourceSets.test.output
 	testCompile lib.junit
 	testCompile lib.hsqldb
 	testCompile lib.tomcat_embed

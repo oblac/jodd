@@ -30,7 +30,6 @@ import jodd.db.DbSessionProvider;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
-import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
@@ -560,9 +559,8 @@ public abstract class DefaultAppCore {
 		log.info("database initialization");
 
 		// connection pool
-		Class<? extends ConnectionProvider> connectionProviderClass = getConnectionProviderType();
-		petite.registerPetiteBean(connectionProviderClass, PETITE_DBPOOL, null, null, false);
-		connectionProvider = (ConnectionProvider) petite.getBean(PETITE_DBPOOL);
+		connectionProvider = createConnectionProvider();
+		petite.addBean(PETITE_DBPOOL, connectionProvider);
 		connectionProvider.init();
 
 		checkConnectionProvider();
@@ -608,10 +606,10 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Returns <code>ConnectionProvider</code> implementation.
+	 * Returns <code>ConnectionProvider</code> instance.
 	 */
-	protected Class<? extends ConnectionProvider> getConnectionProviderType() {
-		return CoreConnectionPool.class;
+	protected ConnectionProvider createConnectionProvider() {
+		throw new UnsupportedOperationException("Please provide ConnectionProvider implementation.");
 	}
 
 	/**
@@ -665,7 +663,7 @@ public abstract class DefaultAppCore {
 	 * Simply delegates to {@link AppInit#init()}.
 	 */
 	protected void startApp() {
-		appInit = (AppInit) petite.getBean(PETITE_INIT);
+		appInit = petite.getBean(PETITE_INIT);
 		if (appInit != null) {
 			appInit.init();
 		}
