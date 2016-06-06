@@ -656,7 +656,7 @@ public abstract class HttpBase<T> {
 				String formEncoding = resolveFormEncoding();
 
 				String utf8String = StringUtil.convertCharset(
-					string, formEncoding, StringPool.ISO_8859_1);
+					string, formEncoding, StringPool.UTF_8);
 
 				buffer.append(utf8String);
 			}
@@ -670,7 +670,7 @@ public abstract class HttpBase<T> {
 					String formEncoding = resolveFormEncoding();
 
 					fileName = StringUtil.convertCharset(
-						fileName, formEncoding, StringPool.ISO_8859_1);
+						fileName, formEncoding, StringPool.UTF_8);
 				}
 
 				buffer.append("Content-Disposition: form-data; name=\"").append(name);
