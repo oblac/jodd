@@ -55,21 +55,21 @@ public final class MutableInteger extends Number implements Comparable<MutableIn
 	/**
 	 * Returns mutable value.
 	 */
-	public int getValue() {
+	public int get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(int value) {
+	public void set(int value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(Number value) {
 		this.value = value.intValue();
 	}
 

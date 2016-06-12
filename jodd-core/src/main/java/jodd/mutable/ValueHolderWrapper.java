@@ -52,11 +52,11 @@ public class ValueHolderWrapper {
 			this.value = v;
 		}
 
-		public T value() {
+		public T get() {
 			return value;
 		}
 
-		public void value(T value) {
+		public void set(T value) {
 			this.value = value;
 		}
 

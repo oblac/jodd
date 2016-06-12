@@ -55,21 +55,21 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	/**
 	 * Returns mutable value.
 	 */
-	public float getValue() {
+	public float get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(float value) {
+	public void set(float value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(Number value) {
 		this.value = value.floatValue();
 	}
 

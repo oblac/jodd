@@ -34,13 +34,13 @@ public class ValueHolderTest {
 	@Test
 	public void testValueHolder() {
 		ValueHolder<String> str = ValueHolderWrapper.create();
-		str.value("123");
+		str.set("123");
 
-		assertEquals("123", str.value());
+		assertEquals("123", str.get());
 
 		str = ValueHolderWrapper.wrap("123");
-		str.value("123");
+		str.set("123");
 
-		assertEquals("123", str.value());
+		assertEquals("123", str.get());
 	}
 }

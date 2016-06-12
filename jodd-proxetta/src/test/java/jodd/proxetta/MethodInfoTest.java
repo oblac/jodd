@@ -50,7 +50,7 @@ public class MethodInfoTest {
 				new ProxyPointcut() {
 					public boolean apply(MethodInfo methodInfo) {
 						if (methodInfo.getMethodName().equals("p1")) {
-							valueHolder.value(methodInfo);
+							valueHolder.set(methodInfo);
 							return true;
 						}
 						return false;
@@ -65,7 +65,7 @@ public class MethodInfoTest {
 
 		assertNotNull(foo);
 
-		MethodInfo mi = valueHolder.value();
+		MethodInfo mi = valueHolder.get();
 
 		assertEquals("p1", mi.getMethodName());
 		assertEquals(Foo.class.getName().replace('.', '/'), mi.getClassname());

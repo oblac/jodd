@@ -55,21 +55,21 @@ public final class MutableDouble extends Number implements Comparable<MutableDou
 	/**
 	 * Returns mutable value.
 	 */
-	public double getValue() {
+	public double get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(double value) {
+	public void set(double value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(Number value) {
 		this.value = value.doubleValue();
 	}
 

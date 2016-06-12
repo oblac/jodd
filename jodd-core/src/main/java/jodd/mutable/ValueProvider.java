@@ -29,10 +29,11 @@ package jodd.mutable;
  * Lazy immutable {@link jodd.mutable.ValueHolder}.
  * @param <T> value type
  */
+@FunctionalInterface
 public interface ValueProvider<T> {
 
-    /**
-     * Returns value.
-     */
-    T value();
+	/**
+	 * Returns value.
+	 */
+	T get();
 }

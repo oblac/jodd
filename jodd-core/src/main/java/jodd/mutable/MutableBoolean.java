@@ -60,18 +60,22 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	/**
 	 * Returns mutable value.
 	 */
-	public boolean getValue() {
+	public boolean get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(boolean value) {
+	public void set(boolean value) {
 		this.value = value;
 	}
 
-	public void setValue(Boolean value) {
+	/**
+	 * Sets mutable value. Throws exception if boolean value is
+	 * <code>null</code>.
+	 */
+	public void set(Boolean value) {
 		this.value = value.booleanValue();
 	}
 
