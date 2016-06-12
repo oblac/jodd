@@ -118,6 +118,7 @@ public class StreamGobbler extends Thread {
 			}
 		}
 		catch (InterruptedException ignore) {
+			Thread.currentThread().interrupt();
 		}
 	}
 

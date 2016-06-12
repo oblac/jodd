@@ -39,7 +39,7 @@ public class ThreadUtil {
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException iex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -51,7 +51,7 @@ public class ThreadUtil {
 		try {
 			Thread.sleep(Long.MAX_VALUE);
 		} catch (InterruptedException iex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -66,7 +66,7 @@ public class ThreadUtil {
 			try {
 				obj.wait();
 			} catch (InterruptedException inex) {
-				//ignore
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class ThreadUtil {
 			try {
 				obj.wait(timeout);
 			} catch (InterruptedException inex) {
-				// ignore
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -110,7 +110,7 @@ public class ThreadUtil {
 		try {
 			thread.join();
 		} catch (InterruptedException inex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -118,7 +118,7 @@ public class ThreadUtil {
 		try {
 			thread.join(millis);
 		} catch (InterruptedException inex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -126,7 +126,7 @@ public class ThreadUtil {
 		try {
 			thread.join(millis, nanos);
 		} catch (InterruptedException inex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
