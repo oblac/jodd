@@ -37,7 +37,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.7.2-20160523'
+version = '3.8.0-20160602'
 //version = '3.7.1'
 
 // --- properties -------------------------------------------------------------
@@ -179,14 +179,17 @@ configure(javaModules()) {
 
 	// compile
 
-	sourceCompatibility = 1.7
-	targetCompatibility = 1.7
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
 		options.incremental = true
 		//configurations.compile.transitive = false
+	}
+	tasks.withType(Javadoc) {
+		options.addStringOption('Xdoclint:none', '-quiet')
 	}
 	compileJava.options.debug = true
 	compileJava.options.fork = true
