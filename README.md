@@ -1,15 +1,18 @@
 Jodd
 ====
 
-[![BSD License](http://img.shields.io/badge/license-BSD-orange.svg)](http://jodd.org/license.html)
+[![BSD License](http://img.shields.io/badge/license-BSD-blue.svg)](http://jodd.org/license.html)
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
 [![Coverage Status](https://coveralls.io/repos/oblac/jodd/badge.png?branch=master)](https://coveralls.io/r/oblac/jodd?branch=master)
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
+[![Release](https://img.shields.io/github/tag/oblac/jodd.svg)](https://github.com/oblac/jodd/releases)
 [![Download](https://api.bintray.com/packages/oblac/jodd/org.jodd%3Ajodd-core/images/download.svg)](https://bintray.com/oblac/jodd)
+[![](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
-**Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
+**Jodd** is set of open-source Java micro frameworks and tools; compact, yet powerful.
 
-**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.5 Mb**
+**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.6 Mb**
 
 Read about **Jodd**:
 
@@ -52,8 +55,8 @@ Read more in our [official documentation](http://jodd.org/doc).
 ## Jodd Bundle
 
 If you are already using many **Jodd** jars, you can simply
-just use the _bundle_ jar. It's a single jar with
-all modules included :)
+just use the _bundle_ jar: `jodd-all`. It's a single jar with
+all modules included; where all dependencies are optional. Why not :)
 
 
 ## Building Jodd from source
