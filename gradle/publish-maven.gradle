@@ -61,7 +61,7 @@ def customizePom(pom, gradleProject) {
 			}
 			licenses {
 				license {
-					name 'The New BSD License'
+					name 'The BSD 2-Clause License'
 					url 'http://jodd.org/license.html'
 					distribution 'repo'
 				}
@@ -74,7 +74,7 @@ def customizePom(pom, gradleProject) {
 			developers {
 				developer {
 					id = 'igor'
-					name = 'Igor Spasic'
+					name = 'Igor Spasić'
 					email = 'igor@jodd.org'
 					timezone = '+1'
 				}
