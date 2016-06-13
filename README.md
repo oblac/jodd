@@ -62,8 +62,8 @@ all modules included; where all dependencies are optional. Why not :)
 
 ## Building Jodd from source
 
-**Jodd** is built with [Gradle](http://gradle.org/) on JDK6,
-targeting Java 1.7. You don't have to install anything,
+**Jodd** is built with [Gradle](http://gradle.org/) on JDK8,
+targeting Java 1.8. You don't have to install anything,
 the only prerequisites are [Git](http://help.github.com/set-up-git-redirect)
 and Java JDK.
 
