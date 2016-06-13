@@ -30,7 +30,9 @@ scopeMappings.addMapping(
 // set provided scope for IDEA dependencies
 idea {
 	module {
-		scopes.PROVIDED.plus += [ configurations.provided ]
+		if (scopes.PROVIDED != null) {
+			scopes.PROVIDED.plus += [configurations.provided]
+		}
 	}
 }
 
