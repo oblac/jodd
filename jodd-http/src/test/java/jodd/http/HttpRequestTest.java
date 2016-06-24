@@ -36,9 +36,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class HttpRequestTest {
 
@@ -291,4 +289,24 @@ public class HttpRequestTest {
 		assertEquals("http://foo.com", httpRequest.hostUrl());
 	}
 
+	@Test
+	public void testBasicAuthorizationCanBeSetToNullAndIsIgnoredSilently() {
+		HttpRequest httpRequest = new HttpRequest();
+		String[][] input = new String[][]{
+				{"non-null", null},
+				{null, "non-null"},
+				{null, null},
+		};
+
+		try {
+
+			for(String[] pair :input) {
+				httpRequest.basicAuthentication(pair[0], pair[1]);
+				assertNull(httpRequest.headers.get("Authorization"));
+			}
+
+		} catch (RuntimeException e) {
+			fail("No exception should be thrown for null authorization basic header args!");
+		}
+	}
 }

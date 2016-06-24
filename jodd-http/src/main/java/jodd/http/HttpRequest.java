@@ -528,11 +528,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Enables basic authentication by adding required header.
 	 */
 	public HttpRequest basicAuthentication(String username, String password) {
-		String data = username.concat(StringPool.COLON).concat(password);
 
-		String base64 = Base64.encodeToString(data);
+		if (username != null && password != null) {
+			String data = username.concat(StringPool.COLON).concat(password);
 
-		header("Authorization", "Basic " + base64, true);
+			String base64 = Base64.encodeToString(data);
+
+			header("Authorization", "Basic " + base64, true);
+		}
 
 		return this;
 	}
