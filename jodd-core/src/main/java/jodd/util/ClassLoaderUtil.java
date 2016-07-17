@@ -329,7 +329,7 @@ public class ClassLoaderUtil {
 			classLoader = classLoader.getParent();
 		}
 
-		String bootstrap = SystemUtil.getSunBoothClassPath();
+		String bootstrap = SystemUtil.getSunBootClassPath();
 		if (bootstrap != null) {
 			String[] bootstrapFiles = StringUtil.splitc(bootstrap, File.pathSeparatorChar);
 			for (String bootstrapFile: bootstrapFiles) {

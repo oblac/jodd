@@ -445,7 +445,7 @@ public class SystemUtil {
 	/**
 	 * Returns bootstrap class path.
 	 */
-	public static String getSunBoothClassPath() {
+	public static String getSunBootClassPath() {
 		return System.getProperty(SUN_BOOT_CLASS_PATH);
 	}
 
