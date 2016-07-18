@@ -29,8 +29,6 @@ import jodd.util.HtmlDecoder;
 import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
 
-import java.io.IOException;
-
 /**
  * Text node. Text value is stored as node value in decoded, readable form.
  * There is also an option to get and set <b>html content</b> in
@@ -75,7 +73,7 @@ public class Text extends Node {
 	/**
 	 * Sets HTML text, but decodes it first.
 	 */
-	public void setTextContent(String text) {
+	public void setTextValue(String text) {
 		encodedText = text;
 		nodeValue = HtmlDecoder.decode(text);
 	}
@@ -83,24 +81,11 @@ public class Text extends Node {
 	/**
 	 * Returns encoded HTML text.
 	 */
-	@Override
-	public String getTextContent() {
+	public String getTextValue() {
 		if (encodedText == null) {
 			encodedText = HtmlEncoder.text(nodeValue);
 		}
 		return encodedText;
-	}
-
-	/**
-	 * Appends the text content to <code>Appendable</code>.
-	 */
-	@Override
-	public void appendTextContent(Appendable appendable) {
-		try {
-			appendable.append(getTextContent());
-		} catch (IOException ioex) {
-			throw new LagartoDOMException(ioex);
-		}
 	}
 
 	@Override

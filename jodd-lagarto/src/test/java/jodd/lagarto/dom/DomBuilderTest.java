@@ -259,7 +259,8 @@ public class DomBuilderTest {
 		Text text = (Text) document.getFirstChild().getFirstChild();
 
 		assertEquals("a<b", text.getNodeValue());
-		assertEquals("a&lt;b", text.getTextContent());
+		assertEquals("a<b", text.getTextContent());
+		assertEquals("a&lt;b", text.getTextValue());
 		assertTrue(document.check());
 	}
 

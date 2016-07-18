@@ -357,4 +357,16 @@ public class JerryMiscTest {
 		assertEquals("<html><body></body></html>", $.html());
 	}
 
+	@Test
+	public void test321() {
+		String html = "<head><title>test &amp; blah</title><body><h1>test &amp; blah<b>bold</b></h1></body>";
+
+		Jerry doc = Jerry.jerry(html);
+		Jerry title = doc.$("title");
+
+		assertEquals("test &amp; blah", title.eq(0).html());
+		assertEquals("test & blah", title.eq(0).text());
+
+	}
+
 }

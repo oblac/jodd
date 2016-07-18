@@ -76,7 +76,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	}
 
 	public void text(Text text) {
-		String nodeValue = text.getTextContent();
+		String nodeValue = text.getTextValue();
 
 		try {
 			appendable.append(nodeValue);
