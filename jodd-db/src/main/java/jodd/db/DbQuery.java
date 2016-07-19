@@ -134,7 +134,7 @@ public class DbQuery extends DbQueryBase {
 	 * previous value. However, in some cases it is useful to immediately
 	 * release the resources used by the current parameter values; this can
 	 * be done by calling the method <code>clearParameters</code>.
-s	 */
+	 */
 	public void clearParameters() {
 		init();
 		if (preparedStatement == null) {
