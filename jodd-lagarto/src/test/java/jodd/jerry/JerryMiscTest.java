@@ -367,6 +367,9 @@ public class JerryMiscTest {
 		assertEquals("test &amp; blah", title.eq(0).html());
 		assertEquals("test & blah", title.eq(0).text());
 
+		Jerry h1 = doc.$("h1");
+		assertEquals("test &amp; blah<b>bold</b>", h1.eq(0).html());
+		assertEquals("test & blahbold", h1.eq(0).text());
 	}
 
 }
