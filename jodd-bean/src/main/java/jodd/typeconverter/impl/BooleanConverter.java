@@ -52,7 +52,12 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 			return (Boolean) value;
 		}
 
-		String stringValue = value.toString().trim().toLowerCase();
+		String stringValue = value.toString();
+		if (stringValue.isEmpty()) {
+			return Boolean.FALSE;
+		}
+
+		stringValue = stringValue.trim().toLowerCase();
 		if (stringValue.equals(YES) ||
 				stringValue.equals(Y) ||
 				stringValue.equals(TRUE) ||
