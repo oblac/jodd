@@ -116,9 +116,10 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 * Creates a SSL socket. Enables default secure enabled protocols if specified..
 	 */
 	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout) throws IOException {
-		SocketFactory socketFactory;
+		SSLSocketFactory socketFactory;
+
 		try {
-			socketFactory = getSSLSocketFactory(proxy);
+			socketFactory = (SSLSocketFactory) getSSLSocketFactory(proxy);
 		}
 		catch (Exception ex) {
 			if (ex instanceof IOException) {
@@ -135,9 +136,26 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		}
 		else {
 			// creates unconnected socket
-			sslSocket = (SSLSocket) socketFactory.createSocket();
+			// unfortunately, this does not work always
 
-			sslSocket.connect(new InetSocketAddress(host, port), connectionTimeout);
+//			sslSocket = (SSLSocket) socketFactory.createSocket();
+//			sslSocket.connect(new InetSocketAddress(host, port), connectionTimeout);
+
+			//
+			// Note: SSLSocketFactory has several create() methods.
+			// Those that take arguments all connect immediately
+			// and have no options for specifying a connection timeout.
+			//
+			// So, we have to create a socket and connect it (with a
+			// connection timeout), then have the SSLSocketFactory wrap
+			// the already-connected socket.
+			//
+			Socket sock = new Socket();
+			//sock.setSoTimeout(readTimeout);
+			sock.connect(new InetSocketAddress(host, port), connectionTimeout);
+
+			// wrap plain socket in an SSL socket
+			sslSocket = (SSLSocket)socketFactory.createSocket(sock, host, port, true);
 		}
 
 		String enabledProtocols = JoddHttp.defaultSecureEnabledProtocols;
