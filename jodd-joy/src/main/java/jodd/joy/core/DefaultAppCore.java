@@ -30,6 +30,7 @@ import jodd.db.DbSessionProvider;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
+import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
@@ -607,9 +608,10 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Returns <code>ConnectionProvider</code> instance.
+	 * Instance will be registered into the Petite context.
 	 */
 	protected ConnectionProvider createConnectionProvider() {
-		throw new UnsupportedOperationException("Please provide ConnectionProvider implementation.");
+		return new CoreConnectionPool();
 	}
 
 	/**
