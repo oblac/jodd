@@ -28,6 +28,7 @@ package jodd.jerry;
 /**
  * Callback function for iterating nodes.
  */
+@FunctionalInterface
 public interface JerryFunction {
 
 	/**
