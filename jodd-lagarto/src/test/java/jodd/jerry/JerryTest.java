@@ -266,11 +266,9 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 		final StringBuilder str = new StringBuilder();
-		doc.$("select option:selected").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				str.append($this.text()).append(' ');
-				return true;
-			}
+		doc.$("select option:selected").each(($this, index) -> {
+			str.append($this.text()).append(' ');
+			return true;
 		});
 		doc.$("div").text(str.toString());
 		assertEquals(htmlOK, actualHtml(doc));
@@ -294,11 +292,9 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("ul.nav li:eq(1)").css("backgroundColor", "#ff0");
 
-		doc.$("ul.nav").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				$this.find("li:eq(1)").css("fontStyle", "italic");
-				return true;
-			}
+		doc.$("ul.nav").each(($this, index) -> {
+			$this.find("li:eq(1)").css("fontStyle", "italic");
+			return true;
 		});
 
 		doc.$("ul.nav li:nth-child(2)").css("color", "red");
@@ -481,19 +477,17 @@ public class JerryTest {
 		String htmlOK = readFile("is-ok.html");
 
 		Jerry doc = jerry(html);
-		doc.$("div").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				if ($this.is(":first-child")) {
-					$this.text("Its the first div.");
-				} else if ($this.is(".blue,.red")) {
-					$this.text("Its a blue or red div.");
-				} else if ($this.is(":contains(Peter)")) {
-					$this.text("Its Peter!");
-				} else {
-					$this.html("Its nothing <em>special</em>.");
-				}
-				return true;
+		doc.$("div").each(($this, index) -> {
+			if ($this.is(":first-child")) {
+				$this.text("Its the first div.");
+			} else if ($this.is(".blue,.red")) {
+				$this.text("Its a blue or red div.");
+			} else if ($this.is(":contains(Peter)")) {
+				$this.text("Its Peter!");
+			} else {
+				$this.html("Its nothing <em>special</em>.");
 			}
+			return true;
 		});
 
 		assertEquals(htmlOK, actualHtml(doc));
@@ -540,11 +534,7 @@ public class JerryTest {
 		String htmlOK = readFile("filter2-ok.html");
 
 		Jerry doc = jerry(html);
-		doc.$("li").filter(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				return Jerry.$("strong", $this).length() == 1;
-			}
-		}).css("background-color", "red");
+		doc.$("li").filter(($this, index) -> Jerry.$("strong", $this).length() == 1).css("background-color", "red");
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
@@ -555,11 +545,7 @@ public class JerryTest {
 		String htmlOK = readFile("filter2-ok2.html");
 
 		Jerry doc = jerry(html);
-		doc.$("li").filter(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				return index % 3 == 2;
-			}
-		}).css("background-color", "red");
+		doc.$("li").filter(($this, index) -> index % 3 == 2).css("background-color", "red");
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
@@ -584,11 +570,7 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 		doc.$("div").css("background", "#b4b0da")
-				.filter(new JerryFunction() {
-					public boolean onNode(Jerry $this, int index) {
-						return index == 1 || $this.attr("id").equals("fourth");
-					}
-				})
+				.filter(($this, index) -> index == 1 || $this.attr("id").equals("fourth"))
 				.css("border", "3px double red");
 
 		assertEquals(htmlOK, actualHtml(doc));
@@ -602,11 +584,7 @@ public class JerryTest {
 
 		final Map<String, String[]> params = new HashMap<>();
 
-		doc.form("#myform", new JerryFormHandler() {
-			public void onForm(Jerry form, Map<String, String[]> parameters) {
-				params.putAll(parameters);
-			}
-		});
+		doc.form("#myform", (form, parameters) -> params.putAll(parameters));
 
 		assertEquals(6, params.size());
 

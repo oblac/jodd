@@ -27,7 +27,6 @@ package jodd.lagarto;
 
 import jodd.io.StreamUtil;
 import jodd.jerry.Jerry;
-import jodd.jerry.JerryFunction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,11 +69,9 @@ public class StuckTest {
 
 		// parse
 		try {
-			doc.$("a").each(new JerryFunction() {
-				public boolean onNode(Jerry $this, int index) {
-					assertEquals("Go to Database Directory", $this.html().trim());
-					return false;
-				}
+			doc.$("a").each(($this, index) -> {
+				assertEquals("Go to Database Directory", $this.html().trim());
+				return false;
 			});
 		} catch (StackOverflowError stackOverflowError) {
 			fail("stack overflow!");

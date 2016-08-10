@@ -27,7 +27,6 @@ package jodd.lagarto;
 
 import jodd.io.FileUtil;
 import jodd.jerry.Jerry;
-import jodd.jerry.JerryFunction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,11 +60,9 @@ public class SpringApiTest {
 		Jerry doc = jerryParser.parse(content);
 
 		// parse
-		doc.$("a").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
-				return false;
-			}
+		doc.$("a").each(($this, index) -> {
+			assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
+			return false;
 		});
 	}
 
@@ -80,11 +77,9 @@ public class SpringApiTest {
 		Jerry doc = jerryParser.parse(content);
 
 		// parse
-		doc.$("a").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
-				return false;
-			}
+		doc.$("a").each(($this, index) -> {
+			assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
+			return false;
 		});
 	}
 

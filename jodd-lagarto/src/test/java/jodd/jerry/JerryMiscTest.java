@@ -266,13 +266,11 @@ public class JerryMiscTest {
 	public void testCustomerDetails() {
 		Jerry doc = Jerry.jerry("<p>to<br>{customerDetails}</p>");
 
-		doc.$("p").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				String innerHtml = $this.html();
-				innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
-				$this.html(innerHtml);
-				return true;
-			}
+		doc.$("p").each(($this, index) -> {
+			String innerHtml = $this.html();
+			innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
+			$this.html(innerHtml);
+			return true;
 		});
 
 		String newHtml = doc.html();

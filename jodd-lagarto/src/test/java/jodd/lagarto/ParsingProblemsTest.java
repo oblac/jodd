@@ -29,7 +29,6 @@ import jodd.io.FileUtil;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.jerry.Jerry;
-import jodd.jerry.JerryFunction;
 import jodd.lagarto.dom.Document;
 import jodd.util.StringUtil;
 import org.junit.Before;
@@ -164,13 +163,11 @@ public class ParsingProblemsTest {
 		assertEquals(2, doc.$("table td.NavBarCell1Rev").size());
 
 		final StringBuilder sb = new StringBuilder();
-		doc.$("td.NavBarCell1").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				sb.append("---\n");
-				sb.append($this.text().trim());
-				sb.append('\n');
-				return true;
-			}
+		doc.$("td.NavBarCell1").each(($this, index) -> {
+			sb.append("---\n");
+			sb.append($this.text().trim());
+			sb.append('\n');
+			return true;
 		});
 		String s = sb.toString();
 		s = StringUtil.remove(s, ' ');
@@ -256,11 +253,9 @@ public class ParsingProblemsTest {
 
 		final StringBuilder result = new StringBuilder();
 
-		jerry.$("cfg\\:test").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				result.append($this.$("cfg\\:node").text());
-				return true;
-			}
+		jerry.$("cfg\\:test").each(($this, index) -> {
+			result.append($this.$("cfg\\:node").text());
+			return true;
 		});
 
 		assertEquals("This is a text", result.toString());
