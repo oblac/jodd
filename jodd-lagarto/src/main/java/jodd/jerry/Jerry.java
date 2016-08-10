@@ -370,7 +370,8 @@ public class Jerry implements Iterable<Jerry> {
 		for (int i = 0; i < nodes.length; i++) {
 			Node node = nodes[i];
 			Jerry $this = new Jerry(this, node);
-			if (!function.onNode($this, i)) {
+			Boolean result = function.onNode($this, i);
+			if (result != null && result == Boolean.FALSE) {
 				break;
 			}
 		}
@@ -1089,87 +1090,79 @@ public class Jerry implements Iterable<Jerry> {
 
 			// process all input elements
 
-			singleForm.$("input").each(new JerryFunction() {
-				public boolean onNode(Jerry $inputTag, int index) {
+			singleForm.$("input").each(($inputTag, index) -> {
 
-					String type = $inputTag.attr("type");
+				String type = $inputTag.attr("type");
 
-					boolean isCheckbox = type.equals("checkbox");
-					boolean isRadio = type.equals("radio");
+				boolean isCheckbox = type.equals("checkbox");
+				boolean isRadio = type.equals("radio");
 
-					if (isRadio || isCheckbox) {
-						if (!($inputTag.nodes[0].hasAttribute("checked"))) {
-							return true;
-						}
-					}
-
-					String name = $inputTag.attr("name");
-					if (name == null) {
+				if (isRadio || isCheckbox) {
+					if (!($inputTag.nodes[0].hasAttribute("checked"))) {
 						return true;
 					}
+				}
 
-					String tagValue = $inputTag.attr("value");
-
-					if (tagValue == null) {
-						if (isCheckbox) {
-							tagValue = "on";
-						}
-					}
-
-					// add tag value
-					String[] value = parameters.get(name);
-
-					if (value == null) {
-						value = new String[] {tagValue};
-					} else {
-						value = ArraysUtil.append(value, tagValue);
-					}
-
-					parameters.put(name, value);
+				String name = $inputTag.attr("name");
+				if (name == null) {
 					return true;
 				}
+
+				String tagValue = $inputTag.attr("value");
+
+				if (tagValue == null) {
+					if (isCheckbox) {
+						tagValue = "on";
+					}
+				}
+
+				// add tag value
+				String[] value = parameters.get(name);
+
+				if (value == null) {
+					value = new String[] {tagValue};
+				} else {
+					value = ArraysUtil.append(value, tagValue);
+				}
+
+				parameters.put(name, value);
+				return true;
 			});
 
 			// process all select elements
 
-			singleForm.$("select").each(new JerryFunction() {
-				public boolean onNode(Jerry $selectTag, int index) {
-					final String name = $selectTag.attr("name");
+			singleForm.$("select").each(($selectTag, index) -> {
+				final String name = $selectTag.attr("name");
 
-					$selectTag.$("option").each(new JerryFunction() {
-						public boolean onNode(Jerry $optionTag, int index) {
-							if ($optionTag.nodes[0].hasAttribute("selected")) {
-								String tagValue = $optionTag.attr("value");
+				$selectTag.$("option").each(($optionTag, index1) -> {
+					if ($optionTag.nodes[0].hasAttribute("selected")) {
+						String tagValue = $optionTag.attr("value");
 
-								// add tag value
-								String[] value = parameters.get(name);
+						// add tag value
+						String[] value = parameters.get(name);
 
-								if (value == null) {
-									value = new String[] {tagValue};
-								} else {
-									value = ArraysUtil.append(value, tagValue);
-								}
-
-								parameters.put(name, value);
-							}
-							return true;
+						if (value == null) {
+							value = new String[] {tagValue};
+						} else {
+							value = ArraysUtil.append(value, tagValue);
 						}
-					});
 
+						parameters.put(name, value);
+					}
 					return true;
-				}
+				});
+
+				return true;
 			});
 
 			// process all text areas
 
-			singleForm.$("textarea").each(new JerryFunction() {
-				public boolean onNode(Jerry $textarea, int index) {
-					String name = $textarea.attr("name");
-					String value = $textarea.text();
+			singleForm.$("textarea").each(($textarea, index) -> {
+				String name = $textarea.attr("name");
+				String value = $textarea.text();
 
-					parameters.put(name, new String[] {value});
-					return true;
-				}
+				parameters.put(name, new String[] {value});
+				return true;
 			});
 
 			// done
