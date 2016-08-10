@@ -25,6 +25,7 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.Jodd;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.upload.FileUpload;
 import jodd.upload.typeconverter.FileUploadConverter;
@@ -38,6 +39,8 @@ public class UploadTypeConverterManagerAddonTest {
 
 	@Test
 	public void testRegistration() {
+		Jodd.initAllModules();
+
 		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.lookup(FileUpload.class);
 
 		assertNotNull(fileUploadConverter);

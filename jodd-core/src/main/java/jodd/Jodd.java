@@ -52,6 +52,7 @@ import java.lang.reflect.Field;
 public class Jodd {
 
 	private static int ndx = 0;
+	private static boolean initAllModules = false;
 
 	public static final int CORE 			= ndx++;
 	public static final int BEAN 			= ndx++;
@@ -118,6 +119,11 @@ public class Jodd {
 	 * of this class.
 	 */
 	public static void initAllModules() {
+		if (initAllModules) {
+			return;
+		}
+		initAllModules = true;
+
 		final Field[] fields = Jodd.class.getFields();
 
 		final ClassLoader classLoader = Jodd.class.getClassLoader();
