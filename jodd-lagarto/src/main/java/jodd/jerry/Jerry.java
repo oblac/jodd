@@ -364,6 +364,7 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Iterates over a jQuery object, executing a function for
 	 * each matched element.
+	 * @see #eachNode(JerryNodeFunction)
 	 */
 	public Jerry each(JerryFunction function) {
 		for (int i = 0; i < nodes.length; i++) {
@@ -379,8 +380,9 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Iterates over a jQuery object, executing a function for
 	 * each matched element.
+	 * @see #each(JerryFunction)
 	 */
-	public Jerry each(JerryNodeFunction function) {
+	public Jerry eachNode(JerryNodeFunction function) {
 		for (int i = 0; i < nodes.length; i++) {
 			Node node = nodes[i];
 			if (!function.onNode(node, i)) {
