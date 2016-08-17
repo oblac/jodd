@@ -163,6 +163,19 @@ public class JSONDeserializerTest {
 	}
 
 	@Test
+	public void testDeserializeInterfaces2() {
+		Hero superman = creator.createSuperman();
+		String json = new JsonSerializer().include("powers").withClassMetadata(true).serialize(superman);
+		Hero jsonSuperMan = new JsonParser().withClassMetadata(true).parse(json, Hero.class);
+
+		assertNotNull(jsonSuperMan);
+		assertEquals(4, jsonSuperMan.getPowers().size());
+		assertHeroHasSuperPowers(jsonSuperMan);
+
+		JoddJson.classMetadataName = null;
+	}
+
+	@Test
 	public void testNoClassHints() {
 		JoddJson.classMetadataName = null;
 
