@@ -359,16 +359,14 @@ public class StringTemplateParser {
 	 * macros in the provided map.
 	 */
 	public static MacroResolver createMapMacroResolver(final Map map) {
-		return new MacroResolver() {
-			public String resolve(String macroName) {
-				Object value = map.get(macroName);
+		return macroName -> {
+			Object value = map.get(macroName);
 
-				if (value == null) {
-					return null;
-				}
-
-				return value.toString();
+			if (value == null) {
+				return null;
 			}
+
+			return value.toString();
 		};
 	}
 

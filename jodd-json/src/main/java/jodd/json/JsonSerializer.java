@@ -33,6 +33,8 @@ import jodd.util.buffer.FastCharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
+
 /**
  * JSON serializer.
  */
@@ -156,6 +158,19 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer setClassMetadataName(String name) {
 		classMetadataName = name;
+		return this;
+	}
+
+	/**
+	 * Sets local class meta-data name.
+	 */
+	public JsonSerializer withClassMetadata(boolean useMetadata) {
+		if (useMetadata) {
+			classMetadataName = DEFAULT_CLASS_METADATA_NAME;
+		}
+		else {
+			classMetadataName = null;
+		}
 		return this;
 	}
 

@@ -36,6 +36,8 @@ import java.lang.annotation.Annotation;
  */
 public class JoddJson {
 
+	public static final String DEFAULT_CLASS_METADATA_NAME = "__class";
+
 	/**
 	 * Annotation used for marking the properties.
 	 */

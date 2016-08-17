@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
+
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
  * and type mappings. Uses Jodd's type converters, so it is natural
@@ -219,6 +221,17 @@ public class JsonParser extends JsonParserBase {
 		classMetadataName = name;
 		return this;
 	}
+
+	public JsonParser withClassMetadata(boolean useMetadata) {
+		if (useMetadata) {
+			classMetadataName = DEFAULT_CLASS_METADATA_NAME;
+		}
+		else {
+			classMetadataName = null;
+		}
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- parse
 
