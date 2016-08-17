@@ -595,4 +595,21 @@ public class JsonSerializerTest {
 
 		assertEquals(path, path2);
 	}
+
+	@Test
+	public void testClassMetaData() {
+		String json = JsonSerializer
+			.create()
+			.withClassMetadata(true)
+			.serialize(new Foo());
+
+		assertTrue(json.contains("\"__class\":\"" + Foo.class.getName() + "\""));
+
+		json = JsonSerializer.create().withClassMetadata(false).serialize(123);
+		assertEquals("123", json);
+
+		json = JsonSerializer.create().withClassMetadata(true).serialize(123);
+		assertEquals("123", json);
+
+	}
 }
