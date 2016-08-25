@@ -26,6 +26,7 @@
 package jodd.csselly.selector;
 
 import jodd.csselly.CSSelly;
+import jodd.csselly.CssSelector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeMatcher;
 import jodd.lagarto.dom.NodeSelector;
@@ -222,19 +223,19 @@ public abstract class PseudoFunction<E> {
 	/**
 	 * Selects elements which contain at least one element that matches the specified selector.
 	 */
-	public static class HAS extends PseudoFunction<String> {
+	public static class HAS extends PseudoFunction<List<List<CssSelector>>> {
 
 		@Override
-		public String parseExpression(String expression) {
+		public List<List<CssSelector>> parseExpression(String expression) {
 			if (StringUtil.startsWithChar(expression, '\'') || StringUtil.startsWithChar(expression, '"')) {
 				expression = expression.substring(1, expression.length() - 1);
 			}
-			return expression;
+			return CSSelly.parse(expression);
 		}
 
 		@Override
-		public boolean match(Node node, String expression) {
-			List<Node> matchedNodes = new NodeSelector(node).select(CSSelly.parse(expression));
+		public boolean match(Node node, List<List<CssSelector>> selectors) {
+			List<Node> matchedNodes = new NodeSelector(node).select(selectors);
 
 			return !matchedNodes.isEmpty();
 		}
@@ -243,19 +244,19 @@ public abstract class PseudoFunction<E> {
 	/**
 	 * Selects all elements that do not match the given selector.
 	 */
-	public static class NOT extends PseudoFunction<String> {
+	public static class NOT extends PseudoFunction<List<List<CssSelector>>> {
 
 		@Override
-		public String parseExpression(String expression) {
+		public List<List<CssSelector>> parseExpression(String expression) {
 			if (StringUtil.startsWithChar(expression, '\'') || StringUtil.startsWithChar(expression, '"')) {
 				expression = expression.substring(1, expression.length() - 1);
 			}
-			return expression;
+			return CSSelly.parse(expression);
 		}
 
 		@Override
-		public boolean match(Node node, String expression) {
-			return !new NodeMatcher(node).match(CSSelly.parse(expression));
+		public boolean match(Node node, List<List<CssSelector>> selectors) {
+			return !new NodeMatcher(node).match(selectors);
 		}
 	}
 
