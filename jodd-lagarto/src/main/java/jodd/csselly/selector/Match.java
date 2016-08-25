@@ -54,13 +54,13 @@ public enum Match {
 			final int attrLength = attr.length();
 			
 			//  value or attribute is empty or the requested value is 'too' long
-			if (attrLength ==0 || valLength == 0 || attrLength < valLength) {
+			if (attrLength == 0 || valLength == 0 || attrLength < valLength) {
 				return false;
 			}
 			
 	        // if both length are equals, just compare the value with the attribute
 			// no need to split
-	        if(valLength == attrLength) {
+	        if (valLength == attrLength) {
 	            return val.equals(attr);
 	        }
 	        
@@ -70,17 +70,17 @@ public enum Match {
 	        int start = 0;
 	        for (int i = 0; i < attrLength; i ++) {
 	            if (attr.charAt(i) == ' ') {
-	                if(inClass) {
+	                if (inClass) {
 	                    // the white space ends a class name
 	                    // compare it with the requested one
-	                    if(i-start == valLength && attr.regionMatches(start, val, 0, valLength)) {
+	                    if ((i - start == valLength) && attr.regionMatches(start, val, 0, valLength)) {
 	                        return true;
 	                    }
 	                    inClass = false;
 	                }
 	            }
 	            else {
-	                if(!inClass) {
+	                if (!inClass) {
 	                    // we're in a class name : keep the start of the substring
 	                    inClass = true;
 	                    start = i;
@@ -90,7 +90,7 @@ public enum Match {
 	        
 	        // the attribute may not end by a white space
 	        // check the current class name
-	        if(inClass && attrLength-start == valLength) {
+	        if (inClass && (attrLength - start == valLength)) {
 	            return attr.regionMatches(start, val, 0, valLength);  
 	        }
 	        
