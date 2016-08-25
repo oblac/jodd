@@ -48,6 +48,12 @@ public class MatchTest {
         result = Match.INCLUDES.compare("  toto ", "toto");
         assertTrue(result);
         
+        result = Match.INCLUDES.compare("toto\ttiti", "toto");
+        assertTrue(result);
+        
+        result = Match.INCLUDES.compare("\ttoto", "toto");
+        assertTrue(result);
+        
         result = Match.INCLUDES.compare("ab", "toto");
         assertFalse(result);
         

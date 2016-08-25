@@ -69,7 +69,8 @@ public enum Match {
 	        boolean inClass = false;
 	        int start = 0;
 	        for (int i = 0; i < attrLength; i ++) {
-	            if (attr.charAt(i) == ' ') {
+	            char c = attr.charAt(i);
+				if (c == ' ' || c == '\t') {
 	                if (inClass) {
 	                    // the white space ends a class name
 	                    // compare it with the requested one

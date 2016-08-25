@@ -340,6 +340,21 @@ public class NodeSelectorTest {
 
 		assertTrue(document.check());
 	}
+	
+	@Test
+	public void testClassWithTabs() throws IOException {
+		File file = new File(testDataRoot, "class-tabs.html");
+		String htmlContent = FileUtil.readString(file);
+
+		Document document = new LagartoDOMBuilder().parse(htmlContent);
+
+		List<Node> nodes = new NodeSelector(document).select(".hey");
+		assertEquals(1, nodes.size());
+
+		Node n = nodes.get(0);
+		assertEquals("div", n.getNodeName());
+		assertEquals("jodd", n.getAttribute("id"));
+	}
 
 	@Test
 	public void testCollectionOfSelectors() throws IOException {
