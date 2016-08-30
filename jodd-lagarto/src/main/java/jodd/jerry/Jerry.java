@@ -1094,6 +1094,13 @@ public class Jerry implements Iterable<Jerry> {
 
 				String type = $inputTag.attr("type");
 
+				// An input element with no type attribute specified represents
+				// the same thing as an input element with its type attribute set to "text".
+
+				if (type == null) {
+					type = "text";
+				}
+
 				boolean isCheckbox = type.equals("checkbox");
 				boolean isRadio = type.equals("radio");
 
