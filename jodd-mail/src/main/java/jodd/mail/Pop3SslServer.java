@@ -57,7 +57,6 @@ public class Pop3SslServer extends Pop3Server {
 		this.password = password;
 	}
 
-
 	@Override
 	protected Properties createSessionProperties() {
 		Properties props = new Properties();
@@ -66,6 +65,11 @@ public class Pop3SslServer extends Pop3Server {
 		props.setProperty(MAIL_POP3_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
 		props.setProperty(MAIL_POP3_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
 		return props;
+	}
+
+	public Pop3SslServer setProperty(String name, String value) {
+		super.setProperty(name, value);
+		return this;
 	}
 
 	@Override

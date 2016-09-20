@@ -65,7 +65,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 	 * Defines the interface of the resulting class.
 	 */
 	public void setTargetInterface(Class targetInterface) {
-		if (targetInterface.isInterface() == false) {
+		if (!targetInterface.isInterface()) {
 			throw new ProxettaException("Not an interface: " + targetInterface.getName());
 		}
 		this.targetInterface = targetInterface;

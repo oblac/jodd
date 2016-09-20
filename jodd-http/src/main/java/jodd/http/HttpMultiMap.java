@@ -34,30 +34,49 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Case-insensitive multi-map. It's optimized Linked-HashMap, designed for
- * small number of items and <code>String</code> non-null keys.
+ * General purpose HTTP multi-map. It's optimized Linked-HashMap, designed for
+ * small number of items and <code>String</code> non-null keys. It stores keys
+ * in case-sensitive way, but, by default, you can read them in case-insensitive
+ * way.
  */
-public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
+public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 
 	private static final int BUCKET_SIZE = 31;
+	private final boolean caseSensitive;
 
 	@SuppressWarnings("unchecked")
-	private final MapEntry<V>[] entries = new MapEntry[BUCKET_SIZE];
+	private final MapEntry<V>[] entries = new MapEntry[BUCKET_SIZE + 1];
 	private final MapEntry<V> head = new MapEntry<>(-1, null, null);
 
-	public HttpMultiMap() {
+	/**
+	 * Creates new case-insensitive multimap.
+	 */
+	public static <T> HttpMultiMap<T> newCaseInsensitveMap() {
+		return new HttpMultiMap<>(false);
+	}
+	/**
+	 * Creates new case-insensitive map.
+	 */
+	public static <T> HttpMultiMap<T> newCaseSensitveMap() {
+		return new HttpMultiMap<>(true);
+	}
+
+	protected HttpMultiMap(boolean caseSensitive) {
 		head.before = head.after = head;
+		this.caseSensitive = caseSensitive;
 	}
 
 	/**
 	 * Calculates hash value of the input string.
 	 */
-	private static int hash(String name) {
+	private int hash(String name) {
 		int h = 0;
 		for (int i = name.length() - 1; i >= 0; i--) {
 			char c = name.charAt(i);
-			if (c >= 'A' && c <= 'Z') {
-				c += 32;
+			if (!caseSensitive) {
+				if (c >= 'A' && c <= 'Z') {
+					c += 32;
+				}
 			}
 			h = 31 * h + c;
 		}
@@ -81,7 +100,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Returns <code>true</code> if two names are the same.
 	 */
-	private static boolean eq(String name1, String name2) {
+	private boolean eq(String name1, String name2) {
 		int nameLen = name1.length();
 		if (nameLen != name2.length()) {
 			return false;
@@ -90,7 +109,11 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		for (int i = nameLen - 1; i >= 0; i--) {
 			char c1 = name1.charAt(i);
 			char c2 = name2.charAt(i);
+
 			if (c1 != c2) {
+				if (caseSensitive) {
+					return false;
+				}
 				if (c1 >= 'A' && c1 <= 'Z') {
 					c1 += 32;
 				}
@@ -344,7 +367,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 			@Override
 			@SuppressWarnings("unchecked")
 			public Map.Entry<String, V> next() {
-				if (hasNext() == false) {
+				if (!hasNext()) {
 					throw new NoSuchElementException("No next() entry in the iteration");
 				}
 				MapEntry<V> next = e[0];
@@ -360,7 +383,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	}
 
 	public Set<String> names() {
-		Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		Set<String> names = new TreeSet<>(caseSensitive ? null : String.CASE_INSENSITIVE_ORDER);
 
 		MapEntry e = head.after;
 		while (e != head) {
@@ -370,6 +393,10 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return names;
 	}
 
+	/**
+	 * Returns all the entries of this map. Case sensitivity does not influence
+	 * the returned list, it always contains all of the values.
+	 */
 	public List<Map.Entry<String, V>> entries() {
 		List<Map.Entry<String, V>> all = new LinkedList<>();
 

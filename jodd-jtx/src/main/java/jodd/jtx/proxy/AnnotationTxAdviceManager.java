@@ -128,7 +128,7 @@ public class AnnotationTxAdviceManager {
 		String signature = type.getName() + '#' + methodName + '%' + unique;
 		JtxTransactionMode txMode = txmap.get(signature);
 		if (txMode == null) {
-			if (txmap.containsKey(signature) == false) {
+			if (!txmap.containsKey(signature)) {
 
 				Method m;
 				try {

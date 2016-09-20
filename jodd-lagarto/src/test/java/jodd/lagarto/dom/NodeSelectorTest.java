@@ -244,7 +244,7 @@ public class NodeSelectorTest {
 
 		nodes = nodeSelector.select("p#text > em:nth-last-child(2n+1)");
 		assertEquals(1, nodes.size());
-		assertEquals("lina", ((Element) nodes.get(0)).getAttribute("id"));
+		assertEquals("lina", (nodes.get(0)).getAttribute("id"));
 
 		nodes = nodeSelector.select("p#text em:nth-last-child(2n+1)");
 		assertEquals(2, nodes.size());
@@ -339,6 +339,21 @@ public class NodeSelectorTest {
 		assertEquals(9, nodes.size());
 
 		assertTrue(document.check());
+	}
+	
+	@Test
+	public void testClassWithTabs() throws IOException {
+		File file = new File(testDataRoot, "class-tabs.html");
+		String htmlContent = FileUtil.readString(file);
+
+		Document document = new LagartoDOMBuilder().parse(htmlContent);
+
+		List<Node> nodes = new NodeSelector(document).select(".hey");
+		assertEquals(1, nodes.size());
+
+		Node n = nodes.get(0);
+		assertEquals("div", n.getNodeName());
+		assertEquals("jodd", n.getAttribute("id"));
 	}
 
 	@Test

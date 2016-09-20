@@ -539,6 +539,11 @@ public class FormatTest {
 	}
 
 	@Test
+	public void testMultipleObject() {
+		assertEquals("173, hej true", Printf.str("%i, %s %l", 173, "hej", true));
+	}
+
+	@Test
 	public void testAlternateChar() {
 		assertEquals("\\u41", Printf.str("%#c", 'A'));
 		assertEquals("\\u1a34", Printf.str("%#c", '\u1A34'));

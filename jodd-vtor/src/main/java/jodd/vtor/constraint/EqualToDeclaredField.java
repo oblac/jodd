@@ -51,4 +51,8 @@ public @interface EqualToDeclaredField {
 	 */
 	int severity() default 0;
 
+	/**
+	 * Message.
+	 */
+	String message() default "jodd.vtor.constraint.EqualToDeclaredField";
 }

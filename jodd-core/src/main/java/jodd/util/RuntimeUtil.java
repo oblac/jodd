@@ -26,6 +26,11 @@
 package jodd.util;
 
 import jodd.Jodd;
+import jodd.io.StreamGobbler;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Runtime utilities.
@@ -80,5 +85,46 @@ public class RuntimeUtil {
 	public static String joddLocation() {
 		return classLocation(Jodd.class);
 	}
+
+	// ---------------------------------------------------------------- process
+
+	public static class ProcessResult {
+		private final int exitCode;
+		private final String out;
+
+		protected ProcessResult(int existCode, String out) {
+			this.exitCode = existCode;
+			this.out = out;
+		}
+
+		public int getExitCode() {
+			return exitCode;
+		}
+
+		public String getOut() {
+			return out;
+		}
+	}
+
+	/**
+	 * Executes a process and returns the process output and exit code.
+	 */
+	public static ProcessResult run(Process process) throws IOException, InterruptedException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, "out>");
+		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), baos, "err>");
+
+		outputGobbler.start();
+		errorGobbler.start();
+
+		int result = process.waitFor();
+
+		outputGobbler.waitFor();
+		errorGobbler.waitFor();
+
+		return new ProcessResult(result, baos.toString());
+	}
+
 
 }

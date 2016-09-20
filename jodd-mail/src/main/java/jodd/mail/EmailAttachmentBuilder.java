@@ -131,7 +131,7 @@ public class EmailAttachmentBuilder {
 
 	public EmailAttachmentBuilder setInline(boolean inline) {
 		this.inline = inline;
-		if (inline == false) {
+		if (!inline) {
 			contentId = null;
 		}
 		return this;

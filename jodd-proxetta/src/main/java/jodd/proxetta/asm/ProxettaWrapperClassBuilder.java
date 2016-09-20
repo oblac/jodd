@@ -145,11 +145,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		}
 
 		// ignore all destination constructors
-		if (name.equals(INIT) == true) {
+		if (name.equals(INIT)) {
 			return null;
 		}
 		// ignore all destination static block
-		if (name.equals(CLINIT) == true) {
+		if (name.equals(CLINIT)) {
 			return null;
 		}
 

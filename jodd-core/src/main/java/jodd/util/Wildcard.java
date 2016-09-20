@@ -43,16 +43,16 @@ public class Wildcard {
 	 * @param pattern	pattern to match
 	 * @return 			<code>true</code> if string matches the pattern, otherwise <code>false</code>
 	 */
-	public static boolean match(String string, String pattern) {
+	public static boolean match(CharSequence string, CharSequence pattern) {
 		return match(string, pattern, 0, 0);
 	}
 
 	/**
-	 * Checks if two strings are equals or if they {@link #match(String, String)}.
+	 * Checks if two strings are equals or if they {@link #match(CharSequence, CharSequence)}.
 	 * Useful for cases when matching a lot of equal strings and speed is important.
 	 */
-	public static boolean equalsOrMatch(String string, String pattern) {
-		if (string.equals(pattern) == true) {
+	public static boolean equalsOrMatch(CharSequence string, CharSequence pattern) {
+		if (string.equals(pattern)) {
 			return true;
 		}
 		return match(string, pattern, 0, 0);
@@ -61,7 +61,7 @@ public class Wildcard {
 	/**
 	 * Internal matching recursive function.
 	 */
-	private static boolean match(String string, String pattern, int sNdx, int pNdx) {
+	private static boolean match(CharSequence string, CharSequence pattern, int sNdx, int pNdx) {
 		int pLen = pattern.length();
 		if (pLen == 1) {
 			if (pattern.charAt(0) == '*') {     // speed-up
@@ -74,7 +74,7 @@ public class Wildcard {
 		while (true) {
 
 			// check if end of string and/or pattern occurred
-			if ((sNdx >= sLen) == true) {		// end of string still may have pending '*' in pattern
+			if ((sNdx >= sLen)) {		// end of string still may have pending '*' in pattern
 				while ((pNdx < pLen) && (pattern.charAt(pNdx) == '*')) {
 					pNdx++;
 				}
@@ -86,7 +86,7 @@ public class Wildcard {
 			char p = pattern.charAt(pNdx);		// pattern char
 
 			// perform logic
-			if (nextIsNotWildcard == false) {
+			if (!nextIsNotWildcard) {
 
 				if (p == '\\') {
 					pNdx++;
@@ -112,7 +112,7 @@ public class Wildcard {
 					// find recursively if there is any substring from the end of the
 					// line that matches the rest of the pattern !!!
 					for (i = string.length(); i >= sNdx; i--) {
-						if (match(string, pattern, i, pNdx) == true) {
+						if (match(string, pattern, i, pNdx)) {
 							return true;
 						}
 					}
@@ -138,11 +138,11 @@ public class Wildcard {
 	/**
 	 * Matches string to at least one pattern.
 	 * Returns index of matched pattern, or <code>-1</code> otherwise.
-	 * @see #match(String, String)
+	 * @see #match(CharSequence, CharSequence)
 	 */
 	public static int matchOne(String src, String[] patterns) {
 		for (int i = 0; i < patterns.length; i++) {
-			if (match(src, patterns[i]) == true) {
+			if (match(src, patterns[i])) {
 				return i;
 			}
 		}
@@ -156,7 +156,7 @@ public class Wildcard {
 	 */
 	public static int matchPathOne(String path, String[] patterns) {
 		for (int i = 0; i < patterns.length; i++) {
-			if (matchPath(path, patterns[i]) == true) {
+			if (matchPath(path, patterns[i])) {
 				return i;
 			}
 		}

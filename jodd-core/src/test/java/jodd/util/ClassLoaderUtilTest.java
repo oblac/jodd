@@ -161,7 +161,7 @@ public class ClassLoaderUtilTest {
 			@Override
 			protected void onEntry(EntryData entryData) throws Exception {
 				if (entryData.getName().endsWith("jquery.js")) {
-					jqueryName.setValue(entryData.getName());
+					jqueryName.set(entryData.getName());
 				}
 			}
 		};
@@ -171,6 +171,6 @@ public class ClassLoaderUtilTest {
 
 		assertNotNull(url);
 
-		assertEquals("/META-INF/resources/webjars/jquery/2.1.1/jquery.js", jqueryName.getValue());
+		assertEquals("/META-INF/resources/webjars/jquery/2.1.1/jquery.js", jqueryName.get());
 	}
 }

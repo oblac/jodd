@@ -145,7 +145,7 @@ public class NodeSelector {
 			int index = 0;
 			for (Node node : selectedNodes) {
 				boolean match = filter(selectedNodes, node, cssSelector, index);
-				if (match == true) {
+				if (match) {
 					resultNodes.add(node);
 				}
 				index++;

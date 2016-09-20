@@ -60,18 +60,22 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	/**
 	 * Returns mutable value.
 	 */
-	public boolean getValue() {
+	public boolean get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(boolean value) {
+	public void set(boolean value) {
 		this.value = value;
 	}
 
-	public void setValue(Boolean value) {
+	/**
+	 * Sets mutable value. Throws exception if boolean value is
+	 * <code>null</code>.
+	 */
+	public void set(Boolean value) {
 		this.value = value.booleanValue();
 	}
 
@@ -104,10 +108,10 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
-			if (obj instanceof Boolean) {
+			if ( ((Boolean)this.value).getClass() == obj.getClass() ) {
 				return value == ((Boolean) obj).booleanValue();
 			}
-			if (obj instanceof MutableBoolean) {
+			if (this.getClass() == obj.getClass()) {
 				return value == ((MutableBoolean) obj).value;
 			}
 		}
@@ -120,7 +124,7 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	 * Compares value of two same instances.
 	 */
 	public int compareTo(MutableBoolean o) {
-		return (value == o.value) ? 0 : (value == false ? -1 : 1);
+		return (value == o.value) ? 0 : (!value ? -1 : 1);
 	}
 
 	// ---------------------------------------------------------------- clone

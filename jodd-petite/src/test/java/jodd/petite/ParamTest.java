@@ -56,6 +56,7 @@ public class ParamTest {
 		pc.defineParameter("name", "${name${num}}");
 		pc.defineParameter("num", "2");
 		pc.defineParameter("name2", "FOONAME");
+		pc.defineParameter("FOONAME", "aaa");
 
 		Foo foo = (Foo) pc.getBean("foo");
 		assertNotNull(foo);

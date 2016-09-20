@@ -23,6 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+plugins {
+	id "com.jfrog.bintray" version "1.6"
+}
+
 description = '''
 
 	Jodd is an open-source Java utility library and set of micro frameworks.
@@ -33,8 +37,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.6.7-SNAPSHOT'
-
+version = '3.8.0-' + date()
+//version = '3.7.1'
 
 // --- properties -------------------------------------------------------------
 
@@ -54,17 +58,25 @@ ext {
 
 		log_slf4j:			'org.slf4j:slf4j-api:1.7.2',
 		log_slf4j_simple:	'org.slf4j:slf4j-simple:1.7.2',
+		log_logback:		[
+								'ch.qos.logback:logback-core:1.1.7',
+								'ch.qos.logback:logback-classic:1.1.7'
+							],
 		log_jcl:        	'commons-logging:commons-logging:1.1.3',
 
 //		asm:			'org.ow2.asm:asm:4.1',
 
 		junit: 			'junit:junit:4.12',
 		hamcrest:       'org.hamcrest:hamcrest-core:1.3',
-		mockito:		'org.mockito:mockito-all:1.9.5',
+		mockito:		'org.mockito:mockito-all:1.10.19',
+		powermock:		[
+							'org.powermock:powermock-module-junit4:1.6.4',
+							'org.powermock:powermock-api-mockito:1.6.4'
+						],
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
-		mysql:			'mysql:mysql-connector-java:5.1.35',
+		mysql:			'mysql:mysql-connector-java:5.1.37',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
 		//el_api:		'javax.el:el-api:2.2',
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
@@ -98,10 +110,11 @@ ext {
 allprojects {
 	version = rootProject.version
 
-	ext.isSnapshot = version.endsWith("-SNAPSHOT")
+	ext.isSnapshot = version.contains("-");
 	ext.isSubproject = project.parent != null
 
 	repositories {
+		jcenter()
 		mavenCentral()
 	}
 }
@@ -109,7 +122,8 @@ allprojects {
 def javaModules() {
 	subprojects.findAll {
 		it.name.contains('jodd-') &&
-		!it.name.equals('jodd-bom')
+		!it.name.equals('jodd-bom') &&
+		!it.name.equals('jodd-all')
 	}
 }
 
@@ -118,7 +132,8 @@ def javaBundleModules() {
 		it.name.contains('jodd-') &&
 		!it.name.equals('jodd-swingspy') &&
 		!it.name.equals('jodd-joy') &&
-		!it.name.equals('jodd-bom')
+		!it.name.equals('jodd-bom') &&
+		!it.name.equals('jodd-all')
 	}
 }
 
@@ -155,16 +170,28 @@ configure(javaModules()) {
 
 	group = 'org.jodd'
 
+	// bintray
+
+	apply plugin: 'com.jfrog.bintray'
+	apply from: "${gradleScriptDir}/bintray.gradle"
+
+	configurations {
+		published
+	}
+
 	// compile
 
-	sourceCompatibility = 1.7
-	targetCompatibility = 1.7
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
 		options.incremental = true
 		//configurations.compile.transitive = false
+	}
+	tasks.withType(Javadoc) {
+		options.addStringOption('Xdoclint:none', '-quiet')
 	}
 	compileJava.options.debug = true
 	compileJava.options.fork = true
@@ -176,6 +203,13 @@ configure(javaModules()) {
 	task javadocJar(type: Jar, dependsOn: javadoc) {
 		classifier = 'javadoc'
 		from javadoc.destinationDir
+	}
+
+	// DONT: use separate output folders for idea, don't mess with gradle
+	idea {
+		module {
+			inheritOutputDirs false
+		}
 	}
 
 	// integration tests
@@ -193,23 +227,20 @@ configure(javaModules()) {
 //		}
 //	}
 
-	// use separate output folders for idea, don't mess with gradle
-	idea {
-		module {
-			inheritOutputDirs true
-		}
-	}
-
 	dependencies {
 		testIntCompile sourceSets.main.output
-		testIntCompile configurations.testCompile
 		testIntCompile sourceSets.test.output
+		testIntCompile configurations.testCompile
 		testIntRuntime configurations.testRuntime
 	}
+
 
 	task testIntegration(type: Test, dependsOn: jar) {
 		group 'verification'
 		description 'Runs the integration tests.'
+		testLogging {
+			showStandardStreams = true
+		}
 
 		testClassesDir = sourceSets.testInt.output.classesDir
 		classpath = sourceSets.testInt.runtimeClasspath
@@ -222,6 +253,10 @@ configure(javaModules()) {
 		archives jar
 		archives sourcesJar
 		archives javadocJar
+
+		published jar
+		published sourcesJar
+		published javadocJar
 	}
 
 	jar {
@@ -277,7 +312,7 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*']
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
@@ -305,6 +340,8 @@ task testAll {
 	group 'Verification'
 	description 'Runs all the tests.'
 
+	//dependsOn javaTestModules().test
+
 	dependsOn javaModules().test
 	dependsOn javaModules().testIntegration
 }
@@ -325,6 +362,7 @@ task javadocAll(type: Javadoc) {
 
 	source javaBundleModulesSources.allJava
 	exclude '**/asm4/**'
+	exclude '**/asm5/**'
 
 	destinationDir = file("$buildDir/reports/javadoc")
 	classpath = files(javaBundleModulesSources.compileClasspath)
@@ -332,13 +370,13 @@ task javadocAll(type: Javadoc) {
 	configure(options) {
 		windowTitle 'Jodd API Documentation'
 		docTitle "Jodd Project $project.version API Documentation"
-		bottom = 'Copyright &#169; 2003-2014 <a href="http://jodd.org">Jodd Team</a>'
+		bottom = 'Copyright &#169; 2003-2016 <a href="http://jodd.org">Jodd Team</a>'
 		breakIterator = true
 		author = false
 		encoding = 'UTF-8'
 		docEncoding = 'UTF-8'
 		stylesheetFile = file('src/main/javadoc/jodd.css')
-		source = '1.7'
+		source = '1.9'
 	}
 
 	inputs.files(javaBundleModulesSources.allSource + javaBundleModulesSources.compileClasspath)
@@ -350,6 +388,9 @@ task testReport(type: TestReport) {
 	description 'Generates tests report.'
 
 	destinationDir = file("$buildDir/reports/tests")
+
+	//reportOn javaTestModules()*.test
+
 	reportOn javaBundleModules()*.test
 	reportOn javaBundleModules()*.testIntegration
 }
@@ -433,6 +474,14 @@ dependencyReport {
 	projects = javaModules()
 }
 
+task bintray {
+	group 'Publishing'
+	description 'Publish all artifcats to bintray'
+
+	dependsOn javaModules().bintrayUpload
+	dependsOn(":jodd-bom:bintrayUpload")
+}
+
 // --- release ----------------------------------------------------------------
 
 task release() {
@@ -487,8 +536,23 @@ gradle.taskGraph.whenReady { taskGraph ->
 	}
 }
 
+task version() {
+	println "-----------------------"
+	println "  Jodd ${version}"
+	if (isSnapshot) println "  [snapshot]"
+	println "-----------------------"
+}
+
+// --- util -------------------------------------------------------------------
+
+def date() {
+	def date = new Date()
+	def formattedDate = date.format('yyyyMMdd')
+	return formattedDate
+}
+
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.4'
+	gradleVersion = '2.14.1'
 }

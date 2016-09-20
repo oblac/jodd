@@ -33,7 +33,8 @@ import jodd.json.TypeJsonSerializer;
  */
 public class ByteArrayJsonSerializer implements TypeJsonSerializer<byte[]> {
 
-	public void serialize(JsonContext jsonContext, byte[] array) {
+	@Override
+	public boolean serialize(JsonContext jsonContext, byte[] array) {
 		jsonContext.writeOpenArray();
 
 		for (int i = 0; i < array.length; i++) {
@@ -44,5 +45,7 @@ public class ByteArrayJsonSerializer implements TypeJsonSerializer<byte[]> {
 		}
 
 		jsonContext.writeCloseArray();
+
+		return true;
 	}
 }

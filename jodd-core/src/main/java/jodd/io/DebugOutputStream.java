@@ -74,7 +74,7 @@ public class DebugOutputStream extends FilterOutputStream {
 
 	@Override
 	public void write(int b) throws IOException {
-		if (passThrough == true) {
+		if (passThrough) {
 			super.write(b);
 		}
 		dumpByte(b);
@@ -82,13 +82,13 @@ public class DebugOutputStream extends FilterOutputStream {
 	}
 
 	@Override
-	public void write(byte b[]) throws IOException {
+	public void write(byte[] b) throws IOException {
 		super.write(b);
 	}
 
 	@Override
-	public void write(byte b[], int off, int len) throws IOException {
-		if (passThrough == true) {
+	public void write(byte[] b, int off, int len) throws IOException {
+		if (passThrough) {
 			super.write(b, off, len);
 		}
 		int i = off;
@@ -104,7 +104,7 @@ public class DebugOutputStream extends FilterOutputStream {
 	 * Dumps single byte to output stream.
 	 */
 	protected void dumpByte(int b) {
-		if (passThrough == true) {
+		if (passThrough) {
 			System.out.print('\t');
 		}
 		if (b < 0) {

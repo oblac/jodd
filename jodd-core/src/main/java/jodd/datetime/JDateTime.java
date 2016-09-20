@@ -367,14 +367,14 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		//return (jd + 1) % 7;		// return 0 (Sunday), 1 (Monday),...
 	}
 
-	private static final int NUM_DAYS[] = {-1, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};		// 1-based
-	private static final int LEAP_NUM_DAYS[] = {-1, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};	// 1-based
+	private static final int[] NUM_DAYS = {-1, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};        // 1-based
+	private static final int[] LEAP_NUM_DAYS = {-1, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};    // 1-based
 
 	/**
 	 * Calculates day of year.
 	 */
 	private int calcDayOfYear() {
-		if (leap == true) {
+		if (leap) {
 			return LEAP_NUM_DAYS[time.month] + time.day;
 		}
 		return NUM_DAYS[time.month] + time.day;
@@ -440,7 +440,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		// set WeekNumber to 1 to 53 if date falls in YearNumber
 		int m = 365;
 		if (YearNumber == time_year) {
-			if (TimeUtil.isLeapYear(time_year) == true) {
+			if (TimeUtil.isLeapYear(time_year)) {
 				m = 366;
 			}
 			if ((m - DayOfYearNumber) < (must - WeekDay)) {
@@ -542,7 +542,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		minute += time.minute;
 		hour += time.hour;
 		day += time.day;
-		if (monthFix == false) {
+		if (!monthFix) {
 			month += time.month;
 			year += time.year;
 			set(year, month, day, hour, minute, second, millisecond);
@@ -1618,7 +1618,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof JDateTime)) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		JDateTime jdt = (JDateTime) obj;

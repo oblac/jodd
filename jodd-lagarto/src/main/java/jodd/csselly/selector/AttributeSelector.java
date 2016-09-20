@@ -127,6 +127,11 @@ public class AttributeSelector extends Selector implements NodeFilter {
 		}
 
 		String nodeValue = node.getAttribute(name);
+
+		if (nodeValue == null) {
+			return false;
+		}
+		
 		return match.compare(nodeValue, value);
 	}
 }

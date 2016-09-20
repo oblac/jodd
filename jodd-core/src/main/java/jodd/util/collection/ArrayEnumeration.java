@@ -34,15 +34,15 @@ import java.util.NoSuchElementException;
  */
 public class ArrayEnumeration<E> implements Enumeration<E>, Serializable {
 
-	private E array[];
+	private E[] array;
 	private int ndx;
 	private int endNdx;
 
-	public ArrayEnumeration(E arr[]) {
+	public ArrayEnumeration(E[] arr) {
 		this(arr, 0, arr.length);
 	}
 
-	public ArrayEnumeration(E arr[], int offset, int length) {
+	public ArrayEnumeration(E[] arr, int offset, int length) {
 		array = arr;
 		ndx = offset;
 		this.endNdx = offset + length;

@@ -25,9 +25,12 @@
 
 package jodd.io;
 
+import jodd.util.SystemUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"SimplifiableJUnitAssertion"})
 public class FileNameUtilTest {
@@ -127,5 +130,25 @@ public class FileNameUtilTest {
 		assertEquals("", FileNameUtil.getPathNoEndSeparator("/hello.world.html"));
 		assertEquals("foo", FileNameUtil.getPathNoEndSeparator("/foo/hello.world.html"));
 		assertEquals("foo/bar", FileNameUtil.getPathNoEndSeparator("/foo/bar/hello.world.html"));
+	}
+
+	@Test
+	public void testExtension() {
+		assertEquals("foo", FileNameUtil.getExtension("/a/b/c.foo"));
+		assertEquals("doo", FileNameUtil.getExtension("/a/b/c.foo.doo"));
+		assertEquals("", FileNameUtil.getExtension("/a/b/c"));
+
+		assertTrue(FileNameUtil.hasExtension("/a/b/c.foo"));
+		assertTrue(FileNameUtil.hasExtension("/a/b/c.foo.doo"));
+		assertFalse(FileNameUtil.hasExtension("/a/b/c"));
+	}
+
+	@Test
+	public void testResolveHome() {
+		assertEquals("qwe", FileNameUtil.resolveHome("qwe"));
+		assertEquals("", FileNameUtil.resolveHome(""));
+		assertEquals(SystemUtil.userHome(), FileNameUtil.resolveHome("~"));
+		assertEquals(SystemUtil.userHome() + "/", FileNameUtil.resolveHome("~/"));
+		assertEquals(SystemUtil.userHome() + "/foo", FileNameUtil.resolveHome("~/foo"));
 	}
 }

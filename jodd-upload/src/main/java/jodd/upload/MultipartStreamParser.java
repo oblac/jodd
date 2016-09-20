@@ -60,7 +60,7 @@ public class MultipartStreamParser {
 	 * Throws an exception if stream already loaded.
 	 */
 	protected void setParsed() throws IOException {
-		if (parsed == true) {
+		if (parsed) {
 			throw new IOException("Multi-part request already parsed");
 		}
 		parsed = true;
@@ -128,7 +128,7 @@ public class MultipartStreamParser {
 				break;
 			}
 
-			if (header.isFile == true) {
+			if (header.isFile) {
 				String fileName = header.fileName;
 				if (fileName.length() > 0) {
 					if (header.contentType.indexOf("application/x-macbinary") > 0) {

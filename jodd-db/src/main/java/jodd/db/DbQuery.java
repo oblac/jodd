@@ -134,7 +134,7 @@ public class DbQuery extends DbQueryBase {
 	 * previous value. However, in some cases it is useful to immediately
 	 * release the resources used by the current parameter values; this can
 	 * be done by calling the method <code>clearParameters</code>.
-s	 */
+	 */
 	public void clearParameters() {
 		init();
 		if (preparedStatement == null) {
@@ -782,10 +782,8 @@ s	 */
 		init();
 		try {
 			preparedStatement.setAsciiStream(index, stream, stream.available());
-		} catch (IOException ioex) {
+		} catch (IOException | SQLException ioex) {
 			throwSetParamError(index, ioex);
-		} catch (SQLException sex) {
-			throwSetParamError(index, sex);
 		}
 	}
 
@@ -796,10 +794,8 @@ s	 */
 			for (int i = 0; i < positions.size(); i++) {
 				preparedStatement.setAsciiStream(positions.get(i), stream, stream.available());
 			}
-		} catch (IOException ioex) {
+		} catch (IOException | SQLException ioex) {
 			throwSetParamError(param, ioex);
-		} catch (SQLException sex) {
-			throwSetParamError(param, sex);
 		}
 	}
 
@@ -862,8 +858,8 @@ s	 */
 			String paramName = (String) it.next();
 			if (paramName.startsWith(beanName) == true) {
 				String propertyName = paramName.substring(beanName.length());
-				if (BeanUtil.hasDeclaredRootProperty(bean, propertyName) == true) {
-					Object value = BeanUtil.getDeclaredProperty(bean, propertyName);
+				if (BeanUtil.declared.hasRootProperty(bean, propertyName) == true) {
+					Object value = BeanUtil.declared.getProperty(bean, propertyName);
 					setObject(paramName, value);
 				}
 			}

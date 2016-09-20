@@ -43,6 +43,8 @@ import static jodd.util.StringPool.RIGHT_SQ_BRACKET;
 /**
  * Visitor for bean properties. It extracts properties names
  * from the source bean and then visits one by one.
+ *
+ * @see BeanVisitorImplBase
  */
 public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 
@@ -154,9 +156,9 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 
 			if (declared) {
-				value = BeanUtil.getDeclaredProperty(source, propertyName);
+				value = BeanUtil.declared.getProperty(source, propertyName);
 			} else {
-				value = BeanUtil.getProperty(source, propertyName);
+				value = BeanUtil.pojo.getProperty(source, propertyName);
 			}
 
 			if (value == null && ignoreNullValues) {

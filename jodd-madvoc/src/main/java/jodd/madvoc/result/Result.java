@@ -43,7 +43,7 @@ public class Result {
 	/**
 	 * Specifies generic result type for rendering.
 	 */
-	public Result use(Class<? extends ActionResult> actionResult) {
+	public Result with(Class<? extends ActionResult> actionResult) {
 		this.actionResult = actionResult;
 		return this;
 	}

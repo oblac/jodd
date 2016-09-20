@@ -53,7 +53,7 @@ public class DefaultAppCoreTest {
 		appCore.startPetite();
 		PetiteContainer pc = appCore.petite;
 
-		AppScanner as = (AppScanner) pc.getBean(AppCore.PETITE_SCAN);
+		AppScanner as = pc.getBean(AppCore.PETITE_SCAN);
 
 		assertSame(appCore.appScanner, as);
 

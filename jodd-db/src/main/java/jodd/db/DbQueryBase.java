@@ -42,7 +42,7 @@ import java.util.HashSet;
 /**
  * Support for {@link DbQuery} holds all configuration, initialization and the execution code.
  */
-abstract class DbQueryBase {
+abstract class DbQueryBase implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
 
@@ -156,7 +156,7 @@ abstract class DbQueryBase {
 	 */
 	protected void saveResultSet(ResultSet rs) {
 		if (resultSets == null) {
-			resultSets = new HashSet<ResultSet>();
+			resultSets = new HashSet<>();
 		}
 		resultSets.add(rs);
 	}
@@ -229,7 +229,7 @@ abstract class DbQueryBase {
 		this.query = new DbQueryParser(sqlString);
 
 		// statement
-		if ((forcePreparedStatement == false) && (query.prepared == false)) {
+		if ((!forcePreparedStatement) && (!query.prepared)) {
 			try {
 				if (holdability != DEFAULT_HOLDABILITY) {
 					statement = connection.createStatement(type, concurrencyType, holdability);
@@ -244,7 +244,7 @@ abstract class DbQueryBase {
 
 		// prepared statement
 		try {
-			if (debug == true) {
+			if (debug) {
 				if (generatedColumns != null) {
 					if (generatedColumns.length == 0) {
 						statement = LoggablePreparedStatementFactory.create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
@@ -390,7 +390,7 @@ abstract class DbQueryBase {
 		if (rs == null) {
 			return;
 		}
-		if (resultSets.remove(rs) == false) {
+		if (!resultSets.remove(rs)) {
 			throw new DbSqlException(this, "ResultSet is not created by this query");
 		}
 		try {
@@ -766,7 +766,7 @@ abstract class DbQueryBase {
 	public <T> List<T> list(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
 
-		List<T> list = new ArrayList<T>();
+		List<T> list = new ArrayList<>();
 
 		try {
 			while (resultSet.next()) {
@@ -810,7 +810,7 @@ abstract class DbQueryBase {
 	public <T> Set<T> listSet(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
 
-		Set<T> set = new HashSet<T>();
+		Set<T> set = new HashSet<>();
 
 		try {
 			while (resultSet.next()) {

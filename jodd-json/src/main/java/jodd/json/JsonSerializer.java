@@ -33,10 +33,19 @@ import jodd.util.buffer.FastCharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
+
 /**
  * JSON serializer.
  */
 public class JsonSerializer {
+
+	/**
+	 * Static ctor.
+	 */
+	public static JsonSerializer create() {
+		return new JsonSerializer();
+	}
 
 	// ---------------------------------------------------------------- config
 
@@ -59,7 +68,7 @@ public class JsonSerializer {
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
 	 */
-	public JsonSerializer use(String pathString, TypeJsonSerializer typeJsonSerializer) {
+	public JsonSerializer withSerializer(String pathString, TypeJsonSerializer typeJsonSerializer) {
 		if (pathSerializersMap == null) {
 			pathSerializersMap = new HashMap<>();
 		}
@@ -72,7 +81,7 @@ public class JsonSerializer {
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given type.
 	 */
-	public JsonSerializer use(Class type, TypeJsonSerializer typeJsonSerializer) {
+	public JsonSerializer withSerializer(Class type, TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
 			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaultSerializers);
 		}
@@ -149,6 +158,19 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer setClassMetadataName(String name) {
 		classMetadataName = name;
+		return this;
+	}
+
+	/**
+	 * Sets local class meta-data name.
+	 */
+	public JsonSerializer withClassMetadata(boolean useMetadata) {
+		if (useMetadata) {
+			classMetadataName = DEFAULT_CLASS_METADATA_NAME;
+		}
+		else {
+			classMetadataName = null;
+		}
 		return this;
 	}
 

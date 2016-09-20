@@ -88,7 +88,7 @@ public class AlphaAction {
 
 	@Action
 	public void red1() {
-		result.use(ServletRedirectResult.class).value("/alpha.html");
+		result.with(ServletRedirectResult.class).value("/alpha.html");
 	}
 
 	@Action

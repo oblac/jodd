@@ -70,7 +70,7 @@ public class EqualToDeclaredFieldConstraint implements ValidationConstraint<Equa
 		}
 		Object valueToCompare;
 		try {
-			valueToCompare = BeanUtil.getDeclaredProperty(target, fieldName);
+			valueToCompare = BeanUtil.declared.getProperty(target, fieldName);
 		} catch (BeanException bex) {
 			throw new VtorException("Invalid value: " + fieldName, bex);
 		}

@@ -277,7 +277,7 @@ public class DirWatcher {
 				}
 				else if (currentTime.longValue() != lastModified) {
 					// modified file
-					currentTime.setValue(lastModified);
+					currentTime.set(lastModified);
 					onChange(file, Event.MODIFIED);
 				}
 			}

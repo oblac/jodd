@@ -7,5 +7,6 @@ dependencies {
 	compile project(':jodd-log')
 
 	testCompile project(':jodd-bean')
+	testCompile project(':jodd-petite')
 	testCompile lib.junit
 }

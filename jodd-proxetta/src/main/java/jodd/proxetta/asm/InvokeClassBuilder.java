@@ -82,7 +82,7 @@ public class InvokeClassBuilder extends ClassAdapter {
 		// check aspects that apply to this method
 		List<InvokeAspect> applicableAspects = new ArrayList<>(aspects.length);
 		for (InvokeAspect aspect : aspects) {
-			if (aspect.apply(msign) == true) {
+			if (aspect.apply(msign)) {
 				applicableAspects.add(aspect);
 			}
 		}

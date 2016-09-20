@@ -53,11 +53,11 @@ final class CSSellyLexer {
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
    * ZZ_LEXSTATE[l+1] is the state in the DFA for the lexical state l
-   *                  at the beginning of a line
+   * at the beginning of a line
    * l is of the form l = 2*k, k a non negative integer
    */
-  private static final int ZZ_LEXSTATE[] = { 
-     0,  0,  1,  1,  2,  2,  3,  3,  4, 4
+  private static final int[] ZZ_LEXSTATE = {
+          0, 0, 1, 1, 2, 2, 3, 3, 4, 4
   };
 
   /** 
@@ -384,10 +384,10 @@ final class CSSellyLexer {
   private static final int ZZ_PUSHBACK_2BIG = 2;
 
   /* error messages for the codes above */
-  private static final String ZZ_ERROR_MSG[] = {
-    "Unkown internal scanner error",
-    "Error: could not match input",
-    "Error: pushback value was too large"
+  private static final String[] ZZ_ERROR_MSG = {
+          "Unkown internal scanner error",
+          "Error: could not match input",
+          "Error: pushback value was too large"
   };
 
   /**
@@ -433,9 +433,11 @@ final class CSSellyLexer {
   /** the current lexical state */
   private int zzLexicalState = YYINITIAL;
 
-  /** this buffer contains the current text to be matched and is
-      the source of the yytext() string */
-  private char zzBuffer[];
+  /**
+   * this buffer contains the current text to be matched and is
+   * the source of the yytext() string
+   */
+  private char[] zzBuffer;
 
   /** the textposition at the last accepting state */
   private int zzMarkedPos;

@@ -27,7 +27,6 @@ package jodd.proxetta.asm;
 
 import jodd.asm5.signature.SignatureVisitor;
 import jodd.asm5.Opcodes;
-import jodd.util.collection.CharArrayList;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
@@ -61,7 +60,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected AnnotationInfo[] annotations;
 
 	protected boolean visitingArgument;
-	protected CharArrayList argumentsOpcodeType;
+	protected StringBuilder argumentsOpcodeType;
 	protected IntArrayList argumentsOffset;
 	protected List<String> argumentsTypeNames;
 	protected AnnotationInfo[][] argumentsAnnotation;
@@ -111,11 +110,11 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		super.visitParameterType();
 		visitingArgument = true;
 		if (argumentsOpcodeType == null) {
-			argumentsOpcodeType = new CharArrayList();
+			argumentsOpcodeType = new StringBuilder();
 			argumentsOffset = new IntArrayList();
 			argumentsTypeNames = new ArrayList<>();
 
-			argumentsOpcodeType.add('L');
+			argumentsOpcodeType.append('L');
 			argumentsOffset.add(0);
 			argumentsTypeNames.add(null);
 		}
@@ -215,7 +214,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 * @param index 1-base index
 	 */
 	public char getArgumentOpcodeType(int index) {
-		return argumentsOpcodeType.get(index);
+		return argumentsOpcodeType.charAt(index);
 	}
 
 	public String getArgumentTypeName(int i) {
@@ -304,8 +303,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 * saves return type. When saving arguments data, stores also current argument offset.
 	 */
 	private void maybeUseType(char type, String typeName) {
-		if (visitingArgument == true) {
-			if (isArray() == true) {
+		if (visitingArgument) {
+			if (isArray()) {
 				type = '[';
 				typeName = getArrayDepthString() + typeName;
 			}
@@ -313,7 +312,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 				throw new ProxettaException("Method argument can't be void");
 			}
 			argumentsCount++;
-			argumentsOpcodeType.add(type);
+			argumentsOpcodeType.append(type);
 			argumentsOffset.add(argumentsWords + 1);
 			argumentsTypeNames.add(typeName);
 			if ((type == 'D') || (type == 'J')) {
@@ -323,7 +322,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			}
 			visitingArgument = false;
 		} else if (returnOpcodeType != null) {
-			if (isArray() == true) {
+			if (isArray()) {
 				type = '[';
 				typeName = getArrayDepthString() + typeName;
 			}

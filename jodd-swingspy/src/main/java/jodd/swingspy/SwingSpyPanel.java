@@ -74,16 +74,16 @@ import java.util.TreeSet;
  */
 public class SwingSpyPanel extends JPanel {
 
-	private JTree componentTree;
-	private JEditorPane componentData;
-	private JEditorPane detailsData;
-	private JScrollPane detailsScrollPane;
-	private DefaultMutableTreeNode root;
+	private final JTree componentTree;
+	private final JEditorPane componentData;
+	private final JEditorPane detailsData;
+	private final JScrollPane detailsScrollPane;
+	private final DefaultMutableTreeNode root;
 
 	private static final int INITIAL_WIDTH = 600;
 	private static final int INITIAL_HEIGHT = 500;
 
-	private Font font = new Font("Arial", Font.PLAIN,  12);
+	private final Font font = new Font("Arial", Font.PLAIN,  12);
 
 	/**
 	 * Initialization.
@@ -178,10 +178,11 @@ public class SwingSpyPanel extends JPanel {
 		}
 
 		public String toHtmlString() {
-			StringBuilder str = new StringBuilder("<html>");
-			str.append("&nbsp;name: ").append("<b>").append(component.getName()).append("</b><br>");
-			str.append("&nbsp;class: ").append("<b>").append(component.getClass().getName()).append("</b><br>");
-			return str.toString();
+			return new StringBuilder("<html>").append("&nbsp;name: ")
+					.append("<b>").append(component.getName())
+					.append("</b><br>").append("&nbsp;class: ").append("<b>")
+					.append(component.getClass().getName()).append("</b><br>")
+					.toString();
 		}
 
 		public String toDetailedString() {
@@ -208,6 +209,7 @@ public class SwingSpyPanel extends JPanel {
 				} else {
 					str.append(' ');
 				}
+				field.setAccessible(true);
 
 				str.append(field.getName()).append(':');
 

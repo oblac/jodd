@@ -138,7 +138,7 @@ public class RandomString {
 		}
 		int i = 0;
 		int len = 0;
-		int lens[] = new int[ranges.length];
+		int[] lens = new int[ranges.length];
 		while (i < ranges.length) {
 			int gap = ranges[i + 1] - ranges[i] + 1;
 			len += gap;

@@ -104,22 +104,15 @@ public class SimpleLogger implements Logger {
 	 * Prints error message.
 	 */
 	protected void print(Level level, String message, Throwable throwable) {
-		if (isEnabled(level) == false) {
+		if (!isEnabled(level)) {
 			return;
 		}
 
-		StringBuilder msg = new StringBuilder();
-		msg.append(slf.getElapsedTime());
-		msg.append(' ');
-		msg.append('[');
-		msg.append(level.toString());
-		msg.append(']');
-		msg.append(' ');
-		msg.append(slf.getCallerClass());
-		msg.append(' ');
-		msg.append('-');
-		msg.append(' ');
-		msg.append(message);
+		StringBuilder msg = new StringBuilder()
+			.append(slf.getElapsedTime()).append(' ').append('[')
+			.append(level).append(']').append(' ')
+			.append(slf.getCallerClass()).append(' ').append('-')
+			.append(' ').append(message);
 
 		System.out.println(msg.toString());
 

@@ -56,6 +56,7 @@ public class ManualTest {
 		assertEquals("string", v.getName());
 		assertEquals("1", v.getInvalidValue());
 		assertEquals("string", v.getCheck().getName());
+		assertNull(v.getCheck().getMessage());
 		assertEquals(MinLengthConstraint.class, v.getConstraint().getClass());
 
 		// new context that contains previous

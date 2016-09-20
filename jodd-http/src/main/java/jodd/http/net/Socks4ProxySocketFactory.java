@@ -29,6 +29,7 @@ import jodd.http.HttpException;
 import jodd.http.ProxyInfo;
 
 import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,10 +44,16 @@ import java.net.Socket;
 public class Socks4ProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
+    private final boolean secure;
 
-	public Socks4ProxySocketFactory(ProxyInfo proxy) {
+	public Socks4ProxySocketFactory(ProxyInfo proxy, boolean secure) {
 		this.proxy = proxy;
+        this.secure = secure;
 	}
+
+    public Socks4ProxySocketFactory(ProxyInfo proxy) {
+        this(proxy, false);
+    }
 
 	public Socket createSocket(String host, int port) throws IOException {
 		return createSocks4ProxySocket(host, port);
@@ -92,8 +99,8 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 
 			InetAddress addr = InetAddress.getByName(host);
 			byte[] byteAddress = addr.getAddress();
-			for (int i = 0; i < byteAddress.length; i++) {
-				buf[index++] = byteAddress[i];
+			for (byte byteAddres : byteAddress) {
+				buf[index++] = byteAddres;
 			}
 
 			if (user != null) {
@@ -127,7 +134,12 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 
 			byte[] temp = new byte[2];
 			in.read(temp, 0, 2);
-			return socket;
+
+            if (secure) {
+                return ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket(socket, host, port, true);
+            } else {
+                return socket;
+            }
 		} catch (RuntimeException rtex) {
 			closeSocket(socket);
 			throw rtex;

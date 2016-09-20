@@ -39,6 +39,7 @@ import java.util.Enumeration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -118,47 +119,71 @@ public class ExtendedURLClassLoaderTest {
 
 	@Test
 	public void testGetResource() throws IOException {
-		File temp = FileUtil.createTempDirectory("jodd", "tmp");
+		File tempRoot = FileUtil.createTempDirectory("jodd", "tmp");
+		File temp = new File(tempRoot, "pckg");
+		FileUtil.mkdir(temp);
+
 		File resourceFile = new File(temp, "data");
 		FileUtil.writeString(resourceFile, "RESOURCE CONTENT");
 		resourceFile.deleteOnExit();
-		URL[] urls = new URL[] {FileUtil.toURL(temp)};
+		URL[] urls = new URL[] {FileUtil.toURL(tempRoot)};
 
 		// parent-first
 
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, cl, true);
-		URL res = ecl.getResource("data");
+		URL res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
 
-		Enumeration<URL> enums = ecl.getResources("data");
+		Enumeration<URL> enums = ecl.getResources("pckg/data");
 		assertTrue(enums.hasMoreElements());
 		assertEquals(res, enums.nextElement());
 
 		// parent-first, parent-only
 		ecl = new ExtendedURLClassLoader(urls, cl, true);
-		ecl.addParentOnlyRules("data");
-		res = ecl.getResource("data");
+		ecl.addParentOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
 		assertNull(res);
+
+		//// dot variant
+		ecl = new ExtendedURLClassLoader(urls, cl, true);
+		ecl.setMatchResourcesAsPackages(false);
+		ecl.addParentOnlyRules("pckg/data");
+		res = ecl.getResource("pckg/data");
+		assertNull(res);
+
 
 		// parent-last
 
 		ecl = new ExtendedURLClassLoader(urls, cl, false);
-		res = ecl.getResource("data");
+		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
 
-		enums = ecl.getResources("data");
+		enums = ecl.getResources("pckg/data");
 		assertTrue(enums.hasMoreElements());
 		assertEquals(res, enums.nextElement());
 
 		// parent-last, parent-only
 		ecl = new ExtendedURLClassLoader(urls, cl, false);
-		ecl.addLoaderOnlyRules("data");
-		res = ecl.getResource("data");
+		ecl.addLoaderOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
-		ecl.addParentOnlyRules("data");
-		res = ecl.getResource("data");
+		ecl.addParentOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
 		assertNull(res);
 
-		FileUtil.deleteDir(temp);
+		//// dot variant
+		ecl = new ExtendedURLClassLoader(urls, cl, false);
+		ecl.setMatchResourcesAsPackages(false);
+		ecl.addLoaderOnlyRules("pckg/data");
+		res = ecl.getResource("pckg/data");
+		assertEquals(res, FileUtil.toURL(resourceFile));
+		ecl.addParentOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
+		assertNotNull(res);
+		ecl.addParentOnlyRules("pckg/data");
+		res = ecl.getResource("pckg/data");
+		assertNull(res);
+
+		FileUtil.deleteDir(tempRoot);
 	}
 }

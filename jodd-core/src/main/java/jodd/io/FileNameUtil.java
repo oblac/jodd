@@ -26,6 +26,7 @@
 package jodd.io;
 
 import jodd.util.StringPool;
+import jodd.util.SystemUtil;
 
 import java.io.File;
 
@@ -505,7 +506,7 @@ public class FileNameUtil {
 			if (ch1 == ':') {
 				ch0 = Character.toUpperCase(ch0);
 				if (ch0 >= 'A' && ch0 <= 'Z') {
-					if (len == 2 || isSeparator(filename.charAt(2)) == false) {
+					if (len == 2 || !isSeparator(filename.charAt(2))) {
 						return 2;
 					}
 					return 3;
@@ -567,6 +568,13 @@ public class FileNameUtil {
 		int extensionPos = filename.lastIndexOf(EXTENSION_SEPARATOR);
 		int lastSeparator = indexOfLastSeparator(filename);
 		return (lastSeparator > extensionPos ? -1 : extensionPos);
+	}
+
+	/**
+	 * Returns <code>true</code> if file has extension.
+	 */
+	public static boolean hasExtension(String filename) {
+		return indexOfExtension(filename) != -1;
 	}
 
 	// ---------------------------------------------------------------- get
@@ -966,6 +974,26 @@ public class FileNameUtil {
 			}
 		}
 		return new String[] {prefix, path, baseName, extension};
+	}
+
+	// ---------------------------------------------------------------- home
+
+	/**
+	 * Resolve <code>~</code> in the path.
+	 */
+	public static String resolveHome(String path) {
+		if (path.length() == 1) {
+			if (path.charAt(0) == '~') {
+				return SystemUtil.userHome();
+			}
+			return path;
+		}
+		if (path.length() >= 2) {
+			if ((path.charAt(0) == '~') && (path.charAt(1) == File.separatorChar)) {
+				return SystemUtil.userHome() + path.substring(1);
+			}
+		}
+		return path;
 	}
 
 }

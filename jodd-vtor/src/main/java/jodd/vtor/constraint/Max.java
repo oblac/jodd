@@ -53,4 +53,9 @@ public @interface Max {
 	 * Severity.
 	 */
 	int severity() default 0;
+
+	/**
+	 * Message.
+	 */
+	String message() default "jodd.vtor.constraint.Max";
 }

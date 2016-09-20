@@ -31,6 +31,7 @@ import jodd.asm5.AnnotationVisitor;
 
 import static jodd.asm5.Opcodes.ACC_ABSTRACT;
 import static jodd.asm5.Opcodes.ACC_NATIVE;
+import static jodd.asm5.Opcodes.ASTORE;
 import static jodd.asm5.Opcodes.GETFIELD;
 import static jodd.asm5.Opcodes.INVOKESPECIAL;
 import static jodd.asm5.Opcodes.ARETURN;
@@ -160,7 +161,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		methodVisitor.visitEnd();
 	}
 
-
+	protected boolean proxyInfoRequested;
 
 	/**
 	 * Creates proxy methods over target method, For each matched proxy, new proxy method is created
@@ -186,7 +187,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-				if (name.equals(executeMethodName) == false) {
+				if (!name.equals(executeMethodName)) {
 					return null;
 				}
 
@@ -205,6 +206,14 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					@Override
 					public void visitVarInsn(int opcode, int var) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
+
+						if (proxyInfoRequested) {
+							proxyInfoRequested = false;
+							if (opcode == ASTORE) {
+								ProxyTargetReplacement.info(mv, td.msign, var);
+							}
+						}
+
 						super.visitVarInsn(opcode, var);   // [F1]
 					}
 
@@ -220,7 +229,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 							visitReturn(mv, td.msign, true);
 							return;
 						}
-						if (traceNext == true) {
+						if (traceNext) {
 							if ((opcode == POP) || (opcode == POP2)) {      // [F3] - invoke invoked without assignment
 								return;
 							}
@@ -244,12 +253,12 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								mname = adviceMethodName(mname, aspectData.aspectIndex);
 							} else
 
-							if (string.endsWith('/' + TARGET_CLASS_NAME) == true) {
+							if (string.endsWith('/' + TARGET_CLASS_NAME)) {
 
 								if (isInvokeMethod(mname, mdesc)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 
-										if (wd.isWrapper() == false) {
+										if (!wd.isWrapper()) {
 											// PROXY
 											loadSpecialMethodArguments(mv, td.msign);
 											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription(), isInterface);
@@ -347,7 +356,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								}
 
 								if (isInfoMethod(mname, mdesc)) {
-									ProxyTargetReplacement.info(mv, td.msign);
+									// we are NOT replacing info() here! First, we need to figure out
+									// what is the operand for the very next ASTORE instructions
+									// since we need to create an object and store it in this
+									// register - and reuse it, in replacement code.
+
+									//ProxyTargetReplacement.info(mv, td.msign);
+									proxyInfoRequested = true;
 									return;
 								}
 

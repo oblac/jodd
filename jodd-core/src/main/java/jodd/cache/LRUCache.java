@@ -85,14 +85,14 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 	 */
 	@Override
 	protected int pruneCache() {
-		if (isPruneExpiredActive() == false) {
+		if (!isPruneExpiredActive()) {
 			return 0;
 		}
         int count = 0;
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
 			CacheObject<K,V> co = values.next();
-			if (co.isExpired() == true) {
+			if (co.isExpired()) {
 				values.remove();
 				count++;
 			}

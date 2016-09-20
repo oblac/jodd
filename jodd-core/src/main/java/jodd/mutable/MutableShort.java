@@ -55,21 +55,21 @@ public final class MutableShort extends Number implements Comparable<MutableShor
 	/**
 	 * Returns mutable value.
 	 */
-	public short getValue() {
+	public short get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(short value) {
+	public void set(short value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(Number value) {
 		this.value = value.shortValue();
 	}
 
@@ -101,10 +101,10 @@ public final class MutableShort extends Number implements Comparable<MutableShor
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
-			if (obj instanceof Short) {
+			if ( ((Short)this.value).getClass() == obj.getClass() ) {
 				return value == ((Short) obj).shortValue();
 			}
-			if (obj instanceof MutableShort) {
+			if (this.getClass() == obj.getClass()) {
 				return value == ((MutableShort) obj).value;
 			}
 		}

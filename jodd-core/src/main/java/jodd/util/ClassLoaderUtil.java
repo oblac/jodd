@@ -29,15 +29,17 @@ import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
@@ -50,6 +52,24 @@ import java.util.jar.Manifest;
 public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- default class loader
+
+	/**
+	 * Returns class loader of a class, considering the security manager.
+	 */
+	public static ClassLoader getClassLoader(final Class<?> clazz) {
+		if (System.getSecurityManager() == null) {
+			return clazz.getClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return clazz.getClassLoader();
+				}
+			});
+		}
+	}
+
 
 	/**
 	 * Returns default class loader. By default, it is {@link #getContextClassLoader() threads context class loader}.
@@ -68,21 +88,34 @@ public class ClassLoaderUtil {
 	 * Returns thread context class loader.
 	 */
 	public static ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
-
-	/**
-	 * Sets the thread context class loader.
-	 */
-	public static void setContextClassLoader(ClassLoader classLoader) {
-		Thread.currentThread().setContextClassLoader(classLoader);
+		if (System.getSecurityManager() == null) {
+			return Thread.currentThread().getContextClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return Thread.currentThread().getContextClassLoader();
+				}
+			});
+		}
 	}
 
 	/**
 	 * Returns system class loader.
 	 */
 	public static ClassLoader getSystemClassLoader() {
-		return ClassLoader.getSystemClassLoader();
+		if (System.getSecurityManager() == null) {
+			return ClassLoader.getSystemClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return ClassLoader.getSystemClassLoader();
+				}
+			});
+		}
 	}
 
 	// ---------------------------------------------------------------- add class path
@@ -155,7 +188,7 @@ public class ClassLoaderUtil {
 			} catch (MalformedURLException ignore) {
 			}
 		}
-		return findClass(className, urls, null);
+		return findClass(className, urls, parent);
 	}
 
 	/**
@@ -184,7 +217,11 @@ public class ClassLoaderUtil {
 	 * Finds <b>tools.jar</b>. Returns <code>null</code> if does not exist.
 	 */
 	public static File findToolsJar() {
-		String tools = new File(SystemUtil.getJavaHome()).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
+		String javaHome = SystemUtil.javaHome();
+		if (javaHome == null) {
+			return null;
+		}
+		String tools = new File(javaHome).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
 		File toolsFile = new File(tools);
 		if (toolsFile.exists()) {
 			return toolsFile;
@@ -215,7 +252,7 @@ public class ClassLoaderUtil {
 			if (metaDir.isDirectory()) {
 				for (String m : MANIFESTS) {
 					File mFile = new File(metaDir, m);
-					if (mFile.isFile() == true) {
+					if (mFile.isFile()) {
 						manifestFile = mFile;
 						break;
 					}
@@ -292,7 +329,7 @@ public class ClassLoaderUtil {
 			classLoader = classLoader.getParent();
 		}
 
-		String bootstrap = SystemUtil.getSunBoothClassPath();
+		String bootstrap = SystemUtil.getSunBootClassPath();
 		if (bootstrap != null) {
 			String[] bootstrapFiles = StringUtil.splitc(bootstrap, File.pathSeparatorChar);
 			for (String bootstrapFile: bootstrapFiles) {
@@ -342,7 +379,7 @@ public class ClassLoaderUtil {
 			try {
 				file = new File(base, t);
 				file = file.getCanonicalFile();
-				if (file.exists() == false) {
+				if (!file.exists()) {
 					file = null;
 				}
 			} catch (Exception ignore) {
@@ -354,7 +391,7 @@ public class ClassLoaderUtil {
 				try {
 					file = new File(t);
 					file = file.getCanonicalFile();
-					if (file.exists() == false) {
+					if (!file.exists()) {
 						file = null;
 					}
 				} catch (Exception ignore) {
@@ -369,7 +406,7 @@ public class ClassLoaderUtil {
 
 					file = new File(url.getFile());
 					file = file.getCanonicalFile();
-					if (file.exists() == false) {
+					if (!file.exists()) {
 						file = null;
 					}
 				} catch (Exception ignore) {
@@ -377,7 +414,7 @@ public class ClassLoaderUtil {
 				}
 			}
 
-			if (file != null && file.exists() == true) {
+			if (file != null && file.exists()) {
 				classpaths.add(file);
 			}
 		}
@@ -460,7 +497,11 @@ public class ClassLoaderUtil {
 	 */
 	public static File getResourceFile(String resourceName, ClassLoader classLoader) {
 		try {
-			return new File(getResourceUrl(resourceName, classLoader).toURI());
+			URL resourceUrl = getResourceUrl(resourceName, classLoader);
+			if (resourceUrl == null) {
+				return null;
+			}
+			return new File(resourceUrl.toURI());
 		} catch (URISyntaxException ignore) {
 			return null;
 		}

@@ -117,7 +117,7 @@ public class LoggableAdvice implements ProxyAdvice {
 
 		// if we are setting a position larger than current size of parameterValues, first make it larger
 		if (parameterValues == null) {
-			parameterValues = new ArrayList<String>();
+			parameterValues = new ArrayList<>();
 		}
 		while (position >= parameterValues.size()) {
 			parameterValues.add(null);

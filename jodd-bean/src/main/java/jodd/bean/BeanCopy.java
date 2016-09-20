@@ -36,7 +36,7 @@ import static jodd.util.StringPool.RIGHT_SQ_BRACKET;
  *
  * @see BeanVisitor
  */
-public class BeanCopy extends BeanVisitor {
+public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 
 	protected Object destination;
 	protected boolean forced;
@@ -84,6 +84,17 @@ public class BeanCopy extends BeanVisitor {
 		return beanCopy;
 	}
 
+	/**
+	 * Defines source, detects a map.
+	 */
+	public static BeanCopy from(Object source) {
+		BeanCopy beanCopy = new BeanCopy(source);
+
+		beanCopy.isSourceMap = source instanceof Map;
+
+		return beanCopy;
+	}
+
 	// ---------------------------------------------------------------- destination
 
 	/**
@@ -105,75 +116,18 @@ public class BeanCopy extends BeanVisitor {
 		return this;
 	}
 
+	/**
+	 * Defines destination, detects a map.
+	 */
+	public BeanCopy to(Object destination) {
+		this.destination = destination;
+
+		this.isTargetMap = destination instanceof Map;
+
+		return this;
+	}
 
 	// ---------------------------------------------------------------- properties
-
-	/**
-	 * Excludes all properties, i.e. enables blacklist mode.
-	 */
-	public BeanCopy excludeAll() {
-		blacklist = false;
-		return this;
-	}
-
-	/**
-	 * Defines excluded property names.
-	 */
-	public BeanCopy exclude(String... excludes) {
-		for (String ex : excludes) {
-			rules.exclude(ex);
-		}
-		return this;
-	}
-
-	/**
-	 * Exclude a property.
-	 */
-	public BeanCopy exclude(String exclude) {
-		rules.exclude(exclude);
-		return this;
-	}
-
-	/**
-	 * Defines included property names.
-	 */
-	public BeanCopy include(String... includes) {
-		for (String in : includes) {
-			rules.include(in);
-		}
-		return this;
-	}
-
-	/**
-	 * Include a property.
-	 */
-	public BeanCopy include(String include) {
-		rules.include(include);
-		return this;
-	}
-
-	/**
-	 * Defines included property names as public properties
-	 * of given template class. Sets to black list mode.
-	 */
-	public BeanCopy includeAs(Class template) {
-		blacklist = false;
-
-		String[] properties = getAllBeanPropertyNames(template, false);
-
-		include(properties);
-
-		return this;
-	}
-
-	/**
-	 * Defines if <code>null</code> values should be ignored.
-	 */
-	public BeanCopy ignoreNulls(boolean ignoreNulls) {
-		this.ignoreNullValues = ignoreNulls;
-
-		return this;
-	}
 
 	/**
 	 * Defines if all properties should be copied (when set to <code>true</code>)
@@ -194,14 +148,6 @@ public class BeanCopy extends BeanVisitor {
 		return this;
 	}
 
-	/**
-	 * Defines if fields without getters should be copied too.
-	 */
-	public BeanCopy includeFields(boolean includeFields) {
-		this.includeFields = includeFields;
-		return this;
-	}
-
 	public BeanCopy forced(boolean forced) {
 		this.forced = forced;
 		return this;
@@ -209,10 +155,16 @@ public class BeanCopy extends BeanVisitor {
 
 	// ---------------------------------------------------------------- visitor
 
+	protected BeanUtil beanUtil;
+
 	/**
 	 * Performs the copying.
 	 */
 	public void copy() {
+		beanUtil = new BeanUtilBean()
+						.declared(declared)
+						.forced(forced)
+						.silent(true);
 		visit();
 	}
 
@@ -227,7 +179,7 @@ public class BeanCopy extends BeanVisitor {
 			name = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
 		}
 
-		BeanUtil.setProperty(destination, name, value, declared, forced, true);
+		beanUtil.setProperty(destination, name, value);
 
 		return true;
 	}

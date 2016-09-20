@@ -25,8 +25,10 @@
 
 package jodd.http;
 
+import jodd.exception.ExceptionUtil;
 import jodd.util.StringPool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,10 +40,11 @@ public class HttpBrowser {
 	protected HttpConnectionProvider httpConnectionProvider;
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
-	protected HttpMultiMap<Cookie> cookies = new HttpMultiMap<>();
-	protected HttpMultiMap<String> defaultHeaders = new HttpMultiMap<>();
+	protected HttpMultiMap<Cookie> cookies = HttpMultiMap.newCaseInsensitveMap();
+	protected HttpMultiMap<String> defaultHeaders = HttpMultiMap.newCaseInsensitveMap();
 	protected boolean keepAlive;
 	protected long elapsedTime;
+	protected boolean catchTransportExceptions = true;
 
 	public HttpBrowser() {
 		httpConnectionProvider = JoddHttp.httpConnectionProvider;
@@ -59,6 +62,14 @@ public class HttpBrowser {
 	 */
 	public HttpBrowser setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
+		return this;
+	}
+
+	/**
+	 * Defines if transport exceptions should be thrown.
+	 */
+	public HttpBrowser setCatchTransportExceptions(boolean catchTransportExceptions) {
+		this.catchTransportExceptions = catchTransportExceptions;
 		return this;
 	}
 
@@ -133,18 +144,20 @@ public class HttpBrowser {
 			addCookies(httpRequest);
 
 			// send request
-			if (keepAlive == false) {
-				httpRequest.open(httpConnectionProvider);
-			} else {
-				// keeping alive
-				if (previouseResponse == null) {
-					httpRequest.open(httpConnectionProvider).connectionKeepAlive(true);
-				} else {
-					httpRequest.keepAlive(previouseResponse, true);
+			if (catchTransportExceptions) {
+				try {
+					this.httpResponse = _sendRequest(httpRequest, previouseResponse);
+				}
+				catch (HttpException httpException) {
+					httpResponse = new HttpResponse();
+					httpResponse.assignHttpRequest(httpRequest);
+					httpResponse.statusCode(503);
+					httpResponse.statusPhrase("Service unavailable. " + ExceptionUtil.message(httpException));
 				}
 			}
-
-			this.httpResponse = httpRequest.send();
+			else {
+				this.httpResponse =_sendRequest(httpRequest, previouseResponse);
+			}
 
 			readCookies(httpResponse);
 
@@ -183,6 +196,24 @@ public class HttpBrowser {
 		elapsedTime = System.currentTimeMillis() - elapsedTime;
 
 		return this.httpResponse;
+	}
+
+	/**
+	 * Opens connection and sends a response.
+	 */
+	protected HttpResponse _sendRequest(HttpRequest httpRequest, HttpResponse previouseResponse) {
+		if (!keepAlive) {
+			httpRequest.open(httpConnectionProvider);
+		} else {
+			// keeping alive
+			if (previouseResponse == null) {
+				httpRequest.open(httpConnectionProvider).connectionKeepAlive(true);
+			} else {
+				httpRequest.keepAlive(previouseResponse, true);
+			}
+		}
+
+		return httpRequest.send();
 	}
 
 	/**
@@ -239,16 +270,20 @@ public class HttpBrowser {
 	// ---------------------------------------------------------------- cookies
 
 	/**
-	 * Reads cookies from response.
+	 * Deletes all cookies.
+	 */
+	public void clearCookies() {
+		cookies.clear();
+	}
+
+	/**
+	 * Reads cookies from response and adds to cookies list.
 	 */
 	protected void readCookies(HttpResponse httpResponse) {
-		List<String> newCookies = httpResponse.headers("set-cookie");
+		Cookie[] newCookies = httpResponse.cookies();
 
-		if (newCookies != null) {
-			for (String cookieValue : newCookies) {
-				Cookie cookie = new Cookie(cookieValue);
-				cookies.add(cookie.getName(), cookie);
-			}
+		for (Cookie cookie : newCookies) {
+			cookies.add(cookie.getName(), cookie);
 		}
 	}
 
@@ -257,30 +292,14 @@ public class HttpBrowser {
 	 */
 	protected void addCookies(HttpRequest httpRequest) {
 		// prepare all cookies
-
-		StringBuilder cookieString = new StringBuilder();
-		boolean first = true;
+		List<Cookie> cookiesList = new ArrayList<>();
 
 		if (!cookies.isEmpty()) {
 			for (Map.Entry<String, Cookie> cookieEntry : cookies) {
-
-				Cookie cookie = cookieEntry.getValue();
-
-			    Integer maxAge = cookie.getMaxAge();
-				if (maxAge != null && maxAge.intValue() == 0) {
-				    continue;
-				}
-
-				if (!first) {
-					cookieString.append("; ");
-				}
-				first = false;
-				cookieString.append(cookie.getName());
-				cookieString.append('=');
-				cookieString.append(cookie.getValue());
+				cookiesList.add(cookieEntry.getValue());
 			}
 
-			httpRequest.header("cookie", cookieString.toString(), true);
+			httpRequest.cookies(cookiesList.toArray(new Cookie[cookiesList.size()]));
 		}
 	}
 }

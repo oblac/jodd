@@ -113,7 +113,7 @@ public class Target {
 			propertyName = propertyName.substring(dotNdx + 1);
 		}
 
-		return BeanUtil.getDeclaredProperty(value, propertyName);
+		return BeanUtil.declared.getProperty(value, propertyName);
 	}
 
 	// ---------------------------------------------------------------- write
@@ -144,11 +144,11 @@ public class Target {
 		// inject into target value
 
 		if (silent) {
-			BeanUtil.setDeclaredPropertyForcedSilent(value, propertyName, propertyValue);
+			BeanUtil.declaredForcedSilent.setProperty(value, propertyName, propertyValue);
 			return;
 		}
 
-		BeanUtil.setDeclaredPropertyForced(value, propertyName, propertyValue);
+		BeanUtil.declaredForced.setProperty(value, propertyName, propertyValue);
 	}
 
 	/**

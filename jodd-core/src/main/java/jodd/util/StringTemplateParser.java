@@ -35,6 +35,14 @@ import java.util.Map;
  */
 public class StringTemplateParser {
 
+	/**
+	 * Static ctor.
+	 */
+	public static StringTemplateParser create() {
+		return new StringTemplateParser();
+	}
+
+	public static final String DEFAULT_MACRO_PREFIX = "$";
 	public static final String DEFAULT_MACRO_START = "${";
 	public static final String DEFAULT_MACRO_END = "}";
 
@@ -43,6 +51,7 @@ public class StringTemplateParser {
 	protected boolean replaceMissingKey = true;
 	protected String missingKeyReplacement;
 	protected boolean resolveEscapes = true;
+	protected String macroPrefix = DEFAULT_MACRO_PREFIX;
 	protected String macroStart = DEFAULT_MACRO_START;
 	protected String macroEnd = DEFAULT_MACRO_END;
 	protected char escapeChar = '\\';
@@ -70,8 +79,9 @@ public class StringTemplateParser {
 	 * Specifies replacement for missing keys. If <code>null</code>
 	 * exception will be thrown.
 	 */
-	public void setMissingKeyReplacement(String missingKeyReplacement) {
+	public StringTemplateParser setMissingKeyReplacement(String missingKeyReplacement) {
 		this.missingKeyReplacement = missingKeyReplacement;
+		return this;
 	}
 
 	public boolean isResolveEscapes() {
@@ -84,8 +94,9 @@ public class StringTemplateParser {
 	 * this may be set to <code>false</code> so escaped values
 	 * remains.
 	 */
-	public void setResolveEscapes(boolean resolveEscapes) {
+	public StringTemplateParser setResolveEscapes(boolean resolveEscapes) {
 		this.resolveEscapes = resolveEscapes;
+		return this;
 	}
 
 	public String getMacroStart() {
@@ -95,8 +106,18 @@ public class StringTemplateParser {
 	/**
 	 * Defines macro start string.
 	 */
-	public void setMacroStart(String macroStart) {
+	public StringTemplateParser setMacroStart(String macroStart) {
 		this.macroStart = macroStart;
+		return this;
+	}
+
+	public String getMacroPrefix() {
+		return macroPrefix;
+	}
+
+	public StringTemplateParser setMacroPrefix(String macroPrefix) {
+		this.macroPrefix = macroPrefix;
+		return this;
 	}
 
 	public String getMacroEnd() {
@@ -106,8 +127,17 @@ public class StringTemplateParser {
 	/**
 	 * Defines macro end string.
 	 */
-	public void setMacroEnd(String macroEnd) {
+	public StringTemplateParser setMacroEnd(String macroEnd) {
 		this.macroEnd = macroEnd;
+		return this;
+	}
+
+	/**
+	 * Sets the strict format by setting the macro prefix to <code>null</code>.
+	 */
+	public StringTemplateParser setStrictFormat() {
+		macroPrefix = null;
+		return this;
 	}
 
 	public char getEscapeChar() {
@@ -117,8 +147,9 @@ public class StringTemplateParser {
 	/**
 	 * Defines escape character.
 	 */
-	public void setEscapeChar(char escapeChar) {
+	public StringTemplateParser setEscapeChar(char escapeChar) {
 		this.escapeChar = escapeChar;
+		return this;
 	}
 
 	public boolean isParseValues() {
@@ -129,8 +160,9 @@ public class StringTemplateParser {
 	 * Defines if macro values has to be parsed, too.
 	 * By default, macro values are returned as they are.
 	 */
-	public void setParseValues(boolean parseValues) {
+	public StringTemplateParser setParseValues(boolean parseValues) {
 		this.parseValues = parseValues;
+		return this;
 	}
 
 
@@ -145,11 +177,26 @@ public class StringTemplateParser {
 		int i = 0;
 		int len = template.length();
 
+		// strict flag means that start and end tag are not necessary
+		boolean strict;
+
+		if (macroPrefix == null) {
+			// when prefix is not specified, make it equals to macro start
+			// so we can use the same code
+			macroPrefix = macroStart;
+
+			strict = true;
+		}
+		else {
+			strict = false;
+		}
+
+		int prefixLen = macroPrefix.length();
 		int startLen = macroStart.length();
 		int endLen = macroEnd.length();
 
 		while (i < len) {
-			int ndx = template.indexOf(macroStart, i);
+			int ndx = template.indexOf(macroPrefix, i);
 			if (ndx == -1) {
 				result.append(i == 0 ? template : template.substring(i));
 				break;
@@ -172,34 +219,83 @@ public class StringTemplateParser {
 			} else {
 				result.append(template.substring(i, ndx));
 			}
-			if (escape == true) {
-				result.append(macroStart);
-				i = ndx + startLen;
+			if (escape) {
+				result.append(macroPrefix);
+
+				i = ndx + prefixLen;
+
 				continue;
 			}
 
-			// find macros end
-			ndx += startLen;
-			int ndx2 = template.indexOf(macroEnd, ndx);
-			if (ndx2 == -1) {
-				throw new IllegalArgumentException("Invalid template, unclosed macro at: " + (ndx - startLen));
-			}
+			// macro started, detect strict format
 
-			// detect inner macros, there is no escaping
-			int ndx1 = ndx;
-			while (ndx1 < ndx2) {
-				int n = StringUtil.indexOf(template, macroStart, ndx1, ndx2);
-				if (n == -1) {
-					break;
+			boolean strictFormat = strict;
+
+			if (!strictFormat) {
+				if (StringUtil.isSubstringAt(template, macroStart, ndx)) {
+					strictFormat = true;
 				}
-				ndx1 = n + startLen;
 			}
 
-			String name = template.substring(ndx1, ndx2);
+			int ndx1;
+			int ndx2;
+
+			if (!strictFormat) {
+				// not strict format: $foo
+
+				ndx += prefixLen;
+				ndx1 = ndx;
+				ndx2 = ndx;
+
+				while ((ndx2 < len) && CharUtil.isPropertyNameChar(template.charAt(ndx2))) {
+					ndx2++;
+				}
+
+				if (ndx2 == len) {
+					ndx2--;
+				}
+
+				while ((ndx2 > ndx) && !CharUtil.isAlphaOrDigit(template.charAt(ndx2))) {
+					ndx2--;
+				}
+
+				ndx2++;
+
+				if (ndx2 == ndx1 + 1) {
+					// no value, hence no macro
+					result.append(macroPrefix);
+
+					i = ndx1;
+					continue;
+				}
+			}
+			else {
+				// strict format: ${foo}
+
+				// find macros end
+				ndx += startLen;
+				ndx2 = template.indexOf(macroEnd, ndx);
+				if (ndx2 == -1) {
+					throw new IllegalArgumentException("Invalid template, unclosed macro at: " + (ndx - startLen));
+				}
+
+				// detect inner macros, there is no escaping
+				ndx1 = ndx;
+				while (ndx1 < ndx2) {
+					int n = StringUtil.indexOf(template, macroStart, ndx1, ndx2);
+					if (n == -1) {
+						break;
+					}
+					ndx1 = n + startLen;
+				}
+			}
+
+			final String name = template.substring(ndx1, ndx2);
 
 			// find value and append
+
 			Object value;
-			if (missingKeyReplacement != null || replaceMissingKey == false) {
+			if (missingKeyReplacement != null || !replaceMissingKey) {
 				try {
 					value = macroResolver.resolve(name);
 				} catch (Exception ignore) {
@@ -207,7 +303,7 @@ public class StringTemplateParser {
 				}
 
 				if (value == null) {
-					if (replaceMissingKey == true) {
+					if (replaceMissingKey) {
 						value = missingKeyReplacement;
 					} else {
 						value = template.substring(ndx1 - startLen, ndx2 + 1);
@@ -222,13 +318,17 @@ public class StringTemplateParser {
 
 			if (ndx == ndx1) {
 				String stringValue = value.toString();
-				if (parseValues == true) {
+				if (parseValues) {
 					if (stringValue.contains(macroStart)) {
 						stringValue = parse(stringValue, macroResolver);
 					}
 				}
 				result.append(stringValue);
-				i = ndx2 + endLen;
+
+				i = ndx2;
+				if (strictFormat) {
+					i += endLen;
+				}
 			} else {
 				// inner macro
 				template = template.substring(0, ndx1 - startLen) + value.toString() + template.substring(ndx2 + endLen);
@@ -259,16 +359,14 @@ public class StringTemplateParser {
 	 * macros in the provided map.
 	 */
 	public static MacroResolver createMapMacroResolver(final Map map) {
-		return new MacroResolver() {
-			public String resolve(String macroName) {
-				Object value = map.get(macroName);
+		return macroName -> {
+			Object value = map.get(macroName);
 
-				if (value == null) {
-					return null;
-				}
-
-				return value.toString();
+			if (value == null) {
+				return null;
 			}
+
+			return value.toString();
 		};
 	}
 

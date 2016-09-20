@@ -338,14 +338,14 @@ public class ProxettaAsmUtil {
 	public static void visitReturn(MethodVisitor mv, MethodInfo methodInfo, boolean isLast) {
 		switch (methodInfo.getReturnOpcodeType()) {
 			case 'V':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(POP);
 				}
 				mv.visitInsn(RETURN);
 				break;
 
 			case 'B':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -360,7 +360,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'C':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -375,7 +375,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'S':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -390,7 +390,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'I':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -405,7 +405,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'Z':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -420,7 +420,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'J':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -435,7 +435,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'F':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -450,7 +450,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'D':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);

@@ -5,6 +5,7 @@ ext.moduleDescription = 'Jodd VTor is focused validation framework for any Java 
 dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
-	
+
+	testCompile lib.mockito
 	testCompile lib.junit
 }

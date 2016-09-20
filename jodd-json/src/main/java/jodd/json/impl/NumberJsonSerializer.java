@@ -30,8 +30,10 @@ import jodd.json.TypeJsonSerializer;
 
 public class NumberJsonSerializer implements TypeJsonSerializer<Number> {
 
-	public void serialize(JsonContext jsonContext, Number value) {
+	@Override
+	public boolean serialize(JsonContext jsonContext, Number value) {
 		jsonContext.write(value.toString());
+		return true;
 	}
 
 }

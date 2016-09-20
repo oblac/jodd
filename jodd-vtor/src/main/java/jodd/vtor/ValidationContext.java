@@ -30,6 +30,7 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
@@ -47,6 +48,7 @@ public class ValidationContext {
 
 	private static final String ANN_SEVERITY = "severity";
 	private static final String ANN_PROFILES = "profiles";
+	private static final String ANN_MESSAGE = "message";
 
 	// ---------------------------------------------------------------- define constraints
 
@@ -140,11 +142,23 @@ public class ValidationContext {
 	protected void collectAnnotationChecks(List<Check> annChecks, Class targetType, String targetName, Annotation[] annotations) {
 		for (Annotation annotation : annotations) {
 			Constraint c = annotation.annotationType().getAnnotation(Constraint.class);
+			Class<? extends ValidationConstraint> constraintClass;
+
 			if (c == null) {
-				continue;
+				// if constraint is not available, try lookup
+				String constraintClassName = annotation.annotationType().getName() + "Constraint";
+
+				try {
+					constraintClass = ClassLoaderUtil.loadClass(constraintClassName, this.getClass().getClassLoader());
+				}
+				catch (ClassNotFoundException ingore) {
+					continue;
+				}
+			}
+			else {
+				constraintClass = c.value();
 			}
 
-			Class<? extends ValidationConstraint> constraintClass = c.value();
 			ValidationConstraint vc;
 			try {
 				vc = newConstraint(constraintClass, targetType);
@@ -188,6 +202,15 @@ public class ValidationContext {
 
 		String[] profiles = (String[]) ReflectUtil.readAnnotationValue(annotation, ANN_PROFILES);
 		destCheck.setProfiles(profiles);
+
+		String message = (String) ReflectUtil.readAnnotationValue(annotation, ANN_MESSAGE);
+		destCheck.setMessage(message);
 	}
 
+	/**
+	 * Clears the cache map
+	 */
+	protected void clearCache() {
+		cache.clear();
+	}
 }

@@ -334,7 +334,7 @@ public class IntrospectorTest {
 
 		// beanutil
 
-		BeanUtil.setDeclaredProperty(one, "fone", "!!!");
+		BeanUtil.declared.setProperty(one, "fone", "!!!");
 		assertEquals("!!!", one.getFone());
 
 		// change value 2
@@ -380,7 +380,7 @@ public class IntrospectorTest {
 
 		// beanutil
 
-		BeanUtil.setDeclaredProperty(one, "fone", "!!!");
+		BeanUtil.declared.setProperty(one, "fone", "!!!");
 		assertEquals("!!!", one.getFone());
 	}
 
@@ -420,7 +420,7 @@ public class IntrospectorTest {
 
 		// beanutil
 
-		BeanUtil.setDeclaredProperty(one, "fone", "!!!");
+		BeanUtil.declared.setProperty(one, "fone", "!!!");
 		assertEquals("!!!", one.getFone());
 	}
 

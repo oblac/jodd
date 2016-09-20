@@ -109,7 +109,7 @@ public class JSONDeserializerTest {
 
 		String json = new JsonSerializer().serialize(map);
 
-		map = (Map) new JsonParser().map("values", Person.class).parse(json);
+		map = new JsonParser().map("values", Person.class).parse(json);
 		Person jsonIgor = (Person) map.get("person");
 
 		assertNotNull(jsonIgor);
@@ -134,8 +134,7 @@ public class JSONDeserializerTest {
 		Person jsonIgor = new JsonParser().parse(json, Person.class);
 
 		assertEquals(2, jsonIgor.getPhones().size());
-		assertEquals(3, jsonIgor.getHobbies().size());
-		assertEquals("run", jsonIgor.getHobbies().get(1));
+		assertEquals(0, jsonIgor.getHobbies().size());
 	}
 
 	@Test
@@ -155,6 +154,19 @@ public class JSONDeserializerTest {
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer().include("powers").setClassMetadataName("class").serialize(superman);
 		Hero jsonSuperMan = new JsonParser().setClassMetadataName("class").parse(json, Hero.class);
+
+		assertNotNull(jsonSuperMan);
+		assertEquals(4, jsonSuperMan.getPowers().size());
+		assertHeroHasSuperPowers(jsonSuperMan);
+
+		JoddJson.classMetadataName = null;
+	}
+
+	@Test
+	public void testDeserializeInterfaces2() {
+		Hero superman = creator.createSuperman();
+		String json = new JsonSerializer().include("powers").withClassMetadata(true).serialize(superman);
+		Hero jsonSuperMan = new JsonParser().withClassMetadata(true).parse(json, Hero.class);
 
 		assertNotNull(jsonSuperMan);
 		assertEquals(4, jsonSuperMan.getPowers().size());
@@ -205,7 +217,7 @@ public class JSONDeserializerTest {
 		String json = new JsonSerializer()
 				.include("powers")        // redudant
 				.include("powers.class")
-				.use("powers.class", new SimpleClassnameTransformer())
+				.withSerializer("powers.class", new SimpleClassnameTransformer())
 				.exclude("*.class")
 				.serialize(superman);
 
@@ -219,6 +231,7 @@ public class JSONDeserializerTest {
 				.map("secretIdentity", SecretIdentity.class)
 				.parse(json, Hero.class);
 
+		assertEquals("Fortress of Solitude", jsonSuperMan.getLair().getName());
 		assertHeroHasSuperPowers(jsonSuperMan);
 	}
 
@@ -374,15 +387,16 @@ public class JSONDeserializerTest {
 		foo.setBirthdate(df.parse("2009/01/02"));
 
 
-		String json = new JsonSerializer().use("birthdate", new DateJsonSerializer() {
+		String json = new JsonSerializer().withSerializer("birthdate", new DateJsonSerializer() {
 			@Override
-			public void serialize(JsonContext jsonContext, Date date) {
+			public boolean serialize(JsonContext jsonContext, Date date) {
 				jsonContext.writeString(df.format(date));
+				return true;
 			}
 		}).serialize(foo);
 
 		Person newUser = new JsonParser()
-				.use("birthdate", new ValueConverter<String, Date>() {
+				.withValueConverter("birthdate", new ValueConverter<String, Date>() {
 					public Date convert(String data) {
 						try {
 							return df.parse(data);
@@ -625,9 +639,10 @@ public class JSONDeserializerTest {
 	}
 
 	public static class SimpleClassnameTransformer implements TypeJsonSerializer {
-		public void serialize(JsonContext jsonContext, Object value) {
+		public boolean serialize(JsonContext jsonContext, Object value) {
 			String name = value.toString() + "***";
 			jsonContext.writeString(name);
+			return true;
 		}
 	}
 

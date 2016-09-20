@@ -26,6 +26,7 @@
 package jodd.util.cl;
 
 import jodd.util.ArraysUtil;
+import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 import jodd.util.Wildcard;
 
@@ -56,7 +57,7 @@ import java.util.List;
  * <b>parent</b> group rules will be checked first.
  * <p>
  * By default, the list of <b>parent-only</b> group is populated with
- * {@link jodd.util.SystemUtil#getJrePackages() JRE packages}.
+ * {@link jodd.util.SystemUtil#jrePackages() JRE packages}.
  * <p>
  * When <b>parent-last</b> strategy is used, be aware how you use
  * {@link jodd.util.ClassLoaderUtil} as it is designed to follow <b>parent-first</b>
@@ -69,11 +70,19 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	protected String[] parentOnlyRules;
 	protected String[] loaderOnlyRules;
 	protected final boolean parentFirst;
+	protected boolean matchResourcesAsPackages = true;
+
+	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent, boolean parentFirst) {
+		this(classpath, parent, parentFirst, true);
+	}
 
 	/**
 	 * Creates class loader with given loading strategy.
 	 */
-	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent, boolean parentFirst) {
+	public ExtendedURLClassLoader(
+			URL[] classpath, ClassLoader parent,
+			boolean parentFirst, boolean excludeJrePackagesFromLoader) {
+
 		super(classpath, parent);
 
 		this.parentFirst = parentFirst;
@@ -86,15 +95,18 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		parentOnlyRules = new String[0];
 		loaderOnlyRules = new String[0];
 
-		String[] corePackages = SystemUtil.getJrePackages();
+		if (excludeJrePackagesFromLoader) {
+			String[] corePackages = SystemUtil.jrePackages();
 
-		for (int i = 0; i < corePackages.length; i++) {
-			String pck = corePackages[i];
+			for (String corePackage : corePackages) {
+				if (corePackage.equals("javax")) {
+					// javax is NOT forbidden
+					continue;
+				}
 
-			corePackages[i] = pck + ".*";
+				addParentOnlyRules(corePackage + ".*");
+			}
 		}
-		
-		addParentOnlyRules(corePackages);
 	}
 
 	// ---------------------------------------------------------------- rules
@@ -113,6 +125,15 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	 */
 	public void addLoaderOnlyRules(String... packages) {
 		loaderOnlyRules = ArraysUtil.join(loaderOnlyRules, packages);
+	}
+
+	/**
+	 * When set, resources will be matched in the same way as packages.
+	 * If disabled, resources must be matched only with separate rules
+	 * that uses "/".
+	 */
+	public void setMatchResourcesAsPackages(boolean matchResourcesAsPackages) {
+		this.matchResourcesAsPackages = matchResourcesAsPackages;
 	}
 
 	/**
@@ -165,6 +186,17 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		}
 
 		return new Loading(withParent, withLoader);
+	}
+
+	/**
+	 * Resolves resources.
+	 */
+	protected Loading resolveResourceLoading(boolean parentFirstStrategy, String resourceName) {
+		if (matchResourcesAsPackages) {
+			resourceName = StringUtil.replaceChar(resourceName, '/', '.');
+		}
+
+		return resolveLoading(parentFirstStrategy, resourceName);
 	}
 
 
@@ -244,7 +276,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 
 		URL url = null;
 
-		Loading loading = resolveLoading(parentFirst, resourceName);
+		Loading loading = resolveResourceLoading(parentFirst, resourceName);
 
 		if (parentFirst) {
 			// PARENT FIRST
@@ -281,7 +313,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		Enumeration<URL> loaderUrls = this.findResources(resourceName);
 		Enumeration<URL> parentUrls = parentClassLoader.getResources(resourceName);
 
-		Loading loading = resolveLoading(parentFirst, resourceName);
+		Loading loading = resolveResourceLoading(parentFirst, resourceName);
 
 		if (parentFirst) {
 			if (loading.withParent) {

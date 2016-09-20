@@ -326,8 +326,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 		if (len == 0) {
 			return this;
 		}
-
-		int end = offset + len;
+		
 		int newSize = size + len;
 		int remaining = len;
 		int start = 0;

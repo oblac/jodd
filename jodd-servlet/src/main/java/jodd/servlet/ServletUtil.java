@@ -138,7 +138,7 @@ public class ServletUtil {
 	 * Prepares response for file download with provided mime type.
 	 */
 	public static void prepareDownload(HttpServletResponse response, File file, String mimeType) {
-		if (file.exists() == false) {
+		if (!file.exists()) {
 			throw new IllegalArgumentException("File not found: " + file);
 		}
 		if (file.length() > Integer.MAX_VALUE) {
@@ -571,7 +571,7 @@ public class ServletUtil {
 				}
 				paramValues[i] = paramValue;
 			}
-			if ((ignoreEmptyRequestParams == true) && (emptyCount == total)) {
+			if ((ignoreEmptyRequestParams) && (emptyCount == total)) {
 				return null;
 			}
 		}
@@ -606,11 +606,11 @@ public class ServletUtil {
 		}
 
 		// multipart
-		if ((servletRequest instanceof MultipartRequestWrapper) == false) {
+		if (!(servletRequest instanceof MultipartRequestWrapper)) {
 			return;
 		}
 		MultipartRequestWrapper multipartRequest = (MultipartRequestWrapper) servletRequest;
-		if (multipartRequest.isMultipart() == false) {
+		if (!multipartRequest.isMultipart()) {
 			return;
 		}
 		paramNames = multipartRequest.getFileParameterNames();

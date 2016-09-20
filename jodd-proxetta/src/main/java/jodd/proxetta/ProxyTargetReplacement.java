@@ -146,13 +146,13 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#info()}.
 	 */
-	public static void info(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void info(MethodVisitor mv, MethodInfo methodInfo, int argsOff) {
 		mv.visitTypeInsn(Opcodes.NEW, PROXY_TARGET_INFO);
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, PROXY_TARGET_INFO, "<init>", "()V", false);
 
-		int argsOff = methodInfo.getAllArgumentsSize();
-		argsOff++;
+//		int argsOff = methodInfo.getAllArgumentsSize();
+//		argsOff++;
 
 		mv.visitVarInsn(Opcodes.ASTORE, argsOff);
 

@@ -123,7 +123,7 @@ public class Jspp {
 					if (tag.matchTagNamePrefix(tagPrefix)) {
 						int tagStart = tag.getTagPosition();
 
-						sb.append(input.substring(lastPosition.getValue(), tagStart));
+						sb.append(input.substring(lastPosition.get(), tagStart));
 
 						String tagName = tag.getName().toString();
 						tagName = tagName.substring(tagPrefix.length);
@@ -139,13 +139,13 @@ public class Jspp {
 
 						sb.append(macroBody);
 
-						lastPosition.setValue(tagStart + tag.getTagLength());
+						lastPosition.set(tagStart + tag.getTagLength());
 					}
 				}
 			}
 		});
 
-		sb.append(input.substring(lastPosition.getValue()));
+		sb.append(input.substring(lastPosition.get()));
 
 		return sb.toString();
 	}

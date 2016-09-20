@@ -354,10 +354,10 @@ public class ScopeDataResolver {
 		}
 
 		ScopeData scopeData = new ScopeData();
-		if (listIn.isEmpty() == false) {
+		if (!listIn.isEmpty()) {
 			scopeData.in = listIn.toArray(new ScopeData.In[listIn.size()]);
 		}
-		if (listOut.isEmpty() == false) {
+		if (!listOut.isEmpty()) {
 			scopeData.out = listOut.toArray(new ScopeData.Out[listOut.size()]);
 		}
 		return scopeData;

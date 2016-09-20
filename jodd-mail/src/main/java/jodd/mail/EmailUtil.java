@@ -28,16 +28,10 @@ package jodd.mail;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import javax.mail.Part;
+import javax.mail.internet.MimeBodyPart;
 import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 
 /**
  * Email utilities.
@@ -54,7 +48,8 @@ public class EmailUtil {
 		String mime;
 		if (ndx != -1) {
 			mime = contentType.substring(0, ndx);
-		} else {
+		}
+		else {
 			mime = contentType;
 		}
 		return mime;
@@ -81,7 +76,7 @@ public class EmailUtil {
 
 			while (ndx < len) {
 				char c = charset.charAt(ndx);
-				if ((c == '"') || (CharUtil.isWhitespace(c) == true) || (c == ';')) {
+				if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
 					break;
 				}
 				ndx++;
@@ -92,32 +87,32 @@ public class EmailUtil {
 	}
 
 	/**
-	 * Reads EML from a file and parses it into {@link ReceivedEmail}.
+	 * Correctly resolves file name from the message part.
+	 * Thanx to: Flavio Pompermaier
 	 */
-	public static ReceivedEmail parseEML(File emlFile) throws FileNotFoundException, MessagingException {
-		Properties props = System.getProperties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		Message message = new MimeMessage(session, new FileInputStream(emlFile));
-
-		return new ReceivedEmail(message);
-	}
-
-	/**
-	 * Parse EML from content into {@link ReceivedEmail}.
-	 */
-	public static ReceivedEmail parseEML(String emlContent) throws MessagingException {
-		Properties props = System.getProperties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		Message message = null;
-		try {
-			message = new MimeMessage(session, new ByteArrayInputStream(emlContent.getBytes(StringPool.US_ASCII)));
-		} catch (UnsupportedEncodingException ueex) {
-			throw new MessagingException(ueex.toString());
+	public static String resolveFileName(Part part) throws MessagingException, UnsupportedEncodingException {
+		if (!(part instanceof MimeBodyPart)) {
+			return part.getFileName();
 		}
 
-		return new ReceivedEmail(message);
+		String contentType = part.getContentType();
+		String ret = null;
+
+		try {
+			ret = javax.mail.internet.MimeUtility.decodeText(part.getFileName());
+		}
+		catch (Exception ex) {
+			String[] contentId = part.getHeader("Content-ID");
+			if (contentId != null && contentId.length > 0) {
+				ret = contentId[0];
+			}
+			if (contentId == null) {
+				ret = "no-name";
+			}
+			ret += StringPool.DOT  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
+		}
+
+		return ret;
 	}
 
 }

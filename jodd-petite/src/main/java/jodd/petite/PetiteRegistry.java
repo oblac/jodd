@@ -27,6 +27,7 @@ package jodd.petite;
 
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
+import jodd.util.ReflectUtil;
 
 /**
  * Petite registry helps with manual registration
@@ -446,7 +447,7 @@ public class PetiteRegistry {
 		 */
 		public BeanProvider args(Class... methodArgsTypes) {
 			if (methodArgsTypes.length == 0) {
-				methodArgsTypes = null;
+				methodArgsTypes = ReflectUtil.NO_PARAMETERS;
 			}
 			this.methodArgsTypes = methodArgsTypes;
 			return this;

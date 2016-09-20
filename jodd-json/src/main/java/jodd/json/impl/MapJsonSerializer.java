@@ -27,15 +27,15 @@ package jodd.json.impl;
 
 import jodd.json.JsonContext;
 import jodd.json.Path;
-import jodd.util.StringPool;
 
 import java.util.Map;
 
 /**
  * Map serializer.
  */
-public class MapJsonSerializer extends ValueJsonSerializer<Map<?, ?>> {
+public class MapJsonSerializer extends KeyValueJsonSerializer<Map<?, ?>> {
 
+	@Override
 	public void serializeValue(JsonContext jsonContext, Map<?, ?> map) {
 		jsonContext.writeOpenObject();
 
@@ -44,56 +44,14 @@ public class MapJsonSerializer extends ValueJsonSerializer<Map<?, ?>> {
 		Path currentPath = jsonContext.getPath();
 
 		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			final Object key = entry.getKey();
-			final Object value = entry.getValue();
+			Object key = entry.getKey();
+			Object value = entry.getValue();
 
-			if ((value == null) && jsonContext.isExcludeNulls()) {
-				continue;
-			}
-
-			if (key != null) {
-				currentPath.push(key.toString());
-			} else {
-				currentPath.push(StringPool.NULL);
-			}
-
-			// check if we should include the field
-
-			boolean include = true;
-
-			if (value != null) {
-
-				// + all collections are not serialized by default
-
-				include = jsonContext.matchIgnoredPropertyTypes(value.getClass(), false, include);
-
-				// + path queries: excludes/includes
-
-				include = jsonContext.matchPathToQueries(include);
-			}
-
-			// done
-
-			if (!include) {
-				currentPath.pop();
-				continue;
-			}
-
-			if (key == null) {
-				jsonContext.pushName(null, count > 0);
-			} else {
-				jsonContext.pushName(key.toString(), count > 0);
-			}
-
-			jsonContext.serialize(value);
-
-			if (jsonContext.isNamePopped()) {
-				count++;
-			}
-
-			currentPath.pop();
+			count = serializeKeyValue(jsonContext, currentPath, key, value, count);
 		}
 
 		jsonContext.writeCloseObject();
 	}
+
+
 }

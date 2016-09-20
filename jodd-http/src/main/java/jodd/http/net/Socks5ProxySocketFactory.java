@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Socket factory for SOCKS5 proxy.
@@ -42,10 +43,16 @@ import javax.net.SocketFactory;
  */
 public class Socks5ProxySocketFactory extends SocketFactory {
 
-	private ProxyInfo proxy;
+	private final ProxyInfo proxy;
+	private final boolean secure;
+
+	public Socks5ProxySocketFactory(ProxyInfo proxy, boolean secure) {
+		this.proxy = proxy;
+		this.secure = secure;
+	}
 
 	public Socks5ProxySocketFactory(ProxyInfo proxy) {
-		this.proxy = proxy;
+		this(proxy, false);
 	}
 
 	public Socket createSocket(String host, int port) throws IOException {
@@ -186,7 +193,11 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 					break;
 				default:
 			}
-			return socket;
+			if (secure) {
+				return ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket(socket, host, port, true);
+			} else {
+				return socket;
+			}
 
 		} catch (RuntimeException rttex) {
 			closeSocket(socket);

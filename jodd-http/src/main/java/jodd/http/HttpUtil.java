@@ -87,7 +87,7 @@ public class HttpUtil {
 	 */
 	public static HttpMultiMap<String> parseQuery(String query, boolean decode) {
 
-		HttpMultiMap<String> queryMap = new HttpMultiMap<>();
+		HttpMultiMap<String> queryMap = HttpMultiMap.newCaseInsensitveMap();
 
 		int ndx, ndx2 = 0;
 		while (true) {

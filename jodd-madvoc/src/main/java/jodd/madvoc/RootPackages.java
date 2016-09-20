@@ -80,7 +80,7 @@ public class RootPackages {
 		// fix mapping
 		if (mapping.length() > 0) {
 			// mapping must start with the slash
-			if (mapping.startsWith(StringPool.SLASH) == false) {
+			if (!mapping.startsWith(StringPool.SLASH)) {
 				mapping = StringPool.SLASH + mapping;
 			}
 			// mapping must NOT end with the slash

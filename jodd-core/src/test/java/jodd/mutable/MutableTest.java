@@ -37,7 +37,7 @@ public class MutableTest {
 		MutableInteger m = new MutableInteger();
 
 		assertTrue(m instanceof Number);
-		m.setValue(27);
+		m.set(27);
 		assertEquals(27, m.intValue());
 		assertEquals(27, m.longValue());
 		assertEquals(27, m.shortValue());
@@ -48,6 +48,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Integer.valueOf(27)));
 		assertEquals(0, m.compareTo((MutableInteger) m2));
 	}
 
@@ -56,7 +57,7 @@ public class MutableTest {
 		MutableLong m = new MutableLong();
 
 		assertTrue(m instanceof Number);
-		m.setValue(27);
+		m.set(27);
 		assertEquals(27, m.intValue());
 		assertEquals(27, m.longValue());
 		assertEquals(27, m.shortValue());
@@ -67,6 +68,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Long.valueOf(27)));
 		assertEquals(0, m.compareTo((MutableLong) m2));
 	}
 
@@ -75,7 +77,7 @@ public class MutableTest {
 		MutableShort m = new MutableShort();
 
 		assertTrue(m instanceof Number);
-		m.setValue(27);
+		m.set(27);
 		assertEquals(27, m.intValue());
 		assertEquals(27, m.longValue());
 		assertEquals(27, m.shortValue());
@@ -86,6 +88,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Short.valueOf((short) 27)));
 		assertEquals(0, m.compareTo((MutableShort) m2));
 	}
 
@@ -94,7 +97,7 @@ public class MutableTest {
 		MutableByte m = new MutableByte();
 
 		assertTrue(m instanceof Number);
-		m.setValue(27);
+		m.set(27);
 		assertEquals(27, m.intValue());
 		assertEquals(27, m.longValue());
 		assertEquals(27, m.shortValue());
@@ -105,6 +108,7 @@ public class MutableTest {
 		Number m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Byte.valueOf((byte) 27)));
 		assertEquals(0, m.compareTo((MutableByte) m2));
 	}
 
@@ -113,7 +117,7 @@ public class MutableTest {
 		MutableFloat m = new MutableFloat();
 
 		assertTrue(m instanceof Number);
-		m.setValue(27);
+		m.set(27);
 		assertEquals(27, m.intValue());
 		assertEquals(27, m.longValue());
 		assertEquals(27, m.shortValue());
@@ -132,7 +136,7 @@ public class MutableTest {
 		MutableDouble m = new MutableDouble();
 
 		assertTrue(m instanceof Number);
-		m.setValue(27);
+		m.set(27);
 		assertEquals(27, m.intValue());
 		assertEquals(27, m.longValue());
 		assertEquals(27, m.shortValue());
@@ -150,12 +154,13 @@ public class MutableTest {
 	public void testMutableBoolean() {
 		MutableBoolean m = new MutableBoolean();
 
-		m.setValue(true);
-		assertEquals(true, m.getValue());
+		m.set(true);
+		assertEquals(true, m.get());
 
 		Object m2 = m.clone();
 
 		assertEquals(m2, m);
+		assertTrue(m.equals(Boolean.TRUE));
 		assertEquals(0, m.compareTo((MutableBoolean) m2));
 	}
 

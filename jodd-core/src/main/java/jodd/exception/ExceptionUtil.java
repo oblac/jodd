@@ -25,6 +25,9 @@
 
 package jodd.exception;
 
+import jodd.io.StreamUtil;
+import jodd.util.StringUtil;
+
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -74,7 +77,7 @@ public class ExceptionUtil {
 						break;
 					}
 				}
-				if (validElemenet == false) {
+				if (!validElemenet) {
 					continue;
 				}
 			}
@@ -129,12 +132,15 @@ public class ExceptionUtil {
 	/**
 	 * Prints stack trace into a String.
 	 */
-	public static String exceptionToString(Throwable t) {
+	public static String exceptionStackTraceToString(Throwable t) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw, true);
+
 		t.printStackTrace(pw);
-		pw.flush();
-		sw.flush();
+
+		StreamUtil.close(pw);
+		StreamUtil.close(sw);
+
 		return sw.toString();
 	}
 
@@ -270,13 +276,24 @@ public class ExceptionUtil {
 				ThrowableThrower.throwable = throwable;
 				ThrowableThrower.class.newInstance();
 			}
-		} catch (InstantiationException iex) {
-			throw new RuntimeException(iex);
-		} catch (IllegalAccessException iex) {
+		} catch (InstantiationException | IllegalAccessException iex) {
 			throw new RuntimeException(iex);
 		} finally {
 			ThrowableThrower.throwable = null;
 		}
+	}
+
+	/**
+	 * Returns <code>non-null</code> message for a throwable.
+	 */
+	public static String message(Throwable throwable) {
+		String message = throwable.getMessage();
+
+		if (StringUtil.isBlank(message)) {
+			message = throwable.toString();
+		}
+
+		return message;
 	}
 
 	private static class ThrowableThrower {

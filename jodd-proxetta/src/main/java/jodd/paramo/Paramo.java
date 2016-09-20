@@ -25,6 +25,7 @@
 
 package jodd.paramo;
 
+import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.asm5.ClassReader;
 
@@ -51,6 +52,7 @@ public class Paramo {
 		Class[] paramTypes;
 		Class declaringClass;
 		String name;
+
 		if (methodOrCtor instanceof Method) {
 			Method method = (Method) methodOrCtor;
 			paramTypes = method.getParameterTypes();
@@ -83,8 +85,12 @@ public class Paramo {
 			MethodFinder visitor = new MethodFinder(declaringClass, name, paramTypes);
 			reader.accept(visitor, 0);
 			return visitor.getResolvedParameters();
-		} catch (IOException ioex) {
+		}
+		catch (IOException ioex) {
 			throw new ParamoException(ioex);
+		}
+		finally {
+			StreamUtil.close(stream);
 		}
 	}
 

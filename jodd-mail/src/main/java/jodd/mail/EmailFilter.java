@@ -28,13 +28,19 @@ package jodd.mail;
 import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.search.AndTerm;
+import javax.mail.search.BodyTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.FromStringTerm;
+import javax.mail.search.HeaderTerm;
 import javax.mail.search.MessageIDTerm;
+import javax.mail.search.MessageNumberTerm;
 import javax.mail.search.NotTerm;
 import javax.mail.search.OrTerm;
+import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.RecipientStringTerm;
 import javax.mail.search.SearchTerm;
+import javax.mail.search.SentDateTerm;
+import javax.mail.search.SizeTerm;
 import javax.mail.search.SubjectTerm;
 
 /**
@@ -80,6 +86,15 @@ public class EmailFilter {
 	 */
 	public EmailFilter messageId(String messageId) {
 		SearchTerm msgIdTerm = new MessageIDTerm(messageId);
+		concat(msgIdTerm);
+		return this;
+	}
+
+	/**
+	 * Defines message number filter.
+	 */
+	public EmailFilter messageNumber(int messageNumber) {
+		SearchTerm msgIdTerm = new MessageNumberTerm(messageNumber);
 		concat(msgIdTerm);
 		return this;
 	}
@@ -145,6 +160,68 @@ public class EmailFilter {
 		return flags(flags, value);
 	}
 
+	/**
+	 * Defines filter for received date.
+	 */
+	public EmailFilter receivedDate(Operator operator, long milliseconds) {
+		SearchTerm term = new ReceivedDateTerm(operator.value, new java.util.Date(milliseconds));
+		concat(term);
+		return this;
+	}
+	/**
+	 * Defines filter for sent date.
+	 */
+	public EmailFilter sentDate(Operator operator, long milliseconds) {
+		SearchTerm term = new SentDateTerm(operator.value, new java.util.Date(milliseconds));
+		concat(term);
+		return this;
+	}
+
+	/**
+	 * Defines filter on a message body.
+	 * All parts of the message that are of MIME type "text/*" are searched.
+	 */
+	public EmailFilter text(String pattern) {
+		SearchTerm term = new BodyTerm(pattern);
+		concat(term);
+		return this;
+	}
+
+	/**
+	 * Defines filter for header.
+	 */
+	public EmailFilter header(String headerName, String pattern) {
+		SearchTerm term = new HeaderTerm(headerName, pattern);
+		concat(term);
+		return this;
+	}
+
+	/**
+	 * Defines filter for message size.
+	 */
+	public EmailFilter size(Operator comparison, int size) {
+		SearchTerm term = new SizeTerm(comparison.value, size);
+		concat(term);
+		return this;
+	}
+
+	/**
+	 * Comparison operator.
+	 */
+	public enum Operator {
+		EQ(javax.mail.search.ComparisonTerm.EQ),
+		GE(javax.mail.search.ComparisonTerm.GE),
+		GT(javax.mail.search.ComparisonTerm.GT),
+		LE(javax.mail.search.ComparisonTerm.LE),
+		LT(javax.mail.search.ComparisonTerm.LT),
+		NE(javax.mail.search.ComparisonTerm.NE);
+
+		private final int value;
+
+		Operator(int value) {
+			this.value = value;
+		}
+	}
 
 	// ---------------------------------------------------------------- boolean
 

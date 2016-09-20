@@ -661,7 +661,7 @@ public class JSONSerializationTest {
 		assertAttribute("address", json);
 		assertAttribute("name", json);
 
-		jsonSerializer.use(Object.class, new ObjectJsonSerializer() {
+		jsonSerializer.withSerializer(Object.class, new ObjectJsonSerializer() {
 			public void serializeValue(final JsonContext jsonContext, Object value) {
 				jsonContext.writeOpenObject();
 

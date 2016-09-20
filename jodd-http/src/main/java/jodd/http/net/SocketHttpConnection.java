@@ -26,13 +26,11 @@
 package jodd.http.net;
 
 import jodd.http.HttpConnection;
-import jodd.http.HttpException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 /**
  * Socket-based {@link jodd.http.HttpConnection}.
@@ -46,27 +44,34 @@ public class SocketHttpConnection implements HttpConnection {
 		this.socket = socket;
 	}
 
+	@Override
+	public void init() throws IOException {
+		if (timeout >= 0) {
+			socket.setSoTimeout(timeout);
+		}
+	}
+
+	@Override
 	public OutputStream getOutputStream() throws IOException {
 		return socket.getOutputStream();
 	}
 
+	@Override
 	public InputStream getInputStream() throws IOException {
 		return socket.getInputStream();
 	}
 
+	@Override
 	public void close() {
 		try {
 			socket.close();
-		} catch (IOException ignore) {
+		} catch (Throwable ignore) {
 		}
 	}
 
+	@Override
 	public void setTimeout(int milliseconds) {
-		try {
-			socket.setSoTimeout(milliseconds);
-		} catch (SocketException sex) {
-			throw new HttpException(sex);
-		}
+		this.timeout = milliseconds;
 	}
 
 	/**
@@ -75,4 +80,6 @@ public class SocketHttpConnection implements HttpConnection {
 	public Socket getSocket() {
 		return socket;
 	}
+
+	private int timeout;
 }

@@ -331,7 +331,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+		if (ReflectUtil.isInstanceOf(value, destinationType)) {
 			return (T) value;
 		}
 
@@ -353,13 +353,13 @@ public class TypeConverterManagerBean {
 	 * when component type is known.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Collection<T> convertToCollection(Object value, Class<? extends Collection<T>> destinationType, Class componentType) {
+	public <T> Collection<T> convertToCollection(Object value, Class<? extends Collection> destinationType, Class componentType) {
 		if (value == null) {
 			return null;
 		}
 
 		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+		if (ReflectUtil.isInstanceOf(value, destinationType)) {
 			return (Collection<T>) value;
 		}
 

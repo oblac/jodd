@@ -48,4 +48,15 @@
 		<url-pattern>/redirect</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<display-name>SlowServlet</display-name>
+		<servlet-name>SlowServlet</servlet-name>
+		<servlet-class>jodd.http.SlowServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SlowServlet</servlet-name>
+		<url-pattern>/slow</url-pattern>
+	</servlet-mapping>
+
 </web-app>

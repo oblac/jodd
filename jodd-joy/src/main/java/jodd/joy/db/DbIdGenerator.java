@@ -48,7 +48,7 @@ public class DbIdGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(DbIdGenerator.class);
 
-	protected Map<Class<?>, MutableLong> entityIdsMap = new HashMap<Class<?>, MutableLong>();
+	protected Map<Class<?>, MutableLong> entityIdsMap = new HashMap<>();
 
 	/**
 	 * Resets all stored data.

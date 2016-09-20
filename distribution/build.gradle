@@ -60,7 +60,6 @@ task bundleMobileJar(type: Jar) {
 	exclude 'jodd/util/BCrypt.class'
 	exclude 'jodd/util/Base32.class'
 	exclude 'jodd/util/BinarySearch*.class'
-	exclude 'jodd/util/ClipboardUtil.class'
 	exclude 'jodd/util/ComparableComparator.class'
 	exclude 'jodd/util/DateFormatSymbolsEx.class'
 	exclude 'jodd/util/cl/ExtendedClassLoader.class'

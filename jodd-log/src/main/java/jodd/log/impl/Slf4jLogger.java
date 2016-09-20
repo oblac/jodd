@@ -26,16 +26,26 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import org.slf4j.spi.LocationAwareLogger;
 
 /**
  * SLF4J logger adapter.
  */
 public class Slf4jLogger implements Logger {
 
+	private static final String FQCN = Slf4jLogger.class.getName();
+
 	private final org.slf4j.Logger logger;
+	private final LocationAwareLogger locationAwareLogger;
 
 	public Slf4jLogger(org.slf4j.Logger logger) {
 		this.logger = logger;
+		if (logger instanceof LocationAwareLogger) {
+			locationAwareLogger = (LocationAwareLogger) logger;
+		}
+		else {
+			locationAwareLogger = null;
+		}
 	}
 
 	public String getName() {
@@ -56,11 +66,11 @@ public class Slf4jLogger implements Logger {
 
 	public void log(Level level, String message) {
 		switch (level) {
-			case TRACE: logger.trace(message); break;
-			case DEBUG: logger.debug(message); break;
-			case INFO: logger.info(message); break;
-			case WARN: logger.warn(message); break;
-			case ERROR: logger.error(message); break;
+			case TRACE: trace(message); break;
+			case DEBUG: debug(message); break;
+			case INFO: info(message); break;
+			case WARN: warn(message); break;
+			case ERROR: error(message); break;
 		}
 	}
 
@@ -69,7 +79,13 @@ public class Slf4jLogger implements Logger {
 	}
 
 	public void trace(String message) {
-		logger.trace(message);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.TRACE_INT, message, null, null);
+		}
+		else {
+			logger.trace(message);
+		}
 	}
 
 	public boolean isDebugEnabled() {
@@ -77,7 +93,13 @@ public class Slf4jLogger implements Logger {
 	}
 
 	public void debug(String message) {
-		logger.debug(message);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.DEBUG_INT, message, null, null);
+		}
+		else {
+			logger.debug(message);
+		}
 	}
 
 	public boolean isInfoEnabled() {
@@ -85,7 +107,13 @@ public class Slf4jLogger implements Logger {
 	}
 
 	public void info(String message) {
-		logger.info(message);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.INFO_INT, message, null, null);
+		}
+		else {
+			logger.info(message);
+		}
 	}
 
 	public boolean isWarnEnabled() {
@@ -93,11 +121,23 @@ public class Slf4jLogger implements Logger {
 	}
 
 	public void warn(String message) {
-		logger.warn(message);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.WARN_INT, message, null, null);
+		}
+		else {
+			logger.warn(message);
+		}
 	}
 
 	public void warn(String message, Throwable throwable) {
-		logger.warn(message, throwable);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.WARN_INT, message, null, throwable);
+		}
+		else {
+			logger.warn(message, throwable);
+		}
 	}
 
 	public boolean isErrorEnabled() {
@@ -105,10 +145,22 @@ public class Slf4jLogger implements Logger {
 	}
 
 	public void error(String message) {
-		logger.error(message);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.ERROR_INT, message, null, null);
+		}
+		else {
+			logger.error(message);
+		}
 	}
 
 	public void error(String message, Throwable throwable) {
-		logger.error(message, throwable);
+		if (locationAwareLogger != null) {
+			locationAwareLogger.log(
+				null, FQCN, LocationAwareLogger.ERROR_INT, message, null, throwable);
+		}
+		else {
+			logger.error(message, throwable);
+		}
 	}
 }

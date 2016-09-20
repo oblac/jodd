@@ -27,12 +27,18 @@ package jodd.json;
 
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
+import jodd.json.model.FileMan;
+import jodd.json.model.HitList;
 import jodd.json.model.State;
+import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -539,5 +545,71 @@ public class JsonSerializerTest {
 		assertEquals("{\"one\":{\"id\":1}}", json);
 	}
 
+	@Test
+	public void testFiles() {
+		FileMan fileMan = new FileMan();
+		File userHome = new File(SystemUtil.userHome());
+		fileMan.setFile(userHome);
 
+		String json = JsonSerializer.create().serialize(fileMan);
+
+		assertTrue(json.contains(StringUtil.replace(SystemUtil.userHome(), "/", "\\/")));
+	}
+
+	@Test
+	public void testSerializeSets() {
+		HitList hitList = new HitList();
+
+		hitList.setNames(new HashSet<String>());
+		hitList.getNames().add("Joe");
+		hitList.getNames().add("Pig");
+
+		hitList.setNumbers(new HashSet<Integer>());
+		hitList.getNumbers().add(173);
+		hitList.getNumbers().add(22);
+
+		String json = JsonSerializer
+			.create()
+			.deep(true)
+			.serialize(hitList);
+
+		assertTrue(json.contains("\"names\""));
+		assertTrue(json.contains("\"numbers\""));
+		assertTrue(json.contains("\"Pig\""));
+		assertTrue(json.contains("\"Joe\""));
+		assertTrue(json.contains("173"));
+		assertTrue(json.contains("22"));
+	}
+
+	@Test
+	public void testSerializeStringEscapes() {
+		String path = "/foo/bar";
+
+		String json = JsonSerializer
+			.create()
+			.serialize(path);
+
+		assertEquals("\"\\/foo\\/bar\"", json);
+
+		String path2 = JsonParser.create().parse(json);
+
+		assertEquals(path, path2);
+	}
+
+	@Test
+	public void testClassMetaData() {
+		String json = JsonSerializer
+			.create()
+			.withClassMetadata(true)
+			.serialize(new Foo());
+
+		assertTrue(json.contains("\"__class\":\"" + Foo.class.getName() + "\""));
+
+		json = JsonSerializer.create().withClassMetadata(false).serialize(123);
+		assertEquals("123", json);
+
+		json = JsonSerializer.create().withClassMetadata(true).serialize(123);
+		assertEquals("123", json);
+
+	}
 }

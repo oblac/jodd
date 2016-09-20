@@ -100,12 +100,12 @@ public class MatchChunk extends SqlChunk {
 		int count = 0;
 		out.append('(');
 		for (DbEntityColumnDescriptor dec : decList) {
-			if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+			if ((includeColumns == COLS_ONLY_IDS) && (!dec.isId())) {
 				continue;
 			}
 			String property = dec.getPropertyName();
 
-			Object value = BeanUtil.getDeclaredPropertySilently(data, property);
+			Object value = BeanUtil.declaredSilent.getProperty(data, property);
 
 			if ((includeColumns == COLS_ONLY_EXISTING) && (value == null)) {
 				continue;

@@ -196,6 +196,9 @@ public abstract class Node implements Cloneable {
 	 * Reindex is done only once, after all children are added.
 	 */
 	public void addChild(Node... nodes) {
+		if (nodes.length == 0) {
+			return;	// nothing to add
+		}
 		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
@@ -251,6 +254,9 @@ public abstract class Node implements Cloneable {
 	 * Inserts several child nodes before provided node.
 	 */
 	public void insertBefore(Node[] newChilds, Node refChild) {
+		if (newChilds.length == 0) {
+			return;
+		}
 		int siblingIndex = refChild.getSiblingIndex();
 		refChild.parentNode.insertChild(newChilds, siblingIndex);
 	}
@@ -271,6 +277,10 @@ public abstract class Node implements Cloneable {
 	 * Inserts several child nodes after referent node.
 	 */
 	public void insertAfter(Node[] newChilds, Node refChild) {
+		if (newChilds.length == 0) {
+			return;
+		}
+
 		int siblingIndex = refChild.getSiblingIndex() + 1;
 		if (siblingIndex == refChild.parentNode.getChildNodesCount()) {
 			refChild.parentNode.addChild(newChilds);
@@ -1109,8 +1119,7 @@ public abstract class Node implements Cloneable {
 			String nodeName = node.getNodeName();
 			if (nodeName != null) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(' ');
-				sb.append(nodeName);
+				sb.append(' ').append(nodeName);
 				String id = node.getAttribute("id");
 				if (id != null) {
 					sb.append('#').append(id);

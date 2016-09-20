@@ -188,7 +188,7 @@ public class AsmUtil {
 	 * <code>String[]</code>.
 	 */
 	public static String typedescToSignature(String desc, MutableInteger from) {
-		int fromIndex = from.getValue();
+		int fromIndex = from.get();
 		from.value++;	// default usage for most cases
 
 		switch (desc.charAt(fromIndex)) {
@@ -207,7 +207,7 @@ public class AsmUtil {
 				if (index < 0) {
 					throw new IllegalArgumentException(INVALID_TYPE_DESCRIPTION + desc);
 				}
-				from.setValue(index + 1);
+				from.set(index + 1);
 				String str = desc.substring(fromIndex + 1, index);
 				return str.replace('/', '.');
 
@@ -246,8 +246,8 @@ public class AsmUtil {
 	 * Converts type to type ref.
 	 */
 	public static String typeToTyperef(Class type) {
-		if (type.isArray() == false) {
-			if (type.isPrimitive() == false) {
+		if (!type.isArray()) {
+			if (!type.isPrimitive()) {
 				return 'L' + typeToSignature(type) + ';';
 			}
 			if (type == int.class) {

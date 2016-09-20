@@ -26,9 +26,11 @@
 package jodd.bean;
 
 import jodd.bean.data.Abean;
+import jodd.util.StringTemplateParser;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -63,6 +65,17 @@ public class BeanTemplateParserTest {
 	}
 
 	@Test
+	public void testNoParenthes() {
+		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
+
+		Map<String, Object> ctx = new HashMap<>();
+		ctx.put("string", 173);
+
+		assertEquals("173", beanTemplateParser.parse("$string", ctx));
+		assertEquals("", beanTemplateParser.parse("$string2", ctx));
+	}
+
+	@Test
 	public void testMap() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
@@ -75,12 +88,7 @@ public class BeanTemplateParserTest {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
-		try {
-			beanTemplateParser.parse("---${key2}---", map);
-			fail();
-		} catch (BeanException bex) {
-			// ignore
-		}
+		assertEquals("------", beanTemplateParser.parse("---${key2}---", map));
 
 		BeanTemplateParser beanTemplateParser2 = new BeanTemplateParser();
 		beanTemplateParser2.setMissingKeyReplacement("");
@@ -105,17 +113,18 @@ public class BeanTemplateParserTest {
 
 	@Test
 	public void testReplaceMissingKey() {
+		StringTemplateParser stp = new StringTemplateParser();
+
 		BeanTemplateParser btp = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 
 		assertEquals(".1.", btp.parse(".${key0}.", map));
-		try {
-			assertEquals(".1.", btp.parse(".${key2}.", map));
-			fail();
-		} catch (BeanException be) {
-		}
+		assertEquals("..", btp.parse(".${key2}.", map));
+
+		assertEquals(".1.", stp.parse(".${key0}.", StringTemplateParser.createMapMacroResolver(map)));
+		assertEquals("..", stp.parse(".${key2}.", StringTemplateParser.createMapMacroResolver(map)));
 
 		btp.setMissingKeyReplacement("x");
 		assertEquals(".x.", btp.parse(".${key2}.", map));

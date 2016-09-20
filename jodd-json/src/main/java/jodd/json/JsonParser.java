@@ -28,14 +28,18 @@ package jodd.json;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
+import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
 
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
@@ -46,12 +50,25 @@ import java.util.Map;
  */
 public class JsonParser extends JsonParserBase {
 
+	/**
+	 * Static ctor.
+	 */
+	public static JsonParser create() {
+		return new JsonParser();
+	}
+
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};
 
-	private static final String KEYS = "keys";
-	private static final String VALUES = "values";
+	/**
+	 * Map keys.
+	 */
+	public static final String KEYS = "keys";
+	/**
+	 * Array or map values.
+	 */
+	public static final String VALUES = "values";
 
 	protected int ndx = 0;
 	protected char[] input;
@@ -175,7 +192,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Defines {@link jodd.json.ValueConverter} to use on given path.
 	 */
-	public JsonParser use(String path, ValueConverter valueConverter) {
+	public JsonParser withValueConverter(String path, ValueConverter valueConverter) {
 		if (convs == null) {
 			convs = new HashMap<>();
 		}
@@ -204,6 +221,17 @@ public class JsonParser extends JsonParserBase {
 		classMetadataName = name;
 		return this;
 	}
+
+	public JsonParser withClassMetadata(boolean useMetadata) {
+		if (useMetadata) {
+			classMetadataName = DEFAULT_CLASS_METADATA_NAME;
+		}
+		else {
+			classMetadataName = null;
+		}
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- parse
 
@@ -676,6 +704,14 @@ public class JsonParser extends JsonParserBase {
 	 * Parses arrays, once when open bracket has been consumed.
 	 */
 	protected Object parseArrayContent(Class targetType, Class componentType) {
+		// detect special case
+
+		if (targetType == Object.class) {
+			targetType = List.class;
+		}
+
+		// continue
+
 		targetType = replaceWithMappedTypeForPath(targetType);
 
 		if (componentType == null && targetType != null && targetType.isArray()) {
@@ -686,7 +722,7 @@ public class JsonParser extends JsonParserBase {
 
 		componentType = replaceWithMappedTypeForPath(componentType);
 
-		List<Object> target = newArrayInstance(targetType);
+		Collection<Object> target = newArrayInstance(targetType);
 
 		boolean koma = false;
 
@@ -737,12 +773,21 @@ public class JsonParser extends JsonParserBase {
 	 * Parses object, once when open bracket has been consumed.
 	 */
 	protected Object parseObjectContent(Class targetType, Class valueKeyType, Class valueType) {
+		// detect special case
+
+		if (targetType == Object.class) {
+			targetType = Map.class;
+		}
+
+		// continue
+
 		targetType = replaceWithMappedTypeForPath(targetType);
 
 		Object target;
 		boolean isTargetTypeMap = true;
 		boolean isTargetRealTypeMap = true;
 		ClassDescriptor targetTypeClassDescriptor = null;
+		JsonAnnotationManager.TypeData typeData = null;
 
 		if (targetType != null) {
 			targetTypeClassDescriptor = ClassIntrospector.lookup(targetType);
@@ -752,6 +797,8 @@ public class JsonParser extends JsonParserBase {
 			// map usage locally in this method
 
 			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
+
+			typeData = JoddJson.annotationManager.lookupTypeData(targetType);
 		}
 
 		if (isTargetRealTypeMap) {
@@ -791,6 +838,7 @@ public class JsonParser extends JsonParserBase {
 			koma = false;
 
 			String key = parseString();
+			String keyOriginal = key;
 
 			skipWhiteSpaces();
 
@@ -826,15 +874,18 @@ public class JsonParser extends JsonParserBase {
 
 			if (!isTargetTypeMap) {
 				// *** inject into bean
-				path.push(key);
+					path.push(key);
 
-				value = parseValue(propertyType, keyType, componentType);
+					value = parseValue(propertyType, keyType, componentType);
 
-				path.pop();
+					path.pop();
 
-				if (pd != null) {
-					// only inject values if target property exist
-					injectValueIntoObject(target, pd, value);
+				if (typeData.rules.match(keyOriginal, !typeData.strict)) {
+
+					if (pd != null) {
+						// only inject values if target property exist
+						injectValueIntoObject(target, pd, value);
+					}
 				}
 			}
 			else {
@@ -847,9 +898,12 @@ public class JsonParser extends JsonParserBase {
 				// *** add to map
 				if (isTargetRealTypeMap) {
 					path.push(VALUES, key);
+
+					valueType = replaceWithMappedTypeForPath(valueType);
 				} else {
 					path.push(key);
 				}
+
 
 				value = parseValue(valueType, null, null);
 

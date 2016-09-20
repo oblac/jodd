@@ -63,7 +63,7 @@ public class MailAddress {
 	public MailAddress(String address) {
 		address = address.trim();
 
-		if (StringUtil.endsWithChar(address, '>') == false) {
+		if (!StringUtil.endsWithChar(address, '>')) {
 			this.email = address;
 			this.personalName = null;
 			return;

@@ -108,7 +108,7 @@ public class WebApplication {
 				break;
 			}
 			component = superClass;
-			if (Modifier.isAbstract(component.getModifiers()) == false) {
+			if (!Modifier.isAbstract(component.getModifiers())) {
 				lastComponent = component;
 			}
 		}

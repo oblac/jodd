@@ -1,0 +1,85 @@
+
+ext.moduleName = 'Jodd Bundle'
+ext.moduleDescription = 'Jodd bundle - all classes in one jar'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply from: "${gradleScriptDir}/provided.gradle"
+apply from: "${gradleScriptDir}/publish-maven.gradle"
+apply plugin: 'com.jfrog.bintray'
+apply from: "${gradleScriptDir}/bintray.gradle"
+
+group = 'org.jodd'
+
+dependencies {
+    compile javaBundleModules()
+}
+
+jar {
+    baseName = 'jodd-all'
+    javaBundleModules().each { subproject ->
+        from { subproject.sourceSets.main.output }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from javaBundleModules().sourceSets.main.allSource
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javaBundleModules().javadoc.destinationDir
+}
+
+configurations {
+    published
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+
+    published jar
+    published sourcesJar
+    published javadocJar
+}
+
+install {
+    repositories.mavenInstaller {
+        buildAllDependencies(pom)
+        addAllDependencies(pom)
+    }
+}
+
+def buildAllDependencies(pom) {
+    pom.whenConfigured {
+        p -> p.dependencies = p.dependencies.findAll {
+            dep -> dep.groupId != "org.jodd"
+        }
+    }
+}
+
+def addAllDependencies(pom) {
+    def deps = []
+    pom.withXml {
+        def dependenciesNode = asNode().appendNode('dependencies')
+
+        javaBundleModules().configurations.compile.allDependencies.each {
+            it.each {
+                if (it.group != "org.jodd") {
+                    def fulldep = it.group + ':' + it.name + ':' + it.version
+                    if (!(fulldep in deps)) {
+                        deps += [ fulldep ]
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                        dependencyNode.appendNode('optional', true)
+                    }
+                }
+            }
+        }
+    }
+}

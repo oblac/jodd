@@ -30,12 +30,12 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
-import jodd.util.collection.ByteArrayList;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}
@@ -135,13 +135,21 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ByteArrayList byteArrayList = new ByteArrayList();
+			ArrayList<Byte> byteArrayList = new ArrayList<>();
+
 			for (Object element : iterable) {
 				byte convertedValue = convertType(element);
-				byteArrayList.add(convertedValue);
-            }
+				byteArrayList.add(Byte.valueOf(convertedValue));
+			}
 
-			return byteArrayList.toArray();
+			byte[] array = new byte[byteArrayList.size()];
+
+			for (int i = 0; i < byteArrayList.size(); i++) {
+				Byte b = byteArrayList.get(i);
+				array[i] = b.byteValue();
+			}
+
+			return array;
 		}
 
 		if (value instanceof CharSequence) {

@@ -31,11 +31,13 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.Wildcard;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -335,6 +337,35 @@ public class Props implements Cloneable {
 		return data.lookupValue(key, activeProfiles);
 	}
 
+	public Integer getIntegerValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Integer.valueOf(value);
+	}
+	public Long getLongValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Long.valueOf(value);
+	}
+	public Double getDoubleValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Double.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
 	/**
 	 * Returns <code>string</code> value of given profiles. If key is not
 	 * found under listed profiles, base properties will be searched.
@@ -344,6 +375,36 @@ public class Props implements Cloneable {
 		initialize();
 		return data.lookupValue(key, profiles);
 	}
+
+	public Integer getIntegerValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Integer.valueOf(value);
+	}
+	public Long getLongValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Long.valueOf(value);
+	}
+	public Double getDoubleValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Double.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
 
 	/**
 	 * Sets default value.
@@ -421,7 +482,7 @@ public class Props implements Cloneable {
 	 * Adds child map to the props on given prefix.
 	 */
 	public void addInnerMap(String prefix, Map<?, ?> map, String profile) {
-		if (StringUtil.endsWithChar(prefix, '.') == false) {
+		if (!StringUtil.endsWithChar(prefix, '.')) {
 			prefix += StringPool.DOT;
 		}
 
@@ -440,9 +501,9 @@ public class Props implements Cloneable {
 	 * Initializes props. By default it only resolves active profiles.
 	 */
 	protected void initialize() {
-		if (initialized == false) {
+		if (!initialized) {
 			synchronized (this) {
-				if (initialized == false) {
+				if (!initialized) {
 
 					resolveActiveProfiles();
 
@@ -494,6 +555,30 @@ public class Props implements Cloneable {
 			index++;
 		}
 		return profiles;
+	}
+
+	/**
+	 * Returns all the profiles that define certain prop's key name.
+	 * Key name is given as a wildcard, or it can be matched fully.
+	 */
+	public String[] getProfilesFor(String propKeyNameWildcard) {
+		HashSet<String> profiles = new HashSet<>();
+
+		profile:
+		for (Map.Entry<String, Map<String, PropsEntry>> entries : data.profileProperties.entrySet()) {
+			String profileName = entries.getKey();
+
+			Map<String, PropsEntry> value = entries.getValue();
+
+			for (String propKeyName : value.keySet()) {
+				if (Wildcard.equalsOrMatch(propKeyName, propKeyNameWildcard)) {
+					profiles.add(profileName);
+					continue profile;
+				}
+			}
+		}
+
+		return profiles.toArray(new String[profiles.size()]);
 	}
 
 	/**

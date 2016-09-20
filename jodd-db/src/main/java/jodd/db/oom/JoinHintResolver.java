@@ -34,6 +34,7 @@ import jodd.bean.BeanUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -58,7 +59,7 @@ public class JoinHintResolver {
 			return data;
 		}
 		// build context
-		Map<String, Object> context = new HashMap<String, Object>(hints.length);
+		Map<String, Object> context = new HashMap<>(hints.length);
 		for (int i = 0; i < hints.length; i++) {
 			hints[i] = hints[i].trim();
 			String hint = hints[i];
@@ -92,7 +93,7 @@ public class JoinHintResolver {
 				}
 
 				String hintPropertyName = hint.substring(ndx + 1);
-				Class hintPropertyType = BeanUtil.getPropertyType(value, hintPropertyName);
+				Class hintPropertyType = BeanUtil.pojo.getPropertyType(value, hintPropertyName);
 
 				if (hintPropertyType != null) {
 					ClassDescriptor cd = ClassIntrospector.lookup(hintPropertyType);
@@ -100,11 +101,11 @@ public class JoinHintResolver {
 					if (cd.isCollection()) {
 						// add element to collection
 						try {
-							Collection collection = (Collection) BeanUtil.getDeclaredProperty(value, hintPropertyName);
+							Collection collection = BeanUtil.declared.getProperty(value, hintPropertyName);
 
 							if (collection == null) {
 								collection = (Collection) ReflectUtil.newInstance(hintPropertyType);
-								BeanUtil.setDeclaredPropertySilent(value, hintPropertyName, collection);
+								BeanUtil.declaredSilent.setProperty(value, hintPropertyName, collection);
 							}
 
 							collection.add(data[i]);
@@ -114,19 +115,19 @@ public class JoinHintResolver {
 					} else if (cd.isArray()) {
 						// add element to array
 						try {
-							Object[] array = (Object[]) BeanUtil.getDeclaredProperty(value, hintPropertyName);
+							Object[] array = BeanUtil.declared.getProperty(value, hintPropertyName);
 
 							if (array == null) {
 								array = (Object[]) Array.newInstance(hintPropertyType.getComponentType(), 1);
 
-								BeanUtil.setDeclaredPropertySilent(value, hintPropertyName, array);
+								BeanUtil.declaredSilent.setProperty(value, hintPropertyName, array);
 
 								array[0] = data[i];
 							} else {
 								Object[] newArray = ArraysUtil.append(array, data[i]);
 
 								if (newArray != array) {
-									BeanUtil.setDeclaredPropertySilent(value, hintPropertyName, newArray);
+									BeanUtil.declaredSilent.setProperty(value, hintPropertyName, newArray);
 								}
 							}
 						} catch (Exception ex) {
@@ -134,7 +135,22 @@ public class JoinHintResolver {
 						}
 					} else {
 						// set value
-						BeanUtil.setDeclaredPropertySilent(value, hintPropertyName, data[i]);
+						BeanUtil.declaredSilent.setProperty(value, hintPropertyName, data[i]);
+					}
+				}
+				else {
+					// special case - the property probably contains the collection in the way
+
+					int lastNdx = hintPropertyName.lastIndexOf('.');
+
+					String name = hintPropertyName.substring(0, lastNdx);
+
+					Object target = resolveValueInSpecialCase(value, name);
+
+					if (target != null) {
+						String targetSimpleName = hintPropertyName.substring(lastNdx + 1);
+
+						BeanUtil.declaredForcedSilent.setProperty(target, targetSimpleName, data[i]);
 					}
 				}
 
@@ -144,5 +160,21 @@ public class JoinHintResolver {
 			}
 		}
 		return result;
+	}
+
+	protected Object resolveValueInSpecialCase(Object value, String name) {
+		String[] elements = StringUtil.splitc(name, '.');
+
+		for (String element : elements) {
+			value = BeanUtil.declaredSilent.getProperty(value, element);
+
+			if (value instanceof List) {
+				List list = (List) value;
+
+				value = list.get(list.size() - 1);
+			}
+		}
+
+		return value;
 	}
 }

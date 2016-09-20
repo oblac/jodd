@@ -28,8 +28,8 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.util.collection.CharArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}
@@ -108,13 +108,22 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			CharArrayList charArrayList = new CharArrayList();
+			ArrayList<Character> charArrayList = new ArrayList<>();
+
 			for (Object element : iterable) {
 				char convertedValue = convertType(element);
-				charArrayList.add(convertedValue);
-            }
+				charArrayList.add(Character.valueOf(convertedValue));
+			}
 
-			return charArrayList.toArray();
+			char[] array = new char[charArrayList.size()];
+
+			for (int i = 0; i < charArrayList.size(); i++) {
+				Character c = charArrayList.get(i);
+				array[i] = c.charValue();
+			}
+
+			return array;
+
 		}
 
 		if (value instanceof CharSequence) {

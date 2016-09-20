@@ -204,8 +204,8 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		if (minConnections > maxConnections) {
 			minConnections = maxConnections;
 		}
-		availableConnections = new ArrayList<ConnectionData>(maxConnections);
-		busyConnections = new ArrayList<ConnectionData>(maxConnections);
+		availableConnections = new ArrayList<>(maxConnections);
+		busyConnections = new ArrayList<>(maxConnections);
 		for (int i = 0; i < minConnections; i++) {
 			try {
 				Connection conn = DriverManager.getConnection(url, user, password); 
@@ -225,7 +225,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		if (availableConnections == null) {
 			throw new DbSqlException("Connection pool is not initialized");
 		}
-		if (availableConnections.isEmpty() == false) {
+		if (!availableConnections.isEmpty()) {
 			int lastIndex = availableConnections.size() - 1;
 			ConnectionData existingConnection = availableConnections.get(lastIndex);
 			availableConnections.remove(lastIndex);
@@ -235,7 +235,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			// conn because maxConnection limit was reached.
 			long now = System.currentTimeMillis();
 			boolean isValid = isConnectionValid(existingConnection, now);
-			if (isValid == false) {
+			if (!isValid) {
 				if (log.isDebugEnabled()) {
 					log.debug("Pooled connection not valid, resetting");
 				}
@@ -279,7 +279,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * although not technically closed.
 	 */
 	private boolean isConnectionValid(ConnectionData connectionData, long now) {
-		if (validateConnection == false) {
+		if (!validateConnection) {
 			return true;
 		}
 		
@@ -363,9 +363,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			log.info("Core connection pool shutdown");
 		}
 		closeConnections(availableConnections);
-		availableConnections = new ArrayList<ConnectionData>(maxConnections);
+		availableConnections = new ArrayList<>(maxConnections);
 		closeConnections(busyConnections);
-		busyConnections = new ArrayList<ConnectionData>(maxConnections);
+		busyConnections = new ArrayList<>(maxConnections);
 	}
 
 	private void closeConnections(ArrayList<ConnectionData> connections) {

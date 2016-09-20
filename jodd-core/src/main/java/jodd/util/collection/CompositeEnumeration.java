@@ -88,7 +88,7 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
 	 * {@inheritDoc}
 	 */
 	public T nextElement() {
-		if (hasMoreElements() == false) {
+		if (!hasMoreElements()) {
 			throw new NoSuchElementException();
 		}
 

@@ -94,8 +94,8 @@ public class GzipFilter implements Filter {
 
 		if (
 				(threshold == 0) ||
-				(ServletUtil.isGzipSupported(req) == false) ||
-				(isGzipEligible(req) == false)
+				(!ServletUtil.isGzipSupported(req)) ||
+				(!isGzipEligible(req))
 		) {
 			chain.doFilter(request, response);
 			return;
@@ -139,7 +139,7 @@ public class GzipFilter implements Filter {
 		// match string
 		String uriMatch = config.getInitParameter("match");
 
-		if ((uriMatch != null) && (uriMatch.equals(StringPool.STAR) == false)) {
+		if ((uriMatch != null) && (!uriMatch.equals(StringPool.STAR))) {
 			matches = StringUtil.splitc(uriMatch, ',');
 			for (int i = 0; i < matches.length; i++) {
 				matches[i] = matches[i].trim();
@@ -239,7 +239,7 @@ public class GzipFilter implements Filter {
 			}
 		}
 
-		if ((result == true) && (excludes != null)) {
+		if ((result) && (excludes != null)) {
 			if (wildcards) {
 				if (Wildcard.matchPathOne(uri, excludes) != -1) {
 					result = false;

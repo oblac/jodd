@@ -75,7 +75,7 @@ public abstract class WebRunner {
 		
 		app = madvoc.getWebApplication();
 
-		appCore = (DefaultAppCore) BeanUtil.getDeclaredProperty(app, "appCore");
+		appCore = BeanUtil.declared.getProperty(app, "appCore");
 
 		setJtxManager(appCore.getJtxManager());
 

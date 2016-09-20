@@ -25,6 +25,7 @@
 
 package jodd.datetime;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -366,11 +367,29 @@ public class TimeUtil {
 	public static final SimpleDateFormat HTTP_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
 	/**
-	 * Formats time to HTTP date format.
+	 * Formats time to HTTP date/time format. Note that number of milliseconds
+	 * is lost.
 	 */
 	public static String formatHttpDate(long millis) {
 		Date date = new Date(millis);
 		return HTTP_DATE_FORMAT.format(date);
+	}
+
+	/**
+	 * Parses the HTTP date/time format. Returns <code>-1</code> if given string
+	 * is invalid.
+	 */
+	public static long parseHttpTime(String time) {
+		if (time == null) {
+			return -1;
+		}
+
+		try {
+			return TimeUtil.HTTP_DATE_FORMAT.parse(time).getTime();
+		}
+		catch (ParseException e) {
+			return -1;
+		}
 	}
 
 }

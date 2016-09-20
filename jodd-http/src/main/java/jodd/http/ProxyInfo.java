@@ -33,15 +33,15 @@ public class ProxyInfo {
 	/**
 	 * Proxy types.
 	 */
-	public static enum ProxyType {
+	public enum ProxyType {
 		NONE, HTTP, SOCKS4, SOCKS5
 	}
 
-	private String proxyAddress;
-	private int proxyPort;
-	private String proxyUsername;
-	private String proxyPassword;
-	private ProxyType proxyType;
+	private final String proxyAddress;
+	private final int proxyPort;
+	private final String proxyUsername;
+	private final String proxyPassword;
+	private final ProxyType proxyType;
 
 	public ProxyInfo(ProxyType proxyType, String proxyHost, int proxyPort, String proxyUser, String proxyPassword) {
 		this.proxyType = proxyType;

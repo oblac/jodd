@@ -53,8 +53,8 @@ import java.net.URL;
  */
 public class SqlTypeManager {
 
-	private static HashMap<Class, SqlType> types = new HashMap<Class, SqlType>();
-	private static HashMap<Class<? extends SqlType>, SqlType> sqlTypes = new HashMap<Class<? extends SqlType>, SqlType>();
+	private static HashMap<Class, SqlType> types = new HashMap<>();
+	private static HashMap<Class<? extends SqlType>, SqlType> sqlTypes = new HashMap<>();
 
 	static {
 		registerDefaults();

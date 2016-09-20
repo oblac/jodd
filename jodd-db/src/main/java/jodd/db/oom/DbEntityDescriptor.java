@@ -31,9 +31,9 @@ import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.StringPool;
-import jodd.util.sort.FastSort;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -133,10 +133,10 @@ public class DbEntityDescriptor<E> {
 	 */
 	private void resolveColumnsAndProperties(Class type) {
 		PropertyDescriptor[] allProperties = ClassIntrospector.lookup(type).getAllPropertyDescriptors();
-		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(allProperties.length);
+		List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
 		int idcount = 0;
 
-		HashSet<String> names = new HashSet<String>(allProperties.length);
+		HashSet<String> names = new HashSet<>(allProperties.length);
 
 		for (PropertyDescriptor propertyDescriptor : allProperties) {
 
@@ -144,7 +144,7 @@ public class DbEntityDescriptor<E> {
 					DbMetaUtil.resolveColumnDescriptors(this, propertyDescriptor, isAnnotated, columnNamingStrategy);
 
 			if (dec != null) {
-				if (names.add(dec.getColumnName()) == false) {
+				if (!names.add(dec.getColumnName())) {
 					throw new DbOomException("Duplicate column name: " + dec.getColumnName());
 				}
 
@@ -159,7 +159,7 @@ public class DbEntityDescriptor<E> {
 			throw new DbOomException("No column mappings in entity: " + type);
 		}
 		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[decList.size()]);
-		FastSort.sort(columnDescriptors);
+		Arrays.sort(columnDescriptors);
 
 		// extract ids from sorted list
 		if (idcount > 0) {
@@ -184,7 +184,7 @@ public class DbEntityDescriptor<E> {
 		}
 		init();
 		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-			if (columnDescriptor.columnName.equalsIgnoreCase(columnName) == true) {
+			if (columnDescriptor.columnName.equalsIgnoreCase(columnName)) {
 				return columnDescriptor;
 			}
 		}
@@ -199,7 +199,7 @@ public class DbEntityDescriptor<E> {
 		}
 		init();
 		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-			if (columnDescriptor.propertyName.equals(propertyName) == true) {
+			if (columnDescriptor.propertyName.equals(propertyName)) {
 				return columnDescriptor;
 			}
 		}
@@ -280,7 +280,7 @@ public class DbEntityDescriptor<E> {
 	 */
 	public Object getIdValue(E object) {
 		String propertyName = getIdPropertyName();
-		return BeanUtil.getDeclaredProperty(object, propertyName);
+		return BeanUtil.declared.getProperty(object, propertyName);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class DbEntityDescriptor<E> {
 	 */
 	public void setIdValue(E object, Object value) {
 		String propertyName = getIdPropertyName();
-		BeanUtil.setDeclaredProperty(object, propertyName, value);
+		BeanUtil.declared.setProperty(object, propertyName, value);
 	}
 
 	/**

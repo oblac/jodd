@@ -164,7 +164,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 */
 	private String[] process(String actionPath, boolean match) {
 		// first check the first fixed as a prefix
-		if (match && actionPath.startsWith(fixed[0]) == false) {
+		if (match && !actionPath.startsWith(fixed[0])) {
 			return null;
 		}
 
@@ -208,7 +208,7 @@ public abstract class BasePathMacros implements PathMacros {
 			values[i] = macroValue;
 
 			if (match && patterns[i] != null) {
-				if (matchValue(i, macroValue) == false) {
+				if (!matchValue(i, macroValue)) {
 					return null;
 				}
 			}

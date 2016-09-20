@@ -57,7 +57,7 @@ import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
  * User can set explicit excludes. Of course, mode can be changed.
  * <p>
  * All paths are matched using {@link Wildcard#matchPath(String, String) path-style}
- * wildcard matcher. All entries are matched using {@link Wildcard#match(String, String) common-style}
+ * wildcard matcher. All entries are matched using {@link Wildcard#match(CharSequence, CharSequence)} common-style}
  * wildcard matcher.
  *
  * @see ClassScanner
@@ -102,12 +102,18 @@ public abstract class ClassFinder {
 		return systemJars;
 	}
 
+	/**
+	 * Specify excluded jars.
+	 */
 	public void setExcludedJars(String... excludedJars) {
 		for (String excludedJar : excludedJars) {
-			rulesJars.include(excludedJar);
+			rulesJars.exclude(excludedJar);
 		}
 	}
 
+	/**
+	 * Specify included jars.
+	 */
 	public void setIncludedJars(String... includedJars) {
 		for (String includedJar : includedJars) {
 			rulesJars.include(includedJar);
@@ -236,7 +242,7 @@ public abstract class ClassFinder {
 	protected void scanUrl(URL url) {
 		File file = FileUtil.toFile(url);
 		if (file == null) {
-			if (ignoreException == false) {
+			if (!ignoreException) {
 				throw new FindFileException("URL is not a valid file: " + url);
 			}
 		}
@@ -276,13 +282,13 @@ public abstract class ClassFinder {
 	protected void scanPath(File file) {
 		String path = file.getAbsolutePath();
 
-		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT) == true) {
+		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT)) {
 
-			if (acceptJar(file) == false) {
+			if (!acceptJar(file)) {
 				return;
 			}
 			scanJarFile(file);
-		} else if (file.isDirectory() == true) {
+		} else if (file.isDirectory()) {
 			scanClassPath(file);
 		}
 	}
@@ -298,7 +304,7 @@ public abstract class ClassFinder {
 		try {
 			zipFile = new ZipFile(file);
 		} catch (IOException ioex) {
-			if (ignoreException == false) {
+			if (!ignoreException) {
 				throw new FindFileException("Invalid zip: " + file.getName(), ioex);
 			}
 			return;
@@ -316,7 +322,7 @@ public abstract class ClassFinder {
 					} finally {
 						entryData.closeInputStreamIfOpen();
 					}
-				} else if (includeResources == true) {
+				} else if (includeResources) {
 					String entryName = prepareEntryName(zipEntryName, false);
 					EntryData entryData = new EntryData(entryName, zipFile, zipEntry);
 					try {
@@ -326,7 +332,7 @@ public abstract class ClassFinder {
 					}
 				}
 			} catch (RuntimeException rex) {
-				if (ignoreException == false) {
+				if (!ignoreException) {
 					ZipUtil.close(zipFile);
 					throw rex;
 				}
@@ -341,7 +347,7 @@ public abstract class ClassFinder {
 	 */
 	protected void scanClassPath(File root) {
 		String rootPath = root.getAbsolutePath();
-		if (rootPath.endsWith(File.separator) == false) {
+		if (!rootPath.endsWith(File.separator)) {
 			rootPath += File.separatorChar;
 		}
 
@@ -352,11 +358,11 @@ public abstract class ClassFinder {
 			try {
 				if (StringUtil.endsWithIgnoreCase(filePath, CLASS_FILE_EXT)) {
 					scanClassFile(filePath, rootPath, file, true);
-				} else if (includeResources == true) {
+				} else if (includeResources) {
 					scanClassFile(filePath, rootPath, file, false);
 				}
 			} catch (RuntimeException rex) {
-				if (ignoreException == false) {
+				if (!ignoreException) {
 					throw rex;
 				}
 			}
@@ -364,7 +370,7 @@ public abstract class ClassFinder {
 	}
 
 	protected void scanClassFile(String filePath, String rootPath, File file, boolean isClass) {
-		if (StringUtil.startsWithIgnoreCase(filePath, rootPath) == true) {
+		if (StringUtil.startsWithIgnoreCase(filePath, rootPath)) {
 			String entryName = prepareEntryName(filePath.substring(rootPath.length()), isClass);
 			EntryData entryData = new EntryData(entryName, file);
 			try {
@@ -405,7 +411,7 @@ public abstract class ClassFinder {
 	 * If entry name is {@link #acceptEntry(String) accepted} invokes {@link #onEntry(EntryData)} a callback}.
 	 */
 	protected void scanEntry(EntryData entryData) {
-		if (acceptEntry(entryData.getName()) == false) {
+		if (!acceptEntry(entryData.getName())) {
 			return;
 		}
 		try {

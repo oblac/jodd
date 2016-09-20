@@ -28,8 +28,8 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
-import jodd.util.collection.ShortArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}
@@ -108,14 +108,21 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ShortArrayList shortArrayList = new ShortArrayList();
+			ArrayList<Short> shortArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				short convertedValue = convertType(element);
-            	shortArrayList.add(convertedValue);
-            }
+				shortArrayList.add(Short.valueOf(convertedValue));
+			}
 
-			return shortArrayList.toArray();
+			short[] array = new short[shortArrayList.size()];
+
+			for (int i = 0; i < shortArrayList.size(); i++) {
+				Short s = shortArrayList.get(i);
+				array[i] = s.shortValue();
+			}
+
+			return array;
 		}
 
 		if (value instanceof CharSequence) {

@@ -25,7 +25,6 @@
 
 package jodd.servlet;
 
-import jodd.bean.JoddBean;
 import jodd.bean.BeanUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +70,7 @@ public class JspResolver {
 	 * @see jodd.servlet.ServletUtil#value(HttpServletRequest, String)
 	 */
 	public static Object value(String name, HttpServletRequest request) {
-		String thisRef = BeanUtil.extractThisReference(name);
+		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.value(request, thisRef);
 		if (value == null) {
 			return ServletUtil.value(request, name);
@@ -80,7 +79,7 @@ public class JspResolver {
 	}
 
 	public static Object value(String name, PageContext pageContext) {
-		String thisRef = BeanUtil.extractThisReference(name);
+		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.value(pageContext, thisRef);
 		if (value == null) {
 			return ServletUtil.value(pageContext, name);
@@ -106,7 +105,7 @@ public class JspResolver {
 	 * @see jodd.servlet.ServletUtil#attribute(HttpServletRequest, String)
 	 */
 	public static Object attribute(String name, HttpServletRequest request) {
-		String thisRef = BeanUtil.extractThisReference(name);
+		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.attribute(request, thisRef);
 		if (value == null) {
 			return ServletUtil.attribute(request, name);
@@ -116,7 +115,7 @@ public class JspResolver {
 	}
 
 	public static Object attribute(String name, PageContext pageContext) {
-		String thisRef = BeanUtil.extractThisReference(name);
+		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.attribute(pageContext, thisRef);
 		if (value == null) {
 			return ServletUtil.attribute(pageContext, name);
@@ -133,7 +132,7 @@ public class JspResolver {
 		}
 
 		name = name.substring(thisRef.length() + 1);
-		return BeanUtil.getDeclaredPropertySilently(value, name);
+		return BeanUtil.declaredSilent.getProperty(value, name);
 	}
 
 }

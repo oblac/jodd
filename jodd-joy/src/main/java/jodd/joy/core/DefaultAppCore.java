@@ -209,7 +209,7 @@ public abstract class DefaultAppCore {
 		String protocol = url.getProtocol();
 
 
-		if (protocol.equals("file") == false) {
+		if (!protocol.equals("file")) {
 			try {
 				url = new URL(url.getFile());
 			} catch (MalformedURLException ignore) {
@@ -221,7 +221,7 @@ public abstract class DefaultAppCore {
 		int ndx = appDir.indexOf("WEB-INF");
 		isWebApplication = (ndx != -1);
 
-		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
+		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.workingFolder();
 	}
 
 	// ---------------------------------------------------------------- ready
@@ -464,7 +464,7 @@ public abstract class DefaultAppCore {
 		petite = createPetiteContainer();
 
 		log.info("app in web: " + Boolean.valueOf(isWebApplication));
-		if (isWebApplication == false) {
+		if (!isWebApplication) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).
 			petite.registerScope(SessionScope.class, new SingletonScope());
@@ -560,9 +560,8 @@ public abstract class DefaultAppCore {
 		log.info("database initialization");
 
 		// connection pool
-		Class<? extends ConnectionProvider> connectionProviderClass = getConnectionProviderType();
-		petite.registerPetiteBean(connectionProviderClass, PETITE_DBPOOL, null, null, false);
-		connectionProvider = (ConnectionProvider) petite.getBean(PETITE_DBPOOL);
+		connectionProvider = createConnectionProvider();
+		petite.addBean(PETITE_DBPOOL, connectionProvider);
 		connectionProvider.init();
 
 		checkConnectionProvider();
@@ -608,10 +607,11 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Returns <code>ConnectionProvider</code> implementation.
+	 * Returns <code>ConnectionProvider</code> instance.
+	 * Instance will be registered into the Petite context.
 	 */
-	protected Class<? extends ConnectionProvider> getConnectionProviderType() {
-		return CoreConnectionPool.class;
+	protected ConnectionProvider createConnectionProvider() {
+		return new CoreConnectionPool();
 	}
 
 	/**
@@ -665,7 +665,7 @@ public abstract class DefaultAppCore {
 	 * Simply delegates to {@link AppInit#init()}.
 	 */
 	protected void startApp() {
-		appInit = (AppInit) petite.getBean(PETITE_INIT);
+		appInit = petite.getBean(PETITE_INIT);
 		if (appInit != null) {
 			appInit.init();
 		}

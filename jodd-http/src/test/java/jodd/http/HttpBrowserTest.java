@@ -58,11 +58,34 @@ public class HttpBrowserTest {
 		HttpBrowser httpBrowser = new HttpBrowser();
 
 		httpBrowser.sendRequest(
-				HttpRequest.get("localhost:8173/echo?id=17").bodyText("hello"));
+			HttpRequest
+				.get("localhost:8173/echo?id=17")
+				.cookies(new Cookie("waffle", "jam"))
+				.bodyText("hello"));
+
 		HttpResponse httpResponse = httpBrowser.getHttpResponse();
 
 		assertNotNull(httpResponse);
 		assertEquals("hello", httpResponse.body());
+
+		Cookie[] cookies = httpResponse.cookies();
+		assertEquals(1, cookies.length);
+
+		assertEquals("waffle", cookies[0].getName());
+		assertEquals("jam!", cookies[0].getValue());
+	}
+
+	@Test
+	public void testBrowserRedirect() {
+		HttpBrowser httpBrowser = new HttpBrowser();
+
+		httpBrowser.sendRequest(HttpRequest.get("localhost:8173/redirect"));
+
+		HttpResponse httpResponse = httpBrowser.getHttpResponse();
+
+		assertEquals(200, httpResponse.statusCode());
+		assertEquals("target!", httpResponse.body());
+
 	}
 	
 }

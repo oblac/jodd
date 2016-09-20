@@ -45,4 +45,10 @@ public class OneRedirectAction {
 		return "url:/<two>?value=${value}";
 	}
 
+	@Action
+	public String permGoogle() {
+		value = "444";
+		return "url:http://google.com";
+	}
+
 }

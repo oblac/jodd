@@ -52,11 +52,14 @@ import java.lang.reflect.Field;
 public class Jodd {
 
 	private static int ndx = 0;
+	private static boolean initAllModules = false;
 
 	public static final int CORE 			= ndx++;
 	public static final int BEAN 			= ndx++;
 	public static final int DB 				= ndx++;
+	public static final int DECORA 			= ndx++;
 	public static final int HTTP 			= ndx++;
+	public static final int HTML_STAPLER 	= ndx++;
 	public static final int INTROSPECTOR 	= ndx++;
 	public static final int JSON 			= ndx++;
 	public static final int JTX 			= ndx++;
@@ -116,6 +119,11 @@ public class Jodd {
 	 * of this class.
 	 */
 	public static void initAllModules() {
+		if (initAllModules) {
+			return;
+		}
+		initAllModules = true;
+
 		final Field[] fields = Jodd.class.getFields();
 
 		final ClassLoader classLoader = Jodd.class.getClassLoader();
@@ -133,8 +141,32 @@ public class Jodd {
 
 			String packageName = moduleName.toLowerCase();
 
+			while (true) {
+				int ndx = packageName.indexOf('_');
+
+				if (ndx == -1) {
+					break;
+				}
+
+				packageName = packageName.substring(0, ndx) +
+					packageName.substring(ndx + 1);
+			}
+
 			moduleName = moduleName.substring(0, 1).toUpperCase() +
 					moduleName.substring(1, moduleName.length()).toLowerCase();
+
+			while (true) {
+				int ndx = moduleName.indexOf('_');
+
+				if (ndx == -1) {
+					break;
+				}
+
+				moduleName = moduleName.substring(0, ndx) +
+					moduleName.substring(ndx + 1, ndx + 2).toUpperCase() +
+					moduleName.substring(ndx + 2);
+			}
+
 
 			String moduleClass = "jodd." + packageName + ".Jodd" + moduleName;
 

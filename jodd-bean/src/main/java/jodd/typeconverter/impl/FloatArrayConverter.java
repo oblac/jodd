@@ -28,8 +28,8 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
-import jodd.util.collection.FloatArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 
 		Class valueClass = value.getClass();
 
-		if (valueClass.isArray() == false) {
+		if (!valueClass.isArray()) {
 			// source is not an array
 			return convertValueToArray(value);
 		}
@@ -108,14 +108,21 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			FloatArrayList floatArrayList = new FloatArrayList();
+			ArrayList<Float> floatArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				float convertedValue = convertType(element);
-				floatArrayList.add(convertedValue);
-            }
+				floatArrayList.add(Float.valueOf(convertedValue));
+			}
 
-			return floatArrayList.toArray();
+			float[] array = new float[floatArrayList.size()];
+
+			for (int i = 0; i < floatArrayList.size(); i++) {
+				Float f = floatArrayList.get(i);
+				array[i] = f.floatValue();
+			}
+
+			return array;
 		}
 
 		if (value instanceof CharSequence) {

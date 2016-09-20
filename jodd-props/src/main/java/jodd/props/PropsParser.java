@@ -277,7 +277,7 @@ public class PropsParser implements Cloneable {
 					case '\n':
 						if ((state == ParseState.ESCAPE_NEWLINE) && (c == '\n')) {
 							sb.append(escapeNewLineValue);
-							if (ignorePrefixWhitespacesOnNewLine == false) {
+							if (!ignorePrefixWhitespacesOnNewLine) {
 								state = ParseState.VALUE;
 							}
 						} else {

@@ -36,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -188,6 +187,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- static factories
 
+	/**
+	 * Generic request cretor.
+	 */
+	public static HttpRequest create(String method, String destination) {
+		return new HttpRequest()
+				.method(method.toUpperCase())
+				.set(destination);
+	}
+
 
 	/**
 	 * Builds a CONNECT request.
@@ -296,7 +304,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest path(String path) {
 		// this must be the only place that sets the path
 
-		if (path.startsWith(StringPool.SLASH) == false) {
+		if (!path.startsWith(StringPool.SLASH)) {
 			path = StringPool.SLASH + path;
 		}
 
@@ -309,7 +317,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			query = HttpUtil.parseQuery(queryString, true);
 		} else {
-			query = new HttpMultiMap<>();
+			query = HttpMultiMap.newCaseInsensitveMap();
 		}
 
 		this.path = path;
@@ -324,7 +332,43 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * we are forcing usage of multipart request.
 	 */
 	public HttpRequest multipart(boolean multipart) {
-		this.multipart = true;
+		this.multipart = multipart;
+		return this;
+	}
+
+
+	// ---------------------------------------------------------------- cookies
+
+	/**
+	 * Sets cookies to the request.
+	 */
+	public HttpRequest cookies(Cookie... cookies) {
+		if (cookies.length == 0) {
+			return this;
+		}
+
+		StringBuilder cookieString = new StringBuilder();
+
+		boolean first = true;
+
+		for (Cookie cookie : cookies) {
+			Integer maxAge = cookie.getMaxAge();
+			if (maxAge != null && maxAge.intValue() == 0) {
+				continue;
+			}
+
+			if (!first) {
+				cookieString.append("; ");
+			}
+
+			first = false;
+			cookieString.append(cookie.getName());
+			cookieString.append('=');
+			cookieString.append(cookie.getValue());
+		}
+
+		header("cookie", cookieString.toString(), true);
+
 		return this;
 	}
 
@@ -484,11 +528,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Enables basic authentication by adding required header.
 	 */
 	public HttpRequest basicAuthentication(String username, String password) {
-		String data = username.concat(StringPool.COLON).concat(password);
 
-		String base64 = Base64.encodeToString(data);
+		if (username != null && password != null) {
+			String data = username.concat(StringPool.COLON).concat(password);
 
-		header("Authorization", "Basic " + base64, true);
+			String base64 = Base64.encodeToString(data);
+
+			header("Authorization", "Basic " + base64, true);
+		}
 
 		return this;
 	}
@@ -524,9 +571,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- connection properties
 
 	protected int timeout = -1;
+	protected int connectTimeout = -1;
 
 	/**
-	 * Defines connection timeout in milliseconds.
+	 * Defines read timeout (SO_TIMEOUT) in milliseconds.
 	 * @see jodd.http.HttpConnection#setTimeout(int)
 	 */
 	public HttpRequest timeout(int milliseconds) {
@@ -535,12 +583,29 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Returns timeout in milliseconds. Negative value means that
-	 * default value is used.
+	 * Returns read timeout (SO_TIMEOUT) in milliseconds. Negative value
+	 * means that default value is used.
 	 */
 	public int timeout() {
 		return timeout;
 	}
+
+	/**
+	 * Defines socket connection timeout.
+	 */
+	public HttpRequest connectionTimeout(int milliseconds) {
+		this.connectTimeout = milliseconds;
+		return this;
+	}
+
+	/**
+	 * Returns socket connection timeout. Negative value means that default
+	 * value is used.
+	 */
+	public int connectionTimeout() {
+		return connectTimeout;
+	}
+
 
 	// ---------------------------------------------------------------- send
 
@@ -548,10 +613,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected HttpConnectionProvider httpConnectionProvider;
 
 	/**
-	 * Returns http connection provider that was used for creating
-	 * current http connection.
+	 * Uses custom connection provider when {@link #open() opening} the
+	 * connection.
 	 */
-	public HttpConnectionProvider httpConnectionProvider() {
+	public HttpRequest withConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+		this.httpConnectionProvider = httpConnectionProvider;
+		return this;
+	}
+
+	/**
+	 * Returns http connection provider that was used for creating
+	 * current http connection. If <code>null</code>, default
+	 * connection provider will be used.
+	 */
+	public HttpConnectionProvider connectionProvider() {
 		return httpConnectionProvider;
 	}
 
@@ -560,16 +635,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * used for sending this request. Value is available
 	 * ONLY after calling {@link #open()} and before {@link #send()}.
 	 */
-	public HttpConnection httpConnection() {
+	public HttpConnection connection() {
 		return httpConnection;
 	}
 
 	/**
-	 * Opens a new {@link HttpConnection connection} using
-	 * {@link JoddHttp#httpConnectionProvider default connection provider}.
+	 * Opens a new {@link HttpConnection connection} using either
+	 * provided or {@link JoddHttp#httpConnectionProvider default} connection
+	 * provider.
 	 */
 	public HttpRequest open() {
-		return open(JoddHttp.httpConnectionProvider);
+		if (httpConnectionProvider == null) {
+			return open(JoddHttp.httpConnectionProvider);
+		}
+
+		return open(httpConnectionProvider);
 	}
 
 	/**
@@ -627,7 +707,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if (previousConnection != null) {
 				// keep using the connection!
 				this.httpConnection = previousConnection;
-				this.httpConnectionProvider = httpResponse.getHttpRequest().httpConnectionProvider();
+				this.httpConnectionProvider = httpResponse.getHttpRequest().connectionProvider();
 			}
 
 			//keepAlive = true; (already set)
@@ -640,7 +720,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// if we don't want to continue with this persistent session, mark this connection as closed
-		if (doContinue == false) {
+		if (!doContinue) {
 			keepAlive = false;
 		}
 
@@ -648,7 +728,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// if connection is not opened, open it using previous connection provider
 		if (httpConnection == null) {
-			open(httpResponse.getHttpRequest().httpConnectionProvider());
+			open(httpResponse.getHttpRequest().connectionProvider());
 		}
 		return this;
 	}
@@ -659,14 +739,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * connection will not be closed.
 	 */
 	public HttpResponse send() {
+		return _send();
+	}
+
+	private HttpResponse _send() {
 		if (httpConnection == null) {
 			open();
-		}
-
-		// prepare http connection
-
-		if (timeout != -1) {
-			httpConnection.setTimeout(timeout);
 		}
 
 		// sends data
@@ -687,7 +765,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		boolean keepAlive = httpResponse.isConnectionPersistent();
 
-		if (keepAlive == false) {
+		if (!keepAlive) {
 			// closes connection if keep alive is false, or if counter reached 0
 			httpConnection.close();
 			httpConnection = null;
@@ -749,28 +827,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			.append(httpVersion)
 			.append(CRLF);
 
-		for (String key : headers.names()) {
-			List<String> values = headers.getAll(key);
-
-			String headerName = HttpUtil.prepareHeaderParameterName(key);
-
-			for (String value : values) {
-				request.append(headerName);
-				request.append(": ");
-				request.append(value);
-				request.append(CRLF);
-			}
-		}
-
-		if (fullRequest) {
-			request.append(CRLF);
-
-			if (form != null) {
-				request.append(formBuffer);
-			} else if (body != null) {
-				request.append(body);
-			}
-		}
+		populateHeaderAndBody(request, formBuffer, fullRequest);
 
 		return request;
 	}

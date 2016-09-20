@@ -72,7 +72,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected HttpMultiMap<String> headers = new HttpMultiMap<>();
+	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
@@ -149,7 +149,7 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		if (overwrite == true) {
+		if (overwrite) {
 			headers.set(key, value);
 		} else {
 			headers.add(key, value);
@@ -383,7 +383,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected void initForm() {
 		if (form == null) {
-			form = new HttpMultiMap<>();
+			form = HttpMultiMap.newCaseInsensitveMap();
 		}
 	}
 
@@ -773,6 +773,32 @@ public abstract class HttpBase<T> {
 	 */
 	protected abstract Buffer buffer(boolean full);
 
+	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
+		for (String key : headers.names()) {
+			List<String> values = headers.getAll(key);
+
+			String headerName = HttpUtil.prepareHeaderParameterName(key);
+
+			for (String value : values) {
+				target.append(headerName);
+				target.append(": ");
+				target.append(value);
+				target.append(CRLF);
+			}
+		}
+
+		if (fullRequest) {
+			target.append(CRLF);
+
+			if (form != null) {
+				target.append(formBuffer);
+			} else if (body != null) {
+				target.append(body);
+			}
+		}
+	}
+
+
 	// ---------------------------------------------------------------- send
 
 	protected HttpProgressListener httpProgressListener;
@@ -914,7 +940,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = new HttpMultiMap<>();
+			form = HttpMultiMap.newCaseInsensitveMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 

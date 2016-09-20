@@ -263,12 +263,15 @@ public class ReceiveMailSession {
 			for (int i = 0; i < messages.length; i++) {
 				Message msg = messages[i];
 
-				if (flagsToSet != null) {
-					msg.setFlags(flagsToSet, true);
-				}
+				// we need to parse message BEFORE flags are set!
 				emails[i] = new ReceivedEmail(msg);
 
-				if (flagsToSet == null && emails[i].isSeen() == false) {
+				if (flagsToSet != null) {
+					emails[i].setFlags(flagsToSet);
+					msg.setFlags(flagsToSet, true);
+				}
+
+				if (flagsToSet == null && !emails[i].isSeen()) {
 					msg.setFlag(Flags.Flag.SEEN, false);
 				}
 			}

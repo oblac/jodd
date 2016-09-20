@@ -112,7 +112,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	 * Enables debug mode. By default it is turned off.
 	 */
 	public T debug(boolean debug) {
-		this.debug = true;
+		this.debug = debug;
 		return (T) this;
 	}
 
@@ -162,11 +162,11 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
 		}
 
-		if (debug == true) {
+		if (debug) {
 			props.put(MAIL_DEBUG, "true");
 		}
 
-		if (strictAddress == false) {
+		if (!strictAddress) {
 			props.put(MAIL_MIME_ADDRESS_STRICT, "false");
 		}
 

@@ -28,13 +28,21 @@ package jodd.petite;
 import jodd.petite.data.Biz;
 import jodd.petite.data.DefaultBiz;
 import jodd.petite.data.DefaultBizImpl;
+import jodd.petite.meta.PetiteBean;
+import jodd.petite.meta.PetiteInject;
+import jodd.petite.scope.ProtoScope;
 import jodd.petite.tst.Boo;
 import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
 import org.junit.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class MiscTest {
 
@@ -168,6 +176,46 @@ public class MiscTest {
 		assertEquals(1, boo2.getFoo().hello());
 		assertEquals(1, boo2.getFoo().getCounter());
 		assertEquals("[first, second, third, init, beforeLast, last]", boo.orders.toString());
+	}
+
+	public static class PetiteDemo {
+		static Integer getOne() {
+			return new Integer(123);
+		}
+	}
+
+	@Test
+	public void test243() {
+		PetiteContainer pc = new PetiteContainer();
+		new PetiteRegistry(pc).provider("provider").type(PetiteDemo.class).method("getOne").args().register();
+	}
+
+	@PetiteBean(scope = ProtoScope.class)
+	public static class BeanTwo {
+	}
+
+	@PetiteBean
+	public static class BeanOne {
+
+		BeanTwo ctor;
+		@PetiteInject
+		BeanTwo setter;
+
+		@PetiteInject
+		public BeanOne(BeanTwo bean) {
+			this.ctor = bean;
+		}
+	}
+
+	@Test
+	public void test244() {
+		PetiteContainer pc = new PetiteContainer();
+		pc.registerPetiteBean(BeanOne.class, null, null, null, false);
+		pc.registerPetiteBean(BeanTwo.class, null, null, null, false);
+
+		BeanOne petiteBean = pc.getBean(BeanOne.class);
+
+		assertTrue(petiteBean.ctor != petiteBean.setter);
 	}
 
 }

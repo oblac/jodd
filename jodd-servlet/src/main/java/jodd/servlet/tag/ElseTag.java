@@ -37,12 +37,12 @@ public class ElseTag extends SimpleTagSupport {
 	@Override
 	public void doTag() throws JspException {
 		JspTag parent = getParent();
-		if (parent == null || !(parent instanceof IfElseTag)) {
+		if (!(parent instanceof IfElseTag)) {
 			throw new JspException("Parent IfElse tag is required", null);
 		}
 
 		IfElseTag ifTag = (IfElseTag) parent;
-		if (ifTag.getTestValue() == false) {
+		if (!ifTag.getTestValue()) {
 			TagUtil.invokeBody(getJspBody());
 		}
 	}

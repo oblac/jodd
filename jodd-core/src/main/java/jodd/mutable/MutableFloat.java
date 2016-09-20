@@ -55,21 +55,21 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	/**
 	 * Returns mutable value.
 	 */
-	public float getValue() {
+	public float get() {
 		return value;
 	}
 
 	/**
 	 * Sets mutable value.
 	 */
-	public void setValue(float value) {
+	public void set(float value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void setValue(Number value) {
+	public void set(Number value) {
 		this.value = value.floatValue();
 	}
 
@@ -101,10 +101,10 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
-			if (obj instanceof Float) {
+			if ( ((Float)this.value).getClass() == obj.getClass() ) {
 				return Float.floatToIntBits(value) == Float.floatToIntBits(((Float) obj).floatValue());
 			}
-			if (obj instanceof MutableFloat) {
+			if (this.getClass() == obj.getClass()) {
 				return Float.floatToIntBits(value) == Float.floatToIntBits(((MutableFloat) obj).value);
 			}
 		}

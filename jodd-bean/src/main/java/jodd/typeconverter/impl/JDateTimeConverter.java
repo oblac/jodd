@@ -78,7 +78,7 @@ public class JDateTimeConverter implements TypeConverter<JDateTime> {
 
 		String stringValue = value.toString().trim();
 
-		if (StringUtil.containsOnlyDigits(stringValue) == false) {
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			return new JDateTime(stringValue, JDateTime.DEFAULT_FORMAT);
 		}
 		try {

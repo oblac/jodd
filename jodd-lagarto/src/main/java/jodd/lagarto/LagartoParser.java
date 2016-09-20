@@ -199,7 +199,7 @@ public class LagartoParser extends Scanner {
 			return;
 		}
 
-		_consumeCharacterReference();
+		_consumeAttrCharacterReference();
 	}
 
 	protected void consumeCharacterReference() {
@@ -219,6 +219,7 @@ public class LagartoParser extends Scanner {
 
 		if (equalsOne(c, CONTINUE_CHARS)) {
 			ndx = unconsumeNdx;
+			textEmitChar('&');
 			return;
 		}
 
@@ -248,6 +249,46 @@ public class LagartoParser extends Scanner {
 			if (c != ';') {
 				errorCharReference();
 				ndx--;
+			}
+		}
+	}
+
+	private void _consumeAttrCharacterReference() {
+		final int unconsumeNdx = ndx - 1;
+
+		char c = input[ndx];
+
+		if (equalsOne(c, CONTINUE_CHARS)) {
+			ndx = unconsumeNdx;
+			textEmitChar('&');
+			return;
+		}
+
+		if (c == '#') {
+			_consumeNumber(unconsumeNdx);
+		} else {
+			final String name = HtmlDecoder.detectName(input, ndx);
+
+			if (name == null) {
+				// this error is not quite as by the spec. The spec says that
+				// only a sequence of alphanumeric chars ending with semicolon
+				// gives na error
+				errorCharReference();
+				textEmitChar('&');
+				ndx = unconsumeNdx;
+				return;
+			}
+
+			// missing legacy attribute thing
+
+			ndx += name.length();
+			c = input[ndx];
+
+			if (c == ';') {
+				textEmitChars(HtmlDecoder.lookup(name));
+			} else {
+				textEmitChar('&');
+				ndx = unconsumeNdx;
 			}
 		}
 	}
@@ -1100,6 +1141,7 @@ public class LagartoParser extends Scanner {
 
 				if (c == '&') {
 					consumeCharacterReference();
+					continue;
 				}
 
 				textEmitChar(c);
