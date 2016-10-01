@@ -34,7 +34,7 @@ Some tools and utility modules are:
 + `jodd-core` contains many utilities, including `JDateTime`.
 + `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
 + `jodd-props` is the super-replacement for Java `Properties`.
-+ `jodd-email` for easier email sending.
++ `jodd-mail` for easier email sending.
 + `jodd-upload`, handles HTTP uploads.
 + `jodd-servlet` with many servlet utilities, including nice tag library.
 + `jodd-http`, tiny HTTP client.
