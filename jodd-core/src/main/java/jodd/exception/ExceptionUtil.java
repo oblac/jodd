@@ -154,8 +154,10 @@ public class ExceptionUtil {
 			t.printStackTrace(pw);
 			t = t.getCause();
 		}
-		pw.flush();
-		sw.flush();
+
+		StreamUtil.close(pw);
+		StreamUtil.close(sw);
+
 		return sw.toString();
 	}
 
