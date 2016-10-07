@@ -2205,7 +2205,7 @@ public class StringUtil {
 	/**
 	 * Joins an array of objects into one string without separators.
 	 */
-	public static String join(Object... array) {
+	public static String join(Object[] array) {
 		if (array == null) {
 			return null;
 		}
