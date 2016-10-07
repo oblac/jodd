@@ -33,6 +33,7 @@ import java.util.Locale;
 
 import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
+import static jodd.util.Sugar.arr;
 import static org.junit.Assert.*;
 
 public class StringUtilTest {
@@ -900,10 +901,11 @@ public class StringUtilTest {
 		assertNull(StringUtil.join((Object[]) null));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}));
 
-		assertEquals("123", StringUtil.join("123"));
-		assertEquals("123", StringUtil.join("1", "2", "3"));
-		assertEquals("13", StringUtil.join("1", "", "3"));
-		assertEquals("1null3", StringUtil.join("1", null, "3"));
+		assertEquals("123", StringUtil.join(arr("123")));
+
+		assertEquals("123", StringUtil.join(arr("1", "2", "3")));
+		assertEquals("13", StringUtil.join(arr("1", "", "3")));
+		assertEquals("1null3", StringUtil.join(arr("1", null, "3")));
 
 		String s = StringUtil.join(ArraysUtil.array("1", "2", "3"), ".");
 		assertEquals("1.2.3", s);
@@ -917,11 +919,11 @@ public class StringUtilTest {
 		s = StringUtil.join(new String[0], ".");
 		assertEquals("", s);
 
-		assertNull(StringUtil.join(null, "."));
+		assertNull(StringUtil.join(arr(null, ".")));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, "."));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, "."));
 
-		assertNull(StringUtil.join(null, '.'));
+		assertNull(StringUtil.join(arr(null, '.')));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, '.'));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, '.'));
 	}
