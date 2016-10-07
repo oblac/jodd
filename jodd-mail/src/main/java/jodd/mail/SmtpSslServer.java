@@ -61,7 +61,7 @@ public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
 	// ---------------------------------------------------------------- properties
 
 	protected boolean startTlsRequired = false;
-	protected boolean plaintextOverTLS = false;
+	protected boolean plaintextOverTLS = true;
 
 	/**
 	 * Sets <code>mail.smtp.starttls.required</code> which according to
