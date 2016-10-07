@@ -11,5 +11,11 @@ public class SugarTest {
 	public void testArr() {
 		String[] strings = arr("one", "two");
 		Assert.assertArrayEquals(new String[] {"one", "two"}, strings);
+
+		Object[] emptyObjects = arr();
+		Assert.assertArrayEquals(new Object[] {}, emptyObjects);
+
+		String[] emptyStrings = arr();
+		Assert.assertArrayEquals(new String[] {}, emptyStrings);
 	}
 }

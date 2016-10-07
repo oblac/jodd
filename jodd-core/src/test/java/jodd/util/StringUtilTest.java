@@ -898,7 +898,7 @@ public class StringUtilTest {
 
 	@Test
 	public void testJoin() {
-		assertNull(StringUtil.join((Object[]) null));
+		assertNull(StringUtil.join(null));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}));
 
 		assertEquals("123", StringUtil.join(arr("123")));
@@ -919,11 +919,11 @@ public class StringUtilTest {
 		s = StringUtil.join(new String[0], ".");
 		assertEquals("", s);
 
-		assertNull(StringUtil.join(arr(null, ".")));
+		assertNull(StringUtil.join(arr(null), "."));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, "."));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, "."));
 
-		assertNull(StringUtil.join(arr(null, '.')));
+		assertNull(StringUtil.join(arr(null), '.'));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, '.'));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, '.'));
 	}
