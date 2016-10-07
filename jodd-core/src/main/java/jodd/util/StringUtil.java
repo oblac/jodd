@@ -28,6 +28,8 @@ package jodd.util;
 import static jodd.util.StringPool.EMPTY;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 
 /**
@@ -2253,6 +2255,58 @@ public class StringUtil {
 
 		return sb.toString();
 	}
+
+	/**
+	 * Joins an collection of objects into one string with separator.
+	 */
+	public static String join(Collection collection, char separator) {
+		if (collection == null) {
+			return null;
+		}
+
+		if (collection.size() == 0) {
+			return StringPool.EMPTY;
+		}
+
+		final StringBuilder sb = new StringBuilder(collection.size() * 16);
+		final Iterator it = collection.iterator();
+
+		for (int i = 0; i < collection.size(); i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(it.next());
+		}
+
+		return sb.toString();
+	}
+
+	public static String join(Collection collection, String separator) {
+		if (collection == null) {
+			return null;
+		}
+
+		if (collection.size() == 0) {
+			return StringPool.EMPTY;
+		}
+
+		final StringBuilder sb = new StringBuilder(collection.size() * 16);
+		final Iterator it = collection.iterator();
+
+		for (int i = 0; i < collection.size(); i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(it.next());
+		}
+
+		return sb.toString();
+	}
+
 	/**
 	 * Joins an array of objects into one string with separator.
 	 */

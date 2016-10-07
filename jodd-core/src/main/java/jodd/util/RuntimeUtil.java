@@ -30,12 +30,14 @@ import jodd.io.StreamGobbler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Runtime utilities.
  */
 public class RuntimeUtil {
+
+	public static final String ERROR_PREFIX = "err> ";
+	public static final String OUTPUT_PREFIX = "out> ";
 
 	// ---------------------------------------------------------------- memory
 
@@ -90,19 +92,25 @@ public class RuntimeUtil {
 
 	public static class ProcessResult {
 		private final int exitCode;
-		private final String out;
+		private final String output;
 
-		protected ProcessResult(int existCode, String out) {
+		protected ProcessResult(int existCode, String output) {
 			this.exitCode = existCode;
-			this.out = out;
+			this.output = output;
 		}
 
+		/**
+		 * Returns process exit code.
+		 */
 		public int getExitCode() {
 			return exitCode;
 		}
 
-		public String getOut() {
-			return out;
+		/**
+		 * Returns process output.
+		 */
+		public String getOutput() {
+			return output;
 		}
 	}
 
@@ -112,8 +120,8 @@ public class RuntimeUtil {
 	public static ProcessResult run(Process process) throws IOException, InterruptedException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, "out>");
-		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), baos, "err>");
+		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, OUTPUT_PREFIX);
+		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), baos, ERROR_PREFIX);
 
 		outputGobbler.start();
 		errorGobbler.start();
