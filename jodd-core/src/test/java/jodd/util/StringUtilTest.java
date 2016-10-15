@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static jodd.util.ArraysUtil.*;
 import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
-import static jodd.util.Sugar.arr;
 import static org.junit.Assert.*;
 
 public class StringUtilTest {
@@ -901,29 +901,29 @@ public class StringUtilTest {
 		assertNull(StringUtil.join(null));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}));
 
-		assertEquals("123", StringUtil.join(arr("123")));
+		assertEquals("123", StringUtil.join(array("123")));
 
-		assertEquals("123", StringUtil.join(arr("1", "2", "3")));
-		assertEquals("13", StringUtil.join(arr("1", "", "3")));
-		assertEquals("1null3", StringUtil.join(arr("1", null, "3")));
+		assertEquals("123", StringUtil.join(array("1", "2", "3")));
+		assertEquals("13", StringUtil.join(array("1", "", "3")));
+		assertEquals("1null3", StringUtil.join(array("1", null, "3")));
 
-		String s = StringUtil.join(ArraysUtil.array("1", "2", "3"), ".");
+		String s = StringUtil.join(array("1", "2", "3"), ".");
 		assertEquals("1.2.3", s);
 
-		 s = StringUtil.join(ArraysUtil.array("1", "2", "3"), '.');
+		 s = StringUtil.join(array("1", "2", "3"), '.');
 			assertEquals("1.2.3", s);
 
-		s = StringUtil.join(ArraysUtil.array("1"), '.');
+		s = StringUtil.join(array("1"), '.');
 		assertEquals("1", s);
 
 		s = StringUtil.join(new String[0], ".");
 		assertEquals("", s);
 
-		assertNull(StringUtil.join(arr(null), "."));
+		assertNull(StringUtil.join(array(null), "."));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, "."));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, "."));
 
-		assertNull(StringUtil.join(arr(null), '.'));
+		assertNull(StringUtil.join(array(null), '.'));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, '.'));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, '.'));
 	}
