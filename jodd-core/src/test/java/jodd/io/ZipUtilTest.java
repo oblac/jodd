@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -109,8 +110,7 @@ public class ZipUtilTest {
 
 		int directoryCount = 0;
 
-		ZipFile zipfile = new ZipFile(zipFile);
-		try {
+		try (ZipFile zipfile = new ZipFile(zipFile)) {
 			for (Enumeration<? extends ZipEntry> entries = zipfile.entries(); entries.hasMoreElements(); ) {
 				ZipEntry zipEntry = entries.nextElement();
 				if (zipEntry.isDirectory()) {
@@ -119,14 +119,32 @@ public class ZipUtilTest {
 					assertTrue(zipEntry.getName().equals("data/") || zipEntry.getName().equals("data/file/"));
 				}
 			}
-		} finally {
-			zipfile.close();
 		}
 
 		assertEquals(2, directoryCount);
 
 		// cleanup
 		FileUtil.delete(zipFile);
+	}
+
+	@Test
+	public void testZipEmptyFolder() throws IOException {
+		byte[] bytes = ZipBuilder
+			.createZipInMemory()
+			.addFolder("myEmptyFolder")
+			.toBytes();
+
+		File tempDir = FileUtil.createTempDirectory();
+		tempDir.deleteOnExit();
+
+		File zipFile = new File(tempDir, "test.zip");
+		FileUtil.writeBytes(zipFile, bytes);
+
+		// read zip
+		List<String> entries = ZipUtil.listZip(zipFile);
+
+		assertEquals(1, entries.size());
+		assertEquals("myEmptyFolder/", entries.get(0));
 	}
 
 	@Test

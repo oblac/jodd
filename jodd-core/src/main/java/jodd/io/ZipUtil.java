@@ -37,7 +37,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -174,6 +177,25 @@ public class ZipUtil {
 	}
 
 	// ---------------------------------------------------------------- unzip
+
+	/**
+	 * Lists zip content.
+	 */
+	public static List<String> listZip(File zipFile) throws IOException {
+		List<String> entries = new ArrayList<>();
+
+		ZipFile zip = new ZipFile(zipFile);
+		Enumeration zipEntries = zip.entries();
+
+		while (zipEntries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) zipEntries.nextElement();
+			String entryName = entry.getName();
+
+			entries.add(entryName);
+		}
+
+		return Collections.unmodifiableList(entries);
+	}
 
 	/**
 	 * Extracts zip file content to the target directory.
