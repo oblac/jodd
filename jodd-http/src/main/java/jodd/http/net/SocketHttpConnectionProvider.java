@@ -50,6 +50,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Defines proxy to use for created sockets.
 	 */
+	@Override
 	public void useProxy(ProxyInfo proxyInfo) {
 		proxy = proxyInfo;
 	}

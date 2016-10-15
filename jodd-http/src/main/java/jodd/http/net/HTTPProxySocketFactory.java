@@ -104,12 +104,13 @@ public class HTTPProxySocketFactory extends SocketFactory {
 
 			while (true) {
 				char c = (char) in.read();
+				if (c == -1) {
+					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
+				}
+
 				recv.append(c);
 				if (recv.length() > 1024) {
 					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Received header longer then 1024 chars");
-				}
-				if (c == -1) {
-					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
 				}
 				if ((nlchars == 0 || nlchars == 2) && c == '\r') {
 					nlchars++;
@@ -140,7 +141,7 @@ public class HTTPProxySocketFactory extends SocketFactory {
 			int code = Integer.parseInt(m.group(1));
 
 			if (code != HttpURLConnection.HTTP_OK) {
-				throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid code");
+				throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid return status code: " + code);
 			}
 
             if (secure) {
