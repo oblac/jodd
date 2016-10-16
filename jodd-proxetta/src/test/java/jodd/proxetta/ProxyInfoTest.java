@@ -30,7 +30,6 @@ import jodd.proxetta.data.DateDao;
 import jodd.proxetta.data.PerformanceMeasureProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import jodd.util.SystemUtil;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -40,7 +39,7 @@ public class ProxyInfoTest {
 	@Test
 	public void testProxyInfo_createNotRightAfterTheMethod() {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		proxetta.setDebugFolder(SystemUtil.userHome());
+		//proxetta.setDebugFolder(SystemUtil.userHome());
 
 		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
 
