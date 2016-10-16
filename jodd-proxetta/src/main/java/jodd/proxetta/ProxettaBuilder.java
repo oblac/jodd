@@ -108,11 +108,15 @@ public abstract class ProxettaBuilder {
 
 		try {
 			targetInputStream = ClassLoaderUtil.getClassAsStream(targetName);
+			if (targetInputStream == null) {
+				throw new ProxettaException("Target class not found: " + targetName);
+			}
 			targetClassName = targetName;
 			targetClass = null;
-		} catch (IOException ioex) {
+		}
+		catch (IOException ioex) {
 			StreamUtil.close(targetInputStream);
-			throw new ProxettaException("Unable to stream class name: " + targetName, ioex);
+			throw new ProxettaException("Unable to get stream class name: " + targetName, ioex);
 		}
 	}
 
@@ -124,9 +128,13 @@ public abstract class ProxettaBuilder {
 
 		try {
 			targetInputStream = ClassLoaderUtil.getClassAsStream(target);
+			if (targetInputStream == null) {
+				throw new ProxettaException("Target class not found: " + target.getName());
+			}
 			targetClass = target;
 			targetClassName = target.getName();
-		} catch (IOException ioex) {
+		}
+		catch (IOException ioex) {
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
 		}
