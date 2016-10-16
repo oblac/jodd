@@ -25,6 +25,7 @@
 
 package jodd.petite;
 
+import jodd.petite.proxetta.ProxettaBeanDefinition;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -32,6 +33,7 @@ import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -135,16 +137,35 @@ public class ScopedProxyManager {
 		if (proxyClass == null) {
 			// create proxy class only once
 
-			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
+			if (refBeanDefinition instanceof ProxettaBeanDefinition) {
+				// special case, double proxy!
 
-			proxetta.setClassNameSuffix("$ScopedProxy");
-			proxetta.setVariableClassName(true);
+				ProxettaBeanDefinition pbd =
+					(ProxettaBeanDefinition) refBeanDefinition;
 
-			ProxyProxettaBuilder builder = proxetta.builder(beanType);
+				ProxyProxetta proxetta = ProxyProxetta.withAspects(ArraysUtil.insert(pbd.proxyAspects, aspect, 0));
 
-			proxyClass = builder.define();
+				proxetta.setClassNameSuffix("$ScopedProxy");
+				proxetta.setVariableClassName(true);
 
-			proxyClasses.put(beanType, proxyClass);
+				ProxyProxettaBuilder builder = proxetta.builder(pbd.originalTarget);
+
+				proxyClass = builder.define();
+
+				proxyClasses.put(beanType, proxyClass);
+			}
+			else {
+				ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
+
+				proxetta.setClassNameSuffix("$ScopedProxy");
+				proxetta.setVariableClassName(true);
+
+				ProxyProxettaBuilder builder = proxetta.builder(beanType);
+
+				proxyClass = builder.define();
+
+				proxyClasses.put(beanType, proxyClass);
+			}
 		}
 
 		Object proxy;
