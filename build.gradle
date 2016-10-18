@@ -51,7 +51,10 @@ ext {
 	jacocoVersion = '0.7.1.201405082137'
 
 	lib = [
-		mail:			'javax.mail:mail:1.4.5',
+		mail:			[
+							'javax.mail:javax.mail-api:1.5.+',
+							'com.sun.mail:javax.mail:1.5.+'
+						],
 		activation:		'javax.activation:activation:1.1.1',
 		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
 		jsp:			'javax.servlet.jsp:jsp-api:2.2',
@@ -78,6 +81,7 @@ ext {
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
 		mysql:			'mysql:mysql-connector-java:5.1.37',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
+		greenmail:		'com.icegreen:greenmail:1.5.2',
 		//el_api:		'javax.el:el-api:2.2',
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
 		tomcat_embed:	[
