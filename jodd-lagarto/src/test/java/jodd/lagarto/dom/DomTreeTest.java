@@ -356,4 +356,20 @@ public class DomTreeTest {
 		assertEquals(1, two.siblingElementIndex);
 		assertEquals(2, four.siblingElementIndex);
 	}
+
+	@Test
+	public void testHasVsGet333() {
+		Document document = new Document();
+
+		Element one = new Element(document, "one");
+		document.addChild(one);
+		one.setAttribute("a1", "v1");
+
+		assertEquals("v1", one.getAttribute("a1"));
+		assertEquals("v1", one.getAttribute("A1"));
+
+		assertTrue(one.hasAttribute("a1"));
+		assertTrue(one.hasAttribute("A1"));
+
+	}
 }

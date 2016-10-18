@@ -384,6 +384,9 @@ public abstract class Node implements Cloneable {
 		if (attributes == null) {
 			return false;
 		}
+		if (!ownerDocument.config.isCaseSensitive()) {
+			name = name.toLowerCase();
+		}
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
 			if (attr.getName().equals(name)) {
