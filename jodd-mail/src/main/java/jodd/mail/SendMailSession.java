@@ -184,9 +184,10 @@ public class SendMailSession {
 		}
 
 		// message data and attachments
-		List<EmailMessage> messages = email.getAllMessages();
-		List<EmailAttachment> attachments = email.getAttachments();
-		int totalMessages = messages.size();
+		final List<EmailMessage> messages = email.getAllMessages();
+		final List<EmailAttachment> attachments =
+			email.getAttachments() == null ? null : new ArrayList<>(email.getAttachments());
+		final int totalMessages = messages.size();
 
 		if ((attachments == null) && (totalMessages == 1)) {
 			// special case: no attachments and just one content
@@ -214,7 +215,8 @@ public class SendMailSession {
 				if (embeddedAttachments == null) {
 					// no embedded attachments, just add message
 					bodyPart.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
-				} else {
+				}
+				else {
 					// embedded attachments detected, join them as related
 					MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
 
