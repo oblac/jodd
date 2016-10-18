@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class EmailGreenTest {
 
 	@Test
-	public void testSendAll() {
+	public void testInlineAttachmentAfterSending() {
 		GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
 		greenMail.setUser("green@mail.com", "green", "pwd");
 		greenMail.start();
@@ -24,13 +24,19 @@ public class EmailGreenTest {
 			.addHtml("Hi!")
 			.attach(EmailAttachment.attachment()
 				.setName("one")
-				.bytes(new byte[]{1,2,3})
-				.setInline("CID1").create())
+				.bytes(new byte[]{7,8,9})
+				.setInline(false)
+				.create())
 			.attach(EmailAttachment.attachment()
 				.setName("two")
 				.bytes(new byte[]{4,5,6})
 				.setInline(false)
-				.create());
+				.create())
+			.attach(EmailAttachment.attachment()
+				.setName("three")
+				.bytes(new byte[]{1,2,3})
+				.setInline("CID1").create())
+			;
 
 		// send
 
@@ -63,18 +69,22 @@ public class EmailGreenTest {
 		assertEquals("green@mail.com", email.getTo()[0].toString());
 		assertEquals("green@mail.com", liame.getTo()[0].toString());
 
-		assertEquals(2, email.getAttachments().size());
+		assertEquals(3, email.getAttachments().size());
 		assertEquals("one", email.getAttachments().get(0).getName());
-		assertEquals("CID1", email.getAttachments().get(0).getContentId());
+		assertArrayEquals(new byte[]{7,8,9}, email.getAttachments().get(0).toByteArray());
 		assertEquals("two", email.getAttachments().get(1).getName());
+		assertArrayEquals(new byte[]{4,5,6}, email.getAttachments().get(1).toByteArray());
+		assertEquals("three", email.getAttachments().get(2).getName());
+		assertEquals("CID1", email.getAttachments().get(2).getContentId());
+		assertArrayEquals(new byte[]{1,2,3}, email.getAttachments().get(2).toByteArray());
 
-		assertEquals(2, liame.getAttachments().size());
-		assertEquals(3, liame.getAttachments().get(0).getSize());
+		assertEquals(3, liame.getAttachments().size());
 		assertEquals("one", liame.getAttachments().get(0).getName());
-		assertEquals("<CID1>", liame.getAttachments().get(0).getContentId());
-		assertArrayEquals(new byte[]{1,2,3}, liame.getAttachments().get(0).toByteArray());
-		assertEquals(3, liame.getAttachments().get(1).getSize());
+		assertArrayEquals(new byte[]{7,8,9}, liame.getAttachments().get(0).toByteArray());
 		assertEquals("two", liame.getAttachments().get(1).getName());
+		assertArrayEquals(new byte[]{4,5,6}, liame.getAttachments().get(1).toByteArray());
+		assertEquals("three", liame.getAttachments().get(2).getName());
+		assertArrayEquals(new byte[]{1,2,3}, liame.getAttachments().get(2).toByteArray());
 
 		greenMail.stop();
 	}
