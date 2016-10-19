@@ -27,10 +27,8 @@ package jodd.util.testdata;
 
 public class W {
 
-	public static final int constant = 222;
+	public static final int CONSTANT = 222;
 
-	private static final int priv = 111;
-
-	public static int regular = 123;
+	public static int REGULAR = 123;
 
 }

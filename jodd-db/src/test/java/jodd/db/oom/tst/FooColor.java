@@ -26,8 +26,8 @@
 package jodd.db.oom.tst;
 
 public enum FooColor {
-	red,
-	yellow,
-	green
+	RED,
+	YELLOW,
+	GREEN
 }
 
