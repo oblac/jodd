@@ -33,11 +33,11 @@ public class PageRequest {
 	/**
 	 * Default page size.
 	 */
-	public static int defaultPageSize = 10;
+	public static final int defaultPageSize = 10;
 	/**
 	 * Default sort index.
 	 */
-	public static int defaultSortIndex = 0;
+	public static final int defaultSortIndex = 0;
 
 	protected int page = 1;
 	protected int size = defaultPageSize;

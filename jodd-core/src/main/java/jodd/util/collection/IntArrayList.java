@@ -34,7 +34,7 @@ public class IntArrayList {
 	private int[] array;
 	private int size;
 
-	public static int initialCapacity = 10;
+	public static final int initialCapacity = 10;
 
 	/**
 	 * Constructs an empty list with an initial capacity.

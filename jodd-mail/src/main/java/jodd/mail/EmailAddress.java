@@ -61,7 +61,7 @@ public class EmailAddress {
 	 * and specifically only those with at least two levels ("example.com"), then
 	 * change this constant to <code>false</code>.
 	 */
-	public static boolean ALLOW_DOMAIN_LITERALS = false;
+	public static final boolean ALLOW_DOMAIN_LITERALS = false;
 
 	/**
 	 * This constant states that quoted identifiers are allowed
@@ -76,7 +76,7 @@ public class EmailAddress {
 	 * a raw address (<code>john.smith@somewhere.com</code> - no quotes or angle
 	 * brackets), then change this constant to <code>false</code>.
 	 */
-	public static boolean ALLOW_QUOTED_IDENTIFIERS = true;
+	public static final boolean ALLOW_QUOTED_IDENTIFIERS = true;
 
 	/**
 	 * This constant allows &quot;.&quot; to appear in atext (note: only atext which appears
@@ -95,7 +95,7 @@ public class EmailAddress {
 	 * If this boolean is set to false, the parser will act per 2822 and will require
 	 * the quotes; if set to true, it will allow the use of &quot;.&quot; without quotes.
 	 */
-	public static boolean ALLOW_DOT_IN_ATEXT = false;
+	public static final boolean ALLOW_DOT_IN_ATEXT = false;
 
 	/**
 	 * This controls the behavior of getInternetAddress and extractHeaderAddresses. If true,
@@ -118,7 +118,7 @@ public class EmailAddress {
 	 * the methods will favor the personal name to the left. If the methods need to use the
 	 * CFWS following the address, they will take the first comment token they find.
 	 */
-	public static boolean EXTRACT_CFWS_PERSONAL_NAMES = true;
+	public static final boolean EXTRACT_CFWS_PERSONAL_NAMES = true;
 
 	/**
 	 * This constant allows &quot;[&quot; or &quot;]&quot; to appear in atext.
@@ -135,7 +135,7 @@ public class EmailAddress {
 	 * Use at your own risk. There may be some issue with enabling this feature in conjunction
 	 * with ALLOW_DOMAIN_LITERALS.
 	 */
-	public static boolean ALLOW_SQUARE_BRACKETS_IN_ATEXT = false;
+	public static final boolean ALLOW_SQUARE_BRACKETS_IN_ATEXT = false;
 
 	/**
 	 * This constant allows &quot;)&quot; or &quot;(&quot; to appear in quoted versions of
@@ -143,7 +143,7 @@ public class EmailAddress {
 	 * The default (2822) behavior is to allow this, i.e. boolean true.
 	 * You can disallow it, but better to leave it true.
 	 */
-	public static boolean ALLOW_PARENS_IN_LOCALPART = true;
+	public static final boolean ALLOW_PARENS_IN_LOCALPART = true;
 
 	// ---------------------------------------------------------------- ctor
 

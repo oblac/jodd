@@ -40,12 +40,12 @@ public class JoddCore {
 	/**
 	 * Default temp file prefix.
 	 */
-	public static String tempFilePrefix = "jodd-";
+	public static final String tempFilePrefix = "jodd-";
 
 	/**
 	 * Default file encoding (UTF8).
 	 */
-	public static String encoding = StringPool.UTF_8;
+	public static final String encoding = StringPool.UTF_8;
 
 	/**
 	 * Default IO buffer size (16 KB).
@@ -55,12 +55,12 @@ public class JoddCore {
 	/**
 	 * Default parameters used in {@link jodd.io.FileUtil} operations.
 	 */
-	public static FileUtilParams fileUtilParams = new FileUtilParams();
+	public static final FileUtilParams fileUtilParams = new FileUtilParams();
 
 	/**
 	 * Default class loader strategy.
 	 */
-	public static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+	public static final ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
 
 	// ---------------------------------------------------------------- module
 

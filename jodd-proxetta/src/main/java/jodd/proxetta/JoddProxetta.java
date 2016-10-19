@@ -35,57 +35,57 @@ public class JoddProxetta {
 	/**
 	 * {@link jodd.proxetta.ProxyAdvice#execute()}
 	 */
-	public static String executeMethodName = "execute";
+	public static final String executeMethodName = "execute";
 
 	/**
 	 * Proxy class name suffix.
 	 */
-	public static String proxyClassNameSuffix = "$$Proxetta";
+	public static final String proxyClassNameSuffix = "$$Proxetta";
 
 	/**
 	 * Invoke proxy class name suffix.
 	 */
-	public static String invokeProxyClassNameSuffix = "$$Clonetou";
+	public static final String invokeProxyClassNameSuffix = "$$Clonetou";
 
 	/**
 	 * Wrapper class name suffix.
 	 */
-	public static String wrapperClassNameSuffix = "$$Wraporetto";
+	public static final String wrapperClassNameSuffix = "$$Wraporetto";
 
 	/**
 	 * Prefix for advice method names.
 	 */
-	public static String methodPrefix = "$__";
+	public static final String methodPrefix = "$__";
 
 	/**
 	 * Divider for method names.
 	 */
-	public static String methodDivider = "$";
+	public static final String methodDivider = "$";
 
 	/**
 	 * Method name for advice 'clinit' methods.
 	 */
-	public static String clinitMethodName = "$clinit";
+	public static final String clinitMethodName = "$clinit";
 
 	/**
 	 * Method name for advice default constructor ('init') methods.
 	 */
-	public static String initMethodName = "$init";
+	public static final String initMethodName = "$init";
 
 	/**
 	 * Prefix for advice field names.
 	 */
-	public static String fieldPrefix = "$__";
+	public static final String fieldPrefix = "$__";
 
 	/**
 	 * Divider for field names.
 	 */
-	public static String fieldDivider = "$";
+	public static final String fieldDivider = "$";
 
 	/**
 	 * Wrapper target field name.
 	 */
-	public static String wrapperTargetFieldName = "_target";
+	public static final String wrapperTargetFieldName = "_target";
 
 	// ---------------------------------------------------------------- module
 

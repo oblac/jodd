@@ -40,7 +40,7 @@ public class JDateTimeDefault {
 	/**
 	 * Default value for month fix.
 	 */
-	public static boolean monthFix = true;
+	public static final boolean monthFix = true;
 
 	/**
 	 * Default time zone. Set it to <code>null</code>
@@ -62,25 +62,25 @@ public class JDateTimeDefault {
 	/**
 	 * Default formatter.
 	 */
-	public static JdtFormatter formatter = new Iso8601JdtFormatter();
+	public static final JdtFormatter formatter = new Iso8601JdtFormatter();
 
 	/**
 	 * Default definition of first day of week.
 	 */
-	public static int firstDayOfWeek = JDateTime.MONDAY;
+	public static final int firstDayOfWeek = JDateTime.MONDAY;
 
 	/**
 	 * Default number of days first week of year must have.
 	 */
-	public static int mustHaveDayOfFirstWeek = 4;
+	public static final int mustHaveDayOfFirstWeek = 4;
 
 	/**
 	 * Default minimal number of days firs week of year must have.
 	 */
-	public static int minDaysInFirstWeek = 4;
+	public static final int minDaysInFirstWeek = 4;
 
 	/**
 	 * Default value for tracking DST.
 	 */
-	public static boolean trackDST = false;
+	public static final boolean trackDST = false;
 }
