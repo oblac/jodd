@@ -67,14 +67,14 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	}
 
 	/**
-	 * Creates <copy>BeanCopy</copy> with given POJO bean as a source.
+	 * Creates <code>BeanCopy</code> with given POJO bean as a source.
 	 */
 	public static BeanCopy fromBean(Object source) {
 		return new BeanCopy(source);
 	}
 
 	/**
-	 * Creates <copy>BeanCopy</copy> with given <code>Map</code> as a source.
+	 * Creates <code>BeanCopy</code> with given <code>Map</code> as a source.
 	 */
 	public static BeanCopy fromMap(Map source) {
 		BeanCopy beanCopy = new BeanCopy(source);
