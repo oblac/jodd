@@ -114,27 +114,8 @@ public abstract class DbBaseTest {
 	}
 
 	public static String dbhost() {
-		String dockerHost = System.getenv("DOCKER_HOST");
-
-		System.out.println(dockerHost);
-
-		if (dockerHost != null) {
-			selftCreated = true;
-
-			if (dockerHost.startsWith("tcp://")) {
-				//	tcp://192.168.99.100:2376";
-				dockerHost = dockerHost.substring(6);
-				dockerHost = dockerHost.substring(0, dockerHost.lastIndexOf(':'));
-			}
-
-			return dockerHost;
-		}
-		else {
-			return "localhost";
-		}
+		return "localhost";
 	}
-
-	static boolean selftCreated = false;
 
 	/**
 	 * MySql.
@@ -147,14 +128,11 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
 
-			if (selftCreated) {
-				dboom.getTableNames().setUppercase(true);
-				dboom.getColumnNames().setUppercase(true);
-			}
-			else {
-				dboom.getTableNames().setLowercase(true);
-				dboom.getColumnNames().setLowercase(true);
-			}
+			dboom.getTableNames().setUppercase(true);
+			dboom.getColumnNames().setUppercase(true);
+
+			//dboom.getTableNames().setLowercase(true);
+			//dboom.getColumnNames().setLowercase(true);
 
 			connectionPool.init();
 
