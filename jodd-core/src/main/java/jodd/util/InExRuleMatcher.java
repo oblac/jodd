@@ -31,24 +31,18 @@ package jodd.util;
 public interface InExRuleMatcher<T, R> {
 
 	/**
-	 * {@link jodd.util.Wildcard#match(String, String) Wilcard} rule matcher.
+	 * {@link jodd.util.Wildcard#match(CharSequence, CharSequence) Wilcard} rule matcher.
 	 */
-	public static final InExRuleMatcher<String, String> WILDCARD_RULE_MATCHER = new InExRuleMatcher<String, String>() {
-		public boolean accept(String value, String rule, boolean include) {
-			return Wildcard.match(value, rule);
-		}
-	};
+	public static final InExRuleMatcher<String, String> WILDCARD_RULE_MATCHER =
+		(value, rule, include) -> Wildcard.match(value, rule);
 	/**
 	 * {@link jodd.util.Wildcard#matchPath(String, String)  Wilcard path} rule matcher.
 	 */
-	public static final InExRuleMatcher<String, String> WILDCARD_PATH_RULE_MATCHER = new InExRuleMatcher<String, String>() {
-		public boolean accept(String value, String rule, boolean include) {
-			return Wildcard.matchPath(value, rule);
-		}
-	};
+	public static final InExRuleMatcher<String, String> WILDCARD_PATH_RULE_MATCHER =
+		(value, rule, include) -> Wildcard.matchPath(value, rule);
 
 	/**
-	 * Match the value against the rule.
+	 * Matches the value against the rule.
 	 */
 	boolean accept(T value, R rule, boolean include);
 
