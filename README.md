@@ -39,7 +39,7 @@ Some tools and utility modules are:
 + `jodd-servlet` with many servlet utilities, including nice tag library.
 + `jodd-http`, tiny HTTP client.
 
-and some micro frameworks:
+and some micro-frameworks:
 
 + `jodd-madvoc` - slick MVC framework.
 + `jodd-petite` - pragmatic DI container.
@@ -75,7 +75,7 @@ Simply clone **Jodd** Git repo:
 
 ### Compile and test, build jars
 
-You can build the project with:
+You can build the Jodd project with:
 
     gradlew build
 
@@ -86,11 +86,14 @@ To skip the tests (for faster build), execute:
 
 ### Build full release with reports
 
-To generate full release, including running integration tests and generating various reports:
+To generate _full release_, including running integration tests and generating various reports,
+you need [Docker](https://www.docker.com/) v1.12+.
 
-    gradlew release
+	docker-compose -f etc/docker-compose.yml up
+    gradlew clean release
 
-For integration tests you will need also to set up databases named: 'jodd-test' on local MySql (access: root/root!) and PostgreSQL (postgres/root!).
+Integration tests requires some infrastructure (like databases), hence Docker is
+used.
 
 ### Install Jodd into your local Maven
 

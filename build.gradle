@@ -37,8 +37,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.8.0-' + date()
-//version = '3.7.1'
+//version = '3.8.0-' + date()
+version = '3.8.0'
 
 // --- properties -------------------------------------------------------------
 
@@ -52,8 +52,8 @@ ext {
 
 	lib = [
 		mail:			[
-							'javax.mail:javax.mail-api:1.5.+',
-							'com.sun.mail:javax.mail:1.5.+'
+							'javax.mail:javax.mail-api:1.5.6',
+							'com.sun.mail:javax.mail:1.5.6'
 						],
 		activation:		'javax.activation:activation:1.1.1',
 		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
@@ -185,8 +185,14 @@ configure(javaModules()) {
 
 	// compile
 
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
+	compileJava {
+		sourceCompatibility = '1.8'
+		targetCompatibility = '1.8'
+	}
+
+	if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+		throw new GradleException("This build must be run with Java 8.")
+	}
 
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
@@ -287,7 +293,7 @@ configure(javaModules()) {
 				encoding = 'UTF-8'
 				docEncoding = 'UTF-8'
 				stylesheetFile = file('src/main/javadoc/jodd.css')
-				source = '1.7'
+				source = '1.8'
 				failOnError = false
 			}
 		}
@@ -508,7 +514,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 		println "	You are about to run the 'release' task for Jodd project!"
 		println "	This task builds distribution artifacts, but also runs"
 		println "	integration tests and generates reports (javadoc, coverage...)"
-		println "	For running integration tests you need databases running;"
+		println "	For running integration tests you need infrastructure running;"
 		println "	please find more information here: http://jodd.org/code.html"
 		println ""
 		println "	Usually, you don't need to run this task. If you want to build"
