@@ -1,17 +1,16 @@
 Jodd
 ====
 
-[![GitHub version](https://badge.fury.io/gh/oblac%2Fjodd.svg)](https://badge.fury.io/gh/oblac%2Fjodd)
-[![BSD License](http://img.shields.io/badge/license-BSD-blue.svg)](http://jodd.org/license.html)
-[![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
-[![Coverage Status](https://coveralls.io/repos/oblac/jodd/badge.png?branch=master)](https://coveralls.io/r/oblac/jodd?branch=master)
-[![Release](https://img.shields.io/github/tag/oblac/jodd.svg)](https://github.com/oblac/jodd/releases)
+[![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
+[![Build Status](https://img.shields.io/travis/oblac/jodd.svg)](https://travis-ci.org/oblac/jodd)
+[![Coverage Status](https://img.shields.io/coveralls/oblac/jodd.svg)](https://coveralls.io/r/oblac/jodd?branch=master)
 [![Snapshot](https://api.bintray.com/packages/oblac/jodd/org.jodd%3Ajodd-core/images/download.svg)](https://bintray.com/oblac/jodd)
-[![](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
+[![JitPack](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+[![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
 
-**Jodd** is set of open-source Java micro frameworks and tools; compact, yet powerful.
+**Jodd** is set of open source Java micro-frameworks and tools; compact, yet powerful.
 
 **Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.6 Mb**
 
