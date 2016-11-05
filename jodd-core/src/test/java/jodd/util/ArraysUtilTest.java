@@ -595,9 +595,12 @@ public class ArraysUtilTest {
 	@Test
 	public void testToString() {
 		Assert.assertEquals("null", ArraysUtil.toString((int[]) null));
+		Assert.assertEquals("", ArraysUtil.toString((new int[0])));
+		Assert.assertEquals("1", ArraysUtil.toString(new int[] { 1 }));
 		Assert.assertEquals("1,2,3", ArraysUtil.toString(new int[] { 1, 2, 3 }));
 
 		Assert.assertEquals("null", ArraysUtil.toString((Object[]) null));
+		Assert.assertEquals("", ArraysUtil.toString((new Object[0])));
 		Assert.assertEquals("1,null,3.1",
 				ArraysUtil.toString(new Object[] { Integer.valueOf(1), null, Double.valueOf(3.1) }));
 

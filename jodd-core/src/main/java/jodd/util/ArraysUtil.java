@@ -31,7 +31,6 @@ import static jodd.util.StringPool.NULL;
 
 /**
  * Array utilities.
- * <b>DO NOT MODIFY: this source is generated.</b>
  */
 @Generated("ArraysUtil.py")
 public class ArraysUtil {
@@ -2062,7 +2061,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2080,7 +2082,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2098,7 +2103,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2116,7 +2124,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2134,7 +2145,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2152,7 +2166,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2170,7 +2187,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2188,7 +2208,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2206,7 +2229,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
@@ -2224,7 +2250,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBand sb = new StringBand(array.length << 1 - 1);
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+		StringBand sb = new StringBand((array.length << 1) - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
 				sb.append(StringPool.COMMA);
