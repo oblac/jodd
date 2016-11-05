@@ -55,9 +55,6 @@ public class StringBand {
 	 * joins) and not the total string size.
 	 */
 	public StringBand(int initialCapacity) {
-		if (initialCapacity <= 0) {
-			throw new IllegalArgumentException("Invalid initial capacity");
-		}
 		array = new String[initialCapacity];
 	}
 
@@ -247,8 +244,13 @@ public class StringBand {
 	public String toString() {
 
 		// special cases
-		if (index == 0) {
-			return StringPool.EMPTY;
+		switch (index) {
+			case 0:
+				return StringPool.EMPTY;
+			case 1:
+				return array[0];
+			case 2:
+				return array[0] + array[1];
 		}
 
 		// join strings
