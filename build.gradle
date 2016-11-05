@@ -222,31 +222,34 @@ configure(javaModules()) {
 		}
 	}
 
-	// integration tests
+	// integration tests + performances
 
 	sourceSets {
+		perf
 		testInt
 	}
-
-	// idea fix no more needed since 13.0.2
-//	idea {
-//		module {
-//			testSourceDirs += file('src/testInt/java')
-//			testSourceDirs += file('src/testInt/resources')
-//			scopes.TEST.plus += configurations.testIntCompile
-//		}
-//	}
 
 	dependencies {
 		testIntCompile sourceSets.main.output
 		testIntCompile sourceSets.test.output
 		testIntCompile configurations.testCompile
 		testIntRuntime configurations.testRuntime
+
+		perfCompile sourceSets.main.output
+		perfCompile 'org.openjdk.jmh:jmh-core:1.15'
+		perfCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.15'
 	}
 
+	task perf(type:JavaExec) {
+		group 'Application'
+		description 'Execute benchmarks.'
+
+		main 'org.openjdk.jmh.Main'
+		classpath = sourceSets.perf.runtimeClasspath
+	}
 
 	task testIntegration(type: Test, dependsOn: jar) {
-		group 'verification'
+		group 'Verification'
 		description 'Runs the integration tests.'
 		testLogging {
 			showStandardStreams = true
