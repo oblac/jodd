@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import javax.annotation.Generated;
 import java.lang.reflect.Array;
 import static jodd.util.StringPool.NULL;
 
@@ -32,6 +33,7 @@ import static jodd.util.StringPool.NULL;
  * Array utilities.
  * <b>DO NOT MODIFY: this source is generated.</b>
  */
+@Generated("ArraysUtil.py")
 public class ArraysUtil {
 
 
@@ -1709,7 +1711,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		byte c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (array[i] != c) {
 				continue;
@@ -1755,7 +1757,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		char c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (array[i] != c) {
 				continue;
@@ -1801,7 +1803,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		short c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (array[i] != c) {
 				continue;
@@ -1847,7 +1849,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		int c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (array[i] != c) {
 				continue;
@@ -1893,7 +1895,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		long c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (array[i] != c) {
 				continue;
@@ -1939,7 +1941,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		boolean c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (array[i] != c) {
 				continue;
@@ -1985,7 +1987,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		float c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (Float.compare(array[i], c) != 0) {
 				continue;
@@ -2031,7 +2033,7 @@ public class ArraysUtil {
 		}
 		int total = endIndex - sublen + 1;
 		double c = sub[0];
-	mainloop:
+		mainloop:
 		for (int i = startIndex; i < total; i++) {
 			if (Double.compare(array[i], c) != 0) {
 				continue;
@@ -2060,10 +2062,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2078,10 +2080,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2096,10 +2098,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2114,10 +2116,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2132,10 +2134,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2150,10 +2152,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2168,10 +2170,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2186,10 +2188,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2204,10 +2206,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
@@ -2222,10 +2224,10 @@ public class ArraysUtil {
 		if (array == null) {
 			return NULL;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(array.length << 1 - 1);
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',');
+				sb.append(StringPool.COMMA);
 			}
 			sb.append(array[i]);
 		}
