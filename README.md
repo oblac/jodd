@@ -9,6 +9,7 @@ Jodd
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 [![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=oblac/jodd&amp;utm_campaign=Badge_Grade)
 
 **Jodd** is set of open source Java micro-frameworks and tools; compact, yet powerful.
 
