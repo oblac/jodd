@@ -483,6 +483,30 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testReplaceWith() {
+		String html = readFile("replaceWith.html");
+		String htmlOK = readFile("replaceWith-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div.second").replaceWith("<h2>New heading</h2>");
+
+		String h = actualHtml(doc);
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testUnwrap() {
+		String html = readFile("unwrap.html");
+		String htmlOK = readFile("unwrap-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("p").unwrap();
+
+		String h = actualHtml(doc);
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testIs() {
 		String html = readFile("is.html");
 		String htmlOK = readFile("is-ok.html");

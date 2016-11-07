@@ -989,6 +989,37 @@ public class Jerry implements Iterable<Jerry> {
 		return this;
 	}
 
+        /**
+	 * Remove the parents of the set of matched elements from the DOM, leaving 
+	 * the matched elements (and siblings, if any) in their place. 
+	 * Returns the set of elements that was removed.
+	 */
+	public Jerry replaceWith(String html) {
+ 		if (html == null) {
+			html = StringPool.EMPTY;
+		}
+		final Document doc = builder.parse(html);
+
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Node parent = node.getParentNode();
+			// if a node already is the root element, don't unwrap
+			if (parent == null) {
+				continue;
+			}
+
+			// replace, if possible
+			Document workingDoc = doc.clone();
+			int index = node.getSiblingIndex();
+			parent.insertChild(workingDoc.getFirstChild(), index);
+			node.detachFromParent();
+		}
+
+		return this;
+	}
+
 	/**
 	 * Removes the set of matched elements from the DOM.
 	 */
@@ -1056,6 +1087,36 @@ public class Jerry implements Iterable<Jerry> {
 			int index = node.getSiblingIndex();
 			inmostNode.addChild(node);
 			parent.insertChild(workingDoc.getFirstChild(), index);
+		}
+
+		return this;
+	}
+
+	/**
+	 * Remove the parents of the set of matched elements from the DOM, leaving 
+	* the matched elements (and siblings, if any) in their place. 
+	 */
+	public Jerry unwrap() {
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Node parent = node.getParentNode();
+			// if a node already is the root element, don't unwrap
+			if (parent == null) {
+				continue;
+			}
+
+			// replace, if possible
+			Node grandparent = parent.getParentNode();
+			if (grandparent == null) {
+				continue;
+			}
+
+			Node[] siblings = parent.getChildElements();
+			int index = parent.getSiblingIndex();
+			grandparent.insertChild(siblings, index);
+			parent.detachFromParent();
 		}
 
 		return this;
