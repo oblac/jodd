@@ -472,6 +472,17 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testAfter() {
+		String html = readFile("after.html");
+		String htmlOK = readFile("after-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("p").after("<b>what is the question?</b>");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testIs() {
 		String html = readFile("is.html");
 		String htmlOK = readFile("is-ok.html");
