@@ -61,7 +61,17 @@ public class SingletonScope implements Scope {
 	 * Allows only singleton scoped beans to be injected into the target singleton bean.
 	 */
 	public boolean accept(Scope referenceScope) {
-		return (referenceScope.getClass() == SingletonScope.class);
+		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
+
+		if (refScopeType == SingletonScope.class) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

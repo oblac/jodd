@@ -73,6 +73,10 @@ public class ThreadLocalScope implements Scope {
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
+
 		if (refScopeType == SingletonScope.class) {
 			return true;
 		}

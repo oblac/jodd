@@ -64,6 +64,9 @@ public interface Scope {
 	 * into the 'longer' target scopes should not be accepted.
 	 * In other words, if reference scope is 'longer' or equal (same),
 	 * this method should return <code>true</code>.
+	 * <p>
+	 * Helpful is to ask the following question: "May the reference scope
+	 * bean be injected into bean of this scope?".
 	 */
 	boolean accept(Scope referenceScope);
 

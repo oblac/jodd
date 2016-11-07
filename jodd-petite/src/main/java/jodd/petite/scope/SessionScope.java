@@ -152,6 +152,10 @@ public class SessionScope extends ShutdownAwareScope {
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
+
 		if (refScopeType == SingletonScope.class) {
 			return true;
 		}
