@@ -490,7 +490,6 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("div.second").replaceWith("<h2>New heading</h2>");
 
-		String h = actualHtml(doc);
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
@@ -502,7 +501,6 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("p").unwrap();
 
-		String h = actualHtml(doc);
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
