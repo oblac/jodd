@@ -989,10 +989,9 @@ public class Jerry implements Iterable<Jerry> {
 		return this;
 	}
 
-        /**
-	 * Remove the parents of the set of matched elements from the DOM, leaving 
-	 * the matched elements (and siblings, if any) in their place. 
-	 * Returns the set of elements that was removed.
+	/**
+	 * Replace each element in the set of matched elements with the provided 
+	 * new content and return the set of elements that was removed.
 	 */
 	public Jerry replaceWith(String html) {
  		if (html == null) {
@@ -1094,7 +1093,7 @@ public class Jerry implements Iterable<Jerry> {
 
 	/**
 	 * Remove the parents of the set of matched elements from the DOM, leaving 
-	* the matched elements (and siblings, if any) in their place. 
+	 * the matched elements (and siblings, if any) in their place. 
 	 */
 	public Jerry unwrap() {
 		if (nodes.length == 0) {
