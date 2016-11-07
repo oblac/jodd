@@ -86,7 +86,7 @@ public class ScopeTest {
 		RequestScope requestScope = pc.resolveScope(RequestScope.class);
 
 		assertTrue(singletonScope.accept(singletonScope));
-		assertFalse(singletonScope.accept(protoScope));
+		assertTrue(singletonScope.accept(protoScope));
 		assertFalse(singletonScope.accept(sessionScope));
 		assertFalse(singletonScope.accept(requestScope));
 
@@ -96,12 +96,12 @@ public class ScopeTest {
 		assertTrue(protoScope.accept(requestScope));
 
 		assertTrue(sessionScope.accept(singletonScope));
-		assertFalse(sessionScope.accept(protoScope));
+		assertTrue(sessionScope.accept(protoScope));
 		assertTrue(sessionScope.accept(sessionScope));
 		assertFalse(sessionScope.accept(requestScope));
 
 		assertTrue(requestScope.accept(singletonScope));
-		assertFalse(requestScope.accept(protoScope));
+		assertTrue(requestScope.accept(protoScope));
 		assertTrue(requestScope.accept(sessionScope));
 		assertTrue(requestScope.accept(requestScope));
 	}
