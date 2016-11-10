@@ -260,6 +260,21 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
+	* Get the children of each element in the set of matched elements, 
+	* including text and comment nodes.
+	*/
+	public Jerry contents() {
+		List<Node> result = new NodeList(nodes.length);
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				Node[] contents = node.getChildNodes();
+				Collections.addAll(result, contents);
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
 	 * Gets the parent of each element in the current set of matched elements.
 	 */
 	public Jerry parent() {
@@ -1112,7 +1127,7 @@ public class Jerry implements Iterable<Jerry> {
 				continue;
 			}
 
-			Node[] siblings = parent.getChildElements();
+			Node[] siblings = parent.getChildNodes();
 			int index = parent.getSiblingIndex();
 			grandparent.insertChild(siblings, index);
 			parent.detachFromParent();

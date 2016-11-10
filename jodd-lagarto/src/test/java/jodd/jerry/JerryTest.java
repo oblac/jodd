@@ -416,6 +416,20 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testChildrenVsContents() {
+		String html = readFile("contents.html");
+		String htmlOK = readFile("contents-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("span.contents").contents().remove();
+		doc.$("span.children").children().remove();
+		int count = doc.$(".count").contents().length();
+		doc.$(".count").text(Integer.toString(count));
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testSibling() {
 		String html = readFile("sibling.html");
 		String htmlOK = readFile("sibling-ok.html");
