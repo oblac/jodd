@@ -540,6 +540,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return this;
 	}
 
+	private boolean trustAllCertificates;
+
+	/**
+	 * Trusts all certificates, use with caution.
+	 */
+	public HttpRequest trustAllCerts(boolean trust) {
+		trustAllCertificates = trust;
+		return this;
+	}
+
+	/**
+	 * Trusts all certificates.
+	 */
+	public boolean trustAllCertificates() {
+		return trustAllCertificates;
+	}
+
 	// ---------------------------------------------------------------- misc
 
 	/**

@@ -34,6 +34,7 @@ import jodd.http.ProxyInfo;
 import jodd.util.StringUtil;
 
 import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -66,7 +67,11 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		final boolean https = httpRequest.protocol().equalsIgnoreCase("https");
 
 		if (https) {
-			SSLSocket sslSocket = createSSLSocket(httpRequest.host(), httpRequest.port(), httpRequest.connectionTimeout());
+			SSLSocket sslSocket = createSSLSocket(
+				httpRequest.host(),
+				httpRequest.port(),
+				httpRequest.connectionTimeout(),
+				httpRequest.trustAllCertificates());
 
 			httpConnection = new SocketHttpSecureConnection(sslSocket);
 		}
@@ -116,11 +121,11 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Creates a SSL socket. Enables default secure enabled protocols if specified..
 	 */
-	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout) throws IOException {
+	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout, boolean trustAll) throws IOException {
 		SSLSocketFactory socketFactory;
 
 		try {
-			socketFactory = (SSLSocketFactory) getSSLSocketFactory(proxy);
+			socketFactory = (SSLSocketFactory) getSSLSocketFactory(proxy, trustAll);
 		}
 		catch (Exception ex) {
 			if (ex instanceof IOException) {
@@ -173,15 +178,22 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int, int)}.
+	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int, int, boolean)}.
 	 * May be overwritten to provide custom SSL socket factory by using e.g.
 	 * <code>SSLContext</code>. By default returns default SSL socket factory for non-roxy connections or specified
 	 * proxy socket factory based on proxy type.
 	 */
-	protected SocketFactory getSSLSocketFactory(ProxyInfo proxy) throws Exception {
+	protected SocketFactory getSSLSocketFactory(ProxyInfo proxy, boolean trustAllCertificates) throws Exception {
 		switch (proxy.getProxyType()) {
 			case NONE:
-				return SSLSocketFactory.getDefault();
+				if (trustAllCertificates) {
+					SSLContext sc = SSLContext.getInstance("SSL");
+					sc.init(null, TrustManagers.TRUST_ALL_CERTS, new java.security.SecureRandom());
+					return sc.getSocketFactory();
+				}
+				else {
+					return SSLSocketFactory.getDefault();
+				}
 			case HTTP:
 				return new HTTPProxySocketFactory(proxy, true);
 			case SOCKS4:
