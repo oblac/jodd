@@ -13,7 +13,7 @@ Jodd
 
 **Jodd** is set of open source Java micro-frameworks and tools; compact, yet powerful.
 
-**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.6 Mb**
+**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
 
 Read about **Jodd**:
 
