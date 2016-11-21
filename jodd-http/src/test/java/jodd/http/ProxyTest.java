@@ -109,6 +109,7 @@ public class ProxyTest {
 
 		HttpResponse response = HttpRequest.get("https://localhost:1080/get_books")
 			.withConnectionProvider(s)
+			.trustAllCerts(true)
 			.send();
 		Assert.assertEquals(200, response.statusCode());
 		Assert.assertTrue(response.body().contains("Tatum"));

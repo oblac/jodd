@@ -167,7 +167,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 				sslSocket = (SSLSocket) ((SSLSocketFactory)socketFactory).createSocket(socket, host, port, true);
 			}
 			else {
-				sslSocket = (SSLSocket) ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket(socket, host, port, true);
+				sslSocket = (SSLSocket) (getDefaultSSLSocketFactory(trustAll)).createSocket(socket, host, port, true);
 			}
 		}
 
@@ -187,24 +187,31 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
+	 * Returns default SSL socket factory allowing setting trust managers.
+	 */
+	protected SSLSocketFactory getDefaultSSLSocketFactory(boolean trustAllCertificates) throws IOException {
+		if (trustAllCertificates) {
+			try {
+				SSLContext sc = SSLContext.getInstance("SSL");
+				sc.init(null, TrustManagers.TRUST_ALL_CERTS, new java.security.SecureRandom());
+				return sc.getSocketFactory();
+			}
+			catch (NoSuchAlgorithmException | KeyManagementException e) {
+				throw new IOException(e);
+			}
+		} else {
+			return (SSLSocketFactory) SSLSocketFactory.getDefault();
+		}
+	}
+
+	/**
 	 * Returns socket factory based on proxy type and SSL requirements.
 	 */
 	protected SocketFactory getSocketFactory(ProxyInfo proxy, boolean ssl, boolean trustAllCertificates) throws IOException {
 		switch (proxy.getProxyType()) {
 			case NONE:
 				if (ssl) {
-					if (trustAllCertificates) {
-						try {
-							SSLContext sc = SSLContext.getInstance("SSL");
-							sc.init(null, TrustManagers.TRUST_ALL_CERTS, new java.security.SecureRandom());
-							return sc.getSocketFactory();
-						}
-						catch (NoSuchAlgorithmException | KeyManagementException e) {
-							throw new IOException(e);
-						}
-					} else {
-						return SSLSocketFactory.getDefault();
-					}
+					return getDefaultSSLSocketFactory(trustAllCertificates);
 				}
 				else {
 					return SocketFactory.getDefault();
