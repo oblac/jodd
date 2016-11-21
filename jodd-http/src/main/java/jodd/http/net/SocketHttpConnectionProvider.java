@@ -40,6 +40,8 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Socket factory for HTTP proxy.
@@ -100,10 +102,10 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Creates a socket using {@link #getSocketFactory(jodd.http.ProxyInfo) socket factory}.
+	 * Creates a socket using socket factory.
 	 */
 	protected Socket createSocket(String host, int port, int connectionTimeout) throws IOException {
-		SocketFactory socketFactory = getSocketFactory(proxy);
+		SocketFactory socketFactory = getSocketFactory(proxy, false, false);
 
 		if (connectionTimeout < 0) {
 			return socketFactory.createSocket(host, port);
@@ -119,26 +121,15 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Creates a SSL socket. Enables default secure enabled protocols if specified..
+	 * Creates a SSL socket. Enables default secure enabled protocols if specified.
 	 */
 	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout, boolean trustAll) throws IOException {
-		SSLSocketFactory socketFactory;
+		SocketFactory socketFactory = getSocketFactory(proxy, true, trustAll);
 
-		try {
-			socketFactory = (SSLSocketFactory) getSSLSocketFactory(proxy, trustAll);
-		}
-		catch (Exception ex) {
-			if (ex instanceof IOException) {
-				throw (IOException) ex;
-			} else {
-				throw new IOException(ex.getMessage());
-			}
-		}
-
-		SSLSocket sslSocket;
+		Socket socket;
 
 		if (connectionTimeout < 0) {
-			sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
+			socket = socketFactory.createSocket(host, port);
 		}
 		else {
 			// creates unconnected socket
@@ -156,13 +147,31 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			// connection timeout), then have the SSLSocketFactory wrap
 			// the already-connected socket.
 			//
-			Socket sock = new Socket();
+			socket = new Socket();
 			//sock.setSoTimeout(readTimeout);
-			sock.connect(new InetSocketAddress(host, port), connectionTimeout);
+			socket.connect(new InetSocketAddress(host, port), connectionTimeout);
 
-			// wrap plain socket in an SSL socket
-			sslSocket = (SSLSocket)socketFactory.createSocket(sock, host, port, true);
+			// continue to wrap this plain socket with ssl socket...
 		}
+
+
+		// wrap plain socket in an SSL socket
+
+		SSLSocket sslSocket;
+
+		if (socket instanceof SSLSocket) {
+			sslSocket = (SSLSocket) socket;
+		}
+		else {
+			if (socketFactory instanceof SSLSocketFactory) {
+				sslSocket = (SSLSocket) ((SSLSocketFactory)socketFactory).createSocket(socket, host, port, true);
+			}
+			else {
+				sslSocket = (SSLSocket) ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket(socket, host, port, true);
+			}
+		}
+
+		// sslSocket is now ready
 
 		String enabledProtocols = JoddHttp.defaultSecureEnabledProtocols;
 
@@ -178,40 +187,28 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int, int, boolean)}.
-	 * May be overwritten to provide custom SSL socket factory by using e.g.
-	 * <code>SSLContext</code>. By default returns default SSL socket factory for non-roxy connections or specified
-	 * proxy socket factory based on proxy type.
+	 * Returns socket factory based on proxy type and SSL requirements.
 	 */
-	protected SocketFactory getSSLSocketFactory(ProxyInfo proxy, boolean trustAllCertificates) throws Exception {
+	protected SocketFactory getSocketFactory(ProxyInfo proxy, boolean ssl, boolean trustAllCertificates) throws IOException {
 		switch (proxy.getProxyType()) {
 			case NONE:
-				if (trustAllCertificates) {
-					SSLContext sc = SSLContext.getInstance("SSL");
-					sc.init(null, TrustManagers.TRUST_ALL_CERTS, new java.security.SecureRandom());
-					return sc.getSocketFactory();
+				if (ssl) {
+					if (trustAllCertificates) {
+						try {
+							SSLContext sc = SSLContext.getInstance("SSL");
+							sc.init(null, TrustManagers.TRUST_ALL_CERTS, new java.security.SecureRandom());
+							return sc.getSocketFactory();
+						}
+						catch (NoSuchAlgorithmException | KeyManagementException e) {
+							throw new IOException(e);
+						}
+					} else {
+						return SSLSocketFactory.getDefault();
+					}
 				}
 				else {
-					return SSLSocketFactory.getDefault();
+					return SocketFactory.getDefault();
 				}
-			case HTTP:
-				return new HTTPProxySocketFactory(proxy, true);
-			case SOCKS4:
-				return new Socks4ProxySocketFactory(proxy, true);
-			case SOCKS5:
-				return new Socks5ProxySocketFactory(proxy, true);
-			default:
-				return null;
-		}
-	}
-
-	/**
-	 * Returns socket factory based on proxy type.
-	 */
-	public SocketFactory getSocketFactory(ProxyInfo proxy) {
-		switch (proxy.getProxyType()) {
-			case NONE:
-				return SocketFactory.getDefault();
 			case HTTP:
 				return new HTTPProxySocketFactory(proxy);
 			case SOCKS4:
@@ -222,5 +219,4 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 				return null;
 		}
 	}
-
 }
