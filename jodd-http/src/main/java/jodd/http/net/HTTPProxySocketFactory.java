@@ -30,7 +30,6 @@ import jodd.http.ProxyInfo;
 import jodd.util.Base64;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,16 +46,10 @@ import java.util.regex.Pattern;
 public class HTTPProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
-	private final boolean secure;
 
-	public HTTPProxySocketFactory(ProxyInfo proxy, boolean secure) {
+	public HTTPProxySocketFactory(ProxyInfo proxy) {
 		this.proxy = proxy;
-        this.secure = secure;
 	}
-
-    public HTTPProxySocketFactory(ProxyInfo proxy) {
-        this(proxy, false);
-    }
 
 	public Socket createSocket(String host, int port) throws IOException {
 		return createHttpProxySocket(host, port);
@@ -103,11 +96,12 @@ public class HTTPProxySocketFactory extends SocketFactory {
 			int nlchars = 0;
 
 			while (true) {
-				char c = (char) in.read();
-				if (c == -1) {
+				int i =  in.read();
+				if (i == -1) {
 					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
 				}
 
+				char c = (char) i;
 				recv.append(c);
 				if (recv.length() > 1024) {
 					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Received header longer then 1024 chars");
@@ -144,11 +138,7 @@ public class HTTPProxySocketFactory extends SocketFactory {
 				throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid return status code: " + code);
 			}
 
-            if (secure) {
-                return ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket(socket, host, port, true);
-            } else {
-                return socket;
-            }
+			return socket;
 		} catch (RuntimeException rtex) {
 			closeSocket(socket);
 			throw rtex;
