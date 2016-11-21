@@ -8,4 +8,5 @@ dependencies {
 
 	testCompile lib.junit
 	testCompile lib.tomcat_embed
+	testCompile lib.mockserver
 }

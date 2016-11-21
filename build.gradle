@@ -94,6 +94,7 @@ ext {
 							"org.apache.tomcat.embed:tomcat-embed-logging-log4j:${tomcatVersion}"],
 		jacoco_agent:	"org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime@jar",
 		jacoco_ant:		"org.jacoco:org.jacoco.ant:${jacocoVersion}",
+		mockserver:		'org.mock-server:mockserver-netty:3.10.4',
 	]
 
 	commonManifest = [
