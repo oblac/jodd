@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -11,8 +11,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -23,7 +23,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
@@ -49,7 +49,7 @@ table {
 /* LAYOUT STYLES */
 body {
   font-size: 1em;
-  line-height: 1.5; 
+  line-height: 1.5;
   background: #e7e7e7 url(../images/body-bg.png) 0 0 repeat;
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -163,14 +163,14 @@ th {
 
 td {
   border: 1px solid #ebebeb;
-  text-align: center; 
+  text-align: center;
   font-weight: 300;
 }
 
 form {
   background: #f2f2f2;
   padding: 20px;
-  
+
 }
 
 
@@ -178,43 +178,43 @@ form {
 
 h1 {
   font-size: 32px;
-} 
+}
 
 h2 {
   font-size: 22px;
   font-weight: bold;
   color: #303030;
   margin-bottom: 8px;
-} 
+}
 
 h3 {
   color: #d5000d;
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
-} 
- 
+}
+
 h4 {
   font-size: 16px;
   color: #303030;
   font-weight: bold;
-} 
+}
 
 h5 {
   font-size: 1em;
   color: #303030;
-} 
+}
 
 h6 {
   font-size: .8em;
   color: #303030;
-} 
+}
 
 p {
   font-weight: 300;
   margin-bottom: 20px;
 }
- 
+
 a {
   text-decoration: none;
 }
@@ -372,7 +372,7 @@ content: ".";
 clear: both;
 display: block;
 height: 0;
-visibility: hidden;}            
+visibility: hidden;}
 
 /* ---------------------------------------------------- */
 /* SLIDESHOW > SLIDES
@@ -407,7 +407,7 @@ margin-top: 0;}
 #slideshow .slides-nav .on {
   margin: 0;
   -moz-border-radius: 30px;
-  -webkit-border-radius: 30px;                     
+  -webkit-border-radius: 30px;
   border-radius: 30px;
   border-top: solid 1px #cbcbcb;
   border-left: solid 1px #b7b7b7;
@@ -442,7 +442,7 @@ margin-top: 0;}
 .wow {
   background: #222 url(../images/heart.png) 10px 10px no-repeat;
   -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;                     
+  -webkit-border-radius: 10px;
   border-radius: 10px;
 text-align:center;
 width:140px;
@@ -450,4 +450,8 @@ float:right;
 padding-left: 40px;
 margin-top: 40px;
 margin-right: 40px;
+}
+
+section#go {
+  text-align: center;
 }
