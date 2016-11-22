@@ -6,9 +6,9 @@
 <suppressions>
 
 	<!-- ignore -->
-	<suppress files=".*[/\\]src[/\\]test[/\\].*" checks=".+"/>
-	<suppress files=".*[/\\]src[/\\]testInt[/\\].*" checks=".+"/>
-	<suppress files=".*[/\\]src[/\\]perf[/\\].*" checks=".+"/>
+	<suppress files=".*[/\\]test[/\\].*" checks=".+"/>
+	<suppress files=".*[/\\]testInt[/\\].*" checks=".+"/>
+	<suppress files=".*[/\\]perf[/\\].*" checks=".+"/>
 	<suppress files=".*[/\\]asm5[/\\].*" checks=".+"/>
 
 </suppressions>
