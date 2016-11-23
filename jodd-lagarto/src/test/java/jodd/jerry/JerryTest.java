@@ -377,6 +377,18 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testPrevNextAll() {
+		String html = readFile("prevNextAll.html");
+		String htmlOK = readFile("prevNextAll-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$(".prev :last-child").prevAll().remove();
+		doc.$(".next :first-child").nextAll().remove();
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testEq() {
 		String html = readFile("eq.html");
 		String htmlOK = readFile("eq-ok.html");
@@ -470,6 +482,18 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 		doc.$("p").empty();
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testAppendPrepend() {
+		String html = readFile("appendPrepend.html");
+		String htmlOK = readFile("appendPrepend-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$(".append p").append("<span>C</span>");
+		doc.$(".prepend p").prepend("<span>C</span>");
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}

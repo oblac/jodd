@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+    <div class="append">
+        <p>A<span>C</span></p><p><span>B</span><span>C</span></p>
+    </div>
+    <div class="prepend">
+        <p><span>C</span>A</p><p><span>C</span><span>B</span></p>
+    </div>
+    <script>$(".append p").append("<span>C</span>");$(".prepend p").prepend("<span>C</span>");</script>
+</body>
+</html>
