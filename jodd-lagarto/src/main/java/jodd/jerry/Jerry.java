@@ -323,6 +323,25 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
+	 * Get all following siblings of each element in the set of matched 
+	 * elements, optionally filtered by a selector.
+	 */
+	public Jerry nextAll() {
+		List<Node> result = new NodeList(nodes.length);
+
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				Node currentSiblingElement = node.getNextSiblingElement();
+				while (currentSiblingElement != null) {
+					result.add(currentSiblingElement);
+					currentSiblingElement = currentSiblingElement.getNextSiblingElement();
+				}
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
 	 * Gets the immediately preceding sibling of each element in the
 	 * set of matched elements.
 	 */
@@ -332,6 +351,25 @@ public class Jerry implements Iterable<Jerry> {
 		if (nodes.length > 0) {
 			for (Node node : nodes) {
 				result.add(node.getPreviousSiblingElement());
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
+	 * Get all preceding siblings of each element in the set of matched 
+	 * elements, optionally filtered by a selector.
+	 */
+	public Jerry prevAll() {
+		List<Node> result = new NodeList(nodes.length);
+
+		if (nodes.length > 0) {
+			for (Node node : nodes) {
+				Node currentSiblingElement = node.getPreviousSiblingElement();
+				while (currentSiblingElement != null) {
+					result.add(currentSiblingElement);
+					currentSiblingElement = currentSiblingElement.getPreviousSiblingElement();
+				}
 			}
 		}
 		return new Jerry(this, result);
@@ -962,6 +1000,26 @@ public class Jerry implements Iterable<Jerry> {
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
 			node.addChild(workingDoc.getChildNodes());
+		}
+		return this;
+	}
+
+	/**
+	 * Insert content, specified by the parameter, to the beginning of each 
+	 * element in the set of matched elements.
+	 */
+	public Jerry prepend(String html) {
+		if (html == null) {
+			html = StringPool.EMPTY;
+		}
+		final Document doc = builder.parse(html);
+
+		if (nodes.length == 0) {
+			return this;
+		}
+		for (Node node : nodes) {
+			Document workingDoc = doc.clone();
+			node.insertChild(workingDoc.getChildNodes(), 0);
 		}
 		return this;
 	}
