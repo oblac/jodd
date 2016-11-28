@@ -80,6 +80,13 @@ public class SendMailSession {
 	}
 
 	/**
+	 * Returns {@code true} if mail session is still connected.
+	 */
+	public boolean isConnected() {
+		return mailTransport.isConnected();
+	}
+
+	/**
 	 * Prepares message and sends it.
 	 * Returns Message ID of sent email.
 	 */
