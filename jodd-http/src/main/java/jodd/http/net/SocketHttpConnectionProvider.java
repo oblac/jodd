@@ -35,6 +35,7 @@ import jodd.util.StringUtil;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -73,7 +74,9 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 				httpRequest.host(),
 				httpRequest.port(),
 				httpRequest.connectionTimeout(),
-				httpRequest.trustAllCertificates());
+				httpRequest.trustAllCertificates(),
+				httpRequest.verifyHttpsHost()
+			);
 
 			httpConnection = new SocketHttpSecureConnection(sslSocket);
 		}
@@ -123,7 +126,10 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Creates a SSL socket. Enables default secure enabled protocols if specified.
 	 */
-	protected SSLSocket createSSLSocket(String host, int port, int connectionTimeout, boolean trustAll) throws IOException {
+	protected SSLSocket createSSLSocket(
+			String host, int port, int connectionTimeout,
+			boolean trustAll, boolean verifyHttpsHost) throws IOException {
+
 		SocketFactory socketFactory = getSocketFactory(proxy, true, trustAll);
 
 		Socket socket;
@@ -181,6 +187,16 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			StringUtil.trimAll(values);
 
 			sslSocket.setEnabledProtocols(values);
+		}
+
+		// set SSL parameters to allow host name verifier
+
+		if (verifyHttpsHost) {
+			SSLParameters sslParams = new SSLParameters();
+
+			sslParams.setEndpointIdentificationAlgorithm("HTTPS");
+
+			sslSocket.setSSLParameters(sslParams);
 		}
 
 		return sslSocket;

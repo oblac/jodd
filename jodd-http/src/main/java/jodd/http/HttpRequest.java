@@ -540,7 +540,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- https
+
 	private boolean trustAllCertificates;
+	private boolean verifyHttpsHost = true;
 
 	/**
 	 * Trusts all certificates, use with caution.
@@ -551,10 +554,25 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Trusts all certificates.
+	 * Returns a flag if to trusts all certificates.
 	 */
 	public boolean trustAllCertificates() {
 		return trustAllCertificates;
+	}
+
+	/**
+	 * Verifies HTTPS hosts.
+	 */
+	public HttpRequest verifyHttpsHost(boolean verifyHttpsHost) {
+		this.verifyHttpsHost = verifyHttpsHost;
+		return this;
+	}
+
+	/**
+	 * Returns a flag if to verify https hosts.
+	 */
+	public boolean verifyHttpsHost() {
+		return verifyHttpsHost;
 	}
 
 	// ---------------------------------------------------------------- misc
