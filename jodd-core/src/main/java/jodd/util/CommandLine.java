@@ -25,8 +25,10 @@
 
 package jodd.util;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ import java.util.Map;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamGobbler;
+import jodd.io.StreamUtil;
 
 import static jodd.util.RuntimeUtil.ERROR_PREFIX;
 import static jodd.util.RuntimeUtil.OUTPUT_PREFIX;
@@ -182,8 +185,13 @@ public class CommandLine {
 			}
 		}
 		else if (SystemUtil.isHostAix() || SystemUtil.isHostLinux() || SystemUtil.isHostSolaris() || SystemUtil.isHostUnix()) {
-			newCommand.add("sh");
-			newCommand.add("-c");
+			String shebang = resolveShebangLine(commandFile);
+
+			newCommand.add(shebang);
+
+			if (shebang.equals("sh")) {
+				newCommand.add("-c");
+			}
 		}
 		else if (SystemUtil.isHostWindows()) {
 			newCommand.add("cmd");
@@ -193,6 +201,28 @@ public class CommandLine {
 		newCommand.add(command);
 
 		return newCommand;
+	}
+
+	protected String resolveShebangLine(File commandFile) {
+		String shebang = "sh";
+
+		if (commandFile.exists() && !commandFile.isDirectory() && commandFile.length() > 0) {
+
+			BufferedReader reader = null;
+
+			try {
+				reader = new BufferedReader(new FileReader(commandFile));
+				shebang = reader.readLine();
+				shebang = shebang.substring(shebang.indexOf('/'));
+			}
+			catch (Exception ignore) {
+			}
+			finally {
+				StreamUtil.close(reader);
+			}
+		}
+
+		return shebang;
 	}
 
 	protected boolean isSH(String command) {
