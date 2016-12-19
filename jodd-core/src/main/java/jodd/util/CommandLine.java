@@ -28,10 +28,8 @@ package jodd.util;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -187,7 +185,7 @@ public class CommandLine {
 			}
 		}
 		else if (SystemUtil.isHostAix() || SystemUtil.isHostLinux() || SystemUtil.isHostSolaris() || SystemUtil.isHostUnix()) {
-			String shebang = getShebang(commandFile);
+			String shebang = resolveShebangLine(commandFile);
 
 			newCommand.add(shebang);
 
@@ -205,8 +203,8 @@ public class CommandLine {
 		return newCommand;
 	}
 
-	protected String getShebang(File commandFile) {
-		String shebang;
+	protected String resolveShebangLine(File commandFile) {
+		String shebang = "sh";
 
 		if (commandFile.exists() && !commandFile.isDirectory() && commandFile.length() > 0) {
 
@@ -217,8 +215,7 @@ public class CommandLine {
 				shebang = reader.readLine();
 				shebang = shebang.substring(shebang.indexOf('/'));
 			}
-			catch (Exception e) {
-				shebang = "sh";
+			catch (Exception ignore) {
 			}
 			finally {
 				StreamUtil.close(reader);
