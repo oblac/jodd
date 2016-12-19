@@ -169,19 +169,14 @@ public class ServletUtil {
 			response.setContentLength(fileSize);
 		}
 
-
-		// Support internationalization
-		// Visit https://tools.ietf.org/html/rfc6266#section-5 for more infomation.
+		// support internationalization
+		// See https://tools.ietf.org/html/rfc6266#section-5 for more information.
 		if (fileName != null) {
 			String name = FileNameUtil.getName(fileName);
-			String template = "attachment;filename=\"%s\";filename*=utf8''%s";
-			String encodedFileName = name;
-			try {
-                encodedFileName = URLEncoder.encode(rawFileName, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                // should not reach here
-            }
-			response.setHeader(CONTENT_DISPOSITION, String.format(template, encodedFileName, encodedFileName));
+			String encodedFileName = URLCoder.encode(name);
+
+			response.setHeader(CONTENT_DISPOSITION,
+				"attachment;filename=\"+ name + \";filename*=utf8''" + encodedFileName);
 		}
 	}
 

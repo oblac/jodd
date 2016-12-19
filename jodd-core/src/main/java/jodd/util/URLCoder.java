@@ -97,6 +97,13 @@ public class URLCoder {
 	 */
 	enum URIPart {
 
+		UNRESERVED {
+			@Override
+			public boolean isValid(char c) {
+				return isUnreserved(c);
+			}
+		},
+
 		SCHEME {
 			@Override
 			public boolean isValid(char c) {
@@ -218,6 +225,16 @@ public class URLCoder {
 	}
 
 	// ---------------------------------------------------------------- main methods
+
+	/**
+	 * Encodes string using default RFCP rules.
+	 */
+	public static String encode(String string, String encoding) {
+		return encodeUriComponent(string, encoding, URIPart.UNRESERVED);
+	}
+	public static String encode(String string) {
+		return encodeUriComponent(string, JoddCore.encoding, URIPart.UNRESERVED);
+	}
 
 	/**
 	 * Encodes the given URI scheme with the given encoding.
