@@ -108,7 +108,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Character> charArrayList = new ArrayList<>();
+			List<Character> charArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				char convertedValue = convertType(element);

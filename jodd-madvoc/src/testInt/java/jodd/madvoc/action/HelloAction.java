@@ -161,7 +161,7 @@ public class HelloAction {
 	Person[] parray;
 
 	@In("ppp")
-	LinkedHashMap<String, Person> pmap;
+	Map<String, Person> pmap;
 
 	@Out
 	String result;

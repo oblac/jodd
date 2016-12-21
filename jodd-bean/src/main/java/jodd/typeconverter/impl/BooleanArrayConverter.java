@@ -106,7 +106,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			ArrayList<Boolean> booleanArrayList = new ArrayList<>();
+			List<Boolean> booleanArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				boolean convertedValue = convertType(element);

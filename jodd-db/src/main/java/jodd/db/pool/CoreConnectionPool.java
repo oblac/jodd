@@ -35,6 +35,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class for pre-allocating, recycling, and managing JDBC connections.
@@ -186,7 +187,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 
 	// ---------------------------------------------------------------- init
 
-	private ArrayList<ConnectionData> availableConnections, busyConnections;
+	private List<ConnectionData> availableConnections, busyConnections;
 	private boolean connectionPending;
 
 	/**
@@ -368,7 +369,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		busyConnections = new ArrayList<>(maxConnections);
 	}
 
-	private void closeConnections(ArrayList<ConnectionData> connections) {
+	private void closeConnections(Iterable<ConnectionData> connections) {
 		try {
 			for (ConnectionData connectionData : connections) {
 				Connection connection = connectionData.connection;

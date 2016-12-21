@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Holds all information about some entity type, such as table name and {@link DbEntityColumnDescriptor columns data}.
@@ -136,7 +137,7 @@ public class DbEntityDescriptor<E> {
 		List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
 		int idcount = 0;
 
-		HashSet<String> names = new HashSet<>(allProperties.length);
+		Set<String> names = new HashSet<>(allProperties.length);
 
 		for (PropertyDescriptor propertyDescriptor : allProperties) {
 

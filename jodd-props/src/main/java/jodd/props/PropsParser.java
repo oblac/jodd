@@ -425,7 +425,7 @@ public class PropsParser implements Cloneable {
 	 */
 	protected void justAdd(final String key, final String value, final ArrayList<String> keyProfiles, final Operator operator) {
 		if (operator == Operator.COPY) {
-			HashMap<String,Object> target = new HashMap<>();
+			Map<String,Object> target = new HashMap<>();
 
 			String[] profiles = null;
 			if (keyProfiles != null) {

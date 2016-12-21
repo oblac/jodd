@@ -52,7 +52,7 @@ class PropertiesToProps {
 		bw.flush();
 	}
 
-	private void writeProfilePropertiesThatAreNotInTheBase(final BufferedWriter bw, final Properties baseProperties,
+	private void writeProfilePropertiesThatAreNotInTheBase(final BufferedWriter bw, final Map baseProperties,
 														   final Map<String, Properties> profiles) throws IOException {
 
 		for (final Map.Entry<String, Properties> entry : profiles.entrySet()) {

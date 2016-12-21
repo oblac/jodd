@@ -87,6 +87,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -96,7 +97,7 @@ import java.util.TimeZone;
  */
 public class TypeConverterManagerBean {
 
-	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);
+	private final Map<Class, TypeConverter> converters = new HashMap<>(70);
 
 	// ---------------------------------------------------------------- converter
 

@@ -28,6 +28,7 @@ package jodd.lagarto.dom;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Simplified HTML foster rules for tables.
@@ -100,9 +101,9 @@ public class HtmlFosterRules {
 
 	// ---------------------------------------------------------------- core
 
-	protected ArrayList<Element> lastTables = new ArrayList<>();
-	protected ArrayList<Element> fosterElements = new ArrayList<>();
-	protected ArrayList<Text> fosterTexts = new ArrayList<>();
+	protected List<Element> lastTables = new ArrayList<>();
+	protected List<Element> fosterElements = new ArrayList<>();
+	protected List<Text> fosterTexts = new ArrayList<>();
 
 	/**
 	 * Fixes foster elements.

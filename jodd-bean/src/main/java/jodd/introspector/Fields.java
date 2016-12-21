@@ -31,6 +31,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Collection of {@link FieldDescriptor field descriptors}.
@@ -38,7 +39,7 @@ import java.util.HashMap;
 public class Fields {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final HashMap<String, FieldDescriptor> fieldsMap;
+	protected final Map<String, FieldDescriptor> fieldsMap;
 
 	// cache
 	private FieldDescriptor[] allFields;
@@ -54,13 +55,13 @@ public class Fields {
 	/**
 	 * Inspects fields and returns map of {@link FieldDescriptor field descriptors}.
 	 */
-	protected HashMap<String, FieldDescriptor> inspectFields() {
+	protected Map<String, FieldDescriptor> inspectFields() {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
 		Field[] fields = scanAccessible ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
 
-		HashMap<String, FieldDescriptor> map = new HashMap<>(fields.length);
+		Map<String, FieldDescriptor> map = new HashMap<>(fields.length);
 
 		for (Field field : fields) {
 			String fieldName = field.getName();

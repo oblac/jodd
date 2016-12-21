@@ -44,6 +44,7 @@ import jodd.petite.PetiteContainer;
 
 import javax.servlet.ServletContext;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 import java.util.Properties;
 
 import jodd.props.Props;
@@ -201,7 +202,7 @@ public class WebApplication {
 	 * Initialized web application parameters. Provided properties object is always non-<code>null</code>.
 	 * Simple defines parameters for internal container.
 	 */
-	protected void defineParams(Properties properties) {
+	protected void defineParams(Map properties) {
 		log.debug("Defining Madvoc parameters");
 
 		madpc.defineParameters(properties);

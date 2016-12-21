@@ -33,13 +33,14 @@ import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utilities for applying {@link DelegateAdvice} to target.
  */
 public class DelegateAdviceUtil {
 
-	private static HashMap<Class, Class> advicesMap = new HashMap<>();
+	private static Map<Class, Class> advicesMap = new HashMap<>();
 
 	/**
 	 * Proxy Proxetta, applied on all public methods of the target class.

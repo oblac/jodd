@@ -31,6 +31,7 @@ import jodd.typeconverter.Convert;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -41,7 +42,7 @@ public class LoggableAdvice implements ProxyAdvice {
 	/**
 	 * Used for storing parameter values needed for producing log.
 	 */
-	protected ArrayList<String> parameterValues;
+	protected List<String> parameterValues;
 
 	public String sqlTemplate;
 
