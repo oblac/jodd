@@ -176,7 +176,7 @@ public class ServletUtil {
 			String encodedFileName = URLCoder.encode(name);
 
 			response.setHeader(CONTENT_DISPOSITION,
-				"attachment;filename=\"+ name + \";filename*=utf8''" + encodedFileName);
+				"attachment;filename=\"" + name + "\";filename*=utf8''" + encodedFileName);
 		}
 	}
 
