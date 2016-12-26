@@ -99,13 +99,6 @@ public class TomcatTestServer {
 		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
 
 		FileUtil.copyFileToDir(madvocPropsFile, classes);
-
-		// classes/madvoc-routes.txt
-
-		URL madvocRoutesUrl = TomcatTestServer.class.getResource("madvoc-routes.txt");
-		File madvocRoutesFile = FileUtil.toFile(madvocRoutesUrl);
-
-		FileUtil.copyFileToDir(madvocRoutesFile, classes);
 	}
 
 	public void stop() throws Exception {
