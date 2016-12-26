@@ -60,7 +60,7 @@ public class RawActionTest {
 	@Test
 	public void testRawDownloadAction() {
 		HttpResponse response = HttpRequest.get("localhost:8173/raw.download").send();
-		assertEquals("attachment;filename=\"jodd-download.txt\"", response.header("content-disposition"));
+		assertEquals("attachment;filename=\"jodd-download.txt\";filename*=utf8''jodd-download.txt", response.header("content-disposition"));
 		assertEquals("file from jodd.org!", response.bodyText().trim());
 	}
 
