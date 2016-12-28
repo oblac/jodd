@@ -126,13 +126,13 @@ public class SendMailSession {
 	protected MimeMessage createMessage(Email email, Session session) throws MessagingException {
 		MimeMessage msg = new MimeMessage(session);
 
-		msg.setFrom(email.getFrom().toInternetAddress());
+		msg.setFrom(email.getFrom().getInternetAddress());
 
 		// to
 		int totalTo = email.getTo().length;
 		InternetAddress[] address = new InternetAddress[totalTo];
 		for (int i = 0; i < totalTo; i++) {
-			address[i] = email.getTo()[i].toInternetAddress();
+			address[i] = email.getTo()[i].getInternetAddress();
 		}
 		msg.setRecipients(Message.RecipientType.TO, address);
 
@@ -141,7 +141,7 @@ public class SendMailSession {
 			int totalReplyTo = email.getReplyTo().length;
 			address = new InternetAddress[totalReplyTo];
 			for (int i = 0; i < totalReplyTo; i++) {
-				address[i] = email.getReplyTo()[i].toInternetAddress();
+				address[i] = email.getReplyTo()[i].getInternetAddress();
 			}
 			msg.setReplyTo(address);
 		}
@@ -151,7 +151,7 @@ public class SendMailSession {
 			int totalCc = email.getCc().length;
 			address = new InternetAddress[totalCc];
 			for (int i = 0; i < totalCc; i++) {
-				address[i] = email.getCc()[i].toInternetAddress();
+				address[i] = email.getCc()[i].getInternetAddress();
 			}
 			msg.setRecipients(Message.RecipientType.CC, address);
 		}
@@ -161,7 +161,7 @@ public class SendMailSession {
 			int totalBcc = email.getBcc().length;
 			address = new InternetAddress[totalBcc];
 			for (int i = 0; i < totalBcc; i++) {
-				address[i] = email.getBcc()[i].toInternetAddress();
+				address[i] = email.getBcc()[i].getInternetAddress();
 			}
 			msg.setRecipients(Message.RecipientType.BCC, address);
 		}

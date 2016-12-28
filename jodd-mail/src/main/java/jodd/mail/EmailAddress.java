@@ -27,6 +27,7 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 
+import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
@@ -43,6 +44,9 @@ import java.util.regex.Pattern;
  * characters.
  */
 public class EmailAddress {
+	
+	public static final EmailAddress[] EMPTY_ARRAY = new EmailAddress[0];
+	
 	/**
 	 * This constant changes the behavior of the domain parsing. If true, the parser will
 	 * allow 2822 domains, which include single-level domains (e.g. bob@localhost) as well
@@ -681,6 +685,50 @@ public class EmailAddress {
 		}
 
 		return str;
+	}
+	
+
+
+	// ---------------------------------------------------------------- arrays
+
+	/**
+	 * Converts array of <code>Address</code> to {@link EmailAddress}.
+	 */
+	public static EmailAddress[] createFrom(Address[] addresses) {
+		if (addresses == null) {
+			return null;
+		}
+		if (addresses.length == 0) {
+			return null;
+		}
+
+		EmailAddress[] res = new EmailAddress[addresses.length];
+
+		for (int i = 0; i < addresses.length; i++) {
+			res[i] = new EmailAddress(addresses[i].toString());
+		}
+
+		return res;
+	}
+
+	/**
+	 * Converts array of <code>String</code> to {@link EmMailAddress}.
+	 */
+	public static EmailAddress[] createFrom(String[] addresses) {
+		if (addresses == null) {
+			return null;
+		}
+		if (addresses.length == 0) {
+			return null;
+		}
+
+		EmailAddress[] res = new EmailAddress[addresses.length];
+
+		for (int i = 0; i < addresses.length; i++) {
+			res[i] = new EmailAddress(addresses[i]);
+		}
+
+		return res;
 	}
 
 }
