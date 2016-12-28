@@ -33,12 +33,12 @@ public class EMLComposerTest {
 
 	@Test
 	public void testWriteSimpleEmail() {
-		Email email = Email.create().from("Joe").to("Pig").addText("Hello");
+		Email email = Email.create().from("Joe@example.com").to("Pig@example.com").addText("Hello");
 
 		String eml = EMLComposer.create().compose(email);
 
-		assertTrue(eml.contains("From: Joe\r\n"));
-		assertTrue(eml.contains("To: Pig\r\n"));
+		assertTrue(eml.contains("From: Joe@example.com\r\n"));
+		assertTrue(eml.contains("To: Pig@example.com\r\n"));
 		assertTrue(eml.contains("Hello"));
 	}
 }
