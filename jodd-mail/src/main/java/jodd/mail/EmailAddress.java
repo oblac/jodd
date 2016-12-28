@@ -625,6 +625,12 @@ public class EmailAddress {
 
 		return (new String[] {personal_string, currentLocalpart, currentDomainpart});
 	}
+	
+	public String toString()
+	{
+		InternetAddress addr = getInternetAddress();
+		return addr.getPersonal()==null ? addr.getAddress() : addr.getPersonal() + " <" + addr.getAddress() + ">";
+	}
 
 	/**
 	 * Given a string, extract the first matched comment token as defined in 2822, trimmed;
