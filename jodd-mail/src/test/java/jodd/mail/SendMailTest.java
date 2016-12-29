@@ -48,36 +48,36 @@ public class SendMailTest {
 	@Test
 	public void testFromToBccCc() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to1").to("Major Tom", "to2")
-				.cc("cc1").cc("Major Tom", "cc2")
-				.bcc("Major Tom", "bcc1").bcc("bcc2");
+				.from("from@example.com")
+				.to("to1@example.com").to("Major Tom", "to2@example.com")
+				.cc("cc1@example.com").cc("Major Tom", "cc2@example.com")
+				.bcc("Major Tom", "bcc1@example.com").bcc("bcc2@example.com");
 
 		Message message = createMessage(email);
 
 		assertEquals(1, message.getFrom().length);
-		assertEquals("from", message.getFrom()[0].toString());
+		assertEquals("from@example.com", message.getFrom()[0].toString());
 
 		assertEquals(6, message.getAllRecipients().length);
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to1", message.getRecipients(Message.RecipientType.TO)[0].toString());
-		assertEquals("Major Tom <to2>", message.getRecipients(Message.RecipientType.TO)[1].toString());
+		assertEquals("to1@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
+		assertEquals("Major Tom <to2@example.com>", message.getRecipients(Message.RecipientType.TO)[1].toString());
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.CC).length);
-		assertEquals("cc1", message.getRecipients(Message.RecipientType.CC)[0].toString());
-		assertEquals("Major Tom <cc2>", message.getRecipients(Message.RecipientType.CC)[1].toString());
+		assertEquals("cc1@example.com", message.getRecipients(Message.RecipientType.CC)[0].toString());
+		assertEquals("Major Tom <cc2@example.com>", message.getRecipients(Message.RecipientType.CC)[1].toString());
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.BCC).length);
-		assertEquals("Major Tom <bcc1>", message.getRecipients(Message.RecipientType.BCC)[0].toString());
-		assertEquals("bcc2", message.getRecipients(Message.RecipientType.BCC)[1].toString());
+		assertEquals("Major Tom <bcc1@example.com>", message.getRecipients(Message.RecipientType.BCC)[0].toString());
+		assertEquals("bcc2@example.com", message.getRecipients(Message.RecipientType.BCC)[1].toString());
 	}
 
 	@Test
 	public void testSimpleText() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to")
+				.from("from@example.com")
+				.to("to@example.com")
 				.subject("sub")
 				.addText("Hello!");
 
@@ -111,8 +111,8 @@ public class SendMailTest {
 	@Test
 	public void testTextHtml() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to")
+				.from("from@example.com")
+				.to("to@example.com")
 				.subject("sub")
 				.addText("Hello!")
 				.addHtml("<html><body><h1>Hey!</h1></body></html>");
@@ -120,10 +120,10 @@ public class SendMailTest {
 		Message message = createMessage(email);
 
 		assertEquals(1, message.getFrom().length);
-		assertEquals("from", message.getFrom()[0].toString());
+		assertEquals("from@example.com", message.getFrom()[0].toString());
 
 		assertEquals(1, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to", message.getRecipients(Message.RecipientType.TO)[0].toString());
+		assertEquals("to@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
 
 		assertEquals("sub", message.getSubject());
 
@@ -150,8 +150,8 @@ public class SendMailTest {
 	@Test
 	public void testTextHtmlEmbedAttach1() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to")
+				.from("from@example.com")
+				.to("to@example.com")
 				.subject("sub")
 				.addText("Hello!")
 				.addHtml("<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>")
@@ -165,8 +165,8 @@ public class SendMailTest {
 	public void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
 		Email email = new Email();
 
-		email.from("from");
-		email.to("to");
+		email.from("from@example.com");
+		email.to("to@example.com");
 		email.subject("sub");
 
 		EmailMessage testMessage = new EmailMessage("Hello!", MimeTypes.MIME_TEXT_PLAIN);
@@ -192,10 +192,10 @@ public class SendMailTest {
 		Message message = createMessage(email);
 
 		assertEquals(1, message.getFrom().length);
-		assertEquals("from", message.getFrom()[0].toString());
+		assertEquals("from@example.com", message.getFrom()[0].toString());
 
 		assertEquals(1, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to", message.getRecipients(Message.RecipientType.TO)[0].toString());
+		assertEquals("to@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
 
 		assertEquals("sub", message.getSubject());
 
