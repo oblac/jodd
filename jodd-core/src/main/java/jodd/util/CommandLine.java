@@ -25,39 +25,38 @@
 
 package jodd.util;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jodd.io.FileNameUtil;
-import jodd.io.FileUtil;
 import jodd.io.StreamGobbler;
-import jodd.io.StreamUtil;
 
 import static jodd.util.RuntimeUtil.ERROR_PREFIX;
 import static jodd.util.RuntimeUtil.OUTPUT_PREFIX;
 
 /**
- * Simple tool to easily execute native applications.
- *
- * @author Vilmos Papp
- * @author Igor Spasić
+ * Simple user-friendly wrapper over {@code ProcessBuilder}. Has the following:
+ * <ul>
+ *     <li>fluent interface</li>
+ *     <li>no exception is throw</li>
+ *     <li>output is collected to string</li>
+ *     <li>easy environment manipulation</li>
+ * </ul>
  */
 public class CommandLine {
 
 	public static final int OK = 0;
 
-	protected final String command;
-	protected final List<String> args = new ArrayList<>();
+	protected final List<String> cmdLine = new ArrayList<>();
 	protected Map<String, String> env = null;
+	protected boolean cleanEnvironment = false;
 	protected File workingDirectory;
 	protected String outPrefix = OUTPUT_PREFIX;
 	protected String errPrefix = ERROR_PREFIX;
@@ -67,7 +66,7 @@ public class CommandLine {
 	// ---------------------------------------------------------------- ctor
 
 	protected CommandLine(String command) {
-		this.command = command;
+		cmdLine.add(command);
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class CommandLine {
 	 * Adds single argument.
 	 */
 	public CommandLine arg(String argument) {
-		args.add(argument);
+		cmdLine.add(argument);
 
 		return this;
 	}
@@ -111,7 +110,7 @@ public class CommandLine {
 	 */
 	public CommandLine args(String... arguments) {
 		if (arguments != null && arguments.length > 0) {
-			Collections.addAll(args, arguments);
+			Collections.addAll(cmdLine, arguments);
 		}
 
 		return this;
@@ -154,47 +153,52 @@ public class CommandLine {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- execute
-
-	protected List<String> prepareCommands() {
-		List<String> commands = new ArrayList<>(args.size() + 1);
-
-		commands.add(command);
-		commands.addAll(args);
-
-		return commands;
+	/**
+	 * When set to {@code true}, environment will not be copied from the
+	 * parent process and will be completly empty.
+	 */
+	public CommandLine newEnv(boolean clean) {
+		cleanEnvironment = clean;
+		return this;
 	}
 
+	// ---------------------------------------------------------------- execute
+
 	/**
-	 * Executes command and returns process result.
+	 * Runs command and returns process result.
 	 */
-	public RuntimeUtil.ProcessResult execute() throws IOException, InterruptedException {
+	public RuntimeUtil.ProcessResult run() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		out = err = baos;
 
-		List<String> commands = prepareCommands();
+		try {
+			baos.write(StringUtil.join(cmdLine, ' ').getBytes());
+			baos.write(StringPool.BYTES_NEW_LINE);
+		}
+		catch (IOException ignore) {
+		}
 
-		baos.write(StringUtil.join(commands, ' ').getBytes());
-		baos.write(StringPool.BYTES_NEW_LINE);
-
-		int exitCode = execute(commands);
-
-		return new RuntimeUtil.ProcessResult(exitCode, baos.toString());
-	}
-
-	private int execute(List<String> commands) throws IOException, InterruptedException {
 		ProcessBuilder processBuilder = new ProcessBuilder();
 
-		processBuilder.command(commands);
+		processBuilder.command(cmdLine);
 
+		if (cleanEnvironment) {
+			processBuilder.environment().clear();
+		}
 		if (env != null) {
 			processBuilder.environment().putAll(env);
 		}
 
 		processBuilder.directory(workingDirectory);
 
-		Process process = processBuilder.start();
+		Process process = null;
+		try {
+			process = processBuilder.start();
+		}
+		catch (IOException ioex) {
+			return writeException(baos, ioex);
+		}
 
 		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), out, outPrefix);
 		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), err, errPrefix);
@@ -202,11 +206,30 @@ public class CommandLine {
 		outputGobbler.start();
 		errorGobbler.start();
 
-		int result = process.waitFor();
+		int result;
+
+		try {
+			result = process.waitFor();
+		}
+		catch (InterruptedException iex) {
+			return writeException(baos, iex);
+		}
 
 		outputGobbler.waitFor();
 		errorGobbler.waitFor();
 
-		return result;
+		return new RuntimeUtil.ProcessResult(result, baos.toString());
+	}
+
+	private RuntimeUtil.ProcessResult writeException(ByteArrayOutputStream baos, Exception ex) {
+		try {
+			baos.write(errPrefix.getBytes());
+		}
+		catch (IOException ignore) {
+		}
+
+		ex.printStackTrace(new PrintStream(baos));
+
+		return new RuntimeUtil.ProcessResult(-1, baos.toString());
 	}
 }
