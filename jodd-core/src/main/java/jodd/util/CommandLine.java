@@ -63,7 +63,6 @@ public class CommandLine {
 	protected String errPrefix = ERROR_PREFIX;
 	protected OutputStream out = System.out;
 	protected OutputStream err = System.err;
-	protected boolean newShell = false;
 
 	// ---------------------------------------------------------------- ctor
 
@@ -155,91 +154,12 @@ public class CommandLine {
 		return this;
 	}
 
-	public CommandLine newShell(boolean newShell) {
-		this.newShell = newShell;
-		return this;
-	}
-
-	// ---------------------------------------------------------------- executor
-
-	/**
-	 * Resolves system-dependent executor.
-	 */
-	protected List<String> resolveShellExecutor(String command) {
-		List<String> newCommand = new ArrayList<>();
-
-		File commandFile = new File(command);
-
-		if (SystemUtil.isHostMac()) {
-			if (isSH(command)) {
-				newCommand.add("sh");
-			}
-			else if (commandFile.canExecute() && !FileNameUtil.hasExtension(commandFile.getAbsolutePath())) {
-			}
-			else if (FileUtil.isExistingFile(commandFile)) { // for native application and files with associated applications, open command should be used
-				newCommand.add("open");
-			}
-			else {
-				newCommand.add("sh");
-				newCommand.add("-c");
-			}
-		}
-		else if (SystemUtil.isHostAix() || SystemUtil.isHostLinux() || SystemUtil.isHostSolaris() || SystemUtil.isHostUnix()) {
-			String shebang = resolveShebangLine(commandFile);
-
-			newCommand.add(shebang);
-
-			if (shebang.equals("sh")) {
-				newCommand.add("-c");
-			}
-		}
-		else if (SystemUtil.isHostWindows()) {
-			newCommand.add("cmd");
-			newCommand.add("/c");
-		}
-
-		newCommand.add(command);
-
-		return newCommand;
-	}
-
-	protected String resolveShebangLine(File commandFile) {
-		String shebang = "sh";
-
-		if (commandFile.exists() && !commandFile.isDirectory() && commandFile.length() > 0) {
-
-			BufferedReader reader = null;
-
-			try {
-				reader = new BufferedReader(new FileReader(commandFile));
-				shebang = reader.readLine();
-				shebang = shebang.substring(shebang.indexOf('/'));
-			}
-			catch (Exception ignore) {
-			}
-			finally {
-				StreamUtil.close(reader);
-			}
-		}
-
-		return shebang;
-	}
-
-	protected boolean isSH(String command) {
-		return FileNameUtil.getExtension(command).equals("sh");
-	}
-
 	// ---------------------------------------------------------------- execute
 
 	protected List<String> prepareCommands() {
 		List<String> commands = new ArrayList<>(args.size() + 1);
 
-		if (newShell) {
-			commands.addAll(resolveShellExecutor(command));
-		}
-		else {
-			commands.add(command);
-		}
+		commands.add(command);
 		commands.addAll(args);
 
 		return commands;
