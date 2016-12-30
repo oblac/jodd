@@ -25,7 +25,7 @@
 
 package jodd.joy.vtor.constraint;
 
-import jodd.mail.EmailAddress;
+import jodd.mail.RFC2822AddressParser;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -42,8 +42,8 @@ public class EmailConstraint implements ValidationConstraint<Email> {
 			return true;
 		}
 
-		EmailAddress emailAddress = new EmailAddress(value.toString());
+		RFC2822AddressParser RFC2822AddressParser = new RFC2822AddressParser(value.toString());
 
-		return emailAddress.isValid();
+		return RFC2822AddressParser.isValid();
 	}
 }

@@ -81,11 +81,11 @@ public class MailAddress {
 	}
 
 	/**
-	 * Creates new email address from {@link jodd.mail.EmailAddress}.
+	 * Creates new email address from {@link RFC2822AddressParser}.
 	 */
-	public MailAddress(EmailAddress emailAddress) {
-		this.personalName = emailAddress.getPersonalName();
-		this.email = emailAddress.getLocalPart() + '@' + emailAddress.getDomain();
+	public MailAddress(RFC2822AddressParser RFC2822AddressParser) {
+		this.personalName = RFC2822AddressParser.getPersonalName();
+		this.email = RFC2822AddressParser.getLocalPart() + '@' + RFC2822AddressParser.getDomain();
 	}
 
 	/**

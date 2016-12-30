@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  * Note: Unlike <code>InternetAddress</code>, this class will preserve any RFC-2047-encoding of international
  * characters.
  */
-public class EmailAddress {
+public class RFC2822AddressParser {
 	/**
 	 * This constant changes the behavior of the domain parsing. If true, the parser will
 	 * allow 2822 domains, which include single-level domains (e.g. bob@localhost) as well
@@ -152,7 +152,7 @@ public class EmailAddress {
 	/**
 	 * Creates new email address. Nothing is parsed yet.
 	 */
-	public EmailAddress(String email) {
+	public RFC2822AddressParser(String email) {
 		this.email = email.trim();
 	}
 
