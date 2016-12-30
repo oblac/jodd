@@ -333,7 +333,6 @@ configure(javaModules()) {
 			 	'-Djacoco=true',
 			 	'-Xms128m',
 			 	'-Xmx512m',
-			 	'-XX:MaxPermSize=128m',
 			 	'-Duser.timezone=GMT'
 		}
 	}
