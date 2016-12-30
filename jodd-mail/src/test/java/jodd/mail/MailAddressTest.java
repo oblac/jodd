@@ -62,7 +62,7 @@ public class MailAddressTest {
 		assertEquals("Jenny Doe", mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 
-		MailAddress mailAddress2 = new MailAddress(mailAddress.toEmailAddress());
+		MailAddress mailAddress2 = new MailAddress(new EmailAddress(mailAddress.toString()));
 		assertEquals("Jenny Doe", mailAddress2.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress2.getEmail());
 	}

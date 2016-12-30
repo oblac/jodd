@@ -123,13 +123,6 @@ public class MailAddress {
 	// ---------------------------------------------------------------- convert
 
 	/**
-	 * Creates new {@link jodd.mail.EmailAddress}.
-	 */
-	public EmailAddress toEmailAddress() {
-		return new EmailAddress(toString());
-	}
-
-	/**
 	 * Creates new <code>InternetAddress</code> from current data.
 	 */
 	public InternetAddress toInternetAddress() throws AddressException {
@@ -155,7 +148,7 @@ public class MailAddress {
 	/**
 	 * Converts array of <code>Address</code> to {@link MailAddress}.
 	 */
-	public static MailAddress[] createFrom(Address[] addresses) {
+	public static MailAddress[] createFrom(Address... addresses) {
 		if (addresses == null) {
 			return null;
 		}
@@ -175,7 +168,7 @@ public class MailAddress {
 	/**
 	 * Converts array of <code>String</code> to {@link MailAddress}.
 	 */
-	public static MailAddress[] createFrom(String[] addresses) {
+	public static MailAddress[] createFrom(String... addresses) {
 		if (addresses == null) {
 			return null;
 		}
@@ -191,25 +184,4 @@ public class MailAddress {
 
 		return res;
 	}
-
-	/**
-	 * Converts array of {@link jodd.mail.EmailAddress} to {@link MailAddress}.
-	 */
-	public static MailAddress[] createFrom(EmailAddress[] addresses) {
-		if (addresses == null) {
-			return null;
-		}
-		if (addresses.length == 0) {
-			return null;
-		}
-
-		MailAddress[] res = new MailAddress[addresses.length];
-
-		for (int i = 0; i < addresses.length; i++) {
-			res[i] = new MailAddress(addresses[i]);
-		}
-
-		return res;
-	}
-
 }

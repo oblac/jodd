@@ -62,13 +62,6 @@ public class Email extends CommonEmail {
 		return this;
 	}
 	/**
-	 * Sets the FROM address from {@link jodd.mail.EmailAddress}.
-	 */
-	public Email from(EmailAddress emailAddress) {
-		setFrom(new MailAddress(emailAddress));
-		return this;
-	}
-	/**
 	 * Sets the FROM address from {@link javax.mail.internet.InternetAddress}.
 	 */
 	public Email from(InternetAddress internetAddress) {
@@ -95,13 +88,6 @@ public class Email extends CommonEmail {
 		return this;
 	}
 	/**
-	 * Appends TO address from {@link jodd.mail.EmailAddress}.
-	 */
-	public Email to(EmailAddress emailAddress) {
-		addTo(new MailAddress(emailAddress));
-		return this;
-	}
-	/**
 	 * Appends TO address from <code>InternetAddress</code>.
 	 */
 	public Email to(InternetAddress internetAddress) {
@@ -117,13 +103,7 @@ public class Email extends CommonEmail {
 		setTo(MailAddress.createFrom(tos));
 		return this;
 	}
-	/**
-	 * Sets one or more TO addresses.
-	 */
-	public Email to(EmailAddress[] tos) {
-		setTo(MailAddress.createFrom(tos));
-		return this;
-	}
+
 	/**
 	 * Sets one or more TO addresses.
 	 */
@@ -152,13 +132,6 @@ public class Email extends CommonEmail {
 	/**
 	 * Appends REPLY-TO address.
 	 */
-	public Email replyTo(EmailAddress emailAddress) {
-		addReplyTo(new MailAddress(emailAddress));
-		return this;
-	}
-	/**
-	 * Appends REPLY-TO address.
-	 */
 	public Email replyTo(InternetAddress internetAddress) {
 		addReplyTo(new MailAddress(internetAddress));
 		return this;
@@ -169,13 +142,6 @@ public class Email extends CommonEmail {
 	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
 	 */
 	public Email replyTo(String[] replyTos) {
-		setReplyTo(MailAddress.createFrom(replyTos));
-		return this;
-	}
-	/**
-	 * Sets one or more REPLY-TO address.
-	 */
-	public Email replyTo(EmailAddress[] replyTos) {
 		setReplyTo(MailAddress.createFrom(replyTos));
 		return this;
 	}
@@ -207,13 +173,6 @@ public class Email extends CommonEmail {
 	/**
 	 * Appends CC address.
 	 */
-	public Email cc(EmailAddress emailAddress) {
-		addCc(new MailAddress(emailAddress));
-		return this;
-	}
-	/**
-	 * Appends CC address.
-	 */
 	public Email cc(InternetAddress internetAddress) {
 		addCc(new MailAddress(internetAddress));
 		return this;
@@ -224,13 +183,6 @@ public class Email extends CommonEmail {
 	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
 	 */
 	public Email cc(String[] ccs) {
-		setCc(MailAddress.createFrom(ccs));
-		return this;
-	}
-	/**
-	 * Sets one or more CC address.
-	 */
-	public Email cc(EmailAddress[] ccs) {
 		setCc(MailAddress.createFrom(ccs));
 		return this;
 	}
@@ -262,13 +214,6 @@ public class Email extends CommonEmail {
 	/**
 	 * Appends BCC address.
 	 */
-	public Email bcc(EmailAddress emailAddress) {
-		addBcc(new MailAddress(emailAddress));
-		return this;
-	}
-	/**
-	 * Appends BCC address.
-	 */
 	public Email bcc(InternetAddress internetAddress) {
 		addBcc(new MailAddress(internetAddress));
 		return this;
@@ -278,13 +223,6 @@ public class Email extends CommonEmail {
 	 * Sets one or more BCC addresses.
 	 */
 	public Email bcc(String[] bccs) {
-		setBcc(MailAddress.createFrom(bccs));
-		return this;
-	}
-	/**
-	 * Sets one or more BCC addresses.
-	 */
-	public Email bcc(EmailAddress[] bccs) {
 		setBcc(MailAddress.createFrom(bccs));
 		return this;
 	}
