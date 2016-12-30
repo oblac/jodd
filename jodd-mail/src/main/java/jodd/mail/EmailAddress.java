@@ -450,7 +450,7 @@ public class EmailAddress {
 			//current_ia = new InternetAddress(parts[0] + " <" + parts[1] + "@" +
 			//                                 parts[2]+ ">", true);
 			// so it parses it OK, but since javamail doesn't extract too well
-			// we make sure that the consituent parts
+			// we make sure that the consistent parts
 			// are correct
 
 			current_ia = new InternetAddress();
@@ -611,11 +611,11 @@ public class EmailAddress {
 			personal_string = cleanupPersonalString(personal_string);
 		}
 
-		// remove any unecessary bounding quotes from the localpart:
+		// remove any unnecessary bounding quotes from the localpart:
 
-		String test_addr = removeAnyBounding('"', '"', currentLocalpart) + "@" + currentDomainpart;
+		String testAddr = removeAnyBounding('"', '"', currentLocalpart) + "@" + currentDomainpart;
 
-		if (ADDR_SPEC_PATTERN.matcher(test_addr).matches()) {
+		if (ADDR_SPEC_PATTERN.matcher(testAddr).matches()) {
 			currentLocalpart = removeAnyBounding('"', '"', currentLocalpart);
 		}
 

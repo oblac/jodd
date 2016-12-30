@@ -101,4 +101,31 @@ public class EmailAddressTest {
 		emailAddress = new EmailAddress("bob@example.com (Bob) (Smith)");
 		assertEquals("Bob", emailAddress.getPersonalName());
 	}
+
+	@Test
+	public void testValidEmails2() {
+		assertEmail("me@example.com", true);
+		assertEmail("a.nonymous@example.com", true);
+		assertEmail("name+tag@example.com", true);
+		//assertEmail("!#$%&'+-/=.?^`{|}~@[1.0.0.127]", true);
+		//assertEmail("!#$%&'+-/=.?^`{|}~@[IPv6:0123:4567:89AB:CDEF:0123:4567:89AB:CDEF]", true);
+		assertEmail("me(this is a comment)@example.com", true); // comments are discouraged but not prohibited by RFC2822.
+		//assertEmail("me.example@com", true);
+		assertEmail("309d4696df38ff12c023600e3bc2bd4b@fakedomain.com", true);
+		assertEmail("ewiuhdghiufduhdvjhbajbkerwukhgjhvxbhvbsejskuadukfhgskjebf@gmail.net", true);
+
+		assertEmail("NotAnEmail", false);
+		assertEmail("me@", false);
+		assertEmail("@example.com", false);
+		assertEmail(".me@example.com", false);
+		assertEmail("me@example..com", false);
+		assertEmail("me\\@example.com", false);
+	}
+
+	private static void assertEmail(String emailaddress, boolean expected) {
+		final boolean isValid = new EmailAddress(emailaddress).isValid();
+		if (isValid != expected) {
+			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, isValid));
+		}
+	}
 }
