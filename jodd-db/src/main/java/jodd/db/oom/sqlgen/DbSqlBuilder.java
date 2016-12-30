@@ -164,20 +164,20 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	}
 
 	/**
-	 * User-friendly append(String).
+	 * User-friendly {@link #append(String)}.
 	 */
-	public DbSqlBuilder _(String text) {
+	public DbSqlBuilder $(String text) {
 		return append(text);
 	}
 
 	/**
 	 * Single space shortcut.
 	 */
-	public DbSqlBuilder _() {
+	public DbSqlBuilder $() {
 		return appendRaw(StringPool.SPACE);
 	}
 
-	public DbSqlBuilder _(SqlChunk chunk) {
+	public DbSqlBuilder $(SqlChunk chunk) {
 		return addChunk(chunk);
 	}
 

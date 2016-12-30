@@ -450,9 +450,9 @@ public class DbOomTest extends DbHsqldbTestCase {
 		String tableRef = "ggg";
 
 		DbSqlBuilder dsb = sql()
-				._("select * from ")
+				.$("select * from ")
 				.table(girl, tableRef)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
@@ -464,10 +464,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl1((Girl) list.get(0));		// swim
 
 		dsb = sql()
-				._("update ")
+				.$("update ")
 				.table(girl, tableRef)
 				.set(tableRef, girl)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
@@ -478,9 +478,9 @@ public class DbOomTest extends DbHsqldbTestCase {
 		girl_condition.speciality = "run";
 
 		dsb = sql()
-				._("select * from ")
+				.$("select * from ")
 				.table(girl, tableRef)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 
@@ -497,10 +497,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 		girl_condition.speciality = "run";
 
 		dsb = sql()
-				._("update ")
+				.$("update ")
 				.table(girl, tableRef)
 				.set(tableRef, girl)
-				._(" where ")
+				.$(" where ")
 				.match(tableRef, "conditionRef")
 				.use("conditionRef", girl_condition);
 

@@ -164,20 +164,20 @@ public class DbSqlBuilderTest {
 
 	@Test
 	public void testReferences() {
-		assertEquals("b.ID BOY b", sql().ref("b", "id")._(" ").table("Boy", "b").generateQuery());
-		assertEquals("b.ID BOY b", sql().ref("b.+")._(" ").table("BadBoy", "b").generateQuery());
+		assertEquals("b.ID BOY b", sql().ref("b", "id").$(" ").table("Boy", "b").generateQuery());
+		assertEquals("b.ID BOY b", sql().ref("b.+").$(" ").table("BadBoy", "b").generateQuery());
 		assertEquals("b BOY b", sql().ref("b").table("Boy", "b").generateQuery());
 		assertEquals("BOY BOY", sql().ref("Boy").table("Boy", null).generateQuery());
 		assertEquals("Boy BOY Boy", sql().ref("Boy").table("Boy", "Boy").generateQuery());
 
-		assertEquals("b.ID BOY b", sql().ref("b.id")._(" ").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
+		assertEquals("b.ID BOY b", sql().ref("b.id").$(" ").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.id").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.id").table("Boy", "b").aliasColumnsAs(TABLE_REFERENCE).generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.id").table("Boy", "b").aliasColumnsAs(TABLE_NAME).generateQuery());
 
 		assertEquals("b.ID from BOY b", sql("$b.id from $T{b b}").use("b", Boy.class).generateQuery());
 
-		assertEquals("BOY.ID BOY", sql().ref("Boy.id")._(" ").table("Boy", null).aliasColumnsAs(COLUMN_CODE).generateQuery());
+		assertEquals("BOY.ID BOY", sql().ref("Boy.id").$(" ").table("Boy", null).aliasColumnsAs(COLUMN_CODE).generateQuery());
 	}
 
 	@Test
@@ -213,11 +213,11 @@ public class DbSqlBuilderTest {
 		assertEquals(1, dbc.getQueryParameters().size());
 		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("zzz").getValue());
 
-		assertEquals(":zzz :p0", dbc._().value(Integer.valueOf(3)).generateQuery());
+		assertEquals(":zzz :p0", dbc.$().value(Integer.valueOf(3)).generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
 		assertEquals(Integer.valueOf(3), dbc.getQueryParameters().get("p0").getValue());
 
-		assertEquals(":zzz :p0 :p1", dbc._().valueRef("val").use("val", Integer.valueOf(7)).generateQuery());
+		assertEquals(":zzz :p0 :p1", dbc.$().valueRef("val").use("val", Integer.valueOf(7)).generateQuery());
 		assertEquals(3, dbc.getQueryParameters().size());
 		assertEquals(Integer.valueOf(3), dbc.getQueryParameters().get("p0").getValue());
 		assertEquals(Integer.valueOf(7), dbc.getQueryParameters().get("p1").getValue());
@@ -265,7 +265,7 @@ public class DbSqlBuilderTest {
 
 	@Test
 	public void testStrings() {
-		DbSqlBuilder dbc = sql()._("123")._("xxx");
+		DbSqlBuilder dbc = sql().$("123").$("xxx");
 		assertEquals("123xxx", dbc.generateQuery());
 	}
 
@@ -275,9 +275,9 @@ public class DbSqlBuilderTest {
 			Boy b = new Boy();
 			b.id = 1;
 			b.girlId = 2;
-			DbSqlBuilder dbc = sql().match("Boy", b)._(" ").table(b, null);
+			DbSqlBuilder dbc = sql().match("Boy", b).$(" ").table(b, null);
 			assertEquals("(BOY.GIRL_ID=:boy.girlId and BOY.ID=:boy.id) BOY", dbc.generateQuery());
-			dbc = sql().match("b", b)._(" ").table(b, "b");
+			dbc = sql().match("b", b).$(" ").table(b, "b");
 			assertEquals("(b.GIRL_ID=:boy.girlId and b.ID=:boy.id) BOY b", dbc.generateQuery());
 		}
 		{
@@ -289,34 +289,34 @@ public class DbSqlBuilderTest {
 		}
 		{
 			BadBoy bb = new BadBoy();
-			DbSqlBuilder dbc = sql()._("where ").match("BadBoy", bb)._(" ").table(bb, null);
+			DbSqlBuilder dbc = sql().$("where ").match("BadBoy", bb).$(" ").table(bb, null);
 			assertEquals("where (1=1) BOY", dbc.generateQuery());
-			dbc = sql()._("where")._().match("b", bb)._(" ").table(bb, "b");
+			dbc = sql().$("where").$().match("b", bb).$(" ").table(bb, "b");
 			assertEquals("where (1=1) BOY b", dbc.generateQuery());
 
-			dbc = sql()._("where")._().match("BadBoy", bb).table(bb, null);
+			dbc = sql().$("where").$().match("BadBoy", bb).table(bb, null);
 			assertEquals("where (1=1) BOY", dbc.generateQuery());
-			dbc = sql()._("where ").match("b", bb).table(bb, "b");
+			dbc = sql().$("where ").match("b", bb).table(bb, "b");
 			assertEquals("where (1=1) BOY b", dbc.generateQuery());
 
 			bb.ajdi = Integer.valueOf(3);
-			dbc = sql()._("where ").match("BadBoy", bb)._(" ").table(bb, null);
+			dbc = sql().$("where ").match("BadBoy", bb).$(" ").table(bb, null);
 			assertEquals("where (BOY.ID=:badBoy.ajdi) BOY", dbc.generateQuery());
-			dbc = sql()._("where ").match("b", bb)._(" ").table(bb, "b");
+			dbc = sql().$("where ").match("b", bb).$(" ").table(bb, "b");
 			assertEquals("where (b.ID=:badBoy.ajdi) BOY b", dbc.generateQuery());
 
 			bb.ajdi = null;
 			bb.nejm = "";
-			dbc = sql()._("where ").match("BadBoy", bb)._(" ").table(bb, null);
+			dbc = sql().$("where ").match("BadBoy", bb).$(" ").table(bb, null);
 			assertEquals("where (1=1) BOY", dbc.generateQuery());
-			dbc = sql()._("where ").match("b", bb)._(" ").table(bb, "b");
+			dbc = sql().$("where ").match("b", bb).$(" ").table(bb, "b");
 			assertEquals("where (1=1) BOY b", dbc.generateQuery());
 
 			bb.ajdi = null;
 			bb.nejm = "foo";
-			dbc = sql()._("where ").match("BadBoy", bb)._(" ").table(bb, null);
+			dbc = sql().$("where ").match("BadBoy", bb).$(" ").table(bb, null);
 			assertEquals("where (BOY.NAME=:badBoy.nejm) BOY", dbc.generateQuery());
-			dbc = sql()._("where ").match("b", bb)._(" ").table(bb, "b");
+			dbc = sql().$("where ").match("b", bb).$(" ").table(bb, "b");
 			assertEquals("where (b.NAME=:badBoy.nejm) BOY b", dbc.generateQuery());
 		}
 	}
@@ -326,17 +326,17 @@ public class DbSqlBuilderTest {
 		BadBoy bb = new BadBoy();
 		BadGirl bg = new BadGirl();
 
-		DbSqlBuilder dbc = sql()._("select").
-				columnsAll("bb").columnsIds("bg")._(" from").
-				table(bb, "bb").table(bg, "bg")._().
-				match("bb", bb)._().match("bg", bg);
+		DbSqlBuilder dbc = sql().$("select").
+				columnsAll("bb").columnsIds("bg").$(" from").
+				table(bb, "bb").table(bg, "bg").$().
+				match("bb", bb).$().match("bg", bg);
 
 		assertEquals("select bb.ID, bb.GIRL_ID, bb.NAME, bg.ID from BOY bb, GIRL bg (1=1) (1=1)", dbc.generateQuery());
 
-		dbc = sql()._("select").
-				columnsAll("bb").columnsIds("bg")._(" from").
-				table(bb, "bb").table(bg, "bg")._(" where ").
-				match("bb", bb)._().match("bg", bg)._(" or ").refId("bb")._("=").value(Long.valueOf(5L));
+		dbc = sql().$("select").
+				columnsAll("bb").columnsIds("bg").$(" from").
+				table(bb, "bb").table(bg, "bg").$(" where ").
+				match("bb", bb).$().match("bg", bg).$(" or ").refId("bb").$("=").value(Long.valueOf(5L));
 
 
 		assertEquals("select bb.ID, bb.GIRL_ID, bb.NAME, bg.ID from BOY bb, GIRL bg where (1=1) (1=1) or bb.ID=:p0", dbc.generateQuery());
@@ -356,7 +356,7 @@ public class DbSqlBuilderTest {
 
 		String tableRef = "ggg";
 
-		DbSqlBuilder dsb = sql()._("update ").table(girl, tableRef).set(tableRef, girl)._("where ").
+		DbSqlBuilder dsb = sql().$("update ").table(girl, tableRef).set(tableRef, girl).$("where ").
 		           match(tableRef, "conditionRef").use("conditionRef",girl_condition);
 
 		String sql = dsb.generateQuery();
