@@ -321,16 +321,16 @@ public class RFC2822AddressParser {
 	}
 
 	/**
-	 * Convenient shortcut of {@link #parse(String)} that returns {@link MailAddress} or {@code null}.
+	 * Convenient shortcut of {@link #parse(String)} that returns {@link EmailAddress} or {@code null}.
 	 */
-	public MailAddress parseToEmailAddress(String email) {
+	public EmailAddress parseToEmailAddress(String email) {
 		ParsedAddress parsedAddress = parse(email);
 
 		if (parsedAddress == null) {
 			return null;
 		}
 
-		return new MailAddress(parsedAddress.getPersonalName(), parsedAddress.getLocalPart() + '@' + parsedAddress.getDomain());
+		return new EmailAddress(parsedAddress.getPersonalName(), parsedAddress.getLocalPart() + '@' + parsedAddress.getDomain());
 	}
 
 	// ---------------------------------------------------------------- regexp

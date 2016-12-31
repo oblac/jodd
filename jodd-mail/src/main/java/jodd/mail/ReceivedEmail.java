@@ -74,16 +74,16 @@ public class ReceivedEmail extends CommonEmail {
 		Address[] addresses = msg.getFrom();
 
 		if (addresses != null && addresses.length > 0) {
-			setFrom(new MailAddress(addresses[0]));
+			setFrom(new EmailAddress(addresses[0]));
 		}
 
 		// common field
-		setTo(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.TO)));
-		setCc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.CC)));
-		setBcc(MailAddress.createFrom(msg.getRecipients(Message.RecipientType.BCC)));
+		setTo(EmailAddress.createFrom(msg.getRecipients(Message.RecipientType.TO)));
+		setCc(EmailAddress.createFrom(msg.getRecipients(Message.RecipientType.CC)));
+		setBcc(EmailAddress.createFrom(msg.getRecipients(Message.RecipientType.BCC)));
 
 		// reply to
-		setReplyTo(MailAddress.createFrom(msg.getReplyTo()));
+		setReplyTo(EmailAddress.createFrom(msg.getReplyTo()));
 
 		setSubject(msg.getSubject());
 

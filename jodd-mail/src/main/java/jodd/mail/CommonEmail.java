@@ -48,32 +48,32 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- from
 
-	protected MailAddress from;
+	protected EmailAddress from;
 
 	/**
 	 * Sets the FROM address.
 	 */
-	public void setFrom(MailAddress from) {
+	public void setFrom(EmailAddress from) {
 		this.from = from;
 	}
 
 	/**
-	 * Returns FROM {@link MailAddress address}.
+	 * Returns FROM {@link EmailAddress address}.
 	 */
-	public MailAddress getFrom() {
+	public EmailAddress getFrom() {
 		return from;
 	}
 
 	// ---------------------------------------------------------------- to
 
-	protected MailAddress[] to = MailAddress.EMPTY_ARRAY;
+	protected EmailAddress[] to = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets TO addresses.
 	 */
-	public void setTo(MailAddress... tos) {
+	public void setTo(EmailAddress... tos) {
 		if (tos == null) {
-			tos = MailAddress.EMPTY_ARRAY;
+			tos = EmailAddress.EMPTY_ARRAY;
 		}
 		to = tos;
 	}
@@ -81,27 +81,27 @@ public abstract class CommonEmail {
 	/**
 	 * Appends TO address.
 	 */
-	public void addTo(MailAddress to) {
+	public void addTo(EmailAddress to) {
 		this.to = ArraysUtil.append(this.to, to);
 	}
 
 	/**
 	 * Returns TO addresses.
 	 */
-	public MailAddress[] getTo() {
+	public EmailAddress[] getTo() {
 		return to;
 	}
 
 	// ---------------------------------------------------------------- reply-to
 
-	protected MailAddress[] replyTo = MailAddress.EMPTY_ARRAY;
+	protected EmailAddress[] replyTo = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets REPLY-TO addresses.
 	 */
-	public void setReplyTo(MailAddress... replyTo) {
+	public void setReplyTo(EmailAddress... replyTo) {
 		if (replyTo == null) {
-			replyTo = MailAddress.EMPTY_ARRAY;
+			replyTo = EmailAddress.EMPTY_ARRAY;
 		}
 		this.replyTo = replyTo;
 	}
@@ -109,27 +109,27 @@ public abstract class CommonEmail {
 	/**
 	 * Appends REPLY-TO address.
 	 */
-	public void addReplyTo(MailAddress to) {
+	public void addReplyTo(EmailAddress to) {
 		this.replyTo = ArraysUtil.append(this.replyTo, to);
 	}
 
 	/**
 	 * Returns REPLY-TO addresses.
 	 */
-	public MailAddress[] getReplyTo() {
+	public EmailAddress[] getReplyTo() {
 		return replyTo;
 	}
 
 	// ---------------------------------------------------------------- cc
 
-	protected MailAddress[] cc = MailAddress.EMPTY_ARRAY;
+	protected EmailAddress[] cc = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets CC addresses.
 	 */
-	public void setCc(MailAddress... ccs) {
+	public void setCc(EmailAddress... ccs) {
 		if (ccs == null) {
-			ccs = MailAddress.EMPTY_ARRAY;
+			ccs = EmailAddress.EMPTY_ARRAY;
 		}
 		cc = ccs;
 	}
@@ -137,27 +137,27 @@ public abstract class CommonEmail {
 	/**
 	 * Appends CC address.
 	 */
-	public void addCc(MailAddress to) {
+	public void addCc(EmailAddress to) {
 		this.cc = ArraysUtil.append(this.cc, to);
 	}
 
 	/**
 	 * Returns CC addresses.
 	 */
-	public MailAddress[] getCc() {
+	public EmailAddress[] getCc() {
 		return cc;
 	}
 
 	// ---------------------------------------------------------------- bcc
 
-	protected MailAddress[] bcc = MailAddress.EMPTY_ARRAY;
+	protected EmailAddress[] bcc = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets BCC addresses.
 	 */
-	public void setBcc(MailAddress... bccs) {
+	public void setBcc(EmailAddress... bccs) {
 		if (bccs == null) {
-			bccs = MailAddress.EMPTY_ARRAY;
+			bccs = EmailAddress.EMPTY_ARRAY;
 		}
 		bcc = bccs;
 	}
@@ -165,14 +165,14 @@ public abstract class CommonEmail {
 	/**
 	 * Appends BCC address.
 	 */
-	public void addBcc(MailAddress to) {
+	public void addBcc(EmailAddress to) {
 		this.bcc = ArraysUtil.append(this.bcc, to);
 	}
 
 	/**
 	 * Returns BCC addresses.
 	 */
-	public MailAddress[] getBcc() {
+	public EmailAddress[] getBcc() {
 		return bcc;
 	}
 
