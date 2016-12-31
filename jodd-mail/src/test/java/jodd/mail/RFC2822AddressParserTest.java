@@ -35,71 +35,71 @@ public class RFC2822AddressParserTest {
 
 	@Test
 	public void testEmailAddress() {
-		RFC2822AddressParser RFC2822AddressParser = new RFC2822AddressParser("igor@jodd.org");
+		RFC2822AddressParser.ParsedAddress address = new RFC2822AddressParser().parse("igor@jodd.org");
 
-		assertEquals(null, RFC2822AddressParser.getPersonalName());
-		assertEquals("igor", RFC2822AddressParser.getLocalPart());
-		assertEquals("jodd.org", RFC2822AddressParser.getDomain());
-		assertTrue(RFC2822AddressParser.isValid());
+		assertEquals(null, address.getPersonalName());
+		assertEquals("igor", address.getLocalPart());
+		assertEquals("jodd.org", address.getDomain());
+		assertTrue(address.isValid());
 
-		RFC2822AddressParser = new RFC2822AddressParser("Vladimir <djs@gmail.com>");
+		address = new RFC2822AddressParser().parse("Vladimir <djs@gmail.com>");
 
-		assertEquals("Vladimir", RFC2822AddressParser.getPersonalName());
-		assertEquals("djs", RFC2822AddressParser.getLocalPart());
-		assertEquals("gmail.com", RFC2822AddressParser.getDomain());
+		assertEquals("Vladimir", address.getPersonalName());
+		assertEquals("djs", address.getLocalPart());
+		assertEquals("gmail.com", address.getDomain());
 
-		assertTrue(RFC2822AddressParser.isValid());
+		assertTrue(address.isValid());
 	}
 
 	@Test
 	public void testValidEmails() {
-		assertTrue(new RFC2822AddressParser("bob @example.com").isValid());
-		assertTrue(new RFC2822AddressParser("\"bob\"  @  example.com").isValid());
-		assertTrue(new RFC2822AddressParser("\"bob\" (hi) @  example.com").isValid());
-		assertTrue(new RFC2822AddressParser("name.surname@example.com").isValid());
+		assertTrue(new RFC2822AddressParser().parse("bob @example.com").isValid());
+		assertTrue(new RFC2822AddressParser().parse("\"bob\"  @  example.com").isValid());
+		assertTrue(new RFC2822AddressParser().parse("\"bob\" (hi) @  example.com").isValid());
+		assertTrue(new RFC2822AddressParser().parse("name.surname@example.com").isValid());
 
-		assertTrue(new RFC2822AddressParser("devnull@onyxbits.de").isValid());
-		assertTrue(new RFC2822AddressParser("< devnull @ onyxbits.de >").isValid());
-		assertTrue(new RFC2822AddressParser("<devnull@onyxbits.de>").isValid());
-		assertFalse(new RFC2822AddressParser("Patrick devnull@onyxbits.de").isValid());
-		assertTrue(new RFC2822AddressParser("Patrick <devnull@onyxbits.de>").isValid());
-		assertTrue(new RFC2822AddressParser("Patrickdevnull@onyxbits.de").isValid());
-		assertFalse(new RFC2822AddressParser("\"Patrick Ahlbrecht\" devnull@onyxbits.de").isValid());
-		assertTrue(new RFC2822AddressParser("\"Patrick Ahlbrecht\" <devnull@onyxbits.de>").isValid());
-		assertTrue(new RFC2822AddressParser("Patrick Ahlbrecht <devnull@onyxbits.de>").isValid());
+		assertTrue(new RFC2822AddressParser().parse("devnull@onyxbits.de").isValid());
+		assertTrue(new RFC2822AddressParser().parse("< devnull @ onyxbits.de >").isValid());
+		assertTrue(new RFC2822AddressParser().parse("<devnull@onyxbits.de>").isValid());
+		assertFalse(new RFC2822AddressParser().parse("Patrick devnull@onyxbits.de").isValid());
+		assertTrue(new RFC2822AddressParser().parse("Patrick <devnull@onyxbits.de>").isValid());
+		assertTrue(new RFC2822AddressParser().parse("Patrickdevnull@onyxbits.de").isValid());
+		assertFalse(new RFC2822AddressParser().parse("\"Patrick Ahlbrecht\" devnull@onyxbits.de").isValid());
+		assertTrue(new RFC2822AddressParser().parse("\"Patrick Ahlbrecht\" <devnull@onyxbits.de>").isValid());
+		assertTrue(new RFC2822AddressParser().parse("Patrick Ahlbrecht <devnull@onyxbits.de>").isValid());
 
-		assertFalse(new RFC2822AddressParser("Kayaks.org <kayaks@kayaks.org>").isValid());
-		assertTrue(new RFC2822AddressParser("\"Kayaks.org\" <kayaks@kayaks.org>").isValid());
+		assertFalse(new RFC2822AddressParser().parse("Kayaks.org <kayaks@kayaks.org>").isValid());
+		assertTrue(new RFC2822AddressParser().parse("\"Kayaks.org\" <kayaks@kayaks.org>").isValid());
 
-		assertFalse(new RFC2822AddressParser("[Kayaks] <kayaks@kayaks.org>").isValid());
-		assertTrue(new RFC2822AddressParser("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
+		assertFalse(new RFC2822AddressParser().parse("[Kayaks] <kayaks@kayaks.org>").isValid());
+		assertTrue(new RFC2822AddressParser().parse("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
 	}
 
 	@Test
 	public void testReturnPath() {
-		assertTrue(new RFC2822AddressParser("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
-		assertFalse(new RFC2822AddressParser("\"[Kayaks]\" <kayaks@kayaks.org>").isValidReturnPath());
+		assertTrue(new RFC2822AddressParser().parse("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
+		assertFalse(new RFC2822AddressParser().parse("\"[Kayaks]\" <kayaks@kayaks.org>").isValidReturnPath());
 
-		assertTrue(new RFC2822AddressParser("<kayaks@kayaks.org>").isValid());
-		assertTrue(new RFC2822AddressParser("<kayaks@kayaks.org>").isValidReturnPath());
+		assertTrue(new RFC2822AddressParser().parse("<kayaks@kayaks.org>").isValid());
+		assertTrue(new RFC2822AddressParser().parse("<kayaks@kayaks.org>").isValidReturnPath());
 	}
 
 	@Test
 	public void testCommentAsName() {
-		RFC2822AddressParser RFC2822AddressParser = new RFC2822AddressParser("<bob@example.com> (Bob Smith)");
-		assertEquals("Bob Smith", RFC2822AddressParser.getPersonalName());
+		RFC2822AddressParser.ParsedAddress address = new RFC2822AddressParser().parse("<bob@example.com> (Bob Smith)");
+		assertEquals("Bob Smith", address.getPersonalName());
 
-		RFC2822AddressParser = new RFC2822AddressParser("\"bob smith\" <bob@example.com> (Bobby)");
-		assertEquals("bob smith", RFC2822AddressParser.getPersonalName());
+		address = new RFC2822AddressParser().parse("\"bob smith\" <bob@example.com> (Bobby)");
+		assertEquals("bob smith", address.getPersonalName());
 
-		RFC2822AddressParser = new RFC2822AddressParser("<bob@example.com> (Bobby)");
-		assertEquals("Bobby", RFC2822AddressParser.getPersonalName());
+		address = new RFC2822AddressParser().parse("<bob@example.com> (Bobby)");
+		assertEquals("Bobby", address.getPersonalName());
 
-		RFC2822AddressParser = new RFC2822AddressParser("bob@example.com (Bobby)");
-		assertEquals("Bobby", RFC2822AddressParser.getPersonalName());
+		address = new RFC2822AddressParser().parse("bob@example.com (Bobby)");
+		assertEquals("Bobby", address.getPersonalName());
 
-		RFC2822AddressParser = new RFC2822AddressParser("bob@example.com (Bob) (Smith)");
-		assertEquals("Bob", RFC2822AddressParser.getPersonalName());
+		address = new RFC2822AddressParser().parse("bob@example.com (Bob) (Smith)");
+		assertEquals("Bob", address.getPersonalName());
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class RFC2822AddressParserTest {
 	}
 
 	private static void assertEmail(String emailaddress, boolean expected) {
-		final boolean isValid = new RFC2822AddressParser(emailaddress).isValid();
+		final boolean isValid = new RFC2822AddressParser().parse(emailaddress).isValid();
 		if (isValid != expected) {
 			throw new IllegalArgumentException(String.format("%s (expected: %s, but was: %s)", emailaddress, expected, isValid));
 		}

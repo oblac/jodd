@@ -81,14 +81,6 @@ public class MailAddress {
 	}
 
 	/**
-	 * Creates new email address from {@link RFC2822AddressParser}.
-	 */
-	public MailAddress(RFC2822AddressParser RFC2822AddressParser) {
-		this.personalName = RFC2822AddressParser.getPersonalName();
-		this.email = RFC2822AddressParser.getLocalPart() + '@' + RFC2822AddressParser.getDomain();
-	}
-
-	/**
 	 * Creates new email address from <code>InternetAddress</code>.
 	 */
 	public MailAddress(InternetAddress internetAddress) {

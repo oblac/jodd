@@ -54,22 +54,22 @@ public class MailAddressTest {
 
 	@Test
 	public void testMailFromEmailAddress() {
-		MailAddress mailAddress = new MailAddress(new RFC2822AddressParser("admin@jodd.com"));
+		MailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("admin@jodd.com");
 		assertNull(mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 
-		mailAddress = new MailAddress(new RFC2822AddressParser("Jenny Doe <admin@jodd.com>"));
+		mailAddress = new RFC2822AddressParser().parseToEmailAddress("Jenny Doe <admin@jodd.com>");
 		assertEquals("Jenny Doe", mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 
-		MailAddress mailAddress2 = new MailAddress(new RFC2822AddressParser(mailAddress.toString()));
+		MailAddress mailAddress2 = new RFC2822AddressParser().parseToEmailAddress(mailAddress.toString());
 		assertEquals("Jenny Doe", mailAddress2.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress2.getEmail());
 	}
 
 	@Test
 	public void testMailFromInternetAddress() throws AddressException {
-		MailAddress mailAddress = new MailAddress(new RFC2822AddressParser("Jenny Doe <admin@jodd.com>"));
+		MailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("Jenny Doe <admin@jodd.com>");
 		MailAddress mailAddress2 = new MailAddress(mailAddress.toInternetAddress());
 
 		assertEquals("Jenny Doe", mailAddress2.getPersonalName());
