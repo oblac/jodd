@@ -37,9 +37,9 @@ import java.io.UnsupportedEncodingException;
  * Storage for personal name and email address.
  * Serves as a email address adapter between various formats.
  */
-public class MailAddress {
+public class EmailAddress {
 
-	public static final MailAddress[] EMPTY_ARRAY = new MailAddress[0];
+	public static final EmailAddress[] EMPTY_ARRAY = new EmailAddress[0];
 
 	private final String email;
 	private final String personalName;
@@ -47,7 +47,7 @@ public class MailAddress {
 	/**
 	 * Creates new address by specifying email and personal name.
 	 */
-	public MailAddress(String personalName, String email) {
+	public EmailAddress(String personalName, String email) {
 		this.email = email;
 		this.personalName = personalName;
 	}
@@ -60,7 +60,7 @@ public class MailAddress {
 	 *     and the other part is email, surrounded with &lt; and &gt;.</li>
 	 * </ul>
 	 */
-	public MailAddress(String address) {
+	public EmailAddress(String address) {
 		address = address.trim();
 
 		if (!StringUtil.endsWithChar(address, '>')) {
@@ -83,7 +83,7 @@ public class MailAddress {
 	/**
 	 * Creates new email address from <code>InternetAddress</code>.
 	 */
-	public MailAddress(InternetAddress internetAddress) {
+	public EmailAddress(InternetAddress internetAddress) {
 		this.personalName = internetAddress.getPersonal();
 		this.email = internetAddress.getAddress();
 	}
@@ -91,7 +91,7 @@ public class MailAddress {
 	/**
 	 * Creates new email address from <code>Address</code>.
 	 */
-	public MailAddress(Address address) {
+	public EmailAddress(Address address) {
 		this(address.toString());
 	}
 
@@ -138,9 +138,9 @@ public class MailAddress {
 	// ---------------------------------------------------------------- arrays
 
 	/**
-	 * Converts array of <code>Address</code> to {@link MailAddress}.
+	 * Converts array of <code>Address</code> to {@link EmailAddress}.
 	 */
-	public static MailAddress[] createFrom(Address... addresses) {
+	public static EmailAddress[] createFrom(Address... addresses) {
 		if (addresses == null) {
 			return null;
 		}
@@ -148,19 +148,19 @@ public class MailAddress {
 			return null;
 		}
 
-		MailAddress[] res = new MailAddress[addresses.length];
+		EmailAddress[] res = new EmailAddress[addresses.length];
 
 		for (int i = 0; i < addresses.length; i++) {
-			res[i] = new MailAddress(addresses[i]);
+			res[i] = new EmailAddress(addresses[i]);
 		}
 
 		return res;
 	}
 
 	/**
-	 * Converts array of <code>String</code> to {@link MailAddress}.
+	 * Converts array of <code>String</code> to {@link EmailAddress}.
 	 */
-	public static MailAddress[] createFrom(String... addresses) {
+	public static EmailAddress[] createFrom(String... addresses) {
 		if (addresses == null) {
 			return null;
 		}
@@ -168,10 +168,10 @@ public class MailAddress {
 			return null;
 		}
 
-		MailAddress[] res = new MailAddress[addresses.length];
+		EmailAddress[] res = new EmailAddress[addresses.length];
 
 		for (int i = 0; i < addresses.length; i++) {
-			res[i] = new MailAddress(addresses[i]);
+			res[i] = new EmailAddress(addresses[i]);
 		}
 
 		return res;

@@ -32,21 +32,21 @@ import javax.mail.internet.AddressException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class MailAddressTest {
+public class EmailAddressTest {
 
 	@Test
 	public void testMailFromString() {
-		MailAddress mailAddress = new MailAddress("admin@jodd.com");
+		EmailAddress mailAddress = new EmailAddress("admin@jodd.com");
 		assertNull(mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 		assertEquals("admin@jodd.com", mailAddress.toString());
 
-		mailAddress = new MailAddress("Jenny Doe <admin@jodd.com>");
+		mailAddress = new EmailAddress("Jenny Doe <admin@jodd.com>");
 		assertEquals("Jenny Doe", mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 		assertEquals("Jenny Doe <admin@jodd.com>", mailAddress.toString());
 
-		mailAddress = new MailAddress("Jenny Doe ", "admin@jodd.com");
+		mailAddress = new EmailAddress("Jenny Doe ", "admin@jodd.com");
 		assertEquals("Jenny Doe ", mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 		assertEquals("Jenny Doe  <admin@jodd.com>", mailAddress.toString());
@@ -54,7 +54,7 @@ public class MailAddressTest {
 
 	@Test
 	public void testMailFromEmailAddress() {
-		MailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("admin@jodd.com");
+		EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("admin@jodd.com");
 		assertNull(mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 
@@ -62,15 +62,15 @@ public class MailAddressTest {
 		assertEquals("Jenny Doe", mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
 
-		MailAddress mailAddress2 = new RFC2822AddressParser().parseToEmailAddress(mailAddress.toString());
+		EmailAddress mailAddress2 = new RFC2822AddressParser().parseToEmailAddress(mailAddress.toString());
 		assertEquals("Jenny Doe", mailAddress2.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress2.getEmail());
 	}
 
 	@Test
 	public void testMailFromInternetAddress() throws AddressException {
-		MailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("Jenny Doe <admin@jodd.com>");
-		MailAddress mailAddress2 = new MailAddress(mailAddress.toInternetAddress());
+		EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("Jenny Doe <admin@jodd.com>");
+		EmailAddress mailAddress2 = new EmailAddress(mailAddress.toInternetAddress());
 
 		assertEquals("Jenny Doe", mailAddress2.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress2.getEmail());
@@ -79,7 +79,7 @@ public class MailAddressTest {
 	@Test
 	public void testIssue211() {
 		String testAddress = "Some One<someone@yahoo.com>";
-		MailAddress addr = new MailAddress(testAddress);
+		EmailAddress addr = new EmailAddress(testAddress);
 
 		assertEquals("Some One <someone@yahoo.com>", addr.toString());
 	}
