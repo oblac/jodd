@@ -50,6 +50,23 @@ public class RFC2822AddressParser {
 	private boolean ALLOW_PARENS_IN_LOCALPART = true;
 
 	/**
+	 * Strict parser.
+	 */
+	public static final RFC2822AddressParser STRICT =
+		new RFC2822AddressParser()
+			.allowDomainLiterals(true)
+			.allowQuotedIdentifiers(true)
+			.allowDotInAtext(false)
+			.extractCfwsPersonalName(true)
+			.allowSquareBracketsInAtext(false)
+			.allowParentheseInLocalpart(true);
+
+	/**
+	 * Loose parser.
+	 */
+	public static final RFC2822AddressParser LOOSE = new RFC2822AddressParser();
+
+	/**
 	 * Changes the behavior of the domain parsing. If {@code true}, the parser will
 	 * allow 2822 domains, which include single-level domains (e.g. bob@localhost) as well
 	 * as domain literals, e.g.:
@@ -64,7 +81,7 @@ public class RFC2822AddressParser {
 	 * allowing them. If you don't want to allow them, and only want to allow valid domain names
 	 * (<a href="http://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>, x.y.z.com, etc),
 	 * and specifically only those with at least two levels ("example.com"), then
-	 * set this flag to {@code false} (default).
+	 * set this flag to {@code false}.
 	 */
 	public RFC2822AddressParser allowDomainLiterals(boolean allow) {
 		ALLOW_DOMAIN_LITERALS = allow;

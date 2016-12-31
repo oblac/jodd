@@ -107,11 +107,12 @@ public class RFC2822AddressParserTest {
 		assertTrue(new RFC2822AddressParser().parse("me@example.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("a.nonymous@example.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("name+tag@example.com").isValid());
-		//assertEmail("!#$%&'+-/=.?^`{|}~@[1.0.0.127]", true);
-		//assertEmail("!#$%&'+-/=.?^`{|}~@[IPv6:0123:4567:89AB:CDEF:0123:4567:89AB:CDEF]", true);
+		assertTrue(RFC2822AddressParser.STRICT.parse("!#$%&'+-/=.?^`{|}~@[1.0.0.127]").isValid());
+		assertFalse(RFC2822AddressParser.LOOSE.parse("!#$%&'+-/=.?^`{|}~@[IPv6:0123:4567:89AB:CDEF:0123:4567:89AB:CDEF]").isValid());
+		assertTrue(RFC2822AddressParser.STRICT.parse("!#$%&'+-/=.?^`{|}~@[IPv6:0123:4567:89AB:CDEF:0123:4567:89AB:CDEF]").isValid());
 		assertTrue(new RFC2822AddressParser().parse("me(this is a comment)@example.com").isValid());
-		assertFalse(new RFC2822AddressParser().allowDomainLiterals(false).parse("me.example@com").isValid());
-		assertTrue(new RFC2822AddressParser().allowDomainLiterals(true).parse("me.example@com").isValid());
+		assertFalse(RFC2822AddressParser.LOOSE.parse("me.example@com").isValid());
+		assertTrue(RFC2822AddressParser.STRICT.parse("me.example@com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("309d4696df38ff12c023600e3bc2bd4b@fakedomain.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("ewiuhdghiufduhdvjhbajbkerwukhgjhvxbhvbsejskuadukfhgskjebf@gmail.net").isValid());
 
