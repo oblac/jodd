@@ -42,8 +42,12 @@ public class EmailConstraint implements ValidationConstraint<Email> {
 			return true;
 		}
 
-		RFC2822AddressParser RFC2822AddressParser = new RFC2822AddressParser(value.toString());
+		RFC2822AddressParser.ParsedAddress address = RFC2822AddressParser.LOOSE.parse(value.toString());
 
-		return RFC2822AddressParser.isValid();
+		if (address == null) {
+			return false;
+		}
+
+		return address.isValid();
 	}
 }
