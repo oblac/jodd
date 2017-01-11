@@ -609,7 +609,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected int connectTimeout = -1;
 
 	/**
-	 * Defines read timeout (SO_TIMEOUT) in milliseconds.
+	 * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or,
+	 * put differently, a maximum period inactivity between two consecutive data packets).
+	 * After establishing the connection, the client socket waits for response after sending
+	 * the request. This is the elapsed time since the client has sent request to the
+	 * server before server responds. Please note that this is not same as HTTP Error 408 which
+	 * the server sends to the client. In other words its maximum period inactivity between
+	 * two consecutive data packets arriving at client side after connection is established.
+	 * A timeout value of zero is interpreted as an infinite timeout.
 	 * @see jodd.http.HttpConnection#setTimeout(int)
 	 */
 	public HttpRequest timeout(int milliseconds) {
@@ -620,13 +627,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * Returns read timeout (SO_TIMEOUT) in milliseconds. Negative value
 	 * means that default value is used.
+	 * @see #timeout(int)
 	 */
 	public int timeout() {
 		return timeout;
 	}
 
 	/**
-	 * Defines socket connection timeout.
+	 * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout
+	 * for waiting for data or, put differently, a maximum period inactivity between
+	 * two consecutive data packets). A timeout value of zero is interpreted as
+	 * an infinite timeout.
 	 */
 	public HttpRequest connectionTimeout(int milliseconds) {
 		this.connectTimeout = milliseconds;
@@ -636,6 +647,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * Returns socket connection timeout. Negative value means that default
 	 * value is used.
+	 * @see #connectionTimeout(int)
 	 */
 	public int connectionTimeout() {
 		return connectTimeout;
