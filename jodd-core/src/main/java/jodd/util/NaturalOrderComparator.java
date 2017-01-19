@@ -109,7 +109,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 				if (char1 == '0') {
 					zeroCount1++;
 				} else {
-					zeroCount1 = 0;	// counts only last 0 prefixes, space char interrupts the array of 0s
+					zeroCount1 = 0;		// counts only last 0 prefixes, space char interrupts the array of 0s
 				}
 				ndx1++;
 				char1 = charAt(str1, ndx1);
@@ -143,7 +143,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 			}
 
 			if (char1 == 0 && char2 == 0) {
-				// the end; the strings are the same, maybe compare ascii?
+				// both strings end; the strings are the same
 				return zeroCount1 - zeroCount2;
 			}
 
@@ -177,12 +177,12 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 	}
 
 	/**
-	 * Safe charAt.
+	 * Safe {@code charAt} that returns 0 when ndx is out of boundaries.
 	 */
-	private static char charAt(String s, int i) {
-		if (i >= s.length()) {
+	private static char charAt(String string, int ndx) {
+		if (ndx >= string.length()) {
 			return 0;
 		}
-		return s.charAt(i);
+		return string.charAt(ndx);
 	}
 }
