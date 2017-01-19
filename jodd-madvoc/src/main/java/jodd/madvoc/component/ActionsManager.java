@@ -82,8 +82,6 @@ public class ActionsManager {
 	 * Comparator that considers first chunks number then action path.
 	 */
 	public static class ActionConfigSetComparator implements Comparator<ActionConfigSet>, Serializable {
-		private static final long serialVersionUID = 1;
-
 		public int compare(ActionConfigSet set1, ActionConfigSet set2) {
 			int deep1 = set1.deep;
 			int deep2 = set2.deep;

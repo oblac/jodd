@@ -778,8 +778,6 @@ public class FindFile<T extends FindFile> {
 	// ---------------------------------------------------------------- comparators
 
 	public static class FolderFirstComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
 		protected final int order;
 
 		public FolderFirstComparator(boolean foldersFirst) {
@@ -802,8 +800,6 @@ public class FindFile<T extends FindFile> {
 	}
 
 	public static class FileNameComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
 		protected final int order;
 		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true);
 
@@ -828,8 +824,6 @@ public class FindFile<T extends FindFile> {
 	}
 
 	public static class FileExtensionComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
 		protected final int order;
 
 		public FileExtensionComparator(boolean ascending) {
@@ -855,8 +849,6 @@ public class FindFile<T extends FindFile> {
 	}
 
 	public static class FileLastModifiedTimeComparator implements Comparator<File>, Serializable {
-		private static final long serialVersionUID = 1;
-
 		protected final int order;
 
 		public FileLastModifiedTimeComparator(boolean ascending) {

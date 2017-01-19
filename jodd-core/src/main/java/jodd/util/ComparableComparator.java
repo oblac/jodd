@@ -33,8 +33,6 @@ import java.util.Comparator;
  * Comparator that adapts <code>Comparables</code> to the <code>Comparator</code> interface.
  */
 public class ComparableComparator<T extends Comparable<T>> implements Comparator<T>, Serializable {
-	private static final long serialVersionUID = 1;
-
 	/**
 	 * Cached instance.
 	 */

@@ -33,8 +33,6 @@ import java.util.List;
  * Multiple comparators compares using list of comparators.
  */
 public class MultiComparator<T> implements Comparator<T>, Serializable {
-	private static final long serialVersionUID = 1;
-
 	protected final List<Comparator<T>> comparators;
 
 	public MultiComparator(List<Comparator<T>> comparators) {
