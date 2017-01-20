@@ -91,7 +91,8 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 
 		int ndx1 = 0, ndx2 = 0;
 		int zeroCount1, zeroCount2;
-		int lastZeroCount = 0;
+		int zerosDelta = 0;
+		int lastAllZerosResult = 0;
 		char char1, char2;
 
 		int result;
@@ -126,7 +127,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 			}
 
 			if (zeroCount1 > 0 || zeroCount2 > 0) {
-				lastZeroCount = zeroCount1 - zeroCount2;
+				zerosDelta = zeroCount1 - zeroCount2;
 			}
 
 			// process remaining digits
@@ -142,34 +143,55 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 				}
 				// if numbers are equal
 				if (zeroCount1 != zeroCount2) {
-					return zeroCount1 - zeroCount2;
+					return zerosDelta;
 				}
 			}
 
 			if (char1 == 0 && char2 == 0) {
 				// both strings end; the strings are the same
-				return lastZeroCount;
-//				return zeroCount1 - zeroCount2;
+				if (lastAllZerosResult == 0) {
+					return zerosDelta;
+				}
+				return lastAllZerosResult;
 			}
 
-			// check when one of the numbers is just zeros
+			// check when one of the numbers is just zeros; as the other
+			// string is still a number
 			if (isDigitChar1 || isDigitChar2) {
-				if (zeroCount1 != zeroCount2) {
-					return zeroCount2 - zeroCount1;
+				if (zeroCount1 > 0 && zeroCount2 > 0) {
+					if (zeroCount1 != zeroCount2) {
+						return -zerosDelta;
+					}
 				}
 			}
 
-			// checks when both numbers are zero
-			// but we DON'T need to check this, as zeros number considered equal!
-//			if (zeroCount1 != zeroCount2) {
-//				return zeroCount1 - zeroCount2;
-//			}
-
-			if (lastZeroCount != 0) {
+			// check if both numbers are zeros
+			if (zerosDelta != 0) {
+				// so we really have both number with at least one zero?
 				if (zeroCount1 > 0 && zeroCount2 > 0) {
-					return lastZeroCount;
+					lastAllZerosResult = zerosDelta;
+				} else {
+					// one of the number is empty strings
+					// the other char defines the order!
+
+
+					if (zeroCount1 > 0) {
+						if (char2 > '0') {
+							return -zerosDelta;
+						} else {
+							return zerosDelta;
+						}
+					} else if (zeroCount2 > 0) {
+						if (char1 > '0') {
+							return -zerosDelta;
+						}
+						else  {
+							return zerosDelta;
+						}
+					}
+
+					return 0;
 				}
-				return -lastZeroCount;
 			}
 
 			// compare chars
