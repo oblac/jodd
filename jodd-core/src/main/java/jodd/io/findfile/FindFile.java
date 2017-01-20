@@ -801,7 +801,7 @@ public class FindFile<T extends FindFile> {
 
 	public static class FileNameComparator implements Comparator<File>, Serializable {
 		protected final int order;
-		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true);
+		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true, true);
 
 		public FileNameComparator(boolean ascending) {
 			if (ascending) {

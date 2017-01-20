@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -127,6 +128,16 @@ public class NaturalOrderComparatorTest {
 	}
 
 	private void assertListOrderByShuffling(String[] strings) {
+		Comparator<String> c = new NaturalOrderComparator<>();
+		assertListOrder(c, strings);
+	}
+
+	private void assertListOrderByShuffling(String[] strings, boolean caseSensitive) {
+		Comparator<String> c = new NaturalOrderComparator<>(caseSensitive, true);
+		assertListOrder(c, strings);
+	}
+
+	private void assertListOrder(Comparator<String> c, String[] strings) {
 		int loop = 100;
 
 		while (loop-- > 0) {
@@ -134,7 +145,7 @@ public class NaturalOrderComparatorTest {
 
 			Collections.shuffle(list);
 
-			list.sort(new NaturalOrderComparator<>());
+			list.sort(c);
 
 			for (int i = 0, listSize = list.size(); i < listSize; i++) {
 				String s = list.get(i);
@@ -296,6 +307,30 @@ public class NaturalOrderComparatorTest {
 		};
 
 		assertListOrderByShuffling(list);
+	}
+
+	@Test
+	public void testNaturalAccents() {
+		String[] list = new String[] {
+			"above",
+//			"Æon",
+//			"æon",
+			"aether",
+			"apple",
+//			"außen",
+			"autumn",
+			"bald",
+			"Ball",
+			"car",
+			"Card",
+			"e-mail",
+			"Évian",
+			"evoke",
+			"nina",
+			"niño",
+		};
+
+		assertListOrderByShuffling(list, true);
 	}
 
 	private void assertReflexivity(NaturalOrderComparator<String> comparator, String s1, String s2) {

@@ -29,18 +29,36 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Compares two strings in natural, alphabetical, way.
+ * Probably the best natural strings comparator.
  */
 public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 
+	/* copied from Perl6 code */
+	private static final char[] ACCENT_CHARS = new char[]{
+		'À', 'A', 'Á', 'A', 'Â', 'A', 'Ã', 'A', 'Ä', 'A', 'Å', 'A',
+		'à', 'a', 'á', 'a', 'â', 'a', 'ã', 'a', 'ä', 'a', 'å', 'a',
+		'Ç', 'C', 'ç', 'c',
+		'È', 'E', 'É', 'E', 'Ê', 'E', 'Ë', 'E',
+		'è', 'e', 'é', 'e', 'ê', 'e', 'ë', 'e',
+		'Ì', 'I', 'Í', 'I', 'Î', 'I', 'Ï', 'I',
+		'ì', 'i', 'í', 'i', 'î', 'i', 'ï', 'i',
+		'Ò', 'O', 'Ó', 'O', 'Ô', 'O', 'Õ', 'O', 'Ö', 'O',
+		'Ø', 'O', 'ò', 'o', 'ó', 'o', 'ô', 'o', 'õ', 'o', 'ö', 'o', 'ø', 'o',
+		'Ñ', 'N', 'ñ', 'n',
+		'Ù', 'U', 'Ú', 'U', 'Û', 'U', 'Ü', 'U', 'ù', 'u', 'ú', 'u', 'û', 'u', 'ü', 'u',
+		'Ý', 'Y', 'ÿ', 'y', 'ý', 'y',
+	};
+
 	protected final boolean ignoreCase;
+	protected final boolean ignoreAccents;
 
 	public NaturalOrderComparator() {
-		ignoreCase = false;
+		this(false, true);
 	}
 
-	public NaturalOrderComparator(boolean ignoreCase) {
+	public NaturalOrderComparator(boolean ignoreCase, boolean ignoreAccents) {
 		this.ignoreCase = ignoreCase;
+		this.ignoreAccents = ignoreAccents;
 	}
 
 	/**
@@ -200,6 +218,11 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 				char2 = Character.toLowerCase(char2);
 			}
 
+			if (ignoreAccents) {
+				char1 = fixAccent(char1);
+				char2 = fixAccent(char2);
+			}
+
 			if (char1 < char2) {
 				return -1;
 			}
@@ -210,6 +233,19 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 			ndx1++;
 			ndx2++;
 		}
+	}
+
+	/**
+	 * Fixes accent char.
+	 */
+	private char fixAccent(char c) {
+		for (int i = 0; i < ACCENT_CHARS.length; i+=2) {
+			char accentChar = ACCENT_CHARS[i];
+			if (accentChar == c) {
+				return ACCENT_CHARS[i + 1];
+			}
+		}
+		return c;
 	}
 
 	/**
