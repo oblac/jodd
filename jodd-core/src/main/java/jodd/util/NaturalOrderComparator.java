@@ -165,6 +165,13 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 //				return zeroCount1 - zeroCount2;
 //			}
 
+			if (lastZeroCount != 0) {
+				if (zeroCount1 > 0 && zeroCount2 > 0) {
+					return lastZeroCount;
+				}
+				return -lastZeroCount;
+			}
+
 			// compare chars
 			if (ignoreCase) {
 				char1 = Character.toLowerCase(char1);
