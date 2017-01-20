@@ -91,6 +91,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 
 		int ndx1 = 0, ndx2 = 0;
 		int zeroCount1, zeroCount2;
+		int lastZeroCount = 0;
 		char char1, char2;
 
 		int result;
@@ -124,7 +125,11 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 				char2 = charAt(str2, ndx2);
 			}
 
-			// process digits
+			if (zeroCount1 > 0 || zeroCount2 > 0) {
+				lastZeroCount = zeroCount1 - zeroCount2;
+			}
+
+			// process remaining digits
 
 			boolean isDigitChar1 = CharUtil.isDigit(char1);
 			boolean isDigitChar2 = CharUtil.isDigit(char2);
@@ -135,7 +140,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 					// not equals, return
 					return result;
 				}
-				// equal numbers
+				// if numbers are equal
 				if (zeroCount1 != zeroCount2) {
 					return zeroCount1 - zeroCount2;
 				}
@@ -143,7 +148,8 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 
 			if (char1 == 0 && char2 == 0) {
 				// both strings end; the strings are the same
-				return zeroCount1 - zeroCount2;
+				return lastZeroCount;
+//				return zeroCount1 - zeroCount2;
 			}
 
 			// check when one of the numbers is just zeros
@@ -154,15 +160,17 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 			}
 
 			// checks when both numbers are zero
-			if (zeroCount1 != zeroCount2) {
-				return zeroCount1 - zeroCount2;
-			}
+			// but we DON'T need to check this, as zeros number considered equal!
+//			if (zeroCount1 != zeroCount2) {
+//				return zeroCount1 - zeroCount2;
+//			}
 
 			// compare chars
 			if (ignoreCase) {
 				char1 = Character.toLowerCase(char1);
 				char2 = Character.toLowerCase(char2);
 			}
+
 			if (char1 < char2) {
 				return -1;
 			}
