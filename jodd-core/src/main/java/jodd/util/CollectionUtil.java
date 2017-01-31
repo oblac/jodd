@@ -31,6 +31,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Some collection utilities.
@@ -84,6 +86,21 @@ public class CollectionUtil {
 			list.add(iterator.next());
 		}
 		return list;
+	}
+
+	/**
+	 * Wraps iterator as a stream.
+	 */
+	public static <T> Stream<T> asStream(Iterator<T> sourceIterator) {
+		return asStream(sourceIterator, false);
+	}
+
+	/**
+	 * Wraps an iterator as a stream.
+	 */
+	public static <T> Stream<T> asStream(Iterator<T> sourceIterator, boolean parallel) {
+		Iterable<T> iterable = () -> sourceIterator;
+		return StreamSupport.stream(iterable.spliterator(), parallel);
 	}
 
 }
