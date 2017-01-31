@@ -32,7 +32,8 @@ import java.text.DateFormatSymbols;
  * Simple holder for <code>DateFormatSymbols</code> that doesn't create new array on each call.
  * This improves performance by avoiding duplication of returned arrays.
  * <p>
- * Use this class from {@link LocaleUtil} or cache it manually.
+ * Use this class from {@link LocaleUtil} or cache it manually, as only one instance
+ * per locale is enough.
  */
 public class DateFormatSymbolsEx {
 

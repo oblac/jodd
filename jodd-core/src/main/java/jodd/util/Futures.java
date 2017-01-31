@@ -34,6 +34,9 @@ import java.util.function.Function;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+/**
+ * Some Java 8 futures utilities.
+ */
 public class Futures {
 
 	private static final ScheduledExecutorService SCHEDULER =
