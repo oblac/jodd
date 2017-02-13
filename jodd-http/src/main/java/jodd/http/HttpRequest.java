@@ -883,11 +883,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * Parses input stream and creates new <code>HttpRequest</code> object.
+	 * Assumes input stream is in ISO_8859_1 encoding.
 	 */
 	public static HttpRequest readFrom(InputStream in) {
+		return readFrom(in, StringPool.ISO_8859_1);
+	}
+
+	public static HttpRequest readFrom(InputStream in, String encoding) {
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new InputStreamReader(in, StringPool.ISO_8859_1));
+			reader = new BufferedReader(new InputStreamReader(in, encoding));
 		} catch (UnsupportedEncodingException uneex) {
 			return null;
 		}

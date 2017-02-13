@@ -61,6 +61,7 @@ public class HttpTunnel {
 	 * Target host.
 	 */
 	protected String targetHost = "localhost";
+
 	/**
 	 * Target port.
 	 */
