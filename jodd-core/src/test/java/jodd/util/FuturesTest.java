@@ -25,12 +25,14 @@
 
 package jodd.util;
 
+import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class FuturesTest {
@@ -65,6 +67,37 @@ public class FuturesTest {
 		if (value == null) {
 			fail();
 		}
+	}
+
+	@Test
+	public void testFailAfterOnManyTasks() throws ExecutionException, InterruptedException {
+		MutableInteger execCount = new MutableInteger();
+		MutableInteger interruptCount = new MutableInteger();
+
+		final CompletableFuture<String> asyncCode1 = CompletableFuture.supplyAsync(() -> {
+			ThreadUtil.sleep(1000);
+			execCount.value++;
+			return "done";
+		});
+		final CompletableFuture<String> asyncCode2 = CompletableFuture.supplyAsync(() -> {
+			ThreadUtil.sleep(2000);
+			execCount.value++;
+			return "done";
+		});
+		final CompletableFuture<String> asyncCode3 = CompletableFuture.supplyAsync(() -> {
+			ThreadUtil.sleep(3000);
+			execCount.value++;
+			return "done";
+		});
+
+		CompletableFuture<String> f1 = Futures.within(asyncCode1, Duration.ofMillis(1500)).exceptionally(throwable -> { interruptCount.value++; return null; });
+		CompletableFuture<String> f2 = Futures.within(asyncCode2, Duration.ofMillis(1500)).exceptionally(throwable -> { interruptCount.value++; return null; });
+		CompletableFuture<String> f3 = Futures.within(asyncCode3, Duration.ofMillis(1500)).exceptionally(throwable -> { interruptCount.value++; return null; });
+
+		CompletableFuture.allOf(f1, f2, f3).get();
+
+		assertEquals(1, execCount.value);
+		assertEquals(2, interruptCount.value);
 	}
 
 }
