@@ -309,4 +309,24 @@ public class HttpRequestTest {
 			fail("No exception should be thrown for null authorization basic header args!");
 		}
 	}
+
+	@Test
+	public void test394() {
+		HttpRequest request = HttpRequest.get("https://jodd.org/random link");
+		assertEquals("GET", request.method());
+		assertEquals("https://jodd.org/random link", request.url());
+
+		request = HttpRequest.get("https://jodd.org/random link?q=1");
+		assertEquals("1", request.query().get("q"));
+
+		String badUrl = "httpsjodd.org/random link?q=1:// GET";
+		try {				
+			HttpRequest.get(badUrl).send();
+			fail();
+		}
+		catch (HttpException he) {
+			assertTrue(he.getMessage().contains(badUrl));
+		}
+
+	}
 }

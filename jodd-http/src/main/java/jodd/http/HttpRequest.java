@@ -47,6 +47,15 @@ import static jodd.util.StringPool.SPACE;
 public class HttpRequest extends HttpBase<HttpRequest> {
 
 	private static final int DEFAULT_PORT = -1;
+	private static final String METHOD_CONNECT = "CONNECT";
+	private static final String METHOD_GET = "GET";
+	private static final String METHOD_POST = "POST";
+	private static final String METHOD_PUT = "PUT";
+	private static final String METHOD_PATCH = "PATCH";
+	private static final String METHOD_DELETE = "DELETE";
+	private static final String METHOD_HEAD = "HEAD";
+	private static final String METHOD_TRACE = "TRACE";
+	private static final String METHOD_OPTIONS = "OPTIONS";
 
 	protected String protocol = "http";
 	protected String host = "localhost";
@@ -135,13 +144,28 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest set(String destination) {
 		destination = destination.trim();
 
-		// http method
+		// http method, optional
 
 		int ndx = destination.indexOf(' ');
 
 		if (ndx != -1) {
-			method = destination.substring(0, ndx).toUpperCase();
-			destination = destination.substring(ndx + 1);
+			String method = destination.substring(0, ndx).toUpperCase();
+
+			switch (method) {
+				case METHOD_CONNECT:
+				case METHOD_DELETE:
+				case METHOD_GET:
+				case METHOD_HEAD:
+				case METHOD_OPTIONS:
+				case METHOD_PATCH:
+				case METHOD_POST:
+				case METHOD_PUT:
+				case METHOD_TRACE:
+					this.method = method;
+					destination = destination.substring(ndx + 1);
+					break;
+				default:
+			}
 		}
 
 		// protocol
@@ -188,7 +212,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- static factories
 
 	/**
-	 * Generic request cretor.
+	 * Generic request builder, usually used when method is a variable.
+	 * Otherwise, use one of the other static request builder methods.
 	 */
 	public static HttpRequest create(String method, String destination) {
 		return new HttpRequest()
@@ -196,13 +221,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				.set(destination);
 	}
 
-
 	/**
 	 * Builds a CONNECT request.
 	 */
 	public static HttpRequest connect(String destination) {
 		return new HttpRequest()
-				.method("CONNECT")
+				.method(METHOD_CONNECT)
 				.set(destination);
 	}
 	/**
@@ -210,7 +234,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest get(String destination) {
 		return new HttpRequest()
-				.method("GET")
+				.method(METHOD_GET)
 				.set(destination);
 	}
 	/**
@@ -218,7 +242,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest post(String destination) {
 		return new HttpRequest()
-				.method("POST")
+				.method(METHOD_POST)
 				.set(destination);
 	}
 	/**
@@ -226,7 +250,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest put(String destination) {
 		return new HttpRequest()
-				.method("PUT")
+				.method(METHOD_PUT)
 				.set(destination);
 	}
 	/**
@@ -234,7 +258,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest patch(String destination) {
 		return new HttpRequest()
-				.method("PATCH")
+				.method(METHOD_PATCH)
 				.set(destination);
 	}
 	/**
@@ -242,7 +266,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest delete(String destination) {
 		return new HttpRequest()
-				.method("DELETE")
+				.method(METHOD_DELETE)
 				.set(destination);
 	}
 	/**
@@ -250,7 +274,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest head(String destination) {
 		return new HttpRequest()
-				.method("HEAD")
+				.method(METHOD_HEAD)
 				.set(destination);
 	}
 	/**
@@ -258,7 +282,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest trace(String destination) {
 		return new HttpRequest()
-				.method("TRACE")
+				.method(METHOD_TRACE)
 				.set(destination);
 	}
 	/**
@@ -266,7 +290,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest options(String destination) {
 		return new HttpRequest()
-				.method("OPTIONS")
+				.method(METHOD_OPTIONS)
 				.set(destination);
 	}
 
@@ -281,6 +305,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * Specifies request method. It will be converted into uppercase.
+	 * Does not validate if method is one of the HTTP methods.
 	 */
 	public HttpRequest method(String method) {
 		this.method = method.toUpperCase();
@@ -711,7 +736,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			this.httpConnectionProvider = httpConnectionProvider;
 			this.httpConnection = httpConnectionProvider.createHttpConnection(this);
 		} catch (IOException ioex) {
-			throw new HttpException(ioex);
+			throw new HttpException("Can't connect to: " + url(), ioex);
 		}
 
 		return this;

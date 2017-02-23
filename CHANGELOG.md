@@ -10,6 +10,8 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **http** - address parsing and exception message is much better.
++ **http** - added optional encoding for `HttpRequest#readFrom`.
 + **email** - email parser is improved.
 + **core** - natural comparison improved and accents added.
 + **core** - added `ThreadFactoryBuilder.
@@ -18,8 +20,12 @@ All notable changes to Jodd project are documented here.
 
 ### Breaking changes
 
-+ **email** - renamed `EmailAddress`, it is used now as a Email parser
++ **email** - renamed `EmailAddress`, it is used now as a Email parser.
 + **dboom** - method `_` has been removed. Use `append` instead.
+
+### System
+
++ **gradle** - updated to Gradle 3.3
 
 
 ## [3.8.1](https://github.com/oblac/jodd/compare/v3.8.0...v3.8.1)
