@@ -54,4 +54,17 @@ public class CookieTest {
 		assertTrue(cookie.isSecure());
 		assertTrue(cookie.isHttpOnly());
 	}
+
+	@Test
+	public void test395() {
+		Cookie cookie = new Cookie("name=value;");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		cookie = new Cookie("name=value;       ");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+	}
 }

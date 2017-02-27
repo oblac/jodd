@@ -69,6 +69,8 @@ public class Cookie {
 		int from = 0;
 		int ndx = 0;
 
+		cookie = cookie.trim();
+
 		while (ndx < cookie.length()) {
 			ndx = cookie.indexOf(';', from);
 
@@ -76,7 +78,6 @@ public class Cookie {
 				// last chunk
 				ndx = cookie.length();
 			}
-
 			int ndx2 = cookie.indexOf('=', from);
 
 			String name;
@@ -85,6 +86,10 @@ public class Cookie {
 				name = cookie.substring(from, ndx2).trim();
 				value = cookie.substring(ndx2 + 1, ndx).trim();
 			} else {
+				if (from == ndx) {
+					ndx++;
+					continue;
+				}
 				name = cookie.substring(from, ndx).trim();
 				value = null;
 			}

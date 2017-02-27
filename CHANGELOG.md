@@ -6,6 +6,7 @@ All notable changes to Jodd project are documented here.
 
 ### Bug Fixes
 
++ **http** - fixed special case with Cookie parsing. 
 + **core** - natural comparison has been fixed to follow comparator contracts.
 
 ### Features
