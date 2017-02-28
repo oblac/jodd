@@ -151,4 +151,12 @@ public class FileNameUtilTest {
 		assertEquals(SystemUtil.userHome() + "/", FileNameUtil.resolveHome("~/"));
 		assertEquals(SystemUtil.userHome() + "/foo", FileNameUtil.resolveHome("~/foo"));
 	}
+
+	@Test
+	public void testGetRelativePaths() {
+		assertEquals("../../b/c", FileNameUtil.relativePath("/a/b/c", "/a/x/y/"));
+		assertEquals("../../b/c", FileNameUtil.relativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/"));
+		assertEquals("stuff/xyz.dat", FileNameUtil.relativePath("/var/data/stuff/xyz.dat", "/var/data/"));
+		assertEquals("../../../a/b/c", FileNameUtil.relativePath("/a/b/c", "/m/n/o"));
+	}
 }

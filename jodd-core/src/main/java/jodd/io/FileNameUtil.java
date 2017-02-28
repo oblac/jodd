@@ -996,4 +996,11 @@ public class FileNameUtil {
 		return path;
 	}
 
+	/**
+	 * Calculates relative path of target path on base path.
+	 */
+	public static String relativePath(String targetPath, String basePath) {
+		return new File(basePath).toPath().relativize(new File(targetPath).toPath()).toString();
+	}
+
 }
