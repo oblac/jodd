@@ -66,5 +66,10 @@ public class CookieTest {
 
 		assertEquals("name", cookie.getName());
 		assertEquals("value", cookie.getValue());
+
+		cookie = new Cookie("p_skey=UIJeeZgODkPQgiVcwHJBhq9mYrZC9JdpYF6SCZ3fNfY_; PATH=/; DOMAIN=mail.qq.com; ;");
+
+		assertEquals("p_skey", cookie.getName());
+		assertEquals("UIJeeZgODkPQgiVcwHJBhq9mYrZC9JdpYF6SCZ3fNfY_", cookie.getValue());
 	}
 }

@@ -25,6 +25,8 @@
 
 package jodd.http;
 
+import jodd.util.StringUtil;
+
 /**
  * Cookie object. Simple cookie data holder, cookie header parser and generator.
  */
@@ -94,7 +96,7 @@ public class Cookie {
 				value = null;
 			}
 
-			if (name.equalsIgnoreCase("Max-Age")) {
+			if (value != null && name.equalsIgnoreCase("Max-Age")) {
 				setMaxAge(Integer.parseInt(value));
 			} else if (name.equalsIgnoreCase("Comment")) {
 				setComment(value);
@@ -104,13 +106,13 @@ public class Cookie {
 				setPath(value);
 			} else if (name.equalsIgnoreCase("Secure")) {
 				setSecure(true);
-			} else if (name.equalsIgnoreCase("Version")) {
+			} else if (value != null && name.equalsIgnoreCase("Version")) {
 				setVersion(Integer.parseInt(value));
 			} else if (name.equalsIgnoreCase("HttpOnly")) {
 				setHttpOnly(true);
 			} else if (name.equalsIgnoreCase("Expires")) {
 				setExpires(value);
-			} else {
+			} else if (!StringUtil.isBlank(name)) {
 				setName(name);
 				setValue(value);
 			}
