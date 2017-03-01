@@ -113,14 +113,7 @@ public class Cookie {
 				setHttpOnly(true);
 			} else if (name.equalsIgnoreCase("Expires")) {
 				setExpires(value);
-			} else if (this.name == null) {
-				if (StringUtil.isBlank(name)) {
-					// special case of handling cookies, when name is not set
-					// the value is used as a name (tested in Firefox and Chrome
-					// by @neroux)
-					name = value;
-					value = StringPool.EMPTY;
-				}
+			} else if (this.name == null && !StringUtil.isBlank(name)) {
 				setName(name);
 				setValue(value);
 			}

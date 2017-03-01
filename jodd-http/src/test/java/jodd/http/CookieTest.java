@@ -103,9 +103,7 @@ public class CookieTest {
 
 		cookie = new Cookie("=value");
 
-		assertEquals("value", cookie.getName());
-		assertEquals("", cookie.getValue());
-
-
+		assertEquals(null, cookie.getName());
+		assertEquals(null, cookie.getValue());
 	}
 }
