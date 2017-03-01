@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -82,8 +83,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	// ---------------------------------------------------------------- cookie
 
 	/**
-	 * Returns list of cookies sent from server.
-	 * If no cookie found, returns an empty array.
+	 * Returns list of valid cookies sent from server.
+	 * If no cookie found, returns an empty array. Invalid cookies are ignored.
 	 */
 	public Cookie[] cookies() {
 		List<String> newCookies = headers("set-cookie");
@@ -92,17 +93,20 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			return new Cookie[0];
 		}
 
-		Cookie[] cookies = new Cookie[newCookies.size()];
+		List<Cookie> cookieList = new ArrayList<>(newCookies.size());
 
-		for (int i = 0; i < newCookies.size(); i++) {
-			String cookieValue = newCookies.get(i);
+		for (String cookieValue : newCookies) {
+			try {
+				Cookie cookie = new Cookie(cookieValue);
 
-			Cookie cookie = new Cookie(cookieValue);
-
-			cookies[i] = cookie;
+				cookieList.add(cookie);
+			}
+			catch (Exception ex) {
+				// ignore
+			}
 		}
 
-		return cookies;
+		return cookieList.toArray(new Cookie[cookieList.size()]);
 	}
 
 	// ---------------------------------------------------------------- body

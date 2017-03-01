@@ -6,7 +6,8 @@ All notable changes to Jodd project are documented here.
 
 ### Bug Fixes
 
-+ **http** - fixed special case with Cookie parsing. 
++ **http** - `response.cookies()` does not throw exception on invalid cookies.
++ **http** - fixed special case with `Cookie` parsing. 
 + **core** - natural comparison has been fixed to follow comparator contracts.
 
 ### Features
