@@ -25,6 +25,7 @@
 
 package jodd.http;
 
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 /**
@@ -112,7 +113,14 @@ public class Cookie {
 				setHttpOnly(true);
 			} else if (name.equalsIgnoreCase("Expires")) {
 				setExpires(value);
-			} else if (!StringUtil.isBlank(name)) {
+			} else if (this.name == null) {
+				if (StringUtil.isBlank(name)) {
+					// special case of handling cookies, when name is not set
+					// the value is used as a name (tested in Firefox and Chrome
+					// by @neurox)
+					name = value;
+					value = StringPool.EMPTY;
+				}
 				setName(name);
 				setValue(value);
 			}

@@ -72,4 +72,40 @@ public class CookieTest {
 		assertEquals("p_skey", cookie.getName());
 		assertEquals("UIJeeZgODkPQgiVcwHJBhq9mYrZC9JdpYF6SCZ3fNfY_", cookie.getValue());
 	}
+
+	@Test
+	public void testSpecialCookieValues() {
+		Cookie cookie = new Cookie("name=value");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		cookie = new Cookie("name=value;");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		// duplicated value
+
+		cookie = new Cookie("name=value;a=b;");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("value", cookie.getValue());
+
+		// empty value
+
+		cookie = new Cookie("name=");
+
+		assertEquals("name", cookie.getName());
+		assertEquals("", cookie.getValue());
+
+		// empty name
+
+		cookie = new Cookie("=value");
+
+		assertEquals("value", cookie.getName());
+		assertEquals("", cookie.getValue());
+
+
+	}
 }
