@@ -117,7 +117,7 @@ public class Cookie {
 				if (StringUtil.isBlank(name)) {
 					// special case of handling cookies, when name is not set
 					// the value is used as a name (tested in Firefox and Chrome
-					// by @neurox)
+					// by @neroux)
 					name = value;
 					value = StringPool.EMPTY;
 				}
