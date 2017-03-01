@@ -110,7 +110,7 @@ public class Cookie {
 				setHttpOnly(true);
 			} else if (name.equalsIgnoreCase("Expires")) {
 				setExpires(value);
-			} else {
+			} else if (this.name == null) {
 				setName(name);
 				setValue(value);
 			}
