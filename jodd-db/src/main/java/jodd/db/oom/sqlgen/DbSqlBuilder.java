@@ -183,10 +183,15 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
 	// ---------------------------------------------------------------- interface
 
+	protected String generatedQuery;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public String generateQuery() {
+		if (generatedQuery != null) {
+			return generatedQuery;
+		}
 
 		resetOnPreInit();
 
@@ -210,7 +215,9 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 			throw dsbex;
 		}
 
-		return query.toString();
+		generatedQuery = query.toString();
+
+		return generatedQuery;
 	}
 
 	/**

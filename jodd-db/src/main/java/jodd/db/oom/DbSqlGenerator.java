@@ -35,7 +35,8 @@ import java.util.Map;
 public interface DbSqlGenerator {
 
 	/**
-	 * Generates SQL query.
+	 * Generates SQL query. May be called multiple times.
+	 * It's not thread-safe.
 	 */
 	String generateQuery();
 
