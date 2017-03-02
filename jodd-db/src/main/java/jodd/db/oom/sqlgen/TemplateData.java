@@ -63,7 +63,7 @@ public abstract class TemplateData {
 	 * Resets the builder so it can be used again. Not everything is reset:
 	 * object references and column alias type is not.
 	 */
-	protected void resetAll() {
+	protected void resetSoft() {
 		columnCount = 0;
 		paramCount = 0;
 		hintCount = 0;
@@ -82,6 +82,12 @@ public abstract class TemplateData {
 			hints.clear();
 		}
 		//columnAliasType = dbOomManager.getDefaultColumnAliasType();
+	}
+
+	protected void resetHard() {
+		resetSoft();
+		objectRefs = null;
+		columnAliasType = dbOomManager.getDefaultColumnAliasType();
 	}
 
 

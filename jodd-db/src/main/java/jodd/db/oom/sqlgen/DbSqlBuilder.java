@@ -87,11 +87,21 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	}
 
 	/**
-	 * Resets the builder so it can be used again.
-	 * Object references are not cleared!
+	 * Resets the builder (soft reset), so it can be used again.
+	 * Configuration is preserved.
+	 * @see TemplateData#resetSoft()
 	 */
 	public DbSqlBuilder reset() {
-		resetAll();
+		resetSoft();
+		return this;
+	}
+
+	/**
+	 * Hard reset of the builder, all configuration is reset.
+	 * @see TemplateData#resetHard()
+	 */
+	public DbSqlBuilder resetAll() {
+		resetHard();
 		return this;
 	}
 
@@ -189,7 +199,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	 * {@inheritDoc}
 	 */
 	public String generateQuery() {
-		resetAll();
+		reset();
 
 		// initialization
 		SqlChunk chunk = firstChunk;

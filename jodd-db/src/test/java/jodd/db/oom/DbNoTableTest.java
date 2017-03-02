@@ -75,7 +75,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 				"select g.ID + 10 as col_0_, UCASE(g.NAME) as col_1_, g.ID as col_2_, g.NAME as col_3_, g.SPECIALITY as col_4_ from GIRL g where g.ID=1",
 				dbSqlBuilder.generateQuery());
 
-		dbSqlBuilder.reset();
+		dbSqlBuilder.resetAll();
 
 		assertEquals(
 				"select g.ID + 10 as Bean1$SUM, UCASE(g.NAME) as Bean1$BIG_NAME, g.ID, g.NAME, g.SPECIALITY from GIRL g where g.ID=1",
