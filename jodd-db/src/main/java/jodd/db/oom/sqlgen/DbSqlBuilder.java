@@ -189,11 +189,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	 * {@inheritDoc}
 	 */
 	public String generateQuery() {
-		if (generatedQuery != null) {
-			return generatedQuery;
-		}
-
-		resetOnPreInit();
+		resetAll();
 
 		// initialization
 		SqlChunk chunk = firstChunk;

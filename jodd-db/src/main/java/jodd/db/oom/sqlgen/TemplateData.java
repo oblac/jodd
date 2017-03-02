@@ -60,20 +60,14 @@ public abstract class TemplateData {
 	}
 
 	/**
-	 * Resets the build before initializing and processing.
+	 * Resets the builder so it can be used again. Not everything is reset:
+	 * object references and column alias type is not.
 	 */
-	protected void resetOnPreInit() {
+	protected void resetAll() {
 		columnCount = 0;
 		paramCount = 0;
 		hintCount = 0;
-	}
 
-	/**
-	 * Resets the builder so it can be used again. Note that
-	 * object references are not cleared.
-	 */
-	protected void resetAll() {
-		resetOnPreInit();
 		if (tableRefs != null) {
 			tableRefs.clear();
 		}
@@ -87,7 +81,7 @@ public abstract class TemplateData {
 		if (hints != null) {
 			hints.clear();
 		}
-		columnAliasType = dbOomManager.getDefaultColumnAliasType();
+		//columnAliasType = dbOomManager.getDefaultColumnAliasType();
 	}
 
 

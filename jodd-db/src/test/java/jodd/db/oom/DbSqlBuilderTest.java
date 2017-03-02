@@ -344,6 +344,9 @@ public class DbSqlBuilderTest {
 		dbc.reset();
 		bb.ajdi = bg.fooid = Integer.valueOf(1);
 		assertEquals("select bb.ID, bb.GIRL_ID, bb.NAME, bg.ID from BOY bb, GIRL bg where (bb.ID=:badBoy.ajdi) (bg.ID=:badGirl.fooid) or bb.ID=:p0", dbc.generateQuery());
+
+		// test double call
+		assertEquals("select bb.ID, bb.GIRL_ID, bb.NAME, bg.ID from BOY bb, GIRL bg where (bb.ID=:badBoy.ajdi) (bg.ID=:badGirl.fooid) or bb.ID=:p0", dbc.generateQuery());
 	}
 
 	@Test
