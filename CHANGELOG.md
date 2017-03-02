@@ -13,6 +13,7 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **db** - added `resetAll` method for hard-resetting the queries.
 + **http** - address parsing and exception message is much better.
 + **http** - added optional encoding for `HttpRequest#readFrom`.
 + **email** - email parser is improved.
