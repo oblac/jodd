@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto;
 
@@ -10,19 +33,21 @@ public interface TagVisitor {
 	// ---------------------------------------------------------------- state
 
 	/**
-	 * Invoked on very beginning of the visiting. Provides
-	 * {@link LagartoParserContext parser context} that
-	 * gives some information during the parsing process.
+	 * Invoked on very beginning of the visiting.
 	 */
-	void start(LagartoParserContext parserContext);
+	void start();
 
 	/**
 	 * Invoked at the end, after all content is visited.
 	 */
 	void end();
 
+	// ---------------------------------------------------------------- html
 
-	// ---------------------------------------------------------------- parsing
+	/**
+	 * Invoked on DOCTYPE directive.
+	 */
+	void doctype(Doctype doctype);
 
 	/**
 	 * Invoked on {@link Tag tag} (open, close or empty).
@@ -33,19 +58,9 @@ public interface TagVisitor {
 	void tag(Tag tag);
 
 	/**
-	 * Invoked on <b>xmp</b> tag.
-	 */
-	void xmp(Tag tag, CharSequence body);
-
-	/**
 	 * Invoked on <b>script</b> tag.
 	 */
 	void script(Tag tag, CharSequence body);
-
-	/**
-	 * Invoked on <b>style</b> tag.
-	 */
-	void style(Tag tag, CharSequence body);
 
 	/**
 	 * Invoked on comment.
@@ -57,29 +72,32 @@ public interface TagVisitor {
 	 */
 	void text(CharSequence text);
 
-	// ---------------------------------------------------------------- special
+	/**
+	 * Invoked on IE conditional comment. By default, the parser does <b>not</b>
+	 * process the conditional comments, so you need to turn them on. Once conditional
+	 * comments are enabled, this even will be fired.
+	 * <p>
+	 * The following conditional comments are recognized:
+	 * {@code
+	 * <!--[if IE 6]>one<![endif]-->
+	 * <!--[if IE 6]><!-->two<!---<![endif]-->
+	 * <!--[if IE 6]>three<!--xx<![endif]-->
+	 * <![if IE 6]>four<![endif]>
+	 * }
+	 */
+	void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag);
+
+	// ---------------------------------------------------------------- xml
+
+	/**
+	 * Invoked on <b>xml</b> declaration.
+	 */
+	void xml(CharSequence version, CharSequence encoding, CharSequence standalone);
 
 	/**
 	 * Invoked on CDATA sequence.
 	 */
 	void cdata(CharSequence cdata);
-
-	/**
-	 * Invoked on <b>xml</b> declaration.
-	 */
-	void xml(Tag tag);
-
-	/**
-	 * Invoked on DOCTYPE directive. If <code>publicId</code> is <code>null</code>, it is a SYSTEM
-	 * directive, otherwise it is PUBLIC.
-	 */
-	void doctype(String name, String publicId, String baseUri);
-
-	/**
-	 * Invoked on IE conditional comment. The <code>expression</code> if unmodified expression.
-	 * <code>comment</code> is optional additional comment and may be <code>null</code>.
-	 */
-	void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment);
 
 	// ---------------------------------------------------------------- errors
 

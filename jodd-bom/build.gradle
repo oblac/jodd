@@ -1,0 +1,56 @@
+
+ext.moduleName = 'jodd-bom'
+ext.moduleDescription = "Jodd (Bill of Materials)"
+
+apply plugin: 'java'    // needs to be java for GRADLE-2427
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply from: "${gradleScriptDir}/publish-maven.gradle"
+apply plugin: 'com.jfrog.bintray'
+apply from: "${gradleScriptDir}/bintray.gradle"
+
+group = 'org.jodd'
+
+//configurations.archives.artifacts.clear()
+configurations {
+	published
+}
+
+artifacts {
+	// work around GRADLE-2406 by attaching text artifact
+	archives(file('jodd-bom.txt'))
+	published(file('jodd-bom.txt'))
+}
+
+install {
+	repositories.mavenInstaller {
+		buildBomDependencies(pom)
+	}
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		buildBomDependencies(pom)
+	}
+}
+
+def buildBomDependencies(pom) {
+	pom.whenConfigured {
+		packaging = "pom"
+		withXml {
+			asNode().children().last() + {
+				delegate.dependencyManagement {
+					delegate.dependencies {
+						parent.javaModules().sort { "$it.name" }.each { p ->
+							delegate.dependency {
+								delegate.groupId(p.group)
+								delegate.artifactId(p.name)
+								delegate.version(p.version)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

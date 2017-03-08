@@ -1,7 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.datetime;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -54,23 +78,29 @@ public class TimeUtil {
 		return result;
 	}
 
-	private static final int[] MONTH_LENGTH = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	private static final int[] LEAP_MONTH_LENGTH = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	static final int[] MONTH_LENGTH = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 	/**
 	 * Returns the length of the specified month in days. Month is 1 for January
-	 * and 12 for December. It works only for years after 1582.
+	 * and 12 for December.
 	 *
 	 * @return length of the specified month in days
 	 */
-	public static int getMonthLength(int year, int m) {
-		if ((m < 1) || (m > 12)) {
-			return -1;
+	public static int getMonthLength(int year, int month) {
+		return getMonthLength(year, month, isLeapYear(year));
+	}
+
+	static int getMonthLength(int year, int month, boolean leap) {
+		if ((month < 1) || (month > 12)) {
+			throw new IllegalArgumentException("Invalid month: " + month);
 		}
-		if (isLeapYear(year)) {
-			return LEAP_MONTH_LENGTH[m];
+		if (month == 2) {
+			return leap ? 29 : 28;
 		}
-		return MONTH_LENGTH[m];
+		if ((year == 1582) && (month == 10)) {
+			return 21;
+		}
+		return MONTH_LENGTH[month];
 	}
 
 
@@ -337,11 +367,29 @@ public class TimeUtil {
 	public static final SimpleDateFormat HTTP_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
 	/**
-	 * Formats time to HTTP date format.
+	 * Formats time to HTTP date/time format. Note that number of milliseconds
+	 * is lost.
 	 */
 	public static String formatHttpDate(long millis) {
 		Date date = new Date(millis);
 		return HTTP_DATE_FORMAT.format(date);
+	}
+
+	/**
+	 * Parses the HTTP date/time format. Returns <code>-1</code> if given string
+	 * is invalid.
+	 */
+	public static long parseHttpTime(String time) {
+		if (time == null) {
+			return -1;
+		}
+
+		try {
+			return TimeUtil.HTTP_DATE_FORMAT.parse(time).getTime();
+		}
+		catch (ParseException e) {
+			return -1;
+		}
 	}
 
 }

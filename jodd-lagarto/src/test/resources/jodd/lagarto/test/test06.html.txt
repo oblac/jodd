@@ -1,0 +1,11 @@
+wrn:[Parse error: invalid token [1:18 @17]
+wrn:[Parse error: invalid token [1:24 @23]
+wrn:[Parse error: invalid token [1:25 @24]
+tag:img:1<><img alt="video " Visits"" src="http://i.i.com.com" height="100" width="140"/>
+tag:bb<:1<
+tag:i:2<
+tag:b:3<
+txt:[bold]
+wrn:[Parse error: invalid token [3:16 @99]
+wrn:[Ignored end tag attribute [3:17 @100]
+tag:b<:3>

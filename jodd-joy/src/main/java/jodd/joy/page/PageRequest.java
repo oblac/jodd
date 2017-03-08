@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.joy.page;
 
@@ -7,12 +30,19 @@ package jodd.joy.page;
  */
 public class PageRequest {
 
+	/**
+	 * Default page size.
+	 */
 	public static int defaultPageSize = 10;
+	/**
+	 * Default sort index.
+	 */
+	public static int defaultSortIndex = 0;
 
 	protected int page = 1;
 	protected int size = defaultPageSize;
 	protected String pagerId;
-	protected int sort;
+	protected int sort = defaultSortIndex;
 
 	/**
 	 * Returns requested page number.
@@ -45,16 +75,24 @@ public class PageRequest {
 		this.size = size;
 	}
 
+	// ---------------------------------------------------------------- sort
+
 	/**
-	 * Returns sort index.
+	 * Returns sort 1-based index of column that should be sorted.
 	 * If <code>0</code>, nothing should be sorted.
 	 * Positive values represents ascending order,
 	 * negative values descending.
+	 * <p>
+	 * By using the index we also hide the real column names.
 	 */
 	public int getSort() {
 		return sort;
 	}
 
+	/**
+	 * Returns sort index.
+	 * @see #getSort()
+	 */
 	public void setSort(int sort) {
 		this.sort = sort;
 	}
@@ -85,7 +123,7 @@ public class PageRequest {
 		return "PageRequest{" +
 				"page=" + page +
 				", size=" + size +
-				", size=" + size +
+				", sort=" + sort +
 				", pagerId=" + pagerId +
 				'}';
 	}

@@ -1,14 +1,37 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.ClassReader;
-import jodd.asm4.AnnotationVisitor;
-import jodd.asm4.signature.SignatureReader;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.ClassReader;
+import jodd.asm5.AnnotationVisitor;
+import jodd.asm5.signature.SignatureReader;
 
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +50,7 @@ import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.util.StringPool;
 
 /**
  * Reads info from target class.
@@ -39,11 +63,13 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected final Map<String, MethodSignatureVisitor> methodSignatures;
 	protected final List<ClassReader> superClassReaders;					// list of all super class readers
 	protected final Set<String> allMethodSignatures;
+	protected final ClassLoader classLoader;
 
-	public TargetClassInfoReader() {
-		this.methodSignatures = new HashMap<String, MethodSignatureVisitor>();
-		this.superClassReaders = new ArrayList<ClassReader>();
-		this.allMethodSignatures = new HashSet<String>();
+	public TargetClassInfoReader(ClassLoader classLoader) {
+		this.methodSignatures = new HashMap<>();
+		this.superClassReaders = new ArrayList<>();
+		this.allMethodSignatures = new HashSet<>();
+		this.classLoader = classLoader;
 	}
 
 
@@ -73,7 +99,6 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected String thisReference;
 	protected String nextSupername;
 	protected String[] superClasses;
-	protected int hierarchyLevel;
 	protected AnnotationInfo[] annotations;
 	protected List<AnnotationInfo> classAnnotations;
 	protected boolean isTargetIntreface;
@@ -114,13 +139,12 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.thisReference = name;
 		this.superName = superName;
 		this.nextSupername = superName;
-		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
+		this.targetPackage = lastSlash == -1 ? StringPool.EMPTY : name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
-		this.hierarchyLevel = 1;
 
 		this.isTargetIntreface = (access & AsmUtil.ACC_INTERFACE) != 0;
 		if (this.isTargetIntreface) {
-			nextInterfaces = new HashSet<String>();
+			nextInterfaces = new HashSet<>();
 			if (interfaces != null) {
 				for (String inter : interfaces) {
 					nextInterfaces.add(inter);
@@ -134,7 +158,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 		AnnotationReader ar = new AnnotationReader(desc, visible);
 		if (classAnnotations == null) {
-			classAnnotations = new ArrayList<AnnotationInfo>();
+			classAnnotations = new ArrayList<>();
 		}
 		classAnnotations.add(ar);
 		return ar;
@@ -168,50 +192,53 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			classAnnotations = null;
 		}
 
+		List<String> superList = new ArrayList<>();
 
-		List<String> superList = new ArrayList<String>();
+		Set<String> allInterfaces = new HashSet<>();
+
+		if (nextInterfaces != null) {
+			allInterfaces.addAll(nextInterfaces);
+		}
+
 		// check all public super methods that are not overridden in superclass
 		while (nextSupername != null) {
 			InputStream inputStream = null;
 			ClassReader cr = null;
+
 			try {
-				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername);
+				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername, classLoader);
 				cr = new ClassReader(inputStream);
 			} catch (IOException ioex) {
 				throw new ProxettaException("Unable to inspect super class: " + nextSupername, ioex);
 			} finally {
 				StreamUtil.close(inputStream);
 			}
-			hierarchyLevel++;
+
 			superList.add(nextSupername);
 			superClassReaders.add(cr);	// remember the super class reader
 			cr.accept(new SuperClassVisitor(), 0);
+
+			if (cr.getInterfaces() != null) {
+				Collections.addAll(allInterfaces, cr.getInterfaces());
+			}
 		}
 		superClasses = superList.toArray(new String[superList.size()]);
 
 		// check all interface methods that are not overridden in super-interface
-		if (nextInterfaces != null) {
-			while (!nextInterfaces.isEmpty()) {
-				Iterator<String> iterator = nextInterfaces.iterator();
-				String next = iterator.next();
-				iterator.remove();
-
-				InputStream inputStream = null;
-				ClassReader cr = null;
-				try {
-					inputStream = ClassLoaderUtil.getClassAsStream(next);
-					cr = new ClassReader(inputStream);
-				} catch (IOException ioex) {
-					throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
-				} finally {
-					StreamUtil.close(inputStream);
-				}
-				hierarchyLevel++;
-				superClassReaders.add(cr);				// remember the super class reader
-				cr.accept(new SuperClassVisitor(), 0);
+		for (String next : allInterfaces) {
+			InputStream inputStream = null;
+			ClassReader cr = null;
+			try {
+				inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
+				cr = new ClassReader(inputStream);
+			} catch (IOException ioex) {
+				throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
+			} finally {
+				StreamUtil.close(inputStream);
 			}
+			superClassReaders.add(cr);				// remember the super class reader
+			cr.accept(new SuperClassVisitor(), 0);
 		}
-
 	}
 
 
@@ -220,7 +247,6 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	protected MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String signature, String classname) {
 		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, signature, this);
-		v.hierarchyLevel = this.hierarchyLevel;
 		new SignatureReader(signature != null ? signature : description).accept(v);
 		return v;
 	}
@@ -233,11 +259,14 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	static class MethodAnnotationReader extends EmptyMethodVisitor {
 
-		final List<AnnotationInfo> methodAnns = new ArrayList<AnnotationInfo>();
+		final List<AnnotationInfo> methodAnns = new ArrayList<>();
+		final List<AnnotationInfo>[] methodParamsAnns;
+
 		final MethodSignatureVisitor msign;
 
 		MethodAnnotationReader(MethodSignatureVisitor msign) {
 			this.msign = msign;
+			this.methodParamsAnns = new ArrayList[msign.getAllArgumentsSize()];
 		}
 
 		@Override
@@ -248,9 +277,31 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		}
 
 		@Override
+		public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+			AnnotationReader ar = new AnnotationReader(desc, visible);
+			if (methodParamsAnns[parameter] == null) {
+				methodParamsAnns[parameter] = new ArrayList<>();
+			}
+
+			methodParamsAnns[parameter].add(ar);
+
+			return ar;
+		}
+
+		@Override
 		public void visitEnd() {
-			if (methodAnns.isEmpty() == false) {
+			if (!methodAnns.isEmpty()) {
 				msign.annotations = methodAnns.toArray(new AnnotationInfo[methodAnns.size()]);
+			}
+
+			msign.argumentsAnnotation = new AnnotationInfo[methodParamsAnns.length][];
+
+			for (int i = 0; i < methodParamsAnns.length; i++) {
+				List<AnnotationInfo> methodParamsAnn = methodParamsAnns[i];
+
+				if (methodParamsAnn != null) {
+					msign.argumentsAnnotation[i] = methodParamsAnn.toArray(new AnnotationInfo[methodParamsAnn.size()]);
+				}
 			}
 		}
 	}
@@ -269,9 +320,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			// append inner interfaces
 			if (nextInterfaces != null) {
 				if (interfaces != null) {
-					for (String inter : interfaces) {
-						nextInterfaces.add(inter);
-					}
+					Collections.addAll(nextInterfaces, interfaces);
 				}
 			}
 

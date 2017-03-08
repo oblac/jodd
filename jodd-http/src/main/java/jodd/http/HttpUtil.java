@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http;
 
@@ -19,23 +42,23 @@ public class HttpUtil {
 	/**
 	 * Builds a query string from given query map.
 	 */
-	public static String buildQuery(HttpValuesMap queryMap, String encoding) {
-		int queryMapSize = queryMap.size();
-
-		if (queryMapSize == 0) {
+	public static String buildQuery(HttpMultiMap<?> queryMap, String encoding) {
+		if (queryMap.isEmpty()) {
 			return StringPool.EMPTY;
 		}
+
+		int queryMapSize = queryMap.size();
 
 		StringBand query = new StringBand(queryMapSize * 4);
 
 		int count = 0;
-		for (Map.Entry<String, Object[]> entry : queryMap.entrySet()) {
+		for (Map.Entry<String, ?> entry : queryMap) {
 			String key = entry.getKey();
-			Object[] values = entry.getValue();
-
 			key = URLCoder.encodeQueryParam(key, encoding);
 
-			if (values == null) {
+			Object value = entry.getValue();
+
+			if (value == null) {
 				if (count != 0) {
 					query.append('&');
 				}
@@ -43,18 +66,16 @@ public class HttpUtil {
 				query.append(key);
 				count++;
 			} else {
-				for (Object value : values) {
-					if (count != 0) {
-						query.append('&');
-					}
-
-					query.append(key);
-					count++;
-					query.append('=');
-
-					String valueString = URLCoder.encodeQueryParam(value.toString(), encoding);
-					query.append(valueString);
+				if (count != 0) {
+					query.append('&');
 				}
+
+				query.append(key);
+				count++;
+				query.append('=');
+
+				String valueString = URLCoder.encodeQueryParam(value.toString(), encoding);
+				query.append(valueString);
 			}
 		}
 
@@ -64,9 +85,9 @@ public class HttpUtil {
 	/**
 	 * Parses query from give query string. Values are optionally decoded.
 	 */
-	public static HttpValuesMap parseQuery(String query, boolean decode) {
+	public static HttpMultiMap<String> parseQuery(String query, boolean decode) {
 
-		HttpValuesMap queryMap = new HttpValuesMap();
+		HttpMultiMap<String> queryMap = HttpMultiMap.newCaseInsensitveMap();
 
 		int ndx, ndx2 = 0;
 		while (true) {
@@ -160,21 +181,36 @@ public class HttpUtil {
 	}
 
 	/**
-	 * @see #extractContentTypeParameter(String, String)
+	 * @see #extractHeaderParameter(String, String, char)
 	 */
 	public static String extractContentTypeCharset(String contentType) {
-		return extractContentTypeParameter(contentType, "charset");
+		return extractHeaderParameter(contentType, "charset", ';');
 	}
 
+	// ---------------------------------------------------------------- keep-alive
+
 	/**
-	 * Extracts "Content Type" parameter. Returns <code>null</code>
+	 * Extract keep-alive timeout.
+	 */
+	public static String extractKeepAliveTimeout(String keepAlive) {
+		return extractHeaderParameter(keepAlive, "timeout", ',');
+	}
+
+	public static String extractKeepAliveMax(String keepAlive) {
+		return extractHeaderParameter(keepAlive, "max", ',');
+	}
+
+	// ---------------------------------------------------------------- header
+
+	/**
+	 * Extracts header parameter. Returns <code>null</code>
 	 * if parameter not found.
 	 */
-	public static String extractContentTypeParameter(String contentType, String parameter) {
+	public static String extractHeaderParameter(String header, String parameter, char separator) {
 		int index = 0;
 
 		while (true) {
-			index = contentType.indexOf(';', index);
+			index = header.indexOf(separator, index);
 
 			if (index == -1) {
 				return null;
@@ -183,17 +219,17 @@ public class HttpUtil {
 			index++;
 
 			// skip whitespaces
-			while (contentType.charAt(index) == ' ') {
+			while (header.charAt(index) == ' ') {
 				index++;
 			}
 
-			int eqNdx = contentType.indexOf('=', index);
+			int eqNdx = header.indexOf('=', index);
 
 			if (eqNdx == -1) {
 				return null;
 			}
 
-			String paramName = contentType.substring(index, eqNdx);
+			String paramName = header.substring(index, eqNdx);
 
 			eqNdx++;
 
@@ -202,12 +238,12 @@ public class HttpUtil {
 				continue;
 			}
 
-			int endIndex = contentType.indexOf(';', eqNdx);
+			int endIndex = header.indexOf(';', eqNdx);
 
 			if (endIndex == -1) {
-				return contentType.substring(eqNdx);
+				return header.substring(eqNdx);
 			} else {
-				return contentType.substring(eqNdx, endIndex);
+				return header.substring(eqNdx, endIndex);
 			}
 		}
 	}

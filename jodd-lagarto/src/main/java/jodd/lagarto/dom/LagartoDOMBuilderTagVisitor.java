@@ -1,17 +1,53 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoParserContext;
+import jodd.lagarto.Doctype;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
+import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
+import jodd.util.Util;
 import jodd.util.StringPool;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
 /**
  * Lagarto tag visitor that builds DOM tree.
+ * It (still) does not build the tree <i>fully</i> by the HTML specs,
+ * however, it works good enough for any sane HTML out there.
+ * In the default mode, the tree builder does <b>not</b> change
+ * the order of the elements, so the returned tree reflects
+ * the input. So if the input contains crazy stuff, the tree will
+ * be weird, too :)
+ * <p>
+ * In experimental <i>html-plus</i> mode we do have some
+ * further HTML5 rules implemented, that according to some rules
+ * may change the node position. However, not all rules are
+ * implemented (yet) and this is still just experimental.
  */
 public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
@@ -19,9 +55,11 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	protected final LagartoDOMBuilder domBuilder;
 	protected final HtmlImplicitClosingRules implRules = new HtmlImplicitClosingRules();
+	protected HtmlVoidRules htmlVoidRules;
 
 	protected Document rootNode;
 	protected Node parentNode;
+
 	/**
 	 * While enabled, nodes will be added to the DOM tree.
 	 * Useful for skipping some tags.
@@ -41,48 +79,53 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- start/end
 
-	protected LagartoParserContext parserContext;
-
-	public void start(LagartoParserContext parserContext) {
-		log.debug("DomTree builder started.");
-
-		this.parserContext = parserContext;
+	/**
+	 * Starts with DOM building.
+	 * Creates root {@link jodd.lagarto.dom.Document} node.
+	 */
+	public void start() {
+		log.debug("DomTree builder started");
 
 		if (rootNode == null) {
-			rootNode = createDocument();
+			rootNode = new Document(domBuilder.config);
 		}
 		parentNode = rootNode;
 		enabled = true;
+
+		if (domBuilder.config.isEnabledVoidTags()) {
+			htmlVoidRules = new HtmlVoidRules();
+		}
 	}
 
+	/**
+	 * Finishes the tree building. Closes unclosed tags.
+	 */
 	public void end() {
 		if (parentNode != rootNode) {
 
 			Node thisNode = parentNode;
 
 			while (thisNode != rootNode) {
-				if (domBuilder.isImpliedEndTags()) {
+				if (domBuilder.config.isImpliedEndTags()) {
 					if (implRules.implicitlyCloseTagOnEOF(thisNode.getNodeName())) {
 						thisNode = thisNode.getParentNode();
 						continue;
 					}
 				}
 
-				error("Unclosed tag closed: <" +
-						thisNode.getNodeName() + "> " +
-						thisNode.getPositionString());
+				error("Unclosed tag closed: <" + thisNode.getNodeName() + ">");
 
 				thisNode = thisNode.getParentNode();
 			}
 		}
 
 		// remove whitespaces
-		if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+		if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, true);
 		}
 
 		// foster
-		if (domBuilder.isUseFosterRules()) {
+		if (domBuilder.config.isUseFosterRules()) {
 			HtmlFosterRules fosterRules = new HtmlFosterRules();
 			fosterRules.fixFosterElements(rootNode);
 		}
@@ -91,7 +134,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		rootNode.end();
 
 		if (log.isDebugEnabled()) {
-			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms.");
+			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms");
 		}
 	}
 
@@ -101,23 +144,30 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Creates new element with correct configuration.
 	 */
 	protected Element createElementNode(Tag tag) {
-		boolean isVoid = domBuilder.isVoidTag(tag.getName());
+		boolean hasVoidTags = htmlVoidRules != null;
+
+		boolean isVoid = false;
 		boolean selfClosed = false;
 
-		if (domBuilder.hasVoidTags()) {
-			// HTML ad XHTML
+		if (hasVoidTags) {
+			isVoid = htmlVoidRules.isVoidTag(tag.getName());
+
+			// HTML and XHTML
 			if (isVoid) {
 				// it's void tag, lookup the flag
-				selfClosed = domBuilder.isSelfCloseVoidTags();
+				selfClosed = domBuilder.config.isSelfCloseVoidTags();
 			}
 		} else {
 			// XML, no voids, lookup the flag
-			selfClosed = domBuilder.isSelfCloseVoidTags();
+			selfClosed = domBuilder.config.isSelfCloseVoidTags();
 		}
-		
-		return createElement(tag, isVoid, selfClosed);
+
+		return new Element(rootNode, tag, isVoid, selfClosed);
 	}
 
+	/**
+	 * Visits tags.
+	 */
 	public void tag(Tag tag) {
 		if (!enabled) {
 			return;
@@ -128,13 +178,13 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 		switch (tagType) {
 			case START:
-				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
 				node = createElementNode(tag);
 
-				if (domBuilder.isImpliedEndTags()) {
+				if (domBuilder.config.isImpliedEndTags()) {
 					while (true) {
 						String parentNodeName = parentNode.getNodeName();
 						if (!implRules.implicitlyCloseParentTagOnNewTag(parentNodeName, node.getNodeName())) {
@@ -143,26 +193,24 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 						parentNode = parentNode.getParentNode();
 
 						if (log.isDebugEnabled()) {
-							log.debug("Implicitly closed tag <" +
-									node.getNodeName() + "> " +
-									parentNode.getPositionString());
+							log.debug("Implicitly closed tag <" + node.getNodeName() + "> ");
 						}
 					}
 				}
 
 				parentNode.addChild(node);
 
-				if (node.isVoidElement() == false) {
+				if (!node.isVoidElement()) {
 					parentNode = node;
 				}
 				break;
 
 			case END:
-				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, true);
 				}
 
-				String tagName = tag.getName();
+				String tagName = tag.getName().toString();
 
 				Node matchingParent = findMatchingParentOpenTag(tagName);
 
@@ -172,24 +220,19 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				}
 
 				if (matchingParent == null) {			// matching open tag not found, remove it
-
-					String positionString = StringPool.EMPTY;
-					if (domBuilder.isCalculatePosition()) {
-						positionString = tag.calculateTagPosition().toString();
-					}
-					error("Orphan closed tag ignored: </" + tagName + "> " + positionString);
+					error("Orphan closed tag ignored: </" + tagName + "> " + tag.getTagPosition());
 					break;
 				}
 
 				// try to close it implicitly
-				if (domBuilder.isImpliedEndTags()) {
+				if (domBuilder.config.isImpliedEndTags()) {
 					boolean fixed = false;
+
 					while (implRules.implicitlyCloseParentTagOnTagEnd(parentNode.getNodeName(), tagName)) {
 						parentNode = parentNode.getParentNode();
 
 						if (log.isDebugEnabled()) {
-							log.debug("Implicitly closed tag <" +
-									tagName + "> " + parentNode.getPositionString());
+							log.debug("Implicitly closed tag <" + tagName + ">");
 						}
 
 						if (parentNode == matchingParent) {
@@ -211,7 +254,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				break;
 
 			case SELF_CLOSING:
-				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
@@ -259,16 +302,15 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	protected Node findMatchingParentOpenTag(String tagName) {
 		Node parent = parentNode;
 		
-		if (rootNode.isLowercase()) {
+		if (!rootNode.config.isCaseSensitive()) {
 			tagName = tagName.toLowerCase();
 		}
 		
 		while (parent != null) {
-			
 			String parentNodeName = parent.getNodeName();
 
 			if (parentNodeName != null) {
-				if (rootNode.isLowercase()) {
+				if (!rootNode.config.isCaseSensitive()) {
 					parentNodeName = parentNodeName.toLowerCase();
 				}
 			}
@@ -294,20 +336,21 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * This is just a generic solutions, closest to the rules.
 	 */
 	protected void fixUnclosedTagsUpToMatchingParent(Tag tag, Node matchingParent) {
-		if (domBuilder.isUnclosedTagAsOrphanCheck()) {
+		if (domBuilder.config.isUnclosedTagAsOrphanCheck()) {
 			Node thisNode = parentNode;
 
-			if (!tag.getName().equals("table")) {
+			if (!TagUtil.equalsIgnoreCase(tag.getName(), "table")) {
 
 				// check if there is table or list between this node
 				// and matching parent
 				while (thisNode != matchingParent) {
 					String thisNodeName = thisNode.getNodeName().toLowerCase();
+
 					if (thisNodeName.equals("table") || thisNodeName.equals("ul") || thisNodeName.equals("ol")) {
 
-						String positionString = StringPool.EMPTY;
-						if (domBuilder.isCalculatePosition()) {
-							positionString = tag.calculateTagPosition().toString();
+						String positionString = tag.getPosition();
+						if (positionString == null) {
+							positionString = StringPool.EMPTY;
 						}
 
 						error("Orphan closed tag ignored: </" + tag.getName() + "> " + positionString);
@@ -326,7 +369,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 			Node parentParentNode = parentNode.getParentNode();
 
-			if (domBuilder.isImpliedEndTags()) {
+			if (domBuilder.config.isImpliedEndTags()) {
 				if (implRules.implicitlyCloseParentTagOnNewTag(
 						parentParentNode.getNodeName(), parentNode.getNodeName())) {
 					// break the tree: detach this node and append it after parent
@@ -339,7 +382,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 			// debug message
 
-			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + parentNode.getPositionString());
+			error("Unclosed tag closed: <" + parentNode.getNodeName() + ">");
 
 			// continue looping
 			parentNode = parentParentNode;
@@ -348,44 +391,17 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- tree
 
-	public void xmp(Tag tag, CharSequence body) {
-		if (!enabled) {
-			return;
-		}
-
-		Node node = createElementNode(tag);
-		parentNode.addChild(node);
-
-		if (body.length() != 0) {
-			Node text = createText(body.toString());
-			node.addChild(text);
-		}
-	}
-
-	public void style(Tag tag, CharSequence body) {
-		if (!enabled) {
-			return;
-		}
-
-		Element node = createElementNode(tag);
-		parentNode.addChild(node);
-
-		if (body.length() != 0) {
-			Node text = createText(body.toString());
-			node.addChild(text);
-		}
-	}
-
 	public void script(Tag tag, CharSequence body) {
 		if (!enabled) {
 			return;
 		}
 
 		Element node = createElementNode(tag);
+
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = createText(body.toString());
+			Node text = new Text(rootNode, body.toString());
 			node.addChild(text);
 		}
 	}
@@ -395,13 +411,16 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+		if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, false);
 		}
-		if (domBuilder.isIgnoreComments()) {
+
+		if (domBuilder.config.isIgnoreComments()) {
 			return;
 		}
-		Node node = createComment(comment.toString());
+
+		Node node = new Comment(rootNode, comment.toString());
+
 		parentNode.addChild(node);
 	}
 
@@ -411,7 +430,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		String textValue = text.toString();
-		Node node = createText(textValue);
+
+		Node node = new Text(rootNode, textValue);
+
 		parentNode.addChild(node);
 	}
 
@@ -420,134 +441,65 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		CData cdataNode = createCData(cdata.toString());
+		CData cdataNode = new CData(rootNode, cdata.toString());
+
 		parentNode.addChild(cdataNode);
 	}
 
-	public void xml(Tag tag) {
+	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 		if (!enabled) {
 			return;
 		}
 
-		XmlDeclaration xmlDeclaration = createXmlDeclaration(tag);
+		XmlDeclaration xmlDeclaration = new XmlDeclaration(rootNode, version, encoding, standalone);
+
 		parentNode.addChild(xmlDeclaration);
 	}
 
-	public void doctype(String name, String publicId, String baseUri) {
+	public void doctype(Doctype doctype) {
 		if (!enabled) {
 			return;
 		}
 
-		DocumentType documentType = createDocumentType(name, publicId, baseUri);
+		DocumentType documentType = new DocumentType(rootNode,
+				Util.toString(doctype.getName()),
+				Util.toString(doctype.getPublicIdentifier()),
+				Util.toString(doctype.getSystemIdentifier())
+		);
+
 		parentNode.addChild(documentType);
 	}
 
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
-		String defaultExpression = domBuilder.getConditionalCommentExpression();
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+		String expressionString = expression.toString().trim();
 
-		if (defaultExpression != null) {
-			String expressionString = expression.toString().trim();
-
-			if (expressionString.equals(defaultExpression) == false) {
-				enabled = expressionString.equals("endif");
-			}
-		} else {
-			if (!enabled) {
-				return;
-			}
-
-			String additionalComment = comment != null ? comment.toString() : null;
-			Node commentNode = createConditionalComment(expression.toString(), isStartingTag, isHidden, additionalComment);
-
-			parentNode.addChild(commentNode);
+		if (expressionString.equals("endif")) {
+			enabled = true;
+			return;
 		}
+
+		if (expressionString.equals("if !IE")) {
+			enabled = false;
+			return;
+		}
+
+		float ieVersion = domBuilder.config.getCondCommentIEVersion();
+
+		if (htmlCCommentExpressionMatcher == null) {
+			htmlCCommentExpressionMatcher = new HtmlCCommentExpressionMatcher();
+		}
+
+		enabled = htmlCCommentExpressionMatcher.match(ieVersion, expressionString);
 	}
+
+	protected HtmlCCommentExpressionMatcher htmlCCommentExpressionMatcher;
+
 
 	// ---------------------------------------------------------------- error
 
 	public void error(String message) {
 		rootNode.addError(message);
-		log.log(domBuilder.getParsingErrorLogLevel(), message);
-	}
-
-	// ---------------------------------------------------------------- factory
-
-	/**
-	 * Creates root {@link Document} node.
-	 */
-	protected Document createDocument() {
-		return new Document(
-				!domBuilder.isCaseSensitive(),
-				domBuilder.isCollectErrors(),
-				domBuilder.getRenderer(),
-				parserContext
-				);
-	}
-
-	/**
-	 * Creates {@link CData tag}.
-	 */
-	protected CData createCData(String cdata) {
-		return new CData(rootNode, cdata);
-	}
-
-	/**
-	 * Creates {@link Comment}.
-	 * @see Comment#Comment(Document, String)
-	 */
-	protected Comment createComment(String comment) {
-		return new Comment(rootNode, comment);
-	}
-
-	/**
-	 * Creates conditional {@link Comment}.
-	 * @see Comment#Comment(Document, String, boolean, boolean, String)
-	 */
-	protected Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
-		return new Comment(rootNode, comment, isStartingTag, conditionalDownlevelHidden, additionalComment);
-	}
-
-
-	/**
-	 * Creates {@link Element} node from a {@link Tag}.
-	 */
-	protected Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
-		Element element = new Element(rootNode, tag, voidElement, selfClosed);
-
-		if (domBuilder.isCalculatePosition()) {
-			element.position = tag.calculateTagPosition();
-		}
-
-		return element;
-	}
-
-	/**
-	 * Creates empty tag.
-	 */
-	protected Element createElement(String name) {
-		return new Element(rootNode, name, false, false);
-	}
-
-	/**
-	 * Creates empty {@link Element} node.
-	 */
-	protected Element createElement(String tagName, boolean voidElement, boolean selfClosed) {
-		return new Element(rootNode, tagName, voidElement, selfClosed);
-	}
-
-	/**
-	 * Creates {@link Text} node.
-	 */
-	protected Text createText(String text) {
-		return new Text(rootNode, text);
-	}
-
-	protected DocumentType createDocumentType(String value, String publicId, String baseUri) {
-		return new DocumentType(rootNode, value, publicId, baseUri);
-	}
-
-	protected XmlDeclaration createXmlDeclaration(Tag tag) {
-		return new XmlDeclaration(rootNode, tag);
+		log.log(domBuilder.config.getParsingErrorLogLevel(), message);
 	}
 
 }

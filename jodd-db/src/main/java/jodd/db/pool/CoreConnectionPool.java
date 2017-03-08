@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.pool;
 
@@ -170,7 +193,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * {@inheritDoc}
 	 */
 	public synchronized void init() {
-		log.info("core connection pool initialization");
+		if (log.isInfoEnabled()) {
+			log.info("Core connection pool initialization");
+		}
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException cnfex) {
@@ -179,14 +204,14 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		if (minConnections > maxConnections) {
 			minConnections = maxConnections;
 		}
-		availableConnections = new ArrayList<ConnectionData>(maxConnections);
-		busyConnections = new ArrayList<ConnectionData>(maxConnections);
+		availableConnections = new ArrayList<>(maxConnections);
+		busyConnections = new ArrayList<>(maxConnections);
 		for (int i = 0; i < minConnections; i++) {
 			try {
 				Connection conn = DriverManager.getConnection(url, user, password); 
 				availableConnections.add(new ConnectionData(conn));
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to get database connection.", sex);
+				throw new DbSqlException("No database connection", sex);
 			}
 		}
 	}
@@ -198,9 +223,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 */
 	public synchronized Connection getConnection() {
 		if (availableConnections == null) {
-			throw new DbSqlException("Connection pool is not initialized.");
+			throw new DbSqlException("Connection pool is not initialized");
 		}
-		if (availableConnections.isEmpty() == false) {
+		if (!availableConnections.isEmpty()) {
 			int lastIndex = availableConnections.size() - 1;
 			ConnectionData existingConnection = availableConnections.get(lastIndex);
 			availableConnections.remove(lastIndex);
@@ -210,26 +235,32 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			// conn because maxConnection limit was reached.
 			long now = System.currentTimeMillis();
 			boolean isValid = isConnectionValid(existingConnection, now);
-			if (isValid == false) {
-				log.debug("pooled connection is not valid, resetting");
+			if (!isValid) {
+				if (log.isDebugEnabled()) {
+					log.debug("Pooled connection not valid, resetting");
+				}
 
 				notifyAll();				 // freed up a spot for anybody waiting
 				return getConnection();
 			} else {
-				log.debug("returning valid pooled connection");
+				if (log.isDebugEnabled()) {
+					log.debug("Returning valid pooled connection");
+				}
 
 				busyConnections.add(existingConnection);
 				existingConnection.lastUsed = now;
 				return existingConnection.connection;
 			}
 		}
-		log.debug("no more available connections");
+		if (log.isDebugEnabled()) {
+			log.debug("No more available connections");
+		}
 
 		// no available connections
 		if (((availableConnections.size() + busyConnections.size()) < maxConnections) && !connectionPending) {
 			makeBackgroundConnection();
 		} else if (!waitIfBusy) {
-			throw new DbSqlException("Connection limit of " + maxConnections + " connections reached.");
+			throw new DbSqlException("Connection limit reached: " + maxConnections);
 		}
 		// wait for either a new conn to be established (if you called makeBackgroundConnection) or for
 		// an existing conn to be freed up.
@@ -248,7 +279,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * although not technically closed.
 	 */
 	private boolean isConnectionValid(ConnectionData connectionData, long now) {
-		if (validateConnection == false) {
+		if (!validateConnection) {
 			return true;
 		}
 		
@@ -328,11 +359,13 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * regarding when the connections are closed.
 	 */
 	public synchronized void close() {
-		log.info("core connection pool shutdown");
+		if (log.isInfoEnabled()) {
+			log.info("Core connection pool shutdown");
+		}
 		closeConnections(availableConnections);
-		availableConnections = new ArrayList<ConnectionData>(maxConnections);
+		availableConnections = new ArrayList<>(maxConnections);
 		closeConnections(busyConnections);
-		busyConnections = new ArrayList<ConnectionData>(maxConnections);
+		busyConnections = new ArrayList<>(maxConnections);
 	}
 
 	private void closeConnections(ArrayList<ConnectionData> connections) {

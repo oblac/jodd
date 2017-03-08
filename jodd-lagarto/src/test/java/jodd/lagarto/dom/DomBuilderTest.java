@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
@@ -24,7 +47,6 @@ public class DomBuilderTest {
 		assertEquals("html", html.getNodeName());
 		assertEquals(1, html.getChildNodesCount());
 		assertEquals(0, html.getAttributesCount());
-		assertEquals(0, html.getOffset());
 
 		Element body = (Element) html.getFirstChild();
 		assertEquals(Node.NodeType.ELEMENT, body.getNodeType());
@@ -33,7 +55,6 @@ public class DomBuilderTest {
 		assertEquals(1, body.getChildNodesCount());
 		assertNull(body.getAttribute("id"));
 		assertEquals(0, body.getAttributesCount());
-		assertEquals(6, body.getOffset());
 
 		Element p = (Element) body.getChild(0);
 		assertNotNull(p);
@@ -41,7 +62,6 @@ public class DomBuilderTest {
 		assertEquals(3, p.getChildNodesCount());
 		assertEquals("w173", p.getAttribute("id"));
 		assertEquals(1, p.getAttributesCount());
-		assertEquals(12, p.getOffset());
 
 		Attribute attr = p.getAttribute(0);
 		assertEquals("id", attr.getName());
@@ -51,16 +71,13 @@ public class DomBuilderTest {
 		Text t = (Text) p.getChild(0);
 		assertEquals(Node.NodeType.TEXT, t.getNodeType());
 		assertEquals("Hello", t.getNodeValue());
-		assertEquals(25, t.getOffset());
 
 		Element br = (Element) p.getChild(1);
 		assertEquals(0, br.getChildNodesCount());
 		assertEquals(0, br.getAttributesCount());
-		assertEquals(30, br.getOffset());
 
 		t = (Text) p.getChild(2);
 		assertEquals("Jodd", t.getNodeValue());
-		assertEquals(34, t.getOffset());
 
 		String generated = root.getHtml();
 
@@ -68,33 +85,6 @@ public class DomBuilderTest {
 
 		assertTrue(root.check());
 	}
-
-	@Test
-	public void testAllTypesOffset() {
-		String page = "<!DOCTYPE html><html>text<!--comment--><xmp></xmp><style type>xx</style>";
-
-		Document root = new LagartoDOMBuilder().parse(page);
-		assertEquals(-1, root.getOffset());
-
-		DocumentType documentType = (DocumentType) root.getChild(0);
-		assertEquals(0, documentType.getOffset());
-
-		Element html = (Element) root.getChild(1);
-		assertEquals(15, html.getOffset());
-
-		Text text = (Text) html.getChild(0);
-		assertEquals(21, text.getOffset());
-
-		Comment comment = (Comment) html.getChild(1);
-		assertEquals(25, comment.getOffset());
-
-		Element xmp = (Element) html.getChild(2);
-		assertEquals(39, xmp.getOffset());
-
-		Element style = (Element) html.getChild(3);
-		assertEquals(50, style.getOffset());
-	}
-
 
 	@Test
 	public void testClone() {
@@ -250,7 +240,8 @@ public class DomBuilderTest {
 
 		document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe' AT='zxc'></body></html>");
 		innerHtml = document.getHtml();
-		assertEquals("<html><body at=\"zxc\"></body></html>", innerHtml);
+		// only the first attribute is used
+		assertEquals("<html><body at=\"qWe\"></body></html>", innerHtml);
 		assertTrue(document.check());
 	}
 
@@ -263,27 +254,29 @@ public class DomBuilderTest {
 		assertEquals("q\u00A0w", foo);
 
 		div.setAttribute("foo", "q\u00A0w\u00A0e");
-		assertEquals("<div foo=\"q\u00A0w\u00A0e\">a&lt;b</div>", document.getHtml());
+		assertEquals("<div foo=\"q&nbsp;w&nbsp;e\">a&lt;b</div>", document.getHtml());
 
 		Text text = (Text) document.getFirstChild().getFirstChild();
 
-		assertEquals("a&lt;b", text.getNodeValue());
+		assertEquals("a<b", text.getNodeValue());
 		assertEquals("a<b", text.getTextContent());
+		assertEquals("a&lt;b", text.getTextValue());
 		assertTrue(document.check());
 	}
 
 	@Test
 	public void testXmlDec() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		Document document = lagartoDOMBuilder.parse("<?html?><div?></div>");
+		lagartoDOMBuilder.enableXmlMode();
+		Document document = lagartoDOMBuilder.parse("<?xml version=\"1.0\"?><div?></div>");
 
 		XmlDeclaration xml = (XmlDeclaration) document.getFirstChild();
 		assertEquals(0, xml.getAttributesCount());
-		assertEquals("html", xml.getNodeName());
+		assertEquals("xml", xml.getNodeName());
 
 		Element div = (Element) xml.getNextSibling();
 		assertEquals(0, div.getAttributesCount());
-		assertEquals("div", div.getNodeName());
+		assertEquals("div?", div.getNodeName());
 
 		assertTrue(document.check());
 	}
@@ -295,11 +288,11 @@ public class DomBuilderTest {
 
 		Element div = (Element) document.getFirstChild();
 		assertEquals("div", div.getNodeName());
-		assertEquals(3, div.getAttributesCount());
+		assertEquals(4, div.getAttributesCount());
 		assertTrue(div.hasAttribute("qwe"));
 		assertTrue(div.hasAttribute("foo"));
 		assertTrue(div.hasAttribute("zoo"));
-		assertFalse(div.hasAttribute("'8989'"));
+		assertTrue(div.hasAttribute("'8989'"));
 
 		assertTrue(document.check());
 	}
@@ -320,9 +313,14 @@ public class DomBuilderTest {
 		FastCharArrayWriter charBuffer = new FastCharArrayWriter();
 		div.appendTextContent(charBuffer);
 
-		System.out.println(charBuffer.toString());
-
 		assertEquals(textContent, charBuffer.toString());
 	}
 
+    @Test
+    public void testDoubleDecode() {
+        LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+        Document document = lagartoDOMBuilder.parse("<div title=\"&amp;lt;root /&amp;gt;\">");
+        Element div = (Element) document.getFirstChild();
+        assertEquals("&lt;root /&gt;", div.getAttribute("title"));
+    }
 }

@@ -1,10 +1,32 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta.asm;
 
-import jodd.asm4.signature.SignatureVisitor;
-import jodd.asm4.Opcodes;
-import jodd.util.collection.CharArrayList;
+import jodd.asm5.signature.SignatureVisitor;
+import jodd.asm5.Opcodes;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
@@ -38,14 +60,14 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected AnnotationInfo[] annotations;
 
 	protected boolean visitingArgument;
-	protected CharArrayList argumentsOpcodeType;
+	protected StringBuilder argumentsOpcodeType;
 	protected IntArrayList argumentsOffset;
 	protected List<String> argumentsTypeNames;
+	protected AnnotationInfo[][] argumentsAnnotation;
 
 	protected String declaredClassName;
 
 	protected ClassInfo targetClassInfo;
-	protected int hierarchyLevel;
 	protected boolean isStatic;
 
 	// ---------------------------------------------------------------- ctors
@@ -68,14 +90,14 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	private MethodSignatureVisitor() {
-        super(new StringBuffer());
+        super(new StringBuilder());
     }
 
-	private MethodSignatureVisitor(final StringBuffer declaration) {
+	private MethodSignatureVisitor(final StringBuilder declaration) {
         super(declaration);
     }
 
-	private MethodSignatureVisitor(final StringBuffer buf, MutableInteger returnOpcodeType, StringBuilder returnTypeName) {
+	private MethodSignatureVisitor(final StringBuilder buf, MutableInteger returnOpcodeType, StringBuilder returnTypeName) {
 		this(buf);
 		this.returnOpcodeType = returnOpcodeType;
 		this.returnTypeName = returnTypeName;
@@ -88,11 +110,11 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		super.visitParameterType();
 		visitingArgument = true;
 		if (argumentsOpcodeType == null) {
-			argumentsOpcodeType = new CharArrayList();
+			argumentsOpcodeType = new StringBuilder();
 			argumentsOffset = new IntArrayList();
-			argumentsTypeNames = new ArrayList<String>();
+			argumentsTypeNames = new ArrayList<>();
 
-			argumentsOpcodeType.add('L');
+			argumentsOpcodeType.append('L');
 			argumentsOffset.add(0);
 			argumentsTypeNames.add(null);
 		}
@@ -192,18 +214,22 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 * @param index 1-base index
 	 */
 	public char getArgumentOpcodeType(int index) {
-		return argumentsOpcodeType.get(index);
+		return argumentsOpcodeType.charAt(index);
 	}
 
-	protected String getArgumentTypeName(int i) {
+	public String getArgumentTypeName(int i) {
 		return argumentsTypeNames.get(i);
 	}
 
-	protected int getArgumentOffset(int i) {
-		return argumentsOffset.get(i);
+	public int getArgumentOffset(int index) {
+		return argumentsOffset.get(index);
 	}
 
-	protected int getAllArgumentsSize() {
+	public AnnotationInfo[] getArgumentAnnotations(int index) {
+		return argumentsAnnotation[index];
+	}
+
+	public int getAllArgumentsSize() {
 		return argumentsWords;
 	}
 
@@ -250,11 +276,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return targetClassInfo;
 	}
 
-	public int getHierarchyLevel() {
-		return hierarchyLevel;
-	}
-
-
 	// ---------------------------------------------------------------- utilities
 
 	/**
@@ -282,16 +303,16 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 * saves return type. When saving arguments data, stores also current argument offset.
 	 */
 	private void maybeUseType(char type, String typeName) {
-		if (visitingArgument == true) {
-			if (isArray() == true) {
+		if (visitingArgument) {
+			if (isArray()) {
 				type = '[';
 				typeName = getArrayDepthString() + typeName;
 			}
 			if (type == 'V') {
-				throw new ProxettaException("Method argument can't be void.");
+				throw new ProxettaException("Method argument can't be void");
 			}
 			argumentsCount++;
-			argumentsOpcodeType.add(type);
+			argumentsOpcodeType.append(type);
 			argumentsOffset.add(argumentsWords + 1);
 			argumentsTypeNames.add(typeName);
 			if ((type == 'D') || (type == 'J')) {
@@ -301,16 +322,22 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			}
 			visitingArgument = false;
 		} else if (returnOpcodeType != null) {
-			if (isArray() == true) {
+			if (isArray()) {
 				type = '[';
 				typeName = getArrayDepthString() + typeName;
 			}
 			returnOpcodeType.value = type;
 
-			returnTypeName.setLength(0);
+			if (returnTypeName.length() == 0) {
+				// only set return type once, first time.
+				// otherwise, if method signature has generic information, the returnTypeName
+				// will be equals to last defined type in the signature, i.e. from the generics.
 
-			if (typeName != null) {
-				returnTypeName.append(typeName);
+				//returnTypeName.setLength(0);
+
+				if (typeName != null) {
+					returnTypeName.append(typeName);
+				}
 			}
 		}
 	}

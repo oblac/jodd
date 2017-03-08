@@ -1,18 +1,44 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.component;
 
 import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.BaseActionWrapperStack;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.injector.Target;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ReflectUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base wrapper manager implements common logic of a wrapper.
@@ -20,19 +46,13 @@ import java.util.Map;
 public abstract class WrapperManager<T extends ActionWrapper> {
 
 	@PetiteInject
-	protected MadvocController madvocController;
+	protected ContextInjectorComponent contextInjectorComponent;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	@PetiteInject
-	protected ServletContextInjector servletContextInjector;
-
-	@PetiteInject
- 	protected MadvocContextInjector madvocContextInjector;
-
 	protected WrapperManager() {
-		wrappers = new HashMap<String, T>();
+		wrappers = new HashMap<>();
 	}
 
 	// ---------------------------------------------------------------- container
@@ -40,22 +60,14 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	protected Map<String, T> wrappers;
 
 	/**
-	 * Returns all action wrappers. Should be used with care.
+	 * Returns all action wrappers.
 	 */
-	public Map<String, ? extends T> getAll() {
-		return wrappers;
+	protected Set<T> getAll() {
+		Set<T> set = new HashSet<>(wrappers.size());
+		set.addAll(wrappers.values());
+		return set;
 	}
 
-	/**
-	 * Registers wrapper instance for given name. Wrapper
-	 * instance gets injected with {@link MadvocContextInjector}.
-	 */
-	public <R extends T> void register(String name, R actionWrapper) {
-		madvocContextInjector.injectMadvocContext(actionWrapper);
-		madvocContextInjector.injectMadvocParams(actionWrapper);
-
-		wrappers.put(name, actionWrapper);
-	}
 
 	/**
 	 * Looks up for existing wrapper. Returns <code>null</code> if wrapper is not already registered.
@@ -76,8 +88,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		if (wrapper == null) {
 			wrapper = createWrapper(wrapperClass);
 
-			madvocContextInjector.injectMadvocContext(wrapper);
-			madvocContextInjector.injectMadvocParams(wrapper);
+			initializeWrapper(wrapper);
 
 			wrappers.put(wrapperClassName, wrapper);
 		}
@@ -112,11 +123,10 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Initializes action wrapper.
 	 */
 	protected void initializeWrapper(T wrapper) {
-		servletContextInjector.injectContext(wrapper, madvocController.getApplicationContext());
+		contextInjectorComponent.injectContext(new Target(wrapper));
 
 		wrapper.init();
 	}
-
 
 	// ---------------------------------------------------------------- expander
 
@@ -138,7 +148,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		if (actionWrappers == null) {
 			return null;
 		}
-		List<Class<? extends T>> list = new ArrayList<Class<? extends T>>(actionWrappers.length);
+		List<Class<? extends T>> list = new ArrayList<>(actionWrappers.length);
 		list.addAll(Arrays.asList(actionWrappers));
 
 		int i = 0;
@@ -164,7 +174,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 				}
 				continue;
 			}
-			if (ReflectUtil.isSubclass(wrapperClass, BaseActionWrapperStack.class)) {
+			if (ReflectUtil.isTypeOf(wrapperClass, BaseActionWrapperStack.class)) {
 				BaseActionWrapperStack stack = (BaseActionWrapperStack) resolve(wrapperClass);
 				list.remove(i);
 				Class<? extends T>[] stackWrappers = stack.getWrappers();
@@ -188,7 +198,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		try {
 		    return wrapperClass.newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to create Madvoc wrapper: " + wrapperClass, ex);
+			throw new MadvocException("Invalid Madvoc wrapper: " + wrapperClass, ex);
 		}
 	}
 

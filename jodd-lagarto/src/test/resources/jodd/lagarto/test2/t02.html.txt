@@ -1,0 +1,3 @@
+txt:[text]
+wrn:[Parse error: EOF [1:6 @5]
+txt:[<]

@@ -1,10 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.datetime;
 
-import jodd.typeconverter.Convert;
-import jodd.typeconverter.impl.SqlDateConverter;
-import jodd.typeconverter.impl.SqlTimestampConverter;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -53,19 +73,17 @@ public class TimeZoneTest {
 		assertEquals(gc.getTimeInMillis(), jdt2.getTimeInMillis());
 		assertEquals(jdt1.getTimeInMillis(), jdt2.getTimeInMillis());
 
-		java.util.Date date = Convert.toDate(jdt1);
+		java.util.Date date = jdt1.convertToDate();
 		assertEquals(date.getTime(), jdt1.getTimeInMillis());
 
-		GregorianCalendar cal = (GregorianCalendar) Convert.toCalendar(jdt1);
+		GregorianCalendar cal = (GregorianCalendar) jdt1.convertToCalendar();
 		assertEquals(cal.getTimeInMillis(), jdt1.getTimeInMillis());
 		assertEquals(cal.getTimeZone(), jdt1.getTimeZone());
 
-		SqlDateConverter sqlDateConverter = new SqlDateConverter();
-		java.sql.Date sqlDate = sqlDateConverter.convert(jdt1);
+		java.sql.Date sqlDate = jdt1.convertToSqlDate();
 		assertEquals(sqlDate.getTime(), jdt1.getTimeInMillis());
 
-		SqlTimestampConverter sqlTimestampConverter = new SqlTimestampConverter();
-		Timestamp sqlTimestamp = sqlTimestampConverter.convert(jdt1);
+		Timestamp sqlTimestamp = jdt1.convertToSqlTimestamp();
 		assertEquals(sqlTimestamp.getTime(), jdt1.getTimeInMillis());
 	}
 

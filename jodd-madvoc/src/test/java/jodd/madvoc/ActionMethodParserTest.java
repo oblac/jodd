@@ -1,9 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ActionPathMapper;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.macro.RegExpPathMacros;
@@ -97,14 +119,11 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 		cfg = parse(actionMethodParser, "tst.BooAction#foo4");
 		assertEquals("/xxx", cfg.actionPath);
-		assertEquals("html", cfg.actionPathExtension);
 		assertNull(cfg.actionMethod);
-		assertNull(cfg.resultType);
 
 		cfg = parse(actionMethodParser, "tst.BooAction#foo41");
 		assertEquals("/xxx", cfg.actionPath);
 		assertEquals("DELETE", cfg.actionMethod);
-		assertEquals("rt", cfg.resultType);
 
 		cfg = parse(actionMethodParser, "tst.BooAction#foo5");
 		assertEquals("/xxx.html", cfg.actionPath);
@@ -270,12 +289,11 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		actionsManager.register(ReAction.class, "macro");
-		ActionConfig cfg = actionPathMapper.resolveActionConfig("/re/user/173/macro.html", "GET");
+		ActionConfig cfg = actionsManager.lookup("/re/user/173/macro.html", "GET");
 
 		assertNotNull(cfg);
 		ActionConfigSet set = cfg.getActionConfigSet();
@@ -288,7 +306,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 
 		actionsManager.register(ReAction.class, "macro2");
-		cfg = actionPathMapper.resolveActionConfig("/re/user/image/173/png/macro2.html", "GET");
+		cfg = actionsManager.lookup("/re/user/image/173/png/macro2.html", "GET");
 
 		assertNotNull(cfg);
 		set = cfg.getActionConfigSet();
@@ -300,7 +318,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals("fmt", set.actionPathMacros.getNames()[1]);
 
 		actionsManager.register(ReAction.class, "macro3");
-		cfg = actionPathMapper.resolveActionConfig("/re/users/173/macro3", "POST");
+		cfg = actionsManager.lookup("/re/users/173/macro3", "POST");
 
 		assertNotNull(cfg);
 		set = cfg.getActionConfigSet();
@@ -311,13 +329,13 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(1, set.actionPathMacros.getMacrosCount());
 		assertEquals("id", set.actionPathMacros.getNames()[0]);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/user/index.html", "GET");
+		cfg = actionsManager.lookup("/re/user/index.html", "GET");
 		assertNull(cfg);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/user/index/reindex/macro.html", "GET");
+		cfg = actionsManager.lookup("/re/user/index/reindex/macro.html", "GET");
 		assertNull(cfg);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/users/173/macro3", "GET");
+		cfg = actionsManager.lookup("/re/users/173/macro3", "GET");
 		assertNull(cfg);
 
 		assertEquals(3, actionsManager.getActionsCount());
@@ -328,20 +346,19 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		actionsManager.register(ReAction.class, "wild1");
 		actionsManager.register(ReAction.class, "wild2");
 
-		ActionConfig cfg = actionPathMapper.resolveActionConfig("/re/ild123cat", "GET");
+		ActionConfig cfg = actionsManager.lookup("/re/ild123cat", "GET");
 		assertNull(cfg);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/wild123cat", "GET");
+		cfg = actionsManager.lookup("/re/wild123cat", "GET");
 		assertNull(cfg);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/wild123cat.html", "GET");
+		cfg = actionsManager.lookup("/re/wild123cat.html", "GET");
 		assertNotNull(cfg);
 		ActionConfigSet set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
@@ -350,10 +367,10 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(1, set.actionPathMacros.getMacrosCount());
 		assertEquals("id", set.actionPathMacros.getNames()[0]);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/wild123dog.html", "GET");
+		cfg = actionsManager.lookup("/re/wild123dog.html", "GET");
 		assertNull(cfg);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/wild123dog.html", "POST");
+		cfg = actionsManager.lookup("/re/wild123dog.html", "POST");
 		assertNotNull(cfg);
 		set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
@@ -371,7 +388,6 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
@@ -380,7 +396,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		actionsManager.register(ReAction.class, "duplo1");
 		actionsManager.register(ReAction.class, "duplo2");
 
-		ActionConfig cfg = actionPathMapper.resolveActionConfig("/re/duplo/123", "GET");
+		ActionConfig cfg = actionsManager.lookup("/re/duplo/123", "GET");
 		assertNotNull(cfg);
 		ActionConfigSet set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
@@ -389,7 +405,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(1, set.actionPathMacros.getMacrosCount());
 		assertEquals("id", set.actionPathMacros.getNames()[0]);
 
-		cfg = actionPathMapper.resolveActionConfig("/re/duplo/aaa", "GET");
+		cfg = actionsManager.lookup("/re/duplo/aaa", "GET");
 		assertNotNull(cfg);
 		set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
@@ -436,14 +452,13 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		actionsManager.register(ReAction.class, "zqq1");
 		actionsManager.register(ReAction.class, "zqq2");
 
-		ActionConfig cfg = actionPathMapper.resolveActionConfig("/config/dba.delete_multi", "GET");
+		ActionConfig cfg = actionsManager.lookup("/config/dba.delete_multi", "GET");
 		assertNotNull(cfg);
 
 		assertEquals("/${entityName}/dba.delete_multi", cfg.getActionPath());

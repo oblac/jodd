@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
@@ -39,7 +62,7 @@ public class DomXmlTest {
 		assertEquals(2, doc.getChildNodesCount());    // not 3!
 
 		XmlDeclaration xml = (XmlDeclaration) doc.getFirstChild();
-		assertEquals(3, xml.getAttributesCount());
+		assertEquals(0, xml.getAttributesCount());
 
 		Element peopleList = (Element) doc.getChild(1);
 		assertEquals(1, peopleList.getChildNodesCount());
@@ -78,7 +101,7 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setSelfCloseVoidTags(true);
+		lagartoDOMBuilder.getConfig().setSelfCloseVoidTags(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -104,7 +127,7 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setIgnoreComments(true);
+		lagartoDOMBuilder.getConfig().setIgnoreComments(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -119,7 +142,7 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setIgnoreComments(true);
+		lagartoDOMBuilder.getConfig().setIgnoreComments(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -134,15 +157,14 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setIgnoreComments(true);
-		lagartoDOMBuilder.setCollectErrors(true);
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setIgnoreComments(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 		List<String> errors = doc.getErrors();
 
 		assertEquals(1, errors.size());
-		assertTrue(errors.get(0).contains("[1:5 @5]"));
 		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
 
 		assertTrue(doc.check());
@@ -169,8 +191,8 @@ public class DomXmlTest {
 		man.getChild(0).getChild(0).setNodeValue("Just Joe");
 
 		// append
-		Element newPerson = new Element(xml, "person", false, false);
-		newPerson.addChild(new Element(xml, "name", false, false));
+		Element newPerson = new Element(xml, "person", false, false, false);
+		newPerson.addChild(new Element(xml, "name", false, false, false));
 		newPerson.getChild(0).addChild(new Text(xml, "Just Maria"));
 
 		man.getParentNode().addChild(newPerson);
@@ -189,5 +211,21 @@ public class DomXmlTest {
 						"<name>Just Maria</name>" +
 					"</person>" +
 				"</people_list>", xmlContent);
+	}
+
+	@Test
+	public void testXmlAndSingleQuotes() throws IOException {
+		File file = new File(testDataRoot, "people2.xml");
+		String xmlContent = FileUtil.readString(file);
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+
+		Document xml = lagartoDOMBuilder.parse(xmlContent);
+
+		XmlDeclaration xmlDeclaration = (XmlDeclaration) xml.getChild(0);
+
+		assertEquals("1.0", xmlDeclaration.getVersion());
+		assertEquals("UTF-8", xmlDeclaration.getEncoding());
 	}
 }

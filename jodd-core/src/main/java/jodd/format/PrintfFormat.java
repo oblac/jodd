@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.format;
 
@@ -7,21 +30,21 @@ import jodd.util.StringPool;
 import java.math.BigInteger;
 
 /**
- * Fast simple and yet useful formattings.
+ * Fast simple and yet useful formatting.
  */
 public class PrintfFormat {
-	
+
 	protected int width;
 	protected int precision;
-	protected StringBuffer pre;
-	protected StringBuffer post;
+	protected StringBuilder pre;
+	protected StringBuilder post;
 	protected boolean leadingZeroes;
 	protected boolean showPlus;
 	protected boolean alternate;
 	protected boolean showSpace;
 	protected boolean leftAlign;
 	protected boolean groupDigits;
-	protected char fmt;	                // one of cdeEfgGiosxXos
+	protected char fmt;	                // one of cdeEfgGiosxXos...
 	protected boolean countSignInLen;
 	private static final BigInteger bgInt = new BigInteger("9223372036854775808");  // 2^63
 
@@ -43,8 +66,9 @@ public class PrintfFormat {
 	 *               <dt> 0 <dd> show leading zeroes
 	 *               <dt> - <dd> align left in the field
 	 *               <dt> space <dd> prepend a space in front of positive numbers
-	 *               <dt> # <dd> use "alternate" format. Add 0 or 0x for octal or hexadecimal numbers.
-	 *               Don't suppress trailing zeroes in general floating point format.
+	 *               <dt> # <dd> use "alternate" format. Add 0 or 0x for octal or hexadecimal numbers;
+	 *               add 0b for binary numbers.  Don't suppress trailing zeroes in general floating 
+	 *               point format.
 	 *               <dt> , <dd> groups decimal values by thousands (for 'diuxXb' formats)
 	 *               </dl>
 	 *
@@ -67,9 +91,10 @@ public class PrintfFormat {
 	 *               <dt>x <dd> unsigned long or integer in hexadecimal,
 	 *               <dt>o <dd> unsigned long or integer in octal,
 	 *               <dt>b <dd> unsigned long or integer in binary,
-	 *               <dt>s <dd> string,
+	 *               <dt>s <dd> string (actually, <code>toString()</code> value of an object),
 	 *               <dt>c <dd> character,
-	 *               <dt>l, L <dd> boolean in lower or upper case (for booleans and int/longs).
+	 *               <dt>l, L <dd> boolean in lower or upper case (for booleans and int/longs),
+	 *               <dt>p <dd> identity hash code of an object (pointer :).
 	 *               </dl>
 	 *               </ul>
 	 */
@@ -95,8 +120,8 @@ public class PrintfFormat {
 	protected void init(String s, int i) {
 		width = 0;
 		precision = -1;
-		pre = (i == 0 ? new StringBuffer() : new StringBuffer(s.substring(0, i)));
-		post = new StringBuffer();
+		pre = (i == 0 ? new StringBuilder() : new StringBuilder(s.substring(0, i)));
+		post = new StringBuilder();
 		leadingZeroes = false;
 		showPlus = false;
 		alternate = false;
@@ -127,14 +152,15 @@ public class PrintfFormat {
 				i += 2;
 				continue;
 			}
-			parseState = 1;                 // single $ founded
+			//parseState = 1;                 // single $ founded
 			i++;
 			break;
 		}
 
 		// 1: parse flags
 		flagsloop:
-		while (parseState == 1) {
+		//while (parseState == 1) {
+		while (true) {
 			if (i >= length) {
 				parseState = 5;
 				break;
@@ -268,7 +294,7 @@ public class PrintfFormat {
 			return expFormat(d);
 		}
 		if (precision == 0) {
-			return (long) (d /*+ 0.5*/) + (removeTrailing ? "" : StringPool.DOT);	// no rounding
+			return Long.toString(Math.round(d));
 		}
 
 		long whole = (long) d;
@@ -286,7 +312,7 @@ public class PrintfFormat {
 			leadingZeroesStr.append('0');
 		}
 
-		long l = (long) (factor * fr /*+ 0.5*/);		// no rounding
+		long l = Math.round(factor * fr);
 		if (l >= factor) {
 			l = 0;
 			whole++;
@@ -333,6 +359,21 @@ public class PrintfFormat {
 		}
 		return new String(buffer);
 	}
+	
+	private String getAltPrefixFor(char fmt, String currentPrefix) {
+		switch(fmt) {
+			case 'x':
+				return "0x";
+			case 'X':
+				return "0X";
+			case 'b':
+				return "0b";
+			case 'B':
+				return "0B";
+			default:
+				return currentPrefix;
+		}
+	}
 
 	protected String sign(int s, String r) {
 		String p = StringPool.EMPTY;
@@ -346,12 +387,12 @@ public class PrintfFormat {
 				p = StringPool.SPACE;
 			}
 		} else {
-			if (fmt == 'o' && alternate && r.length() > 0 && r.charAt(0) != '0') {
-				p = "0";
-			} else if (fmt == 'x' && alternate) {
-				p = "0x";
-			} else if (fmt == 'X' && alternate) {
-				p = "0X";
+			if (alternate) {
+				if (fmt == 'o' && r.length() > 0 && r.charAt(0) != '0') {
+					p = "0";
+				} else {
+					p = getAltPrefixFor(fmt, p);
+				}
 			}
 		}
 
@@ -375,7 +416,7 @@ public class PrintfFormat {
 	 * starting from the right.
 	 */
 	protected String groupDigits(String value, int size, char separator) {
-		if (groupDigits == false) {
+		if (!groupDigits) {
 			return value;
 		}
 		StringBuilder r = new StringBuilder(value.length() + 10);
@@ -403,10 +444,24 @@ public class PrintfFormat {
 	 * Formats a character into a string (like sprintf in C).
 	 */
 	public String form(char value) {
-		if (fmt != 'c') {
-			throw new IllegalArgumentException("Invalid character format: '" + fmt + "' is not 'c'.");
+		switch(fmt) {
+			case 'c':
+				return alternate ? "\\u" + Integer.toHexString((int) value & 0xFFFF) : pad(String.valueOf(value));
+			case 'C':
+				return alternate ? "\\u" + Integer.toHexString((int) value & 0xFFFF).toUpperCase() : pad(String.valueOf(value));
+			case 'd':
+			case 'i':
+			case 'u':
+			case 'o':
+			case 'x':
+			case 'X':
+			case 'b':
+			case 'l':
+			case 'L':
+				return form((short) value);
+			default:
+				throw newIllegalArgumentException("cCdiuoxXblL");
 		}
-		return pad(String.valueOf(value));
 	}
 
 	/**
@@ -419,7 +474,7 @@ public class PrintfFormat {
 		if (fmt == 'L') {
 			return pad(value ? "TRUE" : "FALSE");
 		}
-		throw new IllegalArgumentException("Invalid boolean format: '" + fmt + "' is not one of 'bB'.");
+		throw newIllegalArgumentException("lL");
 
 	}
 
@@ -443,7 +498,7 @@ public class PrintfFormat {
 		} else if (fmt == 'e' || fmt == 'E' || fmt == 'g' || fmt == 'G') {
 			r = expFormat(x);
 		} else {
-			throw new IllegalArgumentException("Invalid floating format: '" + fmt + "' is not one of 'feEgG'.");
+			throw newIllegalArgumentException("feEgG");
 		}
 		return pad(sign(s, r));
 	}
@@ -456,6 +511,8 @@ public class PrintfFormat {
 		int s = 0;
 
 		switch (fmt) {
+			case 'c':
+				return form((char) x);
 			case 'd':
 				if (x < 0) {
 					r = Long.toString(x).substring(1);
@@ -501,6 +558,7 @@ public class PrintfFormat {
 				r = groupDigits(r, 4, ' ');
 				break;
 			case 'b':
+			case 'B':
 				r = Long.toBinaryString(x);
 				r = groupDigits(r, 8, ' ');
 				break;
@@ -511,7 +569,7 @@ public class PrintfFormat {
 				r = (x == 0 ? "FALSE" : "TRUE");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid long format: '" + fmt + "' is not one of 'diuoxXblL'.");
+				throw new IllegalArgumentException("cdiuoxXbBlL");
 		}
 
 		return pad(sign(s, r));
@@ -525,6 +583,8 @@ public class PrintfFormat {
 		int s = 0;
 
 		switch (fmt) {
+			case 'c':
+				return form((char) x);
 			case 'd':
 			case 'i':
 				if (x < 0) {
@@ -554,6 +614,7 @@ public class PrintfFormat {
 				r = groupDigits(r, 4, ' ');
 				break;
 			case 'b':
+			case 'B':
 				r = Integer.toBinaryString(x);
 				r = groupDigits(r, 8, ' ');
 				break;
@@ -564,24 +625,142 @@ public class PrintfFormat {
 				r = (x == 0 ? "FALSE" : "TRUE");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid int format: '" + fmt + "' is not one of 'diuoxXblL'.");
+				throw newIllegalArgumentException("cdiuoxXbBlL");
 		}
 		return pad(sign(s, r));
 	}
 
 	/**
-	 * Formats a string into a larger string (like sprintf in C).
+	 * Formats a byte into a string (like sprintf in C).
 	 */
-	public String form(String s) {
-		if (fmt != 's') {
-			throw new IllegalArgumentException("Invalid long format: '" + fmt + "' is not 's'.");
-		}
-		if (precision >= 0 && precision < s.length()) {
-			s = s.substring(0, precision);
-		}
-
-		return pad(s);
+	public String form(byte b) {
+		return formInt(b, 0xFF);
 	}
 
+	/**
+	 * Formats a short into a string (like sprintf in C).
+	 */
+	public String form(short s) {
+		return formInt(s, 0xFFFF);
+	}
+
+	/**
+	 * Formatter for both <code>byte</code> and <code>short</code> values.
+	 */
+	private String formInt(int value, int unsignedMask) {
+		String r;
+		int s = 0;
+
+		switch (fmt) {
+			case 'c':
+				return form((char) value);
+			case 'd':
+			case 'i':
+				if (value < 0) {
+					r = Integer.toString(value).substring(1);
+					s = -1;
+				} else {
+					r = Integer.toString(value);
+					s = 1;
+				}
+				r = groupDigits(r, 3, ',');
+				break;
+			case 'u':
+				int xl = value & unsignedMask;
+				r = Integer.toString(xl);
+				r = groupDigits(r, 3, ',');
+				s = 1;
+				break;
+			case 'o':
+				r = Integer.toOctalString(value & unsignedMask);
+				break;
+			case 'x':
+				r = Integer.toHexString(value & unsignedMask);
+				r = groupDigits(r, 4, ' ');
+				break;
+			case 'X':
+				r = Integer.toHexString(value & unsignedMask).toUpperCase();
+				r = groupDigits(r, 4, ' ');
+				break;
+			case 'b':
+			case 'B':
+				r = Integer.toBinaryString(value & unsignedMask);
+				r = groupDigits(r, 8, ' ');
+				break;
+			case 'l':
+				r = (value == 0 ? "false" : "true");
+				break;
+			case 'L':
+				r = (value == 0 ? "FALSE" : "TRUE");
+				break;
+			default:
+				throw newIllegalArgumentException("cdiuoxXblL");
+		}
+		return pad(sign(s, r));
+	}
+
+	/**
+	 * Formats a object into a string depending on format (like sprintf in C).
+	 * If object is a numeric type and format is not one object formats (like 's' or 'p')
+	 * it will be converted to primitive and formatted as such.
+	 */
+	public String form(Object object) {
+		if (object == null) {
+			return StringPool.NULL;
+		}
+
+		switch (fmt) {
+			case 's' :
+				String s = object.toString();
+				if (precision >= 0 && precision < s.length()) {
+					s = s.substring(0, precision);
+				}
+				return pad(s);
+			case 'p' :
+				return Integer.toString(System.identityHashCode(object));
+		}
+
+		// check for numeric type
+		if (object instanceof Number) {
+			Number number = (Number) object;
+			if (object instanceof Integer) {
+				return form(number.intValue());
+			}
+			if (object instanceof Long) {
+				return form(number.longValue());
+			}
+			if (object instanceof Double) {
+				return form(number.doubleValue());
+			}
+			if (object instanceof Float) {
+				return form(number.floatValue());
+			}
+			if (object instanceof Byte) {
+				return form(number.byteValue());
+			}
+			if (object instanceof Short) {
+				return form(number.shortValue());
+			}
+			else {
+				return form(number.intValue());
+			}
+		}
+		else if (object instanceof Character) {
+			return form(((Character) object).charValue());
+		}
+		else if (object instanceof Boolean) {
+			return form(((Boolean)object).booleanValue());
+		}
+
+		// throw exception about invalid 'object'-formats
+		throw newIllegalArgumentException("sp");
+	}
+
+	/**
+	 * Creates <code>IllegalArgumentException</code> with message.
+	 */
+	protected IllegalArgumentException newIllegalArgumentException(String allowedFormats) {
+		return new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of '" + allowedFormats + "'");
+	}
 
 }

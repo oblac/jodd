@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
 
@@ -120,7 +143,32 @@ public class CharUtilTest {
 
 		dest = CharUtil.toByteArray(src, "UTF8");
 		assertEquals(5, dest.length);
+	}
 
+	@Test
+	public void testHexToInt() {
+		assertEquals(0, CharUtil.hex2int('0'));
+		assertEquals(1, CharUtil.hex2int('1'));
+		assertEquals(2, CharUtil.hex2int('2'));
+		assertEquals(3, CharUtil.hex2int('3'));
+		assertEquals(4, CharUtil.hex2int('4'));
+		assertEquals(5, CharUtil.hex2int('5'));
+		assertEquals(6, CharUtil.hex2int('6'));
+		assertEquals(7, CharUtil.hex2int('7'));
+		assertEquals(8, CharUtil.hex2int('8'));
+		assertEquals(9, CharUtil.hex2int('9'));
+		assertEquals(10, CharUtil.hex2int('A'));
+		assertEquals(10, CharUtil.hex2int('a'));
+		assertEquals(11, CharUtil.hex2int('B'));
+		assertEquals(11, CharUtil.hex2int('b'));
+		assertEquals(12, CharUtil.hex2int('C'));
+		assertEquals(12, CharUtil.hex2int('c'));
+		assertEquals(13, CharUtil.hex2int('D'));
+		assertEquals(13, CharUtil.hex2int('d'));
+		assertEquals(14, CharUtil.hex2int('E'));
+		assertEquals(14, CharUtil.hex2int('e'));
+		assertEquals(15, CharUtil.hex2int('F'));
+		assertEquals(15, CharUtil.hex2int('f'));
 	}
 
 }

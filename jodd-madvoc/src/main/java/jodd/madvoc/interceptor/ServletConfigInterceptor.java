@@ -1,21 +1,39 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocContextInjector;
-import jodd.madvoc.component.ServletContextInjector;
-import jodd.madvoc.injector.ActionPathMacroInjector;
-import jodd.madvoc.injector.RequestScopeInjector;
-import jodd.madvoc.injector.SessionScopeInjector;
+import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Configures actions and applies some servlet configuration prior action execution.
@@ -33,21 +51,7 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	protected MadvocConfig madvocConfig;
 
 	@In(scope = ScopeType.CONTEXT)
-	protected ServletContextInjector servletContextInjector;
-
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocContextInjector madvocContextInjector;
-
-	protected RequestScopeInjector requestScopeInjector;
-	protected SessionScopeInjector sessionScopeInjector;
-	protected ActionPathMacroInjector actionPathMacroInjector;
-
-	@Override
-	public void init() {
-		requestScopeInjector = new RequestScopeInjector(madvocConfig);
-		sessionScopeInjector = new SessionScopeInjector();
-		actionPathMacroInjector = new ActionPathMacroInjector();
-	}
+	protected InjectorsManager injectorsManager;
 
 	/**
 	 * {@inheritDoc}
@@ -63,8 +67,11 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 
 		// do it
 		inject(actionRequest);
+
 		Object result = actionRequest.invoke();
+
 		outject(actionRequest);
+
 		return result;
 	}
 
@@ -72,40 +79,35 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 * Performs injection.
 	 */
 	protected void inject(ActionRequest actionRequest) {
-		Object target = actionRequest.getAction();
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		madvocContextInjector.injectMadvocContext(target);
+		injectorsManager.getMadvocContextScopeInjector().inject(actionRequest);
 
 		// no need to inject madvoc params, as this can be slow
 		// and its better to use some single data object instead
 		//madvocContextInjector.injectMadvocParams(target);
 
-		servletContextInjector.injectContext(target, servletRequest, servletResponse);
+		injectorsManager.getServletContextScopeInjector().inject(actionRequest);
+		injectorsManager.getApplicationScopeInjector().inject(actionRequest);
 
-		sessionScopeInjector.inject(target, servletRequest);
+		injectorsManager.getSessionScopeInjector().inject(actionRequest);
 
-		requestScopeInjector.prepare(servletRequest);
-		requestScopeInjector.inject(target, servletRequest);
+		injectorsManager.getRequestScopeInjector().prepare(actionRequest);		// todo check if needed
+		injectorsManager.getRequestScopeInjector().inject(actionRequest);
 
-		actionPathMacroInjector.inject(target, actionRequest);
+		injectorsManager.getActionPathMacroInjector().inject(actionRequest);
 	}
 
 	/**
 	 * Performs outjection.
 	 */
 	protected void outject(ActionRequest actionRequest) {
-		Object target = actionRequest.getAction();
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		madvocContextInjector.outjectMadvocContext(target);
-		servletContextInjector.outjectContext(target, servletRequest, servletResponse);
+		injectorsManager.getServletContextScopeInjector().outject(actionRequest);
+		injectorsManager.getApplicationScopeInjector().outject(actionRequest);
 
-		sessionScopeInjector.outject(target, servletRequest);
+		injectorsManager.getSessionScopeInjector().outject(actionRequest);
 
-		requestScopeInjector.outject(target, servletRequest);
+		injectorsManager.getRequestScopeInjector().outject(actionRequest);
 	}
 
 }

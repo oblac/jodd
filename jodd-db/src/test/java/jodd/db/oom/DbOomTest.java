@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom;
 
@@ -6,12 +29,15 @@ import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.QueryMapper;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.tst.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +65,8 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- insert
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "piano")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		DbOomQuery q2 = new DbOomQuery(DbEntitySql.insert(new Girl(3, "Monica", null)));
@@ -48,10 +74,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals("insert into GIRL (ID, NAME) values (:girl.id, :girl.name)", q2.getQueryString());
 		q2.init();
 		assertEquals("insert into GIRL (ID, NAME) values (3, 'Monica')", q2.getQueryString());
-		assertEquals(1, q2.executeUpdateAndClose());
+		assertEquals(1, q2.autoClose().executeUpdate());
 		assertTrue(q2.isClosed());
 
-		assertEquals(1, DbEntitySql.insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		DbQuery dq = new DbQuery("select count(*) from GIRL where id>:id");
@@ -61,7 +87,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		//dq.reset();
 		dq.setInteger("id", 10);
 		assertEquals(1, session.getTotalQueries());
-		assertEquals(0, dq.executeCountAndClose());
+		assertEquals(0, dq.autoClose().executeCount());
 
 		assertEquals(0, session.getTotalQueries());
 
@@ -71,6 +97,19 @@ public class DbOomTest extends DbHsqldbTestCase {
 		DbOomQuery q = new DbOomQuery("select * from GIRL order by ID");
 
 		Girl girl = q.find(Girl.class);
+		checkGirl1(girl);
+		assertTrue(q.isActive());
+
+		girl = q.find(new QueryMapper<Girl>() {
+			public Girl process(ResultSet resultSet) throws SQLException {
+				Girl _girl = new Girl();
+				_girl.id = resultSet.getInt("ID");
+				_girl.name = resultSet.getString("NAME");
+				_girl.speciality = resultSet.getString("SPECIALITY");
+				return _girl;
+			}
+		});
+
 		checkGirl1(girl);
 		assertTrue(q.isActive());
 
@@ -89,6 +128,21 @@ public class DbOomTest extends DbHsqldbTestCase {
 		girl = listGirl.get(1);
 		checkGirl2(girl);
 
+		listGirl = q.list(
+			new QueryMapper<Girl>() {
+				public Girl process(ResultSet resultSet) throws SQLException {
+					Girl _girl = new Girl();
+					_girl.id = resultSet.getInt("ID");
+					_girl.name = resultSet.getString("NAME");
+					_girl.speciality = resultSet.getString("SPECIALITY");
+					return _girl;
+				}
+			}
+		);
+
+		assertEquals(3, listGirl.size());
+		girl = listGirl.get(1);
+		checkGirl2(girl);
 
 		listGirl = q.list();
 		assertEquals(3, listGirl.size());
@@ -384,6 +438,76 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl3((Girl) ((Object[]) list.get(2))[0]);
 		checkBoy((Boy) ((Object[]) list.get(2))[1]);
 
+		// ---------------------------------------------------------------- match
+
+		girl = new Girl();
+		girl.id=1;
+		girl.speciality = "run";		// new values
+
+		Girl girl_condition = new Girl();
+		girl_condition.speciality = "swim";
+
+		String tableRef = "ggg";
+
+		DbSqlBuilder dsb = sql()
+				.$("select * from ")
+				.table(girl, tableRef)
+				.$(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+
+		list = q.list(Girl.class);
+
+		assertEquals(1, list.size());
+		checkGirl1((Girl) list.get(0));		// swim
+
+		dsb = sql()
+				.$("update ")
+				.table(girl, tableRef)
+				.set(tableRef, girl)
+				.$(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+
+		assertEquals(1, q.executeUpdate());
+
+		girl_condition.speciality = "run";
+
+		dsb = sql()
+				.$("select * from ")
+				.table(girl, tableRef)
+				.$(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+		list = q.list(Girl.class);
+
+		assertEquals(1, list.size());
+		assertEquals(1, ((Girl) list.get(0)).id);
+		assertEquals("run", ((Girl) list.get(0)).speciality);		// run
+
+		// go back to swim
+
+		girl.speciality = "swim";
+		girl_condition.speciality = "run";
+
+		dsb = sql()
+				.$("update ")
+				.table(girl, tableRef)
+				.set(tableRef, girl)
+				.$(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+
+		assertEquals(1, q.executeUpdate());
+
 
 		// ---------------------------------------------------------------- etc
 
@@ -534,22 +658,23 @@ public class DbOomTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- finder
 
 		girl = new Girl();
+		girl.id = 1;
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 
 		DbOomQuery f = DbEntitySql.find(girl).aliasColumnsAs(null).query();
 		f.setDebugMode();
-		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=:girl.id)", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id)", f.toString());
 		f.init();
-		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=0)", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1)", f.toString());
 		f.close();
 		f = DbEntitySql.find(badGirl).aliasColumnsAs(null).query();
 		f.setDebugMode();
-		assertEquals("select BadGirl.ID, BadGirl.NAME, BadGirl.SPECIALITY from GIRL BadGirl where (1=1)", f.toString());
+		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (1=1)", f.toString());
 		f.close();
 		f = DbEntitySql.find(badBoy).aliasColumnsAs(null).query();
 		f.setDebugMode();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where (1=1)", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (1=1)", f.toString());
 		f.close();
 
 		girl.name = "Monica";
@@ -559,17 +684,17 @@ public class DbOomTest extends DbHsqldbTestCase {
 		f = DbEntitySql.find(girl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=0 and Girl.NAME='Monica')", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1 and Girl_.NAME='Monica')", f.toString());
 		f.close();
 		f = DbEntitySql.find(badGirl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadGirl.ID, BadGirl.NAME, BadGirl.SPECIALITY from GIRL BadGirl where (BadGirl.NAME='Anna')", f.toString());
+		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.NAME='Anna')", f.toString());
 		f.close();
 		f = DbEntitySql.find(badBoy).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where (BadBoy.NAME='David')", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (BadBoy_.NAME='David')", f.toString());
 		f.close();
 
 		// ---------------------------------------------------------------- whole round
@@ -577,30 +702,30 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(2);
 		f = DbEntitySql.findById(badGirl).query();
-		list = f.listAndClose(BadGirl.class);
+		list = f.autoClose().list(BadGirl.class);
 		assertTrue(f.isClosed());
 		assertEquals(1, list.size());
 		checkBadGirl2((BadGirl) list.get(0));
 
 		f = DbEntitySql.count(badGirl).query();
-		count = (int) f.executeCountAndClose();
+		count = (int) f.autoClose().executeCount();
 		assertEquals(1, count);
 		assertTrue(f.isClosed());
 
 
 		DbSqlGenerator g = DbEntitySql.deleteById(badGirl);
-		f = new DbOomQuery(g);
-		f.executeUpdateAndClose();
+		f = new DbOomQuery(g).autoClose();
+		f.executeUpdate();
 		assertTrue(f.isClosed());
 
 		f = DbEntitySql.count(badGirl).query();
-		count = (int) f.executeCountAndClose();
+		count = (int) f.autoClose().executeCount();
 		assertEquals(0, count);
 		assertTrue(f.isClosed());
 
 		badGirl.fooid = null;
-		f = DbEntitySql.count(badGirl).query();
-		count = (int) f.executeCountAndClose();
+		f = DbEntitySql.count(badGirl).query().autoClose();
+		count = (int) f.executeCount();
 		assertEquals(2, count);
 		assertTrue(f.isClosed());
 
@@ -628,20 +753,20 @@ public class DbOomTest extends DbHsqldbTestCase {
 		f = DbEntitySql.findByColumn(BadBoy.class, "girlId", badGirl.fooid).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where BadBoy.GIRL_ID=3", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
 		f.close();
 
 		f = DbEntitySql.findForeign(BadBoy.class, badGirl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where BadBoy.GIRL_ID=3", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
 
 		f.close();
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		BadGirl bbgg = DbEntitySql.findById(badGirl).query().findAndClose(BadGirl.class);
-		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().listAndClose(BadBoy.class);
+		BadGirl bbgg = DbEntitySql.findById(badGirl).query().find(BadGirl.class);
+		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().list(BadBoy.class);
 
 		assertNotNull(bbgg);
 		assertEquals(3, bbgg.fooid.intValue());
@@ -711,14 +836,14 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(1, girl.id);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 	}
 
 	private void checkGirl2(Girl girl) {
 		assertNotNull(girl);
 		assertEquals(2, girl.id);
 		assertEquals("Sandra", girl.name);
-		assertEquals("spying", girl.speciality);
+		assertEquals("piano", girl.speciality);
 	}
 
 	private void checkGirl3(Girl girl) {
@@ -732,14 +857,14 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(1, girl.fooid.intValue());
 		assertEquals("Anna", girl.fooname);
-		assertEquals("seduction", girl.foospeciality);
+		assertEquals("swim", girl.foospeciality);
 	}
 
 	private void checkBadGirl1Alt(BadGirl girl) {
 		assertNotNull(girl);
 		assertEquals(1, girl.fooid.intValue());
 		assertEquals("Ticky", girl.fooname);
-		assertEquals("seduction", girl.foospeciality);
+		assertEquals("swim", girl.foospeciality);
 	}
 
 	private void checkGirl1Alt(Girl girl) {
@@ -768,7 +893,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(2, girl.fooid.intValue());
 		assertEquals("Sandra", girl.fooname);
-		assertEquals("spying", girl.foospeciality);
+		assertEquals("piano", girl.foospeciality);
 	}
 
 

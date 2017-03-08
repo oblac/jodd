@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta;
 
@@ -6,8 +29,8 @@ import jodd.io.FileUtil;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 import jodd.util.StringUtil;
-import jodd.asm4.ClassReader;
-import jodd.asm4.ClassWriter;
+import jodd.asm5.ClassReader;
+import jodd.asm5.ClassWriter;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 import jodd.log.Logger;
@@ -85,11 +108,15 @@ public abstract class ProxettaBuilder {
 
 		try {
 			targetInputStream = ClassLoaderUtil.getClassAsStream(targetName);
+			if (targetInputStream == null) {
+				throw new ProxettaException("Target class not found: " + targetName);
+			}
 			targetClassName = targetName;
 			targetClass = null;
-		} catch (IOException ioex) {
+		}
+		catch (IOException ioex) {
 			StreamUtil.close(targetInputStream);
-			throw new ProxettaException("Unable to stream class name: " + targetName, ioex);
+			throw new ProxettaException("Unable to get stream class name: " + targetName, ioex);
 		}
 	}
 
@@ -101,9 +128,13 @@ public abstract class ProxettaBuilder {
 
 		try {
 			targetInputStream = ClassLoaderUtil.getClassAsStream(target);
+			if (targetInputStream == null) {
+				throw new ProxettaException("Target class not found: " + target.getName());
+			}
 			targetClass = target;
 			targetClassName = target.getName();
-		} catch (IOException ioex) {
+		}
+		catch (IOException ioex) {
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
 		}
@@ -140,7 +171,7 @@ public abstract class ProxettaBuilder {
 			return null;
 		}
 
-		if (proxetta.isVariableClassName() == false) {
+		if (!proxetta.isVariableClassName()) {
 			return classNameSuffix;
 		}
 
@@ -166,18 +197,18 @@ public abstract class ProxettaBuilder {
 	 */
 	protected void process() {
 		if (targetInputStream == null) {
-			throw new ProxettaException("Target not defined");
+			throw new ProxettaException("Target missing");
 		}
 		// create class reader
 		ClassReader classReader;
 		try {
 			classReader = new ClassReader(targetInputStream);
 		} catch (IOException ioex) {
-			throw new ProxettaException("Error reading class input stream.", ioex);
+			throw new ProxettaException("Error reading class input stream", ioex);
 		}
 
 		// reads information
-		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader();
+		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader(proxetta.getClassLoader());
 		classReader.accept(targetClassInfoReader, 0);
 
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
@@ -203,7 +234,7 @@ public abstract class ProxettaBuilder {
 
 		dumpClass(result);
 
-		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
+		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
 				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
 			}
@@ -223,7 +254,7 @@ public abstract class ProxettaBuilder {
 	public Class define() {
 		process();
 
-		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
+		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
 				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
 			}
@@ -263,7 +294,7 @@ public abstract class ProxettaBuilder {
 
 			return ClassLoaderUtil.defineClass(getProxyClassName(), bytes, classLoader);
 		} catch (Exception ex) {
-			throw new ProxettaException("Class definition failed.", ex);
+			throw new ProxettaException("Class definition failed", ex);
 		}
 	}
 
@@ -276,7 +307,7 @@ public abstract class ProxettaBuilder {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new ProxettaException("Unable to create new instance of Proxetta class.", ex);
+			throw new ProxettaException("Invalid Proxetta class", ex);
 		}
 	}
 

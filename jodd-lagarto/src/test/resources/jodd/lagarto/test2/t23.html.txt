@@ -1,0 +1,6 @@
+tag:title:1<
+txt:[co<ol]
+tag:title:1>
+tag:textarea:1<
+txt:[co<text]
+tag:textarea:1>

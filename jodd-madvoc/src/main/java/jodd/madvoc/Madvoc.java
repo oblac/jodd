@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc;
 
@@ -143,6 +166,8 @@ public class Madvoc {
 
 	// ---------------------------------------------------------------- lifecycle
 
+	protected ServletContext servletContext;
+
 	/**
 	 * Creates and starts new <code>Madvoc</code> web application.
 	 * <code>Madvoc</code> instance is stored in servlet context.
@@ -170,6 +195,8 @@ public class Madvoc {
 	private void start(ServletContext servletContext) { 
 
 		if (servletContext != null) {
+			this.servletContext = servletContext;
+
 			servletContext.setAttribute(MADVOC_ATTR, this);
 		}
 
@@ -197,35 +224,35 @@ public class Madvoc {
 		webapp.registerMadvocComponents();
 		madvocConfig = webapp.getComponent(MadvocConfig.class);
 		if (madvocConfig == null) {
-			throw new MadvocException("No Madvoc configuration component found.");
+			throw new MadvocException("Madvoc configuration not found");
 		}
 		webapp.init(madvocConfig, servletContext);
 
 		// filters
 		FiltersManager filtersManager = webapp.getComponent(FiltersManager.class);
 		if (filtersManager == null) {
-			throw new MadvocException("No Madvoc filers manager component found.");
+			throw new MadvocException("Madvoc filers manager not found");
 		}
 		webapp.initFilters(filtersManager);
 
 		// interceptors
 		InterceptorsManager interceptorsManager = webapp.getComponent(InterceptorsManager.class);
 		if (interceptorsManager == null) {
-			throw new MadvocException("No Madvoc interceptors manager component found.");
+			throw new MadvocException("Madvoc interceptors manager not found");
 		}
 		webapp.initInterceptors(interceptorsManager);
 
 		// actions
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		if (actionsManager == null) {
-			throw new MadvocException("No Madvoc actions manager component found.");
+			throw new MadvocException("Madvoc actions manager not found");
 		}
 		webapp.initActions(actionsManager);
 
 		// results
 		ResultsManager resultsManager = webapp.getComponent(ResultsManager.class);
 		if (resultsManager == null) {
-			throw new MadvocException("No Madvoc results manager component found.");
+			throw new MadvocException("Madvoc results manager not found");
 		}
 		webapp.initResults(resultsManager);
 
@@ -236,9 +263,12 @@ public class Madvoc {
 		// prepare web application
 		madvocController = webapp.getComponent(MadvocController.class);
 		if (madvocController == null) {
-			throw new MadvocException("No Madvoc controller component found.");
+			throw new MadvocException("Madvoc controller not found");
 		}
 		madvocController.init(servletContext);
+
+		// web app is ready
+		webapp.ready();
 	}
 
 	/**
@@ -246,6 +276,11 @@ public class Madvoc {
 	 */
 	public void stopWebApplication() {
 		log.info("Madvoc shutting down...");
+
+		if (servletContext != null) {
+			servletContext.removeAttribute(MADVOC_ATTR);
+		}
+
 		webapp.destroy(madvocConfig);
 	}
 
@@ -258,7 +293,7 @@ public class Madvoc {
 	 */
 	protected WebApplication createWebApplication() {
 		if ((webAppClassName != null) && (webAppClass != null)) {
-			throw new MadvocException("Ambiguous WebApplication setting.");
+			throw new MadvocException("Ambiguous WebApplication setting");
 		}
 		if ((webAppClassName == null) && (webAppClass == null)) {
 			return new WebApplication();
@@ -298,7 +333,7 @@ public class Madvoc {
 	 */
 	protected MadvocConfigurator loadMadvocConfig() {
 		if ((madvocConfiguratorClassName != null) && (madvocConfiguratorClass != null)) {
-			throw new MadvocException("Ambiguous MadvocConfigurator setting.");
+			throw new MadvocException("Ambiguous MadvocConfigurator setting");
 		}
 		if ((madvocConfiguratorClassName == null) && (madvocConfiguratorClass == null)) {
 			log.info("Configuring Madvoc using default automagic configurator");

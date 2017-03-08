@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db;
 
@@ -51,7 +74,7 @@ public class DbUtil {
 	 * Returns long value of very first column in result set.
 	 */
 	public static long getFirstLong(ResultSet resultSet) throws SQLException {
-		if (resultSet.next() == true) {
+		if (resultSet.next()) {
 			return resultSet.getLong(1);
 		}
 		return -1;
@@ -61,7 +84,7 @@ public class DbUtil {
 	 * Returns int value of very first column in result set.
 	 */
 	public static int getFirstInt(ResultSet resultSet) throws SQLException {
-		if (resultSet.next() == true) {
+		if (resultSet.next()) {
 			return resultSet.getInt(1);
 		}
 		return -1;
@@ -70,6 +93,7 @@ public class DbUtil {
 	/**
 	 * Sets prepared statement object using target SQL type.
 	 * Here Jodd makes conversion and not JDBC driver.
+	 * See: http://www.tutorialspoint.com/jdbc/jdbc-data-types.htm
 	 */
 	public static void setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType) throws SQLException {
 		if (value == null) {
@@ -78,16 +102,15 @@ public class DbUtil {
 
 		switch (targetSqlType) {
 			case Types.VARCHAR:
+			case Types.LONGVARCHAR:
+			case Types.CHAR:
 				preparedStatement.setString(index, Convert.toString(value));
 				break;
 
 			case Types.INTEGER:
-			case Types.NUMERIC:
-				preparedStatement.setInt(index, Convert.toIntValue(value));
-				break;
-
 			case Types.SMALLINT:
-				preparedStatement.setShort(index, Convert.toShortValue(value));
+			case Types.TINYINT:
+				preparedStatement.setInt(index, Convert.toIntValue(value));
 				break;
 
 			case Types.BIGINT:
@@ -95,22 +118,24 @@ public class DbUtil {
 				break;
 
 			case Types.BOOLEAN:
+			case Types.BIT:
 				preparedStatement.setBoolean(index, Convert.toBooleanValue(value));
-				break;
-
-			case Types.CHAR:
-				preparedStatement.setString(index, String.valueOf(Convert.toCharValue(value)));
 				break;
 
 			case Types.DATE:
 				preparedStatement.setDate(index, TypeConverterManager.convertType(value, java.sql.Date.class));
 				break;
 
+			case Types.NUMERIC:
 			case Types.DECIMAL:
-			case Types.REAL:
+				preparedStatement.setBigDecimal(index, Convert.toBigDecimal(value));
+				break;
+
+			case Types.DOUBLE:
 				preparedStatement.setDouble(index, Convert.toDoubleValue(value));
 				break;
 
+			case Types.REAL:
 			case Types.FLOAT:
 				preparedStatement.setFloat(index, Convert.toFloatValue(value));
 			    break;
@@ -123,6 +148,11 @@ public class DbUtil {
 				preparedStatement.setTimestamp(index, TypeConverterManager.convertType(value, Timestamp.class));
 				break;
 
+			case Types.BINARY:
+			case Types.VARBINARY:
+				preparedStatement.setBytes(index, TypeConverterManager.convertType(value, byte[].class));
+				break;
+
 			default:
 				if (targetSqlType != SqlType.DB_SQLTYPE_NOT_AVAILABLE) {
 					preparedStatement.setObject(index, value, targetSqlType);
@@ -130,7 +160,6 @@ public class DbUtil {
 					preparedStatement.setObject(index, value);
 				}
 		}
-
 
 	}
 

@@ -1,9 +1,29 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
-
-import jodd.lagarto.LagartoLexer;
-import jodd.util.StringPool;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +47,6 @@ public abstract class Node implements Cloneable {
 	protected final String nodeName;
 	protected final String nodeRawName;
 	protected final NodeType nodeType;
-	protected final int offset;
 	protected Document ownerDocument;	// root document node
 	protected String nodeValue;
 
@@ -51,31 +70,18 @@ public abstract class Node implements Cloneable {
 	protected int siblingElementIndex = -1;
 	protected int siblingNameIndex = -1;
 
-	// position information
-
-	protected int deepLevel;
-	protected LagartoLexer.Position position;
-
 	/**
 	 * Creates new node.
 	 */
 	protected Node(Document document, NodeType nodeType, String nodeName) {
-		this(document, nodeType, nodeName, document != null ? document.getCurrentOffset() : -1);
-	}
-
-	/**
-	 * Creates new node.
-	 */
-	protected Node(Document document, NodeType nodeType, String nodeName, int offset) {
 		this.ownerDocument = document;
 		this.nodeRawName = nodeName;
 		if (nodeName != null) {
-			this.nodeName = document.isLowercase() ? nodeName.toLowerCase() : nodeName;
+			this.nodeName = ownerDocument.config.isCaseSensitive() ? nodeName : nodeName.toLowerCase();
 		} else {
 			this.nodeName = null;
 		}
 		this.nodeType = nodeType;
-		this.offset = offset;
 	}
 
 	// ---------------------------------------------------------------- clone
@@ -87,10 +93,9 @@ public abstract class Node implements Cloneable {
 	protected <T extends Node> T cloneTo(T dest) {
 //		dest.nodeValue = nodeValue;		// already  in clone implementations!
 		dest.parentNode = parentNode;
-		dest.deepLevel = deepLevel;
 
 		if (attributes != null) {
-			dest.attributes = new ArrayList<Attribute>(attributes.size());
+			dest.attributes = new ArrayList<>(attributes.size());
 			for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 				Attribute attr = attributes.get(i);
 				dest.attributes.add(attr.clone());
@@ -98,7 +103,7 @@ public abstract class Node implements Cloneable {
 		}
 
 		if (childNodes != null) {
-			dest.childNodes = new ArrayList<Node>(childNodes.size());
+			dest.childNodes = new ArrayList<>(childNodes.size());
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node child = childNodes.get(i);
 				Node childClone = child.clone();
@@ -110,7 +115,7 @@ public abstract class Node implements Cloneable {
 
 		return dest;
 	}
-	
+
 	@Override
 	public abstract Node clone();
 
@@ -172,7 +177,6 @@ public abstract class Node implements Cloneable {
 			parentNode.reindexChildren();
 		}
 		parentNode = null;
-		deepLevel = 0;
 	}
 
 	/**
@@ -182,7 +186,6 @@ public abstract class Node implements Cloneable {
 	public void addChild(Node node) {
 		node.detachFromParent();
 		node.parentNode = this;
-		node.deepLevel = deepLevel + 1;
 		initChildNodes(node);
 		childNodes.add(node);
 		reindexChildrenOnAdd(1);
@@ -193,10 +196,12 @@ public abstract class Node implements Cloneable {
 	 * Reindex is done only once, after all children are added.
 	 */
 	public void addChild(Node... nodes) {
+		if (nodes.length == 0) {
+			return;	// nothing to add
+		}
 		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
-			node.deepLevel = deepLevel + 1;
 			initChildNodes(node);
 			childNodes.add(node);
 		}
@@ -209,7 +214,6 @@ public abstract class Node implements Cloneable {
 	public void insertChild(Node node, int index) {
 		node.detachFromParent();
 		node.parentNode = this;
-		node.deepLevel = deepLevel + 1;
 		try {
 			initChildNodes(node);
 			childNodes.add(index, node);
@@ -227,7 +231,6 @@ public abstract class Node implements Cloneable {
 		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
-			node.deepLevel = deepLevel + 1;
 			try {
 				initChildNodes(node);
 				childNodes.add(index, node);
@@ -248,6 +251,17 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
+	 * Inserts several child nodes before provided node.
+	 */
+	public void insertBefore(Node[] newChilds, Node refChild) {
+		if (newChilds.length == 0) {
+			return;
+		}
+		int siblingIndex = refChild.getSiblingIndex();
+		refChild.parentNode.insertChild(newChilds, siblingIndex);
+	}
+
+	/**
 	 * Inserts node after provided node.
 	 */
 	public void insertAfter(Node newChild, Node refChild) {
@@ -263,6 +277,10 @@ public abstract class Node implements Cloneable {
 	 * Inserts several child nodes after referent node.
 	 */
 	public void insertAfter(Node[] newChilds, Node refChild) {
+		if (newChilds.length == 0) {
+			return;
+		}
+
 		int siblingIndex = refChild.getSiblingIndex() + 1;
 		if (siblingIndex == refChild.parentNode.getChildNodesCount()) {
 			refChild.parentNode.addChild(newChilds);
@@ -366,6 +384,9 @@ public abstract class Node implements Cloneable {
 		if (attributes == null) {
 			return false;
 		}
+		if (!ownerDocument.config.isCaseSensitive()) {
+			name = name.toLowerCase();
+		}
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
 			if (attr.getName().equals(name)) {
@@ -393,7 +414,7 @@ public abstract class Node implements Cloneable {
 			return null;
 		}
 
-		if (ownerDocument.isLowercase()) {
+		if (!ownerDocument.config.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 
@@ -411,7 +432,7 @@ public abstract class Node implements Cloneable {
 			return -1;
 		}
 
-		if (ownerDocument.isLowercase()) {
+		if (!ownerDocument.config.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 
@@ -440,7 +461,7 @@ public abstract class Node implements Cloneable {
 		initAttributes();
 
 		String rawAttributeName = name;
-		if (ownerDocument.isLowercase()) {
+		if (!ownerDocument.config.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 
@@ -452,7 +473,7 @@ public abstract class Node implements Cloneable {
 				return;
 			}
 		}
-		attributes.add(new Attribute(rawAttributeName, name, value, true));
+		attributes.add(new Attribute(rawAttributeName, name, value));
 	}
 
 	/**
@@ -463,14 +484,14 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Returns <code>true</code> if attribute includes some word.
+	 * Returns <code>true</code> if attribute containing some word.
 	 */
-	public boolean isAttributeIncluding(String name, String word) {
+	public boolean isAttributeContaining(String name, String word) {
 		Attribute attr = getAttributeInstance(name);
 		if (attr == null) {
 			return false;
 		}
-		return attr.isIncluding(word);
+		return attr.isContaining(word);
 	}
 
 	// ---------------------------------------------------------------- children count
@@ -559,6 +580,7 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Returns a child element node at given index.
+	 * If index is out of bounds, <code>null</code> is returned.
 	 */
 	public Element getChildElement(int index) {
 		initChildElementNodes();
@@ -825,7 +847,7 @@ public abstract class Node implements Cloneable {
 	 */
 	protected void initAttributes() {
 		if (attributes == null) {
-			attributes = new ArrayList<Attribute>(5);
+			attributes = new ArrayList<>(5);
 		}
 	}
 
@@ -835,7 +857,7 @@ public abstract class Node implements Cloneable {
 	 */
 	protected void initChildNodes(Node newNode) {
 		if (childNodes == null) {
-			childNodes = new ArrayList<Node>();
+			childNodes = new ArrayList<>();
 		}
 		if (ownerDocument != null) {
 			if (newNode.ownerDocument != ownerDocument) {
@@ -1026,90 +1048,68 @@ public abstract class Node implements Cloneable {
 		}
 	}
 
+	// ---------------------------------------------------------------- visit
+
 	/**
 	 * Generates HTML.
 	 */
 	public String getHtml() {
-		StringBuilder sb = new StringBuilder();
-		try {
-			toHtml(sb);
-		} catch (IOException ioex) {
-			throw new LagartoDOMException(ioex);
+		LagartoDomBuilderConfig lagartoDomBuilderConfig;
+		if (ownerDocument == null) {
+			lagartoDomBuilderConfig = ((Document) this).getConfig();
+		} else {
+			lagartoDomBuilderConfig = ownerDocument.getConfig();
 		}
-		return sb.toString();
+
+		LagartoHtmlRenderer lagartoHtmlRenderer =
+				lagartoDomBuilderConfig.getLagartoHtmlRenderer();
+
+		return lagartoHtmlRenderer.toHtml(this, new StringBuilder());
 	}
 
 	/**
 	 * Generates inner HTML.
 	 */
 	public String getInnerHtml() {
-		StringBuilder sb = new StringBuilder();
-		try {
-			toInnerHtml(sb);
-		} catch (IOException ioex) {
-			throw new LagartoDOMException(ioex);
+		LagartoDomBuilderConfig lagartoDomBuilderConfig;
+		if (ownerDocument == null) {
+			lagartoDomBuilderConfig = ((Document) this).getConfig();
+		} else {
+			lagartoDomBuilderConfig = ownerDocument.getConfig();
 		}
-		return sb.toString();
+
+		LagartoHtmlRenderer lagartoHtmlRenderer =
+				lagartoDomBuilderConfig.getLagartoHtmlRenderer();
+
+		return lagartoHtmlRenderer.toInnerHtml(this, new StringBuilder());
 	}
 
 	/**
-	 * Generates HTML by appending it to the provided <code>Appendable</code>.
+	 * Visits the DOM tree.
 	 */
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderNodeValue(this, appendable);
-		toInnerHtml(appendable);
+	public void visit(NodeVisitor nodeVisitor) {
+		visitNode(nodeVisitor);
 	}
 
-	protected void toInnerHtml(Appendable appendable) throws IOException {
+	/**
+	 * Visits children nodes.
+	 */
+	protected void visitChildren(NodeVisitor nodeVisitor) {
 		if (childNodes != null) {
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node childNode = childNodes.get(i);
-				childNode.toHtml(appendable);
+				childNode.visit(nodeVisitor);
 			}
 		}
 	}
 
-	// ---------------------------------------------------------------- position
-
 	/**
-	 * Returns offset position of the node in the original source.
-	 * Note: offset may <b>NOT</b> implemented for all node types.
-	 * Returns <code>-1</code> if value is not available.
-	 * If you move/detach the node, this value will <b>NOT</b> change.
-	 * Moreover, since nodes may move from their location due to
-	 * HTML rules, this value should not be used for determining
-	 * nodes order.
+	 * Visits single node. Implementations just needs to call
+	 * the correct visitor callback function.
 	 */
-	public int getOffset() {
-		return offset;
-	}
+	protected abstract void visitNode(NodeVisitor nodeVisitor);
 
-	/**
-	 * Returns deep level.
-	 */
-	public int getDeepLevel() {
-		return deepLevel;
-	}
-
-	/**
-	 * Returns node position, if position is calculated, otherwise <code>null</code>.
-	 */
-	public LagartoLexer.Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * Returns {@link #getPosition() node position} as a string,
-	 * ready to be appended to a message. If position is not
-	 * calculated, returns an empty string.
-	 */
-	public String getPositionString() {
-		if (position != null) {
-			return position.toString();
-		}
-		return StringPool.EMPTY;
-	}
-
+	// ---------------------------------------------------------------- misc
 
 	/**
 	 * Returns CSS path to this node from document root.
@@ -1122,8 +1122,7 @@ public abstract class Node implements Cloneable {
 			String nodeName = node.getNodeName();
 			if (nodeName != null) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(' ');
-				sb.append(nodeName);
+				sb.append(' ').append(nodeName);
 				String id = node.getAttribute("id");
 				if (id != null) {
 					sb.append('#').append(id);

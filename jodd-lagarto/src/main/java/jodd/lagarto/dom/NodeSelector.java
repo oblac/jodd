@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
@@ -38,7 +61,7 @@ public class NodeSelector {
 	 * collection type for results grouping order.
 	 */
 	public List<Node> select(Collection<List<CssSelector>> selectorsCollection) {
-		List<Node> results = new ArrayList<Node>();
+		List<Node> results = new ArrayList<>();
 		for (List<CssSelector> selectors : selectorsCollection) {
 			processSelectors(results, selectors);
 		}
@@ -73,7 +96,7 @@ public class NodeSelector {
 	 * Selects nodes using {@link NodeFilter node filter}.
 	 */
 	public List<Node> select(NodeFilter nodeFilter) {
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 		walk(rootNode, nodeFilter, nodes);
 		return nodes;
 	}
@@ -105,24 +128,24 @@ public class NodeSelector {
 	protected List<Node> select(Node rootNode, List<CssSelector> selectors) {
 
 		// start with the root node
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 		nodes.add(rootNode);
 
 		// iterate all selectors
 		for (CssSelector cssSelector : selectors) {
 
 			// create new set of results for current css selector
-			List<Node> selectedNodes = new ArrayList<Node>();
+			List<Node> selectedNodes = new ArrayList<>();
 			for (Node node : nodes) {
 				walk(node, cssSelector, selectedNodes);
 			}
 
 			// post-processing: filter out the results
-			List<Node> resultNodes = new ArrayList<Node>();
+			List<Node> resultNodes = new ArrayList<>();
 			int index = 0;
 			for (Node node : selectedNodes) {
 				boolean match = filter(selectedNodes, node, cssSelector, index);
-				if (match == true) {
+				if (match) {
 					resultNodes.add(node);
 				}
 				index++;
@@ -165,7 +188,7 @@ public class NodeSelector {
 
 		switch (combinator) {
 			case DESCENDANT:
-				JoddArrayList<Node> nodes = new JoddArrayList<Node>();
+				JoddArrayList<Node> nodes = new JoddArrayList<>();
 				int childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
 					nodes.add(rootNode.getChild(i));

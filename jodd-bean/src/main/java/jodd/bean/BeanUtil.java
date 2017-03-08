@@ -1,9 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.bean;
 
-import java.util.List;
-import java.util.Map;
+import jodd.introspector.Introspector;
 
 /**
  * Supreme utility for reading and writing bean properties. However, this one is the fastest available.
@@ -31,150 +53,111 @@ import java.util.Map;
  * Another reason is that most common usage is to work with public accessors, and in that case
  * private fields are ignored.
  */
-public class BeanUtil {
-
-	private static final BeanUtilBean BEAN_UTIL_BEAN = new BeanUtilBean();
+public interface BeanUtil {
 
 	/**
-	 * Returns {@link BeanUtilBean} implementation.
+	 * Default instance of {@link BeanUtilBean}.
 	 */
-	public static BeanUtilBean getBeanUtilBean() {
-		return BEAN_UTIL_BEAN;
-	}
+	BeanUtil pojo = new BeanUtilBean();
+
+	BeanUtil declared = new BeanUtilBean().declared(true);
+
+	BeanUtil silent = new BeanUtilBean().silent(true);
+
+	BeanUtil forced = new BeanUtilBean().forced(true);
+
+	BeanUtil declaredSilent = new BeanUtilBean().declared(true).silent(true);
+
+	BeanUtil declaredForced = new BeanUtilBean().declared(true).forced(true);
+
+	BeanUtil declaredForcedSilent = new BeanUtilBean().declared(true).forced(true).silent(true);
+
+	BeanUtil forcedSilent = new BeanUtilBean().forced(true).silent(true);
+
+	// ---------------------------------------------------------------- INTROSPECTOR
+
+	/**
+	 * Returns introspector instance used by this implementation.
+	 */
+	Introspector getIntrospector();
 
 	// ---------------------------------------------------------------- SET
 
 	/**
 	 * Sets Java Bean property.
+	 * @param bean Java POJO bean or a Map
+	 * @param name property name
+	 * @param value property value
 	 */
-	public static void setProperty(Object bean, String name, Object value) {
-		BEAN_UTIL_BEAN.setProperty(bean, name, value);
-	}
+	void setProperty(Object bean, String name, Object value);
 
 	/**
-	 * Sets Java Bean property silently, without throwing an exception on non-existing properties.
+	 * Sets indexed property.
 	 */
-	public static boolean setPropertySilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setPropertySilent(bean, name, value);
-	}
+	void setIndexProperty(Object bean, String property, int index, Object value);
 
 	/**
-	 * Sets Java Bean property forced.
+	 * Sets simple property.
 	 */
-	public static void setPropertyForced(Object bean, String name, Object value) {
-		BEAN_UTIL_BEAN.setPropertyForced(bean, name, value);
-	}
-	/**
-	 * Sets Java Bean property forced, without throwing an exception on non-existing properties.
-	 */
-	public static boolean setPropertyForcedSilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setPropertyForcedSilent(bean, name, value);
-	}
+	void setSimpleProperty(Object bean, String property, Object value);
 
-	/**
-	 * Sets declared Java Bean property.
-	 */
-	public static void setDeclaredProperty(Object bean, String name, Object value) {
-		BEAN_UTIL_BEAN.setDeclaredProperty(bean, name, value);
-	}
-
-	/**
-	 * Silently sets declared Java Bean property.
-	 */
-	public static boolean setDeclaredPropertySilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setDeclaredPropertySilent(bean, name, value);
-	}
-
-	/**
-	 * Sets declared Java Bean property forced.
-	 */
-	public static void setDeclaredPropertyForced(Object bean, String name, Object value) {
-		BEAN_UTIL_BEAN.setDeclaredPropertyForced(bean, name, value);
-	}
-
-	/**
-	 * Silently sets declared Java Bean property forced.
-	 */
-	public static boolean setDeclaredPropertyForcedSilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setDeclaredPropertyForcedSilent(bean, name, value);
-	}
 
 	// ---------------------------------------------------------------- GET
 
 	/**
 	 * Returns value of bean's property.
-	 */
-	public static Object getProperty(Object bean, String name) {
-		return BEAN_UTIL_BEAN.getProperty(bean, name);
-	}
-
-	/**
-	 * Silently returns value of bean's property.
-	 * Return value <code>null</code> is ambiguous: it may means that property name
+	 * <p>
+	 * In silent mode, returning of <code>null</code> is ambiguous: it may means that property name
 	 * is valid and property value is <code>null</code> or that property name is invalid.
+	 * <p>
+	 * Using forced mode does not have any influence on the result.
 	 */
-	public static Object getPropertySilently(Object bean, String name) {
-		return BEAN_UTIL_BEAN.getPropertySilently(bean, name);
-	}
+	<T> T getProperty(Object bean, String name);
 
 	/**
-	 * Returns value of declared bean's property.
+	 * Returns value of indexed property.
 	 */
-	public static Object getDeclaredProperty(Object bean, String name) {
-		return BEAN_UTIL_BEAN.getDeclaredProperty(bean, name);
-	}
+	<T> T getIndexProperty(Object bean, String property, int index);
 
 	/**
-	 * Silently returns value of declared bean's property.
-	 * Return value <code>null</code> is ambiguous: it may means that property name
-	 * is valid and property value is <code>null</code> or that property name is invalid.
+	 * Reads simple property.
 	 */
-	public static Object getDeclaredPropertySilently(Object bean, String name) {
-		return BEAN_UTIL_BEAN.getDeclaredPropertySilently(bean, name);
-	}
+	<T> T getSimpleProperty(Object bean, String property);
 
 
 	// ---------------------------------------------------------------- HAS
 
-	public static boolean hasProperty(Object bean, String name) {
-		return BEAN_UTIL_BEAN.hasProperty(bean, name);
-	}
+	/**
+	 * Returns <code>true</code> if bean has a property.
+	 */
+	boolean hasProperty(Object bean, String name);
 
-	public static boolean hasDeclaredProperty(Object bean, String name) {
-		return BEAN_UTIL_BEAN.hasDeclaredProperty(bean, name);
-	}
+	/**
+	 * Returns <code>true</code> if bean has only a root property.
+	 * If yes, this means that property may be injected into the bean.
+	 * If not, bean does not contain the property.
+	 */
+	boolean hasRootProperty(Object bean, String name);
+
+	/**
+	 * Returns <code>true</code> if simple property exist.
+	 */
+	boolean hasSimpleProperty(Object bean, String property);
+
 
 	// ---------------------------------------------------------------- type
 
-	public static Class getPropertyType(Object bean, String name) {
-		return BEAN_UTIL_BEAN.getPropertyType(bean, name);
-	}
+	/**
+	 * Returns property type.
+	 */
+	Class<?> getPropertyType(Object bean, String name);
 
-	public static Class getDeclaredPropertyType(Object bean, String name) {
-		return BEAN_UTIL_BEAN.getDeclaredPropertyType(bean, name);
-	}
-	
-	// ---------------------------------------------------------------- populate
 
-	public static void populateBean(Object bean, Map<?, ?> map) {
-		BEAN_UTIL_BEAN.populateBean(bean, map);
-	}
-
-	public static void populateProperty(Object bean, String name, Map<?, ?> map) {
-		BEAN_UTIL_BEAN.populateProperty(bean, name, map);
-	}
-
-	public static void populateProperty(Object bean, String name, List<?> list) {
-		BEAN_UTIL_BEAN.populateProperty(bean, name, list);
-	}
-
-	// ---------------------------------------------------------------- utilities
+	// ---------------------------------------------------------------- misc
 
 	/**
-	 * Extract the first name of this reference. 
+	 * Returns the very first name chunk of the property.
 	 */
-	public static String extractThisReference(String propertyName) {
-		return BEAN_UTIL_BEAN.extractThisReference(propertyName);
-	}
+	public String extractThisReference(String propertyName);
 
 }

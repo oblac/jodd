@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.bean;
 
@@ -82,9 +105,9 @@ public class BeanIndexPropertyTest {
 
 			Bean1 bean1 = new Bean1();
 
-			assertNull(BeanUtil.getProperty(bean1, "array1" + suffix));
+			assertNull(BeanUtil.pojo.getProperty(bean1, "array1" + suffix));
 			try {
-				BeanUtil.getProperty(bean1, "array1" + suffix + "[0]");
+				BeanUtil.pojo.getProperty(bean1, "array1" + suffix + "[0]");
 				fail();	// fails to read index of null property
 			} catch (BeanException ignore) {
 			}
@@ -92,24 +115,24 @@ public class BeanIndexPropertyTest {
 			// array1[0]
 
 			try {
-				BeanUtil.setProperty(bean1, "array1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean1, "array1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignored) {
 			}
 
-			BeanUtil.setPropertyForced(bean1, "array1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean1, "array1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 			assertNotNull(bean1.array1);
 			assertEquals(Integer.valueOf(173), bean1.array1[0].data);
 
 			// array2[0]
 
 			try {
-				BeanUtil.setProperty(bean1, "array2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean1, "array2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignored) {
 			}
 
-			BeanUtil.setPropertyForced(bean1, "array2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean1, "array2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 			assertNotNull(bean1.array2);
 			assertEquals(Long.valueOf(173), bean1.array2[0].data);
 		}
@@ -130,22 +153,22 @@ public class BeanIndexPropertyTest {
 			// array1[0]
 
 			try {
-				BeanUtil.setProperty(bean2, "array1" + suffix + "[0]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2, "array1" + suffix + "[0]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2, "array1" + suffix + "[0]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2, "array1" + suffix + "[0]", Integer.valueOf(173));
 			assertNotNull(bean2.array1);
 			assertEquals(Integer.valueOf(173), bean2.array1[0]);
 
 			try {
-				BeanUtil.setProperty(bean2Long, "array1" + suffix + "[0]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2Long, "array1" + suffix + "[0]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2Long, "array1" + suffix + "[0]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2Long, "array1" + suffix + "[0]", Integer.valueOf(173));
 			assertNotNull(bean2Long.array1);
 			assertEquals(Long.valueOf(173), bean2Long.array1[0]);
 			assertEquals(Long.class, bean2Long.array1[0].getClass());
@@ -164,20 +187,20 @@ public class BeanIndexPropertyTest {
 
 			Bean1 bean1 = new Bean1();
 
-			assertNull(BeanUtil.getProperty(bean1, "list1" + suffix));
+			assertNull(BeanUtil.pojo.getProperty(bean1, "list1" + suffix));
 			try {
-				BeanUtil.getProperty(bean1, "list1" + suffix + "[0]");
+				BeanUtil.pojo.getProperty(bean1, "list1" + suffix + "[0]");
 				fail();	// fails to read index of null property
 			} catch (BeanException ignored) {
 			}
 
 			try {
-				BeanUtil.setProperty(bean1, "list1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean1, "list1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignored) {
 			}
 
-			BeanUtil.setPropertyForced(bean1, "list1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean1, "list1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 			assertNotNull(bean1.list1);
 			assertEquals(Integer.valueOf(173), bean1.list1.get(0).data);
 		}
@@ -197,22 +220,22 @@ public class BeanIndexPropertyTest {
 			// array1[0]
 
 			try {
-				BeanUtil.setProperty(bean2, "list1" + suffix + "[0]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2, "list1" + suffix + "[0]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2, "list1" + suffix + "[0]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2, "list1" + suffix + "[0]", Integer.valueOf(173));
 			assertNotNull(bean2.list1);
 			assertEquals(Integer.valueOf(173), bean2.list1.get(0));
 
 			try {
-				BeanUtil.setProperty(bean2Long, "list1" + suffix + "[0]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2Long, "list1" + suffix + "[0]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2Long, "list1" + suffix + "[0]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2Long, "list1" + suffix + "[0]", Integer.valueOf(173));
 			assertNotNull(bean2Long.list1);
 			assertEquals(Long.valueOf(173), bean2Long.list1.get(0));
 			assertEquals(Long.class, bean2Long.list1.get(0).getClass());
@@ -231,15 +254,15 @@ public class BeanIndexPropertyTest {
 
 			Bean1 bean1 = new Bean1();
 
-			assertNull(BeanUtil.getProperty(bean1, "map1" + suffix));
+			assertNull(BeanUtil.pojo.getProperty(bean1, "map1" + suffix));
 
 			try {
-				BeanUtil.setProperty(bean1, "map1" + suffix + "[x0].data" + suffix, Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean1, "map1" + suffix + "[x0].data" + suffix, Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignored) {
 			}
 
-			BeanUtil.setPropertyForced(bean1, "map1" + suffix + "[x0].data" + suffix, Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean1, "map1" + suffix + "[x0].data" + suffix, Integer.valueOf(173));
 			assertNotNull(bean1.map1);
 			assertEquals(Integer.valueOf(173), bean1.map1.get("x0").data);
 		}
@@ -255,15 +278,15 @@ public class BeanIndexPropertyTest {
 
 			Bean1 bean1 = new Bean1();
 
-			assertNull(BeanUtil.getProperty(bean1, "map2" + suffix));
+			assertNull(BeanUtil.pojo.getProperty(bean1, "map2" + suffix));
 
 			try {
-				BeanUtil.setProperty(bean1, "map2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean1, "map2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignored) {
 			}
 
-			BeanUtil.setPropertyForced(bean1, "map2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean1, "map2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
 			assertNotNull(bean1.map2);
 			assertEquals(Integer.valueOf(173), bean1.map2.get(Integer.valueOf(0)).data);
 		}
@@ -283,22 +306,22 @@ public class BeanIndexPropertyTest {
 			// array1[0]
 
 			try {
-				BeanUtil.setProperty(bean2, "map1" + suffix + "[0x]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2, "map1" + suffix + "[0x]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2, "map1" + suffix + "[0x]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2, "map1" + suffix + "[0x]", Integer.valueOf(173));
 			assertNotNull(bean2.map1);
 			assertEquals(Integer.valueOf(173), bean2.map1.get("0x"));
 
 			try {
-				BeanUtil.setProperty(bean2Long, "map1" + suffix + "[0x]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2Long, "map1" + suffix + "[0x]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2Long, "map1" + suffix + "[0x]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2Long, "map1" + suffix + "[0x]", Integer.valueOf(173));
 			assertNotNull(bean2Long.map1);
 			assertEquals(Long.valueOf(173), bean2Long.map1.get("0x"));
 			assertEquals(Long.class, bean2Long.map1.get("0x").getClass());
@@ -319,22 +342,22 @@ public class BeanIndexPropertyTest {
 			// array1[0]
 
 			try {
-				BeanUtil.setProperty(bean2, "map2" + suffix + "[0]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2, "map2" + suffix + "[0]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2, "map2" + suffix + "[0]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2, "map2" + suffix + "[0]", Integer.valueOf(173));
 			assertNotNull(bean2.map2);
 			assertEquals(Integer.valueOf(173), bean2.map2.get(Integer.valueOf(0)));
 
 			try {
-				BeanUtil.setProperty(bean2Long, "map2" + suffix + "[0]", Integer.valueOf(173));
+				BeanUtil.pojo.setProperty(bean2Long, "map2" + suffix + "[0]", Integer.valueOf(173));
 				fail();
 			} catch (BeanException ignore) {
 			}
 
-			BeanUtil.setPropertyForced(bean2Long, "map2" + suffix + "[0]", Integer.valueOf(173));
+			BeanUtil.forced.setProperty(bean2Long, "map2" + suffix + "[0]", Integer.valueOf(173));
 			assertNotNull(bean2Long.map2);
 			assertEquals(Long.valueOf(173), bean2Long.map2.get(Integer.valueOf(0)));
 			assertEquals(Long.class, bean2Long.map2.get(Integer.valueOf(0)).getClass());

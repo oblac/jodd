@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
@@ -221,7 +244,7 @@ public class NodeSelectorTest {
 
 		nodes = nodeSelector.select("p#text > em:nth-last-child(2n+1)");
 		assertEquals(1, nodes.size());
-		assertEquals("lina", ((Element) nodes.get(0)).getAttribute("id"));
+		assertEquals("lina", (nodes.get(0)).getAttribute("id"));
 
 		nodes = nodeSelector.select("p#text em:nth-last-child(2n+1)");
 		assertEquals(2, nodes.size());
@@ -317,6 +340,21 @@ public class NodeSelectorTest {
 
 		assertTrue(document.check());
 	}
+	
+	@Test
+	public void testClassWithTabs() throws IOException {
+		File file = new File(testDataRoot, "class-tabs.html");
+		String htmlContent = FileUtil.readString(file);
+
+		Document document = new LagartoDOMBuilder().parse(htmlContent);
+
+		List<Node> nodes = new NodeSelector(document).select(".hey");
+		assertEquals(1, nodes.size());
+
+		Node n = nodes.get(0);
+		assertEquals("div", n.getNodeName());
+		assertEquals("jodd", n.getAttribute("id"));
+	}
 
 	@Test
 	public void testCollectionOfSelectors() throws IOException {
@@ -325,7 +363,7 @@ public class NodeSelectorTest {
 		List<CssSelector> selectors1 = new CSSelly("body").parse();
 		List<CssSelector> selectors2 = new CSSelly("p").parse();
 
-		List<List<CssSelector>> collection = new ArrayList<List<CssSelector>>();
+		List<List<CssSelector>> collection = new ArrayList<>();
 		collection.add(selectors1);
 		collection.add(selectors2);
 

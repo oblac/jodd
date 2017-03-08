@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.props;
 
@@ -254,7 +277,7 @@ public class PropsParser implements Cloneable {
 					case '\n':
 						if ((state == ParseState.ESCAPE_NEWLINE) && (c == '\n')) {
 							sb.append(escapeNewLineValue);
-							if (ignorePrefixWhitespacesOnNewLine == false) {
+							if (!ignorePrefixWhitespacesOnNewLine) {
 								state = ParseState.VALUE;
 							}
 						} else {
@@ -363,7 +386,7 @@ public class PropsParser implements Cloneable {
 		}
 
 		// extract profiles
-		ArrayList<String> keyProfiles = new ArrayList<String>();
+		ArrayList<String> keyProfiles = new ArrayList<>();
 
 		while (true) {
 			ndx = fullKey.indexOf(PROFILE_LEFT);
@@ -388,6 +411,11 @@ public class PropsParser implements Cloneable {
 			fullKey = fullKey.substring(0, ndx) + right;
 		}
 
+		if (fullKey.startsWith(StringPool.DOT)) {
+			// check for special case when only profile is defined in section
+			fullKey = fullKey.substring(1);
+		}
+
 		// add value to extracted profiles
 		justAdd(fullKey, value, keyProfiles, operator);
 	}
@@ -397,7 +425,7 @@ public class PropsParser implements Cloneable {
 	 */
 	protected void justAdd(final String key, final String value, final ArrayList<String> keyProfiles, final Operator operator) {
 		if (operator == Operator.COPY) {
-			HashMap<String,Object> target = new HashMap<String, Object>();
+			HashMap<String,Object> target = new HashMap<>();
 
 			String[] profiles = null;
 			if (keyProfiles != null) {
@@ -407,19 +435,45 @@ public class PropsParser implements Cloneable {
 			String[] sources = StringUtil.splitc(value, ',');
 			for (String source : sources) {
 				source = source.trim();
+
+				// try to extract profile for parsing
+
+				String[] lookupProfiles = profiles;
+				String lookupProfilesString = null;
+
+				int leftIndex = source.indexOf('<');
+				if (leftIndex != -1) {
+					int rightIndex = source.indexOf('>');
+
+					lookupProfilesString = source.substring(leftIndex + 1, rightIndex);
+					source = source.substring(0, leftIndex).concat(source.substring(rightIndex + 1));
+
+					lookupProfiles = StringUtil.splitc(lookupProfilesString, ',');
+
+					StringUtil.trimAll(lookupProfiles);
+				}
+
 				String[] wildcards = new String[] {source + ".*"};
-				propsData.extract(target, profiles, wildcards);
+
+				propsData.extract(target, lookupProfiles, wildcards, null);
 
 				for (Map.Entry<String, Object> entry : target.entrySet()) {
 					String entryKey = entry.getKey();
 					String suffix = entryKey.substring(source.length());
 
 					String newKey = key + suffix;
+
+					String newValue = "${" + entryKey;
+					if (lookupProfilesString != null) {
+						newValue += "<" + lookupProfilesString + ">";
+					}
+					newValue += "}";
+
 					if (profiles == null) {
-						propsData.putBaseProperty(newKey, "${" + entryKey + "}", false);
+						propsData.putBaseProperty(newKey, newValue, false);
 					} else {
-						for (final String p : keyProfiles) {
-							propsData.putProfileProperty(newKey, "${" + entryKey + "}", p, false);
+						for (final String p : profiles) {
+							propsData.putProfileProperty(newKey, newValue, p, false);
 						}
 					}
 				}

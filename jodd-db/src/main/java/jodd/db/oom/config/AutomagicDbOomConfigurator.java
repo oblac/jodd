@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom.config;
 
@@ -14,7 +37,7 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Auto-magically reads classpath for domain objects annotated
+ * Auto-magically scans classpath for domain objects annotated with DbOom annotations.
  */
 public class AutomagicDbOomConfigurator extends ClassFinder {
 
@@ -48,14 +71,19 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	 */
 	public void configure(DbOomManager dbOomManager, File[] classpath) {
 		this.dbOomManager = dbOomManager;
+
+		rulesEntries.smartMode();
+
 		elapsed = System.currentTimeMillis();
 		try {
 			scanPaths(classpath);
 		} catch (Exception ex) {
-			throw new DbOomException("Unable to scan classpath.", ex);
+			throw new DbOomException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("DbOomManager configured in " + elapsed + " ms. Total entities: " + dbOomManager.getTotalNames());
+		if (log.isInfoEnabled()) {
+			log.info("DbOomManager configured in " + elapsed + " ms. Total entities: " + dbOomManager.getTotalNames());
+		}
 	}
 
 	/**
@@ -75,7 +103,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	protected void onEntry(EntryData entryData) {
 		String entryName = entryData.getName();
 		InputStream inputStream = entryData.openInputStream();
-		if (isTypeSignatureInUse(inputStream, dbTableAnnotationBytes) == false) {
+		if (!isTypeSignatureInUse(inputStream, dbTableAnnotationBytes)) {
 			return;
 		}
 
@@ -83,23 +111,22 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		try {
 			beanClass = loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
-			throw new DbOomException("Unable to load class: " + entryName, cnfex);
+			throw new DbOomException("Entry class not found: " + entryName, cnfex);
 		}
+
+		if (beanClass == null) {
+			return;
+		}
+
 		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
 		if (dbTable == null) {
 			return;
 		}
-		if (registerAsEntities == true) {
+		if (registerAsEntities) {
 			dbOomManager.registerEntity(beanClass);
 		} else {
 			dbOomManager.registerType(beanClass);
 		}
 	}
 
-	/**
-	 * Loads class from classname using default classloader.
-	 */
-	protected Class loadClass(String className) throws ClassNotFoundException {
-		return ClassLoaderUtil.loadClass(className);
-	}
 }

@@ -1,14 +1,37 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite;
 
+import jodd.introspector.PropertyDescriptor;
 import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -56,19 +79,19 @@ public class InjectionPointFactory {
 	/**
 	 * Creates new property injection point.
 	 */
-	public PropertyInjectionPoint createPropertyInjectionPoint(Field field, String[] references) {
+	public PropertyInjectionPoint createPropertyInjectionPoint(PropertyDescriptor propertyDescriptor, String[] references) {
 		if (references == null || references.length == 0) {
-			references = fieldDefaultReferences(field);
+			references = fieldDefaultReferences(propertyDescriptor);
 		}
 		removeDuplicateNames(references);
-		return new PropertyInjectionPoint(field, references);
+		return new PropertyInjectionPoint(propertyDescriptor, references);
 	}
 
 	/**
 	 * Creates new set injection point.
 	 */
-	public SetInjectionPoint createSetInjectionPoint(Field field) {
-		return new SetInjectionPoint(field);
+	public SetInjectionPoint createSetInjectionPoint(PropertyDescriptor propertyDescriptor) {
+		return new SetInjectionPoint(propertyDescriptor);
 	}
 
 	// ---------------------------------------------------------------- utils
@@ -76,15 +99,15 @@ public class InjectionPointFactory {
 	/**
 	 * Builds default field references.
 	 */
-	protected String[] fieldDefaultReferences(Field field) {
+	protected String[] fieldDefaultReferences(PropertyDescriptor propertyDescriptor) {
 		PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
 		String[] references = new String[lookupReferences.length];
 
 		for (int i = 0; i < references.length; i++) {
 			switch (lookupReferences[i]) {
-				case NAME:				references[i] = field.getName(); break;
-				case TYPE_SHORT_NAME:	references[i] = StringUtil.uncapitalize(field.getType().getSimpleName()); break;
-				case TYPE_FULL_NAME:	references[i] = field.getType().getName(); break;
+				case NAME:				references[i] = propertyDescriptor.getName(); break;
+				case TYPE_SHORT_NAME:	references[i] = StringUtil.uncapitalize(propertyDescriptor.getType().getSimpleName()); break;
+				case TYPE_FULL_NAME:	references[i] = propertyDescriptor.getType().getName(); break;
 			}
 		}
 		return references;

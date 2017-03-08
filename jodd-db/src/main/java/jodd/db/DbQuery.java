@@ -1,14 +1,36 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db;
 
 import jodd.bean.BeanUtil;
-import jodd.io.StringInputStream;
+import jodd.util.CharUtil;
 import jodd.util.collection.IntArrayList;
+import jodd.db.querymap.QueryMap;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,18 +71,12 @@ import java.util.Map;
  */
 public class DbQuery extends DbQueryBase {
 
-	private static final Logger log = LoggerFactory.getLogger(DbQuery.class);
-
 	/**
-	 * Creates new query,
+	 * Creates new query.
 	 */
 	public DbQuery(Connection conn, String sqlString) {
 		this.connection = conn;
-		this.sqlString = sqlString;
-
-		if (log.isDebugEnabled()) {
-			log.debug("DbQuery: " + sqlString);
-		}
+		this.sqlString = preprocessSql(sqlString);
 	}
 
 	/**
@@ -70,11 +86,7 @@ public class DbQuery extends DbQueryBase {
 		initSession(session);
 
 		this.session.attachQuery(this);
-		this.sqlString = sqlString;
-
-		if (log.isDebugEnabled()) {
-			log.debug("DbQuery: " + sqlString);
-		}
+		this.sqlString = preprocessSql(sqlString);
 	}
 
 	/**
@@ -82,6 +94,34 @@ public class DbQuery extends DbQueryBase {
 	 */
 	public DbQuery(String sqlString) {
 		this((DbSession)null, sqlString);
+	}
+
+	// ---------------------------------------------------------------- sql map
+
+	/**
+	 * Pre-process SQL before using it. If string starts with a non-ascii char
+	 * or it has no spaces, it will be loaded from the query map.
+	 */
+	protected String preprocessSql(String sqlString) {
+		// quickly detect if sql string is a key
+		if (!CharUtil.isAlpha(sqlString.charAt(0))) {
+			sqlString = sqlString.substring(1);
+		}
+		else if (sqlString.indexOf(' ') != -1) {
+			return sqlString;
+		}
+
+		QueryMap queryMap = DbManager.getInstance().getQueryMap();
+
+		if (queryMap != null) {
+			String sqlFromMap = queryMap.getQuery(sqlString);
+
+			if (sqlFromMap != null) {
+				sqlString = sqlFromMap.trim();
+			}
+		}
+
+		return sqlString;
 	}
 
 	// ---------------------------------------------------------------- additional statement parameters
@@ -94,7 +134,7 @@ public class DbQuery extends DbQueryBase {
 	 * previous value. However, in some cases it is useful to immediately
 	 * release the resources used by the current parameter values; this can
 	 * be done by calling the method <code>clearParameters</code>.
-s	 */
+	 */
 	public void clearParameters() {
 		init();
 		if (preparedStatement == null) {
@@ -111,11 +151,11 @@ s	 */
 	// ---------------------------------------------------------------- methods for setting statement parameters
 
 	private void throwSetParamError(int index, Exception ex) {
-		throw new DbSqlException("Unable to set SQL parameter with index: " + index, ex);
+		throw new DbSqlException(this, "Invalid SQL parameter with index: " + index, ex);
 	}
 
 	private void throwSetParamError(String param, Exception ex) {
-		throw new DbSqlException("Unable to set SQL parameter with name: " + param, ex);
+		throw new DbSqlException(this, "Invalid SQL parameter with name: " + param, ex);
 	}
 
 	// ---------------------------------------------------------------- null
@@ -125,7 +165,7 @@ s	 */
 		try {
 			preparedStatement.setNull(index, type);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set null value to parameter: " + index, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + index, sex);
 		}
 	}
 
@@ -137,7 +177,7 @@ s	 */
 				preparedStatement.setNull(positions.get(i), type);
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set null value to parameter: " + param, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + param, sex);
 		}
 
 	}
@@ -147,7 +187,7 @@ s	 */
 		try {
 			preparedStatement.setNull(index, type, typeName);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set null value to parameter: " + index, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + index, sex);
 		}
 	}
 
@@ -159,11 +199,9 @@ s	 */
 				preparedStatement.setNull(positions.get(i), value, typeName);
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set null value to parameter: " + param, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + param, sex);
 		}
 	}
-
-
 
 	// ---------------------------------------------------------------- int
 
@@ -740,28 +778,24 @@ s	 */
 
 	// ---------------------------------------------------------------- ascii streams
 
-	public void setAsciiStream(int index, StringInputStream stream) {
+	public void setAsciiStream(int index, InputStream stream) {
 		init();
 		try {
 			preparedStatement.setAsciiStream(index, stream, stream.available());
-		} catch (IOException ioex) {
+		} catch (IOException | SQLException ioex) {
 			throwSetParamError(index, ioex);
-		} catch (SQLException sex) {
-			throwSetParamError(index, sex);
 		}
 	}
 
-	public void setAsciiStream(String param, StringInputStream stream) {
+	public void setAsciiStream(String param, InputStream stream) {
 		init();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
 				preparedStatement.setAsciiStream(positions.get(i), stream, stream.available());
 			}
-		} catch (IOException ioex) {
+		} catch (IOException | SQLException ioex) {
 			throwSetParamError(param, ioex);
-		} catch (SQLException sex) {
-			throwSetParamError(param, sex);
 		}
 	}
 
@@ -824,8 +858,8 @@ s	 */
 			String paramName = (String) it.next();
 			if (paramName.startsWith(beanName) == true) {
 				String propertyName = paramName.substring(beanName.length());
-				if (BeanUtil.hasDeclaredProperty(bean, propertyName) == true) {
-					Object value = BeanUtil.getDeclaredProperty(bean, propertyName);
+				if (BeanUtil.declared.hasRootProperty(bean, propertyName) == true) {
+					Object value = BeanUtil.declared.getProperty(bean, propertyName);
 					setObject(paramName, value);
 				}
 			}
@@ -994,10 +1028,80 @@ s	 */
 	public void setObjects(String[] names, Object[] values) {
 		init();
 		if (names.length != values.length) {
-			throw new DbSqlException("Different number of parameter names and values.");
+			throw new DbSqlException(this, "Different number of parameter names and values");
 		}
 		for (int i = 0; i < names.length; i++) {
 			setObject(names[i], values[i]);
 		}
 	}
+
+	// ---------------------------------------------------------------- batch
+
+	/**
+	 * Sets batch parameters with given array of values.
+	 */
+	public void setBatch(String name, int[] array, int startingIndex) {
+		init();
+		int batchSize = query.getBatchParameterSize(name);
+
+		for (int i = 1; i <= batchSize; i++) {
+			String paramName = name + '.' + i;
+
+			if (startingIndex < array.length) {
+				setInteger(paramName, array[startingIndex]);
+			} else {
+				setNull(paramName, Types.INTEGER);
+			}
+			startingIndex++;
+		}
+	}
+	/**
+	 * Sets batch parameters with given array of values.
+	 */
+	public void setBatch(String name, long[] array, int startingIndex) {
+		init();
+		int batchSize = query.getBatchParameterSize(name);
+
+		for (int i = 1; i <= batchSize; i++) {
+			String paramName = name + '.' + i;
+
+			if (startingIndex < array.length) {
+				setLong(paramName, array[startingIndex]);
+			} else {
+				setNull(paramName, Types.INTEGER);
+			}
+			startingIndex++;
+		}
+	}
+
+	/**
+	 * Sets batch parameters with given array of values.
+	 */
+	public void setBatch(String name, Object[] array, int startingIndex) {
+		init();
+		int batchSize = query.getBatchParameterSize(name);
+
+		for (int i = 1; i <= batchSize; i++) {
+			String paramName = name + '.' + i;
+
+			if (startingIndex < array.length) {
+				setObject(paramName, array[startingIndex]);
+			} else {
+				setObject(paramName, null);
+			}
+			startingIndex++;
+		}
+	}
+
+	// ---------------------------------------------------------------- close
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DbQuery autoClose() {
+		super.autoClose();
+		return this;
+	}
+
 }

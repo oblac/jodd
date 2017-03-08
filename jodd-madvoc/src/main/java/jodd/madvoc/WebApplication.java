@@ -1,20 +1,44 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.ActionMethodParamNameResolver;
 import jodd.madvoc.component.ActionPathMacroManager;
+import jodd.madvoc.component.ContextInjectorComponent;
 import jodd.madvoc.component.FiltersManager;
+import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.InterceptorsManager;
-import jodd.madvoc.component.MadvocContextInjector;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ActionPathMapper;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ActionPathRewriter;
-import jodd.madvoc.component.ServletContextInjector;
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
 
@@ -84,7 +108,7 @@ public class WebApplication {
 				break;
 			}
 			component = superClass;
-			if (Modifier.isAbstract(component.getModifiers()) == false) {
+			if (!Modifier.isAbstract(component.getModifiers())) {
 				lastComponent = component;
 			}
 		}
@@ -155,18 +179,19 @@ public class WebApplication {
 		log.debug("Registering Madvoc components");
 
 		registerComponent(ActionMethodParser.class);
-		registerComponent(ActionPathMapper.class);
+		registerComponent(ActionMethodParamNameResolver.class);
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
+		registerComponent(ContextInjectorComponent.class);
+		registerComponent(InjectorsManager.class);
 		registerComponent(InterceptorsManager.class);
 		registerComponent(FiltersManager.class);
 		registerComponent(MadvocConfig.class);
 		registerComponent(MadvocController.class);
 		registerComponent(ResultsManager.class);
 		registerComponent(ResultMapper.class);
-		registerComponent(ServletContextInjector.class);
-		registerComponent(MadvocContextInjector.class);
+		registerComponent(ScopeDataResolver.class);
 	}
 
 
@@ -191,7 +216,7 @@ public class WebApplication {
 	/**
 	 * Initializes web application custom configuration.
 	 * When running web application out from container,
-	 * <code>servletContext</code> may be null
+	 * <code>servletContext</code> may be <code>null</code>.
 	 */
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		log.debug("Initializing Madvoc");
@@ -227,12 +252,18 @@ public class WebApplication {
 	}
 
 	/**
+	 * Called when Madvoc is up and ready.
+	 */
+	protected void ready() {
+		log.info("Madvoc is ready");
+	}
+
+	/**
 	 * Invoked on web application destroy.
 	 */
 	protected void destroy(MadvocConfig madvocConfig) {
 		log.debug("Destroying Madvoc");
 	}
-
 
 	// ---------------------------------------------------------------- configurator
 

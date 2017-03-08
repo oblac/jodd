@@ -1,9 +1,33 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.mail;
 
 import jodd.util.MimeTypes;
 
+import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,46 +44,193 @@ public class Email extends CommonEmail {
 		return new Email();
 	}
 
-	// ---------------------------------------------------------------- from, to, cc, bcc
+	// ---------------------------------------------------------------- from
 
+	/**
+	 * Sets the FROM address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
 	public Email from(String from) {
-		setFrom(from);
+		setFrom(new EmailAddress(from));
+		return this;
+	}
+	/**
+	 * Sets the FROM address by providing personal name and address.
+	 */
+	public Email from(String personal, String from) {
+		setFrom(new EmailAddress(personal, from));
+		return this;
+	}
+	/**
+	 * Sets the FROM address from {@link javax.mail.internet.InternetAddress}.
+	 */
+	public Email from(InternetAddress internetAddress) {
+		setFrom(new EmailAddress(internetAddress));
 		return this;
 	}
 
+	// ---------------------------------------------------------------- to
+
+	/**
+	 * Appends TO address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
 	public Email to(String to) {
-		setTo(to);
-		return this;
-	}
-	public Email to(String... tos) {
-		setTo(tos);
+		addTo(new EmailAddress(to));
 		return this;
 	}
 
+	/**
+	 * Appends TO address by personal name and email address.
+	 */
+	public Email to(String personalName, String to) {
+		addTo(new EmailAddress(personalName, to));
+		return this;
+	}
+	/**
+	 * Appends TO address from <code>InternetAddress</code>.
+	 */
+	public Email to(InternetAddress internetAddress) {
+		addTo(new EmailAddress(internetAddress));
+		return this;
+	}
+
+	/**
+	 * Sets one or more TO address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
+	public Email to(String[] tos) {
+		setTo(EmailAddress.createFrom(tos));
+		return this;
+	}
+
+	/**
+	 * Sets one or more TO addresses.
+	 */
+	public Email to(InternetAddress[] tos) {
+		setTo(EmailAddress.createFrom(tos));
+		return this;
+	}
+
+	// ---------------------------------------------------------------- reply to
+
+	/**
+	 * Appends REPLY-TO address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
 	public Email replyTo(String replyTo) {
-		setReplyTo(replyTo);
+		addReplyTo(new EmailAddress(replyTo));
 		return this;
 	}
-	public Email replyTo(String... replyTos) {
-		setReplyTo(replyTos);
+	/**
+	 * Appends REPLY-TO address.
+	 */
+	public Email replyTo(String personalName, String replyTo) {
+		addReplyTo(new EmailAddress(personalName, replyTo));
+		return this;
+	}
+	/**
+	 * Appends REPLY-TO address.
+	 */
+	public Email replyTo(InternetAddress internetAddress) {
+		addReplyTo(new EmailAddress(internetAddress));
 		return this;
 	}
 
+	/**
+	 * Sets one or more REPLY-TO address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
+	public Email replyTo(String[] replyTos) {
+		setReplyTo(EmailAddress.createFrom(replyTos));
+		return this;
+	}
+	/**
+	 * Sets one or more REPLY-TO address.
+	 */
+	public Email replyTo(InternetAddress[] replyTos) {
+		setReplyTo(EmailAddress.createFrom(replyTos));
+		return this;
+	}
+
+	// ---------------------------------------------------------------- cc
+
+	/**
+	 * Appends CC address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
 	public Email cc(String cc) {
-		setCc(cc);
+		addCc(new EmailAddress(cc));
 		return this;
 	}
-	public Email cc(String... ccs) {
-		setCc(ccs);
+	/**
+	 * Appends CC address.
+	 */
+	public Email cc(String personalName, String cc) {
+		addCc(new EmailAddress(personalName, cc));
+		return this;
+	}
+	/**
+	 * Appends CC address.
+	 */
+	public Email cc(InternetAddress internetAddress) {
+		addCc(new EmailAddress(internetAddress));
 		return this;
 	}
 
-	public Email bcc(String bcc) {
-		setBcc(bcc);
+	/**
+	 * Sets one or more CC address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
+	public Email cc(String[] ccs) {
+		setCc(EmailAddress.createFrom(ccs));
 		return this;
 	}
-	public Email bcc(String... bccs) {
-		setBcc(bccs);
+	/**
+	 * Sets one or more CC address.
+	 */
+	public Email cc(InternetAddress[] ccs) {
+		setCc(EmailAddress.createFrom(ccs));
+		return this;
+	}
+
+	// ---------------------------------------------------------------- bcc
+
+	/**
+	 * Appends BCC address. Address may be specified with personal name
+	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
+	 */
+	public Email bcc(String bcc) {
+		addBcc(new EmailAddress(bcc));
+		return this;
+	}
+	/**
+	 * Appends BCC address.
+	 */
+	public Email bcc(String personal, String bcc) {
+		addBcc(new EmailAddress(personal, bcc));
+		return this;
+	}
+	/**
+	 * Appends BCC address.
+	 */
+	public Email bcc(InternetAddress internetAddress) {
+		addBcc(new EmailAddress(internetAddress));
+		return this;
+	}
+
+	/**
+	 * Sets one or more BCC addresses.
+	 */
+	public Email bcc(String[] bccs) {
+		setBcc(EmailAddress.createFrom(bccs));
+		return this;
+	}
+	/**
+	 * Sets one or more BCC addresses.
+	 */
+	public Email bcc(InternetAddress[] bccs) {
+		setBcc(EmailAddress.createFrom(bccs));
 		return this;
 	}
 
@@ -67,6 +238,11 @@ public class Email extends CommonEmail {
 
 	public Email subject(String subject) {
 		setSubject(subject);
+		return this;
+	}
+
+	public Email subject(String subject, String subjectEncoding) {
+		setSubject(subject, subjectEncoding);
 		return this;
 	}
 
@@ -121,7 +297,7 @@ public class Email extends CommonEmail {
 	 */
 	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
-			attachments = new ArrayList<EmailAttachment>();
+			attachments = new ArrayList<>();
 		}
 		attachments.add(emailAttachment);
 		return this;

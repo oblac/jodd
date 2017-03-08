@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc;
 
@@ -24,31 +47,31 @@ public class IntcptActionTest {
 
 	@Test
 	public void testIn1Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.in1.html?foo=173").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in1.html?foo=173").send();
 		assertEquals("param:  = 173", response.bodyText().trim());
 	}
 
 	@Test
 	public void testIn2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.in2.html?foo=173&foo2=").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in2.html?foo=173&foo2=173").send();
 		assertEquals("param: 173 = 173", response.bodyText().trim());
 	}
 
 	@Test
 	public void testAppendingAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.inap.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap.html").send();
 		assertEquals("value=appending<jodd>", response.bodyText().trim());
 	}
 
 	@Test
 	public void testAppending2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.inap2.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap2.html").send();
 		assertEquals("value=appending2<heyp>", response.bodyText().trim());
 	}
 
 	@Test
 	public void testAppending3Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.inap3.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap3.html").send();
 		assertEquals("value=appending3<jodd>", response.bodyText().trim());
 	}
 

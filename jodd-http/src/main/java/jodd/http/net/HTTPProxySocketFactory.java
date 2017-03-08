@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http.net;
 
@@ -44,7 +67,7 @@ public class HTTPProxySocketFactory extends SocketFactory {
 		return createHttpProxySocket(address.getHostAddress(), port);
 	}
 
-	private Socket createHttpProxySocket(String host, int port) throws IOException {
+	private Socket createHttpProxySocket(String host, int port) {
 		Socket socket = null;
 		String proxyAddress = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();
@@ -73,13 +96,15 @@ public class HTTPProxySocketFactory extends SocketFactory {
 			int nlchars = 0;
 
 			while (true) {
-				char c = (char) in.read();
+				int i =  in.read();
+				if (i == -1) {
+					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
+				}
+
+				char c = (char) i;
 				recv.append(c);
 				if (recv.length() > 1024) {
 					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Received header longer then 1024 chars");
-				}
-				if (c == -1) {
-					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
 				}
 				if ((nlchars == 0 || nlchars == 2) && c == '\r') {
 					nlchars++;
@@ -110,7 +135,7 @@ public class HTTPProxySocketFactory extends SocketFactory {
 			int code = Integer.parseInt(m.group(1));
 
 			if (code != HttpURLConnection.HTTP_OK) {
-				throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid code");
+				throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid return status code: " + code);
 			}
 
 			return socket;

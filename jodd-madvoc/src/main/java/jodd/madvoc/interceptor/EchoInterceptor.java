@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.interceptor;
 
@@ -10,6 +33,27 @@ import jodd.util.StringUtil;
  * User may inherit it and change the way message is printed.
  */
 public class EchoInterceptor extends BaseActionInterceptor {
+
+	protected String prefixIn = "-----> ";
+	protected String prefixOut = "<----- ";
+
+	public String getPrefixIn() {
+		return prefixIn;
+	}
+
+	public void setPrefixIn(String prefixIn) {
+		this.prefixIn = prefixIn;
+	}
+
+	public String getPrefixOut() {
+		return prefixOut;
+	}
+
+	public void setPrefixOut(String prefixOut) {
+		this.prefixOut = prefixOut;
+	}
+
+	// ---------------------------------------------------------------- code
 
 	/**
 	 * Measure action invocation time.
@@ -38,7 +82,8 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	 * the message is printed.
 	 */
 	protected void printBefore(ActionRequest request) {
-		StringBuilder message = new StringBuilder("----->");
+		StringBuilder message = new StringBuilder(prefixIn);
+
 		message.append(request.getActionPath()).append("   [").append(request.getActionConfig().getActionString()).append(']');
 		out(message.toString());
 	}
@@ -48,14 +93,16 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	 * the message is printed.
 	 */
 	protected void printAfter(ActionRequest request, long executionTime, Object result) {
-		StringBuilder message = new StringBuilder("<----- ");
+		StringBuilder message = new StringBuilder(prefixOut);
+
 		String resultString = StringUtil.toSafeString(result);
 		if (resultString.length() > 70) {
 			resultString = resultString.substring(0, 70);
 			resultString += "...";
 		}
-		message.append(request.getActionPath()).append("  (").append(resultString);
-		message.append(") in ").append(executionTime).append("ms.");
+		message.append(request.getActionPath()).append("  (")
+				.append(resultString).append(") in ").append(executionTime)
+				.append("ms.");
 		out(message.toString());
 	}
 

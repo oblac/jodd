@@ -1,7 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.servlet.filter;
 
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
@@ -21,14 +45,44 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	public ByteArrayResponseWrapper(HttpServletResponse response) {
 		super(response);
 		out = new FastByteArrayServletOutputStream();
-		writer = new PrintWriter(out);
+
+		// create a PrintWriter-wrapper over the output stream
+		// that is not buffered and is immediately flush-able
+		// so to reflect the changes on out immediately.
+
+		writer = new PrintWriter(new OutputStreamWriter(out) {
+			@Override
+			public void write(int c) throws IOException {
+				super.write(c);
+				super.flush();
+			}
+
+			@Override
+			public void write(char[] cbuf, int off, int len) throws IOException {
+				super.write(cbuf, off, len);
+				super.flush();
+			}
+
+			@Override
+			public void write(String str, int off, int len) throws IOException {
+				super.write(str, off, len);
+				super.flush();
+			}
+		});
 	}
 
+	/**
+	 * Returns the wrapped output stream.
+	 */
 	@Override
 	public ServletOutputStream getOutputStream() throws IOException {
 		return out;
 	}
 
+	/**
+	 * Returns a writer-wrapper that is backed up by the
+	 * wrapped output stream.
+	 */
 	@Override
 	public PrintWriter getWriter() throws IOException {
 		return writer;
@@ -45,6 +99,14 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	@Override
 	public void reset() {
 		out.reset();
+	}
+
+	/**
+	 * Returns current buffer size.
+	 */
+	@Override
+	public int getBufferSize() {
+		return out.wrapped.size();
 	}
 
 	// ---------------------------------------------------------------- add-on

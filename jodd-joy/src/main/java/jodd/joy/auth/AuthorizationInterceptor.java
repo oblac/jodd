@@ -1,8 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.joy.auth;
 
-import jodd.joy.madvoc.action.AppAction;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.DispatcherUtil;
@@ -14,8 +36,6 @@ import jodd.log.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import static jodd.joy.madvoc.action.AppAction.REDIRECT;
 
 /**
  * Authorization checking interceptor. Usually invoked after {@link AuthenticationInterceptor}.
@@ -40,7 +60,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 			log.debug("authorize user: " + userSession);
 		}
 
-		if (authorize(actionRequest, userSession) == false) {
+		if (!authorize(actionRequest, userSession)) {
 			if (log.isInfoEnabled()) {
 				log.info("access denied for: " + userSession);
 			}
@@ -66,7 +86,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 	 * Prepares result for access denied page.
 	 */
 	protected Object resultAccessDenied() {
-		return REDIRECT + AppAction.ALIAS_ACCESS_DENIED;
+		return "redirect:" + AuthAction.ALIAS_ACCESS_DENIED;
 	}
 
 
@@ -83,7 +103,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 					'?' + URLCoder.encodeQueryParam(AuthAction.LOGIN_SUCCESS_PATH) +
 					'=' + URLCoder.encodeQueryParam(targetUrl);
 		}
-		return REDIRECT + AppAction.ALIAS_LOGIN + targetUrl;
+		return "redirect:" + AuthAction.ALIAS_LOGIN + targetUrl;
 	}
 
 

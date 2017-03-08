@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom.sqlgen.chunks;
 
@@ -21,7 +44,7 @@ import jodd.util.StringUtil;
  * There are some special values for propertyName
  * <ul>
  * <li>wildcard (*), all table columns will be listed</li>
- * <li>id sign (+), all table id columns will be listed</li?
+ * <li>id sign (+), all table id columns will be listed</li>
  * </ul>
  * <p>
  * If previous chunk is also a column chunk, comma separator will be added in between.
@@ -33,6 +56,7 @@ import jodd.util.StringUtil;
  * <li><code>$C{tableRef}</code> is rendered as FOO.col1, FOO.col2,...</li>
  * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns</li>
  * <li><code>$C{tableRef.+}</code> renders to only identity columns</li>
+ * <li><code>$C{tableRef.%}</code> renders all but identity columns</li>
  * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column</li>
  * <li><code>$C{tableRef.[colRef1,colRef2|...]}</code> is rendered as FOO.column1, FOO.column2,..., support id sign (+)</li>
  * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
@@ -71,7 +95,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	}
 
 	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
-		this(tableRef, null, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
+		this(tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
 	public ColumnsSelectChunk(String reference) {
@@ -116,6 +140,10 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.columnRef = null;
 				this.columnRefArr = null;
 				this.includeColumns = COLS_ONLY_IDS;
+			} else if (reference.equals(StringPool.PERCENT)) {
+				this.columnRef = null;
+				this.columnRefArr = null;
+				this.includeColumns = COLS_ALL_BUT_ID;
 			} else if (
 					reference.length() != 0
 					&& reference.charAt(0) == '['
@@ -175,11 +203,14 @@ public class ColumnsSelectChunk extends SqlChunk {
 			int count = 0;
 			boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
 			for (DbEntityColumnDescriptor dec : decList) {
-				if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+				if ((includeColumns == COLS_ONLY_IDS) && (!dec.isId())) {
+					continue;
+				}
+				if ((includeColumns == COLS_ALL_BUT_ID) && (dec.isId())) {
 					continue;
 				}
 				if ((includeColumns == COLS_NA_MULTI) 
-					&& (!withIds || (dec.isId() == false))
+					&& (!withIds || (!dec.isId()))
 					&& (!ArraysUtil.contains(columnRefArr, dec.getPropertyName()))) {
 					continue;
 				}
@@ -201,7 +232,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 			String columnName = dec == null ? null : dec.getColumnName();
 			//String columnName = ded.getColumnName(columnRef);
 			if (columnName == null) {
-				throw new DbSqlBuilderException("Unable to resolve column reference: " + tableRef + '.' + columnRef);
+				throw new DbSqlBuilderException("Invalid column reference: " + tableRef + '.' + columnRef);
 			}
 			if (useTableReference) {
 				appendColumnName(out, ded, columnName);
@@ -258,10 +289,4 @@ public class ColumnsSelectChunk extends SqlChunk {
 		}
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new ColumnsSelectChunk(tableRef, columnRef, columnRefArr, includeColumns, hint);
-	}
 }

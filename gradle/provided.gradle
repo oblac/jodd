@@ -1,0 +1,57 @@
+/*
+Provided scope (Gradle still does not want to address this):
+
+http://issues.gradle.org/browse/GRADLE-784
+http://www.sinking.in/blog/provided-scope-in-gradle/
+http://www.gradle.org/docs/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html
+*/
+
+// PROVIDED
+
+configurations {
+	provided {
+		description "Like compile, but indicates that you expect the JDK or a container to provide it. It is only available on the compilation classpath."
+		transitive false
+		dependencies.all { dep ->
+			configurations.default.exclude group: dep.group, module: dep.name
+		}
+	}
+	compile.extendsFrom provided
+}
+
+// add provided scope to the maven
+Conf2ScopeMappingContainer scopeMappings = project.conf2ScopeMappings
+scopeMappings.addMapping(
+		MavenPlugin.COMPILE_PRIORITY + 1,
+		project.configurations.getByName("provided"),
+		Conf2ScopeMappingContainer.PROVIDED)
+
+
+// set provided scope for IDEA dependencies
+idea {
+	module {
+		if (scopes.PROVIDED != null) {
+			scopes.PROVIDED.plus += [configurations.provided]
+		}
+	}
+}
+
+// set provided scope for Eclipse dependencies
+eclipse {
+	classpath {
+		plusConfigurations += [ configurations.provided ]
+	}
+}
+
+
+// OPTIONAL
+
+// + an extra property List that holds optional dependencies
+// + an extra method that can be executed as parameter when declaring dependencies
+
+project.ext.optionalDeps = []
+
+project.ext.optional = { dep ->
+	project.ext.optionalDeps << (dep.group + ':' + dep.name + ':' + dep.version)
+}
+

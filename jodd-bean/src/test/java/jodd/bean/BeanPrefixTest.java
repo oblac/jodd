@@ -1,12 +1,38 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.bean;
 
-import jodd.JoddBean;
 import jodd.bean.data.LifeBean;
 import jodd.introspector.CachingIntrospector;
-import org.junit.Assert;
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.JoddIntrospector;
+import jodd.introspector.PropertyDescriptor;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class BeanPrefixTest {
 
@@ -14,33 +40,73 @@ public class BeanPrefixTest {
 	public void testFieldPrefix1() {
 		LifeBean lifeBean = new LifeBean();
 
-		String foo = BeanUtil.getProperty(lifeBean, "foo").toString();
+		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
-		Assert.assertEquals("foo", foo);
+		assertEquals("foo", foo);
 
-		JoddBean.introspector = new CachingIntrospector(true, true, true, "_");
+		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_"});
 
-		foo = BeanUtil.getProperty(lifeBean, "foo").toString();
+		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
-		Assert.assertEquals("foo", foo);
+		assertEquals("foo", foo);
 
-		JoddBean.introspector = new CachingIntrospector();
+		ClassDescriptor cd = JoddIntrospector.introspector.lookup(LifeBean.class);
+
+		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
+		assertEquals(3, pds.length);
+
+		assertEquals("bar", pds[0].getName());
+		assertEquals("_bar", pds[0].getFieldDescriptor().getName());
+
+		assertEquals("www", pds[2].getName());
+		assertEquals(null, pds[2].getFieldDescriptor());
+
+		JoddIntrospector.introspector = new CachingIntrospector();
+	}
+
+	@Test
+	public void testFieldPrefix1withEmpty() {
+		LifeBean lifeBean = new LifeBean();
+
+		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
+
+		assertEquals("foo", foo);
+
+		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_", ""});
+
+		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
+
+		assertEquals("foo", foo);
+
+
+		ClassDescriptor cd = JoddIntrospector.introspector.lookup(LifeBean.class);
+
+		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
+		assertEquals(3, pds.length);
+
+		assertEquals("bar", pds[0].getName());
+		assertEquals("_bar", pds[0].getFieldDescriptor().getName());
+
+		assertEquals("www", pds[2].getName());
+		assertEquals("www", pds[2].getFieldDescriptor().getName());
+
+		JoddIntrospector.introspector = new CachingIntrospector();
 	}
 
 	@Test
 	public void testFieldPrefix2() {
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
 		LifeBean lifeBean = new LifeBean();
 
-		String bar = BeanUtil.getProperty(lifeBean, "bar").toString();
+		String bar = beanUtilBean.getProperty(lifeBean, "bar").toString();
 
-		Assert.assertEquals("bar", bar);
+		assertEquals("bar", bar);
 
-		BeanUtil.getBeanUtilBean().setIntrospector(new CachingIntrospector(true, true, true, "_"));
+		beanUtilBean.setIntrospector(new CachingIntrospector(true, true, true, new String[] {"_"}));
 
-		bar = BeanUtil.getProperty(lifeBean, "bar").toString();
+		bar = beanUtilBean.getProperty(lifeBean, "bar").toString();
 
-		Assert.assertEquals("_bar", bar);
-
-		BeanUtil.getBeanUtilBean().setIntrospector(JoddBean.introspector);
+		assertEquals("_bar", bar);
 	}
 }

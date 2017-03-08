@@ -1,15 +1,38 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
-import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.petite.meta.InitMethodInvocationStrategy;
-import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
+import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
@@ -35,22 +58,27 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all beans definitions.
 	 */
-	protected final Map<String, BeanDefinition> beans = new HashMap<String, BeanDefinition>();
+	protected final Map<String, BeanDefinition> beans = new HashMap<>();
+
+	/**
+	 * Map of alternative beans names.
+	 */
+	protected final Map<String, BeanDefinition> beansAlt = new HashMap<>();
 
 	/**
 	 * Map of all bean scopes.
 	 */
-	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<Class<? extends Scope>, Scope>();
+	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<>();
 
 	/**
 	 * Map of all providers.
 	 */
-	protected final Map<String, ProviderDefinition> providers = new HashMap<String, ProviderDefinition>();
+	protected final Map<String, ProviderDefinition> providers = new HashMap<>();
 
 	/**
 	 * Map of all bean collections.
 	 */
-	protected final Map<Class, String[]> beanCollections = new HashMap<Class, String[]>();
+	protected final Map<Class, String[]> beanCollections = new HashMap<>();
 
 	/**
 	 * {@link PetiteConfig Petite configuration}.
@@ -108,7 +136,7 @@ public abstract class PetiteBeans {
 			try {
 				scope = PetiteUtil.newInstance(scopeType, (PetiteContainer) this);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to create Petite scope: " + scopeType.getName(), ex);
+				throw new PetiteException("Invalid Petite scope: " + scopeType.getName(), ex);
 			}
 
 			registerScope(scopeType, scope);
@@ -135,11 +163,21 @@ public abstract class PetiteBeans {
 	 * Returns <code>null</code> if bean name doesn't exist.
 	 */
 	public BeanDefinition lookupBeanDefinition(String name) {
-		return beans.get(name);
+		BeanDefinition beanDefinition = beans.get(name);
+
+		// try alt bean names
+		if (beanDefinition == null) {
+			if (petiteConfig.isUseAltBeanNames()) {
+				beanDefinition = beansAlt.get(name);
+			}
+		}
+
+		return beanDefinition;
 	}
 
 	/**
 	 * Lookups for first founded {@link BeanDefinition bean definition}.
+	 * Returns <code>null</code> if none of the beans is found.
 	 */
 	protected BeanDefinition lookupBeanDefinitions(String... names) {
 		for (String name : names) {
@@ -152,7 +190,8 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Lookups for existing bean. Throws exception if bean is not found.
+	 * Lookups for existing {@link jodd.petite.BeanDefinition bean definition}.
+	 * Throws exception if bean is not found.
 	 */
 	protected BeanDefinition lookupExistingBeanDefinition(String name) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(name);
@@ -180,6 +219,25 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- register beans
 
 	/**
+	 * Creates {@link jodd.petite.BeanDefinition} on
+	 * {@link #registerPetiteBean(Class, String, Class, WiringMode, boolean) bean registration}.
+	 * This is a hook for modifying the bean data, like passing proxifed class etc.
+	 * By default returns new instance of {@link jodd.petite.BeanDefinition}.
+	 */
+	protected BeanDefinition createBeanDefinitionForRegistration(
+			String name, Class type, Scope scope, WiringMode wiringMode) {
+
+		return new BeanDefinition(name, type, scope, wiringMode);
+	}
+
+	/**
+	 * Registers a bean using provided class that is annotated.
+	 */
+	public BeanDefinition registerPetiteBean(Class type) {
+		return registerPetiteBean(type, null, null, null, false);
+	}
+
+	/**
 	 * Registers or defines a bean.
 	 *
 	 * @param type bean type, must be specified
@@ -195,7 +253,7 @@ public abstract class PetiteBeans {
 			boolean define) {
 
 		if (name == null) {
-			name = PetiteUtil.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
+			name = resolveBeanName(type);
 		}
 		if (wiringMode == null) {
 			wiringMode = PetiteUtil.resolveBeanWiringMode(type);
@@ -206,9 +264,11 @@ public abstract class PetiteBeans {
 		if (scopeType == null) {
 			scopeType = PetiteUtil.resolveBeanScopeType(type);
 		}
-		if (scopeType == DefaultScope.class) {
-			scopeType = petiteConfig.getDefaultScope();
+		if (scopeType == null) {
+			scopeType = SingletonScope.class;
 		}
+
+		// remove existing bean
 		BeanDefinition existing = removeBean(name);
 		if (existing != null) {
 			if (petiteConfig.getDetectDuplicatedBeanNames()) {
@@ -217,24 +277,25 @@ public abstract class PetiteBeans {
 						existing.type.getName() + "' is already registered with the name: " + name);
 			}
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("Registering bean: " + name +
-					" of type: " + type.getSimpleName() +
-					" in: " + scopeType.getSimpleName() +
-					" using wiring mode: " + wiringMode.toString());
-		}
-
-		// registering
 
 		// check if type is valid
-		if ((type != null) && (type.isInterface() == true)) {
-			throw new PetiteException("Unable to register interface: " + type.getName());
+		if (type.isInterface()) {
+			throw new PetiteException("PetiteBean can not be an interface: " + type.getName());
+		}
+
+		// registration
+		if (log.isDebugEnabled()) {
+			log.debug("Register bean " + name +
+					" of type " + type.getSimpleName() +
+					" in " + scopeType.getSimpleName() +
+					" using wiring mode " + wiringMode.toString());
 		}
 
 		// register
 		Scope scope = resolveScope(scopeType);
-		BeanDefinition beanDefinition = new BeanDefinition(name, type, scope, wiringMode);
-		beans.put(name, beanDefinition);
+		BeanDefinition beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode);
+
+		registerBean(name, beanDefinition);
 
 		// providers
 		ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(beanDefinition);
@@ -247,14 +308,59 @@ public abstract class PetiteBeans {
 
 		// define
 		if (define) {
-			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(type);
+			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(beanDefinition.getType());
 			beanDefinition.properties = PropertyInjectionPoint.EMPTY;
 			beanDefinition.methods = MethodInjectionPoint.EMPTY;
 			beanDefinition.initMethods = InitMethodPoint.EMPTY;
+			beanDefinition.destroyMethods = DestroyMethodPoint.EMPTY;
 		}
 
 		// return
 		return beanDefinition;
+	}
+
+	/**
+	 * Registers bean definition by putting it in the beans map. If bean does
+	 * not have petite name explicitly defined, alternative bean names
+	 * will be registered.
+	 */
+	protected void registerBean(String name, BeanDefinition beanDefinition) {
+		beans.put(name, beanDefinition);
+
+		if (!petiteConfig.isUseAltBeanNames()) {
+			return;
+		}
+
+		Class type = beanDefinition.getType();
+
+		if (PetiteUtil.beanHasAnnotationName(type)) {
+			return;
+		}
+
+		Class[] interfaces = ReflectUtil.resolveAllInterfaces(type);
+
+		for (Class anInterface : interfaces) {
+			String altName = PetiteUtil.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
+
+			if (name.equals(altName)) {
+				continue;
+			}
+
+			if (beans.containsKey(altName)) {
+				continue;
+			}
+
+			if (beansAlt.containsKey(altName)) {
+				BeanDefinition existing = beansAlt.get(altName);
+
+				if (existing != null) {
+					beansAlt.put(altName, null);		// store null as value to mark that alt name is duplicate
+				}
+			}
+			else {
+				beansAlt.put(altName, beanDefinition);
+			}
+		}
 	}
 
 	/**
@@ -264,7 +370,7 @@ public abstract class PetiteBeans {
 	 */
 	public void removeBean(Class type) {
 		// collect bean names
-		Set<String> beanNames = new HashSet<String>();
+		Set<String> beanNames = new HashSet<>();
 
 		for (BeanDefinition def : beans.values()) {
 			if (def.type.equals(type)) {
@@ -303,12 +409,12 @@ public abstract class PetiteBeans {
 			return beanNames;
 		}
 
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 
 		for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
 			BeanDefinition beanDefinition = entry.getValue();
 
-			if (ReflectUtil.isSubclass(beanDefinition.type, type)) {
+			if (ReflectUtil.isTypeOf(beanDefinition.type, type)) {
 				String beanName = entry.getKey();
 				list.add(beanName);
 			}
@@ -375,13 +481,13 @@ public abstract class PetiteBeans {
 		String[] references = reference == null ? null : new String[] {reference};
 
 		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		FieldDescriptor fieldDescriptor = cd.getFieldDescriptor(property, true);
-		if (fieldDescriptor == null) {
+		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
 		PropertyInjectionPoint pip =
-				injectionPointFactory.createPropertyInjectionPoint(fieldDescriptor.getField(), references);
+				injectionPointFactory.createPropertyInjectionPoint(propertyDescriptor, references);
 
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
@@ -395,13 +501,14 @@ public abstract class PetiteBeans {
 	public void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		FieldDescriptor fieldDescriptor = cd.getFieldDescriptor(property, true);
-		if (fieldDescriptor == null) {
+
+		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+
+		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
-		SetInjectionPoint sip =
-				injectionPointFactory.createSetInjectionPoint(fieldDescriptor.getField());
+		SetInjectionPoint sip = injectionPointFactory.createSetInjectionPoint(propertyDescriptor);
 
 		beanDefinition.addSetInjectionPoint(sip);
 	}
@@ -472,6 +579,35 @@ public abstract class PetiteBeans {
 		beanDefinition.addInitMethodPoints(initMethodPoints);
 	}
 
+	/**
+	 * Registers destroy method.
+	 *
+	 * @param beanName bean name
+	 * @param destroyMethodNames destroy method names
+	 */
+	public void registerPetiteDestroyMethods(String beanName, String... destroyMethodNames) {
+		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		if (destroyMethodNames == null) {
+			destroyMethodNames = StringPool.EMPTY_ARRAY;
+		}
+
+		int total = destroyMethodNames.length;
+		DestroyMethodPoint[] destroyMethodPoints = new DestroyMethodPoint[total];
+
+		int i;
+		for (i = 0; i < destroyMethodNames.length; i++) {
+			MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
+			if (md == null) {
+				throw new PetiteException("Destroy method not found: " + beanDefinition.type.getName() + '#' + destroyMethodNames[i]);
+			}
+			destroyMethodPoints[i] = new DestroyMethodPoint(md.getMethod());
+		}
+
+		beanDefinition.addDestroyMethodPoints(destroyMethodPoints);
+	}
+
 	// ---------------------------------------------------------------- providers
 
 	/**
@@ -480,7 +616,7 @@ public abstract class PetiteBeans {
 	 * @param providerName provider name
 	 * @param beanName bean name
 	 * @param methodName instance method name
-	 * @param arguments method argument types, may be <code>null</code>
+	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
@@ -509,7 +645,7 @@ public abstract class PetiteBeans {
 	 * @param providerName provider name
 	 * @param type class type
 	 * @param staticMethodName static method name
-	 * @param arguments method argument types, may be <code>null</code>
+	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);

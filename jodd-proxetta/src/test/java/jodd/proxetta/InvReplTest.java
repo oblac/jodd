@@ -1,14 +1,37 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.JoddProxetta;
 import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.inv.*;
 import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -19,13 +42,13 @@ import static org.junit.Assert.*;
 public class InvReplTest {
 
 	@Test
-	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {
 
 		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
-		byte klazz[] = proxetta.builder(One.class).create();
-		//FileUtil.writeBytes("d:\\OneClone.class", klazz);
+		byte[] klazz = proxetta.builder(One.class).create();
+		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 //		PrintStream out = System.out;
@@ -59,7 +82,6 @@ public class InvReplTest {
 
 	}
 
-
 	@Test
 	public void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
@@ -81,9 +103,58 @@ public class InvReplTest {
 		}
 	}
 
+	@Test
+	public void testCurrentTimeMillis() {
+		TimeClass timeClass = (TimeClass) InvokeProxetta.withAspects(new InvokeAspect() {
+			@Override
+			public boolean apply(MethodInfo methodInfo) {
+				return methodInfo.isTopLevelMethod();
+			}
+
+			@Override
+			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
+				if (
+						invokeInfo.getClassName().equals("java.lang.System") &&
+						invokeInfo.getMethodName().equals("currentTimeMillis")
+					) {
+					return InvokeReplacer.with(MySystem.class, "currentTimeMillis");
+				}
+				return null;
+			}
+		}).builder(TimeClass.class).newInstance();
+
+		long time = timeClass.time();
+
+		assertEquals(10823, time);
+	}
+
+	@Test
+	public void testWimp() {
+		Wimp wimp = (Wimp) InvokeProxetta.withAspects(new InvokeAspect() {
+			@Override
+			public boolean apply(MethodInfo methodInfo) {
+				return methodInfo.isTopLevelMethod();
+			}
+
+			@Override
+			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
+				return InvokeReplacer.NONE;
+			}
+		}).builder(Wimp.class).newInstance();
+
+		int i = wimp.foo();
+		assertEquals(0, i);
+
+		String txt = wimp.aaa(3, null, null);
+		assertEquals("int3WelcomeToJodd", txt);
+
+		txt = wimp.ccc(3, "XXX", 1, null);
+		assertEquals(">4:String:4long:4XXX:ccc:Wimp", txt);
+	}
+
 
 	protected InvokeProxetta initProxetta() {
-		InvokeProxetta fp = InvokeProxetta.withAspects(
+		return InvokeProxetta.withAspects(
 				new InvokeAspect() {
 					@Override
 					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
@@ -131,6 +202,5 @@ public class InvReplTest {
 					}
 				}
 		);
-		return fp;
 	}
 }

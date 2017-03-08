@@ -1,12 +1,38 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util.collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 @SuppressWarnings("AutoBoxing")
 public class ArrayIteratorTest {
@@ -15,7 +41,7 @@ public class ArrayIteratorTest {
 	public void testArrayIteration() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
-		ArrayIterator<Integer> ae = new ArrayIterator<Integer>(i);
+		ArrayIterator<Integer> ae = new ArrayIterator<>(i);
 		assertTrue(ae.hasNext());
 		assertEquals("1", ae.next().toString());
 		assertEquals("2", ae.next().toString());
@@ -31,6 +57,13 @@ public class ArrayIteratorTest {
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}
+		
+		try {
+			ae.remove();
+			fail();
+		} catch (UnsupportedOperationException nseex) {
+			// ignore
+		}
 
 	}
 
@@ -38,7 +71,7 @@ public class ArrayIteratorTest {
 	public void testArrayIterationFrom() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
-		ArrayIterator<Integer> ae = new ArrayIterator<Integer>(i, 2, 2);
+		ArrayIterator<Integer> ae = new ArrayIterator<>(i, 2, 2);
 		assertTrue(ae.hasNext());
 		assertEquals("3", ae.next().toString());
 		assertEquals("4", ae.next().toString());
@@ -53,4 +86,3 @@ public class ArrayIteratorTest {
 
 	}
 }
-

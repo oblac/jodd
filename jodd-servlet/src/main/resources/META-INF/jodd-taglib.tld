@@ -12,13 +12,6 @@
 	<uri>/jodd</uri>
 
 	<tag>
-		<description>Form tag</description>
-		<name>form</name>
-		<tag-class>jodd.servlet.tag.FormTag</tag-class>
-		<body-content>JSP</body-content>
-	</tag>
-
-	<tag>
 		<name>url</name>
 		<tag-class>jodd.servlet.tag.UrlTag</tag-class>
 		<body-content>empty</body-content>

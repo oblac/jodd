@@ -1,17 +1,42 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http;
 
 import jodd.io.StreamUtil;
-import jodd.io.StringInputStream;
-import jodd.io.StringOutputStream;
 import jodd.util.StringPool;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import static jodd.util.StringPool.CRLF;
@@ -55,6 +80,35 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- cookie
+
+	/**
+	 * Returns list of valid cookies sent from server.
+	 * If no cookie found, returns an empty array. Invalid cookies are ignored.
+	 */
+	public Cookie[] cookies() {
+		List<String> newCookies = headers("set-cookie");
+
+		if (newCookies == null) {
+			return new Cookie[0];
+		}
+
+		List<Cookie> cookieList = new ArrayList<>(newCookies.size());
+
+		for (String cookieValue : newCookies) {
+			try {
+				Cookie cookie = new Cookie(cookieValue);
+
+				cookieList.add(cookie);
+			}
+			catch (Exception ex) {
+				// ignore
+			}
+		}
+
+		return cookieList.toArray(new Cookie[cookieList.size()]);
+	}
+
 	// ---------------------------------------------------------------- body
 
 	/**
@@ -68,13 +122,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			if (body != null) {
 				removeHeader(HEADER_CONTENT_ENCODING);
 				try {
-					StringInputStream in = new StringInputStream(body, StringInputStream.Mode.STRIP);
+					ByteArrayInputStream in = new ByteArrayInputStream(body.getBytes(StringPool.ISO_8859_1));
 					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
-					StringOutputStream out = new StringOutputStream();
+
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 					StreamUtil.copy(gzipInputStream, out);
 
-					body(out.toString());
+					body(out.toString(StringPool.ISO_8859_1));
 				} catch (IOException ioex) {
 					throw new HttpException(ioex);
 				}
@@ -83,19 +138,21 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- toString
+	// ---------------------------------------------------------------- buffer
+
 
 	/**
-	 * String representation of the HTTP response.
+	 * Creates response {@link jodd.http.Buffer buffer}.
 	 */
-	public String toString() {
+	@Override
+	protected Buffer buffer(boolean fullResponse) {
 		// form
 
-		String formString = formString();
+		Buffer formBuffer = formBuffer();
 
 		// response
 
-		StringBuilder response = new StringBuilder();
+		Buffer response = new Buffer();
 
 		response.append(httpVersion)
 			.append(SPACE)
@@ -104,28 +161,9 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			.append(statusPhrase)
 			.append(CRLF);
 
-		for (String key : headers.keySet()) {
-			String[] values = headers.getStrings(key);
+		populateHeaderAndBody(response, formBuffer, fullResponse);
 
-			String headerName = HttpUtil.prepareHeaderParameterName(key);
-
-			for (String value : values) {
-				response.append(headerName);
-				response.append(": ");
-				response.append(value);
-				response.append(CRLF);
-			}
-		}
-
-		response.append(CRLF);
-
-		if (form != null) {
-			response.append(formString);
-		} else if (body != null) {
-			response.append(body);
-		}
-
-		return response.toString();
+		return response;
 	}
 
 	// ---------------------------------------------------------------- read from
@@ -158,10 +196,29 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			line = line.trim();
 
 			int ndx = line.indexOf(' ');
-			httpResponse.httpVersion(line.substring(0, ndx));
+			int ndx2;
 
-			int ndx2 = line.indexOf(' ', ndx + 1);
-			httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+			if (ndx > -1) {
+				httpResponse.httpVersion(line.substring(0, ndx));
+
+				ndx2 = line.indexOf(' ', ndx + 1);
+			}
+			else {
+				httpResponse.httpVersion(HTTP_1_1);
+				ndx2 = -1;
+				ndx = 0;
+			}
+
+			if (ndx2 == -1) {
+				ndx2 = line.length();
+			}
+
+			try {
+				httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+			}
+			catch (NumberFormatException nfex) {
+				httpResponse.statusCode(-1);
+			}
 
 			httpResponse.statusPhrase(line.substring(ndx2).trim());
 		}
@@ -170,6 +227,38 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		httpResponse.readBody(reader);
 
 		return httpResponse;
+	}
+
+	// ---------------------------------------------------------------- request
+
+	protected HttpRequest httpRequest;
+
+	/**
+	 * Binds {@link jodd.http.HttpRequest} to this response.
+	 */
+	void assignHttpRequest(HttpRequest httpRequest) {
+		this.httpRequest = httpRequest;
+	}
+
+	/**
+	 * Returns {@link jodd.http.HttpRequest} that created this response.
+	 */
+	public HttpRequest getHttpRequest() {
+		return httpRequest;
+	}
+
+	/**
+	 * Closes requests connection if it was open.
+	 * Should be called when using keep-alive connections.
+	 * Otherwise, connection will be already closed.
+	 */
+	public HttpResponse close() {
+		HttpConnection httpConnection = httpRequest.httpConnection;
+		if (httpConnection != null) {
+			httpConnection.close();
+			httpRequest.httpConnection = null;
+		}
+		return this;
 	}
 
 }

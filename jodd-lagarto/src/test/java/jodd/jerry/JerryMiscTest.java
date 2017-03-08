@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.jerry;
 
@@ -9,13 +32,17 @@ import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.Node;
+import jodd.lagarto.dom.NodeSelector;
+import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 public class JerryMiscTest {
 
@@ -28,7 +55,7 @@ public class JerryMiscTest {
 
 		assertEquals(9, div.text().length());
 		assertEquals("Одјави се", div.text());
-		assertEquals(57, div.html().length());
+		assertEquals(9, div.html().length());
 	}
 
 	@Test
@@ -221,6 +248,126 @@ public class JerryMiscTest {
 		public String getPseudoFunctionName() {
 			return "super-fn";
 		}
+	}
+
+	@Test
+	public void testCreateElementError() {
+		Jerry j = Jerry.jerry("1<span>2</span>3<span></span>4");
+
+		j.attr("id", "test");
+		assertEquals("1<span>2</span>3<span></span>4", j.html());
+
+		j.$("*").attr("id", "test");
+
+		assertEquals("1<span id=\"test\">2</span>3<span id=\"test\"></span>4", j.html());
+	}
+
+	@Test
+	public void testCustomerDetails() {
+		Jerry doc = Jerry.jerry("<p>to<br>{customerDetails}</p>");
+
+		doc.$("p").each(($this, index) -> {
+			String innerHtml = $this.html();
+			innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
+			$this.html(innerHtml);
+			return true;
+		});
+
+		String newHtml = doc.html();
+		assertEquals("<p>to<br>Jodd <b>rocks</b></p>", newHtml);
+	}
+
+	@Test
+	public void testNull() {
+		String html = null;
+		Jerry jerry = Jerry.jerry(html);
+
+		assertEquals(1, jerry.nodes.length);
+		assertEquals(0, jerry.nodes[0].getChildNodes().length);
+
+		html = "";
+		jerry = Jerry.jerry(html);
+
+		assertEquals(1, jerry.nodes.length);
+		assertEquals(0, jerry.nodes[0].getChildNodes().length);
+	}
+
+	@Test
+	public void test233() {
+		String html = "<div><span>name</span>value</div>";
+
+		Jerry $ = Jerry.jerry(html);
+
+		assertEquals("namevalue", $.text());
+
+		assertEquals(1, $.children().size());
+
+		Node div = $.children().get(0);
+
+		assertEquals("div", div.getNodeName());
+
+		assertEquals(2, div.getChildNodesCount());
+
+		assertEquals("value", div.getChild(1).getNodeValue());
+	}
+
+	@Test
+	public void testEmptyClassAttribute() {
+		Jerry doc = Jerry.jerry("<div class></div>");
+
+		try {
+			doc.find(".foo");
+		} catch(Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	@Test
+	public void test250() {
+		String html = "<html>\n" +
+			"  <body>\n" +
+			"    <a href=\"/go?to=foobar&index=null\" title=\"Choice 1\">link</a>\n" +
+			"  </body>\n" +
+			"</html>";
+
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		NodeSelector nodeSelector = new NodeSelector(domBuilder.parse(html));
+		List<Node> selectedNodes = nodeSelector.select("a[title='Choice 1']");
+
+		System.out.println();
+
+		assertEquals("/go?to=foobar&index=null", selectedNodes.get(0).getAttribute("href"));
+	}
+
+	@Test
+	public void test279() {
+		String html = "<html><body><div>x</div></body></html>";
+
+		Jerry $ = Jerry.jerry(html);
+
+		$.$("body").html("");
+		assertEquals("<html><body></body></html>", $.html());
+
+		$.$("body").append("");
+		assertEquals("<html><body></body></html>", $.html());
+
+		$.$("body").before("");
+		assertEquals("<html><body></body></html>", $.html());
+	}
+
+	@Test
+	public void test321() {
+		String html = "<head><title>test &amp; blah</title><body><h1>test &amp; blah<b>bold</b></h1></body>";
+
+		Jerry doc = Jerry.jerry(html);
+		Jerry title = doc.$("title");
+
+		assertEquals("test &amp; blah", title.eq(0).html());
+		assertEquals("test & blah", title.eq(0).text());
+
+		Jerry h1 = doc.$("h1");
+		assertEquals("test &amp; blah<b>bold</b>", h1.eq(0).html());
+		assertEquals("test & blahbold", h1.eq(0).text());
 	}
 
 }

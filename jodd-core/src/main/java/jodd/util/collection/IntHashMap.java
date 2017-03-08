@@ -1,8 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util.collection;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
@@ -26,7 +48,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	/**
 	 * The hash table data.
 	 */
-	private transient Entry table[];
+	private transient Entry[] table;
 
 	/**
 	 * The total number of mappings in the hash table.
@@ -57,39 +79,33 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * Constructs a new, empty map with the specified initial
 	 * capacity and the specified load factor.
 	 *
-	 * @param initialCapacity
-	 *                   the initial capacity of the IntHashMap.
+	 * @param initialCapacity the initial capacity of the IntHashMap.
 	 * @param loadFactor the load factor of the IntHashMap
-	 *
-	 * @throws IllegalArgumentException
-	 *                if the initial capacity is less
-	 *                than zero, or if the load factor is non-positive.
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 * than zero, or if the load factor is non-positive.
 	 */
 	public IntHashMap(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) {
-			throw new IllegalArgumentException("Invalid initial capacity: "+ initialCapacity);
+			throw new IllegalArgumentException("Invalid initial capacity: " + initialCapacity);
 		}
 		if (loadFactor <= 0) {
-			throw new IllegalArgumentException("Invalid load factor: "+ loadFactor);
+			throw new IllegalArgumentException("Invalid load factor: " + loadFactor);
 		}
 		if (initialCapacity == 0) {
 			initialCapacity = 1;
 		}
 		this.loadFactor = loadFactor;
 		table = new Entry[initialCapacity];
-		threshold = (int)(initialCapacity * loadFactor);
+		threshold = (int) (initialCapacity * loadFactor);
 	}
 
 	/**
 	 * Constructs a new, empty map with the specified initial capacity
 	 * and default load factor, which is 0.75.
 	 *
-	 * @param initialCapacity
-	 *               the initial capacity of the IntHashMap.
-	 *
-	 * @throws IllegalArgumentException
-	 *                if the initial capacity is less
-	 *                than zero.
+	 * @param initialCapacity the initial capacity of the IntHashMap.
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 * than zero.
 	 */
 	public IntHashMap(int initialCapacity) {
 		this(initialCapacity, 0.75f);
@@ -138,24 +154,24 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * Returns <code>true</code> if this map maps one or more keys to the
 	 * specified value.
 	 *
-	 * @param value  value whose presence in this map is to be tested.
-	 *
+	 * @param value value whose presence in this map is to be tested.
 	 * @return <code>true</code> if this map maps one or more keys to the
-	 *         specified value.
+	 * specified value.
 	 */
 	@Override
 	public boolean containsValue(Object value) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 		if (value == null) {
-			for (int i = tab.length; i-- > 0 ;) {
-				for (Entry e = tab[i] ; e != null ; e = e.next) {
+			for (int i = tab.length; i-- > 0; ) {
+				for (Entry e = tab[i]; e != null; e = e.next) {
 					if (e.value == null) {
 						return true;
 					}
 				}
 			}
-		} else {
-			for (int i = tab.length; i-- > 0 ;) {
+		}
+		else {
+			for (int i = tab.length; i-- > 0; ) {
 				for (Entry e = tab[i]; e != null; e = e.next) {
 					if (value.equals(e.value)) {
 						return true;
@@ -170,31 +186,28 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * Returns <code>true</code> if this map contains a mapping for the specified
 	 * key.
 	 *
-	 * @param key    key whose presence in this Map is to be tested.
-	 *
+	 * @param key key whose presence in this Map is to be tested.
 	 * @return <code>true</code> if this map contains a mapping for the specified
-	 *         key.
+	 * key.
 	 */
 	@Override
 	public boolean containsKey(Object key) {
 		if (key instanceof Number) {
-			return containsKey( ((Number)key).intValue() );
-		} else {
-			return false;
+			return containsKey(((Number) key).intValue());
 		}
+		return false;
 	}
 
 	/**
 	 * Returns <code>true</code> if this map contains a mapping for the specified
 	 * key.
 	 *
-	 * @param key    key whose presence in this Map is to be tested.
-	 *
+	 * @param key key whose presence in this Map is to be tested.
 	 * @return <code>true</code> if this map contains a mapping for the specified
-	 *         key.
+	 * key.
 	 */
 	public boolean containsKey(int key) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
@@ -214,17 +227,15 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * explicitly maps the key to <code>null</code>. The <code>containsKey</code>
 	 * operation may be used to distinguish these two cases.
 	 *
-	 * @param key    key whose associated value is to be returned.
-	 *
+	 * @param key key whose associated value is to be returned.
 	 * @return the value to which this map maps the specified key.
 	 */
 	@Override
 	public Object get(Object key) {
 		if (key instanceof Number) {
-			return get( ((Number)key).intValue() );
-		} else {
-			return null;
+			return get(((Number) key).intValue());
 		}
+		return null;
 	}
 
 	/**
@@ -235,12 +246,11 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * explicitly maps the key to <code>null</code>. The <code>containsKey</code>
 	 * operation may be used to distinguish these two cases.
 	 *
-	 * @param key    key whose associated value is to be returned.
-	 *
+	 * @param key key whose associated value is to be returned.
 	 * @return the value to which this map maps the specified key.
 	 */
 	public Object get(int key) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
@@ -259,17 +269,17 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	private void rehash() {
 		int oldCapacity = table.length;
-		Entry oldMap[] = table;
+		Entry[] oldMap = table;
 
 		int newCapacity = (oldCapacity << 1) + 1;
-		Entry newMap[] = new Entry[newCapacity];
+		Entry[] newMap = new Entry[newCapacity];
 
 		modCount++;
-		threshold = (int)(newCapacity * loadFactor);
+		threshold = (int) (newCapacity * loadFactor);
 		table = newMap;
 
-		for (int i = oldCapacity ; i-- > 0 ;) {
-			for (Entry old = oldMap[i] ; old != null ; ) {
+		for (int i = oldCapacity; i-- > 0; ) {
+			for (Entry old = oldMap[i]; old != null; ) {
 				Entry e = old;
 				old = old.next;
 
@@ -285,22 +295,19 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * map previously contained a mapping for this key, the old value is
 	 * replaced.
 	 *
-	 * @param key    key with which the specified value is to be associated.
-	 * @param value  value to be associated with the specified key.
-	 *
+	 * @param key key with which the specified value is to be associated.
+	 * @param value value to be associated with the specified key.
 	 * @return previous value associated with specified key, or <code>null</code> if
-	 *         there was no mapping for key. A <code>null</code> return can also indicate
-	 *         that the IntHashMap previously associated <code>null</code> with the
-	 *         specified key.
+	 * there was no mapping for key. A <code>null</code> return can also indicate
+	 * that the IntHashMap previously associated <code>null</code> with the
+	 * specified key.
 	 */
 	@Override
 	public Object put(Object key, Object value) {
 		if (key instanceof Number) {
-			return put( ((Number)key).intValue(), value );
-		} else {
-			throw new UnsupportedOperationException
-			("IntHashMap key must be a number");
+			return put(((Number) key).intValue(), value);
 		}
+		throw new UnsupportedOperationException("IntHashMap key must be a Number");
 	}
 
 	/**
@@ -308,20 +315,19 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * map previously contained a mapping for this key, the old value is
 	 * replaced.
 	 *
-	 * @param key    key with which the specified value is to be associated.
-	 * @param value  value to be associated with the specified key.
-	 *
+	 * @param key key with which the specified value is to be associated.
+	 * @param value value to be associated with the specified key.
 	 * @return previous value associated with specified key, or <code>null</code> if
-	 *         there was no mapping for key. A <code>null</code> return can also indicate
-	 *         that the IntHashMap previously associated <code>null</code> with the
-	 *         specified key.
+	 * there was no mapping for key. A <code>null</code> return can also indicate
+	 * that the IntHashMap previously associated <code>null</code> with the
+	 * specified key.
 	 */
 	public Object put(int key, Object value) {
 		// makes sure the key is not already in the IntHashMap.
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
-		for (Entry e = tab[index] ; e != null ; e = e.next) {
+		for (Entry e = tab[index]; e != null; e = e.next) {
 			if (e.key == key) {
 				Object old = e.value;
 				e.value = value;
@@ -347,45 +353,43 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	/**
 	 * Removes the mapping for this key from this map if present.
 	 *
-	 * @param key    key whose mapping is to be removed from the map.
-	 *
+	 * @param key key whose mapping is to be removed from the map.
 	 * @return previous value associated with specified key, or <code>null</code> if
-	 *         there was no mapping for key. A <code>null</code> return can also indicate
-	 *         that the map previously associated <code>null</code> with the specified
-	 *         key.
+	 * there was no mapping for key. A <code>null</code> return can also indicate
+	 * that the map previously associated <code>null</code> with the specified
+	 * key.
 	 */
 	@Override
 	public Object remove(Object key) {
 		if (key instanceof Number) {
-			return remove( ((Number)key).intValue() );
-		} else {
-			return null;
+			return remove(((Number) key).intValue());
 		}
+		return null;
 	}
 
 	/**
 	 * Removes the mapping for this key from this map if present.
 	 *
-	 * @param key    key whose mapping is to be removed from the map.
-	 *
+	 * @param key key whose mapping is to be removed from the map.
 	 * @return previous value associated with specified key, or <code>null</code> if
-	 *         there was no mapping for key. A <code>null</code> return can also indicate
-	 *         that the map previously associated <code>null</code> with the specified
-	 *         key.
+	 * there was no mapping for key. A <code>null</code> return can also indicate
+	 * that the map previously associated <code>null</code> with the specified
+	 * key.
 	 */
 	public Object remove(int key) {
-		Entry tab[] = table;
+		Entry[] tab = table;
 
 		int index = (key & 0x7FFFFFFF) % tab.length;
 
 		for (Entry e = tab[index], prev = null; e != null;
-			prev = e, e = e.next) {
+			 prev = e, e = e.next) {
 
 			if (e.key == key) {
 				modCount++;
 				if (prev != null) {
 					prev.next = e.next;
-				} else {
+				}
+				else {
 					tab[index] = e.next;
 				}
 
@@ -404,7 +408,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * These mappings replace any mappings that this map had for any of the
 	 * keys currently in the specified Map.
 	 *
-	 * @param t      Mappings to be stored in this map.
+	 * @param t Mappings to be stored in this map.
 	 */
 	@Override
 	public void putAll(Map t) {
@@ -419,7 +423,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	@Override
 	public void clear() {
-		Entry tab[] = table;
+		Entry[] tab = table;
 		modCount++;
 		for (int index = tab.length; --index >= 0; ) {
 			tab[index] = null;
@@ -434,13 +438,13 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * @return a shallow copy of this map.
 	 */
 	@Override
-	public Object clone() {
+	public IntHashMap clone() {
 		try {
-			IntHashMap t = (IntHashMap)super.clone();
+			IntHashMap t = (IntHashMap) super.clone();
 			t.table = new Entry[table.length];
-			for (int i = table.length ; i-- > 0 ; ) {
+			for (int i = table.length; i-- > 0; ) {
 				t.table[i] = (table[i] != null)
-							 ? (Entry)table[i].clone() : null;
+						? (Entry) table[i].clone() : null;
 			}
 			t.keySet = null;
 			t.entrySet = null;
@@ -470,25 +474,29 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * @return a set view of the keys contained in this map.
 	 */
 	@Override
-	public Set keySet() {
+	public Set<Integer> keySet() {
 		if (keySet == null) {
-			keySet = new AbstractSet() {
+			keySet = new AbstractSet<Integer>() {
 				@Override
-				public Iterator iterator() {
+				public Iterator<Integer> iterator() {
 					return new IntHashIterator(KEYS);
 				}
+
 				@Override
 				public int size() {
 					return count;
 				}
+
 				@Override
 				public boolean contains(Object o) {
 					return containsKey(o);
 				}
+
 				@Override
 				public boolean remove(Object o) {
 					return IntHashMap.this.remove(o) != null;
 				}
+
 				@Override
 				public void clear() {
 					IntHashMap.this.clear();
@@ -512,20 +520,23 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	@Override
 	public Collection values() {
-		if (values==null) {
+		if (values == null) {
 			values = new AbstractCollection() {
 				@Override
 				public Iterator iterator() {
 					return new IntHashIterator(VALUES);
 				}
+
 				@Override
 				public int size() {
 					return count;
 				}
+
 				@Override
 				public boolean contains(Object o) {
 					return containsValue(o);
 				}
+
 				@Override
 				public void clear() {
 					IntHashMap.this.clear();
@@ -547,11 +558,12 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 * <code>addAll</code> operations.
 	 *
 	 * @return a collection view of the mappings contained in this map.
+	 *
 	 * @see java.util.Map.Entry
 	 */
 	@Override
-	public Set entrySet() {
-		if (entrySet==null) {
+	public Set<Map.Entry<Integer, Object>> entrySet() {
+		if (entrySet == null) {
 			entrySet = new AbstractSet() {
 				@Override
 				public Iterator iterator() {
@@ -563,10 +575,10 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 					if (!(o instanceof Map.Entry)) {
 						return false;
 					}
-					Map.Entry entry = (Map.Entry)o;
+					Map.Entry entry = (Map.Entry) o;
 					Object key = entry.getKey();
-					Entry tab[] = table;
-					int hash = (key==null ? 0 : key.hashCode());
+					Entry[] tab = table;
+					int hash = (key == null ? 0 : key.hashCode());
 					int index = (hash & 0x7FFFFFFF) % tab.length;
 
 					for (Entry e = tab[index]; e != null; e = e.next) {
@@ -582,19 +594,20 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 					if (!(o instanceof Map.Entry)) {
 						return false;
 					}
-					Map.Entry entry = (Map.Entry)o;
+					Map.Entry entry = (Map.Entry) o;
 					Object key = entry.getKey();
-					Entry tab[] = table;
-					int hash = (key==null ? 0 : key.hashCode());
+					Entry[] tab = table;
+					int hash = (key == null ? 0 : key.hashCode());
 					int index = (hash & 0x7FFFFFFF) % tab.length;
 
 					for (Entry e = tab[index], prev = null; e != null;
-						prev = e, e = e.next) {
+						 prev = e, e = e.next) {
 						if (e.key == hash && e.equals(entry)) {
 							modCount++;
 							if (prev != null) {
 								prev.next = e.next;
-							} else {
+							}
+							else {
 								tab[index] = e.next;
 							}
 
@@ -624,7 +637,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	/**
 	 * IntHashMap collision list entry.
 	 */
-	private static class Entry implements Map.Entry, Cloneable {
+	private static class Entry implements Map.Entry<Integer, Object>, Cloneable {
 		int key;
 		Object value;
 		Entry next;
@@ -639,14 +652,16 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 		@Override
 		protected Object clone() {
 			return new Entry(key, value,
-							 (next==null ? null : (Entry)next.clone()));
+					(next == null ? null : (Entry) next.clone()));
 		}
 
 		// Map.Entry Ops
 
-		public Object getKey() {
-			return(objectKey != null) ? objectKey :
-			(objectKey = new Integer(key));
+		public Integer getKey() {
+			if (objectKey == null) {
+				objectKey = Integer.valueOf(key);
+			}
+			return objectKey;
 		}
 
 		public Object getValue() {
@@ -661,23 +676,23 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 
 		@Override
 		public boolean equals(Object o) {
-			if (!(o instanceof Map.Entry)) {
+			if (this.getClass() != o.getClass()) {
 				return false;
 			}
-			Map.Entry e = (Map.Entry)o;
+			Map.Entry e = (Map.Entry) o;
 
-			return(getKey().equals(e.getKey())) &&
-			(value==null ? e.getValue()==null : value.equals(e.getValue()));
+			return (getKey().equals(e.getKey())) &&
+					(value == null ? e.getValue() == null : value.equals(e.getValue()));
 		}
 
 		@Override
 		public int hashCode() {
-			return key ^ (value==null ? 0 : value.hashCode());
+			return key ^ (value == null ? 0 : value.hashCode());
 		}
 
 		@Override
 		public String toString() {
-			return  Integer.toString(key) + '=' + value;
+			return Integer.toString(key) + '=' + value;
 		}
 	}
 
@@ -725,7 +740,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 				Entry e = lastReturned = entry;
 				entry = e.next;
 				return type == KEYS ? e.getKey() :
-				(type == VALUES ? e.value : e);
+						(type == VALUES ? e.value : e);
 			}
 			throw new NoSuchElementException();
 		}
@@ -742,13 +757,14 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 			int ndx = (lastReturned.key & 0x7FFFFFFF) % tab.length;
 
 			for (Entry e = tab[ndx], prev = null; e != null;
-				prev = e, e = e.next) {
+				 prev = e, e = e.next) {
 				if (e == lastReturned) {
 					modCount++;
 					expectedModCount++;
 					if (prev == null) {
 						tab[ndx] = e.next;
-					} else {
+					}
+					else {
 						prev.next = e.next;
 					}
 					count--;
@@ -760,71 +776,4 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 		}
 	}
 
-	/**
-	 * Save the state of the <code>IntHashMap</code> instance to a stream (i.e.,
-	 * serialize it).
-	 * <p>
-	 * Context The <i>capacity</i> of the IntHashMap (the length of the bucket
-	 * array) is emitted (int), followed by the <i>size</i> of the IntHashMap
-	 * (the number of key-value mappings), followed by the key (Object) and value
-	 * (Object) for each key-value mapping represented by the IntHashMap The
-	 * key-value mappings are emitted in no particular order.
-	 *
-	 * @exception IOException
-	 */
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException {
-		// write out the threshold, loadfactor, and any hidden stuff
-		s.defaultWriteObject();
-
-		// write out number of buckets
-		s.writeInt(table.length);
-
-		// write out size (number of Mappings)
-		s.writeInt(count);
-
-		// write out keys and values (alternating)
-		for (int index = table.length-1; index >= 0; index--) {
-			Entry entry = table[index];
-
-			while (entry != null) {
-				s.writeInt(entry.key);
-				s.writeObject(entry.value);
-				entry = entry.next;
-			}
-		}
-	}
-
-	/**
-	 * Reconstitutes the <code>IntHashMap</code> instance from a stream (i.e.,
-	 * deserialize it).
-	 *
-	 * @exception IOException
-	 * @exception ClassNotFoundException
-	 */
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException {
-		// read in the threshold, loadfactor, and any hidden stuff
-		s.defaultReadObject();
-
-		// read in number of buckets and allocate the bucket array;
-		int numBuckets = s.readInt();
-		table = new Entry[numBuckets];
-
-		// read in size (number of Mappings)
-		int size = s.readInt();
-
-		// read the keys and values, and put the mappings in the IntHashMap
-		for (int i=0; i<size; i++) {
-			int key = s.readInt();
-			Object value = s.readObject();
-			put(key, value);
-		}
-	}
-
-	int capacity() {
-		return table.length;
-	}
-
-	float loadFactor() {
-		return loadFactor;
-	}
 }

@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.debug;
 
@@ -15,6 +38,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Factory for loggable prepared statements - a <code>PreparedStatement</code> with added logging capability.
@@ -66,6 +90,8 @@ public class LoggablePreparedStatementFactory {
 	protected static Method getQueryStringMethod;
 	protected static WrapperProxetta proxetta;
 
+	private static final ReentrantLock lock = new ReentrantLock();
+
 	/**
 	 * Returns {@link WrapperProxetta} used for building loggable prepared statements.
 	 * Initializes proxetta when called for the first time.
@@ -98,27 +124,35 @@ public class LoggablePreparedStatementFactory {
 	@SuppressWarnings("unchecked")
 	protected static PreparedStatement wrap(PreparedStatement preparedStatement, String sql) {
 		if (wrappedPreparedStatement == null) {
-			proxetta = getProxetta();
-
-			builder = proxetta.builder();
-
-			// use just interface
-			builder.setTarget(PreparedStatement.class);
-
-			// define different package
-			builder.setTargetProxyClassName(LoggablePreparedStatementFactory.class.getPackage().getName() + '.');
-
-			wrappedPreparedStatement = builder.define();
-
-			// lookup fields
+			lock.lock();
 			try {
-				String fieldName = ProxettaAsmUtil.adviceFieldName("sqlTemplate", 0);
-				sqlTemplateField = wrappedPreparedStatement.getField(fieldName);
+				if (wrappedPreparedStatement == null) {
+					proxetta = getProxetta();
 
-				String methodName = ProxettaAsmUtil.adviceMethodName("getQueryString", 0);
-				getQueryStringMethod = wrappedPreparedStatement.getMethod(methodName);
-			} catch (Exception ex) {
-				throw new DbSqlException(ex);
+					builder = proxetta.builder();
+
+					// use just interface
+					builder.setTarget(PreparedStatement.class);
+
+					// define different package
+					builder.setTargetProxyClassName(LoggablePreparedStatementFactory.class.getPackage().getName() + '.');
+
+					wrappedPreparedStatement = builder.define();
+
+					// lookup fields
+					try {
+						String fieldName = ProxettaAsmUtil.adviceFieldName("sqlTemplate", 0);
+						sqlTemplateField = wrappedPreparedStatement.getField(fieldName);
+
+						String methodName = ProxettaAsmUtil.adviceMethodName("getQueryString", 0);
+						getQueryStringMethod = wrappedPreparedStatement.getMethod(methodName);
+					} catch (Exception ex) {
+						throw new DbSqlException(ex);
+					}
+				}
+			}
+			finally {
+				lock.unlock();
 			}
 		}
 

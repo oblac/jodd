@@ -1,0 +1,8 @@
+wrn:[Parse error: invalid token [1:2 @1]
+com:[?d?]
+txt:[a]
+wrn:[Parse error: invalid token [1:8 @7]
+com:[?e]
+txt:[b]
+wrn:[Parse error: invalid token [1:14 @13]
+com:[x]

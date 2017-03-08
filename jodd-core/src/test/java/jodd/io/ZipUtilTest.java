@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.io;
 
@@ -10,9 +33,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -87,8 +110,7 @@ public class ZipUtilTest {
 
 		int directoryCount = 0;
 
-		ZipFile zipfile = new ZipFile(zipFile);
-		try {
+		try (ZipFile zipfile = new ZipFile(zipFile)) {
 			for (Enumeration<? extends ZipEntry> entries = zipfile.entries(); entries.hasMoreElements(); ) {
 				ZipEntry zipEntry = entries.nextElement();
 				if (zipEntry.isDirectory()) {
@@ -97,8 +119,6 @@ public class ZipUtilTest {
 					assertTrue(zipEntry.getName().equals("data/") || zipEntry.getName().equals("data/file/"));
 				}
 			}
-		} finally {
-			zipfile.close();
 		}
 
 		assertEquals(2, directoryCount);
@@ -108,16 +128,35 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipStreams() throws IOException {
+	public void testZipEmptyFolder() throws IOException {
+		byte[] bytes = ZipBuilder
+			.createZipInMemory()
+			.addFolder("myEmptyFolder")
+			.toBytes();
+
+		File tempDir = FileUtil.createTempDirectory();
+		tempDir.deleteOnExit();
+
+		File zipFile = new File(tempDir, "test.zip");
+		FileUtil.writeBytes(zipFile, bytes);
+
+		// read zip
+		List<String> entries = ZipUtil.listZip(zipFile);
+
+		assertEquals(1, entries.size());
+		assertEquals("myEmptyFolder/", entries.get(0));
+	}
+
+	@Test
+	public void testZipBuilderFile() throws IOException {
 		File zipFile = new File(dataRoot, "test.zip");
 
-		ZipOutputStream zos = ZipUtil.createZip(zipFile);
-
-		ZipUtil.addToZip(zos).file(dataRoot, "sb.data").path("sbdata").comment("This is sb data file").add();
-
-		ZipUtil.addToZip(zos).file(dataRoot, "file").path("folder").comment("This is a folder and all its files").add();
-
-		StreamUtil.close(zos);
+		ZipBuilder.createZipFile(zipFile)
+			.add(new File(dataRoot, "sb.data"))
+				.path("sbdata").comment("This is sb data file").save()
+			.add(new File(dataRoot, "file"))
+				.path("folder").comment("This is a folder and all its files").save()
+			.toZipFile();
 
 		assertTrue(zipFile.exists());
 
@@ -135,6 +174,44 @@ public class ZipUtilTest {
 		// cleanup
 		FileUtil.delete(new File(dataRoot, "sbdata"));
 		FileUtil.deleteDir(new File(dataRoot, "folder"));
+		FileUtil.delete(zipFile);
+	}
+
+	@Test
+	public void testZipBuilderFileMemory() throws IOException {
+		byte[] bytes = ZipBuilder.createZipInMemory()
+			.add(new File(dataRoot, "sb.data"))
+				.path("sbdata").comment("This is sb data file").save()
+			.add(new File(dataRoot, "file"))
+				.path("folder").comment("This is a folder and all its files").save()
+			.add("text")
+				.path("folder/txt").save()
+			.addFolder("folder2")
+			.add("txet")
+				.path("folder2/txt2").save()
+			.toBytes();
+
+		File zipFile = new File(dataRoot, "test.zip");
+		FileUtil.writeBytes(zipFile, bytes);
+
+		assertTrue(zipFile.exists());
+
+		ZipUtil.unzip(zipFile, new File(dataRoot));
+
+		assertTrue(new File(dataRoot, "sbdata").exists());
+		assertTrue(new File(dataRoot, "folder").exists());
+		assertTrue(new File(dataRoot, "folder").isDirectory());
+		assertTrue(new File(dataRoot, "folder2").exists());
+		assertTrue(new File(dataRoot, "folder2").isDirectory());
+		assertTrue(new File(new File(dataRoot, "folder"), "txt").exists());
+		assertEquals("text", FileUtil.readString(new File(new File(dataRoot, "folder"), "txt")));
+		assertTrue(new File(new File(dataRoot, "folder2"), "txt2").exists());
+		assertEquals("txet", FileUtil.readString(new File(new File(dataRoot, "folder2"), "txt2")));
+
+		// cleanup
+		FileUtil.delete(new File(dataRoot, "sbdata"));
+		FileUtil.deleteDir(new File(dataRoot, "folder"));
+		FileUtil.deleteDir(new File(dataRoot, "folder2"));
 		FileUtil.delete(zipFile);
 	}
 

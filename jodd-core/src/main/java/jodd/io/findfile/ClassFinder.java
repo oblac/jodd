@@ -1,8 +1,33 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.util.ClassLoaderUtil;
+import jodd.util.InExRules;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 import jodd.util.ArraysUtil;
@@ -20,14 +45,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
 
+import static jodd.util.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
+import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
+
 /**
  * Simple utility that scans <code>URL</code>s for classes.
  * Its purpose is to help scanning class paths for some classes.
  * Content of Jar files is also examined.
  * <p>
+ * Scanning starts in included all mode (blacklist mode) for both jars and lists.
+ * User can set explicit excludes. Of course, mode can be changed.
+ * <p>
  * All paths are matched using {@link Wildcard#matchPath(String, String) path-style}
- * wildcard matcher. All entries are matched using {@link Wildcard#match(String, String) common-style}
+ * wildcard matcher. All entries are matched using {@link Wildcard#match(CharSequence, CharSequence)} common-style}
  * wildcard matcher.
+ *
  * @see ClassScanner
  */
 public abstract class ClassFinder {
@@ -47,15 +79,21 @@ public abstract class ClassFinder {
 			"**/Java/Extensions/*.jar",
 			"**/Classes/*.jar"
 	};
+
+	protected final InExRules<String, String> rulesJars = createJarRules();
+
 	/**
-	 * Array of excluded jars.
+	 * Creates JAR rules. By default, excludes all system jars.
 	 */
-	protected String[] excludedJars;
-	/**
-	 * Array of jar file name patterns that are included in the search.
-	 * This rule is applied after the excluded rule.
-	 */
-	protected String[] includedJars;
+	protected InExRules<String, String> createJarRules() {
+		InExRules<String, String> rulesJars = new InExRules<>(WILDCARD_PATH_RULE_MATCHER);
+
+		for (String systemJar : systemJars) {
+			rulesJars.exclude(systemJar);
+		}
+
+		return rulesJars;
+	}
 
 	/**
 	 * Returns system jars.
@@ -65,53 +103,92 @@ public abstract class ClassFinder {
 	}
 
 	/**
-	 * Specifies system jars, that are always excluded first.
+	 * Specify excluded jars.
 	 */
-	public static void setSystemJars(String... newSystemJars) {
-		systemJars = newSystemJars;
-	}
-
-	public String[] getExcludedJars() {
-		return excludedJars;
-	}
-
 	public void setExcludedJars(String... excludedJars) {
-		this.excludedJars = excludedJars;
-	}
-
-	public String[] getIncludedJars() {
-		return includedJars;
-	}
-
-	public void setIncludedJars(String... includedJars) {
-		this.includedJars = includedJars;
-	}
-
-	// ---------------------------------------------------------------- included packages
-
-	protected String[] includedEntries;    // array of included name patterns
-	protected String[] excludedEntries;    // array of excluded name patterns
-
-	public String[] getIncludedEntries() {
-		return includedEntries;
+		for (String excludedJar : excludedJars) {
+			rulesJars.exclude(excludedJar);
+		}
 	}
 
 	/**
-	 * Sets included set of names that will be considered during configuration,
+	 * Specify included jars.
 	 */
-	public void setIncludedEntries(String... includedEntries) {
-		this.includedEntries = includedEntries;
+	public void setIncludedJars(String... includedJars) {
+		for (String includedJar : includedJars) {
+			rulesJars.include(includedJar);
+		}
 	}
 
-	public String[] getExcludedEntries() {
-		return excludedEntries;
+	/**
+	 * Sets white/black list mode for jars.
+	 */
+	public void setIncludeAllJars(boolean blacklist) {
+		if (blacklist) {
+			rulesJars.blacklist();
+		} else {
+			rulesJars.whitelist();
+		}
+	}
+
+	/**
+	 * Sets white/black list mode for jars.
+	 */
+	public void setExcludeAllJars(boolean whitelist) {
+		if (whitelist) {
+			rulesJars.whitelist();
+		} else {
+			rulesJars.blacklist();
+		}
+	}
+
+	// ---------------------------------------------------------------- included entries
+
+	protected final InExRules<String, String> rulesEntries = createEntriesRules();
+
+	protected InExRules<String, String> createEntriesRules() {
+		return new InExRules<>(WILDCARD_RULE_MATCHER);
+	}
+
+	/**
+	 * Sets included set of names that will be considered during configuration.
+	 * @see jodd.util.InExRules
+	 */
+	public void setIncludedEntries(String... includedEntries) {
+		for (String includedEntry : includedEntries) {
+			rulesEntries.include(includedEntry);
+		}
+	}
+
+	/**
+	 * Sets white/black list mode for entries.
+	 */
+	public void setIncludeAllEntries(boolean blacklist) {
+		if (blacklist) {
+			rulesEntries.blacklist();
+		} else {
+			rulesEntries.whitelist();
+		}
+	}
+	/**
+	 * Sets white/black list mode for entries.
+	 */
+	public void setExcludeAllEntries(boolean whitelist) {
+		if (whitelist) {
+			rulesEntries.whitelist();
+		} else {
+			rulesEntries.blacklist();
+		}
 	}
 
 	/**
 	 * Sets excluded names that narrows included set of packages.
+	 * @see jodd.util.InExRules
 	 */
 	public void setExcludedEntries(String... excludedEntries) {
-		this.excludedEntries = excludedEntries;
+		for (String excludedEntry : excludedEntries) {
+			rulesEntries.exclude(excludedEntry);
+		}
 	}
 
 	// ---------------------------------------------------------------- implementation
@@ -165,7 +242,7 @@ public abstract class ClassFinder {
 	protected void scanUrl(URL url) {
 		File file = FileUtil.toFile(url);
 		if (file == null) {
-			if (ignoreException == false) {
+			if (!ignoreException) {
 				throw new FindFileException("URL is not a valid file: " + url);
 			}
 		}
@@ -191,36 +268,12 @@ public abstract class ClassFinder {
 
 	/**
 	 * Returns <code>true</code> if some JAR file has to be accepted.
-	 * The following logic is provided by default, in given order:
-	 * <ul>
-	 * <li>system jars are excluded</li>
-	 * <li>excluded jars are excluded (if specified)</li>
-	 * <li>only included jars are included (if specified)</li>
-	 * </ul>
 	 */
 	protected boolean acceptJar(File jarFile) {
 		String path = jarFile.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
-		if (systemJars != null) {
-			int ndx = Wildcard.matchPathOne(path, systemJars);
-			if (ndx != -1) {
-				return false;
-			}
-		}
-		if (excludedJars != null) {
-			int ndx = Wildcard.matchPathOne(path, excludedJars);
-			if (ndx != -1) {
-				return false;
-			}
-		}
-		if (includedJars != null) {
-			int ndx = Wildcard.matchPathOne(path, includedJars);
-			if (ndx == -1) {
-				return false;
-			}
-		}
-		return true;
+		return rulesJars.match(path);
 	}
 	
 	/**
@@ -229,13 +282,13 @@ public abstract class ClassFinder {
 	protected void scanPath(File file) {
 		String path = file.getAbsolutePath();
 
-		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT) == true) {
+		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT)) {
 
-			if (acceptJar(file) == false) {
+			if (!acceptJar(file)) {
 				return;
 			}
 			scanJarFile(file);
-		} else if (file.isDirectory() == true) {
+		} else if (file.isDirectory()) {
 			scanClassPath(file);
 		}
 	}
@@ -251,8 +304,8 @@ public abstract class ClassFinder {
 		try {
 			zipFile = new ZipFile(file);
 		} catch (IOException ioex) {
-			if (ignoreException == false) {
-				throw new FindFileException("Unable to open zip: " + file.getName(), ioex);
+			if (!ignoreException) {
+				throw new FindFileException("Invalid zip: " + file.getName(), ioex);
 			}
 			return;
 		}
@@ -269,7 +322,7 @@ public abstract class ClassFinder {
 					} finally {
 						entryData.closeInputStreamIfOpen();
 					}
-				} else if (includeResources == true) {
+				} else if (includeResources) {
 					String entryName = prepareEntryName(zipEntryName, false);
 					EntryData entryData = new EntryData(entryName, zipFile, zipEntry);
 					try {
@@ -279,7 +332,7 @@ public abstract class ClassFinder {
 					}
 				}
 			} catch (RuntimeException rex) {
-				if (ignoreException == false) {
+				if (!ignoreException) {
 					ZipUtil.close(zipFile);
 					throw rex;
 				}
@@ -294,7 +347,7 @@ public abstract class ClassFinder {
 	 */
 	protected void scanClassPath(File root) {
 		String rootPath = root.getAbsolutePath();
-		if (rootPath.endsWith(File.separator) == false) {
+		if (!rootPath.endsWith(File.separator)) {
 			rootPath += File.separatorChar;
 		}
 
@@ -305,11 +358,11 @@ public abstract class ClassFinder {
 			try {
 				if (StringUtil.endsWithIgnoreCase(filePath, CLASS_FILE_EXT)) {
 					scanClassFile(filePath, rootPath, file, true);
-				} else if (includeResources == true) {
+				} else if (includeResources) {
 					scanClassFile(filePath, rootPath, file, false);
 				}
 			} catch (RuntimeException rex) {
-				if (ignoreException == false) {
+				if (!ignoreException) {
 					throw rex;
 				}
 			}
@@ -317,7 +370,7 @@ public abstract class ClassFinder {
 	}
 
 	protected void scanClassFile(String filePath, String rootPath, File file, boolean isClass) {
-		if (StringUtil.startsWithIgnoreCase(filePath, rootPath) == true) {
+		if (StringUtil.startsWithIgnoreCase(filePath, rootPath)) {
 			String entryName = prepareEntryName(filePath.substring(rootPath.length()), isClass);
 			EntryData entryData = new EntryData(entryName, file);
 			try {
@@ -350,17 +403,7 @@ public abstract class ClassFinder {
 	 * @see #scanEntry(EntryData) 
 	 */
 	protected boolean acceptEntry(String entryName) {
-		if (excludedEntries != null) {
-			if (Wildcard.matchOne(entryName, excludedEntries) != -1) {
-				return false;
-			}
-		}
-		if (includedEntries != null) {
-			if (Wildcard.matchOne(entryName, includedEntries) == -1) {
-				return false;
-			}
-		}
-		return true;
+		return rulesEntries.match(entryName);
 	}
 
 
@@ -368,13 +411,13 @@ public abstract class ClassFinder {
 	 * If entry name is {@link #acceptEntry(String) accepted} invokes {@link #onEntry(EntryData)} a callback}.
 	 */
 	protected void scanEntry(EntryData entryData) {
-		if (acceptEntry(entryData.getName()) == false) {
+		if (!acceptEntry(entryData.getName())) {
 			return;
 		}
 		try {
 			onEntry(entryData);
 		} catch (Exception ex) {
-			throw new FindFileException("Unable to scan entry: " + entryData, ex);
+			throw new FindFileException("Scan entry error: " + entryData, ex);
 		}
 	}
 
@@ -416,7 +459,29 @@ public abstract class ClassFinder {
 			int index = ArraysUtil.indexOf(data, bytes);
 			return index != -1;
 		} catch (IOException ioex) {
-			throw new FindFileException("Unable to read.", ioex);
+			throw new FindFileException("Read error", ioex);
+		}
+	}
+
+	// ---------------------------------------------------------------- class loading
+
+	/**
+	 * Loads class by its name. If {@link #ignoreException} is set,
+	 * no exception is thrown, but <code>null</code> is returned.
+	 */
+	protected Class loadClass(String className) throws ClassNotFoundException {
+		try {
+			return ClassLoaderUtil.loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			if (ignoreException) {
+				return null;
+			}
+			throw cnfex;
+		} catch (Error error) {
+			if (ignoreException) {
+				return null;
+			}
+			throw error;
 		}
 	}
 
@@ -483,7 +548,7 @@ public abstract class ClassFinder {
 					inputStream = zipFile.getInputStream(zipEntry);
 					return inputStream;
 				} catch (IOException ioex) {
-					throw new FindFileException("Unable to get input stream: '" + zipFile.getName()
+					throw new FindFileException("Input stream error: '" + zipFile.getName()
 							+ "', entry: '" + zipEntry.getName() + "'." , ioex);
 				}
 			}

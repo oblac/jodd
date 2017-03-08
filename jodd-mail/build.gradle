@@ -6,7 +6,8 @@ dependencies {
 	compile project(':jodd-core')
 
 	compile lib.mail
-	compile lib.activation
+	//compile lib.activation
 	
 	testCompile lib.junit
+	testCompile lib.greenmail
 }

@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.upload;
 
@@ -30,32 +53,31 @@ public class MultipartStreamParser {
 		this.fileUploadFactory = (fileUploadFactory == null ? new MemoryFileUploadFactory() : fileUploadFactory);
 	}
 
-	private boolean loaded;
+	private boolean parsed;
 
 	/**
 	 * Sets the loaded flag that indicates that input stream is loaded and parsed.
 	 * Throws an exception if stream already loaded.
 	 */
-	protected void setLoaded() throws IOException {
-		if (loaded == true) {
-			throw new IOException("Multi-part request already parsed.");
+	protected void setParsed() throws IOException {
+		if (parsed) {
+			throw new IOException("Multi-part request already parsed");
 		}
-		loaded = true;
+		parsed = true;
 	}
 
 	/**
 	 * Returns <code>true</code> if multi-part request is already loaded.
 	 */
-	public boolean isLoaded() {
-		return loaded;
+	public boolean isParsed() {
+		return parsed;
 	}
-
 
 	// ---------------------------------------------------------------- load and extract
 
 	protected void putFile(String name, FileUpload value) {
 		if (requestFiles == null) {
-			requestFiles = new HashMap<String, FileUpload[]>();
+			requestFiles = new HashMap<>();
 		}
 
 		FileUpload[] fileUploads = requestFiles.get(name);
@@ -71,14 +93,14 @@ public class MultipartStreamParser {
 
 	protected void putParameters(String name, String[] values) {
 		if (requestParameters == null) {
-			requestParameters = new HashMap<String, String[]>();
+			requestParameters = new HashMap<>();
 		}
 		requestParameters.put(name, values);
 	}
 
 	protected void putParameter(String name, String value) {
 		if (requestParameters == null) {
-			requestParameters = new HashMap<String, String[]>();
+			requestParameters = new HashMap<>();
 		}
 		
 		String[] params = requestParameters.get(name);
@@ -96,7 +118,7 @@ public class MultipartStreamParser {
 	 * Extracts uploaded files and parameters from the request data.
 	 */
 	public void parseRequestStream(InputStream inputStream, String encoding) throws IOException {
-		setLoaded();
+		setParsed();
 
 		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
 		input.readBoundary();
@@ -106,7 +128,7 @@ public class MultipartStreamParser {
 				break;
 			}
 
-			if (header.isFile == true) {
+			if (header.isFile) {
 				String fileName = header.fileName;
 				if (fileName.length() > 0) {
 					if (header.contentType.indexOf("application/x-macbinary") > 0) {

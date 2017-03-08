@@ -1,33 +1,54 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.AnnotationVisitor;
-import jodd.asm4.Type;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.AnnotationVisitor;
 
-import static jodd.asm4.Opcodes.ACC_ABSTRACT;
-import static jodd.asm4.Opcodes.ACC_NATIVE;
-import static jodd.asm4.Opcodes.GETFIELD;
-import static jodd.asm4.Opcodes.INVOKESPECIAL;
-import static jodd.asm4.Opcodes.ARETURN;
-import static jodd.asm4.Opcodes.POP;
-import static jodd.asm4.Opcodes.POP2;
-import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm4.Opcodes.INVOKEINTERFACE;
-import static jodd.asm4.Opcodes.INVOKESTATIC;
-import static jodd.asm4.Opcodes.ANEWARRAY;
-import static jodd.asm4.Opcodes.DUP;
-import static jodd.asm4.Opcodes.AASTORE;
-import static jodd.asm4.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.ACC_ABSTRACT;
+import static jodd.asm5.Opcodes.ACC_NATIVE;
+import static jodd.asm5.Opcodes.ASTORE;
+import static jodd.asm5.Opcodes.GETFIELD;
+import static jodd.asm5.Opcodes.INVOKESPECIAL;
+import static jodd.asm5.Opcodes.ARETURN;
+import static jodd.asm5.Opcodes.POP;
+import static jodd.asm5.Opcodes.POP2;
+import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm5.Opcodes.INVOKEINTERFACE;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.ALOAD;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
 import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.JoddProxetta.executeMethodName;
+import static jodd.proxetta.JoddProxetta.executeMethodName;
 import jodd.asm.AnnotationVisitorAdapter;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.proxetta.ProxyTargetReplacement;
 
 import java.util.List;
 
@@ -50,7 +71,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	// ---------------------------------------------------------------- visits
 
 	/**
-	 * Copies target method annotations
+	 * Copies target method annotations.
 	 */
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
@@ -118,10 +139,20 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 		if (tmd.msign.isStatic) {
 			loadStaticMethodArguments(methodVisitor, tmd.msign);
-			methodVisitor.visitMethodInsn(INVOKESTATIC, wd.thisReference, tmd.firstMethodName(), tmd.msign.getDescription());
+			methodVisitor.visitMethodInsn(
+				INVOKESTATIC,
+				wd.thisReference,
+				tmd.firstMethodName(),
+				tmd.msign.getDescription(),
+				false);
 		} else {
 			loadSpecialMethodArguments(methodVisitor, tmd.msign);
-			methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, tmd.firstMethodName(), tmd.msign.getDescription());
+			methodVisitor.visitMethodInsn(
+				INVOKESPECIAL,
+				wd.thisReference,
+				tmd.firstMethodName(),
+				tmd.msign.getDescription(),
+				false);
 		}
 
 		visitReturn(methodVisitor, tmd.msign, false);
@@ -130,13 +161,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		methodVisitor.visitEnd();
 	}
 
-
+	protected boolean proxyInfoRequested;
 
 	/**
 	 * Creates proxy methods over target method, For each matched proxy, new proxy method is created
 	 * by taking advice bytecode and replaces usages of {@link jodd.proxetta.ProxyTarget}.
 	 * <p>
-	 * Invocation chain example: name -> name$p0 -> name$p1 -> name$p4 -> super
+	 * Invocation chain example: {@code name -> name$p0 -> name$p1 -> name$p4 -> super}.
 	 */
 	public void createProxyMethod(final TargetMethodData td) {
 		final ProxyAspectData aspectData = td.getProxyData();
@@ -156,11 +187,11 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-				if (name.equals(executeMethodName) == false) {
+				if (!name.equals(executeMethodName)) {
 					return null;
 				}
 
-				return new IntArgHistoryMethodAdapter(mv) {
+				return new HistoryMethodAdapter(mv) {
 
 					@Override
 					public void visitFieldInsn(int opcode, String owner, String name, String desc) {
@@ -175,6 +206,14 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					@Override
 					public void visitVarInsn(int opcode, int var) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
+
+						if (proxyInfoRequested) {
+							proxyInfoRequested = false;
+							if (opcode == ASTORE) {
+								ProxyTargetReplacement.info(mv, td.msign, var);
+							}
+						}
+
 						super.visitVarInsn(opcode, var);   // [F1]
 					}
 
@@ -190,7 +229,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 							visitReturn(mv, td.msign, true);
 							return;
 						}
-						if (traceNext == true) {
+						if (traceNext) {
 							if ((opcode == POP) || (opcode == POP2)) {      // [F3] - invoke invoked without assignment
 								return;
 							}
@@ -200,7 +239,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 					@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 					@Override
-					public void visitMethodInsn(int opcode, String string, String mname, String mdesc) {
+					public void visitMethodInsn(int opcode, String string, String mname, String mdesc, boolean isInterface) {
 						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE) || (opcode == INVOKESPECIAL)) {
 							if (string.equals(aspectData.adviceReference)) {
 								string = wd.thisReference;
@@ -214,24 +253,34 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								mname = adviceMethodName(mname, aspectData.aspectIndex);
 							} else
 
-							if (string.endsWith('/' + TARGET_CLASS_NAME) == true) {
+							if (string.endsWith('/' + TARGET_CLASS_NAME)) {
 
 								if (isInvokeMethod(mname, mdesc)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 
-										if (wd.isWrapper() == false) {
+										if (!wd.isWrapper()) {
 											// PROXY
 											loadSpecialMethodArguments(mv, td.msign);
-											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());
+											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription(), isInterface);
 										} else {
 											// WRAPPER
 											mv.visitVarInsn(ALOAD, 0);
 											mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
 											loadVirtualMethodArguments(mv, td.msign);
 											if (wd.wrapInterface) {
-												mv.visitMethodInsn(INVOKEINTERFACE, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), td.msign.getMethodName(), td.msign.getDescription());
+												mv.visitMethodInsn(
+													INVOKEINTERFACE,
+													wd.wrapperType.substring(1, wd.wrapperType.length() - 1),
+													td.msign.getMethodName(),
+													td.msign.getDescription(),
+													true);
 											} else {
-												mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), td.msign.getMethodName(), td.msign.getDescription());
+												mv.visitMethodInsn(
+													INVOKEVIRTUAL,
+													wd.wrapperType.substring(1, wd.wrapperType.length() - 1),
+													td.msign.getMethodName(),
+													td.msign.getDescription(),
+													isInterface);
 											}
 										}
 
@@ -239,105 +288,118 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 										traceNext = true;
 									} else {                                                    // calls next proxy method
 										loadSpecialMethodArguments(mv, td.msign);
-										mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.nextMethodName(), td.msign.getDescription());
+										mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.nextMethodName(), td.msign.getDescription(), isInterface);
 										visitReturn(mv, td.msign, false);
 									}
 									return;
-								} else
+								}
 
-								if (isArgumentsCountMethod(mname, mdesc)) {        // [R2]
-									int argsCount = td.msign.getArgumentsCount();
-									pushInt(mv, argsCount);
+								if (isArgumentsCountMethod(mname, mdesc)) {		// [R2]
+									ProxyTargetReplacement.argumentsCount(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isArgumentTypeMethod(mname, mdesc)) {      // [R3]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
-									mv.visitInsn(POP);
-									loadMethodArgumentClass(mv, td.msign, argIndex);
+									ProxyTargetReplacement.argumentType(mv, td.msign, argIndex);
 									return;
-								} else
+								}
 
 								if (isArgumentMethod(mname, mdesc)) {           // [R4]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
-									mv.visitInsn(POP);
-									loadMethodArgumentAsObject(mv, td.msign, argIndex);
+									ProxyTargetReplacement.argument(mv, td.msign, argIndex);
 									return;
-								} else
+								}
 
 								if (isSetArgumentMethod(mname, mdesc)) {           // [R5]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
+									checkArgumentIndex(td.msign, argIndex);
 									mv.visitInsn(POP);
 									storeMethodArgumentFromObject(mv, td.msign, argIndex);
 									return;
-								} else
+								}
 
 								if (isCreateArgumentsArrayMethod(mname, mdesc)) {  // [R6]
-									int argsCount = td.msign.getArgumentsCount();
-									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT);
-									for (int i = 0; i < argsCount; i++) {
-										mv.visitInsn(DUP);
-										pushInt(mv, i);
-										loadMethodArgumentAsObject(mv, td.msign, i + 1);
-										mv.visitInsn(AASTORE);
-									}
+									ProxyTargetReplacement.createArgumentsArray(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isCreateArgumentsClassArrayMethod(mname, mdesc)) {     // [R11]
-									int argsCount = td.msign.getArgumentsCount();
-									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_CLASS);
-									for (int i = 0; i < argsCount; i++) {
-										mv.visitInsn(DUP);
-										pushInt(mv, i);
-										loadMethodArgumentClass(mv, td.msign, i + 1);
-										mv.visitInsn(AASTORE);
-									}
+									ProxyTargetReplacement.createArgumentsClassArray(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isTargetMethod(mname, mdesc)) {       // [R9.1]
 									mv.visitVarInsn(ALOAD, 0);
 									return;
-								} else
+								}
 
 								if (isTargetClassMethod(mname, mdesc)) {       // [R9]
-									mv.visitLdcInsn(Type.getType('L' + wd.superReference + ';'));
+									ProxyTargetReplacement.targetClass(mv, td.msign);
+									//ProxyTargetReplacement.targetClass(mv, wd.superReference);
 									return;
-								} else
+								}
 
 								if (isTargetMethodNameMethod(mname, mdesc)) {  // [R10]
-									mv.visitLdcInsn(td.msign.getMethodName());
+									ProxyTargetReplacement.targetMethodName(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isTargetMethodSignatureMethod(mname, mdesc)) {
-									mv.visitLdcInsn(td.msign.getSignature());
+									ProxyTargetReplacement.targetMethodSignature(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isTargetMethodDescriptionMethod(mname, mdesc)) {
-									mv.visitLdcInsn(td.msign.getDescription());
+									ProxyTargetReplacement.targetMethodDescription(mv, td.msign);
 									return;
-								} else
+								}
+
+								if (isInfoMethod(mname, mdesc)) {
+									// we are NOT replacing info() here! First, we need to figure out
+									// what is the operand for the very next ASTORE instructions
+									// since we need to create an object and store it in this
+									// register - and reuse it, in replacement code.
+
+									//ProxyTargetReplacement.info(mv, td.msign);
+									proxyInfoRequested = true;
+									return;
+								}
 
 								if (isReturnTypeMethod(mname, mdesc)) {        // [R11]
-									loadMethodReturnClass(mv, td.msign);
+									ProxyTargetReplacement.returnType(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isReturnValueMethod(mname, mdesc)) {
 									castToReturnType(mv, td.msign);
 									return;
 								}
+
+								if (isTargetMethodAnnotationMethod(mname, mdesc)) {
+									String[] args = getLastTwoStringArguments();
+
+									// pop current two args
+									mv.visitInsn(POP);
+									mv.visitInsn(POP);
+
+									ProxyTargetReplacement.targetMethodAnnotation(mv, td.msign, args);
+									return;
+								}
+
+								if (isTargetClassAnnotationMethod(mname, mdesc)) {
+									String[] args = getLastTwoStringArguments();
+
+									// pop current two args
+									mv.visitInsn(POP);
+									mv.visitInsn(POP);
+
+									ProxyTargetReplacement.targetClassAnnotation(mv, td.msign.getClassInfo(), args);
+									return;
+								}
 							}
 						}
-						super.visitMethodInsn(opcode, string, mname, mdesc);
+						super.visitMethodInsn(opcode, string, mname, mdesc, isInterface);
 					}
 
 				};

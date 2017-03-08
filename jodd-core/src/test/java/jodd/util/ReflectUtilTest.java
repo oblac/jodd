@@ -1,9 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
 
-import jodd.mutable.MutableInteger;
-import jodd.typeconverter.TypeConverterManager;
 import jodd.util.subclass.*;
 import jodd.util.testdata.A;
 import jodd.util.testdata.B;
@@ -11,16 +32,17 @@ import jodd.util.testdata.C;
 import jodd.util.testdata.JavaBean;
 import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
-import jodd.util.testdata2.En;
 import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -187,29 +209,48 @@ public class ReflectUtilTest {
 		TFooBean2 c = new TFooBean2();
 
 		assertTrue(TFooBean.class.isInstance(a));
-		assertTrue(ReflectUtil.isSubclass(TFooBean.class, a.getClass()));
-		assertTrue(ReflectUtil.isSubclass(TFooBean.class, b.getClass()));
-		assertTrue(ReflectUtil.isSubclass(a.getClass(), b.getClass()));
-		assertTrue(ReflectUtil.isSubclass(b.getClass(), a.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, a.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, b.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(a.getClass(), b.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(b.getClass(), a.getClass()));
 
-		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, c.getClass()));
-		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, TFooBean.class));
-		assertFalse(ReflectUtil.isSubclass(TFooBean.class, TFooBean2.class));
-		assertTrue(ReflectUtil.isSubclass(c.getClass(), TFooBean.class));
-		assertFalse(ReflectUtil.isSubclass(a.getClass(), TFooBean2.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, c.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, TFooBean.class));
+		assertFalse(ReflectUtil.isTypeOf(TFooBean.class, TFooBean2.class));
+		assertTrue(ReflectUtil.isTypeOf(c.getClass(), TFooBean.class));
+		assertFalse(ReflectUtil.isTypeOf(a.getClass(), TFooBean2.class));
 
-		assertTrue(ReflectUtil.isSubclass(TFooBean.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, Serializable.class));
 		assertTrue(Serializable.class.isInstance(c));
 		//noinspection ConstantConditions
 		assertTrue(c instanceof Serializable);
 		assertTrue(ReflectUtil.isInstanceOf(c, Serializable.class));
-		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, Serializable.class));
-		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, Comparable.class));
-		assertFalse(ReflectUtil.isSubclass(TFooBean.class, Comparable.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, Comparable.class));
+		assertFalse(ReflectUtil.isTypeOf(TFooBean.class, Comparable.class));
 
-		assertTrue(ReflectUtil.isSubclass(TFooBean.class, TFooIndyEx.class));
-		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, TFooIndyEx.class));
-		assertTrue(ReflectUtil.isSubclass(TFooBean.class, TFooIndy.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, TFooIndyEx.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, TFooIndyEx.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, TFooIndy.class));
+	}
+
+	@Test
+	public void testMatchInterfaces() {
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(Map.class, Map.class));
+
+		assertTrue(ReflectUtil.isInstanceOf(new HashMap(), Map.class));
+
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(Map.class, Map.class));
+
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(Map.class, Map.class));
 	}
 
 
@@ -343,57 +384,29 @@ public class ReflectUtilTest {
 
 
 	@Test
-	public void testCast() {
-
-		String s = "123";
-		Integer d = TypeConverterManager.convertType(s, Integer.class);
-		assertEquals(123, d.intValue());
-
-		s = TypeConverterManager.convertType(d, String.class);
-		assertEquals("123", s);
-
-		MutableInteger md = TypeConverterManager.convertType(s, MutableInteger.class);
-		assertEquals(123, md.intValue());
-
-		B b = new B();
-		A a = TypeConverterManager.convertType(b, A.class);
-		assertEquals(a, b);
-	}
-
-	@Test
-	public void testCastEnums() {
-
-		En en = TypeConverterManager.convertType("ONE", En.class);
-		assertEquals(En.ONE, en);
-		en = TypeConverterManager.convertType("TWO", En.class);
-		assertEquals(En.TWO, en);
-	}
-
-
-	@Test
 	public void testIsSubclassAndInterface() {
-		assertTrue(ReflectUtil.isSubclass(SBase.class, SBase.class));
+		assertTrue(ReflectUtil.isTypeOf(SBase.class, SBase.class));
 
-		assertTrue(ReflectUtil.isSubclass(SOne.class, SBase.class));
-		assertTrue(ReflectUtil.isSubclass(SOne.class, IOne.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(SOne.class, IOne.class));
-		assertTrue(ReflectUtil.isSubclass(SOne.class, Serializable.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(SOne.class, Serializable.class));
-		assertTrue(ReflectUtil.isSubclass(SOne.class, SOne.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, SBase.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, SOne.class));
 
-		assertTrue(ReflectUtil.isSubclass(STwo.class, SBase.class));
-		assertTrue(ReflectUtil.isSubclass(STwo.class, IOne.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, IOne.class));
-		assertTrue(ReflectUtil.isSubclass(STwo.class, Serializable.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, Serializable.class));
-		assertTrue(ReflectUtil.isSubclass(STwo.class, ITwo.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, ITwo.class));
-		assertTrue(ReflectUtil.isSubclass(STwo.class, IBase.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, IBase.class));
-		assertTrue(ReflectUtil.isSubclass(STwo.class, IExtra.class));
-		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, IExtra.class));
-		assertTrue(ReflectUtil.isSubclass(STwo.class, STwo.class));
-		assertFalse(ReflectUtil.isInterfaceImpl(STwo.class, STwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, SBase.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, ITwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, ITwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IBase.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IBase.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IExtra.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IExtra.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, STwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, STwo.class));
 	}
 
 	@Test
@@ -443,8 +456,8 @@ public class ReflectUtilTest {
 
 	@Test
 	public void testIsSubClassForCommonTypes() {
-		assertTrue(ReflectUtil.isSubclass(Long.class, Long.class));
-		assertFalse(ReflectUtil.isSubclass(Long.class, long.class));
+		assertTrue(ReflectUtil.isTypeOf(Long.class, Long.class));
+		assertFalse(ReflectUtil.isTypeOf(Long.class, long.class));
 	}
 
 /*	@Test
@@ -505,8 +518,9 @@ public class ReflectUtilTest {
 		Field f5 = ConcreteClass.class.getField("f5");
 		Field array1 = BaseClass.class.getField("array1");
 
-		assertEquals(String.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 0));
-		assertEquals(Integer.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 1));
+		Class[] genericSupertypes = ReflectUtil.getGenericSupertypes(ConcreteClass.class);
+		assertEquals(String.class, genericSupertypes[0]);
+		assertEquals(Integer.class, genericSupertypes[1]);
 
 		assertEquals(String.class, ReflectUtil.getRawType(f1.getGenericType(), ConcreteClass.class));
 		assertEquals(Integer.class, ReflectUtil.getRawType(f2.getGenericType(), ConcreteClass.class));
@@ -516,8 +530,8 @@ public class ReflectUtilTest {
 		assertEquals(String[].class, ReflectUtil.getRawType(array1.getGenericType(), ConcreteClass.class));
 
 		assertEquals(Object.class, ReflectUtil.getRawType(f1.getGenericType()));
-		assertNull(ReflectUtil.getComponentType(f1.getGenericType()));
-		assertEquals(Long.class, ReflectUtil.getComponentType(f5.getGenericType()));
+		assertNull(ReflectUtil.getComponentType(f1.getGenericType(), -1));
+		assertEquals(Long.class, ReflectUtil.getComponentType(f5.getGenericType(), 0));
 	}
 
 	@Test
@@ -552,49 +566,48 @@ public class ReflectUtilTest {
 
 		Field stringList = sooClass.getField("stringList");
 		assertEquals(List.class, ReflectUtil.getRawType(stringList.getType()));
-		assertEquals(String.class, ReflectUtil.getComponentType(stringList.getGenericType()));
+		assertEquals(String.class, ReflectUtil.getComponentType(stringList.getGenericType(), 0));
 
 		Field strings = sooClass.getField("strings");
 		assertEquals(String[].class, ReflectUtil.getRawType(strings.getType()));
-		assertEquals(String.class, ReflectUtil.getComponentType(strings.getGenericType()));
+		assertEquals(String.class, ReflectUtil.getComponentType(strings.getGenericType(), -1));
 
 		Field string = sooClass.getField("string");
 		assertEquals(String.class, ReflectUtil.getRawType(string.getType()));
-		assertNull(ReflectUtil.getComponentType(string.getGenericType()));
+		assertNull(ReflectUtil.getComponentType(string.getGenericType(), 0));
 
 		Method integerList = ReflectUtil.findMethod(sooClass, "getIntegerList");
 		assertEquals(List.class, ReflectUtil.getRawType(integerList.getReturnType()));
-		assertEquals(Integer.class, ReflectUtil.getComponentType(integerList.getGenericReturnType()));
+		assertEquals(Integer.class, ReflectUtil.getComponentType(integerList.getGenericReturnType(), -1));
 
 		Method integers = ReflectUtil.findMethod(sooClass, "getIntegers");
 		assertEquals(Integer[].class, ReflectUtil.getRawType(integers.getReturnType()));
-		assertEquals(Integer.class, ReflectUtil.getComponentType(integers.getGenericReturnType()));
+		assertEquals(Integer.class, ReflectUtil.getComponentType(integers.getGenericReturnType(), 0));
 
 		Method integer = ReflectUtil.findMethod(sooClass, "getInteger");
 		assertEquals(Integer.class, ReflectUtil.getRawType(integer.getReturnType()));
-		assertNull(ReflectUtil.getComponentType(integer.getGenericReturnType()));
+		assertNull(ReflectUtil.getComponentType(integer.getGenericReturnType(), -1));
 
 		Method template = ReflectUtil.findMethod(sooClass, "getTemplate");
 		assertEquals(Object.class, ReflectUtil.getRawType(template.getReturnType()));
-		assertNull(ReflectUtil.getComponentType(template.getGenericReturnType()));
+		assertNull(ReflectUtil.getComponentType(template.getGenericReturnType(), 0));
 
 		Method collection = ReflectUtil.findMethod(sooClass, "getCollection");
 		assertEquals(Collection.class, ReflectUtil.getRawType(collection.getReturnType()));
-		assertEquals(Number.class, ReflectUtil.getComponentType(collection.getGenericReturnType()));
+		assertEquals(Number.class, ReflectUtil.getComponentType(collection.getGenericReturnType(), -1));
 
 		Method collection2 = ReflectUtil.findMethod(sooClass, "getCollection2");
 		assertEquals(Collection.class, ReflectUtil.getRawType(collection2.getReturnType()));
-		assertEquals(Object.class, ReflectUtil.getComponentType(collection2.getGenericReturnType()));
+		assertEquals(Object.class, ReflectUtil.getComponentType(collection2.getGenericReturnType(), 0));
 	}
 
 	public static class Base2<N extends Number, K> {
 		public N getNumber() {return null;}
 		public K getKiko() {return null;}
 	}
-	public static class Impl1<N extends Number> extends Base2<N, Long> {
-	}
-	public static class Impl2 extends Impl1<Integer> {
-	}
+	public static class Impl1<N extends Number> extends Base2<N, Long> {}
+	public static class Impl2 extends Impl1<Integer> {}
+	public static class Impl3 extends Impl2 {}
 
 	@Test
 	public void testGetRawWithImplClass() throws NoSuchFieldException {
@@ -618,7 +631,107 @@ public class ReflectUtilTest {
 
 		assertEquals(Object.class, ReflectUtil.getRawType(kiko.getReturnType(), Impl2.class));
 		assertEquals(Long.class, ReflectUtil.getRawType(kiko.getGenericReturnType(), Impl2.class));
+
+		assertEquals(Number.class, ReflectUtil.getRawType(number.getReturnType(), Impl3.class));
+		assertEquals(Integer.class, ReflectUtil.getRawType(number.getGenericReturnType(), Impl3.class));
+
+		assertEquals(Object.class, ReflectUtil.getRawType(kiko.getReturnType(), Impl3.class));
+		assertEquals(Long.class, ReflectUtil.getRawType(kiko.getGenericReturnType(), Impl3.class));
 	}
+
+	public static class Base22<K, N extends Number> {}
+	public static class Impl11<N extends Number> extends Base22<Long, N> {}
+	public static class Impl22 extends Impl11<Integer> {}
+	public static class Impl33 extends Impl22 {}
+
+
+	@Test
+	public void testClassGenerics1() {
+		Class[] componentTypes = ReflectUtil.getGenericSupertypes(Base2.class);
+		assertNull(componentTypes);
+
+		Type[] types = Base2.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(Impl1.class);
+		assertEquals(2, componentTypes.length);
+		assertEquals(Number.class, componentTypes[0]);
+		assertEquals(Long.class, componentTypes[1]);
+
+		types = Impl1.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(Impl2.class);
+		assertEquals(1, componentTypes.length);
+		assertEquals(Integer.class, componentTypes[0]);
+
+		types = Impl2.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(Impl3.class);
+		assertNull(componentTypes);
+	}
+
+	@Test
+	public void testClassGenerics2() {
+		Class[] componentTypes = ReflectUtil.getGenericSupertypes(Base22.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(Impl11.class);
+		assertEquals(2, componentTypes.length);
+		assertEquals(Long.class, componentTypes[0]);
+		assertEquals(Number.class, componentTypes[1]);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(Impl22.class);
+		assertEquals(1, componentTypes.length);
+		assertEquals(Integer.class, componentTypes[0]);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(Impl33.class);
+		assertNull(componentTypes);
+	}
+
+	public static interface BaseAna<K, N extends Number> {}
+	public static interface ImplAna<N extends Number> extends BaseAna<Long, N> {}
+	public static interface ImplAna2 extends ImplAna<Integer> {}
+	public static class ImplAna3 implements ImplAna2 {}
+	public static class ImplAna4 extends ImplAna3 {}
+
+	@Test
+	public void testClassGenerics3() {
+		Class[] componentTypes = ReflectUtil.getGenericSupertypes(BaseAna.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(ImplAna.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(ImplAna2.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(ImplAna3.class);
+		assertNull(componentTypes);
+
+		// scan generic interfacase
+
+		Type[] types = ImplAna3.class.getGenericInterfaces();
+		assertEquals(1, types.length);
+		assertEquals(ImplAna2.class, types[0]);
+		assertNull(ReflectUtil.getComponentType(types[0], 0));
+
+		types = ImplAna2.class.getGenericInterfaces();
+		assertEquals(1, types.length);
+		assertEquals(Integer.class, ReflectUtil.getComponentType(types[0], 0));
+
+		types = ImplAna.class.getGenericInterfaces();
+		assertEquals(1, types.length);
+		assertEquals(Long.class, ReflectUtil.getComponentType(types[0], 0));
+
+		types = BaseAna.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+
+		types = ImplAna4.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+	}
+
 
 	// ---------------------------------------------------------------- type2string
 
@@ -733,5 +846,105 @@ public class ReflectUtilTest {
 		assertEquals(List.class, ReflectUtil.getRawType(types[2], Mimple.class));
 		assertEquals(List.class, ReflectUtil.getRawType(types[3], Mimple.class));
 		assertEquals(List.class, ReflectUtil.getRawType(types[4], Mimple.class));
+	}
+
+	public interface SomeGuy {}
+	public interface Cool extends SomeGuy {}
+	public interface Vigilante {}
+	public interface Flying extends Vigilante {}
+	public interface SuperMario extends Flying, Cool {}
+	public class User implements SomeGuy {}
+	public class SuperUser extends User implements Cool {}
+	public class SuperMan extends SuperUser implements Flying {}
+
+	@Test
+	public void testResolveAllInterfaces() {
+		Class[] interfaces = ReflectUtil.resolveAllInterfaces(HashMap.class);
+
+		assertTrue(interfaces.length >= 3);
+		assertTrue(ArraysUtil.contains(interfaces, Map.class));
+		assertTrue(ArraysUtil.contains(interfaces, Serializable.class));
+		assertTrue(ArraysUtil.contains(interfaces, Cloneable.class));
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SuperMan.class);
+
+		assertEquals(4, interfaces.length);
+		assertTrue(ArraysUtil.contains(interfaces, SomeGuy.class));
+		assertTrue(ArraysUtil.contains(interfaces, Cool.class));
+		assertTrue(ArraysUtil.contains(interfaces, Flying.class));
+		assertTrue(ArraysUtil.contains(interfaces, Vigilante.class));
+		assertTrue(ArraysUtil.indexOf(interfaces, Flying.class) < ArraysUtil.indexOf(interfaces, SomeGuy.class));
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SuperUser.class);
+
+		assertEquals(2, interfaces.length);
+		assertTrue(ArraysUtil.contains(interfaces, SomeGuy.class));
+		assertTrue(ArraysUtil.contains(interfaces, Cool.class));
+
+		interfaces = ReflectUtil.resolveAllInterfaces(User.class);
+
+		assertEquals(1, interfaces.length);
+		assertTrue(ArraysUtil.contains(interfaces, SomeGuy.class));
+
+
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SomeGuy.class);
+		assertEquals(0, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Cool.class);
+		assertEquals(1, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Vigilante.class);
+		assertEquals(0, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Flying.class);
+		assertEquals(1, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SuperMario.class);
+		assertEquals(4, interfaces.length);
+
+
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Object.class);
+		assertEquals(0, interfaces.length);
+		interfaces = ReflectUtil.resolveAllInterfaces(int.class);
+		assertEquals(0, interfaces.length);
+		interfaces = ReflectUtil.resolveAllInterfaces(int[].class);
+		assertEquals(2, interfaces.length);		// cloneable, serializable
+		interfaces = ReflectUtil.resolveAllInterfaces(Integer[].class);
+		assertEquals(2, interfaces.length);
+	}
+
+	@Test
+	public void testResolveAllSuperclsses() {
+		Class[] subclasses = ReflectUtil.resolveAllSuperclasses(User.class);
+		assertEquals(0, subclasses.length);
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(SuperUser.class);
+		assertEquals(1, subclasses.length);
+		assertEquals(User.class, subclasses[0]);
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(SuperMan.class);
+		assertEquals(2, subclasses.length);
+		assertEquals(SuperUser.class, subclasses[0]);
+		assertEquals(User.class, subclasses[1]);
+
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(Cool.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(Flying.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(SuperMario.class);
+		assertEquals(0, subclasses.length);
+
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(Object.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(int.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(int[].class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(Integer[].class);
+		assertEquals(0, subclasses.length);
 	}
 }

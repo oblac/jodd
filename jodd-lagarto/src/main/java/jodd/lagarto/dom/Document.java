@@ -1,49 +1,59 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoParserContext;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Document node is always a root node.
- * Holds various DOM-related flags and information.
+ * Holds various DOM-related configuration and information.
  */
 public class Document extends Node {
 
 	protected long elapsedTime;
-	protected final boolean lowercase;
-	protected final boolean collectErrors;
-	protected final LagartoNodeHtmlRenderer renderer;
+	protected final LagartoDomBuilderConfig config;
 	protected List<String> errors;
-	protected LagartoParserContext parserContext;
 
 	public Document() {
-		this(true, false, new LagartoNodeHtmlRenderer(), null);
+		this(new LagartoDomBuilderConfig());
 	}
 
 	/**
 	 * Document constructor with all relevant flags.
-	 * @param lowercase	should all names be converted to lowercase
-	 * @param collectErrors	should we collect errors during the parsing
-	 * @param renderer renderer instance
-	 * @param parserContext {@link LagartoParserContext parser context}
 	 */
-	public Document(boolean lowercase, boolean collectErrors, LagartoNodeHtmlRenderer renderer, LagartoParserContext parserContext) {
+	public Document(LagartoDomBuilderConfig config) {
 		super(null, NodeType.DOCUMENT, null);
-		this.lowercase = lowercase;
-		this.renderer = renderer;
-		this.collectErrors = collectErrors;
+		this.config = config;
 		this.elapsedTime = System.currentTimeMillis();
-		this.parserContext = parserContext;
 	}
-	
+
 	@Override
 	public Document clone() {
-		Document document = cloneTo(new Document(lowercase, collectErrors, renderer, parserContext));
+		Document document = cloneTo(new Document(config));
 		document.elapsedTime = this.elapsedTime;
 		return document;
 	}
@@ -56,8 +66,8 @@ public class Document extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		super.toInnerHtml(appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.document(this);
 	}
 
 	// ---------------------------------------------------------------- errors
@@ -67,9 +77,9 @@ public class Document extends Node {
 	 * If errors are not collected error, message is ignored.
 	 */
 	public void addError(String message) {
-		if (collectErrors) {
+		if (config.collectErrors) {
 			if (errors == null) {
-				errors = new ArrayList<String>();
+				errors = new ArrayList<>();
 			}
 			errors.add(message);
 		}
@@ -84,6 +94,15 @@ public class Document extends Node {
 		return errors;
 	}
 
+	// ---------------------------------------------------------------- attr
+
+	/**
+	 * Document node does not have attributes.
+	 */
+	@Override
+	public void setAttribute(String name, String value) {
+	}
+
 	// ---------------------------------------------------------------- getter
 
 	/**
@@ -94,35 +113,10 @@ public class Document extends Node {
 	}
 
 	/**
-	 * Returns <code>true</code> if node names should
-	 * be converted to lowercase. Otherwise, name remains
-	 * unchanged (ie equals to raw name).
+	 * Returns used {@link jodd.lagarto.dom.LagartoDomBuilderConfig}.
 	 */
-	public boolean isLowercase() {
-		return lowercase;
+	public LagartoDomBuilderConfig getConfig() {
+		return config;
 	}
 
-	/**
-	 * Returns <code>true</code> if errors are collected.
-	 */
-	public boolean isCollectErrors() {
-		return collectErrors;
-	}
-
-	/**
-	 * Returns renderer for nodes.
-	 */
-	public LagartoNodeHtmlRenderer getRenderer() {
-		return renderer;
-	}
-
-	/**
-	 * Returns current offset during the parsing.
-	 */
-	public int getCurrentOffset() {
-		if (parserContext == null) {
-			return -1;
-		}
-		return parserContext.getOffset();
-	}
 }

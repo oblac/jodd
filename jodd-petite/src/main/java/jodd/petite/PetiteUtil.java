@@ -1,10 +1,32 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite;
 
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.scope.Scope;
-import jodd.petite.scope.DefaultScope;
 import jodd.typeconverter.Convert;
 import jodd.util.StringUtil;
 
@@ -29,8 +51,6 @@ public class PetiteUtil {
 			t = ctor.newInstance(petiteContainer);
 		} catch (NoSuchMethodException nsmex) {
 			// ignore
-		} catch (Exception ex) {
-			throw ex;
 		}
 
 		// if first try failed, try default ctor
@@ -39,6 +59,21 @@ public class PetiteUtil {
 		}
 
 		return t;
+	}
+
+	/**
+	 * Calls destroy methods on given BeanData. Destroy methods are called
+	 * without any order.
+	 */
+	public static void callDestroyMethods(BeanData beanData) {
+		DestroyMethodPoint[] dmp = beanData.getBeanDefinition().getDestroyMethodPoints();
+		for (DestroyMethodPoint destroyMethodPoint : dmp) {
+			try {
+				destroyMethodPoint.method.invoke(beanData.getBean());
+			} catch (Exception ex) {
+				throw new PetiteException("Invalid destroy method: " + destroyMethodPoint.method, ex);
+			}
+		}
 	}
 
 	/**
@@ -86,11 +121,12 @@ public class PetiteUtil {
 	}
 
 	/**
-	 * Resolves bean's scope type from the annotation. Returns default scope if annotation doesn't exist.
+	 * Resolves bean's scope type from the annotation. Returns <code>null</code>
+	 * if annotation doesn't exist.
 	 */
 	public static Class<? extends Scope> resolveBeanScopeType(Class type) {
 		PetiteBean petiteBean = ((Class<?>) type).getAnnotation(PetiteBean.class);
-		return petiteBean != null ? petiteBean.scope() : DefaultScope.class;
+		return petiteBean != null ? petiteBean.scope() : null;
 	}
 
 	/**
@@ -111,6 +147,21 @@ public class PetiteUtil {
 			}
 		}
 		return name;
+	}
+
+	/**
+	 * Returns <code>true</code> if bean has name defined by Petite annotation.
+	 */
+	public static boolean beanHasAnnotationName(Class type) {
+		PetiteBean petiteBean = ((Class<?>)type).getAnnotation(PetiteBean.class);
+
+		if (petiteBean == null) {
+			return false;
+		}
+
+		String name = petiteBean.value().trim();
+
+		return !name.isEmpty();
 	}
 
 }

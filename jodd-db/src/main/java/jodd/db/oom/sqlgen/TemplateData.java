@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom.sqlgen;
 
@@ -7,6 +30,7 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.NamedValuesHashMap;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -36,20 +60,14 @@ public abstract class TemplateData {
 	}
 
 	/**
-	 * Resets the build before initializing and processing.
+	 * Resets the builder so it can be used again. Not everything is reset:
+	 * object references and column alias type is not.
 	 */
-	protected void resetOnPreInit() {
+	protected void resetSoft() {
 		columnCount = 0;
 		paramCount = 0;
 		hintCount = 0;
-	}
 
-	/**
-	 * Resets the builder so it can be used again. Note that
-	 * object references are not cleared.
-	 */
-	protected void resetAll() {
-		resetOnPreInit();
 		if (tableRefs != null) {
 			tableRefs.clear();
 		}
@@ -63,6 +81,12 @@ public abstract class TemplateData {
 		if (hints != null) {
 			hints.clear();
 		}
+		//columnAliasType = dbOomManager.getDefaultColumnAliasType();
+	}
+
+	protected void resetHard() {
+		resetSoft();
+		objectRefs = null;
 		columnAliasType = dbOomManager.getDefaultColumnAliasType();
 	}
 
@@ -76,7 +100,7 @@ public abstract class TemplateData {
 	 */
 	public void setObjectReference(String name, Object object) {
 		if (objectRefs == null) {
-			objectRefs = new HashMap<String, Object>();
+			objectRefs = new HashMap<>();
 		}
 		objectRefs.put(name, object);
 	}
@@ -157,11 +181,11 @@ public abstract class TemplateData {
 	 */
 	public void registerTableReference(String tableReference, DbEntityDescriptor ded, String tableAlias) {
 		if (tableRefs == null) {
-			tableRefs = new HashMap<String, TableRefData>();
+			tableRefs = new HashMap<>();
 		}
 		TableRefData t = new TableRefData(ded, tableAlias);
 		if (tableRefs.put(tableReference, t) != null) {
-			throw new DbSqlBuilderException("Duplicated table reference detected: " + tableReference);
+			throw new DbSqlBuilderException("Duplicated table reference: " + tableReference);
 		}
 	}
 
@@ -193,18 +217,18 @@ public abstract class TemplateData {
 
 	public void registerColumnDataForTableRef(String tableRef, String tableName) {
 		if (columnData == null) {
-			columnData = new HashMap<String, ColumnData>();
+			columnData = new NamedValuesHashMap<>();
 		}
 		columnData.put(tableRef, new ColumnData(tableName));
 	}
 
 	public String registerColumnDataForColumnCode(String tableName, String column) {
 		if (columnData == null) {
-			columnData = new HashMap<String, ColumnData>();
+			columnData = new NamedValuesHashMap<>();
 		}
-		String code = COL_CODE_PREFIX + Integer.toString(columnCount++) + '_';
-		columnData.put(code, new ColumnData(tableName, column));
-		return code;
+		String columnCode = COL_CODE_PREFIX + Integer.toString(columnCount++) + '_';
+		columnData.put(columnCode, new ColumnData(tableName, column));
+		return columnCode;
 	}
 
 
@@ -226,7 +250,7 @@ public abstract class TemplateData {
 	 */
 	public void addParameter(String name, Object value, DbEntityColumnDescriptor dec) {
 		if (parameters == null) {
-			parameters = new HashMap<String, ParameterValue>();
+			parameters = new HashMap<>();
 		}
 		parameters.put(name, new ParameterValue(value, dec));
 	}
@@ -241,7 +265,7 @@ public abstract class TemplateData {
 	protected DbEntityDescriptor lookupName(String entityName) {
 		DbEntityDescriptor ded = dbOomManager.lookupName(entityName);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOomManager.");
+			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
 		return ded;
 	}
@@ -263,7 +287,7 @@ public abstract class TemplateData {
 	protected DbEntityDescriptor lookupTableRef(String tableRef) {
 		DbEntityDescriptor ded = getTableDescriptor(tableRef);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "', not used in this query.");
+			throw new DbSqlBuilderException("Table reference not used in this query: " + tableRef);
 		}
 		return ded;
 	}
@@ -293,7 +317,7 @@ public abstract class TemplateData {
 	 */
 	public void registerHint(String hint) {
 		if (hints == null) {
-			hints = new ArrayList<String>(hintCount);
+			hints = new ArrayList<>(hintCount);
 		}
 		hints.add(hint);
 	}

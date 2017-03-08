@@ -7,11 +7,10 @@ dependencies {
 	compile project(':jodd-bean')
 	compile project(':jodd-upload')
 
-	compile lib.servlet
-	compile lib.jsp
-	
+	provided lib.servlet
+	provided lib.jsp
+
 	testCompile lib.junit
 	testCompile lib.mockito
 	testCompile lib.el_api
 }
-provided = [lib.servlet, lib.jsp]

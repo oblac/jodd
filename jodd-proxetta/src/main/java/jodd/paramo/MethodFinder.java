@@ -1,10 +1,33 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.paramo;
 
 import jodd.asm.EmptyClassVisitor;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.Type;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.Type;
 
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -16,7 +39,7 @@ import java.util.HashMap;
  */
 final class MethodFinder extends EmptyClassVisitor {
 
-	private static final Map<String, String> primitives = new HashMap<String, String>(8);
+	private static final Map<String, String> primitives = new HashMap<>(8);
 
 	private static final String TYPE_INT = "int";
 	private static final String TYPE_BOOLEAN = "boolean";
@@ -56,7 +79,7 @@ final class MethodFinder extends EmptyClassVisitor {
 		if (paramExtractor != null) {
 			return null;				// method already found, skip all further methods
 		}
-		if (name.equals(methodName) == false) {
+		if (!name.equals(methodName)) {
 			return null;				// different method
 		}
 
@@ -74,7 +97,7 @@ final class MethodFinder extends EmptyClassVisitor {
 		}
 
 		for (int i = 0; i < argumentTypes.length; i++) {
-			if (isEqualTypeName(argumentTypes[i], this.parameterTypes[i]) == false) {
+			if (!isEqualTypeName(argumentTypes[i], this.parameterTypes[i])) {
 				return null;			// wrong param types
 			}
 		}
@@ -109,7 +132,7 @@ final class MethodFinder extends EmptyClassVisitor {
 		if (paramExtractor == null) {
 			return MethodParameter.EMPTY_ARRAY;
 		}
-		if (paramExtractor.debugInfoPresent == false) {
+		if (!paramExtractor.debugInfoPresent) {
 			throw new ParamoException("Parameter names not available for method: "
 					+ declaringClass.getName() + '#' + methodName);
 		}

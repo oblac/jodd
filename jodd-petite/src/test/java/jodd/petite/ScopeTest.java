@@ -1,9 +1,32 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite;
 
-import jodd.bean.BeanUtil;
 import jodd.petite.scope.ProtoScope;
+import jodd.petite.scope.RequestScope;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
@@ -54,25 +77,33 @@ public class ScopeTest {
 	}
 
 	@Test
-	public void testSessionScopeAccepted() {
-		PetiteContainer pc = new PetiteContainer();
+	public void testScopeAccept() {
+		final PetiteContainer pc = new PetiteContainer();
 
-		ThreadLocalScope threadLocalScope = pc.resolveScope(ThreadLocalScope.class);
 		SingletonScope singletonScope = pc.resolveScope(SingletonScope.class);
 		ProtoScope protoScope = pc.resolveScope(ProtoScope.class);
-
-		assertTrue(threadLocalScope.accept(singletonScope));
-		assertTrue(threadLocalScope.accept(threadLocalScope));
-		assertFalse(threadLocalScope.accept(protoScope));
-
-		Class[] acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
-		assertEquals(2, acceptedClasses.length);
-
 		SessionScope sessionScope = pc.resolveScope(SessionScope.class);
+		RequestScope requestScope = pc.resolveScope(RequestScope.class);
 
-		acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
-		assertEquals(3, acceptedClasses.length);
-		assertTrue(threadLocalScope.accept(sessionScope));
+		assertTrue(singletonScope.accept(singletonScope));
+		assertTrue(singletonScope.accept(protoScope));
+		assertFalse(singletonScope.accept(sessionScope));
+		assertFalse(singletonScope.accept(requestScope));
+
+		assertTrue(protoScope.accept(singletonScope));
+		assertTrue(protoScope.accept(protoScope));
+		assertTrue(protoScope.accept(sessionScope));
+		assertTrue(protoScope.accept(requestScope));
+
+		assertTrue(sessionScope.accept(singletonScope));
+		assertTrue(sessionScope.accept(protoScope));
+		assertTrue(sessionScope.accept(sessionScope));
+		assertFalse(sessionScope.accept(requestScope));
+
+		assertTrue(requestScope.accept(singletonScope));
+		assertTrue(requestScope.accept(protoScope));
+		assertTrue(requestScope.accept(sessionScope));
+		assertTrue(requestScope.accept(requestScope));
 	}
 
 }

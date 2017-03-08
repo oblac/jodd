@@ -1,22 +1,64 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * Compares two strings in natural, alphabetical, way.
+ * Probably the best natural strings comparator.
  */
-public class NaturalOrderComparator<T> implements Comparator<T> {
+public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
+
+	/* copied from Perl6 code */
+	private static final char[] ACCENT_CHARS = new char[]{
+		'À', 'A', 'Á', 'A', 'Â', 'A', 'Ã', 'A', 'Ä', 'A', 'Å', 'A',
+		'à', 'a', 'á', 'a', 'â', 'a', 'ã', 'a', 'ä', 'a', 'å', 'a',
+		'Ç', 'C', 'ç', 'c',
+		'È', 'E', 'É', 'E', 'Ê', 'E', 'Ë', 'E',
+		'è', 'e', 'é', 'e', 'ê', 'e', 'ë', 'e',
+		'Ì', 'I', 'Í', 'I', 'Î', 'I', 'Ï', 'I',
+		'ì', 'i', 'í', 'i', 'î', 'i', 'ï', 'i',
+		'Ò', 'O', 'Ó', 'O', 'Ô', 'O', 'Õ', 'O', 'Ö', 'O',
+		'Ø', 'O', 'ò', 'o', 'ó', 'o', 'ô', 'o', 'õ', 'o', 'ö', 'o', 'ø', 'o',
+		'Ñ', 'N', 'ñ', 'n',
+		'Ù', 'U', 'Ú', 'U', 'Û', 'U', 'Ü', 'U', 'ù', 'u', 'ú', 'u', 'û', 'u', 'ü', 'u',
+		'Ý', 'Y', 'ÿ', 'y', 'ý', 'y',
+	};
 
 	protected final boolean ignoreCase;
+	protected final boolean ignoreAccents;
 
 	public NaturalOrderComparator() {
-		ignoreCase = false;
+		this(false, true);
 	}
 
-	public NaturalOrderComparator(boolean ignoreCase) {
+	public NaturalOrderComparator(boolean ignoreCase, boolean ignoreAccents) {
 		this.ignoreCase = ignoreCase;
+		this.ignoreAccents = ignoreAccents;
 	}
 
 	/**
@@ -67,6 +109,8 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 
 		int ndx1 = 0, ndx2 = 0;
 		int zeroCount1, zeroCount2;
+		int zerosDelta = 0;
+		int lastAllZerosResult = 0;
 		char char1, char2;
 
 		int result;
@@ -84,7 +128,7 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 				if (char1 == '0') {
 					zeroCount1++;
 				} else {
-					zeroCount1 = 0;	// counts only last 0 prefixes, space char interrupts the array of 0s
+					zeroCount1 = 0;		// counts only last 0 prefixes, space char interrupts the array of 0s
 				}
 				ndx1++;
 				char1 = charAt(str1, ndx1);
@@ -100,7 +144,11 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 				char2 = charAt(str2, ndx2);
 			}
 
-			// process digits
+			if (zeroCount1 > 0 || zeroCount2 > 0) {
+				zerosDelta = zeroCount1 - zeroCount2;
+			}
+
+			// process remaining digits
 
 			boolean isDigitChar1 = CharUtil.isDigit(char1);
 			boolean isDigitChar2 = CharUtil.isDigit(char2);
@@ -111,27 +159,57 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 					// not equals, return
 					return result;
 				}
-				// equal numbers
+				// if numbers are equal
 				if (zeroCount1 != zeroCount2) {
-					return zeroCount1 - zeroCount2;
+					return zerosDelta;
 				}
 			}
 
 			if (char1 == 0 && char2 == 0) {
-				// the end; the strings are the same, maybe compare ascii?
-				return zeroCount1 - zeroCount2;
+				// both strings end; the strings are the same
+				if (lastAllZerosResult == 0) {
+					return zerosDelta;
+				}
+				return lastAllZerosResult;
 			}
 
-			// check when one of the numbers is just zeros
+			// check when one of the numbers is just zeros; as the other
+			// string is still a number
 			if (isDigitChar1 || isDigitChar2) {
-				if (zeroCount1 != zeroCount2) {
-					return zeroCount2 - zeroCount1;
+				if (zeroCount1 > 0 && zeroCount2 > 0) {
+					if (zeroCount1 != zeroCount2) {
+						return -zerosDelta;
+					}
 				}
 			}
 
-			// checks when both numbers are zero
-			if (zeroCount1 != zeroCount2) {
-				return zeroCount1 - zeroCount2;
+			// check if both numbers are zeros
+			if (zerosDelta != 0) {
+				// so we really have both number with at least one zero?
+				if (zeroCount1 > 0 && zeroCount2 > 0) {
+					lastAllZerosResult = zerosDelta;
+				} else {
+					// one of the number is empty strings
+					// the other char defines the order!
+
+
+					if (zeroCount1 > 0) {
+						if (char2 > '0') {
+							return -zerosDelta;
+						} else {
+							return zerosDelta;
+						}
+					} else if (zeroCount2 > 0) {
+						if (char1 > '0') {
+							return -zerosDelta;
+						}
+						else  {
+							return zerosDelta;
+						}
+					}
+
+					return 0;
+				}
 			}
 
 			// compare chars
@@ -139,6 +217,12 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 				char1 = Character.toLowerCase(char1);
 				char2 = Character.toLowerCase(char2);
 			}
+
+			if (ignoreAccents) {
+				char1 = fixAccent(char1);
+				char2 = fixAccent(char2);
+			}
+
 			if (char1 < char2) {
 				return -1;
 			}
@@ -152,12 +236,25 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 	}
 
 	/**
-	 * Safe charAt.
+	 * Fixes accent char.
 	 */
-	private static char charAt(String s, int i) {
-		if (i >= s.length()) {
+	private char fixAccent(char c) {
+		for (int i = 0; i < ACCENT_CHARS.length; i+=2) {
+			char accentChar = ACCENT_CHARS[i];
+			if (accentChar == c) {
+				return ACCENT_CHARS[i + 1];
+			}
+		}
+		return c;
+	}
+
+	/**
+	 * Safe {@code charAt} that returns 0 when ndx is out of boundaries.
+	 */
+	private static char charAt(String string, int ndx) {
+		if (ndx >= string.length()) {
 			return 0;
 		}
-		return s.charAt(i);
+		return string.charAt(ndx);
 	}
 }

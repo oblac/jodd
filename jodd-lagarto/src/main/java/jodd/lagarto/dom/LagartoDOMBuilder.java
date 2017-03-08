@@ -1,10 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoParser;
-import jodd.log.Logger;
-import jodd.util.StringUtil;
 
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
@@ -15,230 +36,16 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		enableHtmlMode();
 	}
 
-	/**
-	 * Default void tags.
-	 * http://dev.w3.org/html5/spec/Overview.html#void-elements
-	 */
-	public static final String[] HTML5_VOID_TAGS = {
-			"area", "base", "br", "col", "embed", "hr", "img", "input",
-			"keygen", "link", "menuitem", "meta", "param", "source",
-			"track", "wbr"};
+	// ---------------------------------------------------------------- config
 
-	// ---------------------------------------------------------------- flags
+	protected LagartoDomBuilderConfig config = new LagartoDomBuilderConfig();
 
-	protected boolean parseSpecialTagsAsCdata;
-	protected boolean enableConditionalComments;
-	protected boolean calculatePosition;
-	protected boolean ignoreWhitespacesBetweenTags;
-	protected boolean caseSensitive;
-	protected boolean ignoreComments;
-	protected boolean selfCloseVoidTags;
-	protected boolean collectErrors;
-	protected String conditionalCommentExpression;
-	protected String[] voidTags = HTML5_VOID_TAGS;
-	protected boolean impliedEndTags;
-	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
-	protected Logger.Level parsingErrorLogLevel = Logger.Level.WARN;
-
-	// special flags
-	protected boolean useFosterRules;
-	protected boolean unclosedTagAsOrphanCheck;
-
-	public boolean isUnclosedTagAsOrphanCheck() {
-		return unclosedTagAsOrphanCheck;
+	public LagartoDomBuilderConfig getConfig() {
+		return config;
 	}
 
-	public LagartoDOMBuilder setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
-		this.unclosedTagAsOrphanCheck = unclosedTagAsOrphanCheck;
-		return this;
-	}
-
-	/**
-	 * Returns <code>true</code> if {@link HtmlFosterRules foster rules}
-	 * should be used.
-	 */
-	public boolean isUseFosterRules() {
-		return useFosterRules;
-	}
-
-	public LagartoDOMBuilder setUseFosterRules(boolean useFosterRules) {
-		this.useFosterRules = useFosterRules;
-		return this;
-	}
-
-	public boolean isParseSpecialTagsAsCdata() {
-		return parseSpecialTagsAsCdata;
-	}
-
-	public LagartoDOMBuilder setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
-		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
-		return this;
-	}
-
-	public boolean isEnableConditionalComments() {
-		return enableConditionalComments;
-	}
-
-	public LagartoDOMBuilder setEnableConditionalComments(boolean enableConditionalComments) {
-		this.enableConditionalComments = enableConditionalComments;
-		return this;
-	}
-
-	public boolean isCalculatePosition() {
-		return calculatePosition;
-	}
-
-	public LagartoDOMBuilder setCalculatePosition(boolean calculatePosition) {
-		this.calculatePosition = calculatePosition;
-		return this;
-	}
-
-	/**
-	 * Returns {@link LagartoNodeHtmlRenderer} instance that generates HTML output.
-	 */
-	public LagartoNodeHtmlRenderer getRenderer() {
-		return renderer;
-	}
-
-	/**
-	 * Sets new renderer.
-	 */
-	public LagartoDOMBuilder setRenderer(LagartoNodeHtmlRenderer renderer) {
-		this.renderer = renderer;
-		return this;
-	}
-
-	public boolean isIgnoreWhitespacesBetweenTags() {
-		return ignoreWhitespacesBetweenTags;
-	}
-
-	/**
-	 * Specifies if whitespaces between open/closed tags should be ignored.
-	 */
-	public LagartoDOMBuilder setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
-		this.ignoreWhitespacesBetweenTags = ignoreWhitespacesBetweenTags;
-		return this;
-	}
-
-	public boolean isCaseSensitive() {
-		return caseSensitive;
-	}
-
-	/**
-	 * Specifies if tag names are case sensitive.
-	 */
-	public LagartoDOMBuilder setCaseSensitive(boolean caseSensitive) {
-		this.caseSensitive = caseSensitive;
-		return this;
-	}
-
-	public boolean isIgnoreComments() {
-		return ignoreComments;
-	}
-
-	/**
-	 * Specifies if comments should be ignored in DOM tree.
-	 */
-	public LagartoDOMBuilder setIgnoreComments(boolean ignoreComments) {
-		this.ignoreComments = ignoreComments;
-		return this;
-	}
-
-	public String[] getVoidTags() {
-		return voidTags;
-	}
-
-	/**
-	 * Sets void tags. If <code>null</code>, void tags are not used.
-	 */
-	public LagartoDOMBuilder setVoidTags(String... voidTags) {
-		this.voidTags = voidTags;
-		return this;
-	}
-
-	/**
-	 * Returns <code>true</code> if void tags are used.
-	 * Using void tags makes parsing a different.
-	 */
-	public boolean hasVoidTags() {
-		return voidTags != null;
-	}
-
-	/**
-	 * Returns <code>true</code> if tag name is void.
-	 * If void tags are not defined, returns <code>false</code>
-	 * for any input.
-	 */
-	public boolean isVoidTag(String tagName) {
-		if (voidTags == null) {
-			return false;
-		}
-		tagName = tagName.toLowerCase();
-		return StringUtil.equalsOne(tagName, voidTags) != -1;
-	}
-
-	public boolean isSelfCloseVoidTags() {
-		return selfCloseVoidTags;
-	}
-
-	/**
-	 * Specifies if void tags should be self closed.
-	 */
-	public LagartoDOMBuilder setSelfCloseVoidTags(boolean selfCloseVoidTags) {
-		this.selfCloseVoidTags = selfCloseVoidTags;
-		return this;
-	}
-
-	public boolean isCollectErrors() {
-		return collectErrors;
-	}
-
-	/**
-	 * Enables error collection during parsing.
-	 */
-	public LagartoDOMBuilder setCollectErrors(boolean collectErrors) {
-		this.collectErrors = collectErrors;
-		return this;
-	}
-
-	public String getConditionalCommentExpression() {
-		return conditionalCommentExpression;
-	}
-
-	public LagartoDOMBuilder setConditionalCommentExpression(String conditionalCommentExpression) {
-		this.conditionalCommentExpression = conditionalCommentExpression;
-		return this;
-	}
-
-	public boolean isImpliedEndTags() {
-		return impliedEndTags;
-	}
-
-	/**
-	 * Enables implied end tags for certain tags.
-	 * This flag reduces the performances a bit, so if you
-	 * are dealing with 'straight' html that uses closes
-	 * tags, consider switching this flag off.
-	 */
-	public LagartoDOMBuilder setImpliedEndTags(boolean impliedEndTags) {
-		this.impliedEndTags = impliedEndTags;
-		return this;
-	}
-
-	/**
-	 * Returns parsing error log level.
-	 */
-	public Logger.Level getParsingErrorLogLevel() {
-		return parsingErrorLogLevel;
-	}
-
-	/**
-	 * Sets parsing error log level as a name.
-	 */
-	public void setParsingErrorLogLevelName(String logLevel) {
-		logLevel = logLevel.trim().toUpperCase();
-
-		parsingErrorLogLevel = Logger.Level.valueOf(logLevel);
+	public void setConfig(LagartoDomBuilderConfig config) {
+		this.config = config;
 	}
 
 	// ---------------------------------------------------------------- quick settings
@@ -247,8 +54,8 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Enables debug mode. Performances are lost.
 	 */
 	public LagartoDOMBuilder enableDebug() {
-		collectErrors = true;
-		calculatePosition = true;
+		config.collectErrors = true;
+		config.setCalculatePosition(true);
 		return this;
 	}
 
@@ -256,8 +63,8 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Disables debug mode.
 	 */
 	public LagartoDOMBuilder disableDebug() {
-		collectErrors = false;
-		calculatePosition = false;
+		config.collectErrors = false;
+		config.setCalculatePosition(false);
 		return this;
 	}
 
@@ -267,8 +74,8 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 */
 	public LagartoDOMBuilder enableHtmlPlusMode() {
 		enableHtmlMode();
-		useFosterRules = true;
-		unclosedTagAsOrphanCheck = true;
+		config.useFosterRules = true;
+		config.unclosedTagAsOrphanCheck = true;
 		return this;
 	}
 
@@ -277,15 +84,14 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Enables HTML5 parsing mode.
 	 */
 	public LagartoDOMBuilder enableHtmlMode() {
-		ignoreWhitespacesBetweenTags = false;			// collect all whitespaces
-		caseSensitive = false;							// HTML is case insensitive
-		parseSpecialTagsAsCdata = true;					// script and style tags are parsed as CDATA
-		voidTags = HTML5_VOID_TAGS;						// list of void tags
-		selfCloseVoidTags = false;						// don't self close void tags
-		impliedEndTags = true;							// some tags end is implied
-		enableConditionalComments = true;				// enable IE conditional comments
-		conditionalCommentExpression = "if !IE";		// treat HTML as non-IE browser
-		renderer.reset();
+		config.ignoreWhitespacesBetweenTags = false;			// collect all whitespaces
+		config.setCaseSensitive(false);							// HTML is case insensitive
+		config.setEnableRawTextModes(true);						// script and style tags are parsed as CDATA
+		config.enabledVoidTags = true;							// list of void tags
+		config.selfCloseVoidTags = false;						// don't self close void tags
+		config.impliedEndTags = true;							// some tags end is implied
+		config.setEnableConditionalComments(false);				// don't enable IE conditional comments
+		config.setParseXmlTags(false);							// enable XML mode in parsing
 		return this;
 	}
 
@@ -293,15 +99,14 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Enables XHTML mode.
 	 */
 	public LagartoDOMBuilder enableXhtmlMode() {
-		ignoreWhitespacesBetweenTags = false;			// collect all whitespaces
-		caseSensitive = true;							// XHTML is case sensitive
-		parseSpecialTagsAsCdata = false;				// all tags are parsed in the same way
-		voidTags = HTML5_VOID_TAGS;						// list of void tags
-		selfCloseVoidTags = true;						// self close void tags
-		impliedEndTags = false;							// no implied tag ends
-		enableConditionalComments = true;				// enable IE conditional comments
-		conditionalCommentExpression = "if !IE";		// treat XHTML as non-IE browser
-		renderer.reset();
+		config.ignoreWhitespacesBetweenTags = false;			// collect all whitespaces
+		config.setCaseSensitive(true);							// XHTML is case sensitive
+		config.setEnableRawTextModes(false);					// all tags are parsed in the same way
+		config.enabledVoidTags = true;							// list of void tags
+		config.selfCloseVoidTags = true;						// self close void tags
+		config.impliedEndTags = false;							// no implied tag ends
+		config.setEnableConditionalComments(false);				// don't enable IE conditional comments
+		config.setParseXmlTags(false);							// enable XML mode in parsing
 		return this;
 	}
 
@@ -309,15 +114,14 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Enables XML parsing mode.
 	 */
 	public LagartoDOMBuilder enableXmlMode() {
-		ignoreWhitespacesBetweenTags = true;			// ignore whitespaces that are non content
-		caseSensitive = true;							// XML is case sensitive
-		parseSpecialTagsAsCdata = false;				// all tags are parsed in the same way
-		voidTags = null;								// there are no void tags
-		selfCloseVoidTags = false;						// don't self close empty tags (can be changed!)
-		impliedEndTags = false;							// no implied tag ends
-		enableConditionalComments = false;				// disable IE conditional comments
-		conditionalCommentExpression = null;			// don't use
-		renderer.reset();
+		config.ignoreWhitespacesBetweenTags = true;				// ignore whitespaces that are non content
+		config.setCaseSensitive(true);							// XML is case sensitive
+		config.setEnableRawTextModes(false);					// all tags are parsed in the same way
+		config.enabledVoidTags = false;							// there are no void tags
+		config.selfCloseVoidTags = false;						// don't self close empty tags (can be changed!)
+		config.impliedEndTags = false;							// no implied tag ends
+		config.setEnableConditionalComments(false);				// disable IE conditional comments
+		config.setParseXmlTags(true);							// enable XML mode in parsing
 		return this;
 	}
 
@@ -327,7 +131,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from provided content.
 	 */
 	public Document parse(char[] content) {
-		LagartoParser lagartoParser = new LagartoParser(content);
+		LagartoParser lagartoParser = new LagartoParser(content, true);
 		return doParse(lagartoParser);
 	}
 
@@ -335,7 +139,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from the provided content.
 	 */
 	public Document parse(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content);
+		LagartoParser lagartoParser = new LagartoParser(content, true);
 		return doParse(lagartoParser);
 	}
 
@@ -343,10 +147,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Parses the content using provided lagarto parser.
 	 */
 	protected Document doParse(LagartoParser lagartoParser) {
-		// parser flags
-		lagartoParser.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);
-		lagartoParser.setEnableConditionalComments(enableConditionalComments);
-		lagartoParser.setCalculatePosition(calculatePosition);
+		lagartoParser.setConfig(config);
 
 		LagartoDOMBuilderTagVisitor domBuilderTagVisitor =
 				new LagartoDOMBuilderTagVisitor(this);

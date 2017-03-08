@@ -1,6 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
+
+import jodd.util.cl.ClassLoaderStrategy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -18,6 +43,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -32,12 +58,6 @@ public class ReflectUtil {
 
 	/** Empty class array. */
 	public static final Class[] NO_PARAMETERS = new Class[0];
-
-	/** Empty object array. */
-	public static final Object[] NO_ARGUMENTS = new Object[0];
-
-	/** Empty type array. */
-	public static final Type[] NO_TYPES = new Type[0];
 
 	public static final String METHOD_GET_PREFIX = "get";
 	public static final String METHOD_IS_PREFIX = "is";
@@ -253,49 +273,80 @@ public class ReflectUtil {
 	// ---------------------------------------------------------------- match classes
 
 	/**
-	 * Determines if first class match the destination and simulates kind
-	 * of <code>instanceof</code>. All subclasses and interface of first class
-	 * are examined against second class. Method is not symmetric.
+	 * Safe version of <code>isAssignableFrom</code> method that
+	 * returns <code>false</code> if one of the arguments is <code>null</code>.
 	 */
-	public static boolean isSubclass(Class thisClass, Class target) {
-		if (target.isInterface() != false) {
-			return isInterfaceImpl(thisClass, target);
+	public static boolean isTypeOf(Class<?> lookupClass, Class<?> targetClass) {
+		if (targetClass == null || lookupClass == null) {
+			return false;
 		}
-		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
-			if (x == target) {
-				return true;
-			}
-		}
-		return false;
+		return targetClass.isAssignableFrom(lookupClass);
 	}
 
 	/**
-	 * Returns <code>true</code> if provided class is interface implementation.
+	 * Safe version of <code>isInstance</code>, returns <code>false</code>
+	 * if any of the arguments is <code>null</code>.
 	 */
-	public static boolean isInterfaceImpl(Class thisClass, Class targetInterface) {
-		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
-			Class[] interfaces = x.getInterfaces();
-			for (Class i : interfaces) {
-				if (i == targetInterface) {
-					return true;
-				}
-				if (isInterfaceImpl(i, targetInterface)) {
-					return true;
-				}
-			}
+	public static boolean isInstanceOf(Object object, Class target) {
+		if (object == null || target == null) {
+			return false;
 		}
-		return false;
+		return target.isInstance(object);
 	}
 
 	/**
-	 * Dynamic version of <code>instanceof</code>.
-	 *
-	 * @param o			object to match
-	 * @param target	target class
-	 * @return			<code>true</code> if object is an instance of target class
+	 * Resolves all interfaces of a type. No duplicates are returned.
+	 * Direct interfaces are prior the interfaces of subclasses in
+	 * the returned array.
 	 */
-	public static boolean isInstanceOf(Object o, Class target) {
-		return isSubclass(o.getClass(), target);
+	public static Class[] resolveAllInterfaces(Class type) {
+		Set<Class> bag = new LinkedHashSet<>();
+		_resolveAllInterfaces(type, bag);
+
+		return bag.toArray(new Class[bag.size()]);
+	}
+
+	private static void _resolveAllInterfaces(Class type, Set<Class> bag) {
+		// add types interfaces
+		Class[] interfaces = type.getInterfaces();
+		Collections.addAll(bag, interfaces);
+
+		// resolve interfaces of each interface
+		for (Class iface : interfaces) {
+			_resolveAllInterfaces(iface, bag);
+		}
+
+		// continue with super type
+		Class superClass = type.getSuperclass();
+
+		if (superClass == null) {
+			return;
+		}
+
+		if (superClass == Object.class) {
+			return;
+		}
+
+		_resolveAllInterfaces(type.getSuperclass(), bag);
+	}
+
+	/**
+	 * Resolves all super classes, from top (direct subclass) to down. <code>Object</code>
+	 * class is not included in the list.
+	 */
+	public static Class[] resolveAllSuperclasses(Class type) {
+		List<Class> list = new ArrayList<>();
+
+		while (true) {
+			type = type.getSuperclass();
+
+			if ((type == null) || (type == Object.class)) {
+				break;
+			}
+			list.add(type);
+		}
+
+		return list.toArray(new Class[list.size()]);
 	}
 
 	// ---------------------------------------------------------------- accessible methods
@@ -315,7 +366,7 @@ public class ReflectUtil {
 	 */
 	public static Method[] getAccessibleMethods(Class clazz, Class limit) {
 		Package topPackage = clazz.getPackage();
-		List<Method> methodList = new ArrayList<Method>();
+		List<Method> methodList = new ArrayList<>();
 		int topPackageHash = topPackage == null ? 0 : topPackage.hashCode();
 		boolean top = true;
 		do {
@@ -330,22 +381,22 @@ public class ReflectUtil {
 //				if (Modifier.isAbstract(method.getModifiers())) {
 //					continue;
 //				}
-				if (top == true) {				// add all top declared methods
+				if (top) {				// add all top declared methods
 					methodList.add(method);
 					continue;
 				}
 				int modifier = method.getModifiers();
-				if (Modifier.isPrivate(modifier) == true) {
+				if (Modifier.isPrivate(modifier)) {
 					continue;										// ignore super private methods
 				}
-				if (Modifier.isAbstract(modifier) == true) {		// ignore super abstract methods
+				if (Modifier.isAbstract(modifier)) {		// ignore super abstract methods
 					continue;
 				}
-				if (Modifier.isPublic(modifier) == true) {
+				if (Modifier.isPublic(modifier)) {
 					addMethodIfNotExist(methodList, method);		// add super public methods
 					continue;
 				}
-				if (Modifier.isProtected(modifier) == true) {
+				if (Modifier.isProtected(modifier)) {
 					addMethodIfNotExist(methodList, method);		// add super protected methods
 					continue;
 				}
@@ -368,7 +419,7 @@ public class ReflectUtil {
 
 	private static void addMethodIfNotExist(List<Method> allMethods, Method newMethod) {
 		for (Method m : allMethods) {
-			if (compareSignatures(m, newMethod) == true) {
+			if (compareSignatures(m, newMethod)) {
 				return;
 			}
 		}
@@ -384,7 +435,7 @@ public class ReflectUtil {
 
 	public static Field[] getAccessibleFields(Class clazz, Class limit) {
 		Package topPackage = clazz.getPackage();
-		List<Field> fieldList = new ArrayList<Field>();
+		List<Field> fieldList = new ArrayList<>();
 		int topPackageHash = topPackage == null ? 0 : topPackage.hashCode();
 		boolean top = true;
 		do {
@@ -393,19 +444,19 @@ public class ReflectUtil {
 			}
 			Field[] declaredFields = clazz.getDeclaredFields();
 			for (Field field : declaredFields) {
-				if (top == true) {				// add all top declared fields
+				if (top) {				// add all top declared fields
 					fieldList.add(field);
 					continue;
 				}
 				int modifier = field.getModifiers();
-				if (Modifier.isPrivate(modifier) == true) {
+				if (Modifier.isPrivate(modifier)) {
 					continue;										// ignore super private fields
 				}
-				if (Modifier.isPublic(modifier) == true) {
+				if (Modifier.isPublic(modifier)) {
 					addFieldIfNotExist(fieldList, field);			// add super public methods
 					continue;
 				}
-				if (Modifier.isProtected(modifier) == true) {
+				if (Modifier.isProtected(modifier)) {
 					addFieldIfNotExist(fieldList, field);			// add super protected methods
 					continue;
 				}
@@ -428,7 +479,7 @@ public class ReflectUtil {
 
 	private static void addFieldIfNotExist(List<Field> allFields, Field newField) {
 		for (Field f : allFields) {
-			if (compareSignatures(f, newField) == true) {
+			if (compareSignatures(f, newField)) {
 				return;
 			}
 		}
@@ -451,7 +502,7 @@ public class ReflectUtil {
 	 * methods are returned.
 	 */
 	public static Method[] getSupportedMethods(Class clazz, Class limit) {
-		ArrayList<Method> supportedMethods = new ArrayList<Method>();
+		ArrayList<Method> supportedMethods = new ArrayList<>();
 		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
 			Method[] methods = c.getDeclaredMethods();
 			for (Method method : methods) {
@@ -462,7 +513,7 @@ public class ReflectUtil {
 						break;
 					}
 				}
-				if (found == false) {
+				if (!found) {
 					supportedMethods.add(method);
 				}
 			}
@@ -476,7 +527,7 @@ public class ReflectUtil {
 	}
 
 	public static Field[] getSupportedFields(Class clazz, Class limit) {
-		ArrayList<Field> supportedFields = new ArrayList<Field>();
+		ArrayList<Field> supportedFields = new ArrayList<>();
 		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
 			Field[] fields = c.getDeclaredFields();
 			for (Field field : fields) {
@@ -487,7 +538,7 @@ public class ReflectUtil {
 						break;
 					}
 				}
-				if (found == false) {
+				if (!found) {
 					supportedFields.add(field);
 				}
 			}
@@ -512,7 +563,7 @@ public class ReflectUtil {
 	 * Compares method signatures: names and parameters.
 	 */
 	public static boolean compareSignatures(Method first, Method second) {
-		if (first.getName().equals(second.getName()) == false) {
+		if (!first.getName().equals(second.getName())) {
 			return false;
 		}
 		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
@@ -522,7 +573,7 @@ public class ReflectUtil {
 	 * Compares constructor signatures: names and parameters.
 	 */
 	public static boolean compareSignatures(Constructor first, Constructor second) {
-		if (first.getName().equals(second.getName()) == false) {
+		if (!first.getName().equals(second.getName())) {
 			return false;
 		}
 		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
@@ -558,7 +609,7 @@ public class ReflectUtil {
 	 * Checks first if the object is already accessible.
 	 */
 	public static void forceAccess(AccessibleObject accObject){
-		if (accObject.isAccessible() == true) {
+		if (accObject.isAccessible()) {
 			return;
 		}
 		try {
@@ -581,7 +632,7 @@ public class ReflectUtil {
 	 * Returns <code>true</code> if class member is public and if its declaring class is also public.
 	 */
 	public static boolean isPublicPublic(Member member) {
-		if (Modifier.isPublic(member.getModifiers()) == true) {
+		if (Modifier.isPublic(member.getModifiers())) {
 			if (Modifier.isPublic(member.getDeclaringClass().getModifiers())) {
 				return true;
 			}
@@ -599,13 +650,13 @@ public class ReflectUtil {
 
 	// ---------------------------------------------------------------- create
 
-
 	/**
 	 * Creates new instances including for common mutable classes that do not have a default constructor.
 	 * more user-friendly. It examines if class is a map, list,
 	 * String, Character, Boolean or a Number. Immutable instances are cached and not created again.
 	 * Arrays are also created with no elements. Note that this bunch of <code>if</code> blocks
 	 * is faster then using a <code>HashMap</code>.
+	 * todo Add generics if possible
 	 */
 	public static Object newInstance(Class type) throws IllegalAccessException, InstantiationException {
 		if (type.isPrimitive()) {
@@ -633,7 +684,7 @@ public class ReflectUtil {
 			if (type == char.class) {
 				return Character.valueOf((char) 0);
 			}
-			throw new IllegalArgumentException("Invalid primitive type: " + type);
+			throw new IllegalArgumentException("Invalid primitive: " + type);
 		}
 		if (type == Integer.class) {
 			return Integer.valueOf(0);
@@ -648,10 +699,10 @@ public class ReflectUtil {
 			return Boolean.FALSE;
 		}
 		if (type == Float.class) {
-			Float.valueOf(0);
+			return Float.valueOf(0);
 		}
 		if (type == Double.class) {
-			Double.valueOf(0);
+			return Double.valueOf(0);
 		}
 
 		if (type == Map.class) {
@@ -677,11 +728,11 @@ public class ReflectUtil {
 			return Character.valueOf((char) 0);
 		}
 
-		if (type.isEnum() == true) {
+		if (type.isEnum()) {
 			return type.getEnumConstants()[0];
 		}
 
-		if (type.isArray() == true) {
+		if (type.isArray()) {
 			return Array.newInstance(type.getComponentType(), 0);
 		}
 
@@ -830,21 +881,55 @@ public class ReflectUtil {
 
 	// ---------------------------------------------------------------- generics
 
-	public static Class getComponentType(Type type) {
-		return getComponentType(type, null, -1);
-	}
-
-	public static Class getComponentType(Type type, Class implClass) {
-		return getComponentType(type, implClass, -1);
-	}
-
+	/**
+	 * Returns single component type. Index is used when type consist of many
+	 * components. If negative, index will be calculated from the end of the
+	 * returned array. Returns <code>null</code> if component type
+	 * does not exist or if index is out of bounds.
+	 *
+	 * @see #getComponentTypes(java.lang.reflect.Type)
+	 */
 	public static Class getComponentType(Type type, int index) {
 		return getComponentType(type, null, index);
 	}
+
 	/**
-	 * Returns the component type of the given type.
-	 * Returns <code>null</code> if given type does not have a single
-	 * component type. For example the following types all have the
+	 * Returns single component type for given type and implementation.
+	 * Index is used when type consist of many
+	 * components. If negative, index will be calculated from the end of the
+	 * returned array.  Returns <code>null</code> if component type
+	 * does not exist or if index is out of bounds.
+	 * <p>
+	 *
+	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
+	 */
+	public static Class getComponentType(Type type, Class implClass, int index) {
+		Class[] componentTypes = getComponentTypes(type, implClass);
+		if (componentTypes == null) {
+			return null;
+		}
+
+		if (index < 0) {
+			index += componentTypes.length;
+		}
+
+		if (index >= componentTypes.length) {
+			return null;
+		}
+
+		return componentTypes[index];
+	}
+
+	/**
+	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
+	 */
+	public static Class[] getComponentTypes(Type type) {
+		return getComponentTypes(type, null);
+	}
+
+	/**
+	 * Returns all component types of the given type.
+	 * For example the following types all have the
 	 * component-type MyClass:
 	 * <ul>
 	 * <li>MyClass[]</li>
@@ -853,48 +938,59 @@ public class ReflectUtil {
 	 * <li>Bar&lt;? super MyClass&gt;</li>
 	 * <li>&lt;T extends MyClass&gt; T[]</li>
 	 * </ul>
-	 *
-	 * Index represents the index of component type, when class supports more then one.
-	 * For example, <code>Map&lt;A, B&gt;</code> has 2 component types. If index is 0 or positive,
-	 * than it represents order of component type. If the value is negative, then it represents
-	 * component type counted from the end! Therefore, the default value of <code>-1</code>
-	 * always returns the <b>last</b> component type.
 	 */
-	public static Class getComponentType(Type type, Class implClass, int index) {
+	public static Class[] getComponentTypes(Type type, Class implClass) {
 		if (type instanceof Class) {
 			Class clazz = (Class) type;
 			if (clazz.isArray()) {
-				return clazz.getComponentType();
+				return new Class[] {clazz.getComponentType()};
 			}
-		} else if (type instanceof ParameterizedType) {
+		}
+		else if (type instanceof ParameterizedType) {
 			ParameterizedType pt = (ParameterizedType) type;
+
 			Type[] generics = pt.getActualTypeArguments();
-			if (index < 0) {
-				index = generics.length + index;
+
+			if (generics.length == 0) {
+				return null;
 			}
-			if (index < generics.length) {
-				return getRawType(generics[index], implClass);
+
+			Class[] types = new Class[generics.length];
+
+			for (int i = 0; i < generics.length; i++) {
+				types[i] = getRawType(generics[i], implClass);
 			}
-		} else if (type instanceof GenericArrayType) {
+			return types;
+		}
+		else if (type instanceof GenericArrayType) {
 			GenericArrayType gat = (GenericArrayType) type;
-			return getRawType(gat.getGenericComponentType(), implClass);
+
+			Class rawType = getRawType(gat.getGenericComponentType(), implClass);
+			if (rawType == null) {
+				return null;
+			}
+
+			return new Class[] {rawType};
 		}
 		return null;
 	}
 
 	/**
-	 * Returns generic supertype for given class and 0-based index.
-	 * @see #getComponentType(java.lang.reflect.Type, int)
+	 * Shortcut for <code>getComponentTypes(type.getGenericSuperclass())</code>.
+	 *
+	 * @see #getComponentTypes(java.lang.reflect.Type)
 	 */
-	public static Class getGenericSupertype(Class type, int index) {
-		return getComponentType(type.getGenericSuperclass(), null, index);
+	public static Class[] getGenericSupertypes(Class type) {
+		return getComponentTypes(type.getGenericSuperclass());
 	}
 
 	/**
-	 * @see #getComponentType(java.lang.reflect.Type)
+	 * Shortcut for <code>getComponentType(type.getGenericSuperclass())</code>.
+	 *
+	 * @see #getComponentType(java.lang.reflect.Type, int)
 	 */
-	public static Class getGenericSupertype(Class type) {
-		return getComponentType(type.getGenericSuperclass());
+	public static Class getGenericSupertype(Class type, int index) {
+		return getComponentType(type.getGenericSuperclass(), index);
 	}
 
 
@@ -998,7 +1094,7 @@ public class ReflectUtil {
 				index = ArraysUtil.indexOf(rawInterface.getTypeParameters(), typeVariable);
 
 				if (index < 0) {
-					throw new IllegalArgumentException("Can't resolve type variable:" + typeVariable);
+					throw new IllegalArgumentException("Invalid type variable:" + typeVariable);
 				}
 
 				final Type type = i < genericInterfaces.length ? genericInterfaces[i] : rawType.getGenericSuperclass();
@@ -1165,6 +1261,58 @@ public class ReflectUtil {
 		} catch (ClassNotFoundException cnfex) {
 			throw new UnsupportedOperationException(className + " not found.");
 		}
+	}
+
+	/**
+	 * Smart variant of {@link #getCallerClass(int)} that skips all relevant Jodd calls.
+	 * However, this one does not use the security manager.
+	 */
+	public static Class getCallerClass() {
+		String className = null;
+		StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+
+		for (StackTraceElement stackTraceElement : stackTraceElements) {
+			className = stackTraceElement.getClassName();
+			String methodName = stackTraceElement.getMethodName();
+
+			if (methodName.equals("loadClass")) {
+				if (className.contains(ClassLoaderStrategy.class.getSimpleName())) {
+					continue;
+				}
+				if (className.equals(ClassLoaderUtil.class.getName())) {
+					continue;
+				}
+			} else if (methodName.equals("getCallerClass")) {
+				continue;
+			}
+			break;
+		}
+
+		try {
+			return Thread.currentThread().getContextClassLoader().loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			throw new UnsupportedOperationException(className + " not found.");
+		}
+	}
+
+	// ---------------------------------------------------------------- enum
+
+	/**
+	 * Returns <code>enum</code> class or <code>null</code> if class is not an enum.
+	 */
+	public static Class findEnum(Class target) {
+		if (target.isPrimitive()) {
+			return null;
+		}
+		while (target != Object.class) {
+			if (target.isEnum()) {
+				return target;
+			}
+
+			target = target.getSuperclass();
+		}
+
+		return null;
 	}
 
 }

@@ -1,9 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.csselly.selector;
 
 import jodd.csselly.CSSellyException;
-import jodd.util.StringUtil;
 
 /**
  * {@link AttributeSelector Attribute} relation matcher.
@@ -28,16 +50,52 @@ public enum Match {
 	INCLUDES("~=") {
 		@Override
 		public boolean compare(String attr, String val) {
-			if (val.length() == 0) {
+			final int valLength = val.length();
+			final int attrLength = attr.length();
+			
+			//  value or attribute is empty or the requested value is 'too' long
+			if (attrLength == 0 || valLength == 0 || attrLength < valLength) {
 				return false;
 			}
-			String[] attrarr = StringUtil.splitc(attr, ' ');
-			for (String aa : attrarr) {
-				if (aa.equals(val)) {
-					return true;
-				}
-			}
-			return false;
+			
+	        // if both length are equals, just compare the value with the attribute
+			// no need to split
+	        if (valLength == attrLength) {
+	            return val.equals(attr);
+	        }
+	        
+	        // manually split the attribute
+	        // DO NOT allocate the string but use regionMatches and length comparison to make the check
+	        boolean inClass = false;
+	        int start = 0;
+	        for (int i = 0; i < attrLength; i ++) {
+	            char c = attr.charAt(i);
+				if ((c == ' ') || (c == '\t')) {
+	                if (inClass) {
+	                    // the white space ends a class name
+	                    // compare it with the requested one
+	                    if ((i - start == valLength) && attr.regionMatches(start, val, 0, valLength)) {
+	                        return true;
+	                    }
+	                    inClass = false;
+	                }
+	            }
+	            else {
+	                if (!inClass) {
+	                    // we're in a class name : keep the start of the substring
+	                    inClass = true;
+	                    start = i;
+	                }
+	            }
+	        }
+	        
+	        // the attribute may not end by a white space
+	        // check the current class name
+	        if (inClass && (attrLength - start == valLength)) {
+	            return attr.regionMatches(start, val, 0, valLength);  
+	        }
+	        
+	        return false;
 		}
 	},
 

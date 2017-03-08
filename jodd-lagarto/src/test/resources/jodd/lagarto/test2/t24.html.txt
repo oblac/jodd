@@ -1,0 +1,5 @@
+wrn:[Parse error: invalid character reference [1:6 @5]
+wrn:[Parse error: invalid character reference [1:12 @11]
+wrn:[Parse error: invalid character reference [1:17 @16]
+wrn:[Parse error: invalid character reference [3:9 @34]
+txt:[€@a[∾̳]I'm ¬it; I tell youI'm ∉ I tell you]

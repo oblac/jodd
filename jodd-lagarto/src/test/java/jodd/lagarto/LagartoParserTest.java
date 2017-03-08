@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto;
 
@@ -20,6 +43,7 @@ import static org.junit.Assert.*;
 public class LagartoParserTest {
 
 	protected String testDataRoot;
+	protected String testDataRoot2;
 	protected String testLiveRoot;
 
 	@Before
@@ -30,56 +54,64 @@ public class LagartoParserTest {
 		URL data = LagartoParserTest.class.getResource("test");
 		testDataRoot = data.getFile();
 
+		data = LagartoParserTest.class.getResource("test2");
+		testDataRoot2 = data.getFile();
+
 		data = LagartoParserTest.class.getResource("live");
 		testLiveRoot = data.getFile();
 	}
 
 	@Test
 	public void testHtmls() throws IOException {
+		_testHtmls(testDataRoot);
+	}
+
+	@Test
+	public void testHtmls2() throws IOException {
+		_testHtmls(testDataRoot2);
+	}
+
+	private void _testHtmls(String root) throws IOException {
 		FindFile ff = new WildcardFindFile().include("**/*.*ml");
 		long reps = 1;
 		JStopWatch jsw = new JStopWatch();
 		boolean processed = false;
 		while (reps-- > 0) {
-			ff.searchPath(testDataRoot);
+			ff.searchPath(root);
 			File file;
 			while ((file = ff.nextFile()) != null) {
 				processed = true;
 				System.out.println('+' + file.getName());
+
 				String content = FileUtil.readString(file);
+				content = StringUtil.removeChars(content, '\r');
 				String expectedResult = FileUtil.readString(new File(file.getAbsolutePath() + ".txt"));
 
-				String formattedOut = null;
-				File formatted = new File(file.getAbsolutePath() + ".htm");
-				if (formatted.exists()) {
-					formattedOut = FileUtil.readString(formatted);
+				String formatted = null;
+				File formattedFile = new File(file.getAbsolutePath() + "-fmt.htm");
+				if (formattedFile.exists()) {
+					formatted = FileUtil.readString(formattedFile);
 				}
-				String formattedOut2 = null;
-				formatted = new File(file.getAbsolutePath() + "-fmt.htm");
-				if (formatted.exists()) {
-					formattedOut2 = FileUtil.readString(formatted);
+				if (formatted != null) {
+					formatted = StringUtil.removeChars(formatted, '\r');
 				}
 
-				String[] results = parse(content);
-				String result = results[0];
-				String result2 = results[1];
-				String result3 = results[2];
+				boolean isXml = file.getName().endsWith(".xml");
+
+				String[] results = _parse(content, isXml);
+				String result = results[0];		// parsing result
+				String result2 = results[1];	// tag writer
 
 				expectedResult = StringUtil.removeChars(expectedResult, '\r');
 				result = StringUtil.removeChars(result, '\r').trim();
+				result2 = StringUtil.removeChars(result2, '\r').trim();
 
 				assertEquals(expectedResult, result);
 
-				if (formattedOut != null) {
-					assertEquals(formattedOut, result2);
+				if (formatted != null) {
+					assertEquals(formatted, result2);
 				} else {
 					assertEquals(content, result2);
-				}
-
-				if (formattedOut2 != null) {
-					assertEquals(formattedOut2, result3);
-				} else {
-					assertEquals(content, result3);
 				}
 			}
 		}
@@ -101,25 +133,19 @@ public class LagartoParserTest {
 			String name = file.getName();
 			System.out.println('+' + name);
 			String content = FileUtil.readString(file);
-			String errors = "";
 			try {
-				errors = parseEmpty(content);
+				_parseEmpty(content);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				fail(ex.toString());
 			}
-
-			if (name.equals("Answers.com.html") || name.equals("Yahoo!.html")) {
-				System.out.println(errors);
-				continue;
-			}
-			assertEquals(0, errors.length());
 		}
 		assertTrue(processed);
 	}
 
-	private String parseEmpty(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content);
+	private String _parseEmpty(String content) {
+		LagartoParser lagartoParser = new LagartoParser(content, false);
+		lagartoParser.getConfig().setCalculatePosition(true);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {
 			@Override
@@ -131,13 +157,13 @@ public class LagartoParserTest {
 		return errors.toString();
 	}
 
-	private String[] parse(String content) {
+	private String[] _parse(String content, boolean isXml) {
 		final StringBuilder result = new StringBuilder();
 		final StringBuilder out = new StringBuilder();
-		final StringBuilder out2 = new StringBuilder();
+
 		TagVisitor visitor = new TagVisitor() {
 
-			public void start(LagartoParserContext parserContext) {
+			public void start() {
 			}
 
 			public void end() {
@@ -159,50 +185,15 @@ public class LagartoParserTest {
 				}
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 					}
 				}
 				result.append(NEWLINE);
 			}
 
-			public void xml(Tag tag) {
-				result.append("xml:").append(tag.getDeepLevel());
-				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result, true);
-					} catch (IOException ignored) {
-
-					}
-				}
-				result.append(NEWLINE);
-			}
-
-			public void xmp(Tag tag, CharSequence bodyM) {
-				result.append("xmp:").append(tag.getDeepLevel());
-				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result, true);
-					} catch (IOException ignored) {
-					}
-				}
-				String body = bodyM.toString();
-				body = StringUtil.removeChars(body, "\r\n\t\b");
-				result.append('[').append(body).append(']');
-				result.append(NEWLINE);
-			}
-
-			public void style(Tag tag, CharSequence bodyM) {
-				result.append("css:").append(tag.getDeepLevel());
-				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result, true);
-					} catch (IOException ignored) {
-					}
-				}
-				String body = bodyM.toString();
-				body = StringUtil.removeChars(body, "\r\n\t\b");
-				result.append('[').append(body).append(']');
+			public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+				result.append("xml:").append(version).append(':').append(encoding).append(':').append(standalone);
 				result.append(NEWLINE);
 			}
 
@@ -210,7 +201,7 @@ public class LagartoParserTest {
 				result.append("scr:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 					}
 				}
@@ -232,17 +223,15 @@ public class LagartoParserTest {
 				result.append("cdt:[").append(cdata).append(']').append(NEWLINE);
 			}
 
-			public void doctype(String name, String publicId, String baseUri) {
-				result.append("doc:[").append(name).append(' ');
-				result.append(publicId).append(' ').append(baseUri).append(']').append(NEWLINE);
+			public void doctype(Doctype doctype) {
+				result.append("doc:[").append(doctype.getName()).append(' ');
+				result.append(doctype.getPublicIdentifier()).append(' ').append(doctype.getSystemIdentifier()).append(']').append(NEWLINE);
 			}
 
-			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 				result.append(isStartingTag ? "CC" : "cc").append(isHidden ? 'H' : 'S');
+				result.append(isHiddenEndTag ? "h" : "");
 				result.append(":[").append(expression).append(']');
-				if (comment != null) {
-					result.append(comment.length());
-				}
 				result.append(NEWLINE);
 
 			}
@@ -259,16 +248,20 @@ public class LagartoParserTest {
 				result.append("wrn:[").append(message).append(NEWLINE);
 			}
 		};
-		TagWriter writer1 = new TagWriter(out, false);
-		TagWriter writer2 = new TagWriter(out2, true);
 
-		LagartoParser lagartoParser = new LagartoParser(content);
 
-		TagAdapterWrapper taw = new TagAdapterWrapper(visitor,
-				new TagAdapterWrapper(writer1, writer2));
+		LagartoParser lagartoParser = new LagartoParser(content, false);
+		lagartoParser.getConfig().setCalculatePosition(true);
 
-		lagartoParser.parse(taw);
-		return new String[]{result.toString(), out.toString(), out2.toString()};
+		if (isXml) {
+			lagartoParser.getConfig().setParseXmlTags(true);
+		}
+
+		TagWriter tagWriter = new TagWriter(out);
+
+		lagartoParser.parse(new TagVisitorChain(visitor, tagWriter));
+
+		return new String[]{result.toString(), out.toString()};
 	}
 
 }

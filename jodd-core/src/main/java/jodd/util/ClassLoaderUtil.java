@@ -1,19 +1,45 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
 
+import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.File;
-import java.util.Arrays;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLConnection;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
@@ -26,6 +52,24 @@ import java.util.jar.Manifest;
 public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- default class loader
+
+	/**
+	 * Returns class loader of a class, considering the security manager.
+	 */
+	public static ClassLoader getClassLoader(final Class<?> clazz) {
+		if (System.getSecurityManager() == null) {
+			return clazz.getClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return clazz.getClassLoader();
+				}
+			});
+		}
+	}
+
 
 	/**
 	 * Returns default class loader. By default, it is {@link #getContextClassLoader() threads context class loader}.
@@ -44,21 +88,34 @@ public class ClassLoaderUtil {
 	 * Returns thread context class loader.
 	 */
 	public static ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
-
-	/**
-	 * Sets the thread context class loader.
-	 */
-	public static void setContextClassLoader(ClassLoader classLoader) {
-		Thread.currentThread().setContextClassLoader(classLoader);
+		if (System.getSecurityManager() == null) {
+			return Thread.currentThread().getContextClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return Thread.currentThread().getContextClassLoader();
+				}
+			});
+		}
 	}
 
 	/**
 	 * Returns system class loader.
 	 */
 	public static ClassLoader getSystemClassLoader() {
-		return ClassLoader.getSystemClassLoader();
+		if (System.getSecurityManager() == null) {
+			return ClassLoader.getSystemClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return ClassLoader.getSystemClassLoader();
+				}
+			});
+		}
 	}
 
 	// ---------------------------------------------------------------- add class path
@@ -85,7 +142,7 @@ public class ClassLoaderUtil {
 			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Unable to add URL: " + url, ex);
+			throw new IllegalArgumentException("Add URL failed: " + url, ex);
 		}
 	}
 
@@ -113,7 +170,7 @@ public class ClassLoaderUtil {
 					new Class[] {String.class, byte[].class, int.class, int.class},
 					new Object[] {className, classData, Integer.valueOf(0), Integer.valueOf(classData.length)});
 		} catch (Throwable th) {
-			throw new RuntimeException("Unable to define class: " + className, th);
+			throw new RuntimeException("Define class failed: " + className, th);
 		}
 	}
 
@@ -131,7 +188,7 @@ public class ClassLoaderUtil {
 			} catch (MalformedURLException ignore) {
 			}
 		}
-		return findClass(className, urls, null);
+		return findClass(className, urls, parent);
 	}
 
 	/**
@@ -147,7 +204,7 @@ public class ClassLoaderUtil {
 					new Class[] {String.class},
 					new Object[] {className});
 		} catch (Throwable th) {
-			throw new RuntimeException("Unable to find class: " + className, th);
+			throw new RuntimeException("Class not found: " + className, th);
 		}
 	}
 
@@ -160,7 +217,11 @@ public class ClassLoaderUtil {
 	 * Finds <b>tools.jar</b>. Returns <code>null</code> if does not exist.
 	 */
 	public static File findToolsJar() {
-		String tools = new File(SystemUtil.getJavaHome()).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
+		String javaHome = SystemUtil.javaHome();
+		if (javaHome == null) {
+			return null;
+		}
+		String tools = new File(javaHome).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
 		File toolsFile = new File(tools);
 		if (toolsFile.exists()) {
 			return toolsFile;
@@ -191,7 +252,7 @@ public class ClassLoaderUtil {
 			if (metaDir.isDirectory()) {
 				for (String m : MANIFESTS) {
 					File mFile = new File(metaDir, m);
-					if (mFile.isFile() == true) {
+					if (mFile.isFile()) {
 						manifestFile = mFile;
 						break;
 					}
@@ -245,7 +306,7 @@ public class ClassLoaderUtil {
 	 * </ul>
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
-		Set<File> classpaths = new TreeSet<File>();
+		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
 			if (classLoader instanceof URLClassLoader) {
@@ -268,7 +329,7 @@ public class ClassLoaderUtil {
 			classLoader = classLoader.getParent();
 		}
 
-		String bootstrap = SystemUtil.getSunBoothClassPath();
+		String bootstrap = SystemUtil.getSunBootClassPath();
 		if (bootstrap != null) {
 			String[] bootstrapFiles = StringUtil.splitc(bootstrap, File.pathSeparatorChar);
 			for (String bootstrapFile: bootstrapFiles) {
@@ -318,7 +379,7 @@ public class ClassLoaderUtil {
 			try {
 				file = new File(base, t);
 				file = file.getCanonicalFile();
-				if (file.exists() == false) {
+				if (!file.exists()) {
 					file = null;
 				}
 			} catch (Exception ignore) {
@@ -330,7 +391,7 @@ public class ClassLoaderUtil {
 				try {
 					file = new File(t);
 					file = file.getCanonicalFile();
-					if (file.exists() == false) {
+					if (!file.exists()) {
 						file = null;
 					}
 				} catch (Exception ignore) {
@@ -345,7 +406,7 @@ public class ClassLoaderUtil {
 
 					file = new File(url.getFile());
 					file = file.getCanonicalFile();
-					if (file.exists() == false) {
+					if (!file.exists()) {
 						file = null;
 					}
 				} catch (Exception ignore) {
@@ -353,7 +414,7 @@ public class ClassLoaderUtil {
 				}
 			}
 
-			if (file != null && file.exists() == true) {
+			if (file != null && file.exists()) {
 				classpaths.add(file);
 			}
 		}
@@ -436,7 +497,11 @@ public class ClassLoaderUtil {
 	 */
 	public static File getResourceFile(String resourceName, ClassLoader classLoader) {
 		try {
-			return new File(getResourceUrl(resourceName, classLoader).toURI());
+			URL resourceUrl = getResourceUrl(resourceName, classLoader);
+			if (resourceUrl == null) {
+				return null;
+			}
+			return new File(resourceUrl.toURI());
 		} catch (URISyntaxException ignore) {
 			return null;
 		}
@@ -454,12 +519,34 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Opens a resource of the specified name for reading.
+	 * @see #getResourceAsStream(String, ClassLoader, boolean)
+	 */
+	public static InputStream getResourceAsStream(String resourceName, boolean useCache) throws IOException {
+		return getResourceAsStream(resourceName, null, useCache);
+	}
+
+	/**
+	 * Opens a resource of the specified name for reading.
 	 * @see #getResourceUrl(String, ClassLoader)
 	 */
 	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass) throws IOException {
 		URL url = getResourceUrl(resourceName, callingClass);
 		if (url != null) {
 			return url.openStream();
+		}
+		return null;
+	}
+
+	/**
+	 * Opens a resource of the specified name for reading. Controls caching,
+	 * that is important when the same jar is reloaded using custom classloader.
+	 */
+	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass, boolean useCache) throws IOException {
+		URL url = getResourceUrl(resourceName, callingClass);
+		if (url != null) {
+			URLConnection urlConnection = url.openConnection();
+			urlConnection.setUseCaches(useCache);
+			return urlConnection.getInputStream();
 		}
 		return null;
 	}
@@ -481,126 +568,29 @@ public class ClassLoaderUtil {
 		return getResourceAsStream(getClassFileName(className));
 	}
 
+	/**
+	 * Opens a class of the specified name for reading using provided class loader.
+	 */
+	public static InputStream getClassAsStream(String className, ClassLoader classLoader) throws IOException {
+		return getResourceAsStream(getClassFileName(className), classLoader);
+	}
+
 	// ---------------------------------------------------------------- load class
 
 	/**
-	 * List of primitive type names.
+	 * Loads a class using default class loader strategy.
+	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
-	public static final String[] PRIMITIVE_TYPE_NAMES = new String[] {
-			"boolean", "byte", "char", "double", "float", "int", "long", "short",
-	};
-	/**
-	 * List of primitive types that matches names list.
-	 */
-	public static final Class[] PRIMITIVE_TYPES = new Class[] {
-			boolean.class, byte.class, char.class, double.class, float.class, int.class, long.class, short.class,
-	};
-	/**
-	 * List of primitive bytecode characters that matches names list.
-	 */
-	public static final char[] PRIMITIVE_BYTECODE_NAME = new char[] {
-			'Z', 'B', 'C', 'D', 'F', 'I', 'J', 'S'
-	};
-
-	/**
-	 * Prepares classname for loading.
-	 */
-	public static String prepareClassnameForLoading(String className) {
-		int bracketCount = StringUtil.count(className, '[');
-		if (bracketCount == 0) {
-			return className;
-		}
-
-		String brackets = StringUtil.repeat('[', bracketCount);
-
-		int bracketIndex = className.indexOf('[');
-		className = className.substring(0, bracketIndex);
-
-		int primitiveNdx = getPrimitiveClassNameIndex(className);
-		if (primitiveNdx >= 0) {
-			className = String.valueOf(PRIMITIVE_BYTECODE_NAME[primitiveNdx]);
-
-			return brackets + className;
-		} else {
-			return brackets + 'L' + className + ';';
-		}
-	}
-
-	/**
-	 * Detects if provided class name is a primitive type.
-	 * Returns >= 0 number if so.
-	 */
-	private static int getPrimitiveClassNameIndex(String className) {
-		int dotIndex = className.indexOf('.');
-		if (dotIndex != -1) {
-			return -1;
-		}
-		return Arrays.binarySearch(PRIMITIVE_TYPE_NAMES, className);
-	}
-
 	public static Class loadClass(String className) throws ClassNotFoundException {
-		return loadClass(className, null);
+		return JoddCore.classLoaderStrategy.loadClass(className, null);
 	}
 	
 	/**
-	 * Loads a class with a given name dynamically, more reliable then <code>Class.forName</code>.
-	 * <p>
-	 * Class will be loaded using class loaders in the following order:
-	 * <ul>
-	 * <li>provided class loader (if any)</li>
-	 * <li><code>Thread.currentThread().getContextClassLoader()}</code></li>
-	 * <li>caller classloader</li>
-	 * <li>using <code>Class.forName</code></li>
-	 * </ul>
+	 * Loads a class using default class loader strategy.
+	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
 	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-
-		className = prepareClassnameForLoading(className);
-		
-		if ((className.indexOf('.') == -1) || (className.indexOf('[') == -1)) {
-			// maybe a primitive
-			int primitiveNdx = getPrimitiveClassNameIndex(className);
-			if (primitiveNdx >= 0) {
-				return PRIMITIVE_TYPES[primitiveNdx];
-			}
-		}
-
-		// try #1 - using provided class loader
-		try {
-			if (classLoader != null) {
-				return classLoader.loadClass(className);
-			}
-		} catch (ClassNotFoundException ignore) {
-		}
-
-		// try #2 - using thread class loader
-		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
-		if ((currentThreadClassLoader != null) && (currentThreadClassLoader != classLoader)) {
-			try {
-				return currentThreadClassLoader.loadClass(className);
-			} catch (ClassNotFoundException ignore) {
-			}
-		}
-		
-		// try #3 - using caller classloader, similar as Class.forName()
-		Class callerClass = ReflectUtil.getCallerClass(2);
-		ClassLoader callerClassLoader = callerClass.getClassLoader();
-
-		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
-			try {
-				return callerClassLoader.loadClass(className);
-			} catch (ClassNotFoundException ignore) {
-			}
-		}
-
-		// try #4 - using Class.forName(). We must use this since for JDK >= 6
-		// arrays will be not loaded using classloader, but only with forName.
-		try {
-			return Class.forName(className);
-		} catch (ClassNotFoundException ignore) {
-		}
-
-		throw new ClassNotFoundException("Class not found: " + className);
+		return JoddCore.classLoaderStrategy.loadClass(className, classLoader);
 	}
 
 	// ---------------------------------------------------------------- misc

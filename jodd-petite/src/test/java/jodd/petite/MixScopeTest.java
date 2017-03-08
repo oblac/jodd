@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite;
 
@@ -22,9 +45,10 @@ public class MixScopeTest {
 		pc.getConfig().setDetectMixedScopes(true);
 
 		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
 
-		Big big = (Big) pc.getBean("big");
+		Big big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();
@@ -33,15 +57,19 @@ public class MixScopeTest {
 
 		assertEquals(1, Small.instanceCounter);
 
-		assertEquals("small 2", small1.name());	// calling any method of small will create a new (target) instance of 'small'
+		assertTrue(small1.toString().equals(small2.toString()));
 
-		assertEquals("small 3", small2.name());
+		assertEquals("small 1", small1.name());
+		assertEquals("small 1", small2.name());
 
-		assertEquals(3, Small.instanceCounter);
+		assertEquals(1, Small.instanceCounter);
 
-		assertFalse(small1.toString().equals(small2.toString()));
+		Big big2 = pc.getBean("big2");
+		Small small3 = big2.getSmall();
 
-		assertEquals(5, Small.instanceCounter);
+		assertEquals("small 2", small3.name());
+
+		assertEquals(2, Small.instanceCounter);
 	}
 
 	@Test
@@ -55,7 +83,7 @@ public class MixScopeTest {
 		pc.registerPetiteBean(Big2.class, "big", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
 
-		Big2 big = (Big2) pc.getBean("big");
+		Big2 big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();
@@ -64,15 +92,14 @@ public class MixScopeTest {
 
 		assertEquals(1, Small.instanceCounter);
 
-		assertEquals("small 2", small1.name());	// calling any method of small will create a new (target) instance of 'small'
+		assertEquals("small 1", small1.name());
+		assertEquals("small 1", small2.name());
 
-		assertEquals("small 3", small2.name());
+		assertEquals(1, Small.instanceCounter);
 
-		assertEquals(3, Small.instanceCounter);
+		assertTrue(small1.toString().equals(small2.toString()));
 
-		assertFalse(small1.toString().equals(small2.toString()));
-
-		assertEquals(5, Small.instanceCounter);
+		assertEquals(1, Small.instanceCounter);
 	}
 
 	@Test
@@ -88,7 +115,7 @@ public class MixScopeTest {
 		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
 
-		Big big = (Big) pc.getBean("big");
+		Big big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();
@@ -97,14 +124,14 @@ public class MixScopeTest {
 
 		assertEquals(1, Small.instanceCounter);
 
-		Big big2 = (Big) pc.getBean("big2");
+		Big big2 = pc.getBean("big2");
 
 		Small small3 = big2.getSmall();
 		Small small4 = big2.getSmall();
 
 		assertSame(small3, small4);				// factory !!!
 
-		assertSame(small1, small4);
+		assertNotSame(small1, small4);
 	}
 
 	@Test
@@ -119,7 +146,7 @@ public class MixScopeTest {
 		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Small.class, "small", ThreadLocalScope.class, null, false);
 
-		final Big big = (Big) pc.getBean("big");
+		final Big big = pc.getBean("big");
 
 		Small small1 = big.getSmall();
 		Small small2 = big.getSmall();

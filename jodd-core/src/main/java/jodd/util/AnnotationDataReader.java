@@ -1,8 +1,29 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
-
-import jodd.typeconverter.Convert;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -42,7 +63,12 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	@SuppressWarnings( {"unchecked"})
 	protected AnnotationDataReader(Class<A> annotationClass, Class<? extends Annotation> defaultAnnotationClass) {
 		if (annotationClass == null) {
-			annotationClass = ReflectUtil.getGenericSupertype(this.getClass(), 0);
+			Class[] genericSupertypes = ReflectUtil.getGenericSupertypes(this.getClass());
+
+			if (genericSupertypes != null) {
+				annotationClass = genericSupertypes[0];
+			}
+
 			if (annotationClass == null || annotationClass == Annotation.class) {
 				throw new IllegalArgumentException("Missing annotation from generics supertype");
 			}
@@ -99,6 +125,19 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	}
 
 	/**
+	 * Reads {@link AnnotationData annotation data} on provided type.
+	 * If annotation is not presented, <code>null</code> is returned.
+	 */
+	public D readAnnotationData(Class<?> type) {
+		A annotation = type.getAnnotation(annotationClass);
+		if (annotation == null) {
+			return null;
+		}
+
+		return createAnnotationData(annotation);
+	}
+
+	/**
 	 * Creates annotation data from given annotation.
 	 */
 	protected abstract D createAnnotationData(A annotation);
@@ -121,7 +160,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 				return null;
 			}
 		}
-		String value = Convert.toString(annotationValue);
+		String value = StringUtil.toSafeString(annotationValue);
 		return value.trim();
 	}
 
@@ -138,6 +177,45 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 			}
 		}
 		return annotationValue;
+	}
+
+
+	/**
+	 * Reads string element from the annotation. Empty strings are detected
+	 * and default value is returned instead.
+	 */
+	protected String readString(A annotation, String name, String defaultValue) {
+		String value = readStringElement(annotation, name);
+
+		if (StringUtil.isEmpty(value)) {
+			value = defaultValue;
+		}
+
+		return value;
+	}
+
+
+	/**
+	 * Reads boolean element from the annotation.
+	 */
+	protected boolean readBoolean(A annotation, String name, boolean defaultValue) {
+		Boolean value = (Boolean) readElement(annotation, name);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value.booleanValue();
+	}
+
+
+	/**
+	 * Reads int element from the annotation.
+	 */
+	protected int readInt(A annotation, String name, int defaultValue) {
+		Integer value = (Integer) readElement(annotation, name);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value.intValue();
 	}
 
 	// ---------------------------------------------------------------- annotation data

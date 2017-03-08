@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom.sqlgen;
 
@@ -18,8 +41,6 @@ import jodd.db.oom.sqlgen.chunks.UpdateSetChunk;
 import jodd.db.oom.sqlgen.chunks.MatchChunk;
 import jodd.db.DbSession;
 import jodd.util.StringPool;
-import jodd.cache.Cache;
-import jodd.cache.LRUCache;
 
 import java.util.Map;
 
@@ -39,7 +60,6 @@ import java.util.Map;
  * <p>
  * Furthermore, if all queries are generated using just sql builder, it is possible to use dialects for various
  * database types.
-
  */
 public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
@@ -60,87 +80,40 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	}
 
 	/**
-	 * Template constructor that uses cache.
+	 * Template constructor.
 	 */
 	public static DbSqlBuilder sql(String template) {
-		if (cache == null) {
-			return new DbSqlBuilder().append(template);
-		}
-		SqlChunk cachedChunk = cache.get(template);
-		if (cachedChunk == null) {
-			DbSqlBuilder dbsql = new DbSqlBuilder().append(template);
-			if (dbsql.totalChunks >= cacheThreshold) {
-				cachedChunk = cloneAllChunks(dbsql.firstChunk);
-				cache.put(template, cachedChunk);
-			}
-			return dbsql;
-		}
-		DbSqlBuilder dbsql = new DbSqlBuilder();
-		SqlChunk cloned = cloneAllChunks(cachedChunk);
-		dbsql.firstChunk = cloned;
-		while (cloned != null) {
-			dbsql.lastChunk = cloned;
-			cloned = cloned.getNextChunk();
-		}
-		return dbsql;
+		return new DbSqlBuilder().append(template);
 	}
 
 	/**
-	 * Resets the builder so it can be used again.
-	 * Object references are not cleared!
+	 * Resets the builder (soft reset), so it can be used again.
+	 * Configuration is preserved.
+	 * @see TemplateData#resetSoft()
 	 */
 	public DbSqlBuilder reset() {
-		resetAll();
+		resetSoft();
 		return this;
 	}
 
-
-	// ---------------------------------------------------------------- cache & clone
-
-	protected static Cache<String, SqlChunk> cache = new LRUCache<String, SqlChunk>(100);
-
-	protected static int cacheThreshold = 3;
-
 	/**
-	 * Sets the minimal number of sql chunks that query must contains so to be cached. 
+	 * Hard reset of the builder, all configuration is reset.
+	 * @see TemplateData#resetHard()
 	 */
-	public static void setCacheThreshold(int ct) {
-		if (ct < 1) {
-			throw new DbSqlBuilderException("Cache threshold can't be less then 1: " + ct);
-		}
-		cacheThreshold = ct;
+	public DbSqlBuilder resetAll() {
+		resetHard();
+		return this;
 	}
 
 	/**
-	 * Sets new cache size. Zero or negative value turns the cache off. 
+	 * Builds the query and returns parsed data.
+	 * Returned value can be cached or stored as a constant value
+	 * to prevent further parsing of the same code.
 	 */
-	public static void setCacheSize(int size) {
-		if (size <= 0) {
-			cache = null;
-		} else {
-			cache = new LRUCache<String, SqlChunk>(size);
-		}
+	public ParsedSql parse() {
+		return new ParsedSql(this);
 	}
 
-
-	/**
-	 * Clones all chunks.
-	 */
-	protected static SqlChunk cloneAllChunks(SqlChunk chunk) {
-		if (chunk == null) {
-			return null;
-		}
-		SqlChunk first = chunk.clone();
-		SqlChunk previous = first;
-		chunk = chunk.getNextChunk();
-		while (chunk != null) {
-			SqlChunk cloned = chunk.clone();
-			cloned.insertChunkAfter(previous);
-			previous = cloned;
-			chunk = chunk.getNextChunk();
-		}
-		return first;
-	}
 
 	// ---------------------------------------------------------------- settings
 
@@ -171,7 +144,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Appends chunk to the list. Chunks <b>must</b> be added using this method.
 	 */
-	protected DbSqlBuilder addChunk(SqlChunk chunk) {
+	public DbSqlBuilder addChunk(SqlChunk chunk) {
 		if (lastChunk == null) {
 			lastChunk = firstChunk = chunk;
 		} else {
@@ -201,31 +174,32 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	}
 
 	/**
-	 * User-friendly append(String).
+	 * User-friendly {@link #append(String)}.
 	 */
-	public DbSqlBuilder _(String text) {
+	public DbSqlBuilder $(String text) {
 		return append(text);
 	}
 
 	/**
 	 * Single space shortcut.
 	 */
-	public DbSqlBuilder _() {
+	public DbSqlBuilder $() {
 		return appendRaw(StringPool.SPACE);
 	}
 
-	public DbSqlBuilder _(SqlChunk chunk) {
+	public DbSqlBuilder $(SqlChunk chunk) {
 		return addChunk(chunk);
 	}
 
 	// ---------------------------------------------------------------- interface
 
+	protected String generatedQuery;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public String generateQuery() {
-
-		resetOnPreInit();
+		reset();
 
 		// initialization
 		SqlChunk chunk = firstChunk;
@@ -247,7 +221,9 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 			throw dsbex;
 		}
 
-		return query.toString();
+		generatedQuery = query.toString();
+
+		return generatedQuery;
 	}
 
 	/**
@@ -283,6 +259,10 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
 	public DbSqlBuilder table(Object entity, String alias) {
 		return addChunk(new TableChunk(entity, alias));
+	}
+
+	public DbSqlBuilder table(Object entity, String alias, String tableReference) {
+		return addChunk(new TableChunk(entity, alias, tableReference));
 	}
 
 	public DbSqlBuilder table(Object entity) {
@@ -406,11 +386,11 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	// ---------------------------------------------------------------- update set
 
 	public DbSqlBuilder set(String tableRef, Object values) {
-		return addChunk(new UpdateSetChunk(tableRef, values, false));
+		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
 	public DbSqlBuilder setAll(String tableRef, Object values) {
-		return addChunk(new UpdateSetChunk(tableRef, values, true));
+		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ALL));
 	}
 
 	// ---------------------------------------------------------------- query factories

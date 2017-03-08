@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom.mapper;
 
@@ -8,6 +31,7 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbOomQuery;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
 import jodd.typeconverter.TypeConverterManager;
@@ -64,8 +88,8 @@ import java.util.ArrayList;
 public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 	protected final DbOomManager dbOomManager;
+	protected final DbOomQuery dbOomQuery;
 	protected final boolean cacheEntities;
-	protected final boolean strictCompare;
 	protected final int totalColumns;			// total number of columns
 	protected final String[] columnNames;		// list of all column names
 	protected final int[] columnDbSqlTypes;		// list of all column db types
@@ -80,35 +104,41 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * @param resultSet JDBC result set
 	 * @param columnAliases alias names for columns, if exist
 	 * @param cacheEntities flag if entities should be cached
-	 * @param oomManager DbOom manager instance
+	 * @param dbOomQuery query that created this mapper.
 	 */
-	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomManager oomManager) {
+	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomQuery dbOomQuery) {
 		super(resultSet);
-		this.dbOomManager = oomManager;
+		this.dbOomQuery = dbOomQuery;
+		this.dbOomManager = dbOomQuery.getManager();
 		this.cacheEntities = cacheEntities;
-		this.strictCompare = dbOomManager.isStrictCompare();
+
 		//this.resultColumns = new HashSet<String>();
 		try {
 			ResultSetMetaData rsMetaData = resultSet.getMetaData();
 			if (rsMetaData == null) {
-				throw new DbOomException("JDBC driver does not provide meta-data.");
+				throw new DbOomException("No ResultSet meta-data");
 			}
 
 			totalColumns = rsMetaData.getColumnCount();
 
-			this.resultColumns = new HashSet<String>(totalColumns);
+			this.resultColumns = new HashSet<>(totalColumns);
 			columnNames = new String[totalColumns];
 			columnDbSqlTypes = new int[totalColumns];
 			tableNames = new String[totalColumns];
 
 			for (int i = 0; i < totalColumns; i++) {
-				String columnName = rsMetaData.getColumnName(i + 1);
+				String columnName = rsMetaData.getColumnLabel(i + 1);
+
+				if (columnName == null) {
+					columnName = rsMetaData.getColumnName(i + 1);
+				}
+
 				String tableName = null;
 
 				// resolve column and table name
 				int sepNdx = columnName.indexOf(dbOomManager.getColumnAliasSeparator());
 				if (sepNdx != -1) {
-					// column alias exist, result set is ignored and columnAliases contains table data.
+					// column alias exist, result set is ignored and columnAliases contains table data
 					tableName = columnName.substring(0, sepNdx);
 					if (columnAliases != null) {
 						ColumnData columnData = columnAliases.get(tableName);
@@ -118,9 +148,9 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					}
 					columnName = columnName.substring(sepNdx + 1);
 				} else {
-					// column alias does not exist, table name is read from columnAliases and result set (if available).
+					// column alias does not exist, table name is read from columnAliases and result set (if available)
 					if (columnAliases != null) {
-						ColumnData columnData = columnAliases.get(columnName.toLowerCase());
+						ColumnData columnData = columnAliases.get(columnName);
 						if (columnData != null) {
 							tableName = columnData.getTableName();
 							columnName = columnData.getColumnName();
@@ -145,25 +175,19 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 				if (columnName != null) {
 					columnName = columnName.trim();
-
-					if (!strictCompare) {
-						columnName = columnName.toUpperCase();
-					}
+					columnName = columnName.toUpperCase();
 				}
 				columnNames[i] = columnName;
 
 				if (tableName != null) {
 					tableName = tableName.trim();
-
-					if (!strictCompare) {
-						tableName = tableName.toUpperCase();
-					}
+					tableName = tableName.toUpperCase();
 				}
 				tableNames[i] = tableName;
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
 			}
 		} catch (SQLException sex) {
-			throw new DbOomException("Unable to read ResultSet meta-data.", sex);
+			throw new DbOomException(dbOomQuery, "Reading ResultSet meta-data failed", sex);
 		}
 	}
 
@@ -173,7 +197,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * {@inheritDoc}
 	 */
 	public Class[] resolveTables() {
-		List<Class> classes = new ArrayList<Class>(tableNames.length);
+		List<Class> classes = new ArrayList<>(tableNames.length);
 		String lastTableName = null;
 		resultColumns.clear();
 
@@ -183,16 +207,16 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			if (tableName == null) {
 				// maybe JDBC driver does not support it
-				throw new DbOomException("Table name not available in driver meta-data.");
+				throw new DbOomException(dbOomQuery, "Table name missing in meta-data");
 			}
 
-			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
+			if ((!tableName.equals(lastTableName)) || (resultColumns.contains(columnName))) {
 				resultColumns.clear();
 				lastTableName = tableName;
 
 				DbEntityDescriptor ded = dbOomManager.lookupTableName(tableName);
 				if (ded == null) {
-					throw new DbOomException("Table name not registered: " + tableName);
+					throw new DbOomException(dbOomQuery, "Table name not registered: " + tableName);
 				}
 
 				classes.add(ded.getType());
@@ -202,10 +226,30 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		return classes.toArray(new Class[classes.size()]);
 	}
 
-	// ---------------------------------------------------------------- parse objects
+	// ---------------------------------------------------------------- cache
 
+	protected DbEntityDescriptor[] cachedDbEntityDescriptors;
 	protected Class[] cachedUsedTypes;
 	protected String[] cachedTypesTableNames;
+	protected String[][] cachedMappedNames;
+
+	/**
+	 * Resolves {@link jodd.db.oom.DbEntityDescriptor} for all given types,
+	 * so not to repeat every time.
+	 */
+	protected DbEntityDescriptor[] resolveDbEntityDescriptors(Class[] types) {
+		if (cachedDbEntityDescriptors == null) {
+			DbEntityDescriptor[] descs = new DbEntityDescriptor[types.length];
+			for (int i = 0; i < types.length; i++) {
+				Class type = types[i];
+				if (type != null) {
+					descs[i] = dbOomManager.lookupType(type);
+				}
+			}
+			cachedDbEntityDescriptors = descs;
+		}
+		return cachedDbEntityDescriptors;
+	}
 
 	/**
 	 * Creates table names for all specified types.
@@ -213,31 +257,61 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * Type name will be <code>null</code> for simple names, i.e. for all those
 	 * types that returns <code>null</code> when used by {@link jodd.db.oom.DbOomManager#lookupType(Class)}.
 	 */
-	protected String[] createTypesTableNames(Class[] types) {
+	protected String[] resolveTypesTableNames(Class[] types) {
 		if (types != cachedUsedTypes) {
-			cachedTypesTableNames = new String[types.length];
-			for (int i = 0; i < types.length; i++) {
-				if (types[i] == null) {
-					cachedTypesTableNames[i] = null;
-					continue;
-				}
-				DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
-				if (ded != null) {
-					String tableName = ded.getTableName();
-					if (!strictCompare) {
-						tableName = tableName.toUpperCase();
-					}
-					cachedTypesTableNames[i] = tableName;
-				}
-			}
+			cachedTypesTableNames = createTypesTableNames(types);
 			cachedUsedTypes = types;			
 		}
 		return cachedTypesTableNames;
 	}
 
+	/**
+	 * Resolved mapped type names for each type.
+	 */
+	protected String[][] resolveMappedTypesTableNames(Class[] types) {
+		if (cachedMappedNames == null) {
+			String[][] names = new String[types.length][];
+			for (int i = 0; i < types.length; i++) {
+				Class type = types[i];
+				if (type != null) {
+					DbEntityDescriptor ded = cachedDbEntityDescriptors[i];
+					if (ded != null) {
+						Class[] mappedTypes = ded.getMappedTypes();
+						if (mappedTypes != null) {
+							names[i] = createTypesTableNames(mappedTypes);
+						}
+					}
+				}
+			}
+			cachedMappedNames = names;
+		}
+		return cachedMappedNames;
+	}
+
+	/**
+	 * Creates table names for given types.
+	 */
+	protected String[] createTypesTableNames(Class[] types) {
+		String[] names = new String[types.length];
+		for (int i = 0; i < types.length; i++) {
+			if (types[i] == null) {
+				names[i] = null;
+				continue;
+			}
+			DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
+			if (ded != null) {
+				String tableName = ded.getTableName();
+				tableName = tableName.toUpperCase();
+				names[i] = tableName;
+			}
+		}
+		return names;
+	}
 
 	protected int cachedColumnNdx;
 	protected Object cachedColumnValue;
+
+	// ---------------------------------------------------------------- parse object
 
 	/**
 	 * Reads column value from result set. Since this method may be called more then once for
@@ -260,7 +334,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					cachedColumnValue = TypeConverterManager.convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
-				throw new DbOomException("Unable to read value for column #" + (colNdx + 1), sex);
+				throw new DbOomException(dbOomQuery, "Invalid value for column #" + (colNdx + 1), sex);
 			}
 			cachedColumnNdx = colNdx;
 		}
@@ -276,7 +350,9 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		int totalTypes = types.length;
 		Object[] result = new Object[totalTypes];
 		boolean[] resultUsage = new boolean[totalTypes];
-		String[] typesTableNames = createTypesTableNames(types);
+		DbEntityDescriptor[] dbEntityDescriptors = resolveDbEntityDescriptors(types);
+		String[] typesTableNames = resolveTypesTableNames(types);
+		String[][] mappedNames = resolveMappedTypesTableNames(types);
 
 		int currentResult = 0;
 		cachedColumnNdx = -1;
@@ -292,7 +368,8 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			Class currentType = types[currentResult];
 			if (currentType == null) {
 				colNdx++;
-				currentResult++; resultColumns.clear();
+				currentResult++;
+				resultColumns.clear();
 				continue;
 			}
 
@@ -309,11 +386,35 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				currentResult++; resultColumns.clear();
 				continue;
 			}
-			if ((tableName == null) || (resultTableName.equals(tableName) == true)) {
-				if (resultColumns.contains(columnName) == false) {
-					DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
+
+			// match table
+			boolean tableMatched = false;
+
+			if (tableName == null) {
+				tableMatched = true;
+			} else if (resultTableName.equals(tableName)) {
+				tableMatched = true;
+			} else {
+				String[] mapped = mappedNames[currentResult];
+				if (mapped != null) {
+					for (String m : mapped) {
+						if (m.equals(tableName)) {
+							tableMatched = true;
+							break;
+						}
+					}
+				}
+			}
+
+			if (tableMatched) {
+				if (!resultColumns.contains(columnName)) {
+					//DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
+					DbEntityDescriptor ded = dbEntityDescriptors[currentResult];
+
 					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
 					String propertyName = (dec == null ? null : dec.getPropertyName());
+
+					// check if a property that matches column name exist
 					if (propertyName != null) {
 
 						// if current entity instance does not exist (i.e. we are at the first column
@@ -326,7 +427,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 										BeanUtil.setDeclaredPropertySilent(result[currentResult], propertyName, value) :
 										BeanUtil.hasDeclaredProperty(result[currentResult], propertyName);
 */
-						Class type = BeanUtil.getDeclaredPropertyType(result[currentResult], propertyName);
+						Class type = BeanUtil.declared.getPropertyType(result[currentResult], propertyName);
 						if (type != null) {
 							// match: entity
 							dec.updateDbSqlType(columnDbSqlType);	// updates column db sql type information for the entity!!!
@@ -335,7 +436,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 							if (value != null) {
 								// inject column value into existing entity
-								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
+								BeanUtil.declared.setProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;
 							}
 							colNdx++;
@@ -352,7 +453,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 		resultColumns.clear();
 		for (int i = 0; i < resultUsage.length; i++) {
-			if (resultUsage[i] == false) {
+			if (!resultUsage[i]) {
 				result[i] = null;
 			}
 		}
@@ -374,17 +475,36 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 */
 	protected void cacheResultSetEntities(Object[] result) {
 		if (entitiesCache == null) {
-			entitiesCache = new HashMap<Object, Object>();
+			entitiesCache = new HashMap<>();
 		}
 
 		for (int i = 0; i < result.length; i++) {
 			Object object = result[i];
 
-			Object cachedObject = entitiesCache.get(object);
+			if (object == null) {
+				continue;
+			}
+
+			DbEntityDescriptor ded = cachedDbEntityDescriptors[i];
+
+			if (ded == null) {	// not a type, continue
+				continue;
+			}
+
+			// calculate key
+			Object key;
+			if (ded.hasIdColumn()) {
+				//noinspection unchecked
+				key = ded.getKeyValue(object);
+			} else {
+				key = object;
+			}
+
+			Object cachedObject = entitiesCache.get(key);
 
 			if (cachedObject == null) {
 				// object is not in the cache, add it
-				entitiesCache.put(object, object);
+				entitiesCache.put(key, object);
 			} else {
 				// object is in the cache, replace it
 				result[i] = cachedObject;

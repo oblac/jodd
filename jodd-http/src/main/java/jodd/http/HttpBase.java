@@ -1,26 +1,53 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http;
 
-import jodd.JoddHttp;
 import jodd.datetime.TimeUtil;
+import jodd.http.up.ByteArrayUploadable;
+import jodd.http.up.FileUploadable;
+import jodd.http.up.Uploadable;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
-import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
 import jodd.util.MimeTypes;
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -31,18 +58,24 @@ import static jodd.util.StringPool.CRLF;
 @SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
 
+    public static final String HEADER_ACCEPT = "Accept";
 	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
 	public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
 	public static final String HEADER_HOST = "Host";
 	public static final String HEADER_ETAG = "ETag";
+	public static final String HEADER_CONNECTION = "Connection";
+	public static final String HEADER_KEEP_ALIVE = "Keep-Alive";
+	public static final String HEADER_CLOSE = "Close";
+	public static final String HTTP_1_0 = "HTTP/1.0";
+	public static final String HTTP_1_1 = "HTTP/1.1";
 
-	protected String httpVersion = "HTTP/1.1";
-	protected HttpValuesMap headers = new HttpValuesMap();
+	protected String httpVersion = HTTP_1_1;
+	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
 
-	protected HttpValuesMap form;	// holds form data (when used)
-	protected String body;			// holds raw body string (always)
+	protected HttpMultiMap<?> form;			// holds form data (when used)
+	protected String body;					// holds raw body string (always)
 
 	// ---------------------------------------------------------------- properties
 
@@ -66,26 +99,18 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns value of header parameter.
 	 * If multiple headers with the same names exist,
-	 * the first value will be returned.
+	 * the first value will be returned. Returns <code>null</code>
+	 * if header doesn't exist.
 	 */
 	public String header(String name) {
-		String key = name.trim().toLowerCase();
-
-		Object value = headers.getFirst(key);
-
-		if (value == null) {
-			return null;
-		}
-		return value.toString();
+		return headers.get(name);
 	}
 
 	/**
 	 * Returns all values for given header name.
 	 */
-	public String[] headers(String name) {
-		String key = name.trim().toLowerCase();
-
-		return headers.getStrings(key);
+	public List<String> headers(String name) {
+		return headers.getAll(name);
 	}
 
 	/**
@@ -124,7 +149,7 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		if (overwrite == true) {
+		if (overwrite) {
 			headers.set(key, value);
 		} else {
 			headers.add(key, value);
@@ -161,6 +186,13 @@ public abstract class HttpBase<T> {
 	public T header(String name, long millis) {
 		_header(name, TimeUtil.formatHttpDate(millis), false);
 		return (T) this;
+	}
+
+	/**
+	 * Returns {@link HttpMultiMap} of all headers.
+	 */
+	public HttpMultiMap<String> headers() {
+		return headers;
 	}
 
 	// ---------------------------------------------------------------- content type
@@ -256,6 +288,39 @@ public abstract class HttpBase<T> {
 		return (T) this;
 	}
 
+	// ---------------------------------------------------------------- keep-alive
+
+	/**
+	 * Defines "Connection" header as "Keep-Alive" or "Close".
+	 * Existing value is overwritten.
+	 */
+	public T connectionKeepAlive(boolean keepAlive) {
+		if (keepAlive) {
+			header(HEADER_CONNECTION, HEADER_KEEP_ALIVE, true);
+		} else {
+			header(HEADER_CONNECTION, HEADER_CLOSE, true);
+		}
+		return (T) this;
+	}
+
+	/**
+	 * Returns <code>true</code> if connection is persistent.
+	 * If "Connection" header does not exist, returns <code>true</code>
+	 * for HTTP 1.1 and <code>false</code> for HTTP 1.0. If
+	 * "Connection" header exist, checks if it is equal to "Close".
+	 * <p>
+	 * In HTTP 1.1, all connections are considered persistent unless declared otherwise.
+	 * Under HTTP 1.0, there is no official specification for how keepalive operates.
+	 */
+	public boolean isConnectionPersistent() {
+		String connection = header(HEADER_CONNECTION);
+		if (connection == null) {
+			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
+		}
+
+		return !connection.equalsIgnoreCase(HEADER_CLOSE);
+	}
+
 	// ---------------------------------------------------------------- common headers
 
 	/**
@@ -282,6 +347,21 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
+	 * Returns "Accept" header.
+	 */
+	public String accept() {
+		return header(HEADER_ACCEPT);
+	}
+
+	/**
+	 * Sets "Accept" header.
+	 */
+	public T accept(String encodings) {
+		header(HEADER_ACCEPT, encodings, true);
+		return (T) this;
+	}
+	
+	/**
 	 * Returns "Accept-Encoding" header.
 	 */
 	public String acceptEncoding() {
@@ -298,10 +378,44 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- form
 
+	/**
+	 * Initializes form.
+	 */
 	protected void initForm() {
 		if (form == null) {
-			form = new HttpValuesMap();
+			form = HttpMultiMap.newCaseInsensitveMap();
 		}
+	}
+
+	/**
+	 * Wraps non-Strings form values with {@link jodd.http.up.Uploadable uploadable content}.
+	 * Detects invalid types and throws an exception. So all uploadable values
+	 * are of the same type.
+	 */
+	protected Object wrapFormValue(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof CharSequence) {
+			return value.toString();
+		}
+		if (value instanceof Number) {
+			return value.toString();
+		}
+		if (value instanceof Boolean) {
+			return value.toString();
+		}
+		if (value instanceof File) {
+			return new FileUploadable((File) value);
+		}
+		if (value instanceof byte[]) {
+			return new ByteArrayUploadable((byte[]) value, null);
+		}
+		if (value instanceof Uploadable) {
+			return value;
+		}
+
+		throw new HttpException("Unsupported value type: " + value.getClass().getName());
 	}
 
 	/**
@@ -309,7 +423,10 @@ public abstract class HttpBase<T> {
 	 */
 	public T form(String name, Object value) {
 		initForm();
-		form.add(name, value);
+
+		value = wrapFormValue(value);
+		((HttpMultiMap<Object>)form).add(name, value);
+
 		return (T) this;
 	}
 
@@ -318,11 +435,15 @@ public abstract class HttpBase<T> {
 	 */
 	public T form(String name, Object value, boolean overwrite) {
 		initForm();
+
+		value = wrapFormValue(value);
+
 		if (overwrite) {
-			form.set(name, value);
+			((HttpMultiMap<Object>)form).set(name, value);
 		} else {
-			form.add(name, value);
+			((HttpMultiMap<Object>)form).add(name, value);
 		}
+
 		return (T) this;
 	}
 
@@ -332,11 +453,12 @@ public abstract class HttpBase<T> {
 	public T form(String name, Object value, Object... parameters) {
 		initForm();
 
-		form.add(name, value);
+		form(name, value);
+
 		for (int i = 0; i < parameters.length; i += 2) {
 			name = parameters[i].toString();
 
-			form.add(name, parameters[i + 1]);
+			form(name, parameters[i + 1]);
 		}
 		return (T) this;
 	}
@@ -348,15 +470,16 @@ public abstract class HttpBase<T> {
 		initForm();
 
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
-			form.add(entry.getKey(), entry.getValue());
+			form(entry.getKey(), entry.getValue());
 		}
 		return (T) this;
 	}
 
 	/**
 	 * Return map of form parameters.
+	 * Note that all uploadable values are wrapped with {@link jodd.http.up.Uploadable}.
 	 */
-	public Map<String, Object[]> form() {
+	public HttpMultiMap<?> form() {
 		return form;
 	}
 
@@ -379,13 +502,14 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns <b>raw</b> body as received or set (always in ISO-8859-1 encoding).
 	 * If body content is a text, use {@link #bodyText()} to get it converted.
+	 * Returns <code>null</code> if body is not specified!
 	 */
 	public String body() {
 		return body;
 	}
 
 	/**
-	 * Returns <b>raw</b> body bytes.
+	 * Returns <b>raw</b> body bytes. Returns <code>null</code> if body is not specified.
 	 */
 	public byte[] bodyBytes() {
 		if (body == null) {
@@ -401,9 +525,12 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns {@link #body() body content} as text. If {@link #charset() charset parameter}
 	 * of "Content-Type" header is defined, body string charset is converted, otherwise
-	 * the same raw body content is returned.
+	 * the same raw body content is returned. Never returns <code>null</code>.
 	 */
 	public String bodyText() {
+		if (body == null) {
+			return StringPool.EMPTY;
+		}
 		if (charset != null) {
 			return StringUtil.convertCharset(body, StringPool.ISO_8859_1, charset);
 		}
@@ -468,43 +595,37 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- body form
 
+	protected boolean multipart = false;
+
 	/**
-	 * Returns <code>true</code> if form contains non-string elements (i.e. files).
+	 * Returns <code>true</code> if form contains {@link jodd.http.up.Uploadable}.
 	 */
 	protected boolean isFormMultipart() {
-		for (Object[] values : form.values()) {
-			if (values == null) {
-				continue;
-			}
+		if (multipart) {
+			return true;
+		}
 
-			for (Object value : values) {
-				Class type = value.getClass();
-
-				if (type.equals(File.class)) {
-					return true;
-				}
+		for (Map.Entry<String, ?> entry : form) {
+			Object value = entry.getValue();
+			if (value instanceof Uploadable) {
+				return true;
 			}
 		}
+
 	    return false;
 	}
 
 	/**
-	 * Creates form string and sets few headers.
+	 * Creates form {@link jodd.http.Buffer buffer} and sets few headers.
 	 */
-	protected String formString() {
+	protected Buffer formBuffer() {
+		Buffer buffer = new Buffer();
 		if (form == null || form.isEmpty()) {
-			return StringPool.EMPTY;
+			return buffer;
 		}
 
-		// todo allow user to force usage of multipart
-
 		if (!isFormMultipart()) {
-			// determine form encoding
-			String formEncoding = charset;
-
-			if (formEncoding == null) {
-				formEncoding = this.formEncoding;
-			}
+			String formEncoding = resolveFormEncoding();
 
 			// encode
 			String formQueryString = HttpUtil.buildQuery(form, formEncoding);
@@ -512,82 +633,188 @@ public abstract class HttpBase<T> {
 			contentType("application/x-www-form-urlencoded", null);
 			contentLength(formQueryString.length());
 
-			return formQueryString;
+			buffer.append(formQueryString);
+			return buffer;
 		}
 
-		String boundary = StringUtil.repeat('-', 10) + RandomStringUtil.randomAlphaNumeric(10);
+		String boundary = StringUtil.repeat('-', 10) + RandomString.getInstance().randomAlphaNumeric(10);
 
-		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, ?> entry : form) {
 
-		for (Map.Entry<String, Object[]> entry : form.entrySet()) {
-
-			sb.append("--");
-			sb.append(boundary);
-			sb.append(CRLF);
+			buffer.append("--");
+			buffer.append(boundary);
+			buffer.append(CRLF);
 
 			String name = entry.getKey();
-			Object[] values = entry.getValue();
+			Object value = entry.getValue();
 
-			for (Object value : values) {
-				if (value instanceof String) {
-					String string = (String) value;
-					sb.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
-					sb.append(CRLF);
-					sb.append(string);
-				} else if (value instanceof File) {
-					File file = (File) value;
-					String fileName = FileNameUtil.getName(file.getName());
+			if (value instanceof String) {
+				String string = (String) value;
+				buffer.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
+				buffer.append(CRLF);
 
-					sb.append("Content-Disposition: form-data; name=\"").append(name);
-					sb.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
+				String formEncoding = resolveFormEncoding();
 
-					String mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
-					sb.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
-					sb.append("Content-Transfer-Encoding: binary").append(CRLF);
-					sb.append(CRLF);
+				String utf8String = StringUtil.convertCharset(
+					string, formEncoding, StringPool.ISO_8859_1);
 
-					try {
-						char[] chars = FileUtil.readChars(file, StringPool.ISO_8859_1);
-						sb.append(chars);
-					} catch (IOException ioex) {
-						throw new HttpException(ioex);
-					}
-				} else {
-					throw new HttpException("Unsupported parameter type: " + value.getClass().getName());
-				}
-				sb.append(CRLF);
+				buffer.append(utf8String);
 			}
+			else if (value instanceof Uploadable) {
+				Uploadable uploadable = (Uploadable) value;
+
+				String fileName = uploadable.getFileName();
+				if (fileName == null) {
+					fileName = name;
+				} else {
+					String formEncoding = resolveFormEncoding();
+
+					fileName = StringUtil.convertCharset(
+						fileName, formEncoding, StringPool.ISO_8859_1);
+				}
+
+				buffer.append("Content-Disposition: form-data; name=\"").append(name);
+				buffer.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
+
+				String mimeType = uploadable.getMimeType();
+				if (mimeType == null) {
+					mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
+				}
+				buffer.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
+
+				buffer.append("Content-Transfer-Encoding: binary").append(CRLF);
+				buffer.append(CRLF);
+
+				buffer.append(uploadable);
+
+				//byte[] bytes = uploadable.getBytes();
+				//for (byte b : bytes) {
+					//buffer.append(CharUtil.toChar(b));
+				//}
+			} else {
+				// should never happened!
+				throw new HttpException("Unsupported type");
+			}
+			buffer.append(CRLF);
 		}
 
-		sb.append("--").append(boundary).append("--");
+		buffer.append("--").append(boundary).append("--");
+		buffer.append(CRLF);
 
 		// the end
 		contentType("multipart/form-data; boundary=" + boundary);
-		contentLength(sb.length());
+		contentLength(buffer.size());
 
-		return sb.toString();
+		return buffer;
 	}
 
-	// ---------------------------------------------------------------- send
+	/**
+	 * Resolves form encodings.
+	 */
+	protected String resolveFormEncoding() {
+		// determine form encoding
+		String formEncoding = charset;
+
+		if (formEncoding == null) {
+			formEncoding = this.formEncoding;
+		}
+		return formEncoding;
+	}
+
+	// ---------------------------------------------------------------- buffer
+
+	/**
+	 * Returns string representation of this request or response.
+	 */
+	public String toString() {
+		return toString(true);
+	}
+
+	/**
+	 * Returns full request/response, or just headers.
+	 * Useful for debugging.
+	 */
+	public String toString(boolean fullResponse) {
+		Buffer buffer = buffer(fullResponse);
+
+		StringWriter stringWriter = new StringWriter();
+
+		try {
+			buffer.writeTo(stringWriter);
+		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return stringWriter.toString();
+	}
 
 	/**
 	 * Returns byte array of request or response.
 	 */
 	public byte[] toByteArray() {
+		Buffer buffer = buffer(true);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
+
 		try {
-			return toString().getBytes(StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
+			buffer.writeTo(baos);
+		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return baos.toByteArray();
+	}
+
+	/**
+	 * Creates {@link jodd.http.Buffer buffer} ready to be consumed.
+	 * Buffer can, optionally, contains just headers.
+	 */
+	protected abstract Buffer buffer(boolean full);
+
+	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
+		for (String key : headers.names()) {
+			List<String> values = headers.getAll(key);
+
+			String headerName = HttpUtil.prepareHeaderParameterName(key);
+
+			for (String value : values) {
+				target.append(headerName);
+				target.append(": ");
+				target.append(value);
+				target.append(CRLF);
+			}
+		}
+
+		if (fullRequest) {
+			target.append(CRLF);
+
+			if (form != null) {
+				target.append(formBuffer);
+			} else if (body != null) {
+				target.append(body);
+			}
 		}
 	}
+
+
+	// ---------------------------------------------------------------- send
+
+	protected HttpProgressListener httpProgressListener;
 
 	/**
 	 * Sends request or response to output stream.
 	 */
 	public void sendTo(OutputStream out) throws IOException {
-		byte[] bytes = toByteArray();
+		Buffer buffer = buffer(true);
 
-		out.write(bytes);
+		if (httpProgressListener == null) {
+			buffer.writeTo(out);
+		}
+		else {
+			buffer.writeTo(out, httpProgressListener);
+		}
 
 		out.flush();
 	}
@@ -625,16 +852,27 @@ public abstract class HttpBase<T> {
 	protected void readBody(BufferedReader reader) {
 		String bodyString = null;
 
+		// first determine if chunked encoding is specified
+		boolean isChunked = false;
+
+		String transferEncoding = header("Transfer-Encoding");
+		if (transferEncoding != null && transferEncoding.equalsIgnoreCase("chunked")) {
+			isChunked = true;
+		}
+
+
 		// content length
 		String contentLen = contentLength();
-		if (contentLen != null) {
-			int len = Integer.parseInt(contentLen);
+		int contentLenValue = -1;
 
-			if (len > 0) {
-				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(len);
+		if (contentLen != null && !isChunked) {
+			contentLenValue = Integer.parseInt(contentLen);
+
+			if (contentLenValue > 0) {
+				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(contentLenValue);
 
 				try {
-					StreamUtil.copy(reader, fastCharArrayWriter, len);
+					StreamUtil.copy(reader, fastCharArrayWriter, contentLenValue);
 				} catch (IOException ioex) {
 					throw new HttpException(ioex);
 				}
@@ -644,23 +882,22 @@ public abstract class HttpBase<T> {
 		}
 
 		// chunked encoding
-		String transferEncoding = header("Transfer-Encoding");
-		if (transferEncoding != null && transferEncoding.equalsIgnoreCase("chunked")) {
+		if (isChunked) {
 
 			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
 			try {
 				while (true) {
 					String line = reader.readLine();
 
-					if (StringUtil.isBlank(line)) {
-						break;
-					}
-
 					int len = Integer.parseInt(line, 16);
 
-					if (len != 0) {
+					if (len > 0) {
 						StreamUtil.copy(reader, fastCharArrayWriter, len);
 						reader.readLine();
+					} else {
+						// end reached, read trailing headers, if there is any
+						readHeaders(reader);
+						break;
 					}
 				}
 			} catch (IOException ioex) {
@@ -670,22 +907,16 @@ public abstract class HttpBase<T> {
 			bodyString = fastCharArrayWriter.toString();
 		}
 
-		// no body
-		if (bodyString == null) {
-
-			if (httpVersion().equals("HTTP/1.0")) {
-				// in HTTP 1.0 body ends when stream closes
-				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
-				try {
-					StreamUtil.copy(reader, fastCharArrayWriter);
-				} catch (IOException ioex) {
-					throw new HttpException(ioex);
-				}
-				bodyString = fastCharArrayWriter.toString();
-			} else {
-				body = null;
-				return;
+		// no body yet - special case
+		if (bodyString == null && contentLenValue != 0) {
+			// body ends when stream closes
+			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+			try {
+				StreamUtil.copy(reader, fastCharArrayWriter);
+			} catch (IOException ioex) {
+				throw new HttpException(ioex);
 			}
+			bodyString = fastCharArrayWriter.toString();
 		}
 
 		// BODY READY - PARSE BODY
@@ -709,7 +940,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = new HttpValuesMap();
+			form = HttpMultiMap.newCaseInsensitveMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 
@@ -724,20 +955,18 @@ public abstract class HttpBase<T> {
 			// string parameters
 			for (String paramName : multipartParser.getParameterNames()) {
 				String[] values = multipartParser.getParameterValues(paramName);
-				if (values.length == 1) {
-					form.add(paramName, values[0]);
-				} else {
-					form.put(paramName, values);
+
+				for (String value : values) {
+					((HttpMultiMap<Object>)form).add(paramName, value);
 				}
 			}
 
 			// file parameters
 			for (String paramName : multipartParser.getFileParameterNames()) {
-				FileUpload[] values = multipartParser.getFiles(paramName);
-				if (values.length == 1) {
-					form.add(paramName, values[0]);
-				} else {
-					form.put(paramName, values);
+				FileUpload[] uploads = multipartParser.getFiles(paramName);
+
+				for (FileUpload upload : uploads) {
+					((HttpMultiMap<Object>)form).add(paramName, upload);
 				}
 			}
 

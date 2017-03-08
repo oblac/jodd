@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta;
 
@@ -6,6 +29,7 @@ import jodd.proxetta.data.*;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -45,7 +69,7 @@ public class SubclassTest {
 		assertNotNull(fooProxyClass);
 
 		Method[] methods = fooProxyClass.getMethods();
-		assertEquals(11, methods.length);
+		assertEquals(12, methods.length);
 		try {
 			fooProxyClass.getMethod("m1");
 		} catch (NoSuchMethodException nsmex) {
@@ -54,7 +78,7 @@ public class SubclassTest {
 
 
 		methods = fooProxyClass.getDeclaredMethods();
-		assertEquals(13, methods.length);
+		assertEquals(15, methods.length);
 		try {
 			fooProxyClass.getDeclaredMethod("m2");
 		} catch (NoSuchMethodException nsmex) {
@@ -73,14 +97,14 @@ public class SubclassTest {
 		Foo foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta1", foo.getClass().getName());
+		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		builder = proxyProxetta.builder();
 		builder.setTarget(Foo.class);
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta2", foo.getClass().getName());
+		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		proxyProxetta.setClassNameSuffix("$$Ppp");
 		builder = proxyProxetta.builder();
@@ -88,7 +112,7 @@ public class SubclassTest {
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Ppp3", foo.getClass().getName());
+		assertEquals(Foo.class.getName() + "$$Ppp", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		proxyProxetta.setClassNameSuffix("$$Proxetta");
 		proxyProxetta.setVariableClassName(false);

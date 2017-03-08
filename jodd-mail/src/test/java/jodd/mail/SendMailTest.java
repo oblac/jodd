@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.mail;
 
@@ -25,36 +48,36 @@ public class SendMailTest {
 	@Test
 	public void testFromToBccCc() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to1", "to2")
-				.cc("cc1", "cc2")
-				.bcc("bcc1", "bcc2");
+				.from("from@example.com")
+				.to("to1@example.com").to("Major Tom", "to2@example.com")
+				.cc("cc1@example.com").cc("Major Tom", "cc2@example.com")
+				.bcc("Major Tom", "bcc1@example.com").bcc("bcc2@example.com");
 
 		Message message = createMessage(email);
 
 		assertEquals(1, message.getFrom().length);
-		assertEquals("from", message.getFrom()[0].toString());
+		assertEquals("from@example.com", message.getFrom()[0].toString());
 
 		assertEquals(6, message.getAllRecipients().length);
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to1", message.getRecipients(Message.RecipientType.TO)[0].toString());
-		assertEquals("to2", message.getRecipients(Message.RecipientType.TO)[1].toString());
+		assertEquals("to1@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
+		assertEquals("Major Tom <to2@example.com>", message.getRecipients(Message.RecipientType.TO)[1].toString());
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.CC).length);
-		assertEquals("cc1", message.getRecipients(Message.RecipientType.CC)[0].toString());
-		assertEquals("cc2", message.getRecipients(Message.RecipientType.CC)[1].toString());
+		assertEquals("cc1@example.com", message.getRecipients(Message.RecipientType.CC)[0].toString());
+		assertEquals("Major Tom <cc2@example.com>", message.getRecipients(Message.RecipientType.CC)[1].toString());
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.BCC).length);
-		assertEquals("bcc1", message.getRecipients(Message.RecipientType.BCC)[0].toString());
-		assertEquals("bcc2", message.getRecipients(Message.RecipientType.BCC)[1].toString());
+		assertEquals("Major Tom <bcc1@example.com>", message.getRecipients(Message.RecipientType.BCC)[0].toString());
+		assertEquals("bcc2@example.com", message.getRecipients(Message.RecipientType.BCC)[1].toString());
 	}
 
 	@Test
 	public void testSimpleText() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to")
+				.from("from@example.com")
+				.to("to@example.com")
 				.subject("sub")
 				.addText("Hello!");
 
@@ -88,8 +111,8 @@ public class SendMailTest {
 	@Test
 	public void testTextHtml() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to")
+				.from("from@example.com")
+				.to("to@example.com")
 				.subject("sub")
 				.addText("Hello!")
 				.addHtml("<html><body><h1>Hey!</h1></body></html>");
@@ -97,10 +120,10 @@ public class SendMailTest {
 		Message message = createMessage(email);
 
 		assertEquals(1, message.getFrom().length);
-		assertEquals("from", message.getFrom()[0].toString());
+		assertEquals("from@example.com", message.getFrom()[0].toString());
 
 		assertEquals(1, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to", message.getRecipients(Message.RecipientType.TO)[0].toString());
+		assertEquals("to@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
 
 		assertEquals("sub", message.getSubject());
 
@@ -127,8 +150,8 @@ public class SendMailTest {
 	@Test
 	public void testTextHtmlEmbedAttach1() throws MessagingException, IOException {
 		Email email = Email.create()
-				.from("from")
-				.to("to")
+				.from("from@example.com")
+				.to("to@example.com")
 				.subject("sub")
 				.addText("Hello!")
 				.addHtml("<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>")
@@ -142,9 +165,9 @@ public class SendMailTest {
 	public void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
 		Email email = new Email();
 
-		email.setFrom("from");
-		email.setTo("to");
-		email.setSubject("sub");
+		email.from("from@example.com");
+		email.to("to@example.com");
+		email.subject("sub");
 
 		EmailMessage testMessage = new EmailMessage("Hello!", MimeTypes.MIME_TEXT_PLAIN);
 		email.addMessage(testMessage);
@@ -169,10 +192,10 @@ public class SendMailTest {
 		Message message = createMessage(email);
 
 		assertEquals(1, message.getFrom().length);
-		assertEquals("from", message.getFrom()[0].toString());
+		assertEquals("from@example.com", message.getFrom()[0].toString());
 
 		assertEquals(1, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to", message.getRecipients(Message.RecipientType.TO)[0].toString());
+		assertEquals("to@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
 
 		assertEquals("sub", message.getSubject());
 

@@ -1,0 +1,4 @@
+wrn:[Parse error: invalid token [1:14 @13]
+tag:gat:1<<gat one="two=/">
+wrn:[Parse error: invalid token [2:10 @26]
+tag:cat:2<<cat tom>

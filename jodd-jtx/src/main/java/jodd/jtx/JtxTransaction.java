@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.jtx;
 
@@ -61,7 +84,7 @@ public class JtxTransaction {
 		this.txManager = txManager;
 		this.mode = mode;
 		this.scope = scope;
-		this.resources = new HashSet<JtxResource>();
+		this.resources = new HashSet<>();
 		this.deadline = mode.getTransactionTimeout() == DEFAULT_TIMEOUT ?
 				DEFAULT_TIMEOUT :
 				System.currentTimeMillis() + (mode.getTransactionTimeout() * 1000L);
@@ -164,9 +187,9 @@ public class JtxTransaction {
 	 * of the transaction is to roll back the transaction.
 	 */
 	public void setRollbackOnly(Throwable th) {
-		if (isNoTransaction() == false) {
+		if (!isNoTransaction()) {
 			if ((status != STATUS_MARKED_ROLLBACK) && (status != STATUS_ACTIVE)) {
-				throw new JtxException("There is no active transaction that can be marked as rollback only.");
+				throw new JtxException("TNo active TX that can be marked as rollback only");
 			}
 		}
 		rollbackCause = th;
@@ -191,7 +214,7 @@ public class JtxTransaction {
 		}
 		if (this.deadline - System.currentTimeMillis() < 0) {
 			setRollbackOnly();
-			throw new JtxException("Transaction timed out, marked as rollback only.");
+			throw new JtxException("TX timed out, marked as rollback only");
 		}
 	}
 
@@ -228,20 +251,20 @@ public class JtxTransaction {
 			}
 		}
 		boolean forcedRollback = false;
-		if (isNoTransaction() == false) {
+		if (!isNoTransaction()) {
 			if (isRollbackOnly()) {
-				if (doCommit == true) {
+				if (doCommit) {
 					doCommit = false;
 					forcedRollback = true;
 				}
-			} else if (isActive() == false) {
+			} else if (!isActive()) {
 				if (isCompleted()) {
-					throw new JtxException("Transaction is already completed, commit or rollback should be called once per transaction.");
+					throw new JtxException("TX is already completed, commit or rollback should be called once per TX");
 				}
-				throw new JtxException("No active transaction to " + (doCommit ? "commit." : "rollback."));
+				throw new JtxException("No active TX to " + (doCommit ? "commit" : "rollback"));
 			}
 		}
-		if (doCommit == true) {
+		if (doCommit) {
 			commitAllResources();
 		} else {
 			rollbackAllResources(forcedRollback);
@@ -274,7 +297,7 @@ public class JtxTransaction {
 		}
 		if (lastException != null) {
 			setRollbackOnly(lastException);
-			throw new JtxException("Commit failed: one or more transaction resources couldn't commit a transaction.", lastException);
+			throw new JtxException("Commit failed: one or more TX resources couldn't commit a TX", lastException);
 		}
 		txManager.removeTransaction(this);
 		status = STATUS_COMMITTED;
@@ -302,10 +325,10 @@ public class JtxTransaction {
 		status = STATUS_ROLLEDBACK;
 		if (lastException != null) {
 			status = STATUS_UNKNOWN;
-			throw new JtxException("Rollback failed: one or more transaction resources couldn't rollback a transaction.", lastException);
+			throw new JtxException("Rollback failed: one or more TX resources couldn't rollback a TX", lastException);
 		}
 		if (wasForced) {
-			throw new JtxException("Transaction rolled back because it has been marked as rollback-only.", rollbackCause);
+			throw new JtxException("TX rolled back because it has been marked as rollback-only", rollbackCause);
 		}
 	}
 
@@ -317,24 +340,24 @@ public class JtxTransaction {
 	 */
 	public <E> E requestResource(Class<E> resourceType) {
 		if (isCompleted()) {
-			throw new JtxException("Transaction is already completed, resource are not available after commit or rollback.");
+			throw new JtxException("TX is already completed, resource are not available after commit or rollback");
 		}
 		if (isRollbackOnly()) {
-			throw new JtxException("Transaction is marked as rollback only, resource are not available.", rollbackCause);
+			throw new JtxException("TX is marked as rollback only, resource are not available", rollbackCause);
 		}
 		if (!isNoTransaction() && !isActive()) {
-			throw new JtxException("Resources are not available since transaction is not active.");
+			throw new JtxException("Resources are not available since TX is not active");
 		}
 		checkTimeout();
 		E resource = lookupResource(resourceType);
 		if (resource == null) {
 			int maxResources = txManager.getMaxResourcesPerTransaction();
 			if ((maxResources != -1) && (resources.size() >= maxResources)) {
-				throw new JtxException("Transaction already has attached max. number of resources.");
+				throw new JtxException("TX already has attached max. number of resources");
 			}
 			JtxResourceManager<E> resourceManager = txManager.lookupResourceManager(resourceType);
 			resource = resourceManager.beginTransaction(mode, isActive());
-			resources.add(new JtxResource<E>(this, resourceManager, resource));
+			resources.add(new JtxResource<>(this, resourceManager, resource));
 		}
 		return resource;
 	}

@@ -1,17 +1,45 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.util.StringBand;
-import jodd.asm4.Label;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.Type;
-import static jodd.asm4.Opcodes.*;
-import jodd.proxetta.ProxyAdvice;
+import jodd.asm5.Label;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.Type;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
-import static jodd.JoddProxetta.*;
+import jodd.util.ReflectUtil;
+import jodd.util.StringBand;
 import jodd.util.StringPool;
+
+import static jodd.asm5.Opcodes.*;
+import static jodd.proxetta.JoddProxetta.fieldDivider;
+import static jodd.proxetta.JoddProxetta.fieldPrefix;
+import static jodd.proxetta.JoddProxetta.methodDivider;
+import static jodd.proxetta.JoddProxetta.methodPrefix;
 import static jodd.util.StringPool.COLON;
 
 /**
@@ -49,9 +77,9 @@ public class ProxettaAsmUtil {
 	/**
 	 * Validates argument index.
 	 */
-	public static void checkArgumentIndex(MethodSignatureVisitor msign, int argIndex, Class<? extends ProxyAdvice> advice) {
-		if ((argIndex < 1) || (argIndex > msign.getArgumentsCount())) {
-			throw new ProxettaException("Invalid argument index: '" + argIndex + "' used in advice: " + advice.getName());
+	public static void checkArgumentIndex(MethodInfo methodInfo, int argIndex) {
+		if ((argIndex < 1) || (argIndex > methodInfo.getArgumentsCount())) {
+			throw new ProxettaException("Invalid argument index: " + argIndex);
 		}
 	}
 
@@ -73,12 +101,8 @@ public class ProxettaAsmUtil {
 
 	// ---------------------------------------------------------------- load
 
-	public static void loadMethodArgumentClass(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		loadClass(mv, msign.getArgumentOpcodeType(index), msign.getArgumentTypeName(index));
-	}
-
-	public static void loadMethodReturnClass(MethodVisitor mv, MethodSignatureVisitor msign) {
-		loadClass(mv, msign.getReturnOpcodeType(), msign.getReturnTypeName());
+	public static void loadMethodArgumentClass(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		loadClass(mv, methodInfo.getArgumentOpcodeType(index), methodInfo.getArgumentTypeName(index));
 	}
 
 	public static void loadClass(MethodVisitor mv, int type, String typeName) {
@@ -120,37 +144,37 @@ public class ProxettaAsmUtil {
 	/**
 	 * Loads all method arguments before INVOKESPECIAL call.
 	 */
-	public static void loadSpecialMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
+	public static void loadSpecialMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
 		mv.visitVarInsn(ALOAD, 0);
-		for (int i = 1; i <= msign.getArgumentsCount(); i++) {
-			loadMethodArgument(mv, msign, i);
+		for (int i = 1; i <= methodInfo.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, methodInfo, i);
 		}
 	}
 
 	/**
 	 * Loads all method arguments before INVOKESTATIC call.
 	 */
-	public static void loadStaticMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
-		for (int i = 0; i < msign.getArgumentsCount(); i++) {
-			loadMethodArgument(mv, msign, i);
+	public static void loadStaticMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+		for (int i = 0; i < methodInfo.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, methodInfo, i);
 		}
 	}
 
 	/**
 	 * Loads all method arguments before INVOKEVIRTUAL call.
 	 */
-	public static void loadVirtualMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
-		for (int i = 1; i <= msign.getArgumentsCount(); i++) {
-			loadMethodArgument(mv, msign, i);
+	public static void loadVirtualMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+		for (int i = 1; i <= methodInfo.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, methodInfo, i);
 		}
 	}
 
 	/**
 	 * Loads one argument. Index is 1-based. No conversion occurs.
 	 */
-	public static void loadMethodArgument(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int offset = msign.getArgumentOffset(index);
-		int type = msign.getArgumentOpcodeType(index);
+	public static void loadMethodArgument(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int offset = methodInfo.getArgumentOffset(index);
+		int type = methodInfo.getArgumentOpcodeType(index);
 		switch (type) {
 			case 'V':
 				break;
@@ -176,9 +200,9 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static void loadMethodArgumentAsObject(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int offset = msign.getArgumentOffset(index);
-		int type = msign.getArgumentOpcodeType(index);
+	public static void loadMethodArgumentAsObject(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int offset = methodInfo.getArgumentOffset(index);
+		int type = methodInfo.getArgumentOpcodeType(index);
 		switch (type) {
 			case 'V':
 				break;
@@ -224,9 +248,9 @@ public class ProxettaAsmUtil {
 	/**
 	 * Stores one argument. Index is 1-based. No conversion occurs.
 	 */
-	public static void storeMethodArgument(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int offset = msign.getArgumentOffset(index);
-		int type = msign.getArgumentOpcodeType(index);
+	public static void storeMethodArgument(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int offset = methodInfo.getArgumentOffset(index);
+		int type = methodInfo.getArgumentOpcodeType(index);
 		switch (type) {
 			case 'V':
 				break;
@@ -259,9 +283,9 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static void storeMethodArgumentFromObject(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int type = msign.getArgumentOpcodeType(index);
-		int offset = msign.getArgumentOffset(index);
+	public static void storeMethodArgumentFromObject(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int type = methodInfo.getArgumentOpcodeType(index);
+		int offset = methodInfo.getArgumentOffset(index);
 		storeValue(mv, offset, type);
 	}
 
@@ -311,17 +335,17 @@ public class ProxettaAsmUtil {
 	/**
 	 * Visits return opcodes.
 	 */
-	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast) {
-		switch (msign.getReturnOpcodeType()) {
+	public static void visitReturn(MethodVisitor mv, MethodInfo methodInfo, boolean isLast) {
+		switch (methodInfo.getReturnOpcodeType()) {
 			case 'V':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(POP);
 				}
 				mv.visitInsn(RETURN);
 				break;
 
 			case 'B':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -336,7 +360,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'C':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -351,7 +375,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'S':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -366,7 +390,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'I':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -381,7 +405,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'Z':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -396,7 +420,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'J':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -411,7 +435,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'F':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -426,7 +450,7 @@ public class ProxettaAsmUtil {
 				break;
 
 			case 'D':
-				if (isLast == true) {
+				if (isLast) {
 					mv.visitInsn(DUP);
 					Label label = new Label();
 					mv.visitJumpInsn(IFNONNULL, label);
@@ -449,9 +473,9 @@ public class ProxettaAsmUtil {
 	/**
 	 * Prepares return value.
 	 */
-	public static void prepareReturnValue(MethodVisitor mv, MethodSignatureVisitor msign, int varOffset) {
-		varOffset += msign.getAllArgumentsSize();
-		switch (msign.getReturnOpcodeType()) {
+	public static void prepareReturnValue(MethodVisitor mv, MethodInfo methodInfo, int varOffset) {
+		varOffset += methodInfo.getAllArgumentsSize();
+		switch (methodInfo.getReturnOpcodeType()) {
 			case 'V':
 				mv.visitInsn(ACONST_NULL);
 				break;
@@ -483,10 +507,10 @@ public class ProxettaAsmUtil {
 		}
 	}
 
-	public static void castToReturnType(MethodVisitor mv, MethodSignatureVisitor msign) {
+	public static void castToReturnType(MethodVisitor mv, MethodInfo methodInfo) {
 		final String returnType;
 
-		char returnOpcodeType = msign.getReturnOpcodeType();
+		char returnOpcodeType = methodInfo.getReturnOpcodeType();
 
 		switch (returnOpcodeType) {
 			case 'I':
@@ -514,10 +538,13 @@ public class ProxettaAsmUtil {
 				returnType = AsmUtil.SIGNATURE_JAVA_LANG_CHARACTER;
 				break;
 			case '[':
-				returnType = msign.getReturnTypeName();
+				returnType = methodInfo.getReturnTypeName();
 				break;
 			default:
-				returnType = msign.getReturnType().replace('.', '/');
+				String rtname = methodInfo.getReturnTypeName();
+				returnType = rtname.length() == 0 ?
+					AsmUtil.typeToSignature(methodInfo.getReturnType()) :
+					AsmUtil.typedesc2ClassName(rtname);
 				break;
 		}
 
@@ -542,6 +569,187 @@ public class ProxettaAsmUtil {
 			.toString();
 	}
 
+	// ---------------------------------------------------------------- annotation work
+
+	/**
+	 * Visits non-array element value for annotation. Returns <code>true</code>
+	 * if value is successfully processed.
+	 */
+	public static void visitElementValue(MethodVisitor mv, Object elementValue, boolean boxPrimitives) {
+		if (elementValue instanceof String) {	// string
+			mv.visitLdcInsn(elementValue);
+			return;
+		}
+		if (elementValue instanceof Type) {		// class
+			mv.visitLdcInsn(elementValue);
+			return;
+		}
+		if (elementValue instanceof Class) {
+			mv.visitLdcInsn(Type.getType((Class) elementValue));
+			return;
+		}
+
+		// primitives
+
+		if (elementValue instanceof Integer) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfInteger(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Long) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfLong(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Short) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfShort(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Byte) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfByte(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Float) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfFloat(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Double) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfDouble(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Character) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfCharacter(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Boolean) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfBoolean(mv);
+			}
+			return;
+		}
+
+		// enum
+
+		Class elementValueClass = elementValue.getClass();
+		Class enumClass = ReflectUtil.findEnum(elementValueClass);
+
+		if (enumClass != null) {
+			try {
+				String typeRef = AsmUtil.typeToTyperef(enumClass);
+
+				String name = (String) ReflectUtil.invoke(elementValue, "name");
+
+				mv.visitFieldInsn(GETSTATIC, typeRef, name, typeRef);
+
+				return;
+			} catch (Exception ignore) {
+			}
+		}
+
+		throw new ProxettaException("Unsupported annotation type: " + elementValue.getClass());
+	}
+
+	// ---------------------------------------------------------------- array
+
+	/**
+	 * Creates new array.
+	 */
+	public static void newArray(MethodVisitor mv, Class componentType) {
+		if (componentType == int.class) {
+			mv.visitIntInsn(NEWARRAY, T_INT);
+			return;
+		}
+		if (componentType == long.class) {
+			mv.visitIntInsn(NEWARRAY, T_LONG);
+			return;
+		}
+		if (componentType == float.class) {
+			mv.visitIntInsn(NEWARRAY, T_FLOAT);
+			return;
+		}
+		if (componentType == double.class) {
+			mv.visitIntInsn(NEWARRAY, T_DOUBLE);
+			return;
+		}
+		if (componentType == byte.class) {
+			mv.visitIntInsn(NEWARRAY, T_BYTE);
+			return;
+		}
+		if (componentType == short.class) {
+			mv.visitIntInsn(NEWARRAY, T_SHORT);
+			return;
+		}
+		if (componentType == boolean.class) {
+			mv.visitIntInsn(NEWARRAY, T_BOOLEAN);
+			return;
+		}
+		if (componentType == char.class) {
+			mv.visitIntInsn(NEWARRAY, T_CHAR);
+			return;
+		}
+
+		mv.visitTypeInsn(ANEWARRAY, AsmUtil.typeToSignature(componentType));
+	}
+
+	/**
+	 * Stores element on stack into an array.
+	 */
+	public static void storeIntoArray(MethodVisitor mv, Class componentType) {
+		if (componentType == int.class) {
+			mv.visitInsn(IASTORE);
+			return;
+		}
+		if (componentType == long.class) {
+			mv.visitInsn(LASTORE);
+			return;
+		}
+		if (componentType == float.class) {
+			mv.visitInsn(FASTORE);
+			return;
+		}
+		if (componentType == double.class) {
+			mv.visitInsn(DASTORE);
+			return;
+		}
+		if (componentType == byte.class) {
+			mv.visitInsn(BASTORE);
+			return;
+		}
+		if (componentType == short.class) {
+			mv.visitInsn(SASTORE);
+			return;
+		}
+		if (componentType == boolean.class) {
+			mv.visitInsn(BASTORE);
+			return;
+		}
+		if (componentType == char.class) {
+			mv.visitInsn(CASTORE);
+			return;
+		}
+
+		mv.visitInsn(AASTORE);
+	}
 
 	// ---------------------------------------------------------------- detect advice macros
 
@@ -666,6 +874,33 @@ public class ProxettaAsmUtil {
 	public static boolean isReturnValueMethod(String name, String desc) {
 		if (name.equals("returnValue")) {
 			if (desc.equals("(Ljava/lang/Object;)Ljava/lang/Object;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isInfoMethod(String name, String desc) {
+		if (name.equals("info")) {
+			if (desc.equals("()Ljodd/proxetta/ProxyTargetInfo;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isTargetMethodAnnotationMethod(String name, String desc) {
+		if (name.equals("targetMethodAnnotation")) {
+			if (desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isTargetClassAnnotationMethod(String name, String desc) {
+		if (name.equals("targetClassAnnotation")) {
+			if (desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
 				return true;
 			}
 		}

@@ -1,0 +1,5 @@
+tag:foo:1<<foo one="111" two three="333" four="456">
+tag:foo:1>
+txt:[between]
+tag:bar:1<<bar one two="222" three="xxx">
+tag:bar:1>

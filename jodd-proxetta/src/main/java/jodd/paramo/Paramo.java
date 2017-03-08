@@ -1,9 +1,33 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.paramo;
 
+import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
-import jodd.asm4.ClassReader;
+import jodd.asm5.ClassReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +52,7 @@ public class Paramo {
 		Class[] paramTypes;
 		Class declaringClass;
 		String name;
+
 		if (methodOrCtor instanceof Method) {
 			Method method = (Method) methodOrCtor;
 			paramTypes = method.getParameterTypes();
@@ -48,7 +73,7 @@ public class Paramo {
 		try {
 			stream = ClassLoaderUtil.getClassAsStream(declaringClass);
 		} catch (IOException ioex) {
-			throw new ParamoException("Unable to read class bytes: " + declaringClass.getName(), ioex);
+			throw new ParamoException("Failed to read class bytes: " + declaringClass.getName(), ioex);
 		}
 
 		if (stream == null) {
@@ -60,8 +85,12 @@ public class Paramo {
 			MethodFinder visitor = new MethodFinder(declaringClass, name, paramTypes);
 			reader.accept(visitor, 0);
 			return visitor.getResolvedParameters();
-		} catch (IOException ioex) {
+		}
+		catch (IOException ioex) {
 			throw new ParamoException(ioex);
+		}
+		finally {
+			StreamUtil.close(stream);
 		}
 	}
 

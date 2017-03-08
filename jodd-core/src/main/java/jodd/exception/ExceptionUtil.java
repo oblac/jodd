@@ -1,11 +1,37 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.exception;
+
+import jodd.io.StreamUtil;
+import jodd.util.StringUtil;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.sql.SQLException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,7 +64,7 @@ public class ExceptionUtil {
 	 */
 	public static StackTraceElement[] getStackTrace(Throwable t, String[] allow, String[] deny) {
 		StackTraceElement[] st = t.getStackTrace();
-		ArrayList<StackTraceElement> result = new ArrayList<StackTraceElement>(st.length);
+		ArrayList<StackTraceElement> result = new ArrayList<>(st.length);
 
 		elementLoop:
 		for (StackTraceElement element : st) {
@@ -51,7 +77,7 @@ public class ExceptionUtil {
 						break;
 					}
 				}
-				if (validElemenet == false) {
+				if (!validElemenet) {
 					continue;
 				}
 			}
@@ -72,7 +98,7 @@ public class ExceptionUtil {
 	 * Returns stack trace chain filtered by class names.
 	 */
 	public static StackTraceElement[][] getStackTraceChain(Throwable t, String[] allow, String[] deny) {
-		ArrayList<StackTraceElement[]> result = new ArrayList<StackTraceElement[]>();
+		ArrayList<StackTraceElement[]> result = new ArrayList<>();
 		while (t != null) {
 			StackTraceElement[] stack = getStackTrace(t, allow, deny);
 			result.add(stack);
@@ -90,7 +116,7 @@ public class ExceptionUtil {
 	 * Returns exception chain starting from top up to root cause.
 	 */
 	public static Throwable[] getExceptionChain(Throwable throwable) {
-		ArrayList<Throwable> list = new ArrayList<Throwable>();
+		ArrayList<Throwable> list = new ArrayList<>();
 		list.add(throwable);
 		while ((throwable = throwable.getCause()) != null) {
 			list.add(throwable);
@@ -106,12 +132,15 @@ public class ExceptionUtil {
 	/**
 	 * Prints stack trace into a String.
 	 */
-	public static String exceptionToString(Throwable t) {
+	public static String exceptionStackTraceToString(Throwable t) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw, true);
+
 		t.printStackTrace(pw);
-		pw.flush();
-		sw.flush();
+
+		StreamUtil.close(pw);
+		StreamUtil.close(sw);
+
 		return sw.toString();
 	}
 
@@ -125,8 +154,10 @@ public class ExceptionUtil {
 			t.printStackTrace(pw);
 			t = t.getCause();
 		}
-		pw.flush();
-		sw.flush();
+
+		StreamUtil.close(pw);
+		StreamUtil.close(sw);
+
 		return sw.toString();
 	}
 
@@ -191,7 +222,7 @@ public class ExceptionUtil {
      * and making it a child of the previous using the <code>setNextException</code>
      * method of SQLException.
      */
-	public static SQLException rollupSqlExceptions(List<SQLException> exceptions) {
+	public static SQLException rollupSqlExceptions(Collection<SQLException> exceptions) {
 		SQLException parent = null;
 		for (SQLException exception : exceptions) {
 			if (parent != null) {
@@ -247,13 +278,24 @@ public class ExceptionUtil {
 				ThrowableThrower.throwable = throwable;
 				ThrowableThrower.class.newInstance();
 			}
-		} catch (InstantiationException iex) {
-			throw new RuntimeException(iex);
-		} catch (IllegalAccessException iex) {
+		} catch (InstantiationException | IllegalAccessException iex) {
 			throw new RuntimeException(iex);
 		} finally {
 			ThrowableThrower.throwable = null;
 		}
+	}
+
+	/**
+	 * Returns <code>non-null</code> message for a throwable.
+	 */
+	public static String message(Throwable throwable) {
+		String message = throwable.getMessage();
+
+		if (StringUtil.isBlank(message)) {
+			message = throwable.toString();
+		}
+
+		return message;
 	}
 
 	private static class ThrowableThrower {

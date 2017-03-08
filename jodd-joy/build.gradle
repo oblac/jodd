@@ -12,7 +12,23 @@ dependencies {
 	compile project(':jodd-proxetta')
 	compile project(':jodd-mail')
 	compile project(':jodd-log')
+	compile project(':jodd-lagarto')
 
+	provided lib.servlet
+	provided lib.jsp
+
+	testCompile project(':jodd-http')
+	testCompile project(':jodd-db').sourceSets.test.output
 	testCompile lib.junit
 	testCompile lib.hsqldb
+	testCompile lib.tomcat_embed
+	testCompile lib.mockito
+}
+
+// run joy integration tests only through the suite
+// so we can control the embedded web server
+
+testIntegration {
+	scanForTestClasses false
+	include 'jodd/joy/*Suite.class'
 }

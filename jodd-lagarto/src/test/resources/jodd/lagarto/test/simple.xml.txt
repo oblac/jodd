@@ -1,4 +1,4 @@
-xml:1<?xml version="1.0" charset="UTF8"?>
+xml:1.0:UTF8:null
 tag:foo:1<
 cdt:[<>]
 tag:foo:1>

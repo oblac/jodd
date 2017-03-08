@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.jtx;
 
@@ -37,10 +60,10 @@ s	 */
 
 	/**
 	 * Propagation required.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> T2 (same session, new tx)
 	 * T1 -> T1 (same session, join tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationRequired() {
 		this.propagationBehavior = PROPAGATION_REQUIRED;
@@ -49,10 +72,10 @@ s	 */
 
 	/**
 	 * Propagation supports.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None (same session)
 	 * T1 -> T1 (same session, join tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationSupports() {
 		this.propagationBehavior = PROPAGATION_SUPPORTS;
@@ -61,10 +84,10 @@ s	 */
 
 	/**
 	 * Propagation mandatory.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> Error
 	 * T1 -> T1 (same session, join tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationMandatory() {
 		this.propagationBehavior = PROPAGATION_MANDATORY;
@@ -73,10 +96,10 @@ s	 */
 
 	/**
 	 * Propagation requires new.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> T2 (same session, new tx)
 	 * T1 -> T2  (new session, new tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationRequiresNew() {
 		this.propagationBehavior = PROPAGATION_REQUIRES_NEW;
@@ -85,10 +108,10 @@ s	 */
 
 	/**
 	 * Propagation not supported.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None (same session)
 	 * T1 -> None (new session, no tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationNotSupported() {
 		this.propagationBehavior = PROPAGATION_NOT_SUPPORTED;
@@ -96,10 +119,10 @@ s	 */
 	}
 	/**
 	 * Propagation never.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None (same session)
 	 * T1 -> Error
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationNever() {
 		this.propagationBehavior = PROPAGATION_NEVER;
@@ -180,7 +203,7 @@ s	 */
 	 */
 	public void setTransactionTimeout(int timeout) {
 		if (timeout < DEFAULT_TIMEOUT) {
-			throw new JtxException("Invalid transaction timeout: " + timeout);
+			throw new JtxException("Invalid TX timeout: " + timeout);
 		}
 		this.timeout = timeout;
 	}
@@ -197,7 +220,7 @@ s	 */
 		if (this == object) {
 			return true;
 		}
-		if (!(object instanceof JtxTransactionMode)) {
+		if (this.getClass() != object.getClass()) {
 			return false;
 		}
 		JtxTransactionMode mode = (JtxTransactionMode) object;
@@ -225,12 +248,9 @@ s	 */
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("jtx{");
-		sb.append(propagationBehavior.toString());
-		sb.append(',').append(readOnlyMode ? "readonly" : "readwrite");
-		sb.append(',').append(isolationLevel.toString());
-		sb.append(',').append(timeout).append('}');
-		return sb.toString();
+		return new StringBuilder().append("jtx{").append(propagationBehavior)
+				.append(',').append(readOnlyMode ? "readonly" : "readwrite")
+				.append(',').append(isolationLevel.toString()).append(',')
+				.append(timeout).append('}').toString();
 	}
 }

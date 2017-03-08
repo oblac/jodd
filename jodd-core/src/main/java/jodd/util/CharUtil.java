@@ -1,8 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 
 import java.io.UnsupportedEncodingException;
 
@@ -181,7 +204,7 @@ public class CharUtil {
 	 */
 	public static int findFirstEqual(char[] source, int index, char[] match) {
 		for (int i = index; i < source.length; i++) {
-			if (equalsOne(source[i], match) == true) {
+			if (equalsOne(source[i], match)) {
 				return i;
 			}
 		}
@@ -212,7 +235,7 @@ public class CharUtil {
 	 */
 	public static int findFirstDiff(char[] source, int index, char[] match) {
 		for (int i = index; i < source.length; i++) {
-			if (equalsOne(source[i], match) == false) {
+			if (!equalsOne(source[i], match)) {
 				return i;
 			}
 		}
@@ -237,7 +260,7 @@ public class CharUtil {
 	// ---------------------------------------------------------------- is
 
 	/**
-	 * Returns <code>true</code> if character is a white space (<= ' ').
+	 * Returns <code>true</code> if character is a white space ({@code <= ' '}).
 	 * White space definition is taken from String class (see: <code>trim()</code>).
 	 */
 	public static boolean isWhitespace(char c) {
@@ -293,12 +316,30 @@ public class CharUtil {
 	}
 
 	/**
+	 * Indicates whether the given character is the hexadecimal digit.
+	 */
+	public static boolean isHexDigit(char c) {
+		return (c >= '0' && c <= '9') || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F'));
+	}
+
+	/**
 	 * Indicates whether the given character is in the <i>gen-delims</i> set.
 	 *
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	public static boolean isGenericDelimiter(int c) {
-		return c == ':' || c == '/' || c == '?' || c == '#' || c == '[' || c == ']' || c == '@';
+		switch (c) {
+			case ':':
+			case '/':
+			case '?':
+			case '#':
+			case '[':
+			case ']':
+			case '@':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -307,8 +348,22 @@ public class CharUtil {
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	protected static boolean isSubDelimiter(int c) {
-		return c == '!' || c == '$' || c == '&' || c == '\'' || c == '(' || c == ')' || c == '*' || c == '+' ||
-				c == ',' || c == ';' || c == '=';
+		switch (c) {
+			case '!':
+			case '$':
+			case '&':
+			case '\'':
+			case '(':
+			case ')':
+			case '*':
+			case '+':
+			case ',':
+			case ';':
+			case '=':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -317,7 +372,7 @@ public class CharUtil {
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	protected static boolean isReserved(char c) {
-		return isGenericDelimiter(c) || isReserved(c);
+		return isGenericDelimiter(c) || isSubDelimiter(c);
 	}
 
 	/**
@@ -361,5 +416,49 @@ public class CharUtil {
 		}
 		return c;
 	}
+
+	/**
+	 * Converts hex char to int value.
+	 */
+	public static int hex2int(char c) {
+		switch (c) {
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+				return c - '0';
+			case 'A':
+			case 'B':
+			case 'C':
+			case 'D':
+			case 'E':
+			case 'F':
+				return c - 55;
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'e':
+			case 'f':
+				return c - 87;
+			default:
+				throw new IllegalArgumentException("Not a hex: " + c);
+		}
+	}
+
+	/**
+	 * Converts integer digit to heck char.
+	 */
+	public static char int2hex(int i) {
+		return HEX_CHARS[i];
+	}
+
+	public static final char[] HEX_CHARS = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 }

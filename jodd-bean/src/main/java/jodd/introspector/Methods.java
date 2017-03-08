@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.introspector;
 
@@ -7,6 +30,9 @@ import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,7 +61,7 @@ public class Methods {
 
 		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 
-		HashMap<String, MethodDescriptor[]> map = new HashMap<String, MethodDescriptor[]>(methods.length);
+		HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
 
 		for (Method method : methods) {
 			String methodName = method.getName();
@@ -75,10 +101,10 @@ public class Methods {
 		if (methodDescriptors == null) {
 			return null;
 		}
-		for (int i = 0; i < methodDescriptors.length; i++) {
-			Method m = methodDescriptors[i].getMethod();
-			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes) == true) {
-				return methodDescriptors[i];
+		for (MethodDescriptor methodDescriptor : methodDescriptors) {
+			Method m = methodDescriptor.getMethod();
+			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
+				return methodDescriptor;
 			}
 		}
 		return null;
@@ -113,15 +139,21 @@ public class Methods {
 	 */
 	public MethodDescriptor[] getAllMethodDescriptors() {
 		if (allMethods == null) {
-			List<MethodDescriptor> allMethodsList = new ArrayList<MethodDescriptor>();
+			List<MethodDescriptor> allMethodsList = new ArrayList<>();
 
 			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
-				for (MethodDescriptor methodDescriptor : methodDescriptors) {
-					allMethodsList.add(methodDescriptor);
-				}
+				Collections.addAll(allMethodsList, methodDescriptors);
 			}
 
-			allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
+			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
+
+			Arrays.sort(allMethods, new Comparator<MethodDescriptor>() {
+				public int compare(MethodDescriptor md1, MethodDescriptor md2) {
+					return md1.getMethod().getName().compareTo(md2.getMethod().getName());
+				}
+			});
+
+			this.allMethods = allMethods;
 		}
 		return allMethods;
 	}

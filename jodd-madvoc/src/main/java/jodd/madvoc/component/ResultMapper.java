@@ -1,20 +1,51 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.component;
 
-import jodd.petite.meta.PetiteInject;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ResultPath;
+import jodd.petite.meta.PetiteInject;
 import jodd.madvoc.MadvocUtil;
-import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 /**
- * Maps action results to result path. Invoked just before the result itself.
+ * Mapper from action results paths to result path. Certain set of results
+ * defines path where to forward/redirect etc. This mapper converts
+ * result path to real path. Result path may contain some macros that
+ * will be resolved. Here are the macros that can be used:
+ * <ul>
+ *     <li>&lt;alias&gt; - replaced with alias value</li>
+ *     <li># - strips words from path (goes 'back')</li>
+ * </ul>
  */
 public class ResultMapper {
 
-	protected static final String REPL_CLASS = "[class]";
-	protected static final String REPL_METHOD = "[method]";
+	private static final Logger log = LoggerFactory.getLogger(ResultMapper.class);
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -23,35 +54,61 @@ public class ResultMapper {
 	protected MadvocConfig madvocConfig;
 
 	/**
+	 * Lookups value as an alias and, if not found, as a default alias.
+	 */
+	protected String lookupAlias(String alias) {
+		String value = actionsManager.lookupPathAlias(alias);
+		if (value == null) {
+			ActionConfig cfg = actionsManager.lookup(alias);
+			if (cfg != null) {
+				value = cfg.actionPath;
+			}
+		}
+		return value;
+	}
+
+	/**
 	 * Returns resolved alias result value or passed on, if alias doesn't exist.
 	 */
-	protected String resolveAlias(String resultValue) {
-		StringBuilder result = new StringBuilder(resultValue.length());
+	protected String resolveAlias(String value) {
+		StringBuilder result = new StringBuilder(value.length());
 		int i = 0;
-		int len = resultValue.length();
+		int len = value.length();
 		while (i < len) {
-			int ndx = resultValue.indexOf('<', i);
+			int ndx = value.indexOf('<', i);
 			if (ndx == -1) {
 				// alias markers not found
-				resultValue = (i == 0 ? resultValue : resultValue.substring(i));
-				String alias = actionsManager.lookupPathAlias(resultValue);
-				result.append(alias != null ? alias : resultValue);
+				if (i == 0) {
+					// try whole string as an alias
+					String alias = lookupAlias(value);
+					return (alias != null ? alias : value);
+				} else {
+					result.append(value.substring(i));
+				}
 				break;
 			}
-			result.append(resultValue.substring(i, ndx));
+
+			// alias marked found
+			result.append(value.substring(i, ndx));
 			ndx++;
-			int ndx2 = resultValue.indexOf('>', ndx);
-			String alias = (ndx2 == -1 ? resultValue.substring(ndx) : resultValue.substring(ndx, ndx2));
+			int ndx2 = value.indexOf('>', ndx);
+			String aliasName = (ndx2 == -1 ? value.substring(ndx) : value.substring(ndx, ndx2));
 
 			// process alias
-			alias = actionsManager.lookupPathAlias(alias);
+			String alias = lookupAlias(aliasName);
 			if (alias != null) {
 				result.append(alias);
+			}
+			else {
+				// alias not found
+				if (log.isWarnEnabled()) {
+					log.warn("Alias not found: " + aliasName);
+				}
 			}
 			i = ndx2 + 1;
 		}
 
-		// fix '//' as prefix - it may happens when aliases are used.
+		// fix prefix '//' - may happened when aliases are used
 		i = 0; len = result.length();
 		while (i < len) {
 			if (result.charAt(i) != '/') {
@@ -60,117 +117,95 @@ public class ResultMapper {
 			i++;
 		}
 		if (i > 1) {
-			return result.subSequence(i - 1, len).toString();
+			return result.substring(i - 1, len);
 		}
 		return result.toString();
 	}
 
 	/**
-	 * Resolves result path from action configuration and result value.
-	 * By default, the result value is appended to the class action path and method action path.
-	 * If result value starts with path prefix, it represent complete path.
-	 * Although result value may be <code>null</code>, result is never <code>null</code>.
+	 * Resolves result path.
 	 */
-	public String resolveResultPath(ActionConfig cfg, String resultValue) {
+	public ResultPath resolveResultPath(String path, String value) {
 
-		boolean aliasResolved = false;
+		boolean absolutePath = false;
 
-		if (resultValue != null) {
+		if (value != null) {
+			// [*] resolve alias in value
+			value = resolveAlias(value);
 
-			if (resultValue.indexOf('[') != -1) {
-
-				String name = cfg.actionClass.getSimpleName();
-				name = StringUtil.uncapitalize(name);
-				name = MadvocUtil.stripLastCamelWord(name);
-				resultValue = StringUtil.replace(resultValue, REPL_CLASS, name);
-
-				resultValue = StringUtil.replace(resultValue, REPL_METHOD, cfg.actionClassMethod.getName());
-			}
-
-			resultValue = resolveAlias(resultValue);
-
-			aliasResolved = true;
-
-			// absolute paths
-			if (resultValue.startsWith(StringPool.SLASH)) {
-				return resultValue;
-			}
-		}
-
-		String resultPath = cfg.actionPath;
-
-		// strip extension part
-		boolean strip = cfg.getActionPathExtension() != null;		// don't strip if ext == null
-		if ((strip == true) && madvocConfig.strictExtensionStripForResultPath) {
-			if (cfg.isPathEndsWithExtension() == false) {			// don't strip if ext is not eq defined
-				strip = false;
-			}
-		}
-		if (strip == true) {
-			if (resultValue != null) {
-				if (StringUtil.startsWithChar(resultValue, '.')) {	// don't strip if result value starts with a dot
-					//resultValue = resultValue.substring(1);	handle this later for all resultValues
-					strip = false;
-				}
-			}
-		}
-		if (strip) {
-			int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(resultPath);
-			if (dotNdx != -1) {
-				resultPath = resultPath.substring(0, dotNdx);
-			}
-		}
-
-		// method
-		boolean addDot = true;
-		if (resultValue != null) {
-			int i = 0;
-			while (i < resultValue.length()) {
-				if (resultValue.charAt(i) != '#') {
-					break;
-				}
-				int dotNdx = MadvocUtil.lastIndexOfSlashDot(resultPath);
+			// [*] absolute paths
+			if (StringUtil.startsWithChar(value, '/')) {
+				absolutePath = true;
+				int dotNdx = value.indexOf("..");
 				if (dotNdx != -1) {
-					resultPath = resultPath.substring(0, dotNdx);
-					if (resultPath.charAt(dotNdx - 1) == '/') {
-						addDot = false;
+					path = value.substring(0, dotNdx);
+					value = value.substring(dotNdx + 2);
+				} else {
+					path = value;
+					value = null;
+				}
+			} else {
+				// [*] resolve # in value and path
+				int i = 0;
+				while (i < value.length()) {
+					if (value.charAt(i) != '#') {
+						break;
+					}
+					int dotNdx = MadvocUtil.lastIndexOfSlashDot(path);
+					if (dotNdx != -1) {
+						// dot found
+						path = path.substring(0, dotNdx);
+					}
+					i++;
+				}
+				if (i > 0) {
+					// remove # from value
+					value = value.substring(i);
+
+					// [*] update path and value
+
+					if (StringUtil.startsWithChar(value, '.')) {
+						value = value.substring(1);
+					} else {
+						int dotNdx = value.indexOf("..");
+						if (dotNdx != -1) {
+							path += '.' + value.substring(0, dotNdx);
+							value = value.substring(dotNdx + 2);
+						} else {
+							if (value.length() > 0) {
+								if (StringUtil.endsWithChar(path, '/')) {
+									path += value;
+								} else {
+									path += '.' + value;
+								}
+							}
+							value = null;
+						}
 					}
 				}
-				i++;
-			}
-			if (i > 0) {
-				resultValue = resultValue.substring(i);
-			}
-
-			// special case
-			if (StringUtil.startsWithChar(resultValue, '.')) {
-				if (resultValue.length() > 1) {
-					addDot = false;
-				} else {
-					resultValue = StringPool.EMPTY;
-				}
 			}
 		}
 
-		// finally
-		if ((resultValue != null) && (resultValue.length() != 0)) {
-			if (addDot) {
-				resultPath += StringPool.DOT;	// result separator
+		if (!absolutePath) {
+			String resultPathPrefix = madvocConfig.getResultPathPrefix();
+			if (resultPathPrefix != null) {
+				path = resultPathPrefix + path;
 			}
-			resultPath += resultValue;
 		}
 
-		if (aliasResolved == false) {
-			resultPath = resolveAlias(resultPath);
-		}
-
-		String resultPathPrefix = madvocConfig.getResultPathPrefix();
-		if (resultPathPrefix != null) {
-			resultPath = resultPathPrefix + resultPath;
-		}
-
-		return resultPath;
+		return new ResultPath(path, value);
 	}
 
+	/**
+	 * Resolves result path as a string, when parts are not important
+	 * and when only full string matters. Additional alias resolving
+	 * on full path is done.
+	 */
+	public String resolveResultPathString(String path, String value) {
+		ResultPath resultPath = resolveResultPath(path, value);
+		String result = resultPath.getPathValue();
+
+		return resolveAlias(result);
+	}
 
 }

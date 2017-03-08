@@ -1,32 +1,49 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.result;
 
-import jodd.bean.BeanTemplateParser;
-import jodd.madvoc.ActionRequest;
+import jodd.servlet.DispatcherUtil;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
- * Simply sends redirect to an external location.
+ * Simply sends permanent redirection to an external location.
  */
-public class ServletUrlRedirectResult extends ActionResult  {
+public class ServletUrlRedirectResult extends ServletRedirectResult {
 
 	public static final String NAME = "url";
-
-	private static BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 	public ServletUrlRedirectResult() {
 		super(NAME);
 	}
 
-	/**
-	 * Redirects to the external location.
-	 */
 	@Override
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
-		resultValue = beanTemplateParser.parse(resultValue, actionRequest.getAction());
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
-		response.sendRedirect(resultValue);
+	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+		DispatcherUtil.redirectPermanent(request, response, path);
 	}
-
 }

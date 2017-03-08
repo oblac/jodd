@@ -12,12 +12,12 @@
 		<p> ... Your HTML content here ...</p>
 		<div id="333">
         aaa
-        <![CDATA[
+        <!--[CDATA[
             function foo(a,b)
             {
                 return 0;
             }
-        ]]>
+        ]]-->
 		</div>
 
 		<div id="789" my_ATTRIB1="testing">attribute testing going on</div>
@@ -33,9 +33,9 @@
                 </shipto>
                 <item>
                     <title>
-                        <![CDATA[
-                            <<< * >>>
-                        ]]>
+                        &lt;![CDATA[
+                            &lt;&lt;&lt; * &gt;&gt;&gt;
+                        ]]&gt;
                     </title>
                     <quantity>1</quantity>
                     <price>9.90</price>

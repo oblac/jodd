@@ -5,8 +5,9 @@ ext.moduleDescription = 'Jodd DB is efficient and thin database facade; DbOom is
 dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
-	compile project(':jodd-jtx')
-	compile project(':jodd-proxetta')
+	compile project(':jodd-jtx'), optional
+	compile project(':jodd-proxetta'), optional
+	compile project(':jodd-props'), optional
 	compile project(':jodd-log')
 
 	testCompile lib.junit
@@ -15,8 +16,6 @@ dependencies {
 	testCompile lib.mysql
 	testCompile lib.postgresql
 }
-
-optional = ['jodd-jtx', 'jodd-proxetta']
 
 // run db integration tests only through the suite
 // so we can control the embedded web server

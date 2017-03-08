@@ -1,0 +1,3 @@
+txt:[aaa]
+scr:1<script l="j">[foo()]
+txt:[bb]

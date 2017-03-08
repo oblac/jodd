@@ -1,8 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.mail;
 
-import jodd.util.StringPool;
+import jodd.util.ArraysUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,114 +48,156 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- from
 
-	protected String from;
+	protected EmailAddress from;
 
 	/**
 	 * Sets the FROM address.
 	 */
-	public void setFrom(String from) {
+	public void setFrom(EmailAddress from) {
 		this.from = from;
 	}
+
 	/**
-	 * Returns FROM address.
+	 * Returns FROM {@link EmailAddress address}.
 	 */
-	public String getFrom() {
+	public EmailAddress getFrom() {
 		return from;
 	}
 
 	// ---------------------------------------------------------------- to
 
-	protected String[] to = StringPool.EMPTY_ARRAY;
+	protected EmailAddress[] to = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets TO addresses.
 	 */
-	public void setTo(String... tos) {
+	public void setTo(EmailAddress... tos) {
 		if (tos == null) {
-			tos = StringPool.EMPTY_ARRAY;
+			tos = EmailAddress.EMPTY_ARRAY;
 		}
 		to = tos;
 	}
 
 	/**
+	 * Appends TO address.
+	 */
+	public void addTo(EmailAddress to) {
+		this.to = ArraysUtil.append(this.to, to);
+	}
+
+	/**
 	 * Returns TO addresses.
 	 */
-	public String[] getTo() {
+	public EmailAddress[] getTo() {
 		return to;
 	}
 
 	// ---------------------------------------------------------------- reply-to
 
-	protected String[] replyTo = StringPool.EMPTY_ARRAY;
+	protected EmailAddress[] replyTo = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets REPLY-TO addresses.
 	 */
-	public void setReplyTo(String... replyTo) {
+	public void setReplyTo(EmailAddress... replyTo) {
 		if (replyTo == null) {
-			replyTo = StringPool.EMPTY_ARRAY;
+			replyTo = EmailAddress.EMPTY_ARRAY;
 		}
 		this.replyTo = replyTo;
 	}
 
 	/**
+	 * Appends REPLY-TO address.
+	 */
+	public void addReplyTo(EmailAddress to) {
+		this.replyTo = ArraysUtil.append(this.replyTo, to);
+	}
+
+	/**
 	 * Returns REPLY-TO addresses.
 	 */
-	public String[] getReplyTo() {
+	public EmailAddress[] getReplyTo() {
 		return replyTo;
 	}
 
 	// ---------------------------------------------------------------- cc
 
-	protected String[] cc = StringPool.EMPTY_ARRAY;
+	protected EmailAddress[] cc = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets CC addresses.
 	 */
-	public void setCc(String... ccs) {
+	public void setCc(EmailAddress... ccs) {
 		if (ccs == null) {
-			ccs = StringPool.EMPTY_ARRAY;
+			ccs = EmailAddress.EMPTY_ARRAY;
 		}
 		cc = ccs;
 	}
 
 	/**
+	 * Appends CC address.
+	 */
+	public void addCc(EmailAddress to) {
+		this.cc = ArraysUtil.append(this.cc, to);
+	}
+
+	/**
 	 * Returns CC addresses.
 	 */
-	public String[] getCc() {
+	public EmailAddress[] getCc() {
 		return cc;
 	}
 
 	// ---------------------------------------------------------------- bcc
 
-	protected String[] bcc = StringPool.EMPTY_ARRAY;
+	protected EmailAddress[] bcc = EmailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets BCC addresses.
 	 */
-	public void setBcc(String... bccs) {
+	public void setBcc(EmailAddress... bccs) {
 		if (bccs == null) {
-			bccs = StringPool.EMPTY_ARRAY;
+			bccs = EmailAddress.EMPTY_ARRAY;
 		}
 		bcc = bccs;
 	}
 
 	/**
+	 * Appends BCC address.
+	 */
+	public void addBcc(EmailAddress to) {
+		this.bcc = ArraysUtil.append(this.bcc, to);
+	}
+
+	/**
 	 * Returns BCC addresses.
 	 */
-	public String[] getBcc() {
+	public EmailAddress[] getBcc() {
 		return bcc;
 	}
 
 	// ---------------------------------------------------------------- subject
 
 	protected String subject;
+	protected String subjectEncoding;
 
 	/**
 	 * Sets message subject.
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	/**
+	 * Sets message subject with specified encoding to override default platform encoding.
+	 * If the subject contains non US-ASCII characters, it will be encoded using the specified charset.
+	 * If the subject contains only US-ASCII characters, no encoding is done and it is used as-is.
+	 * The application must ensure that the subject does not contain any line breaks.
+	 * See {@link javax.mail.internet.MimeMessage#setSubject(String, String)}.
+	 */
+	public void setSubject(String subject, String encoding) {
+		this.subject = subject;
+		this.subjectEncoding = encoding;
 	}
 	/**
 	 * Returns message subject.
@@ -141,9 +206,16 @@ public abstract class CommonEmail {
 		return this.subject;
 	}
 
+	/**
+	 * Returns the message subject encoding.
+	 */
+	public String getSubjectEncoding() {
+		return this.subjectEncoding;
+	}
+
 	// ---------------------------------------------------------------- message
 
-	protected List<EmailMessage> messages = new ArrayList<EmailMessage>();
+	protected List<EmailMessage> messages = new ArrayList<>();
 
 	/**
 	 * Returns all messages.
@@ -178,7 +250,7 @@ public abstract class CommonEmail {
 	 */
 	public void setHeader(String name, String value) {
 		if (headers == null) {
-			headers = new HashMap<String, String>();
+			headers = new HashMap<>();
 		}
 		headers.put(name, value);
 	}

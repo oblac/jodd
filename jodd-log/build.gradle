@@ -3,12 +3,11 @@ ext.moduleName = 'Jodd Log'
 ext.moduleDescription = 'Jodd Log is simple logging facade.'
 
 dependencies {
-	provided(lib.log_slf4j)
-	provided(lib.log_jcl)
+	provided lib.log_slf4j, optional
+	provided lib.log_jcl, optional
 
 	testCompile project(':jodd-core')
 	testCompile lib.junit
-	testCompile lib.log_slf4j_simple
+	testCompile lib.log_logback
+	testCompile lib.powermock
 }
-provided = [lib.log_slf4j, lib.log_jcl]
-optional = [lib.log_slf4j, lib.log_jcl]

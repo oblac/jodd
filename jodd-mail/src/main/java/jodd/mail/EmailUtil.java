@@ -1,24 +1,37 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.mail;
 
-import jodd.io.StringInputStream;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
-import javax.mail.Address;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import javax.mail.Part;
+import javax.mail.internet.MimeBodyPart;
 import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 
 /**
  * Email utilities.
@@ -35,7 +48,8 @@ public class EmailUtil {
 		String mime;
 		if (ndx != -1) {
 			mime = contentType.substring(0, ndx);
-		} else {
+		}
+		else {
 			mime = contentType;
 		}
 		return mime;
@@ -62,7 +76,7 @@ public class EmailUtil {
 
 			while (ndx < len) {
 				char c = charset.charAt(ndx);
-				if ((c == '"') || (CharUtil.isWhitespace(c) == true) || (c == ';')) {
+				if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
 					break;
 				}
 				ndx++;
@@ -73,75 +87,32 @@ public class EmailUtil {
 	}
 
 	/**
-	 * Converts mail address to strings.
+	 * Correctly resolves file name from the message part.
+	 * Thanx to: Flavio Pompermaier
 	 */
-	public static String[] address2String(Address[] addresses) {
-		if (addresses == null) {
-			return null;
-		}
-		if (addresses.length == 0) {
-			return null;
-		}
-		String[] res = new String[addresses.length];
-		for (int i = 0; i < addresses.length; i++) {
-			Address address = addresses[i];
-			res[i] = address.toString();
-		}
-		return res;
-	}
-
-	/**
-	 * Converts string to <code>InternetAddress</code> while taking care of encoding.
-	 * The email can be given in following form:
-	 * <ul>
-	 *     <li>"email" - the whole string is an email</li>
-	 *     <li>"personal <email>" - first part of the string is personal, and
-	 *     		the other part is email, surrounded with &lt; and &gt;</li>
-	 * </ul>
-	 */
-	public static InternetAddress string2Address(String address) throws AddressException {
-		address = address.trim();
-
-		if (StringUtil.endsWithChar(address, '>') == false) {
-			return new InternetAddress(address);
+	public static String resolveFileName(Part part) throws MessagingException, UnsupportedEncodingException {
+		if (!(part instanceof MimeBodyPart)) {
+			return part.getFileName();
 		}
 
-		int ndx = address.lastIndexOf('<');
-		if (ndx == -1) {
-			throw new AddressException("Invalid address: " + address);
-		}
+		String contentType = part.getContentType();
+		String ret = null;
 
 		try {
-			return new InternetAddress(
-					address.substring(ndx + 1, address.length() - 1),
-					address.substring(0, ndx - 1).trim());
-		} catch (UnsupportedEncodingException ueex) {
-			throw new AddressException(ueex.toString());
+			ret = javax.mail.internet.MimeUtility.decodeText(part.getFileName());
 		}
-	}
+		catch (Exception ex) {
+			String[] contentId = part.getHeader("Content-ID");
+			if (contentId != null && contentId.length > 0) {
+				ret = contentId[0];
+			}
+			if (contentId == null) {
+				ret = "no-name";
+			}
+			ret += StringPool.DOT  + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
+		}
 
-	/**
-	 * Reads EML from a file and parses it into {@link ReceivedEmail}.
-	 */
-	public static ReceivedEmail parseEML(File emlFile) throws FileNotFoundException, MessagingException {
-		Properties props = System.getProperties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		Message message = new MimeMessage(session, new FileInputStream(emlFile));
-
-		return new ReceivedEmail(message);
-	}
-
-	/**
-	 * Parse EML from content into {@link ReceivedEmail}.
-	 */
-	public static ReceivedEmail parseEML(String emlContent) throws MessagingException {
-		Properties props = System.getProperties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		Message message = new MimeMessage(session, new StringInputStream(emlContent, StringInputStream.Mode.ASCII));
-
-		return new ReceivedEmail(message);
+		return ret;
 	}
 
 }

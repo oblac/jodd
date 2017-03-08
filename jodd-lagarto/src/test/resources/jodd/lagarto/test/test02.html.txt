@@ -1,1 +1,1 @@
-txt:[<table]
+wrn:[Parse error: EOF [1:7 @6]

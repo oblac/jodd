@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.joy.core;
 
@@ -36,6 +59,9 @@ import jodd.log.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
 /**
  * Default application core. Contains init points to
@@ -178,12 +204,12 @@ public abstract class DefaultAppCore {
 	protected void resolveAppDir(String classPathFileName) {
 		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName);
 		if (url == null) {
-			throw new AppException("Unable to resolve app dirs, missing: " + classPathFileName);
+			throw new AppException("Failed to resolve app dir, missing: " + classPathFileName);
 		}
 		String protocol = url.getProtocol();
 
 
-		if (protocol.equals("file") == false) {
+		if (!protocol.equals("file")) {
 			try {
 				url = new URL(url.getFile());
 			} catch (MalformedURLException ignore) {
@@ -195,7 +221,7 @@ public abstract class DefaultAppCore {
 		int ndx = appDir.indexOf("WEB-INF");
 		isWebApplication = (ndx != -1);
 
-		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
+		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.workingFolder();
 	}
 
 	// ---------------------------------------------------------------- ready
@@ -273,6 +299,7 @@ public abstract class DefaultAppCore {
 
 		stopApp();
 		stopDb();
+		stopPetite();
 
 		if (log != null) {
 			log.info("app stopped");
@@ -437,7 +464,7 @@ public abstract class DefaultAppCore {
 		petite = createPetiteContainer();
 
 		log.info("app in web: " + Boolean.valueOf(isWebApplication));
-		if (isWebApplication == false) {
+		if (!isWebApplication) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).
 			petite.registerScope(SessionScope.class, new SingletonScope());
@@ -474,6 +501,15 @@ public abstract class DefaultAppCore {
 	 */
 	protected PetiteContainer createPetiteContainer() {
 		return new ProxettaAwarePetiteContainer(proxetta);
+	}
+
+	/**
+	 * Stops Petite container.
+	 */
+	protected void stopPetite() {
+		if (petite != null) {
+			petite.shutdown();
+		}
 	}
 
 	// ---------------------------------------------------------------- database
@@ -524,9 +560,11 @@ public abstract class DefaultAppCore {
 		log.info("database initialization");
 
 		// connection pool
-		petite.registerPetiteBean(CoreConnectionPool.class, PETITE_DBPOOL, null, null, false);
-		connectionProvider = (ConnectionProvider) petite.getBean(PETITE_DBPOOL);
+		connectionProvider = createConnectionProvider();
+		petite.addBean(PETITE_DBPOOL, connectionProvider);
 		connectionProvider.init();
+
+		checkConnectionProvider();
 
 		// transactions manager
 		jtxManager = createJtxTransactionManager(connectionProvider);
@@ -568,6 +606,34 @@ public abstract class DefaultAppCore {
 		return new DbJtxTransactionManager(connectionProvider);
 	}
 
+	/**
+	 * Returns <code>ConnectionProvider</code> instance.
+	 * Instance will be registered into the Petite context.
+	 */
+	protected ConnectionProvider createConnectionProvider() {
+		return new CoreConnectionPool();
+	}
+
+	/**
+	 * Checks if connection provider can return a connection.
+	 */
+	protected void checkConnectionProvider() {
+		Connection connection = connectionProvider.getConnection();
+		try {
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			String name = databaseMetaData.getDatabaseProductName();
+			String version = databaseMetaData.getDatabaseProductVersion();
+
+			if (log.isInfoEnabled()) {
+				log.info("Connected to database: " + name + " v" + version);
+			}
+
+		} catch (SQLException sex) {
+			log.error("DB connection failed: ", sex);
+		} finally {
+			connectionProvider.closeConnection(connection);
+		}
+	}
 
 	/**
 	 * Closes database resources at the end.
@@ -599,7 +665,7 @@ public abstract class DefaultAppCore {
 	 * Simply delegates to {@link AppInit#init()}.
 	 */
 	protected void startApp() {
-		appInit = (AppInit) petite.getBean(PETITE_INIT);
+		appInit = petite.getBean(PETITE_INIT);
 		if (appInit != null) {
 			appInit.init();
 		}

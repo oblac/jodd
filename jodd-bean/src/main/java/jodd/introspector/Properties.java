@@ -1,11 +1,37 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
@@ -37,47 +63,64 @@ public class Properties {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		HashMap<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
+		HashMap<String, PropertyDescriptor> map = new HashMap<>();
 
 		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
-		for (Method method : methods) {
-			if (Modifier.isStatic(method.getModifiers())) {
-				continue;			// ignore static methods
-			}
 
-			boolean add = false;
-			boolean issetter = false;
-
-			String propertyName = ReflectUtil.getBeanPropertyGetterName(method);
-			if (propertyName != null) {
-				add = true;
-				issetter = false;
-			} else {
-				propertyName = ReflectUtil.getBeanPropertySetterName(method);
-				if (propertyName != null) {
-					add = true;
-					issetter = true;
+		for (int iteration = 0; iteration < 2; iteration++) {
+			// first find the getters, and then the setters!
+			for (Method method : methods) {
+				if (Modifier.isStatic(method.getModifiers())) {
+					continue;            // ignore static methods
 				}
-			}
 
-			if (add == true) {
-				MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
-				addProperty(map, propertyName, methodDescriptor, issetter);
+				boolean add = false;
+				boolean issetter = false;
+
+				String propertyName;
+
+				if (iteration == 0) {
+					propertyName = ReflectUtil.getBeanPropertyGetterName(method);
+					if (propertyName != null) {
+						add = true;
+						issetter = false;
+					}
+				} else {
+					propertyName = ReflectUtil.getBeanPropertySetterName(method);
+					if (propertyName != null) {
+						add = true;
+						issetter = true;
+					}
+				}
+
+				if (add) {
+					MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
+					addProperty(map, propertyName, methodDescriptor, issetter);
+				}
 			}
 		}
 
 		if (classDescriptor.isIncludeFieldsAsProperties()) {
 			FieldDescriptor[] fieldDescriptors = classDescriptor.getAllFieldDescriptors();
-			String prefix = classDescriptor.getPropertyFieldPrefix();
+			String[] prefix = classDescriptor.getPropertyFieldPrefix();
 
 			for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
-				String name = fieldDescriptor.getField().getName();
+				Field field = fieldDescriptor.getField();
+
+				if (Modifier.isStatic(field.getModifiers())) {
+					continue;            // ignore static fields
+				}
+
+				String name = field.getName();
 
 				if (prefix != null) {
-					if (!name.startsWith(prefix)) {
-						continue;
+					for (String p : prefix) {
+						if (!name.startsWith(p)) {
+							continue;
+						}
+						name = name.substring(p.length());
+						break;
 					}
-					name = name.substring(prefix.length());
 				}
 
 				if (!map.containsKey(name)) {
@@ -110,6 +153,8 @@ public class Properties {
 			return;
 		}
 
+		// property exist
+
 		if (!isSetter) {
 			// use existing setter
 			setterMethod = existing.getWriteMethodDescriptor();
@@ -135,6 +180,20 @@ public class Properties {
 			// setter
 			// use existing getter
 			getterMethod = existing.getReadMethodDescriptor();
+
+			if (getterMethod != null) {
+				Class returnType = getterMethod.getMethod().getReturnType();
+
+				if (setterMethod != null) {
+					Class parameterType = setterMethod.getMethod().getParameterTypes()[0];
+
+					if (returnType != parameterType) {
+						// getter's type is different then setter's
+						return;
+					}
+
+				}
+			}
 		}
 
 		PropertyDescriptor propertyDescriptor = createPropertyDescriptor(name, getterMethod, setterMethod);
@@ -169,6 +228,7 @@ public class Properties {
 
 	/**
 	 * Returns all property descriptors.
+	 * Properties are sorted by name.
 	 */
 	public PropertyDescriptor[] getAllPropertyDescriptors() {
 		if (allProperties == null) {
@@ -179,6 +239,12 @@ public class Properties {
 				allProperties[index] = propertyDescriptor;
 				index++;
 			}
+
+			Arrays.sort(allProperties, new Comparator<PropertyDescriptor>() {
+				public int compare(PropertyDescriptor pd1, PropertyDescriptor pd2) {
+					return pd1.getName().compareTo(pd2.getName());
+				}
+			});
 
 			this.allProperties = allProperties;
 		}

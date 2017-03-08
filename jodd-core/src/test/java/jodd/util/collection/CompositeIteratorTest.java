@@ -1,23 +1,63 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util.collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.Test;
 
 public class CompositeIteratorTest {
 
 	@Test
 	public void testNextWithOne() {
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
+		
+		try {
+			compositeIterator.next();
+			fail();
+		} catch (NoSuchElementException e) {
+			// ignore
+		}
+		
 		List<Integer> list = createList(4);
-		compositeIterator.add(list.iterator());
+		Iterator<Integer> iterator = list.iterator();
+		compositeIterator.add(iterator);
+		
+		try {
+			compositeIterator.add(iterator);
+			fail();
+		} catch (IllegalArgumentException iaex) {
+			// ignore
+		}
 
 		int count = list.size();
 		StringBuilder sb = new StringBuilder();
@@ -92,7 +132,7 @@ public class CompositeIteratorTest {
 		List<Integer> list3 = createList(4);
 		int count = list1.size() + list2.size() + list3.size();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 		compositeIterator.add(list3.iterator());
@@ -107,11 +147,11 @@ public class CompositeIteratorTest {
 	@Test
 	public void testRemoveWithThree() {
 		List<Integer> list1 = createList(4);
-		List<Integer> list2 = new ArrayList<Integer>();
+		List<Integer> list2 = new ArrayList<>();
 		List<Integer> list3 = createList(4);
 		int count = list1.size() + list2.size() + list3.size();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 		compositeIterator.add(list3.iterator());
@@ -132,7 +172,7 @@ public class CompositeIteratorTest {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 		try {
@@ -156,7 +196,7 @@ public class CompositeIteratorTest {
 		it2.next();
 		it3.next();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>(it1, it2, it3);
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>(it1, it2, it3);
 
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -183,7 +223,7 @@ public class CompositeIteratorTest {
 		it2.next(); it2.next(); it2.next();
 		it3.next();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>(it1, it2, it3);
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>(it1, it2, it3);
 
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -200,7 +240,7 @@ public class CompositeIteratorTest {
 	// ---------------------------------------------------------------- util
 
 	private List<Integer> createList(int count) {
-		List<Integer> list = new ArrayList<Integer>(count);
+		List<Integer> list = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			list.add(Integer.valueOf(i));
 		}

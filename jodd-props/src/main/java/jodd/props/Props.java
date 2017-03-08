@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.props;
 
@@ -6,14 +29,15 @@ import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import jodd.typeconverter.Convert;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.Wildcard;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -21,7 +45,7 @@ import java.util.Properties;
 
 /**
  * Super properties: fast, configurable, supports (ini) sections, profiles.
- * <p/>
+ * <p>
  * Basic parsing rules:
  * <ul>
  * <li> By default, props files are UTF8 encoded.
@@ -34,20 +58,20 @@ import java.util.Properties;
  * <li> \\uXXXX is encoded as character
  * <li> \t, \r and \f are encoded as characters
  * </ul>
- * <p/>
+ * <p>
  * Sections rules:
  * <ul>
  * <li> Section names are enclosed between [ and ].
  * <li> Properties following a section header belong to that section. Section name is added as a prefix to section properties.
  * <li> Section ends with empty section definition [] or with new section start
  * </ul>
- * <p/>
+ * <p>
  * Profiles rules:
  * <ul>
  * <li> Profile names are enclosed between &lt; and &gt; in property key.
  * <li> Each property key may contain zero, one or more profile definitions.
  * </ul>
- * <p/>
+ * <p>
  * Macro rules:
  * <ul>
  * <li> Profile values may contain references to other properties using ${ and }
@@ -106,7 +130,7 @@ public class Props implements Cloneable {
 	/**
 	 * Sets new active profiles and overrides existing ones.
 	 * By setting <code>null</code>, no active profile will be set.
-	 * <pr>
+	 * <p>
 	 * Note that if some props are loaded <b>after</b>
 	 * this method call, they might override active profiles
 	 * by using special property for active profiles (<code>@profiles</code>).
@@ -170,15 +194,6 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Defines if macros should be resolved using active profiles.
-	 */
-	public void setUseActiveProfilesWhenResolvingMacros(boolean useActiveProfilesWhenResolvingMacros) {
-		data.useActiveProfilesWhenResolvingMacros = useActiveProfilesWhenResolvingMacros;
-	}
-
-	// ---------------------------------------------------------------- load
-
-	/**
 	 * Enables multiline values.
 	 */
 	public void setMultilineValues(final boolean multilineValues) {
@@ -192,6 +207,8 @@ public class Props implements Cloneable {
 		initialized = false;
 		parser.parse(data);
 	}
+
+	// ---------------------------------------------------------------- load
 
 	/**
 	 * Loads props from the string.
@@ -283,8 +300,6 @@ public class Props implements Cloneable {
 		load(environmentProperties, prefix);
 	}
 
-	// ---------------------------------------------------------------- props
-
 	/**
 	 * Loads environment properties with given prefix.
 	 * If prefix is <code>null</code> it will not be used.
@@ -293,6 +308,8 @@ public class Props implements Cloneable {
 		final Map<String, String> environmentMap = System.getenv();
 		load(environmentMap, prefix);
 	}
+
+	// ---------------------------------------------------------------- props
 
 	/**
 	 * Counts the total number of properties, including all profiles.
@@ -320,8 +337,34 @@ public class Props implements Cloneable {
 		return data.lookupValue(key, activeProfiles);
 	}
 
-
-	// ---------------------------------------------------------------- put
+	public Integer getIntegerValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Integer.valueOf(value);
+	}
+	public Long getLongValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Long.valueOf(value);
+	}
+	public Double getDoubleValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Double.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key) {
+		String value = getValue(key);
+		if (value == null) {
+			return null;
+		}
+		return Boolean.valueOf(value);
+	}
 
 	/**
 	 * Returns <code>string</code> value of given profiles. If key is not
@@ -333,14 +376,42 @@ public class Props implements Cloneable {
 		return data.lookupValue(key, profiles);
 	}
 
+	public Integer getIntegerValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Integer.valueOf(value);
+	}
+	public Long getLongValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Long.valueOf(value);
+	}
+	public Double getDoubleValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Double.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key, final String... profiles) {
+		String value = getValue(key, profiles);
+		if (value == null) {
+			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
+
 	/**
 	 * Sets default value.
 	 */
 	public void setValue(final String key, final String value) {
 		setValue(key, value, null);
 	}
-
-	// ---------------------------------------------------------------- extract
 
 	/**
 	 * Sets value on some profile.
@@ -354,19 +425,14 @@ public class Props implements Cloneable {
 		initialized = false;
 	}
 
-	/**
-	 * Extract base props (no profiles).
-	 */
-	public void extractBaseProps(final Map target) {
-		extractProps(target, null);
-	}
+	// ---------------------------------------------------------------- extract
 
 	/**
 	 * Extracts props belonging to active profiles.
 	 */
 	public void extractProps(final Map target) {
 		initialize();
-		data.extract(target, activeProfiles, null);
+		data.extract(target, activeProfiles, null, null);
 	}
 
 	/**
@@ -374,37 +440,72 @@ public class Props implements Cloneable {
 	 */
 	public void extractProps(final Map target, final String... profiles) {
 		initialize();
-		data.extract(target, profiles, null);
-	}
-
-	public void extractBaseSubProps(final Map target, final String... wildcardPatterns) {
-		initialize();
-		data.extract(target, null, wildcardPatterns);
-	}
-
-	public void extractSubProps(final Map target, final String... wildcardPatterns) {
-		initialize();
-		data.extract(target, activeProfiles, wildcardPatterns);
-	}
-
-
-	// ---------------------------------------------------------------- initialize
-
-	public void extractSubProps(final Map target, final String[] profiles, final String[] wildcardPatterns) {
-		initialize();
-		data.extract(target, profiles, wildcardPatterns);
+		data.extract(target, profiles, null, null);
 	}
 
 	/**
-	 * Initializes props by replacing macros in values with the lookup values.
+	 * Extracts subset of properties that matches given wildcards.
+	 */
+	public void extractSubProps(final Map target, final String... wildcardPatterns) {
+		initialize();
+		data.extract(target, activeProfiles, wildcardPatterns, null);
+	}
+
+	/**
+	 * Extracts subset of properties that matches given wildcards.
+	 */
+	public void extractSubProps(final Map target, final String[] profiles, final String[] wildcardPatterns) {
+		initialize();
+		data.extract(target, profiles, wildcardPatterns, null);
+	}
+
+	// ---------------------------------------------------------------- childMap
+
+	/**
+	 * Returns inner map from the props with given prefix. Keys in returned map
+	 * will not have the prefix.
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> innerMap(String prefix) {
+		initialize();
+		return data.extract(null, activeProfiles, null, prefix);
+	}
+
+	/**
+	 * Adds child map to the props on given prefix.
+	 */
+	public void addInnerMap(String prefix, Map<?, ?> map) {
+		addInnerMap(prefix, map, null);
+	}
+
+	/**
+	 * Adds child map to the props on given prefix.
+	 */
+	public void addInnerMap(String prefix, Map<?, ?> map, String profile) {
+		if (!StringUtil.endsWithChar(prefix, '.')) {
+			prefix += StringPool.DOT;
+		}
+
+		for (Map.Entry<?, ?> entry : map.entrySet()) {
+			String key = entry.getKey().toString();
+
+			key = prefix + key;
+
+			setValue(key, entry.getValue().toString(), profile);
+		}
+	}
+
+	// ---------------------------------------------------------------- initialize
+
+	/**
+	 * Initializes props. By default it only resolves active profiles.
 	 */
 	protected void initialize() {
-		if (initialized == false) {
+		if (!initialized) {
 			synchronized (this) {
-				if (initialized == false) {
+				if (!initialized) {
 
 					resolveActiveProfiles();
-					data.resolveMacros(activeProfiles);
 
 					initialized = true;
 				}
@@ -436,7 +537,7 @@ public class Props implements Cloneable {
 			return;
 		}
 
-		activeProfiles = Convert.toStringArray(value);
+		activeProfiles = StringUtil.splitc(value, ',');
 		StringUtil.trimAll(activeProfiles);
 	}
 
@@ -454,6 +555,30 @@ public class Props implements Cloneable {
 			index++;
 		}
 		return profiles;
+	}
+
+	/**
+	 * Returns all the profiles that define certain prop's key name.
+	 * Key name is given as a wildcard, or it can be matched fully.
+	 */
+	public String[] getProfilesFor(String propKeyNameWildcard) {
+		HashSet<String> profiles = new HashSet<>();
+
+		profile:
+		for (Map.Entry<String, Map<String, PropsEntry>> entries : data.profileProperties.entrySet()) {
+			String profileName = entries.getKey();
+
+			Map<String, PropsEntry> value = entries.getValue();
+
+			for (String propKeyName : value.keySet()) {
+				if (Wildcard.equalsOrMatch(propKeyName, propKeyNameWildcard)) {
+					profiles.add(profileName);
+					continue profile;
+				}
+			}
+		}
+
+		return profiles.toArray(new String[profiles.size()]);
 	}
 
 	/**

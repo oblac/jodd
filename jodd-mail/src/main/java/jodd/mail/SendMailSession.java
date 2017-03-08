@@ -1,8 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.mail;
 
-import jodd.JoddMail;
 import jodd.util.StringPool;
 
 import javax.activation.DataHandler;
@@ -53,24 +75,34 @@ public class SendMailSession {
 		try {
 			mailTransport.connect();
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect", msex);
+			throw new MailException("Failed to connect", msex);
 		}
 	}
 
 	/**
-	 * Prepares message and sends it.
+	 * Returns {@code true} if mail session is still connected.
 	 */
-	public void sendMail(Email mail) {
-		Message msg;
+	public boolean isConnected() {
+		return mailTransport.isConnected();
+	}
+
+	/**
+	 * Prepares message and sends it.
+	 * Returns Message ID of sent email.
+	 */
+	public String sendMail(Email mail) {
+		MimeMessage msg;
 		try {
 			msg = createMessage(mail, mailSession);
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to prepare email message: " + mail, mex);
+			throw new MailException("Failed to prepare email: " + mail, mex);
 		}
 		try {
 			mailTransport.sendMessage(msg, msg.getAllRecipients());
+
+			return msg.getMessageID();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to send email message: " + mail, mex);
+			throw new MailException("Failed to send email: " + mail, mex);
 		}
 	}
 
@@ -81,7 +113,7 @@ public class SendMailSession {
 		try {
 			mailTransport.close();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to close session", mex);
+			throw new MailException("Failed to close session", mex);
 		}
 	}
 
@@ -91,16 +123,16 @@ public class SendMailSession {
 	/**
 	 * Creates new JavaX message from {@link Email email}.
 	 */
-	protected Message createMessage(Email email, Session session) throws MessagingException {
-		Message msg = new MimeMessage(session);
+	protected MimeMessage createMessage(Email email, Session session) throws MessagingException {
+		MimeMessage msg = new MimeMessage(session);
 
-		msg.setFrom(EmailUtil.string2Address(email.getFrom()));
+		msg.setFrom(email.getFrom().toInternetAddress());
 
 		// to
 		int totalTo = email.getTo().length;
 		InternetAddress[] address = new InternetAddress[totalTo];
 		for (int i = 0; i < totalTo; i++) {
-			address[i] = EmailUtil.string2Address(email.getTo()[i]);
+			address[i] = email.getTo()[i].toInternetAddress();
 		}
 		msg.setRecipients(Message.RecipientType.TO, address);
 
@@ -109,7 +141,7 @@ public class SendMailSession {
 			int totalReplyTo = email.getReplyTo().length;
 			address = new InternetAddress[totalReplyTo];
 			for (int i = 0; i < totalReplyTo; i++) {
-				address[i] = EmailUtil.string2Address(email.getReplyTo()[i]);
+				address[i] = email.getReplyTo()[i].toInternetAddress();
 			}
 			msg.setReplyTo(address);
 		}
@@ -119,7 +151,7 @@ public class SendMailSession {
 			int totalCc = email.getCc().length;
 			address = new InternetAddress[totalCc];
 			for (int i = 0; i < totalCc; i++) {
-				address[i] = EmailUtil.string2Address(email.getCc()[i]);
+				address[i] = email.getCc()[i].toInternetAddress();
 			}
 			msg.setRecipients(Message.RecipientType.CC, address);
 		}
@@ -129,13 +161,20 @@ public class SendMailSession {
 			int totalBcc = email.getBcc().length;
 			address = new InternetAddress[totalBcc];
 			for (int i = 0; i < totalBcc; i++) {
-				address[i] = EmailUtil.string2Address(email.getBcc()[i]);
+				address[i] = email.getBcc()[i].toInternetAddress();
 			}
 			msg.setRecipients(Message.RecipientType.BCC, address);
 		}
 
 		// subject & date
-		msg.setSubject(email.getSubject());
+
+		if (email.getSubjectEncoding() != null) {
+			msg.setSubject(email.getSubject(), email.getSubjectEncoding());
+		} else {
+			msg.setSubject(email.getSubject());
+		}
+
+
 		Date date = email.getSentDate();
 		if (date == null) {
 			date = new Date();
@@ -152,9 +191,10 @@ public class SendMailSession {
 		}
 
 		// message data and attachments
-		List<EmailMessage> messages = email.getAllMessages();
-		List<EmailAttachment> attachments = email.getAttachments();
-		int totalMessages = messages.size();
+		final List<EmailMessage> messages = email.getAllMessages();
+		final List<EmailAttachment> attachments =
+			email.getAttachments() == null ? null : new ArrayList<>(email.getAttachments());
+		final int totalMessages = messages.size();
 
 		if ((attachments == null) && (totalMessages == 1)) {
 			// special case: no attachments and just one content
@@ -182,7 +222,8 @@ public class SendMailSession {
 				if (embeddedAttachments == null) {
 					// no embedded attachments, just add message
 					bodyPart.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
-				} else {
+				}
+				else {
 					// embedded attachments detected, join them as related
 					MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
 
@@ -254,7 +295,7 @@ public class SendMailSession {
 			if (emailAttachment.isEmbeddedInto(emailMessage)) {
 
 				if (embeddedAttachments == null) {
-					embeddedAttachments = new ArrayList<EmailAttachment>();
+					embeddedAttachments = new ArrayList<>();
 				}
 
 				embeddedAttachments.add(emailAttachment);

@@ -1,17 +1,36 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom;
 
-import jodd.db.oom.mapper.DefaultResultSetMapper;
-import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.util.StringUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
-
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +83,6 @@ public class DbOomManager {
 	protected String schemaName;
 	protected TableNamingStrategy tableNames = new TableNamingStrategy();
 	protected ColumnNamingStrategy columnNames = new ColumnNamingStrategy();
-	protected boolean strictCompare = true;
 
 	/**
 	 * Returns current table name strategy.
@@ -94,17 +112,6 @@ public class DbOomManager {
 		this.columnNames = columnNames;
 	}
 
-	public boolean isStrictCompare() {
-		return strictCompare;
-	}
-
-	/**
-	 * Enables strict comparison of table and column names.
-	 */
-	public void setStrictCompare(boolean strictCompare) {
-		this.strictCompare = strictCompare;
-	}
-
 	// ---------------------------------------------------------------- registration
 
 	protected String[] primitiveEntitiesPrefixes = new String[] {
@@ -129,25 +136,9 @@ public class DbOomManager {
 		this.primitiveEntitiesPrefixes = primitiveEntitiesPrefixes;
 	}
 
-	protected Map<Class, DbEntityDescriptor> descriptorsMap = new HashMap<Class, DbEntityDescriptor>();
-	protected Map<String, DbEntityDescriptor> entityNamesMap = new HashMap<String, DbEntityDescriptor>();
-	protected Map<String, DbEntityDescriptor> tableNamesMap = new HashMap<String, DbEntityDescriptor>() {
-		@Override
-		public DbEntityDescriptor put(String key, DbEntityDescriptor value) {
-			if (!strictCompare) {
-				key = key.toUpperCase();
-			}
-			return super.put(key, value);
-		}
-
-		@Override
-		public DbEntityDescriptor get(Object key) {
-			if (!strictCompare) {
-				key = ((String)key).toUpperCase();
-			}
-			return super.get(key);
-		}
-	};
+	protected Map<Class, DbEntityDescriptor> descriptorsMap = new HashMap<>();
+	protected Map<String, DbEntityDescriptor> entityNamesMap = new HashMap<>();
+	protected Map<String, DbEntityDescriptor> tableNamesMap = new NamedValuesHashMap<>();
 
 	/**
 	 * Lookups {@link DbEntityDescriptor} for some type and registers the type if is new.
@@ -156,12 +147,12 @@ public class DbOomManager {
 	 * Some types are <b>not</b> entities, i.e. domain objects. Instead, primitive entities
 	 * are simply mapped to one column. 
 	 */
-	public DbEntityDescriptor lookupType(Class type) {
+	public <E> DbEntityDescriptor<E> lookupType(Class<E> type) {
 		String typeName = type.getName();
 		if (StringUtil.startsWithOne(typeName, primitiveEntitiesPrefixes) != -1) {
 			return null;
 		}
-		DbEntityDescriptor ded = descriptorsMap.get(type);
+		DbEntityDescriptor<E> ded = descriptorsMap.get(type);
 		if (ded == null) {
 			ded = registerType(type);
 		}
@@ -186,7 +177,7 @@ public class DbOomManager {
 
 	/**
 	 * Lookups for {@link jodd.db.oom.DbEntityDescriptor} that was registered with this manager.
-	 * Returns <code>null</code> if table name not found.
+	 * Returns <code>null</code> if table name not found. Lookup is case-insensitive.
 	 */
 	public DbEntityDescriptor lookupTableName(String tableName) {
 		return tableNamesMap.get(tableName);
@@ -195,34 +186,41 @@ public class DbOomManager {
 	/**
 	 * Registers just type and entity names. Enough for most usages.
 	 */
-	public DbEntityDescriptor registerType(Class type) {
-		DbEntityDescriptor ded = createDbEntityDescriptor(type);
-		DbEntityDescriptor existing = descriptorsMap.put(type, ded);
+	public <E> DbEntityDescriptor<E> registerType(Class<E> type) {
+		DbEntityDescriptor<E> ded = createDbEntityDescriptor(type);
+		DbEntityDescriptor<E> existing = descriptorsMap.put(type, ded);
 
 		if (log.isDebugEnabled()) {
 			log.debug("Register " + type.getName() + " as " + ded.getTableName());
 		}
 
 		if (existing != null) {
-			throw new DbOomException("Type registration failed! Type '" + existing.getType() + "' already registered.");
+			if (ded.getType() == type) {
+				return ded;
+			}
+			throw new DbOomException("Type already registered: " + existing.getType());
 		}
+
 		existing = entityNamesMap.put(ded.getEntityName(), ded);
+
 		if (existing != null) {
-			throw new DbOomException("Type registration failed! Name '" + ded.getEntityName() + "' already mapped to an entity class: " + existing.getType());
+			throw new DbOomException("Name '" + ded.getEntityName() + "' already mapped to an entity: " + existing.getType());
 		}
 		return ded;
 	}
 
 	/**
 	 * Registers entity. {@link #registerType(Class) Registers types} and table names.
-	 * Throw exception is type is already registered.
 	 */
-	public DbEntityDescriptor registerEntity(Class type) {
-		DbEntityDescriptor ded = registerType(type);
+	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type) {
+		DbEntityDescriptor<E> ded = registerType(type);
 		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
 
 		if (existing != null) {
-			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity class: " + existing.getType());
+			if (ded.getType() == type) {
+				return ded;
+			}
+			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity: " + existing.getType());
 		}
 		return ded;
 	}
@@ -230,18 +228,18 @@ public class DbOomManager {
 	/**
 	 * Registers entity. Existing entity will be removed if exist, so no exception will be thrown. 
 	 */
-	public DbEntityDescriptor registerEntity(Class type, boolean force) {
-		if (force == true) {
+	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type, boolean force) {
+		if (force) {
 			removeEntity(type);
 		}
 		return registerEntity(type);
 	}
 
 	/**
-	 * Removes entity.
+	 * Removes entity and returns removed descriptor.
 	 */
-	public DbEntityDescriptor removeEntity(Class type) {
-		DbEntityDescriptor ded = descriptorsMap.remove(type);
+	public <E> DbEntityDescriptor<E> removeEntity(Class<E> type) {
+		DbEntityDescriptor<E> ded = descriptorsMap.remove(type);
 		if (ded == null) {
 			ded = createDbEntityDescriptor(type);
 		}
@@ -254,8 +252,8 @@ public class DbOomManager {
 	/**
 	 * Creates {@link DbEntityDescriptor}.
 	 */
-	protected DbEntityDescriptor createDbEntityDescriptor(Class type) {
-		return new DbEntityDescriptor(type, schemaName, tableNames, columnNames, strictCompare);
+	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
+		return new DbEntityDescriptor<>(type, schemaName, tableNames, columnNames);
 	}
 
 
@@ -358,17 +356,10 @@ public class DbOomManager {
 	/**
 	 * Defines if entities have to be cached in result set.
 	 * When cached, more memory is consumed during the existence of
-	 * {@link ResultSetMapper}.
+	 * {@link jodd.db.oom.mapper.ResultSetMapper}.
 	 */
 	public void setCacheEntitiesInResultSet(boolean cacheEntitiesInResultSet) {
 		this.cacheEntitiesInResultSet = cacheEntitiesInResultSet;
-	}
-
-	/**
-	 * Creates a new instance of {@link jodd.db.oom.mapper.ResultSetMapper}.
-	 */
-	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities) {
-		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
 	}
 
 	// ---------------------------------------------------------------- db list
@@ -403,7 +394,7 @@ public class DbOomManager {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new DbOomException("Unable to create new entity instance using default constructor for type: " + type, ex);
+			throw new DbOomException(ex);
 		}
 	}
 

@@ -1,17 +1,39 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.util;
-
-import jodd.typeconverter.Convert;
 
 import static jodd.util.StringPool.EMPTY;
 
 import java.io.UnsupportedEncodingException;
-
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * Various String utilities.
- * @see jodd.util.TextUtil
  */
 public class StringUtil {
 
@@ -261,23 +283,23 @@ public class StringUtil {
 	 * @return <code>true</code> if strings are equal, otherwise <code>false</code>
 	 */
 	public static boolean equals(String s1, String s2) {
-		return ObjectUtil.equals(s1, s2);
+		return Util.equals(s1, s2);
 	}
 
 	/**
 	 * Determines if a string is empty (<code>null</code> or zero-length).
 	 */
-	public static boolean isEmpty(String string) {
+	public static boolean isEmpty(CharSequence string) {
 		return ((string == null) || (string.length() == 0));
 	}
 
 	/**
 	 * Determines if string array contains empty strings.
-	 * @see #isEmpty(String) 
+	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isAllEmpty(String... strings) {
 		for (String string : strings) {
-			if (isEmpty(string) == false) {
+			if (!isEmpty(string)) {
 				return false;
 			}
 		}
@@ -285,9 +307,9 @@ public class StringUtil {
 	}
 
 	/**
-	 * Determines if a string is blank (<code>null</code> or {@link #containsOnlyWhitespaces(String)}).
+	 * Determines if a string is blank (<code>null</code> or {@link #containsOnlyWhitespaces(CharSequence)}).
 	 */
-	public static boolean isBlank(String string) {
+	public static boolean isBlank(CharSequence string) {
 		return ((string == null) || containsOnlyWhitespaces(string));
 	}
 
@@ -303,7 +325,7 @@ public class StringUtil {
 	 */
 	public static boolean isAllBlank(String... strings) {
 		for (String string : strings) {
-			if (isBlank(string) == false) {
+			if (!isBlank(string)) {
 				return false;
 			}
 		}
@@ -314,11 +336,11 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if string contains only white spaces.
 	 */
-	public static boolean containsOnlyWhitespaces(String string) {
+	public static boolean containsOnlyWhitespaces(CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if (CharUtil.isWhitespace(c) == false) {
+			if (!CharUtil.isWhitespace(c)) {
 				return false;
 			}
 		}
@@ -328,11 +350,11 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if string contains only digits.
 	 */
-	public static boolean containsOnlyDigits(String string) {
+	public static boolean containsOnlyDigits(CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if (CharUtil.isDigit(c) == false) {
+			if (!CharUtil.isDigit(c)) {
 				return false;
 			}
 		}
@@ -340,14 +362,14 @@ public class StringUtil {
 	}
 
 	/**
-	 * Returns <code>true</code> if string {@link #containsOnlyDigits(String) contains only digits}
+	 * Returns <code>true</code> if string {@link #containsOnlyDigits(CharSequence) contains only digits}
 	 * or signs plus or minus.
 	 */
-	public static boolean containsOnlyDigitsAndSigns(String string) {
+	public static boolean containsOnlyDigitsAndSigns(CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
-			if ((CharUtil.isDigit(c) == false) && (c != '-') && (c != '+')) {
+			if ((!CharUtil.isDigit(c)) && (c != '-') && (c != '+')) {
 				return false;
 			}
 		}
@@ -358,33 +380,154 @@ public class StringUtil {
 	/**
 	 * Determines if a string is not empty.
 	 */
-	public static boolean isNotEmpty(String string) {
+	public static boolean isNotEmpty(CharSequence string) {
 		return string != null && string.length() > 0;
 	}
 
-
 	/**
-	 * Converts safely an object to a string. If object is <code>null</code> it will be
-	 * not converted.
+	 * Converts safely an object to a string.
 	 */
-	public static String toString(Object obj) {
-		return Convert.toString(obj);
+	public static String toString(Object value) {
+		if (value == null) {
+			return null;
+		}
+		return value.toString();
 	}
 
 	/**
 	 * Converts safely an object to a string. If object is <code>null</code> an empty
 	 * string is returned.
 	 */
-	public static String toSafeString(Object obj) {
-		String value = Convert.toString(obj);
-		return value != null ? value : EMPTY;
+	public static String toSafeString(Object value) {
+		if (value == null) {
+			return EMPTY;
+		}
+
+		return value.toString();
 	}
 
 	/**
-	 * Converts an object to a String Array.
+	 * Converts object into pretty string. All arrays are iterated.
 	 */
-	public static String[] toStringArray(Object obj) {
-		return Convert.toStringArray(obj);
+	public static String toPrettyString(Object value) {
+		if (value == null) {
+			return StringPool.NULL;
+		}
+
+		Class<?> type = value.getClass();
+
+		if (type.isArray()) {
+			Class componentType = type.getComponentType();
+
+			if (componentType.isPrimitive()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+
+				if (componentType == int.class) {
+					sb.append(ArraysUtil.toString((int[]) value));
+				}
+				else if (componentType == long.class) {
+					sb.append(ArraysUtil.toString((long[]) value));
+				}
+				else if (componentType == double.class) {
+					sb.append(ArraysUtil.toString((double[]) value));
+				}
+				else if (componentType == float.class) {
+					sb.append(ArraysUtil.toString((float[]) value));
+				}
+				else if (componentType == boolean.class) {
+					sb.append(ArraysUtil.toString((boolean[]) value));
+				}
+				else if (componentType == short.class) {
+					sb.append(ArraysUtil.toString((short[]) value));
+				}
+				else if (componentType == byte.class) {
+					sb.append(ArraysUtil.toString((byte[]) value));
+				} else {
+					throw new IllegalArgumentException();
+				}
+				sb.append(']');
+				return sb.toString();
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+
+				Object[] array = (Object[]) value;
+				for (int i = 0; i < array.length; i++) {
+					if (i > 0) {
+						sb.append(',');
+					}
+					sb.append(toPrettyString(array[i]));
+				}
+				sb.append(']');
+				return sb.toString();
+			}
+		} else if (value instanceof Iterable) {
+			Iterable iterable = (Iterable) value;
+			StringBuilder sb = new StringBuilder();
+			sb.append('{');
+			int i = 0;
+			for (Object o : iterable) {
+				if (i > 0) {
+					sb.append(',');
+				}
+				sb.append(toPrettyString(o));
+				i++;
+			}
+			sb.append('}');
+			return sb.toString();
+		}
+
+		return value.toString();
+	}
+
+
+	/**
+	 * Converts an array object to array of strings, where every element
+	 * of input array is converted to a string. If input is not an array,
+	 * the result will still be an array with one element.
+	 */
+	public static String[] toStringArray(Object value) {
+		if (value == null) {
+			return new String[0];
+		}
+		Class<?> type = value.getClass();
+
+		if (!type.isArray()) {
+			return new String[] {value.toString()};
+		}
+
+		Class componentType = type.getComponentType();
+
+		if (componentType.isPrimitive()) {
+			if (componentType == int.class) {
+				return ArraysUtil.toStringArray((int[]) value);
+			}
+			else if (componentType == long.class) {
+				return ArraysUtil.toStringArray((long[]) value);
+			}
+			else if (componentType == double.class) {
+				return ArraysUtil.toStringArray((double[]) value);
+			}
+			else if (componentType == float.class) {
+				return ArraysUtil.toStringArray((float[]) value);
+			}
+			else if (componentType == boolean.class) {
+				return ArraysUtil.toStringArray((boolean[]) value);
+			}
+			else if (componentType == short.class) {
+				return ArraysUtil.toStringArray((short[]) value);
+			}
+			else if (componentType == byte.class) {
+				return ArraysUtil.toStringArray((byte[]) value);
+			}
+			else {
+				throw new IllegalArgumentException();
+			}
+		}
+		else {
+			return ArraysUtil.toStringArray((Object[]) value);
+		}
 	}
 
 	// ---------------------------------------------------------------- capitalize
@@ -435,7 +578,7 @@ public class StringUtil {
 
 		}
 
-		char chars[] = string.toCharArray();
+		char[] chars = string.toCharArray();
 		chars[0] = modifiedCh;
 		return new String(chars);
 	}
@@ -447,7 +590,7 @@ public class StringUtil {
 	 * character from upper case to lower case, but in the (unusual) special
 	 * case when there is more than one character and both the first and
 	 * second characters are upper case, we leave it alone.
-	 * <p/>
+	 * <p>
 	 * Thus "FooBah" becomes "fooBah" and "X" becomes "x", but "URL" stays
 	 * as "URL".
 	 *
@@ -464,7 +607,7 @@ public class StringUtil {
 			return name;
 		}
 
-		char chars[] = name.toCharArray();
+		char[] chars = name.toCharArray();
 		char c = chars[0];
 		char modifiedChar = Character.toLowerCase(c);
 		if (modifiedChar == c) {
@@ -525,6 +668,7 @@ public class StringUtil {
 	 * allows to specify, e.g. <code>substring(1,-1)</code> to cut one character
 	 * from both ends of the string. If <code>fromIndex</code> is negative
 	 * and <code>toIndex</code> is 0, it will return last characters of the string.
+	 * Also, this method will never throw an exception if index is out of range.
 	 */
 	public static String substring(String string, int fromIndex, int toIndex) {
 		int len = string.length();
@@ -541,7 +685,41 @@ public class StringUtil {
 			toIndex = len + toIndex;
 		}
 
+		// safe net
+
+		if (fromIndex < 0) {
+			fromIndex = 0;
+		}
+		if (toIndex > len) {
+			toIndex = len;
+		}
+		if (fromIndex >= toIndex) {
+			return StringPool.EMPTY;
+		}
+
 		return string.substring(fromIndex, toIndex);
+	}
+
+	/**
+	 * Returns <code>true</code> if substring exist at given offset in a string.
+	 */
+	public static boolean isSubstringAt(String string, String substring, int offset) {
+		int len = substring.length();
+
+		int max = offset + len;
+
+		if (max > string.length()) {
+			return false;
+		}
+
+		int ndx = 0;
+		for (int i = offset; i < max; i++, ndx++) {
+			if (string.charAt(i) != substring.charAt(ndx)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	// ---------------------------------------------------------------- split
@@ -596,10 +774,25 @@ public class StringUtil {
 	 * @return array of tokens
 	 */
 	public static String[] splitc(String src, String d) {
-		if ((d.length() == 0) || (src.length() == 0) ) {
+		if ((d.length() == 0) || (src.length() == 0)) {
 			return new String[] {src};
 		}
-		char[] delimiters = d.toCharArray();
+		return splitc(src, d.toCharArray());
+	}
+	/**
+	 * Splits a string in several parts (tokens) that are separated by delimiter
+	 * characters. Delimiter may contains any number of character and it is
+	 * always surrounded by two strings.
+	 *
+	 * @param src			source to examine
+	 * @param delimiters	char array with delimiter characters
+	 *
+	 * @return array of tokens
+	 */
+	public static String[] splitc(String src, char[] delimiters) {
+		if ((delimiters.length == 0) || (src.length() == 0) ) {
+			return new String[] {src};
+		}
 		char[] srcc = src.toCharArray();
 
 		int maxparts = srcc.length + 1;
@@ -610,7 +803,7 @@ public class StringUtil {
 
 		start[0] = 0;
 		int s = 0, e;
-		if (CharUtil.equalsOne(srcc[0], delimiters) == true) {	// string starts with delimiter
+		if (CharUtil.equalsOne(srcc[0], delimiters)) {	// string starts with delimiter
 			end[0] = 0;
 			count++;
 			s = CharUtil.findFirstDiff(srcc, 1, delimiters);
@@ -1110,7 +1303,7 @@ public class StringUtil {
 			endIndex = 0;
 		}
 		for (int i = startIndex; i >= endIndex; i--) {
-			if (Character.isWhitespace(src.charAt(i)) == false) {
+			if (!Character.isWhitespace(src.charAt(i))) {
 				return i;
 			}
 		}
@@ -1297,7 +1490,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOf(String s, String arr[]) {
+	public static int[] indexOf(String s, String[] arr) {
 		return indexOf(s, arr, 0);
 	}
 	/**
@@ -1310,7 +1503,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOf(String s, String arr[], int start) {
+	public static int[] indexOf(String s, String[] arr, int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1335,7 +1528,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOfIgnoreCase(String s, String arr[]) {
+	public static int[] indexOfIgnoreCase(String s, String[] arr) {
 		return indexOfIgnoreCase(s, arr, 0);
 	}
 	/**
@@ -1348,7 +1541,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOfIgnoreCase(String s, String arr[], int start) {
+	public static int[] indexOfIgnoreCase(String s, String[] arr, int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1373,7 +1566,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] lastIndexOf(String s, String arr[]) {
+	public static int[] lastIndexOf(String s, String[] arr) {
 		return lastIndexOf(s, arr, s.length());
 	}
 	/**
@@ -1386,7 +1579,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOf(String s, String arr[], int fromIndex) {
+	public static int[] lastIndexOf(String s, String[] arr, int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1413,7 +1606,7 @@ public class StringUtil {
 	 *
 	 * @return int[2]
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String arr[]) {
+	public static int[] lastIndexOfIgnoreCase(String s, String[] arr) {
 		return lastIndexOfIgnoreCase(s, arr, s.length());
 	}
 	/**
@@ -1426,7 +1619,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String arr[], int fromIndex) {
+	public static int[] lastIndexOfIgnoreCase(String s, String[] arr, int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1450,12 +1643,12 @@ public class StringUtil {
 	 *
 	 * @return <code>true</code> if all array elements matches
 	 */
-	public static boolean equals(String as[], String as1[]) {
+	public static boolean equals(String[] as, String[] as1) {
 	    if (as.length != as1.length) {
 	        return false;
 	    }
 	    for (int i = 0; i < as.length; i++) {
-	        if (as[i].equals(as1[i]) == false) {
+	        if (!as[i].equals(as1[i])) {
 	            return false;
 	        }
 	    }
@@ -1469,12 +1662,12 @@ public class StringUtil {
 	 *
 	 * @return true if all array elements matches
 	 */
-	public static boolean equalsIgnoreCase(String as[], String as1[]) {
+	public static boolean equalsIgnoreCase(String[] as, String[] as1) {
 		if (as.length != as1.length) {
 			return false;
 		}
 		for (int i = 0; i < as.length; i++) {
-			if (as[i].equalsIgnoreCase(as1[i]) == false) {
+			if (!as[i].equalsIgnoreCase(as1[i])) {
 				return false;
 			}
 		}
@@ -1728,7 +1921,7 @@ public class StringUtil {
 	}
 	public static int indexOfNonWhitespace(String string, int startindex, int endindex) {
 		for (int i = startindex; i < endindex; i++) {
-			if (CharUtil.isWhitespace(string.charAt(i)) == false) {
+			if (!CharUtil.isWhitespace(string.charAt(i))) {
 				return i;
 			}
 		}
@@ -2010,35 +2203,142 @@ public class StringUtil {
 	// ---------------------------------------------------------------- join
 
 	/**
-	 * Joins an array of strings into one string.
+	 * Joins an array of objects into one string without separators.
 	 */
-	public static String join(String... parts) {
-		StringBand sb = new StringBand(parts.length);
-		for (String part : parts) {
-			sb.append(part);
+	public static String join(Object[] array) {
+		if (array == null) {
+			return null;
 		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		if (array.length == 1) {
+			return String.valueOf(array[0]);
+		}
+
+		final StringBuilder sb = new StringBuilder(array.length * 16);
+
+		for (int i = 0; i < array.length; i++) {
+			sb.append(array[i]);
+		}
+
+		return sb.toString();
+	}
+	/**
+	 * Joins an array of objects into one string with separator.
+	 */
+	public static String join(Object[] array, char separator) {
+		if (array == null) {
+			return null;
+		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		if (array.length == 1) {
+			return String.valueOf(array[0]);
+		}
+
+		final StringBuilder sb = new StringBuilder(array.length * 16);
+
+		for (int i = 0; i < array.length; i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(array[i]);
+		}
+
 		return sb.toString();
 	}
 
 	/**
-	 * Joins list of iterable elements. Separator string
-	 * may be <code>null</code>.
+	 * Joins an collection of objects into one string with separator.
 	 */
-	public static String join(Iterable<?> elements, String separator) {
-		if (elements == null) {
-			return EMPTY;
+	public static String join(Collection collection, char separator) {
+		if (collection == null) {
+			return null;
 		}
-		StringBand sb = new StringBand();
-		for (Object o : elements) {
-			if (sb.length() > 0) {
-				if (separator != null) {
-					sb.append(separator);
-				}
+
+		if (collection.size() == 0) {
+			return StringPool.EMPTY;
+		}
+
+		final StringBuilder sb = new StringBuilder(collection.size() * 16);
+		final Iterator it = collection.iterator();
+
+		for (int i = 0; i < collection.size(); i++) {
+
+			if (i > 0) {
+				sb.append(separator);
 			}
-			sb.append(o);
+
+			sb.append(it.next());
 		}
+
 		return sb.toString();
 	}
+
+	public static String join(Collection collection, String separator) {
+		if (collection == null) {
+			return null;
+		}
+
+		if (collection.size() == 0) {
+			return StringPool.EMPTY;
+		}
+
+		final StringBuilder sb = new StringBuilder(collection.size() * 16);
+		final Iterator it = collection.iterator();
+
+		for (int i = 0; i < collection.size(); i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(it.next());
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Joins an array of objects into one string with separator.
+	 */
+	public static String join(Object[] array, String separator) {
+		if (array == null) {
+			return null;
+		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		if (array.length == 1) {
+			return String.valueOf(array[0]);
+		}
+
+		final StringBuilder sb = new StringBuilder(array.length * 16);
+
+		for (int i = 0; i < array.length; i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(array[i]);
+		}
+
+		return sb.toString();
+	}
+
+
+
 
 	// ---------------------------------------------------------------- charset
 
@@ -2150,10 +2450,10 @@ public class StringUtil {
 	 * Surrounds the string with provided prefix and suffix if such missing from string.
 	 */
 	public static String surround(String string, String prefix, String suffix) {
-		if (string.startsWith(prefix) == false) {
+		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
-		if (string.endsWith(suffix) == false) {
+		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
 		return string;
@@ -2163,7 +2463,7 @@ public class StringUtil {
 	 * Inserts prefix if doesn't exist.
 	 */
 	public static String prefix(String string, String prefix) {
-		if (string.startsWith(prefix) == false) {
+		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
 		return string;
@@ -2173,7 +2473,7 @@ public class StringUtil {
 	 * Appends suffix if doesn't exist.
 	 */
 	public static String suffix(String string, String suffix) {
-		if (string.endsWith(suffix) == false) {
+		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
 		return string;
@@ -2264,6 +2564,31 @@ public class StringUtil {
 		}
 
 		return string.substring(start, end);
+	}
+
+	/**
+	 * Cuts a string between two other strings. If either of left and right
+	 * is missing, nothing will be cut and <code>null</code> is returned.
+	 * If indexes of left or right strings are wrong, empty string is returned.
+	 */
+	public static String cutBetween(String string, String left, String right) {
+		int leftNdx = string.indexOf(left);
+		if (leftNdx == -1) {
+			return null;
+		}
+
+		int rightNdx = string.indexOf(right);
+		if (rightNdx == -1) {
+			return null;
+		}
+
+		leftNdx += left.length();
+
+		if (leftNdx >= rightNdx) {
+			return StringPool.EMPTY;
+		}
+
+		return string.substring(leftNdx, rightNdx);
 	}
 
 
@@ -2385,24 +2710,26 @@ public class StringUtil {
 	/**
 	 * Changes CamelCase string to lower case words separated by provided
 	 * separator character. The following translations are applied:
-	 * <ul><li>Every upper case letter in the CamelCase name is translated into
+	 * <ul>
+	 *     <li>Every upper case letter in the CamelCase name is translated into
 	 * two characters, a separator and the lower case equivalent of the target character,
 	 * with three exceptions.
-	 * <ol><li>For contiguous sequences of upper case letters, characters after the first
+	 * 		<ol><li>For contiguous sequences of upper case letters, characters after the first
 	 * character are replaced only by their lower case equivalent, and are not
 	 * preceded by a separator (<code>theFOO</code> to <code>the_foo</code>).
-	 * <li>An upper case character in the first position of the CamelCase name
+	 *		<li>An upper case character in the first position of the CamelCase name
 	 * is not preceded by a separator character, and is translated only to its
 	 * lower case equivalent. (<code>Foo</code> to <code>foo</code> and not <code>_foo</code>)
-	 * <li>An upper case character in the CamelCase name that is already preceded
+	 * 		<li>An upper case character in the CamelCase name that is already preceded
 	 * by a separator character is translated only to its lower case equivalent,
 	 * and is not preceded by an additional separator. (<code>user_Name</code>
 	 * to <code>user_name</code> and not <code>user__name</code>.
-	 * </ol>
+	 * 		</ol>
 	 * <li>If the CamelCase name starts with a separator, then that
 	 * separator is not included in the translated name, unless the CamelCase
 	 * name is just one character in length, i.e., it is the separator character.
 	 * This applies only to the first character of the CamelCase name.
+	 * </ul>
 	 */
 	public static String fromCamelCase(String input, char separator) {
 		int length = input.length();
@@ -2509,5 +2836,218 @@ public class StringUtil {
 		return s;
 	}
 
+	// ---------------------------------------------------------------- text
+
+	/**
+	 * Formats provided string as paragraph.
+	 */
+	public static String formatParagraph(String src, int len, boolean breakOnWhitespace) {
+		StringBuilder str = new StringBuilder();
+		int total = src.length();
+		int from = 0;
+		while (from < total) {
+			int to = from + len;
+			if (to >= total) {
+				to = total;
+			} else if (breakOnWhitespace) {
+				int ndx = lastIndexOfWhitespace(src, to - 1, from);
+				if (ndx != -1) {
+					to = ndx + 1;
+				}
+			}
+			int cutFrom = indexOfNonWhitespace(src, from, to);
+			if (cutFrom != -1) {
+				int cutTo = lastIndexOfNonWhitespace(src, to - 1, from) + 1;
+				str.append(src.substring(cutFrom, cutTo));
+			}
+			str.append('\n');
+			from = to;
+		}
+		return str.toString();
+	}
+
+	/**
+	 * Converts all tabs on a line to spaces according to the provided tab width.
+	 * This is not a simple tab to spaces replacement, since the resulting
+	 * indentation remains the same.
+	 */
+	public static String convertTabsToSpaces(String line, int tabWidth) {
+		int tab_index, tab_size;
+		int last_tab_index = 0;
+		int added_chars = 0;
+
+		if (tabWidth == 0) {
+			return remove(line, '\t');
+		}
+
+		StringBuilder result = new StringBuilder();
+
+		while ((tab_index = line.indexOf('\t', last_tab_index)) != -1) {
+			tab_size = tabWidth - ((tab_index + added_chars) % tabWidth);
+			if (tab_size == 0) {
+				tab_size = tabWidth;
+			}
+			added_chars += tab_size - 1;
+			result.append(line.substring(last_tab_index, tab_index));
+			result.append(repeat(' ', tab_size));
+			last_tab_index = tab_index+1;
+		}
+
+		if (last_tab_index == 0) {
+			return line;
+		}
+
+		result.append(line.substring(last_tab_index));
+		return result.toString();
+	}
+
+	// ---------------------------------------------------------------- case change
+
+	/**
+	 * Converts all of the characters in the string to lower case, based on the
+	 * portal instance's default locale.
+	 *
+	 * @param  s the string to convert
+	 * @return the string, converted to lower case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toLowerCase(String s) {
+		return toLowerCase(s, null);
+	}
+
+
+	/**
+	 * Converts all of the characters in the string to lower case, based on the
+	 * locale. More efficient than <code>String.toLowerCase</code>.
+	 *
+	 * @param  s the string to convert
+	 * @param  locale apply this locale's rules, if <code>null</code> default locale is used
+	 * @return the string, converted to lower case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toLowerCase(String s, Locale locale) {
+		if (s == null) {
+			return null;
+		}
+
+		StringBuilder sb = null;
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+
+			if (c > 127) {
+				// found non-ascii char, fallback to the slow unicode detection
+
+				if (locale == null) {
+					locale = Locale.getDefault();
+				}
+
+				return s.toLowerCase(locale);
+			}
+
+			if ((c >= 'A') && (c <= 'Z')) {
+				if (sb == null) {
+					sb = new StringBuilder(s);
+				}
+
+				sb.setCharAt(i, (char)(c + 32));
+			}
+		}
+
+		if (sb == null) {
+			return s;
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Converts all of the characters in the string to upper case, based on the
+	 * portal instance's default locale.
+	 *
+	 * @param  s the string to convert
+	 * @return the string, converted to upper case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toUpperCase(String s) {
+		return toUpperCase(s, null);
+	}
+
+	/**
+	 * Converts all of the characters in the string to upper case, based on the
+	 * locale.
+	 *
+	 * @param  s the string to convert
+	 * @param  locale apply this locale's rules
+	 * @return the string, converted to upper case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toUpperCase(String s, Locale locale) {
+		if (s == null) {
+			return null;
+		}
+
+		StringBuilder sb = null;
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+
+			if (c > 127) {
+				// found non-ascii char, fallback to the slow unicode detection
+
+				if (locale == null) {
+					locale = Locale.getDefault();
+				}
+
+				return s.toUpperCase(locale);
+			}
+
+			if ((c >= 'a') && (c <= 'z')) {
+				if (sb == null) {
+					sb = new StringBuilder(s);
+				}
+
+				sb.setCharAt(i, (char)(c - 32));
+			}
+		}
+
+		if (sb == null) {
+			return s;
+		}
+
+		return sb.toString();
+	}
+
+	// ---------------------------------------------------------------- text
+
+	/**
+	 * Removes starting and ending single or double quotes.
+	 */
+	public static String removeQuotes(String string) {
+		if (
+			(startsWithChar(string, '\'') && endsWithChar(string, '\'')) ||
+			(startsWithChar(string, '"') && endsWithChar(string, '"'))
+		) {
+			return substring(string, 1, -1);
+		}
+		return string;
+	}
+
+	// ---------------------------------------------------------------- hex
+
+	/**
+	 * Converts bytes to hex string.
+	 */
+	public static String toHexString(byte[] bytes) {
+		char[] chars = new char[bytes.length * 2];
+
+		int i = 0;
+		for (byte b : bytes) {
+			chars[i++] = CharUtil.int2hex((b & 0xF0) >> 4);
+			chars[i++] = CharUtil.int2hex(b & 0x0F);
+		}
+
+		return new String(chars);
+	}
 
 }

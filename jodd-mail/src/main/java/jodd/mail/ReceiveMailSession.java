@@ -1,8 +1,29 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.mail;
-
-import jodd.JoddMail;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -44,7 +65,7 @@ public class ReceiveMailSession {
 		try {
 			store.connect();
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to open session", msex);
+			throw new MailException("Open session error", msex);
 		}
 	}
 
@@ -59,7 +80,7 @@ public class ReceiveMailSession {
 		try {
 			folders = store.getDefaultFolder().list( "*" );
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect to folder", msex);
+			throw new MailException("Failed to connect to folder", msex);
 		}
 		String[] folderNames = new String[folders.length];
 
@@ -78,7 +99,7 @@ public class ReceiveMailSession {
 		try {
 			folder = store.getFolder(folderName);
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect to folder: " + folderName, msex);
+			throw new MailException("Failed to connect to folder: " + folderName, msex);
 		}
 		try {
 			folder.open(Folder.READ_WRITE);
@@ -86,7 +107,7 @@ public class ReceiveMailSession {
 			try {
 				folder.open(Folder.READ_ONLY);
 			} catch (MessagingException msex) {
-				throw new MailException("Unable to open folder: " + folderName, msex);
+				throw new MailException("Failed to open folder: " + folderName, msex);
 			}
 		}
 	}
@@ -242,19 +263,22 @@ public class ReceiveMailSession {
 			for (int i = 0; i < messages.length; i++) {
 				Message msg = messages[i];
 
-				if (flagsToSet != null) {
-					msg.setFlags(flagsToSet, true);
-				}
+				// we need to parse message BEFORE flags are set!
 				emails[i] = new ReceivedEmail(msg);
 
-				if (flagsToSet == null && emails[i].isSeen() == false) {
+				if (flagsToSet != null) {
+					emails[i].setFlags(flagsToSet);
+					msg.setFlags(flagsToSet, true);
+				}
+
+				if (flagsToSet == null && !emails[i].isSeen()) {
 					msg.setFlag(Flags.Flag.SEEN, false);
 				}
 			}
 
 			return emails;
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to fetch messages", msex);
+			throw new MailException("Failed to fetch messages", msex);
 		}
 	}
 

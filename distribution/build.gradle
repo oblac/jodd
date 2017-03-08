@@ -60,11 +60,9 @@ task bundleMobileJar(type: Jar) {
 	exclude 'jodd/util/BCrypt.class'
 	exclude 'jodd/util/Base32.class'
 	exclude 'jodd/util/BinarySearch*.class'
-	exclude 'jodd/util/ClipboardUtil.class'
 	exclude 'jodd/util/ComparableComparator.class'
 	exclude 'jodd/util/DateFormatSymbolsEx.class'
-	exclude 'jodd/util/ExtendedClassLoader.class'
-	exclude 'jodd/util/FastSort.class'
+	exclude 'jodd/util/cl/ExtendedClassLoader.class'
 	exclude 'jodd/util/HashCode.class'
 	exclude 'jodd/util/HtmlDecoder*'
 	exclude 'jodd/util/JmxClient.class'
@@ -75,7 +73,6 @@ task bundleMobileJar(type: Jar) {
 	exclude 'jodd/util/PrettyStringBuilder.class'
 	exclude 'jodd/util/ResourceBundleMessageResolver.class'
 	exclude 'jodd/util/TextUtil.class'
-	exclude 'jodd/util/Tuple3.class'
 	exclude 'jodd/util/buffer/FastShortBuffer.class'
 	exclude 'jodd/util/collection/Array*.class'
 	exclude 'jodd/util/collection/Bag.class'
@@ -116,7 +113,7 @@ task distroZip(type: Zip) {
 
 	addonModules.each{ addon->
 		rootProject.project(addon).tasks.withType(Jar).each { jar ->
-			if (!jar.name.contains('sources') && !jar.name.contains('javadoc')) {
+			if (!jar.name.contains('javadoc')) {
 				from jar
 			}
 		}

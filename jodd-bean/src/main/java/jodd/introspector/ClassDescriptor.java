@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.introspector;
 
@@ -32,10 +55,12 @@ public class ClassDescriptor {
 	protected final boolean scanAccessible;
 	protected final boolean extendedProperties;
 	protected final boolean includeFieldsAsProperties;
-	protected final String propertyFieldPrefix;
+	protected final String[] propertyFieldPrefix;
+	protected final Class[] interfaces;
+	protected final Class[] superclasses;
 	protected int usageCount;
 
-	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String propertyFieldPrefix) {
+	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
 		this.type = type;
 		this.scanAccessible = scanAccessible;
 		this.extendedProperties = extendedProperties;
@@ -43,10 +68,13 @@ public class ClassDescriptor {
 		this.propertyFieldPrefix = propertyFieldPrefix;
 
 		isArray = type.isArray();
-		isMap = ReflectUtil.isSubclass(type, Map.class);
-		isList = ReflectUtil.isSubclass(type, List.class);
-		isSet = ReflectUtil.isSubclass(type, Set.class);
-		isCollection = ReflectUtil.isSubclass(type, Collection.class);
+		isMap = ReflectUtil.isTypeOf(type, Map.class);
+		isList = ReflectUtil.isTypeOf(type, List.class);
+		isSet = ReflectUtil.isTypeOf(type, Set.class);
+		isCollection = ReflectUtil.isTypeOf(type, Collection.class);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(type);
+		superclasses = ReflectUtil.resolveAllSuperclasses(type);
 	}
 
 	/**
@@ -81,10 +109,11 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns property field prefix. May be <code>null</code>
-	 * if prefix is not set.
+	 * Returns property field prefixes. May be <code>null</code>
+	 * if prefixes are not set. If you need to access both prefixed
+	 * and non-prefixed fields, use empty string as one of the prefixes.
 	 */
-	public String getPropertyFieldPrefix() {
+	public String[] getPropertyFieldPrefix() {
 		return propertyFieldPrefix;
 	}
 
@@ -322,4 +351,22 @@ public class ClassDescriptor {
 		return getCtors().getAllCtorDescriptors();
 	}
 
+
+	// ---------------------------------------------------------------- interfaces
+
+	/**
+	 * Returns <b>all</b> interfaces of this class.
+	 */
+	public Class[] getAllInterfaces() {
+		return interfaces;
+	}
+
+	/**
+	 * Returns <b>all</b> superclasses of this class.
+	 * <code>Object.class</code> is <b>not</b> included in the
+	 * returned list.
+	 */
+	public Class[] getAllSuperclasses() {
+		return superclasses;
+	}
 }

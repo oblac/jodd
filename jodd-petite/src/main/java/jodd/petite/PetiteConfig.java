@@ -1,11 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite;
 
-import jodd.Jodd;
-import jodd.petite.scope.Scope;
-import jodd.petite.scope.DefaultScope;
-import jodd.petite.scope.SingletonScope;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
@@ -17,7 +36,6 @@ public class PetiteConfig {
 	private static final Logger log = LoggerFactory.getLogger(PetiteConfig.class);
 
 	public PetiteConfig() {
-		defaultScope = SingletonScope.class;
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
 		resolveReferenceParameters = true;
@@ -27,29 +45,28 @@ public class PetiteConfig {
 		        PetiteReference.TYPE_SHORT_NAME,
 				PetiteReference.TYPE_FULL_NAME
 		};
-		useParamo = Jodd.isProxettaLoaded();
+		useParamo = JoddPetite.useProxetta;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
+		useAltBeanNames = true;
 	}
 
-	protected Class<? extends Scope> defaultScope;
+	// ----------------------------------------------------------------
+
+	protected boolean useAltBeanNames;
+
 	/**
-	 * Returns default scope type.
+	 * Returns if alternative bean names are in use.
 	 */
-	public Class<? extends Scope> getDefaultScope() {
-		return defaultScope;
+	public boolean isUseAltBeanNames() {
+		return useAltBeanNames;
 	}
+
 	/**
-	 * Sets default scope type.
+	 * Enables alternative bean names.
 	 */
-	public void setDefaultScope(Class<? extends Scope> defaultScope) {
-		if (defaultScope == DefaultScope.class) {
-			throw new PetiteException("Invalid default Petite scope: scope must be a concrete scope implementation.");
-		}
-		if (defaultScope == null) {
-			throw new PetiteException("Invalid default Petite scope: null.");
-		}
-		this.defaultScope = defaultScope;
+	public void setUseAltBeanNames(boolean useAltBeanNames) {
+		this.useAltBeanNames = useAltBeanNames;
 	}
 
 	// ----------------------------------------------------------------
@@ -159,7 +176,7 @@ public class PetiteConfig {
 	 * always <code>false</code>).
 	 */
 	public void setUseParamo(boolean useParamo) {
-		if (Jodd.isProxettaLoaded() == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -180,7 +197,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
-		if (Jodd.isProxettaLoaded() == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -199,7 +216,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
-		if (Jodd.isProxettaLoaded() == false) {
+		if (!JoddPetite.useProxetta) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}

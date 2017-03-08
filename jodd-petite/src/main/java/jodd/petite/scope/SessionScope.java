@@ -1,13 +1,40 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.petite.scope;
 
-import jodd.petite.PetiteContainer;
+import jodd.petite.BeanData;
+import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteException;
 import jodd.servlet.RequestContextListener;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,46 +42,108 @@ import java.util.Map;
  * Session scope stores unique object instances per single http session.
  * Upon creation, new session listener is registered (dynamically) that will
  * keep track on active sessions. {@link RequestContextListener} is used for accessing
- * the request and the session. Session-scoped beans are stored in the session.
+ * the request and the session.
  */
-public class SessionScope implements Scope {
+public class SessionScope extends ShutdownAwareScope {
 
-	private static final String ATTR_NAME = SessionScope.class.getName() + ".map";
+	// ---------------------------------------------------------------- destory
+
+	protected static final String SESSION_BEANS_NAME = SessionScope.class.getName() + ".SESSION_BEANS.";
 
 	/**
-	 * Session scope.
+	 * Registers new session destroy callback if not already registered.
 	 */
-	public SessionScope(PetiteContainer petiteContainer) {
-		// register session scope on first usage
-		ThreadLocalScope threadLocalScope = petiteContainer.resolveScope(ThreadLocalScope.class);
-		threadLocalScope.acceptScope(SessionScope.class);
+	protected Map<String, BeanData> registerSessionBeans(HttpSession httpSession) {
+	    SessionBeans sessionBeans = new SessionBeans();
+		httpSession.setAttribute(SESSION_BEANS_NAME, sessionBeans);
+		return sessionBeans.getBeanMap();
 	}
 
+	/**
+	 * Returns instance map from http session.
+	 */
 	@SuppressWarnings("unchecked")
+	protected Map<String, BeanData> getSessionMap(HttpSession session) {
+		SessionBeans sessionBeans = (SessionBeans) session.getAttribute(SESSION_BEANS_NAME);
+		if (sessionBeans == null) {
+			return null;
+		}
+		return sessionBeans.getBeanMap();
+	}
+
+
+	/**
+	 * Session beans holder and manager.
+	 */
+	public class SessionBeans implements HttpSessionBindingListener, Serializable {
+
+		protected Map<String, BeanData> beanMap = new HashMap<>();
+
+		/**
+		 * Returns bean map used in this session.
+		 */
+		public Map<String, BeanData> getBeanMap() {
+			return beanMap;
+		}
+
+		public void valueBound(HttpSessionBindingEvent event) {
+			// do nothing
+		}
+
+		/**
+		 * Session is destroyed.
+		 */
+		public void valueUnbound(HttpSessionBindingEvent event) {
+			for (BeanData beanData : beanMap.values()) {
+				destroyBean(beanData);
+			}
+		}
+	}
+
+	// ---------------------------------------------------------------- scope
+
+	/**
+	 * Shutdowns the Session scope. Calls destroyable methods on
+	 * all destroyable beans available in this moment.
+	 */
+	@Override
+	public void shutdown() {
+		super.shutdown();
+	}
+
 	public Object lookup(String name) {
 		HttpSession session = getCurrentHttpSession();
-		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
+		Map<String, BeanData> map = getSessionMap(session);
 		if (map == null) {
 			return null;
 		}
-		return map.get(name);
-	}
 
-	@SuppressWarnings("unchecked")
-	public void register(String name, Object bean) {
-		HttpSession session = getCurrentHttpSession();
-		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
-		if (map == null) {
-			map = new HashMap<String, Object>();
-			session.setAttribute(ATTR_NAME, map);
+		BeanData beanData = map.get(name);
+		if (beanData == null) {
+			return null;
 		}
-		map.put(name, bean);
+		return beanData.getBean();
 	}
 
-	@SuppressWarnings("unchecked")
-	public void remove(String name) {
+	public void register(BeanDefinition beanDefinition, Object bean) {
 		HttpSession session = getCurrentHttpSession();
-		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
+		Map<String, BeanData> map = getSessionMap(session);
+		if (map == null) {
+			map = registerSessionBeans(session);
+		}
+
+		BeanData beanData = new BeanData(beanDefinition, bean);
+		map.put(beanDefinition.getName(), beanData);
+
+		registerDestroyableBeans(beanData);
+	}
+
+	public void remove(String name) {
+		if (totalRegisteredDestroyableBeans() == 0) {
+			return;
+		}
+		HttpSession session = getCurrentHttpSession();
+		Map<String, BeanData> map = getSessionMap(session);
 		if (map != null) {
 			map.remove(name);
 		}
@@ -62,6 +151,10 @@ public class SessionScope implements Scope {
 
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ProtoScope.class) {
+			return true;
+		}
 
 		if (refScopeType == SingletonScope.class) {
 			return true;

@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.introspector;
 
@@ -9,7 +32,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * Method descriptor.  Holds additional method data,
+ * Method descriptor. Holds additional method data,
  * that might be specific to implementation class.
  */
 public class MethodDescriptor extends Descriptor implements Getter, Setter {
@@ -20,24 +43,45 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	protected final Class rawReturnComponentType;
 	protected final Class rawReturnKeyComponentType;
 	protected final Class[] rawParameterTypes;
+	protected final Class[] rawParameterComponentTypes;
 
 	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
 		super(classDescriptor, ReflectUtil.isPublic(method));
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
 		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
-		this.rawReturnComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType());
-		this.rawReturnKeyComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType(), 0);
+
+		Class[] componentTypes = ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
+		if (componentTypes != null) {
+			this.rawReturnComponentType = componentTypes[componentTypes.length - 1];
+			this.rawReturnKeyComponentType = componentTypes[0];
+		} else {
+			this.rawReturnComponentType = null;
+			this.rawReturnKeyComponentType = null;
+		}
 
 		ReflectUtil.forceAccess(method);
 
 		Type[] params = method.getGenericParameterTypes();
+		Type[] genericParams = method.getGenericParameterTypes();
+
 		rawParameterTypes = new Class[params.length];
+		rawParameterComponentTypes = genericParams.length == 0 ? null : new Class[params.length];
 
 		for (int i = 0; i < params.length; i++) {
 			Type type = params[i];
 			rawParameterTypes[i] = ReflectUtil.getRawType(type, classDescriptor.getType());
+			if (rawParameterComponentTypes != null) {
+				rawParameterComponentTypes[i] = ReflectUtil.getComponentType(genericParams[i], classDescriptor.getType(), -1);
+			}
 		}
+	}
+
+	/**
+	 * Returns method name.
+	 */
+	public String getName() {
+		return method.getName();
 	}
 
 	/**
@@ -73,11 +117,11 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	}
 
 	/**
-	 * Resolves raw return component type for given index.
+	 * Resolves raw return component types
 	 * This value is NOT cached.
 	 */
-	public Class resolveRawReturnComponentType(int index) {
-		return ReflectUtil.getComponentType(returnType, classDescriptor.getType(), index);
+	public Class[] resolveRawReturnComponentTypes() {
+		return ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
 	}
 
 	/**
@@ -85,6 +129,14 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	 */
 	public Class[] getRawParameterTypes() {
 		return rawParameterTypes;
+	}
+
+	/**
+	 * Returns raw parameter component types. Returns <code>null</code>
+	 * if data does not exist.
+	 */
+	public Class[] getRawParameterComponentTypes() {
+		return rawParameterComponentTypes;
 	}
 
 	// ---------------------------------------------------------------- getter/setter
@@ -111,6 +163,14 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 
 	public Class getSetterRawType() {
 		return getRawParameterTypes()[0];
+	}
+
+	public Class getSetterRawComponentType() {
+		Class[] ts = getRawParameterComponentTypes();
+		if (ts == null) {
+			return null;
+		}
+		return ts[0];
 	}
 
 	// ---------------------------------------------------------------- toString

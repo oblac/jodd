@@ -1,13 +1,36 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
 import jodd.proxetta.ProxyAspect;
-import jodd.asm4.ClassVisitor;
-import jodd.asm4.FieldVisitor;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.Opcodes;
+import jodd.asm5.ClassVisitor;
+import jodd.asm5.FieldVisitor;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.Opcodes;
 
 import java.util.List;
 
@@ -15,12 +38,12 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadVirtualMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.visitReturn;
-import static jodd.asm4.Opcodes.ACC_ABSTRACT;
-import static jodd.asm4.Opcodes.ACC_NATIVE;
-import static jodd.asm4.Opcodes.ALOAD;
-import static jodd.asm4.Opcodes.GETFIELD;
-import static jodd.asm4.Opcodes.INVOKEINTERFACE;
-import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm5.Opcodes.ACC_ABSTRACT;
+import static jodd.asm5.Opcodes.ACC_NATIVE;
+import static jodd.asm5.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.GETFIELD;
+import static jodd.asm5.Opcodes.INVOKEINTERFACE;
+import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
 
 public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 
@@ -100,7 +123,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PUBLIC, INIT, "()V", null, null);
 		mv.visitCode();
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT, INIT, "()V");
+		mv.visitMethodInsn(
+			Opcodes.INVOKESPECIAL,
+			AsmUtil.SIGNATURE_JAVA_LANG_OBJECT,
+			INIT, "()V",
+			false);
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
@@ -118,11 +145,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		}
 
 		// ignore all destination constructors
-		if (name.equals(INIT) == true) {
+		if (name.equals(INIT)) {
 			return null;
 		}
 		// ignore all destination static block
-		if (name.equals(CLINIT) == true) {
+		if (name.equals(CLINIT)) {
 			return null;
 		}
 
@@ -160,11 +187,23 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
 		loadVirtualMethodArguments(mv, msign);
+
 		if (wd.wrapInterface) {
-			mv.visitMethodInsn(INVOKEINTERFACE, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
+			mv.visitMethodInsn(
+				INVOKEINTERFACE,
+				wd.wrapperType.substring(1, wd.wrapperType.length() - 1),
+				msign.getMethodName(),
+				msign.getDescription(),
+				true);
 		} else {
-			mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
+			mv.visitMethodInsn(
+				INVOKEVIRTUAL,
+				wd.wrapperType.substring(1, wd.wrapperType.length() - 1),
+				msign.getMethodName(),
+				msign.getDescription(),
+				false);
 		}
+
 		ProxettaAsmUtil.prepareReturnValue(mv, msign, 0);
 		visitReturn(mv, msign, true);
 		mv.visitMaxs(0, 0);

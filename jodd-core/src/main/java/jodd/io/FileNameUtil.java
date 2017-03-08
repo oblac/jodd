@@ -1,8 +1,32 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.io;
 
 import jodd.util.StringPool;
+import jodd.util.SystemUtil;
 
 import java.io.File;
 
@@ -40,7 +64,7 @@ import java.io.File;
  * <p>
  * This class only supports Unix and Windows style names.
  * Prefixes are matched as follows:
- * <pre>
+ * <pre>{@code
  * Windows:
  * a\b\c.txt           --> ""          --> relative
  * \a\b\c.txt          --> "\"         --> current drive absolute
@@ -55,7 +79,7 @@ import java.io.File;
  * ~                   --> "~/"        --> current user (slash added)
  * ~user/a/b/c.txt     --> "~user/"    --> named user
  * ~user               --> "~user/"    --> named user (slash added)
- * </pre>
+ * }</pre>
  * Both prefix styles are matched always, irrespective of the machine that you are
  * currently running on.
  */
@@ -122,7 +146,7 @@ public class FileNameUtil {
 	 * <p>
 	 * The output will be the same on both Unix and Windows except
 	 * for the separator character.
-	 * <pre>
+	 * <pre>{@code
 	 * /foo//               -->   /foo/
 	 * /foo/./              -->   /foo/
 	 * /foo/../bar          -->   /bar
@@ -140,7 +164,7 @@ public class FileNameUtil {
 	 * C:\..\bar            -->   null
 	 * ~/foo/../bar/        -->   ~/bar/
 	 * ~/../bar             -->   null
-	 * </pre>
+	 * }</pre>
 	 * (Note the file separator returned will be correct for Windows/Unix)
 	 *
 	 * @param filename  the filename to normalize, null returns null
@@ -172,7 +196,7 @@ public class FileNameUtil {
 	 * <p>
 	 * The output will be the same on both Unix and Windows except
 	 * for the separator character.
-	 * <pre>
+	 * <pre>{@code
 	 * /foo//               -->   /foo
 	 * /foo/./              -->   /foo
 	 * /foo/../bar          -->   /bar
@@ -190,7 +214,7 @@ public class FileNameUtil {
 	 * C:\..\bar            -->   null
 	 * ~/foo/../bar/        -->   ~/bar
 	 * ~/../bar             -->   null
-	 * </pre>
+	 * }</pre>
 	 * (Note the file separator returned will be correct for Windows/Unix)
 	 *
 	 * @param filename  the filename to normalize, null returns null
@@ -320,7 +344,7 @@ public class FileNameUtil {
 	 * <p>
 	 * The output will be the same on both Unix and Windows except
 	 * for the separator character.
-	 * <pre>
+	 * <pre>{@code
 	 * /foo/ + bar          -->   /foo/bar
 	 * /foo + bar           -->   /foo/bar
 	 * /foo + /bar          -->   /bar
@@ -332,7 +356,7 @@ public class FileNameUtil {
 	 * /foo/.. + /bar       -->   /bar
 	 * /foo + bar/c.txt     -->   /foo/bar/c.txt
 	 * /foo/c.txt + bar     -->   /foo/c.txt/bar (!)
-	 * </pre>
+	 * }</pre>
 	 * (*) Note that the Windows relative drive prefix is unreliable when
 	 * used with this method.
 	 * (!) Note that the first parameter must be a path. If it ends with a name, then
@@ -427,7 +451,7 @@ public class FileNameUtil {
 	 * The prefix length includes the first slash in the full filename
 	 * if applicable. Thus, it is possible that the length returned is greater
 	 * than the length of the input string.
-	 * <pre>
+	 * <pre>{@code
 	 * Windows:
 	 * a\b\c.txt           --> ""          --> relative
 	 * \a\b\c.txt          --> "\"         --> current drive absolute
@@ -442,7 +466,7 @@ public class FileNameUtil {
 	 * ~                   --> "~/"        --> current user (slash added)
 	 * ~user/a/b/c.txt     --> "~user/"    --> named user
 	 * ~user               --> "~user/"    --> named user (slash added)
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 * ie. both Unix and Windows prefixes are matched regardless.
@@ -482,7 +506,7 @@ public class FileNameUtil {
 			if (ch1 == ':') {
 				ch0 = Character.toUpperCase(ch0);
 				if (ch0 >= 'A' && ch0 <= 'Z') {
-					if (len == 2 || isSeparator(filename.charAt(2)) == false) {
+					if (len == 2 || !isSeparator(filename.charAt(2))) {
 						return 2;
 					}
 					return 3;
@@ -546,6 +570,13 @@ public class FileNameUtil {
 		return (lastSeparator > extensionPos ? -1 : extensionPos);
 	}
 
+	/**
+	 * Returns <code>true</code> if file has extension.
+	 */
+	public static boolean hasExtension(String filename) {
+		return indexOfExtension(filename) != -1;
+	}
+
 	// ---------------------------------------------------------------- get
 
 	/**
@@ -554,7 +585,7 @@ public class FileNameUtil {
 	 * <p>
 	 * This method will handle a file in either Unix or Windows format.
 	 * The prefix includes the first slash in the full filename where applicable.
-	 * <pre>
+	 * <pre>{@code
 	 * Windows:
 	 * a\b\c.txt           --> ""          --> relative
 	 * \a\b\c.txt          --> "\"         --> current drive absolute
@@ -569,7 +600,7 @@ public class FileNameUtil {
 	 * ~                   --> "~/"        --> current user (slash added)
 	 * ~user/a/b/c.txt     --> "~user/"    --> named user
 	 * ~user               --> "~user/"    --> named user (slash added)
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 * ie. both Unix and Windows prefixes are matched regardless.
@@ -597,13 +628,13 @@ public class FileNameUtil {
 	 * This method will handle a file in either Unix or Windows format.
 	 * The method is entirely text based, and returns the text before and
 	 * including the last forward or backslash.
-	 * <pre>
+	 * <pre>{@code
 	 * C:\a\b\c.txt --> a\b\
 	 * ~/a/b/c.txt  --> a/b/
 	 * a.txt        --> ""
 	 * a/b/c        --> a/b/
 	 * a/b/c/       --> a/b/c/
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 * <p>
@@ -624,13 +655,13 @@ public class FileNameUtil {
 	 * This method will handle a file in either Unix or Windows format.
 	 * The method is entirely text based, and returns the text before the
 	 * last forward or backslash.
-	 * <pre>
+	 * <pre>{@code
 	 * C:\a\b\c.txt --> a\b
 	 * ~/a/b/c.txt  --> a/b
 	 * a.txt        --> ""
 	 * a/b/c        --> a/b
 	 * a/b/c/       --> a/b/c
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 * <p>
@@ -673,7 +704,7 @@ public class FileNameUtil {
 	 * This method will handle a file in either Unix or Windows format.
 	 * The method is entirely text based, and returns the text before and
 	 * including the last forward or backslash.
-	 * <pre>
+	 * <pre>{@code
 	 * C:\a\b\c.txt --> C:\a\b\
 	 * ~/a/b/c.txt  --> ~/a/b/
 	 * a.txt        --> ""
@@ -685,7 +716,7 @@ public class FileNameUtil {
 	 * ~/           --> ~/
 	 * ~user        --> ~user/
 	 * ~user/       --> ~user/
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 *
@@ -703,7 +734,7 @@ public class FileNameUtil {
 	 * This method will handle a file in either Unix or Windows format.
 	 * The method is entirely text based, and returns the text before the
 	 * last forward or backslash.
-	 * <pre>
+	 * <pre>{@code
 	 * C:\a\b\c.txt --> C:\a\b
 	 * ~/a/b/c.txt  --> ~/a/b
 	 * a.txt        --> ""
@@ -715,7 +746,7 @@ public class FileNameUtil {
 	 * ~/           --> ~
 	 * ~user        --> ~user
 	 * ~user/       --> ~user
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 *
@@ -764,12 +795,12 @@ public class FileNameUtil {
 	 * <p>
 	 * This method will handle a file in either Unix or Windows format.
 	 * The text after the last forward or backslash is returned.
-	 * <pre>
+	 * <pre>{@code
 	 * a/b/c.txt --> c.txt
 	 * a.txt     --> a.txt
 	 * a/b/c     --> c
 	 * a/b/c/    --> ""
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 *
@@ -789,12 +820,12 @@ public class FileNameUtil {
 	 * <p>
 	 * This method will handle a file in either Unix or Windows format.
 	 * The text after the last forward or backslash and before the last dot is returned.
-	 * <pre>
+	 * <pre>{@code
 	 * a/b/c.txt --> c
 	 * a.txt     --> a
 	 * a/b/c     --> c
 	 * a/b/c/    --> ""
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 *
@@ -810,12 +841,12 @@ public class FileNameUtil {
 	 * <p>
 	 * This method returns the textual part of the filename after the last dot.
 	 * There must be no directory separator after the dot.
-	 * <pre>
+	 * <pre>{@code
 	 * foo.txt      --> "txt"
 	 * a/b/c.jpg    --> "jpg"
 	 * a/b.txt/c    --> ""
 	 * a/b/c        --> ""
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 *
@@ -841,12 +872,12 @@ public class FileNameUtil {
 	 * <p>
 	 * This method returns the textual part of the filename before the last dot.
 	 * There must be no directory separator after the dot.
-	 * <pre>
+	 * <pre>{@code
 	 * foo.txt    --> foo
 	 * a\b\c.jpg  --> a\b\c
 	 * a\b\c      --> a\b\c
 	 * a.b\c      --> a.b\c
-	 * </pre>
+	 * }</pre>
 	 * <p>
 	 * The output will be the same irrespective of the machine that the code is running on.
 	 *
@@ -943,6 +974,33 @@ public class FileNameUtil {
 			}
 		}
 		return new String[] {prefix, path, baseName, extension};
+	}
+
+	// ---------------------------------------------------------------- home
+
+	/**
+	 * Resolve <code>~</code> in the path.
+	 */
+	public static String resolveHome(String path) {
+		if (path.length() == 1) {
+			if (path.charAt(0) == '~') {
+				return SystemUtil.userHome();
+			}
+			return path;
+		}
+		if (path.length() >= 2) {
+			if ((path.charAt(0) == '~') && (path.charAt(1) == File.separatorChar)) {
+				return SystemUtil.userHome() + path.substring(1);
+			}
+		}
+		return path;
+	}
+
+	/**
+	 * Calculates relative path of target path on base path.
+	 */
+	public static String relativePath(String targetPath, String basePath) {
+		return new File(basePath).toPath().relativize(new File(targetPath).toPath()).toString();
 	}
 
 }

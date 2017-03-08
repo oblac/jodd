@@ -1,63 +1,112 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.util.ArraysUtil;
+import jodd.util.InExRuleMatcher;
+import jodd.util.InExRules;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import static jodd.util.StringPool.LEFT_SQ_BRACKET;
+import static jodd.util.StringPool.RIGHT_SQ_BRACKET;
+
 /**
- * Visitor for bean properties.
+ * Visitor for bean properties. It extracts properties names
+ * from the source bean and then visits one by one.
+ *
+ * @see BeanVisitorImplBase
  */
-public abstract class BeanVisitor {
+public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 
 	/**
 	 * Source bean.
 	 */
 	protected Object source;
 	/**
-	 * List of excluded property names.
+	 * Include/exclude rules.
 	 */
-	protected String[] excludeNames;
+	protected InExRules<String, String> rules = new InExRules<>(this);
 	/**
-	 * List of included property names.
-	 */
-	protected String[] includeNames;
-	/**
-	 * Flag for enabling declared properties, or just public one.
+	 * Flag for enabling declared properties, or just public ones.
 	 */
 	protected boolean declared;
 	/**
 	 * Defines if null values should be ignored.
 	 */
 	protected boolean ignoreNullValues;
+	/**
+	 * Defines if fields should be included.
+	 */
+	protected boolean includeFields;
+	/**
+	 * Initial matching mode.
+	 */
+	protected boolean blacklist = true;
+	/**
+	 * Indicates the the source is a Map.
+	 */
+	protected boolean isSourceMap = false;
 
 	// ---------------------------------------------------------------- util
 
-	protected String[] getAllBeanGetterNames(Class type, boolean declared) {
+	/**
+	 * Returns all bean property names.
+	 */
+	protected String[] getAllBeanPropertyNames(Class type, boolean declared) {
 		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
-		String[] names = new String[propertyDescriptors.length];
+		ArrayList<String> names = new ArrayList<>(propertyDescriptors.length);
 
-		for (int i = 0; i < propertyDescriptors.length; i++) {
-			PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-
+		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
 			if (getter != null) {
 				if (getter.matchDeclared(declared)) {
-					names[i] = propertyDescriptor.getName();
+					names.add(propertyDescriptor.getName());
+				}
+			}
+			else if (includeFields) {
+				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
+				if (field != null) {
+					if (field.matchDeclared(declared)) {
+						names.add(field.getName());
+					}
 				}
 			}
 		}
 
-		return names;
+		return names.toArray(new String[names.size()]);
 	}
 
 	/**
@@ -77,7 +126,7 @@ public abstract class BeanVisitor {
 				ndx++;
 			}
 		} else {
-			properties = getAllBeanGetterNames(bean.getClass(), declared);
+			properties = getAllBeanPropertyNames(bean.getClass(), declared);
 		}
 
 		return properties;
@@ -87,31 +136,29 @@ public abstract class BeanVisitor {
 	 * Starts visiting properties.
 	 */
 	public void visit() {
-		String[] properties = resolveProperties(source, false);
+		String[] properties = resolveProperties(source, declared);
 
 		for (String name : properties) {
 			if (name == null) {
 				continue;
 			}
 
-			if (excludeNames != null) {
-				if (ArraysUtil.contains(excludeNames, name) == true) {
-					continue;
-				}
-			}
-
-			if (includeNames != null)  {
-				if (ArraysUtil.contains(includeNames, name) == false) {
-					continue;
-				}
+			if (!rules.match(name, blacklist)) {
+				continue;
 			}
 
 			Object value;
 
+			String propertyName = name;
+
+			if (isSourceMap) {
+				propertyName = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
+			}
+
 			if (declared) {
-				value = BeanUtil.getDeclaredProperty(source, name);
+				value = BeanUtil.declared.getProperty(source, propertyName);
 			} else {
-				value = BeanUtil.getProperty(source, name);
+				value = BeanUtil.pojo.getProperty(source, propertyName);
 			}
 
 			if (value == null && ignoreNullValues) {
@@ -127,4 +174,11 @@ public abstract class BeanVisitor {
 	 * visiting should continue, otherwise <code>false</code> to stop.
 	 */
 	protected abstract boolean visitProperty(String name, Object value);
+
+	/**
+	 * Compares property name to the rules.
+	 */
+	public boolean accept(String propertyName, String rule, boolean include) {
+		return propertyName.equals(rule);
+	}
 }

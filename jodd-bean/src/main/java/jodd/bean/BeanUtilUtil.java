@@ -1,8 +1,30 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.bean;
 
-import jodd.JoddBean;
 import jodd.introspector.Getter;
 import jodd.introspector.Introspector;
 import jodd.introspector.Setter;
@@ -11,12 +33,21 @@ import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Various bean property utilities that makes writings of {@link BeanUtil} classes easy.
  */
-class BeanUtilUtil {
+abstract class BeanUtilUtil implements BeanUtil {
+
+	// ---------------------------------------------------------------- flags
+
+	protected boolean isDeclared = false;
+	protected boolean isForced = false;
+	protected boolean isSilent = false;
+
+	// ---------------------------------------------------------------- introspector
 
 	protected Introspector introspector = JoddBean.introspector;
 	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
@@ -31,6 +62,7 @@ class BeanUtilUtil {
 	/**
 	 * Returns {@link Introspector introspector} implementation.
 	 */
+	@Override
 	public Introspector getIntrospector() {
 		return introspector;
 	}
@@ -59,22 +91,40 @@ class BeanUtilUtil {
 		return typeConverterManager.convertType(value, type);
 	}
 
+	/**
+	 * Convert to collection.
+	 */
+	protected Object convertToCollection(Object value, Class destinationType, Class componentType) {
+		return typeConverterManager.convertToCollection(value, destinationType, componentType);
+	}
+
 	
 	// ---------------------------------------------------------------- accessors
 
 	/**
 	 * Invokes setter, but first converts type to match the setter type.
 	 */
-	protected void invokeSetter(Setter setter, Object bean, Object value) {
+	protected Object invokeSetter(Setter setter, BeanProperty bp, Object value) {
 		try {
 			Class type = setter.getSetterRawType();
 
-			value = convertType(value, type);
+			if (ReflectUtil.isTypeOf(type, Collection.class)) {
+				Class componentType = setter.getSetterRawComponentType();
 
-			setter.invokeSetter(bean, value);
+				value = convertToCollection(value, type, componentType);
+			} else {
+				// no collections
+				value = convertType(value, type);
+			}
+
+			setter.invokeSetter(bp.bean, value);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to set: " + setter, ex);
+			if (isSilent) {
+				return null;
+			}
+			throw new BeanException("Setter failed: " + setter, ex);
 		}
+		return value;
 	}
 
 	// ---------------------------------------------------------------- forced
@@ -85,7 +135,7 @@ class BeanUtilUtil {
 	 */
 	protected Object arrayForcedGet(BeanProperty bp, Object array, int index) {
 		Class componentType = array.getClass().getComponentType();
-		if (bp.last == false) {
+		if (!bp.last) {
 			array = ensureArraySize(bp, array, componentType, index);
 		}
 		Object value = Array.get(array, index);
@@ -93,7 +143,10 @@ class BeanUtilUtil {
 			try {
 				value = ReflectUtil.newInstance(componentType);
 			} catch (Exception ex) {
-				throw new BeanException("Unable to create array element: " + bp.name + '[' + index + ']', bp, ex);
+				if (isSilent) {
+					return null;
+				}
+				throw new BeanException("Invalid array element: " + bp.name + '[' + index + ']', bp, ex);
 			}
 			Array.set(array, index, value);
 		}
@@ -121,10 +174,11 @@ class BeanUtilUtil {
 
 			Setter setter = bp.getSetter(true);
 			if (setter == null) {
-				throw new BeanException("Unable to find setter or field named as: " + bp.name, bp);
+				// no point to check for bp.silent, throws NPE later
+				throw new BeanException("Setter or field not found: " + bp.name, bp);
 			}
 
-			invokeSetter(setter, bp.bean, newArray);
+			newArray = invokeSetter(setter, bp, newArray);
 
 			array = newArray;
 		}
@@ -144,6 +198,7 @@ class BeanUtilUtil {
 
 	/**
 	 * Finds the very first next dot. Ignores dots between index brackets.
+	 * Returns <code>-1</code> when dot is not found.
 	 */
 	protected int indexOfDot(String name) {
 		int ndx = 0;
@@ -199,6 +254,7 @@ class BeanUtilUtil {
 		try {
 			return Integer.parseInt(indexString);
 		} catch (NumberFormatException nfex) {
+			// no point to use bp.silent, as will throw exception
 			throw new BeanException("Invalid index: " + indexString, bp, nfex);
 		}
 	}
@@ -221,10 +277,13 @@ class BeanUtilUtil {
 		try {
 			newInstance = ReflectUtil.newInstance(type);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to create property: " + bp.name, bp, ex);
+			if (isSilent) {
+				return null;
+			}
+			throw new BeanException("Invalid property: " + bp.name, bp, ex);
 		}
 
-		invokeSetter(setter, bp.bean, newInstance);
+		newInstance = invokeSetter(setter, bp, newInstance);
 
 		return newInstance;
 	}
@@ -277,8 +336,8 @@ class BeanUtilUtil {
 	/**
 	 * Extracts type of current property.
 	 */
-	protected Class extractType(BeanProperty bp, boolean declared) {
-		Getter getter = bp.getGetter(declared);
+	protected Class extractType(BeanProperty bp) {
+		Getter getter = bp.getGetter(isDeclared);
 		if (getter != null) {
 			if (bp.index != null) {
 				Class type = getter.getGetterRawComponentType();

@@ -1,13 +1,38 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.io;
 
-import static jodd.JoddCore.ioBufferSize;
+import static jodd.core.JoddCore.ioBufferSize;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,74 +49,24 @@ public class StreamUtil {
 	// ---------------------------------------------------------------- silent close
 
 	/**
-	 * Closes an input stream and releases any system resources associated with
-	 * this stream. No exception will be thrown if an I/O error occurs.
+	 * Closes silently the closable object. If it is <code>FLushable</code>, it
+	 * will be flushed first. No exception will be thrown if an I/O error occurs.
 	 */
-	public static void close(InputStream in) {
-		if (in != null) {
+	public static void close(Closeable closeable) {
+		if (closeable != null) {
+			if (closeable instanceof Flushable) {
+				try {
+					((Flushable)closeable).flush();
+				} catch (IOException ignored) {
+				}
+			}
+
 			try {
-				in.close();
-			} catch (IOException ioex) {
-				// ignore
+				closeable.close();
+			} catch (IOException ignored) {
 			}
 		}
 	}
-
-	/**
-	 * Closes an output stream and releases any system resources associated with
-	 * this stream. No exception will be thrown if an I/O error occurs.
-	 */
-	public static void close(OutputStream out) {
-		if (out != null) {
-			try {
-				out.flush();
-			} catch (IOException ioex) {
-				// ignore
-			}
-			try {
-				out.close();
-			} catch (IOException ioex) {
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Closes a character-input stream and releases any system resources
-	 * associated with this stream. No exception will be thrown if an I/O error
-	 * occurs.
-	 */
-	public static void close(Reader in) {
-		if (in != null) {
-			try {
-				in.close();
-			} catch (IOException ioex) {
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Closes a character-output stream and releases any system resources
-	 * associated with this stream. No exception will be thrown if an I/O error
-	 * occurs.
-	 */
-	public static void close(Writer out) {
-		if (out != null) {
-			try {
-				out.flush();
-			} catch (IOException ioex) {
-				// ignore
-			}
-			try {
-				out.close();
-			} catch (IOException ioex) {
-				// ignore
-			}
-		}
-	}
-
-
 
 	// ---------------------------------------------------------------- copy
 
@@ -117,14 +92,16 @@ public class StreamUtil {
 	 * Copies specified number of bytes from input stream to output stream using buffer.
 	 */
 	public static int copy(InputStream input, OutputStream output, int byteCount) throws IOException {
-		byte buffer[] = new byte[ioBufferSize];
+		int bufferSize = (byteCount > ioBufferSize) ? ioBufferSize : byteCount;
+
+		byte[] buffer = new byte[bufferSize];
 		int count = 0;
 		int read;
 		while (byteCount > 0) {
-			if (byteCount < ioBufferSize) {
+			if (byteCount < bufferSize) {
 				read = input.read(buffer, 0, byteCount);
 			} else {
-				read = input.read(buffer, 0, ioBufferSize);
+				read = input.read(buffer, 0, bufferSize);
 			}
 			if (read == -1) {
 				break;
@@ -183,14 +160,16 @@ public class StreamUtil {
 	 * Copies specified number of characters from reader to writer using buffer.
 	 */
 	public static int copy(Reader input, Writer output, int charCount) throws IOException {
-		char buffer[] = new char[ioBufferSize];
+		int bufferSize = (charCount > ioBufferSize) ? ioBufferSize : charCount;
+
+		char[] buffer = new char[bufferSize];
 		int count = 0;
 		int read;
 		while (charCount > 0) {
-			if (charCount < ioBufferSize) {
+			if (charCount < bufferSize) {
 				read = input.read(buffer, 0, charCount);
 			} else {
-				read = input.read(buffer, 0, ioBufferSize);
+				read = input.read(buffer, 0, bufferSize);
 			}
 			if (read == -1) {
 				break;
@@ -245,7 +224,7 @@ public class StreamUtil {
 	 */
 	public static byte[] readAvailableBytes(InputStream in) throws IOException {
 		int l = in.available();
-		byte byteArray[] = new byte[l];
+		byte[] byteArray = new byte[l];
 		int i = 0, j;
 		while ((i < l) && (j = in.read(byteArray, i, l - i)) >= 0) {
 			i +=j;

@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http;
 
@@ -10,11 +33,10 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class HttpRequestTest {
 
@@ -33,9 +55,9 @@ public class HttpRequestTest {
 		httpRequest.queryString("one=two");
 		assertEquals("/jodd", httpRequest.path());
 
-		Map<String, Object[]> params = httpRequest.query();
+		HttpMultiMap<String> params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("two", params.get("one")[0]);
+		assertEquals("two", params.get("one"));
 
 		httpRequest.queryString("one");
 		assertEquals("one", httpRequest.queryString());
@@ -47,28 +69,28 @@ public class HttpRequestTest {
 		assertEquals("one=", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("", params.get("one")[0]);
+		assertEquals("", params.get("one"));
 
 		httpRequest.queryString("one=aaa&two=bbb");
 		assertEquals("one=aaa&two=bbb", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(2, params.size());
-		assertEquals("aaa", params.get("one")[0]);
-		assertEquals("bbb", params.get("two")[0]);
+		assertEquals("aaa", params.get("one"));
+		assertEquals("bbb", params.get("two"));
 
 		httpRequest.queryString("one=&two=aaa");
 		assertEquals("one=&two=aaa", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(2, params.size());
-		assertEquals("", params.get("one")[0]);
-		assertEquals("aaa", params.get("two")[0]);
+		assertEquals("", params.get("one"));
+		assertEquals("aaa", params.get("two"));
 
 		httpRequest.clearQueries();
 		httpRequest.queryString("one=Супер");
 		assertEquals("one=%D0%A1%D1%83%D0%BF%D0%B5%D1%80", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("Супер", params.get("one")[0]);
+		assertEquals("Супер", params.get("one"));
 
 		httpRequest.queryString("one=Sуp");
 		assertEquals("one=S%D1%83p", httpRequest.queryString());
@@ -77,11 +99,22 @@ public class HttpRequestTest {
 		assertEquals("one=1&one=2", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("1", params.get("one")[0]);
-		assertEquals("2", params.get("one")[1]);
+		assertEquals("1", params.getAll("one").get(0));
+		assertEquals("2", params.getAll("one").get(1));
 
 		httpRequest.query("one", Integer.valueOf(3));
 		assertEquals("one=1&one=2&one=3", httpRequest.queryString());
+	}
+
+	@Test
+	public void testFormParamsObjects() {
+		Map<String, Object> params = new HashMap<>();
+		params.put("state", 1);
+
+		HttpRequest httpRequest = new HttpRequest();
+		httpRequest.form(params);
+
+		assertEquals(1, httpRequest.form().size());
 	}
 
 	@Test
@@ -94,7 +127,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(173, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -105,7 +138,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(173, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -116,7 +149,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(173, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -127,7 +160,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(80, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -138,7 +171,7 @@ public class HttpRequestTest {
 		assertEquals("localhost", httpRequest.host());
 		assertEquals(80, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -171,8 +204,8 @@ public class HttpRequestTest {
 		assertEquals(request.header("Content-Type"), request2.header("content-type"));
 		assertEquals(request.header("Content-Length"), request2.header("content-length"));
 
-		Map params1 = request.form();
-		Map params2 = request2.form();
+		HttpMultiMap<?> params1 = request.form();
+		HttpMultiMap<?> params2 = request2.form();
 		assertEquals(params1.size(), params2.size());
 		assertEquals(params2.get("one"), params2.get("one"));
 	}
@@ -185,7 +218,7 @@ public class HttpRequestTest {
 		byte[] bytes = request.toByteArray();
 		try {
 			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-			assertNull(request2.body());
+			assertEquals("", request2.body());
 		} catch (Exception ex) {
 			Assert.fail(ex.toString());
 		}
@@ -197,7 +230,7 @@ public class HttpRequestTest {
 		bytes = request.toByteArray();
 		try {
 			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-			assertNull(request2.body());
+			assertEquals("", request2.body());
 		} catch (Exception ex) {
 			Assert.fail(ex.toString());
 		}
@@ -219,7 +252,7 @@ public class HttpRequestTest {
 
 		// read
 		HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-		Map<String, Object[]> httpParams2 = request2.form();
+		HttpMultiMap<?> httpParams2 = request2.form();
 
 		assertEquals(request.method(), request2.method());
 		assertEquals(request.path(), request2.path());
@@ -229,12 +262,12 @@ public class HttpRequestTest {
 		assertEquals(request.header("Content-Type"), request2.header("content-type"));
 		assertEquals(request.header("Content-Length"), request2.header("content-length"));
 
-		Map params1 = request.form();
-		Map params2 = request2.form();
+		HttpMultiMap<?> params1 = request.form();
+		HttpMultiMap<?> params2 = request2.form();
 		assertEquals(params1.size(), params2.size());
 		assertEquals(params2.get("one"), params2.get("one"));
 
-		FileUpload fu = (FileUpload) httpParams2.get("two")[0];
+		FileUpload fu = (FileUpload) httpParams2.get("two");
 		assertEquals(6, fu.getSize());
 
 		String str = new String(fu.getFileContent());
@@ -249,6 +282,51 @@ public class HttpRequestTest {
 		httpRequest.set("GET http://jodd.org:173/index.html?light=true");
 
 		assertEquals("http://jodd.org:173/index.html?light=true", httpRequest.url());
+		assertEquals("http://jodd.org:173", httpRequest.hostUrl());
+
+		httpRequest = HttpRequest.get("foo.com/");
+
+		assertEquals("http://foo.com", httpRequest.hostUrl());
 	}
 
+	@Test
+	public void testBasicAuthorizationCanBeSetToNullAndIsIgnoredSilently() {
+		HttpRequest httpRequest = new HttpRequest();
+		String[][] input = new String[][]{
+				{"non-null", null},
+				{null, "non-null"},
+				{null, null},
+		};
+
+		try {
+
+			for(String[] pair :input) {
+				httpRequest.basicAuthentication(pair[0], pair[1]);
+				assertNull(httpRequest.headers.get("Authorization"));
+			}
+
+		} catch (RuntimeException e) {
+			fail("No exception should be thrown for null authorization basic header args!");
+		}
+	}
+
+	@Test
+	public void test394() {
+		HttpRequest request = HttpRequest.get("https://jodd.org/random link");
+		assertEquals("GET", request.method());
+		assertEquals("https://jodd.org/random link", request.url());
+
+		request = HttpRequest.get("https://jodd.org/random link?q=1");
+		assertEquals("1", request.query().get("q"));
+
+		String badUrl = "httpsjodd.org/random link?q=1:// GET";
+		try {				
+			HttpRequest.get(badUrl).send();
+			fail();
+		}
+		catch (HttpException he) {
+			assertTrue(he.getMessage().contains(badUrl));
+		}
+
+	}
 }

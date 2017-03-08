@@ -1,8 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.servlet.upload;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.servlet.ServletUtil;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.MultipartStreamParser;
@@ -63,28 +86,6 @@ public class MultipartRequest extends MultipartStreamParser {
 
 	// ---------------------------------------------------------------- constructors
 
-
-	/**
-	 * @see #MultipartRequest(javax.servlet.http.HttpServletRequest, FileUploadFactory, String)
-	 */
-	public MultipartRequest(HttpServletRequest request) {
-		this(request, null, null);
-	}
-
-	/**
-	 * @see #MultipartRequest(javax.servlet.http.HttpServletRequest, FileUploadFactory, String)
-	 */
-	public MultipartRequest(HttpServletRequest request, FileUploadFactory fileUploadFactory) {
-		this(request, fileUploadFactory, null);
-	}
-
-	/**
-	 * @see #MultipartRequest(javax.servlet.http.HttpServletRequest, FileUploadFactory, String)
-	 */
-	public MultipartRequest(HttpServletRequest request, String encoding) {
-		this(request, null, encoding);
-	}
-
 	/**
 	 * Creates new multi-part request with form encoding and file upload factory.
 	 * After construction stream is <b>not</b> yet parsed! Use {@link #parseMultipartRequest()} or
@@ -121,60 +122,25 @@ public class MultipartRequest extends MultipartStreamParser {
 	private static final String MREQ_ATTR_NAME = MultipartRequest.class.getName();
 
 	/**
-	 * Returns a new instance of MultipleRequest if it was not created before during current request.
+	 * Returns new or existing instance of <code>MultipartRequest</code>.
 	 */
-	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) {
+	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) throws IOException {
 		MultipartRequest mreq = (MultipartRequest) request.getAttribute(MREQ_ATTR_NAME);
 		if (mreq == null) {
 			mreq = new MultipartRequest(request, fileUploadFactory, encoding);
 			request.setAttribute(MREQ_ATTR_NAME, mreq);
 		}
+		if (!mreq.isParsed()) {
+			mreq.parseRequest();
+		}
 		return mreq;
 	}
 
 	/**
-	 * Returns parsed instance of MultipartRequest.
+	 * Returns new or existing instance of <code>MultipartRequest</code>.
 	 */
-	public static MultipartRequest getParsedInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) throws IOException {
-		MultipartRequest mreq = getInstance(request, fileUploadFactory, encoding);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
-	}
-
-	public static MultipartRequest getInstance(HttpServletRequest request, String encoding) {
-		return getInstance(request, null, encoding);
-	}
-	public static MultipartRequest getParsedInstance(HttpServletRequest request, String encoding) throws IOException {
-		MultipartRequest mreq = getInstance(request, null, encoding);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
-	}
-
-
-	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory) {
-		return getInstance(request, fileUploadFactory, null);
-	}
-	public static MultipartRequest getParsedInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory) throws IOException {
-		MultipartRequest mreq = getInstance(request, fileUploadFactory, null);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
-	}
-
-	public static MultipartRequest getInstance(HttpServletRequest request) {
+	public static MultipartRequest getInstance(HttpServletRequest request) throws IOException {
 		return getInstance(request, null, null);
-	}
-	public static MultipartRequest getParsedInstance(HttpServletRequest request) throws IOException {
-		MultipartRequest mreq = getInstance(request, null, null);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
 	}
 
 	// ---------------------------------------------------------------- load
@@ -195,7 +161,7 @@ public class MultipartRequest extends MultipartStreamParser {
 	 * @see MultipartRequestWrapper
 	 */
 	public void parseRequest() throws IOException {
-		if (ServletUtil.isMultipartRequest(request) == true) {
+		if (ServletUtil.isMultipartRequest(request)) {
 			parseRequestStream(request.getInputStream(), characterEncoding);
 		} else {
 			Enumeration names = request.getParameterNames();

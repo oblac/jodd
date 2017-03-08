@@ -1,10 +1,34 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbUtil;
+import jodd.db.oom.mapper.DefaultResultSetMapper;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
 import jodd.db.type.SqlType;
@@ -230,7 +254,7 @@ public class DbOomQuery extends DbQuery {
 	protected ResultSetMapper createResultSetMapper(ResultSet resultSet) {
 		Map<String, ColumnData> columnAliases = sqlgen != null ? sqlgen.getColumnData() : null;
 
-		return dbOomManager.createResultSetMapper(resultSet, columnAliases, cacheEntities);
+		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
 	}
 
 	// ---------------------------------------------------------------- db list
@@ -252,46 +276,28 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- iterator
 
 	public <T> Iterator<T> iterate(Class... types) {
-		return iterate(types, false);
-	}
-	public <T> Iterator<T> iterateAndClose(Class... types) {
-		return iterate(types, true);
+		return iterate(types, autoClose);
 	}
 	public <T> Iterator<T> iterate() {
-		return iterate(null, false);
-	}
-	public <T> Iterator<T> iterateAndClose() {
-		return iterate(null, true);
+		return iterate(null, autoClose);
 	}
 	protected <T> Iterator<T> iterate(Class[] types, boolean close) {
-		return new DbListIterator<T>(this, types, close);
+		return new DbListIterator<>(this, types, close);
 	}
 
 	// ---------------------------------------------------------------- list
 
 	public <T> List<T> list(Class... types) {
-		return list(types, -1, false);
-	}
-	public <T> List<T> listAndClose(Class... types) {
-		return list(types, -1, true);
+		return list(types, -1, autoClose);
 	}
 	public <T> List<T> list() {
-		return list(null, -1, false);
-	}
-	public <T> List<T> listAndClose() {
-		return list(null, -1, true);
+		return list(null, -1, autoClose);
 	}
 	public <T> List<T> list(int max, Class... types) {
-		return list(types, max, false);
-	}
-	public <T> List<T> listAndClose(int max, Class... types) {
-		return list(types, max, true);
+		return list(types, max, autoClose);
 	}
 	public <T> List<T> list(int max) {
-		return list(null, max, false);
-	}
-	public <T> List<T> listAndClose(int max) {
-		return list(null, max, true);
+		return list(null, max, autoClose);
 	}
 	/**
 	 * Iterates result set, maps rows to classes and populates resulting array list.
@@ -302,7 +308,7 @@ public class DbOomQuery extends DbQuery {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, int max, boolean close) {
-		List<T> result = new ArrayList<T>(initialCollectionSize(max));
+		List<T> result = new ArrayList<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
@@ -350,32 +356,20 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- set
 
 	public <T> Set<T> listSet(Class... types) {
-		return listSet(types, -1, false);
-	}
-	public <T> Set<T> listSetAndClose(Class... types) {
-		return listSet(types, -1, true);
+		return listSet(types, -1, autoClose);
 	}
 	public <T> Set<T> listSet() {
-		return listSet(null, -1, false);
-	}
-	public <T> Set<T> listSetAndClose() {
-		return listSet(null, -1, true);
+		return listSet(null, -1, autoClose);
 	}
 	public <T> Set<T> listSet(int max, Class... types) {
-		return listSet(types, max, false);
-	}
-	public <T> Set<T> listSetAndClose(int max, Class... types) {
-		return listSet(types, max, true);
+		return listSet(types, max, autoClose);
 	}
 	public <T> Set<T> listSet(int max) {
-		return listSet(null, max, false);
-	}
-	public <T> Set<T> listSetAndClose(int max) {
-		return listSet(null, max, true);
+		return listSet(null, max, autoClose);
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
-		Set<T> result = new LinkedHashSet<T>(initialCollectionSize(max));
+		Set<T> result = new LinkedHashSet<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
@@ -423,16 +417,10 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- find
 
 	public <T> T find(Class... types) {
-		return find(types, false, null);
-	}
-	public <T> T findAndClose(Class... types) {
-		return find(types, true, null);
+		return find(types, autoClose, null);
 	}
 	public <T> T find() {
-		return find(null, false, null);
-	}
-	public <T> T findAndClose() {
-		return find(null, true, null);
+		return find(null, autoClose, null);
 	}
 	protected <T> T find(Class[] types, boolean close, ResultSet resultSet) {
 		if (resultSet == null) {
@@ -440,7 +428,7 @@ public class DbOomQuery extends DbQuery {
 		}
 		ResultSetMapper rsm = createResultSetMapper(resultSet);
 
-		Iterator<T> iterator = new DbListIterator<T>(this, types, rsm, false);
+		Iterator<T> iterator = new DbListIterator<>(this, types, rsm, false);
 
 		T result = null;
 
@@ -471,10 +459,19 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- util
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DbOomQuery autoClose() {
+		super.autoClose();
+		return this;
+	}
+
+	/**
 	 * Closes results set or whole query.
 	 */
 	protected void close(ResultSetMapper rsm, boolean closeQuery) {
-		if (closeQuery == true) {
+		if (closeQuery) {
 			close();
 		} else {
 			closeResultSet(rsm.getResultSet());

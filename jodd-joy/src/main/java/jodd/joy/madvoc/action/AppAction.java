@@ -1,8 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.joy.madvoc.action;
 
-import jodd.joy.page.PageRequest;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.vtor.Vtor;
 import jodd.vtor.Violation;
@@ -17,35 +40,21 @@ public abstract class AppAction {
 	public static final String BACK = "#";
 	public static final String OK = "ok";
 
-	public static final String METHOD_POST = "POST";
-	public static final String METHOD_GET = "GET";
-	public static final String METHOD_PUT = "PUT";
-	public static final String METHOD_HEAD = "HEAD";
-	public static final String METHOD_DELETE = "DELETE";
-	public static final String METHOD_TRACE = "TRACE";
-	public static final String METHOD_OPTIONS = "OPTIONS";
-
 	public static final String REDIRECT = "redirect:";
 	public static final String DISPATCH = "dispatch:";
 	public static final String CHAIN = "chain:";
-	public static final String JSON = "json:";
 	public static final String MOVE = "move:";
-	public static final String RAW = "raw:";
 	public static final String NONE = "none:";
 	public static final String VTOR_JSON = "vtor-json:";
 
 	public static final String ALIAS_INDEX = "<index>";
 	public static final String ALIAS_INDEX_NAME = "index";
-	public static final String ALIAS_LOGIN = "<login>";
-	public static final String ALIAS_LOGIN_NAME = "login";
-	public static final String ALIAS_ACCESS_DENIED = "<accessDenied>";
-	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
 
 	/**
 	 * Creates alias. 
 	 */
 	protected String alias(String target) {
-		return '<' + target + '>';
+		return StringPool.LEFT_CHEV.concat(target).concat(StringPool.RIGHT_CHEV);
 	}
 
 	/**
@@ -118,21 +127,6 @@ public abstract class AppAction {
 		if (vtor == null) {
 			vtor = new Vtor();
 		}
-	}
-
-	// ---------------------------------------------------------------- paging
-
-	/**
-	 * Applies page size on given page request.
-	 */
-	protected PageRequest applyPageSize(PageRequest pageRequest, int pageSize) {
-		if (pageSize != 0) {
-			if (pageRequest == null) {
-				pageRequest = new PageRequest();
-				pageRequest.setSize(pageSize);
-			}
-		}
-		return pageRequest;
 	}
 
 }

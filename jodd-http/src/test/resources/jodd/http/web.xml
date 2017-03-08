@@ -26,4 +26,37 @@
 		<url-pattern>/echo2</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<display-name>TargetServlet</display-name>
+		<servlet-name>TargetServlet</servlet-name>
+		<servlet-class>jodd.http.TargetServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>TargetServlet</servlet-name>
+		<url-pattern>/target</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<display-name>RedirectServlet</display-name>
+		<servlet-name>RedirectServlet</servlet-name>
+		<servlet-class>jodd.http.RedirectServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>RedirectServlet</servlet-name>
+		<url-pattern>/redirect</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<display-name>SlowServlet</display-name>
+		<servlet-name>SlowServlet</servlet-name>
+		<servlet-class>jodd.http.SlowServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SlowServlet</servlet-name>
+		<url-pattern>/slow</url-pattern>
+	</servlet-mapping>
+
 </web-app>

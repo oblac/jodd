@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.swingspy;
 
@@ -51,16 +74,16 @@ import java.util.TreeSet;
  */
 public class SwingSpyPanel extends JPanel {
 
-	private JTree componentTree;
-	private JEditorPane componentData;
-	private JEditorPane detailsData;
-	private JScrollPane detailsScrollPane;
-	private DefaultMutableTreeNode root;
+	private final JTree componentTree;
+	private final JEditorPane componentData;
+	private final JEditorPane detailsData;
+	private final JScrollPane detailsScrollPane;
+	private final DefaultMutableTreeNode root;
 
 	private static final int INITIAL_WIDTH = 600;
 	private static final int INITIAL_HEIGHT = 500;
 
-	private Font font = new Font("Arial", Font.PLAIN,  12);
+	private final Font font = new Font("Arial", Font.PLAIN,  12);
 
 	/**
 	 * Initialization.
@@ -155,10 +178,11 @@ public class SwingSpyPanel extends JPanel {
 		}
 
 		public String toHtmlString() {
-			StringBuilder str = new StringBuilder("<html>");
-			str.append("&nbsp;name: ").append("<b>").append(component.getName()).append("</b><br>");
-			str.append("&nbsp;class: ").append("<b>").append(component.getClass().getName()).append("</b><br>");
-			return str.toString();
+			return new StringBuilder("<html>").append("&nbsp;name: ")
+					.append("<b>").append(component.getName())
+					.append("</b><br>").append("&nbsp;class: ").append("<b>")
+					.append(component.getClass().getName()).append("</b><br>")
+					.toString();
 		}
 
 		public String toDetailedString() {
@@ -167,7 +191,7 @@ public class SwingSpyPanel extends JPanel {
 				return "<null>";
 			}
 
-			TreeSet<String> treeSet = new TreeSet<String>();
+			TreeSet<String> treeSet = new TreeSet<>();
 
 			Class clazz = bean.getClass();
 			Field[] fields = clazz.getDeclaredFields();
@@ -185,6 +209,7 @@ public class SwingSpyPanel extends JPanel {
 				} else {
 					str.append(' ');
 				}
+				field.setAccessible(true);
 
 				str.append(field.getName()).append(':');
 
@@ -218,8 +243,8 @@ public class SwingSpyPanel extends JPanel {
 	}
 
 	private static String htmlSafe(String str) {
-		str = str.replace("<", "&gt;");
-		str = str.replace(">", "&lt;");
+		str = str.replace(">", "&gt;");
+		str = str.replace("<", "&lt;");
 		str = str.replace(" ", "&nbsp;");
 		str = str.replace("\n", "<br>");
 		return str;
@@ -291,7 +316,7 @@ public class SwingSpyPanel extends JPanel {
 					createImageIcon(packageName + "label.png"),
 					createImageIcon(packageName + "list.png"),
 					createImageIcon(packageName + "panel.png"),
-					createImageIcon(packageName + "progressBar.png"),
+					createImageIcon(packageName + "progressbar.png"),
 					createImageIcon(packageName + "radioButton.png"),
 					createImageIcon(packageName + "scrollbar.png"),
 					createImageIcon(packageName + "scrollPane.png"),

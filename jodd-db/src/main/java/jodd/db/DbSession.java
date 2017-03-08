@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db;
 
@@ -10,12 +33,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Encapsulates db connection. Initially works in auto-commit mode.
- * May start and work with transactions, after commiting/rolling back
+ * May start and work with transactions, after committing/rolling back
  * DbSession goes back to auto-commit mode.
  * <p>
  * All invoked queries are stored within one session and closed implicitly
@@ -23,7 +44,7 @@ import java.util.ArrayList;
  * <p>
  * For managed transaction see <code>DbJtxTransactionManager</code> from <b>jodd-tx</b>.
  */
-public class DbSession {
+public class DbSession implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(DbSession.class);
 
@@ -49,13 +70,13 @@ public class DbSession {
 		if (connectionProvider == null) {
 			connectionProvider = dbManager.connectionProvider;
 			if (connectionProvider == null) {
-				throw new DbSqlException("Connection provider is not available.");
+				throw new DbSqlException("Connection provider is not available");
 			}
 		}
 		this.connectionProvider = connectionProvider;
 		txActive = false;
 		txMode = dbManager.transactionMode;
-		queries = new HashSet<DbQueryBase>();
+		queries = new HashSet<>();
 	}
 
 
@@ -68,29 +89,36 @@ public class DbSession {
 	public void closeSession() {
 		log.debug("Closing db session");
 
-		List<SQLException> allsexs = null;
+		SQLException sqlException = null;
+
 		if (queries != null) {
 			for (DbQueryBase query : queries) {
-				List<SQLException> sexs = query.closeQuery();
-				if (sexs != null) {
-					if (allsexs == null) {
-						allsexs = new ArrayList<SQLException>();
+				SQLException sex = query.closeQuery();
+				if (sex != null) {
+					if (sqlException == null) {
+						sqlException = sex;
+					} else {
+						sqlException.setNextException(sex);
 					}
-					allsexs.addAll(sexs);
 				}
 			}
 		}
 		if (connection != null) {
-			if (txActive == true) {
-				throw new DbSqlException("Transaction was not closed before closing the session.");
+			if (txActive) {
+				throw new DbSqlException("TX was not closed before closing the session");
 			}
 			connectionProvider.closeConnection(connection);
 			connection = null;
 		}
 		queries = null;
-		if (allsexs != null) {
-			throw new DbSqlException("Unable to close DbSession.", allsexs);
+		if (sqlException != null) {
+			throw new DbSqlException("Closing DbSession failed", sqlException);
 		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		closeSession();
 	}
 
 	/**
@@ -112,7 +140,7 @@ public class DbSession {
 
 	/**
 	 * Bag of all queries attached to this session. Explicitly closed queries
-	 * remains in the set. If <code>null</code> session is closed.
+	 * remains in the set. If <code>null</code>, session is closed.
 	 * If not <code>null</code>, but empty, session is still considered as open.
 	 */
 	protected Set<DbQueryBase> queries;
@@ -162,7 +190,7 @@ public class DbSession {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to open non-transactional connection.", sex);
+				throw new DbSqlException("Failed to open non-TX connection", sex);
 			}
 		}
 	}
@@ -196,7 +224,7 @@ public class DbSession {
 			}
 			connection.setReadOnly(txMode.isReadOnly());
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to open and prepare transaction.", sex);
+			throw new DbSqlException("Open TX failed", sex);
 		}
 	}
 
@@ -208,7 +236,7 @@ public class DbSession {
 		try {
 			connection.setAutoCommit(true);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to prepare connection", sex);
+			throw new DbSqlException("Close TX failed", sex);
 		}
 	}
 
@@ -242,7 +270,7 @@ public class DbSession {
 		try {
 			connection.commit();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to commit transaction.", sex);
+			throw new DbSqlException("Commit TX failed", sex);
 		} finally {
 			closeTx();
 		}
@@ -258,7 +286,7 @@ public class DbSession {
 		try {
 			connection.rollback();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to rollback transaction.", sex);
+			throw new DbSqlException("Rollback TX failed", sex);
 		} finally {
 			closeTx();
 		}
@@ -269,21 +297,21 @@ public class DbSession {
 
 	protected void checkOpenSession() {
 		if (queries == null) {
-			throw new DbSqlException("Session is closed.");
+			throw new DbSqlException("Session is closed");
 		}
 	}
 
 	protected void checkClosedTx() {
 		checkOpenSession();
-		if (txActive == true) {
-			throw new DbSqlException("Transaction already started for this session.");
+		if (txActive) {
+			throw new DbSqlException("TX already started for this session");
 		}
 	}
 
 	protected void checkActiveTx() {
 		checkOpenSession();
-		if (txActive == false) {
-			throw new DbSqlException("Transaction not available for this session.");
+		if (!txActive) {
+			throw new DbSqlException("TX not available for this session");
 		}
 	}
 }

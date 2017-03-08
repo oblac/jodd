@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom.sqlgen.chunks;
 
@@ -11,12 +34,13 @@ import jodd.util.CharUtil;
 /**
  * SQL chunk defines part of the SQL query that can be processed.
  */
-public abstract class SqlChunk implements Cloneable {
+public abstract class SqlChunk {
 
 	public static final int COLS_NA = 0;                // using explicit reference.
 	public static final int COLS_ONLY_EXISTING = 1;     // using only existing columns i.e. that are not-null
 	public static final int COLS_ONLY_IDS = 2;          // using only identity columns
 	public static final int COLS_ALL = 3;               // using all available columns
+	public static final int COLS_ALL_BUT_ID = 4;        // using all available columns except the identity column
 	public static final int COLS_NA_MULTI = 0;          // using explicit reference.
 
 	protected final int chunkType;                      // chunk type
@@ -132,7 +156,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected DbEntityDescriptor lookupName(String entityName) {
 		DbEntityDescriptor ded = templateData.getDbOomManager().lookupName(entityName);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOomManager.");
+			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
 		return ded;
 	}
@@ -143,7 +167,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected DbEntityDescriptor lookupType(Class entity) {
 		DbEntityDescriptor ded = templateData.getDbOomManager().lookupType(entity);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
+			throw new DbSqlBuilderException("Invalid or not-persistent entity: " + entity.getName());
 		}
 		return ded;
 	}
@@ -222,7 +246,7 @@ public abstract class SqlChunk implements Cloneable {
 			return;
 		}
 		len--;
-		if (CharUtil.isWhitespace(out.charAt(len)) == false) {
+		if (!CharUtil.isWhitespace(out.charAt(len))) {
 			out.append(' ');
 		}
 	}
@@ -237,14 +261,5 @@ public abstract class SqlChunk implements Cloneable {
 			appendMissingSpace(out);
 		}
 	}
-
-
-	// ---------------------------------------------------------------- clone
-
-	/**
-	 * Clones all parsed chunk data to an instance that is ready for processing.
-	 */
-	@Override
-	public abstract SqlChunk clone();
 
 }

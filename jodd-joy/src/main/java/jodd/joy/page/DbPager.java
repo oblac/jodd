@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.joy.page;
 
@@ -18,33 +41,83 @@ import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 public abstract class DbPager {
 
 	/**
-	 * Performs the pagination.
+	 * Returns default page request when passed one is <code>null</code>.
+	 * This usually happens on initial page view, when no page request is created.
+	 * Returned <code>PageRequest</code> defines <i>global</i> defaults.
 	 */
-	public <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, String[] sortColumns, Class[] target) {
-		PageData<T> pageData = page(sql, pageRequest.getPage(), pageRequest.getSize(), params, pageRequest.getSort(), sortColumns, target);
-
-		if (pageData.getItems().isEmpty() && pageData.currentPage != 0) {
-			if (pageData.currentPage != pageRequest.getPage()) {
-				// out of bounds
-				int newPage = pageData.getCurrentPage();
-				pageData = page(sql, newPage, pageRequest.getSize(), params, pageRequest.getSort(), sortColumns, target);
-			}
-		}
-		return pageData;
+	protected PageRequest getDefaultPageRequest() {
+		return new PageRequest();
 	}
 
 	/**
-	 * Pages given page. No fix in case of out-of-bounds.
+	 * Performs the pagination with given {@link jodd.joy.page.PageRequest}.
+	 *
+	 * @param pageRequest page request, may be <code>null</code>, then the {@link #getDefaultPageRequest() default page request} will be used
+	 * @param sql SQL query that lists <b>all</b> items
+	 * @param params SQL query parameters or <code>null</code>
+	 * @param sortColumns array of all column names
+	 * @param target db entities for mapping (as usual in DbOom)
+	 *
+	 * @see #page(String, java.util.Map, int, int, String, boolean, Class[])
 	 */
-	protected <T> PageData<T> page(String sql, int page, int pageSize, Map params, int sort, String[] sortColumns, Class[] target) {
+	public <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, String[] sortColumns, Class[] target) {
+		if (pageRequest == null) {
+			pageRequest = getDefaultPageRequest();
+		}
+
+		// check sort
+
+		String sortColumName = null;
+		boolean ascending = true;
+
+		int sort = pageRequest.getSort();
 		if (sort != 0) {
-			boolean ascending = sort > 0;
+			ascending = sort > 0;
 			if (!ascending) {
 				sort = -sort;
 			}
 			int index = sort - 1;
 
-			sql = buildOrderSql(sql, sortColumns[index], ascending);
+			if (index >= sortColumns.length) {
+				index = 1;
+			}
+			sortColumName = sortColumns[index];
+		}
+
+		// page
+
+		int page = pageRequest.getPage();
+		int pageSize = pageRequest.getSize();
+
+		PageData<T> pageData = page(sql, params, page, pageSize, sortColumName, ascending, target);
+
+		// fix the out-of-bounds
+
+		if (pageData.getItems().isEmpty() && pageData.currentPage != 0) {
+			if (pageData.currentPage != page) {
+				// out of bounds
+				int newPage = pageData.getCurrentPage();
+				pageData = page(sql, params, newPage, pageSize, sortColumName, ascending, target);
+			}
+		}
+
+		return pageData;
+	}
+
+	/**
+	 * Pages given page.
+	 *
+	 * @param sql sql query that lists <b>all</b> items
+	 * @param params map of SQL parameters
+	 * @param page current page to show
+	 * @param pageSize number of items to show
+	 * @param sortColumnName name of sorting column, <code>null</code> for no sorting
+	 * @param ascending <code>true</code> for ascending order
+	 * @param target db entities for mapping (sa usual in DbOom)
+	 */
+	protected <T> PageData<T> page(String sql, Map params, int page, int pageSize, String sortColumnName, boolean ascending, Class[] target) {
+		if (sortColumnName != null) {
+			sql = buildOrderSql(sql, sortColumnName, ascending);
 		}
 
 		int from = (page - 1) * pageSize;
@@ -57,13 +130,17 @@ public abstract class DbPager {
 		query.setFetchSize(pageSize);
 		query.setMap(params);
 
-		List<T> list = query.listAndClose(pageSize, target);
+		List<T> list = query.list(pageSize, target);
+		query.close();
 
 		String countSql = buildCountSql(sql);
 		dbsql = sql(countSql);
-		long count = query(dbsql).executeCountAndClose();
+		query = query(dbsql);
+		query.setMap(params);
+		long count = query.executeCount();
+		query.close();
 
-		return new PageData<T>(page, (int) count, pageSize, list);
+		return new PageData<>(page, (int) count, pageSize, list);
 	}
 
 	// ---------------------------------------------------------------- abstract
@@ -100,18 +177,39 @@ public abstract class DbPager {
 	}
 
 	/**
-	 * Removes the first part of the sql up to the 'from'.
+	 * Removes the first part of the sql up to the relevant 'from'.
+	 * Tries to detect sub-queries in the 'select' part.
 	 */
 	protected String removeToFrom(String sql) {
-		int ndx = StringUtil.indexOfIgnoreCase(sql, "from");
-		if (ndx != -1) {
-			sql = sql.substring(ndx);
+		int from = 0;
+		int fromCount = 1;
+		int selectCount = 0;
+		int lastNdx = 0;
+		while (true) {
+			int ndx = StringUtil.indexOfIgnoreCase(sql, "from", from);
+			if (ndx == -1) {
+				break;
+			}
+
+			// count selects in left part
+			String left = sql.substring(lastNdx, ndx);
+			selectCount += StringUtil.countIgnoreCase(left, "select");
+
+			if (fromCount >= selectCount) {
+				sql = sql.substring(ndx);
+				break;
+			}
+
+			// find next 'from'
+			lastNdx = ndx;
+			from = ndx + 4;
+			fromCount++;
 		}
 		return sql;
 	}
 
 	/**
-	 * Removes everything from last last order by.
+	 * Removes everything from last "order by".
 	 */
 	protected String removeLastOrderBy(String sql) {
 		int ndx = StringUtil.lastIndexOfIgnoreCase(sql, "order by");

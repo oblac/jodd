@@ -1,22 +1,40 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.props;
 
-import jodd.io.FastCharArrayWriter;
-import jodd.io.StreamUtil;
-import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
 
-public class PropsTest {
+public class PropsTest extends BasePropsTest {
 
 	@Test
 	public void testBasic() throws IOException {
@@ -42,7 +60,7 @@ public class PropsTest {
 		assertNull(p.getValue("non existing"));
 
 		Properties prop = new Properties();
-		p.extractBaseProps(prop);
+		p.extractProps(prop, null);
 		assertEquals("1937{c}", prop.getProperty("year"));
 		assertEquals("49.5", prop.getProperty("doc.weight"));
 		assertEquals("Čađavi Žar utf8", prop.getProperty("comment"));
@@ -85,7 +103,7 @@ public class PropsTest {
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy"));
 
 		Properties prop = new Properties();
-		p.extractBaseProps(prop);
+		p.extractProps(prop, null);
 		assertEquals("one", prop.getProperty("foo"));
 
 		prop.clear();
@@ -171,8 +189,9 @@ public class PropsTest {
 	@Test
 	public void testMacros() throws IOException {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(readDataFile("test2.props"));
+
+		assertEquals("/roo/mypath", p.getValue("data.mypath"));
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
@@ -193,14 +212,14 @@ public class PropsTest {
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
-		assertEquals("/app/data3", p.getValue("data.path", "@prof2"));
+		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));
 
-		assertEquals("/app/re", p.getValue("data.path", "@p1"));
+		assertEquals("/roo/re", p.getValue("data.path", "@p1"));
 		assertEquals("/app/re", p.getValue("data.path", "@p2"));
 
 		Properties prop = new Properties();
 		p.extractProps(prop, "@prof2");
-		assertEquals("/app/data3", prop.getProperty("data.path"));
+		assertEquals("/foo/data3", prop.getProperty("data.path"));
 
 		// activate profiles
 
@@ -208,7 +227,7 @@ public class PropsTest {
 		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));
 
 		p.setActiveProfiles("@p1", "@p2");
-		assertEquals("/roo/re", p.getValue("data.path", "@p2"));
+		assertEquals("/app/re", p.getValue("data.path", "@p2"));
 	}
 
 
@@ -264,14 +283,13 @@ public class PropsTest {
 	@Test
 	public void testClone() throws IOException {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(readDataFile("test2.props"));
 
 		Props p2 = p.clone();
 		p2.load(readDataFile("test.props"));
 
-		assertEquals(2, p.countTotalProperties());
-		assertEquals(19, p2.countTotalProperties());
+		assertEquals(3, p.countTotalProperties());
+		assertEquals(20, p2.countTotalProperties());
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
@@ -606,6 +624,39 @@ public class PropsTest {
 	}
 
 	@Test
+	public void testGetProfilesForKey() {
+		Props p = new Props();
+
+		p.load("zorg<prof2>=zero\n" +
+				"foo=one\n" +
+				"bar=two\n" +
+				"[foo<prof1>]\n" +
+				"info=zero\n" +
+				"info2=zero2");
+
+		String[] profiles = p.getProfilesFor("zorg");
+
+		assertEquals(1, profiles.length);
+		assertEquals("prof2", profiles[0]);
+
+		profiles = p.getProfilesFor("zor*");
+
+		assertEquals(1, profiles.length);
+		assertEquals("prof2", profiles[0]);
+
+		profiles = p.getProfilesFor("foo");
+		assertEquals(0, profiles.length);
+
+		profiles = p.getProfilesFor("foo.*");
+		assertEquals(1, profiles.length);
+		assertEquals("prof1", profiles[0]);
+
+		profiles = p.getProfilesFor("foo*");
+		assertEquals(1, profiles.length);
+		assertEquals("prof1", profiles[0]);
+	}
+
+	@Test
 	public void testChangeActiveProfile() {
 		Props p = new Props();
 
@@ -662,7 +713,6 @@ public class PropsTest {
 	@Test
 	public void testMacrosAndProfiles() {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(true);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -686,7 +736,6 @@ public class PropsTest {
 	@Test
 	public void testMacrosAndProfilesAsBefore() {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -698,18 +747,18 @@ public class PropsTest {
 		assertEquals("111", p.getValue("wow"));
 
 		p.setActiveProfiles("pr1");
-		assertEquals("111", p.getValue("wow"));
+		assertEquals("111222", p.getValue("wow"));
 
 		p.setActiveProfiles("pr2");
-		assertEquals("111", p.getValue("wow"));
+		assertEquals("111222333", p.getValue("wow"));
 
 		p.setActiveProfiles("pr1", "pr2");
-		assertEquals("111", p.getValue("wow"));
+		assertEquals("111222", p.getValue("wow"));
 
 		// wow needs to be defined in a profile to get the profile value in macro
+		// NOT ANYMORE!
 
 		p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -731,7 +780,6 @@ public class PropsTest {
 
 
 		p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -828,40 +876,32 @@ public class PropsTest {
 		assertEquals("222", p.getValue("bar.two"));
 	}
 
+	@Test
+	public void testIssue78() {
+		String data =
+				"@profiles=o\n" +
+				"\n" +
+				"prefix<o> = is Good\n" +
+				"prefix<l> = is very Good\n" +
+				"\n" +
+				"[user]\n" +
+				"name = jodd ${prefix}";
 
-	// ---------------------------------------------------------------- util
+		Props props = new Props();
+		props.load(data);
 
-	private String readDataFile(String fileName) throws IOException {
-		String dataFolder = this.getClass().getPackage().getName() + ".data.";
-		dataFolder = dataFolder.replace('.', '/');
-
-		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
-		Writer out = new FastCharArrayWriter();
-		String encoding = "UTF-8";
-		if (fileName.endsWith(".properties")) {
-			encoding = "ISO-8859-1";
-		}
-		StreamUtil.copy(is, out, encoding);
-		StreamUtil.close(is);
-		return out.toString();
+		assertEquals("jodd is Good", props.getValue("user.name"));
 	}
 
-	private Props loadProps(Props p, String fileName) throws IOException {
-		String dataFolder = this.getClass().getPackage().getName() + ".data.";
-		dataFolder = dataFolder.replace('.', '/');
+	@Test
+	public void testAdditionalEquals() {
+		String data =
+				"account-dn = cn=accountname,ou=users,o=organization\n";
 
-		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
-		String encoding = "UTF-8";
-		if (fileName.endsWith(".properties")) {
-			encoding = "ISO-8859-1";
-		}
-		p.load(is, encoding);
-		return p;
-	}
+		Props props = new Props();
+		props.load(data);
 
-	private Props loadProps(String fileName) throws IOException {
-		Props p = new Props();
-		return loadProps(p, fileName);
+		assertEquals("cn=accountname,ou=users,o=organization", props.getValue("account-dn"));
 	}
 
 }

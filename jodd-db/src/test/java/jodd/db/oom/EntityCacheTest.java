@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom;
 
@@ -52,12 +75,12 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		dbSession = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl2(1, "Anna", "seduction")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Girl2(2, "Sandra", "spying")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Girl2(3, "Emma", "nothing")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Boy(1, "Johny", 2)).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Boy(2, "Marco", 2)).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Boy(3, "Hugo", 1)).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new Girl2(1, "Anna", "swim")).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl2(2, "Sandra", "piano")).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl2(3, "Emma", "nothing")).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Boy(1, "Johny", 2)).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Boy(2, "Marco", 2)).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Boy(3, "Hugo", 1)).query().executeUpdate());
 	}
 
 	@After
@@ -70,7 +93,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_useCache_noHints() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		List<Object[]> result = q.cacheEntities(true).listAndClose(Girl2.class, Boy.class);
+		List<Object[]> result = q.cacheEntities(true).list(Girl2.class, Boy.class);
 
 		assertEquals(3, result.size());
 
@@ -99,7 +122,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		List<Object[]> result = q.cacheEntities(true).listAndClose(Girl2.class, Boy.class);
+		List<Object[]> result = q.cacheEntities(true).list(Girl2.class, Boy.class);
 
 		assertEquals(4, result.size());
 
@@ -131,7 +154,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_useCache_useHints_1perRow() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).listAndClose(Girl2.class, Boy.class);
+		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).list(Girl2.class, Boy.class);
 
 		assertEquals(3, result2.size());
 
@@ -155,7 +178,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_useCache_useHints_1perRow_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).listAndClose(Girl2.class, Boy.class);
+		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).list(Girl2.class, Boy.class);
 
 		assertEquals(4, result2.size());
 
@@ -181,7 +204,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).listAndClose(Girl2.class, Boy.class);
+		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(Girl2.class, Boy.class);
 
 		assertEquals(2, result2.size());
 
@@ -199,7 +222,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).listAndClose(Girl2.class, Boy.class);
+		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(Girl2.class, Boy.class);
 
 		assertEquals(3, result2.size());
 
@@ -220,7 +243,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_List() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).listAndClose(1, Girl2.class, Boy.class);
+		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(1, Girl2.class, Boy.class);
 
 		assertEquals(1, result2.size());
 
@@ -234,7 +257,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_List_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).listAndClose(2, Girl2.class, Boy.class);
+		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(2, Girl2.class, Boy.class);
 
 		assertEquals(2, result2.size());
 
@@ -251,7 +274,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(Girl2.class, Boy.class);
+		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSet(Girl2.class, Boy.class);
 
 		assertEquals(2, set1.size());
 
@@ -270,7 +293,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(Girl2.class, Boy.class);
+		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSet(Girl2.class, Boy.class);
 
 		assertEquals(3, set1.size());
 
@@ -292,7 +315,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_Max() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(1, Girl2.class, Boy.class);
+		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSet(1, Girl2.class, Boy.class);
 
 		assertEquals(1, set1.size());
 
@@ -309,7 +332,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_Max_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(2, Girl2.class, Boy.class);
+		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSet(2, Girl2.class, Boy.class);
 
 		assertEquals(2, set1.size());
 
@@ -328,7 +351,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_Iterator() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterateAndClose(Girl2.class, Boy.class);
+		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterate(Girl2.class, Boy.class);
 
 		assertTrue(iterator.hasNext());
 		assertTrue(iterator.hasNext());
@@ -353,7 +376,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_Iterator_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterateAndClose(Girl2.class, Boy.class);
+		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterate(Girl2.class, Boy.class);
 
 		assertTrue(iterator.hasNext());
 
@@ -379,7 +402,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_Find() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
-		Girl2 girl1 = q.withHints("g", "g.boys").entityAwareMode(true).findAndClose(Girl2.class, Boy.class);
+		Girl2 girl1 = q.withHints("g", "g.boys").entityAwareMode(true).find(Girl2.class, Boy.class);
 
 		assertNotNull(girl1.getBoys());
 		assertEquals(2, girl1.getBoys().size());
@@ -389,7 +412,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	public void testMapRows2Types_entityAware_Find_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
-		Girl2 girl0 = q.withHints("g", "g.boys").entityAwareMode(true).findAndClose(Girl2.class, Boy.class);
+		Girl2 girl0 = q.withHints("g", "g.boys").entityAwareMode(true).find(Girl2.class, Boy.class);
 
 		assertNull(girl0.getBoys());
 	}

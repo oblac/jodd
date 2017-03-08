@@ -1,3 +1,32 @@
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+plugins {
+	id "com.jfrog.bintray" version "1.6"
+}
+
 description = '''
 
 	Jodd is an open-source Java utility library and set of micro frameworks.
@@ -8,9 +37,9 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.4.11-SNAPSHOT'
-//version = '3.4.10'
-
+version = '3.8.2-SNAPSHOT'
+//version = '3.8.2-' + date()
+//version = '3.8.1'
 
 // --- properties -------------------------------------------------------------
 
@@ -20,27 +49,40 @@ ext {
 	// libraries
 
 	tomcatVersion = '7.0.47'
-	jacocoVersion = '0.6.3.201306030806'
+	jacocoVersion = '0.7.1.201405082137'
 
 	lib = [
-		mail:			'javax.mail:mail:1.4.5',
+		mail:			[
+							'javax.mail:javax.mail-api:1.5.6',
+							'com.sun.mail:javax.mail:1.5.6'
+						],
 		activation:		'javax.activation:activation:1.1.1',
 		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
 		jsp:			'javax.servlet.jsp:jsp-api:2.2',
 
 		log_slf4j:			'org.slf4j:slf4j-api:1.7.2',
 		log_slf4j_simple:	'org.slf4j:slf4j-simple:1.7.2',
+		log_logback:		[
+								'ch.qos.logback:logback-core:1.1.7',
+								'ch.qos.logback:logback-classic:1.1.7'
+							],
 		log_jcl:        	'commons-logging:commons-logging:1.1.3',
 
 //		asm:			'org.ow2.asm:asm:4.1',
 
-		junit: 			'junit:junit:4.11',
-		mockito:		'org.mockito:mockito-all:1.9.5',
+		junit: 			'junit:junit:4.12',
+		hamcrest:       'org.hamcrest:hamcrest-core:1.3',
+		mockito:		'org.mockito:mockito-all:1.10.19',
+		powermock:		[
+							'org.powermock:powermock-module-junit4:1.6.4',
+							'org.powermock:powermock-api-mockito:1.6.4'
+						],
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',
-		postgresql:		'postgresql:postgresql:9.1-901-1.jdbc4',
-		mysql:			'mysql:mysql-connector-java:5.1.21',
+		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
+		mysql:			'mysql:mysql-connector-java:5.1.37',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
+		greenmail:		'com.icegreen:greenmail:1.5.2',
 		//el_api:		'javax.el:el-api:2.2',
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
 		tomcat_embed:	[
@@ -53,11 +95,7 @@ ext {
 							"org.apache.tomcat.embed:tomcat-embed-logging-log4j:${tomcatVersion}"],
 		jacoco_agent:	"org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime@jar",
 		jacoco_ant:		"org.jacoco:org.jacoco.ant:${jacocoVersion}",
-
-		// Animal Sniffer Ant Task and Java 1.5 API signature file
-		// not using 1.9 for the time being due to MANIMALSNIFFER-34
-		animal_sniffer: 'org.codehaus.mojo:animal-sniffer-ant-tasks:1.8',
-		java15_signature: 'org.codehaus.mojo.signature:java15:1.0@signature',
+		mockserver:		'org.mock-server:mockserver-netty:3.10.4',
 	]
 
 	commonManifest = [
@@ -78,36 +116,30 @@ ext {
 allprojects {
 	version = rootProject.version
 
-	ext.isSnapshot = version.endsWith("-SNAPSHOT")
+	ext.isSnapshot = version.contains("-");
 	ext.isSubproject = project.parent != null
 
 	repositories {
+		jcenter()
 		mavenCentral()
 	}
 }
 
-subprojects {
-	// provided
-	configurations {
-		provided
-	}
-
-	tasks.withType(Compile) {
-		sourceSets {
-			main { compileClasspath += configurations.provided }
-		}
-	}
-}
-
 def javaModules() {
-	subprojects.findAll { it.name.contains('jodd-') }
+	subprojects.findAll {
+		it.name.contains('jodd-') &&
+		!it.name.equals('jodd-bom') &&
+		!it.name.equals('jodd-all')
+	}
 }
 
 def javaBundleModules() {
 	rootProject.subprojects.findAll {
 		it.name.contains('jodd-') &&
 		!it.name.equals('jodd-swingspy') &&
-		!it.name.equals('jodd-joy')
+		!it.name.equals('jodd-joy') &&
+		!it.name.equals('jodd-bom') &&
+		!it.name.equals('jodd-all')
 	}
 }
 
@@ -120,8 +152,17 @@ def javaMobileModules() {
 }
 
 
-
 // --- configuration ----------------------------------------------------------
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+// exclude folders from IDEA project
+idea {
+	module {
+		excludeDirs += file('.idea')
+	}
+}
 
 configure(javaModules()) {
 	apply plugin: 'java'
@@ -130,19 +171,39 @@ configure(javaModules()) {
 	apply plugin: 'signing'
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
+	apply from: "${gradleScriptDir}/provided.gradle"
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	group = 'org.jodd'
 
+	// bintray
+
+	apply plugin: 'com.jfrog.bintray'
+	apply from: "${gradleScriptDir}/bintray.gradle"
+
+	configurations {
+		published
+	}
+
 	// compile
 
-	sourceCompatibility = 1.5
-	targetCompatibility = 1.5
+	compileJava {
+		sourceCompatibility = '1.8'
+		targetCompatibility = '1.8'
+	}
 
-	tasks.withType(Compile) {
+	if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+		throw new GradleException("This build must be run with Java 8.")
+	}
+
+	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
+		options.incremental = true
 		//configurations.compile.transitive = false
+	}
+	tasks.withType(Javadoc) {
+		options.addStringOption('Xdoclint:none', '-quiet')
 	}
 	compileJava.options.debug = true
 	compileJava.options.fork = true
@@ -156,29 +217,45 @@ configure(javaModules()) {
 		from javadoc.destinationDir
 	}
 
-	// integration tests
-
-	sourceSets {
-		testInt
-	}
+	// DONT: use separate output folders for idea, don't mess with gradle
 	idea {
 		module {
-			testSourceDirs += file('src/testInt/java')
-			testSourceDirs += file('src/testInt/resources')
-			scopes.TEST.plus += configurations.testIntCompile
+			inheritOutputDirs false
 		}
+	}
+
+	// integration tests + performances
+
+	sourceSets {
+		perf
+		testInt
 	}
 
 	dependencies {
 		testIntCompile sourceSets.main.output
-		testIntCompile configurations.testCompile
 		testIntCompile sourceSets.test.output
+		testIntCompile configurations.testCompile
 		testIntRuntime configurations.testRuntime
+
+		perfCompile sourceSets.main.output
+		perfCompile 'org.openjdk.jmh:jmh-core:1.15'
+		perfCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.15'
+	}
+
+	task perf(type:JavaExec) {
+		group 'Application'
+		description 'Execute benchmarks.'
+
+		main 'org.openjdk.jmh.Main'
+		classpath = sourceSets.perf.runtimeClasspath
 	}
 
 	task testIntegration(type: Test, dependsOn: jar) {
-		group 'verification'
+		group 'Verification'
 		description 'Runs the integration tests.'
+		testLogging {
+			showStandardStreams = true
+		}
 
 		testClassesDir = sourceSets.testInt.output.classesDir
 		classpath = sourceSets.testInt.runtimeClasspath
@@ -191,6 +268,10 @@ configure(javaModules()) {
 		archives jar
 		archives sourcesJar
 		archives javadocJar
+
+		published jar
+		published sourcesJar
+		published javadocJar
 	}
 
 	jar {
@@ -206,7 +287,7 @@ configure(javaModules()) {
 	}
 
 	javadoc {
-		exclude '**/asm4/**'
+		exclude '**/asm5/**'
 		afterEvaluate {
 			configure(options) {
 				windowTitle 'Jodd API Documentation'
@@ -217,7 +298,8 @@ configure(javaModules()) {
 				encoding = 'UTF-8'
 				docEncoding = 'UTF-8'
 				stylesheetFile = file('src/main/javadoc/jodd.css')
-				source = '1.5'
+				source = '1.8'
+				failOnError = false
 			}
 		}
 	}
@@ -245,57 +327,29 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test', '*.?', '*Foo*', '*.data.*', '*.tst*', '*\$*']
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
 			 	'-Djacoco=true',
 			 	'-Xms128m',
 			 	'-Xmx512m',
-			 	'-XX:MaxPermSize=128m',
 			 	'-Duser.timezone=GMT'
 		}
 	}
 
-	// Animal Sniffer
-
-	configurations {
-		animalSniffer
-		javaApiSignature
-	}
-
-	dependencies {
-		animalSniffer(lib.animal_sniffer)
-    	javaApiSignature(lib.java15_signature)
-    }
-
-	// copy the resolved Animal Sniffer signature dependency artifact to a known location and name
-	task copyJavaApiSignature(type: Copy) {
-		from configurations.javaApiSignature
-		into "$buildDir/javaApiSignature/"
-		rename '.*signature', 'javaApi.signature'
-	}
-
-	// prepare the Animal Sniffer signature copy every time (before) we compile
-	compileJava.dependsOn copyJavaApiSignature
-
-	// and then after compilation, run the Animal Sniffer tool
-	compileJava << {
-		print "$buildDir/javaApiSignature/"
-		ant.taskdef(
-				name: 'animalSniffer',
-				classname: 'org.codehaus.mojo.animal_sniffer.ant.CheckSignatureTask',
-				classpath: configurations.animalSniffer.asPath
-		)
-
-		ant.animalSniffer(
-				signature: "$buildDir/javaApiSignature/javaApi.signature",
-				classpath: sourceSets.main.compileClasspath.asPath) {
-			path(path: sourceSets.main.output.classesDir)
-			ignore(className: "java.nio.CharBuffer")
-			ignore(className: "sun.misc.Unsafe")
+	// add fancy test output
+	tasks.withType(Test) {
+		afterSuite { desc, result ->
+			if (!desc.parent) { // will match the outermost suite
+				def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+				def startItem = '|  ', endItem = '  |'
+				def repeatLength = startItem.length() + output.length() + endItem.length()
+				println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+			}
 		}
 	}
+
 }
 
 // --- project ----------------------------------------------------------------
@@ -311,6 +365,8 @@ task buildModules {
 task testAll {
 	group 'Verification'
 	description 'Runs all the tests.'
+
+	//dependsOn javaTestModules().test
 
 	dependsOn javaModules().test
 	dependsOn javaModules().testIntegration
@@ -332,6 +388,7 @@ task javadocAll(type: Javadoc) {
 
 	source javaBundleModulesSources.allJava
 	exclude '**/asm4/**'
+	exclude '**/asm5/**'
 
 	destinationDir = file("$buildDir/reports/javadoc")
 	classpath = files(javaBundleModulesSources.compileClasspath)
@@ -339,13 +396,13 @@ task javadocAll(type: Javadoc) {
 	configure(options) {
 		windowTitle 'Jodd API Documentation'
 		docTitle "Jodd Project $project.version API Documentation"
-		bottom = 'Copyright &#169; 2003-2014 <a href="http://jodd.org">Jodd Team</a>'
+		bottom = 'Copyright &#169; 2003-2016 <a href="http://jodd.org">Jodd Team</a>'
 		breakIterator = true
 		author = false
 		encoding = 'UTF-8'
 		docEncoding = 'UTF-8'
 		stylesheetFile = file('src/main/javadoc/jodd.css')
-		source = '1.5'
+		source = '1.9'
 	}
 
 	inputs.files(javaBundleModulesSources.allSource + javaBundleModulesSources.compileClasspath)
@@ -357,6 +414,9 @@ task testReport(type: TestReport) {
 	description 'Generates tests report.'
 
 	destinationDir = file("$buildDir/reports/tests")
+
+	//reportOn javaTestModules()*.test
+
 	reportOn javaBundleModules()*.test
 	reportOn javaBundleModules()*.testIntegration
 }
@@ -400,18 +460,52 @@ task jacocoReport() {
 				javaBundleModules().each {submodule ->
 					group(name: submodule.name) {
 						classfiles {
-							fileset dir: "${submodule.sourceSets.main.output.classesDir}"
+							fileset dir: "${submodule.sourceSets.main.output.classesDir}", excludes: "**/jodd/asm5/**"
 						}
 					}
 				}
 			}
 			html destdir: coverageDir
+			xml destfile: coverageDir + '/jodd-coverage.xml'
 		}
+	}
+}
+
+// Coveralls task should be invoked manually, since we have integration tests
+// that are executed only locally. After the release is build,
+// go to Travis Build History: https://travis-ci.org/oblac/jodd/builds
+// and select one of the jobs, then copy the job id from the URL line.
+// Paste the job id into the .coverals.yml and invoke this task
+// After few minutes, the coverage will appear here:
+// https://coveralls.io/r/oblac/jodd
+task coveralls() {
+	//dependsOn jacocoReport
+	group = 'Reporting'
+	description = 'Submits Jacoco reports to Coveralls.'
+
+	doLast {
+		List<File> targetSrcDirs = new ArrayList<File>()
+
+		for (main in javaBundleModulesSources) {
+			targetSrcDirs += main.java.srcDirs
+		}
+
+		CoverallsReporter coverallsReporter = new CoverallsReporter();
+
+		coverallsReporter.send(targetSrcDirs, file("build/reports/coverage/jodd-coverage.xml"))
 	}
 }
 
 dependencyReport {
 	projects = javaModules()
+}
+
+task bintray {
+	group 'Publishing'
+	description 'Publish all artifcats to bintray'
+
+	dependsOn javaModules().bintrayUpload
+	dependsOn(":jodd-bom:bintrayUpload")
 }
 
 // --- release ----------------------------------------------------------------
@@ -429,8 +523,62 @@ task release() {
 	dependsOn projectReport
 }
 
+gradle.taskGraph.whenReady { taskGraph ->
+	if (taskGraph.hasTask(release)) {
+
+		println ""
+		println "	You are about to run the 'release' task for Jodd project!"
+		println "	This task builds distribution artifacts, but also runs"
+		println "	integration tests and generates reports (javadoc, coverage...)"
+		println "	For running integration tests you need infrastructure running;"
+		println "	please find more information here: http://jodd.org/code.html"
+		println ""
+		println "	Usually, you don't need to run this task. If you want to build"
+		println "	distribution jars and run all unit tests, then just run the "
+		println "	default 'build' task instead."
+		println ""
+
+		def char c
+
+		def console = System.console()
+		if (console) {
+			line = console.readLine('	> Do you want to continue? [y/N]: ')
+			line = line.trim()
+			c = line.charAt(0)
+		}
+		else {
+			println "	> Do you want to continue? [y/N]: "
+			println ""
+
+			// Can't use `console` because it does not work with Gradle Daemon
+			def DataInputStream dis = new DataInputStream(System.in);
+
+			c = dis.readByte()
+		}
+
+		if (!(c == 'Y' || c == 'y')) {
+			throw new StopExecutionException("Execution terminated by user")
+		}
+	}
+}
+
+task version() {
+	println "-----------------------"
+	println "  Jodd ${version}"
+	if (isSnapshot) println "  [snapshot]"
+	println "-----------------------"
+}
+
+// --- util -------------------------------------------------------------------
+
+def date() {
+	def date = new Date()
+	def formattedDate = date.format('yyyyMMdd')
+	return formattedDate
+}
+
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.10'
+	gradleVersion = '3.3'
 }

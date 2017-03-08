@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom;
 
@@ -32,12 +55,12 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 	public void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		// one
 		DbOomQuery q = new DbOomQuery(DbSqlBuilder.sql("select $C{g.id} + 10, UCASE($C{g.name}) from $T{Girl g}"));
-		Object[] row = (Object[]) q.find(Integer.class, String.class);
+		Object[] row = q.find(Integer.class, String.class);
 
 		assertEquals(Integer.valueOf(11), row[0]);
 		assertEquals("ANNA", row[1]);
@@ -52,7 +75,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 				"select g.ID + 10 as col_0_, UCASE(g.NAME) as col_1_, g.ID as col_2_, g.NAME as col_3_, g.SPECIALITY as col_4_ from GIRL g where g.ID=1",
 				dbSqlBuilder.generateQuery());
 
-		dbSqlBuilder.reset();
+		dbSqlBuilder.resetAll();
 
 		assertEquals(
 				"select g.ID + 10 as Bean1$SUM, UCASE(g.NAME) as Bean1$BIG_NAME, g.ID, g.NAME, g.SPECIALITY from GIRL g where g.ID=1",
@@ -61,7 +84,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		dbSqlBuilder.reset();
 
 		q = new DbOomQuery(dbSqlBuilder);
-		row = (Object[]) q.find(Bean1.class, Girl.class);
+		row = q.find(Bean1.class, Girl.class);
 
 		Bean1 bean1 = (Bean1) row[0];
 		Girl girl = (Girl) row[1];
@@ -72,7 +95,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 		assertNotNull(girl);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 		assertEquals(1, girl.id);
 
 
@@ -86,7 +109,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		dbSqlBuilder.reset();
 
 		q = new DbOomQuery(dbSqlBuilder);
-		row = (Object[]) q.find(Bean1.class, Girl.class);
+		row = q.find(Bean1.class, Girl.class);
 
 		bean1 = (Bean1) row[0];
 		girl = (Girl) row[1];
@@ -97,7 +120,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 		assertNotNull(girl);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 		assertEquals(1, girl.id);
 
 		session.closeSession();

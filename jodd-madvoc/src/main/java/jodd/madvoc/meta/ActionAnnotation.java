@@ -1,9 +1,32 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.util.AnnotationDataReader;
-import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -13,16 +36,12 @@ import java.lang.reflect.AccessibleObject;
  */
 public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader<A, ActionAnnotationData<A>> {
 
-	public ActionAnnotation() {
-		super(null, Action.class);
-	}
-
 	public ActionAnnotation(Class<A> annotationClass) {
 		super(annotationClass, Action.class);
 	}
 
 	/**
-	 * Need to override to make java compiler happy.
+s	 * Need to override to make java compiler happy.
 	 */
 	@Override
 	public ActionAnnotationData<A> readAnnotationData(AccessibleObject accessibleObject) {
@@ -32,36 +51,27 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected ActionAnnotationData<A> createAnnotationData(A annotation) {
 
-		ActionAnnotationData<A> ad = new ActionAnnotationData<A>(annotation);
+		ActionAnnotationData<A> ad = new ActionAnnotationData<>(annotation);
 
-		ad.value = readString(annotation, "value");
+		ad.value = readString(annotation, "value", null);
 
-		ad.extension = readString(annotation, "extension");
+		ad.extension = readString(annotation, "extension", null);
 
-		ad.alias = readString(annotation, "alias");
+		ad.alias = readString(annotation, "alias", null);
 
-		ad.method = readString(annotation, "method");
+		ad.method = readString(annotation, "method", null);
 
-		ad.result = readString(annotation, "result");
+		ad.async = readBoolean(annotation, "async", false);
+
+		ad.path = (Class<? extends ActionNamingStrategy>) readElement(annotation, "path");
+
+		ad.result = (Class<? extends jodd.madvoc.result.ActionResult>) readElement(annotation, "result");
 
 		return ad;
-	}
-
-	/**
-	 * Reads string element from the annotation. Converts
-	 * empty strings to <code>null</code>.
-	 */
-	private String readString(A annotation, String name) {
-		String value = readStringElement(annotation, name);
-
-		if (StringUtil.isEmpty(value)) {
-			value = null;
-		}
-
-		return value;
 	}
 
 }

@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.jerry;
 
@@ -15,6 +38,8 @@ import java.util.Map;
 
 import static jodd.jerry.Jerry.jerry;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JerryTest {
 	protected String testDataRoot;
@@ -241,11 +266,9 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 		final StringBuilder str = new StringBuilder();
-		doc.$("select option:selected").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				str.append($this.text()).append(' ');
-				return true;
-			}
+		doc.$("select option:selected").each(($this, index) -> {
+			str.append($this.text()).append(' ');
+			return true;
 		});
 		doc.$("div").text(str.toString());
 		assertEquals(htmlOK, actualHtml(doc));
@@ -269,14 +292,32 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("ul.nav li:eq(1)").css("backgroundColor", "#ff0");
 
-		doc.$("ul.nav").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				$this.find("li:eq(1)").css("fontStyle", "italic");
-				return true;
-			}
+		doc.$("ul.nav").each(($this, index) -> {
+			$this.find("li:eq(1)").css("fontStyle", "italic");
+			return true;
 		});
 
 		doc.$("ul.nav li:nth-child(2)").css("color", "red");
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testPseudoHas() {
+		String html = readFile("pseudoHas.html");
+		String htmlOK = readFile("pseudoHas-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div:has(p)").addClass("test");
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testPseudoNot() {
+		String html = readFile("pseudoNot.html");
+		String htmlOK = readFile("pseudoNot-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("input:not(\':checked\') + span").css("background-color", "yellow");
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
@@ -336,6 +377,18 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testPrevNextAll() {
+		String html = readFile("prevNextAll.html");
+		String htmlOK = readFile("prevNextAll-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$(".prev :last-child").prevAll().remove();
+		doc.$(".next :first-child").nextAll().remove();
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testEq() {
 		String html = readFile("eq.html");
 		String htmlOK = readFile("eq-ok.html");
@@ -343,6 +396,47 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("li").eq(1).css("background-color", "red");
 		doc.$("li").eq(-1).css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testHas() {
+		String html = readFile("has.html");
+		String htmlOK = readFile("has-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").has("ul").css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testHas2() {
+		String html = readFile("has2.html");
+		String htmlOK = readFile("has2-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").has("ul").css("background-color", "red");
+
+		doc.$( "ul" ).append( "<li>" +
+			( doc.$( "ul" ).has( "li" ).length() > 0 ? "Yes" : "No" ) +
+			"</li>" );
+		doc.$( "ul" ).has( "li" ).addClass( "full" );
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testChildrenVsContents() {
+		String html = readFile("contents.html");
+		String htmlOK = readFile("contents-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("span.contents").contents().remove();
+		doc.$("span.children").children().remove();
+		int count = doc.$(".count").contents().length();
+		doc.$(".count").text(Integer.toString(count));
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
@@ -393,6 +487,18 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testAppendPrepend() {
+		String html = readFile("appendPrepend.html");
+		String htmlOK = readFile("appendPrepend-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$(".append p").append("<span>C</span>");
+		doc.$(".prepend p").prepend("<span>C</span>");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testBefore() {
 		String html = readFile("before.html");
 		String htmlOK = readFile("before-ok.html");
@@ -404,24 +510,55 @@ public class JerryTest {
 	}
 
 	@Test
+	public void testAfter() {
+		String html = readFile("after.html");
+		String htmlOK = readFile("after-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("p").after("<b>what is the question?</b>");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testReplaceWith() {
+		String html = readFile("replaceWith.html");
+		String htmlOK = readFile("replaceWith-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div.second").replaceWith("<h2>New heading</h2>");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testUnwrap() {
+		String html = readFile("unwrap.html");
+		String htmlOK = readFile("unwrap-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("p").unwrap();
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
 	public void testIs() {
 		String html = readFile("is.html");
 		String htmlOK = readFile("is-ok.html");
 
 		Jerry doc = jerry(html);
-		doc.$("div").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				if ($this.is(":first-child")) {
-					$this.text("Its the first div.");
-				} else if ($this.is(".blue,.red")) {
-					$this.text("Its a blue or red div.");
-				} else if ($this.is(":contains(Peter)")) {
-					$this.text("Its Peter!");
-				} else {
-					$this.html("Its nothing <em>special</em>.");
-				}
-				return true;
+		doc.$("div").each(($this, index) -> {
+			if ($this.is(":first-child")) {
+				$this.text("Its the first div.");
+			} else if ($this.is(".blue,.red")) {
+				$this.text("Its a blue or red div.");
+			} else if ($this.is(":contains(Peter)")) {
+				$this.text("Its Peter!");
+			} else {
+				$this.html("Its nothing <em>special</em>.");
 			}
+			return true;
 		});
 
 		assertEquals(htmlOK, actualHtml(doc));
@@ -468,11 +605,7 @@ public class JerryTest {
 		String htmlOK = readFile("filter2-ok.html");
 
 		Jerry doc = jerry(html);
-		doc.$("li").filter(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				return Jerry.$("strong", $this).length() == 1;
-			}
-		}).css("background-color", "red");
+		doc.$("li").filter(($this, index) -> Jerry.$("strong", $this).length() == 1).css("background-color", "red");
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
@@ -483,11 +616,7 @@ public class JerryTest {
 		String htmlOK = readFile("filter2-ok2.html");
 
 		Jerry doc = jerry(html);
-		doc.$("li").filter(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				return index % 3 == 2;
-			}
-		}).css("background-color", "red");
+		doc.$("li").filter(($this, index) -> index % 3 == 2).css("background-color", "red");
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
@@ -512,11 +641,7 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 		doc.$("div").css("background", "#b4b0da")
-				.filter(new JerryFunction() {
-					public boolean onNode(Jerry $this, int index) {
-						return index == 1 || $this.attr("id").equals("fourth");
-					}
-				})
+				.filter(($this, index) -> index == 1 || $this.attr("id").equals("fourth"))
 				.css("border", "3px double red");
 
 		assertEquals(htmlOK, actualHtml(doc));
@@ -528,13 +653,9 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 
-		final Map<String, String[]> params = new HashMap<String, String[]>();
+		final Map<String, String[]> params = new HashMap<>();
 
-		doc.form("#myform", new JerryFormHandler() {
-			public void onForm(Jerry form, Map<String, String[]> parameters) {
-				params.putAll(parameters);
-			}
-		});
+		doc.form("#myform", (form, parameters) -> params.putAll(parameters));
 
 		assertEquals(6, params.size());
 
@@ -546,6 +667,53 @@ public class JerryTest {
 		assertEquals("sel2!", params.get("n_select")[0]);
 		assertEquals("sel3!", params.get("n_select")[1]);
 		assertEquals("textarea!", params.get("n_textarea")[0]);
+	}
+
+	@Test
+	public void testHtmlAll() {
+		Jerry j = Jerry.jerry("<div><span>1</span></div><div><span>2</span></div>");
+
+		assertEquals(j.htmlAll(true), j.htmlAll(false));
+
+		j = j.$("div");
+		assertEquals("<span>1</span>", j.html());
+		assertEquals("<span>1</span><span>2</span>", j.htmlAll(false));
+		assertEquals("<div><span>1</span></div><div><span>2</span></div>", j.htmlAll(true));
+
+		Jerry j2 = j.find("span");
+		assertEquals(2, j2.length());
+
+		assertEquals("12", j2.text());
+		assertEquals("1", j2.html());
+		assertEquals("12", j2.htmlAll(false));
+		assertEquals("<span>1</span><span>2</span>", j2.htmlAll(true));
+	}
+
+	@Test
+	public void testCamelCaseClassesIssue() {
+		Jerry j = Jerry.jerry("<div id='d'></div>");
+
+		j.$("#d").css("background-color", "red");
+
+		assertEquals("<div id=\"d\" style=\"background-color:red;\"></div>", j.html());
+
+		j.$("#d").css("background-color", "");
+
+		assertEquals("<div id=\"d\" style=\"\"></div>", j.html());
+
+		j.$("#d").addClass("fooBar");
+
+		assertEquals("<div id=\"d\" style=\"\" class=\"fooBar\"></div>", j.html());
+
+		assertTrue(j.$("#d").hasClass("fooBar"));
+		assertFalse(j.$("#d").hasClass("foo-bar"));
+
+		j.$("#d").addClass("foo-bar");
+		assertEquals("<div id=\"d\" style=\"\" class=\"fooBar foo-bar\"></div>", j.html());
+
+		j.$("#d").toggleClass("foo-bar", "fooBar");
+
+		assertEquals("<div id=\"d\" style=\"\" class=\"\"></div>", j.html());
 	}
 
 	// ---------------------------------------------------------------- tools

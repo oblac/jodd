@@ -1,22 +1,45 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
 import jodd.proxetta.ProxettaException;
-import jodd.asm4.ClassVisitor;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.AnnotationVisitor;
-import jodd.asm4.ClassReader;
-import jodd.asm4.Attribute;
-import jodd.asm4.FieldVisitor;
+import jodd.asm5.ClassVisitor;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.AnnotationVisitor;
+import jodd.asm5.ClassReader;
+import jodd.asm5.Attribute;
+import jodd.asm5.FieldVisitor;
 
-import static jodd.asm4.Opcodes.ACC_ABSTRACT;
-import static jodd.asm4.Opcodes.INVOKESTATIC;
-import static jodd.asm4.Opcodes.RETURN;
-import static jodd.asm4.Opcodes.ALOAD;
-import static jodd.asm4.Opcodes.INVOKESPECIAL;
-import static jodd.JoddProxetta.initMethodName;
+import static jodd.asm5.Opcodes.ACC_ABSTRACT;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.RETURN;
+import static jodd.asm5.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.INVOKESPECIAL;
+import static jodd.proxetta.JoddProxetta.initMethodName;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
@@ -102,12 +125,12 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		}
 
 		// destination constructors [A1]
-		if (name.equals(INIT) == true) {
+		if (name.equals(INIT)) {
 			MethodVisitor mv = wd.dest.visitMethod(access, name, desc, msign.getRawSignature(), null);
 			return new ProxettaCtorBuilder(mv, msign, wd);
 		}
 		// ignore destination static block
-		if (name.equals(CLINIT) == true) {
+		if (name.equals(CLINIT)) {
 			return null;
 		}
 		return applyProxy(msign);
@@ -159,7 +182,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_STATIC, CLINIT, DESC_VOID, null, null);
 			mv.visitCode();
 			for (String name : wd.adviceClinits) {
-				mv.visitMethodInsn(INVOKESTATIC, wd.thisReference, name, DESC_VOID);
+				mv.visitMethodInsn(
+					INVOKESTATIC,
+					wd.thisReference,
+					name, DESC_VOID,
+					false);
 			}
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(0, 0);
@@ -177,7 +204,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {
 				mv.visitVarInsn(ALOAD, 0);
-				mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, name, DESC_VOID);
+				mv.visitMethodInsn
+					(INVOKESPECIAL,
+						wd.thisReference,
+						name, DESC_VOID,
+						false);
 			}
 		}
 		mv.visitInsn(RETURN);
@@ -279,9 +310,9 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	protected List<ProxyAspectData> matchMethodPointcuts(MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = null;
 		for (ProxyAspectData aspectData : wd.proxyAspects) {
-			if (aspectData.apply(msign) == true) {
+			if (aspectData.apply(msign)) {
 				if (aspectList == null) {
-					aspectList = new ArrayList<ProxyAspectData>(wd.proxyAspects.length);
+					aspectList = new ArrayList<>(wd.proxyAspects.length);
 				}
 				aspectList.add(aspectData);
 			}

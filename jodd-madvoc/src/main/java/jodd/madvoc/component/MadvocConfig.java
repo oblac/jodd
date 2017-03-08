@@ -1,16 +1,42 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.component;
 
 import jodd.madvoc.RootPackages;
 import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
+import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.path.DefaultActionPath;
+import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
@@ -18,6 +44,10 @@ import jodd.util.StringPool;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+
+import static jodd.util.StringPool.COLON;
+import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
+import static jodd.util.StringPool.RIGHT_BRACE;
 
 /**
  * Madvoc configuration. This is the single place where component configuration is stored.
@@ -28,26 +58,26 @@ public class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
-		setActionAnnotations(Action.class);
+		setActionAnnotations(Action.class, RestAction.class);
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
-		defaultResultType = ServletDispatcherResult.NAME;
+		defaultActionResult = ServletDispatcherResult.class;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
-		createDefaultAliases = false;
 		defaultExtension = "html";
+		defaultNamingStrategy = DefaultActionPath.class;
 		rootPackages = new RootPackages();
 		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
-		actionPathMappingEnabled = false;
 		preventCaching = true;
-		requestScopeInjectorConfig = new RequestScopeInjector.Config();
-		strictExtensionStripForResultPath = false;
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
+		pathMacroSeparators = new String[] {DOLLAR_LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
+		asyncConfig = new AsyncConfig();
+		routesFileName = "madvoc-routes.txt";
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -138,6 +168,7 @@ public class MadvocConfig {
 
 	protected String defaultExtension;
 	protected String[] defaultActionMethodNames;
+	protected Class<? extends ActionNamingStrategy> defaultNamingStrategy;
 
 	/**
 	 * Returns default action extension.
@@ -165,6 +196,17 @@ public class MadvocConfig {
 	 */
 	public void setDefaultActionMethodNames(String... defaultActionMethodNames) {
 		this.defaultActionMethodNames = defaultActionMethodNames;
+	}
+
+	public Class<? extends ActionNamingStrategy> getDefaultNamingStrategy() {
+		return defaultNamingStrategy;
+	}
+
+	/**
+	 * Specifies default {@link jodd.madvoc.path.ActionNamingStrategy} action naming strategy.
+	 */
+	public void setDefaultNamingStrategy(Class<? extends ActionNamingStrategy> defaultNamingStrategy) {
+		this.defaultNamingStrategy = defaultNamingStrategy;
 	}
 
 	// ---------------------------------------------------------------- default interceptors & filters
@@ -202,36 +244,20 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- default result type
 
-	protected String defaultResultType;
+	protected Class<? extends ActionResult> defaultActionResult;
 
 	/**
-	 * Specifies default result type.
+	 * Specifies default action result.
 	 */
-	public void setDefaultResultType(String type) {
-		defaultResultType = type;
+	public void setDefaultActionResult(Class<? extends ActionResult> defaultActionResult) {
+		this.defaultActionResult = defaultActionResult;
 	}
 
 	/**
-	 * Returns default action result type.
+	 * Returns default action result.
 	 */
-	public String getDefaultResultType() {
-		return defaultResultType;
-	}
-
-	// ---------------------------------------------------------------- path aliases
-
-	protected boolean createDefaultAliases;
-
-	public boolean isCreateDefaultAliases() {
-		return createDefaultAliases;
-	}
-
-	/**
-	 * Specifies if default aliases should be created for all
-	 * action paths.
-	 */
-	public void setCreateDefaultAliases(boolean createDefaultAliases) {
-		this.createDefaultAliases = createDefaultAliases;
+	public Class<? extends ActionResult> getDefaultActionResult() {
+		return defaultActionResult;
 	}
 
 	// ---------------------------------------------------------------- packageRoot
@@ -278,22 +304,6 @@ public class MadvocConfig {
 		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
 	}
 
-	// ---------------------------------------------------------------- mapping
-
-	protected boolean actionPathMappingEnabled;
-
-	public boolean isActionPathMappingEnabled() {
-		return actionPathMappingEnabled;
-	}
-
-	/**
-	 * Defines if reverse action path mapping should be enabled. This means
-	 * that classes are not registered before, but searched in runtime.
-	 */
-	public void setActionPathMappingEnabled(boolean actionPathMappingEnabled) {
-		this.actionPathMappingEnabled = actionPathMappingEnabled;
-	}
-
 	// ---------------------------------------------------------------- caching
 
 	protected boolean preventCaching;
@@ -309,44 +319,20 @@ public class MadvocConfig {
 		this.preventCaching = preventCaching;
 	}
 
-	// ---------------------------------------------------------------- request
-
-	protected RequestScopeInjector.Config requestScopeInjectorConfig;
-
-	public RequestScopeInjector.Config getRequestScopeInjectorConfig() {
-		return requestScopeInjectorConfig;
-	}
-
-	/**
-	 * Sets {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration.
-	 */
-	public void setRequestScopeInjectorConfig(RequestScopeInjector.Config requestScopeInjectorConfig) {
-		this.requestScopeInjectorConfig = requestScopeInjectorConfig;
-	}
-
 	// ---------------------------------------------------------------- result
 
-	protected boolean strictExtensionStripForResultPath;
 	protected String resultPathPrefix;
 
-	public boolean isStrictExtensionStripForResultPath() {
-		return strictExtensionStripForResultPath;
-	}
-
 	/**
-	 * Specifies if action path extension should be stripped only if it is equal
-	 * to defined one, during result path creation.
+	 * Returns default prefix for all result paths.
+	 * Returns <code>null</code> when not used.
 	 */
-	public void setStrictExtensionStripForResultPath(boolean strictExtensionStripForResultPath) {
-		this.strictExtensionStripForResultPath = strictExtensionStripForResultPath;
-	}
-
 	public String getResultPathPrefix() {
 		return resultPathPrefix;
 	}
 
 	/**
-	 * Defines result path prefix that will be added to all relative result paths.
+	 * Defines result path prefix that will be added to all result paths.
 	 * If set to <code>null</code> will be ignored.
 	 */
 	public void setResultPathPrefix(String resultPathPrefix) {
@@ -371,6 +357,7 @@ public class MadvocConfig {
 	// ---------------------------------------------------------------- path macro class
 
 	protected Class<? extends PathMacros> pathMacroClass;
+	protected String[] pathMacroSeparators;
 
 	/**
 	 * Returns current implementation for path macros.
@@ -387,6 +374,85 @@ public class MadvocConfig {
 	}
 
 
+	public String[] getPathMacroSeparators() {
+		return pathMacroSeparators;
+	}
+
+	/**
+	 * Sets path macro separators.
+	 */
+	public void setPathMacroSeparators(String[] pathMacroSeparators) {
+		this.pathMacroSeparators = pathMacroSeparators;
+	}
+
+	// ---------------------------------------------------------------- async
+
+	public static class AsyncConfig {
+
+		protected int corePoolSize = 10;
+		protected int maximumPoolSize = 25;
+		protected long keepAliveTimeMillis = 50000L;
+		protected int queueCapacity = 100;
+
+		public int getCorePoolSize() {
+			return corePoolSize;
+		}
+
+		public void setCorePoolSize(int corePoolSize) {
+			this.corePoolSize = corePoolSize;
+		}
+
+		public int getMaximumPoolSize() {
+			return maximumPoolSize;
+		}
+
+		public void setMaximumPoolSize(int maximumPoolSize) {
+			this.maximumPoolSize = maximumPoolSize;
+		}
+
+		public long getKeepAliveTimeMillis() {
+			return keepAliveTimeMillis;
+		}
+
+		public void setKeepAliveTimeMillis(long keepAliveTimeMillis) {
+			this.keepAliveTimeMillis = keepAliveTimeMillis;
+		}
+
+		public int getQueueCapacity() {
+			return queueCapacity;
+		}
+
+		public void setQueueCapacity(int queueCapacity) {
+			this.queueCapacity = queueCapacity;
+		}
+
+		@Override
+		public String toString() {
+			return "AsyncConfig{" + corePoolSize + " of " + maximumPoolSize + " in " + queueCapacity + " for " + keepAliveTimeMillis + "ms}";
+		}
+	}
+
+	protected AsyncConfig asyncConfig;
+
+	/**
+	 * Returns asynchronous configuration.
+	 */
+	public AsyncConfig getAsyncConfig() {
+		return asyncConfig;
+	}
+
+	// ----------------------------------------------------------------
+
+	protected String routesFileName;
+
+	public String getRoutesFileName() {
+		return routesFileName;
+	}
+
+	public void setRoutesFileName(String routesFileName) {
+		this.routesFileName = routesFileName;
+	}
+
 	// ---------------------------------------------------------------- toString
 
 	/**
@@ -396,23 +462,21 @@ public class MadvocConfig {
 	public String toString() {
 		return "MadvocConfig{" +
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
-				",\n\tactionPathMappingEnabled=" + actionPathMappingEnabled +
 				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
 				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
-				",\n\tcreateDefaultAliases=" + createDefaultAliases +
 				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
 				",\n\tdefaultExtension='" + defaultExtension + '\'' +
 				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
-				",\n\tdefaultResultType='" + defaultResultType + '\'' +
+				",\n\tdefaultResultType='" + defaultActionResult.getName() + '\'' +
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
-				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
-				",\n\tstrictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
+				",\n\tasyncConfig='" + asyncConfig + '\'' +
+				",\n\troutesFileName='" + routesFileName + '\'' +
 				"\n}";
 	}
 

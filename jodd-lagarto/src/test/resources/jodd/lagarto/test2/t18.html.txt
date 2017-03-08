@@ -1,0 +1,3 @@
+txt:[aaa]
+wrn:[Parse error: EOF [1:43 @42]
+scr:1[foo("<!-- <script>")</script>bb]

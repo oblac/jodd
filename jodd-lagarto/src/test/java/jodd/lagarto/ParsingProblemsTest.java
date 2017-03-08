@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto;
 
@@ -6,7 +29,6 @@ import jodd.io.FileUtil;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.jerry.Jerry;
-import jodd.jerry.JerryFunction;
 import jodd.lagarto.dom.Document;
 import jodd.util.StringUtil;
 import org.junit.Before;
@@ -35,7 +57,7 @@ public class ParsingProblemsTest {
 	public void testInvalidTag() {
 		String html = "<html>text1<=>text2</html>";
 
-		LagartoParser lagartoParser = new LagartoParser(html);
+		LagartoParser lagartoParser = new LagartoParser(html, false);
 
 		final StringBuilder sb = new StringBuilder();
 
@@ -61,7 +83,7 @@ public class ParsingProblemsTest {
 			fail();
 		}
 
-		assertEquals("html text1<=>text2 html ", sb.toString());
+		assertEquals("html text1 <=>text2 html ", sb.toString());
 	}
 
 	@Test
@@ -69,7 +91,7 @@ public class ParsingProblemsTest {
 		String html = "<a href=123>xxx</a>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		Document document = lagartoDOMBuilder.parse(html);
 
 		assertEquals("<a href=\"123\">xxx</a>", document.getHtml());
@@ -78,15 +100,9 @@ public class ParsingProblemsTest {
 		html = "<a href=../org/w3c/dom/'http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list'>xxx</a>";
 
 		lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		document = lagartoDOMBuilder.parse(html);
 		assertTrue(document.check());
-
-		document.getRenderer().setAttributeValuePreserveSingleQuote(false);
-
-		assertEquals("<a href=\"../org/w3c/dom/&#039;http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list&#039;\">xxx</a>", document.getHtml());
-
-		document.getRenderer().setAttributeValuePreserveSingleQuote(true);
 
 		assertEquals("<a href=\"../org/w3c/dom/'http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list'\">xxx</a>", document.getHtml());
 	}
@@ -96,8 +112,8 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4-v0.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
-		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
@@ -109,8 +125,8 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4-v1.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
-		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
@@ -122,13 +138,13 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-//		lagartoDOMBuilder.setCalculatePosition(true);
-		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
 		Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(document.check());
 
 		// (1564 open DTs + 1564 open DDs) 1 open P
-		assertEquals(1, document.getErrors().size());
+		assertEquals(19, document.getErrors().size());
 
 		Jerry doc = Jerry.jerry(FileUtil.readString(file));
 		assertEquals(16, doc.$("td.NavBarCell1").size());
@@ -147,18 +163,17 @@ public class ParsingProblemsTest {
 		assertEquals(2, doc.$("table td.NavBarCell1Rev").size());
 
 		final StringBuilder sb = new StringBuilder();
-		doc.$("td.NavBarCell1").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				sb.append("---\n");
-				sb.append($this.text().trim());
-				sb.append('\n');
-				return true;
-			}
+		doc.$("td.NavBarCell1").each(($this, index) -> {
+			sb.append("---\n");
+			sb.append($this.text().trim());
+			sb.append('\n');
+			return true;
 		});
 		String s = sb.toString();
 		s = StringUtil.remove(s, ' ');
 		s = StringUtil.remove(s, '\r');
 		s = StringUtil.remove(s, '\u00A0');
+		s = StringUtil.remove(s, "&nbsp;");
 		assertEquals(
 				"---\n" +
 						"Overview\n" +
@@ -215,7 +230,7 @@ public class ParsingProblemsTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
@@ -238,11 +253,9 @@ public class ParsingProblemsTest {
 
 		final StringBuilder result = new StringBuilder();
 
-		jerry.$("cfg\\:test").each(new JerryFunction() {
-			public boolean onNode(Jerry $this, int index) {
-				result.append($this.$("cfg\\:node").text());
-				return true;
-			}
+		jerry.$("cfg\\:test").each(($this, index) -> {
+			result.append($this.$("cfg\\:node").text());
+			return true;
 		});
 
 		assertEquals("This is a text", result.toString());
@@ -256,7 +269,7 @@ public class ParsingProblemsTest {
 
 		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
-		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).setEnableConditionalComments(false);
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).getConfig().setEnableConditionalComments(false);
 
 		Jerry jerry = jerryParser.parse(expectedResult);
 		String result = jerry.html();
@@ -286,6 +299,16 @@ public class ParsingProblemsTest {
 		assertEquals("planchaaccessoires\":\"http:\\", script.getAttribute(3).getName());
 		assertEquals("www.kelkoo.fr\"}'", script.getAttribute(4).getName());
 		assertEquals("data-adsense-append", script.getAttribute(5).getName());
+	}
+
+	@Test
+	public void testEntity() throws Exception {
+		assertEquals(
+			"<head><title>Peanut Butter &amp; Jelly</title>" +
+				"it's yummy &amp; delicious</head>",
+			Jerry.jerry().parse(
+				"<head><title>Peanut Butter & Jelly</title>" +
+					"it's yummy & delicious").html());
 	}
 
 }

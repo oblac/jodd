@@ -1,20 +1,45 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http;
 
+import jodd.http.up.ByteArrayUploadable;
+import jodd.util.MimeTypes;
 import jodd.util.StringPool;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 public class EncodingTest {
 
@@ -82,8 +107,8 @@ public class EncodingTest {
 	private void testRequestEncoding(int i) throws IOException {
 		HttpRequest request =
 				(i == 1 || i == 2) ?
-				HttpRequest.get("http://localhost:8080/echo?id=12"):
-				HttpRequest.post("http://localhost:8080/echo?id=12");
+				HttpRequest.get("http://localhost:8173/echo?id=12"):
+				HttpRequest.post("http://localhost:8173/echo?id=12");
 
 		String utf8String = (i == 1 || i == 3) ? "Hello!" : "хелло!";
 		byte[] utf8Bytes = utf8String.getBytes(StringPool.UTF_8);
@@ -135,7 +160,7 @@ public class EncodingTest {
 	private void testFormParams(int i) {
 		String encoding = i == 1 ?  "UTF-8" : "CP1251";
 
-		HttpRequest request = HttpRequest.post("http://localhost:8080/echo2");
+		HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
 		request.formEncoding(encoding);
 
 		if (i == 3) {
@@ -180,7 +205,7 @@ public class EncodingTest {
 	private void testQueryParams(int i) throws IOException {
 		String encoding = i == 1 ?  "UTF-8" : "CP1251";
 
-		HttpRequest request = HttpRequest.get("http://localhost:8080/echo2");
+		HttpRequest request = HttpRequest.get("http://localhost:8173/echo2");
 		request.queryEncoding(encoding);
 
 		String value1 = "value";
@@ -199,5 +224,48 @@ public class EncodingTest {
 		assertEquals(value1, EchoServlet.ref.params.get("one"));
 		assertEquals(value2, EchoServlet.ref.params.get("two"));
 	}
+
+	@Test
+	public void testMultipart() {
+		HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
+		request
+			.formEncoding("UTF-8")		// optional
+			.multipart(true);
+
+		String value1 = "value";
+		String value2 = "валуе";
+
+		request.form("one", value1);
+		request.form("two", value2);
+
+		HttpResponse httpResponse = request.send();
+
+		assertEquals("multipart/form-data", request.mediaType());
+
+		assertFalse(EchoServlet.ref.get);
+		assertTrue(EchoServlet.ref.post);
+
+		assertEquals(value1, EchoServlet.ref.parts.get("one"));
+		assertEquals(value2, EchoServlet.ref.parts.get("two"));
+	}
+
+	@Test
+	public void testUploadWithUploadable() throws IOException {
+		HttpResponse response = HttpRequest
+				.post("http://localhost:8173/echo2")
+				.multipart(true)
+				.form("id", "12")
+				.form("file", new ByteArrayUploadable(
+					"upload тест".getBytes(StringPool.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
+				.send();
+
+		assertEquals(200, response.statusCode());
+		assertEquals("OK", response.statusPhrase());
+
+		assertEquals("12", Echo2Servlet.ref.params.get("id"));
+		assertEquals("upload тест", Echo2Servlet.ref.parts.get("file"));
+		assertEquals("d ст", Echo2Servlet.ref.fileNames.get("file"));
+	}
+
 
 }

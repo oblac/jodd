@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.vtor;
 
@@ -6,6 +29,7 @@ import jodd.bean.BeanUtil;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +38,13 @@ import java.util.Map;
  * Vtor validator.
  */
 public class Vtor {
+
+	/**
+	 * Static constructor for fluent usage.
+	 */
+	public static Vtor create() {
+		return new Vtor();
+	}
 
 	public static final String DEFAULT_PROFILE = "default";
 	public static final String ALL_PROFILES = "*";
@@ -31,7 +62,7 @@ public class Vtor {
 			return;
 		}
 		if (violations == null) {
-			violations = new ArrayList<Violation>();
+			violations = new ArrayList<>();
 		}
 		violations.add(v);
 	}
@@ -48,41 +79,43 @@ public class Vtor {
 	/**
 	 * Validate object using context from the annotations.
 	 */
-	public void validate(Object target) {
-		validate(ValidationContext.resolveFor(target.getClass()), target);
+	public List<Violation> validate(Object target) {
+		return validate(ValidationContext.resolveFor(target.getClass()), target);
 	}
 
 	/**
 	 * @see #validate(ValidationContext, Object, String)
 	 */
-	public void validate(ValidationContext vctx, Object target) {
-		validate(vctx, target, null);
+	public List<Violation> validate(ValidationContext vctx, Object target) {
+		return validate(vctx, target, null);
 	}
 
 	/**
 	 * Performs validation of provided validation context and appends violations.
 	 */
-	public void validate(ValidationContext ctx, Object target, String targetName) {
+	public List<Violation> validate(ValidationContext ctx, Object target, String targetName) {
 		for (Map.Entry<String, List<Check>> entry : ctx.map.entrySet()) {
 			String name = entry.getKey();
-			Object value = BeanUtil.getDeclaredPropertySilently(target, name);
+			Object value = BeanUtil.declaredSilent.getProperty(target, name);
 			String valueName = targetName != null ? (targetName + '.' + name) : name;		// move up
 			ValidationConstraintContext vcc = new ValidationConstraintContext(this, target, valueName);
 			
 			for (Check check : entry.getValue()) {
 				String[] checkProfiles = check.getProfiles();
-				if (matchProfiles(checkProfiles) == false) {
+				if (!matchProfiles(checkProfiles)) {
 					continue;
 				}
 				if (check.getSeverity() < severity) {
 					continue;
 				}
 				ValidationConstraint constraint = check.getConstraint();
-				if (constraint.isValid(vcc, value) == false) {
+				if (!constraint.isValid(vcc, value)) {
 					addViolation(new Violation(valueName, target, value, check));
 				}
 			}
 		}
+
+		return getViolations();
 	}
 
 	// ---------------------------------------------------------------- severity
@@ -124,7 +157,7 @@ public class Vtor {
 			return;
 		}
 		if (this.enabledProfiles == null) {
-			this.enabledProfiles = new HashSet<String>();
+			this.enabledProfiles = new HashSet<>();
 		}
 		this.enabledProfiles.add(profile);
 	}
@@ -137,11 +170,9 @@ public class Vtor {
 			return;
 		}
 		if (this.enabledProfiles == null) {
-			this.enabledProfiles = new HashSet<String>();
+			this.enabledProfiles = new HashSet<>();
 		}
-		for (String profile : enabledProfiles) {
-			this.enabledProfiles.add(profile);
-		}
+		Collections.addAll(this.enabledProfiles, enabledProfiles);
 	}
 
 	/**
@@ -199,12 +230,12 @@ public class Vtor {
 			}
 
 			if (enabledProfiles.contains(profile)) {
-				if (b == false) {
+				if (!b) {
 					return false;
 				}
 				result = true;
 			} else {
-				if (must == true) {
+				if (must) {
 					return false;
 				}
 			}

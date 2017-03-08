@@ -1,6 +1,3 @@
-ext.optional = []
-ext.provided = []
-
 signing {
 	if (project.hasProperty('JODD_ADMIN')) {
 		sign configurations.archives
@@ -20,6 +17,7 @@ uploadArchives {
 		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
 		if (project.hasProperty('JODD_ADMIN')) {
+//			snapshotRepository(url: 'file:///Users/igor/m2')
 			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
 				authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
@@ -43,12 +41,8 @@ def customizePom(pom, gradleProject) {
 			ext.artifactId = it.artifactId
 			ext.fulldep = it.groupId + ':' + it.artifactId + ':' + it.version
 
-			if (ext.artifactId in project.optional || ext.fulldep in project.optional) {
+			if (ext.artifactId in project.optionalDeps || ext.fulldep in project.optionalDeps) {
 				it.optional = true
-			}
-
-		 	if (ext.artifactId in project.provided || ext.fulldep in project.provided) {
-				it.scope = "provided"
 			}
 		}
 
@@ -67,7 +61,7 @@ def customizePom(pom, gradleProject) {
 			}
 			licenses {
 				license {
-					name 'The New BSD License'
+					name 'The BSD 2-Clause License'
 					url 'http://jodd.org/license.html'
 					distribution 'repo'
 				}
@@ -80,7 +74,7 @@ def customizePom(pom, gradleProject) {
 			developers {
 				developer {
 					id = 'igor'
-					name = 'Igor Spasic'
+					name = 'Igor Spasić'
 					email = 'igor@jodd.org'
 					timezone = '+1'
 				}

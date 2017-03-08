@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.lagarto;
 
@@ -9,12 +32,24 @@ import java.io.IOException;
  */
 public interface Tag {
 
+	// ---------------------------------------------------------------- flags
+
+	/**
+	 * Returns case-sensitive flag for various name matching.
+	 */
+	boolean isCaseSensitive();
+
+	/**
+	 * Returns <code>true</code> if tag should parse inner text content as RAWTEXT.
+	 */
+	boolean isRawTag();
+
 	// ---------------------------------------------------------------- read
 
 	/**
 	 * Returns tags name.
 	 */
-	String getName();
+	CharSequence getName();
 
 	/**
 	 * Returns {@link TagType type of tag} (e.g. open, close, etc).
@@ -23,10 +58,10 @@ public interface Tag {
 
 	/**
 	 * Returns <b>id</b> attribute value of a tag.
-	 * Implementations may simply call {@link #getAttributeValue(String, boolean)}
+	 * Implementations may simply call {@link #getAttributeValue(java.lang.CharSequence)}
 	 * or to cache this value for better performances.
 	 */
-	String getId();
+	CharSequence getId();
 
 	/**
 	 * Returns 1-based deep level of a tag from the root.
@@ -41,30 +76,34 @@ public interface Tag {
 	/**
 	 * Returns attribute name.
 	 */
-	String getAttributeName(int index);
+	CharSequence getAttributeName(int index);
 
 	/**
 	 * Returns attribute value or <code>null</code> for an empty attribute,
 	 */
-	String getAttributeValue(int index);
+	CharSequence getAttributeValue(int index);
 
 	/**
 	 * Returns attribute value or <code>null</code> for an empty attribute,
 	 * Returns <code>null</code> also if attribute name does not exist.
 	 */
-	String getAttributeValue(String name, boolean caseSensitive);
+	CharSequence getAttributeValue(CharSequence name);
+
+	CharSequence getAttributeValue(char[] name);
 
 	/**
 	 * Returns attribute index or <code>-1</code> if not found.
 	 */
-	int getAttributeIndex(String name, boolean caseSensitive);
+	int getAttributeIndex(CharSequence name);
+
+	int getAttributeIndex(char[] name);
 
 	/**
 	 * Detects if an attribute is present.
 	 */
-	boolean hasAttribute(String name, boolean caseSensitive);
+	boolean hasAttribute(CharSequence name);
 
-	// ---------------------------------------------------------------- advanced
+	// ---------------------------------------------------------------- position
 
 	/**
 	 * Returns tag position in the input source.
@@ -72,24 +111,24 @@ public interface Tag {
 	int getTagPosition();
 
 	/**
-	 * Calculates current position of a tag .
-	 */
-	LagartoLexer.Position calculateTagPosition();
-
-	/**
 	 * Returns tag length in the input source.
 	 */
 	int getTagLength();
 
+	/**
+	 * Returns tag position string or <code>null</code> if position is not calculated.
+	 */
+	public String getPosition();
+
 	// ---------------------------------------------------------------- write
 
 	/**
-	 * Sets new tag name.
+	 * Sets tag name.
 	 */
-	void setName(String tagName);
+	void setName(CharSequence tagName);
 
 	/**
-	 * Sets new tag type.
+	 * Sets {@link jodd.lagarto.TagType tag type}.
 	 */
 	void setType(TagType type);
 
@@ -97,38 +136,42 @@ public interface Tag {
 	 * Adds new attribute without checking if it already exist
 	 * thus allowing duplicate attributes.
 	 */
-	void addAttribute(String name, String value);
+	void addAttribute(CharSequence name, CharSequence value);
 
 	/**
 	 * Sets new attribute value. If attribute already exist, it's value is changed.
-	 * If attribute does not exist, it will be added to the list.
+	 * If attribute does not exist, it will be added to the tag.
 	 */
-	void setAttribute(String name, boolean caseSensitive, String value);
+	void setAttribute(CharSequence name, CharSequence value);
 
 	/**
-	 * Sets value for attribute at specific index.
+	 * Sets value for attribute at specific index. Throws exception
+	 * if index is invalid.
 	 */
-	void setAttributeValue(int index, String value);
+	void setAttributeValue(int index, CharSequence value);
 
 	/**
-	 * Sets value for attribute at specific index.
+	 * Sets value for attribute with given name. If attribute with given
+	 * name doesn't exist, nothing changes.
 	 */
-	void setAttributeValue(String name, boolean caseSensitive, String value);
+	void setAttributeValue(CharSequence name, CharSequence value);
 
 	/**
-	 * Changes attribute name on specific index.
+	 * Changes attribute name on specific index. Throws exception
+	 * if index is invalid.
 	 */
-	void setAttributeName(int index, String name);
+	void setAttributeName(int index, CharSequence name);
 
 	/**
-	 * Removes attribute.
+	 * Removes attribute at given index. Throws exception
+	 * if index is invalid.
 	 */
 	void removeAttribute(int index);
 
 	/**
-	 * Removes attribute.
+	 * Removes attribute by given name.
 	 */
-	void removeAttribute(String name, boolean caseSensitive);
+	void removeAttribute(CharSequence name);
 
 	/**
 	 * Removes all attributes.
@@ -140,35 +183,39 @@ public interface Tag {
 	 */
 	boolean isModified();
 
+	// ---------------------------------------------------------------- match
+
 	/**
-	 * Force {@link #isModified()} to be <code>true</code>.
-	 * Used when tags needs to be regenerated.
+	 * Returns <code>true</code> if name equals to given chars.
 	 */
-	void setModified();
+	boolean nameEquals(char[] chars);
+	/**
+	 * Returns <code>true</code> if name equals to given char sequence.
+	 */
+	boolean nameEquals(CharSequence charSequence);
+
+	/**
+	 * Matches tag name to given <b>lowercase</b> tag name.
+	 * Should be somewhat faster then {@link #nameEquals(char[])}
+	 * since only one name is getting converted to lower ascii.
+	 */
+	boolean matchTagName(char[] tagNameLowercase);
+
+	/**
+	 * Matches tag name to given <b>lowercase</b> prefix.
+	 */
+	boolean matchTagNamePrefix(char[] tagPrefix);
 
 	// ---------------------------------------------------------------- output
 
 	/**
-	 * Shortcut for <code>writeTo(out, false)</code>.
+	 * Writes the tag to the output.
 	 */
 	void writeTo(Appendable out) throws IOException;
 
 	/**
-	 * Write out the complete tag. There are two modes how tag can be written.
-	 * <ul>
-	 * <li> optimized - if tag is not modified it will be written in its <b>original</b> form. otherwise it will be generated.</li>
-	 * <li> force build - tag will be always build from tag name and attributes. Resulting tag may be different than source.</li>
-	 * </ul>
-	 */
-	void writeTo(Appendable out, boolean forceBuild) throws IOException;
-
-
-	/**
-	 * Get the complete tag.
-	 * <p/>
-	 * This is a bit slower method in that it needs to construct a String and generates tag always.
-	 * Use it for debugging purposes.
+	 * Get the complete tag as a string.
 	 */
 	String toString();
-}
 
+}

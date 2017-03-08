@@ -1,4 +1,27 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.db.oom;
 
@@ -92,25 +115,20 @@ public class LiveDatabaseTest extends DbBaseTest {
 
 	@Test
 	public void testLiveDb() throws Exception {
+		for (DbAccess db : databases) {
+			System.out.println("\t" + db.getClass().getSimpleName());
+			init();
+			db.initDb();
+			connect();
 
-		for (int i = 0; i < 2; i++) {
-			boolean strict = i == 0;
-			System.out.println("strict: " + strict);
-			for (DbAccess db : databases) {
-				System.out.println("\t" + db.getClass().getSimpleName());
-				init(strict);
-				db.initDb();
-				connect();
+			dboom.registerEntity(Tester.class);
 
-				dboom.registerEntity(Tester.class);
+			db.createTables();
 
-				db.createTables();
-
-				try {
-					workoutEntity();
-				} finally {
-					db.close();
-				}
+			try {
+				workoutEntity();
+			} finally {
+				db.close();
 			}
 		}
 	}
@@ -136,73 +154,73 @@ public class LiveDatabaseTest extends DbBaseTest {
 		assertEquals(1, tester.getId().longValue());
 
 		tester.setName("seven");
-		DbOomQuery.query(session, DbEntitySql.updateAll(tester)).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.updateAll(tester)).executeUpdate();
 		assertDb(session, "{1,seven,7}");
 
 		tester.setName("SEVEN");
-		DbOomQuery.query(session, DbEntitySql.update(tester)).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.update(tester)).executeUpdate();
 		assertDb(session, "{1,SEVEN,7}");
 
 		tester.setName("seven");
-		DbOomQuery.query(session, DbEntitySql.updateColumn(tester, "name")).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.updateColumn(tester, "name")).executeUpdate();
 		assertDb(session, "{1,seven,7}");
 
 		tester = new Tester();
 		tester.setId(Long.valueOf(2));
 		tester.setName("two");
 		tester.setValue(Integer.valueOf(2));
-		DbOomQuery.query(session, DbEntitySql.insert(tester)).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.insert(tester)).executeUpdate();
 		assertDb(session, "{1,seven,7}{2,two,2}");
 
-		long count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCountAndClose();
+		long count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCount();
 		assertEquals(2, count);
 
-		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, Integer.valueOf(2))).findAndClose(Tester.class);
+		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, 2)).find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))
-				.findAndClose(Tester.class);
+				.find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.TABLE_REFERENCE))
-				.findAndClose(Tester.class);
+				.find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.TABLE_NAME))
-				.findAndClose(Tester.class);
+				.find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))    // fixes POSTGRESQL
-				.findAndClose();
+				.find();
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = new Tester();
 		tester.setName("seven");
-		tester = DbOomQuery.query(session, DbEntitySql.find(tester)).findAndClose(Tester.class);
+		tester = DbOomQuery.query(session, DbEntitySql.find(tester)).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, DbEntitySql.findByColumn(Tester.class, "name", "seven")).findAndClose(Tester.class);
+		DbOomQuery.query(session, DbEntitySql.findByColumn(Tester.class, "name", "seven")).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, Integer.valueOf(1))).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, 1)).executeUpdate();
 
-		count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCountAndClose();
+		count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCount();
 		assertEquals(1, count);
 
 		session.closeSession();

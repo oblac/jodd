@@ -1,8 +1,31 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.upload.impl;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;
@@ -84,9 +107,9 @@ public class AdaptiveFileUpload extends FileUpload {
 	protected boolean matchFileExtension() throws IOException {
 		String fileNameExtension = FileNameUtil.getExtension(getHeader().getFileName());
 		for (String fileExtension : fileExtensions) {
-			if (fileNameExtension.equalsIgnoreCase(fileExtension) == true) {
-				if (allowFileExtensions == false) {	// extension matched and it is not allowed
-					if (breakOnError == true) {
+			if (fileNameExtension.equalsIgnoreCase(fileExtension)) {
+				if (!allowFileExtensions) {	// extension matched and it is not allowed
+					if (breakOnError) {
 						throw new IOException("Upload filename extension not allowed: " + fileNameExtension);
 					}
 					size = input.skipToBoundary();
@@ -95,8 +118,8 @@ public class AdaptiveFileUpload extends FileUpload {
 				return true;		// extension matched and it is allowed.
 			}
 		}
-		if (allowFileExtensions == true) {	// extension is not one of the allowed ones.
-			if (breakOnError == true) {
+		if (allowFileExtensions) {	// extension is not one of the allowed ones.
+			if (breakOnError) {
 				throw new IOException("Upload filename extension not allowed: " + fileNameExtension);
 			}
 			size = input.skipToBoundary();
@@ -110,7 +133,7 @@ public class AdaptiveFileUpload extends FileUpload {
 	 */
 	protected boolean checkUpload() throws IOException {
 		if (fileExtensions != null) {
-			if (matchFileExtension() == false) {
+			if (!matchFileExtension()) {
 				return false;
 			}
 		}
@@ -119,7 +142,7 @@ public class AdaptiveFileUpload extends FileUpload {
 
 	@Override
 	protected void processStream() throws IOException {
-		if (checkUpload() == false) {
+		if (!checkUpload()) {
 			return;
 		}
 		size = 0;
@@ -151,7 +174,7 @@ public class AdaptiveFileUpload extends FileUpload {
 					deleteTempFile = true;
 					fileTooBig = true;
 					valid = false;
-					if (breakOnError == true) {
+					if (breakOnError) {
 						throw new IOException("File upload (" + header.getFileName() + ") too big, > " + maxFileSize);
 					}
 					input.skipToBoundary();
@@ -195,7 +218,7 @@ public class AdaptiveFileUpload extends FileUpload {
 	 * Returns the destination file.
 	 */
 	public File write(File destination) throws IOException {
-		if (destination.isDirectory() == true) {
+		if (destination.isDirectory()) {
 			destination = new File(destination, this.header.getFileName());
 		}
 		if (data != null) {

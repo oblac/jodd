@@ -17,7 +17,6 @@ import java.nio.CharBuffer;
 //%column
 
 // code generation(%switch, %table, %pack)
-%table
 %buffer 4096
 
 // additional methods
@@ -125,4 +124,4 @@ dimension ={num}{ident}
 
 
 // fallback rule, when nothing else matches
-.|\n				{ throw new CSSellyException("Illegal character <"+ yytext() +">.", yystate(), line(), column()); }
+[^]|\n				{ throw new CSSellyException("Illegal character <"+ yytext() +">.", yystate(), line(), column()); }

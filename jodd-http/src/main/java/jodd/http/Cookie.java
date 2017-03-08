@@ -1,6 +1,32 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.http;
+
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 /**
  * Cookie object. Simple cookie data holder, cookie header parser and generator.
@@ -46,6 +72,8 @@ public class Cookie {
 		int from = 0;
 		int ndx = 0;
 
+		cookie = cookie.trim();
+
 		while (ndx < cookie.length()) {
 			ndx = cookie.indexOf(';', from);
 
@@ -53,20 +81,23 @@ public class Cookie {
 				// last chunk
 				ndx = cookie.length();
 			}
-
 			int ndx2 = cookie.indexOf('=', from);
 
 			String name;
 			String value;
-			if (ndx2 != -1) {
+			if (ndx2 != -1 && ndx2 < ndx) {
 				name = cookie.substring(from, ndx2).trim();
 				value = cookie.substring(ndx2 + 1, ndx).trim();
 			} else {
+				if (from == ndx) {
+					ndx++;
+					continue;
+				}
 				name = cookie.substring(from, ndx).trim();
 				value = null;
 			}
 
-			if (name.equalsIgnoreCase("Max-Age")) {
+			if (value != null && name.equalsIgnoreCase("Max-Age")) {
 				setMaxAge(Integer.parseInt(value));
 			} else if (name.equalsIgnoreCase("Comment")) {
 				setComment(value);
@@ -76,13 +107,13 @@ public class Cookie {
 				setPath(value);
 			} else if (name.equalsIgnoreCase("Secure")) {
 				setSecure(true);
-			} else if (name.equalsIgnoreCase("Version")) {
+			} else if (value != null && name.equalsIgnoreCase("Version")) {
 				setVersion(Integer.parseInt(value));
 			} else if (name.equalsIgnoreCase("HttpOnly")) {
 				setHttpOnly(true);
 			} else if (name.equalsIgnoreCase("Expires")) {
 				setExpires(value);
-			} else {
+			} else if (this.name == null && !StringUtil.isBlank(name)) {
 				setName(name);
 				setValue(value);
 			}
@@ -122,8 +153,9 @@ public class Cookie {
 	 * The comment is useful if the browser presents the cookie
 	 * to the user.
 	 */
-	public void setComment(String purpose) {
+	public Cookie setComment(String purpose) {
 		comment = purpose;
+		return this;
 	}
 
 	/**
@@ -146,8 +178,9 @@ public class Cookie {
 	 * to the server that sent them.
 	 */
 
-	public void setDomain(String pattern) {
+	public Cookie setDomain(String pattern) {
 		domain = pattern.toLowerCase();    // IE allegedly needs this
+		return this;
 	}
 
 	/**
@@ -174,8 +207,9 @@ public class Cookie {
 	 * to be deleted.
 	 */
 
-	public void setMaxAge(int expiry) {
+	public Cookie setMaxAge(int expiry) {
 		maxAge = Integer.valueOf(expiry);
+		return this;
 	}
 
 	/**
@@ -200,8 +234,9 @@ public class Cookie {
 	 * <p>Consult RFC 2109 (available on the Internet) for more
 	 * information on setting path names for cookies.
 	 */
-	public void setPath(String uri) {
+	public Cookie setPath(String uri) {
 		path = uri;
+		return this;
 	}
 
 	/**
@@ -209,7 +244,7 @@ public class Cookie {
 	 * only over a secure protocol, or <code>false</code> if the
 	 * browser can send cookies using any protocol.
 	 */
-	public boolean getSecure() {
+	public boolean isSecure() {
 		return secure;
 	}
 
@@ -217,8 +252,9 @@ public class Cookie {
 	 * Indicates to the browser whether the cookie should only be sent
 	 * using a secure protocol, such as HTTPS or SSL.
 	 */
-	public void setSecure(boolean flag) {
+	public Cookie setSecure(boolean flag) {
 		secure = flag;
+		return this;
 	}
 
 	/**
@@ -240,8 +276,9 @@ public class Cookie {
 	 * Assigns a new value to a cookie after the cookie is created.
 	 * If you use a binary value, you may want to use BASE64 encoding.
 	 */
-	public void setValue(String newValue) {
+	public Cookie setValue(String newValue) {
 		value = newValue;
+		return this;
 	}
 
 	/**
@@ -260,24 +297,27 @@ public class Cookie {
 	 * with. Version 0 complies with the original Netscape cookie
 	 * specification. Version 1 complies with RFC 2109.
 	 */
-	public void setVersion(int version) {
+	public Cookie setVersion(int version) {
 		this.version = Integer.valueOf(version);
+		return this;
 	}
 
 	public boolean isHttpOnly() {
 		return httpOnly;
 	}
 
-	public void setHttpOnly(boolean httpOnly) {
+	public Cookie setHttpOnly(boolean httpOnly) {
 		this.httpOnly = httpOnly;
+		return this;
 	}
 
 	public String getExpires() {
 		return expires;
 	}
 
-	public void setExpires(String expires) {
+	public Cookie setExpires(String expires) {
 		this.expires = expires;
+		return this;
 	}
 
 	public String toString() {
@@ -300,7 +340,7 @@ public class Cookie {
 		if (path != null) {
 			cookie.append("; Path=").append(path);
 		}
-		if (secure == true) {
+		if (secure) {
 			cookie.append("; Secure");
 		}
 		if (version != null) {
