@@ -15,16 +15,14 @@ Jodd
 
 **Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
 
-Read about **Jodd**:
+READ about **Jodd**:
 
 + Official web site (site, documentation, information): http://jodd.org/
-
 + GitHub page (5 min overview): http://oblac.github.io/jodd
-
 + Jodd micro-frameworks (30 min overview): http://joddframework.org
-
 + One-page love: http://jodd.org/about
 
+TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
 
 ## Jodd Modules
 
