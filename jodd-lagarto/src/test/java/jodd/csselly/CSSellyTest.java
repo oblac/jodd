@@ -26,6 +26,7 @@
 package jodd.csselly;
 
 import jodd.csselly.selector.AttributeSelector;
+import jodd.csselly.selector.PseudoClass;
 import jodd.csselly.selector.PseudoClassSelector;
 import jodd.csselly.selector.PseudoFunctionExpression;
 import jodd.csselly.selector.PseudoFunctionSelector;
@@ -380,5 +381,40 @@ public class CSSellyTest {
 
 		assertEquals("contains", pseudoFunctionSelector.getPseudoFunction().getPseudoFunctionName());
 
+	}
+
+	@Test
+	public void test301() {
+		CSSelly lexerA = new CSSelly("input:not(':checked')");
+		CSSelly lexerB = new CSSelly("input:not(:checked)");
+
+		List<CssSelector> selectorsA = lexerA.parse();
+		List<CssSelector> selectorsB = lexerB.parse();
+
+		assertEquals(1, selectorsA.size());
+		assertEquals(1, selectorsB.size());
+
+		CssSelector cssSelectorA = selectorsA.get(0);
+		CssSelector cssSelectorB = selectorsB.get(0);
+
+		PseudoFunctionSelector pseudoFunctionSelectorA = (PseudoFunctionSelector) cssSelectorA.getSelector(0);
+		assertEquals("':checked'", pseudoFunctionSelectorA.getExpression());
+		PseudoFunctionSelector pseudoFunctionSelectorB = (PseudoFunctionSelector) cssSelectorB.getSelector(0);
+		assertEquals(":checked", pseudoFunctionSelectorB.getExpression());
+
+		List peA = (List) pseudoFunctionSelectorA.getParsedExpression();
+		assertEquals(1, peA.size());
+		assertEquals(1, ((List)peA.get(0)).size());
+		List peB = (List) pseudoFunctionSelectorB.getParsedExpression();
+		assertEquals(1, peB.size());
+		assertEquals(1, ((List)peB.get(0)).size());
+
+		CssSelector lastSelectorA = (CssSelector) ((List)peA.get(0)).get(0);
+		PseudoClassSelector pcsA = (PseudoClassSelector) lastSelectorA.selectors.get(0);
+		CssSelector lastSelectorB = (CssSelector) ((List)peB.get(0)).get(0);
+		PseudoClassSelector pcsB = (PseudoClassSelector) lastSelectorB.selectors.get(0);
+
+		assertEquals(PseudoClass.CHECKED.class.getSimpleName().toLowerCase(), pcsA.getPseudoClass().getPseudoClassName());
+		assertEquals(PseudoClass.CHECKED.class.getSimpleName().toLowerCase(), pcsB.getPseudoClass().getPseudoClassName());
 	}
 }
