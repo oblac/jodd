@@ -129,13 +129,18 @@ public class Jodd {
 		final ClassLoader classLoader = Jodd.class.getClassLoader();
 
 		for (Field field : fields) {
-			int index;
+			Object fieldValue;
 
 			try {
-				index = ((Integer) field.get(null)).intValue();
+				fieldValue = field.get(null);
+				if (!(fieldValue instanceof Integer)) {
+					continue;
+				}
 			} catch (IllegalAccessException iaex) {
 				throw new UncheckedException(iaex);
 			}
+
+			int index = (Integer) fieldValue;
 
 			String moduleName = field.getName();
 
@@ -233,5 +238,15 @@ public class Jodd {
 	public static Object getModule(int moduleNdx) {
 		return MODULES[moduleNdx];
 	}
+
+	/**
+	 * Ascii art of Jodds name. Every serious framework needs one:)
+	 */
+	public static String JODD =
+		"          __          __    __\n" +
+		"         / /___  ____/ /___/ /\n" +
+		"    __  / / __ \\/ __  / __  / \n" +
+		"   / /_/ / /_/ / /_/ / /_/ /  \n" +
+		"   \\____/\\____/\\__,_/\\__,_/   \n";
 
 }
