@@ -15,16 +15,16 @@ Jodd
 
 **Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
 
-READ about **Jodd**:
+:orange_book: READ about **Jodd**:
 
 + Official web site (site, documentation, information): http://jodd.org/
 + GitHub page (5 min overview): http://oblac.github.io/jodd
 + Jodd micro-frameworks (30 min overview): http://joddframework.org
 + One-page love: http://jodd.org/about
 
-TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
+:loudspeaker: TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
 
-## Jodd Modules
+## :zap: Jodd Modules
 
 **Jodd** is split into many modules, so choose what to use.
 Some tools and utility modules are:
@@ -51,14 +51,14 @@ and some micro-frameworks:
 
 Read more in our [official documentation](http://jodd.org/doc).
 
-## Jodd Bundle
+## :sunny: Jodd Bundle
 
 If you are already using many **Jodd** jars, you can simply
 just use the _bundle_ jar: `jodd-all`. It's a single jar with
 all modules included; where all dependencies are optional. Why not :)
 
 
-## Building Jodd from source
+## :octocat: Building Jodd from source
 
 **Jodd** is built with [Gradle](http://gradle.org/) on JDK8,
 targeting Java 1.8. You don't have to install anything,
@@ -97,9 +97,9 @@ used.
 
     gradlew install
 
-## Contribute
+## :gift_heart: Contribute
 
-Feel free to contribute! Follow these steps:
+Feel free to [contribute](CONTRIBUTING.MD)! Follow these steps:
 
 First time only:
 
