@@ -118,7 +118,7 @@ public class FileLFUCache {
 	 * Returns timeout.
 	 */
 	public long getCacheTimeout() {
-		return cache.getCacheTimeout();
+		return cache.timeout();
 	}
 
 	/**

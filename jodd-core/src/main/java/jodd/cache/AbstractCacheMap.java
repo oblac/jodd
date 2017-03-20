@@ -84,7 +84,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getCacheSize() {
+	public int limit() {
 		return cacheSize;
 	}
 
@@ -94,7 +94,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * Returns default cache timeout or <code>0</code> if it is not set.
 	 * Timeout can be set individually for each object.
 	 */
-	public long getCacheTimeout() {
+	public long timeout() {
 		return timeout;
 	}
 

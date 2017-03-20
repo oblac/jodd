@@ -35,12 +35,12 @@ public interface Cache<K, V> {
 	/**
 	 * Returns cache size or <code>0</code> if there is no size limit.
 	 */
-	int getCacheSize();
+	int limit();
 
 	/**
 	 * Returns default timeout or <code>0</code> if it is not set.
 	 */
-	long getCacheTimeout();
+	long timeout();
 
 	/**
 	 * Adds an object to the cache with default timeout.

@@ -34,11 +34,11 @@ import java.util.Iterator;
 public class NoCache<K, V> implements Cache<K, V> {
 
 
-	public int getCacheSize() {
+	public int limit() {
 		return 0;
 	}
 
-	public long getCacheTimeout() {
+	public long timeout() {
 		return 0;
 	}
 
