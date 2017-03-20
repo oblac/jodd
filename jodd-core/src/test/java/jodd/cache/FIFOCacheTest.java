@@ -38,7 +38,7 @@ public class FIFOCacheTest {
 	@Test
 	public void testCache() {
 		Cache<String, String> cache = new FIFOCache<>(3);
-		assertEquals(3, cache.getCacheSize());
+		assertEquals(3, cache.limit());
 		assertEquals(0, cache.size());
 
 		cache.put("1", "1");
@@ -64,7 +64,7 @@ public class FIFOCacheTest {
 		assertNotNull(cache.get("1"));
 
 		cache.clear();
-		assertEquals(3, cache.getCacheSize());
+		assertEquals(3, cache.limit());
 		assertEquals(0, cache.size());
 	}
 
@@ -112,7 +112,7 @@ public class FIFOCacheTest {
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertEquals(2, cache.size());
-		assertEquals(50, cache.getCacheTimeout());
+		assertEquals(50, cache.timeout());
 
 		ThreadUtil.sleep(100);
 		assertEquals(2, cache.prune());
