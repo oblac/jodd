@@ -1,9 +1,9 @@
+/etc/work
 /dist/
 /out/
 *.iml
 .idea
 /user.*
-.gitignore
 .gradle
 build
 target
