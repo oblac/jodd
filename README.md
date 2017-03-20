@@ -22,7 +22,7 @@ Jodd
 + Jodd micro-frameworks (30 min overview): http://joddframework.org
 + One-page love: http://jodd.org/about
 
-:loudspeaker: TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
+:speech_balloon: TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
 
 ## :zap: Jodd Modules
 
@@ -37,7 +37,7 @@ Some tools and utility modules are:
 + `jodd-servlet` with many servlet utilities, including nice tag library.
 + `jodd-http`, tiny HTTP client.
 
-and some micro-frameworks:
+and some **micro-frameworks**:
 
 + `jodd-madvoc` - slick MVC framework.
 + `jodd-petite` - pragmatic DI container.
@@ -99,7 +99,7 @@ used.
 
 ## :gift_heart: Contribute
 
-Feel free to [contribute](CONTRIBUTING.MD)! Follow these steps:
+Feel free to [contribute](CONTRIBUTING.md)! Follow these steps:
 
 First time only:
 
