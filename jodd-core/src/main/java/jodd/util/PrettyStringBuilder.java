@@ -41,48 +41,36 @@ public class PrettyStringBuilder {
 	protected String nullValue = "<null>";
 	protected String moreValue = ",...";
 
-	public int getMaxItemsToShow() {
-		return maxItemsToShow;
-	}
-
 	/**
 	 * Sets the max number of items of arrays, collections and maps to show.
 	 */
-	public void setMaxItemsToShow(int maxItemsToShow) {
+	public PrettyStringBuilder maxItemsToShow(int maxItemsToShow) {
 		this.maxItemsToShow = maxItemsToShow;
-	}
-
-	public int getMaxDeep() {
-		return maxDeep;
+		return this;
 	}
 
 	/**
 	 * Sets how deep to examine inner objects.
 	 */
-	public void setMaxDeep(int maxDeep) {
+	public PrettyStringBuilder maxDeep(int maxDeep) {
 		this.maxDeep = maxDeep;
-	}
-
-	public String getNullValue() {
-		return nullValue;
+		return this;
 	}
 
 	/**
 	 * Sets <code>null</code> value representation.
 	 */
-	public void setNullValue(String nullValue) {
+	public PrettyStringBuilder showNullAs(String nullValue) {
 		this.nullValue = nullValue;
-	}
-
-	public String getMoreValue() {
-		return moreValue;
+		return this;
 	}
 
 	/**
 	 * Sets string for 'more'.
 	 */
-	public void setMoreValue(String moreValue) {
+	public PrettyStringBuilder showMoreAs(String moreValue) {
 		this.moreValue = moreValue;
+		return this;
 	}
 
 	/**
@@ -114,7 +102,8 @@ public class PrettyStringBuilder {
 				s.append(moreValue);
 			}
 			s.append(']');
-		} else if (obj instanceof Collection) {
+		}
+		else if (obj instanceof Collection) {
 			Collection coll = (Collection) obj;
 			int len = Math.min(coll.size(), maxItemsToShow);
 			Iterator it = coll.iterator();
@@ -131,7 +120,8 @@ public class PrettyStringBuilder {
 				s.append(moreValue);
 			}
 			s.append(')');
-		} else if (obj instanceof Map) {
+		}
+		else if (obj instanceof Map) {
 			Map map = (Map) obj;
 			int len = Math.min(map.size(), maxItemsToShow);
 			Iterator it = map.keySet().iterator();
@@ -150,10 +140,13 @@ public class PrettyStringBuilder {
 				s.append(moreValue);
 			}
 			s.append('}');
-		} else {
+		}
+		else {
 			s.append(obj.toString());
 		}
+
 		deep--;
+
 		return s.toString();
 	}
 

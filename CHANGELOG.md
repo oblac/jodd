@@ -25,6 +25,7 @@ All notable changes to Jodd project are documented here.
 
 ### Breaking changes
 
++ **core** - `PreattyStringBuilder` simplified the interface.
 + **core** - `DirWatcher` now accepts `Consumer`s instead of custom listener.
 + **core** - `FindFile` interface changed to match Java8.
 + **core** - renamed methods in `Cache` interface.
