@@ -30,10 +30,14 @@ package jodd.util;
  */
 public class NameValue<N, V> {
 
-	protected N name;
-	protected V value;
+	protected final N name;
+	protected final V value;
 
-	public NameValue() {
+	/**
+	 * Simple static constructor.
+	 */
+	public static <T,R> NameValue of(T name, R value) {
+		return new NameValue<>(name, value);
 	}
 
 	public NameValue(N name, V value) {
@@ -42,31 +46,17 @@ public class NameValue<N, V> {
 	}
 
 	/**
-	 * Sets name.
-	 */
-	public void setName(N name) {
-		this.name = name;
-	}
-
-	/**
 	 * Returns name.
 	 */
-	public N getName() {
+	public N name() {
 		return name;
 	}
 
 	/**
 	 * Returns value.
 	 */
-	public V getValue() {
+	public V value() {
 		return value;
-	}
-
-	/**
-	 * Sets value.
-	 */
-	public void setValue(V value) {
-		this.value = value;
 	}
 
 	@Override
@@ -76,12 +66,12 @@ public class NameValue<N, V> {
 		}
 		NameValue that = (NameValue) o;
 
-		Object n1 = getName();
-		Object n2 = that.getName();
+		Object n1 = name();
+		Object n2 = that.name();
 
 		if (n1 == n2 || (n1 != null && n1.equals(n2))) {
-			Object v1 = getValue();
-			Object v2 = that.getValue();
+			Object v1 = value();
+			Object v2 = that.value();
 			if (v1 == v2 || (v1 != null && v1.equals(v2))) {
 				return true;
 			}
