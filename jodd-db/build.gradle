@@ -2,6 +2,18 @@
 ext.moduleName = 'Jodd DbOom'
 ext.moduleDescription = 'Jodd DB is efficient and thin database facade; DbOom is convenient database object mapper.'
 
+
+buildscript {
+	ext.kotlin_version = '1.1.1'
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+apply plugin: 'kotlin'
+
 dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
@@ -15,6 +27,7 @@ dependencies {
 	testCompile lib.h2db
 	testCompile lib.mysql
 	testCompile lib.postgresql
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
 
 // run db integration tests only through the suite
