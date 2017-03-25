@@ -189,12 +189,15 @@ public class ThreadUtil {
 	 * longer to complete. When the CPU is saturated, more threads is definitely not what the server needs.
 	 */
 	public static ExecutorService newCoreThreadPool(String name, int coreSize, int maxSize, int idleTimeoutInSeconds) {
+		return newCoreThreadPool(daemonThreadFactory(name), coreSize, maxSize, idleTimeoutInSeconds);
+	}
+	public static ExecutorService newCoreThreadPool(ThreadFactory threadFactory, int coreSize, int maxSize, int idleTimeoutInSeconds) {
 		return new ThreadPoolExecutor(
 			coreSize,
         	maxSize,
         	idleTimeoutInSeconds, TimeUnit.SECONDS,
 			new SynchronousQueue<>(),
-			daemonThreadFactory(name),
+			threadFactory,
 			new ThreadPoolExecutor.CallerRunsPolicy()
         );
 	}
