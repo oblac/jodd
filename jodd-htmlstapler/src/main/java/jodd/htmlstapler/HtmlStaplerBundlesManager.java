@@ -562,7 +562,7 @@ public class HtmlStaplerBundlesManager {
 		}
 
 		FindFile ff = new FindFile();
-		ff.setIncludeDirs(false);
+		ff.includeDirs(false);
 		ff.searchPath(new File(bundleFolder, staplerPath));
 
 		File f;

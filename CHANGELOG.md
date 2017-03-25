@@ -26,6 +26,7 @@ All notable changes to Jodd project are documented here.
 ### Breaking changes
 
 + **core** - renamed methods in `Cache` interface.
++ **core** - `FindFile` interface changed to match Java8.
 + **email** - renamed `EmailAddress`, it is used now as a Email parser.
 + **dboom** - method `_` has been removed. Use `append` instead.
 

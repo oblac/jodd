@@ -34,7 +34,7 @@ import jodd.util.InExRules;
  *
  * @see jodd.io.findfile.RegExpFindFile
  */
-public class WildcardFindFile extends FindFile<WildcardFindFile> {
+public class WildcardFindFile extends FindFile {
 
 	@Override
 	protected InExRules createRulesEngine() {

@@ -59,7 +59,7 @@ public class DecoraParserTest {
 		DecoraParser decoraParser = new DecoraParser();
 
 		FindFile ff = new WildcardFindFile().include("*.*ml");
-		ff.setMatchType(FindFile.Match.NAME);
+		ff.matchType(FindFile.Match.NAME);
 		ff.searchPath(testDataRoot);
 
 		File file;

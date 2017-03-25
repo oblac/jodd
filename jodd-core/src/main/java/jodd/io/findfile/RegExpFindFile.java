@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * Simple {@link FindFile} that matches file names with regular expression pattern.
  * @see jodd.io.findfile.WildcardFindFile
  */
-public class RegExpFindFile extends FindFile<RegExpFindFile> {
+public class RegExpFindFile extends FindFile {
 
 	@Override
 	protected InExRules createRulesEngine() {

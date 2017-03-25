@@ -351,7 +351,7 @@ public abstract class ClassFinder {
 			rootPath += File.separatorChar;
 		}
 
-		FindFile ff = new FindFile().setIncludeDirs(false).setRecursive(true).searchPath(rootPath);
+		FindFile ff = new FindFile().includeDirs(false).recursive(true).searchPath(rootPath);
 		File file;
 		while ((file = ff.nextFile()) != null) {
 			String filePath = file.getAbsolutePath();
