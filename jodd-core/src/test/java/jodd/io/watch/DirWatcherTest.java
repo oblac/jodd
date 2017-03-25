@@ -37,8 +37,7 @@ import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
-// test is ignored as it does not give consistent results, but still can be used locally
-@Ignore
+@Ignore("test does not give consistent results - run each method individually")
 public class DirWatcherTest {
 
 	protected String dataRoot;
@@ -58,11 +57,7 @@ public class DirWatcherTest {
 
 		final StringBuilder sb = new StringBuilder();
 
-		dirWatcher.register(new DirWatcherListener() {
-			public void onChange(File file, DirWatcher.Event event) {
-				sb.append(event.name() + ":" + file.getName() + "\n");
-			}
-		});
+		dirWatcher.register(event -> sb.append(event.type().name() + ":" + event.target().getName() + "\n"));
 
 		dirWatcher.start(100);
 
@@ -80,9 +75,9 @@ public class DirWatcherTest {
 		dirWatcher.stop();
 
 		assertEquals(
-				DirWatcher.Event.CREATED + ":jodd.md\n" +
-				DirWatcher.Event.MODIFIED + ":jodd.md\n" +
-				DirWatcher.Event.DELETED + ":jodd.md\n",
+				DirWatcherEvent.Type.CREATED + ":jodd.md\n" +
+				DirWatcherEvent.Type.MODIFIED + ":jodd.md\n" +
+				DirWatcherEvent.Type.DELETED + ":jodd.md\n",
 				sb.toString());
 	}
 
@@ -94,11 +89,8 @@ public class DirWatcherTest {
 
 		final StringBuilder sb = new StringBuilder();
 
-		dirWatcher.register(new DirWatcherListener() {
-			public void onChange(File file, DirWatcher.Event event) {
-				sb.append(event.name() + ":" + file.getName() + "\n");
-			}
-		});
+		dirWatcher.register(
+			event -> sb.append(event.type().name() + ":" + event.target().getName() + "\n"));
 
 		dirWatcher.start(100);
 
@@ -119,9 +111,9 @@ public class DirWatcherTest {
 		dirWatcher.stop();
 
 		assertEquals(
-				DirWatcher.Event.CREATED + ":jodd.md\n" +
+				DirWatcherEvent.Type.CREATED + ":jodd.md\n" +
 				//DirWatcher.Event.MODIFIED + ":jodd.md\n" +
-				DirWatcher.Event.DELETED + ":jodd.md\n",
+				DirWatcherEvent.Type.DELETED + ":jodd.md\n",
 				sb.toString());
 	}
 
@@ -133,10 +125,8 @@ public class DirWatcherTest {
 
 		final StringBuilder sb = new StringBuilder();
 
-		dirWatcher.register(new DirWatcherListener() {
-			public void onChange(File file, DirWatcher.Event event) {
-				sb.append(event.name() + ":" + file.getName() + "\n");
-			}
+		dirWatcher.register(event -> {
+			sb.append(event.type().name() + ":" + event.target().getName() + "\n");
 		});
 
 		dirWatcher.start(100);
@@ -146,7 +136,7 @@ public class DirWatcherTest {
 		dirWatcher.stop();
 
 		assertEquals(
-				DirWatcher.Event.CREATED + ":watch.txt\n",
+				DirWatcherEvent.Type.CREATED + ":watch.txt\n",
 				sb.toString());
 
 	}

@@ -38,22 +38,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class DirWatcher {
-
-	/**
-	 * Events that describes file change.
-	 */
-	public enum Event {
-		CREATED,
-		DELETED,
-		MODIFIED
-	}
 
 	protected final File dir;
 	protected HashMap<File, MutableLong> map = new HashMap<>();
 	protected int filesCount;
-	protected List<DirWatcherListener> listeners = new ArrayList<>();
+	protected List<Consumer<DirWatcherEvent>> listeners = new ArrayList<>();
 	protected String[] patterns;
 
 	/**
@@ -115,7 +107,7 @@ public class DirWatcher {
 
 	/**
 	 * Defines if watcher should start blank and consider all present
-	 * files as {@link jodd.io.watch.DirWatcher.Event#CREATED created}.
+	 * files as {@link jodd.io.watch.DirWatcherEvent.Type#CREATED created}.
 	 * By default all existing files will consider as existing ones.
 	 */
 	public DirWatcher startBlank(boolean startBlank) {
@@ -273,12 +265,12 @@ public class DirWatcher {
 				if (currentTime == null) {
 					// new file
 					map.put(file, new MutableLong(lastModified));
-					onChange(file, Event.CREATED);
+					onChange(DirWatcherEvent.Type.CREATED, file);
 				}
 				else if (currentTime.longValue() != lastModified) {
 					// modified file
 					currentTime.set(lastModified);
-					onChange(file, Event.MODIFIED);
+					onChange(DirWatcherEvent.Type.MODIFIED, file);
 				}
 			}
 
@@ -286,7 +278,7 @@ public class DirWatcher {
 			if (deletedFiles != null) {
 				for (File deletedFile : deletedFiles) {
 					map.remove(deletedFile);
-					onChange(deletedFile, Event.DELETED);
+					onChange(DirWatcherEvent.Type.DELETED, deletedFile);
 				}
 			}
 
@@ -298,28 +290,35 @@ public class DirWatcher {
 	/**
 	 * Triggers listeners on file change.
 	 */
-	protected void onChange(File file, Event event) {
-		for (DirWatcherListener listener : listeners) {
-			listener.onChange(file, event);
+	protected void onChange(DirWatcherEvent.Type type, File file) {
+		for (Consumer<DirWatcherEvent> listener : listeners) {
+			listener.accept(new DirWatcherEvent(type, file));
 		}
 	}
 
 	// ---------------------------------------------------------------- listeners
 
 	/**
-	 * Registers {@link jodd.io.watch.DirWatcherListener listener}.
+	 * Registers {@link jodd.io.watch.DirWatcherEvent consumer}.
 	 */
-	public void register(DirWatcherListener dirWatcherListener) {
+	public void register(Consumer<DirWatcherEvent> dirWatcherListener) {
 		if (!listeners.contains(dirWatcherListener)) {
 			listeners.add(dirWatcherListener);
 		}
 	}
 
 	/**
-	 * Removes registered {@link jodd.io.watch.DirWatcherListener listener}.
+	 * Removes registered {@link jodd.io.watch.DirWatcherEvent consumer}.
 	 */
-	public void remove(DirWatcherListener dirWatcherListener) {
+	public void remove(Consumer<DirWatcherEvent> dirWatcherListener) {
 		listeners.remove(dirWatcherListener);
+	}
+
+	/**
+	 * Removes all event consumers..
+	 */
+	public void clear() {
+		listeners.clear();
 	}
 
 }
