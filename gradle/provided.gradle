@@ -6,7 +6,15 @@ http://www.sinking.in/blog/provided-scope-in-gradle/
 http://www.gradle.org/docs/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html
 */
 
-// PROVIDED
+// PROVIDED scope
+//
+// In the Maven world, the "provided" scope means a library that needs to be
+// available in order to compile the project, but which should not be exported
+// as a transitive dependency or included in the final packaged archive (e.g. WAR file)
+// because it will be "provided" in some other way by the target environment.
+// The classic example is web applications - you need the servlet API dependency
+// at compile time but you don't want it in your final WAR because the web server
+// will provide it on a parent classloader.
 
 configurations {
 	provided {
