@@ -161,7 +161,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- null
 
 	public void setNull(int index, int type) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setNull(index, type);
 		} catch (SQLException sex) {
@@ -170,7 +170,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setNull(String param, int type) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -183,7 +183,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setNull(int index, int type, String typeName) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setNull(index, type, typeName);
 		} catch (SQLException sex) {
@@ -192,7 +192,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setNull(String param, int value, String typeName) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -206,7 +206,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- int
 
 	public void setInteger(int index, int value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setInt(index, value);
 		} catch (SQLException sex) {
@@ -215,7 +215,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setInteger(String param, int value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -248,7 +248,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- boolean
 
 	public void setBoolean(int index, boolean value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setBoolean(index, value);
 		} catch (SQLException sex) {
@@ -257,7 +257,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setBoolean(String param, boolean value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -290,7 +290,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- long
 
 	public void setLong(int index, long value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setLong(index, value);
 		} catch (SQLException sex) {
@@ -299,7 +299,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setLong(String param, long value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -332,7 +332,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- byte
 
 	public void setByte(int index, byte value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setByte(index, value);
 		} catch (SQLException sex) {
@@ -341,7 +341,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setByte(String param, byte value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -373,7 +373,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- bytes[]
 
 	public void setBytes(int index, byte[] value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setBytes(index, value);
 		} catch (SQLException sex) {
@@ -382,7 +382,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setBytes(String param, byte[] value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -397,7 +397,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- double
 
 	public void setDouble(int index, double value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setDouble(index, value);
 		} catch (SQLException sex) {
@@ -406,7 +406,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setDouble(String param, double value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -439,7 +439,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- float
 
 	public void setFloat(int index, float value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setFloat(index, value);
 		} catch (SQLException sex) {
@@ -448,7 +448,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setFloat(String param, float value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -481,7 +481,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- short
 
 	public void setShort(int index, short value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setShort(index, value);
 		} catch (SQLException sex) {
@@ -490,7 +490,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setShort(String param, short value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -523,7 +523,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- string
 
 	public void setString(int index, String value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setString(index, value);
 		} catch (SQLException sex) {
@@ -532,7 +532,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setString(String param, String value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -546,7 +546,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- date
 
 	public void setDate(int index, Date value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setDate(index, value);
 		} catch (SQLException sex) {
@@ -555,7 +555,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setDate(String param, Date value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -570,7 +570,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- time
 
 	public void setTime(int index, Time value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setTime(index, value);
 		} catch (SQLException sex) {
@@ -579,7 +579,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setTime(String param, Time value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -593,7 +593,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- timestamp
 
 	public void setTimestamp(int index, Timestamp value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setTimestamp(index, value);
 		} catch (SQLException sex) {
@@ -602,7 +602,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setTimestamp(String param, Timestamp value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -617,7 +617,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- big decimal
 
 	public void setBigDecimal(int index, BigDecimal value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setBigDecimal(index, value);
 		} catch (SQLException sex) {
@@ -626,7 +626,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setBigDecimal(String param, BigDecimal value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -660,7 +660,7 @@ public class DbQuery extends DbQueryBase {
 
 
 	public void setURL(int index, URL value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setURL(index, value);
 		} catch (SQLException sex) {
@@ -669,7 +669,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setURL(String param, URL value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -684,7 +684,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- BLOB
 
 	public void setBlob(int index, Blob value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setBlob(index, value);
 		} catch (SQLException sex) {
@@ -693,7 +693,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setBlob(String param, Blob value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -708,7 +708,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- CLOB
 
 	public void setClob(int index, Clob value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setClob(index, value);
 		} catch (SQLException sex) {
@@ -717,7 +717,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setClob(String param, Clob value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -731,7 +731,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- Array
 
 	public void setArray(int index, Array value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setArray(index, value);
 		} catch (SQLException sex) {
@@ -740,7 +740,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setArray(String param, Array value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -755,7 +755,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- Ref
 
 	public void setRef(int index, Ref value) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setRef(index, value);
 		} catch (SQLException sex) {
@@ -764,7 +764,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setRef(String param, Ref value) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -779,7 +779,7 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- ascii streams
 
 	public void setAsciiStream(int index, InputStream stream) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setAsciiStream(index, stream, stream.available());
 		} catch (IOException | SQLException ioex) {
@@ -788,7 +788,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setAsciiStream(String param, InputStream stream) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -800,7 +800,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setAsciiStream(int index, InputStream stream, int length) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setAsciiStream(index, stream, length);
 		} catch (SQLException sex) {
@@ -809,7 +809,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setAsciiStream(String param, InputStream stream, int length) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -821,7 +821,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setCharacterStream(int index, Reader reader, int length) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setCharacterStream(index, reader, length);
 		} catch (SQLException sex) {
@@ -830,7 +830,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	public void setCharacterStream(String param, Reader reader, int length) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -854,11 +854,14 @@ public class DbQuery extends DbQueryBase {
 		init();
 		beanName += '.';
 		Iterator it = query.iterateNamedParameters();
+
 		while (it.hasNext()) {
 			String paramName = (String) it.next();
-			if (paramName.startsWith(beanName) == true) {
+
+			if (paramName.startsWith(beanName)) {
 				String propertyName = paramName.substring(beanName.length());
-				if (BeanUtil.declared.hasRootProperty(bean, propertyName) == true) {
+
+				if (BeanUtil.declared.hasRootProperty(bean, propertyName)) {
 					Object value = BeanUtil.declared.getProperty(bean, propertyName);
 					setObject(paramName, value);
 				}
@@ -892,7 +895,7 @@ public class DbQuery extends DbQueryBase {
 	 * above, except that it assumes a scale of zero.
 	 */
 	public void setObject(int index, Object object, int targetSqlType) {
-		init();
+		initPrepared();
 		try {
 			preparedStatement.setObject(index, object, targetSqlType);
 		} catch (SQLException sex) {
@@ -906,7 +909,7 @@ public class DbQuery extends DbQueryBase {
 	 * above, except that it assumes a scale of zero.
 	 */
 	public void setObject(String param, Object object, int targetSqlType) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -923,7 +926,7 @@ public class DbQuery extends DbQueryBase {
 	 * above, except that it assumes a scale of zero.
 	 */
     void setObject(int index, Object object, int targetSqlType, int scale) {
-		init();
+		initPrepared();
 	    try {
 		    preparedStatement.setObject(index, object, targetSqlType, scale);
 	    } catch (SQLException sex) {
@@ -937,7 +940,7 @@ public class DbQuery extends DbQueryBase {
 	 * above, except that it assumes a scale of zero.
 	 */
     void setObject(String param, Object object, int targetSqlType, int scale) {
-		init();
+		initPrepared();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
@@ -1090,6 +1093,18 @@ public class DbQuery extends DbQueryBase {
 				setObject(paramName, null);
 			}
 			startingIndex++;
+		}
+	}
+
+	// ---------------------------------------------------------------- utils
+
+	/**
+	 * Shortcut.
+	 */
+	private void initPrepared() {
+		init();
+		if (preparedStatement == null) {
+			throw new DbSqlException("Prepared statement not initialized.");
 		}
 	}
 

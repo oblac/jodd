@@ -144,7 +144,7 @@ abstract class DbQueryBase implements AutoCloseable {
 		return session;
 	}
 
-	// ---------------------------------------------------------------- attributes
+	// ---------------------------------------------------------------- statement
 
 	protected Statement statement;
 	protected PreparedStatement preparedStatement;
@@ -217,7 +217,6 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Performs JDBC initialization of the query. Obtains connection, parses the SQL query string
 	 * and creates statements. Initialization is performed only once, when switching to initialized state.
 	 */
-	@SuppressWarnings("MagicConstant")
 	protected void initializeJdbc() {
 		// connection
 		if (connection == null) {
