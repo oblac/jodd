@@ -29,6 +29,7 @@ import jodd.db.debug.LoggablePreparedStatementFactory;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
+import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -148,6 +149,7 @@ abstract class DbQueryBase implements AutoCloseable {
 
 	protected Statement statement;
 	protected PreparedStatement preparedStatement;
+	protected CallableStatement callableStatement;
 	protected Set<ResultSet> resultSets;
 	protected DbQueryParser query;
 
@@ -227,55 +229,78 @@ abstract class DbQueryBase implements AutoCloseable {
 
 		this.query = new DbQueryParser(sqlString);
 
-		// statement
-		if ((!forcePreparedStatement) && (!query.prepared)) {
+		// callable statement
+
+		if (query.callable) {
 			try {
 				if (holdability != DEFAULT_HOLDABILITY) {
-					statement = connection.createStatement(type, concurrencyType, holdability);
-				} else {
-					statement = connection.createStatement(type, concurrencyType);
+					callableStatement = connection.prepareCall(query.sql, type, concurrencyType, holdability);
 				}
-			} catch (SQLException sex) {
-				throw new DbSqlException(this, "Create statement error", sex);
+				else {
+					callableStatement = connection.prepareCall(query.sql, type, concurrencyType);
+				}
 			}
+			catch (SQLException sex) {
+				throw new DbSqlException(this, "Error creating callable statement", sex);
+			}
+
+			preparedStatement = callableStatement;
+			statement = callableStatement;
+
 			return;
 		}
 
 		// prepared statement
-		try {
-			if (debug) {
-				if (generatedColumns != null) {
-					if (generatedColumns.length == 0) {
-						statement = LoggablePreparedStatementFactory.create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
+
+		if (query.prepared || forcePreparedStatement) {
+			try {
+				if (debug) {
+					if (generatedColumns != null) {
+						if (generatedColumns.length == 0) {
+							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
+						} else {
+							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, generatedColumns);
+						}
 					} else {
-						statement = LoggablePreparedStatementFactory.create(connection, query.sql, generatedColumns);
+						if (holdability != DEFAULT_HOLDABILITY) {
+							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType, holdability);
+						} else {
+							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType);
+						}
 					}
 				} else {
-					if (holdability != DEFAULT_HOLDABILITY) {
-						statement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType, holdability);
+					if (generatedColumns != null) {
+						if (generatedColumns.length == 0) {
+							preparedStatement = connection.prepareStatement(query.sql, Statement.RETURN_GENERATED_KEYS);
+						} else {
+							preparedStatement = connection.prepareStatement(query.sql, generatedColumns);
+						}
 					} else {
-						statement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType);
-					}
-				}
-			} else {
-				if (generatedColumns != null) {
-					if (generatedColumns.length == 0) {
-						statement = connection.prepareStatement(query.sql, Statement.RETURN_GENERATED_KEYS);
-					} else {
-						statement = connection.prepareStatement(query.sql, generatedColumns);
-					}
-				} else {
-					if (holdability != DEFAULT_HOLDABILITY) {
-						statement = connection.prepareStatement(query.sql, type, concurrencyType, holdability);
-					} else {
-						statement = connection.prepareStatement(query.sql, type, concurrencyType);
+						if (holdability != DEFAULT_HOLDABILITY) {
+							preparedStatement = connection.prepareStatement(query.sql, type, concurrencyType, holdability);
+						} else {
+							preparedStatement = connection.prepareStatement(query.sql, type, concurrencyType);
+						}
 					}
 				}
 			}
-		} catch (SQLException sex) {
-			throw new DbSqlException(this, "Create prepared statement error", sex);
+			catch (SQLException sex) {
+				throw new DbSqlException(this, "Error creating prepared statement", sex);
+			}
+			statement = preparedStatement;
 		}
-		preparedStatement = (PreparedStatement) statement;
+
+		// statement
+
+		try {
+			if (holdability != DEFAULT_HOLDABILITY) {
+				statement = connection.createStatement(type, concurrencyType, holdability);
+			} else {
+				statement = connection.createStatement(type, concurrencyType);
+			}
+		} catch (SQLException sex) {
+			throw new DbSqlException(this, "Error creating statement", sex);
+		}
 	}
 
 	/**
@@ -658,6 +683,27 @@ abstract class DbQueryBase implements AutoCloseable {
 			log.debug("execution time: " + elapsed + "ms");
 		}
 		return rs;
+	}
+
+	public DbCallResult executeCall() {
+		start = System.currentTimeMillis();
+
+		init();
+		if (log.isDebugEnabled()) {
+			log.debug("Calling statement: " + getQueryString());
+		}
+		try {
+			callableStatement.execute();
+		} catch (SQLException sex) {
+			DbUtil.close(callableStatement);
+			throw new DbSqlException(this, "Query execution failed", sex);
+		}
+
+		elapsed = System.currentTimeMillis() - start;
+		if (log.isDebugEnabled()) {
+			log.debug("execution time: " + elapsed + "ms");
+		}
+		return new DbCallResult(query, callableStatement);
 	}
 
 	/**

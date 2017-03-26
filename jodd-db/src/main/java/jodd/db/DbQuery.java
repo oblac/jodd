@@ -103,6 +103,12 @@ public class DbQuery extends DbQueryBase {
 	 * or it has no spaces, it will be loaded from the query map.
 	 */
 	protected String preprocessSql(String sqlString) {
+
+		// detects callable
+		if (sqlString.charAt(0) == '{') {
+			return sqlString;
+		}
+
 		// quickly detect if sql string is a key
 		if (!CharUtil.isAlpha(sqlString.charAt(0))) {
 			sqlString = sqlString.substring(1);
@@ -226,6 +232,12 @@ public class DbQuery extends DbQueryBase {
 		}
 	}
 
+	public void outInteger(int index) {
+		registerOutParameter(index, Types.INTEGER);
+	}
+	public void outInteger(String param) {
+		registerOutParameter(param, Types.INTEGER);
+	}
 
 	// ---------------------------------------------------------------- Integer
 
@@ -266,6 +278,13 @@ public class DbQuery extends DbQueryBase {
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
+	}
+
+	public void outBoolean(int index) {
+		registerOutParameter(index, Types.BOOLEAN);
+	}
+	public void outBoolean(String param) {
+		registerOutParameter(param, Types.BOOLEAN);
 	}
 
 	// ---------------------------------------------------------------- Boolean
@@ -352,6 +371,13 @@ public class DbQuery extends DbQueryBase {
 		}
 	}
 
+	public void outByte(int index) {
+		registerOutParameter(index, Types.SMALLINT);
+	}
+	public void outByte(String param) {
+		registerOutParameter(param, Types.SMALLINT);
+	}
+
 	// ---------------------------------------------------------------- Byte
 
 	public void setByte(int index, Number value) {
@@ -417,6 +443,13 @@ public class DbQuery extends DbQueryBase {
 		}
 	}
 
+	public void outDouble(int index) {
+		registerOutParameter(index, Types.DOUBLE);
+	}
+	public void outDouble(String param) {
+		registerOutParameter(param, Types.DOUBLE);
+	}
+
 	// ---------------------------------------------------------------- Double
 
 	public void setDouble(int index, Number value) {
@@ -457,6 +490,13 @@ public class DbQuery extends DbQueryBase {
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
+	}
+
+	public void outFloat(int index) {
+		registerOutParameter(index, Types.FLOAT);
+	}
+	public void outFloat(String param) {
+		registerOutParameter(param, Types.FLOAT);
 	}
 
 	// ---------------------------------------------------------------- Float
@@ -542,6 +582,14 @@ public class DbQuery extends DbQueryBase {
 			throwSetParamError(param, sex);
 		}
 	}
+
+	public void outString(int index) {
+		registerOutParameter(index, Types.VARCHAR);
+	}
+	public void outString(String param) {
+		registerOutParameter(param, Types.VARCHAR);
+	}
+
 
 	// ---------------------------------------------------------------- date
 
@@ -1098,13 +1146,36 @@ public class DbQuery extends DbQueryBase {
 
 	// ---------------------------------------------------------------- utils
 
-	/**
-	 * Shortcut.
-	 */
 	private void initPrepared() {
 		init();
 		if (preparedStatement == null) {
 			throw new DbSqlException("Prepared statement not initialized.");
+		}
+	}
+	private void initCallable() {
+		init();
+		if (callableStatement == null) {
+			throw new DbSqlException("Callable statement not initialized.");
+		}
+	}
+
+	private void registerOutParameter(int index, int type) {
+		initCallable();
+		try {
+			callableStatement.registerOutParameter(index,type);
+		} catch (SQLException sex) {
+			throwSetParamError(index, sex);
+		}
+	}
+	private void registerOutParameter(String param, int type) {
+		initCallable();
+		IntArrayList positions = query.getNamedParameterIndices(param);
+		try {
+			for (int i = 0; i < positions.size(); i++) {
+				callableStatement.registerOutParameter(positions.get(i), type);
+			}
+		} catch (SQLException sex) {
+			throwSetParamError(param, sex);
 		}
 	}
 

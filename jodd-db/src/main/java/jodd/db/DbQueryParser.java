@@ -41,6 +41,7 @@ class DbQueryParser {
 	public static final String SQL_SEPARATORS = " \n\r\f\t,()=<>&|+-=/*'^![]#~\\";
 
 	boolean prepared;
+	boolean callable;
 	String sql;
 
 	// ---------------------------------------------------------------- ctors
@@ -113,15 +114,18 @@ class DbQueryParser {
 		boolean inQuote = false;
 		int index = 0;
 		int paramCount = 0;
+
 		while (index < stringLength) {
 			char c = sqlString.charAt(index);
 			if (inQuote) {
 				if (c == '\'') {
 					inQuote = false;
 				}
-			} else if (c == '\'') {
+			}
+			else if (c == '\'') {
 				inQuote = true;
-			} else if (c == ':') {
+			}
+			else if (c == ':') {
 				int right = StringUtil.indexOfChars(sqlString, SQL_SEPARATORS, index + 1);
 				boolean batch = false;
 
@@ -175,7 +179,8 @@ class DbQueryParser {
 
 				index = right;
 				continue;
-			} else if (c == '?') {		// either an ordinal or positional parameter
+			}
+			else if (c == '?') {		// either an ordinal or positional parameter
 				if ((index < stringLength - 1) && (Character.isDigit(sqlString.charAt(index + 1)))) {   // positional parameter
 					int right = StringUtil.indexOfChars(sqlString, SQL_SEPARATORS, index + 1);
 					if (right < 0) {
@@ -200,5 +205,9 @@ class DbQueryParser {
 		}
 		this.prepared = (paramCount != 0);
 		this.sql = pureSql.toString();
+
+		if (this.sql.startsWith("{")) {
+			this.callable = true;
+		}
 	}
 }
