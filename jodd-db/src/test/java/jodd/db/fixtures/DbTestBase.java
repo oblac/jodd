@@ -3,6 +3,7 @@ package jodd.db.fixtures;
 import jodd.db.DbManager;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
+import jodd.db.DbThreadSession;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
@@ -68,6 +69,13 @@ public abstract class DbTestBase {
 	}
 
 	// ---------------------------------------------------------------- helpers
+
+	/**
+	 * Creates DB Session.
+	 */
+	protected DbSession createDbSession() {
+		return new DbThreadSession(cp);
+	}
 
 	protected int executeUpdate(DbSession session, String sql) {
 		return new DbQuery(session, sql).autoClose().executeUpdate();
