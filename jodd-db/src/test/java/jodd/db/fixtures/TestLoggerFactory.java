@@ -23,8 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db;
-
+package jodd.db.fixtures;
 
 import jodd.exception.UncheckedException;
 import jodd.log.Logger;
@@ -41,12 +40,12 @@ public class TestLoggerFactory extends NOPLoggerFactory {
 
 		@Override
 		public void warn(String message) {
-			throw new UncheckedException("NO WARNING ALLOWED: " + message);
+			throw new UncheckedException("NO WARNING ALLOWED IN TESTS: " + message);
 		}
 
 		@Override
 		public void warn(String message, Throwable throwable) {
-			throw new UncheckedException("NO WARNING ALLOWED: " + message);
+			throw new UncheckedException("NO WARNING ALLOWED IN TESTS: " + message);
 		}
 	};
 

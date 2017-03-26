@@ -26,7 +26,7 @@
 package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;

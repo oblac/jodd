@@ -25,7 +25,7 @@
 
 package jodd.db.oom.dao;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.ThreadDbSessionHolder;
 import jodd.db.oom.DbOomManager;

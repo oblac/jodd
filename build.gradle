@@ -327,7 +327,8 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*']
+			// we need to exclude certain classes as jacoco changes them and may influence testing results
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*', '*.fixtures.*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",

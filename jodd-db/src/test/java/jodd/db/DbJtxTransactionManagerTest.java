@@ -25,6 +25,7 @@
 
 package jodd.db;
 
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.jtx.JtxTransactionManager;

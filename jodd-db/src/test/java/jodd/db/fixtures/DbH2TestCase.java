@@ -23,55 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db;
+package jodd.db.fixtures;
 
-import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.log.LoggerFactory;
-import org.junit.After;
-import org.junit.Before;
 
-public abstract class DbH2TestCase {
+/**
+ * H2 database test case.
+ */
+public abstract class DbH2TestCase extends DbTestBase {
 
-	protected DbJtxTransactionManager dbtxm;
-	protected CoreConnectionPool cp;
-
-	@Before
-	public void setUp() throws Exception {
-		LoggerFactory.setLoggerFactory(new TestLoggerFactory());
-		if (dbtxm != null) {
-			return;
-		}
-		cp = new CoreConnectionPool();
+	@Override
+	protected void setupPool(CoreConnectionPool cp) {
 		cp.setDriver("org.h2.Driver");
 		cp.setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
 
 		cp.setUser("sa");
 		cp.setPassword("");
-		cp.init();
-		dbtxm = new DbJtxTransactionManager(cp);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		dbtxm.close();
-		cp.close();
-		dbtxm = null;
-	}
-
-	// ---------------------------------------------------------------- helpers
-
-	protected int executeUpdate(DbSession session, String s) {
-		return new DbQuery(session, s).autoClose().executeUpdate();
-	}
-
-	protected void executeUpdate(String sql) {
-		new DbQuery(sql).autoClose().executeUpdate();
-	}
-
-	protected void executeCount(DbSession session, String s) {
-		new DbQuery(session, s).autoClose().executeCount();
 	}
 
 }
-

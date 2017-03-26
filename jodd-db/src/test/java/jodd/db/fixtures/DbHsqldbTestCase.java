@@ -23,44 +23,27 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db;
+package jodd.db.fixtures;
 
-import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.db.DbSession;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.db.querymap.DbPropsQueryMap;
-import jodd.log.LoggerFactory;
-import org.junit.After;
-import org.junit.Before;
 
-public abstract class DbHsqldbTestCase {
+/**
+ * HSLQDB database test case with initial data.
+ */
+public abstract class DbHsqldbTestCase extends DbTestBase {
 
-	protected DbJtxTransactionManager dbtxm;
-	protected CoreConnectionPool cp;
-
-	@Before
-	public void setUp() throws Exception {
-		DbManager.getInstance().setQueryMap(new DbPropsQueryMap());
-
-		LoggerFactory.setLoggerFactory(new TestLoggerFactory());
-
-		cp = new CoreConnectionPool();
+	@Override
+	protected void setupPool(CoreConnectionPool cp) {
 		cp.setDriver("org.hsqldb.jdbcDriver");
 		cp.setUrl("jdbc:hsqldb:mem:test");
 
 		cp.setUser("sa");
 		cp.setPassword("");
-		cp.init();
-		dbtxm = new DbJtxTransactionManager(cp);
-
-		// initial data
-		DbSession session = new DbSession(cp);
-
-		createTables(session);
-
-		session.closeSession();
 	}
 
-	protected void createTables(DbSession session) {
+	@Override
+	protected void initDb(DbSession session) {
 		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
 
@@ -82,27 +65,6 @@ public abstract class DbHsqldbTestCase {
 				')';
 
 		executeUpdate(session, sql);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		dbtxm.close();
-//		cp.close();
-		dbtxm = null;
-	}
-
-	// ---------------------------------------------------------------- helpers
-
-	protected int executeUpdate(DbSession session, String s) {
-		return new DbQuery(session, s).autoClose().executeUpdate();
-	}
-
-	protected void executeUpdate(String sql) {
-		new DbQuery(sql).autoClose().executeUpdate();
-	}
-
-	protected long executeCount(DbSession session, String s) {
-		return new DbQuery(session, s).autoClose().executeCount();
 	}
 
 }

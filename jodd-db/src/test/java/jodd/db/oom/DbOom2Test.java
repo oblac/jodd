@@ -25,7 +25,7 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbH2TestCase;
+import jodd.db.fixtures.DbH2TestCase;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;

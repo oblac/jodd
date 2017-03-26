@@ -25,7 +25,7 @@
 
 package jodd.db.debug;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import org.junit.Test;
 
 import java.sql.Connection;

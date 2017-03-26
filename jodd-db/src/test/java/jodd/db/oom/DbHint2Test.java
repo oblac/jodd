@@ -25,7 +25,7 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbHsqldbTestCase;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
@@ -55,7 +55,7 @@ public class DbHint2Test extends DbHsqldbTestCase {
 		super.tearDown();
 	}
 
-	protected void createTables(DbSession session) {
+	protected void initDb(DbSession session) {
 		executeUpdate(session, "drop table ROOM if exists");
 		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
