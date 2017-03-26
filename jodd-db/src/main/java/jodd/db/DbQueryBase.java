@@ -40,6 +40,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
+import static jodd.db.DbQueryBase.State.CLOSED;
+import static jodd.db.DbQueryBase.State.CREATED;
+import static jodd.db.DbQueryBase.State.INITIALIZED;
+
 /**
  * Support for {@link DbQuery} holds all configuration, initialization and the execution code.
  */
@@ -63,16 +67,18 @@ abstract class DbQueryBase implements AutoCloseable {
 
 	// ---------------------------------------------------------------- query states
 
-	public static final int QUERY_CREATED = 1;
-	public static final int QUERY_INITIALIZED = 2;
-	public static final int QUERY_CLOSED = 3;
-
-	protected int queryState = QUERY_CREATED;
+	/**
+	 * Query states.
+	 */
+	public enum State {
+		CREATED, INITIALIZED, CLOSED
+	}
+	protected State queryState = CREATED;
 
 	/**
 	 * Returns query state.
 	 */
-	public int getQueryState() {
+	public State getQueryState() {
 		return queryState;
 	}
 
@@ -80,7 +86,7 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Checks if query is not closed and throws an exception if it is.
 	 */
 	protected void checkNotClosed() {
-		if (queryState == QUERY_CLOSED) {
+		if (queryState == CLOSED) {
 			throw new DbSqlException(this, "Query is closed. Operation may be performed only on active queries.");
 		}
 	}
@@ -89,8 +95,8 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Checks if query is created (and not yet initialized or closed) and throws an exception if it is not.
 	 */
 	protected void checkCreated() {
-		if (queryState != QUERY_CREATED) {
-			String message = (queryState == QUERY_INITIALIZED ?
+		if (queryState != CREATED) {
+			String message = (queryState == INITIALIZED ?
 									"Query is already initialized." : "Query is closed.");
 			throw new DbSqlException(this, message + " Operation may be performed only on created queries.");
 		}
@@ -100,8 +106,8 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Checks if query is initialized and throws an exception if it is not.
 	 */
 	protected void checkInitialized() {
-		if (queryState != QUERY_INITIALIZED) {
-			String message = (queryState == QUERY_CREATED ?
+		if (queryState != INITIALIZED) {
+			String message = (queryState == CREATED ?
 									"Query is created but not yet initialized." : "Query is closed.");
 			throw new DbSqlException(this, message + " Operation may be performed only on initialized queries.");
 		}
@@ -113,7 +119,7 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Returns <code>true</code> if query is closed.
 	 */
 	public boolean isClosed() {
-		return queryState == QUERY_CLOSED;
+		return queryState == CLOSED;
 	}
 
 	/**
@@ -121,7 +127,7 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Opened query may be not initialized.
 	 */
 	public boolean isActive() {
-		return queryState < QUERY_CLOSED;
+		return queryState != CLOSED;
 	}
 
 	/**
@@ -129,7 +135,7 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * created JDBC statements. 
 	 */
 	public boolean isInitialized() {
-		return queryState == QUERY_INITIALIZED;
+		return queryState == INITIALIZED;
 	}
 
 	// ---------------------------------------------------------------- input
@@ -188,11 +194,11 @@ abstract class DbQueryBase implements AutoCloseable {
 	 */
 	public final void init() {
 		checkNotClosed();
-		if (queryState == QUERY_INITIALIZED) {
+		if (queryState == INITIALIZED) {
 			return;
 		}
 		initializeJdbc();
-		queryState = QUERY_INITIALIZED;
+		queryState = INITIALIZED;
 		prepareQuery();
 	}
 
@@ -386,7 +392,7 @@ abstract class DbQueryBase implements AutoCloseable {
 			statement = null;
 		}
 		query = null;
-		queryState = QUERY_CLOSED;
+		queryState = CLOSED;
 		return sqlException;
 	}
 
