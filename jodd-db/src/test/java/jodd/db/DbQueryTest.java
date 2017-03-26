@@ -33,6 +33,10 @@ import static org.junit.Assert.*;
 public class DbQueryTest {
 
 	static class DbQueryEx extends DbQueryParser {
+		public DbQueryEx() {
+			super("");
+		}
+
 		String prepare(String sql) {
 			super.parseSql(sql);
 			return this.sql;

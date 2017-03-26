@@ -45,9 +45,6 @@ class DbQueryParser {
 
 	// ---------------------------------------------------------------- ctors
 
-	DbQueryParser() {
-	}
-
 	DbQueryParser(String sql) {
 		parseSql(sql);
 	}
