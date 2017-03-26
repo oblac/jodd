@@ -30,7 +30,7 @@ import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.db.oom.tst.*;
+import jodd.db.oom.fixtures.*;
 import jodd.db.type.SqlTypeManager;
 import org.junit.Before;
 import org.junit.Test;

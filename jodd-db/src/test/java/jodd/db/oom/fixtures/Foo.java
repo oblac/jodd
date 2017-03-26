@@ -23,27 +23,68 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
-import jodd.db.oom.meta.DbColumn;
-import jodd.db.oom.meta.DbId;
-import jodd.db.oom.meta.DbMapTo;
 import jodd.db.oom.meta.DbTable;
+import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.type.IntegerSqlType;
+import jodd.mutable.MutableInteger;
+import jodd.datetime.JDateTime;
+
+import java.sql.Timestamp;
+import java.sql.Clob;
+import java.sql.Blob;
+import java.math.BigDecimal;
 
 @DbTable
-public class Wizard {
+public class Foo {
 
 	@DbId
-	public long wizardId;
+	public long id;
+
 	@DbColumn
-	public int level;
+	public MutableInteger number;
 
-	// ---------------------------------------------------------------- user
+	@DbColumn(sqlType = IntegerSqlType.class)
+	public String string;
 
-	public User user;
+	@DbColumn
+	public String string2;
 
-	public String getName() {
-		return user.name;
-	}
+	@DbColumn
+	public Boo boo;
+
+	@DbColumn
+	public FooColor color;
+
+	@DbColumn(sqlType = FooWeigthSqlType.class)
+	public FooWeight weight;
+
+	@DbColumn
+	public Timestamp timestamp;
+
+	@DbColumn
+	public JDateTime timestamp2;
+
+	@DbColumn
+	public Clob clob;
+
+	@DbColumn
+	public Blob blob;
+
+	@DbColumn
+	public Double decimal;
+
+	@DbColumn
+	public BigDecimal decimal2;
+
+	@DbColumn
+	public JDateTime jdt1;
+
+	@DbColumn
+	public JDateTime jdt2;
 
 }
+
+

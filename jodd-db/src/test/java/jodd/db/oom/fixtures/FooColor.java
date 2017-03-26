@@ -23,38 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
-import jodd.db.oom.meta.DbTable;
-import jodd.db.oom.meta.DbColumn;
-
-import java.util.List;
-
-@DbTable("GIRL")
-public class BadGirl extends BadGirlBase {
-
-	public BadGirl() {
-	}
-
-	public BadGirl(Integer id, String name, String speciality) {
-		this.fooid = id;
-		this.fooname = name;
-		this.foospeciality = speciality;
-	}
-
-	@DbColumn("NAME")
-	public String fooname;
-
-	public List<BadBoy> boys;
-
-	// ---------------------------------------------------------------- toString
-
-	@Override
-	public String toString() {
-		return "Girl{" +
-				"id=" + fooid +
-				", name='" + fooname + '\'' +
-				", speciality='" + foospeciality + '\'' +
-				'}';
-	}
+public enum FooColor {
+	red,
+	yellow,
+	green
 }
+

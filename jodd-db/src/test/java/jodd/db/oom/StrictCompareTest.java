@@ -25,7 +25,7 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.tst.Tester;
+import jodd.db.oom.fixtures.Tester;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

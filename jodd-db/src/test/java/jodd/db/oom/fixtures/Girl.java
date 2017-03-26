@@ -23,25 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom;
+package jodd.db.oom.fixtures;
 
-import jodd.datetime.JDateTime;
-import jodd.db.oom.meta.DbColumn;
-import jodd.db.oom.meta.DbId;
-import jodd.db.oom.meta.DbTable;
+public class Girl {
 
-import java.sql.Timestamp;
+	public Girl() {
+	}
 
-@DbTable
-public class Tester2 {
-	@DbId
-	public long id;
-	@DbColumn
+	public Girl(int id, String name, String speciality) {
+		this.id = id;
+		this.name = name;
+		this.speciality = speciality;
+	}
+
+	public String speciality;
+	public int id;
 	public String name;
-	@DbColumn
-	public Integer value;
-	@DbColumn
-	public Timestamp time;
-	@DbColumn
-	public JDateTime time2;
+
+	// ---------------------------------------------------------------- toString
+
+	@Override
+	public String toString() {
+		return "Girl{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", speciality='" + speciality + '\'' +
+				'}';
+	}
 }

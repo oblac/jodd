@@ -23,48 +23,23 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom;
+package jodd.db.oom.fixtures;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
-import jodd.db.DbQuery;
-import jodd.db.DbSession;
-import jodd.db.DbThreadSession;
-import jodd.db.oom.fixtures.Enumerator;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.db.type.SqlType;
 
-import static jodd.db.oom.sqlgen.DbEntitySql.insert;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 
-public class DbEnumTest extends DbHsqldbTestCase {
+public class FooWeigthSqlType extends SqlType<FooWeight> {
 
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Enumerator.class);
+	@Override
+	public void set(PreparedStatement st, int index, FooWeight value, int dbSqlType) throws SQLException {
+		st.setInt(index, value.getValue());
 	}
 
-	@Test
-	public void testEnums() {
-		DbSession session = new DbThreadSession(cp);
-
-		String sql = "create table ENUMERATOR(ID int, NAME varchar(20), STATUS int)";
-
-		DbQuery query = new DbQuery(sql);
-		query.executeUpdate();
-
-		Enumerator e = new Enumerator();
-		e.id = 2;
-		e.name = "Ikigami";
-		e.status = Enumerator.STATUS.ONE;
-
-		DbSqlGenerator gen = insert(e);
-		query = new DbOomQuery(gen);
-		query.executeUpdate();
-
-		session.closeSession();
+	@Override
+	public FooWeight get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+		return FooWeight.valueOf(rs.getInt(index));
 	}
-
 }

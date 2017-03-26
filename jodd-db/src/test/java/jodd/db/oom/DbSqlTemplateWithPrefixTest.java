@@ -26,10 +26,10 @@
 package jodd.db.oom;
 
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.BadBoy;
-import jodd.db.oom.tst.BadGirl;
-import jodd.db.oom.tst.Boy;
-import jodd.db.oom.tst.Girl;
+import jodd.db.oom.fixtures.BadBoy;
+import jodd.db.oom.fixtures.BadGirl;
+import jodd.db.oom.fixtures.Boy;
+import jodd.db.oom.fixtures.Girl;
 import org.junit.Before;
 import org.junit.Test;
 

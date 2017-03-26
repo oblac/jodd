@@ -31,9 +31,9 @@ import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.Girl;
-import jodd.db.oom.tst.Girl2;
-import jodd.db.oom.tst.IdName;
+import jodd.db.oom.fixtures.Girl;
+import jodd.db.oom.fixtures.Girl2;
+import jodd.db.oom.fixtures.IdName;
 import org.junit.Test;
 
 import java.sql.ResultSet;

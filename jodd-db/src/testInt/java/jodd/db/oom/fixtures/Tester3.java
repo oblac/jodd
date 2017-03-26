@@ -1,4 +1,4 @@
-package jodd.db.oom;
+package jodd.db.oom.fixtures;
 
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
@@ -7,7 +7,7 @@ import jodd.db.oom.meta.DbTable;
 @DbTable("tester")
 public class Tester3 {
 
-	enum Status {
+	public enum Status {
 		NEW, PARTIAL, FAILED, SELECTED, UPLOADED
 	}
 

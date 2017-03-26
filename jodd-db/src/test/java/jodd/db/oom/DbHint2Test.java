@@ -29,9 +29,9 @@ import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.db.oom.tst.Boy4;
-import jodd.db.oom.tst.Girl4;
-import jodd.db.oom.tst.Room;
+import jodd.db.oom.fixtures.Boy4;
+import jodd.db.oom.fixtures.Girl4;
+import jodd.db.oom.fixtures.Room;
 import org.junit.Before;
 import org.junit.Test;
 

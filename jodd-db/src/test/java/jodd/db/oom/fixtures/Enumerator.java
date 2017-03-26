@@ -23,41 +23,40 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
-import jodd.db.oom.meta.DbTable;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbTable;
 
-@DbTable("BOY")
-public class BadBoy {
+@DbTable
+public class Enumerator {
 
-	public BadBoy() {}
+	public enum STATUS {
+		ONE(1),
+		TWO(123),
+		THREE(222);
 
-	public BadBoy(Integer id, String name, Integer girlId) {
-		this.ajdi = id;
-		this.nejm = name;
-		this.girlId = girlId;
+		final int value;
+
+		private STATUS(int i) {
+			this.value = i;
+		}
+
+		public int value() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return Integer.toString(value);
+		}
 	}
 
-	@DbId("ID")
-	public Integer ajdi;
 
-	@DbColumn("NAME")
-	public String nejm;
-
-	@DbColumn
-	public Integer girlId;
-
-	public Girl girl;
+	@DbId public long id;
+	@DbColumn public String name;
+	@DbColumn public STATUS status;
 
 
-	@Override
-	public String toString() {
-		return "BadBoy{" +
-				"ajdi=" + ajdi +
-				", nejm='" + nejm + '\'' +
-				", girlId=" + girlId +
-				'}';
-	}
 }

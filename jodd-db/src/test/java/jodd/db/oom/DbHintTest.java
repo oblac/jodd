@@ -30,8 +30,8 @@ import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.ParsedSql;
-import jodd.db.oom.tst.Boy2;
-import jodd.db.oom.tst.Girl;
+import jodd.db.oom.fixtures.Boy2;
+import jodd.db.oom.fixtures.Girl;
 import org.junit.Before;
 import org.junit.Test;
 

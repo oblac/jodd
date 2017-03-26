@@ -1,4 +1,4 @@
-package jodd.db.oom
+package jodd.db.oom.fixtures
 
 import jodd.db.oom.meta.DbColumn
 import jodd.db.oom.meta.DbId

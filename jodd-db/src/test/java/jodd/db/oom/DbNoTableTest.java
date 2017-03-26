@@ -32,7 +32,7 @@ import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.Girl;
+import jodd.db.oom.fixtures.Girl;
 import org.junit.Before;
 import org.junit.Test;
 

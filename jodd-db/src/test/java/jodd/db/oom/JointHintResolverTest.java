@@ -25,8 +25,8 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.tst.BadBoy;
-import jodd.db.oom.tst.Girl;
+import jodd.db.oom.fixtures.BadBoy;
+import jodd.db.oom.fixtures.Girl;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

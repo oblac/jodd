@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;

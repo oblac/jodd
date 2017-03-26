@@ -23,53 +23,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 
-@DbTable("BOY")
-public class Boy4 {
-
-	public Boy4() {
-	}
-
-	public Boy4(int id, int roomId, String name) {
-		this.id = id;
-		this.name = name;
-		this.roomId = roomId;
-	}
-
+@DbTable
+public class User {
 	@DbId
-	public Integer id;
+	public long userId;
 
 	@DbColumn
 	public String name;
 
-	@DbColumn
-	public Integer roomId;
-
-	public Girl4 girl;
-
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		Boy4 boy4 = (Boy4) o;
-
-		return id.equals(boy4.id);
-
-	}
-
-	@Override
-	public int hashCode() {
-		return id.hashCode();
-	}
+	public int exp;
 }

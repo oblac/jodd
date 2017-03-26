@@ -1,11 +1,15 @@
 package jodd.db.oom;
 
 import jodd.db.DbSession;
+import jodd.db.oom.fixtures.Status33;
+import jodd.db.oom.fixtures.Status33SqlType;
+import jodd.db.oom.fixtures.Tester3;
+import jodd.db.oom.fixtures.Tester33;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.type.SqlTypeManager;
 import org.junit.Test;
 
-public class Test399 extends DbBaseTest {
+public class Kotlin399Test extends DbBaseTest {
 
 	public class PostgreSql extends PostgreSqlDbAccess {
 

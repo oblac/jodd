@@ -23,48 +23,60 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom;
+package jodd.db.oom.fixtures;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
-import jodd.db.DbQuery;
-import jodd.db.DbSession;
-import jodd.db.DbThreadSession;
-import jodd.db.oom.fixtures.Enumerator;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbTable;
 
-import static jodd.db.oom.sqlgen.DbEntitySql.insert;
+@DbTable("GIRL")
+public class Girl4 {
 
-public class DbEnumTest extends DbHsqldbTestCase {
-
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Enumerator.class);
+	public Girl4() {
 	}
 
-	@Test
-	public void testEnums() {
-		DbSession session = new DbThreadSession(cp);
-
-		String sql = "create table ENUMERATOR(ID int, NAME varchar(20), STATUS int)";
-
-		DbQuery query = new DbQuery(sql);
-		query.executeUpdate();
-
-		Enumerator e = new Enumerator();
-		e.id = 2;
-		e.name = "Ikigami";
-		e.status = Enumerator.STATUS.ONE;
-
-		DbSqlGenerator gen = insert(e);
-		query = new DbOomQuery(gen);
-		query.executeUpdate();
-
-		session.closeSession();
+	public Girl4(long id, long boyId, String name) {
+		this.id = id;
+		this.boyId = boyId;
+		this.name = name;
 	}
 
+	@DbColumn
+	private Long id;
+	@DbColumn
+	private Long boyId;
+	@DbColumn
+	private String name;
+	private Boy boy;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getBoyId() {
+		return boyId;
+	}
+
+	public void setBoyId(Long boyId) {
+		this.boyId = boyId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boy getBoy() {
+		return boy;
+	}
+
+	public void setBoy(Boy boy) {
+		this.boy = boy;
+	}
 }

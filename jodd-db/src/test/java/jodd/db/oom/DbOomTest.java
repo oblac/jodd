@@ -32,7 +32,7 @@ import jodd.db.DbThreadSession;
 import jodd.db.QueryMapper;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.tst.*;
+import jodd.db.oom.fixtures.*;
 import org.junit.Before;
 import org.junit.Test;
 

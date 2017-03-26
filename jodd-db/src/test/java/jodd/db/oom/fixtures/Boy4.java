@@ -23,60 +23,53 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
 import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 
-@DbTable("GIRL")
-public class Girl4 {
+@DbTable("BOY")
+public class Boy4 {
 
-	public Girl4() {
+	public Boy4() {
 	}
 
-	public Girl4(long id, long boyId, String name) {
+	public Boy4(int id, int roomId, String name) {
 		this.id = id;
-		this.boyId = boyId;
 		this.name = name;
+		this.roomId = roomId;
 	}
+
+	@DbId
+	public Integer id;
 
 	@DbColumn
-	private Long id;
+	public String name;
+
 	@DbColumn
-	private Long boyId;
-	@DbColumn
-	private String name;
-	private Boy boy;
+	public Integer roomId;
 
-	public Long getId() {
-		return id;
+	public Girl4 girl;
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Boy4 boy4 = (Boy4) o;
+
+		return id.equals(boy4.id);
+
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getBoyId() {
-		return boyId;
-	}
-
-	public void setBoyId(Long boyId) {
-		this.boyId = boyId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Boy getBoy() {
-		return boy;
-	}
-
-	public void setBoy(Boy boy) {
-		this.boy = boy;
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

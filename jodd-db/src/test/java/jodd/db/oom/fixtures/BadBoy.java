@@ -23,31 +23,41 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
-public class Girl {
+import jodd.db.oom.meta.DbTable;
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
 
-	public Girl() {
+@DbTable("BOY")
+public class BadBoy {
+
+	public BadBoy() {}
+
+	public BadBoy(Integer id, String name, Integer girlId) {
+		this.ajdi = id;
+		this.nejm = name;
+		this.girlId = girlId;
 	}
 
-	public Girl(int id, String name, String speciality) {
-		this.id = id;
-		this.name = name;
-		this.speciality = speciality;
-	}
+	@DbId("ID")
+	public Integer ajdi;
 
-	public String speciality;
-	public int id;
-	public String name;
+	@DbColumn("NAME")
+	public String nejm;
 
-	// ---------------------------------------------------------------- toString
+	@DbColumn
+	public Integer girlId;
+
+	public Girl girl;
+
 
 	@Override
 	public String toString() {
-		return "Girl{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", speciality='" + speciality + '\'' +
+		return "BadBoy{" +
+				"ajdi=" + ajdi +
+				", nejm='" + nejm + '\'' +
+				", girlId=" + girlId +
 				'}';
 	}
 }

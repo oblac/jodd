@@ -1,5 +1,6 @@
 package jodd.db.oom;
 
+import jodd.db.oom.fixtures.Tester3;
 import jodd.db.type.SqlType;
 
 import java.sql.PreparedStatement;

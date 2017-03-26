@@ -23,27 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
+import jodd.datetime.JDateTime;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
-import jodd.db.oom.meta.DbMapTo;
 import jodd.db.oom.meta.DbTable;
 
+import java.sql.Timestamp;
+
 @DbTable
-@DbMapTo({Wizard.class, User.class})
-public class WizUser {
-
-	@DbColumn
-	public long userId;
-
-//	@DbColumn
-//	public long wizardId;
-
-	@DbColumn
-	public int level;
-
+public class Tester2 {
+	@DbId
+	public long id;
 	@DbColumn
 	public String name;
-
+	@DbColumn
+	public Integer value;
+	@DbColumn
+	public Timestamp time;
+	@DbColumn
+	public JDateTime time2;
 }

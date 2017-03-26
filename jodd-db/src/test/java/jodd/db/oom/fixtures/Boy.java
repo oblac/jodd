@@ -23,68 +23,45 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
-import jodd.db.oom.meta.DbColumn;
-import jodd.db.oom.meta.DbTable;
+public class Boy {
 
-import java.util.List;
+	public Boy() {}
 
-@DbTable
-public class Room {
-
-	public Room() {
-	}
-	public Room(long id, String name) {
+	public Boy(int id, String name, int girlId) {
 		this.id = id;
 		this.name = name;
+		this.girlId = girlId;
 	}
 
-	@DbColumn private Long id;
-	@DbColumn private String name;
-	private List<Boy4> boys;
+	public int id;
 
-	public Long getId() {
-		return id;
-	}
+	public String name;
+	
+	public int girlId;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public List<Boy4> getBoys() {
-		return boys;
-	}
-
-	public void setBoys(List<Boy4> boys) {
-		this.boys = boys;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	// ---------------------------------------------------------------- hash equals
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-		Room room = (Room) o;
+		Boy boy = (Boy) o;
 
-		return id.equals(room.id);
+		if (girlId != boy.girlId) return false;
+		if (id != boy.id) return false;
+		if (name != null ? !name.equals(boy.name) : boy.name != null) return false;
 
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		int result = id;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + girlId;
+		return result;
 	}
 }

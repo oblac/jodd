@@ -23,45 +23,29 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.tst;
+package jodd.db.oom.fixtures;
 
-public class Boy {
+public enum FooWeight {
+	light(1),
+	medium(10),
+	heavy(77);
 
-	public Boy() {}
-
-	public Boy(int id, String name, int girlId) {
-		this.id = id;
-		this.name = name;
-		this.girlId = girlId;
+	final int value;
+	FooWeight(int value) {
+		this.value = value;
 	}
 
-	public int id;
-
-	public String name;
-	
-	public int girlId;
-
-	// ---------------------------------------------------------------- hash equals
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Boy boy = (Boy) o;
-
-		if (girlId != boy.girlId) return false;
-		if (id != boy.id) return false;
-		if (name != null ? !name.equals(boy.name) : boy.name != null) return false;
-
-		return true;
+	public static FooWeight valueOf(int value) {
+		switch (value) {
+			case 1: return light;
+			case 10: return medium;
+			case 77: return heavy;
+		}
+		throw new IllegalArgumentException("Invalid enum value: " + value);
 	}
 
-	@Override
-	public int hashCode() {
-		int result = id;
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + girlId;
-		return result;
+	public int getValue() {
+		return value;
 	}
 }
+
