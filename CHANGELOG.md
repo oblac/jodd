@@ -36,7 +36,7 @@ All notable changes to Jodd project are documented here.
 
 ### System
 
-+ **gradle** - updated to Gradle 3.3
++ **gradle** - updated to Gradle 3.4.1
 
 
 ## [3.8.1](https://github.com/oblac/jodd/compare/v3.8.0...v3.8.1)
