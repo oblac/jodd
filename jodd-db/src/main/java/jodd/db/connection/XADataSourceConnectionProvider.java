@@ -33,7 +33,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * DataSource connection provider.
+ * XA-DataSource connection provider.
  */
 public class XADataSourceConnectionProvider implements ConnectionProvider {
 
@@ -51,8 +51,10 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 		this.password = pass;
 	}
 
+	@Override
 	public void init() {}
 
+	@Override
 	public Connection getConnection() {
 		try {
 			XAConnection xaConnection;
@@ -67,6 +69,7 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void closeConnection(Connection connection) {
 		try {
 			connection.close();
@@ -75,5 +78,6 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void close() {}
 }

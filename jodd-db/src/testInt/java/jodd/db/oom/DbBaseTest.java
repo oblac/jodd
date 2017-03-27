@@ -25,6 +25,7 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbDetector;
 import jodd.db.DbManager;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
@@ -157,8 +158,7 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("postgres");
 			connectionPool.setPassword("root!");
 
-			dboom.getTableNames().setLowercase(true);
-			dboom.getColumnNames().setLowercase(true);
+			DbDetector.detectDatabaseAndConfigureDbOom(connectionPool);
 		}
 	}
 

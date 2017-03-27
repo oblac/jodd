@@ -43,7 +43,6 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 	private final String username;
 	private final String password;
 
-
 	public DataSourceConnectionProvider(String jndiName) {
 		this(jndiName, null, null);
 	}
@@ -71,8 +70,10 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		this.password = pass;
 	}
 
+	@Override
 	public void init() {}
 
+	@Override
 	public Connection getConnection() {
 		try {
 			if (username != null || password != null) {
@@ -85,6 +86,7 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void closeConnection(Connection connection) {
 		try {
 			connection.close();
@@ -93,5 +95,6 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	@Override
 	public void close() {}
 }

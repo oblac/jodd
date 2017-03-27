@@ -46,15 +46,18 @@ public class ConnectionPoolDataSourceConnectionProvider implements ConnectionPro
 
 	// ---------------------------------------------------------------- init/close
 
+	@Override
 	public void init() {
 	}
 
+	@Override
 	public void close() {
 		cpds = null;
 	}
 
 	// ---------------------------------------------------------------- get/free
 
+	@Override
 	public Connection getConnection() {
 		PooledConnection pconn;
 		try {
@@ -69,6 +72,7 @@ public class ConnectionPoolDataSourceConnectionProvider implements ConnectionPro
 		}
 	}
 
+	@Override
 	public void closeConnection(Connection connection) {
 		try {
 			if (connection != null) {

@@ -61,7 +61,6 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	private long validationTimeout = 18000000L;		// 5 hours
 	private String validationQuery;
 
-
 	public String getDriver() {
 		return driver;
 	}
@@ -188,24 +187,32 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 
 	private ArrayList<ConnectionData> availableConnections, busyConnections;
 	private boolean connectionPending;
+	private boolean initialised;
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public synchronized void init() {
+		if (initialised) {
+			return;
+		}
 		if (log.isInfoEnabled()) {
 			log.info("Core connection pool initialization");
 		}
 		try {
 			Class.forName(driver);
-		} catch (ClassNotFoundException cnfex) {
+		}
+		catch (ClassNotFoundException cnfex) {
 			throw new DbSqlException("Database driver not found: " + driver, cnfex);
 		}
+
 		if (minConnections > maxConnections) {
 			minConnections = maxConnections;
 		}
 		availableConnections = new ArrayList<>(maxConnections);
 		busyConnections = new ArrayList<>(maxConnections);
+
 		for (int i = 0; i < minConnections; i++) {
 			try {
 				Connection conn = DriverManager.getConnection(url, user, password); 
@@ -214,6 +221,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 				throw new DbSqlException("No database connection", sex);
 			}
 		}
+		initialised = true;
 	}
 
 	// ---------------------------------------------------------------- get/close
@@ -221,6 +229,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public synchronized Connection getConnection() {
 		if (availableConnections == null) {
 			throw new DbSqlException("Connection pool is not initialized");
@@ -341,6 +350,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		}
 	}
 
+	@Override
 	public synchronized void closeConnection(Connection connection) {
 		ConnectionData connectionData = new ConnectionData(connection);
 		busyConnections.remove(connectionData);
@@ -358,6 +368,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * closed when garbage collected. But this method gives more control
 	 * regarding when the connections are closed.
 	 */
+	@Override
 	public synchronized void close() {
 		if (log.isInfoEnabled()) {
 			log.info("Core connection pool shutdown");
