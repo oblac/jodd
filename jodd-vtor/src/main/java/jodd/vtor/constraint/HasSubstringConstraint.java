@@ -81,7 +81,7 @@ public class HasSubstringConstraint implements ValidationConstraint<HasSubstring
 		if (ignoreCase) {
 			return StringUtil.indexOfIgnoreCase(value.toString(), substring) > -1;
 		}
-		return value.toString().indexOf(substring) > -1;
+		return value.toString().contains(substring);
 	}
 
 }

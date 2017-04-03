@@ -72,7 +72,7 @@ public class ExceptionUtil {
 			if (allow != null) {
 				boolean validElemenet = false;
 				for (String filter : allow) {
-					if (className.indexOf(filter) != -1) {
+					if (className.contains(filter)) {
 						validElemenet = true;
 						break;
 					}
@@ -83,7 +83,7 @@ public class ExceptionUtil {
 			}
 			if (deny != null) {
 				for (String filter : deny) {
-					if (className.indexOf(filter) != -1) {
+					if (className.contains(filter)) {
 						continue elementLoop;
 					}
 				}
