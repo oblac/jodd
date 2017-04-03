@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * Encapsulates email sending session. Prepares and sends message(s).
  */
-public class SendMailSession {
+public class SendMailSession implements AutoCloseable {
 
 	private static final String ALTERNATIVE = "alternative";
 	private static final String RELATED = "related";
@@ -109,6 +109,7 @@ public class SendMailSession {
 	/**
 	 * Closes session.
 	 */
+	@Override
 	public void close() {
 		try {
 			mailTransport.close();
