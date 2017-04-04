@@ -57,7 +57,7 @@ import java.util.Set;
 public class ClassUtil {
 
 	/** Empty class array. */
-	public static final Class[] NO_PARAMETERS = new Class[0];
+	public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
 	public static final String METHOD_GET_PREFIX = "get";
 	public static final String METHOD_IS_PREFIX = "is";
@@ -176,6 +176,9 @@ public class ClassUtil {
 	 * values.
 	 */
 	public static Class[] getClasses(Object... objects) {
+		if (objects.length == 0) {
+			return EMPTY_CLASS_ARRAY;
+		}
 		Class[] result = new Class[objects.length];
 		for (int i = 0; i < objects.length; i++) {
 			if (objects[i] != null) {
@@ -187,7 +190,6 @@ public class ClassUtil {
 
 
 	// ---------------------------------------------------------------- invoke
-
 
 	/**
 	 * Invokes accessible method of an object.

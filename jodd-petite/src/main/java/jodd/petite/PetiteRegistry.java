@@ -447,7 +447,7 @@ public class PetiteRegistry {
 		 */
 		public BeanProvider args(Class... methodArgsTypes) {
 			if (methodArgsTypes.length == 0) {
-				methodArgsTypes = ClassUtil.NO_PARAMETERS;
+				methodArgsTypes = ClassUtil.EMPTY_CLASS_ARRAY;
 			}
 			this.methodArgsTypes = methodArgsTypes;
 			return this;

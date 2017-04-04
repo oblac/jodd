@@ -569,7 +569,7 @@ public abstract class PetiteBeans {
 
 		int i;
 		for (i = 0; i < initMethodNames.length; i++) {
-			MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ClassUtil.NO_PARAMETERS, true);
+			MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ClassUtil.EMPTY_CLASS_ARRAY, true);
 			if (md == null) {
 				throw new PetiteException("Init method not found: " + beanDefinition.type.getName() + '#' + initMethodNames[i]);
 			}
@@ -598,7 +598,7 @@ public abstract class PetiteBeans {
 
 		int i;
 		for (i = 0; i < destroyMethodNames.length; i++) {
-			MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ClassUtil.NO_PARAMETERS, true);
+			MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ClassUtil.EMPTY_CLASS_ARRAY, true);
 			if (md == null) {
 				throw new PetiteException("Destroy method not found: " + beanDefinition.type.getName() + '#' + destroyMethodNames[i]);
 			}

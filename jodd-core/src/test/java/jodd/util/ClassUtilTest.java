@@ -61,27 +61,27 @@ public class ClassUtilTest {
 			assertEquals("public", result);
 			result = (String) ClassUtil.invoke(bean, "getPublic", null, null);
 			assertEquals("public", result);
-			result = (String) ClassUtil.invoke(bean, "getPublic", null);
+			result = (String) ClassUtil.invoke(bean, "getPublic");
 			assertEquals("public", result);
 		} catch (Exception e) {
-			fail("ReflectUtil.invoke() failed " + e.toString());
+			fail("invoke() failed " + e.toString());
 		}
 
 		try {
 			ClassUtil.invoke(TFooBean.class, bean, "getDefault", null, null);
-			fail("ReflectUtil.invoke() works irregular!");
+			fail("invoke() works irregular!");
 		} catch (Exception e) {
 		}
 
 		try {
 			ClassUtil.invoke(TFooBean.class, bean, "getProtected", null, null);
-			fail("ReflectUtil.invoke() works irregular!");
+			fail("invoke() works irregular!");
 		} catch (Exception e) {
 		}
 
 		try {
 			ClassUtil.invoke(TFooBean.class, bean, "getPrivate", null, null);
-			fail("ReflectUtil.invoke() works irregular!");
+			fail("ClassUtilinvoke() works irregular!");
 		} catch (Exception e) {
 		}
 	}
@@ -97,10 +97,10 @@ public class ClassUtilTest {
 			assertEquals("public", result);
 			result = (String) ClassUtil.invokeDeclared(bean, "getPublic", null, null);
 			assertEquals("public", result);
-			result = (String) ClassUtil.invokeDeclared(bean, "getPublic", null);
+			result = (String) ClassUtil.invokeDeclared(bean, "getPublic");
 			assertEquals("public", result);
 		} catch (Exception e) {
-			fail("ReflectUtil.invoke() failed " + e.toString());
+			fail("invoke() failed " + e.toString());
 		}
 
 		try {
@@ -109,7 +109,7 @@ public class ClassUtilTest {
 			result = (String) ClassUtil.invokeDeclared(bean, "getDefault", null, null);
 			assertEquals("default", result);
 		} catch (Exception e) {
-			fail("ReflectUtil.invoke() failed " + e.toString());
+			fail("invoke() failed " + e.toString());
 		}
 
 		try {
@@ -118,18 +118,17 @@ public class ClassUtilTest {
 			result = (String) ClassUtil.invokeDeclared(bean, "getProtected", null, null);
 			assertEquals("protected", result);
 		} catch (Exception e) {
-			fail("ReflectUtil.invoke() failed " + e.toString());
+			fail("invoke() failed " + e.toString());
 		}
 
 		try {
 			result = (String) ClassUtil.invokeDeclared(TFooBean.class, bean, "getPrivate", null, null);
 			assertEquals("private", result);
-			result = (String) ClassUtil.invokeDeclared(bean, "getPrivate", null);
+			result = (String) ClassUtil.invokeDeclared(bean, "getPrivate");
 			assertEquals("private", result);
 		} catch (Exception e) {
-			fail("ReflectUtil.invoke() failed " + e.toString());
+			fail("invoke() failed " + e.toString());
 		}
-
 	}
 
 	@Test

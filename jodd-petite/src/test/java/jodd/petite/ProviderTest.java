@@ -58,7 +58,7 @@ public class ProviderTest {
 		pc.registerPetiteBean(Solar2.class, null, null, null, false);
 		pc.registerPetiteBean(Sun2.class, null, null, null, false);
 
-		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ClassUtil.NO_PARAMETERS);
+		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ClassUtil.EMPTY_CLASS_ARRAY);
 		pc.registerPetitePropertyInjectionPoint("sun2", "planet", null);
 
 		Sun2 sun = pc.getBean(Sun2.class);
