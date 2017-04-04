@@ -13,6 +13,7 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **proxetta** - added 'AopProxy', simple tool for aop using just java.
 + **core** - added `AppendableWriter`.
 + **email** - `SendMailSession` is now `AutoCloseable`.
 + **db** - added Db detector [#401](https://github.com/oblac/jodd/issues/401).
