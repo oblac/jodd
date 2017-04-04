@@ -133,16 +133,49 @@ public class ClassUtil {
 		return null;
 	}
 
+	// ---------------------------------------------------------------- find ctor
+
+	/**
+	 * Finds constructor with given parameter types. First matched ctor is returned.
+	 */
+	public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... parameterTypes) {
+		final Constructor<?>[] constructors = clazz.getConstructors();
+
+		Class<?>[] pts;
+
+		for (Constructor<?> constructor : constructors) {
+			pts = constructor.getParameterTypes();
+
+			if (isAllAssignableFrom(pts, parameterTypes)) {
+				return (Constructor<T>) constructor;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns {@code true} if all types are assignable from the other array of types.
+	 */
+	public static boolean isAllAssignableFrom(Class<?>[] typesTarget, Class<?>[] typesFrom) {
+		if (typesTarget.length == typesFrom.length) {
+			for (int i = 0; i < typesTarget.length; i++) {
+				if (!typesTarget[i].isAssignableFrom(typesFrom[i])) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 
 	// ---------------------------------------------------------------- classes
 
 	/**
-	 * Returns classes from array of specified objects.
+	 * Returns classes from array of objects. It accepts {@code null}
+	 * values.
 	 */
 	public static Class[] getClasses(Object... objects) {
-		if (objects == null) {
-			return null;
-		}
 		Class[] result = new Class[objects.length];
 		for (int i = 0; i < objects.length; i++) {
 			if (objects[i] != null) {
@@ -583,10 +616,8 @@ public class ClassUtil {
 		return first.getName().equals(second.getName());
 	}
 
-
-
 	/**
-	 * Compares method or ctor parameters.
+	 * Compares classes, usually method or ctor parameters.
 	 */
 	public static boolean compareParameters(Class[] first, Class[] second) {
 		if (first.length != second.length) {
@@ -599,8 +630,6 @@ public class ClassUtil {
 		}
 		return true;
 	}
-
-
 
 	// ---------------------------------------------------------------- force
 
@@ -649,6 +678,27 @@ public class ClassUtil {
 
 
 	// ---------------------------------------------------------------- create
+
+	/**
+	 * Creates new instance of given class with given optional arguments.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T newInstance(Class<T> clazz, Object... params) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		if (params.length == 0) {
+			return (T) newInstance(clazz);
+		}
+
+		final Class<?>[] paramTypes = getClasses(params);
+
+		final Constructor<?> constructor = findConstructor(clazz, paramTypes);
+
+		if (constructor == null) {
+			throw new InstantiationException("No constructor matched parameter types.");
+		}
+
+		return (T) constructor.newInstance(params);
+	}
+
 
 	/**
 	 * Creates new instances including for common mutable classes that do not have a default constructor.
