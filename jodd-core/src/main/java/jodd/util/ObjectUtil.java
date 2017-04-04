@@ -55,7 +55,7 @@ public class ObjectUtil {
 			return null;
 		}
 		try {
-			return ReflectUtil.invokeDeclared(source, "clone", new Class[]{}, new Object[] {});
+			return ClassUtil.invokeDeclared(source, "clone", new Class[]{}, new Object[] {});
 		} catch (Exception ex) {
 			throw new CloneNotSupportedException("Can't clone() the object: " + ex.getMessage());
 		}

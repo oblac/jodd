@@ -63,7 +63,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	@SuppressWarnings( {"unchecked"})
 	protected AnnotationDataReader(Class<A> annotationClass, Class<? extends Annotation> defaultAnnotationClass) {
 		if (annotationClass == null) {
-			Class[] genericSupertypes = ReflectUtil.getGenericSupertypes(this.getClass());
+			Class[] genericSupertypes = ClassUtil.getGenericSupertypes(this.getClass());
 
 			if (genericSupertypes != null) {
 				annotationClass = genericSupertypes[0];
@@ -150,12 +150,12 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * returns <code>null</code>.
 	 */
 	protected String readStringElement(A annotation, String name) {
-		Object annotationValue = ReflectUtil.readAnnotationValue(annotation, name);
+		Object annotationValue = ClassUtil.readAnnotationValue(annotation, name);
 		if (annotationValue == null) {
 			if (defaultAnnotation == null) {
 				return null;
 			}
-			annotationValue = ReflectUtil.readAnnotationValue(defaultAnnotation, name);
+			annotationValue = ClassUtil.readAnnotationValue(defaultAnnotation, name);
 			if (annotationValue == null) {
 				return null;
 			}
@@ -170,10 +170,10 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * If still missing, returns <code>null</code>.
 	 */
 	protected Object readElement(A annotation, String name) {
-		Object annotationValue = ReflectUtil.readAnnotationValue(annotation, name);
+		Object annotationValue = ClassUtil.readAnnotationValue(annotation, name);
 		if (annotationValue == null) {
 			if (defaultAnnotation != null) {
-				annotationValue = ReflectUtil.readAnnotationValue(defaultAnnotation, name);
+				annotationValue = ClassUtil.readAnnotationValue(defaultAnnotation, name);
 			}
 		}
 		return annotationValue;

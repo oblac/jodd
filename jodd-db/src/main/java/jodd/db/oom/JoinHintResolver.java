@@ -28,7 +28,7 @@ package jodd.db.oom;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.util.ArraysUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 import jodd.bean.BeanUtil;
 
@@ -104,7 +104,7 @@ public class JoinHintResolver {
 							Collection collection = BeanUtil.declared.getProperty(value, hintPropertyName);
 
 							if (collection == null) {
-								collection = (Collection) ReflectUtil.newInstance(hintPropertyType);
+								collection = (Collection) ClassUtil.newInstance(hintPropertyType);
 								BeanUtil.declaredSilent.setProperty(value, hintPropertyName, collection);
 							}
 

@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,12 +46,12 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	protected final Class[] rawParameterComponentTypes;
 
 	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
-		super(classDescriptor, ReflectUtil.isPublic(method));
+		super(classDescriptor, ClassUtil.isPublic(method));
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
-		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
+		this.rawReturnType = ClassUtil.getRawType(returnType, classDescriptor.getType());
 
-		Class[] componentTypes = ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
+		Class[] componentTypes = ClassUtil.getComponentTypes(returnType, classDescriptor.getType());
 		if (componentTypes != null) {
 			this.rawReturnComponentType = componentTypes[componentTypes.length - 1];
 			this.rawReturnKeyComponentType = componentTypes[0];
@@ -60,7 +60,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 			this.rawReturnKeyComponentType = null;
 		}
 
-		ReflectUtil.forceAccess(method);
+		ClassUtil.forceAccess(method);
 
 		Type[] params = method.getGenericParameterTypes();
 		Type[] genericParams = method.getGenericParameterTypes();
@@ -70,9 +70,9 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 
 		for (int i = 0; i < params.length; i++) {
 			Type type = params[i];
-			rawParameterTypes[i] = ReflectUtil.getRawType(type, classDescriptor.getType());
+			rawParameterTypes[i] = ClassUtil.getRawType(type, classDescriptor.getType());
 			if (rawParameterComponentTypes != null) {
-				rawParameterComponentTypes[i] = ReflectUtil.getComponentType(genericParams[i], classDescriptor.getType(), -1);
+				rawParameterComponentTypes[i] = ClassUtil.getComponentType(genericParams[i], classDescriptor.getType(), -1);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	 * This value is NOT cached.
 	 */
 	public Class[] resolveRawReturnComponentTypes() {
-		return ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
+		return ClassUtil.getComponentTypes(returnType, classDescriptor.getType());
 	}
 
 	/**

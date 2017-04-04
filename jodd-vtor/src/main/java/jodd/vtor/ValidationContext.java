@@ -31,7 +31,7 @@ import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -197,13 +197,13 @@ public class ValidationContext {
 	 * Copies default properties from annotation to the check.
 	 */
 	protected void copyDefaultCheckProperties(Check destCheck, Annotation annotation) {
-		Integer severity = (Integer) ReflectUtil.readAnnotationValue(annotation, ANN_SEVERITY);
+		Integer severity = (Integer) ClassUtil.readAnnotationValue(annotation, ANN_SEVERITY);
 		destCheck.setSeverity(severity.intValue());
 
-		String[] profiles = (String[]) ReflectUtil.readAnnotationValue(annotation, ANN_PROFILES);
+		String[] profiles = (String[]) ClassUtil.readAnnotationValue(annotation, ANN_PROFILES);
 		destCheck.setProfiles(profiles);
 
-		String message = (String) ReflectUtil.readAnnotationValue(annotation, ANN_MESSAGE);
+		String message = (String) ClassUtil.readAnnotationValue(annotation, ANN_MESSAGE);
 		destCheck.setMessage(message);
 	}
 

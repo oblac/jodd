@@ -30,7 +30,7 @@ import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -177,7 +177,7 @@ public class ActionRequestRecursionTest {
 		Action action = new Action();
 		ActionConfig actionConfig = new ActionConfig(
 				Action.class,
-				ReflectUtil.findMethod(Action.class, "view"),
+				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,
 				new ActionDef("path", "method"),
 				null,

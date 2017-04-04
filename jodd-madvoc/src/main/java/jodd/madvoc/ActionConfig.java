@@ -31,7 +31,7 @@ import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Result;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -136,7 +136,7 @@ public class ActionConfig {
 		FieldDescriptor[] fields = ClassIntrospector.lookup(actionClass).getAllFieldDescriptors();
 		for (FieldDescriptor fd : fields) {
 			Field field = fd.getField();
-			if (ReflectUtil.isTypeOf(field.getType(), Result.class)) {
+			if (ClassUtil.isTypeOf(field.getType(), Result.class)) {
 				field.setAccessible(true);
 				return field;
 			}

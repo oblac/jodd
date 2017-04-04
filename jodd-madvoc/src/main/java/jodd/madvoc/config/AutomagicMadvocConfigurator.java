@@ -39,7 +39,7 @@ import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.petite.meta.PetiteInject;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -235,7 +235,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		if (!checkClass(resultClass)) {
 			return;
 		}
-		if (ReflectUtil.isTypeOf(resultClass, ActionResult.class)) {
+		if (ClassUtil.isTypeOf(resultClass, ActionResult.class)) {
 			resultsManager.register(resultClass);
 		}
 	}

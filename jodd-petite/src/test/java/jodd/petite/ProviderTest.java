@@ -31,7 +31,7 @@ import jodd.petite.tst5.Solar3;
 import jodd.petite.tst5.Sun;
 import jodd.petite.tst5.Sun2;
 import jodd.petite.tst5.Planet;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -58,7 +58,7 @@ public class ProviderTest {
 		pc.registerPetiteBean(Solar2.class, null, null, null, false);
 		pc.registerPetiteBean(Sun2.class, null, null, null, false);
 
-		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ReflectUtil.NO_PARAMETERS);
+		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ClassUtil.NO_PARAMETERS);
 		pc.registerPetitePropertyInjectionPoint("sun2", "planet", null);
 
 		Sun2 sun = pc.getBean(Sun2.class);

@@ -33,7 +33,7 @@ import jodd.introspector.PropertyDescriptor;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.SetInjectionPoint;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +66,7 @@ public class SetResolver {
 			}
 
 			Class propertyType = propertyDescriptor.getType();
-			if (!ReflectUtil.isTypeOf(propertyType, Collection.class)) {
+			if (!ClassUtil.isTypeOf(propertyType, Collection.class)) {
 				continue;
 			}
 

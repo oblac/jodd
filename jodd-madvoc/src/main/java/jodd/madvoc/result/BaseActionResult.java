@@ -25,7 +25,7 @@
 
 package jodd.madvoc.result;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 
 /**
@@ -60,13 +60,13 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 		Class clazz = this.getClass();
 
 		while (clazz.getSuperclass() != BaseActionResult.class) {
-			Class<T> rvt = ReflectUtil.getGenericSupertype(clazz, 0);
+			Class<T> rvt = ClassUtil.getGenericSupertype(clazz, 0);
 			if (rvt != null) {
 				return rvt;
 			}
 			clazz = clazz.getSuperclass();
 		}
-		return ReflectUtil.getGenericSupertype(clazz, 0);
+		return ClassUtil.getGenericSupertype(clazz, 0);
 	}
 
 	/**

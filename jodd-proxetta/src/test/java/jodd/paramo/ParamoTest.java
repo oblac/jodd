@@ -30,7 +30,7 @@ import jodd.asm5.signature.SignatureReader;
 import jodd.paramo.data.Foo;
 import jodd.paramo.data.Generic;
 import jodd.paramo.data.NonGeneric;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -102,7 +102,7 @@ public class ParamoTest {
 
 	@Test
 	public void testPrimitives() throws NoSuchMethodException {
-		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primitives");
+		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primitives");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
 		assertEquals(8, s.length);
@@ -118,7 +118,7 @@ public class ParamoTest {
 
 	@Test
 	public void testPrimitivesArrays1() throws NoSuchMethodException {
-		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarr1");
+		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr1");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
 		assertEquals(2, s.length);
@@ -128,7 +128,7 @@ public class ParamoTest {
 
 	@Test
 	public void testPrimitivesArrays2() throws NoSuchMethodException {
-		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarr2");
+		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr2");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
 		assertEquals(6, s.length);
@@ -142,7 +142,7 @@ public class ParamoTest {
 
 	@Test
 	public void testPrimitivesArrays3() throws NoSuchMethodException {
-		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
+		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
 		assertEquals(3, s.length);
@@ -153,7 +153,7 @@ public class ParamoTest {
 
 	@Test
 	public void testNonGeneric() {
-		Method m = ReflectUtil.findDeclaredMethod(NonGeneric.class, "one");
+		Method m = ClassUtil.findDeclaredMethod(NonGeneric.class, "one");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(2, mps.length);
 		assertEquals("foo", mps[0].getName());
@@ -164,7 +164,7 @@ public class ParamoTest {
 
 	@Test
 	public void testGeneric() {
-		Method m = ReflectUtil.findDeclaredMethod(Generic.class, "one");
+		Method m = ClassUtil.findDeclaredMethod(Generic.class, "one");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(2, mps.length);
 		assertEquals("foo", mps[0].getName());
@@ -172,7 +172,7 @@ public class ParamoTest {
 		assertEquals("aLong", mps[1].getName());
 		assertEquals("Ljava/lang/Long;", mps[1].getSignature());
 
-		m = ReflectUtil.findDeclaredMethod(Generic.class, "two");
+		m = ClassUtil.findDeclaredMethod(Generic.class, "two");
 		mps = Paramo.resolveParameters(m);
 		assertEquals(1, mps.length);
 		assertEquals("zzz", mps[0].getName());
@@ -181,7 +181,7 @@ public class ParamoTest {
 
 	@Test
 	public void testGenericsWildcards() {
-		Method m = ReflectUtil.findDeclaredMethod(Generic.class, "three");
+		Method m = ClassUtil.findDeclaredMethod(Generic.class, "three");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(3, mps.length);
 

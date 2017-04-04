@@ -31,7 +31,7 @@ import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -114,7 +114,7 @@ public class MapToBean {
 				}
 				else if (value instanceof Map) {
 					// if the value we want to inject is a Map...
-					if (!ReflectUtil.isTypeOf(propertyType, Map.class)) {
+					if (!ClassUtil.isTypeOf(propertyType, Map.class)) {
 						// ... and if target is NOT a map
 						value = map2bean((Map) value, propertyType);
 					}

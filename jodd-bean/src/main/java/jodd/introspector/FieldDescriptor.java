@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -48,12 +48,12 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	 * Also, forces access to a field.
 	 */
 	public FieldDescriptor(ClassDescriptor classDescriptor, Field field) {
-		super(classDescriptor, ReflectUtil.isPublic(field));
+		super(classDescriptor, ClassUtil.isPublic(field));
 		this.field = field;
 		this.type = field.getGenericType();
-		this.rawType = ReflectUtil.getRawType(type, classDescriptor.getType());
+		this.rawType = ClassUtil.getRawType(type, classDescriptor.getType());
 
-		Class[] componentTypes = ReflectUtil.getComponentTypes(type, classDescriptor.getType());
+		Class[] componentTypes = ClassUtil.getComponentTypes(type, classDescriptor.getType());
 		if (componentTypes != null) {
 			this.rawComponentType = componentTypes[componentTypes.length - 1];
 			this.rawKeyComponentType = componentTypes[0];
@@ -62,7 +62,7 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 			this.rawKeyComponentType = null;
 		}
 
-		ReflectUtil.forceAccess(field);
+		ClassUtil.forceAccess(field);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	 * Resolves raw component type for given index. This value is NOT cached.
 	 */
 	public Class[] resolveRawComponentTypes() {
-		return ReflectUtil.getComponentTypes(type, classDescriptor.getType());
+		return ClassUtil.getComponentTypes(type, classDescriptor.getType());
 	}
 
 	// ---------------------------------------------------------------- getter/setter

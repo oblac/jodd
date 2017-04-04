@@ -34,7 +34,7 @@ import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -337,7 +337,7 @@ public abstract class PetiteBeans {
 			return;
 		}
 
-		Class[] interfaces = ReflectUtil.resolveAllInterfaces(type);
+		Class[] interfaces = ClassUtil.resolveAllInterfaces(type);
 
 		for (Class anInterface : interfaces) {
 			String altName = PetiteUtil.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
@@ -414,7 +414,7 @@ public abstract class PetiteBeans {
 		for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
 			BeanDefinition beanDefinition = entry.getValue();
 
-			if (ReflectUtil.isTypeOf(beanDefinition.type, type)) {
+			if (ClassUtil.isTypeOf(beanDefinition.type, type)) {
 				String beanName = entry.getKey();
 				list.add(beanName);
 			}
@@ -569,7 +569,7 @@ public abstract class PetiteBeans {
 
 		int i;
 		for (i = 0; i < initMethodNames.length; i++) {
-			MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
+			MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ClassUtil.NO_PARAMETERS, true);
 			if (md == null) {
 				throw new PetiteException("Init method not found: " + beanDefinition.type.getName() + '#' + initMethodNames[i]);
 			}
@@ -598,7 +598,7 @@ public abstract class PetiteBeans {
 
 		int i;
 		for (i = 0; i < destroyMethodNames.length; i++) {
-			MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
+			MethodDescriptor md = cd.getMethodDescriptor(destroyMethodNames[i], ClassUtil.NO_PARAMETERS, true);
 			if (md == null) {
 				throw new PetiteException("Destroy method not found: " + beanDefinition.type.getName() + '#' + destroyMethodNames[i]);
 			}

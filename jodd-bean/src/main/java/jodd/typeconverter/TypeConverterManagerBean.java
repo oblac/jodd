@@ -73,7 +73,7 @@ import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.TimeZoneConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -331,12 +331,12 @@ public class TypeConverterManagerBean {
 		}
 
 		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType)) {
+		if (ClassUtil.isInstanceOf(value, destinationType)) {
 			return (T) value;
 		}
 
 		// collection
-		if (ReflectUtil.isTypeOf(destinationType, Collection.class)) {
+		if (ClassUtil.isTypeOf(destinationType, Collection.class)) {
 			// component type is unknown because of Java's type-erasure
 			CollectionConverter<T> collectionConverter =
 					new CollectionConverter(this, destinationType, Object.class);
@@ -359,7 +359,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType)) {
+		if (ClassUtil.isInstanceOf(value, destinationType)) {
 			return (Collection<T>) value;
 		}
 

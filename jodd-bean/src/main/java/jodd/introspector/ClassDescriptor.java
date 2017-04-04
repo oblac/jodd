@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.util.Map;
 import java.util.List;
@@ -68,13 +68,13 @@ public class ClassDescriptor {
 		this.propertyFieldPrefix = propertyFieldPrefix;
 
 		isArray = type.isArray();
-		isMap = ReflectUtil.isTypeOf(type, Map.class);
-		isList = ReflectUtil.isTypeOf(type, List.class);
-		isSet = ReflectUtil.isTypeOf(type, Set.class);
-		isCollection = ReflectUtil.isTypeOf(type, Collection.class);
+		isMap = ClassUtil.isTypeOf(type, Map.class);
+		isList = ClassUtil.isTypeOf(type, List.class);
+		isSet = ClassUtil.isTypeOf(type, Set.class);
+		isCollection = ClassUtil.isTypeOf(type, Collection.class);
 
-		interfaces = ReflectUtil.resolveAllInterfaces(type);
-		superclasses = ReflectUtil.resolveAllSuperclasses(type);
+		interfaces = ClassUtil.resolveAllInterfaces(type);
+		superclasses = ClassUtil.resolveAllSuperclasses(type);
 	}
 
 	/**

@@ -25,7 +25,7 @@
 
 package jodd.util.cl;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Array;
@@ -162,7 +162,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 
 		// try #3 - using caller classloader, similar as Class.forName()
 		//Class callerClass = ReflectUtil.getCallerClass(2);
-		Class callerClass = ReflectUtil.getCallerClass();
+		Class callerClass = ClassUtil.getCallerClass();
 		ClassLoader callerClassLoader = callerClass.getClassLoader();
 
 		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {

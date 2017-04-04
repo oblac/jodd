@@ -29,6 +29,7 @@ All notable changes to Jodd project are documented here.
 
 ### Breaking changes
 
++ **core** - `ReflectUtil` is now `ClassUtil`: sorry, but the name was super ugly.
 + **core** - `PreattyStringBuilder` simplified the interface.
 + **core** - `DirWatcher` now accepts `Consumer`s instead of custom listener.
 + **core** - `FindFile` interface changed to match Java8.

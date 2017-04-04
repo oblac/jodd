@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
 
@@ -38,11 +38,11 @@ public class CtorDescriptor extends Descriptor {
 	protected final Class[] parameters;
 
 	public CtorDescriptor(ClassDescriptor classDescriptor, Constructor constructor) {
-		super(classDescriptor, ReflectUtil.isPublic(constructor));
+		super(classDescriptor, ClassUtil.isPublic(constructor));
 		this.constructor = constructor;
 		this.parameters = constructor.getParameterTypes();
 
-		ReflectUtil.forceAccess(constructor);
+		ClassUtil.forceAccess(constructor);
 	}
 
 	/**

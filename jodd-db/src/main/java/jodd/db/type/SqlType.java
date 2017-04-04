@@ -26,7 +26,7 @@
 package jodd.db.type;
 
 import jodd.typeconverter.TypeConverterManager;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -54,7 +54,7 @@ public abstract class SqlType<T> {
 
 	@SuppressWarnings({"unchecked"})
 	protected SqlType() {
-		this.sqlType = ReflectUtil.getGenericSupertype(this.getClass(), 0);
+		this.sqlType = ClassUtil.getGenericSupertype(this.getClass(), 0);
 	}
 
 	/**

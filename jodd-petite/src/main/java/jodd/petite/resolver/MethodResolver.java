@@ -32,7 +32,7 @@ import jodd.petite.InjectionPointFactory;
 import jodd.petite.MethodInjectionPoint;
 import jodd.petite.PetiteUtil;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class MethodResolver {
 		for (MethodDescriptor methodDescriptor : allMethods) {
 			Method method = methodDescriptor.getMethod();
 
-			if (ReflectUtil.isBeanPropertySetter(method)) {
+			if (ClassUtil.isBeanPropertySetter(method)) {
 				// ignore setters
 				continue;
 			}

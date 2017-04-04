@@ -30,7 +30,7 @@ import jodd.introspector.Introspector;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -108,7 +108,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 		try {
 			Class type = setter.getSetterRawType();
 
-			if (ReflectUtil.isTypeOf(type, Collection.class)) {
+			if (ClassUtil.isTypeOf(type, Collection.class)) {
 				Class componentType = setter.getSetterRawComponentType();
 
 				value = convertToCollection(value, type, componentType);
@@ -141,7 +141,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 		Object value = Array.get(array, index);
 		if (value == null) {
 			try {
-				value = ReflectUtil.newInstance(componentType);
+				value = ClassUtil.newInstance(componentType);
 			} catch (Exception ex) {
 				if (isSilent) {
 					return null;
@@ -275,7 +275,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 		Object newInstance;
 		try {
-			newInstance = ReflectUtil.newInstance(type);
+			newInstance = ClassUtil.newInstance(type);
 		} catch (Exception ex) {
 			if (isSilent) {
 				return null;

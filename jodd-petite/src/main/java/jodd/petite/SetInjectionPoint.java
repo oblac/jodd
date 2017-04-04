@@ -28,7 +28,7 @@ package jodd.petite;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -75,7 +75,7 @@ public class SetInjectionPoint<T> {
 	protected Class<T> resolveSetType(PropertyDescriptor propertyDescriptor) {
 		Class<T> type = (Class<T>) propertyDescriptor.getType();
 
-		if (ReflectUtil.isTypeOf(type, Collection.class)) {
+		if (ClassUtil.isTypeOf(type, Collection.class)) {
 			return type;
 		}
 		throw new PetiteException("Unsupported Petite set type: " + type.getName());

@@ -52,9 +52,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Various java.lang.reflect utilities.
+ * Class utilities.
  */
-public class ReflectUtil {
+public class ClassUtil {
 
 	/** Empty class array. */
 	public static final Class[] NO_PARAMETERS = new Class[0];

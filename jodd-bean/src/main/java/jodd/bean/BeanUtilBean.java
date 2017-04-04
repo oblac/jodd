@@ -27,7 +27,7 @@ package jodd.bean;
 
 import jodd.introspector.Getter;
 import jodd.introspector.Setter;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Array;
@@ -329,7 +329,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 					listComponentType = Map.class;
 				}
 				try {
-					value = ReflectUtil.newInstance(listComponentType);
+					value = ClassUtil.newInstance(listComponentType);
 				} catch (Exception ex) {
 					if (isSilent) {
 						return null;
@@ -358,7 +358,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 						mapComponentType = Map.class;
 					}
 					try {
-						value = ReflectUtil.newInstance(mapComponentType);
+						value = ClassUtil.newInstance(mapComponentType);
 					} catch (Exception ex) {
 						if (isSilent) {
 							return null;

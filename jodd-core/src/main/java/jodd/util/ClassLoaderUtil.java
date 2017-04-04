@@ -78,7 +78,7 @@ public class ClassLoaderUtil {
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = getContextClassLoader();
 		if (cl == null) {
-			Class callerClass = ReflectUtil.getCallerClass(2);
+			Class callerClass = ClassUtil.getCallerClass(2);
 			cl = callerClass.getClassLoader();
 		}
 		return cl;
@@ -139,7 +139,7 @@ public class ClassLoaderUtil {
 	 */
 	public static void addUrlToClassPath(URL url, ClassLoader classLoader) {
 		try {
-			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
+			ClassUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
 		} catch (Exception ex) {
 			throw new IllegalArgumentException("Add URL failed: " + url, ex);
@@ -166,7 +166,7 @@ public class ClassLoaderUtil {
 	 */
 	public static Class defineClass(String className, byte[] classData, ClassLoader classLoader) {
 		try {
-			return (Class) ReflectUtil.invokeDeclared(ClassLoader.class, classLoader, "defineClass",
+			return (Class) ClassUtil.invokeDeclared(ClassLoader.class, classLoader, "defineClass",
 					new Class[] {String.class, byte[].class, int.class, int.class},
 					new Object[] {className, classData, Integer.valueOf(0), Integer.valueOf(classData.length)});
 		} catch (Throwable th) {
@@ -200,7 +200,7 @@ public class ClassLoaderUtil {
 	public static Class findClass(String className, URL[] classPath, ClassLoader parent) {
 		URLClassLoader tempClassLoader = parent != null ? new URLClassLoader(classPath, parent) : new URLClassLoader(classPath);
 		try {
-			return (Class) ReflectUtil.invokeDeclared(URLClassLoader.class, tempClassLoader, "findClass",
+			return (Class) ClassUtil.invokeDeclared(URLClassLoader.class, tempClassLoader, "findClass",
 					new Class[] {String.class},
 					new Object[] {className});
 		} catch (Throwable th) {
@@ -468,7 +468,7 @@ public class ClassLoaderUtil {
 		}
 
 		// try #3 - using caller classloader, similar as Class.forName()
-		Class callerClass = ReflectUtil.getCallerClass(2);
+		Class callerClass = ClassUtil.getCallerClass(2);
 		ClassLoader callerClassLoader = callerClass.getClassLoader();
 
 		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {

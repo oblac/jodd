@@ -31,7 +31,7 @@ import jodd.asm5.MethodVisitor;
 import jodd.asm5.Type;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 
@@ -651,13 +651,13 @@ public class ProxettaAsmUtil {
 		// enum
 
 		Class elementValueClass = elementValue.getClass();
-		Class enumClass = ReflectUtil.findEnum(elementValueClass);
+		Class enumClass = ClassUtil.findEnum(elementValueClass);
 
 		if (enumClass != null) {
 			try {
 				String typeRef = AsmUtil.typeToTyperef(enumClass);
 
-				String name = (String) ReflectUtil.invoke(elementValue, "name");
+				String name = (String) ClassUtil.invoke(elementValue, "name");
 
 				mv.visitFieldInsn(GETSTATIC, typeRef, name, typeRef);
 

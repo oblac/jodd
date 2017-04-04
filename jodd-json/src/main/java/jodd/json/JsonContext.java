@@ -27,7 +27,7 @@ package jodd.json;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.Wildcard;
 
 import java.util.ArrayList;
@@ -228,14 +228,14 @@ public class JsonContext extends JsonWriter {
 
 			if (JoddJson.excludedTypes != null) {
 				for (Class excludedType : JoddJson.excludedTypes) {
-					if (ReflectUtil.isTypeOf(propertyType, excludedType)) {
+					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
 				}
 			}
 			if (jsonSerializer.excludedTypes != null) {
 				for (Class excludedType : jsonSerializer.excludedTypes) {
-					if (ReflectUtil.isTypeOf(propertyType, excludedType)) {
+					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
 				}

@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -34,8 +34,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
-import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
+import static jodd.util.ClassUtil.METHOD_GET_PREFIX;
+import static jodd.util.ClassUtil.METHOD_IS_PREFIX;
 
 /**
  * Bean properties collection. Property in Java is defined as a pair of
@@ -65,7 +65,7 @@ public class Properties {
 
 		HashMap<String, PropertyDescriptor> map = new HashMap<>();
 
-		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
 
 		for (int iteration = 0; iteration < 2; iteration++) {
 			// first find the getters, and then the setters!
@@ -80,13 +80,13 @@ public class Properties {
 				String propertyName;
 
 				if (iteration == 0) {
-					propertyName = ReflectUtil.getBeanPropertyGetterName(method);
+					propertyName = ClassUtil.getBeanPropertyGetterName(method);
 					if (propertyName != null) {
 						add = true;
 						issetter = false;
 					}
 				} else {
-					propertyName = ReflectUtil.getBeanPropertySetterName(method);
+					propertyName = ClassUtil.getBeanPropertySetterName(method);
 					if (propertyName != null) {
 						add = true;
 						issetter = true;

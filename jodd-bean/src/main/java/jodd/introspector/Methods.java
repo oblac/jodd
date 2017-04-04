@@ -26,7 +26,7 @@
 package jodd.introspector;
 
 import jodd.util.ArraysUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class Methods {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
 
 		HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
 
@@ -103,7 +103,7 @@ public class Methods {
 		}
 		for (MethodDescriptor methodDescriptor : methodDescriptors) {
 			Method m = methodDescriptor.getMethod();
-			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
+			if (ClassUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
 				return methodDescriptor;
 			}
 		}

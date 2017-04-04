@@ -25,7 +25,7 @@
 
 package jodd.jtx;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 /**
  * Stores resource object and its resource manager.
@@ -46,7 +46,7 @@ final class JtxResource<E> {
 	 * Returns <code>true</code> if resource is of provided resource type.
 	 */
 	public boolean isSameTypeAsResource(Class type) {
-		return ReflectUtil.isTypeOf(type, resource.getClass());
+		return ClassUtil.isTypeOf(type, resource.getClass());
 	}
 
 	// ---------------------------------------------------------------- delegates

@@ -33,7 +33,7 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
 import jodd.proxetta.pointcuts.AllRealMethodsPointcut;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -114,7 +114,7 @@ public class AnnTest {
 		proxetta.setVariableClassName(true);
 		Object hero = proxettaBuilder.newInstance();
 
-		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", ReflectUtil.invoke(hero, "name"));
+		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", ClassUtil.invoke(hero, "name"));
 	}
 
 	@Test
@@ -139,7 +139,7 @@ public class AnnTest {
 		proxetta.setVariableClassName(true);
 		Object hero = proxettaBuilder.newInstance();
 
-		assertEquals("SilverHero89W99.222None1000speeeeedXRAYnull", ReflectUtil.invoke(hero, "name"));
+		assertEquals("SilverHero89W99.222None1000speeeeedXRAYnull", ClassUtil.invoke(hero, "name"));
 	}
 
 }

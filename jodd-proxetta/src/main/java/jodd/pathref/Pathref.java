@@ -26,7 +26,7 @@
 package jodd.pathref;
 
 import jodd.proxetta.ProxettaUtil;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -143,17 +143,17 @@ public class Pathref<C> {
 			throw new PathrefException("Not a getter: " + methodName, e);
 		}
 
-		if (!ReflectUtil.isBeanPropertyGetter(method)) {
+		if (!ClassUtil.isBeanPropertyGetter(method)) {
 			throw new PathrefException("Not a getter: " + methodName);
 		}
 
-		String getterName = ReflectUtil.getBeanPropertyGetterName(method);
+		String getterName = ClassUtil.getBeanPropertyGetterName(method);
 
 		append(getterName);
 
-		if (ReflectUtil.isTypeOf(target, List.class)) {
+		if (ClassUtil.isTypeOf(target, List.class)) {
 			final Class componentType =
-				ReflectUtil.getComponentType(method.getGenericReturnType(), currentClass, 0);
+				ClassUtil.getComponentType(method.getGenericReturnType(), currentClass, 0);
 
 			if (componentType == null) {
 				throw new PathrefException("Unknown component name for: " + methodName);

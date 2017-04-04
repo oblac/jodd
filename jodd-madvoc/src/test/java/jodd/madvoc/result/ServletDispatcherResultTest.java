@@ -32,7 +32,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import javax.servlet.ServletContext;
@@ -142,7 +142,7 @@ public class ServletDispatcherResultTest {
 		Object action = new Object();
 		ActionConfig actionConfig = new ActionConfig(
 				Action.class,
-				ReflectUtil.findMethod(Action.class, "view"),
+				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
 				new ActionDef(actionPath, "GET"),
 				null, false, null, null);

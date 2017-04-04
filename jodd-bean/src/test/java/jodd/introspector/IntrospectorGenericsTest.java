@@ -25,7 +25,7 @@
 
 package jodd.introspector;
 
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -101,7 +101,7 @@ public class IntrospectorGenericsTest {
 
 		assertEquals(Map.class, fd3.getRawType());
 		assertEquals(Integer.class, fd3.getRawComponentType());
-		assertEquals(String.class, ReflectUtil.getComponentTypes(fd3.getField().getGenericType(), cd.getType())[0]);
+		assertEquals(String.class, ClassUtil.getComponentTypes(fd3.getField().getGenericType(), cd.getType())[0]);
 	}
 
 	@Test

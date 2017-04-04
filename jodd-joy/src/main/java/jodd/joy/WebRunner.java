@@ -35,7 +35,7 @@ import jodd.madvoc.WebApplication;
 import jodd.madvoc.Madvoc;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 
 /**
@@ -97,7 +97,7 @@ public abstract class WebRunner {
 		}
 
 		try {
-			ReflectUtil.invokeDeclared(app, "destroy", new Class[] {MadvocConfig.class}, new Object[] {null});
+			ClassUtil.invokeDeclared(app, "destroy", new Class[] {MadvocConfig.class}, new Object[] {null});
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -30,7 +30,7 @@ import jodd.madvoc.BaseActionWrapperStack;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.injector.Target;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.ReflectUtil;
+import jodd.util.ClassUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -174,7 +174,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 				}
 				continue;
 			}
-			if (ReflectUtil.isTypeOf(wrapperClass, BaseActionWrapperStack.class)) {
+			if (ClassUtil.isTypeOf(wrapperClass, BaseActionWrapperStack.class)) {
 				BaseActionWrapperStack stack = (BaseActionWrapperStack) resolve(wrapperClass);
 				list.remove(i);
 				Class<? extends T>[] stackWrappers = stack.getWrappers();
