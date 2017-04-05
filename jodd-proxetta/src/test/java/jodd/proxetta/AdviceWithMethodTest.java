@@ -25,8 +25,8 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.CollectorAdvice;
-import jodd.proxetta.data.Foo;
+import jodd.proxetta.fixtures.data.CollectorAdvice;
+import jodd.proxetta.fixtures.data.Foo;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
 import org.junit.Test;

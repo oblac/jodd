@@ -23,36 +23,29 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.fixtures.data;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.fixtures.data.DateDao;
-import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+import jodd.util.StringPool;
 
-import static junit.framework.TestCase.assertNotNull;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ProxyInfoTest {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+public @interface Action {
 
-	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		//proxetta.setDebugFolder(SystemUtil.userHome());
+	String NONE = StringPool.HASH;
 
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
+	String value() default "";
 
-		JDateTime jDateTime = dateDateProxy.currentTime();
+	String extension() default "";
 
-		assertNotNull(jDateTime);
-	}
+	String alias() default "";
 
-	private ProxyAspect[] aspects() {
-		ProxyAspect aspect_performance = new ProxyAspect(
-			PerformanceMeasureProxyAdvice.class, new AllTopMethodsPointcut());
-
-		return new ProxyAspect[] {aspect_performance};
-	}
+	String method() default "";
 
 }

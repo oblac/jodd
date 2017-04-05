@@ -23,36 +23,38 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.fixtures.inv;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.fixtures.data.DateDao;
-import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+public class Two {
 
-import static junit.framework.TestCase.assertNotNull;
-
-public class ProxyInfoTest {
-
-	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		//proxetta.setDebugFolder(SystemUtil.userHome());
-
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
-
-		JDateTime jDateTime = dateDateProxy.currentTime();
-
-		assertNotNull(jDateTime);
+	public Two() {
 	}
 
-	private ProxyAspect[] aspects() {
-		ProxyAspect aspect_performance = new ProxyAspect(
-			PerformanceMeasureProxyAdvice.class, new AllTopMethodsPointcut());
-
-		return new ProxyAspect[] {aspect_performance};
+	public Two(String state) {
+		this.state = state;
 	}
 
+	public int invvirtual(String what) {
+		System.out.print("invoke virtual " + what);
+		return -17;
+	}
+
+	public static int invstatic(String what) {
+		System.out.print("invoke static! " + what);
+		return -13;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public void printState() {
+		System.out.print("state = " + state);
+	}
+
+	private String state;
 }

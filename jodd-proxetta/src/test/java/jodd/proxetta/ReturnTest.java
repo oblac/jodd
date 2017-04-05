@@ -25,9 +25,9 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.ReflectionReplacementAdvice;
-import jodd.proxetta.data.Retro;
-import jodd.proxetta.data.ReturnNullAdvice;
+import jodd.proxetta.fixtures.data.ReflectionReplacementAdvice;
+import jodd.proxetta.fixtures.data.Retro;
+import jodd.proxetta.fixtures.data.ReturnNullAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;

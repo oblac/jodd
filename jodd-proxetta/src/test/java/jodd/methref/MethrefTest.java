@@ -26,7 +26,7 @@
 package jodd.methref;
 
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.data.Str;
+import jodd.proxetta.fixtures.data.Str;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
 import org.junit.Test;

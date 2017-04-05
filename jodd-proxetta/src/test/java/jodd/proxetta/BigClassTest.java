@@ -27,13 +27,11 @@ package jodd.proxetta;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.io.FileUtil;
 import jodd.mutable.MutableBoolean;
-import jodd.proxetta.data.*;
+import jodd.proxetta.fixtures.data.*;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.SystemUtil;
 import org.junit.Test;
 import jodd.asm5.Type;
 
@@ -57,8 +55,8 @@ public class BigClassTest {
 					ClassInfo ci = mi.getClassInfo();
 					assertEquals("BigFatJoe", ci.getClassname());
 					assertEquals(BigFatJoe.class.getPackage().getName(), ci.getPackage());
-					assertEquals("jodd/proxetta/data/BigFatJoe", ci.getReference());
-					assertEquals("jodd/proxetta/data/SmallSkinnyZoe", ci.getSuperName());
+					assertEquals("jodd/proxetta/fixtures/data/BigFatJoe", ci.getReference());
+					assertEquals("jodd/proxetta/fixtures/data/SmallSkinnyZoe", ci.getSuperName());
 					AnnotationInfo[] anns = ci.getAnnotations();
 					assertNotNull(anns);
 					assertEquals(3, anns.length);
@@ -78,7 +76,7 @@ public class BigClassTest {
 					assertTrue(ai.getElement("value") instanceof Object[]);
 					assertFalse(ai.getElement("value") instanceof String[]);
 					Object c1 = ((Object[]) ai.getElement("value"))[0];
-					assertEquals("Ljodd/proxetta/data/Str;", ((Type) c1).getDescriptor());
+					assertEquals("Ljodd/proxetta/fixtures/data/Str;", ((Type) c1).getDescriptor());
 				}
 				if (mi.getMethodName().equals("publicMethod")) {
 					AnnotationInfo[] anns = mi.getAnnotations();

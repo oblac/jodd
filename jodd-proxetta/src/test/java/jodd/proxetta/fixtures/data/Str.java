@@ -23,36 +23,60 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.fixtures.data;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.fixtures.data.DateDao;
-import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+import java.util.List;
 
-import static junit.framework.TestCase.assertNotNull;
+public class Str {
 
-public class ProxyInfoTest {
-
-	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		//proxetta.setDebugFolder(SystemUtil.userHome());
-
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
-
-		JDateTime jDateTime = dateDateProxy.currentTime();
-
-		assertNotNull(jDateTime);
+	public String foo() {
+		System.out.println("Str.foo");
+		return "123";
+	}
+	public String foo2(List in1, Thread in2) {
+		System.out.println("Str.foo2");
+		return "123";
 	}
 
-	private ProxyAspect[] aspects() {
-		ProxyAspect aspect_performance = new ProxyAspect(
-			PerformanceMeasureProxyAdvice.class, new AllTopMethodsPointcut());
-
-		return new ProxyAspect[] {aspect_performance};
+	public Integer boo() {
+		System.out.println("Str.boo");
+		return Integer.valueOf(123);
 	}
 
+	public int izoo() {
+		System.out.println("Str.izoo");
+		return 345;
+	}
+	public float fzoo() {
+		System.out.println("Str.fzoo");
+		return 345;
+	}
+	public double dzoo() {
+		System.out.println("Str.dzoo");
+		return 345;
+	}
+	public long lzoo() {
+		System.out.println("Str.lzoo");
+		return 345;
+	}
+	public boolean bzoo() {
+		System.out.println("Str.bzoo");
+		return true;
+	}
+	public short szoo() {
+		System.out.println("Str.bzoo");
+		return 1;
+	}
+	public char czoo() {
+		System.out.println("Str.czoo");
+		return 'a';
+	}
+	public byte yzoo() {
+		System.out.println("Str.yzoo");
+		return 1;
+	}
+
+	public void voo() {
+		System.out.println("Str.voo");
+	}
 }

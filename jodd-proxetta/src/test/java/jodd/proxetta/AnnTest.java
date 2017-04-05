@@ -25,9 +25,9 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.Hero;
-import jodd.proxetta.data.HeroProxyAdvice;
-import jodd.proxetta.data.HeroProxyAdvice2;
+import jodd.proxetta.fixtures.data.Hero;
+import jodd.proxetta.fixtures.data.HeroProxyAdvice;
+import jodd.proxetta.fixtures.data.HeroProxyAdvice2;
 import jodd.proxetta.impl.ProxyProxetta;
 
 import jodd.proxetta.impl.WrapperProxetta;

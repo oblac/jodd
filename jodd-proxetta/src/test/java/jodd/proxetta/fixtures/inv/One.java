@@ -23,36 +23,58 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.fixtures.inv;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.fixtures.data.DateDao;
-import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+import jodd.proxetta.fixtures.data.Action;
+import jodd.proxetta.fixtures.data.InterceptedBy;
+import jodd.proxetta.fixtures.data.MadvocAction;
+import jodd.proxetta.fixtures.data.PetiteBean;
 
-import static junit.framework.TestCase.assertNotNull;
+import java.io.Serializable;
 
-public class ProxyInfoTest {
+@MadvocAction(value = "madvocAction")
+@PetiteBean(value = "petiteBean")
+@InterceptedBy({One.class, Two.class})
+public class One extends SubOne implements Serializable {
 
-	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		//proxetta.setDebugFolder(SystemUtil.userHome());
-
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
-
-		JDateTime jDateTime = dateDateProxy.currentTime();
-
-		assertNotNull(jDateTime);
+	public One() {
+		a = 12;
+		Object o = new Object();
+		SubOne s = new SubOne();
+		System.out.print("one ctor!");
 	}
 
-	private ProxyAspect[] aspects() {
-		ProxyAspect aspect_performance = new ProxyAspect(
-			PerformanceMeasureProxyAdvice.class, new AllTopMethodsPointcut());
-
-		return new ProxyAspect[] {aspect_performance};
+	@Action
+	public void example1() {
+		Two two = new Two();
+		int i = two.invvirtual("one");
+		System.out.print(i);
+		callSub();
 	}
+
+	public void example2() {
+		int i = Two.invstatic("one");
+		System.out.print(i + ++a);
+		System.out.print(a);
+		System.out.print("static: " + s);
+	}
+
+	public void example3() {
+		Two two = new Two("ctor!");
+		two.printState();
+	}
+
+	public void example4() {
+		Three three = new ThreeImpl();
+		three.invinterface("four!");
+	}
+
+	public void sub() {
+		System.out.print(">overriden sub");
+	}
+
+	private static int s = 4;
+	private int a;
 
 }
+

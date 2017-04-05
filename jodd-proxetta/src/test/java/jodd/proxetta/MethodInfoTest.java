@@ -27,9 +27,9 @@ package jodd.proxetta;
 
 import jodd.mutable.ValueHolder;
 import jodd.mutable.ValueHolderWrapper;
-import jodd.proxetta.data.Foo;
-import jodd.proxetta.data.FooAnn;
-import jodd.proxetta.data.FooProxyAdvice;
+import jodd.proxetta.fixtures.data.Foo;
+import jodd.proxetta.fixtures.data.FooAnn;
+import jodd.proxetta.fixtures.data.FooProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import org.junit.Test;

@@ -23,36 +23,28 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.fixtures.data;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.fixtures.data.DateDao;
-import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+import jodd.proxetta.ProxyAdvice;
+import jodd.proxetta.ProxyTarget;
 
-import static junit.framework.TestCase.assertNotNull;
+import java.lang.reflect.Method;
 
-public class ProxyInfoTest {
+public class ReflectionReplacementAdvice implements ProxyAdvice {
 
-	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		//proxetta.setDebugFolder(SystemUtil.userHome());
+	public Object target;
 
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
+	public Object execute() throws Exception {
+		String methodName = ProxyTarget.targetMethodName();
 
-		JDateTime jDateTime = dateDateProxy.currentTime();
+		Class[] methodArgumentTypes = ProxyTarget.createArgumentsClassArray();
 
-		assertNotNull(jDateTime);
+		Object[] methodArguments = ProxyTarget.createArgumentsArray();
+
+		Method targetMethod = target.getClass().getMethod(methodName, methodArgumentTypes);
+
+		Object result = targetMethod.invoke(target, methodArguments);
+
+		return ProxyTarget.returnValue(result);
 	}
-
-	private ProxyAspect[] aspects() {
-		ProxyAspect aspect_performance = new ProxyAspect(
-			PerformanceMeasureProxyAdvice.class, new AllTopMethodsPointcut());
-
-		return new ProxyAspect[] {aspect_performance};
-	}
-
 }

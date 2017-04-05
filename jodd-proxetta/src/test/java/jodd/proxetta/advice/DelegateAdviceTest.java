@@ -25,8 +25,8 @@
 
 package jodd.proxetta.advice;
 
-import jodd.proxetta.data.Calc;
-import jodd.proxetta.data.CalcImpl;
+import jodd.proxetta.fixtures.data.Calc;
+import jodd.proxetta.fixtures.data.CalcImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

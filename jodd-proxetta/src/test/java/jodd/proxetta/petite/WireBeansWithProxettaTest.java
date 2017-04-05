@@ -3,11 +3,11 @@ package jodd.proxetta.petite;
 import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteContainer;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.petite.data.Bean1;
-import jodd.proxetta.petite.data.Bean2;
-import jodd.proxetta.petite.data.ExternalBean;
-import jodd.proxetta.petite.data.PetiteHelper;
-import jodd.proxetta.petite.data.PetiteProxettaContainer;
+import jodd.proxetta.petite.fixtures.Bean1;
+import jodd.proxetta.petite.fixtures.Bean2;
+import jodd.proxetta.petite.fixtures.ExternalBean;
+import jodd.proxetta.petite.fixtures.PetiteHelper;
+import jodd.proxetta.petite.fixtures.PetiteProxettaContainer;
 import org.junit.Before;
 import org.junit.Test;
 

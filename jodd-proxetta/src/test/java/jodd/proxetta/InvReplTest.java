@@ -27,7 +27,7 @@ package jodd.proxetta;
 
 import jodd.io.FastByteArrayOutputStream;
 import jodd.proxetta.impl.InvokeProxetta;
-import jodd.proxetta.inv.*;
+import jodd.proxetta.fixtures.inv.*;
 import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
 
@@ -59,18 +59,18 @@ public class InvReplTest {
 		fbaos.reset();
 
 		one.example1();
-		assertEquals("REPLACED VIRTUAL! jodd.proxetta.inv.Two * one!173>overriden sub", fbaos.toString());
+		assertEquals("REPLACED VIRTUAL! jodd.proxetta.fixtures.inv.Two * one!173>overriden sub", fbaos.toString());
 		fbaos.reset();
 
 		one.example2();
-		assertEquals("REPLACED STATIC! one * jodd/proxetta/inv/Two * example2 * void example2() * jodd.proxetta.inv.One * jodd.proxetta.inv.One$$Clonetou!15013static: 4", fbaos.toString());
+		assertEquals("REPLACED STATIC! one * jodd/proxetta/fixtures/inv/Two * example2 * void example2() * jodd.proxetta.fixtures.inv.One * jodd.proxetta.fixtures.inv.One$$Clonetou!15013static: 4", fbaos.toString());
 		fbaos.reset();
 
 		one.example3();
 		assertEquals("state = REPLACED ctor!", fbaos.toString());
 		fbaos.reset();
 
-		assertEquals("jodd.proxetta.inv.One$$Clonetou", one.getClass().getName());
+		assertEquals("jodd.proxetta.fixtures.inv.One$$Clonetou", one.getClass().getName());
 		assertTrue(one instanceof Serializable);
 
 		Annotation[] anns = one.getClass().getAnnotations();

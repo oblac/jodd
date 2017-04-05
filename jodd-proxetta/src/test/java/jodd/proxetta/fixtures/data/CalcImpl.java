@@ -23,36 +23,39 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.fixtures.data;
 
-import jodd.datetime.JDateTime;
-import jodd.proxetta.fixtures.data.DateDao;
-import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+public class CalcImpl extends CalcImplBase implements Calc {
 
-import static junit.framework.TestCase.assertNotNull;
-
-public class ProxyInfoTest {
-
-	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
-		//proxetta.setDebugFolder(SystemUtil.userHome());
-
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
-
-		JDateTime jDateTime = dateDateProxy.currentTime();
-
-		assertNotNull(jDateTime);
+	public int calculate(int a, int b) {
+		return a + b;
 	}
 
-	private ProxyAspect[] aspects() {
-		ProxyAspect aspect_performance = new ProxyAspect(
-			PerformanceMeasureProxyAdvice.class, new AllTopMethodsPointcut());
-
-		return new ProxyAspect[] {aspect_performance};
+	public double calculate(double a, double b) {
+		return a + b;
 	}
 
+	public long calculate(long a, long b) {
+		return a + b;
+	}
+
+	public float calculate(float a, float b) {
+		return a + b;
+	}
+
+	public short calculate(short a, short b) {
+		return (short) (a + b);
+	}
+
+	public byte calculate(byte a, byte b) {
+		return (byte) (a + b);
+	}
+
+	public void customMethod() {
+		System.out.println("custom");
+	}
+
+	public static void main(String[] args) {
+		System.out.println(args);
+	}
 }

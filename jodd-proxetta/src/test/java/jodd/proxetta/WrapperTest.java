@@ -25,7 +25,7 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.*;
+import jodd.proxetta.fixtures.data.*;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;

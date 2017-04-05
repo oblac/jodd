@@ -25,12 +25,12 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.Abstra;
-import jodd.proxetta.data.Abstra2;
-import jodd.proxetta.data.Foo;
-import jodd.proxetta.data.FooProxyAdvice;
-import jodd.proxetta.data.Inter;
-import jodd.proxetta.data.InvalidAdvice;
+import jodd.proxetta.fixtures.data.Abstra;
+import jodd.proxetta.fixtures.data.Abstra2;
+import jodd.proxetta.fixtures.data.Foo;
+import jodd.proxetta.fixtures.data.FooProxyAdvice;
+import jodd.proxetta.fixtures.data.Inter;
+import jodd.proxetta.fixtures.data.InvalidAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import org.junit.Test;
 
