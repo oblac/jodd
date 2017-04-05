@@ -687,7 +687,7 @@ public class ClassUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		if (params.length == 0) {
-			return (T) newInstance(clazz);
+			return newInstance(clazz);
 		}
 
 		final Class<?>[] paramTypes = getClasses(params);
@@ -708,76 +708,76 @@ public class ClassUtil {
 	 * String, Character, Boolean or a Number. Immutable instances are cached and not created again.
 	 * Arrays are also created with no elements. Note that this bunch of <code>if</code> blocks
 	 * is faster then using a <code>HashMap</code>.
-	 * todo Add generics if possible
 	 */
-	public static Object newInstance(Class type) throws IllegalAccessException, InstantiationException {
+	@SuppressWarnings("unchecked")
+	public static <T> T newInstance(Class<T> type) throws IllegalAccessException, InstantiationException {
 		if (type.isPrimitive()) {
 			if (type == int.class) {
-				return Integer.valueOf(0);
+				return (T) Integer.valueOf(0);
 			}
 			if (type == long.class) {
-				return Long.valueOf(0);
+				return (T) Long.valueOf(0);
 			}
 			if (type == boolean.class) {
-				return Boolean.FALSE;
+				return (T) Boolean.FALSE;
 			}
 			if (type == float.class) {
-				return Float.valueOf(0);
+				return (T) Float.valueOf(0);
 			}
 			if (type == double.class) {
-				return Double.valueOf(0);
+				return (T) Double.valueOf(0);
 			}
 			if (type == byte.class) {
-				return Byte.valueOf((byte) 0);
+				return (T) Byte.valueOf((byte) 0);
 			}
 			if (type == short.class) {
-				return Short.valueOf((short) 0);
+				return (T) Short.valueOf((short) 0);
 			}
 			if (type == char.class) {
-				return Character.valueOf((char) 0);
+				return (T) Character.valueOf((char) 0);
 			}
 			throw new IllegalArgumentException("Invalid primitive: " + type);
 		}
 		if (type == Integer.class) {
-			return Integer.valueOf(0);
+			return (T) Integer.valueOf(0);
 		}
 		if (type == String.class) {
-			return StringPool.EMPTY;
+			return (T) StringPool.EMPTY;
 		}
 		if (type == Long.class) {
-			return Long.valueOf(0);
+			return (T) Long.valueOf(0);
 		}
 		if (type == Boolean.class) {
-			return Boolean.FALSE;
+			return (T) Boolean.FALSE;
 		}
 		if (type == Float.class) {
-			return Float.valueOf(0);
+			return (T) Float.valueOf(0);
 		}
 		if (type == Double.class) {
-			return Double.valueOf(0);
+			return (T) Double.valueOf(0);
 		}
 
 		if (type == Map.class) {
-			return new HashMap();
+			return (T) new HashMap();
 		}
 		if (type == List.class) {
-			return new ArrayList();
+			return (T) new ArrayList();
 		}
 		if (type == Set.class) {
-			return new LinkedHashSet();
+			return (T) new HashSet();
 		}
 		if (type == Collection.class) {
-			return new ArrayList();
+			return (T) new ArrayList();
 		}
 
 		if (type == Byte.class) {
-			return Byte.valueOf((byte) 0);
+			return (T) Byte.valueOf((byte) 0);
 		}
 		if (type == Short.class) {
-			return Short.valueOf((short) 0);
+			return (T) Short.valueOf((short) 0);
 		}
 		if (type == Character.class) {
-			return Character.valueOf((char) 0);
+			return (T) Character.valueOf((char) 0);
 		}
 
 		if (type.isEnum()) {
@@ -785,7 +785,7 @@ public class ClassUtil {
 		}
 
 		if (type.isArray()) {
-			return Array.newInstance(type.getComponentType(), 0);
+			return (T) Array.newInstance(type.getComponentType(), 0);
 		}
 
 		return type.newInstance();
