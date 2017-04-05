@@ -25,11 +25,11 @@
 
 package jodd.petite;
 
-import jodd.petite.data.Biz;
-import jodd.petite.data.MyBiz;
-import jodd.petite.data.MyBiz2;
-import jodd.petite.data.MyBiz3;
-import jodd.petite.data.WeBiz;
+import jodd.petite.fixtures.data.Biz;
+import jodd.petite.fixtures.data.MyBiz;
+import jodd.petite.fixtures.data.MyBiz2;
+import jodd.petite.fixtures.data.MyBiz3;
+import jodd.petite.fixtures.data.WeBiz;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

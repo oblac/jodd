@@ -25,9 +25,9 @@
 
 package jodd.petite;
 
-import jodd.petite.tst4.Bar;
-import jodd.petite.tst4.Foo;
-import jodd.petite.tst4.Foo2;
+import jodd.petite.fixtures.tst4.Bar;
+import jodd.petite.fixtures.tst4.Foo;
+import jodd.petite.fixtures.tst4.Foo2;
 import org.junit.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_CONSTRUCT;

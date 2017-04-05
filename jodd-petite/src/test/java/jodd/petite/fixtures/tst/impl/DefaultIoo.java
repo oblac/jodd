@@ -23,27 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.fixtures.tst.impl;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.fixtures.tst.Ioo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.meta.PetiteInject;
 
-import static org.junit.Assert.assertEquals;
+public class DefaultIoo implements Ioo {
 
-public class PetiteShutdownTest {
+	@PetiteInject
+	Foo foo;
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+	public void hello() {
+		System.out.println("DefaultIoo.hello");
+	}
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
-
-		assertEquals(2, pc.getTotalBeans());
-
-		pc.shutdown();
-
-		assertEquals(0, pc.getTotalBeans());
+	public Foo getFoo() {
+		return foo;
 	}
 }

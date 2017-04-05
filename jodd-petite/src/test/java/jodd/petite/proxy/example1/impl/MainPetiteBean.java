@@ -23,27 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.proxy.example1.impl;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.meta.PetiteBean;
+import jodd.petite.meta.PetiteInject;
+import jodd.petite.proxy.Logged;
+import jodd.petite.proxy.example1.IMainPetiteBean;
+import jodd.petite.proxy.example1.ISubPetiteBean;
+import jodd.petite.scope.SingletonScope;
 
-import static org.junit.Assert.assertEquals;
+@PetiteBean (scope = SingletonScope.class)
+public class MainPetiteBean implements IMainPetiteBean {
 
-public class PetiteShutdownTest {
+    @PetiteInject
+    ISubPetiteBean subPetiteBean;
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+    @Override
+    @Logged
+    public void execute() {
+        subPetiteBean.execute_sub();
+        System.out.println("executing " + this.getClass().getCanonicalName());
+    }
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
-
-		assertEquals(2, pc.getTotalBeans());
-
-		pc.shutdown();
-
-		assertEquals(0, pc.getTotalBeans());
-	}
 }

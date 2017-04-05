@@ -25,15 +25,15 @@
 
 package jodd.petite;
 
-import jodd.petite.data.Biz;
-import jodd.petite.data.DefaultBiz;
-import jodd.petite.data.DefaultBizImpl;
+import jodd.petite.fixtures.data.Biz;
+import jodd.petite.fixtures.data.DefaultBiz;
+import jodd.petite.fixtures.data.DefaultBizImpl;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 import jodd.petite.scope.ProtoScope;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Zoo;
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Zoo;
 import org.junit.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;

@@ -23,27 +23,82 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.fixtures.tst;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.meta.PetiteDestroyMethod;
+import jodd.petite.meta.PetiteInject;
+import jodd.petite.meta.PetiteInitMethod;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
+import java.util.ArrayList;
 
-public class PetiteShutdownTest {
+public class Boo {
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+	public List<String> orders = new ArrayList<>();
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
+	@PetiteInject
+	private Foo foo;
 
-		assertEquals(2, pc.getTotalBeans());
-
-		pc.shutdown();
-
-		assertEquals(0, pc.getTotalBeans());
+	public Foo getFoo() {
+		return foo;
 	}
+
+	public void setFoo(Foo foo) {
+		foo.counter++;
+		this.foo = foo;
+	}
+
+	private int count;
+	private int count2;
+
+	public int getCount() {
+		return count;
+	}
+	public int getCount2() {
+		return count2;
+	}
+
+	@PetiteInitMethod
+	void init() {
+		count++;
+		orders.add("init");
+	}
+
+	@PetiteInitMethod(order = 100)
+	void third() {
+		orders.add("third");
+	}
+
+	@PetiteInitMethod(order = -1)
+	void last() {
+		orders.add("last");
+	}
+
+	@PetiteInitMethod(order = -2)
+	void beforeLast() {
+		orders.add("beforeLast");
+	}
+
+	@PetiteInitMethod(order = 1)
+	void first() {
+		orders.add("first");
+	}
+
+	@PetiteInitMethod(order = 2)
+	void second() {
+		orders.add("second");
+	}
+
+	@PetiteDestroyMethod
+	void ciao() {
+		count2++;
+	}
+	@PetiteDestroyMethod
+	void buy() {
+		count2++;
+	}
+
+	@PetiteInject
+	public final Zoo zoo = null;
+
 }

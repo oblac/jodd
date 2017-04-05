@@ -26,10 +26,10 @@
 package jodd.petite;
 
 import jodd.petite.scope.SessionScope;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Ses;
-import jodd.petite.tst.Zoo;
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Ses;
+import jodd.petite.fixtures.tst.Zoo;
 import jodd.servlet.RequestContextListener;
 import org.junit.Test;
 

@@ -25,9 +25,9 @@
 
 package jodd.petite;
 
-import jodd.petite.data.PojoBean2;
-import jodd.petite.tst2.Joo;
-import jodd.petite.tst2.Moo;
+import jodd.petite.fixtures.data.PojoBean2;
+import jodd.petite.fixtures.tst2.Joo;
+import jodd.petite.fixtures.tst2.Moo;
 import jodd.props.Props;
 import org.junit.Test;
 

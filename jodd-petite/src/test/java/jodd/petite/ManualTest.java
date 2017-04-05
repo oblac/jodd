@@ -25,9 +25,9 @@
 
 package jodd.petite;
 
-import jodd.petite.data.PojoAnnBean;
-import jodd.petite.data.PojoBean;
-import jodd.petite.data.SomeService;
+import jodd.petite.fixtures.data.PojoAnnBean;
+import jodd.petite.fixtures.data.PojoBean;
+import jodd.petite.fixtures.data.SomeService;
 import org.junit.Test;
 
 import java.util.Set;

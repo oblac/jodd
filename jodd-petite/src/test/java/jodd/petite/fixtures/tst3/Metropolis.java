@@ -23,27 +23,29 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.fixtures.tst3;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.meta.PetiteBean;
+import jodd.petite.meta.PetiteInject;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Collection;
 
-public class PetiteShutdownTest {
+@PetiteBean
+public class Metropolis implements SuperHero {
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+	@PetiteInject
+	public Collection<SuperHero> superHeros;
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
+	public String whoIsThere() {
+		String superHeroes = "";
+		for (SuperHero superHero : superHeros) {
+			superHeroes += superHero.getHeroName() + " ";
+		}
 
-		assertEquals(2, pc.getTotalBeans());
+		return superHeroes.trim();
+	}
 
-		pc.shutdown();
-
-		assertEquals(0, pc.getTotalBeans());
+	public String getHeroName() {
+		return "delegate";
 	}
 }

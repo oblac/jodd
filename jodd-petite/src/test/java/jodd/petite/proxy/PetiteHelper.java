@@ -23,27 +23,34 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.proxy;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.PetiteConfig;
+import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.ProxyPointcut;
+import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 
-import static org.junit.Assert.assertEquals;
+public class PetiteHelper {
 
-public class PetiteShutdownTest {
+    public static PetiteConfig createPetiteConfig() {
+        PetiteConfig petiteConfig = new PetiteConfig();
+        petiteConfig.setDetectDuplicatedBeanNames(true);
+        petiteConfig.setWireScopedProxy(true);
+        petiteConfig.setDetectMixedScopes(true);
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+        return petiteConfig;
+    }
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
+    public static ProxyProxetta createProxyProxetta() {
 
-		assertEquals(2, pc.getTotalBeans());
+        ProxyPointcut pointcut_logged = new MethodAnnotationPointcut(Logged.class);
+        ProxyAspect aspect_logged = new ProxyAspect(LogProxyAdvice.class, pointcut_logged);
 
-		pc.shutdown();
+        ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect_logged);
+        //proxetta.setDebugFolder(SystemUtil.userHome() + "\\inka\\proxetta");
 
-		assertEquals(0, pc.getTotalBeans());
-	}
+        return proxetta;
+    }
+
 }

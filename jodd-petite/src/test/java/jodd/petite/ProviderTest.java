@@ -25,12 +25,12 @@
 
 package jodd.petite;
 
-import jodd.petite.tst5.Solar;
-import jodd.petite.tst5.Solar2;
-import jodd.petite.tst5.Solar3;
-import jodd.petite.tst5.Sun;
-import jodd.petite.tst5.Sun2;
-import jodd.petite.tst5.Planet;
+import jodd.petite.fixtures.tst5.Solar;
+import jodd.petite.fixtures.tst5.Solar2;
+import jodd.petite.fixtures.tst5.Solar3;
+import jodd.petite.fixtures.tst5.Sun;
+import jodd.petite.fixtures.tst5.Sun2;
+import jodd.petite.fixtures.tst5.Planet;
 import jodd.util.ClassUtil;
 import org.junit.Test;
 

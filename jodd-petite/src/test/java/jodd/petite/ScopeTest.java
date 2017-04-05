@@ -30,9 +30,9 @@ import jodd.petite.scope.RequestScope;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Zoo;
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Zoo;
 import org.junit.Test;
 
 import java.util.concurrent.Semaphore;

@@ -27,8 +27,8 @@ package jodd.petite;
 
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.scope.ProtoScope;
-import jodd.petite.tst.*;
-import jodd.petite.tst.impl.DefaultIoo;
+import jodd.petite.fixtures.tst.*;
+import jodd.petite.fixtures.tst.impl.DefaultIoo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,11 +48,11 @@ public class WireTest {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
 		configurator.setExcludeAllEntries(true);
-		configurator.setIncludedEntries("jodd.petite.*");
-		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses");
+		configurator.setIncludedEntries("jodd.petite.fixtures.*");
+		configurator.setExcludedEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses");
 		configurator.setExcludedEntries(
-				"jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses", "*Public*", "*Secret*", "*$*",
-			"jodd.petite.prox.*");
+				"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses", "*Public*", "*Secret*", "*$*",
+			"jodd.petite.proxy.*");
 		configurator.configure(pc);
 
 		assertEquals(1, pc.getTotalBeans());

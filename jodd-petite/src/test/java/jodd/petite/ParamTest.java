@@ -25,7 +25,7 @@
 
 package jodd.petite;
 
-import jodd.petite.tst.Foo;
+import jodd.petite.fixtures.tst.Foo;
 import org.junit.Test;
 
 import java.util.Properties;

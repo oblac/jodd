@@ -25,9 +25,9 @@
 
 package jodd.petite;
 
-import jodd.petite.mix.Big;
-import jodd.petite.mix.Big2;
-import jodd.petite.mix.Small;
+import jodd.petite.fixtures.mix.Big;
+import jodd.petite.fixtures.mix.Big2;
+import jodd.petite.fixtures.mix.Small;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;

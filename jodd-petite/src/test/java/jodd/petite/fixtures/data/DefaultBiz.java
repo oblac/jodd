@@ -23,27 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.fixtures.data;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.meta.PetiteBean;
+import jodd.petite.fixtures.tst.Foo;
 
-import static org.junit.Assert.assertEquals;
+@PetiteBean("biz")
+public class DefaultBiz implements Biz {
 
-public class PetiteShutdownTest {
+	Foo foo;
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+	public Foo getFoo() {
+		return foo;
+	}
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
+	public int initCount;
 
-		assertEquals(2, pc.getTotalBeans());
+	public void init() {
+		initCount++;
+	}
 
-		pc.shutdown();
+	public void init2() {
+		initCount++;
+	}
 
-		assertEquals(0, pc.getTotalBeans());
+	public void calculate() {
+		System.out.println("DefaultBizImpl.calculate");
 	}
 }

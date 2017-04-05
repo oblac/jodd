@@ -25,8 +25,8 @@
 
 package jodd.petite;
 
-import jodd.petite.tst2.Joo;
-import jodd.petite.tst2.Koo;
+import jodd.petite.fixtures.tst2.Joo;
+import jodd.petite.fixtures.tst2.Koo;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

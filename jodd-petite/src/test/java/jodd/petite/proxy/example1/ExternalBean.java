@@ -23,27 +23,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.proxy.example1;
 
-import jodd.petite.fixtures.data.PojoBean;
-import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import jodd.petite.meta.PetiteInject;
 
-import static org.junit.Assert.assertEquals;
+public class ExternalBean {
 
-public class PetiteShutdownTest {
+    @PetiteInject
+    private IMainPetiteBean mainPetiteBean;
 
-	@Test
-	public void testShutdown() {
-		PetiteContainer pc = new PetiteContainer();
+    public void execute() {
+        mainPetiteBean.execute();
+        System.out.println("executing non jodd petite bean -> " + this.getClass().getCanonicalName());
+    }
 
-		pc.registerPetiteBean(SomeService.class, null, null, null, false);
-		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
-
-		assertEquals(2, pc.getTotalBeans());
-
-		pc.shutdown();
-
-		assertEquals(0, pc.getTotalBeans());
-	}
 }
