@@ -25,7 +25,7 @@
 
 package jodd.bean;
 
-import jodd.bean.data.LifeBean;
+import jodd.bean.fixtures.LifeBean;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.JoddIntrospector;

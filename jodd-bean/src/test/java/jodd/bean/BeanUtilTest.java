@@ -25,7 +25,26 @@
 
 package jodd.bean;
 
-import jodd.bean.data.*;
+import jodd.bean.fixtures.Abean;
+import jodd.bean.fixtures.Bbean;
+import jodd.bean.fixtures.Cbean;
+import jodd.bean.fixtures.Color;
+import jodd.bean.fixtures.EnumBean;
+import jodd.bean.fixtures.FooBean;
+import jodd.bean.fixtures.FooBean2;
+import jodd.bean.fixtures.FooBean3;
+import jodd.bean.fixtures.FooBean4;
+import jodd.bean.fixtures.FooBeanSlim;
+import jodd.bean.fixtures.GetIsBool;
+import jodd.bean.fixtures.Gig;
+import jodd.bean.fixtures.IsGetBool;
+import jodd.bean.fixtures.MixBean;
+import jodd.bean.fixtures.Status;
+import jodd.bean.fixtures.SubBean;
+import jodd.bean.fixtures.SupBean;
+import jodd.bean.fixtures.UppercaseBean;
+import jodd.bean.fixtures.XBean;
+import jodd.bean.fixtures.ZBean;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;

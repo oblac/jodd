@@ -25,7 +25,7 @@
 
 package jodd.bean;
 
-import jodd.bean.data.Woof;
+import jodd.bean.fixtures.Woof;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;

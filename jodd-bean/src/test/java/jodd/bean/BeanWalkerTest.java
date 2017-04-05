@@ -25,7 +25,7 @@
 
 package jodd.bean;
 
-import jodd.bean.data.FooBean;
+import jodd.bean.fixtures.FooBean;
 import org.junit.Test;
 
 import java.util.ArrayList;

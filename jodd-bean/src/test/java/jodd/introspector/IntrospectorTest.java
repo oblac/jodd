@@ -26,16 +26,16 @@
 package jodd.introspector;
 
 import jodd.bean.BeanUtil;
-import jodd.introspector.tst.Abean;
-import jodd.introspector.tst.Ac;
-import jodd.introspector.tst.Bbean;
-import jodd.introspector.tst.Bc;
-import jodd.introspector.tst.Cbean;
-import jodd.introspector.tst.Mojo;
-import jodd.introspector.tst.One;
-import jodd.introspector.tst.OneSub;
-import jodd.introspector.tst.Overload;
-import jodd.introspector.tst.TwoSub;
+import jodd.introspector.fixtures.Abean;
+import jodd.introspector.fixtures.Ac;
+import jodd.introspector.fixtures.Bbean;
+import jodd.introspector.fixtures.Bc;
+import jodd.introspector.fixtures.Cbean;
+import jodd.introspector.fixtures.Mojo;
+import jodd.introspector.fixtures.One;
+import jodd.introspector.fixtures.OneSub;
+import jodd.introspector.fixtures.Overload;
+import jodd.introspector.fixtures.TwoSub;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;

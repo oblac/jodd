@@ -25,8 +25,8 @@
 
 package jodd.bean;
 
-import jodd.bean.data.FooBean;
-import jodd.bean.data.FooBeanString;
+import jodd.bean.fixtures.FooBean;
+import jodd.bean.fixtures.FooBeanString;
 import jodd.util.Wildcard;
 import org.junit.Test;
 

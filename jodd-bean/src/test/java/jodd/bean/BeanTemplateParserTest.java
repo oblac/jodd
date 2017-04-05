@@ -25,7 +25,7 @@
 
 package jodd.bean;
 
-import jodd.bean.data.Abean;
+import jodd.bean.fixtures.Abean;
 import jodd.util.StringTemplateParser;
 import org.junit.Test;
 
