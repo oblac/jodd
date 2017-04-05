@@ -23,25 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model.cat;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Area {
 
-import static org.junit.Assert.assertTrue;
+	Long areaId;
+	Long[] blockIds;
 
-public class FieldsBooleanTest {
+	public Long getAreaId() {
+		return areaId;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public void setAreaId(Long areaId) {
+		this.areaId = areaId;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public Long[] getBlockIds() {
+		return blockIds;
+	}
 
-		System.out.println(json);
-
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public void setBlockIds(Long[] blockIds) {
+		this.blockIds = blockIds;
 	}
 }

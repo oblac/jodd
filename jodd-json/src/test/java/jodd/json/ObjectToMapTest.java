@@ -25,9 +25,9 @@
 
 package jodd.json;
 
-import jodd.json.mock.Address;
-import jodd.json.mock.Hill;
-import jodd.json.mock.Person;
+import jodd.json.fixtures.mock.Address;
+import jodd.json.fixtures.mock.Hill;
+import jodd.json.fixtures.mock.Person;
 import org.junit.Test;
 
 import java.util.HashMap;

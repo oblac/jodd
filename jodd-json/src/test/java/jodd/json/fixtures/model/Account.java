@@ -23,25 +23,55 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.math.BigDecimal;
 
-import static org.junit.Assert.assertTrue;
+public class Account {
 
-public class FieldsBooleanTest {
+	private Integer id;
+	private AccountType accountType;
+	private String name;
+	private String accountNumber;
+	private BigDecimal balance;
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public Integer getId() {
+		return id;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-		System.out.println(json);
+	public AccountType getAccountType() {
+		return accountType;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
 }

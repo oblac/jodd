@@ -23,25 +23,45 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock.superhero;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class SecretIdentity {
 
-import static org.junit.Assert.assertTrue;
+	private String name;
 
-public class FieldsBooleanTest {
+	protected SecretIdentity() {
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public SecretIdentity(String name) {
+		this.name = name;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public String getName() {
+		return name;
+	}
 
-		System.out.println(json);
+	private void setName(String name) {
+		this.name = name;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
+		SecretIdentity that = (SecretIdentity) o;
+
+		if (name != null ? !name.equals(that.name) : that.name != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public int hashCode() {
+		return (name != null ? name.hashCode() : 0);
 	}
 }

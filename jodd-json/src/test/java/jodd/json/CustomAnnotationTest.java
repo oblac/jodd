@@ -26,7 +26,7 @@
 package jodd.json;
 
 import jodd.json.meta.JSON;
-import jodd.json.mock.LocationAlt;
+import jodd.json.fixtures.mock.LocationAlt;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

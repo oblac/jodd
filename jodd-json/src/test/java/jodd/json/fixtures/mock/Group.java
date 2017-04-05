@@ -23,25 +23,34 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Group {
 
-import static org.junit.Assert.assertTrue;
+	private String groupName;
+	private Person[] people;
 
-public class FieldsBooleanTest {
+	public Group() {
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public Group(String groupName, Person... people) {
+		this.groupName = groupName;
+		this.people = people;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public String getGroupName() {
+		return groupName;
+	}
 
-		System.out.println(json);
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public Person[] getPeople() {
+		return people;
+	}
 
+	public void setPeople(Person[] people) {
+		this.people = people;
 	}
 }

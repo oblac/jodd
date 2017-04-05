@@ -23,25 +23,60 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Pair<T, U> {
+	private T first;
+	private U second;
 
-import static org.junit.Assert.assertTrue;
+	protected Pair() {
+	}
 
-public class FieldsBooleanTest {
+	public Pair(T first, U second) {
+		this.first = first;
+		this.second = second;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public T getFirst() {
+		return first;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	protected void setFirst(T first) {
+		this.first = first;
+	}
 
-		System.out.println(json);
+	public U getSecond() {
+		return second;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	protected void setSecond(U second) {
+		this.second = second;
+	}
 
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Pair pair = (Pair) o;
+
+		if (first != null ? !first.equals(pair.first) : pair.first != null) {
+			return false;
+		}
+		if (second != null ? !second.equals(pair.second) : pair.second != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public int hashCode() {
+		int result;
+		result = (first != null ? first.hashCode() : 0);
+		result = 31 * result + (second != null ? second.hashCode() : 0);
+		return result;
 	}
 }

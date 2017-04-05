@@ -23,25 +23,80 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+public class Surfer {
 
-public class FieldsBooleanTest {
+	private long id;
+	private String name;
+	private Double skill;
+	private String split;
+	private InputStream pipe;
+	private List<Phone> phones;
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public static Surfer createSurfer() throws FileNotFoundException {
+		Surfer surfer = new Surfer();
+		surfer.id = 674;
+		surfer.name = "jodd";
+		surfer.skill = null;
+		surfer.split = "half";
+		surfer.pipe = new ByteArrayInputStream("jodd".getBytes());
+		surfer.phones = new ArrayList<>();
+		surfer.phones.add(new Phone(PhoneNumberType.HOME, "123 456-7894"));
+		return surfer;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public long getId() {
+		return id;
+	}
 
-		System.out.println(json);
+	public void setId(long id) {
+		this.id = id;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Double getSkill() {
+		return skill;
+	}
+
+	public void setSkill(Double skill) {
+		this.skill = skill;
+	}
+
+	public String getSplit() {
+		return split;
+	}
+
+	public void setSplit(String split) {
+		this.split = split;
+	}
+
+	public List<Phone> getPhones() {
+		return phones;
+	}
+
+	public void setPhones(List<Phone> phones) {
+		this.phones = phones;
+	}
+
+	public InputStream getPipe() {
+		return pipe;
+	}
+
+	public void setPipe(InputStream pipe) {
+		this.pipe = pipe;
 	}
 }

@@ -25,7 +25,7 @@
 
 package jodd.json;
 
-import jodd.json.mock.Surfer;
+import jodd.json.fixtures.mock.Surfer;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -25,14 +25,14 @@
 
 package jodd.json;
 
-import jodd.json.mock.Location;
-import jodd.json.model.App;
-import jodd.json.model.MyFolder1;
-import jodd.json.model.MyFolder2;
-import jodd.json.model.MyFolder3;
-import jodd.json.model.MyFolder4;
-import jodd.json.model.User;
-import jodd.json.model.UserHolder;
+import jodd.json.fixtures.mock.Location;
+import jodd.json.fixtures.model.App;
+import jodd.json.fixtures.model.MyFolder1;
+import jodd.json.fixtures.model.MyFolder2;
+import jodd.json.fixtures.model.MyFolder3;
+import jodd.json.fixtures.model.MyFolder4;
+import jodd.json.fixtures.model.User;
+import jodd.json.fixtures.model.UserHolder;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class AnnotationTest {
 
 		String json = new JsonSerializer().setClassMetadataName("class").serialize(location);
 
-		assertEquals("{\"class\":\"jodd.json.mock.Location\",\"lat\":65,\"lng\":12}", json);
+		assertEquals("{\"class\":\"" + Location.class.getName() + "\",\"lat\":65,\"lng\":12}", json);
 
 		Location jsonLocation = new JsonParser().setClassMetadataName("class").parse(json, Location.class);
 

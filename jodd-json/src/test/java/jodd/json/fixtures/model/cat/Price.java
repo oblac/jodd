@@ -23,25 +23,35 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model.cat;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Price {
 
-import static org.junit.Assert.assertTrue;
+	int amount;
+	Long audienceSubCategoryId;
+	Long seatCategoryId;
 
-public class FieldsBooleanTest {
+	public int getAmount() {
+		return amount;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public Long getAudienceSubCategoryId() {
+		return audienceSubCategoryId;
+	}
 
-		System.out.println(json);
+	public void setAudienceSubCategoryId(Long audienceSubCategoryId) {
+		this.audienceSubCategoryId = audienceSubCategoryId;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public Long getSeatCategoryId() {
+		return seatCategoryId;
+	}
 
+	public void setSeatCategoryId(Long seatCategoryId) {
+		this.seatCategoryId = seatCategoryId;
 	}
 }

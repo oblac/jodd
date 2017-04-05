@@ -23,25 +23,62 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Address {
 
-import static org.junit.Assert.assertTrue;
+	private Integer id;
+	private String street1;
+	private String street2;
+	private String city;
+	private State state;
+	private String postal;
 
-public class FieldsBooleanTest {
+	public Integer getId() {
+		return id;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public String getStreet1() {
+		return street1;
+	}
 
-		System.out.println(json);
+	public void setStreet1(String street1) {
+		this.street1 = street1;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public String getStreet2() {
+		return street2;
+	}
 
+	public void setStreet2(String street2) {
+		this.street2 = street2;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public String getPostal() {
+		return postal;
+	}
+
+	public void setPostal(String postal) {
+		this.postal = postal;
 	}
 }

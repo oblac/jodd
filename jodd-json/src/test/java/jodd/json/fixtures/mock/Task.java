@@ -23,25 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+public class Task {
 
-public class FieldsBooleanTest {
+	private String name;
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	private List<SubTask> subTasks;
 
-		String json = JsonSerializer.create().serialize(active);
-
-		System.out.println(json);
-
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public String getName() {
+		return name;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<SubTask> getSubTasks() {
+		return subTasks;
+	}
+
+	public void setSubTasks(List<SubTask> subTasks) {
+		this.subTasks = subTasks;
+	}
+
 }

@@ -23,25 +23,80 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model.cat;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Event {
 
-import static org.junit.Assert.assertTrue;
+	private String description;
+	private Long id;
+	private String logo;
+	private String name;
+	private Long[] subTopicIds;
+	private Integer subjectCode;
+	private String subtitle;
+	private Long[] topicIds;
 
-public class FieldsBooleanTest {
+	public String getDescription() {
+		return description;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public Long getId() {
+		return id;
+	}
 
-		System.out.println(json);
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public String getLogo() {
+		return logo;
+	}
 
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long[] getSubTopicIds() {
+		return subTopicIds;
+	}
+
+	public void setSubTopicIds(Long[] subTopicIds) {
+		this.subTopicIds = subTopicIds;
+	}
+
+	public Integer getSubjectCode() {
+		return subjectCode;
+	}
+
+	public void setSubjectCode(Integer subjectCode) {
+		this.subjectCode = subjectCode;
+	}
+
+	public String getSubtitle() {
+		return subtitle;
+	}
+
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
+	}
+
+	public Long[] getTopicIds() {
+		return topicIds;
+	}
+
+	public void setTopicIds(Long[] topicIds) {
+		this.topicIds = topicIds;
 	}
 }

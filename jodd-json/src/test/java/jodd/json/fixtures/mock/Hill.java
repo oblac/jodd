@@ -23,25 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import jodd.json.meta.JSON;
 
-import static org.junit.Assert.assertTrue;
+@JSON(strict = true)
+public class Hill {
 
-public class FieldsBooleanTest {
+	@JSON
+	String height;
+	String name;
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public String getHeight() {
+		return height;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public void setHeight(String height) {
+		this.height = height;
+	}
 
-		System.out.println(json);
+	public String getName() {
+		return name;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -23,25 +23,68 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertTrue;
+public class Phone {
+	private PhoneNumberType type;
+	private String areaCode;
+	private String exchange;
+	private String number;
 
-public class FieldsBooleanTest {
+	private static final Pattern PHONE_PATTERN = Pattern.compile("\\(?(\\d{3})\\)?[\\s-](\\d{3})[\\s-](\\d{4})");
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	protected Phone() {
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public Phone(PhoneNumberType aType, String number) {
+		this.type = aType;
+		Matcher matcher = PHONE_PATTERN.matcher(number);
+		if (matcher.matches()) {
+			this.areaCode = matcher.group(1);
+			this.exchange = matcher.group(2);
+			this.number = matcher.group(3);
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+	}
 
-		System.out.println(json);
+	public String getAreaCode() {
+		return areaCode;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public PhoneNumberType getType() {
+		return type;
+	}
 
+	public void setType(PhoneNumberType type) {
+		this.type = type;
+	}
+
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+
+	public String getExchange() {
+		return exchange;
+	}
+
+	public void setExchange(String exchange) {
+		this.exchange = exchange;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public String getPhoneNumber() {
+		return "(" + areaCode + ") " + exchange + "-" + number;
 	}
 }

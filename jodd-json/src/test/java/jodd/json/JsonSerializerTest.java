@@ -27,9 +27,9 @@ package jodd.json;
 
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
-import jodd.json.model.FileMan;
-import jodd.json.model.HitList;
-import jodd.json.model.State;
+import jodd.json.fixtures.model.FileMan;
+import jodd.json.fixtures.model.HitList;
+import jodd.json.fixtures.model.State;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 import org.junit.Assert;

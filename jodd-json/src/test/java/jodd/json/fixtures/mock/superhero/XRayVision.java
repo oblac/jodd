@@ -23,25 +23,24 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock.superhero;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class XRayVision implements SuperPower {
 
-import static org.junit.Assert.assertTrue;
+	private float power;
 
-public class FieldsBooleanTest {
+	protected XRayVision() {
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public XRayVision(float power) {
+		this.power = power;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public float getPower() {
+		return power;
+	}
 
-		System.out.println(json);
-
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	protected void setPower(float power) {
+		this.power = power;
 	}
 }

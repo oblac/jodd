@@ -23,25 +23,57 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock.superhero;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+public class Hero {
 
-public class FieldsBooleanTest {
+	private SecretLair lair;
+	private SecretIdentity identity;
+	private String name;
+	private List<SuperPower> powers;
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	protected Hero() {
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public Hero(String name, SecretIdentity identity, SecretLair lair, SuperPower... powers) {
+		this.name = name;
+		this.identity = identity;
+		this.lair = lair;
+		this.powers = Arrays.asList(powers);
+	}
 
-		System.out.println(json);
+	public SecretLair getLair() {
+		return lair;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public SecretIdentity getIdentity() {
+		return identity;
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	private void setLair(SecretLair lair) {
+		this.lair = lair;
+	}
+
+	private void setIdentity(SecretIdentity identity) {
+		this.identity = identity;
+	}
+
+	private void setName(String name) {
+		this.name = name;
+	}
+
+	private void setPowers(List<SuperPower> powers) {
+		this.powers = powers;
+	}
+
+	public List<SuperPower> getPowers() {
+		return powers;
 	}
 }

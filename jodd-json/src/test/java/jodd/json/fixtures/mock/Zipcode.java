@@ -23,25 +23,47 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Zipcode {
+	private String zipcode;
 
-import static org.junit.Assert.assertTrue;
+	public Zipcode() {
+	}
 
-public class FieldsBooleanTest {
+	public Zipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
 
-		String json = JsonSerializer.create().serialize(active);
+	public String getZipcode() {
+		return zipcode;
+	}
 
-		System.out.println(json);
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
+		Zipcode zipcode1 = (Zipcode) o;
+
+		if (zipcode != null ? !zipcode.equals(zipcode1.zipcode) : zipcode1.zipcode != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return zipcode != null ? zipcode.hashCode() : 0;
 	}
 }

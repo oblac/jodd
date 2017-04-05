@@ -23,25 +23,35 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class State {
 
-import static org.junit.Assert.assertTrue;
+	private Integer id;
+	private String abbrev;
+	private String name;
 
-public class FieldsBooleanTest {
+	public Integer getId() {
+		return id;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public String getAbbrev() {
+		return abbrev;
+	}
 
-		System.out.println(json);
+	public void setAbbrev(String abbrev) {
+		this.abbrev = abbrev;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
 	}
 }

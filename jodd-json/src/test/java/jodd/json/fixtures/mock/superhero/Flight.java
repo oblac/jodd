@@ -23,25 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock.superhero;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public class Flight implements SuperPower {
 
-import static org.junit.Assert.assertTrue;
+	private float velocity;
 
-public class FieldsBooleanTest {
-
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
-
-		String json = JsonSerializer.create().serialize(active);
-
-		System.out.println(json);
-
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	protected Flight() {
 	}
+
+	public Flight(float velocity) {
+		this.velocity = velocity;
+	}
+
+	public float getVelocity() {
+		return velocity;
+	}
+
 }

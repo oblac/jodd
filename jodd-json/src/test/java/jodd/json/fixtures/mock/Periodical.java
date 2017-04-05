@@ -23,25 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+public abstract class Periodical {
 
-import static org.junit.Assert.assertTrue;
+	private String name;
 
-public class FieldsBooleanTest {
+	protected Periodical(String name) {
+		this.name = name;
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public abstract String getID();
 
-		String json = JsonSerializer.create().serialize(active);
+	public abstract void setID(String id);
 
-		System.out.println(json);
-
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public String getName() {
+		return name;
 	}
 }

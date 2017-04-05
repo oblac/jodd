@@ -23,25 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import jodd.json.meta.JSON;
 
-import static org.junit.Assert.assertTrue;
+public class Location {
 
-public class FieldsBooleanTest {
+	@JSON(name="lng")
+	private int longitude;
+	private int latitude;
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public int getLongitude() {
+		return longitude;
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public void setLongitude(int longitude) {
+		this.longitude = longitude;
+	}
 
-		System.out.println(json);
+	@JSON(name="lat")
+	public int getLatitude() {
+		return latitude;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public void setLatitude(int latitude) {
+		this.latitude = latitude;
 	}
 }

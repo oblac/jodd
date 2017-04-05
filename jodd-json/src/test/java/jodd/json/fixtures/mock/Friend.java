@@ -23,25 +23,32 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.Assert.assertTrue;
+public class Friend {
 
-public class FieldsBooleanTest {
+	private List<String> nicknames = new ArrayList<>();
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public Friend(String... nicknames) {
+		setNicknamesAsArray(nicknames);
+	}
 
-		String json = JsonSerializer.create().serialize(active);
+	public void setNicknames(List<String> nicknames) {
+		this.nicknames = new CopyOnWriteArrayList<>(nicknames);
+	}
 
-		System.out.println(json);
+	public void setNicknamesAsArray(String[] array) {
+		this.nicknames = new ArrayList<>();
+		for (String name : array) {
+			this.nicknames.add(name);
+		}
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public List<String> getNicknames() {
+		return nicknames;
 	}
 }

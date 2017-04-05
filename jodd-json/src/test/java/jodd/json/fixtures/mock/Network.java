@@ -23,25 +23,39 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.mock;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+public class Network {
+	String name;
+	List<Person> people;
 
-public class FieldsBooleanTest {
+	public Network() {
+	}
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
+	public Network(String name, Person... peeps) {
+		this.name = name;
+		people = new ArrayList<>();
+		people.addAll(Arrays.asList(peeps));
+	}
 
-		String json = JsonSerializer.create().serialize(active);
 
-		System.out.println(json);
+	public String getName() {
+		return name;
+	}
 
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public List getPeople() {
+		return people;
+	}
+
+	public void setPeople(List<Person> people) {
+		this.people = people;
 	}
 }

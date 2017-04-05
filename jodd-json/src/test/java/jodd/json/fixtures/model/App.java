@@ -23,25 +23,33 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json;
+package jodd.json.fixtures.model;
 
-import jodd.json.fixtures.model.Active;
-import org.junit.Test;
+import jodd.json.meta.JSON;
 
-import static org.junit.Assert.assertTrue;
+import java.util.HashMap;
+import java.util.Map;
 
-public class FieldsBooleanTest {
+public class App {
 
-	@Test
-	public void testBooleanField() {
-		Active active = new Active();
-
-		String json = JsonSerializer.create().serialize(active);
-
-		System.out.println(json);
-
-		assertTrue(json.contains("\"active\":true"));
-		assertTrue(json.contains("\"inactive\":3"));
-
+	public String getName() {
+		return name;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Map getApis() {
+		return apis;
+	}
+
+	public void setApis(Map apis) {
+		this.apis = apis;
+	}
+
+	private String name = "Hello";
+
+	@JSON
+	private Map apis = new HashMap<>();
 }
