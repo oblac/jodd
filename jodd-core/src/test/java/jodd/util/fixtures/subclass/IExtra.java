@@ -23,16 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.testdata;
+package jodd.util.fixtures.subclass;
 
-public class B extends A {
-	public B () {
-		this.setDefault();
-		this.setProtected();
-		this.setPublic();
-		
-		super.setDefault();
-		super.setProtected();
-		super.setPublic();
-	}
+public interface IExtra {
 }

@@ -27,7 +27,7 @@ package jodd.util;
 
 import jodd.io.FileUtil;
 import jodd.util.cl.ExtendedURLClassLoader;
-import jodd.util.testdata.A;
+import jodd.util.fixtures.testdata.A;
 import org.junit.Assert;
 import org.junit.Test;
 

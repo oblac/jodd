@@ -23,16 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.testdata2;
+package jodd.util.fixtures.subclass;
 
-import jodd.util.testdata.C;
-
-public class D extends C {
-
-	public D() {
-		super.setProtected();
-		super.setPublic();
-		this.setProtected();
-		this.setPublic();
-	}
+public class STwo extends SOne implements ITwo {
 }

@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.AssertArraysTestHelper;
 import jodd.datetime.JDateTime;
 import org.junit.Test;
 
@@ -95,7 +94,7 @@ public class ConvertTest {
 	public void testArrayConversion() {
 		assertEquals(new String[]{"555", "12"}, Convert.toStringArray("555,12"));
 		assertEquals(new String[]{"555", " 12"}, Convert.toStringArray("555, 12"));
-		AssertArraysTestHelper.assertArrayEquals(new boolean[] {true, false, true}, Convert.toBooleanArray("1, 0, true"));
+		assertArrayEquals(new boolean[] {true, false, true}, Convert.toBooleanArray("1, 0, true"));
 		assertArrayEquals(new int[] {1, 2, -3}, Convert.toIntegerArray("1, 2, -3"));
 		assertArrayEquals(new long[] {-12, 2}, Convert.toLongArray("-12, 2"));
 		assertArrayEquals(new float[] {1.1f, 2.2f}, Convert.toFloatArray("1.1, 2.2"), 0.5f);

@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.AssertArraysTestHelper;
 import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
@@ -186,7 +185,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, boolean[].class);
 
 		assertNotNull(result);
-		AssertArraysTestHelper.assertArrayEquals(BOOLEANS1, (boolean[]) result);
+		assertArrayEquals(BOOLEANS1, (boolean[]) result);
 	}
 
 	@Test
@@ -262,7 +261,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, long[][].class);
 
 		assertNotNull(result);
-		AssertArraysTestHelper.assertArrayEquals(new long[][] {{1, 2, 3}, {4, 5}}, (long[][]) result);
+		assertArrayEquals(new long[][] {{1, 2, 3}, {4, 5}}, (long[][]) result);
 	}
 
 	@Test
@@ -270,7 +269,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, Long[][].class);
 
 		assertNotNull(result);
-		AssertArraysTestHelper.assertArrayEquals(new Long[][] {{1l, 2l, 3l}, {4l, 5l}}, (Long[][]) result);
+		assertArrayEquals(new Long[][] {{1l, 2l, 3l}, {4l, 5l}}, (Long[][]) result);
 	}
 
 	// ---------------------------------------------------------------- mutables

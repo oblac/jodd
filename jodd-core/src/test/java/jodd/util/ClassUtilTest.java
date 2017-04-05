@@ -25,13 +25,19 @@
 
 package jodd.util;
 
-import jodd.util.subclass.*;
-import jodd.util.testdata.A;
-import jodd.util.testdata.B;
-import jodd.util.testdata.C;
-import jodd.util.testdata.JavaBean;
-import jodd.util.testdata2.D;
-import jodd.util.testdata2.E;
+import jodd.util.fixtures.subclass.IBase;
+import jodd.util.fixtures.subclass.IExtra;
+import jodd.util.fixtures.subclass.IOne;
+import jodd.util.fixtures.subclass.ITwo;
+import jodd.util.fixtures.subclass.SBase;
+import jodd.util.fixtures.subclass.SOne;
+import jodd.util.fixtures.subclass.STwo;
+import jodd.util.fixtures.testdata.A;
+import jodd.util.fixtures.testdata.B;
+import jodd.util.fixtures.testdata.C;
+import jodd.util.fixtures.testdata.JavaBean;
+import jodd.util.fixtures.testdata2.D;
+import jodd.util.fixtures.testdata2.E;
 import org.junit.Test;
 
 import java.io.Serializable;

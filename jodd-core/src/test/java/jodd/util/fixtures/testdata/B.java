@@ -23,34 +23,16 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd;
+package jodd.util.fixtures.testdata;
 
-import org.junit.Assert;
-
-/**
- * Additional asserts on arrays.
- */
-public final class AssertArraysTestHelper {
-
-	public static void assertArrayEquals(Object[][] expected, Object[][] actual) {
-		Assert.assertEquals(expected.length, actual.length);
-		for (int i = 0; i < expected.length; i++) {
-			Assert.assertArrayEquals(expected[i], actual[i]);
-		}
+public class B extends A {
+	public B () {
+		this.setDefault();
+		this.setProtected();
+		this.setPublic();
+		
+		super.setDefault();
+		super.setProtected();
+		super.setPublic();
 	}
-
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual) {
-		Assert.assertEquals(expected.length, actual.length);
-		for (int i = 0; i < expected.length; i++) {
-			Assert.assertEquals(expected[i], actual[i]);
-		}
-	}
-
-	public static void assertArrayEquals(long[][] expected, long[][] actual) {
-		Assert.assertEquals(expected.length, actual.length);
-		for (int i = 0; i < expected.length; i++) {
-			Assert.assertArrayEquals(expected[i], actual[i]);
-		}
-	}
-
 }

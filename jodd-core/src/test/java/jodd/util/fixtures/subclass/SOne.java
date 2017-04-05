@@ -23,19 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.testdata;
+package jodd.util.fixtures.subclass;
 
-public class A {
+import java.io.Serializable;
 
-	private int pprivate;
-	private void setPrivate() {}
-
-	int pdefault;
-	void setDefault() {}
-
-	protected int pprotected;
-	protected void setProtected() {}
-
-	public int ppublic;
-	public void setPublic() {}
+public class SOne extends SBase implements IOne, Serializable {
 }

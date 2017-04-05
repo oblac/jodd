@@ -23,28 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.testdata2;
+package jodd.util.fixtures.subclass;
 
-public class E extends D {
-	public E() {
-		setPrivate();
-		setDefault();
-		setProtected();
-		setPublic();
-	}
-
-	private int pprivate;
-	private void setPrivate() {}
-
-	int pdefault;
-	void setDefault() {}
-
-	protected int pprotected;
-	@Override
-	protected void setProtected() {}
-
-	public int ppublic;
-	@Override
-	public void setPublic() {}
-
+public interface ITwo extends IBase, IExtra {
 }
