@@ -23,24 +23,58 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.fixtures.tst2;
 
-import jodd.madvoc.component.ActionMethodParser;
-import org.junit.Test;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.MadvocAction;
 
-import static org.junit.Assert.assertNotNull;
+@MadvocAction("/re/")
+public class ReAction {
 
-public class AnnArgTest extends MadvocTestCase {
-
-	@Test
-	public void testDefaultMethods() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-
-		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.SuperAction#add");
-
-		assertNotNull(cfg);
+	@Action
+	public void hello() {
 	}
+
+	@Action("user/${id}/${:method}")
+	public void macro() {
+	}
+
+	@Action("user/image/${id}/${fmt}/${:method}")
+	public void macro2() {
+	}
+
+	@Action(value = "users/${id}/${:method}", extension = Action.NONE, method = "POST")
+	public void macro3() {
+	}
+
+
+	@Action("wild${id}cat")
+	public void wild1() {
+	}
+	@Action(value = "wild${id}dog", method = "POST")
+	public void wild2() {
+	}
+
+
+
+	@Action(value = "duplo/${id:^[0-9]+}", extension = Action.NONE)
+//	@Action(value = "duplo/${id}", extension = Action.NO_EXTENSION)
+	public void duplo2() {
+	}
+
+	@Action(value = "duplo/${sid}", extension = Action.NONE)
+	public void duplo1() {
+	}
+
+
+	// ---------------------------------------------------------------- zqq #30
+
+	String entityName;
+
+	@Action(value = "/${entityName}/dba.delete", extension = "do")
+	public void zqq1() {}
+
+	@Action(value = "/${entityName}/dba.delete_multi", extension = "do")
+	public void zqq2() {}
 
 }

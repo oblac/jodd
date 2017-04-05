@@ -23,24 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.fixtures.tst;
 
-import jodd.madvoc.component.ActionMethodParser;
-import org.junit.Test;
+import jodd.madvoc.meta.MadvocAction;
 
-import static org.junit.Assert.assertNotNull;
-
-public class AnnArgTest extends MadvocTestCase {
-
-	@Test
-	public void testDefaultMethods() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
-
-		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.SuperAction#add");
-
-		assertNotNull(cfg);
-	}
-
+@MadvocAction("/bbb")
+public class Boo3Action extends BooAction {
 }

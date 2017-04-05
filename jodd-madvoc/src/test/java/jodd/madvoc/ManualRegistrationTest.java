@@ -29,7 +29,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ManualMadvocConfigurator;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.result.TextResult;
-import jodd.madvoc.tst.BooAction;
+import jodd.madvoc.fixtures.tst.BooAction;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

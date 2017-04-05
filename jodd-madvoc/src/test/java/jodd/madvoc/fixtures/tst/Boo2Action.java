@@ -23,12 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.tst2;
+package jodd.madvoc.fixtures.tst;
 
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.tst.BooAction;
 
-@MadvocAction(value = "www")
-public class Boo4Action extends BooAction {
+@MadvocAction(value = "bbb")
+public class Boo2Action extends BooAction {
 
 }

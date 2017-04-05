@@ -29,7 +29,7 @@ import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.tst.BooAction;
+import jodd.madvoc.fixtures.tst.BooAction;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -200,7 +200,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo2");
+		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
 		String path = cfg.getActionPath();
 
 		String resultPath = resultMapper.resolveResultPathString(path, null);

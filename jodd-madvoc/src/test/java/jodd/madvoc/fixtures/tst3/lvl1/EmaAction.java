@@ -23,23 +23,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.tst;
+package jodd.madvoc.fixtures.tst3.lvl1;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 
 @MadvocAction
-public class SuperAction {
-
-	public static class Foo {
-		public String value;
-	}
+public class EmaAction {
 
 	@Action
-	public void add(@In String name, @In Foo foo) {
-		System.out.println(name);
-		System.out.println(foo.value);
-	}
-
+	public void hello(){}
 }

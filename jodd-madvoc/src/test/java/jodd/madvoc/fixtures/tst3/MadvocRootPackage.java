@@ -23,14 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.tst3.lvl2;
+package jodd.madvoc.fixtures.tst3;
 
-import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 
-@MadvocAction
-public class DidyAction {
+@MadvocAction("root")
+public class MadvocRootPackage {
 
-	@Action
-	public void hello() {}
 }

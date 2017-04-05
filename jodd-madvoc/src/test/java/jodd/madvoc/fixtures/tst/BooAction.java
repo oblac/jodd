@@ -23,10 +23,47 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.tst3.lvl2;
+package jodd.madvoc.fixtures.tst;
 
-import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Action;
 
-@MadvocAction("gig")
-public class MadvocRootPackage {
+public class BooAction {
+
+	public void foo() {}
+	public void view() {}
+	public void execute() {}
+
+	@Action("xxx")
+	public void foo1() {}
+
+	@Action(extension = "xxx")
+	public void foo2() {}
+
+	@Action(value = Action.NONE)
+	public void foo3() {}
+
+	@Action("/xxx")
+	public void foo4() {}
+
+	@Action(value = "/xxx", extension = "not used!", method = "DELETE")
+	public void foo41() {}
+
+	@Action(value = "/xxx.${:ext}", alias = "dude", method = "post")
+	public void foo5() {}
+
+	@Action(value = "q${:method}2")
+	public void foo6() {}
+
+	@Action(value = "/${:method}.${:ext}")
+	public void foo7() {}
+
+	@Action(extension = Action.NONE)
+	public void foo8() {}
+	@Action(value = "/boo.foo81")
+	public void foo81() {}
+	@Action
+	public void foo82() {}
+	@Action(extension = "json")
+	public void foo83() {}
+
 }
