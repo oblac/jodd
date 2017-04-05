@@ -26,8 +26,8 @@
 package jodd.vtor;
 
 import jodd.vtor.constraint.TimeAfterConstraint;
-import jodd.vtor.data.Tad;
-import jodd.vtor.data.Woo;
+import jodd.vtor.fixtures.Tad;
+import jodd.vtor.fixtures.Woo;
 import org.junit.Test;
 
 import java.util.List;

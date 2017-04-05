@@ -27,8 +27,8 @@ package jodd.vtor;
 
 import jodd.vtor.constraint.AssertValidConstraint;
 import jodd.vtor.constraint.MinLengthConstraint;
-import jodd.vtor.data.Boo;
-import jodd.vtor.data.Foo;
+import jodd.vtor.fixtures.Boo;
+import jodd.vtor.fixtures.Foo;
 import org.junit.Test;
 
 import java.util.List;

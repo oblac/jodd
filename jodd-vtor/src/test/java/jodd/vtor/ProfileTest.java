@@ -26,8 +26,8 @@
 package jodd.vtor;
 
 import jodd.vtor.constraint.MinLengthConstraint;
-import jodd.vtor.data.Too;
-import jodd.vtor.data.Zoo;
+import jodd.vtor.fixtures.Too;
+import jodd.vtor.fixtures.Zoo;
 import org.junit.Test;
 
 import java.util.List;
