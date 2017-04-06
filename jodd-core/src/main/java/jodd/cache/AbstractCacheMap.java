@@ -250,7 +250,10 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	public void remove(K key) {
 		writeLock.lock();
 		try {
-			cacheMap.remove(key);
+			CacheObject<K,V> co = cacheMap.remove(key);
+			if (co != null) {
+				onRemove(co.key, co.cachedObject);
+			}
 		}
 		finally {
 			writeLock.unlock();
@@ -284,4 +287,13 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	public boolean isEmpty() {
 		return size() == 0;
 	}
+
+	// ---------------------------------------------------------------- protected
+
+	/**
+	 * Callback called on item removal. The cache is still locked.
+	 */
+	protected void onRemove(K key, V cachedObject) {
+	}
+
 }

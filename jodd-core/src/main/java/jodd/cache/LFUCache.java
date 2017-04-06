@@ -108,11 +108,4 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 		return count;
 	}
 
-	/**
-	 * Callback method invoked on cached object removal.
-	 * By default does nothing.
-	 */
-	protected void onRemove(K key, V cachedObject) {
-	}
-
 }
