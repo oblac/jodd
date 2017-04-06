@@ -40,14 +40,14 @@ public abstract class FileCache {
 	/**
 	 * Returns max cache size in bytes.
 	 */
-	public int getMaxSize() {
+	public int maxSize() {
 		return maxSize;
 	}
 
 	/**
 	 * Returns actually used size in bytes.
 	 */
-	public int getUsedSize() {
+	public int usedSize() {
 		return usedSize;
 	}
 
@@ -56,21 +56,21 @@ public abstract class FileCache {
 	 * Files larger than this value will be not added, even if there is
 	 * enough room.
 	 */
-	public int getMaxFileSize() {
+	public int maxFileSize() {
 		return maxFileSize;
 	}
 
 	/**
 	 * Returns number of cached files.
 	 */
-	public int getCachedFilesCount() {
+	public int cachedFilesCount() {
 		return cache.size();
 	}
 
 	/**
 	 * Returns timeout.
 	 */
-	public long getCacheTimeout() {
+	public long cacheTimeout() {
 		return cache.timeout();
 	}
 
@@ -84,12 +84,9 @@ public abstract class FileCache {
 
 	// ---------------------------------------------------------------- get
 
-	public byte[] getFileBytes(String fileName) throws IOException {
-		return getFileBytes(new File(fileName));
-	}
-
 	/**
-	 * Returns cached file bytes.
+	 * Returns cached file bytes. If file is not cached it will be
+	 * read and put in the cache (if all the rules are satisfied).
 	 */
 	public byte[] getFileBytes(File file) throws IOException {
 		byte[] bytes = cache.get(file);

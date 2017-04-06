@@ -56,8 +56,8 @@ public class FileLFUCacheTest {
 	public void testCache() throws IOException {
 		FileLFUCache cache = new FileLFUCache(25);
 
-		assertEquals(25, cache.getMaxSize());
-		assertEquals(12, cache.getMaxFileSize());
+		assertEquals(25, cache.maxSize());
+		assertEquals(12, cache.maxFileSize());
 
 		File a = file("a", 10);
 		File b = file("b", 9);
@@ -68,13 +68,13 @@ public class FileLFUCacheTest {
 		cache.getFileBytes(a);
 		cache.getFileBytes(b);
 
-		assertEquals(2, cache.getCachedFilesCount());
-		assertEquals(19, cache.getUsedSize());
+		assertEquals(2, cache.cachedFilesCount());
+		assertEquals(19, cache.usedSize());
 
 		cache.getFileBytes(c);        // b is out, a(2), c(1)
 
-		assertEquals(2, cache.getCachedFilesCount());
-		assertEquals(17, cache.getUsedSize());
+		assertEquals(2, cache.cachedFilesCount());
+		assertEquals(17, cache.usedSize());
 
 		cache.getFileBytes(c);
 		cache.getFileBytes(c);
@@ -82,7 +82,7 @@ public class FileLFUCacheTest {
 
 		cache.getFileBytes(b);        // a is out
 
-		assertEquals(2, cache.getCachedFilesCount());
-		assertEquals(16, cache.getUsedSize());
+		assertEquals(2, cache.cachedFilesCount());
+		assertEquals(16, cache.usedSize());
 	}
 }
