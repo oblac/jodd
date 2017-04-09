@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
 /**
  * Various object utilities.
@@ -50,12 +51,15 @@ public class ObjectUtil {
 	/**
 	 * Clone an object by invoking it's <code>clone()</code> method, even if it is not overridden.
 	 */
-	public static Object clone(Object source) throws CloneNotSupportedException {
+	@SuppressWarnings("unchecked")
+	public static <T> T clone(T source) throws CloneNotSupportedException {
 		if (source == null) {
 			return null;
 		}
 		try {
-			return ClassUtil.invokeDeclared(source, "clone", new Class[]{}, new Object[] {});
+			Method cloneMethod = source.getClass().getMethod("clone");
+			cloneMethod.setAccessible(true);
+			return (T) cloneMethod.invoke(null);
 		} catch (Exception ex) {
 			throw new CloneNotSupportedException("Can't clone() the object: " + ex.getMessage());
 		}

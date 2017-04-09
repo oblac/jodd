@@ -188,123 +188,6 @@ public class ClassUtil {
 		return result;
 	}
 
-
-	// ---------------------------------------------------------------- invoke
-
-	/**
-	 * Invokes accessible method of an object.
-	 *
-	 * @param c      		class that contains method
-	 * @param obj    		object to execute
-	 * @param method 		method to invoke
-	 * @param paramClasses	classes of parameters
-	 * @param params 		parameters
-	 */
-	public static Object invoke(Class c, Object obj, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Method m = c.getMethod(method, paramClasses);
-		return m.invoke(obj, params);
-	}
-
-	/**
-	 * Invokes static method.
-	 */
-	public static Object invoke(Class c, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Method m = c.getMethod(method, paramClasses);
-		return m.invoke(null, params);
-	}
-
-	/**
-	 * Invokes accessible method of an object.
-	 *
-	 * @param obj    		object
-	 * @param method 		name of the objects method
-	 * @param params 		method parameters
-	 * @param paramClasses	method parameter types
-	 */
-	public static Object invoke(Object obj, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Method m = obj.getClass().getMethod(method, paramClasses);
-		return m.invoke(obj, params);
-	}
-
-	/**
-	 * Invokes accessible method of an object without specifying parameter types.
-	 * @param obj    object
-	 * @param method method of an object
-	 * @param params method parameters
-	 */
-	public static Object invoke(Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Class[] paramClass = getClasses(params);
-		return invoke(obj, method, paramClass, params);
-	}
-
-	public static Object invoke(Class c, Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Class[] paramClass = getClasses(params);
-		return invoke(c, obj, method, paramClass, params);
-	}
-
-	/**
-	 * Invokes static method.
-	 */
-	public static Object invoke(Class c, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Class[] paramClass = getClasses(params);
-		return invoke(c, null, method, paramClass, params);
-	}
-
-
-	// ---------------------------------------------------------------- invokeDeclared
-
-
-	/**
-	 * Invokes any method of a class, even private ones.
-	 *
-	 * @param c      		class to examine
-	 * @param obj    		object to inspect
-	 * @param method 		method to invoke
-	 * @param paramClasses	parameter types
-	 * @param params 		parameters
-	 */
-	public static Object invokeDeclared(Class c, Object obj, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Method m = c.getDeclaredMethod(method, paramClasses);
-		m.setAccessible(true);
-		return m.invoke(obj, params);
-	}
-
-	public static Object invokeDeclared(Class c, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Method m = c.getDeclaredMethod(method, paramClasses);
-		m.setAccessible(true);
-		return m.invoke(null, params);
-	}
-
-	/**
-	 * Invokes any method of a class suppressing java access checking.
-	 *
-	 * @param obj    		object to inspect
-	 * @param method 		method to invoke
-	 * @param paramClasses	parameter types
-	 * @param params 		parameters
-	 */
-	public static Object invokeDeclared(Object obj, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Method m = obj.getClass().getDeclaredMethod(method, paramClasses);
-		m.setAccessible(true);
-		return m.invoke(obj, params);
-	}
-
-	public static Object invokeDeclared(Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Class[] paramClass = getClasses(params);
-		return invokeDeclared(obj, method, paramClass, params);
-	}
-
-	public static Object invokeDeclared(Class c, Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Class[] paramClass = getClasses(params);
-		return invokeDeclared(c, obj, method, paramClass, params);
-	}
-
-	public static Object invokeDeclared(Class c, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Class[] paramClass = getClasses(params);
-		return invokeDeclared(c, null, method, paramClass, params);
-	}
-
-
 	// ---------------------------------------------------------------- match classes
 
 	/**
@@ -639,7 +522,7 @@ public class ClassUtil {
 	 * Suppress access check against a reflection object. SecurityException is silently ignored.
 	 * Checks first if the object is already accessible.
 	 */
-	public static void forceAccess(AccessibleObject accObject){
+	public static void forceAccess(AccessibleObject accObject) {
 		if (accObject.isAccessible()) {
 			return;
 		}

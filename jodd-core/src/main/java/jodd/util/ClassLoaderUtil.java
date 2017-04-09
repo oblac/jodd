@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -139,8 +140,9 @@ public class ClassLoaderUtil {
 	 */
 	public static void addUrlToClassPath(URL url, ClassLoader classLoader) {
 		try {
-			ClassUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
-					new Class[]{URL.class}, new Object[]{url});
+			Method addURLMethod = URLClassLoader.class.getMethod("addURL", URL.class);
+			addURLMethod.setAccessible(true);
+			addURLMethod.invoke(classLoader, url);
 		} catch (Exception ex) {
 			throw new IllegalArgumentException("Add URL failed: " + url, ex);
 		}
@@ -166,9 +168,9 @@ public class ClassLoaderUtil {
 	 */
 	public static Class defineClass(String className, byte[] classData, ClassLoader classLoader) {
 		try {
-			return (Class) ClassUtil.invokeDeclared(ClassLoader.class, classLoader, "defineClass",
-					new Class[] {String.class, byte[].class, int.class, int.class},
-					new Object[] {className, classData, Integer.valueOf(0), Integer.valueOf(classData.length)});
+			Method defineClassMethod = ClassLoader.class.getMethod("defineClass", String.class, byte[].class, int.class, int.class);
+			defineClassMethod.setAccessible(true);
+			return (Class) defineClassMethod.invoke(classLoader, className, classData, 0, classData.length);
 		} catch (Throwable th) {
 			throw new RuntimeException("Define class failed: " + className, th);
 		}
@@ -200,9 +202,9 @@ public class ClassLoaderUtil {
 	public static Class findClass(String className, URL[] classPath, ClassLoader parent) {
 		URLClassLoader tempClassLoader = parent != null ? new URLClassLoader(classPath, parent) : new URLClassLoader(classPath);
 		try {
-			return (Class) ClassUtil.invokeDeclared(URLClassLoader.class, tempClassLoader, "findClass",
-					new Class[] {String.class},
-					new Object[] {className});
+			Method findClassMethod  = URLClassLoader.class.getMethod("findClass", String.class);
+			findClassMethod.setAccessible(true);
+			return (Class) findClassMethod.invoke(tempClassLoader, className);
 		} catch (Throwable th) {
 			throw new RuntimeException("Class not found: " + className, th);
 		}

@@ -37,6 +37,7 @@ import jodd.util.ClassUtil;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
 
@@ -114,7 +115,8 @@ public class AnnTest {
 		proxetta.setVariableClassName(true);
 		Object hero = proxettaBuilder.newInstance();
 
-		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", ClassUtil.invoke(hero, "name"));
+		Method nameMethod = hero.getClass().getMethod("name");
+		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", nameMethod.invoke(nameMethod));
 	}
 
 	@Test
@@ -139,7 +141,8 @@ public class AnnTest {
 		proxetta.setVariableClassName(true);
 		Object hero = proxettaBuilder.newInstance();
 
-		assertEquals("SilverHero89W99.222None1000speeeeedXRAYnull", ClassUtil.invoke(hero, "name"));
+		Method nameMethod = hero.getClass().getMethod("name");
+		assertEquals("SilverHero89W99.222None1000speeeeedXRAYnull", nameMethod.invoke(hero));
 	}
 
 }

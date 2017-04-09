@@ -35,8 +35,9 @@ import jodd.madvoc.WebApplication;
 import jodd.madvoc.Madvoc;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
-import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
+
+import java.lang.reflect.Method;
 
 /**
  * Standalone runner for Madvoc web application.
@@ -97,7 +98,9 @@ public abstract class WebRunner {
 		}
 
 		try {
-			ClassUtil.invokeDeclared(app, "destroy", new Class[] {MadvocConfig.class}, new Object[] {null});
+			Method destroyMethod = MadvocConfig.class.getMethod("destroy");
+			destroyMethod.setAccessible(true);
+			destroyMethod.invoke(app);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

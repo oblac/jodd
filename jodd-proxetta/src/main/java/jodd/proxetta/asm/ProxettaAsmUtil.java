@@ -35,6 +35,8 @@ import jodd.util.ClassUtil;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 
+import java.lang.reflect.Method;
+
 import static jodd.asm5.Opcodes.*;
 import static jodd.proxetta.JoddProxetta.fieldDivider;
 import static jodd.proxetta.JoddProxetta.fieldPrefix;
@@ -657,7 +659,9 @@ public class ProxettaAsmUtil {
 			try {
 				String typeRef = AsmUtil.typeToTyperef(enumClass);
 
-				String name = (String) ClassUtil.invoke(elementValue, "name");
+				// invoke
+				Method nameMethod = elementValue.getClass().getMethod("name");
+				String name = (String) nameMethod.invoke(elementValue);
 
 				mv.visitFieldInsn(GETSTATIC, typeRef, name, typeRef);
 
