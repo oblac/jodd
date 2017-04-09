@@ -28,12 +28,13 @@ package jodd.exception;
 import jodd.io.StreamUtil;
 import jodd.util.StringUtil;
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.sql.SQLException;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Few exception utilities.
@@ -296,6 +297,35 @@ public class ExceptionUtil {
 		}
 
 		return message;
+	}
+
+	/**
+	 * Wraps exception to {@code RuntimeException}.
+	 */
+	public static RuntimeException wrapRuntime(Throwable throwable) {
+		if (throwable instanceof RuntimeException) {
+			return (RuntimeException) throwable;
+		} else {
+			return new RuntimeException(throwable);
+		}
+	}
+
+	/**
+	 * Unwraps invocation and undeclared exceptions to real cause.
+	 */
+	public static Throwable unwrap(Throwable wrapped) {
+		Throwable unwrapped = wrapped;
+		while (true) {
+			if (unwrapped instanceof InvocationTargetException) {
+				unwrapped = ((InvocationTargetException) unwrapped).getTargetException();
+			}
+			else if (unwrapped instanceof UndeclaredThrowableException) {
+				unwrapped = ((UndeclaredThrowableException) unwrapped).getUndeclaredThrowable();
+			}
+			else {
+				return unwrapped;
+			}
+		}
 	}
 
 	private static class ThrowableThrower {
