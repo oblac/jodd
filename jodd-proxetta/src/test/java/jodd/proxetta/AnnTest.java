@@ -116,7 +116,7 @@ public class AnnTest {
 		Object hero = proxettaBuilder.newInstance();
 
 		Method nameMethod = hero.getClass().getMethod("name");
-		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", nameMethod.invoke(nameMethod));
+		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", nameMethod.invoke(hero));
 	}
 
 	@Test
