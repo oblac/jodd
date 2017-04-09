@@ -168,7 +168,7 @@ public class ClassLoaderUtil {
 	 */
 	public static Class defineClass(String className, byte[] classData, ClassLoader classLoader) {
 		try {
-			Method defineClassMethod = ClassLoader.class.getMethod("defineClass", String.class, byte[].class, int.class, int.class);
+			Method defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
 			defineClassMethod.setAccessible(true);
 			return (Class) defineClassMethod.invoke(classLoader, className, classData, 0, classData.length);
 		} catch (Throwable th) {
@@ -202,7 +202,7 @@ public class ClassLoaderUtil {
 	public static Class findClass(String className, URL[] classPath, ClassLoader parent) {
 		URLClassLoader tempClassLoader = parent != null ? new URLClassLoader(classPath, parent) : new URLClassLoader(classPath);
 		try {
-			Method findClassMethod  = URLClassLoader.class.getMethod("findClass", String.class);
+			Method findClassMethod  = URLClassLoader.class.getDeclaredMethod("findClass", String.class);
 			findClassMethod.setAccessible(true);
 			return (Class) findClassMethod.invoke(tempClassLoader, className);
 		} catch (Throwable th) {

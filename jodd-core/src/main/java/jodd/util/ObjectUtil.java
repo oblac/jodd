@@ -45,7 +45,6 @@ import java.lang.reflect.Method;
  */
 public class ObjectUtil {
 
-
 	// ---------------------------------------------------------------- clone
 
 	/**
@@ -57,7 +56,7 @@ public class ObjectUtil {
 			return null;
 		}
 		try {
-			Method cloneMethod = source.getClass().getMethod("clone");
+			Method cloneMethod = source.getClass().getDeclaredMethod("clone");
 			cloneMethod.setAccessible(true);
 			return (T) cloneMethod.invoke(null);
 		} catch (Exception ex) {

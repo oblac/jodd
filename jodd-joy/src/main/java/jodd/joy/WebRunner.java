@@ -98,7 +98,7 @@ public abstract class WebRunner {
 		}
 
 		try {
-			Method destroyMethod = MadvocConfig.class.getMethod("destroy");
+			Method destroyMethod = MadvocConfig.class.getDeclaredMethod("destroy");
 			destroyMethod.setAccessible(true);
 			destroyMethod.invoke(app);
 		} catch (Exception ex) {
