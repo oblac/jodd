@@ -293,7 +293,10 @@ abstract class DbQueryBase implements AutoCloseable {
 			catch (SQLException sex) {
 				throw new DbSqlException(this, "Error creating prepared statement", sex);
 			}
+
 			statement = preparedStatement;
+
+			return;
 		}
 
 		// statement
