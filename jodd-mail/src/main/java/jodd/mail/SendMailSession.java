@@ -271,9 +271,13 @@ public class SendMailSession implements AutoCloseable {
 		}
 
 		attBodyPart.setDataHandler(new DataHandler(attachment.getDataSource()));
-		if (attachment.isInline()) {
+
+		if (attachment.getContentId() != null) {
 			attBodyPart.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
-			attBodyPart.setDisposition(INLINE);
+
+			if (attachment.isInline()) {
+				attBodyPart.setDisposition(INLINE);
+			}
 		}
 		return attBodyPart;
 	}
