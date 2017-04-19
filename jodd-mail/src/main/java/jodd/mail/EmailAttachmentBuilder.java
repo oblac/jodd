@@ -129,22 +129,22 @@ public class EmailAttachmentBuilder {
 		return this;
 	}
 
-	public EmailAttachmentBuilder setInline(boolean inline) {
-		this.inline = inline;
-		if (!inline) {
-			contentId = null;
+	public EmailAttachmentBuilder setContentId(String contentId) {
+		this.contentId = contentId;
+		return this;
+	}
+
+	protected EmailAttachmentBuilder setContentIdFromNameIfMissing() {
+		if (this.contentId == null) {
+			if (name != null) {
+				this.contentId = FileNameUtil.getName(name);
+			}
 		}
 		return this;
 	}
 
-	public EmailAttachmentBuilder setInline(String contentId) {
-		if (contentId != null) {
-			this.inline = true;
-			this.contentId = contentId;
-		} else {
-			this.inline = false;
-			this.contentId = null;
-		}
+	public EmailAttachmentBuilder setInline(boolean inline) {
+		this.inline = inline;
 		return this;
 	}
 
@@ -193,9 +193,8 @@ public class EmailAttachmentBuilder {
 	protected ByteArrayAttachment createByteArrayAttachment() {
 		String name = this.name;
 		String contentType = resolveContentType();
-		String contentId = resolveContentId();
 
-		return new ByteArrayAttachment(sourceBytes, contentType, name, contentId);
+		return new ByteArrayAttachment(sourceBytes, contentType, name, contentId, inline);
 	}
 
 	/**
@@ -204,9 +203,8 @@ public class EmailAttachmentBuilder {
 	protected InputStreamAttachment createInputStreamAttachment() {
 		String name = this.name;
 		String contentType = resolveContentType();
-		String contentId = resolveContentId();
 
-		return new InputStreamAttachment(sourceInputStream, contentType, name, contentId);
+		return new InputStreamAttachment(sourceInputStream, contentType, name, contentId, inline);
 	}
 
 	/**
@@ -215,9 +213,8 @@ public class EmailAttachmentBuilder {
 	 */
 	protected FileAttachment createFileAttachment() {
 		String name = this.name;
-		String contentId = resolveContentId();
 
-		return new FileAttachment(sourceFile, name, contentId);
+		return new FileAttachment(sourceFile, name, contentId, inline);
 	}
 
 	// ---------------------------------------------------------------- tools
@@ -237,16 +234,4 @@ public class EmailAttachmentBuilder {
 		return MimeTypes.getMimeType(extension);
 	}
 
-	/**
-	 * Resolves content id from all data.
-	 */
-	protected String resolveContentId() {
-		if (inline) {
-			if (contentId != null) {
-				return contentId;
-			}
-			return FileNameUtil.getName(name);
-		}
-		return null;
-	}
 }

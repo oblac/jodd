@@ -309,24 +309,29 @@ public class Email extends CommonEmail {
 	public Email embed(EmailAttachment emailAttachment) {
 		attach(emailAttachment);
 
-		if (emailAttachment.isInline()) {
+		if (emailAttachment.getContentId() != null) {
 			int size = messages.size();
 			if (size > 0) {
-				emailAttachment.setEmbeddedMessage(messages.get(size - 1));		// get last message
+				emailAttachment.setEmbeddedMessage(messages.get(size - 1));        // get last message
 			}
 		}
+
 		return this;
 	}
 
 	public Email attach(EmailAttachmentBuilder emailAttachmentBuilder) {
-		emailAttachmentBuilder.setInline(false);
+		emailAttachmentBuilder.setContentId(null);
+
 		attach(emailAttachmentBuilder.create());
+
 		return this;
 	}
 
 	public Email embed(EmailAttachmentBuilder emailAttachmentBuilder) {
-		emailAttachmentBuilder.setInline(true);
+		emailAttachmentBuilder.setContentIdFromNameIfMissing();
+
 		embed(emailAttachmentBuilder.create());
+
 		return this;
 	}
 
