@@ -44,6 +44,7 @@ public abstract class EmailAttachment {
 
 	protected final String name;
 	protected final String contentId;
+	protected final boolean inline;
 	protected EmailMessage targetMessage;
 
 	/**
@@ -51,7 +52,7 @@ public abstract class EmailAttachment {
 	 * Content id may be <code>null</code> if attachment is not embedded.
 	 * Email name may be <code>null</code> as well.
 	 */
-	protected EmailAttachment(String name, String contentId) {
+	protected EmailAttachment(String name, String contentId, boolean inline) {
 		if (name != null) {
 			try {
 				this.name = MimeUtility.decodeText(name);
@@ -62,6 +63,7 @@ public abstract class EmailAttachment {
 			this.name = null;
 		}
 		this.contentId = contentId;
+		this.inline = inline;
 	}
 
 	/**
@@ -96,25 +98,32 @@ public abstract class EmailAttachment {
 	/**
 	 * Returns content id for inline attachments.
 	 * Equals to <code>null</code> when attachment is not embedded.
+	 * @see #isEmbedded()
 	 */
 	public String getContentId() {
 		return contentId;
 	}
 
 	/**
+	 * Returns {@code true} if attachment is embedded.
+	 * Embedded attachment is one when {@link #getContentId() contentId} is not
+	 * {@code null}.
+	 */
+	public boolean isEmbedded() {
+		return contentId != null;
+	}
+
+	/**
 	 * Returns <code>true</code> if it is inline attachment.
 	 */
 	public boolean isInline() {
-		return contentId != null;
+		return inline;
 	}
 
 	/**
 	 * Sets target message for embedded attachments.
 	 */
 	public void setEmbeddedMessage(EmailMessage emailMessage) {
-		if (!isInline()) {
-			throw new MailException("Only inline attachments may be embedded");
-		}
 		targetMessage = emailMessage;
 	}
 

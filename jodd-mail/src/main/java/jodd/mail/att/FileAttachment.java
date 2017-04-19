@@ -40,8 +40,8 @@ public class FileAttachment extends EmailAttachment {
 
 	protected final File file;
 
-	public FileAttachment(File file, String name, String contentId) {
-		super(name, contentId);
+	public FileAttachment(File file, String name, String contentId, boolean inline) {
+		super(name, contentId, inline);
 		this.file = file;
 	}
 
