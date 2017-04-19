@@ -176,11 +176,11 @@ public class SendMailTest {
 				"<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>", MimeTypes.MIME_TEXT_HTML);
 		email.addMessage(htmlMessage);
 
-		EmailAttachment embeddedAttachment = new ByteArrayAttachment(new byte[]{1,2,3,4,5,6,7}, "image/png", "c.png", "c.png");
+		EmailAttachment embeddedAttachment = new ByteArrayAttachment(new byte[]{1,2,3,4,5,6,7}, "image/png", "c.png", "c.png", true);
 		embeddedAttachment.setEmbeddedMessage(htmlMessage);
 		email.attach(embeddedAttachment);
 
-		EmailAttachment attachment = new ByteArrayAttachment(new byte[]{11,12,13,14,15}, "application/zip", "file.zip", "file.zip");
+		EmailAttachment attachment = new ByteArrayAttachment(new byte[]{11,12,13,14,15}, "application/zip", "file.zip", "file.zip", false);
 		email.attach(attachment);
 
 		assertEmail(email);

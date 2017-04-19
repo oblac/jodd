@@ -39,7 +39,7 @@ public class EmailGreenTest {
 			.attach(EmailAttachment.attachment()
 				.setName("three")
 				.bytes(new byte[]{1,2,3})
-				.setInline("CID1").create())
+				.setContentId("CID1").create())
 			.embed(EmailAttachment.attachment()
 				.bytes(new byte[]{0,1,0}))
 			;
@@ -85,10 +85,10 @@ public class EmailGreenTest {
 		assertEquals("three", email.getAttachments().get(2).getName());
 		assertEquals("CID1", email.getAttachments().get(2).getContentId());
 		assertArrayEquals(new byte[]{1,2,3}, email.getAttachments().get(2).toByteArray());
-		assertTrue(email.getAttachments().get(2).isInline());
+		assertTrue(email.getAttachments().get(2).isEmbedded());
 		assertNull(email.getAttachments().get(3).getName());
 		assertArrayEquals(new byte[]{0,1,0}, email.getAttachments().get(3).toByteArray());
-		assertFalse(email.getAttachments().get(3).isInline());
+		assertFalse(email.getAttachments().get(3).isEmbedded());
 
 		assertEquals(4, liame.getAttachments().size());
 		assertEquals("one", liame.getAttachments().get(0).getName());
@@ -98,10 +98,10 @@ public class EmailGreenTest {
 		assertEquals("three", liame.getAttachments().get(2).getName());
 		assertEquals("<CID1>", liame.getAttachments().get(2).getContentId());
 		assertArrayEquals(new byte[]{1,2,3}, liame.getAttachments().get(2).toByteArray());
-		assertTrue(liame.getAttachments().get(2).isInline());
+		assertTrue(liame.getAttachments().get(2).isEmbedded());
 		assertNotNull(liame.getAttachments().get(3).getName());
 		assertArrayEquals(new byte[]{0,1,0}, liame.getAttachments().get(3).toByteArray());
-		assertFalse(liame.getAttachments().get(3).isInline());
+		assertFalse(liame.getAttachments().get(3).isEmbedded());
 
 		greenMail.stop();
 	}
