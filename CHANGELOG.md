@@ -4,7 +4,10 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.8.5...master)
 
-N/A
+### Bug Fixes
+
++ **lagarto** - bug introduced in 3.8.5; bad parsing of pseudo-function arguments [#407](https://github.com/oblac/jodd/issues/407).
+
 
 ## [3.8.5](https://github.com/oblac/jodd/compare/v3.8.1...v3.8.5)
 
