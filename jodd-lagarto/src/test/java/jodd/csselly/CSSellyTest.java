@@ -417,4 +417,23 @@ public class CSSellyTest {
 		assertEquals(PseudoClass.CHECKED.class.getSimpleName().toLowerCase(), pcsA.getPseudoClass().getPseudoClassName());
 		assertEquals(PseudoClass.CHECKED.class.getSimpleName().toLowerCase(), pcsB.getPseudoClass().getPseudoClassName());
 	}
+
+	@Test
+	public void test407() {
+		CSSelly lexer = new CSSelly("div:nth-child(2) > div:nth-child(1)");
+
+		List<CssSelector> selectors = lexer.parse();
+
+		assertEquals(2, selectors.size());
+
+		CssSelector s1 = selectors.get(0);
+		assertEquals(1, s1.selectorsCount());
+		assertEquals(Selector.Type.PSEUDO_FUNCTION, s1.getSelector(0).getType());
+		assertEquals("nth-child", ((PseudoFunctionSelector)s1.getSelector(0)).getPseudoFunction().getPseudoFunctionName());
+
+		CssSelector s2 = selectors.get(0);
+		assertEquals(1, s2.selectorsCount());
+		assertEquals(Selector.Type.PSEUDO_FUNCTION, s2.getSelector(0).getType());
+		assertEquals("nth-child", ((PseudoFunctionSelector)s2.getSelector(0)).getPseudoFunction().getPseudoFunctionName());
+	}
 }
