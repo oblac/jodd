@@ -107,6 +107,17 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 		String str1 = o1.toString();
 		String str2 = o2.toString();
 
+		if (ignoreAccents) {
+			str1 = StringUtil.replace(str1, "ß", "ss");
+			str2 = StringUtil.replace(str2, "ß", "ss");
+
+			str1 = StringUtil.replace(str1, "æ", "ae");
+			str2 = StringUtil.replace(str2, "æ", "ae");
+
+			str1 = StringUtil.replace(str1, "Æ", "AE");
+			str2 = StringUtil.replace(str2, "Æ", "AE");
+		}
+
 		int ndx1 = 0, ndx2 = 0;
 		int zeroCount1, zeroCount2;
 		int zerosDelta = 0;

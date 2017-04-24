@@ -38,6 +38,25 @@ import static org.junit.Assert.assertTrue;
 public class NaturalOrderComparatorTest {
 
 	@Test
+	public void testCaseSensitive() {
+		assertTrue("A".compareTo("a") < 0);
+		assertTrue(new NaturalOrderComparator<String>().compare("A", "a") < 0);
+
+		assertTrue("a".compareTo("A") > 0);
+		assertTrue(new NaturalOrderComparator<String>().compare("a", "A") > 0);
+
+		String[] array = new String[] {"a", "A"};
+		Arrays.sort(array);
+		assertEquals("A", array[0]);
+		assertEquals("a", array[1]);
+
+		array = new String[] {"a", "A"};
+		Arrays.sort(array, new NaturalOrderComparator<>(false, false));
+		assertEquals("A", array[0]);
+		assertEquals("a", array[1]);
+	}
+
+	@Test
 	public void testNatural202() {
 		assertEquals(1, new NaturalOrderComparator<String>().compare("2-02", "2-2"));
 	}
@@ -132,8 +151,8 @@ public class NaturalOrderComparatorTest {
 		assertListOrder(c, strings);
 	}
 
-	private void assertListOrderByShuffling(String[] strings, boolean caseSensitive) {
-		Comparator<String> c = new NaturalOrderComparator<>(caseSensitive, true);
+	private void assertListOrderByShuffling(String[] strings, boolean ignoreCase) {
+		Comparator<String> c = new NaturalOrderComparator<>(ignoreCase, true);
 		assertListOrder(c, strings);
 	}
 
@@ -313,11 +332,11 @@ public class NaturalOrderComparatorTest {
 	public void testNaturalAccents() {
 		String[] list = new String[] {
 			"above",
-//			"Æon",
-//			"æon",
+			"Æon",
+			"æony",
 			"aether",
 			"apple",
-//			"außen",
+			"außen",
 			"autumn",
 			"bald",
 			"Ball",
