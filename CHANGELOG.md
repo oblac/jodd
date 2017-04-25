@@ -8,6 +8,10 @@ All notable changes to Jodd project are documented here.
 
 + **lagarto** - bug introduced in 3.8.5; bad parsing of pseudo-function arguments [#407](https://github.com/oblac/jodd/issues/407).
 
+### Features
+
++ **jtx** - added `ReadWriteTransaction` annotation to codebase.
+
 ## Breaking changes
 
 + **email** - Content-Disposition and Content-ID flags are now separate [#404](https://github.com/oblac/jodd/issues/404).

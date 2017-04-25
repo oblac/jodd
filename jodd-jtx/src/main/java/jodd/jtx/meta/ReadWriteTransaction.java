@@ -23,9 +23,32 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.jtx.meta;
 
-import jodd.joy.jspp.ServletDispatcherResultWithJspp;
+import jodd.jtx.JtxIsolationLevel;
+import jodd.jtx.JtxPropagationBehavior;
+import jodd.jtx.JtxTransactionMode;
+import jodd.jtx.meta.Transaction;
 
-public class MyServletDispatherResult extends ServletDispatcherResultWithJspp {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Read-write PROPAGATION_REQUIRED tx annotation marker.
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+@Transaction(readOnly = false)
+public @interface ReadWriteTransaction {
+
+	JtxPropagationBehavior propagation() default JtxPropagationBehavior.PROPAGATION_REQUIRED;
+
+	JtxIsolationLevel isolation() default JtxIsolationLevel.ISOLATION_DEFAULT;
+
+	int timeout() default JtxTransactionMode.DEFAULT_TIMEOUT;
+
 }

@@ -27,6 +27,7 @@ package jodd.jtx.proxy;
 
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxTransactionManager;
+import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.meta.TransactionAnnotation;
 import jodd.jtx.meta.TransactionAnnotationData;
@@ -85,7 +86,7 @@ public class AnnotationTxAdviceManager {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.scopePattern = scopePattern;
-		registerAnnotations(new Class[] {Transaction.class});
+		registerAnnotations(Transaction.class, ReadWriteTransaction.class);
 	}
 
 	// ---------------------------------------------------------------- methods

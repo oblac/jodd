@@ -32,7 +32,7 @@ import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
-import jodd.joy.jtx.meta.ReadWriteTransaction;
+import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
