@@ -72,6 +72,12 @@ public interface Logger {
 	 */
 	public void log(Level level, String message);
 
+	// ---------------------------------------------------------------- level
+
+	/**
+	 * Sets new level dynamically. Some implementations may not support it.
+	 */
+	public void setLevel(Level level);
 
 	// ---------------------------------------------------------------- trace
 

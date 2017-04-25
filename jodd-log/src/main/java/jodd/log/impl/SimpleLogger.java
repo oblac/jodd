@@ -42,68 +42,88 @@ public class SimpleLogger implements Logger {
 		this.level = defaultLevel;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public boolean isEnabled(Level level) {
 		return level.isEnabledFor(level);
 	}
 
+	@Override
 	public void log(Level level, String message) {
 		print(level, message, null);
 	}
 
+	@Override
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return Level.TRACE.isEnabledFor(level);
 	}
 
+	@Override
 	public void trace(String message) {
 		print(Level.TRACE, message, null);
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return Level.DEBUG.isEnabledFor(level);
 	}
 
+	@Override
 	public void debug(String message) {
 		print(Level.DEBUG, message, null);
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return Level.INFO.isEnabledFor(level);
 	}
 
+	@Override
 	public void info(String message) {
 		print(Level.INFO, message, null);
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return Level.WARN.isEnabledFor(level);
 	}
 
+	@Override
 	public void warn(String message) {
 		print(Level.WARN, message, null);
 	}
 
+	@Override
 	public void warn(String message, Throwable throwable) {
 		print(Level.WARN, message, throwable);
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return Level.ERROR.isEnabledFor(level);
 	}
 
+	@Override
 	public void error(String message) {
 		print(Level.ERROR, message, null);
 	}
 
+	@Override
 	public void error(String message, Throwable throwable) {
 		print(Level.ERROR, message, throwable);
 	}
 
 	/**
-	 * Prints error message.
+	 * Prints error message if level is enabled.
 	 */
 	protected void print(Level level, String message, Throwable throwable) {
 		if (!isEnabled(level)) {

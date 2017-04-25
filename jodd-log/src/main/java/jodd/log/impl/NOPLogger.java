@@ -38,56 +38,75 @@ public class NOPLogger implements Logger {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public boolean isEnabled(Level level) {
 		return false;
 	}
 
+	@Override
 	public void log(Level level, String message) {
 	}
 
+	@Override
+	public void setLevel(Level level) {
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return false;
 	}
 
+	@Override
 	public void trace(String message) {
 
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return false;
 	}
 
+	@Override
 	public void debug(String message) {
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return false;
 	}
 
+	@Override
 	public void info(String message) {
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return false;
 	}
 
+	@Override
 	public void warn(String message) {
 	}
 
+	@Override
 	public void warn(String message, Throwable throwable) {
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return false;
 	}
 
+	@Override
 	public void error(String message) {
 	}
 
+	@Override
 	public void error(String message, Throwable throwable) {
 	}
 

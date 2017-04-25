@@ -39,10 +39,12 @@ public class JCLLogger implements Logger {
 		this.logger = log;
 	}
 
+	@Override
 	public String getName() {
 		return logger.toString();
 	}
 
+	@Override
 	public boolean isEnabled(Level level) {
 		switch (level) {
 			case TRACE: return logger.isTraceEnabled();
@@ -56,6 +58,7 @@ public class JCLLogger implements Logger {
 
 	}
 
+	@Override
 	public void log(Level level, String message) {
 		switch (level) {
 			case TRACE: logger.trace(message); break;
@@ -66,50 +69,67 @@ public class JCLLogger implements Logger {
 		}
 	}
 
+	@Override
+	public void setLevel(Level level) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return logger.isTraceEnabled();
 	}
 
+	@Override
 	public void trace(String message) {
 		logger.trace(message);
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return logger.isDebugEnabled();
 	}
 
+	@Override
 	public void debug(String message) {
 		logger.debug(message);
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return logger.isInfoEnabled();
 	}
 
+	@Override
 	public void info(String message) {
 		logger.info(message);
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return logger.isWarnEnabled();
 	}
 
+	@Override
 	public void warn(String message) {
 		logger.warn(message);
 	}
 
+	@Override
 	public void warn(String message, Throwable throwable) {
 		logger.warn(message, throwable);
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return logger.isErrorEnabled();
 	}
 
+	@Override
 	public void error(String message) {
 		logger.error(message);
 	}
 
+	@Override
 	public void error(String message, Throwable throwable) {
 		logger.error(message, throwable);
 	}

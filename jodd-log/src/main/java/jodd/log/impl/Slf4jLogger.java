@@ -48,10 +48,12 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public String getName() {
 		return logger.getName();
 	}
 
+	@Override
 	public boolean isEnabled(Level level) {
 		switch (level) {
 			case TRACE: return logger.isTraceEnabled();
@@ -64,6 +66,7 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void log(Level level, String message) {
 		switch (level) {
 			case TRACE: trace(message); break;
@@ -74,10 +77,17 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
+	public void setLevel(Level level) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public boolean isTraceEnabled() {
 		return logger.isTraceEnabled();
 	}
 
+	@Override
 	public void trace(String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
@@ -88,10 +98,12 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return logger.isDebugEnabled();
 	}
 
+	@Override
 	public void debug(String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
@@ -102,10 +114,12 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return logger.isInfoEnabled();
 	}
 
+	@Override
 	public void info(String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
@@ -116,10 +130,12 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return logger.isWarnEnabled();
 	}
 
+	@Override
 	public void warn(String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
@@ -130,6 +146,7 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void warn(String message, Throwable throwable) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
@@ -140,10 +157,12 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return logger.isErrorEnabled();
 	}
 
+	@Override
 	public void error(String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
@@ -154,6 +173,7 @@ public class Slf4jLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void error(String message, Throwable throwable) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
