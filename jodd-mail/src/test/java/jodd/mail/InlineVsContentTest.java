@@ -32,7 +32,7 @@ public class InlineVsContentTest {
 					"<body><h1>Hey!</h1><img src='cid:jodd.png'>" +
 					"<h2>Hay!</h2><img src='cid:jodd2.png'>" +
 					"<h3></h3></body></html>")
-			.embed(attachment().bytes(new File(PNG)))
+			.embed(attachment().bytes(new File(PNG)).setInline(false))
 			.embed(attachment().bytes(new File(PNG)).setContentId("jodd2.png").setInline(true))
 			.attach(attachment().file(PNG))
 			;

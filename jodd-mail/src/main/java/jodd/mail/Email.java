@@ -293,7 +293,7 @@ public class Email extends CommonEmail {
 	}
 
 	/**
-	 * Adds attachment.
+	 * Adds an attachment.
 	 */
 	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
@@ -304,16 +304,15 @@ public class Email extends CommonEmail {
 	}
 
 	/**
-	 * Embed attachment to last message.
+	 * Embed attachment to last message. No header is changed.
+	 * @see #embed(EmailAttachmentBuilder)
 	 */
 	public Email embed(EmailAttachment emailAttachment) {
 		attach(emailAttachment);
 
-		if (emailAttachment.getContentId() != null) {
-			int size = messages.size();
-			if (size > 0) {
-				emailAttachment.setEmbeddedMessage(messages.get(size - 1));        // get last message
-			}
+		int size = messages.size();
+		if (size > 0) {
+			emailAttachment.setEmbeddedMessage(messages.get(size - 1));        // get last message
 		}
 
 		return this;
@@ -327,8 +326,15 @@ public class Email extends CommonEmail {
 		return this;
 	}
 
+	/**
+	 * Attaches the embedded attachment: content disposition will be set to
+	 * {@code inline} and content id will be set if missing from attachments
+	 * file name.
+	 * @see #embed(EmailAttachment)
+	 */
 	public Email embed(EmailAttachmentBuilder emailAttachmentBuilder) {
 		emailAttachmentBuilder.setContentIdFromNameIfMissing();
+		emailAttachmentBuilder.setInline(true);
 
 		embed(emailAttachmentBuilder.create());
 
