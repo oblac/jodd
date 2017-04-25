@@ -36,8 +36,8 @@ public class DataSourceAttachment extends EmailAttachment {
 
 	protected final DataSource dataSource;
 
-	public DataSourceAttachment(DataSource dataSource, String name, String contentId) {
-		super(name, contentId);
+	public DataSourceAttachment(DataSource dataSource, String name, String contentId, boolean inline) {
+		super(name, contentId, inline);
 		this.dataSource = dataSource;
 	}
 

@@ -117,13 +117,14 @@ public class ReceivedEmail extends CommonEmail {
 				String mimeType = EmailUtil.extractMimeType(contentType);
 				String encoding = EmailUtil.extractEncoding(contentType);
 				String fileName = part.getFileName();
-				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
+				String contentId = parseContentId(part);
+				boolean inline = parseInline(part);
 
 				if (encoding == null) {
 					encoding = StringPool.US_ASCII;
 				}
 
-				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(encoding));
+				email.addAttachment(fileName, mimeType, contentId, inline, stringContent.getBytes(encoding));
 			} else {
 				String contentType = part.getContentType();
 				String encoding = EmailUtil.extractEncoding(contentType);
@@ -146,14 +147,15 @@ public class ReceivedEmail extends CommonEmail {
 		}
 		else if (content instanceof InputStream) {
 			String fileName = EmailUtil.resolveFileName(part);
-			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
+			String contentId = parseContentId(part);
+			boolean inline = parseInline(part);
 			String mimeType = EmailUtil.extractMimeType(part.getContentType());
 
 			InputStream is = (InputStream) content;
 			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 			StreamUtil.copy(is, fbaos);
 
-			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
+			email.addAttachment(fileName, mimeType, contentId, inline, fbaos.toByteArray());
 		}
 		else if (content instanceof MimeMessage) {
 			MimeMessage mimeMessage = (MimeMessage) content;
@@ -162,7 +164,8 @@ public class ReceivedEmail extends CommonEmail {
 		}
 		else {
 			String fileName = part.getFileName();
-			String contentId = (part instanceof MimePart) ? ((MimePart) part).getContentID() : null;
+			String contentId = parseContentId(part);
+			boolean inline = parseInline(part);
 			String mimeType = EmailUtil.extractMimeType(part.getContentType());
 
 			InputStream is = part.getInputStream();
@@ -170,8 +173,22 @@ public class ReceivedEmail extends CommonEmail {
 			StreamUtil.copy(is, fbaos);
 			StreamUtil.close(is);
 
-			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
+			email.addAttachment(fileName, mimeType, contentId, inline, fbaos.toByteArray());
 		}
+	}
+
+	protected String parseContentId(Part part) throws MessagingException {
+		return (part instanceof MimePart) ? ((MimePart) part).getContentID() : null;
+	}
+
+	protected boolean parseInline(Part part) throws MessagingException {
+		if (part instanceof MimePart) {
+			String dispositionId = part.getDisposition();
+			if (dispositionId != null && dispositionId.equalsIgnoreCase("inline")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected Date parseReceiveDate(Message msg) throws MessagingException {
@@ -276,11 +293,11 @@ public class ReceivedEmail extends CommonEmail {
 	/**
 	 * Adds received attachment.
 	 */
-	public void addAttachment(String filename, String mimeType, String contentId, byte[] content) {
+	public void addAttachment(String filename, String mimeType, String contentId, boolean inline, byte[] content) {
 		if (attachments == null) {
 			attachments = new ArrayList<>();
 		}
-		EmailAttachment emailAttachment = new ByteArrayAttachment(content, mimeType, filename, contentId);
+		EmailAttachment emailAttachment = new ByteArrayAttachment(content, mimeType, filename, contentId, inline);
 		emailAttachment.setSize(content.length);
 		attachments.add(emailAttachment);
 	}
