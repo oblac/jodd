@@ -37,7 +37,7 @@ public class Slf4jLoggerProvider implements LoggerProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Logger createLogger(String name) {
+	public Logger apply(String name) {
 		return new Slf4jLogger(org.slf4j.LoggerFactory.getLogger(name));
 	}
 }

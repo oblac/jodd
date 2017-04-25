@@ -161,7 +161,7 @@ public class JDKLoggerTest extends LoggerTestBase {
 		loggerProvider = new JDKLoggerProvider();
 
 		//when
-		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
+		logger = loggerProvider.apply(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type JDKLogger", logger.getClass(),

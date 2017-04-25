@@ -51,7 +51,7 @@ public abstract class DbBaseTest {
 	protected void init() {
 		LoggerFactory.setLoggerProvider(new NOPLoggerProvider() {
 			@Override
-			public Logger createLogger(String name) {
+			public Logger apply(String name) {
 				return new NOPLogger("") {
 					@Override
 					public boolean isWarnEnabled() {

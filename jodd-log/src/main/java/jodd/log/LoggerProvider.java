@@ -25,16 +25,12 @@
 
 package jodd.log;
 
+import java.util.function.Function;
+
 /**
  * Adapter for various logger implementations.
+ * Always returns a new instance of the {@code Logger}.
  */
 @FunctionalInterface
-public interface LoggerProvider {
-
-	/**
-	 * Returns {@link jodd.log.Logger} for given name.
-	 * Always returns a new instance of the {@code Logger}.
-	 */
-	Logger createLogger(String name);
-
+public interface LoggerProvider extends Function<String, Logger> {
 }

@@ -50,7 +50,7 @@ public class TestLoggerProvider extends NOPLoggerProvider {
 	};
 
 	@Override
-	public Logger createLogger(String name) {
+	public Logger apply(String name) {
 		return NOP_LOGGER;
 	}
 }

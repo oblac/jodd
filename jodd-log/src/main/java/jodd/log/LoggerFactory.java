@@ -27,6 +27,9 @@ package jodd.log;
 
 import jodd.log.impl.NOPLoggerProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Logger factory.
  */
@@ -34,25 +37,36 @@ public final class LoggerFactory {
 
 	private static LoggerProvider loggerProvider = new NOPLoggerProvider();
 
+	private static final Map<String, Logger> loggers = new HashMap<>();
+
 	/**
-	 * Sets logger provider.
+	 * Resets all loggers.
+	 */
+	public static void reset() {
+		loggers.clear();
+	}
+
+	/**
+	 * Sets {@link LoggerProvider} instance used for creating new {@link Logger}s.
 	 */
 	public static void setLoggerProvider(LoggerProvider loggerProvider) {
 		LoggerFactory.loggerProvider = loggerProvider;
 	}
 
 	/**
-	 * Returns logger for given class.
+	 * Returns logger for given class by simply using the class name.
+	 * @see #getLogger(String)
 	 */
 	public static Logger getLogger(Class clazz) {
 		return getLogger(clazz.getName());
 	}
 
 	/**
-	 * Returns logger for given name.
+	 * Returns logger for given name. Repeated calls to this method with the
+	 * same argument should return the very same instance of the logger.
 	 */
 	public static Logger getLogger(String name) {
-		return loggerProvider.createLogger(name);
+		return loggers.computeIfAbsent(name, loggerProvider);
 	}
 
 }

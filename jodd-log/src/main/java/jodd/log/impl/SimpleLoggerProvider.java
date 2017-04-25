@@ -59,7 +59,7 @@ public class SimpleLoggerProvider implements LoggerProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Logger createLogger(String name) {
+	public Logger apply(String name) {
 		return new SimpleLogger(this, name);
 	}
 

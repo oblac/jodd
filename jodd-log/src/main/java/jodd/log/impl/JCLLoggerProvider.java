@@ -37,7 +37,7 @@ public class JCLLoggerProvider implements LoggerProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Logger createLogger(String name) {
+	public Logger apply(String name) {
 		return new JCLLogger(org.apache.commons.logging.LogFactory.getLog(name));
 	}
 }
