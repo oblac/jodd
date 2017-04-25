@@ -31,12 +31,12 @@ import jodd.log.LoggerProvider;
 /**
  * Provider for {@link jodd.log.impl.SimpleLogger} adapter.
  */
-public class SimpleLoggerProvider implements LoggerProvider {
+class SimpleLoggerProvider implements LoggerProvider {
 
 	private final Logger.Level defaultLevel;
 	private final long startTime;
 
-	public SimpleLoggerProvider(Logger.Level defaultLevel) {
+	SimpleLoggerProvider(Logger.Level defaultLevel) {
 		this.defaultLevel = defaultLevel;
 		this.startTime = System.currentTimeMillis();
 	}
@@ -55,6 +55,5 @@ public class SimpleLoggerProvider implements LoggerProvider {
 	public Logger apply(String name) {
 		return new SimpleLogger(this, name, defaultLevel);
 	}
-
 
 }

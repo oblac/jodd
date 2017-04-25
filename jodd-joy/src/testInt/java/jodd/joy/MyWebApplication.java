@@ -25,15 +25,14 @@
 
 package jodd.joy;
 
-import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLoggerProvider;
+import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.petite.PetiteWebApplication;
 
 public class MyWebApplication extends PetiteWebApplication {
 
 	public MyWebApplication() {
-		LoggerFactory.setLoggerProvider(new SimpleLoggerProvider(Logger.Level.DEBUG));
+		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 	}
 
 }

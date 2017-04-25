@@ -26,11 +26,14 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
  * Dummy logger.
  */
 public class NOPLogger implements Logger {
+
+	public static final LoggerProvider PROVIDER = NOPLogger::new;
 
 	private final String name;
 

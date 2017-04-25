@@ -26,12 +26,16 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 import org.slf4j.spi.LocationAwareLogger;
 
 /**
  * SLF4J logger adapter.
  */
 public class Slf4jLogger implements Logger {
+
+	public static final LoggerProvider PROVIDER =
+		name -> new Slf4jLogger(org.slf4j.LoggerFactory.getLogger(name));
 
 	private static final String FQCN = Slf4jLogger.class.getName();
 

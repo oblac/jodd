@@ -25,7 +25,7 @@
 
 package jodd.log;
 
-import jodd.log.impl.NOPLoggerProvider;
+import jodd.log.impl.NOPLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public final class LoggerFactory {
 
-	private static LoggerProvider loggerProvider = new NOPLoggerProvider();
+	private static LoggerProvider loggerProvider = NOPLogger.PROVIDER;
 
 	private static final Map<String, Logger> loggers = new HashMap<>();
 

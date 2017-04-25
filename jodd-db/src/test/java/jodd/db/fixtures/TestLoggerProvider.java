@@ -27,10 +27,10 @@ package jodd.db.fixtures;
 
 import jodd.exception.UncheckedException;
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 import jodd.log.impl.NOPLogger;
-import jodd.log.impl.NOPLoggerProvider;
 
-public class TestLoggerProvider extends NOPLoggerProvider {
+public class TestLoggerProvider implements LoggerProvider {
 
 	private static NOPLogger NOP_LOGGER = new NOPLogger("") {
 		@Override

@@ -25,8 +25,8 @@
 
 package jodd.log;
 
-import jodd.log.impl.NOPLoggerProvider;
-import jodd.log.impl.SimpleLoggerProvider;
+import jodd.log.impl.NOPLogger;
+import jodd.log.impl.SimpleLogger;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -40,7 +40,7 @@ public class LoggerFactoryTest {
 
 	@Test
 	public void testNopLogger() {
-		LoggerFactory.setLoggerProvider(new NOPLoggerProvider());
+		LoggerFactory.setLoggerProvider(NOPLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
 
 		assertEquals("*", log.getName());
@@ -59,8 +59,9 @@ public class LoggerFactoryTest {
 
 	@Test
 	public void testSimpleFactory() {
-		LoggerFactory.setLoggerProvider(new SimpleLoggerProvider(Logger.Level.TRACE));
+		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
+		log.setLevel(Logger.Level.TRACE);
 
 		assertEquals("foo", log.getName());
 

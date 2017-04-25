@@ -160,7 +160,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	@Test
 	public void testJCLLoggerFactory() {
 		//given
-		loggerProvider = new Slf4jLoggerProvider();
+		loggerProvider = Slf4jLogger.PROVIDER;
 
 		//when
 		logger = loggerProvider.apply(LoggerConstants.LOGGER);

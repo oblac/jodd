@@ -26,11 +26,15 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
  * JDK logger.
  */
 public class JDKLogger implements Logger {
+
+	public static final LoggerProvider PROVIDER =
+		name -> new JDKLogger(java.util.logging.Logger.getLogger(name));
 
 	private final java.util.logging.Logger logger;
 

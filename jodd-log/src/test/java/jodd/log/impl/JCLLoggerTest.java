@@ -156,7 +156,7 @@ public class JCLLoggerTest extends LoggerTestBase {
 	@Test
 	public void testJCLLoggerFactory() {
 		//given
-		loggerProvider = new JCLLoggerProvider();
+		loggerProvider = JCLLogger.PROVIDER;
 
 		//when
 		logger = loggerProvider.apply(LoggerConstants.LOGGER);

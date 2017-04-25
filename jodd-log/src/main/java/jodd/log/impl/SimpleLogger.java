@@ -26,11 +26,14 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
  * Simple logger.
  */
 public class SimpleLogger implements Logger {
+
+	public static final LoggerProvider PROVIDER = new SimpleLoggerProvider(Level.DEBUG);
 
 	private final String name;
 	private Level level;

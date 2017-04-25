@@ -31,10 +31,8 @@ import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.exception.UncheckedException;
-import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.impl.NOPLogger;
-import jodd.log.impl.NOPLoggerProvider;
 
 import static org.junit.Assert.assertTrue;
 
@@ -49,25 +47,20 @@ public abstract class DbBaseTest {
 	protected DbOomManager dboom;
 
 	protected void init() {
-		LoggerFactory.setLoggerProvider(new NOPLoggerProvider() {
+		LoggerFactory.setLoggerProvider(name -> new NOPLogger("") {
 			@Override
-			public Logger apply(String name) {
-				return new NOPLogger("") {
-					@Override
-					public boolean isWarnEnabled() {
-						return true;
-					}
+			public boolean isWarnEnabled() {
+				return true;
+			}
 
-					@Override
-					public void warn(String message) {
-						throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
-					}
+			@Override
+			public void warn(String message) {
+				throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
+			}
 
-					@Override
-					public void warn(String message, Throwable throwable) {
-						throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
-					}
-				};
+			@Override
+			public void warn(String message, Throwable throwable) {
+				throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
 			}
 		});
 		DbOomManager.resetAll();

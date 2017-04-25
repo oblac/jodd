@@ -26,12 +26,16 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 import org.apache.commons.logging.Log;
 
 /**
  * Java Commons logging logger.
  */
 public class JCLLogger implements Logger {
+
+	public static final LoggerProvider PROVIDER =
+		name -> new JCLLogger(org.apache.commons.logging.LogFactory.getLog(name));
 
 	private final Log logger;
 
