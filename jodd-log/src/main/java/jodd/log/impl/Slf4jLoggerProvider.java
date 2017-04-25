@@ -23,46 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.log.impl.util;
+package jodd.log.impl;
 
-public class LoggerConstants {
+import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
-	public static final String JDK14_LOGGER = "org.apache.commons.logging.impl.Jdk14Logger";
+/**
+ * Provider for {@link jodd.log.impl.Slf4jLogger} adapters.
+ */
+public class Slf4jLoggerProvider implements LoggerProvider {
 
-	public static final String TRACE = "trace";
-
-	public static final String DEBUG = "debug";
-
-	public static final String INFO = "info";
-
-	public static final String WARN = "warn";
-
-	public static final String ERROR = "error";
-
-	public static final String LOG = "log";
-
-	public static final Integer ZERO = 0;
-
-	public static final Integer ONE = 1;
-
-	public static final Integer TWO = 2;
-
-	public static final String NATIVE_METHOD = "NativeMethodAccessorImpl";
-
-	public static final String SIMPLE_LOGGER = "simple_logger";
-
-	public static final String SIMPLE_MESSAGE = "A simple message";
-
-	public static final String TRACE_MESSAGE = "A trace message";
-
-	public static final String INFO_MESSAGE = "A info message";
-
-	public static final String DEBUG_MESSAGE = "A debug message";
-
-	public static final String ERROR_MESSAGE = "A error message";
-
-	public static final String WARN_MESSAGE = "A Warn Message";
-
-	public static final String LOGGER = "logger";
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Logger createLogger(String name) {
+		return new Slf4jLogger(org.slf4j.LoggerFactory.getLogger(name));
+	}
 }
-

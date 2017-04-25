@@ -27,7 +27,7 @@ package jodd.log.impl;
 
 import jodd.log.Logger;
 import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
+import jodd.log.impl.fixtures.LoggerConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class SimpleLoggerTest extends LoggerTestBase {
 
-	private SimpleLoggerFactory slf;
+	private SimpleLoggerProvider slf;
 
 	private ByteArrayOutputStream outputStream;
 
@@ -174,8 +174,8 @@ public class SimpleLoggerTest extends LoggerTestBase {
 	}
 
 	private void initializeLogFactoryAndLogger(Logger.Level level) {
-		slf = new SimpleLoggerFactory(level);
-		logger = slf.getLogger(LoggerConstants.SIMPLE_LOGGER);
+		slf = new SimpleLoggerProvider(level);
+		logger = slf.createLogger(LoggerConstants.SIMPLE_LOGGER);
 	}
 
 	private void setUpOutputStream() {

@@ -23,34 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.fixtures;
+package jodd.log.impl;
 
-import jodd.exception.UncheckedException;
 import jodd.log.Logger;
-import jodd.log.impl.NOPLogger;
-import jodd.log.impl.NOPLoggerFactory;
+import jodd.log.LoggerProvider;
 
-public class TestLoggerFactory extends NOPLoggerFactory {
+/**
+ * Provider for {@link jodd.log.impl.JCLLogger} adapters.
+ */
+public class JCLLoggerProvider implements LoggerProvider {
 
-	private static NOPLogger NOP_LOGGER = new NOPLogger("") {
-		@Override
-		public boolean isWarnEnabled() {
-			return true;
-		}
-
-		@Override
-		public void warn(String message) {
-			throw new UncheckedException("NO WARNING ALLOWED IN TESTS: " + message);
-		}
-
-		@Override
-		public void warn(String message, Throwable throwable) {
-			throw new UncheckedException("NO WARNING ALLOWED IN TESTS: " + message);
-		}
-	};
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Logger getLogger(String name) {
-		return NOP_LOGGER;
+	public Logger createLogger(String name) {
+		return new JCLLogger(org.apache.commons.logging.LogFactory.getLog(name));
 	}
 }

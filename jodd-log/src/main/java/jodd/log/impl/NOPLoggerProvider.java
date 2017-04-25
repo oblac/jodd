@@ -23,16 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.log;
+package jodd.log.impl;
+
+import jodd.log.Logger;
+import jodd.log.LoggerProvider;
 
 /**
- * Adapter for various logger implementations.
+ * Logger provider for dummy logger. Shares same instance of
+ * {@link jodd.log.impl.NOPLogger} across all loggers.
  */
-public interface LoggerFactoryInterface {
+public class NOPLoggerProvider implements LoggerProvider {
 
-	/**
-	 * Returns {@link jodd.log.Logger} for given name.
-	 */
-	Logger getLogger(String name);
+	private final NOPLogger logger = new NOPLogger("*");
 
+	@Override
+	public Logger createLogger(String name) {
+		return logger;
+	}
 }

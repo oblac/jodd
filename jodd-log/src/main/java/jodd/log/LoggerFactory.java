@@ -25,20 +25,20 @@
 
 package jodd.log;
 
-import jodd.log.impl.NOPLoggerFactory;
+import jodd.log.impl.NOPLoggerProvider;
 
 /**
  * Logger factory.
  */
 public final class LoggerFactory {
 
-	private static LoggerFactoryInterface loggerFactory = new NOPLoggerFactory();
+	private static LoggerProvider loggerProvider = new NOPLoggerProvider();
 
 	/**
-	 * Sets logger factory implementation.
+	 * Sets logger provider.
 	 */
-	public static void setLoggerFactory(LoggerFactoryInterface loggerFactoryInterface) {
-		loggerFactory = loggerFactoryInterface;
+	public static void setLoggerProvider(LoggerProvider loggerProvider) {
+		LoggerFactory.loggerProvider = loggerProvider;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public final class LoggerFactory {
 	 * Returns logger for given name.
 	 */
 	public static Logger getLogger(String name) {
-		return loggerFactory.getLogger(name);
+		return loggerProvider.createLogger(name);
 	}
 
 }

@@ -44,7 +44,7 @@ public class Slf4jLogbackLoggerTest {
 		PrintStream ps = new PrintStream(baos);
 		System.setOut(ps);
 
-		LoggerFactory.setLoggerFactory(new Slf4jLoggerFactory());
+		LoggerFactory.setLoggerProvider(new Slf4jLoggerProvider());
 
 		Logger log = LoggerFactory.getLogger("Foo");
 

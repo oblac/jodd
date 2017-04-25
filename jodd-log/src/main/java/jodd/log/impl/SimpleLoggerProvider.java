@@ -26,17 +26,17 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
-import jodd.log.LoggerFactoryInterface;
+import jodd.log.LoggerProvider;
 
 /**
- * Factory for {@link jodd.log.impl.SimpleLogger}.
+ * Provider for {@link jodd.log.impl.SimpleLogger} adapter.
  */
-public class SimpleLoggerFactory implements LoggerFactoryInterface {
+public class SimpleLoggerProvider implements LoggerProvider {
 
 	private final Logger.Level globalLevel;
 	private final long startTime;
 
-	public SimpleLoggerFactory(Logger.Level globalLevel) {
+	public SimpleLoggerProvider(Logger.Level globalLevel) {
 		this.globalLevel = globalLevel;
 		this.startTime = System.currentTimeMillis();
 	}
@@ -55,7 +55,11 @@ public class SimpleLoggerFactory implements LoggerFactoryInterface {
 		return System.currentTimeMillis() - startTime;
 	}
 
-	public Logger getLogger(String name) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Logger createLogger(String name) {
 		return new SimpleLogger(this, name);
 	}
 
@@ -69,7 +73,7 @@ public class SimpleLoggerFactory implements LoggerFactoryInterface {
 
 		for (StackTraceElement stackTraceElement : stackTrace) {
 			String className = stackTraceElement.getClassName();
-			if (className.equals(SimpleLoggerFactory.class.getName())) {
+			if (className.equals(SimpleLoggerProvider.class.getName())) {
 				continue;
 			}
 			if (className.equals(SimpleLogger.class.getName())) {

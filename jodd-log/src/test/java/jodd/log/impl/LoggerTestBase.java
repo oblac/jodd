@@ -27,7 +27,7 @@ package jodd.log.impl;
 
 import static org.junit.Assert.assertFalse;
 import jodd.log.Logger;
-import jodd.log.LoggerFactoryInterface;
+import jodd.log.LoggerProvider;
 import jodd.log.Logger.Level;
 
 public class LoggerTestBase {
@@ -36,7 +36,7 @@ public class LoggerTestBase {
 	
 	protected Throwable throwable;
 	
-	protected LoggerFactoryInterface loggerFactory;
+	protected LoggerProvider loggerProvider;
 
 	protected void testIsLevelEnabled() {
 		// Loggers does not provide any API to enable levels.

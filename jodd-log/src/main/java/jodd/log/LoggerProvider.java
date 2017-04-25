@@ -23,20 +23,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.log.impl;
-
-import jodd.log.Logger;
-import jodd.log.LoggerFactoryInterface;
+package jodd.log;
 
 /**
- * Logger factory for {@link jodd.log.impl.Slf4jLogger}.
+ * Adapter for various logger implementations.
  */
-public class Slf4jLoggerFactory implements LoggerFactoryInterface {
+@FunctionalInterface
+public interface LoggerProvider {
 
 	/**
-	 * {@inheritDoc}
+	 * Returns {@link jodd.log.Logger} for given name.
+	 * Always returns a new instance of the {@code Logger}.
 	 */
-	public Logger getLogger(String name) {
-		return new Slf4jLogger(org.slf4j.LoggerFactory.getLogger(name));
-	}
+	Logger createLogger(String name);
+
 }

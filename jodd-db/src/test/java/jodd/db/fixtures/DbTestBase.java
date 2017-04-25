@@ -24,7 +24,7 @@ public abstract class DbTestBase {
 	public void setUp() throws Exception {
 		DbManager.getInstance().setQueryMap(new DbPropsQueryMap());
 
-		LoggerFactory.setLoggerFactory(new TestLoggerFactory());
+		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {
 			return;
 		}

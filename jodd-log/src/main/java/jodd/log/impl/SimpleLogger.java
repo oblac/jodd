@@ -33,11 +33,11 @@ import jodd.log.Logger;
 public class SimpleLogger implements Logger {
 
 	private final String name;
-	private final SimpleLoggerFactory slf;
+	private final SimpleLoggerProvider slf;
 
-	public SimpleLogger(SimpleLoggerFactory simpleLoggerFactory, String name) {
+	public SimpleLogger(SimpleLoggerProvider simpleLoggerProvider, String name) {
 		this.name = name;
-		this.slf = simpleLoggerFactory;
+		this.slf = simpleLoggerProvider;
 	}
 
 	public String getName() {

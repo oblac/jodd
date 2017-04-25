@@ -34,7 +34,7 @@ import jodd.exception.UncheckedException;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.impl.NOPLogger;
-import jodd.log.impl.NOPLoggerFactory;
+import jodd.log.impl.NOPLoggerProvider;
 
 import static org.junit.Assert.assertTrue;
 
@@ -49,9 +49,9 @@ public abstract class DbBaseTest {
 	protected DbOomManager dboom;
 
 	protected void init() {
-		LoggerFactory.setLoggerFactory(new NOPLoggerFactory() {
+		LoggerFactory.setLoggerProvider(new NOPLoggerProvider() {
 			@Override
-			public Logger getLogger(String name) {
+			public Logger createLogger(String name) {
 				return new NOPLogger("") {
 					@Override
 					public boolean isWarnEnabled() {

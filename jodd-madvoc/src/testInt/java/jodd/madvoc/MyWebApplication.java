@@ -27,7 +27,7 @@ package jodd.madvoc;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLoggerFactory;
+import jodd.log.impl.SimpleLoggerProvider;
 import jodd.madvoc.action.HelloAction;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.MadvocConfigurator;
@@ -38,7 +38,7 @@ import javax.servlet.ServletContext;
 public class MyWebApplication extends PetiteWebApplication {
 
 	public MyWebApplication() {
-		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.DEBUG));
+		LoggerFactory.setLoggerProvider(new SimpleLoggerProvider(Logger.Level.DEBUG));
 	}
 
 	@Override

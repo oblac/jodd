@@ -26,7 +26,7 @@
 package jodd.log.impl;
 
 import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
+import jodd.log.impl.fixtures.LoggerConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -158,10 +158,10 @@ public class JDKLoggerTest extends LoggerTestBase {
 	@Test
 	public void testJDKLoggerFactory() {
 		//given
-		loggerFactory = new JDKLoggerFactory();
+		loggerProvider = new JDKLoggerProvider();
 
 		//when
-		logger = loggerFactory.getLogger(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type JDKLogger", logger.getClass(),

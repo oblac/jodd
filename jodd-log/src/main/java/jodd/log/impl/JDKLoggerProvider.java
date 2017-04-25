@@ -26,13 +26,18 @@
 package jodd.log.impl;
 
 import jodd.log.Logger;
-import jodd.log.LoggerFactoryInterface;
+import jodd.log.LoggerProvider;
 
 /**
- * Factory for {@link jodd.log.impl.JCLLogger}.
+ * Provider for {@link jodd.log.impl.JDKLogger} adapters.
  */
-public class JCLLoggerFactory implements LoggerFactoryInterface {
-	public Logger getLogger(String name) {
-		return new JCLLogger(org.apache.commons.logging.LogFactory.getLog(name));
+public class JDKLoggerProvider implements LoggerProvider {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Logger createLogger(String name) {
+		return new JDKLogger(java.util.logging.Logger.getLogger(name));
 	}
 }

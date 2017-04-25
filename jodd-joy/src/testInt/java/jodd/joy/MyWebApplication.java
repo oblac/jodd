@@ -27,13 +27,13 @@ package jodd.joy;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLoggerFactory;
+import jodd.log.impl.SimpleLoggerProvider;
 import jodd.madvoc.petite.PetiteWebApplication;
 
 public class MyWebApplication extends PetiteWebApplication {
 
 	public MyWebApplication() {
-		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.DEBUG));
+		LoggerFactory.setLoggerProvider(new SimpleLoggerProvider(Logger.Level.DEBUG));
 	}
 
 }
