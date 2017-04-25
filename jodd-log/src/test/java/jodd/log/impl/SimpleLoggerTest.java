@@ -54,7 +54,6 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 	@Test
 	public void testBasicOperations() throws Exception {
-		assertEquals("Logger Level must be debug", Logger.Level.DEBUG, slf.getLevel());
 		assertTrue("Elapsed Time Should be greater than or equal to zero", slf.getElapsedTime() >= 0);
 		assertEquals("Logger name must be simple logger", LoggerConstants.SIMPLE_LOGGER, logger.getName());
 	}

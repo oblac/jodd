@@ -33,11 +33,13 @@ import jodd.log.Logger;
 public class SimpleLogger implements Logger {
 
 	private final String name;
+	private Level level;
 	private final SimpleLoggerProvider slf;
 
-	public SimpleLogger(SimpleLoggerProvider simpleLoggerProvider, String name) {
+	public SimpleLogger(SimpleLoggerProvider simpleLoggerProvider, String name, Level defaultLevel) {
 		this.name = name;
 		this.slf = simpleLoggerProvider;
+		this.level = defaultLevel;
 	}
 
 	public String getName() {
@@ -45,7 +47,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isEnabled(Level level) {
-		return level.isEnabledFor(slf.getLevel());
+		return level.isEnabledFor(level);
 	}
 
 	public void log(Level level, String message) {
@@ -53,7 +55,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isTraceEnabled() {
-		return Level.TRACE.isEnabledFor(slf.getLevel());
+		return Level.TRACE.isEnabledFor(level);
 	}
 
 	public void trace(String message) {
@@ -61,7 +63,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isDebugEnabled() {
-		return Level.DEBUG.isEnabledFor(slf.getLevel());
+		return Level.DEBUG.isEnabledFor(level);
 	}
 
 	public void debug(String message) {
@@ -69,7 +71,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isInfoEnabled() {
-		return Level.INFO.isEnabledFor(slf.getLevel());
+		return Level.INFO.isEnabledFor(level);
 	}
 
 	public void info(String message) {
@@ -77,7 +79,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isWarnEnabled() {
-		return Level.WARN.isEnabledFor(slf.getLevel());
+		return Level.WARN.isEnabledFor(level);
 	}
 
 	public void warn(String message) {
@@ -89,7 +91,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isErrorEnabled() {
-		return Level.ERROR.isEnabledFor(slf.getLevel());
+		return Level.ERROR.isEnabledFor(level);
 	}
 
 	public void error(String message) {
@@ -111,7 +113,7 @@ public class SimpleLogger implements Logger {
 		StringBuilder msg = new StringBuilder()
 			.append(slf.getElapsedTime()).append(' ').append('[')
 			.append(level).append(']').append(' ')
-			.append(slf.getCallerClass()).append(' ').append('-')
+			.append(getCallerClass()).append(' ').append('-')
 			.append(' ').append(message);
 
 		System.out.println(msg.toString());
@@ -120,4 +122,55 @@ public class SimpleLogger implements Logger {
 			throwable.printStackTrace(System.out);
 		}
 	}
+
+	/**
+	 * Returns called class.
+	 */
+	protected String getCallerClass() {
+		Exception exception = new Exception();
+
+		StackTraceElement[] stackTrace = exception.getStackTrace();
+
+		for (StackTraceElement stackTraceElement : stackTrace) {
+			String className = stackTraceElement.getClassName();
+			if (className.equals(SimpleLoggerProvider.class.getName())) {
+				continue;
+			}
+			if (className.equals(SimpleLogger.class.getName())) {
+				continue;
+			}
+			return shortenClassName(className)
+				+ '.' + stackTraceElement.getMethodName()
+				+ ':' + stackTraceElement.getLineNumber();
+		}
+		return "N/A";
+	}
+
+	/**
+	 * Returns shorten class name.
+	 */
+	protected String shortenClassName(String className) {
+		int lastDotIndex = className.lastIndexOf('.');
+		if (lastDotIndex == -1) {
+			return className;
+		}
+
+		StringBuilder shortClassName = new StringBuilder(className.length());
+
+		int start = 0;
+		while(true) {
+			shortClassName.append(className.charAt(start));
+
+			int next = className.indexOf('.', start);
+			if (next == lastDotIndex) {
+				break;
+			}
+			start = next + 1;
+			shortClassName.append('.');
+		}
+		shortClassName.append(className.substring(lastDotIndex));
+
+		return shortClassName.toString();
+	}
+
 }

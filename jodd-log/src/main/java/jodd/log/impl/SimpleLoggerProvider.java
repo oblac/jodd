@@ -33,19 +33,12 @@ import jodd.log.LoggerProvider;
  */
 public class SimpleLoggerProvider implements LoggerProvider {
 
-	private final Logger.Level globalLevel;
+	private final Logger.Level defaultLevel;
 	private final long startTime;
 
-	public SimpleLoggerProvider(Logger.Level globalLevel) {
-		this.globalLevel = globalLevel;
+	public SimpleLoggerProvider(Logger.Level defaultLevel) {
+		this.defaultLevel = defaultLevel;
 		this.startTime = System.currentTimeMillis();
-	}
-
-	/**
-	 * Returns global level.
-	 */
-	public Logger.Level getLevel() {
-		return globalLevel;
 	}
 
 	/**
@@ -60,57 +53,8 @@ public class SimpleLoggerProvider implements LoggerProvider {
 	 */
 	@Override
 	public Logger apply(String name) {
-		return new SimpleLogger(this, name);
+		return new SimpleLogger(this, name, defaultLevel);
 	}
 
-	/**
-	 * Returns called class.
-	 */
-	protected String getCallerClass() {
-		Exception exception = new Exception();
-
-		StackTraceElement[] stackTrace = exception.getStackTrace();
-
-		for (StackTraceElement stackTraceElement : stackTrace) {
-			String className = stackTraceElement.getClassName();
-			if (className.equals(SimpleLoggerProvider.class.getName())) {
-				continue;
-			}
-			if (className.equals(SimpleLogger.class.getName())) {
-				continue;
-			}
-			return shortenClassName(className)
-				+ '.' + stackTraceElement.getMethodName()
-				+ ':' + stackTraceElement.getLineNumber();
-		}
-		return "N/A";
-	}
-
-	/**
-	 * Returns shorten class name.
-	 */
-	protected String shortenClassName(String className) {
-		int lastDotIndex = className.lastIndexOf('.');
-		if (lastDotIndex == -1) {
-			return className;
-		}
-
-		StringBuilder shortClassName = new StringBuilder(className.length());
-
-		int start = 0;
-		while(true) {
-			shortClassName.append(className.charAt(start));
-
-			int next = className.indexOf('.', start);
-			if (next == lastDotIndex) {
-				break;
-			}
-			start = next + 1;
-			shortClassName.append('.');
-		}
-		shortClassName.append(className.substring(lastDotIndex));
-
-		return shortClassName.toString();
-	}
 
 }
