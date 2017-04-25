@@ -83,6 +83,22 @@ public class Slf4jLogger implements Logger {
 
 	@Override
 	public void setLevel(Level level) {
+		if (logger instanceof ch.qos.logback.classic.Logger) {
+			ch.qos.logback.classic.Level l = null;
+
+			switch (level) {
+				case TRACE: l = ch.qos.logback.classic.Level.TRACE; break;
+				case DEBUG: l = ch.qos.logback.classic.Level.DEBUG; break;
+				case INFO: l = ch.qos.logback.classic.Level.INFO; break;
+				case WARN: l = ch.qos.logback.classic.Level.WARN; break;
+				case ERROR: l = ch.qos.logback.classic.Level.WARN; break;
+			}
+
+			((ch.qos.logback.classic.Logger)logger).setLevel(l);
+
+			return;
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
