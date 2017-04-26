@@ -56,6 +56,10 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
+	public void log(Level level, String message, Throwable throwable) {
+	}
+
+	@Override
 	public void setLevel(Level level) {
 	}
 

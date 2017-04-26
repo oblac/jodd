@@ -61,6 +61,11 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
+	public void log(Level level, String message, Throwable throwable) {
+		print(level, message, throwable);
+	}
+
+	@Override
 	public void setLevel(Level level) {
 		this.level = level;
 	}

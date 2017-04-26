@@ -73,6 +73,11 @@ public class JDKLogger implements Logger {
 	}
 
 	@Override
+	public void log(Level level, String message, Throwable throwable) {
+		logger.log(jodd2jdk(level), message, throwable);
+	}
+
+	@Override
 	public void setLevel(Level level) {
 		logger.setLevel(jodd2jdk(level));
 	}

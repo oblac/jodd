@@ -74,6 +74,17 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
+	public void log(Level level, String message, Throwable throwable) {
+		switch (level) {
+			case TRACE: logger.trace(message, throwable); break;
+			case DEBUG: logger.debug(message, throwable); break;
+			case INFO: logger.info(message, throwable); break;
+			case WARN: logger.warn(message, throwable); break;
+			case ERROR: logger.error(message, throwable); break;
+		}
+	}
+
+	@Override
 	public void setLevel(Level level) {
 		throw new UnsupportedOperationException();
 	}

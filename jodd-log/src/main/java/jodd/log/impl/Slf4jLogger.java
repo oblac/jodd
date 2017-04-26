@@ -82,6 +82,17 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
+	public void log(Level level, String message, Throwable throwable) {
+		switch (level) {
+			case TRACE: trace(message); break;
+			case DEBUG: debug(message); break;
+			case INFO: info(message); break;
+			case WARN: warn(message, throwable); break;
+			case ERROR: error(message, throwable); break;
+		}
+	}
+
+	@Override
 	public void setLevel(Level level) {
 		if (logger instanceof ch.qos.logback.classic.Logger) {
 			ch.qos.logback.classic.Level l = null;

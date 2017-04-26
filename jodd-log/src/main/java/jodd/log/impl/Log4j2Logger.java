@@ -62,6 +62,15 @@ public class Log4j2Logger implements Logger {
 			logger.log(jodd2log4j2(level), message);
 		}
 	}
+	@Override
+	public void log(Logger.Level level, String message, Throwable throwable) {
+		if (abstractLogger != null) {
+			abstractLogger.logIfEnabled(FQCN, jodd2log4j2(level), null, message, throwable);
+		}
+		else {
+			logger.log(jodd2log4j2(level), message, throwable);
+		}
+	}
 
 	@Override
 	public void setLevel(Logger.Level level) {
