@@ -49,22 +49,12 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testIsLevelEnabled() {
-		super.testIsLevelEnabled();
-	}
-
-	@Test
 	public void testGetName() {
 		//given
 		when(log.getName()).thenReturn(LoggerConstants.LOG);
 
 		//then
 		assertEquals("Name must be equal log as we set log to the logger", LoggerConstants.LOG, logger.getName());
-	}
-
-	@Test
-	public void testIsEnabled() {
-		super.testIsEnabled();
 	}
 
 	@Test

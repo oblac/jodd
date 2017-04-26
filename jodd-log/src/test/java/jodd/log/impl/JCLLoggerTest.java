@@ -49,16 +49,6 @@ public class JCLLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testIsLevelEnabled() {
-		super.testIsLevelEnabled();
-	}
-
-	@Test
-	public void testIsEnabled() {
-		super.testIsEnabled();
-	}
-
-	@Test
 	public void testGetName() {
 		assertEquals(LoggerConstants.LOG, logger.getName());
 	}

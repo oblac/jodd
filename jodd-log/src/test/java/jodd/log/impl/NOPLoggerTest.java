@@ -48,8 +48,7 @@ public class NOPLoggerTest extends LoggerTestBase {
 
 	@Test
 	public void testIsEnabled() {
-		assertFalse("Source code implemented in such a way that this method call always returns false"
-			, logger.isEnabled(Level.DEBUG));
+		assertFalse("Source code implemented in such a way that this method call always returns false", logger.isEnabled(Level.DEBUG));
 	}
 
 	@Test
@@ -73,11 +72,6 @@ public class NOPLoggerTest extends LoggerTestBase {
 		logger.warn(name, throwable);
 		logger.error(name);
 		logger.error(name, throwable);
-	}
-
-	@Test
-	public void testIsLevelEnabled() {
-		super.testIsLevelEnabled();
 	}
 
 	@Test

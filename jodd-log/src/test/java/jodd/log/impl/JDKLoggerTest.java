@@ -47,22 +47,12 @@ public class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testIsLevelEnabled() {
-		super.testIsLevelEnabled();
-	}
-
-	@Test
 	public void testGetName() {
 		//when
 		logger.getName();
 
 		//then
 		verify(log).getName();
-	}
-
-	@Test
-	public void testIsEnabled() {
-		super.testIsEnabled();
 	}
 
 	@Test

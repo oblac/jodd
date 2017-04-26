@@ -29,8 +29,9 @@ import static org.junit.Assert.assertFalse;
 import jodd.log.Logger;
 import jodd.log.LoggerProvider;
 import jodd.log.Logger.Level;
+import org.junit.Test;
 
-public class LoggerTestBase {
+abstract class LoggerTestBase {
 	
 	protected Logger logger;
 	
@@ -38,7 +39,8 @@ public class LoggerTestBase {
 	
 	protected LoggerProvider loggerProvider;
 
-	protected void testIsLevelEnabled() {
+	@Test
+	public void testIsLevelEnabled() {
 		// Loggers does not provide any API to enable levels.
 		// Instead we need to use log/level(trace/debug etc) API to log information into corresponding level
 		assertFalse(logger.isTraceEnabled());
@@ -48,7 +50,8 @@ public class LoggerTestBase {
 		assertFalse(logger.isErrorEnabled());
 	}
 
-	protected void testIsEnabled() {
+	@Test
+	public void testIsEnabled() {
 		// Loggers does not provide any API to enable levels.
 		// Instead we need to use log/level(trace/debug etc) API to log information into corresponding level
 		assertFalse(logger.isEnabled(Level.TRACE));

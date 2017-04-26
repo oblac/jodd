@@ -53,6 +53,11 @@ public class SimpleLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
+	public void testIsEnabled() {
+		assertTrue("Source code implemented in such a way that this method call always returns false", logger.isEnabled(Level.DEBUG));
+	}
+
+	@Test
 	public void testBasicOperations() throws Exception {
 		assertTrue("Elapsed Time Should be greater than or equal to zero", slf.getElapsedTime() >= 0);
 		assertEquals("Logger name must be simple logger", LoggerConstants.SIMPLE_LOGGER, logger.getName());
