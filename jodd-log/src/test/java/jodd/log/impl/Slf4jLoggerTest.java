@@ -148,7 +148,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testJCLLoggerFactory() {
+	public void testSl4jLoggerFactory() {
 		//given
 		loggerProvider = Slf4jLogger.PROVIDER;
 
@@ -156,7 +156,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 		logger = loggerProvider.apply(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type JCLLogger", logger.getClass(),
+		assertThat("Logger must be of type Slf4jLogger", logger.getClass(),
 			is(instanceOf(Slf4jLogger.class.getClass())));
 	}
 }

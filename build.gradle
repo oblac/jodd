@@ -60,13 +60,13 @@ ext {
 		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
 		jsp:			'javax.servlet.jsp:jsp-api:2.2',
 
-		log_slf4j:			'org.slf4j:slf4j-api:1.7.2',
-		log_slf4j_simple:	'org.slf4j:slf4j-simple:1.7.2',
-		log_logback:		[
-								'ch.qos.logback:logback-core:1.1.7',
-								'ch.qos.logback:logback-classic:1.1.7'
-							],
-		log_jcl:        	'commons-logging:commons-logging:1.1.3',
+		log_slf4j:			'org.slf4j:slf4j-api:[1.7,1.8)',
+		log_slf4j_simple:	'org.slf4j:slf4j-simple:[1.7,1.8)',
+		log_logback_core: 	'ch.qos.logback:logback-core:[1.2,1.3)',
+		log_logback_classic: 'ch.qos.logback:logback-classic:[1.2,1.3)',
+		log_jcl:        	'commons-logging:commons-logging:[1.2,1.3)',
+		log_log4j2:		  'org.apache.logging.log4j:log4j-api:[2.8,2.9)',
+		log_log4j2_core:		  'org.apache.logging.log4j:log4j-core:[2.8,2.9)',
 
 //		asm:			'org.ow2.asm:asm:4.1',
 

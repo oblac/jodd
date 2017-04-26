@@ -25,6 +25,7 @@
 
 package jodd.log;
 
+import jodd.log.impl.Log4j2Logger;
 import jodd.log.impl.NOPLogger;
 import jodd.log.impl.SimpleLogger;
 import org.junit.Test;
@@ -62,6 +63,30 @@ public class LoggerFactoryTest {
 		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
 		log.setLevel(Logger.Level.TRACE);
+
+		assertEquals("foo", log.getName());
+
+		PrintStream out = System.out;
+		ByteArrayOutputStream sos = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(sos));
+
+		log.debug("debug");
+		log.error("error");
+
+		System.setOut(out);
+
+		String str = sos.toString();
+
+		assertTrue(str.contains("[DEBUG]"));
+		assertTrue(str.contains("[ERROR]"));
+		assertFalse(str.contains("[TRACE]"));
+	}
+
+	@Test
+	public void testLog4j2Factory() {
+		LoggerFactory.setLoggerProvider(Log4j2Logger.PROVIDER);
+		Logger log = LoggerFactory.getLogger("foo");
+//		log.setLevel(Logger.Level.TRACE);
 
 		assertEquals("foo", log.getName());
 

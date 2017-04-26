@@ -75,7 +75,7 @@ public class NOPLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testJDKLoggerFactory() {
+	public void testNopLoggerFactory() {
 		//given
 		loggerProvider = NOPLogger.PROVIDER;
 
