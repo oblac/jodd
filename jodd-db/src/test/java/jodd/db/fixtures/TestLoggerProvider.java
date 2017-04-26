@@ -50,7 +50,7 @@ public class TestLoggerProvider implements LoggerProvider {
 	};
 
 	@Override
-	public Logger apply(String name) {
+	public Logger createLogger(String name) {
 		return NOP_LOGGER;
 	}
 }
