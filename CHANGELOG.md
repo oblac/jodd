@@ -10,10 +10,12 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **log** - added Log4j2 support.
 + **jtx** - added `ReadWriteTransaction` annotation to codebase.
 
 ## Breaking changes
 
++ **log** - factories are now called "providers", now stored in each logger.
 + **email** - Content-Disposition and Content-ID flags are now separate [#404](https://github.com/oblac/jodd/issues/404).
 
 
