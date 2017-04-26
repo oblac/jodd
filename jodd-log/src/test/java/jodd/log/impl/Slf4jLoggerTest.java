@@ -153,7 +153,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 		loggerProvider = Slf4jLogger.PROVIDER;
 
 		//when
-		logger = loggerProvider.apply(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type Slf4jLogger", logger.getClass(),

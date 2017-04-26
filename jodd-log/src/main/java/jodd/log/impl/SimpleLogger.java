@@ -33,7 +33,7 @@ import jodd.log.LoggerProvider;
  */
 public class SimpleLogger implements Logger {
 
-	public static final LoggerProvider PROVIDER = new SimpleLoggerProvider(Level.DEBUG);
+	public static final LoggerProvider<SimpleLogger> PROVIDER = new SimpleLoggerProvider();
 
 	private final String name;
 	private Level level;

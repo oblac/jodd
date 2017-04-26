@@ -34,12 +34,12 @@ import org.slf4j.spi.LocationAwareLogger;
  */
 public class Slf4jLogger implements Logger {
 
-	public static final LoggerProvider PROVIDER =
+	public static final LoggerProvider<Slf4jLogger> PROVIDER =
 		name -> new Slf4jLogger(org.slf4j.LoggerFactory.getLogger(name));
 
 	private static final String FQCN = Slf4jLogger.class.getName();
 
-	private final org.slf4j.Logger logger;
+	final org.slf4j.Logger logger;
 	private final LocationAwareLogger locationAwareLogger;
 
 	public Slf4jLogger(org.slf4j.Logger logger) {

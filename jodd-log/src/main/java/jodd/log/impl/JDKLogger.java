@@ -33,10 +33,10 @@ import jodd.log.LoggerProvider;
  */
 public class JDKLogger implements Logger {
 
-	public static final LoggerProvider PROVIDER =
+	public static final LoggerProvider<JDKLogger> PROVIDER =
 		name -> new JDKLogger(java.util.logging.Logger.getLogger(name));
 
-	private final java.util.logging.Logger logger;
+	final java.util.logging.Logger logger;
 
 	public JDKLogger(java.util.logging.Logger logger) {
 		this.logger = logger;

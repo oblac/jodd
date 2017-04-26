@@ -34,10 +34,10 @@ import org.apache.commons.logging.Log;
  */
 public class JCLLogger implements Logger {
 
-	public static final LoggerProvider PROVIDER =
+	public static final LoggerProvider<JCLLogger> PROVIDER =
 		name -> new JCLLogger(org.apache.commons.logging.LogFactory.getLog(name));
 
-	private final Log logger;
+	final Log logger;
 
 	public JCLLogger(Log log) {
 		this.logger = log;

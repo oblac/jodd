@@ -29,28 +29,29 @@ import jodd.log.impl.NOPLogger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Logger factory.
  */
 public final class LoggerFactory {
 
-	private static LoggerProvider loggerProvider = NOPLogger.PROVIDER;
-
-	private static final Map<String, Logger> loggers = new HashMap<>();
-
-	/**
-	 * Resets all loggers.
-	 */
-	public static void reset() {
-		loggers.clear();
+	static {
+		setLoggerProvider(NOPLogger.PROVIDER);
 	}
+
+	private static Function<String, Logger> loggerProvider;
+
+	private static Map<String, Logger> loggers = new HashMap<>();
 
 	/**
 	 * Sets {@link LoggerProvider} instance used for creating new {@link Logger}s.
 	 */
 	public static void setLoggerProvider(LoggerProvider loggerProvider) {
-		LoggerFactory.loggerProvider = loggerProvider;
+		LoggerFactory.loggerProvider = loggerProvider::createLogger;
+		if (loggers != null) {
+			loggers.clear();
+		}
 	}
 
 	/**
@@ -62,10 +63,20 @@ public final class LoggerFactory {
 	}
 
 	/**
+	 * Enables cache. Previous cache is removed.
+	 */
+	public static void enableCache() {
+		loggers = new HashMap<>();
+	}
+
+	/**
 	 * Returns logger for given name. Repeated calls to this method with the
 	 * same argument should return the very same instance of the logger.
 	 */
 	public static Logger getLogger(String name) {
+		if (loggers == null) {
+			return loggerProvider.apply(name);
+		}
 		return loggers.computeIfAbsent(name, loggerProvider);
 	}
 

@@ -149,7 +149,7 @@ public class JCLLoggerTest extends LoggerTestBase {
 		loggerProvider = JCLLogger.PROVIDER;
 
 		//when
-		logger = loggerProvider.apply(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type JCLLogger", logger.getClass(),

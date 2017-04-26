@@ -129,7 +129,7 @@ public class Log4j2LoggerTest extends LoggerTestBase {
 		loggerProvider = Log4j2Logger.PROVIDER;
 
 		//when
-		logger = loggerProvider.apply(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type Log4j2Logger", logger.getClass(),

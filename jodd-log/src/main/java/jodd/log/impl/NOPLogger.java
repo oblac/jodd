@@ -33,7 +33,9 @@ import jodd.log.LoggerProvider;
  */
 public class NOPLogger implements Logger {
 
-	public static final LoggerProvider PROVIDER = NOPLogger::new;
+	private static final NOPLogger INSTANCE = new NOPLogger("*");
+
+	public static final LoggerProvider<NOPLogger> PROVIDER = name -> INSTANCE;
 
 	private final String name;
 

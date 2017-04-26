@@ -10,12 +10,12 @@ import org.apache.logging.log4j.spi.AbstractLogger;
  */
 public class Log4j2Logger implements Logger {
 
-	public static final LoggerProvider PROVIDER =
+	public static final LoggerProvider<Log4j2Logger> PROVIDER =
 		name -> new Log4j2Logger(LogManager.getLogger(name));
 
 	private static final String FQCN = Log4j2Logger.class.getName();
 
-	private final org.apache.logging.log4j.Logger logger;
+	final org.apache.logging.log4j.Logger logger;
 	private final AbstractLogger abstractLogger;
 
 	public Log4j2Logger(org.apache.logging.log4j.Logger logger) {

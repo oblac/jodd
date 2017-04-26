@@ -80,7 +80,7 @@ public class NOPLoggerTest extends LoggerTestBase {
 		loggerProvider = NOPLogger.PROVIDER;
 
 		//when
-		logger = loggerProvider.apply(LoggerConstants.LOGGER);
+		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
 		assertThat("Logger must be of type NOPLogger", logger.getClass(),

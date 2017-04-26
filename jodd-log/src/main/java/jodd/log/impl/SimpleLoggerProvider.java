@@ -28,16 +28,21 @@ package jodd.log.impl;
 import jodd.log.Logger;
 import jodd.log.LoggerProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 /**
  * Provider for {@link jodd.log.impl.SimpleLogger} adapter.
  */
-class SimpleLoggerProvider implements LoggerProvider {
+public class SimpleLoggerProvider implements LoggerProvider<SimpleLogger> {
 
-	private final Logger.Level defaultLevel;
 	private final long startTime;
+	private static Map<String, SimpleLogger> loggers = new HashMap<>();
+	private Function<String, SimpleLogger> simpleLoggerFunction =
+		n -> new SimpleLogger(this, n, Logger.Level.DEBUG);
 
-	SimpleLoggerProvider(Logger.Level defaultLevel) {
-		this.defaultLevel = defaultLevel;
+	protected SimpleLoggerProvider() {
 		this.startTime = System.currentTimeMillis();
 	}
 
@@ -52,8 +57,8 @@ class SimpleLoggerProvider implements LoggerProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Logger apply(String name) {
-		return new SimpleLogger(this, name, defaultLevel);
+	public SimpleLogger createLogger(String name) {
+		return loggers.computeIfAbsent(name, simpleLoggerFunction);
 	}
 
 }

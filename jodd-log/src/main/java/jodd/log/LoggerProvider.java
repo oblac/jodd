@@ -25,12 +25,26 @@
 
 package jodd.log;
 
-import java.util.function.Function;
-
 /**
- * Adapter for various logger implementations.
- * Always returns a new instance of the {@code Logger}.
+ * Factory and adapter for various logger implementations.
  */
 @FunctionalInterface
-public interface LoggerProvider extends Function<String, Logger> {
+public interface LoggerProvider<L extends Logger> {
+
+	/**
+	 * Creates new Jodd logger. It can be either a <i>wrapper</i> or one of
+	 * Jodds implementations.
+	 * <p>
+	 * Wrapper is an adapter over 3rd party logging frameworks logger. This
+	 * method may return different wrapper instances for same name,
+	 * but internal logger instance must be the same. In the case of Jodds
+	 * implementations, this method always returns the same instance for the
+	 * same name.
+	 * <p>
+	 * Behaviour for 3rd party libraries is different because of common usage
+	 * pattern, where logger instances created with this method are usually
+	 * stored as static finals.
+	 */
+	public L createLogger(String name);
+
 }
