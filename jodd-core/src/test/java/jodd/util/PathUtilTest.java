@@ -28,6 +28,7 @@ package jodd.util;
 import jodd.io.PathUtil;
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -37,24 +38,28 @@ public class PathUtilTest {
 
 	@Test
 	public void testResolve() {
-		Path base = Paths.get("/aaa/bbb");
+		Path base = Paths.get(fixpath("/aaa/bbb"));
 
 		Path path = PathUtil.resolve(base, "ccc");
-		assertEquals("/aaa/bbb/ccc", path.toString());
+		assertEquals(fixpath("/aaa/bbb/ccc"), path.toString());
 
-		path = PathUtil.resolve(base, "ccc/");
-		assertEquals("/aaa/bbb/ccc", path.toString());
+		path = PathUtil.resolve(base, fixpath("ccc/"));
+		assertEquals(fixpath("/aaa/bbb/ccc"), path.toString());
 
-		path = PathUtil.resolve(base, "/ccc");
-		assertEquals("/aaa/bbb/ccc", path.toString());
+		path = PathUtil.resolve(base, fixpath("/ccc"));
+		assertEquals(fixpath("/aaa/bbb/ccc"), path.toString());
 
 		path = PathUtil.resolve(base, "ccc", "ddd");
-		assertEquals("/aaa/bbb/ccc/ddd", path.toString());
+		assertEquals(fixpath("/aaa/bbb/ccc/ddd"), path.toString());
 
-		path = PathUtil.resolve(base, "/ccc", "ddd/");
-		assertEquals("/aaa/bbb/ccc/ddd", path.toString());
+		path = PathUtil.resolve(base, fixpath("/ccc"), fixpath("ddd/"));
+		assertEquals(fixpath("/aaa/bbb/ccc/ddd"), path.toString());
 
-		path = PathUtil.resolve(base, "/ccc/", "/ddd/");
-		assertEquals("/aaa/bbb/ccc/ddd", path.toString());
+		path = PathUtil.resolve(base, fixpath("/ccc/"), fixpath("/ddd/"));
+		assertEquals(fixpath("/aaa/bbb/ccc/ddd"), path.toString());
+	}
+
+	private String fixpath(String path) {
+		return StringUtil.replace(path, "/", File.separator);
 	}
 }
