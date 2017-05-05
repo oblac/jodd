@@ -25,8 +25,11 @@
 
 package jodd.io;
 
+import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 import org.junit.Test;
+
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -148,15 +151,19 @@ public class FileNameUtilTest {
 		assertEquals("qwe", FileNameUtil.resolveHome("qwe"));
 		assertEquals("", FileNameUtil.resolveHome(""));
 		assertEquals(SystemUtil.userHome(), FileNameUtil.resolveHome("~"));
-		assertEquals(SystemUtil.userHome() + "/", FileNameUtil.resolveHome("~/"));
-		assertEquals(SystemUtil.userHome() + "/foo", FileNameUtil.resolveHome("~/foo"));
+		assertEquals(fixpath(SystemUtil.userHome() + "/"), FileNameUtil.resolveHome(fixpath("~/")));
+		assertEquals(fixpath(SystemUtil.userHome() + "/foo"), FileNameUtil.resolveHome(fixpath("~/foo")));
 	}
 
 	@Test
 	public void testGetRelativePaths() {
-		assertEquals("../../b/c", FileNameUtil.relativePath("/a/b/c", "/a/x/y/"));
-		assertEquals("../../b/c", FileNameUtil.relativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/"));
-		assertEquals("stuff/xyz.dat", FileNameUtil.relativePath("/var/data/stuff/xyz.dat", "/var/data/"));
-		assertEquals("../../../a/b/c", FileNameUtil.relativePath("/a/b/c", "/m/n/o"));
+		assertEquals(fixpath("../../b/c"), FileNameUtil.relativePath("/a/b/c", "/a/x/y/"));
+		assertEquals(fixpath("../../b/c"), FileNameUtil.relativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/"));
+		assertEquals(fixpath("stuff/xyz.dat"), FileNameUtil.relativePath("/var/data/stuff/xyz.dat", "/var/data/"));
+		assertEquals(fixpath("../../../a/b/c"), FileNameUtil.relativePath("/a/b/c", "/m/n/o"));
+	}
+
+	private static String fixpath(String path) {
+		return StringUtil.replace(path, "/", File.separator);
 	}
 }
