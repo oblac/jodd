@@ -65,6 +65,11 @@ public class JoddHttp {
 	 * read from system property <code>https.protocols</code>.
 	 */
 	public static String defaultSecureEnabledProtocols = System.getProperty("https.protocols");
+	
+	/**
+	 * Default user agent (Jodd HTTP)
+	 */
+	public static String defaultUserAgent = "Jodd HTTP";
 
 	// ---------------------------------------------------------------- module
 
