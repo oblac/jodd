@@ -872,7 +872,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// user-agent
 
 		if (header("User-Agent") == null) {
-			header("User-Agent", "Jodd HTTP");
+			header("User-Agent", JoddHttp.defaultUserAgent);
 		}
 
 		// POST method requires Content-Type to be set
