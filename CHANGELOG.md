@@ -10,6 +10,7 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **http** - default user agent now can be set [#410](https://github.com/oblac/jodd/pull/410).
 + **log** - added Log4j2 support.
 + **jtx** - added `ReadWriteTransaction` annotation to codebase.
 
