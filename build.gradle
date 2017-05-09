@@ -217,29 +217,51 @@ configure(javaModules()) {
 		from javadoc.destinationDir
 	}
 
-	// DONT: use separate output folders for idea, don't mess with gradle
-	idea {
-		module {
-			inheritOutputDirs false
-		}
-	}
-
 	// integration tests + performances
 
 	sourceSets {
-		perf
-		testInt
+		perf {
+			java {
+				compileClasspath += main.output
+				runtimeClasspath += main.output
+			}
+		}
+		testInt {
+			java {
+				compileClasspath += main.output
+				compileClasspath += test.output
+				runtimeClasspath += main.output
+			}
+		}
+	}
+
+	configurations {
+		testIntCompile.extendsFrom testCompile
+		testIntRuntime.extendsFrom testRuntime
+
+		perfCompile.extendsFrom testCompile
+		perfRuntime.extendsFrom testRuntime
 	}
 
 	dependencies {
-		testIntCompile sourceSets.main.output
-		testIntCompile sourceSets.test.output
-		testIntCompile configurations.testCompile
-		testIntRuntime configurations.testRuntime
-
-		perfCompile sourceSets.main.output
 		perfCompile 'org.openjdk.jmh:jmh-core:1.15'
 		perfCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.15'
+	}
+
+	idea {
+		module {
+			// DONT: use separate output folders for idea, don't mess with gradle
+			inheritOutputDirs false
+
+			//
+			// put our custom test dependencies onto IDEA's TEST scope
+			// IT IS NOT WORKING !!!
+			// see: https://youtrack.jetbrains.com/issue/IDEA-151925
+			// see: fixIdeaTestScopes.sh
+			//
+			//scopes.TEST.plus += [ configurations.testIntCompile ]
+			//scopes.TEST.plus += [ configurations.perfCompile ]
+		}
 	}
 
 	task perf(type:JavaExec) {
