@@ -97,8 +97,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the name of the formal parameter.
      */
-    public void visitFormalTypeParameter(String name) {
-    }
+    public abstract void visitFormalTypeParameter(String name);
 
     /**
      * Visits the class bound of the last visited formal type parameter.
@@ -171,8 +170,7 @@ public abstract class SignatureVisitor {
      *            the descriptor of the primitive type, or 'V' for <tt>void</tt>
      *            .
      */
-    public void visitBaseType(char descriptor) {
-    }
+    public abstract void visitBaseType(char descriptor);
 
     /**
      * Visits a signature corresponding to a type variable.
@@ -180,8 +178,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the name of the type variable.
      */
-    public void visitTypeVariable(String name) {
-    }
+    public abstract void visitTypeVariable(String name);
 
     /**
      * Visits a signature corresponding to an array type.
@@ -200,8 +197,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the internal name of the class or interface.
      */
-    public void visitClassType(String name) {
-    }
+    public abstract void visitClassType(String name);
 
     /**
      * Visits an inner class.
@@ -209,15 +205,13 @@ public abstract class SignatureVisitor {
      * @param name
      *            the local name of the inner class in its enclosing class.
      */
-    public void visitInnerClassType(String name) {
-    }
+    public abstract void visitInnerClassType(String name);
 
     /**
      * Visits an unbounded type argument of the last visited class or inner
      * class type.
      */
-    public void visitTypeArgument() {
-    }
+    public abstract void visitTypeArgument();
 
     /**
      * Visits a type argument of the last visited class or inner class type.
@@ -233,6 +227,5 @@ public abstract class SignatureVisitor {
     /**
      * Ends the visit of a signature corresponding to a class or interface type.
      */
-    public void visitEnd() {
-    }
+    public abstract void visitEnd();
 }
