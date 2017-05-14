@@ -52,7 +52,7 @@ public abstract class UrlRewriterTagAdapter extends TagAdapter {
 				if (href != null) {
 					CharSequence newHref = rewriteUrl(href);
 
-					if (newHref != href) {
+					if (!href.equals(newHref)) {
 						tag.setAttribute("href", newHref);
 					}
 				}

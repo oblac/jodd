@@ -926,7 +926,7 @@ public class ClassReader {
          */
         if (WRITER && mv instanceof MethodWriter) {
             MethodWriter mw = (MethodWriter) mv;
-            if (mw.cw.cr == this && signature == mw.signature) {
+            if ( (this.equals(mw.cw.cr)) && (signature != null && signature.equals(mw.signature)) ) {
                 boolean sameExceptions = false;
                 if (exceptions == null) {
                     sameExceptions = mw.exceptionCount == 0;

@@ -193,7 +193,7 @@ public class MapToBean {
 				Object value = entry.getValue();
 				Object newValue = convert(value, valueType);
 
-				if (value != newValue) {
+				if (!newValue.equals(value)) {
 					entry.setValue(newValue);
 				}
 			}
