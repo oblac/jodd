@@ -1,3 +1,4 @@
+
 // Copyright (c) 2003-present, Jodd Team (http://jodd.org)
 // All rights reserved.
 //
@@ -58,7 +59,7 @@ public class ResourceBundleMessageResolver {
 	/**
 	 * Calculates indexedTextName (collection[*]) if applicable.
 	 */
-	private String calcIndexKey(String key) {
+	private static String calcIndexKey(String key) {
 		String indexedKey = null;
 		if (key.indexOf('[') != -1) {
 			int i = -1;

@@ -210,7 +210,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 	/**
 	 * Closes socket silently.
 	 */
-	private void closeSocket(Socket socket) {
+	private static void closeSocket(Socket socket) {
 		try {
 			if (socket != null) {
 				socket.close();
