@@ -126,7 +126,7 @@ public class Jodd {
 
 		final Field[] fields = Jodd.class.getFields();
 
-		final ClassLoader classLoader = Jodd.class.getClassLoader();
+		final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
 		for (Field field : fields) {
 			Object fieldValue;

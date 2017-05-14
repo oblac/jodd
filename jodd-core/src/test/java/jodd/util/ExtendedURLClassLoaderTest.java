@@ -45,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ExtendedURLClassLoaderTest {
 
-	private final URLClassLoader cl = (URLClassLoader) this.getClass().getClassLoader();
+	private final URLClassLoader cl = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
 	@Test
 	public void testLoadSystemClasses() throws ClassNotFoundException {
@@ -68,7 +68,7 @@ public class ExtendedURLClassLoaderTest {
 
 	@Test
 	public void testParentFirst() throws ClassNotFoundException {
-		URLClassLoader parentCL = (URLClassLoader) A.class.getClassLoader();
+		URLClassLoader parentCL = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 		URL[] urls = parentCL.getURLs();
 
 		// parent-first
@@ -94,7 +94,7 @@ public class ExtendedURLClassLoaderTest {
 
 	@Test
 	public void testParentLast() throws ClassNotFoundException {
-		URLClassLoader parentCL = (URLClassLoader) A.class.getClassLoader();
+		URLClassLoader parentCL = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 		URL[] urls = parentCL.getURLs();
 
 		// parent-last
