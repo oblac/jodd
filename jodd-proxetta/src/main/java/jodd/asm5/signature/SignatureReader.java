@@ -147,8 +147,9 @@ public class SignatureReader {
         int start, end;
         boolean visited, inner;
         String name;
-
-        switch (c = signature.charAt(pos++)) {
+        
+        c = signature.charAt(pos++);
+        switch (c) {
         case 'Z':
         case 'C':
         case 'B':
@@ -174,7 +175,8 @@ public class SignatureReader {
             visited = false;
             inner = false;
             for (;;) {
-                switch (c = signature.charAt(pos++)) {
+            	c = signature.charAt(pos++);
+                switch (c) {
                 case '.':
                 case ';':
                     if (!visited) {
@@ -203,7 +205,8 @@ public class SignatureReader {
                     }
                     visited = true;
                     top: for (;;) {
-                        switch (c = signature.charAt(pos)) {
+                    	c = signature.charAt(pos);
+                        switch (c) {
                         case '>':
                             break top;
                         case '*':
