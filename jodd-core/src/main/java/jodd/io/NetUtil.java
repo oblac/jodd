@@ -36,7 +36,10 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Network utilities.
@@ -47,7 +50,6 @@ public class NetUtil {
 	public static final String LOCAL_IP = "127.0.0.1";
 	public static final String DEFAULT_MASK = "255.255.255.0";
 	public static final int INT_VALUE_127_0_0_1 = 0x7f000001;
-
 
 	/**
 	 * Resolves IP address from a hostname.
@@ -102,9 +104,8 @@ public class NetUtil {
 	 * Validates IP address given as a string.
 	 */
 	public static boolean validateHostIp(String host) {
-		boolean retVal = false;
 		if (host == null) {
-			return retVal;
+			return false;
 		}
 
 		int hitDots = 0;
@@ -174,9 +175,16 @@ public class NetUtil {
 	 * Downloads resource to a file, potentially very efficiently.
 	 */
 	public static void downloadFile(String url, File file) throws IOException {
-		InputStream inputStream = new URL(url).openStream();
-		ReadableByteChannel rbc = Channels.newChannel(inputStream);
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+		try (
+			InputStream inputStream = new URL(url).openStream();
+			ReadableByteChannel rbc = Channels.newChannel(inputStream);
+			FileChannel fileChannel = FileChannel.open(
+				file.toPath(),
+				StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING,
+				StandardOpenOption.WRITE)
+		) {
+			fileChannel.transferFrom(rbc, 0, Long.MAX_VALUE);
+		}
 	}
 }

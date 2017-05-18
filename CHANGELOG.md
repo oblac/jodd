@@ -6,6 +6,7 @@ All notable changes to Jodd project are documented here.
 
 ### Bug Fixes
 
++ **core** - fixes `downloadFile` to download bigger files as well.
 + **lagarto** - bug introduced in 3.8.5; bad parsing of pseudo-function arguments [#407](https://github.com/oblac/jodd/issues/407).
 
 ### Features
