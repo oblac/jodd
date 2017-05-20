@@ -55,7 +55,7 @@ public class Buffer {
 		ensureLast();
 
 		try {
-			byte[] bytes = string.getBytes(StringPool.ISO_8859_1);
+			byte[] bytes = string.getBytes(StringPool.UTF_8);
 
 			last.append(bytes);
 
@@ -135,7 +135,7 @@ public class Buffer {
 
 				byte[] array = fastByteBuffer.toArray();
 
-				writer.write(new String(array, StringPool.ISO_8859_1));
+				writer.write(new String(array, StringPool.UTF_8));
 			}
 			else if (o instanceof Uploadable) {
 				Uploadable uploadable = (Uploadable) o;
@@ -143,7 +143,7 @@ public class Buffer {
 				InputStream inputStream = uploadable.openInputStream();
 
 				try {
-					StreamUtil.copy(inputStream, writer, StringPool.ISO_8859_1);
+					StreamUtil.copy(inputStream, writer, StringPool.UTF_8);
 				}
 				finally {
 					StreamUtil.close(inputStream);
