@@ -37,9 +37,9 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.8.6-SNAPSHOT'
+//version = '3.8.6-SNAPSHOT'
 //version = '3.8.2-' + date()
-//version = '3.8.5'
+version = '3.8.6'
 
 // --- properties -------------------------------------------------------------
 
@@ -231,6 +231,7 @@ configure(javaModules()) {
 				compileClasspath += main.output
 				compileClasspath += test.output
 				runtimeClasspath += main.output
+				runtimeClasspath += test.output
 			}
 		}
 	}
