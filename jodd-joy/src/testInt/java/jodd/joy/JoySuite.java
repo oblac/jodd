@@ -33,7 +33,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-		JsppLiveTest.class
 })
 public class JoySuite {
 
