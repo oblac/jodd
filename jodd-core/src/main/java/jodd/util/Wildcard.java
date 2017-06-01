@@ -140,7 +140,7 @@ public class Wildcard {
 	 * Returns index of matched pattern, or <code>-1</code> otherwise.
 	 * @see #match(CharSequence, CharSequence)
 	 */
-	public static int matchOne(String src, String[] patterns) {
+	public static int matchOne(String src, String... patterns) {
 		for (int i = 0; i < patterns.length; i++) {
 			if (match(src, patterns[i])) {
 				return i;
@@ -154,7 +154,7 @@ public class Wildcard {
 	 * Returns index of matched pattern or <code>-1</code> otherwise.
 	 * @see #matchPath(String, String) 
 	 */
-	public static int matchPathOne(String path, String[] patterns) {
+	public static int matchPathOne(String path, String... patterns) {
 		for (int i = 0; i < patterns.length; i++) {
 			if (matchPath(path, patterns[i])) {
 				return i;

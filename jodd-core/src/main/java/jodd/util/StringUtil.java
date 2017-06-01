@@ -1490,7 +1490,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOf(String s, String[] arr) {
+	public static int[] indexOf(String s, String... arr) {
 		return indexOf(s, arr, 0);
 	}
 	/**
@@ -1501,14 +1501,14 @@ public class StringUtil {
 	 *
 	 * @param s      source string
 	 * @param arr    string array
-	 * @param start  starting position
+	 * @param offset  starting position
 	 */
-	public static int[] indexOf(String s, String[] arr, int start) {
+	public static int[] indexOf(String s, String[] arr, int offset) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
 		for (int j = 0; j < arrLen; j++) {
-			int i = s.indexOf(arr[j], start);
+			int i = s.indexOf(arr[j], offset);
 			if (i != -1) {
 				if (i < index) {
 					index = i;
@@ -1528,7 +1528,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOfIgnoreCase(String s, String[] arr) {
+	public static int[] indexOfIgnoreCase(String s, String... arr) {
 		return indexOfIgnoreCase(s, arr, 0);
 	}
 	/**
@@ -1566,7 +1566,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] lastIndexOf(String s, String[] arr) {
+	public static int[] lastIndexOf(String s, String... arr) {
 		return lastIndexOf(s, arr, s.length());
 	}
 	/**
@@ -1606,7 +1606,7 @@ public class StringUtil {
 	 *
 	 * @return int[2]
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String[] arr) {
+	public static int[] lastIndexOfIgnoreCase(String s, String... arr) {
 		return lastIndexOfIgnoreCase(s, arr, s.length());
 	}
 	/**
@@ -1741,7 +1741,7 @@ public class StringUtil {
 	 * If at least one equal string is found, returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int equalsOne(String src, String[] dest) {
+	public static int equalsOne(String src, String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			if (src.equals(dest[i])) {
 				return i;
@@ -1754,7 +1754,7 @@ public class StringUtil {
 	 * If at least one equal string is found, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int equalsOneIgnoreCase(String src, String[] dest) {
+	public static int equalsOneIgnoreCase(String src, String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			if (src.equalsIgnoreCase(dest[i])) {
 				return i;
@@ -1768,7 +1768,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int startsWithOne(String src, String[] dest) {
+	public static int startsWithOne(String src, String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1786,7 +1786,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int startsWithOneIgnoreCase(String src, String[] dest) {
+	public static int startsWithOneIgnoreCase(String src, String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1805,7 +1805,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int endsWithOne(String src, String[] dest) {
+	public static int endsWithOne(String src, String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1823,7 +1823,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int endsWithOneIgnoreCase(String src, String[] dest) {
+	public static int endsWithOneIgnoreCase(String src, String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -2012,7 +2012,7 @@ public class StringUtil {
 	/**
 	 * Trims array of strings. <code>null</code> array elements are ignored.
 	 */
-	public static void trimAll(String[] strings) {
+	public static void trimAll(String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -2026,7 +2026,7 @@ public class StringUtil {
 	 * <code>null</code> elements of the array are ignored.
 	 * @see #trimDown(String)
 	 */
-	public static void trimDownAll(String[] strings) {
+	public static void trimDownAll(String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -2060,7 +2060,7 @@ public class StringUtil {
 	/**
 	 * Crops all elements of string array.
 	 */
-	public static void cropAll(String[] strings) {
+	public static void cropAll(String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
