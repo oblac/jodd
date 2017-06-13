@@ -33,7 +33,7 @@ import java.util.Iterator;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
-public class FIFOCacheTest {
+public class FIFOCacheTest extends BaseCacheTest {
 
 	@Test
 	public void testCache() {
@@ -146,6 +146,11 @@ public class FIFOCacheTest {
 		assertThat(2, equalTo(fifoCache.get("2")));
 		assertThat(3, equalTo(fifoCache.get("3")));
 
+	}
+
+	@Override
+	protected final <K,V> Cache<K,V> createCache(int size) {
+		return new FIFOCache<>(size);
 	}
 
 }
