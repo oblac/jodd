@@ -27,8 +27,7 @@ package jodd.cache;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 
 /**
  * Default implementation of timed and size cache map.
@@ -71,11 +70,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
     }
 
 	protected Map<K,CacheObject<K,V>> cacheMap;
-
-	private final ReentrantReadWriteLock cacheLock = new ReentrantReadWriteLock();
-	private final Lock readLock = cacheLock.readLock();
-	private final Lock writeLock = cacheLock.writeLock();
-
+	private final StampedLock lock = new StampedLock();
 
 	// ---------------------------------------------------------------- properties
 
@@ -128,7 +123,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void put(K key, V object, long timeout) {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 
 		try {
 			CacheObject<K,V> co = new CacheObject<>(key, object, timeout);
@@ -141,7 +136,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			cacheMap.put(key, co);
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
@@ -169,7 +164,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public V get(K key) {
-		readLock.lock();
+		final long stamp = lock.readLock();
 
 		try {
 			CacheObject<K,V> co = cacheMap.get(key);
@@ -189,7 +184,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			return co.getObject();
 		}
 		finally {
-			readLock.unlock();
+			lock.unlockRead(stamp);
 		}
 	}
 
@@ -204,12 +199,12 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public final int prune() {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 		try {
 			return pruneCache();
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
@@ -241,7 +236,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void remove(K key) {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 		try {
 			CacheObject<K,V> co = cacheMap.remove(key);
 			if (co != null) {
@@ -249,7 +244,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			}
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
@@ -257,12 +252,12 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void clear() {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 		try {
 			cacheMap.clear();
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
@@ -283,14 +278,14 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 	@Override
 	public Map<K, V> snapshot() {
-		writeLock.lock();
+		final long stamp = lock.writeLock();
 		try {
 			Map<K, V> map = new HashMap<>(cacheMap.size());
 			cacheMap.forEach((key, cacheValue) -> map.put(key, cacheValue.getObject()));
 			return map;
 		}
 		finally {
-			writeLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
