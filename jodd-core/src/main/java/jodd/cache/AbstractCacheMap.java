@@ -164,7 +164,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public V get(K key) {
-		final long stamp = lock.readLock();
+		long stamp = lock.readLock();
 
 		try {
 			CacheObject<K,V> co = cacheMap.get(key);
@@ -173,8 +173,22 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 				return null;
 			}
 			if (co.isExpired()) {
-				// remove(key);		// can't upgrade the lock
-				cacheMap.remove(key);
+				final long newStamp = lock.tryConvertToWriteLock(stamp);
+
+				if (newStamp != 0L) {
+					stamp = newStamp;
+					// lock is upgraded to write lock
+				}
+				else {
+					// manually upgrade lock to write lock
+					lock.unlockRead(stamp);
+					stamp = lock.writeLock();
+				}
+
+				CacheObject<K,V> removedCo = cacheMap.remove(key);
+				if (removedCo != null) {
+					onRemove(removedCo.key, removedCo.cachedObject);
+				}
 
 				missCount++;
 				return null;
@@ -184,7 +198,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			return co.getObject();
 		}
 		finally {
-			lock.unlockRead(stamp);
+			lock.unlock(stamp);
 		}
 	}
 
