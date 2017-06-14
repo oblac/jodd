@@ -275,7 +275,6 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		}
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -290,6 +289,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		return size() == 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Map<K, V> snapshot() {
 		final long stamp = lock.writeLock();
