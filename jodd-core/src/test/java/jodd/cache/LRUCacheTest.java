@@ -25,15 +25,8 @@
 
 package jodd.cache;
 
-import jodd.mutable.MutableInteger;
 import jodd.util.ThreadUtil;
 import org.junit.Test;
-
-import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 

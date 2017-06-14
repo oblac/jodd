@@ -3,53 +3,60 @@ package jodd.cache;
 import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
-import java.util.Iterator;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class BaseCacheTest {
 
+	/**
+	 * Creates cache instance.
+	 */
+	protected abstract <K,V> Cache<K,V> createCache(int size);
+
 	@Test
-	public void testThreads_Iterator() throws InterruptedException {
-		final int total = 1000;
-		final int threads = 200;
-		Cache<String, Integer> cache = createCache(total);
-		for (int i = 1; i <= total; i++) {
-			cache.put(String.valueOf(i), i);
-		}
+	public void testSnapshot() {
+		Cache<String, Integer> cache = createCache(3);
 
+		cache.put("1", 1);
+		assertEquals(1, cache.snapshot().size());
+		assertEquals(1, cache.snapshot().get("1").intValue());
+
+		cache.put("2", 2);
+		cache.put("3", 3);
+		assertEquals(3, cache.snapshot().size());
+
+		cache.put("4", 4);
+		assertEquals(3, cache.snapshot().size());
+	}
+
+	@Test
+	public void testConcurrency() throws InterruptedException {
+		final int total = 100000;
+		final int threads = 100;
+
+		Cache<Integer, String> cache = createCache(total);
 		ExecutorService executorService = Executors.newFixedThreadPool(threads);
-		MutableInteger sum = new MutableInteger();
-		AtomicInteger taskCount = new AtomicInteger();
-		final Object lock = new Object();
 
-		for (int i = 0; i < threads; i++) {
+		final LongAdder taskCount = new LongAdder();
+		final Random random = new Random();
+
+		for (int i = 0; i < total; i++) {
 			executorService.submit(() -> {
-				Iterator<Integer> iterator = cache.iterator();
-				while (iterator.hasNext()) {
-					int nextValue = iterator.next();
-					synchronized (lock) {
-						sum.value += nextValue;
-					}
-				}
-				taskCount.incrementAndGet();
+				cache.put(random.nextInt(10), "value", random.nextInt(50));
+				cache.get(random.nextInt(10));
+				taskCount.increment();
 			});
 		}
 
 		executorService.shutdown();
 		executorService.awaitTermination(1, TimeUnit.DAYS);
 
-		assertEquals(threads, taskCount.get());
-		assertEquals(threads * ((total + 1) * total / 2), sum.get());
+		assertEquals(total, taskCount.intValue());
 	}
-
-	/**
-	 * Creates cache instance.
-	 */
-	protected abstract <K,V> Cache<K,V> createCache(int size);
 
 }

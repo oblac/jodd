@@ -28,8 +28,6 @@ package jodd.cache;
 import jodd.util.ThreadUtil;
 import org.junit.Test;
 
-import java.util.Iterator;
-
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
@@ -82,28 +80,6 @@ public class FIFOCacheTest extends BaseCacheTest {
 		assertNotNull(cache.get("2"));
 		assertNull(cache.get("3"));
 		assertNotNull(cache.get("4"));
-
-	}
-
-	@Test
-	public void testCacheIterator() {
-		Cache<String, String> cache = new FIFOCache<>(3);
-		cache.put("1", "1");
-		cache.put("2", "2");
-		cache.put("3", "3", 50);
-
-		ThreadUtil.sleep(100);
-
-		Iterator<String> it = cache.iterator();
-		int count = 0;
-		while (it.hasNext()) {
-			String s = it.next();
-			if (s.equals("3")) {
-				fail();
-			}
-			count++;
-		}
-		assertEquals(2, count);
 	}
 
 	@Test
