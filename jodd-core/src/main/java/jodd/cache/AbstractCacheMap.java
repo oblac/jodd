@@ -25,7 +25,6 @@
 
 package jodd.cache;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -191,13 +190,6 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		finally {
 			readLock.unlock();
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<V> iterator() {
-		return new CacheValuesIterator<>(this);
 	}
 
 	// ---------------------------------------------------------------- prune
