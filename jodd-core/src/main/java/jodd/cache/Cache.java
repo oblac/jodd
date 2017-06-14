@@ -25,6 +25,8 @@
 
 package jodd.cache;
 
+import java.util.Map;
+
 /**
  * Cache interface.
  */
@@ -89,4 +91,11 @@ public interface Cache<K, V> {
 	 * Returns <code>true</code> if cache is empty.
 	 */
 	boolean isEmpty();
+
+	/**
+	 * Creates a snapshot from current cache values. Returned values may not
+	 * longer be valid or they might be already expired! Cache is locked during
+	 * the snapshot creation.
+	 */
+	Map<K, V> snapshot();
 }

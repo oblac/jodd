@@ -25,7 +25,8 @@
 
 package jodd.cache;
 
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Simple no-cache implementations of {@link Cache} for situation when cache
@@ -54,10 +55,6 @@ public class NoCache<K, V> implements Cache<K, V> {
 		return null;
 	}
 
-	public Iterator<V> iterator() {
-		return null;
-	}
-
 	public int prune() {
 		return 0;
 	}
@@ -80,5 +77,10 @@ public class NoCache<K, V> implements Cache<K, V> {
 
 	public boolean isEmpty() {
 		return true;
+	}
+
+	@Override
+	public Map<K, V> snapshot() {
+		return Collections.emptyMap();
 	}
 }

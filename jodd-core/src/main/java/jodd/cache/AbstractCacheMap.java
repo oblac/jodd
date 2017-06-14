@@ -25,6 +25,7 @@
 
 package jodd.cache;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -278,6 +279,19 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 */
 	public boolean isEmpty() {
 		return size() == 0;
+	}
+
+	@Override
+	public Map<K, V> snapshot() {
+		writeLock.lock();
+		try {
+			Map<K, V> map = new HashMap<>(cacheMap.size());
+			cacheMap.forEach((key, cacheValue) -> map.put(key, cacheValue.getObject()));
+			return map;
+		}
+		finally {
+			writeLock.unlock();
+		}
 	}
 
 	// ---------------------------------------------------------------- protected
