@@ -4,7 +4,14 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.8.6...master)
 
-n/a
+### Features
+
++ **core** - Added `snapshot()` method to `Cache`.
+
+## Breaking changes
+
++ **core** - `iterator()` removed from the `Cache`.
+
 
 ## [3.8.6](https://github.com/oblac/jodd/compare/v3.8.5...3.8.6)
 
