@@ -140,7 +140,7 @@ public class ClassLoaderUtil {
 	 */
 	public static void addUrlToClassPath(URL url, ClassLoader classLoader) {
 		try {
-			Method addURLMethod = URLClassLoader.class.getMethod("addURL", URL.class);
+			Method addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
 			addURLMethod.setAccessible(true);
 			addURLMethod.invoke(classLoader, url);
 		} catch (Exception ex) {
