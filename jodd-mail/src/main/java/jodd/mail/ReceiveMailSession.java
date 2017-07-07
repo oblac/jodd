@@ -182,15 +182,16 @@ public class ReceiveMailSession {
 
 	/**
 	 * Receives all emails. Messages are not modified. However, servers
-	 * do may set SEEN flag anyway, so we force messages to remain
+	 * may set SEEN flag anyway, so we force messages to remain
 	 * unseen.
 	 */
 	public ReceivedEmail[] receiveEmail() {
 		return receive(null, null);
 	}
+
 	/**
 	 * Receives all emails that matches given {@link EmailFilter filter}.
-	 * Messages are not modified. However, servers do may set SEEN flag anyway,
+	 * Messages are not modified. However, servers may set SEEN flag anyway,
 	 * so we force messages to remain unseen.
 	 */
 	public ReceivedEmail[] receiveEmail(EmailFilter emailFilter) {
@@ -203,6 +204,7 @@ public class ReceiveMailSession {
 	public ReceivedEmail[] receiveEmailAndMarkSeen() {
 		return receiveEmailAndMarkSeen(null);
 	}
+
 	/**
 	 * Receives all emails that matches given {@link EmailFilter filter}
 	 * and mark them as 'seen' (ie 'read').
