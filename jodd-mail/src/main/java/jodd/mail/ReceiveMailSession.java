@@ -255,7 +255,7 @@ public class ReceiveMailSession {
 			}
 
 			if (messages.length == 0) {
-				return null;
+				return ReceivedEmail.EMPTY_ARRAY;
 			}
 
 			// process messages

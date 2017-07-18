@@ -142,10 +142,10 @@ public class EmailAddress {
 	 */
 	public static EmailAddress[] createFrom(Address... addresses) {
 		if (addresses == null) {
-			return null;
+			return EmailAddress.EMPTY_ARRAY;
 		}
 		if (addresses.length == 0) {
-			return null;
+			return EmailAddress.EMPTY_ARRAY;
 		}
 
 		EmailAddress[] res = new EmailAddress[addresses.length];
@@ -162,10 +162,10 @@ public class EmailAddress {
 	 */
 	public static EmailAddress[] createFrom(String... addresses) {
 		if (addresses == null) {
-			return null;
+			return EmailAddress.EMPTY_ARRAY;
 		}
 		if (addresses.length == 0) {
-			return null;
+			return EmailAddress.EMPTY_ARRAY;
 		}
 
 		EmailAddress[] res = new EmailAddress[addresses.length];

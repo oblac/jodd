@@ -51,6 +51,8 @@ import java.util.List;
  */
 public class ReceivedEmail extends CommonEmail {
 
+	public static final ReceivedEmail[] EMPTY_ARRAY = new ReceivedEmail[0];
+
 	public ReceivedEmail(Message message) {
 		try {
 			parseMessage(message);

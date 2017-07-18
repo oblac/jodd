@@ -699,7 +699,7 @@ public class RFC2822AddressParser {
 			return null;
 		}
 
-		return (m.group().trim());		// must trim
+		return m.group().trim();		// must trim
 	}
 
 	private String cleanupPersonalString(String text) {
@@ -711,7 +711,7 @@ public class RFC2822AddressParser {
 		Matcher m = _QUOTED_STRING_WO_CFWS_PATTERN.matcher(text);
 
 		if (!m.matches()) {
-			return (text);
+			return text;
 		}
 
 		text = removeAnyBounding('"', '"', m.group());
@@ -719,7 +719,7 @@ public class RFC2822AddressParser {
 		text = ESCAPED_BSLASH_PATTERN.matcher(text).replaceAll("\\\\");
 		text = ESCAPED_QUOTE_PATTERN.matcher(text).replaceAll("\"");
 
-		return (text.trim());
+		return text.trim();
 	}
 
 	/**
