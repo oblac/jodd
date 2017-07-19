@@ -53,8 +53,8 @@ ext {
 
 	lib = [
 		mail:			[
-							'javax.mail:javax.mail-api:1.5.6',
-							'com.sun.mail:javax.mail:1.5.6'
+							'javax.mail:javax.mail-api:1.6.0',
+							'com.sun.mail:javax.mail:1.6.0'
 						],
 		activation:		'javax.activation:activation:1.1.1',
 		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
