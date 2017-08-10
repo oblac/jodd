@@ -27,7 +27,6 @@ package jodd.datetime.format;
 
 import jodd.datetime.DateTimeStamp;
 import jodd.datetime.JDateTime;
-import jodd.util.CharUtil;
 
 /**
  * Abstract formatter for easier {@link JdtFormatter} implementations.
@@ -77,25 +76,25 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 * Finds the longest pattern in provided format starting from specified position.
 	 * All available patterns are stored in {@link #patterns}.
 	 *
-	 * @param format  date time format to examine
-	 * @param i         starting index
+	 * @param input  date time format to examine
+	 * @param i      starting index
 	 *
 	 * @return  0-based index of founded pattern, or <code>-1</code> if pattern not found
 	 */
-	protected int findPattern(char[] format, int i) {
-		int frmtc_len = format.length;
-		boolean match;
-		int n, lastn = -1;
+	protected int findPattern(char[] input, int i) {
+		int lastn = -1;
 		int maxLen = 0;
-		for (n = 0; n < patterns.length; n++) {
+
+		for (int n = 0; n < patterns.length; n++) {
 			char[] curr = patterns[n];					// current pattern from the pattern list
-			if (i > frmtc_len - curr.length) {
+			if (i > input.length - curr.length) {
 				continue;
 			}
-			match = true;
+			boolean match = true;
 			int delta = 0;
-			while (delta < curr.length) {			    // match given pattern
-				if (curr[delta] != format[i + delta]) {
+
+				while (delta < curr.length) {			    // match given pattern
+				if (curr[delta] != input[i + delta]) {
 					match = false;					    // no match, go to next
 					break;
 				}
@@ -109,6 +108,19 @@ public abstract class AbstractFormatter implements JdtFormatter {
 			}
 		}
 		return lastn;
+	}
+
+	/**
+	 * Checks if given char is a starting char of a pattern.
+	 * Returns char with zero value if next char is actually a pattern.
+	 */
+	protected char detectSeparatorInPattern(char c) {
+		for (char[] curr : patterns) {
+			if (curr[0] == c) {
+				return 0;
+			}
+		}
+		return c;
 	}
 
 	// ---------------------------------------------------------------- convert
@@ -189,57 +201,67 @@ public abstract class AbstractFormatter implements JdtFormatter {
 		char[] formatChars = format.toCharArray();
 
 		int i = 0, j = 0;
-		int valueLen = valueChars.length;
-		int formatLen = formatChars.length;
+		final int valueLen = valueChars.length;
+		final int formatLen = formatChars.length;
 
-		// detect if separators are used
-		boolean useSeparators = true;
+		final DateTimeStamp time = new DateTimeStamp();
+		final StringBuilder sb = new StringBuilder(value.length());
 
-		if (valueLen == formatLen) {
-			useSeparators = false;
-
-			for (char valueChar : valueChars) {
-				if (!CharUtil.isDigit(valueChar)) {
-					useSeparators = true;
-					break;
-				}
-			}
-		}
-
-		DateTimeStamp time = new DateTimeStamp();
-		StringBuilder sb = new StringBuilder();
 		while (true) {
 			int n = findPattern(formatChars, i);
-			if (n != -1) {					// pattern founded
+
+			if (n != -1) {
+				// pattern founded
+
 				int patternLen = patterns[n].length;
 				i += patternLen;
+
 				sb.setLength(0);
-				if (!useSeparators) {
-					for (int k = 0; k < patternLen; k++) {
+
+				// detects if next char in the pattern is a separator
+				char separator = (i < formatLen) ? detectSeparatorInPattern(formatChars[i]) : 0;
+
+				// proceed value
+
+				if (separator == 0) {
+					// no separators - assumes the value length match pattern length, or up to the end of the string
+					for (int k = 0; k < patternLen && j < valueLen; k++) {
 						sb.append(valueChars[j++]);
 					}
-				} else {
-					char next = 0xFFFF;
-					if (i < formatLen) {
-						next = formatChars[i];			// next = delimiter
-					}
-					while ((j < valueLen) && (valueChars[j] != next)) {
-						char scj = valueChars[j];
-						if ((scj != ' ') && (scj != '\t')) {		// ignore surrounding whitespaces
-							sb.append(valueChars[j]);
-						}
+				}
+				else {
+					i++;	// skip separator
+
+					while (j < valueLen) {
+						final char c = valueChars[j];
 						j++;
+						if (c == separator) {
+							// there might be whitespaces after the separator!
+							while (j < valueLen) {
+								final char cc = valueChars[j];
+								if ((cc != ' ') && (cc != '\t')) {
+									break;
+								}
+								j++;
+							}
+
+							break;
+						}
+						if ((c != ' ') && (c != '\t')) {		// ignore surrounding whitespaces
+							sb.append(c);
+						}
 					}
 				}
 
 				parseValue(n, sb.toString(), time);
-			} else  {
-				if (!useSeparators) {
-					throw new IllegalArgumentException("Invalid value: " + value);
-				}
+			}
+			else {
+				// pattern not founded, consume the chars
+
 				if (formatChars[i] == valueChars[j]) {
 					j++;
 				}
+
 				i++;
 			}
 			if ((i == formatLen) || (j == valueLen)) {
