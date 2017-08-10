@@ -1476,8 +1476,9 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param src        string containing date time information
 	 * @param format format template
 	 */
-	public void parse(String src, String format) {
+	public JDateTime parse(String src, String format) {
 		setDateTimeStamp(jdtFormatter.parse(src, format));
+		return this;
 	}
 
 	/**
@@ -1485,12 +1486,14 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param src        string containing date time information
 	 * @see #getFormat()
 	 */
-	public void parse(String src) {
+	public JDateTime parse(String src) {
 		setDateTimeStamp(jdtFormatter.parse(src, format));
+		return this;
 	}
 
-	public void parse(String src, JdtFormat jdtFormat) {
+	public JDateTime parse(String src, JdtFormat jdtFormat) {
 		setDateTimeStamp(jdtFormat.parse(src));
+		return this;
 	}
 
 	/**
