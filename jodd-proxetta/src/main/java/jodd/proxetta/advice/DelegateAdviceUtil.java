@@ -48,7 +48,7 @@ public class DelegateAdviceUtil {
 			ProxyProxetta.withAspects(
 				new ProxyAspect(DelegateAdvice.class, new ProxyPointcutSupport() {
 					public boolean apply(MethodInfo methodInfo) {
-						return isPublic(methodInfo);
+						return methodInfo.isPublicMethod();
 					}
 				}));
 

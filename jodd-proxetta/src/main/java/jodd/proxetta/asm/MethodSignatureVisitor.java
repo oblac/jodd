@@ -179,7 +179,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	// ---------------------------------------------------------------- method signature
 
 	/**
-	 * Returns signature.
+	 * Returns java-alike method signature.
+	 * @see #createSignature()
 	 */
 	public String getSignature() {
 		if (signature == null) {
@@ -188,6 +189,13 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return signature;
 	}
 
+	public String getCleanSignature() {
+		return methodName + '#' + getDescription();
+	}
+
+	/**
+	 * Builds java-alike method signature.
+	 */
 	private String createSignature() {
 		StringBuilder methodDeclaration = new StringBuilder(30);
 		methodDeclaration.append(getReturnType()).append(' ').append(methodName).append(getDeclaration());

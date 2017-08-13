@@ -62,6 +62,10 @@ public interface MethodInfo {
 	 */
 	String getSignature();
 
+	/**
+	 * Returns a "clean" signature, that is ready for the comparison.
+	 * It does not have any generics information.
+	 */
 	String getCleanSignature();
 
 	/**
