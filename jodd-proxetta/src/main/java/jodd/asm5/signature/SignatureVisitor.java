@@ -39,7 +39,7 @@ import jodd.asm5.Opcodes;
  * <ul>
  * <li><i>ClassSignature</i> = ( <tt>visitFormalTypeParameter</tt>
  * <tt>visitClassBound</tt>? <tt>visitInterfaceBound</tt>* )* (
- * <tt>visitSuperClass</tt> <tt>visitInterface</tt>* )</li>
+ * <tt>visitSuperclass</tt> <tt>visitInterface</tt>* )</li>
  * <li><i>MethodSignature</i> = ( <tt>visitFormalTypeParameter</tt>
  * <tt>visitClassBound</tt>? <tt>visitInterfaceBound</tt>* )* (
  * <tt>visitParameterType</tt>* <tt>visitReturnType</tt>

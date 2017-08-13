@@ -27,49 +27,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package jodd.asm5;
 
 /**
- * An edge in the control flow graph of a method body. See {@link Label Label}.
+ * Information about the input stack map frame at the "current" instruction of a
+ * method. This is implemented as a Frame subclass for a "basic block"
+ * containing only one instruction.
  *
  * @author Eric Bruneton
  */
-class Edge {
+class CurrentFrame extends Frame {
 
     /**
-     * Denotes a normal control flow graph edge.
+     * Sets this CurrentFrame to the input stack map frame of the next "current"
+     * instruction, i.e. the instruction just after the given one. It is assumed
+     * that the value of this object when this method is called is the stack map
+     * frame status just before the given instruction is executed.
      */
-    static final int NORMAL = 0;
-
-    /**
-     * Denotes a control flow graph edge corresponding to an exception handler.
-     * More precisely any {@link Edge} whose {@link #info} is strictly positive
-     * corresponds to an exception handler. The actual value of {@link #info} is
-     * the index, in the {@link ClassWriter} type table, of the exception that
-     * is catched.
-     */
-    static final int EXCEPTION = 0x7FFFFFFF;
-
-    /**
-     * Information about this control flow graph edge. If
-     * {@link ClassWriter#COMPUTE_MAXS} is used this field is the (relative)
-     * stack size in the basic block from which this edge originates. This size
-     * is equal to the stack size at the "jump" instruction to which this edge
-     * corresponds, relatively to the stack size at the beginning of the
-     * originating basic block. If {@link ClassWriter#COMPUTE_FRAMES} is used,
-     * this field is the kind of this control flow graph edge (i.e. NORMAL or
-     * EXCEPTION).
-     */
-    int info;
-
-    /**
-     * The successor block of the basic block from which this edge originates.
-     */
-    Label successor;
-
-    /**
-     * The next edge in the list of successors of the originating basic block.
-     * See {@link Label#successors successors}.
-     */
-    Edge next;
+    @Override
+    void execute(int opcode, int arg, ClassWriter cw, Item item) {
+        super.execute(opcode, arg, cw, item);
+        Frame successor = new Frame();
+        merge(cw, successor, 0);
+        set(successor);
+        owner.inputStackTop = 0;
+    }
 }

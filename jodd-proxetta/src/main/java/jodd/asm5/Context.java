@@ -32,7 +32,7 @@ package jodd.asm5;
 
 /**
  * Information about a class being parsed in a {@link ClassReader}.
- * 
+ *
  * @author Eric Bruneton
  */
 class Context {

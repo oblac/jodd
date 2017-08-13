@@ -37,7 +37,7 @@ package jodd.asm5;
  * opcodes are therefore not defined in this interface. Likewise for LDC,
  * automatically replaced by LDC_W or LDC2_W when necessary, WIDE, GOTO_W and
  * JSR_W.
- * 
+ *
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
@@ -146,13 +146,17 @@ public interface Opcodes {
      */
     int F_SAME1 = 4;
 
-    Integer TOP = new Integer(0);
-    Integer INTEGER = new Integer(1);
-    Integer FLOAT = new Integer(2);
-    Integer DOUBLE = new Integer(3);
-    Integer LONG = new Integer(4);
-    Integer NULL = new Integer(5);
-    Integer UNINITIALIZED_THIS = new Integer(6);
+    // Do not try to change the following code to use auto-boxing,
+    // these values are compared by reference and not by value
+    // The constructor of Integer was deprecated in 9
+    // but we are stuck with it by backward compatibility
+    @SuppressWarnings("deprecation") Integer TOP = new Integer(0);
+    @SuppressWarnings("deprecation") Integer INTEGER = new Integer(1);
+    @SuppressWarnings("deprecation") Integer FLOAT = new Integer(2);
+    @SuppressWarnings("deprecation") Integer DOUBLE = new Integer(3);
+    @SuppressWarnings("deprecation") Integer LONG = new Integer(4);
+    @SuppressWarnings("deprecation") Integer NULL = new Integer(5);
+    @SuppressWarnings("deprecation") Integer UNINITIALIZED_THIS = new Integer(6);
 
     // opcodes // visit method (- = idem)
 

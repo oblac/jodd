@@ -31,10 +31,10 @@ package jodd.asm5;
 
 /**
  * Information about the input and output stack map frames of a basic block.
- * 
+ *
  * @author Eric Bruneton
  */
-final class Frame {
+class Frame {
 
     /*
      * Frames are computed in a two steps process: during the visit of each
@@ -46,14 +46,14 @@ final class Frame {
      * of the first basic block (which is computed from the method descriptor),
      * and by using the previously computed output frames to compute the input
      * state of the other blocks.
-     * 
+     *
      * All output and input frames are stored as arrays of integers. Reference
      * and array types are represented by an index into a type table (which is
      * not the same as the constant pool of the class, in order to avoid adding
      * unnecessary constants in the pool - not all computed frames will end up
      * being stored in the stack map table). This allows very fast type
      * comparisons.
-     * 
+     *
      * Output stack map frames are computed relatively to the input frame of the
      * basic block, which is not yet known when output frames are computed. It
      * is therefore necessary to be able to represent abstract types such as
@@ -61,7 +61,7 @@ final class Frame {
      * position x from the top of the input frame stack" or even "the type at
      * position x in the input frame, with y more (or less) array dimensions".
      * This explains the rather complicated type format used in output frames.
-     * 
+     *
      * This format is the following: DIM KIND VALUE (4, 4 and 24 bits). DIM is a
      * signed number of array dimensions (from -8 to 7). KIND is either BASE,
      * LOCAL or STACK. BASE is used for types that are not relative to the input
@@ -72,14 +72,14 @@ final class Frame {
      * relatively to the top of input frame stack. For BASE types, it is either
      * one of the constants defined below, or for OBJECT and UNINITIALIZED
      * types, a tag and an index in the type table.
-     * 
+     *
      * Output frames can contain types of any kind and with a positive or
      * negative dimension (and even unassigned types, represented by 0 - which
      * does not correspond to any valid type value). Input frames can only
      * contain BASE types of positive or null dimension. In all cases the type
      * table contains only internal type names (array type descriptors are
      * forbidden - dimensions must be represented through the DIM field).
-     * 
+     *
      * The LONG and DOUBLE types are always represented by using two slots (LONG
      * + TOP or DOUBLE + TOP), for local variable types as well as in the
      * operand stack. This is necessary to be able to simulate DUPx_y
@@ -107,7 +107,7 @@ final class Frame {
 
     /**
      * Mask to get the kind of a frame type.
-     * 
+     *
      * @see #BASE
      * @see #LOCAL
      * @see #STACK
@@ -489,18 +489,18 @@ final class Frame {
     /**
      * Relative size of the output stack. The exact semantics of this field
      * depends on the algorithm that is used.
-     * 
+     *
      * When only the maximum stack size is computed, this field is the size of
      * the output stack relatively to the top of the input stack.
-     * 
+     *
      * When the stack map frames are completely computed, this field is the
      * actual number of types in {@link #outputStack}.
      */
-    private int outputStackTop;
+    int outputStackTop;
 
     /**
      * Number of types that are initialized in the basic block.
-     * 
+     *
      * @see #initializations
      */
     private int initializationCount;
@@ -521,8 +521,112 @@ final class Frame {
     private int[] initializations;
 
     /**
+     * Sets this frame to the given value.
+     *
+     * @param cw
+     *            the ClassWriter to which this label belongs.
+     * @param nLocal
+     *            the number of local variables.
+     * @param local
+     *            the local variable types. Primitive types are represented by
+     *            {@link Opcodes#TOP}, {@link Opcodes#INTEGER},
+     *            {@link Opcodes#FLOAT}, {@link Opcodes#LONG},
+     *            {@link Opcodes#DOUBLE},{@link Opcodes#NULL} or
+     *            {@link Opcodes#UNINITIALIZED_THIS} (long and double are
+     *            represented by a single element). Reference types are
+     *            represented by String objects (representing internal names),
+     *            and uninitialized types by Label objects (this label
+     *            designates the NEW instruction that created this uninitialized
+     *            value).
+     * @param nStack
+     *            the number of operand stack elements.
+     * @param stack
+     *            the operand stack types (same format as the "local" array).
+     */
+    final void set(ClassWriter cw, final int nLocal, final Object[] local,
+            final int nStack, final Object[] stack) {
+        int i = convert(cw, nLocal, local, inputLocals);
+        while (i < local.length) {
+            inputLocals[i++] = TOP;
+        }
+        int nStackTop = 0;
+        for (int j = 0; j < nStack; ++j) {
+            if (stack[j] == Opcodes.LONG || stack[j] == Opcodes.DOUBLE) {
+                ++nStackTop;
+            }
+        }
+        inputStack = new int[nStack + nStackTop];
+        convert(cw, nStack, stack, inputStack);
+        outputStackTop = 0;
+        initializationCount = 0;
+    }
+
+    /**
+     * Converts types from the MethodWriter.visitFrame() format to the Frame
+     * format.
+     *
+     * @param cw
+     *            the ClassWriter to which this label belongs.
+     * @param nInput
+     *            the number of types to convert.
+     * @param input
+     *            the types to convert. Primitive types are represented by
+     *            {@link Opcodes#TOP}, {@link Opcodes#INTEGER},
+     *            {@link Opcodes#FLOAT}, {@link Opcodes#LONG},
+     *            {@link Opcodes#DOUBLE},{@link Opcodes#NULL} or
+     *            {@link Opcodes#UNINITIALIZED_THIS} (long and double are
+     *            represented by a single element). Reference types are
+     *            represented by String objects (representing internal names),
+     *            and uninitialized types by Label objects (this label
+     *            designates the NEW instruction that created this uninitialized
+     *            value).
+     * @param output
+     *            where to store the converted types.
+     * @return the number of output elements.
+     */
+    private static int convert(ClassWriter cw, int nInput, Object[] input,
+            int[] output) {
+        int i = 0;
+        for (int j = 0; j < nInput; ++j) {
+            if (input[j] instanceof Integer) {
+                output[i++] = BASE | ((Integer) input[j]).intValue();
+                if (input[j] == Opcodes.LONG || input[j] == Opcodes.DOUBLE) {
+                    output[i++] = TOP;
+                }
+            } else if (input[j] instanceof String) {
+                output[i++] = type(cw, Type.getObjectType((String) input[j])
+                        .getDescriptor());
+            } else {
+                output[i++] = UNINITIALIZED
+                        | cw.addUninitializedType("",
+                                ((Label) input[j]).position);
+            }
+        }
+        return i;
+    }
+
+    /**
+     * Sets this frame to the value of the given frame. WARNING: after this
+     * method is called the two frames share the same data structures. It is
+     * recommended to discard the given frame f to avoid unexpected side
+     * effects.
+     *
+     * @param f
+     *            The new frame value.
+     */
+    final void set(final Frame f) {
+        inputLocals = f.inputLocals;
+        inputStack = f.inputStack;
+        outputLocals = f.outputLocals;
+        outputStack = f.outputStack;
+        outputStackTop = f.outputStackTop;
+        initializationCount = f.initializationCount;
+        initializations = f.initializations;
+    }
+
+    /**
      * Returns the output frame local variable type at the given index.
-     * 
+     *
      * @param local
      *            the index of the local that must be returned.
      * @return the output frame local variable type at the given index.
@@ -545,7 +649,7 @@ final class Frame {
 
     /**
      * Sets the output frame local variable type at the given index.
-     * 
+     *
      * @param local
      *            the index of the local that must be set.
      * @param type
@@ -568,7 +672,7 @@ final class Frame {
 
     /**
      * Pushes a new type onto the output frame stack.
-     * 
+     *
      * @param type
      *            the type that must be pushed.
      */
@@ -585,7 +689,7 @@ final class Frame {
         }
         // pushes the type on the output stack
         outputStack[outputStackTop++] = type;
-        // updates the maximun height reached by the output stack, if needed
+        // updates the maximum height reached by the output stack, if needed
         int top = owner.inputStackTop + outputStackTop;
         if (top > owner.outputStackMax) {
             owner.outputStackMax = top;
@@ -594,7 +698,7 @@ final class Frame {
 
     /**
      * Pushes a new type onto the output frame stack.
-     * 
+     *
      * @param cw
      *            the ClassWriter to which this label belongs.
      * @param desc
@@ -614,7 +718,7 @@ final class Frame {
 
     /**
      * Returns the int encoding of the given type.
-     * 
+     *
      * @param cw
      *            the ClassWriter to which this label belongs.
      * @param desc
@@ -688,7 +792,7 @@ final class Frame {
 
     /**
      * Pops a type from the output frame stack and returns its value.
-     * 
+     *
      * @return the type that has been popped from the output frame stack.
      */
     private int pop() {
@@ -702,7 +806,7 @@ final class Frame {
 
     /**
      * Pops the given number of types from the output frame stack.
-     * 
+     *
      * @param elements
      *            the number of types that must be popped.
      */
@@ -720,7 +824,7 @@ final class Frame {
 
     /**
      * Pops a type from the output frame stack.
-     * 
+     *
      * @param desc
      *            the descriptor of the type to be popped. Can also be a method
      *            descriptor (in this case this method pops the types
@@ -740,7 +844,7 @@ final class Frame {
     /**
      * Adds a new type to the list of types on which a constructor is invoked in
      * the basic block.
-     * 
+     *
      * @param var
      *            a type on a which a constructor is invoked.
      */
@@ -762,7 +866,7 @@ final class Frame {
     /**
      * Replaces the given type with the appropriate type if it is one of the
      * types on which a constructor is invoked in the basic block.
-     * 
+     *
      * @param cw
      *            the ClassWriter to which this label belongs.
      * @param t
@@ -799,7 +903,7 @@ final class Frame {
     /**
      * Initializes the input frame of the first basic block from the method
      * descriptor.
-     * 
+     *
      * @param cw
      *            the ClassWriter to which this label belongs.
      * @param access
@@ -809,7 +913,7 @@ final class Frame {
      * @param maxLocals
      *            the maximum number of local variables of this method.
      */
-    void initInputFrame(final ClassWriter cw, final int access,
+    final void initInputFrame(final ClassWriter cw, final int access,
             final Type[] args, final int maxLocals) {
         inputLocals = new int[maxLocals];
         inputStack = new int[0];
@@ -835,7 +939,7 @@ final class Frame {
 
     /**
      * Simulates the action of the given instruction on the output stack frame.
-     * 
+     *
      * @param opcode
      *            the opcode of the instruction.
      * @param arg
@@ -1272,7 +1376,7 @@ final class Frame {
      * Merges the input frame of the given basic block with the input and output
      * frames of this basic block. Returns <tt>true</tt> if the input frame of
      * the given label has been changed by this operation.
-     * 
+     *
      * @param cw
      *            the ClassWriter to which this label belongs.
      * @param frame
@@ -1283,7 +1387,7 @@ final class Frame {
      * @return <tt>true</tt> if the input frame of the given label has been
      *         changed by this operation.
      */
-    boolean merge(final ClassWriter cw, final Frame frame, final int edge) {
+    final boolean merge(final ClassWriter cw, final Frame frame, final int edge) {
         boolean changed = false;
         int i, s, dim, kind, t;
 
@@ -1380,7 +1484,7 @@ final class Frame {
      * Merges the type at the given index in the given type array with the given
      * type. Returns <tt>true</tt> if the type array has been modified by this
      * operation.
-     * 
+     *
      * @param cw
      *            the ClassWriter to which this label belongs.
      * @param t
