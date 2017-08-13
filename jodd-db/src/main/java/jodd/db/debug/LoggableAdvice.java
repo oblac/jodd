@@ -51,7 +51,7 @@ public class LoggableAdvice implements ProxyAdvice {
 		if (ProxyTarget.targetMethodName().equals("setNull")) {
 			saveQueryParamValue(position, null);
 		} else {
-		saveQueryParamValue(position, ProxyTarget.argument(2));
+			saveQueryParamValue(position, ProxyTarget.argument(2));
 		}
 		return ProxyTarget.invoke();
 	}
@@ -77,16 +77,17 @@ public class LoggableAdvice implements ProxyAdvice {
 			String oneChunk = tok.nextToken();
 			sb.append(oneChunk);
 			try {
-				Object value;
+				Object value = null;
 				if (parameterValues.size() > 1 + qMarkCount) {
 					value = parameterValues.get(1 + qMarkCount);
 					qMarkCount++;
 				} else {
-					if (tok.hasMoreTokens()) {
-						value = null;
-					} else {
+					if (!tok.hasMoreTokens()) {
 						value = "";
 					}
+				}
+				if (value == null) {
+					value = "?";
 				}
 				sb.append(value);
 			} catch (Throwable th) {
