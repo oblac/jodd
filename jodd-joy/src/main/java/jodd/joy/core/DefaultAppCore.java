@@ -433,8 +433,8 @@ public abstract class DefaultAppCore {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return
-						isPublic(methodInfo) &&
-						isTopLevelMethod(methodInfo) &&
+						methodInfo.isPublicMethod() &&
+						methodInfo.isTopLevelMethod() &&
 						super.apply(methodInfo);
 			}
 		});
