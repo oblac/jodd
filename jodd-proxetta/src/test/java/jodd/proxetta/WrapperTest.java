@@ -49,7 +49,7 @@ public class WrapperTest {
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
-				return !isRootMethod(methodInfo) && isPublic(methodInfo);
+				return !methodInfo.isRootMethod() && methodInfo.isPublicMethod();
 			}
 		}));
 
@@ -94,7 +94,7 @@ public class WrapperTest {
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
-				return !isRootMethod(methodInfo) && isPublic(methodInfo);
+				return !methodInfo.isRootMethod() && methodInfo.isPublicMethod();
 			}
 		}));
 
@@ -130,7 +130,7 @@ public class WrapperTest {
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
-				return isTopLevelMethod(methodInfo) && isPublic(methodInfo);
+				return methodInfo.isTopLevelMethod() && methodInfo.isPublicMethod();
 			}
 		}));
 
@@ -173,7 +173,7 @@ public class WrapperTest {
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
 				return
-						isPublic(methodInfo) &&
+						methodInfo.isPublicMethod() &&
 								(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"));
 			}
 		}));

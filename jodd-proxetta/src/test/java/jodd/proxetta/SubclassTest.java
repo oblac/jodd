@@ -176,7 +176,7 @@ public class SubclassTest {
 		assertNotNull(object);
 		assertEquals("foo.Object$$Proxetta", object.getClass().getName());
 
-		System.out.println("----------list");
+		//System.out.println("----------list");
 
 		StatCounter.counter = 0;
 
