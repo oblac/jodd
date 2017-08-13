@@ -101,7 +101,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected String[] superClasses;
 	protected AnnotationInfo[] annotations;
 	protected List<AnnotationInfo> classAnnotations;
-	protected boolean isTargetIntreface;
+	protected boolean isTargetInterface;
 	protected Set<String> nextInterfaces;
 
 	// ---------------------------------------------------------------- class interface
@@ -142,13 +142,11 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.targetPackage = lastSlash == -1 ? StringPool.EMPTY : name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
 
-		this.isTargetIntreface = (access & AsmUtil.ACC_INTERFACE) != 0;
-		if (this.isTargetIntreface) {
+		this.isTargetInterface = (access & AsmUtil.ACC_INTERFACE) != 0;
+		if (this.isTargetInterface) {
 			nextInterfaces = new HashSet<>();
 			if (interfaces != null) {
-				for (String inter : interfaces) {
-					nextInterfaces.add(inter);
-				}
+				Collections.addAll(nextInterfaces, interfaces);
 			}
 		}
 	}
@@ -225,19 +223,49 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		superClasses = superList.toArray(new String[superList.size()]);
 
 		// check all interface methods that are not overridden in super-interface
-		for (String next : allInterfaces) {
-			InputStream inputStream = null;
-			ClassReader cr = null;
-			try {
-				inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
-				cr = new ClassReader(inputStream);
-			} catch (IOException ioex) {
-				throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
-			} finally {
-				StreamUtil.close(inputStream);
+
+		Set<String> todoInterfaces = new HashSet<>(allInterfaces);
+		Set<String> newCollectedInterfaces = new HashSet<>();
+
+		while (true) {
+
+			for (String next : todoInterfaces) {
+				InputStream inputStream = null;
+				ClassReader cr = null;
+				try {
+					inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
+					cr = new ClassReader(inputStream);
+				}
+				catch (IOException ioex) {
+					throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
+				}
+				finally {
+					StreamUtil.close(inputStream);
+				}
+				superClassReaders.add(cr);				// remember the super class reader
+				cr.accept(new SuperClassVisitor(), 0);
+
+				if (cr.getInterfaces() != null) {
+					for (String newInterface : cr.getInterfaces()) {
+						if (!allInterfaces.contains(newInterface) && !todoInterfaces.contains(newInterface)) {
+							// new interface found
+							newCollectedInterfaces.add(newInterface);
+						}
+					}
+				}
 			}
-			superClassReaders.add(cr);				// remember the super class reader
-			cr.accept(new SuperClassVisitor(), 0);
+
+			// perform collection
+			allInterfaces.addAll(todoInterfaces);
+
+			if (newCollectedInterfaces.isEmpty()) {
+				// no new interface found
+				break;
+			}
+			todoInterfaces.clear();
+			todoInterfaces.addAll(newCollectedInterfaces);
+
+			newCollectedInterfaces.clear();
 		}
 	}
 
