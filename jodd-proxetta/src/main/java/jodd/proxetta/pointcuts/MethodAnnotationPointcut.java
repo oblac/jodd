@@ -47,6 +47,6 @@ public class MethodAnnotationPointcut extends ProxyPointcutSupport {
 	 * {@inheritDoc}
 	 */
 	public boolean apply(MethodInfo methodInfo) {
-		return hasAnnotation(methodInfo, annotationClasses);
+		return methodInfo.hasAnnotation(annotationClasses);
 	}
 }

@@ -34,9 +34,9 @@ public class AllSettersPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
 		return
-				isPublic(methodInfo)
-				&& matchMethodName(methodInfo, "set*")
-				&& hasOneArgument(methodInfo)
+				methodInfo.isPublicMethod()
+				&& methodInfo.matchMethodName("set*")
+				&& methodInfo.hasOneArgument()
 				;
 	}
 }

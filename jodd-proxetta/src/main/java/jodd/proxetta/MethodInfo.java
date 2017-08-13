@@ -26,6 +26,9 @@
 package jodd.proxetta;
 
 import jodd.asm.AsmUtil;
+import jodd.util.Wildcard;
+
+import java.lang.annotation.Annotation;
 
 /**
  * Method info provides various information about a method.
@@ -58,6 +61,8 @@ public interface MethodInfo {
 	 * Does not contain any generic information.
 	 */
 	String getSignature();
+
+	String getCleanSignature();
 
 	/**
 	 * Returns raw bytecode signature or <code>null</code> if not present.
@@ -142,6 +147,8 @@ public interface MethodInfo {
 	 */
 	ClassInfo getClassInfo();
 
+	// ---------------------------------------------------------------- utils
+
 	/**
 	 * Returns {@code true} if method is public.
 	 */
@@ -155,4 +162,99 @@ public interface MethodInfo {
 	default boolean isPrivateMethod() {
 		return (getAccessFlags() & AsmUtil.ACC_PRIVATE) != 0;
 	}
+
+	/**
+	 * Returns <code>true</code> if method has no argument.
+	 */
+	default boolean hasNoArguments() {
+		return getArgumentsCount() == 0;
+	}
+
+	/**
+	 * Returns <code>true</code> if method has only one argument.
+	 */
+	default boolean hasOneArgument() {
+		return getArgumentsCount() == 1;
+	}
+
+	/**
+	 * Returns <code>true</code> if method is declared in <code>Object</code> class (root class).
+	 */
+	default boolean isRootMethod() {
+		return AsmUtil.SIGNATURE_JAVA_LANG_OBJECT.equals(getDeclaredClassName());
+	}
+
+	// ---------------------------------------------------------------- return
+
+
+	/**
+	 * Returns <code>true</code> if method's return type is <code>void</code>.
+	 */
+	default boolean hasNoReturnValue() {
+		return getReturnOpcodeType() == AsmUtil.TYPE_VOID;
+	}
+
+	/**
+	 * Returns <code>true</code> if method has a return type.
+	 */
+	default boolean hasReturnValue() {
+		return getReturnOpcodeType() != AsmUtil.TYPE_VOID;
+	}
+
+	// ---------------------------------------------------------------- wildcards
+
+	/**
+	 * Match method name to provided {@link jodd.util.Wildcard} pattern.
+	 */
+	default boolean matchMethodName(String wildcard) {
+		return Wildcard.match(getMethodName(), wildcard);
+	}
+
+	/**
+	 * Match class name to provided {@link jodd.util.Wildcard} pattern.
+	 */
+	default boolean matchClassName(String wildcard) {
+		return Wildcard.match(getClassname(), wildcard);
+	}
+
+	// ---------------------------------------------------------------- annotations
+
+	/**
+	 * Returns <code>true</code> if method is annotated with one of provided annotation.
+	 */
+	default boolean hasAnnotation(Class<? extends Annotation>... an) {
+		AnnotationInfo[] anns = getAnnotations();
+		if (anns == null) {
+			return false;
+		}
+
+		for (Class<? extends Annotation> annotationClass : an) {
+			String anName = annotationClass.getName();
+			for (AnnotationInfo ann : anns) {
+				if (ann.getAnnotationClassname().equals(anName)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if method is annotated with provided annotation.
+	 */
+	default AnnotationInfo getAnnotation(Class<? extends Annotation> an) {
+		AnnotationInfo[] anns = getAnnotations();
+		if (anns == null) {
+			return null;
+		}
+		String anName = an.getName();
+		for (AnnotationInfo ann : anns) {
+			if (ann.getAnnotationClassname().equals(anName)) {
+				return ann;
+			}
+		}
+		return null;
+	}
+
+
 }

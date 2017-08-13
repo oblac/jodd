@@ -34,7 +34,7 @@ public class AllTopMethodsPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
 		return
-				isTopLevelMethod(methodInfo) &&
-				isPublic(methodInfo);
+				methodInfo.isTopLevelMethod() &&
+					methodInfo.isPublicMethod();
 	}
 }

@@ -34,19 +34,19 @@ public class AllRealMethodsPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
 
-		if (hasReturnValue(methodInfo)
-				&& (matchMethodName(methodInfo, "get*") || (matchMethodName(methodInfo, "is*")))
-				&& hasNoArguments(methodInfo)) {
+		if (methodInfo.hasReturnValue()
+				&& (methodInfo.matchMethodName("get*") || (methodInfo.matchMethodName("is*")))
+				&& methodInfo.hasNoArguments()) {
 			// getter
 			return false;
 		}
 
-		if (matchMethodName(methodInfo, "set*")
-				&& hasOneArgument(methodInfo)) {
+		if (methodInfo.matchMethodName("set*")
+				&& methodInfo.hasOneArgument()) {
 			// setter
 			return false;
 		}
 
-		return isPublic(methodInfo);
+		return methodInfo.isPublicMethod();
 	}
 }
