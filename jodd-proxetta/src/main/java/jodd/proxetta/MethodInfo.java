@@ -25,6 +25,8 @@
 
 package jodd.proxetta;
 
+import jodd.asm.AsmUtil;
+
 /**
  * Method info provides various information about a method.
  */
@@ -140,4 +142,17 @@ public interface MethodInfo {
 	 */
 	ClassInfo getClassInfo();
 
+	/**
+	 * Returns {@code true} if method is public.
+	 */
+	default boolean isPublicMethod() {
+		return (getAccessFlags() & AsmUtil.ACC_PUBLIC) != 0;
+	}
+
+	/**
+	 * Returns {@code true} if method is private.
+	 */
+	default boolean isPrivateMethod() {
+		return (getAccessFlags() & AsmUtil.ACC_PRIVATE) != 0;
+	}
 }
