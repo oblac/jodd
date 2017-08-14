@@ -1,7 +1,13 @@
 language: java
 
+services:
+  - docker
+
 jdk:
   - oraclejdk8
+
+before_install:
+  - docker-compose -f etc/docker-compose.yml
 
 install:
   - TERM=dumb ./gradlew assemble
