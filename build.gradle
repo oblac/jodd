@@ -37,9 +37,9 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '3.8.6-SNAPSHOT'
+version = '3.8.7-SNAPSHOT'
 //version = '3.8.2-' + date()
-version = '3.8.6'
+//version = '3.8.6'
 
 // --- properties -------------------------------------------------------------
 
@@ -280,6 +280,9 @@ configure(javaModules()) {
 		classpath = sourceSets.testInt.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
 	}
+
+	check.dependsOn testIntegration
+	testIntegration.mustRunAfter test
 
 	// artifacts
 
