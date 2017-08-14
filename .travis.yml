@@ -1,11 +1,19 @@
+sudo: required
 language: java
 
 services:
-  - mysql
-  - postgresql
+  - docker
 
 jdk:
   - oraclejdk8
+
+before_install:
+  # Disable services enabled by default
+  - sudo service mysql stop
+  - sudo /etc/init.d/postgresql stop
+
+  # Run my databases
+  - docker-compose -f etc/docker-compose.yml up
 
 install:
   - TERM=dumb ./gradlew assemble
