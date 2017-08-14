@@ -4,9 +4,11 @@ language: java
 
 services:
   - docker
+  - mysql
+  - postgresql
 
-before_install:
-  - docker-compose -f etc/docker-compose.yml up
+#before_install:
+#  - docker-compose -f etc/docker-compose.yml up
 
 jdk:
   - oraclejdk8
