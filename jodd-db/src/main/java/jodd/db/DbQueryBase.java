@@ -25,7 +25,7 @@
 
 package jodd.db;
 
-import jodd.db.debug.LoggablePreparedStatementFactory;
+import jodd.db.debug.LogabbleStatementFactory;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
@@ -239,11 +239,19 @@ abstract class DbQueryBase implements AutoCloseable {
 
 		if (query.callable) {
 			try {
-				if (holdability != DEFAULT_HOLDABILITY) {
-					callableStatement = connection.prepareCall(query.sql, type, concurrencyType, holdability);
+				if (debug) {
+					if (holdability != DEFAULT_HOLDABILITY) {
+						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type, concurrencyType, holdability);
+					} else {
+						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type, concurrencyType);
+					}
 				}
 				else {
-					callableStatement = connection.prepareCall(query.sql, type, concurrencyType);
+					if (holdability != DEFAULT_HOLDABILITY) {
+						callableStatement = connection.prepareCall(query.sql, type, concurrencyType, holdability);
+					} else {
+						callableStatement = connection.prepareCall(query.sql, type, concurrencyType);
+					}
 				}
 			}
 			catch (SQLException sex) {
@@ -263,15 +271,15 @@ abstract class DbQueryBase implements AutoCloseable {
 				if (debug) {
 					if (generatedColumns != null) {
 						if (generatedColumns.length == 0) {
-							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
+							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
 						} else {
-							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, generatedColumns);
+							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, generatedColumns);
 						}
 					} else {
 						if (holdability != DEFAULT_HOLDABILITY) {
-							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType, holdability);
+							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type, concurrencyType, holdability);
 						} else {
-							preparedStatement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType);
+							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type, concurrencyType);
 						}
 					}
 				} else {
@@ -927,8 +935,13 @@ abstract class DbQueryBase implements AutoCloseable {
 	 * Returns query SQL string. For prepared statements, returned sql string with quick-and-dirty replaced values.
 	 */
 	public String getQueryString() {
-		if ((preparedStatement != null) && debug) {
-			return LoggablePreparedStatementFactory.getQueryString(preparedStatement);
+		if (debug) {
+			if ((callableStatement != null)) {
+				return LogabbleStatementFactory.callable().getQueryString(callableStatement);
+			}
+			if (preparedStatement != null) {
+				return LogabbleStatementFactory.prepared().getQueryString(preparedStatement);
+			}
 		}
 		if (query != null) {
 			return query.sql;
