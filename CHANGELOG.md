@@ -4,12 +4,18 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.8.6...master)
 
+### Bug Fixes
+
++ **db** - `CallableStatement` are supported in debug mode [#480](https://github.com/oblac/jodd/issues/480).
++ **proxetta** - added all interfaces while scanning the target class info.
+
 ### Features
 
 + **core** - Added `snapshot()` method to `Cache`.
 
 ## Breaking changes
 
++ **proxetta** - all interfaces are scanned now when looking for the target info.
 + **core** - `iterator()` removed from the `Cache`.
 
 
