@@ -6,8 +6,8 @@ services:
 jdk:
   - oraclejdk8
 
-before_install:
-  - docker-compose -f etc/docker-compose.yml up
+#before_install:
+#  - docker-compose -f etc/docker-compose.yml up
 
 install:
   - TERM=dumb ./gradlew assemble
