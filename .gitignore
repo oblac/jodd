@@ -1,13 +1,12 @@
 /etc/work
-/dist/
-/out/
+*/dist/
+*/out/
+*/build
 *.iml
 .idea
 /user.*
 .gradle
-build
 target
-/classes/
 /gradle.properties
 /jodd-bom/jodd-bom.txt.asc
 
