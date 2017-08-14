@@ -12,8 +12,8 @@ before_install:
   - sudo service mysql stop
   - sudo /etc/init.d/postgresql stop
 
-  # Run my databases
-  - docker-compose -f etc/docker-compose.yml up
+  # Run my databases in the background
+  - docker-compose -f etc/docker-compose.yml up -d
 
 install:
   - TERM=dumb ./gradlew assemble
