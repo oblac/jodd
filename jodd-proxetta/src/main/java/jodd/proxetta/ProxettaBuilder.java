@@ -232,7 +232,7 @@ public abstract class ProxettaBuilder {
 
 		byte[] result = toByteArray();
 
-		dumpClass(result);
+		dumpClassInDebugFolder(result);
 
 		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
@@ -290,7 +290,7 @@ public abstract class ProxettaBuilder {
 
 			byte[] bytes = toByteArray();
 
-			dumpClass(bytes);
+			dumpClassInDebugFolder(bytes);
 
 			return ClassLoaderUtil.defineClass(getProxyClassName(), bytes, classLoader);
 		} catch (Exception ex) {
@@ -317,7 +317,7 @@ public abstract class ProxettaBuilder {
 	/**
 	 * Writes created class content to output folder for debugging purposes.
 	 */
-	protected void dumpClass(byte[] bytes) {
+	protected void dumpClassInDebugFolder(byte[] bytes) {
 		String debugFolder = proxetta.getDebugFolder();
 		if (debugFolder == null) {
 			return;
@@ -339,7 +339,7 @@ public abstract class ProxettaBuilder {
 		try {
 			FileUtil.writeBytes(file, bytes);
 		} catch (IOException ioex) {
-			log.warn("Error dumping class", ioex);
+			log.warn("Error writing class as " + file, ioex);
 		}
 	}
 

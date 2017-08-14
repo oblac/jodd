@@ -67,7 +67,7 @@ public abstract class BaseLoggableFactory<T> {
 						methodInfo.getMethodName().startsWith("set") &&			// set*
 						(argumentsCount == 2 || argumentsCount == 3);			// number of arguments
 			}
-		})).setDebugFolder("/Users/igor");
+		}));
 	}
 
 	/**
