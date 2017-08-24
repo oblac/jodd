@@ -72,6 +72,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
+	protected boolean modifyHeaderKeys = true;
 	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -91,6 +92,22 @@ public abstract class HttpBase<T> {
 	 */
 	public T httpVersion(String httpVersion) {
 		this.httpVersion = httpVersion;
+		return (T) this;
+	}
+	
+	/**
+	 * Returns whether header keys are modified. By Default keys are
+	 * modified by changing them to PascalCase.
+	 */
+	public boolean modifyHeaderKeys() {
+		return modifyHeaderKeys;
+	}
+	
+	/**
+	 * Sets header key behavior. By setting this to false the case will not be modified. 
+	 */
+	public T modifyHeaderKeys(boolean modifyHeaderKeys) {
+		this.modifyHeaderKeys = modifyHeaderKeys;
 		return (T) this;
 	}
 
@@ -140,7 +157,7 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	public T header(String name, String value, boolean overwrite) {
-		String key = name.trim().toLowerCase();
+		String key = (modifyHeaderKeys) ? name.trim().toLowerCase() : name.trim();
 
 		value = value.trim();
 
@@ -777,7 +794,7 @@ public abstract class HttpBase<T> {
 		for (String key : headers.names()) {
 			List<String> values = headers.getAll(key);
 
-			String headerName = HttpUtil.prepareHeaderParameterName(key);
+			String headerName = (modifyHeaderKeys) ? HttpUtil.prepareHeaderParameterName(key) : key;
 
 			for (String value : values) {
 				target.append(headerName);

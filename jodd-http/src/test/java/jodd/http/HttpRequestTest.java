@@ -329,4 +329,17 @@ public class HttpRequestTest {
 		}
 
 	}
+	
+	@Test
+	public void testModifyHeadersOption() {
+		HttpRequest request = HttpRequest.get("")
+			.modifyHeaderKeys(false)
+			.header("KEY-TEST1", "VALUE1");
+		assertTrue("Header key should not have been modified", request.toString(false).contains("KEY-TEST1: VALUE1"));
+		
+		request
+			.modifyHeaderKeys(true)
+			.header("key-tEST2", "value2");
+		assertTrue("Header key should have been modified", request.toString(false).contains("Key-Test2: value2"));
+	}
 }
