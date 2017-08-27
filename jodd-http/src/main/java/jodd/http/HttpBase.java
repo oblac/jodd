@@ -72,7 +72,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected boolean capitaliseHeaderKeys = true;
+	protected boolean capitaliseHeaderKeys = JoddHttp.defaultCapitaliseHeaderKeys;
 	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -96,7 +96,7 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
-	 * Returns whether header keys are modified. By Default keys are
+	 * Returns whether header keys are modified. By default keys are
 	 * modified by changing them to PascalCase.
 	 */
 	public boolean capitaliseHeaderKeys() {
@@ -104,7 +104,8 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
-	 * Sets header key behavior. By setting this to false the case will not be modified. 
+	 * Sets header key behavior. By setting this to {@code false} the case
+	 * will not be modified.
 	 */
 	public T capitaliseHeaderKeys(boolean capitaliseHeaderKeys) {
 		this.capitaliseHeaderKeys = capitaliseHeaderKeys;

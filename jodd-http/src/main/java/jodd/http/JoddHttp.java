@@ -71,6 +71,11 @@ public class JoddHttp {
 	 */
 	public static String defaultUserAgent = "Jodd HTTP";
 
+	/**
+	 * Flag that controls if headers should be capitalized.
+	 */
+	public static boolean defaultCapitaliseHeaderKeys = true;
+
 	// ---------------------------------------------------------------- module
 
 	static {

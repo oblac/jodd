@@ -332,14 +332,42 @@ public class HttpRequestTest {
 	
 	@Test
 	public void testCapitaliseHeadersOption() {
+
+		// default, true
+
 		HttpRequest request = HttpRequest.get("")
-			.capitaliseHeaderKeys(false)
-			.header("KEY-TEST1", "VALUE1");
-		assertTrue("Header key should not have been modified", request.toString(false).contains("KEY-TEST1: VALUE1"));
-		
-		request
 			.capitaliseHeaderKeys(true)
 			.header("key-tEST2", "value2");
 		assertTrue("Header key should have been modified", request.toString(false).contains("Key-Test2: value2"));
+		assertEquals("value2", request.headers("KEY-TEST2").get(0));
+		assertEquals("value2", request.headers("key-test2").get(0));
+
+		request.header("key-test2", "value2-2");
+		assertEquals(2, request.headers("KEY-TEST2").size());
+
+		request.removeHeader("key-test2");
+		assertFalse(request.headers.contains("key-test2"));
+		assertFalse(request.headers.contains("key-tEST2"));
+
+
+		// false
+
+		request = HttpRequest.get("")
+			.capitaliseHeaderKeys(false)
+			.header("KEY-TEST1", "VALUE1");
+
+		assertTrue("Header key should not have been modified", request.toString(false).contains("KEY-TEST1: VALUE1"));
+		assertEquals("VALUE1", request.headers("KEY-TEST1").get(0));
+		assertEquals("VALUE1", request.headers("key-test1").get(0));
+
+		request.header("key-test1", "value1-1");
+		assertEquals(2, request.headers("KEY-TEST1").size());
+		assertTrue(request.toString(false).contains("KEY-TEST1: VALUE1"));
+		assertTrue(request.toString(false).contains("key-test1: value1-1"));
+
+		request.removeHeader("key-test1");
+		assertFalse(request.headers.contains("key-test1"));
+		assertFalse(request.headers.contains("KEY-TEST1"));
+
 	}
 }
