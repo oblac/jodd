@@ -134,9 +134,7 @@ public abstract class HttpBase<T> {
 	 * Removes all header parameters for given name.
 	 */
 	public void removeHeader(String name) {
-		String key = name.trim().toLowerCase();
-
-		headers.remove(key);
+		headers.remove(name.trim());
 	}
 
 	/**
@@ -157,7 +155,7 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	public T header(String name, String value, boolean overwrite) {
-		String key = (capitaliseHeaderKeys) ? name.trim().toLowerCase() : name.trim();
+		String key = name.trim();
 
 		value = value.trim();
 
@@ -178,7 +176,7 @@ public abstract class HttpBase<T> {
 	 * Internal direct header setting.
 	 */
 	protected void _header(String name, String value, boolean overwrite) {
-		String key = name.trim().toLowerCase();
+		String key = name.trim();
 		value = value.trim();
 		if (overwrite) {
 			headers.set(key, value);
