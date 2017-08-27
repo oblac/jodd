@@ -103,7 +103,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void testBuildQuery() {
-		HttpMultiMap<String> map = HttpMultiMap.newCaseInsensitveMap();
+		HttpMultiMap<String> map = HttpMultiMap.newCaseInsensitiveMap();
 
 		assertEquals("", HttpUtil.buildQuery(map, StringPool.UTF_8));
 

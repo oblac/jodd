@@ -40,8 +40,8 @@ public class HttpBrowser {
 	protected HttpConnectionProvider httpConnectionProvider;
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
-	protected HttpMultiMap<Cookie> cookies = HttpMultiMap.newCaseInsensitveMap();
-	protected HttpMultiMap<String> defaultHeaders = HttpMultiMap.newCaseInsensitveMap();
+	protected HttpMultiMap<Cookie> cookies = HttpMultiMap.newCaseInsensitiveMap();
+	protected HttpMultiMap<String> defaultHeaders = HttpMultiMap.newCaseInsensitiveMap();
 	protected boolean keepAlive;
 	protected long elapsedTime;
 	protected boolean catchTransportExceptions = true;

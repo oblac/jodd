@@ -73,7 +73,7 @@ public abstract class HttpBase<T> {
 
 	protected String httpVersion = HTTP_1_1;
 	protected boolean capitaliseHeaderKeys = JoddHttp.defaultCapitaliseHeaderKeys;
-	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
+	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitiveMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
@@ -399,7 +399,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected void initForm() {
 		if (form == null) {
-			form = HttpMultiMap.newCaseInsensitveMap();
+			form = HttpMultiMap.newCaseInsensitiveMap();
 		}
 	}
 
@@ -956,7 +956,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = HttpMultiMap.newCaseInsensitveMap();
+			form = HttpMultiMap.newCaseInsensitiveMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 

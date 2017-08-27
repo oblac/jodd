@@ -51,13 +51,13 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Creates new case-insensitive multimap.
 	 */
-	public static <T> HttpMultiMap<T> newCaseInsensitveMap() {
+	public static <T> HttpMultiMap<T> newCaseInsensitiveMap() {
 		return new HttpMultiMap<>(false);
 	}
 	/**
 	 * Creates new case-insensitive map.
 	 */
-	public static <T> HttpMultiMap<T> newCaseSensitveMap() {
+	public static <T> HttpMultiMap<T> newCaseSensitiveMap() {
 		return new HttpMultiMap<>(true);
 	}
 
