@@ -44,6 +44,8 @@ import jodd.json.impl.FloatArrayJsonSerializer;
 import jodd.json.impl.IntArrayJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
 import jodd.json.impl.JDateTimeSerializer;
+import jodd.json.impl.JsonArraySerializer;
+import jodd.json.impl.JsonObjectSerializer;
 import jodd.json.impl.LongArrayJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
@@ -93,6 +95,9 @@ public class TypeJsonSerializerMap {
 		map.put(Object.class, new ObjectJsonSerializer());
 		map.put(Map.class, new MapJsonSerializer());
 		map.put(Iterable.class, new IterableJsonSerializer());
+
+		map.put(JsonObject.class, new JsonObjectSerializer());
+		map.put(JsonArray.class, new JsonArraySerializer());
 
 		// arrays
 		map.put(int[].class, new IntArrayJsonSerializer());

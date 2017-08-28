@@ -25,32 +25,31 @@
 
 package jodd.json.impl;
 
+import jodd.json.JsonArray;
 import jodd.json.JsonContext;
-import jodd.json.Path;
+import jodd.json.TypeJsonSerializer;
 
-import java.util.Map;
-
-/**
- * Map serializer.
- */
-public class MapJsonSerializer extends KeyValueJsonSerializer<Map<?, ?>> {
+public class JsonArraySerializer implements TypeJsonSerializer<JsonArray> {
 
 	@Override
-	public void serializeValue(JsonContext jsonContext, Map<?, ?> map) {
-		jsonContext.writeOpenObject();
+	public boolean serialize(JsonContext jsonContext, JsonArray jsonArray) {
+		jsonContext.writeOpenArray();
 
+		int length = jsonArray.size();
 		int count = 0;
 
-		Path currentPath = jsonContext.getPath();
+		for (int i = 0; i < length; i++) {
+			if (count > 0) {
+				jsonContext.writeComma();
+			}
 
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			Object key = entry.getKey();
-			Object value = entry.getValue();
-
-			count = serializeKeyValue(jsonContext, currentPath, key, value, count);
+			if (jsonContext.serialize(jsonArray.getValue(i))) {
+				count++;
+			}
 		}
 
-		jsonContext.writeCloseObject();
-	}
+		jsonContext.writeCloseArray();
 
+		return true;
+	}
 }

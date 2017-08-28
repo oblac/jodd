@@ -246,6 +246,21 @@ public class JsonParser extends JsonParserBase {
 	}
 
 	/**
+	 * Parses input JSON to {@link JsonObject}, special case of {@link #parse(String, Class)}.
+	 */
+	public JsonObject parseToJsonObject(String input) {
+		return new JsonObject(parse(input));
+	}
+
+	/**
+	 * Parses input JSON to {@link JsonArray}, special case of parsing.
+	 */
+	public JsonArray parseToJsonArray(String input) {
+		return new JsonArray(parse(input));
+	}
+
+
+	/**
 	 * Parses input JSON string.
 	 */
 	public <T> T parse(String input) {
@@ -257,7 +272,7 @@ public class JsonParser extends JsonParserBase {
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T parse(char[] input, Class<?> targetType) {
+	public <T> T parse(char[] input, Class<T> targetType) {
 		rootType = targetType;
 		return _parse(input);
 	}

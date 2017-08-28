@@ -26,25 +26,24 @@
 package jodd.json.impl;
 
 import jodd.json.JsonContext;
+import jodd.json.JsonObject;
 import jodd.json.Path;
 
 import java.util.Map;
 
-/**
- * Map serializer.
- */
-public class MapJsonSerializer extends KeyValueJsonSerializer<Map<?, ?>> {
+public class JsonObjectSerializer extends KeyValueJsonSerializer<JsonObject> {
 
 	@Override
-	public void serializeValue(JsonContext jsonContext, Map<?, ?> map) {
+	public void serializeValue(JsonContext jsonContext, JsonObject jsonObject) {
 		jsonContext.writeOpenObject();
 
 		int count = 0;
 
 		Path currentPath = jsonContext.getPath();
 
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			Object key = entry.getKey();
+		for (Map.Entry<String, ?> entry : jsonObject.map().entrySet()) {
+
+			String key = entry.getKey();
 			Object value = entry.getValue();
 
 			count = serializeKeyValue(jsonContext, currentPath, key, value, count);
@@ -52,5 +51,4 @@ public class MapJsonSerializer extends KeyValueJsonSerializer<Map<?, ?>> {
 
 		jsonContext.writeCloseObject();
 	}
-
 }
