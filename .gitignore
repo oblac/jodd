@@ -14,4 +14,4 @@ target
 .classpath
 .settings
 /.coveralls.yml
-bin
+build
