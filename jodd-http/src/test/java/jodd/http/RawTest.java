@@ -29,6 +29,7 @@ import jodd.io.FileUtil;
 import jodd.util.StringUtil;
 import org.junit.Test;
 
+import javax.mail.Header;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -51,18 +52,18 @@ public class RawTest {
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
 
-		HttpMultiMap<String> headers = response.headers();
+		HttpMultiMap<HeaderTuple> headers = response.headers();
 		assertEquals(7, headers.size());
 
-		assertEquals("no-cache", headers.get("pragma"));
-		assertEquals("Sat, 23 Mar 2013 23:34:18 GMT", headers.get("date"));
+		assertEquals("no-cache", headers.get("pragma").value);
+		assertEquals("Sat, 23 Mar 2013 23:34:18 GMT", headers.get("date").value);
 		assertEquals("max-age=0, must-revalidate, no-cache, no-store, private, post-check=0, pre-check=0",
-				headers.get("cache-control"));
-		assertEquals("no-cache", headers.get("pragma"));
-		assertEquals("Thu, 01 Jan 1970 00:00:00 GMT", headers.get("expires"));
-		assertEquals("text/html;charset=UTF-8", headers.get("content-type"));
-		assertEquals("close", headers.get("connection"));
-		assertEquals("102", headers.get("content-length"));
+				headers.get("cache-control").value);
+		assertEquals("no-cache", headers.get("pragma").value);
+		assertEquals("Thu, 01 Jan 1970 00:00:00 GMT", headers.get("expires").value);
+		assertEquals("text/html;charset=UTF-8", headers.get("content-type").value);
+		assertEquals("close", headers.get("connection").value);
+		assertEquals("102", headers.get("content-length").value);
 
 		assertEquals("no-cache", response.header("Pragma"));
 		assertEquals("text/html;charset=UTF-8" , response.contentType());

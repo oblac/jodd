@@ -49,6 +49,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static jodd.util.StringPool.CRLF;
 
@@ -73,7 +74,7 @@ public abstract class HttpBase<T> {
 
 	protected String httpVersion = HTTP_1_1;
 	protected boolean capitaliseHeaderKeys = JoddHttp.defaultCapitaliseHeaderKeys;
-	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitiveMap();
+	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
@@ -121,14 +122,17 @@ public abstract class HttpBase<T> {
 	 * if header doesn't exist.
 	 */
 	public String header(String name) {
-		return headers.get(name);
+		return headers.getHeader(name);
 	}
 
 	/**
 	 * Returns all values for given header name.
 	 */
 	public List<String> headers(String name) {
-		return headers.getAll(name);
+		return headers.getAll(name)
+			.stream()
+			.map(headerTuple -> headerTuple.value)
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -158,18 +162,15 @@ public abstract class HttpBase<T> {
 	public T header(String name, String value, boolean overwrite) {
 		String key = name.trim();
 
-		value = value.trim();
-
 		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
+			value = value.trim();
+
 			mediaType = HttpUtil.extractMediaType(value);
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		if (overwrite) {
-			headers.set(key, value);
-		} else {
-			headers.add(key, value);
-		}
+		_header(name, value, overwrite);
+
 		return (T) this;
 	}
 
@@ -177,12 +178,13 @@ public abstract class HttpBase<T> {
 	 * Internal direct header setting.
 	 */
 	protected void _header(String name, String value, boolean overwrite) {
-		String key = name.trim();
+		name = name.trim();
 		value = value.trim();
+
 		if (overwrite) {
-			headers.set(key, value);
+			headers.setHeader(name, value);
 		} else {
-			headers.add(key, value);
+			headers.addHeader(name, value);
 		}
 	}
 
@@ -207,7 +209,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns {@link HttpMultiMap} of all headers.
 	 */
-	public HttpMultiMap<String> headers() {
+	public HttpMultiMap<HeaderTuple> headers() {
 		return headers;
 	}
 
@@ -791,14 +793,12 @@ public abstract class HttpBase<T> {
 
 	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
 		for (String key : headers.names()) {
-			List<String> values = headers.getAll(key);
+			List<HeaderTuple> values = headers.getAll(key);
 
-			String headerName = (capitaliseHeaderKeys) ? HttpUtil.prepareHeaderParameterName(key) : key;
-
-			for (String value : values) {
-				target.append(headerName);
+			for (HeaderTuple headerTuple : values) {
+				target.append(capitaliseHeaderKeys ? key : headerTuple.key);
 				target.append(": ");
-				target.append(value);
+				target.append(headerTuple.value);
 				target.append(CRLF);
 			}
 		}
