@@ -331,12 +331,12 @@ public class HttpRequestTest {
 	}
 	
 	@Test
-	public void testCapitaliseHeadersOption() {
+	public void testStrictHeaders() {
 
-		// default, true
+		// default, false
 
 		HttpRequest request = HttpRequest.get("")
-			.capitaliseHeaderKeys(true)
+			.strictHeaders(false)
 			.header("key-tEST2", "value2");
 		assertTrue("Header key should have been modified", request.toString(false).contains("Key-Test2: value2"));
 		assertEquals("value2", request.headers("KEY-TEST2").get(0));
@@ -350,10 +350,10 @@ public class HttpRequestTest {
 		assertFalse(request.headers.contains("key-tEST2"));
 
 
-		// false
+		// true
 
 		request = HttpRequest.get("")
-			.capitaliseHeaderKeys(false)
+			.strictHeaders(true)
 			.header("KEY-TEST1", "VALUE1");
 
 		assertTrue("Header key should not have been modified", request.toString(false).contains("KEY-TEST1: VALUE1"));

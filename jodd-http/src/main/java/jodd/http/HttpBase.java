@@ -73,7 +73,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected boolean capitaliseHeaderKeys = JoddHttp.defaultCapitaliseHeaderKeys;
+	protected boolean strictHeaders = JoddHttp.defaultStrictHeaders;
 	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -97,19 +97,20 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
-	 * Returns whether header keys are modified. By default keys are
+	 * Returns whether header keys should be strict or not, when they are
 	 * modified by changing them to PascalCase.
+	 * @see JoddHttp#defaultStrictHeaders
 	 */
-	public boolean capitaliseHeaderKeys() {
-		return capitaliseHeaderKeys;
+	public boolean strictHeaders() {
+		return strictHeaders;
 	}
 	
 	/**
-	 * Sets header key behavior. By setting this to {@code false} the case
-	 * will not be modified.
+	 * Sets headers behavior.
+	 * @see JoddHttp#defaultStrictHeaders
 	 */
-	public T capitaliseHeaderKeys(boolean capitaliseHeaderKeys) {
-		this.capitaliseHeaderKeys = capitaliseHeaderKeys;
+	public T strictHeaders(boolean strictHeaders) {
+		this.strictHeaders = strictHeaders;
 		return (T) this;
 	}
 
@@ -796,7 +797,7 @@ public abstract class HttpBase<T> {
 			List<HeaderTuple> values = headers.getAll(key);
 
 			for (HeaderTuple headerTuple : values) {
-				target.append(capitaliseHeaderKeys ? key : headerTuple.key);
+				target.append(strictHeaders ? headerTuple.key : key);
 				target.append(": ");
 				target.append(headerTuple.value);
 				target.append(CRLF);
