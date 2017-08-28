@@ -11,11 +11,13 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **json** - New generic JSON classes added: `JsonArray` and `JsonObject`.
 + **core** - Added `MapEntry` implementations.
 + **core** - Added `snapshot()` method to `Cache`.
 
 ## Breaking changes
 
++ **json** - strings are now not strictly parsed (`/` is not longer escaped). 
 + **proxetta** - all interfaces are scanned now when looking for the target info.
 + **core** - `iterator()` removed from the `Cache`.
 
