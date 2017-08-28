@@ -11,6 +11,7 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **json** - Added two `JsonParser` methods for easier parsing to a map and a list. 
 + **json** - New generic JSON classes added: `JsonArray` and `JsonObject`.
 + **core** - Added `MapEntry` implementations.
 + **core** - Added `snapshot()` method to `Cache`.

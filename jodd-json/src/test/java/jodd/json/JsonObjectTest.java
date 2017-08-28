@@ -1,6 +1,5 @@
 package jodd.json;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -1000,8 +999,8 @@ public class JsonObjectTest {
 
 	@Test
 	public void testMergeInDepth0() {
-		JsonObject obj1 = JsonParser.create().parseToJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
-		JsonObject obj2 = JsonParser.create().parseToJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
+		JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
+		JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
 		obj1.mergeIn(obj2, 0);
 		assertEquals(1, obj1.size());
 		assertEquals(1, obj1.getJsonObject("foo").size());
@@ -1010,8 +1009,8 @@ public class JsonObjectTest {
 
 	@Test
 	public void testMergeInFlat() {
-		JsonObject obj1 = JsonParser.create().parseToJsonObject("{ \"foo\": { \"bar\": \"flurb\", \"eek\": 32 }}");
-		JsonObject obj2 = JsonParser.create().parseToJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
+		JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\", \"eek\": 32 }}");
+		JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
 		obj1.mergeIn(obj2);
 		assertEquals(1, obj1.size());
 		assertEquals(1, obj1.getJsonObject("foo").size());
@@ -1020,8 +1019,8 @@ public class JsonObjectTest {
 
 	@Test
 	public void testMergeInDepth1() {
-		JsonObject obj1 = JsonParser.create().parseToJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
-		JsonObject obj2 = JsonParser.create().parseToJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
+		JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
+		JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
 		obj1.mergeIn(obj2, 1);
 		assertEquals(2, obj1.size());
 		assertEquals(1, obj1.getJsonObject("flurb").size());
@@ -1058,7 +1057,7 @@ public class JsonObjectTest {
 
 		String json = JsonSerializer.create().serialize(jsonObject);
 
-		JsonObject expectedParsedJsonObject = JsonParser.create().parseToJsonObject(json);
+		JsonObject expectedParsedJsonObject = JsonParser.create().parseAsJsonObject(json);
 
 		// need to replace float with double, as decoding will do so
 		jsonObject.put("myfloat", 1.23d);

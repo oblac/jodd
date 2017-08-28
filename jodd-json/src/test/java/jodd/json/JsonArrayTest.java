@@ -698,7 +698,7 @@ public class JsonArrayTest {
 		byte[] bytes = randomByteArray(10);
 		String strBytes = Base64.getEncoder().encodeToString(bytes);
 		String json = "[\"foo\",123,1234,1.23,2.34,true,\"" + strBytes + "\",null,{\"foo\":\"bar\"},[\"foo\",123]]";
-		JsonArray arr = JsonParser.create().parseToJsonArray(json);
+		JsonArray arr = JsonParser.create().parseAsJsonArray(json);
 		assertEquals("foo", arr.getString(0));
 		assertEquals(Integer.valueOf(123), arr.getInteger(1));
 		assertEquals(Long.valueOf(1234L), arr.getLong(2));
