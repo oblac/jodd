@@ -34,7 +34,7 @@ public class JsonWriterTest {
 	@Test
 	public void testJsonWriter() {
 		StringBuilder sb = new StringBuilder();
-		JsonWriter jsonWriter = new JsonWriter(sb);
+		JsonWriter jsonWriter = new JsonWriter(sb, false);
 
 		jsonWriter.writeOpenObject();
 		jsonWriter.writeName("one");

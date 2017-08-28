@@ -60,6 +60,7 @@ public class JsonSerializer {
 	};
 
 	protected String classMetadataName = JoddJson.classMetadataName;
+	protected boolean strictStringEncoding = JoddJson.strictStringEncoding;
 	protected boolean deep = JoddJson.deepSerialization;
 	protected Class[] excludedTypes = null;
 	protected String[] excludedTypeNames = null;
@@ -218,13 +219,22 @@ public class JsonSerializer {
 		return this;
 	}
 
+	/**
+	 * Specifies strict string encoding.
+	 * @see JoddJson#strictStringEncoding
+	 */
+	public JsonSerializer strictStringEncoding(boolean strictStringEncoding) {
+		this.strictStringEncoding = strictStringEncoding;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- serialize
 
 	/**
 	 * Serializes object into provided appendable.
 	 */
 	public void serialize(Object source, Appendable target) {
-		JsonContext jsonContext = new JsonContext(this, target, excludeNulls);
+		JsonContext jsonContext = createJsonContext(target);
 
 		jsonContext.serialize(source);
 	}
@@ -246,6 +256,6 @@ public class JsonSerializer {
 	 * Creates new JSON context.
 	 */
 	public JsonContext createJsonContext(Appendable appendable) {
-		return new JsonContext(this, appendable, excludeNulls);
+		return new JsonContext(this, appendable, excludeNulls, strictStringEncoding);
 	}
 }

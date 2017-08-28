@@ -48,8 +48,8 @@ public class JsonContext extends JsonWriter {
 	protected final Path path;
 	protected final boolean excludeNulls;
 
-	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable, boolean excludeNulls) {
-		super(appendable);
+	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable, boolean excludeNulls, boolean strictStringEncoding) {
+		super(appendable, strictStringEncoding);
 		this.jsonSerializer = jsonSerializer;
 		this.bag = new ArrayList<>();
 		this.path = new Path();

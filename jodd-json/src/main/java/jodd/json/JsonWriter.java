@@ -38,9 +38,11 @@ import static jodd.util.StringPool.NULL;
 public class JsonWriter {
 
 	protected final Appendable out;
+	protected final boolean strictStringEncoding;
 
-	public JsonWriter(Appendable out) {
+	public JsonWriter(Appendable out, boolean strictStringEncoding) {
 		this.out = out;
+		this.strictStringEncoding = strictStringEncoding;
 	}
 
 	// ---------------------------------------------------------------- push
@@ -152,7 +154,12 @@ public class JsonWriter {
 					write("\\\\");
 					break;
 				case '/':
-					write("\\/");
+					if (strictStringEncoding) {
+						write("\\/");
+					}
+					else {
+						write(c);
+					}
 					break;
 				case '\b':
 					write("\\b");

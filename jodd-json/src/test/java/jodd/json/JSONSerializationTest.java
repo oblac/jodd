@@ -239,7 +239,7 @@ public class JSONSerializationTest {
 		assertSerializedTo("Hello\nWorld", "\"Hello\\nWorld\"");
 		assertSerializedTo("Hello 'Big Boy'", "\"Hello 'Big Boy'\"");
 		assertSerializedTo("Fly \"you fools\"", "\"Fly \\\"you fools\\\"\"");
-		assertSerializedTo("</script>", "\"<\\/script>\"");
+		assertSerializedTo("</script>", "\"</script>\"");
 	}
 
 

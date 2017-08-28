@@ -311,7 +311,7 @@ public class JsonSerializerTest {
 
 		assertEquals("1\" 2\\ 3/ 4\b 5\f 6\n 7\r 8\t", str);
 
-		String jsonStr = new JsonSerializer().serialize(str);
+		String jsonStr = new JsonSerializer().strictStringEncoding(true).serialize(str);
 
 		assertEquals(json, jsonStr);
 	}
@@ -553,7 +553,7 @@ public class JsonSerializerTest {
 
 		String json = JsonSerializer.create().serialize(fileMan);
 
-		assertTrue(json.contains(StringUtil.replace(SystemUtil.userHome(), "/", "\\/")));
+		assertTrue(json.contains(SystemUtil.userHome()));
 	}
 
 	@Test
@@ -587,6 +587,7 @@ public class JsonSerializerTest {
 
 		String json = JsonSerializer
 			.create()
+			.strictStringEncoding(true)
 			.serialize(path);
 
 		assertEquals("\"\\/foo\\/bar\"", json);

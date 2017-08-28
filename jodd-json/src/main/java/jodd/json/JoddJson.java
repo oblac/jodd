@@ -92,6 +92,16 @@ public class JoddJson {
 	 */
 	public static JsonAnnotationManager annotationManager = new JsonAnnotationManager();
 
+	/**
+	 * JSON specification specifies that certain characters should be
+	 * escaped (see: http://json.org/). However, in the real world, not all
+	 * needs to be escaped: especially the 'solidus' character (/). If this one
+	 * is escaped, many things can go wrong, from URLs to Base64 encodings.
+	 * This flag controls the behavior of strict encoding. By default, the
+	 * strict encoding is set to {@code false}.
+	 */
+	public static boolean strictStringEncoding = false;
+
 	// ---------------------------------------------------------------- module
 
 	static {
