@@ -11,6 +11,7 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **core** - Added `MapEntry` implementations.
 + **core** - Added `snapshot()` method to `Cache`.
 
 ## Breaking changes
