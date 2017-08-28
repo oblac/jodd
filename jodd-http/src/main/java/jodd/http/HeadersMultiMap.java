@@ -25,24 +25,34 @@
 
 package jodd.http;
 
-public class HeadersMultiMap extends HttpMultiMap<HeaderTuple> {
+import java.util.List;
+
+public class HeadersMultiMap extends HttpMultiMap<String> {
 
 	protected HeadersMultiMap() {
 		super(false);
 	}
 
+	/**
+	 * Adds new header value. If existing value exist, it will be removed
+	 * so the store the new key value.
+	 */
 	public void addHeader(String name, String value) {
-		String key = HttpUtil.prepareHeaderParameterName(name);
-		super.add(key, new HeaderTuple(name, value));
+		List<String> valuesList = super.getAll(name);
+		if (valuesList.isEmpty()) {
+			super.add(name, value);
+			return;
+		}
+		super.remove(name);
+		valuesList.add(value);
+		super.addAll(name, valuesList);
 	}
 
 	public void setHeader(String name, String value) {
-		String key = HttpUtil.prepareHeaderParameterName(name);
-		super.set(key, new HeaderTuple(name, value));
+		super.set(name, value);
 	}
 
 	public String getHeader(String name) {
-		HeaderTuple headerTuple = super.get(name);
-		return headerTuple == null ? null : headerTuple.value;
+		return super.get(name);
 	}
 }

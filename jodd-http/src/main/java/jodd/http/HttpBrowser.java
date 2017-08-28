@@ -221,10 +221,9 @@ public class HttpBrowser {
 	 * default header will be ignored.
 	 */
 	protected void addDefaultHeaders(HttpRequest httpRequest) {
-		List<Map.Entry<String, HeaderTuple>> entries = defaultHeaders.entries();
-
-		for (Map.Entry<String, HeaderTuple> entry : entries) {
+		for (Map.Entry<String, String> entry : defaultHeaders.entries()) {
 			String name = entry.getKey();
+
 			if (!httpRequest.headers.contains(name)) {
 				httpRequest.headers.add(name, entry.getValue());
 			}

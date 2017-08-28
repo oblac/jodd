@@ -133,10 +133,7 @@ public abstract class HttpBase<T> {
 	 * Returns all values for given header name.
 	 */
 	public List<String> headers(String name) {
-		return headers.getAll(name)
-			.stream()
-			.map(headerTuple -> headerTuple.value)
-			.collect(Collectors.toList());
+		return headers.getAll(name);
 	}
 
 	/**
@@ -215,12 +212,7 @@ public abstract class HttpBase<T> {
 	 * {@link #strictHeaders()} flag.
 	 */
 	public Collection<String> headerNames() {
-		Set<String> names = new HashSet<>();
-
-		headers.forEach(tuple ->
-			names.add(strictHeaders ? tuple.getValue().key : tuple.getKey()));
-
-		return names;
+		return headers.names();
 	}
 
 	// ---------------------------------------------------------------- content type
@@ -802,15 +794,23 @@ public abstract class HttpBase<T> {
 	protected abstract Buffer buffer(boolean full);
 
 	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
-		for (String key : headers.names()) {
-			List<HeaderTuple> values = headers.getAll(key);
+		for (String name : headers.names()) {
+			List<String> values = headers.getAll(name);
 
-			for (HeaderTuple headerTuple : values) {
-				target.append(strictHeaders ? headerTuple.key : key);
-				target.append(": ");
-				target.append(headerTuple.value);
-				target.append(CRLF);
+			String key = strictHeaders ? name : HttpUtil.prepareHeaderParameterName(name);
+
+			target.append(key);
+			target.append(": ");
+			int count = 0;
+
+			for (String value : values) {
+				if (count++ > 0) {
+					target.append(", ");
+				}
+				target.append(value);
 			}
+
+			target.append(CRLF);
 		}
 
 		if (fullRequest) {

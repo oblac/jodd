@@ -6,12 +6,13 @@ All notable changes to Jodd project are documented here.
 
 ### Bug Fixes
 
++ **http** - fixed bug with multiple headers.
 + **db** - `CallableStatement` are supported in debug mode [#480](https://github.com/oblac/jodd/issues/480).
 + **proxetta** - added all interfaces while scanning the target class info.
 
 ### Features
 
-+ **http** - Added strict headers flag for handling headers in a strict way.
++ **http** - Added strict headers flag for storing headers as they are passed to the engine.
 + **json** - Added two `JsonParser` methods for easier parsing to a map and a list. 
 + **json** - New generic JSON classes added: `JsonArray` and `JsonObject`.
 + **core** - Added `MapEntry` implementations.
