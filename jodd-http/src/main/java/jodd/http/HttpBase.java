@@ -47,8 +47,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static jodd.util.StringPool.CRLF;
@@ -208,10 +211,16 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns {@link HttpMultiMap} of all headers.
+	 * Returns collection of all header names. Depends on
+	 * {@link #strictHeaders()} flag.
 	 */
-	public HttpMultiMap<HeaderTuple> headers() {
-		return headers;
+	public Collection<String> headerNames() {
+		Set<String> names = new HashSet<>();
+
+		headers.forEach(tuple ->
+			names.add(strictHeaders ? tuple.getValue().key : tuple.getKey()));
+
+		return names;
 	}
 
 	// ---------------------------------------------------------------- content type

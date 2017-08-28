@@ -41,7 +41,7 @@ public class HttpBrowserOfflineTest {
 
 		httpBrowser.addDefaultHeaders(request);
 
-		assertEquals(3, request.headers().size());
+		assertEquals(3, request.headerNames().size());
 		assertEquals("123", request.header("aaa"));
 		assertEquals("987", request.header("bbb"));
 	}
@@ -56,7 +56,7 @@ public class HttpBrowserOfflineTest {
 
 		httpBrowser.addDefaultHeaders(request);
 
-		assertEquals(2, request.headers().size());
+		assertEquals(2, request.headerNames().size());
 		assertEquals("987", request.header("aaa"));
 	}
 }

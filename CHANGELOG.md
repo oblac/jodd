@@ -19,6 +19,7 @@ All notable changes to Jodd project are documented here.
 
 ## Breaking changes
 
++ **http** - Http `headers` was removed in favor of `headerNames()`.
 + **json** - strings are now not strictly parsed (`/` is not longer escaped). 
 + **proxetta** - all interfaces are scanned now when looking for the target info.
 + **core** - `iterator()` removed from the `Cache`.

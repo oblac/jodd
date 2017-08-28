@@ -25,26 +25,15 @@
 
 package jodd.http;
 
-public class HeaderTuple {
+/**
+ * Simple header key-value storage.
+ */
+class HeaderTuple {
 
-	protected final String key;
-	protected final String value;
+	public final String key;
+	public final String value;
 
-	/**
-	 * Returns raw value of header key, as it was given on the input.
-	 */
-	public String key() {
-		return key;
-	}
-
-	/**
-	 * Returns headers value.
-	 */
-	public String value() {
-		return value;
-	}
-
-	public HeaderTuple(String key, String value) {
+	HeaderTuple(String key, String value) {
 		this.key = key;
 		this.value = value;
 	}

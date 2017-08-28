@@ -344,6 +344,7 @@ public class HttpRequestTest {
 
 		request.header("key-test2", "value2-2");
 		assertEquals(2, request.headers("KEY-TEST2").size());
+		assertEquals(2 + 2, request.headerNames().size());		// 2 default and 2 added
 
 		request.removeHeader("key-test2");
 		assertFalse(request.headers.contains("key-test2"));
@@ -362,6 +363,8 @@ public class HttpRequestTest {
 
 		request.header("key-test1", "value1-1");
 		assertEquals(2, request.headers("KEY-TEST1").size());
+		assertEquals(2 + 3, request.headerNames().size());		// 2 default and 3 added
+
 		assertTrue(request.toString(false).contains("KEY-TEST1: VALUE1"));
 		assertTrue(request.toString(false).contains("key-test1: value1-1"));
 

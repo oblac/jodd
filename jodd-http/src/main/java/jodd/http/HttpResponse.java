@@ -176,8 +176,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		InputStreamReader inputStreamReader;
 		try {
 			inputStreamReader = new InputStreamReader(in, StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
+		} catch (UnsupportedEncodingException unee) {
+			throw new HttpException(unee);
 		}
 		BufferedReader reader = new BufferedReader(inputStreamReader);
 

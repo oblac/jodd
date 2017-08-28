@@ -29,11 +29,9 @@ import jodd.io.FileUtil;
 import jodd.util.StringUtil;
 import org.junit.Test;
 
-import javax.mail.Header;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -52,7 +50,7 @@ public class RawTest {
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
 
-		HttpMultiMap<HeaderTuple> headers = response.headers();
+		HttpMultiMap<HeaderTuple> headers = response.headers;
 		assertEquals(7, headers.size());
 
 		assertEquals("no-cache", headers.get("pragma").value);
