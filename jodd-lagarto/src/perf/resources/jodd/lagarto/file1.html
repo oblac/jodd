@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2003-present, Jodd Team (http://jodd.org) -->
+<!-- All rights reserved. -->
+<!-- -->
+<!-- Redistribution and use in source and binary forms, with or without -->
+<!-- modification, are permitted provided that the following conditions are met: -->
+<!-- -->
+<!-- 1. Redistributions of source code must retain the above copyright notice, -->
+<!-- this list of conditions and the following disclaimer. -->
+<!-- -->
+<!-- 2. Redistributions in binary form must reproduce the above copyright -->
+<!-- notice, this list of conditions and the following disclaimer in the -->
+<!-- documentation and/or other materials provided with the distribution. -->
+<!-- -->
+<!-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" -->
+<!-- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE -->
+<!-- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE -->
+<!-- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE -->
+<!-- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR -->
+<!-- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF -->
+<!-- SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS -->
+<!-- INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN -->
+<!-- CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) -->
+<!-- ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE -->
+<!-- POSSIBILITY OF SUCH DAMAGE. -->
+
+<html>
+<head>
+    <title>Jodd | The Unbearable Lightness of Java</title>
+
+    <meta charset="utf-8">
+    <meta name="description" content="Jodd is set of Java micro frameworks, tools and utilities, under 1.5 MB.">
+    <meta name="author" content="Jodd">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!--link href="http://fonts.googleapis.com/css?family=Fjalla+One|Lato:300|Open+Sans+Condensed:300|Source+Sans+Pro:700,400|Inconsolata:300" rel="stylesheet" type="text/css"-->
+    <link href="/css/style.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="/css/fonts.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="/css/font-awesome.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="/css/heart.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+    <!--[if IE]>
+    <link href="/css/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <![endif]-->
+    <script src="/js/jquery-2.1.3.min.js"></script>
+    <script src="/js/list.min.js"></script>
+    <script>
+        $(function() {
+            fix();
+        });
+        $(window).on('resize', fix);
+
+        function fix() {
+            var $article = $('#content article');
+            var $aside = $('#content aside');
+
+            if ($article) {
+                if ($aside.css('position') !== 'static') {
+                    var h1 = $article.height();
+                    var h2 = $aside.height();
+                    if (h2 > h1) {
+                        $article.height(h2);
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.4.1/slick.css"/>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.4.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.autoplay').slick({
+                arrows: false,
+                dots: false,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 3000	});
+        });
+    </script>
+    <style>
+        /* Big Triangle */
+        svg#bigTriangleColor {
+            pointer-events: none;
+        }
+
+        #bigTriangleColor path {
+            fill: #f16522;
+            stroke: #f16522;
+            stroke-width: 2;
+        }
+    </style>
+</head>
+<body>
+<div class="search-wrapper dosearch">
+    <div class="search-form" id="lista">
+        <input type="text" class="search-field fuzzy-search" placeholder="Search...">
+        <i class="fa fa-times-circle" id="search-cancel"></i>
+        <ul class="search-list"></ul>
+    </div>
+</div>
+<section id="intro">
+    <header>
+        <div id="top">
+            <a href="http://jodd.org" id="logo"><img src="/jodd-pp-32.png" class="rotateInUpRight"/><span>Jodd</span></a>
+            <nav>
+                <a href="/download">Download</a>
+                <a href="/doc">Documentation</a>
+                <a href="/get-involved.html">Get Involved</a>
+            </nav>
+        </div>
+    </header>
+
+
+    <div class="inner">
+        <div id="button-jodd"><a href="/download">
+            Jodd v3.8.5
+            <div class="sub">Released: Apr 10th, 2017</div>
+        </a></div>
+        <div id="title">
+            <h1>Jodd</h1>
+            <h2>The Unbearable Lightness of Java</h2>
+            <iframe src="https://ghbtns.com/github-btn.html?user=oblac&repo=jodd&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px" style="float:left; margin-top:14px;"></iframe>
+
+            <nav id="social">
+                <a href="http://github.com/oblac/jodd" class="fa fa-github"><span>Github</span></a>
+                <a href="http://stackoverflow.com/tags/jodd" class="fa fa-stack-overflow"><span>Stack Overflow</span></a>
+                <a href="/contact.html" class="fa fa-envelope-o"><span>Contact us</span></a>
+                <a href="https://twitter.com/joddorg" class="fa fa-twitter"><span>Twitter</span></a>
+                <a href="/love.html" class="fa fa-heart-o"><span>Users</span></a>
+                <a id="search" href="#"><i class="fa fa-search"><span>Search</span></i></a>
+            </nav>
+
+        </div>
+
+        <img id="pplane" src="/jodd-pp-128.png">
+
+    </div>
+</section>
+
+<section id="shout" class="ss-style-bigtriangle">
+    <div class="inner">
+
+        <p><em class="jodd">Jodd</em> is set of Java <strong>micro frameworks</strong>, <strong>tools</strong> and <strong>utilities</strong>, under
+            <a href="size-matters.html"><strong>1.7 MB</strong></a>.</p>
+
+        <p>We believe in <a href="principle.html">common sense</a> to make things simple, but not simpler.</p>
+
+        <p>Get things done! Make your ideas! Kickstart your startup!</p>
+
+        <p>And enjoy the coding.</p>
+
+
+    </div>
+</section>
+
+<svg id="bigTriangleColor" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="40" viewBox="0 0 100 102" preserveAspectRatio="none">
+    <path d="M0 0 L50 100 L100 0 Z" />
+</svg>
+
+<section id="main">
+    <div class="inner">
+
+        <h2>Jodd table of Micro-components</h2>
+
+        <div class="under">
+            Here are some components for you!
+            See <a href="/doc">documentation</a> for more.
+        </div>
+
+        <div id="badges">
+
+            <a href="/doc/beanutil.html" class="badge radial-out">
+                <div class="circle topic-icon">B</div>
+                <div class="desc topic-title">
+                    <span>BeanUtil</span> - fast bean library, type introspection
+                    and type conversion tools with some unique features.
+                </div>
+            </a>
+
+            <a href="/doc/jdatetime.html" class="badge br1 radial-out">
+                <div class="circle topic-icon">T</div>
+                <div class="desc topic-title">
+                    <span>JDateTime</span> - astronomical
+                    precision in single time-manipulation class.
+                </div>
+            </a>
+
+            <a href="/doc/props.html" class="badge br1 radial-out">
+                <div class="circle topic-icon bg-col1">R</div>
+                <div class="desc topic-title">
+                    <span>Props</span> - properties replacement,
+                    featuring: UTF8, sections, profiles, macros and more.
+                </div>
+            </a>
+
+            <a href="/doc/db/" class="badge radial-out">
+                <div class="circle topic-icon bg-col4">D</div>
+                <div class="desc topic-title">
+                    <span>DbOom</span> - thin database layers,
+                    object mapper and Template-SQL that simplifies database code.
+                </div>
+            </a>
+
+            <a href="/doc/madvoc/" class="badge radial-out">
+                <div class="circle topic-icon">M</div>
+                <div class="desc topic-title">
+                    <span>Madvoc</span> - MVC framework based on
+                    CoC and annotations for pragmatic web development.
+                </div>
+            </a>
+
+            <a href="/doc/petite/" class="badge radial-out">
+                <div class="circle topic-icon bg-col3">P</div>
+                <div class="desc topic-title">
+                    <span>Petite</span> - DI container
+                    that supports sufficient most of features
+                    offered by other containers.
+                </div>
+            </a>
+
+            <a href="/doc/proxetta/" class="badge radial-out">
+                <div class="circle topic-icon">X</div>
+                <div class="desc topic-title">
+                    <span>Proxetta</span> - the fastest proxy creator with new, unique
+                    approach for making pointcuts and different type of advices.
+                </div>
+            </a>
+
+            <a href="/doc/lagarto/" class="badge br2 radial-out">
+                <div class="circle topic-icon bg-col4">L</div>
+                <div class="desc topic-title">
+                    <span>Lagarto</span> - all-purpose HTML parser and DOM builder.
+                    <br><br><br>
+                </div>
+            </a>
+
+            <a href="/doc/jerry/" class="badge radial-out">
+                <div class="circle topic-icon">J</div>
+                <div class="desc topic-title">
+                    <span>Jerry</span> - jQuery-friendly HTML parser with CSS3 selectors support.
+                    <br><br><br>
+                </div>
+            </a>
+
+            <a href="/doc/http.html" class="badge br2 radial-out">
+                <div class="circle topic-icon bg-col1">H</div>
+                <div class="desc topic-title">
+                    <span>HTTP</span> - Tiny and raw HTTP client, helps talking to servers.
+                    <br><br>
+                </div>
+            </a>
+
+            <a href="/doc/email.html" class="badge br1 radial-out">
+                <div class="circle topic-icon">E</div>
+                <div class="desc topic-title">
+                    <span>Email</span> - sending and receiving emails for busy developers.
+                    <br><br>
+                </div>
+            </a>
+
+            <a href="/doc/decora/" class="badge br1 radial-out">
+                <div class="circle topic-icon">C</div>
+                <div class="desc topic-title">
+                    <span>Decora</span> - decoration framework for web pages based on templates.
+                    <br><br>
+                </div>
+            </a>
+
+            <a href="/doc/json/" class="badge br2 radial-out">
+                <div class="circle topic-icon bg-col4">S</div>
+                <div class="desc topic-title">
+                    <span>Json</span> - parsing JSON to objects and serializing objects back to JSON.
+                    <br><br>
+                </div>
+            </a>
+
+            <a href="/doc/htmlstapler/" class="badge br1 radial-out">
+                <div class="circle topic-icon bg-col1">A</div>
+                <div class="desc topic-title">
+                    <span>HtmlStapler</span> - auto packaging of web resources included by HTML page.
+                    <br><br>
+                </div>
+            </a>
+
+        </div>
+
+        <h2>Think Lightweight, Be Awesome, Get Things Done!</h2>
+
+    </div>
+</section>
+
+<section id="twitter">
+    <div class="inner" >
+
+        <div class="slider autoplay">
+            <div>
+                <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Wow! Found <a href="https://t.co/lqBp26ddZP">https://t.co/lqBp26ddZP</a> and tried http and jquery modules. Bye bye guava and apache-commons? <a href="https://twitter.com/hashtag/Java?src=hash">#Java</a></p>&mdash; =λ= (@danieldietrich) <a href="https://twitter.com/danieldietrich/status/817526604834471936">January 7, 2017</a></blockquote>
+            </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none"><p lang="es" dir="ltr">Introducción a <a href="https://twitter.com/hashtag/java?src=hash">#java</a> jodd <a href="https://twitter.com/hashtag/microframework?src=hash">#microframework</a> y como su tamaño y <a href="https://twitter.com/hashtag/frameworks?src=hash">#frameworks</a> nos ayudan en muy poco espacio <a href="http://t.co/EonkFKgI8t">http://t.co/EonkFKgI8t</a></p>&mdash; Cecilio Alvarez (@arquitectojava) <a href="https://twitter.com/arquitectojava/status/626759823053361153">July 30, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" data-cards="hidden" lang="en"><p lang="en" dir="ltr">New Post: Java Micro Frameworks: The New Trend You Can’t Ignore <a href="http://t.co/l51yQNrzWd">http://t.co/l51yQNrzWd</a> <a href="http://t.co/v0JAPXfz6Q">pic.twitter.com/v0JAPXfz6Q</a></p>&mdash; Takipi (@takipid) <a href="https://twitter.com/takipid/status/608628228387799041">June 10, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>Jodd – The Unbearable Lightness of Java <a href="http://t.co/VplVCeMxIL">http://t.co/VplVCeMxIL</a></p>&mdash; Hacker News 100 (@betterhn100) <a href="https://twitter.com/betterhn100/status/581883829591404544">March 28, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>Unbearable helpful for java developers: <a href="http://t.co/t3inb9dW5Y">http://t.co/t3inb9dW5Y</a> <a href="https://twitter.com/hashtag/java?src=hash">#java</a> <a href="https://twitter.com/hashtag/developer?src=hash">#developer</a> <a href="https://twitter.com/joddorg">@joddorg</a></p>&mdash; Pedro A. Hortas (@phortas) <a href="https://twitter.com/phortas/status/581733261736558592">March 28, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>Probably the very useful toolset for every Java/JVM dev <a href="http://t.co/BK7Z2AkJyV">http://t.co/BK7Z2AkJyV</a></p>&mdash; Alex Chepurnoy (@chepurnoy) <a href="https://twitter.com/chepurnoy/status/581692067253866496">March 28, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="http://t.co/BiNKKiRCCW">http://t.co/BiNKKiRCCW</a> :O ! awesome utils, it&#39;s like those commons but tiny and fantastic</p>&mdash; Miguel Fuentes B. (@miguelfuentes) <a href="https://twitter.com/miguelfuentes/status/581604421689339904">March 27, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>Is Java Dead in 2015? My opinion. Hint: Not!. <a href="http://t.co/f1N86blStx">http://t.co/f1N86blStx</a> <a href="https://twitter.com/hashtag/java?src=hash">#java</a> <a href="https://twitter.com/hashtag/springframework?src=hash">#springframework</a> <a href="https://twitter.com/hashtag/spark?src=hash">#spark</a> <a href="https://twitter.com/hashtag/jodd?src=hash">#jodd</a> <a href="https://twitter.com/trisha_gee">@trisha_gee</a> <a href="https://twitter.com/vertx_project">@vertx_project</a></p>&mdash; RedBlink (@RedBlinkInc) <a href="https://twitter.com/RedBlinkInc/status/551852410453626880">January 4, 2015</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>Whoa... amazing. Batteries included! O.O <a href="https://twitter.com/joddorg">@joddorg</a> <a href="http://t.co/EjaYreJibX">http://t.co/EjaYreJibX</a> <a href="https://twitter.com/hashtag/Java?src=hash">#Java</a> micro <a href="https://twitter.com/hashtag/frameworks?src=hash">#frameworks</a>, tools and utilities!</p>&mdash; Edoardo Rossi (@nulledd) <a href="https://twitter.com/nulledd/status/532159727229468672">November 11, 2014</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>160 characters are not enough to explain how much useful stuff is included in <a href="https://twitter.com/joddorg">@joddorg</a> Have a look! <a href="https://twitter.com/hashtag/java?src=hash">#java</a></p>&mdash; Tino K. (@tinobino) <a href="https://twitter.com/tinobino/status/531732540063641601">November 10, 2014</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/joddorg">@joddorg</a> framework sounds promising and really comes in handy .. Thank you all for your efforts</p>&mdash; omid pourhadi (@omidbiz) <a href="https://twitter.com/omidbiz/status/494530432646795264">July 30, 2014</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/joddorg">@joddorg</a> We have many projects where using Jodd would make sense over other frameworks. Just waiting for the right moment to push it...</p>&mdash; Andreas Schilling (@styx_hcr) <a href="https://twitter.com/styx_hcr/status/537124216563576832">November 25, 2014</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>Nice little Java micro-framework package with most everything you need to get up and running quickly <a href="http://t.co/0gqTVDGiGW">http://t.co/0gqTVDGiGW</a></p>&mdash; cactuspants (@cactuspants) <a href="https://twitter.com/cactuspants/status/532626626212012032">November 12, 2014</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a href="https://twitter.com/hashtag/amazingjava?src=hash">#amazingjava</a> <a href="https://twitter.com/hashtag/Jerry?src=hash">#Jerry</a>, the <a href="https://twitter.com/hashtag/jQuery?src=hash">#jQuery</a>-like parser of <a href="https://twitter.com/hashtag/Jodd?src=hash">#Jodd</a> rocks. It&#39;s a kick-ass way to parse HTML or XML files <a href="http://t.co/pCU7nDksyY">http://t.co/pCU7nDksyY</a> <a href="https://twitter.com/hashtag/java?src=hash">#java</a></p>&mdash; David Weber (@TheJeed) <a href="https://twitter.com/TheJeed/status/544496144915906560">December 15, 2014</a></blockquote>
+        </div><div>
+            <blockquote class="twitter-tweet" data-conversation="none" lang="en"><p>&quot;Jodd: Set of Java micro frameworks, tools and utilities, under 1.5 MB&quot; <a href="http://t.co/rovafo7kKe">http://t.co/rovafo7kKe</a> OMG!! I have to try it right now ^^ <a href="https://twitter.com/hashtag/java?src=hash">#java</a> <a href="https://twitter.com/hashtag/dev?src=hash">#dev</a></p>&mdash; Juan Llado (@jllado) <a href="https://twitter.com/jllado/status/532427687143698433">November 12, 2014</a></blockquote>
+        </div>
+        </div>
+    </div>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</section>
+
+<footer>
+    <div id="support">
+        <div class="inner">
+            <div class="text-center">
+                <a href="/download">Download</a>
+                <a href="/code.html">Code</a>
+                <a href="/doc">Documentation</a>
+            </div>
+        </div>
+    </div>
+    <div id="overview">
+        <div class="inner">
+            © 2017 Igor Spasić and the Jodd Team, with &nbsp;<span class="heartbeat"></span>.<br>
+            <br>
+            Jodd is free software, released under the terms of the BSD License.
+        </div>
+    </div>
+</footer>
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-153514-4");
+        pageTracker._trackPageview();
+    } catch(err) {}</script>
+
+</body>
+</html>
