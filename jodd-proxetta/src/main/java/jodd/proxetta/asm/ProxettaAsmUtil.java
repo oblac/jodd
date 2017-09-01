@@ -99,12 +99,10 @@ public class ProxettaAsmUtil {
 		return methodPrefix + name + methodDivider + index;
 	}
 
-
-
 	// ---------------------------------------------------------------- load
 
 	public static void loadMethodArgumentClass(MethodVisitor mv, MethodInfo methodInfo, int index) {
-		loadClass(mv, methodInfo.getArgumentOpcodeType(index), methodInfo.getArgumentTypeName(index));
+		loadClass(mv, methodInfo.getArgumentOpcodeType(index), methodInfo.getArgumentTypeRawName(index));
 	}
 
 	public static void loadClass(MethodVisitor mv, int type, String typeName) {
@@ -540,10 +538,10 @@ public class ProxettaAsmUtil {
 				returnType = AsmUtil.SIGNATURE_JAVA_LANG_CHARACTER;
 				break;
 			case '[':
-				returnType = methodInfo.getReturnTypeName();
+				returnType = methodInfo.getReturnTypeRawName();
 				break;
 			default:
-				String rtname = methodInfo.getReturnTypeName();
+				String rtname = methodInfo.getReturnTypeRawName();
 				returnType = rtname.length() == 0 ?
 					AsmUtil.typeToSignature(methodInfo.getReturnType()) :
 					AsmUtil.typedesc2ClassName(rtname);

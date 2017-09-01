@@ -27,6 +27,8 @@ package jodd.proxetta.asm;
 
 import jodd.asm5.signature.SignatureVisitor;
 import jodd.asm5.Opcodes;
+import jodd.proxetta.GenericsReader;
+import jodd.util.StringPool;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
@@ -37,6 +39,7 @@ import jodd.asm.TraceSignatureVisitor;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Resolves method signature and holds all information. Uses {@link jodd.asm.TraceSignatureVisitor} from ASM library.
@@ -54,31 +57,29 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	protected MutableInteger returnOpcodeType;
 	protected StringBuilder returnTypeName;
+	protected StringBuilder returnTypeRawName;
 	protected String classname;
 	protected String description;
-	protected String rawSignature;
+	protected String asmMethodSignature;
 	protected AnnotationInfo[] annotations;
 
 	protected boolean visitingArgument;
 	protected StringBuilder argumentsOpcodeType;
 	protected IntArrayList argumentsOffset;
 	protected List<String> argumentsTypeNames;
+	protected List<String> argumentsTypeRawNames;
 	protected AnnotationInfo[][] argumentsAnnotation;
 
 	protected String declaredClassName;
 
-	protected ClassInfo targetClassInfo;
+	final protected ClassInfo targetClassInfo;
 	protected boolean isStatic;
+	protected Map<String, String> generics;
 
 	// ---------------------------------------------------------------- ctors
 
-/*	public MethodSignatureVisitor(String description) {
-		this();
-		this.description = description;
-	}
-*/
 	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, String signature, ClassInfo targetClassInfo) {
-		this();
+		super(new StringBuilder());
 		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
 		this.methodName = methodName;
@@ -86,21 +87,22 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.classname = classname;
 		this.description = description;
 		this.targetClassInfo = targetClassInfo;
-		this.rawSignature = signature;
+		this.asmMethodSignature = signature;
+		this.generics = new GenericsReader().parseSignatureForGenerics(signature, isInterface);
 	}
 
-	private MethodSignatureVisitor() {
-        super(new StringBuilder());
-    }
-
-	private MethodSignatureVisitor(final StringBuilder declaration) {
+	private MethodSignatureVisitor(final StringBuilder declaration, ClassInfo targetClassInfo) {
         super(declaration);
+		this.targetClassInfo = targetClassInfo;
     }
 
-	private MethodSignatureVisitor(final StringBuilder buf, MutableInteger returnOpcodeType, StringBuilder returnTypeName) {
-		this(buf);
+	private MethodSignatureVisitor(final StringBuilder declaration, MutableInteger returnOpcodeType, StringBuilder returnTypeName, StringBuilder returnTypeRawName, ClassInfo targetClassInfo, Map<String, String> generics) {
+		super(declaration);
+		this.targetClassInfo = targetClassInfo;
 		this.returnOpcodeType = returnOpcodeType;
 		this.returnTypeName = returnTypeName;
+		this.returnTypeRawName = returnTypeRawName;
+		this.generics = generics;
 	}
 
 	// ---------------------------------------------------------------- code
@@ -109,14 +111,17 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	public SignatureVisitor visitParameterType() {
 		super.visitParameterType();
 		visitingArgument = true;
+
 		if (argumentsOpcodeType == null) {
 			argumentsOpcodeType = new StringBuilder();
 			argumentsOffset = new IntArrayList();
 			argumentsTypeNames = new ArrayList<>();
+			argumentsTypeRawNames = new ArrayList<>();
 
 			argumentsOpcodeType.append('L');
 			argumentsOffset.add(0);
 			argumentsTypeNames.add(null);
+			argumentsTypeRawNames.add(null);
 		}
 		return this;
 	}
@@ -127,13 +132,14 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		super.visitReturnType();
 		returnOpcodeType = new MutableInteger();
 		returnTypeName = new StringBuilder();
-		return new MethodSignatureVisitor(returnType, returnOpcodeType, returnTypeName);
+		returnTypeRawName = new StringBuilder();
+		return new MethodSignatureVisitor(returnType, returnOpcodeType, returnTypeName, returnTypeRawName, targetClassInfo, generics);
 	}
 
 	@Override
 	public SignatureVisitor visitExceptionType() {
 		super.visitExceptionType();
-		return new MethodSignatureVisitor(exceptions);
+		return new MethodSignatureVisitor(exceptions, targetClassInfo);
 	}
 
 
@@ -154,8 +160,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 */
 	@Override
 	public void visitTypeVariable(final String name) {
+		maybeUseType('L', name);
 		super.visitTypeVariable(name);
-		maybeUseType('L', name);    // toask what is this?
 	}
 
 	/**
@@ -172,8 +178,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 */
 	@Override
 	public void visitClassType(final String name) {
-		super.visitClassType(name);
 		maybeUseType('L', 'L' + name + ';');
+		super.visitClassType(name);
 	}
 
 	// ---------------------------------------------------------------- method signature
@@ -206,8 +212,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return methodDeclaration.toString();
 	}
 
-	public String getRawSignature() {
-		return rawSignature;
+	public String getAsmMethodSignature() {
+		return asmMethodSignature;
 	}
 
 	public String getMethodName() {
@@ -229,6 +235,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return argumentsTypeNames.get(i);
 	}
 
+	public String getArgumentTypeRawName(int i) {
+		return argumentsTypeRawNames.get(i);
+	}
+
 	public int getArgumentOffset(int index) {
 		return argumentsOffset.get(index);
 	}
@@ -247,6 +257,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	public String getReturnTypeName() {
 		return returnTypeName.toString();
+	}
+
+	public String getReturnTypeRawName() {
+		return returnTypeRawName.toString();
 	}
 
 	public int getAccessFlags() {
@@ -322,7 +336,11 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			argumentsCount++;
 			argumentsOpcodeType.append(type);
 			argumentsOffset.add(argumentsWords + 1);
+
 			argumentsTypeNames.add(typeName);
+			argumentsTypeRawNames.add(
+				resolveRawTypeName(typeName));
+
 			if ((type == 'D') || (type == 'J')) {
 				argumentsWords += 2;
 			} else {
@@ -345,9 +363,40 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 				if (typeName != null) {
 					returnTypeName.append(typeName);
+					returnTypeRawName.append(resolveRawTypeName(typeName));
 				}
 			}
 		}
+	}
+
+	/**
+	 * Resolves raw type name using the generics information from the class
+	 * or method information.
+	 */
+	private String resolveRawTypeName(String typeName) {
+		if (typeName == null) {
+			return null;
+		}
+
+		boolean isArray = typeName.startsWith(StringPool.LEFT_SQ_BRACKET);
+		if (isArray) {
+			typeName = typeName.substring(1);
+		}
+
+		String rawTypeName;
+
+		if (generics.containsKey(typeName)) {
+			rawTypeName = generics.get(typeName);
+		}
+		else {
+			rawTypeName = targetClassInfo.getGenerics().getOrDefault(typeName, typeName);
+		}
+
+		if (isArray) {
+			rawTypeName = '[' + rawTypeName;
+		}
+
+		return rawTypeName;
 	}
 
 	// ---------------------------------------------------------------- toString

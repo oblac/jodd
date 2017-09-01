@@ -126,7 +126,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 		// destination constructors [A1]
 		if (name.equals(INIT)) {
-			MethodVisitor mv = wd.dest.visitMethod(access, name, desc, msign.getRawSignature(), null);
+			MethodVisitor mv = wd.dest.visitMethod(access, name, desc, msign.getAsmMethodSignature(), null);
 			return new ProxettaCtorBuilder(mv, msign, wd);
 		}
 		// ignore destination static block
