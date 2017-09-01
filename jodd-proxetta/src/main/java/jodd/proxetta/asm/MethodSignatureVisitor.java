@@ -25,20 +25,22 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmUtil;
 import jodd.asm5.signature.SignatureVisitor;
 import jodd.asm5.Opcodes;
 import jodd.proxetta.GenericsReader;
+import jodd.proxetta.TypeInfo;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 import jodd.util.collection.IntArrayList;
-import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ClassInfo;
 import jodd.proxetta.AnnotationInfo;
 import jodd.asm.TraceSignatureVisitor;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,33 +51,26 @@ import java.util.Map;
  */
 public class MethodSignatureVisitor extends TraceSignatureVisitor implements MethodInfo {
 
-	protected int access;
-	protected String methodName;
+	protected final String classname;
+	protected final String methodName;
+	protected final String[] exceptionsArray;
+	protected final boolean isStatic;
+	protected final ClassInfo targetClassInfo;
+	protected final IntArrayList argumentsOffset;
+	protected final List<TypeInfo> arguments;
+	protected final int access;
+	protected final String description;
+
+	protected TypeInfo returnType;
 	protected String signature;
 	protected int argumentsCount;
 	protected int argumentsWords;
-
-	protected MutableInteger returnOpcodeType;
-	protected StringBuilder returnTypeName;
-	protected StringBuilder returnTypeRawName;
-	protected String classname;
-	protected String description;
 	protected String asmMethodSignature;
 	protected AnnotationInfo[] annotations;
-
-	protected boolean visitingArgument;
-	protected StringBuilder argumentsOpcodeType;
-	protected IntArrayList argumentsOffset;
-	protected List<String> argumentsTypeNames;
-	protected List<String> argumentsTypeRawNames;
 	protected AnnotationInfo[][] argumentsAnnotation;
-
 	protected String declaredClassName;
-
-	final protected ClassInfo targetClassInfo;
-	protected boolean isStatic;
 	protected Map<String, String> generics;
-	protected String[] exceptionsArray;
+
 
 	// ---------------------------------------------------------------- ctors
 
@@ -91,184 +86,103 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.asmMethodSignature = signature;
 		this.generics = new GenericsReader().parseSignatureForGenerics(signature, isInterface);
 		this.exceptionsArray = exceptions;
+
+		this.arguments = new ArrayList<>();
+		this.arguments.add(new TypeInfo('L', null, null, null));
+
+		this.argumentsOffset = new IntArrayList();
+		this.argumentsOffset.add(0);
 	}
 
-	private MethodSignatureVisitor(final StringBuilder declaration, MutableInteger returnOpcodeType, StringBuilder returnTypeName, StringBuilder returnTypeRawName, ClassInfo targetClassInfo, Map<String, String> generics) {
-		super(declaration);
-		this.targetClassInfo = targetClassInfo;
-		this.returnOpcodeType = returnOpcodeType;
-		this.returnTypeName = returnTypeName;
-		this.returnTypeRawName = returnTypeRawName;
-		this.generics = generics;
-	}
-
-	// ---------------------------------------------------------------- code
+	// ---------------------------------------------------------------- method-info signature
 
 	@Override
-	public SignatureVisitor visitParameterType() {
-		super.visitParameterType();
-		visitingArgument = true;
-
-		if (argumentsOpcodeType == null) {
-			argumentsOpcodeType = new StringBuilder();
-			argumentsOffset = new IntArrayList();
-			argumentsTypeNames = new ArrayList<>();
-			argumentsTypeRawNames = new ArrayList<>();
-
-			argumentsOpcodeType.append('L');
-			argumentsOffset.add(0);
-			argumentsTypeNames.add(null);
-			argumentsTypeRawNames.add(null);
-		}
-		return this;
-	}
-
-
-	@Override
-	public SignatureVisitor visitReturnType() {
-		super.visitReturnType();
-		returnOpcodeType = new MutableInteger();
-		returnTypeName = new StringBuilder();
-		returnTypeRawName = new StringBuilder();
-		return new MethodSignatureVisitor(returnType, returnOpcodeType, returnTypeName, returnTypeRawName, targetClassInfo, generics);
-	}
-
-	@Override
-	public void visitBaseType(final char descriptor) {
-		String name = null;
-		char type = descriptor;
-		if (isArray()) {
-			type = '[';
-			name = getArrayDepthString() + descriptor;
-		}
-		super.visitBaseType(descriptor);
-		maybeUseType(type,  name);
-	}
-
-	/**
-	 * Visits a signature corresponding to a type variable.
-	 */
-	@Override
-	public void visitTypeVariable(final String name) {
-		maybeUseType('L', name);
-		super.visitTypeVariable(name);
-	}
-
-	/**
-	 * Visits a signature corresponding to an array type.
-	 */
-	@Override
-	public SignatureVisitor visitArrayType() {
-		super.visitArrayType();
-		return this;
-	}
-
-	/**
-	 * Starts the visit of a signature corresponding to a class or interface type.
-	 */
-	@Override
-	public void visitClassType(final String name) {
-		maybeUseType('L', 'L' + name + ';');
-		super.visitClassType(name);
-	}
-
-	// ---------------------------------------------------------------- method signature
-
-	/**
-	 * Returns java-alike method signature.
-	 * @see #createSignature()
-	 */
 	public String getSignature() {
 		if (signature == null) {
-			signature = createSignature();
+			String decl = getDeclaration();
+
+			int ndx = decl.indexOf(')');
+			ndx++;
+			String retType = decl.substring(ndx);
+
+			StringBuilder methodDeclaration = new StringBuilder(50);
+			methodDeclaration.append(retType).append(' ').append(methodName).append(decl.substring(0, ndx));
+
+			String exceptionsAsString = getExceptionsAsString();
+			if (exceptionsAsString != null) {
+				methodDeclaration.append(" throws ").append(exceptionsAsString);
+			}
+
+			signature = methodDeclaration.toString();
 		}
 		return signature;
 	}
 
+	@Override
 	public String getCleanSignature() {
 		return methodName + '#' + getDescription();
-	}
-
-	/**
-	 * Builds java-alike method signature.
-	 */
-	private String createSignature() {
-		StringBuilder methodDeclaration = new StringBuilder(30);
-		methodDeclaration.append(getReturnType()).append(' ').append(methodName).append(getDeclaration());
-		String genericExceptions = getExceptionsAsString();
-		if (genericExceptions != null) {
-			methodDeclaration.append(" throws ").append(genericExceptions);
-		}
-		return methodDeclaration.toString();
 	}
 
 	public String getAsmMethodSignature() {
 		return asmMethodSignature;
 	}
 
+	@Override
 	public String getMethodName() {
 		return methodName;
 	}
 
+	@Override
 	public int getArgumentsCount() {
 		return argumentsCount;
 	}
 
-	/**
-	 * @param index 1-base index
-	 */
-	public char getArgumentOpcodeType(int index) {
-		return argumentsOpcodeType.charAt(index);
+	@Override
+	public TypeInfo getArgument(int ndx) {
+		return arguments.get(ndx);
 	}
 
-	public String getArgumentTypeName(int i) {
-		return argumentsTypeNames.get(i);
-	}
-
-	public String getArgumentTypeRawName(int i) {
-		return argumentsTypeRawNames.get(i);
-	}
-
+	@Override
 	public int getArgumentOffset(int index) {
 		return argumentsOffset.get(index);
 	}
 
+	@Override
 	public AnnotationInfo[] getArgumentAnnotations(int index) {
 		return argumentsAnnotation[index];
 	}
 
+	@Override
 	public int getAllArgumentsSize() {
 		return argumentsWords;
 	}
 
-	public char getReturnOpcodeType() {
-		return (char) returnOpcodeType.value;
+	@Override
+	public TypeInfo getReturnType() {
+		return returnType;
 	}
 
-	public String getReturnTypeName() {
-		return returnTypeName.toString();
-	}
-
-	public String getReturnTypeRawName() {
-		return returnTypeRawName.toString();
-	}
-
+	@Override
 	public int getAccessFlags() {
 		return access;
 	}
 
+	@Override
 	public String getClassname() {
 		return classname;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public AnnotationInfo[] getAnnotations() {
 		return annotations;
 	}
 
+	@Override
 	public String getDeclaredClassName() {
 		if (declaredClassName == null) {
 			return classname;
@@ -280,87 +194,183 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.declaredClassName = declaredClassName;
 	}
 
+	@Override
 	public boolean isTopLevelMethod() {
 		return declaredClassName == null;
 	}
 
+	@Override
 	public ClassInfo getClassInfo() {
 		return targetClassInfo;
 	}
 
+	@Override
 	public String[] getExceptions() {
 		return exceptionsArray;
 	}
 
-	// ---------------------------------------------------------------- utilities
+	// ---------------------------------------------------------------- type
 
-	/**
-	 * Returns <code>true</code> if we are currently visiting an array.
-	 */
-	private boolean isArray() {
-		return arrayStack != 0;
+	private boolean visitingArgument;
+	private boolean visitingReturnType;
+	private boolean visitingArray;
+	private int declarationTypeOffset;
+
+
+	@Override
+	public SignatureVisitor visitParameterType() {
+		super.visitParameterType();
+
+		visitingArgument = true;
+
+		return this;
 	}
 
-	/**
-	 * Add '[' for current array depth.
-	 */
-	private String getArrayDepthString() {
-		int aStack = arrayStack;    // copy value
-		StringBuilder ads = new StringBuilder();
-		while (aStack % 2 != 0) {
-			aStack /= 2;
-			ads.append('[');
+	@Override
+	public SignatureVisitor visitReturnType() {
+		super.visitReturnType();
+
+		visitingReturnType = true;
+
+		return this;
+	}
+
+	@Override
+	public SignatureVisitor visitArrayType() {
+		visitingArray = true;
+		return super.visitArrayType();
+	}
+
+	@Override
+	public void visitBaseType(final char descriptor) {
+		if (isTopLevelType()) {
+			// mark type start
+			declarationTypeOffset = declaration.length();
 		}
-		return ads.toString();
+
+		super.visitBaseType(descriptor);
 	}
 
-	/**
-	 * Saves argument type if parameter is currently visiting, otherwise
-	 * saves return type. When saving arguments data, stores also current argument offset.
-	 */
-	private void maybeUseType(char type, String typeName) {
-		if (visitingArgument) {
-			if (isArray()) {
-				type = '[';
-				typeName = getArrayDepthString() + typeName;
+	@Override
+	public void visitClassType(String name) {
+		if (isTopLevelType()) {
+			// mark type start
+			declarationTypeOffset = declaration.length();
+		}
+
+		super.visitClassType(name);
+	}
+
+	@Override
+	protected void startType() {
+		super.startType();
+
+		if (isTopLevelType()) {
+			// mark type start
+			declarationTypeOffset = declaration.length();
+		}
+	}
+
+	@Override
+	protected void endType() {
+		super.endType();
+
+		String type = declaration.subSequence(declarationTypeOffset, declaration.length()).toString();
+
+		maybeUseType(type);
+	}
+
+	private void maybeUseType(String typeName) {
+		if (!isTopLevelType()) {
+			return;
+		}
+
+		char type;
+		String bytecodeName;
+
+		if (visitingArray) {
+			type = '[';
+
+			int arrayCount = StringUtil.count(typeName, '[');
+			String arrayDepth = StringUtil.repeat('[', arrayCount);
+
+			int ndx = typeName.indexOf('[');
+			bytecodeName = typeName.substring(0, ndx);
+
+			char arrayType = AsmUtil.typeNameToOpcode(bytecodeName);
+			if (arrayType != 'L') {
+				bytecodeName = String.valueOf(arrayType);
 			}
+			else {
+				bytecodeName = resolveBytecodeName(bytecodeName);
+			}
+
+			bytecodeName = arrayDepth  + bytecodeName;
+		}
+		else {
+			type = AsmUtil.typeNameToOpcode(typeName);
+
+			if (type != 'L') {
+				bytecodeName = String.valueOf(type);
+			}
+			else {
+				bytecodeName = resolveBytecodeName(typeName);
+			}
+		}
+
+		final TypeInfo typeInfo = new TypeInfo(
+			type,
+			typeName,
+			bytecodeName,
+			resolveRawTypeName(bytecodeName));
+
+		if (visitingArgument) {
 			if (type == 'V') {
 				throw new ProxettaException("Method argument can't be void");
 			}
-			argumentsCount++;
-			argumentsOpcodeType.append(type);
-			argumentsOffset.add(argumentsWords + 1);
 
-			argumentsTypeNames.add(typeName);
-			argumentsTypeRawNames.add(
-				resolveRawTypeName(typeName));
+			arguments.add(typeInfo);
+
+			argumentsCount++;
+			argumentsOffset.add(argumentsWords + 1);
 
 			if ((type == 'D') || (type == 'J')) {
 				argumentsWords += 2;
 			} else {
 				argumentsWords++;
 			}
-			visitingArgument = false;
-		} else if (returnOpcodeType != null) {
-			if (isArray()) {
-				type = '[';
-				typeName = getArrayDepthString() + typeName;
-			}
-			returnOpcodeType.value = type;
-
-			if (returnTypeName.length() == 0) {
-				// only set return type once, first time.
-				// otherwise, if method signature has generic information, the returnTypeName
-				// will be equals to last defined type in the signature, i.e. from the generics.
-
-				//returnTypeName.setLength(0);
-
-				if (typeName != null) {
-					returnTypeName.append(typeName);
-					returnTypeRawName.append(resolveRawTypeName(typeName));
-				}
-			}
 		}
+		else if (visitingReturnType) {
+			returnType = typeInfo;
+		}
+
+		visitingReturnType = false;
+		visitingArgument = false;
+		visitingArray = false;
+	}
+
+	/**
+	 * Returns {@code true} if we are scanning the top-level type and not
+	 * the inner ones, like generics.
+	 */
+	private boolean isTopLevelType() {
+		return argumentStack == 0;
+	}
+
+	private String resolveBytecodeName(String typeName) {
+		int ndx = typeName.indexOf('<');
+		if (ndx != -1) {
+			int ndx2 = typeName.indexOf('>', ndx);
+			ndx2++;
+
+			typeName = typeName.substring(0, ndx) + typeName.substring(ndx2);
+		}
+
+		if (isGenericType(typeName)) {
+			return typeName;
+		}
+
+		return 'L' + typeName.replace('.', '/') + ';';
 	}
 
 	/**
@@ -393,31 +403,18 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return rawTypeName;
 	}
 
-	// ---------------------------------------------------------------- toString
-
-/*
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
+	private boolean isGenericType(String typeName) {
+		if (generics.containsKey(typeName)) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		MethodSignatureVisitor that = (MethodSignatureVisitor) o;
-		return getSignature().equals(that.getSignature());
+		return targetClassInfo.getGenerics().containsKey(typeName);
 	}
 
-	@Override
-	public int hashCode() {
-		return getSignature().hashCode();
-	}
+	// ---------------------------------------------------------------- toString
 
-*/
 	@Override
 	public String toString() {
 		return getDeclaredClassName() + '#' + getMethodName() + getDescription();
 	}
 
 }
-

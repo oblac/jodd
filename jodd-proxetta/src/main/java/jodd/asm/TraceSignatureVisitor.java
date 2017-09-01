@@ -25,7 +25,6 @@
 
 package jodd.asm;
 
-import jodd.util.StringUtil;
 import jodd.asm5.Opcodes;
 import jodd.asm5.signature.SignatureVisitor;
 
@@ -48,9 +47,9 @@ import jodd.asm5.signature.SignatureVisitor;
  */
 public class TraceSignatureVisitor extends SignatureVisitor {
 
-	protected final StringBuilder declaration;       // jodd
+	protected final StringBuilder declaration;       // jodd: made protected
 
-    protected boolean isInterface;                   // jodd
+    protected boolean isInterface;                   // jodd: made protected
 
     private boolean seenFormalParameter;
 
@@ -60,7 +59,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {
 
     private boolean seenInterface;
 
-    protected StringBuilder returnType;              // jodd
+    private StringBuilder returnType;
 
     private StringBuilder exceptions;
 
@@ -70,18 +69,18 @@ public class TraceSignatureVisitor extends SignatureVisitor {
      * the lowest order bit. Pushing false = *2, pushing true = *2+1, popping =
      * /2.
      */
-    protected int argumentStack;                    // jodd
+    protected int argumentStack;                    // jodd: made protected
 
     /**
      * Stack used to keep track of array class types. Each element of this stack
      * is a boolean encoded in one bit. The top of the stack is the lowest order
      * bit. Pushing false = *2, pushing true = *2+1, popping = /2.
      */
-    protected int arrayStack;                       // jodd
+    protected int arrayStack;                       // jodd: made protected
 
     private String separator = "";
 
-    public TraceSignatureVisitor(final StringBuilder buf, boolean isInterface) {		// jodd
+    public TraceSignatureVisitor(final StringBuilder buf, boolean isInterface) {		// jodd: no final
         super(Opcodes.ASM5);
         this.isInterface = isInterface;
         this.declaration = buf;
@@ -298,11 +297,15 @@ public class TraceSignatureVisitor extends SignatureVisitor {
         return declaration.toString();
     }
 
-    public String getReturnType() {
-        return returnType == null ? null : returnType.toString();
-    }
+    // jodd: comment out the method
 
-//    public String getExceptions() {           // jodd
+//    public String getReturnType() {
+//        return returnType == null ? null : returnType.toString();
+//    }
+
+    // jodd: comment out the method
+
+//    public String getExceptions() {
 //        return exceptions == null ? null : exceptions.toString();
 //    }
 
@@ -315,11 +318,11 @@ public class TraceSignatureVisitor extends SignatureVisitor {
         }
     }
 
-    private void startType() {
+    protected void startType() {                    // jodd: made protected
         arrayStack *= 2;
     }
 
-    private void endType() {
+    protected void endType() {                      // jodd: made protected
         if (arrayStack % 2 == 0) {
             arrayStack /= 2;
         } else {

@@ -47,24 +47,16 @@ import java.lang.annotation.Annotation;
 public interface MethodInfo {
 
 	/**
-	 * Returns full java-like declaration of method's arguments, including the
-	 * parentheses.
-	 * For example: {@code (long, java.lang.Integer)}.
+	 * Returns full java-like declaration of method's arguments and return type.
+	 * For example: {@code (long, java.lang.Integer)int}.
 	 * @see #getSignature()
 	 */
 	String getDeclaration();
 
 	/**
-	 * Returns java-like return type.
+	 * Returns return {@link TypeInfo type information}.
 	 */
-	String getReturnType();
-
-	/**
-	 * Returns type name for return type.
-	 */
-	String getReturnTypeName();
-
-	String getReturnTypeRawName();
+	TypeInfo getReturnType();
 
 	/**
 	 * Returns exceptions as a comma-seaprated string.
@@ -106,37 +98,19 @@ public interface MethodInfo {
 	int getArgumentsCount();
 
 	/**
-	 * Returns methods opcode type on given position (1-indexed).
-	 */
-	char getArgumentOpcodeType(int index);
-
-	/**
-	 * Returns type name of an argument on given position (1-indexed).
-	 * Type name is bytecode-like, e.g. {@code "Ljava/util/Set;"}.
-	 * <p>
-	 * Note that generics type names are <b>not</b> resolved.
-	 *
-	 * @see #getArgumentTypeRawName(int)
-	 */
-	String getArgumentTypeName(int index);
-
-	/**
-	 * Returns real type name of an argument on given position (1-indexed).
-	 * Type name is bytecode-like, e.g. {@code "Ljava/util/Set;"}.
-	 * <p>
-	 * Generics type are resolved.
-	 */
-	String getArgumentTypeRawName(int index);
-
-	/**
 	 * Returns bytecode offset of an argument in local variables.
 	 */
 	int getArgumentOffset(int index);
 
 	/**
+	 * Returns methods argument (1-indexed).
+	 */
+	TypeInfo getArgument(int index);
+
+	/**
 	 * Returns all annotations for given argument (1-indexed).
 	 */
-	AnnotationInfo[] getArgumentAnnotations(int index);
+	AnnotationInfo[] getArgumentAnnotations(int index);			// todo move to TypeInfo
 
 	/**
 	 * Returns the size of all arguments on stack.
@@ -144,12 +118,6 @@ public interface MethodInfo {
 	 * takes 2 places, like <code>long</code>.
 	 */
 	int getAllArgumentsSize();
-
-	/**
-	 * Returns return type opcode.
-	 * For example, returns 'V' for void etc.
-	 */
-	char getReturnOpcodeType();
 
 	/**
 	 * Returns methods access flags.
@@ -233,14 +201,14 @@ public interface MethodInfo {
 	 * Returns <code>true</code> if method's return type is <code>void</code>.
 	 */
 	default boolean hasNoReturnValue() {
-		return getReturnOpcodeType() == AsmUtil.TYPE_VOID;
+		return getReturnType().getOpcode() == AsmUtil.TYPE_VOID;
 	}
 
 	/**
 	 * Returns <code>true</code> if method has a return type.
 	 */
 	default boolean hasReturnValue() {
-		return getReturnOpcodeType() != AsmUtil.TYPE_VOID;
+		return getReturnType().getOpcode() != AsmUtil.TYPE_VOID;
 	}
 
 	// ---------------------------------------------------------------- wildcards

@@ -123,7 +123,8 @@ public class AsmUtil {
 					throw new IllegalArgumentException(INVALID_BASE_TYPE + desc);
 				}
 				break;
-			case 'L': className = className.substring(1, className.length() - 1); break;
+			case 'L':
+				className = className.substring(1, className.length() - 1); break;
 			case '[':
 				// uses less-known feature of class loaders for loading array types
 				// using bytecode-like signatures.
@@ -147,6 +148,25 @@ public class AsmUtil {
 	}
 
 	// ---------------------------------------------------------------- description
+
+	/**
+	 * Returns type-name to type char.
+	 * Arrays are not supported.
+	 */
+	public static char typeNameToOpcode(String typeName) {
+		switch (typeName) {
+			case "byte" : return 'B';
+			case "char": return 'C';
+			case "double": return 'D';
+			case "float": return 'F';
+			case "int": return 'I';
+			case "long": return 'J';
+			case "short": return 'S';
+			case "boolean": return 'Z';
+			case "void": return 'V';
+			default: return 'L';
+		}
+	}
 
 	/**
 	 * Returns java-like signature of a bytecode-like description.
@@ -211,6 +231,9 @@ public class AsmUtil {
 				String str = desc.substring(fromIndex + 1, index);
 				return str.replace('/', '.');
 
+			case 'T':
+				return desc.substring(from.value);
+
 			case '[':
 				StringBuilder brackets = new StringBuilder();
 				int n = fromIndex;
@@ -222,7 +245,12 @@ public class AsmUtil {
 				String type = typedescToSignature(desc, from);	// the rest of the string denotes a `<field_type>'
 				return type + brackets;
 
-			default: throw new IllegalArgumentException(INVALID_TYPE_DESCRIPTION + desc);
+			default:
+				if (from.value == 0) {
+					throw new IllegalArgumentException(INVALID_TYPE_DESCRIPTION + desc);
+				}
+				// generics!
+				return desc.substring(from.value);
 		}
 	}
 
@@ -379,4 +407,5 @@ public class AsmUtil {
 	public static void valueOfCharacter(MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_CHARACTER, "valueOf", "(C)Ljava/lang/Character;", false);
 	}
+
 }
