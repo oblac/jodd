@@ -69,15 +69,15 @@ public class MethodInfoTest {
 
 		assertEquals("p1", mi.getMethodName());
 		assertEquals(Foo.class.getName().replace('.', '/'), mi.getClassname());
-		assertEquals("(java.lang.String)", mi.getDeclaration());
+		assertEquals("(java.lang.String)java.lang.String", mi.getDeclaration());
 		assertEquals("(Ljava/lang/String;)Ljava/lang/String;", mi.getDescription());
-		assertEquals("java.lang.String", mi.getReturnType());
-		assertEquals("Ljava/lang/String;", mi.getReturnTypeName());
+		assertEquals("java.lang.String", mi.getReturnType().getType());
+		assertEquals("Ljava/lang/String;", mi.getReturnType().getName());
 
 		assertEquals("java.lang.String p1(java.lang.String)", mi.getSignature());
 
 		assertEquals(1, mi.getArgumentsCount());
-		assertEquals("Ljava/lang/String;", mi.getArgumentTypeName(1));
+		assertEquals("Ljava/lang/String;", mi.getArgument(1).getName());
 
 		assertTrue(mi.isTopLevelMethod());
 

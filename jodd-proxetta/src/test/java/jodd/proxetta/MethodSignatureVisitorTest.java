@@ -61,15 +61,16 @@ public class MethodSignatureVisitorTest {
 
 		assertEquals(CLASS_SIGNATURE + "$M1", mi.getClassname());
 		assertEquals("macka#()V", mi.getCleanSignature());
-		assertEquals("()", mi.getDeclaration());
+		assertEquals("()void", mi.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M1", mi.getDeclaredClassName());
 		assertEquals("()V", mi.getDescription());
 		assertNull(mi.getExceptions());
 		assertEquals("macka", mi.getMethodName());
-		assertEquals('V', mi.getReturnOpcodeType());
-		assertEquals("void", mi.getReturnType());
-		assertEquals("", mi.getReturnTypeName());
-		assertEquals("", mi.getReturnTypeRawName());
+
+		assertEquals('V', mi.getReturnType().getOpcode());
+		assertEquals("void", mi.getReturnType().getType());
+		assertEquals("V", mi.getReturnType().getName());
+		assertEquals("V", mi.getReturnType().getRawName());
 	}
 
 
@@ -84,26 +85,29 @@ public class MethodSignatureVisitorTest {
 		MethodInfo mi = getMethodSignatureForSingleMethod(M2.class);
 
 		assertEquals(2, mi.getArgumentsCount());
-		assertEquals(null, mi.getArgumentTypeName(0));
-		assertEquals('L', mi.getArgumentOpcodeType(0));
-		assertEquals(null, mi.getArgumentTypeName(1));
-		assertEquals(null, mi.getArgumentTypeRawName(1));
-		assertEquals('J', mi.getArgumentOpcodeType(1));
-		assertEquals(null, mi.getArgumentTypeName(2));
-		assertEquals(null, mi.getArgumentTypeRawName(2));
-		assertEquals('D', mi.getArgumentOpcodeType(2));
+
+		assertEquals("long", mi.getArgument(1).getType());
+		assertEquals("J", mi.getArgument(1).getName());
+		assertEquals("J", mi.getArgument(1).getRawName());
+		assertEquals('J', mi.getArgument(1).getOpcode());
+
+		assertEquals("double", mi.getArgument(2).getType());
+		assertEquals("D", mi.getArgument(2).getName());
+		assertEquals("D", mi.getArgument(2).getRawName());
+		assertEquals('D', mi.getArgument(2).getOpcode());
 
 		assertEquals(CLASS_SIGNATURE + "$M2", mi.getClassname());
 		assertEquals("macka#(JD)I", mi.getCleanSignature());
-		assertEquals("(long, double)", mi.getDeclaration());
+		assertEquals("(long, double)int", mi.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M2", mi.getDeclaredClassName());
 		assertEquals("(JD)I", mi.getDescription());
 		assertNull(mi.getExceptions());
 		assertEquals("macka", mi.getMethodName());
-		assertEquals('I', mi.getReturnOpcodeType());
-		assertEquals("int", mi.getReturnType());
-		assertEquals("", mi.getReturnTypeName());
-		assertEquals("", mi.getReturnTypeRawName());
+
+		assertEquals('I', mi.getReturnType().getOpcode());
+		assertEquals("int", mi.getReturnType().getType());
+		assertEquals("I", mi.getReturnType().getName());
+		assertEquals("I", mi.getReturnType().getRawName());
 	}
 
 	// ---------------------------------------------------------------- 3
@@ -117,26 +121,29 @@ public class MethodSignatureVisitorTest {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M3.class);
 
 		assertEquals(2, msv.getArgumentsCount());
-		assertEquals(null, msv.getArgumentTypeName(0));
-		assertEquals('L', msv.getArgumentOpcodeType(0));
-		assertEquals("L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgumentTypeName(1));
-		assertEquals("L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgumentTypeRawName(1));
-		assertEquals('L', msv.getArgumentOpcodeType(1));
-		assertEquals("L" + SIGNATURE_JAVA_LANG_DOUBLE + ";", msv.getArgumentTypeName(2));
-		assertEquals("L" + SIGNATURE_JAVA_LANG_DOUBLE + ";", msv.getArgumentTypeRawName(2));
-		assertEquals('L', msv.getArgumentOpcodeType(2));
+
+		assertEquals("java.lang.Long", msv.getArgument(1).getType());
+		assertEquals("L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgument(1).getName());
+		assertEquals("L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgument(1).getRawName());
+		assertEquals('L', msv.getArgument(1).getOpcode());
+
+		assertEquals("java.lang.Double", msv.getArgument(2).getType());
+		assertEquals("L" + SIGNATURE_JAVA_LANG_DOUBLE + ";", msv.getArgument(2).getName());
+		assertEquals("L" + SIGNATURE_JAVA_LANG_DOUBLE + ";", msv.getArgument(2).getRawName());
+		assertEquals('L', msv.getArgument(2).getOpcode());
 
 		assertEquals(CLASS_SIGNATURE + "$M3", msv.getClassname());
 		assertEquals("macka#(L" + SIGNATURE_JAVA_LANG_LONG + ";L" + SIGNATURE_JAVA_LANG_DOUBLE + ";)L" + SIGNATURE_JAVA_LANG_INTEGER + ";", msv.getCleanSignature());
-		assertEquals("(java.lang.Long, java.lang.Double)", msv.getDeclaration());
+		assertEquals("(java.lang.Long, java.lang.Double)java.lang.Integer", msv.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M3", msv.getDeclaredClassName());
 		assertEquals("(Ljava/lang/Long;Ljava/lang/Double;)Ljava/lang/Integer;", msv.getDescription());
 		assertNull(msv.getExceptions());
 		assertEquals("macka", msv.getMethodName());
-		assertEquals('L', msv.getReturnOpcodeType());
-		assertEquals("java.lang.Integer", msv.getReturnType());
-		assertEquals("Ljava/lang/Integer;", msv.getReturnTypeName());
-		assertEquals("Ljava/lang/Integer;", msv.getReturnTypeRawName());
+
+		assertEquals('L', msv.getReturnType().getOpcode());
+		assertEquals("java.lang.Integer", msv.getReturnType().getType());
+		assertEquals("Ljava/lang/Integer;", msv.getReturnType().getName());
+		assertEquals("Ljava/lang/Integer;", msv.getReturnType().getRawName());
 	}
 
 	// ---------------------------------------------------------------- 4
@@ -150,26 +157,29 @@ public class MethodSignatureVisitorTest {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M4.class);
 
 		assertEquals(2, msv.getArgumentsCount());
-		assertEquals(null, msv.getArgumentTypeName(0));
-		assertEquals('L', msv.getArgumentOpcodeType(0));
-		assertEquals("[L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgumentTypeName(1));
-		assertEquals("[L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgumentTypeRawName(1));
-		assertEquals('[', msv.getArgumentOpcodeType(1));
-		assertEquals("[D", msv.getArgumentTypeName(2));
-		assertEquals("[D", msv.getArgumentTypeRawName(2));
-		assertEquals('[', msv.getArgumentOpcodeType(2));
+
+		assertEquals("java.lang.Long[]", msv.getArgument(1).getType());
+		assertEquals("[L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgument(1).getName());
+		assertEquals("[L" + SIGNATURE_JAVA_LANG_LONG + ";", msv.getArgument(1).getRawName());
+		assertEquals('[', msv.getArgument(1).getOpcode());
+
+		assertEquals("double[]", msv.getArgument(2).getType());
+		assertEquals("[D", msv.getArgument(2).getName());
+		assertEquals("[D", msv.getArgument(2).getRawName());
+		assertEquals('[', msv.getArgument(2).getOpcode());
 
 		assertEquals(CLASS_SIGNATURE + "$M4", msv.getClassname());
 		assertEquals("macka#([L" + SIGNATURE_JAVA_LANG_LONG + ";[D)[" + L_CLASS_SIGNATURE + "$M4;", msv.getCleanSignature());
-		assertEquals("(java.lang.Long[], double[])", msv.getDeclaration());
+		assertEquals("(java.lang.Long[], double[])jodd.proxetta.MethodSignatureVisitorTest$M4[]", msv.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M4", msv.getDeclaredClassName());
 		assertEquals("([Ljava/lang/Long;[D)[Ljodd/proxetta/MethodSignatureVisitorTest$M4;", msv.getDescription());
 		assertNull(msv.getExceptions());
 		assertEquals("macka", msv.getMethodName());
-		assertEquals('[', msv.getReturnOpcodeType());
-		assertEquals("jodd.proxetta.MethodSignatureVisitorTest$M4[]", msv.getReturnType());
-		assertEquals("[Ljodd/proxetta/MethodSignatureVisitorTest$M4;", msv.getReturnTypeName());
-		assertEquals("[Ljodd/proxetta/MethodSignatureVisitorTest$M4;", msv.getReturnTypeRawName());
+
+		assertEquals('[', msv.getReturnType().getOpcode());
+		assertEquals("jodd.proxetta.MethodSignatureVisitorTest$M4[]", msv.getReturnType().getType());
+		assertEquals("[Ljodd/proxetta/MethodSignatureVisitorTest$M4;", msv.getReturnType().getName());
+		assertEquals("[Ljodd/proxetta/MethodSignatureVisitorTest$M4;", msv.getReturnType().getRawName());
 	}
 
 	// ---------------------------------------------------------------- 5
@@ -183,26 +193,28 @@ public class MethodSignatureVisitorTest {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M5.class);
 
 		assertEquals(2, msv.getArgumentsCount());
-		assertEquals(null, msv.getArgumentTypeName(0));
-		assertEquals('L', msv.getArgumentOpcodeType(0));
-		assertEquals("Ljava/util/Set;", msv.getArgumentTypeName(1));
-		assertEquals("Ljava/util/Set;", msv.getArgumentTypeRawName(1));
-		assertEquals('L', msv.getArgumentOpcodeType(1));
-		assertEquals("[T", msv.getArgumentTypeName(2));
-		assertEquals("[Ljava/lang/Object;", msv.getArgumentTypeRawName(2));
-		assertEquals('[', msv.getArgumentOpcodeType(2));
+		assertEquals("java.util.Set<Gen>", msv.getArgument(1).getType());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getName());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getRawName());
+		assertEquals('L', msv.getArgument(1).getOpcode());
+
+		assertEquals("T[]", msv.getArgument(2).getType());
+		assertEquals("[T", msv.getArgument(2).getName());
+		assertEquals("[Ljava/lang/Object;", msv.getArgument(2).getRawName());
+		assertEquals('[', msv.getArgument(2).getOpcode());
 
 		assertEquals(CLASS_SIGNATURE + "$M5", msv.getClassname());
 		assertEquals("macka#(Ljava/util/Set;[Ljava/lang/Object;)Ljava/util/List;", msv.getCleanSignature());
-		assertEquals("(java.util.Set<Gen>, T[])", msv.getDeclaration());
+		assertEquals("(java.util.Set<Gen>, T[])java.util.List<Gen>", msv.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M5", msv.getDeclaredClassName());
 		assertEquals("(Ljava/util/Set;[Ljava/lang/Object;)Ljava/util/List;", msv.getDescription());
-		assertEquals(null, msv.getExceptions());
+		assertNull(msv.getExceptions());
 		assertEquals("macka", msv.getMethodName());
-		assertEquals('L', msv.getReturnOpcodeType());
-		assertEquals("java.util.List<Gen>", msv.getReturnType());
-		assertEquals("Ljava/util/List;", msv.getReturnTypeName());
-		assertEquals("Ljava/util/List;", msv.getReturnTypeRawName());
+
+		assertEquals('L', msv.getReturnType().getOpcode());
+		assertEquals("java.util.List<Gen>", msv.getReturnType().getType());
+		assertEquals("Ljava/util/List;", msv.getReturnType().getName());
+		assertEquals("Ljava/util/List;", msv.getReturnType().getRawName());
 	}
 
 	// ---------------------------------------------------------------- 6
@@ -216,26 +228,29 @@ public class MethodSignatureVisitorTest {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M6.class);
 
 		assertEquals(2, msv.getArgumentsCount());
-		assertEquals(null, msv.getArgumentTypeName(0));
-		assertEquals('L', msv.getArgumentOpcodeType(0));
-		assertEquals("Ljava/util/Set;", msv.getArgumentTypeName(1));
-		assertEquals("Ljava/util/Set;", msv.getArgumentTypeRawName(1));
-		assertEquals('L', msv.getArgumentOpcodeType(1));
-		assertEquals("[Tuta", msv.getArgumentTypeName(2));
-		assertEquals("[Ljava/lang/Object;", msv.getArgumentTypeRawName(2));
-		assertEquals('[', msv.getArgumentOpcodeType(2));
+
+		assertEquals("java.util.Set<Gen>", msv.getArgument(1).getType());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getName());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getRawName());
+		assertEquals('L', msv.getArgument(1).getOpcode());
+
+		assertEquals("Tuta[]", msv.getArgument(2).getType());
+		assertEquals("[Tuta", msv.getArgument(2).getName());
+		assertEquals("[Ljava/lang/Object;", msv.getArgument(2).getRawName());
+		assertEquals('[', msv.getArgument(2).getOpcode());
 
 		assertEquals(CLASS_SIGNATURE + "$M6", msv.getClassname());
 		assertEquals("macka#(Ljava/util/Set;[Ljava/lang/Object;)[Ljava/lang/Object;", msv.getCleanSignature());
-		assertEquals("(java.util.Set<Gen>, Tuta[])", msv.getDeclaration());
+		assertEquals("(java.util.Set<Gen>, Tuta[])Gen[]", msv.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M6", msv.getDeclaredClassName());
 		assertEquals("(Ljava/util/Set;[Ljava/lang/Object;)[Ljava/lang/Object;", msv.getDescription());
 		assertNull(msv.getExceptions());
 		assertEquals("macka", msv.getMethodName());
-		assertEquals('[', msv.getReturnOpcodeType());
-		assertEquals("Gen[]", msv.getReturnType());
-		assertEquals("[Gen", msv.getReturnTypeName());
-		assertEquals("[Ljava/lang/Object;", msv.getReturnTypeRawName());
+
+		assertEquals('[', msv.getReturnType().getOpcode());
+		assertEquals("Gen[]", msv.getReturnType().getType());
+		assertEquals("[Gen", msv.getReturnType().getName());
+		assertEquals("[Ljava/lang/Object;", msv.getReturnType().getRawName());
 	}
 
 	// ---------------------------------------------------------------- 7
@@ -249,29 +264,32 @@ public class MethodSignatureVisitorTest {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M7.class);
 
 		assertEquals(2, msv.getArgumentsCount());
-		assertEquals(null, msv.getArgumentTypeName(0));
-		assertEquals('L', msv.getArgumentOpcodeType(0));
-		assertEquals("Ljava/util/Set;", msv.getArgumentTypeName(1));
-		assertEquals("Ljava/util/Set;", msv.getArgumentTypeRawName(1));
-		assertEquals('L', msv.getArgumentOpcodeType(1));
-		assertEquals("[T", msv.getArgumentTypeName(2));
-		assertEquals("[Ljava/lang/Object;", msv.getArgumentTypeRawName(2));
-		assertEquals('[', msv.getArgumentOpcodeType(2));
+
+		assertEquals("java.util.Set<Gen>", msv.getArgument(1).getType());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getName());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getRawName());
+		assertEquals('L', msv.getArgument(1).getOpcode());
+
+		assertEquals("T[]", msv.getArgument(2).getType());
+		assertEquals("[T", msv.getArgument(2).getName());
+		assertEquals("[Ljava/lang/Object;", msv.getArgument(2).getRawName());
+		assertEquals('[', msv.getArgument(2).getOpcode());
 
 		assertEquals(CLASS_SIGNATURE + "$M7", msv.getClassname());
 		assertEquals("macka#(Ljava/util/Set;[Ljava/lang/Object;)[Ljava/lang/Object;", msv.getCleanSignature());
-		assertEquals("<T>(java.util.Set<Gen>, T[])", msv.getDeclaration());
+		assertEquals("<T>(java.util.Set<Gen>, T[])T[]", msv.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M7", msv.getDeclaredClassName());
 		assertEquals("(Ljava/util/Set;[Ljava/lang/Object;)[Ljava/lang/Object;", msv.getDescription());
 		assertNull(msv.getExceptions());
 		assertEquals("macka", msv.getMethodName());
-		assertEquals('[', msv.getReturnOpcodeType());
-		assertEquals("T[]", msv.getReturnType());
-		assertEquals("[T", msv.getReturnTypeName());
-		assertEquals("[Ljava/lang/Object;", msv.getReturnTypeRawName());
+
+		assertEquals('[', msv.getReturnType().getOpcode());
+		assertEquals("T[]", msv.getReturnType().getType());
+		assertEquals("[T", msv.getReturnType().getName());
+		assertEquals("[Ljava/lang/Object;", msv.getReturnType().getRawName());
 	}
 
-	// ---------------------------------------------------------------- 7
+	// ---------------------------------------------------------------- 8
 
 	public static class M8 {
 		public void macka() throws IOException, NullPointerException {}
@@ -285,11 +303,38 @@ public class MethodSignatureVisitorTest {
 
 		assertEquals(CLASS_SIGNATURE + "$M8", msv.getClassname());
 		assertEquals("macka#()V", msv.getCleanSignature());
-		assertEquals("()", msv.getDeclaration());
+		assertEquals("()void", msv.getDeclaration());
 		assertEquals(CLASS_SIGNATURE + "$M8", msv.getDeclaredClassName());
 		assertEquals("()V", msv.getDescription());
 		assertEquals("java/io/IOException,java/lang/NullPointerException", msv.getExceptionsAsString());
 		assertEquals("macka", msv.getMethodName());
+	}
+
+	// ---------------------------------------------------------------- 9
+
+	public static class M9 {
+		public static void main(String[] args) {
+		}
+	}
+
+	@Test
+	public void testMethodSignature9() throws IOException {
+		MethodInfo msv = getMethodSignatureForSingleMethod(M9.class);
+
+		assertEquals(1, msv.getArgumentsCount());
+
+		assertEquals("java.lang.String[]", msv.getArgument(1).getType());
+		assertEquals("[Ljava/lang/String;", msv.getArgument(1).getName());
+		assertEquals("[Ljava/lang/String;", msv.getArgument(1).getRawName());
+		assertEquals('[', msv.getArgument(1).getOpcode());
+
+
+		assertEquals(CLASS_SIGNATURE + "$M9", msv.getClassname());
+		assertEquals("main#([Ljava/lang/String;)V", msv.getCleanSignature());
+		assertEquals("(java.lang.String[])void", msv.getDeclaration());
+		assertEquals(CLASS_SIGNATURE + "$M9", msv.getDeclaredClassName());
+		assertEquals("([Ljava/lang/String;)V", msv.getDescription());
+		assertEquals("main", msv.getMethodName());
 	}
 
 	// ---------------------------------------------------------------- util
