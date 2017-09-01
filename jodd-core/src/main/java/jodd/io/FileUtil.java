@@ -1469,7 +1469,9 @@ public class FileUtil {
 
 		for (byte b : bytes) {
 			if (b < 32) {
-				return true;
+				if (b != 9 && b != 10 && b!= 13) {
+					return true;
+				}
 			}
 		}
 
