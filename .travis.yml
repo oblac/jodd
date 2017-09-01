@@ -19,4 +19,4 @@ install:
   - TERM=dumb ./gradlew assemble
 
 script:
-  - TERM=dumb ./gradlew check -x testIntegration
+  - TERM=dumb ./gradlew check

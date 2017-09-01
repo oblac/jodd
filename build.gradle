@@ -37,7 +37,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.8.7-SNAPSHOT'
+version = '3.9'
 //version = '3.8.2-' + date()
 //version = '3.8.6'
 
@@ -281,7 +281,7 @@ configure(javaModules()) {
 		systemProperties['jar.path'] = jar.archivePath
 	}
 
-	check.dependsOn testIntegration
+	//check.dependsOn testIntegration
 	testIntegration.mustRunAfter test
 
 	// artifacts
