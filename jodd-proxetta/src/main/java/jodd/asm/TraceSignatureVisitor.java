@@ -37,10 +37,10 @@ import jodd.asm5.signature.SignatureVisitor;
  * <ul>
  *    <li>removed <code>final</code> for the class</li>
  *    <li>some <code>private</code> scopes made <code>protected</code></li>
- *    <li>added method <code>getExceptionsArray()</code></li>
  *    <li>public constructor change to accept <code>boolean</code></li>
  *    <li>use <code>AsmUtil</code> constants</li>
  *    <li>use <code>StringBuilder</code> instead of <code>StringBuffer</code></li>
+ *    <li>getExceptions() removed</li>
  * </ul>
  *
  * @author Eugene Kuleshov
@@ -62,7 +62,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {
 
     protected StringBuilder returnType;              // jodd
 
-    protected StringBuilder exceptions;              // jodd
+    private StringBuilder exceptions;
 
     /**
      * Stack used to keep track of class types that have arguments. Each element
@@ -302,20 +302,9 @@ public class TraceSignatureVisitor extends SignatureVisitor {
         return returnType == null ? null : returnType.toString();
     }
 
-    public String getExceptions() {
-        return exceptions == null ? null : exceptions.toString();
-    }
-
-	public String[] getExceptionsArray() {		 // jodd
-		if (exceptions == null) {
-			return null;
-		}
-		String[] result = StringUtil.splitc(exceptions.toString(), ',');
-
-		StringUtil.trimAll(result);
-
-		return result;
-	}
+//    public String getExceptions() {           // jodd
+//        return exceptions == null ? null : exceptions.toString();
+//    }
 
     // -----------------------------------------------
 
