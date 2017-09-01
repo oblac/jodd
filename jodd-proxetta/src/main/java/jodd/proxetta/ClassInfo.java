@@ -26,6 +26,7 @@
 package jodd.proxetta;
 
 import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * Various target class information.
@@ -53,9 +54,20 @@ public interface ClassInfo {
 	String getReference();
 
 	/**
+	 * Returns array of super classes.
+	 */
+	public String[] getSuperClasses();
+
+	/**
 	 * Returns annotation information or <code>null</code> if target class has no annotations.
 	 */
 	AnnotationInfo[] getAnnotations();
+
+	/**
+	 * Returns a map of generic definitions. Keys are map names and values are
+	 * raw types (after erasure).
+	 */
+	Map<String, String> getGenerics();
 
 	// ---------------------------------------------------------------- annotations
 
@@ -94,6 +106,5 @@ public interface ClassInfo {
 		}
 		return false;
 	}
-
 
 }
