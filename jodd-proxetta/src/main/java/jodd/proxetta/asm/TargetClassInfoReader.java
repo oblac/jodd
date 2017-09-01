@@ -43,6 +43,8 @@ import java.io.IOException;
 
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
+
+import jodd.proxetta.GenericsReader;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ClassInfo;
 import jodd.proxetta.AnnotationInfo;
@@ -96,6 +98,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected List<AnnotationInfo> classAnnotations;
 	protected boolean isTargetInterface;
 	protected Set<String> nextInterfaces;
+	protected Map<String, String> generics;
 
 	// ---------------------------------------------------------------- class interface
 
@@ -123,6 +126,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		return annotations;
 	}
 
+	public Map<String, String> getGenerics() {
+		return generics;
+	}
+
 	// ---------------------------------------------------------------- visits
 
 
@@ -142,6 +149,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				Collections.addAll(nextInterfaces, interfaces);
 			}
 		}
+		generics = new GenericsReader().parseSignatureForGenerics(signature, isTargetInterface);
 	}
 
 
@@ -194,7 +202,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		// check all public super methods that are not overridden in superclass
 		while (nextSupername != null) {
 			InputStream inputStream = null;
-			ClassReader cr = null;
+			ClassReader cr;
 
 			try {
 				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername, classLoader);
@@ -224,7 +232,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 			for (String next : todoInterfaces) {
 				InputStream inputStream = null;
-				ClassReader cr = null;
+				ClassReader cr;
 				try {
 					inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
 					cr = new ClassReader(inputStream);
@@ -354,7 +362,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			}
 			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, thisReference);
 			int acc = msign.getAccessFlags();
-			if ((acc & AsmUtil.ACC_PUBLIC) == 0) {   	// skip non-public
+			if ((acc & AsmUtil.ACC_PUBLIC) == 0) {   		// skip non-public
 				return null;
 			}
 			if ((access & AsmUtil.ACC_FINAL) != 0) {		// skip finals
