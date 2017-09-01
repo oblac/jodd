@@ -58,10 +58,10 @@ public abstract class BaseLoggableFactory<T> {
 				int argumentsCount = methodInfo.getArgumentsCount();
 				char argumentType = 0;
 				if (argumentsCount >= 1) {
-					argumentType = methodInfo.getArgumentOpcodeType(1);
+					argumentType = methodInfo.getArgument(1).getOpcode();
 				}
 				return
-					methodInfo.getReturnOpcodeType() == 'V' &&				// void-returning method
+					methodInfo.getReturnType().getOpcode() == 'V' &&			// void-returning method
 						argumentType == 'I' &&									// first argument type
 						methodInfo.isPublicMethod() &&
 						methodInfo.getMethodName().startsWith("set") &&			// set*

@@ -111,7 +111,7 @@ public class ProxyTargetReplacement {
 	 * Visits replacement code for {@link ProxyTarget#returnType()}.
 	 */
 	public static void returnType(MethodVisitor mv, MethodInfo methodInfo) {
-		ProxettaAsmUtil.loadClass(mv, methodInfo.getReturnOpcodeType(), methodInfo.getReturnTypeName());
+		ProxettaAsmUtil.loadClass(mv, methodInfo.getReturnType().getOpcode(), methodInfo.getReturnType().getName());
 	}
 
 	/**
