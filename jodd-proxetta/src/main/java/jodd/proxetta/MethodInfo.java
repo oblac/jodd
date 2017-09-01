@@ -31,12 +31,24 @@ import jodd.util.Wildcard;
 import java.lang.annotation.Annotation;
 
 /**
- * Method info provides various information about a method.
+ * Method info provides various information about a method. There are two types
+ * of information:
+ * <ul>
+ *     <li>java-like, user-readable, that matches the java code, where, for example,
+ *     	   packages in class names are separated with a dot;
+ *     </li>
+ *     <li>
+ *         bytecode-related, where information is more suitable for bytecodes,
+ *         where, for example, packages in class names are separated with a slash.
+ *     </li>
+ * </ul>
  */
 public interface MethodInfo {
 
 	/**
-	 * Returns full java-like method arguments declaration.
+	 * Returns full java-like declaration of method's arguments, including the
+	 * parentheses.
+	 * For example: {@code (long, java.lang.Integer)}.
 	 * @see #getSignature()
 	 */
 	String getDeclaration();
@@ -50,6 +62,8 @@ public interface MethodInfo {
 	 * Returns type name for return type.
 	 */
 	String getReturnTypeName();
+
+	String getReturnTypeRawName();
 
 	/**
 	 * Returns list of exceptions.
@@ -69,41 +83,51 @@ public interface MethodInfo {
 	String getCleanSignature();
 
 	/**
-	 * Returns raw bytecode signature or <code>null</code> if not present.
-	 * @see #getDescription()
-	 */
-	public String getRawSignature();
-
-	/**
 	 * Returns method name.
 	 */
 	String getMethodName();
 
 	/**
-	 * Returns number of method arguments.
+	 * Returns the number of methods arguments.
 	 */
 	int getArgumentsCount();
 
+	/**
+	 * Returns methods opcode type on given position (1-indexed).
+	 */
 	char getArgumentOpcodeType(int index);
 
 	/**
-	 * Returns type name of given argument.
+	 * Returns type name of an argument on given position (1-indexed).
+	 * Type name is bytecode-like, e.g. {@code "Ljava/util/Set;"}.
+	 * <p>
+	 * Note that generics type names are <b>not</b> resolved.
+	 *
+	 * @see #getArgumentTypeRawName(int)
 	 */
 	String getArgumentTypeName(int index);
 
 	/**
-	 * Returns offset of an argument in local variables.
+	 * Returns real type name of an argument on given position (1-indexed).
+	 * Type name is bytecode-like, e.g. {@code "Ljava/util/Set;"}.
+	 * <p>
+	 * Generics type are resolved.
+	 */
+	String getArgumentTypeRawName(int index);
+
+	/**
+	 * Returns bytecode offset of an argument in local variables.
 	 */
 	int getArgumentOffset(int index);
 
 	/**
-	 * Returns annotations for given argument.
+	 * Returns all annotations for given argument (1-indexed).
 	 */
 	AnnotationInfo[] getArgumentAnnotations(int index);
 
 	/**
-	 * Returns size of all arguments on stack.
-	 * It is not equal to argument count, as some types
+	 * Returns the size of all arguments on stack.
+	 * It is not equal to argument count, because some types
 	 * takes 2 places, like <code>long</code>.
 	 */
 	int getAllArgumentsSize();
@@ -115,29 +139,30 @@ public interface MethodInfo {
 	char getReturnOpcodeType();
 
 	/**
-	 * Returns method access flags.
+	 * Returns methods access flags.
 	 */
 	int getAccessFlags();
 
 	/**
-	 * Returns bytecode-like class name.
+	 * Returns bytecode-like class name, where packages are separated by a slash.
+	 * For example: {@code org/jodd/Jodd}
 	 */
 	String getClassname();
 
 	/**
 	 * Returns bytecode-like method description.
 	 * @see #getSignature()
-	 * @see #getRawSignature()
 	 */
 	String getDescription();
 
 	/**
-	 * Returns annotation infos, if there is any.
+	 * Returns annotation information, if there is any.
 	 */
 	AnnotationInfo[] getAnnotations();
 
 	/**
-	 * Returns declared class name for inner methods or {@link #getClassname() classname} for top-level methods.
+	 * Returns declared class name for inner methods or
+	 * {@link #getClassname() classname} for top-level methods.
 	 */
 	String getDeclaredClassName();
 
