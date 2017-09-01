@@ -26,6 +26,7 @@
 package jodd.proxetta;
 
 import jodd.asm.AsmUtil;
+import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 
 import java.lang.annotation.Annotation;
@@ -66,9 +67,21 @@ public interface MethodInfo {
 	String getReturnTypeRawName();
 
 	/**
-	 * Returns list of exceptions.
+	 * Returns exceptions as a comma-seaprated string.
+	 * @see #getExceptions()
 	 */
-	String getExceptions();
+	default String getExceptionsAsString() {
+		if (getExceptions() == null) {
+			return null;
+		}
+
+		return StringUtil.join(getExceptions(),',');
+	}
+
+	/**
+	 * Returns array of exceptions or {@code null} if no exception is declared.
+	 */
+	String[] getExceptions();
 
 	/**
 	 * Returns java-like method signature of @{link #getDescription description}.

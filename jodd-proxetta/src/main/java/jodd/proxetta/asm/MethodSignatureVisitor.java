@@ -75,10 +75,11 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	final protected ClassInfo targetClassInfo;
 	protected boolean isStatic;
 	protected Map<String, String> generics;
+	protected String[] exceptionsArray;
 
 	// ---------------------------------------------------------------- ctors
 
-	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, String signature, ClassInfo targetClassInfo) {
+	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, String[] exceptions, String signature, ClassInfo targetClassInfo) {
 		super(new StringBuilder());
 		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
@@ -89,12 +90,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.targetClassInfo = targetClassInfo;
 		this.asmMethodSignature = signature;
 		this.generics = new GenericsReader().parseSignatureForGenerics(signature, isInterface);
+		this.exceptionsArray = exceptions;
 	}
-
-	private MethodSignatureVisitor(final StringBuilder declaration, ClassInfo targetClassInfo) {
-        super(declaration);
-		this.targetClassInfo = targetClassInfo;
-    }
 
 	private MethodSignatureVisitor(final StringBuilder declaration, MutableInteger returnOpcodeType, StringBuilder returnTypeName, StringBuilder returnTypeRawName, ClassInfo targetClassInfo, Map<String, String> generics) {
 		super(declaration);
@@ -135,13 +132,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		returnTypeRawName = new StringBuilder();
 		return new MethodSignatureVisitor(returnType, returnOpcodeType, returnTypeName, returnTypeRawName, targetClassInfo, generics);
 	}
-
-	@Override
-	public SignatureVisitor visitExceptionType() {
-		super.visitExceptionType();
-		return new MethodSignatureVisitor(exceptions, targetClassInfo);
-	}
-
 
 	@Override
 	public void visitBaseType(final char descriptor) {
@@ -205,7 +195,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	private String createSignature() {
 		StringBuilder methodDeclaration = new StringBuilder(30);
 		methodDeclaration.append(getReturnType()).append(' ').append(methodName).append(getDeclaration());
-		String genericExceptions = getExceptions();
+		String genericExceptions = getExceptionsAsString();
 		if (genericExceptions != null) {
 			methodDeclaration.append(" throws ").append(genericExceptions);
 		}
@@ -296,6 +286,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	public ClassInfo getClassInfo() {
 		return targetClassInfo;
+	}
+
+	public String[] getExceptions() {
+		return exceptionsArray;
 	}
 
 	// ---------------------------------------------------------------- utilities

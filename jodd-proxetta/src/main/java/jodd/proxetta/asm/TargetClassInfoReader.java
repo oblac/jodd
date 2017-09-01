@@ -171,7 +171,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		if ((access & AsmUtil.ACC_FINAL) != 0) {
 			return null;	// skip finals
 		}
-		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, thisReference);
+		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference);
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);
 		allMethodSignatures.add(msign.getCleanSignature());
@@ -274,8 +274,8 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	/**
 	 * Creates method signature from method name.
 	 */
-	protected MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String signature, String classname) {
-		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, signature, this);
+	protected MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String signature, String[] exceptions, String classname) {
+		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, exceptions, signature, this);
 		new SignatureReader(signature != null ? signature : description).accept(v);
 		return v;
 	}
@@ -360,7 +360,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			if (name.equals(INIT) || name.equals(CLINIT)) {
 				return null;
 			}
-			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, thisReference);
+			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference);
 			int acc = msign.getAccessFlags();
 			if ((acc & AsmUtil.ACC_PUBLIC) == 0) {   		// skip non-public
 				return null;
