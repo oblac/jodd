@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static jodd.proxetta.asm.AnnotationReader.NO_ANNOTATIONS;
+
 /**
  * Resolves method signature and holds all information. Uses {@link jodd.asm.TraceSignatureVisitor} from ASM library.
  * <pre>
@@ -57,7 +59,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected final boolean isStatic;
 	protected final ClassInfo targetClassInfo;
 	protected final IntArrayList argumentsOffset;
-	protected final List<TypeInfo> arguments;
+	protected final List<TypeInfoImpl> arguments;
 	protected final int access;
 	protected final String description;
 
@@ -67,7 +69,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected int argumentsWords;
 	protected String asmMethodSignature;
 	protected AnnotationInfo[] annotations;
-	protected AnnotationInfo[][] argumentsAnnotation;
 	protected String declaredClassName;
 	protected Map<String, String> generics;
 
@@ -88,10 +89,12 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.exceptionsArray = exceptions;
 
 		this.arguments = new ArrayList<>();
-		this.arguments.add(new TypeInfo('L', null, null, null));
+		this.arguments.add(new TypeInfoImpl('L', null, null, null));
 
 		this.argumentsOffset = new IntArrayList();
 		this.argumentsOffset.add(0);
+
+		this.annotations = NO_ANNOTATIONS;
 	}
 
 	// ---------------------------------------------------------------- method-info signature
@@ -138,18 +141,13 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	@Override
-	public TypeInfo getArgument(int ndx) {
+	public TypeInfoImpl getArgument(int ndx) {
 		return arguments.get(ndx);
 	}
 
 	@Override
 	public int getArgumentOffset(int index) {
 		return argumentsOffset.get(index);
-	}
-
-	@Override
-	public AnnotationInfo[] getArgumentAnnotations(int index) {
-		return argumentsAnnotation[index];
 	}
 
 	@Override
@@ -215,7 +213,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	private boolean visitingReturnType;
 	private boolean visitingArray;
 	private int declarationTypeOffset;
-
 
 	@Override
 	public SignatureVisitor visitParameterType() {
@@ -318,7 +315,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			}
 		}
 
-		final TypeInfo typeInfo = new TypeInfo(
+		final TypeInfoImpl typeInfo = new TypeInfoImpl(
 			type,
 			typeName,
 			bytecodeName,

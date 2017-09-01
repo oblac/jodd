@@ -44,6 +44,8 @@ import jodd.asm.EmptyAnnotationVisitor;
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class AnnotationReader extends EmptyAnnotationVisitor implements AnnotationInfo {
 
+	public static final AnnotationInfo[] NO_ANNOTATIONS = new AnnotationInfo[0];
+
 	protected final String desc;
 	protected final String className;
 	protected final boolean visible;

@@ -23,39 +23,79 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.proxetta;
+package jodd.proxetta.asm;
+
+import jodd.proxetta.AnnotationInfo;
+import jodd.proxetta.TypeInfo;
+
+import static jodd.proxetta.asm.AnnotationReader.NO_ANNOTATIONS;
 
 /**
- * Holds information about the types. Used for methods return type and arguments.
+ * Implementation of {@link TypeInfo}. Method information is collected during
+ * different types of class scanning (signature, method), so not everything
+ * is available at one moment.
  */
-public interface TypeInfo {
+public class TypeInfoImpl implements TypeInfo {
+
+	private final char opcode;
+	private final String type;
+	private final String name;
+	private final String rawName;
+
+	/**
+	 * Argument annotations are not available on method signature scanning.
+	 * Therefore, we need to inject them from the outside.
+	 */
+	protected AnnotationInfo[] annotations = NO_ANNOTATIONS;
+
+	public TypeInfoImpl(char opcode, String type, String name, String rawName) {
+		this.opcode = opcode;
+		this.type = type;
+		this.name = name;
+		this.rawName = rawName;
+	}
 
 	/**
 	 * Returns annotation info of type. SOme types (like for returning value)
 	 * can't have annotation information.
 	 */
-	AnnotationInfo[] getAnnotations();
+	@Override
+	public AnnotationInfo[] getAnnotations() {
+		return annotations;
+	}
 
 	/**
 	 * Returns bytecode opcode.
 	 */
-	char getOpcode();
+	@Override
+	public char getOpcode() {
+		return opcode;
+	}
 
 	/**
 	 * Returns java-like, e.g. {@code "java.lang.Integer"}.
 	 */
-	String getType();
+	@Override
+	public String getType() {
+		return type;
+	}
 
 	/**
 	 * Returns bytecode-like type name, e.g. {@code "Ljava/lang/Integer;"}.
 	 * Note that generics type names are <b>not</b> resolved.
 	 * @see #getRawName()
 	 */
-	String getName();
+	@Override
+	public String getName() {
+		return name;
+	}
 
 	/**
 	 * Returns bytecode-like type name, e.g. {@code "Ljava/lang/Integer;"}.
 	 * @see #getName()
 	 */
-	String getRawName();
+	@Override
+	public String getRawName() {
+		return rawName;
+	}
 }

@@ -28,6 +28,7 @@ package jodd.proxetta;
 import jodd.asm5.ClassReader;
 import jodd.proxetta.asm.MethodSignatureVisitor;
 import jodd.proxetta.fixtures.TargetClassInfoReaderFixture;
+import jodd.proxetta.fixtures.data.FooAnn;
 import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
 
@@ -335,6 +336,28 @@ public class MethodSignatureVisitorTest {
 		assertEquals(CLASS_SIGNATURE + "$M9", msv.getDeclaredClassName());
 		assertEquals("([Ljava/lang/String;)V", msv.getDescription());
 		assertEquals("main", msv.getMethodName());
+	}
+
+	// ---------------------------------------------------------------- 10
+
+	public static class M10 {
+		@FooAnn
+		public void macka(int a, @FooAnn long b) {}
+	}
+
+	@Test
+	public void testMethodSignature10() throws IOException {
+		MethodInfo msv = getMethodSignatureForSingleMethod(M10.class);
+
+		assertEquals(2, msv.getArgumentsCount());
+
+		assertEquals(0, msv.getArgument(1).getAnnotations().length);
+		assertEquals(1, msv.getArgument(2).getAnnotations().length);
+		assertEquals("jodd.proxetta.fixtures.data.FooAnn", msv.getArgument(2).getAnnotations()[0].getAnnotationClassname());
+
+		assertEquals("macka", msv.getMethodName());
+		assertEquals(1, msv.getAnnotations().length);
+		assertEquals("jodd.proxetta.fixtures.data.FooAnn", msv.getAnnotations()[0].getAnnotationClassname());
 	}
 
 	// ---------------------------------------------------------------- util

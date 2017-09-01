@@ -81,7 +81,7 @@ public class MethodInfoTest {
 
 		assertTrue(mi.isTopLevelMethod());
 
-		AnnotationInfo[] anns = mi.getArgumentAnnotations(0);
+		AnnotationInfo[] anns = mi.getArgument(1).getAnnotations();
 
 		assertNotNull(anns);
 		assertEquals(1, anns.length);

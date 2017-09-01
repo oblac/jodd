@@ -320,16 +320,17 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		@Override
 		public void visitEnd() {
 			if (!methodAnns.isEmpty()) {
+				// method annotations
 				msign.annotations = methodAnns.toArray(new AnnotationInfo[methodAnns.size()]);
 			}
 
-			msign.argumentsAnnotation = new AnnotationInfo[methodParamsAnns.length][];
+			// arguments annotations
 
 			for (int i = 0; i < methodParamsAnns.length; i++) {
 				List<AnnotationInfo> methodParamsAnn = methodParamsAnns[i];
 
 				if (methodParamsAnn != null) {
-					msign.argumentsAnnotation[i] = methodParamsAnn.toArray(new AnnotationInfo[methodParamsAnn.size()]);
+					msign.getArgument(i + 1).annotations = methodParamsAnn.toArray(new AnnotationInfo[methodParamsAnn.size()]);
 				}
 			}
 		}

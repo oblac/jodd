@@ -108,11 +108,6 @@ public interface MethodInfo {
 	TypeInfo getArgument(int index);
 
 	/**
-	 * Returns all annotations for given argument (1-indexed).
-	 */
-	AnnotationInfo[] getArgumentAnnotations(int index);			// todo move to TypeInfo
-
-	/**
 	 * Returns the size of all arguments on stack.
 	 * It is not equal to argument count, because some types
 	 * takes 2 places, like <code>long</code>.
