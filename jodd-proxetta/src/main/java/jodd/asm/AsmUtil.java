@@ -229,21 +229,21 @@ public class AsmUtil {
 	// ---------------------------------------------------------------- type
 
 	/**
-	 * Converts class name ("foo.Bar") to signature ("foo/bar").
+	 * Converts java-class name ("foo.Bar") to bytecode-signature ("foo/bar").
 	 */
 	public static String typeToSignature(String className) {
 		return className.replace('.', '/');
 	}
 
 	/**
-	 * Converts class name ("foo.Bar") to asm name ("foo/bar").
+	 * Converts java-class name ("foo.Bar") to bytecode-name ("foo/bar").
 	 */
 	public static String typeToSignature(Class type) {
 		return type.getName().replace('.', '/');
 	}
 
 	/**
-	 * Converts type to type ref.
+	 * Converts type to byteccode type ref.
 	 */
 	public static String typeToTyperef(Class type) {
 		if (!type.isArray()) {
