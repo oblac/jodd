@@ -361,14 +361,15 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			if (name.equals(INIT) || name.equals(CLINIT)) {
 				return null;
 			}
-			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference);
-			int acc = msign.getAccessFlags();
-			if ((acc & AsmUtil.ACC_PUBLIC) == 0) {   		// skip non-public
+
+			if ((access & AsmUtil.ACC_PUBLIC) == 0) {   		// skip non-public
 				return null;
 			}
 			if ((access & AsmUtil.ACC_FINAL) != 0) {		// skip finals
 				return null;
 			}
+
+			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference);
 			if (allMethodSignatures.contains(msign.getCleanSignature())) {		// skip overridden method by some in above classes
 				return null;
 			}
