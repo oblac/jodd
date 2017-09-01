@@ -72,13 +72,11 @@ public class JoddHttp {
 	public static String defaultUserAgent = "Jodd HTTP";
 
 	/**
-	 * Flag that controls if headers should be in strict mode. When strict mode is
-	 * enabled, header keys are used as they are passed. If two headers with the same
-	 * name but different capitalization are passed, they will both appear in the headers.
-	 * When strict mode is off, header keys will be capitalized. Duplicate headers names
-	 * with different capitalization will be used as they are named the same.
+	 * Flag that controls if headers should be rewritten and capitalized in PascalCase.
+	 * When disabled, header keys are used as they are passed.
+	 * When flag is enabled, header keys will be capitalized.
 	 */
-	public static boolean defaultStrictHeaders = false;
+	public static boolean defaultCapitalizeHeaderKeys = true;
 
 	// ---------------------------------------------------------------- module
 

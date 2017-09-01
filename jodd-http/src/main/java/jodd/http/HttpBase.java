@@ -48,11 +48,8 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static jodd.util.StringPool.CRLF;
 
@@ -76,7 +73,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected boolean strictHeaders = JoddHttp.defaultStrictHeaders;
+	protected boolean capitalizeHeaderKeys = JoddHttp.defaultCapitalizeHeaderKeys;
 	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -102,18 +99,18 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns whether header keys should be strict or not, when they are
 	 * modified by changing them to PascalCase.
-	 * @see JoddHttp#defaultStrictHeaders
+	 * @see JoddHttp#defaultCapitalizeHeaderKeys
 	 */
-	public boolean strictHeaders() {
-		return strictHeaders;
+	public boolean capitalizeHeaderKeys() {
+		return capitalizeHeaderKeys;
 	}
 	
 	/**
 	 * Sets headers behavior.
-	 * @see JoddHttp#defaultStrictHeaders
+	 * @see JoddHttp#defaultCapitalizeHeaderKeys
 	 */
-	public T strictHeaders(boolean strictHeaders) {
-		this.strictHeaders = strictHeaders;
+	public T capitalizeHeaderKeys(boolean capitalizeHeaderKeys) {
+		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
 		return (T) this;
 	}
 
@@ -209,7 +206,7 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Returns collection of all header names. Depends on
-	 * {@link #strictHeaders()} flag.
+	 * {@link #capitalizeHeaderKeys()} flag.
 	 */
 	public Collection<String> headerNames() {
 		return headers.names();
@@ -797,7 +794,7 @@ public abstract class HttpBase<T> {
 		for (String name : headers.names()) {
 			List<String> values = headers.getAll(name);
 
-			String key = strictHeaders ? name : HttpUtil.prepareHeaderParameterName(name);
+			String key = capitalizeHeaderKeys ? HttpUtil.prepareHeaderParameterName(name) : name;
 
 			target.append(key);
 			target.append(": ");
