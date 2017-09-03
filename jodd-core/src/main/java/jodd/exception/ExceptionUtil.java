@@ -193,11 +193,19 @@ public class ExceptionUtil {
 		if (cause == null) {
 			return throwable;
 		}
-		throwable = cause;
-		while ((throwable = throwable.getCause()) != null) {
-			cause = throwable;
+
+		Throwable t = throwable;
+
+		// defend against (malicious?) circularity
+		for (int i = 0; i < 1000; i++) {
+			cause = t.getCause();
+			if (cause == null) {
+				return t;
+			}
+			t = cause;
 		}
-		return cause;
+
+		return throwable;
 	}
 
 	/**
