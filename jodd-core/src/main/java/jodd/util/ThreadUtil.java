@@ -25,11 +25,7 @@
 
 package jodd.util;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -162,44 +158,6 @@ public class ThreadUtil {
 				return thread;
 			}
 		};
-	}
-
-	/**
-	 * Creates new core thread pool.
-	 * @see #newCoreThreadPool(String, int, int, int)
-	 */
-	public static ExecutorService newCoreThreadPool(String name) {
-		final int cpus = Runtime.getRuntime().availableProcessors();
-		return newCoreThreadPool(name, 5 * cpus, 15 * cpus, 60);
-	}
-
-	/**
-	 * Creates core thread pool. Uses direct hand-off (<code>SynchronousQueue</code>)
-	 * and <code>CallerRunsPolicy</code> to avoid deadlocks since tasks may have
-	 * internal dependencies.
-	 * <p>
-	 * <code>Executors.newCachedThreadPool()</code> isn't a great choice for server
-	 * code that's servicing multiple clients and concurrent requests.
-	 * 1) It's unbounded, and 2) The unbounded problem is exacerbated by the fact that
-	 * the Executor is fronted by a SynchronousQueue which means there's a direct
-	 * handoff between the task-giver and the thread pool. Each new task will create
-	 * a new thread if all existing threads are busy. This is generally a bad strategy
-	 * for server code. When the CPU gets saturated, existing tasks take longer to finish.
-	 * Yet more tasks are being submitted and more threads created, so tasks take longer and
-	 * longer to complete. When the CPU is saturated, more threads is definitely not what the server needs.
-	 */
-	public static ExecutorService newCoreThreadPool(String name, int coreSize, int maxSize, int idleTimeoutInSeconds) {
-		return newCoreThreadPool(daemonThreadFactory(name), coreSize, maxSize, idleTimeoutInSeconds);
-	}
-	public static ExecutorService newCoreThreadPool(ThreadFactory threadFactory, int coreSize, int maxSize, int idleTimeoutInSeconds) {
-		return new ThreadPoolExecutor(
-			coreSize,
-        	maxSize,
-        	idleTimeoutInSeconds, TimeUnit.SECONDS,
-			new SynchronousQueue<>(),
-			threadFactory,
-			new ThreadPoolExecutor.CallerRunsPolicy()
-        );
 	}
 
 }
