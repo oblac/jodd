@@ -276,7 +276,7 @@ configure(javaModules()) {
 			showStandardStreams = true
 		}
 
-		testClassesDir = sourceSets.testInt.output.classesDir
+		testClassesDirs = sourceSets.testInt.output.classesDirs
 		classpath = sourceSets.testInt.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
 	}
@@ -603,5 +603,5 @@ def date() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '3.5.1'
+	gradleVersion = '4.1'
 }
