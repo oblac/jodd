@@ -24,7 +24,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 plugins {
-	id "com.jfrog.bintray" version "1.6"
+	id "com.jfrog.bintray" version "1.7.3"
+	id 'com.github.kt3k.coveralls' version '2.8.1'
 }
 
 description = '''
@@ -262,7 +263,7 @@ configure(javaModules()) {
 	}
 
 	task perf(type:JavaExec) {
-		group 'Application'
+		group 'Project'
 		description 'Execute benchmarks.'
 
 		main 'org.openjdk.jmh.Main'
@@ -456,7 +457,7 @@ dependencies {
 task jacocoReport() {
 	dependsOn testAll
 	group = 'Reporting'
-	description = 'Generates JaCoCo coverage reports for unit tests.'
+	description = 'Generates JaCoCo coverage reports for tests.'
 
 	ant.taskdef(
 			name:'jacocoreport',
@@ -483,7 +484,18 @@ task jacocoReport() {
 				javaBundleModules().each {submodule ->
 					group(name: submodule.name) {
 						classfiles {
-							fileset dir: "${submodule.sourceSets.main.output.classesDir}", excludes: "**/jodd/asm5/**"
+							submodule.sourceSets.main.output.classesDirs.each {folder ->
+								if (folder.exists()) {
+									fileset dir: "${folder}", excludes: "**/jodd/asm5/**"
+								}
+							}
+						}
+						sourcefiles {
+							submodule.sourceSets.main.allJava.srcDirs.each {folder ->
+								if (folder.exists()) {
+									fileset dir: "${folder}", excludes: "**/jodd/asm5/**"
+								}
+							}
 						}
 					}
 				}
@@ -494,30 +506,19 @@ task jacocoReport() {
 	}
 }
 
-// Coveralls task should be invoked manually, since we have integration tests
-// that are executed only locally. After the release is build,
-// go to Travis Build History: https://travis-ci.org/oblac/jodd/builds
-// and select one of the jobs, then copy the job id from the URL line.
-// Paste the job id into the .coverals.yml and invoke this task
-// After few minutes, the coverage will appear here:
-// https://coveralls.io/r/oblac/jodd
-task coveralls() {
-	//dependsOn jacocoReport
-	group = 'Reporting'
-	description = 'Submits Jacoco reports to Coveralls.'
-
-	doLast {
-		List<File> targetSrcDirs = new ArrayList<File>()
-
-		for (main in javaBundleModulesSources) {
-			targetSrcDirs += main.java.srcDirs
-		}
-
-		CoverallsReporter coverallsReporter = new CoverallsReporter();
-
-		coverallsReporter.send(targetSrcDirs, file("build/reports/coverage/jodd-coverage.xml"))
-	}
+coveralls {
+	sourceDirs = javaBundleModules().sourceSets.main.allSource.srcDirs.flatten()
+	jacocoReportPath = "${buildDir}/reports/coverage/jodd-coverage.xml"
 }
+
+tasks.coveralls {
+	group = 'Reporting'
+	description = 'Uploads the aggregated coverage report to Coveralls'
+
+	dependsOn jacocoReport
+	onlyIf { System.env.'CI' }
+}
+
 
 dependencyReport {
 	projects = javaModules()

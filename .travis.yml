@@ -20,3 +20,9 @@ install:
 
 script:
   - TERM=dumb ./gradlew check
+
+after_success:
+- ./gradlew jacocoReport coveralls
+
+#after_failure:
+#- ./gradlew clean check --debug
