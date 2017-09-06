@@ -31,12 +31,13 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.result.MoveResult;
+import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.upload.FileUpload;
-import jodd.servlet.ServletUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
@@ -298,7 +299,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 			ActionRequest sourceRequest = (ActionRequest) session.getAttribute(moveId);
 			session.removeAttribute(moveId);
 			if (sourceRequest != null) {
-				outjectAfterMove(sourceRequest);
+				outjectAfterMove(actionRequest.getHttpServletRequest(), sourceRequest);
 			}
 		}
 	}
@@ -315,6 +316,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 		outjectMoveSource(actionRequest);
 	}
 
+	@Override
 	public void inject(ActionRequest actionRequest) {
 		Target[] targets = actionRequest.getTargets();
 
@@ -335,6 +337,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 
 	// ---------------------------------------------------------------- outject
 
+	@Override
 	public void outject(ActionRequest actionRequest) {
 		ScopeData[] outjectData = lookupScopeData(actionRequest);
 		if (outjectData == null) {
@@ -361,14 +364,13 @@ public class RequestScopeInjector extends BaseScopeInjector
 		}
 	}
 
-	protected void outjectAfterMove(ActionRequest sourceRequest) {
+	protected void outjectAfterMove(ServletRequest targetServletRequest, ActionRequest sourceRequest) {
 		ScopeData[] outjectData = lookupScopeData(sourceRequest);
 		if (outjectData == null) {
 			return;
 		}
 
 		Target[] targets = sourceRequest.getTargets();
-		HttpServletRequest servletRequest = sourceRequest.getHttpServletRequest();
 
 		for (int i = 0; i < targets.length; i++) {
 			Target target = targets[i];
@@ -382,7 +384,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 
 			for (ScopeData.Out out : scopes) {
 				Object value = getTargetProperty(target, out);
-				servletRequest.setAttribute(out.name, value);
+				targetServletRequest.setAttribute(out.name, value);
 			}
 		}
 	}
