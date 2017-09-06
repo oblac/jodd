@@ -19,7 +19,7 @@ install:
   - TERM=dumb ./gradlew assemble
 
 script:
-  - TERM=dumb ./gradlew check jacocoReport
+  - TERM=dumb ./gradlew build testAll codeCoverageReport
 
 after_success:
-- ./gradlew coveralls
+  - bash <(curl -s https://codecov.io/bash)

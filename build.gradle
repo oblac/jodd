@@ -25,7 +25,6 @@
 
 plugins {
 	id "com.jfrog.bintray" version "1.7.3"
-	id 'com.github.kt3k.coveralls' version '2.8.1'
 }
 
 description = '''
@@ -50,7 +49,6 @@ ext {
 	// libraries
 
 	tomcatVersion = '7.0.47'
-	jacocoVersion = '0.7.1.201405082137'
 
 	lib = [
 		mail:			[
@@ -94,8 +92,6 @@ ext {
 							"org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}",
 							"org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
 							"org.apache.tomcat.embed:tomcat-embed-logging-log4j:${tomcatVersion}"],
-		jacoco_agent:	"org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime@jar",
-		jacoco_ant:		"org.jacoco:org.jacoco.ant:${jacocoVersion}",
 		mockserver:		'org.mock-server:mockserver-netty:3.10.4',
 	]
 
@@ -167,6 +163,7 @@ idea {
 
 configure(javaModules()) {
 	apply plugin: 'java'
+	apply plugin: 'jacoco'
 	apply plugin: 'osgi'
 	apply plugin: 'maven'
 	apply plugin: 'signing'
@@ -327,43 +324,24 @@ configure(javaModules()) {
 		}
 	}
 
-	// JaCoCo
-
-	configurations {
-		jacoco
+	test {
+		jacoco {
+			excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*', '*.fixtures.*']
+		}
 	}
 
-	dependencies {
-		jacoco lib.jacoco_agent
-	}
-
-
-	// Test: configure all tests, including integration
-
-	tasks.withType(Test) { testTask ->
-		configure(testTask) {
-			beforeTest { descriptor ->
-				logger.lifecycle("\t" + descriptor)
-			}
-
-			reports.html.enabled = true
-
-			systemProperties = System.properties
-
-			// we need to exclude certain classes as jacoco changes them and may influence testing results
-			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*', '*.fixtures.*']
-
-			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
-					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
-			 	'-Djacoco=true',
-			 	'-Xms128m',
-			 	'-Xmx512m',
-			 	'-Duser.timezone=GMT'
+	jacocoTestReport {
+		reports {
+			xml.enabled true
+			html.enabled true
 		}
 	}
 
 	// add fancy test output
 	tasks.withType(Test) {
+		beforeTest { descriptor ->
+			logger.lifecycle("\t" + descriptor)
+		}
 		afterSuite { desc, result ->
 			if (!desc.parent) { // will match the outermost suite
 				def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
@@ -379,6 +357,7 @@ configure(javaModules()) {
 // --- project ----------------------------------------------------------------
 
 apply plugin: 'project-report'
+apply plugin: 'jacoco'
 
 def javaBundleModulesSources = javaBundleModules().sourceSets.main
 
@@ -445,81 +424,6 @@ task testReport(type: TestReport) {
 	reportOn javaBundleModules()*.testIntegration
 }
 
-configurations {
-    jacoco {
-        description 'JARs required for aggregate JacocoReport task.'
-    }
-}
-dependencies {
-    jacoco lib.jacoco_ant
-}
-
-task jacocoReport() {
-	dependsOn testAll
-	group = 'Reporting'
-	description = 'Generates JaCoCo coverage reports for tests.'
-
-	ant.taskdef(
-			name:'jacocoreport',
-			classname: 'org.jacoco.ant.ReportTask',
-			classpath: configurations.jacoco.asPath
-	)
-
-	def coverageDir = "$buildDir/reports/coverage"
-	ant.mkdir dir: coverageDir
-
-	inputs.files(javaBundleModulesSources.allSource + javaBundleModulesSources.compileClasspath)
-	outputs.dir file(coverageDir)
-
-	doLast {
-		ant.jacocoreport {
-			executiondata {
-				javaBundleModules().each {submodule ->
-					fileset(dir: "${submodule.buildDir}/jacoco") {
-						include name: '*.exec'
-					}
-				}
-			}
-			structure(name: 'Jodd Coverage Report') {
-				javaBundleModules().each {submodule ->
-					group(name: submodule.name) {
-						classfiles {
-							submodule.sourceSets.main.output.classesDirs.each {folder ->
-								if (folder.exists()) {
-									fileset dir: "${folder}", excludes: "**/jodd/asm5/**"
-								}
-							}
-						}
-						sourcefiles {
-							submodule.sourceSets.main.allJava.srcDirs.each {folder ->
-								if (folder.exists()) {
-									fileset dir: "${folder}", excludes: "**/jodd/asm5/**"
-								}
-							}
-						}
-					}
-				}
-			}
-			html destdir: coverageDir
-			xml destfile: coverageDir + '/jodd-coverage.xml'
-		}
-	}
-}
-
-coveralls {
-	sourceDirs = javaBundleModules().sourceSets.main.allSource.srcDirs.flatten()
-	jacocoReportPath = "${buildDir}/reports/coverage/jodd-coverage.xml"
-}
-
-tasks.coveralls {
-	group = 'Reporting'
-	description = 'Uploads the aggregated coverage report to Coveralls'
-
-	dependsOn jacocoReport
-	onlyIf { System.env.'CI' }
-}
-
-
 dependencyReport {
 	projects = javaModules()
 }
@@ -532,6 +436,25 @@ task bintray {
 	dependsOn(":jodd-bom:bintrayUpload")
 }
 
+task codeCoverageReport(type: JacocoReport) {
+	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+	jacocoClasspath
+
+	javaModules().each {
+		sourceSets it.sourceSets.main
+	}
+
+	reports {
+		xml.enabled true
+		xml.destination file("${buildDir}/reports/jacoco/report.xml")
+		html.enabled false
+		csv.enabled false
+	}
+}
+
+codeCoverageReport.dependsOn testAll
+
+
 // --- release ----------------------------------------------------------------
 
 task release() {
@@ -542,7 +465,6 @@ task release() {
 	dependsOn testAll
 	dependsOn javadocAll
 	dependsOn testReport
-	dependsOn jacocoReport
 	dependsOn ':distribution:build'
 	dependsOn projectReport
 }
