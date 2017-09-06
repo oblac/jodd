@@ -4,7 +4,7 @@ To generate the code coverage report, execute the following command:
 
 Windows:
 
-	gradlew jacocoReport
+	gradlew.bat jacocoReport
 
 Linux/Unix/OSX:
 
@@ -20,5 +20,5 @@ In order to view the report for a single module, open the following file:
 
 For example:
 
-* `build/reports/coverage/jodd-decora/index.html`
-* `build/reports/coverage/jodd-log/index.html`
++ `build/reports/coverage/jodd-decora/index.html`
++ `build/reports/coverage/jodd-log/index.html`
