@@ -19,10 +19,7 @@ install:
   - TERM=dumb ./gradlew assemble
 
 script:
-  - TERM=dumb ./gradlew check
+  - TERM=dumb ./gradlew check jacocoReport
 
 after_success:
-- ./gradlew jacocoReport coveralls
-
-#after_failure:
-#- ./gradlew clean check --debug
+- ./gradlew coveralls
