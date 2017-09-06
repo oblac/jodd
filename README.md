@@ -3,7 +3,7 @@ Jodd
 
 [![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
 [![Build Status](https://img.shields.io/travis/oblac/jodd.svg)](https://travis-ci.org/oblac/jodd)
-[![Coverage Status](https://img.shields.io/coveralls/oblac/jodd.svg)](https://coveralls.io/r/oblac/jodd?branch=master)
+[![codecov](https://codecov.io/gh/oblac/jodd/branch/master/graph/badge.svg)](https://codecov.io/gh/oblac/jodd)
 [![Snapshot](https://api.bintray.com/packages/oblac/jodd/org.jodd%3Ajodd-core/images/download.svg)](https://bintray.com/oblac/jodd)
 [![JitPack](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
