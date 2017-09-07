@@ -26,18 +26,13 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm5.signature.SignatureVisitor;
+import jodd.asm.TraceSignatureVisitor;
 import jodd.asm5.Opcodes;
-import jodd.proxetta.GenericsReader;
-import jodd.proxetta.TypeInfo;
+import jodd.asm5.signature.SignatureVisitor;
+import jodd.proxetta.*;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.collection.IntArrayList;
-import jodd.proxetta.MethodInfo;
-import jodd.proxetta.ProxettaException;
-import jodd.proxetta.ClassInfo;
-import jodd.proxetta.AnnotationInfo;
-import jodd.asm.TraceSignatureVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -359,6 +354,11 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		if (ndx != -1) {
 			int ndx2 = typeName.indexOf('>', ndx);
 			ndx2++;
+
+			// it might be a nested generics, so skip all '>'
+			while (ndx2 < typeName.length() && typeName.charAt(ndx2) == '>') {
+				ndx2++;
+			}
 
 			typeName = typeName.substring(0, ndx) + typeName.substring(ndx2);
 		}

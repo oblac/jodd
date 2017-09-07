@@ -360,6 +360,36 @@ public class MethodSignatureVisitorTest {
 		assertEquals("jodd.proxetta.fixtures.data.FooAnn", msv.getAnnotations()[0].getAnnotationClassname());
 	}
 
+	// ---------------------------------------------------------------- 11
+
+	public static class M11 {
+		public List<Map<String, Object>> macka(Set<List<Map<String, Object>>> in1) {return null;}
+	}
+
+	@Test
+	public void testMethodSignature11() throws IOException {
+		MethodInfo msv = getMethodSignatureForSingleMethod(M11.class);
+
+		assertEquals(1, msv.getArgumentsCount());
+		assertEquals("java.util.Set<java.util.List<java.util.Map<java.lang.String, java.lang.Object>>>", msv.getArgument(1).getType());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getName());
+		assertEquals("Ljava/util/Set;", msv.getArgument(1).getRawName());
+		assertEquals('L', msv.getArgument(1).getOpcode());
+
+		assertEquals(CLASS_SIGNATURE + "$M11", msv.getClassname());
+		assertEquals("macka#(Ljava/util/Set;)Ljava/util/List;", msv.getCleanSignature());
+		assertEquals("(java.util.Set<java.util.List<java.util.Map<java.lang.String, java.lang.Object>>>)java.util.List<java.util.Map<java.lang.String, java.lang.Object>>", msv.getDeclaration());
+		assertEquals(CLASS_SIGNATURE + "$M11", msv.getDeclaredClassName());
+		assertEquals("(Ljava/util/Set;)Ljava/util/List;", msv.getDescription());
+		assertNull(msv.getExceptions());
+		assertEquals("macka", msv.getMethodName());
+
+		assertEquals('L', msv.getReturnType().getOpcode());
+		assertEquals("java.util.List<java.util.Map<java.lang.String, java.lang.Object>>", msv.getReturnType().getType());
+		assertEquals("Ljava/util/List;", msv.getReturnType().getName());
+		assertEquals("Ljava/util/List;", msv.getReturnType().getRawName());
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private MethodInfo getMethodSignatureForSingleMethod(Class klass) throws IOException {
