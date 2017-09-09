@@ -28,24 +28,24 @@ package jodd.db.servers;
 import jodd.db.oom.DbOomManager;
 
 /**
- * SQL Server.
+ * SQLite.
  */
-public class SqlServerDbServer implements DbServer {
+public class SQLiteDbServer implements DbServer {
 
 	private final String version;
 
-	public SqlServerDbServer(String version) {
+	public SQLiteDbServer(String version) {
 		this.version = version;
 	}
 
 	@Override
 	public void accept(DbOomManager dbOomManager) {
 		dbOomManager.getSqlGenConfig().setUpdateAcceptsTableAlias(false);
-		dbOomManager.getSqlGenConfig().setUpdateablePrimaryKey(false);
 	}
 
 	@Override
 	public String toString() {
-		return "DbServer: SQL Server v" + version;
+		return "DbServer: SQLite v" + version;
 	}
 }
+

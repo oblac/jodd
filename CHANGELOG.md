@@ -6,7 +6,18 @@ All notable changes to Jodd project are documented here.
 
 ### Bug Fixes
 
-+ **madvoc** - fixed bug with `move` result
++ **proxetta** - fixed the bug with nested generics.
++ **madvoc** - fixed bug with `move` result.
++ **dboom** - fixed the issue with the MSSQL and custom behaviour. 
+
+### Features
+
++ **dboom** - Added support for SQLite.
+
+### Breaking changes
+
++ **db** - `DbDetector` now returns a new type.
+
 
 ## [3.9](https://github.com/oblac/jodd/compare/v3.8.6...3.9)
 

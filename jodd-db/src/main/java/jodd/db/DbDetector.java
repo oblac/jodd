@@ -93,6 +93,9 @@ public class DbDetector {
 		if (dbName.equals("ASE") && (dbMajorVersion == 15)) {
 			return new SybaseDbServer(version);
 		}
+		if (dbName.equals("SQLite")) {
+			return new SQLiteDbServer(version);
+		}
 
 		return new GenericDbServer();
 	}
