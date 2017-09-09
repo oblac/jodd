@@ -27,7 +27,8 @@ dependencies {
 	testCompile lib.h2db
 	testCompile lib.mysql
 	testCompile lib.postgresql
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+	testCompile lib.mssql
+	testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
 
 // run db integration tests only through the suite

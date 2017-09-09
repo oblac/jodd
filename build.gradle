@@ -80,6 +80,7 @@ ext {
 		h2db:			'com.h2database:h2:1.1.111',
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
 		mysql:			'mysql:mysql-connector-java:5.1.37',
+		mssql:			'com.microsoft.sqlserver:mssql-jdbc:6.1.0.jre8',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
 		greenmail:		'com.icegreen:greenmail:1.5.2',
 		//el_api:		'javax.el:el-api:2.2',
