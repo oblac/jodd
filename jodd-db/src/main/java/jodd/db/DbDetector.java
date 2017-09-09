@@ -2,6 +2,7 @@ package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
+import jodd.db.servers.*;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
@@ -16,101 +17,30 @@ public class DbDetector {
 
 	private static final Logger log = LoggerFactory.getLogger(DbDetector.class);
 
-	@FunctionalInterface
-	public static interface DbOomConfigurator {
-		public void configure();
-	}
-
-	public enum Db implements DbOomConfigurator {
-		UNKNOWN {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		DERBY {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		DB2 {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		HSQL {
-			@Override
-			public void configure() {
-				DbOomManager dboom = DbOomManager.getInstance();
-				dboom.getTableNames().setLowercase(true);
-				dboom.getColumnNames().setLowercase(true);
-			}
-		},
-		INFORMIX {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		SQL_SERVER {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		MYSQL {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		ORACLE {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		},
-		POSTGRESQL {
-			@Override
-			public void configure() {
-				DbOomManager dboom = DbOomManager.getInstance();
-				dboom.getTableNames().setLowercase(true);
-				dboom.getColumnNames().setLowercase(true);
-			}
-		},
-		SYBASE {
-			@Override
-			public void configure() {
-				// default settings
-			}
-		}
-	}
-
 	/**
 	 * Detects database and configure DbOom engine.
 	 */
-	public static Db detectDatabaseAndConfigureDbOom(ConnectionProvider cp) {
+	public static DbServer detectDatabaseAndConfigureDbOom(ConnectionProvider cp) {
 		cp.init();
 
 		Connection connection = cp.getConnection();
 
-		Db db = detectDatabase(connection);
+		DbServer dbServer = detectDatabase(connection);
 
 		cp.closeConnection(connection);
 
-		db.configure();
+		dbServer.accept(DbOomManager.getInstance());
 
-		return db;
+		return dbServer;
 	}
 
 	/**
-	 * Detects database and returns {@link Db}.
+	 * Detects database and returns {@link DbServer}.
 	 */
-	public static Db detectDatabase(Connection connection) {
+	public static DbServer detectDatabase(Connection connection) {
 		final String dbName;
 		final int dbMajorVersion;
+		final String version;
 
 		try {
 			log.info("Detecting database...");
@@ -119,6 +49,7 @@ public class DbDetector {
 			dbName = databaseMetaData.getDatabaseProductName();
 			dbMajorVersion = databaseMetaData.getDatabaseMajorVersion();
 			int dbMinorVersion = databaseMetaData.getDatabaseMinorVersion();
+			version = dbMajorVersion + "." + dbMinorVersion;
 
 			log.info("Database: " + dbName + " v" + dbMajorVersion + "." + dbMinorVersion);
 		}
@@ -126,43 +57,43 @@ public class DbDetector {
 			String msg = sex.getMessage();
 
 			if (msg.contains("explicitly set for database: DB2")) {
-				return Db.DB2;
+				return new Db2DbServer();
 			}
 
-			return Db.UNKNOWN;
+			return new GenericDbServer();
 		}
 
 		if (dbName.equals("Apache Derby")) {
-			return Db.DERBY;
+			return new DerbyDbServer(version);
 		}
 		if (dbName.startsWith("DB2/")) {
-			return Db.DB2;
+			return new Db2DbServer(version);
 		}
 		if (dbName.equals("HSQL Database Engine")) {
-			return Db.HSQL;
+			return new HsqlDbServer(version);
 		}
 		if (dbName.equals("Informix Dynamic Server")) {
-			return Db.INFORMIX;
+			return new InformixDbServer(version);
 		}
 		if (dbName.startsWith("Microsoft SQL Server")) {
-			return Db.SQL_SERVER;
+			return new SqlServerDbServer(version);
 		}
 		if (dbName.equals("MySQL")) {
-			return Db.MYSQL;
+			return new MySqlDbServer(version);
 		}
 		if (dbName.equals("Oracle")) {
-			return Db.ORACLE;
+			return new OracleDbServer(version);
 		}
 		if (dbName.equals("PostgreSQL")) {
-			return Db.POSTGRESQL;
+			return new PostgreSqlDbServer(version);
 		}
 		if (dbName.equals("Sybase SQL Server")) {
-			return Db.SYBASE;
+			return new SybaseDbServer(version);
 		}
 		if (dbName.equals("ASE") && (dbMajorVersion == 15)) {
-			return Db.SYBASE;
+			return new SybaseDbServer(version);
 		}
 
-		return Db.UNKNOWN;
+		return new GenericDbServer();
 	}
 }

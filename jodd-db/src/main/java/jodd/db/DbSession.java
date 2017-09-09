@@ -31,8 +31,8 @@ import jodd.log.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Encapsulates db connection. Initially works in auto-commit mode.
