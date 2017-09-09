@@ -27,9 +27,10 @@ package jodd.db.oom;
 
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
-import jodd.util.StringUtil;
+import jodd.db.oom.sqlgen.SqlGenConfig;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -396,6 +397,18 @@ public class DbOomManager {
 		} catch (Exception ex) {
 			throw new DbOomException(ex);
 		}
+	}
+
+
+	// ---------------------------------------------------------------- sqlgenconfig
+
+	private final SqlGenConfig sqlGenConfig = new SqlGenConfig();
+
+	/**
+	 * Returns {@link SqlGenConfig}.
+	 */
+	public SqlGenConfig getSqlGenConfig() {
+		return sqlGenConfig;
 	}
 
 }

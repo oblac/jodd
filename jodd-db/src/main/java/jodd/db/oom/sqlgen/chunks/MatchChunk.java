@@ -25,12 +25,12 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.oom.DbEntityDescriptor;
+import jodd.bean.BeanUtil;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomUtil;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.util.StringUtil;
-import jodd.bean.BeanUtil;
 
 /**
  * Renders condition part of the sql query based on values in provided entity object.
@@ -92,7 +92,11 @@ public class MatchChunk extends SqlChunk {
 		if (objectRef != null) {
 			data = templateData.lookupObject(objectRef);
 		}
-		DbEntityDescriptor ded = lookupTableRef(tableRef);
+
+		DbEntityDescriptor ded = tableRef != null ?
+			lookupTableRef(tableRef) :
+			lookupType(resolveClass(data));
+
 		String table = resolveTable(tableRef, ded);
 		DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 		String typeName = StringUtil.uncapitalize(ded.getEntityName());

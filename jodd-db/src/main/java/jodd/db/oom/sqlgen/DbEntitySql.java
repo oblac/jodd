@@ -74,6 +74,11 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder update(Object entity) {
 		String tableRef = createTableRefName(entity);
+
+		if (!DbOomManager.getInstance().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+			tableRef = null;
+		}
+
 		return sql().$(UPDATE).table(entity, tableRef).set(tableRef, entity).$(WHERE).matchIds(tableRef, entity);
 	}
 
@@ -82,6 +87,11 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder updateAll(Object entity) {
 		String tableRef = createTableRefName(entity);
+
+		if (!DbOomManager.getInstance().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+			tableRef = null;
+		}
+
 		return sql().$(UPDATE).table(entity, tableRef).setAll(tableRef, entity).$(WHERE).matchIds(tableRef, entity);
 	}
 
@@ -90,6 +100,11 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder updateColumn(Object entity, String columnRef, Object value) {
 		String tableRef = createTableRefName(entity);
+
+		if (!DbOomManager.getInstance().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+			tableRef = null;
+		}
+
 		return sql().$(UPDATE).table(entity, tableRef).$(SET).ref(null, columnRef).$(EQUALS).columnValue(value).$(WHERE).matchIds(tableRef, entity);
 	}
 
@@ -100,8 +115,6 @@ public class DbEntitySql {
 		Object value = BeanUtil.pojo.getProperty(entity, columnRef);
 		return updateColumn(entity, columnRef, value);
 	}
-
-
 
 	// ---------------------------------------------------------------- delete
 

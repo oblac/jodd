@@ -25,8 +25,8 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.CharUtil;
@@ -193,7 +193,7 @@ public abstract class SqlChunk {
 	}
 
 	/**
-	 * Finds for table that contains column,
+	 * Finds a table that contains given column.
 	 */
 	protected DbEntityDescriptor findColumnRef(String columnRef) {
 		DbEntityDescriptor ded = templateData.findTableDescriptorByColumnRef(columnRef);
