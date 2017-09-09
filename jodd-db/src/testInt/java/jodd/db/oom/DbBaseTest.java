@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class DbBaseTest {
 
-	public static final String DB_NAME = "jodd-test";
+	public static final String DB_NAME = "jodd_test";
 
 	protected CoreConnectionPool connectionPool;
 	protected DbOomManager dboom;
@@ -116,9 +116,10 @@ public abstract class DbBaseTest {
 	 */
 	public abstract class MySqlDbAccess extends DbAccess {
 
+		@Override
 		public final void initDb() {
 			connectionPool.setDriver("com.mysql.jdbc.Driver");
-			connectionPool.setUrl("jdbc:mysql://" + dbhost() + ":3306");
+			connectionPool.setUrl("jdbc:mysql://" + dbhost() + ":3306/" + DB_NAME);
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
 
@@ -127,16 +128,6 @@ public abstract class DbBaseTest {
 
 			//dboom.getTableNames().setLowercase(true);
 			//dboom.getColumnNames().setLowercase(true);
-
-			connectionPool.init();
-
-			DbSession session = new DbSession(connectionPool);
-			DbQuery query = new DbQuery(session, "create database IF NOT EXISTS `jodd-test` CHARACTER SET utf8 COLLATE utf8_general_ci;");
-			query.executeUpdate();
-			session.closeSession();
-
-			connectionPool.close();
-			connectionPool.setUrl("jdbc:mysql://" + dbhost() + ":3306/" + DB_NAME);
 		}
 	}
 
@@ -145,6 +136,7 @@ public abstract class DbBaseTest {
 	 */
 	public abstract class PostgreSqlDbAccess extends DbAccess {
 
+		@Override
 		public void initDb() {
 			connectionPool.setDriver("org.postgresql.Driver");
 			connectionPool.setUrl("jdbc:postgresql://" + dbhost() + "/" + DB_NAME);
@@ -156,10 +148,27 @@ public abstract class DbBaseTest {
 	}
 
 	/**
+	 * MS SQL.
+	 */
+	public abstract class MsSqlDbAccess extends DbAccess {
+
+		@Override
+		public void initDb() {
+			connectionPool.setDriver("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			connectionPool.setUrl("jdbc:sqlserver://" + dbhost() + ":1433;" + "databaseName=" + DB_NAME);
+			connectionPool.setUser("sa");
+			connectionPool.setPassword("root!R00t!");
+
+			DbDetector.detectDatabaseAndConfigureDbOom(connectionPool);
+		}
+	}
+
+	/**
 	 * HsqlDB.
 	 */
 	public abstract class HsqlDbAccess extends DbAccess {
 
+		@Override
 		public final void initDb() {
 			connectionPool = new CoreConnectionPool();
 			connectionPool.setDriver("org.hsqldb.jdbcDriver");
