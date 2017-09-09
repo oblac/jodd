@@ -18,7 +18,6 @@ include 'jodd-petite'
 include 'jodd-props'
 include 'jodd-proxetta'
 include 'jodd-servlet'
-include 'jodd-swingspy'
 include 'jodd-upload'
 include 'jodd-vtor'
 

@@ -134,7 +134,6 @@ def javaModules() {
 def javaBundleModules() {
 	rootProject.subprojects.findAll {
 		it.name.contains('jodd-') &&
-		!it.name.equals('jodd-swingspy') &&
 		!it.name.equals('jodd-joy') &&
 		!it.name.equals('jodd-bom') &&
 		!it.name.equals('jodd-all')
