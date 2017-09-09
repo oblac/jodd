@@ -40,6 +40,8 @@ public class SqlServerDbServer implements DbServer {
 
 	@Override
 	public void accept(DbOomManager dbOomManager) {
+		dbOomManager.getSqlGenConfig().setUpdateAcceptsTableAlias(false);
+		dbOomManager.getSqlGenConfig().setUpdateablePrimaryKey(false);
 	}
 
 	@Override
