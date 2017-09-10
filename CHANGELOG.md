@@ -4,6 +4,9 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.9...master)
 
+
+## [3.9.1](https://github.com/oblac/jodd/compare/v3.9...3.9.1)
+
 ### Bug Fixes
 
 + **proxetta** - fixed the bug with nested generics.
@@ -17,7 +20,7 @@ All notable changes to Jodd project are documented here.
 ### Breaking changes
 
 + **db** - `DbDetector` now returns a new type.
-
++ **swingspy** - removed :)
 
 ## [3.9](https://github.com/oblac/jodd/compare/v3.8.6...3.9)
 
