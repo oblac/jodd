@@ -18,14 +18,14 @@ before_install:
 install:
   - TERM=dumb ./gradlew assemble
 
-before_script:
-  - sleep 5
+#before_script:
+#  - sleep 15
 
 script:
-  - TERM=dumb ./gradlew build testAll codeCoverageReport
+  - TERM=dumb ./gradlew testInt test codeCoverageReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-after_failure:
-  - TERM=dumb ./gradlew build testAll --debug
+#after_failure:
+#  - TERM=dumb ./gradlew build testAll --stacktrace
