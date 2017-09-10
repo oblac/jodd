@@ -279,7 +279,7 @@ configure(javaModules()) {
 	}
 
 	//check.dependsOn testIntegration
-	testIntegration.mustRunAfter test
+	//testIntegration.mustRunAfter test
 
 	// artifacts
 
@@ -370,8 +370,8 @@ task testAll {
 
 	//dependsOn javaTestModules().test
 
-	dependsOn javaModules().test
 	dependsOn javaModules().testIntegration
+	dependsOn javaModules().test
 }
 
 task clean(type: Delete) {
