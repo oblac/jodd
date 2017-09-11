@@ -26,12 +26,12 @@
 package jodd.json.fixtures.mock;
 
 import jodd.json.meta.JSON;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Ignore
+@Disabled
 public class TestClass2 {
 
 	@JSON(include = false)

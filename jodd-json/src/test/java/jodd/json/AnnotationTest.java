@@ -26,24 +26,14 @@
 package jodd.json;
 
 import jodd.json.fixtures.mock.Location;
-import jodd.json.fixtures.model.App;
-import jodd.json.fixtures.model.MyFolder1;
-import jodd.json.fixtures.model.MyFolder2;
-import jodd.json.fixtures.model.MyFolder3;
-import jodd.json.fixtures.model.MyFolder4;
-import jodd.json.fixtures.model.User;
-import jodd.json.fixtures.model.UserHolder;
-import org.junit.Test;
+import jodd.json.fixtures.model.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AnnotationTest {
 

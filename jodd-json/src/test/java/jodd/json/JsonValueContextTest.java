@@ -26,13 +26,13 @@
 package jodd.json;
 
 import jodd.json.fixtures.mock.Surfer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JsonValueContextTest {
 
@@ -115,6 +115,7 @@ public class JsonValueContextTest {
 
 	public static class MyTypeJsonSerializer implements TypeJsonSerializer<String> {
 
+		@Override
 		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 
@@ -132,6 +133,7 @@ public class JsonValueContextTest {
 
 	public static class MyTypeJsonSerializer2 implements TypeJsonSerializer<String> {
 
+		@Override
 		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 

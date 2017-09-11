@@ -28,13 +28,13 @@ package jodd.json;
 import jodd.json.fixtures.mock.Address;
 import jodd.json.fixtures.mock.Hill;
 import jodd.json.fixtures.mock.Person;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ObjectToMapTest {
 

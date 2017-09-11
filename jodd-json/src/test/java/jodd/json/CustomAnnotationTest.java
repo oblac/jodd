@@ -25,22 +25,22 @@
 
 package jodd.json;
 
-import jodd.json.meta.JSON;
 import jodd.json.fixtures.mock.LocationAlt;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.json.meta.JSON;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CustomAnnotationTest {
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		JoddJson.jsonAnnotation = JSON2.class;
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		JoddJson.jsonAnnotation = JSON.class;
 	}

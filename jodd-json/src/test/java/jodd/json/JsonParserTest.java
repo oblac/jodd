@@ -28,14 +28,14 @@ package jodd.json;
 import jodd.Jodd;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import jodd.json.meta.JSON;
 import jodd.json.fixtures.model.FooBar;
 import jodd.json.fixtures.model.HitList;
+import jodd.json.meta.JSON;
 import jodd.util.RandomString;
 import jodd.util.StringUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -48,18 +48,13 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import static jodd.util.ArraysUtil.ints;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonParserTest {
 
 	protected String dataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
@@ -70,7 +65,7 @@ public class JsonParserTest {
 		}
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		JoddJson.classMetadataName = null;
 	}
@@ -186,7 +181,7 @@ public class JsonParserTest {
 
 		try {
 			jsonParser.parse("\"\\u034\"");
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 	}
@@ -372,6 +367,7 @@ public class JsonParserTest {
 
 		protected char sign;
 
+		@Override
 		public char getSign() {
 			return sign;
 		}
@@ -730,12 +726,12 @@ public class JsonParserTest {
 	public void testInvalidJson() {
 		try {
 			new JsonParser().parse("\"" + "123" + "\",");
-			fail();
+			fail("error");
 		} catch (JsonException ignore) {
 		}
 		try {
 			new JsonParser().parse("{\"aa\":\"" + "123" + "\",}");
-			fail();
+			fail("error");
 		} catch (JsonException ignore) {
 		}
 	}

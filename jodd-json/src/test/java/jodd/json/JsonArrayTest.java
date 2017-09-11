@@ -25,35 +25,20 @@
 
 package jodd.json;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonArrayTest {
 
 	private JsonArray jsonArray;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		jsonArray = new JsonArray();
 	}
@@ -64,14 +49,14 @@ public class JsonArrayTest {
 		assertEquals(Integer.valueOf(123), jsonArray.getInteger(0));
 		try {
 			jsonArray.getInteger(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getInteger(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -86,7 +71,7 @@ public class JsonArrayTest {
 		jsonArray.add("foo");
 		try {
 			jsonArray.getInteger(4);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -101,14 +86,14 @@ public class JsonArrayTest {
 		assertEquals(Long.valueOf(123L), jsonArray.getLong(0));
 		try {
 			jsonArray.getLong(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getLong(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -123,7 +108,7 @@ public class JsonArrayTest {
 		jsonArray.add("foo");
 		try {
 			jsonArray.getLong(4);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -138,14 +123,14 @@ public class JsonArrayTest {
 		assertEquals(Float.valueOf(123f), jsonArray.getFloat(0));
 		try {
 			jsonArray.getFloat(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getFloat(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -160,7 +145,7 @@ public class JsonArrayTest {
 		jsonArray.add("foo");
 		try {
 			jsonArray.getFloat(4);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -175,14 +160,14 @@ public class JsonArrayTest {
 		assertEquals(Double.valueOf(123d), jsonArray.getDouble(0));
 		try {
 			jsonArray.getDouble(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getDouble(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -197,7 +182,7 @@ public class JsonArrayTest {
 		jsonArray.add("foo");
 		try {
 			jsonArray.getDouble(4);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -212,14 +197,14 @@ public class JsonArrayTest {
 		assertEquals("foo", jsonArray.getString(0));
 		try {
 			jsonArray.getString(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getString(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -227,7 +212,7 @@ public class JsonArrayTest {
 		jsonArray.add(123);
 		try {
 			jsonArray.getString(1);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -244,14 +229,14 @@ public class JsonArrayTest {
 		assertEquals(false, jsonArray.getBoolean(1));
 		try {
 			jsonArray.getBoolean(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getBoolean(2);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -259,7 +244,7 @@ public class JsonArrayTest {
 		jsonArray.add(123);
 		try {
 			jsonArray.getBoolean(2);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -276,14 +261,14 @@ public class JsonArrayTest {
 		assertArrayEquals(bytes, Base64.getDecoder().decode(jsonArray.getString(0)));
 		try {
 			jsonArray.getBinary(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getBinary(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -291,7 +276,7 @@ public class JsonArrayTest {
 		jsonArray.add(123);
 		try {
 			jsonArray.getBinary(1);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -307,14 +292,14 @@ public class JsonArrayTest {
 		assertEquals(obj, jsonArray.getJsonObject(0));
 		try {
 			jsonArray.getJsonObject(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getJsonObject(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -322,7 +307,7 @@ public class JsonArrayTest {
 		jsonArray.add(123);
 		try {
 			jsonArray.getJsonObject(1);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -338,14 +323,14 @@ public class JsonArrayTest {
 		assertEquals(arr, jsonArray.getJsonArray(0));
 		try {
 			jsonArray.getJsonArray(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getJsonArray(1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -353,7 +338,7 @@ public class JsonArrayTest {
 		jsonArray.add(123);
 		try {
 			jsonArray.getJsonArray(1);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// OK
@@ -391,14 +376,14 @@ public class JsonArrayTest {
 		assertNull(jsonArray.getValue(10));
 		try {
 			jsonArray.getValue(-1);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
 		}
 		try {
 			jsonArray.getValue(11);
-			fail();
+			fail("error");
 		}
 		catch (IndexOutOfBoundsException e) {
 			// OK
@@ -518,7 +503,7 @@ public class JsonArrayTest {
 		assertEquals(arr, jsonArray.getJsonArray(8));
 		try {
 			jsonArray.add(new SomeClass());
-			fail();
+			fail("error");
 		}
 		catch (JsonException e) {
 			// OK
@@ -528,7 +513,7 @@ public class JsonArrayTest {
 
 		try {
 			jsonArray.add(new Date());
-			fail();
+			fail("error");
 		}
 		catch (JsonException e) {
 			// OK

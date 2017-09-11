@@ -1,31 +1,12 @@
 package jodd.json;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonObjectTest {
 	@Test
@@ -36,7 +17,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getInteger("bar");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -67,7 +48,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getInteger("bar", 123);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -99,7 +80,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getLong("bar");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -130,7 +111,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getLong("bar", 123L);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -162,7 +143,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getFloat("bar");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -191,7 +172,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getFloat("bar", 123f);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -221,7 +202,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getDouble("bar");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -250,7 +231,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", "hello");
 		try {
 			jsonObject.getDouble("bar", 123d);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -280,7 +261,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", 123);
 		try {
 			jsonObject.getString("bar");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -302,7 +283,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", 123);
 		try {
 			jsonObject.getString("bar", "wibble");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -327,7 +308,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", 123);
 		try {
 			jsonObject.getBoolean("bar");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -352,7 +333,7 @@ public class JsonObjectTest {
 		jsonObject.put("bar", 123);
 		try {
 			jsonObject.getBoolean("bar", true);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -384,7 +365,7 @@ public class JsonObjectTest {
 		jsonObject.put("foo", 123);
 		try {
 			jsonObject.getBinary("foo");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -408,7 +389,7 @@ public class JsonObjectTest {
 		jsonObject.put("foo", 123);
 		try {
 			jsonObject.getBinary("foo", defBytes);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -432,7 +413,7 @@ public class JsonObjectTest {
 		jsonObject.put("foo", "hello");
 		try {
 			jsonObject.getJsonObject("foo");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -456,7 +437,7 @@ public class JsonObjectTest {
 		jsonObject.put("foo", "hello");
 		try {
 			jsonObject.getJsonObject("foo", def);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -480,7 +461,7 @@ public class JsonObjectTest {
 		jsonObject.put("foo", "hello");
 		try {
 			jsonObject.getJsonArray("foo");
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -504,7 +485,7 @@ public class JsonObjectTest {
 		jsonObject.put("foo", "hello");
 		try {
 			jsonObject.getJsonArray("foo", def);
-			fail();
+			fail("error");
 		}
 		catch (ClassCastException e) {
 			// Ok
@@ -667,7 +648,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, SomeEnum.FOO);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -689,7 +670,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, "blah");
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -712,7 +693,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, (CharSequence) "blah");
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -734,7 +715,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, 123);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -757,7 +738,7 @@ public class JsonObjectTest {
 
 		try {
 			jsonObject.put(null, 123L);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -780,7 +761,7 @@ public class JsonObjectTest {
 
 		try {
 			jsonObject.put(null, 1.2f);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -802,7 +783,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, 1.23d);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -824,7 +805,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, false);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -849,7 +830,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("foo"));
 		try {
 			jsonObject.put(null, new JsonObject());
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -878,7 +859,7 @@ public class JsonObjectTest {
 
 		try {
 			jsonObject.put(null, new JsonArray());
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -906,7 +887,7 @@ public class JsonObjectTest {
 
 		try {
 			jsonObject.put(null, bin1);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -923,7 +904,7 @@ public class JsonObjectTest {
 		assertTrue(jsonObject.containsKey("bar"));
 		try {
 			jsonObject.putNull(null);
-			fail();
+			fail("error");
 		}
 		catch (NullPointerException e) {
 			// OK
@@ -956,7 +937,7 @@ public class JsonObjectTest {
 		assertEquals(arr, jsonObject.getJsonArray("arr"));
 		try {
 			jsonObject.put("inv", new SomeClass());
-			fail();
+			fail("error");
 		}
 		catch (JsonException e) {
 			// OK
@@ -964,7 +945,7 @@ public class JsonObjectTest {
 		jsonObject.put("inv", new BigDecimal(123));
 		try {
 			jsonObject.put("inv", new Date());
-			fail();
+			fail("error");
 		}
 		catch (JsonException e) {
 			// OK
@@ -1407,7 +1388,7 @@ public class JsonObjectTest {
 			String key = entry.getKey();
 			Object val = entry.getValue();
 			assertEquals("object1", key);
-			assertTrue("Expecting JsonObject, found: " + val.getClass().getCanonicalName(), val instanceof JsonObject);
+			assertTrue(val instanceof JsonObject, "Expecting JsonObject, found: " + val.getClass().getCanonicalName());
 		});
 	}
 

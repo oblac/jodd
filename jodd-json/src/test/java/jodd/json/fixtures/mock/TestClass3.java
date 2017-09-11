@@ -25,9 +25,10 @@
 
 package jodd.json.fixtures.mock;
 
-import org.junit.Ignore;
 
-@Ignore
+import org.junit.jupiter.api.Disabled;
+
+@Disabled
 public class TestClass3 {
 
 	private String name;

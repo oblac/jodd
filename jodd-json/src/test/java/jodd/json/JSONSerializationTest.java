@@ -25,24 +25,12 @@
 
 package jodd.json;
 
-import jodd.json.impl.ObjectJsonSerializer;
-import jodd.json.fixtures.mock.Address;
-import jodd.json.fixtures.mock.Employee;
-import jodd.json.fixtures.mock.Friend;
-import jodd.json.fixtures.mock.Hill;
-import jodd.json.fixtures.mock.Mountain;
-import jodd.json.fixtures.mock.Network;
-import jodd.json.fixtures.mock.Person;
-import jodd.json.fixtures.mock.Phone;
-import jodd.json.fixtures.mock.Spiderman;
-import jodd.json.fixtures.mock.Surfer;
-import jodd.json.fixtures.mock.TestClass2;
-import jodd.json.fixtures.mock.TestClass3;
-import jodd.json.fixtures.mock.Zipcode;
+import jodd.json.fixtures.mock.*;
 import jodd.json.fixtures.model.ListContainer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import jodd.json.impl.ObjectJsonSerializer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -52,9 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JSONSerializationTest {
 
@@ -66,7 +52,7 @@ public class JSONSerializationTest {
 	private Zipcode pedroZip;
 	private Employee dilbert;
 
-	@Before
+	@BeforeEach
 	@SuppressWarnings({"unchecked"})
 	public void setUp() {
 		DataCreator dataCreator = new DataCreator();
@@ -86,7 +72,7 @@ public class JSONSerializationTest {
 		network = dataCreator.createNetwork("My Network", jodder, modesty);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		JoddJson.classMetadataName = null;
 	}
@@ -662,6 +648,7 @@ public class JSONSerializationTest {
 		assertAttribute("name", json);
 
 		jsonSerializer.withSerializer(Object.class, new ObjectJsonSerializer() {
+			@Override
 			public void serializeValue(final JsonContext jsonContext, Object value) {
 				jsonContext.writeOpenObject();
 
