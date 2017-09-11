@@ -36,8 +36,8 @@ import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class SimpleLoggerTest extends LoggerTestBase {
 
@@ -52,6 +52,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 		initializeLogFactoryAndLogger(Logger.Level.DEBUG);
 	}
 
+	@Override
 	@Test
 	public void testIsEnabled() {
 		assertTrue("Source code implemented in such a way that this method call always returns false", logger.isEnabled(Level.DEBUG));
@@ -63,6 +64,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 		assertEquals("Logger name must be simple logger", LoggerConstants.SIMPLE_LOGGER, logger.getName());
 	}
 
+	@Override
 	@Test
 	public void testIsLevelEnabled() {
 		//when

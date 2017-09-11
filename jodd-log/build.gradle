@@ -10,7 +10,7 @@ dependencies {
 
 	testCompile project(':jodd-core')
 	testCompile lib.junit
+	testCompile lib.mockito
 	testCompile lib.log_logback_core
 	testCompile lib.log_log4j2_core
-	testCompile lib.powermock
 }

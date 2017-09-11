@@ -32,10 +32,8 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class NOPLoggerTest extends LoggerTestBase {
 
@@ -46,6 +44,7 @@ public class NOPLoggerTest extends LoggerTestBase {
 		logger = new NOPLogger(name);
 	}
 
+	@Override
 	@Test
 	public void testIsEnabled() {
 		assertFalse("Source code implemented in such a way that this method call always returns false", logger.isEnabled(Level.DEBUG));

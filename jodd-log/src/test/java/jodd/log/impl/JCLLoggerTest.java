@@ -35,8 +35,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class JCLLoggerTest extends LoggerTestBase {
 
@@ -50,7 +50,7 @@ public class JCLLoggerTest extends LoggerTestBase {
 
 	@Test
 	public void testGetName() {
-		assertEquals(LoggerConstants.LOG, logger.getName());
+		assertEquals(log.toString(), logger.getName());
 	}
 
 	@Test
