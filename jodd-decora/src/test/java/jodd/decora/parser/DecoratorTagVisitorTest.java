@@ -25,14 +25,11 @@
 
 package jodd.decora.parser;
 
-import static org.junit.Assert.fail;
-import static org.powermock.reflect.Whitebox.invokeMethod;
-import static org.powermock.reflect.Whitebox.setInternalState;
-
+import jodd.decora.DecoraException;
 import org.junit.Before;
 import org.junit.Test;
 
-import jodd.decora.DecoraException;
+import static org.junit.Assert.fail;
 
 public class DecoratorTagVisitorTest {
 
@@ -46,10 +43,10 @@ public class DecoratorTagVisitorTest {
 	@Test(expected = DecoraException.class)
 	public final void testCheckNestedDecoraTagsDecoraTagNameNotNull() throws Exception {
 		// setup
-		setInternalState(decoraTagVisitor, "decoraTagName", "TEST");
+		decoraTagVisitor.decoraTagName = "TEST";
 
 		// when
-		invokeMethod(decoraTagVisitor, "checkNestedDecoraTags");
+		decoraTagVisitor.checkNestedDecoraTags();
 
 		// then
 		fail("A DecoraException must have occured because decoraTagName is not null.");
@@ -58,11 +55,10 @@ public class DecoratorTagVisitorTest {
 	@Test
 	public final void testCheckNestedDecoraTagsDecoraTagNameNull() throws Exception {
 		// setup
-		String nullString = null;
-		setInternalState(decoraTagVisitor, "decoraTagName", nullString);
+		decoraTagVisitor.decoraTagName = null;
 
 		// when
-		invokeMethod(decoraTagVisitor, "checkNestedDecoraTags");
+		decoraTagVisitor.checkNestedDecoraTags();
 
 		// then
 		// DecoraException not expected

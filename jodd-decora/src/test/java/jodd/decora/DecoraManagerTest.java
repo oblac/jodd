@@ -25,18 +25,13 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.reflect.Whitebox.setInternalState;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class DecoraManagerTest {
 
@@ -50,19 +45,10 @@ public class DecoraManagerTest {
 	@Test
 	public final void testIsDecorateErrorPages() {
 		// when
-		setInternalState(decoraManager, "decorateErrorPages", true);
-
-		// then
-		assertTrue("DecorateErrorPages should be true.", decoraManager.isDecorateErrorPages());
-	}
-
-	@Test
-	public final void testSetDecorateErrorPages() {
-		// when
 		decoraManager.setDecorateErrorPages(true);
 
 		// then
-		assertTrue("DecorateErrorPages should be true.", (boolean) getInternalState(decoraManager, "decorateErrorPages"));
+		assertTrue("DecorateErrorPages should be true.", decoraManager.isDecorateErrorPages());
 	}
 
 	@Test
@@ -96,7 +82,7 @@ public class DecoraManagerTest {
 	public final void testDecorateStatusCode2() {
 		// when
 		int statusCode = 300;
-		setInternalState(decoraManager, "decorateErrorPages", true);
+		decoraManager.setDecorateErrorPages(true);
 
 		// then
 		assertFalse("Returns <code>false</code> for status code 300", decoraManager.decorateStatusCode(statusCode));
@@ -106,7 +92,7 @@ public class DecoraManagerTest {
 	public final void testDecorateStatusCode3() {
 		// when
 		int statusCode = 404;
-		setInternalState(decoraManager, "decorateErrorPages", false);
+		decoraManager.setDecorateErrorPages(false);
 
 		// then
 		assertFalse("Returns <code>false</code> for status code 404", decoraManager.decorateStatusCode(statusCode));
@@ -116,7 +102,7 @@ public class DecoraManagerTest {
 	public final void testDecorateStatusCode4() {
 		// when
 		int statusCode = 404;
-		setInternalState(decoraManager, "decorateErrorPages", true);
+		decoraManager.setDecorateErrorPages(true);
 
 		// then
 		assertTrue("For error pages (status code {@literal >=} 400) should return true", decoraManager.decorateStatusCode(statusCode));

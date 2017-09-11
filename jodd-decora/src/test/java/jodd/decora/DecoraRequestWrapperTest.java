@@ -25,28 +25,24 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.reflect.Whitebox.setInternalState;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class DecoraRequestWrapperTest {
 
 	private HttpServletRequest httpServletRequestMock;
-	private HttpServletRequest httpServletRequestMock2;
 	private final String TEST_STRING = "TEST";
 
 	@Before
 	public void setUp() {
 		httpServletRequestMock = mock(HttpServletRequest.class);
-		httpServletRequestMock2 = mock(HttpServletRequest.class);
 	}
 
 	@Test
@@ -55,27 +51,25 @@ public class DecoraRequestWrapperTest {
 		DecoraRequestWrapper decoraRequestWrapper = new DecoraRequestWrapper(httpServletRequestMock);
 
 		// then
-		assertEquals("Parameter should be set.", httpServletRequestMock, getInternalState(decoraRequestWrapper, "request"));
+		assertEquals("Parameter should be set.", httpServletRequestMock, decoraRequestWrapper.getRequest());
 	}
 
 	@Test
 	public final void testGetHeaderString() {
 		// setup
 		DecoraRequestWrapper decoraRequestWrapper = new DecoraRequestWrapper(httpServletRequestMock);
-		setInternalState(decoraRequestWrapper, "request", httpServletRequestMock2);
 
 		// when
 		decoraRequestWrapper.getHeader(TEST_STRING);
 
 		// then
-		verify(httpServletRequestMock2).getHeader(TEST_STRING);
+		verify(httpServletRequestMock).getHeader(TEST_STRING);
 	}
 
 	@Test
 	public final void testGetHeaderStringReturnNull() {
 		// setup
 		DecoraRequestWrapper decoraRequestWrapper = new DecoraRequestWrapper(httpServletRequestMock);
-		setInternalState(decoraRequestWrapper, "request", httpServletRequestMock2);
 		String nullRespondingString = "If-Modified-Since";
 
 		// when
@@ -89,20 +83,18 @@ public class DecoraRequestWrapperTest {
 	public final void testGetDateHeaderString() {
 		// setup
 		DecoraRequestWrapper decoraRequestWrapper = new DecoraRequestWrapper(httpServletRequestMock);
-		setInternalState(decoraRequestWrapper, "request", httpServletRequestMock2);
 
 		// when
 		decoraRequestWrapper.getDateHeader(TEST_STRING);
 
 		// then
-		verify(httpServletRequestMock2).getDateHeader(TEST_STRING);
+		verify(httpServletRequestMock).getDateHeader(TEST_STRING);
 	}
 
 	@Test
 	public final void testGetDateHeaderStringReturnMinusOne() {
 		// setup
 		DecoraRequestWrapper decoraRequestWrapper = new DecoraRequestWrapper(httpServletRequestMock);
-		setInternalState(decoraRequestWrapper, "request", httpServletRequestMock2);
 		String nullRespondingString = "If-Modified-Since";
 
 		// when

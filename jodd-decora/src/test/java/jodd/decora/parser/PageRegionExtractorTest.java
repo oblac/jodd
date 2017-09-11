@@ -25,20 +25,18 @@
 
 package jodd.decora.parser;
 
-import static org.junit.Assert.fail;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.reflect.Whitebox.setInternalState;
-
-import java.util.LinkedList;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import jodd.decora.DecoraException;
 import jodd.decora.parser.PageRegionExtractor.RegionMarker;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.LinkedList;
+
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PageRegionExtractorTest {
 
@@ -55,7 +53,7 @@ public class PageRegionExtractorTest {
 	public final void testEndRegionMarkersNotEmpty() {
 		// setup
 		regionMarkers.add(new RegionMarker("TEST"));
-		setInternalState(pageRegionExtractor, "regionMarkers", regionMarkers);
+		pageRegionExtractor.regionMarkers = regionMarkers;
 
 		// when
 		pageRegionExtractor.end();
@@ -66,7 +64,7 @@ public class PageRegionExtractorTest {
 
 	public final void testEndRegionMarkersEmpty() {
 		// setup
-		setInternalState(pageRegionExtractor, "regionMarkers", regionMarkers);
+		pageRegionExtractor.regionMarkers = regionMarkers;
 
 		// when
 		pageRegionExtractor.end();
@@ -81,7 +79,7 @@ public class PageRegionExtractorTest {
 		Tag tag = mock(Tag.class);
 		when(tag.getType()).thenReturn(TagType.END);
 		regionMarkers.add(new RegionMarker("TEST"));
-		setInternalState(pageRegionExtractor, "regionMarkers", regionMarkers);
+		pageRegionExtractor.regionMarkers = regionMarkers;
 
 		// when
 		pageRegionExtractor.tag(tag);

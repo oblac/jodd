@@ -25,20 +25,15 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.reflect.Whitebox.getInternalState;
+import jodd.servlet.wrapper.LastModifiedData;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import jodd.servlet.wrapper.LastModifiedData;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class DecoraResponseWrapperTest {
 
@@ -62,10 +57,10 @@ public class DecoraResponseWrapperTest {
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 
 		// then
-		assertEquals("Parameter should be set.", originalRequest, getInternalState(decoraResponseWrapper, "request"));
-		assertEquals("Parameter should be set.", originalResponse, getInternalState(decoraResponseWrapper, "response"));
-		assertEquals("Parameter should be set.", lastModifiedData, getInternalState(decoraResponseWrapper, "lastModifiedData"));
-		assertEquals("Parameter should be set.", decoraManager, getInternalState(decoraResponseWrapper, "decoraManager"));
+		assertEquals("Parameter should be set.", originalRequest, decoraResponseWrapper.request);
+		assertEquals("Parameter should be set.", originalResponse, decoraResponseWrapper.response);
+		assertEquals("Parameter should be set.", lastModifiedData, decoraResponseWrapper.getLastModifiedData());
+		assertEquals("Parameter should be set.", decoraManager, decoraResponseWrapper.decoraManager);
 	}
 
 	@Test

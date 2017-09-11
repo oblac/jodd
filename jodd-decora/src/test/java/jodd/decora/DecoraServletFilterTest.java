@@ -25,22 +25,15 @@
 
 package jodd.decora;
 
-import static org.junit.Assert.assertNotNull;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import jodd.decora.parser.DecoraParser;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
-import jodd.decora.parser.DecoraParser;
-import jodd.util.ClassLoaderUtil;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ClassLoaderUtil.class, DecoraResponseWrapper.class })
 public class DecoraServletFilterTest {
 
 	private DecoraServletFilter decoraServletFilter;
