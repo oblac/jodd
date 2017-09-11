@@ -69,11 +69,12 @@ ext {
 //		asm:			'org.ow2.asm:asm:4.1',
 
 		junit: 			'junit:junit:4.12',
+
 		hamcrest:       'org.hamcrest:hamcrest-core:1.3',
-		mockito:		'org.mockito:mockito-all:1.10.19',
+		mockito:		'org.mockito:mockito-core:2.10.0',
 		powermock:		[
-							'org.powermock:powermock-module-junit4:1.6.4',
-							'org.powermock:powermock-api-mockito:1.6.4'
+							'org.powermock:powermock-module-junit4:1.7.1',
+							'org.powermock:powermock-api-mockito:1.7.1'
 						],
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',

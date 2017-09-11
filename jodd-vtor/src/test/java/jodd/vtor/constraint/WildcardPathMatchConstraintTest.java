@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class WildcardPathMatchConstraintTest extends ConstraintTestBase {
 
@@ -59,7 +59,7 @@ public class WildcardPathMatchConstraintTest extends ConstraintTestBase {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         WildcardPathMatch annotation = mock(WildcardPathMatch.class);
         String pattern = "foo";
-        stub(annotation.value()).toReturn(pattern);
+        when(annotation.value()).thenReturn(pattern);
 
         wildcardPathMatchConstraint.configure(annotation);
         assertEquals("method must return the same pattern as was set to annotation when configure", wildcardPathMatchConstraint.getPattern(), pattern);

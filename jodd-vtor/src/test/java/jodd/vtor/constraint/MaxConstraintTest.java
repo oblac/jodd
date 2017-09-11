@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class MaxConstraintTest extends ConstraintTestBase {
 
@@ -56,7 +56,7 @@ public class MaxConstraintTest extends ConstraintTestBase {
     public void testConfigure() {
         MaxConstraint maxConstraint = new MaxConstraint();
         Max annotation = mock(Max.class);
-        stub(annotation.value()).toReturn(0.1);
+        when(annotation.value()).thenReturn(0.1);
 
         maxConstraint.configure(annotation);
         assertEquals("max value must be the same as was set to annotation when configure", maxConstraint.getMax(), 0.1, 0.01);    }

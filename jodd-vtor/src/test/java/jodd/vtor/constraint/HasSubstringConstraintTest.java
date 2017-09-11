@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class HasSubstringConstraintTest extends ConstraintTestBase {
 
@@ -54,8 +54,8 @@ public class HasSubstringConstraintTest extends ConstraintTestBase {
         HasSubstring annotation = mock(HasSubstring.class);
         String substring = "testString";
         boolean ignoreCase = true;
-        stub(annotation.value()).toReturn(substring);
-        stub(annotation.ignoreCase()).toReturn(ignoreCase);
+        when(annotation.value()).thenReturn(substring);
+        when(annotation.ignoreCase()).thenReturn(ignoreCase);
 
         hasSubstringConstraint.configure(annotation);
         assertEquals("substring must be the same as was set to annotation when configure",

@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class RangeConstraintTest extends ConstraintTestBase {
 
@@ -61,8 +61,8 @@ public class RangeConstraintTest extends ConstraintTestBase {
     public void testConfigure() {
         RangeConstraint rangeConstraint = new RangeConstraint();
         Range annotation = mock(Range.class);
-        stub(annotation.min()).toReturn(1.1);
-        stub(annotation.max()).toReturn(10.1);
+        when(annotation.min()).thenReturn(1.1);
+        when(annotation.max()).thenReturn(10.1);
 
         rangeConstraint.configure(annotation);
         assertEquals("method must return the same value as was set to annotation when configure", rangeConstraint.getMin(), 1.1, 0.01);

@@ -34,7 +34,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class SizeConstraintTest extends ConstraintTestBase {
 
@@ -65,8 +65,8 @@ public class SizeConstraintTest extends ConstraintTestBase {
     public void testConfigure() {
         SizeConstraint sizeConstraint = new SizeConstraint();
         Size annotation = mock(Size.class);
-        stub(annotation.min()).toReturn(10);
-        stub(annotation.max()).toReturn(20);
+        when(annotation.min()).thenReturn(10);
+        when(annotation.max()).thenReturn(20);
 
         sizeConstraint.configure(annotation);
         assertEquals("method must return the same value as was set to annotation when configure", sizeConstraint.getMin(), 10);

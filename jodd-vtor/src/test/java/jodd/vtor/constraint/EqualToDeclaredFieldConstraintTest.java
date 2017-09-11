@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class EqualToDeclaredFieldConstraintTest extends ConstraintTestBase {
 
@@ -64,7 +64,7 @@ public class EqualToDeclaredFieldConstraintTest extends ConstraintTestBase {
         //set a field name through an annotation
         EqualToDeclaredField fldAnnotation = mock(EqualToDeclaredField.class);
         String field = "anotherField";
-        stub(fldAnnotation.value()).toReturn(field);
+        when(fldAnnotation.value()).thenReturn(field);
 
         equalToDeclaredFieldConstraint.configure(fldAnnotation);
         assertEquals("field name must be the same as was set to annotation when configure",
@@ -75,7 +75,7 @@ public class EqualToDeclaredFieldConstraintTest extends ConstraintTestBase {
     public void testIsValid_forEqualValues() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint("testField");
         ValidationConstraintContext cvv = mockContext();
-        stub(cvv.getTarget()).toReturn(new TestValue("someValue"));
+        when(cvv.getTarget()).thenReturn(new TestValue("someValue"));
 
         assertTrue("result must be true when field and value are equals",  equalToDeclaredFieldConstraint.isValid(cvv, "someValue"));
     }
@@ -84,7 +84,7 @@ public class EqualToDeclaredFieldConstraintTest extends ConstraintTestBase {
     public void testIsValid_forDifferentValues() {
         EqualToDeclaredFieldConstraint equalToDeclaredFieldConstraint = new EqualToDeclaredFieldConstraint("testField");
         ValidationConstraintContext cvv = mockContext();
-        stub(cvv.getTarget()).toReturn(new TestValue("someValue"));
+        when(cvv.getTarget()).thenReturn(new TestValue("someValue"));
 
         assertFalse("result must be false when validated field and value are different",  equalToDeclaredFieldConstraint.isValid(cvv, "wrongValue"));
     }

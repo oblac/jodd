@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class TimeAfterConstraintTest extends ConstraintTestBase {
 
@@ -61,7 +61,7 @@ public class TimeAfterConstraintTest extends ConstraintTestBase {
         TimeAfterConstraint timeAfterConstraint = new TimeAfterConstraint();
         JDateTime time = new JDateTime();
         TimeAfter annotation = mock(TimeAfter.class);
-        stub(annotation.value()).toReturn(JDateTimeDefault.formatter.convert(time, JDateTimeDefault.format));
+        when(annotation.value()).thenReturn(JDateTimeDefault.formatter.convert(time, JDateTimeDefault.format));
 
         timeAfterConstraint.configure(annotation);
         assertEquals("method must return the same time as was set to annotation when configure", timeAfterConstraint.getTime(), time);

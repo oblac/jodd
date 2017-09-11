@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class MinLengthConstraintTest extends ConstraintTestBase {
     @Test
@@ -56,7 +56,7 @@ public class MinLengthConstraintTest extends ConstraintTestBase {
     public void testConfigure() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
         MinLength annotation = mock(MinLength.class);
-        stub(annotation.value()).toReturn(10);
+        when(annotation.value()).thenReturn(10);
 
         minLengthConstraint.configure(annotation);
         assertEquals("min value must be the same as was set to annotation when configure", minLengthConstraint.getMin(), 10);

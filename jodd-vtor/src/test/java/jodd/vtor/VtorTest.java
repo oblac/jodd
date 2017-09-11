@@ -25,26 +25,17 @@
 
 package jodd.vtor;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.stub;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class VtorTest extends VtorTestSupport {
 
@@ -162,7 +153,7 @@ public class VtorTest extends VtorTestSupport {
         //given
         ValidationConstraint testCheck1Constraint = mock(ValidationConstraint.class);
         //ValidationConstraint.isValid always returns false
-        stub(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).toReturn(false);
+        when(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).thenReturn(false);
         Map<String, List<Check>> constraints = createValidateFldHasCheckerTestConstraints(testCheck1Constraint);
 
         //when validate an object with field testField
@@ -179,7 +170,7 @@ public class VtorTest extends VtorTestSupport {
         //given
         ValidationConstraint testCheck1Constraint = mock(ValidationConstraint.class);
         //ValidationConstraint.isValid always returns false
-        stub(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).toReturn(true);
+        when(testCheck1Constraint.isValid(any(ValidationConstraintContext.class), any())).thenReturn(true);
         Map<String, List<Check>> constraints = createValidateFldHasCheckerTestConstraints(testCheck1Constraint);
 
         //when validate an object with field testField

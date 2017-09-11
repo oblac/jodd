@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class MinConstraintTest extends ConstraintTestBase {
     @Test
@@ -55,7 +55,7 @@ public class MinConstraintTest extends ConstraintTestBase {
     public void testConfigure() {
         MinConstraint minConstraint = new MinConstraint();
         Min annotation = mock(Min.class);
-        stub(annotation.value()).toReturn(10.0);
+        when(annotation.value()).thenReturn(10.0);
 
         minConstraint.configure(annotation);
         assertEquals("method must return the same value as was set to annotation when configure", minConstraint.getMin(), 10.0, 0.01);

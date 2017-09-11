@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 
 public class MaxLengthConstraintTest extends ConstraintTestBase {
 
@@ -59,7 +59,7 @@ public class MaxLengthConstraintTest extends ConstraintTestBase {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint();
         MaxLength annotation = mock(MaxLength.class);
         int maxValue = 100;
-        stub(annotation.value()).toReturn(maxValue);
+        when(annotation.value()).thenReturn(maxValue);
 
         maxLengthConstraint.configure(annotation);
         assertEquals("method must return the same value as was set to annotation when configure", maxLengthConstraint.getMax(), maxValue);
