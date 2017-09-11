@@ -13,7 +13,7 @@ before_install:
   - sudo /etc/init.d/postgresql stop
 
   # Run my databases in the background
-  - docker-compose -f docker/docker-compose-test.yml up -d
+  - docker-compose -f docker/docker-compose-travis.yml up -d
 
 install:
   - TERM=dumb ./gradlew assemble

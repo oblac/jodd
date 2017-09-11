@@ -28,6 +28,7 @@ package jodd.db.oom;
 import jodd.db.DbSession;
 import jodd.db.oom.fixtures.Tester;
 import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.util.SystemUtil;
 import org.junit.Test;
 
 import java.util.List;
@@ -43,12 +44,19 @@ public class LiveDatabaseTest extends DbBaseTest {
 	/**
 	 * DATABASES TO TEST!
 	 */
-	DbAccess[] databases = new DbAccess[]{
-			new MySql(),
-			new PostgreSql(),
-			new HsqlDb(),
-			new MsSqlDb(),
-	};
+	DbAccess[] databases =
+		SystemUtil.get("CI", "false").equals("true") ?
+			new DbAccess[]{
+				new MySql(),
+				new PostgreSql(),
+				new HsqlDb(),
+				new MsSqlDb(),
+		} :
+			new DbAccess[]{
+				new MySql(),
+				new PostgreSql(),
+				new HsqlDb()
+		};
 
 	/**
 	 * MySql.

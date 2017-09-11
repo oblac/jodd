@@ -10,7 +10,6 @@ services:
       - LC_ALL=C.UTF-8
     ports:
        - "5432:5432"
-
   mysql:
     image: mysql:5.6
     environment:
@@ -18,8 +17,3 @@ services:
       - MYSQL_ROOT_PASSWORD=root!
     ports:
       - "3306:3306"
-
-  mssql:
-    build: mssql/.
-    ports:
-      - "1433:1433"
