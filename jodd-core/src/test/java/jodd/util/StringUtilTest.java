@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static jodd.util.ArraysUtil.*;
+import static jodd.util.ArraysUtil.array;
 import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
 import static org.junit.Assert.*;
@@ -189,6 +189,8 @@ public class StringUtilTest {
 		assertEquals("11221144", src);
 		src = StringUtil.replaceLast(src, "55", "11");
 		assertEquals("11221144", src);
+
+		assertEquals("qwerty", StringUtil.replace("qwerty", "", "xxxxxxxxxxxxx"));
 	}
 
 

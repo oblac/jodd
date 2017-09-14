@@ -4,6 +4,10 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.9...master)
 
+### Bug Fixes
+
++ **core** - fixed issue with `StringUtil` and empty strings.
+
 
 ## [3.9.1](https://github.com/oblac/jodd/compare/v3.9...3.9.1)
 

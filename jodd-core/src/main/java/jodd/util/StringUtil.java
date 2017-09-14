@@ -25,12 +25,12 @@
 
 package jodd.util;
 
-import static jodd.util.StringPool.EMPTY;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+
+import static jodd.util.StringPool.EMPTY;
 
 /**
  * Various String utilities.
@@ -48,6 +48,9 @@ public class StringUtil {
 	 * @param with   string that should go where the pattern was
 	 */
 	public static String replace(String s, String sub, String with) {
+		if (sub.isEmpty()) {
+			return s;
+		}
 		int c = 0;
 		int i = s.indexOf(sub, c);
 		if (i == -1) {
