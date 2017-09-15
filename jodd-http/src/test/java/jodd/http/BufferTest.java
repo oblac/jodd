@@ -28,7 +28,7 @@ package jodd.http;
 import jodd.http.up.Uploadable;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,9 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class BufferTest {
 

@@ -27,15 +27,16 @@ package jodd.http;
 
 import io.netty.handler.codec.http.HttpHeaders;
 import jodd.http.net.SocketHttpConnectionProvider;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.Header;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.integration.ClientAndProxy.startClientAndProxy;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -47,14 +48,14 @@ public class ProxyTest {
 	private ClientAndProxy proxy;
 	private ClientAndServer mockServer;
 
-	@Before
+	@BeforeEach
 	public void startProxy() {
 		mockServer = startClientAndServer(1080);
 		proxy = startClientAndProxy(1090);
 		setupMockServer();
 	}
 
-	@After
+	@AfterEach
 	public void stopProxy() {
 		proxy.stop();
 		mockServer.stop();
@@ -63,21 +64,21 @@ public class ProxyTest {
 	@Test
 	public void testDirect() {
 		HttpResponse response = HttpRequest.get("http://localhost:1080/get_books").send();
-		Assert.assertEquals(200, response.statusCode());
-		Assert.assertTrue(response.body().contains("Tatum"));
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().contains("Tatum"));
 		proxy.verify(request().withPath("/get_books"), exactly(0));
 	}
 
 	@Test
 	public void testDirectHttps() {
 		HttpResponse response = HttpRequest.get("https://localhost:1080/get_books").trustAllCerts(true).send();
-		Assert.assertEquals(200, response.statusCode());
-		Assert.assertTrue(response.body().contains("Tatum"));
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().contains("Tatum"));
 		proxy.verify(request().withPath("/get_books"), exactly(0));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testHttpProxy() {
 		SocketHttpConnectionProvider s = new SocketHttpConnectionProvider();
 		s.useProxy(ProxyInfo.httpProxy("localhost", 1090, null, null));
@@ -85,8 +86,8 @@ public class ProxyTest {
 		HttpResponse response = HttpRequest.get("http://localhost:1080/get_books")
 			.withConnectionProvider(s)
 			.send();
-		Assert.assertEquals(200, response.statusCode());
-		Assert.assertTrue(response.body().contains("Tatum"));
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().contains("Tatum"));
 	}
 
 	@Test
@@ -97,8 +98,8 @@ public class ProxyTest {
 		HttpResponse response = HttpRequest.get("http://localhost:1080/get_books")
 			.withConnectionProvider(s)
 			.send();
-		Assert.assertEquals(200, response.statusCode());
-		Assert.assertTrue(response.body().contains("Tatum"));
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().contains("Tatum"));
 		proxy.verify(request().withPath("/get_books"), exactly(1));
 	}
 
@@ -111,8 +112,8 @@ public class ProxyTest {
 			.withConnectionProvider(s)
 			.trustAllCerts(true)
 			.send();
-		Assert.assertEquals(200, response.statusCode());
-		Assert.assertTrue(response.body().contains("Tatum"));
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().contains("Tatum"));
 		proxy.verify(request().withPath("/get_books"), exactly(1));
 	}
 

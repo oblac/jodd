@@ -28,35 +28,35 @@ package jodd.http;
 import jodd.http.up.ByteArrayUploadable;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EncodingTest {
 
 	static TestServer testServer;
 
-	@BeforeClass
+	@BeforeAll
 	public static void startServer() throws Exception {
 		testServer = new TomcatServer();
 		testServer.start();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void stopServer() throws Exception {
 		testServer.stop();
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		EchoServlet.testinit();
 	}

@@ -27,13 +27,13 @@ package jodd.http;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RawTest {
 

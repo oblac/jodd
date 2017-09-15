@@ -6,7 +6,7 @@ dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-upload')
 
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile lib.tomcat_embed
 	testCompile lib.mockserver
 }
