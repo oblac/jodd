@@ -28,13 +28,13 @@ package jodd.petite;
 import jodd.petite.fixtures.data.PojoAnnBean;
 import jodd.petite.fixtures.data.PojoBean;
 import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 import static jodd.petite.PetiteRegistry.petite;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ManualTest {
 

@@ -32,9 +32,9 @@ import jodd.petite.fixtures.tst5.Sun;
 import jodd.petite.fixtures.tst5.Sun2;
 import jodd.petite.fixtures.tst5.Planet;
 import jodd.util.ClassUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProviderTest {
 

@@ -29,16 +29,16 @@ import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.fixtures.tst.*;
 import jodd.petite.fixtures.tst.impl.DefaultIoo;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WireTest {
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		Foo.instanceCounter = 0;
 	}
@@ -84,7 +84,7 @@ public class WireTest {
 		try {
 			//noinspection UnusedAssignment
 			boo = pc.getBean("boo");
-			fail();
+			fail("error");
 		} catch (PetiteException pex) {
 			// zoo class is missing
 		}
@@ -150,7 +150,7 @@ public class WireTest {
 
 		try {
 			pc.getBean("boo");
-			fail();
+			fail("error");
 		} catch (PetiteException pex) {
 			// ignore                       // cyclic dependency
 		}

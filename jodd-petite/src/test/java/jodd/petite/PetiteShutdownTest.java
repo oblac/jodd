@@ -27,9 +27,9 @@ package jodd.petite;
 
 import jodd.petite.fixtures.data.PojoBean;
 import jodd.petite.fixtures.data.SomeService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PetiteShutdownTest {
 

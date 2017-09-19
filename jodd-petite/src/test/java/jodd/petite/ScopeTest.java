@@ -33,11 +33,11 @@ import jodd.petite.scope.ThreadLocalScope;
 import jodd.petite.fixtures.tst.Boo;
 import jodd.petite.fixtures.tst.Foo;
 import jodd.petite.fixtures.tst.Zoo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Semaphore;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ScopeTest {
 

@@ -31,20 +31,20 @@ import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxy.example1.ExternalBean;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.proxetta.impl.ProxyProxetta;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MixedScope343Test {
 
 	private PetiteContainer petiteContainer;
 
-	@Before
+	@BeforeEach
 	public void setupPetiteContainer() {
 		PetiteConfig petiteConfig = PetiteHelper.createPetiteConfig();
 
@@ -56,7 +56,7 @@ public class MixedScope343Test {
 		petiteConfigurator.configure(petiteContainer);
 	}
 
-	@After
+	@AfterEach
 	public void teardownPetiteContainer() {
 		petiteContainer.shutdown();
 	}
@@ -64,13 +64,13 @@ public class MixedScope343Test {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
-	@Before
+	@BeforeEach
 	public void setUpStreams() {
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
 	}
 
-	@After
+	@AfterEach
 	public void cleanUpStreams() {
 		System.setOut(null);
 		System.setErr(null);

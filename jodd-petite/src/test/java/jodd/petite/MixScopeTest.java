@@ -31,8 +31,8 @@ import jodd.petite.fixtures.mix.Small;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MixScopeTest {
 

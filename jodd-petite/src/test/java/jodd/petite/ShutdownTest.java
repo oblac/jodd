@@ -31,7 +31,7 @@ import jodd.petite.fixtures.tst.Foo;
 import jodd.petite.fixtures.tst.Ses;
 import jodd.petite.fixtures.tst.Zoo;
 import jodd.servlet.RequestContextListener;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +42,9 @@ import static jodd.petite.ServletsMockitoUtil.createHttpSessionBindingEvent;
 import static jodd.petite.ServletsMockitoUtil.createRequest;
 import static jodd.petite.ServletsMockitoUtil.createServletRequestEvent;
 import static jodd.petite.ServletsMockitoUtil.createSession;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ShutdownTest {
 

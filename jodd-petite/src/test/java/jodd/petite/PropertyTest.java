@@ -29,9 +29,9 @@ import jodd.petite.fixtures.data.PojoBean2;
 import jodd.petite.fixtures.tst2.Joo;
 import jodd.petite.fixtures.tst2.Moo;
 import jodd.props.Props;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PropertyTest {
 
@@ -56,7 +56,7 @@ public class PropertyTest {
 
 		try {
 			pc.setBeanProperty("poco", null);
-			fail();
+			fail("error");
 		} catch (PetiteException ignore) {
 		}
 		pc.setBeanProperty("pojo.val1", "value");
