@@ -32,10 +32,10 @@ import jodd.proxetta.fixtures.data.FooProxyAdvice;
 import jodd.proxetta.fixtures.data.Inter;
 import jodd.proxetta.fixtures.data.InvalidAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AbstractsTest {
 
@@ -62,7 +62,7 @@ public class AbstractsTest {
 
 		try {
 			ProxyProxetta.withAspects(proxyAspect).builder(Abstra2.class).newInstance();
-			fail();
+			fail("error");
 		} catch (ProxettaException ignore) {
 		}
 	}
@@ -77,7 +77,7 @@ public class AbstractsTest {
 
 		try {
 			ProxyProxetta.withAspects(proxyAspect).builder(Inter.class).newInstance();
-			fail();
+			fail("error");
 		} catch (ProxettaException ignore) {
 		}
 	}
@@ -92,7 +92,7 @@ public class AbstractsTest {
 
 		try {
 			ProxyProxetta.withAspects(proxyAspect).builder(Foo.class).newInstance();
-			fail();
+			fail("error");
 		} catch (ProxettaException ignore) {
 			System.out.println(ignore);
 		}

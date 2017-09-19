@@ -8,17 +8,17 @@ import jodd.proxetta.petite.fixtures.Bean2;
 import jodd.proxetta.petite.fixtures.ExternalBean;
 import jodd.proxetta.petite.fixtures.PetiteHelper;
 import jodd.proxetta.petite.fixtures.PetiteProxettaContainer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WireBeansWithProxettaTest {
 
     private PetiteContainer petiteContainer;
 
-    @Before
+    @BeforeEach
     public void setupPetiteContainer() {
         PetiteConfig petiteConfig = PetiteHelper.createPetiteConfig();
 

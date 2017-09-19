@@ -30,9 +30,9 @@ import jodd.proxetta.fixtures.data.DateDao;
 import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ProxyInfoTest {
 

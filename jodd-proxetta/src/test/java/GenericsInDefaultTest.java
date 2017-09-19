@@ -29,9 +29,9 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GenericsInDefaultTest {
 

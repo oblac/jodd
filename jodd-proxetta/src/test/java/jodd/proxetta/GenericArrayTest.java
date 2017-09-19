@@ -28,9 +28,9 @@ package jodd.proxetta;
 import jodd.proxetta.advice.DelegateAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GenericArrayTest {
 

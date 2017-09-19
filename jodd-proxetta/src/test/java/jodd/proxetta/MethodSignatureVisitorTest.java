@@ -30,7 +30,7 @@ import jodd.proxetta.asm.MethodSignatureVisitor;
 import jodd.proxetta.fixtures.TargetClassInfoReaderFixture;
 import jodd.proxetta.fixtures.data.FooAnn;
 import jodd.util.ClassLoaderUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static jodd.asm.AsmUtil.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class MethodSignatureVisitorTest {
 

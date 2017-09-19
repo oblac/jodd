@@ -3,9 +3,9 @@ package jodd.aop;
 import jodd.aop.fixture.Helloable;
 import jodd.aop.fixture.LoggingAspect;
 import jodd.aop.fixture.Simple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AopProxyTest {
 

@@ -29,7 +29,7 @@ import jodd.io.FastByteArrayOutputStream;
 import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.fixtures.inv.*;
 import jodd.util.ClassLoaderUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -37,7 +37,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InvReplTest {
 
@@ -87,7 +87,7 @@ public class InvReplTest {
 		InvokeProxetta proxetta = initProxetta();
 		try {
 			proxetta.builder(OneWithSuper.class).define();
-			fail();
+			fail("error");
 		} catch (ProxettaException ignore) {
 
 		}
@@ -98,7 +98,7 @@ public class InvReplTest {
 		InvokeProxetta proxetta = initProxetta();
 		try {
 			proxetta.builder(Inter.class).newInstance();
-			fail();
+			fail("error");
 		} catch (ProxettaException ignore) {
 		}
 	}

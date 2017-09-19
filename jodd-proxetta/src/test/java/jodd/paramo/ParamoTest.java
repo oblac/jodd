@@ -31,13 +31,13 @@ import jodd.paramo.data.Foo;
 import jodd.paramo.data.Generic;
 import jodd.paramo.data.NonGeneric;
 import jodd.util.ClassUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ParamoTest {
 

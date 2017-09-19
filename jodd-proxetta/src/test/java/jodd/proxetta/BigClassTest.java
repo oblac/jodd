@@ -32,14 +32,14 @@ import jodd.proxetta.fixtures.data.*;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import jodd.asm5.Type;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BigClassTest {
 
