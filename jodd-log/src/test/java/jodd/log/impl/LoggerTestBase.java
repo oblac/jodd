@@ -25,11 +25,11 @@
 
 package jodd.log.impl;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import jodd.log.Logger;
 import jodd.log.LoggerProvider;
 import jodd.log.Logger.Level;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 abstract class LoggerTestBase {
 	

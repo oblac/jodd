@@ -28,14 +28,14 @@ package jodd.log.impl;
 import jodd.log.Logger;
 import jodd.log.Logger.Level;
 import jodd.log.impl.fixtures.LoggerConstants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -47,7 +47,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 	private String output;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		initializeLogFactoryAndLogger(Logger.Level.DEBUG);
 	}
@@ -55,13 +55,13 @@ public class SimpleLoggerTest extends LoggerTestBase {
 	@Override
 	@Test
 	public void testIsEnabled() {
-		assertTrue("Source code implemented in such a way that this method call always returns false", logger.isEnabled(Level.DEBUG));
+		assertTrue(logger.isEnabled(Level.DEBUG));
 	}
 
 	@Test
 	public void testBasicOperations() throws Exception {
-		assertTrue("Elapsed Time Should be greater than or equal to zero", slf.getElapsedTime() >= 0);
-		assertEquals("Logger name must be simple logger", LoggerConstants.SIMPLE_LOGGER, logger.getName());
+		assertTrue(slf.getElapsedTime() >= 0);
+		assertEquals(logger.getName(), LoggerConstants.SIMPLE_LOGGER);
 	}
 
 	@Override
@@ -71,31 +71,31 @@ public class SimpleLoggerTest extends LoggerTestBase {
 		initializeLogFactoryAndLogger(Logger.Level.DEBUG);
 
 		//then 
-		assertTrue("Debug must be enabled", logger.isDebugEnabled());
+		assertTrue(logger.isDebugEnabled());
 
 		//when
 		initializeLogFactoryAndLogger(Logger.Level.ERROR);
 
 		//then 
-		assertTrue("Error must be enabled", logger.isErrorEnabled());
+		assertTrue(logger.isErrorEnabled());
 
 		//when
 		initializeLogFactoryAndLogger(Logger.Level.INFO);
 
 		//then 
-		assertTrue("Info must be enabled", logger.isInfoEnabled());
+		assertTrue(logger.isInfoEnabled());
 
 		//when
 		initializeLogFactoryAndLogger(Logger.Level.TRACE);
 
 		//then 
-		assertTrue("Trace must be enabled", logger.isTraceEnabled());
+		assertTrue(logger.isTraceEnabled());
 
 		//when
 		initializeLogFactoryAndLogger(Logger.Level.WARN);
 
 		//then 
-		assertTrue("Warn must be enabled", logger.isWarnEnabled());
+		assertTrue(logger.isWarnEnabled());
 	}
 
 	@Test
@@ -108,28 +108,28 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain debug", output.contains(LoggerConstants.DEBUG));
+		assertTrue(output.contains(LoggerConstants.DEBUG));
 
 		//when
 		logger.error(LoggerConstants.ERROR_MESSAGE);
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain error", output.contains(LoggerConstants.ERROR));
+		assertTrue(output.contains(LoggerConstants.ERROR));
 
 		//when
 		logger.info(LoggerConstants.INFO_MESSAGE);
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain info", output.contains(LoggerConstants.INFO));
+		assertTrue(output.contains(LoggerConstants.INFO));
 
 		//when
 		logger.warn(LoggerConstants.WARN_MESSAGE);
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain warn", output.contains(LoggerConstants.WARN_MESSAGE));
+		assertTrue(output.contains(LoggerConstants.WARN_MESSAGE));
 
 		//when
 		initializeLogFactoryAndLogger(Logger.Level.TRACE);
@@ -137,7 +137,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain trace", output.contains(LoggerConstants.TRACE));
+		assertTrue(output.contains(LoggerConstants.TRACE));
 	}
 
 	@Test
@@ -150,7 +150,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain debug", output.contains(LoggerConstants.SIMPLE_MESSAGE));
+		assertTrue(output.contains(LoggerConstants.SIMPLE_MESSAGE));
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain warn", output.contains(LoggerConstants.WARN_MESSAGE));
+		assertTrue(output.contains(LoggerConstants.WARN_MESSAGE));
 		verify(throwable).printStackTrace(System.out);
 
 		//setup
@@ -175,7 +175,7 @@ public class SimpleLoggerTest extends LoggerTestBase {
 
 		//then
 		output = outputStream.toString();
-		assertTrue("Output must contain error", output.contains(LoggerConstants.ERROR));
+		assertTrue(output.contains(LoggerConstants.ERROR));
 		verify(throwable).printStackTrace(System.out);
 	}
 

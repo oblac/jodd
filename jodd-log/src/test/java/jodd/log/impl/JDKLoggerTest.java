@@ -27,12 +27,10 @@ package jodd.log.impl;
 
 import jodd.log.Logger.Level;
 import jodd.log.impl.fixtures.LoggerConstants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +38,7 @@ public class JDKLoggerTest extends LoggerTestBase {
 
 	private java.util.logging.Logger log;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		log = mock(java.util.logging.Logger.class);
 		logger = new JDKLogger(log);
@@ -154,7 +152,6 @@ public class JDKLoggerTest extends LoggerTestBase {
 		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type JDKLogger", logger.getClass(),
-			is(instanceOf(JDKLogger.class.getClass())));
+		assertEquals(JDKLogger.class, logger.getClass());
 	}
 }

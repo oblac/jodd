@@ -27,20 +27,19 @@ package jodd.log.impl;
 
 import jodd.log.Logger.Level;
 import jodd.log.impl.fixtures.LoggerConstants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class Slf4jLoggerTest extends LoggerTestBase {
 
 	private org.slf4j.Logger log;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		log = mock(org.slf4j.Logger.class);
 		logger = new Slf4jLogger(log);
@@ -52,7 +51,7 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 		when(log.getName()).thenReturn(LoggerConstants.LOG);
 
 		//then
-		assertEquals("Name must be equal log as we set log to the logger", LoggerConstants.LOG, logger.getName());
+		assertEquals(logger.getName(), LoggerConstants.LOG);
 	}
 
 	@Test
@@ -154,7 +153,6 @@ public class Slf4jLoggerTest extends LoggerTestBase {
 		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type Slf4jLogger", logger.getClass(),
-			is(instanceOf(Slf4jLogger.class.getClass())));
+		assertEquals(Slf4jLogger.class, logger.getClass());
 	}
 }

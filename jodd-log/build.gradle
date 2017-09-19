@@ -9,7 +9,7 @@ dependencies {
 	provided lib.log_log4j2, optional
 
 	testCompile project(':jodd-core')
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile lib.mockito
 	testCompile lib.log_logback_core
 	testCompile lib.log_log4j2_core

@@ -3,20 +3,19 @@ package jodd.log.impl;
 import jodd.log.Logger;
 import jodd.log.impl.fixtures.LoggerConstants;
 import org.apache.logging.log4j.Level;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class Log4j2LoggerTest extends LoggerTestBase {
 
 	private org.apache.logging.log4j.Logger log;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		log = mock(org.apache.logging.log4j.Logger.class);
 		logger = new Log4j2Logger(log);
@@ -28,7 +27,7 @@ public class Log4j2LoggerTest extends LoggerTestBase {
 		when(log.getName()).thenReturn(LoggerConstants.LOG);
 
 		//then
-		assertEquals("Name must be equal log as we set log to the logger", LoggerConstants.LOG, logger.getName());
+		assertEquals(logger.getName(), LoggerConstants.LOG);
 	}
 
 	@Test
@@ -130,7 +129,6 @@ public class Log4j2LoggerTest extends LoggerTestBase {
 		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type Log4j2Logger", logger.getClass(),
-			is(instanceOf(Log4j2Logger.class.getClass())));
+		assertEquals(Log4j2Logger.class, logger.getClass());
 	}
 }

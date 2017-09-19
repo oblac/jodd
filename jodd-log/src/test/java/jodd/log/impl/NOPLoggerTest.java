@@ -27,19 +27,18 @@ package jodd.log.impl;
 
 import jodd.log.Logger.Level;
 import jodd.log.impl.fixtures.LoggerConstants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 
 public class NOPLoggerTest extends LoggerTestBase {
 
 	private String name = "NOPLogger";
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		logger = new NOPLogger(name);
 	}
@@ -47,12 +46,12 @@ public class NOPLoggerTest extends LoggerTestBase {
 	@Override
 	@Test
 	public void testIsEnabled() {
-		assertFalse("Source code implemented in such a way that this method call always returns false", logger.isEnabled(Level.DEBUG));
+		assertFalse(logger.isEnabled(Level.DEBUG));
 	}
 
 	@Test
 	public void testGetName() {
-		assertEquals("Name must be equal to NOPLogger", name, logger.getName());
+		assertEquals(logger.getName(), name);
 	}
 
 	@Test
@@ -82,7 +81,6 @@ public class NOPLoggerTest extends LoggerTestBase {
 		logger = loggerProvider.createLogger(LoggerConstants.LOGGER);
 
 		//then
-		assertThat("Logger must be of type NOPLogger", logger.getClass(),
-			is(instanceOf(NOPLogger.class.getClass())));
+		assertEquals(NOPLogger.class, logger.getClass());
 	}
 }
