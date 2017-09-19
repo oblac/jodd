@@ -29,15 +29,15 @@ import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DbHsqldbTestCase {
 
 	protected DbJtxTransactionManager dbtxm;
 	protected CoreConnectionPool cp;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		cp = new CoreConnectionPool();
 		cp.setDriver("org.hsqldb.jdbcDriver");
@@ -75,7 +75,7 @@ public abstract class DbHsqldbTestCase {
 		session.closeSession();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		dbtxm.close();
 //		cp.close();

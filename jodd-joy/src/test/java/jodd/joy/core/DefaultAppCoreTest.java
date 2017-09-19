@@ -27,12 +27,12 @@ package jodd.joy.core;
 
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DefaultAppCoreTest {
 
@@ -42,10 +42,10 @@ public class DefaultAppCoreTest {
 
 		appCore.initCore();
 
-		Assert.assertEquals("app.props", appCore.appPropsName);
-		Assert.assertEquals("/app*.prop*", appCore.appPropsNamePattern);
+		assertEquals("app.props", appCore.appPropsName);
+		assertEquals("/app*.prop*", appCore.appPropsNamePattern);
 
-		Assert.assertEquals("core", AppCore.PETITE_CORE);
+		assertEquals("core", AppCore.PETITE_CORE);
 
 		appCore.initLogger();
 		appCore.initProps();

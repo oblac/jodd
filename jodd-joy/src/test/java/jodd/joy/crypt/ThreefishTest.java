@@ -27,18 +27,18 @@ package jodd.joy.crypt;
 
 import jodd.util.MathUtil;
 import jodd.util.RandomString;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ThreefishTest {
 
 	Threefish threefish;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		threefish = new Threefish(Threefish.BLOCK_SIZE_BITS_1024);
 		threefish.init("This is a key message and I feel good", 0x1122334455667788L, 0xFF00FF00AABB9933L);

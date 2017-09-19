@@ -26,22 +26,17 @@
 package jodd.joy;
 
 import jodd.exception.UncheckedException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-})
-public class JoySuite {
+public class JoySuiteTest {
 
 	public static boolean isSuite;
 
 	/**
 	 * Starts Tomcat after the suite.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() {
 		isSuite = true;
 		startTomcat();
@@ -50,7 +45,7 @@ public class JoySuite {
 	/**
 	 * Stop Tomcat after the suite.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void afterSuite() {
 		isSuite = false;
 		stopTomcat();
