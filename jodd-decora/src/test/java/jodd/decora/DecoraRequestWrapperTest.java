@@ -25,13 +25,13 @@
 
 package jodd.decora;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +40,7 @@ public class DecoraRequestWrapperTest {
 	private HttpServletRequest httpServletRequestMock;
 	private final String TEST_STRING = "TEST";
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		httpServletRequestMock = mock(HttpServletRequest.class);
 	}
@@ -51,7 +51,7 @@ public class DecoraRequestWrapperTest {
 		DecoraRequestWrapper decoraRequestWrapper = new DecoraRequestWrapper(httpServletRequestMock);
 
 		// then
-		assertEquals("Parameter should be set.", httpServletRequestMock, decoraRequestWrapper.getRequest());
+		assertEquals(httpServletRequestMock, decoraRequestWrapper.getRequest());
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class DecoraRequestWrapperTest {
 		String result = decoraRequestWrapper.getHeader(nullRespondingString);
 
 		// then
-		assertNull("<code>null</code> for excluded HTTP headers.", result);
+		assertNull(result);
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class DecoraRequestWrapperTest {
 		long result = decoraRequestWrapper.getDateHeader(nullRespondingString);
 
 		// then
-		assertEquals("<code>-1</code> for excluded HTTP headers.", -1, result);
+		assertEquals(-1, result);
 	}
 
 }

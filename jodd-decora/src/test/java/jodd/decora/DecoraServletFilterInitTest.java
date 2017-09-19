@@ -26,14 +26,14 @@
 package jodd.decora;
 
 import jodd.decora.parser.DecoraParser;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +43,7 @@ public class DecoraServletFilterInitTest {
 	private FilterConfig filterConfigMock;
 	private DecoraParser decoraParser;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		decoraServletFilter = new DecoraServletFilter();
 		filterConfigMock = mock(FilterConfig.class);
@@ -61,10 +61,10 @@ public class DecoraServletFilterInitTest {
 		decoraServletFilter.init(filterConfigMock);
 
 		// then
-		assertNotNull("Decora parser should be set.", decoraServletFilter.decoraParser);
+		assertNotNull(decoraServletFilter.decoraParser);
 	}
 
-	@Test(expected = ServletException.class)
+	@Test
 	public final void testInitManagerThrowException() throws ServletException {
 		// setup
 		decoraServletFilter.decoraParser = decoraParser;
@@ -72,13 +72,12 @@ public class DecoraServletFilterInitTest {
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn(null);
 
 		// when
-		decoraServletFilter.init(filterConfigMock);
-
-		// then
-		fail("A ServletException must have occured because ClassLoaderUtil class shouldn't load decoraParserClass.");
+		assertThrows(ServletException.class, () -> {
+			decoraServletFilter.init(filterConfigMock);
+		});
 	}
 
-	@Test(expected = ServletException.class)
+	@Test
 	public final void testInitParserThrowException() throws ServletException {
 		// setup
 		decoraServletFilter.decoraParser = decoraParser;
@@ -86,10 +85,9 @@ public class DecoraServletFilterInitTest {
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_PARSER)).thenReturn("TEST");
 
 		// when
-		decoraServletFilter.init(filterConfigMock);
-
-		// then
-		fail("A ServletException must have occured because ClassLoaderUtil class shouldn't load decoraManagerClass.");
+		assertThrows(ServletException.class, () -> {
+			decoraServletFilter.init(filterConfigMock);
+		});
 	}
 
 	@Test
@@ -104,7 +102,7 @@ public class DecoraServletFilterInitTest {
 		decoraServletFilter.init(filterConfigMock);
 
 		// then
-		assertNotNull("DecoraManager should be set.", decoraServletFilter.decoraManager);
+		assertNotNull(decoraServletFilter.decoraManager);
 	}
 
 	@Test
@@ -118,7 +116,7 @@ public class DecoraServletFilterInitTest {
 		decoraServletFilter.init(filterConfigMock);
 
 		// then
-		assertNotNull("DecoraParser should be set.", decoraServletFilter.decoraParser);
+		assertNotNull(decoraServletFilter.decoraParser);
 	}
 
 }

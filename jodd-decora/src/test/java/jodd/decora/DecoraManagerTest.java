@@ -25,19 +25,22 @@
 
 package jodd.decora;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class DecoraManagerTest {
 
 	private DecoraManager decoraManager;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		decoraManager = new DecoraManager();
 	}
@@ -48,7 +51,7 @@ public class DecoraManagerTest {
 		decoraManager.setDecorateErrorPages(true);
 
 		// then
-		assertTrue("DecorateErrorPages should be true.", decoraManager.isDecorateErrorPages());
+		assertTrue(decoraManager.isDecorateErrorPages());
 	}
 
 	@Test
@@ -57,7 +60,7 @@ public class DecoraManagerTest {
 		HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
 
 		// then
-		assertTrue("DecorateRequest function always returns true.", decoraManager.decorateRequest(httpServletRequestMock));
+		assertTrue(decoraManager.decorateRequest(httpServletRequestMock));
 	}
 
 	@Test
@@ -66,7 +69,7 @@ public class DecoraManagerTest {
 		String testString = "TEST";
 
 		// then
-		assertTrue("DecorateContentType function always returns true.", decoraManager.decorateContentType(testString, testString, testString));
+		assertTrue(decoraManager.decorateContentType(testString, testString, testString));
 	}
 
 	@Test
@@ -75,7 +78,7 @@ public class DecoraManagerTest {
 		int statusCode = 200;
 
 		// then
-		assertTrue("Returns <code>true</code> for status code 200", decoraManager.decorateStatusCode(statusCode));
+		assertTrue(decoraManager.decorateStatusCode(statusCode));
 	}
 
 	@Test
@@ -85,7 +88,7 @@ public class DecoraManagerTest {
 		decoraManager.setDecorateErrorPages(true);
 
 		// then
-		assertFalse("Returns <code>false</code> for status code 300", decoraManager.decorateStatusCode(statusCode));
+		assertFalse(decoraManager.decorateStatusCode(statusCode));
 	}
 
 	@Test
@@ -95,7 +98,7 @@ public class DecoraManagerTest {
 		decoraManager.setDecorateErrorPages(false);
 
 		// then
-		assertFalse("Returns <code>false</code> for status code 404", decoraManager.decorateStatusCode(statusCode));
+		assertFalse(decoraManager.decorateStatusCode(statusCode));
 	}
 
 	@Test
@@ -105,7 +108,7 @@ public class DecoraManagerTest {
 		decoraManager.setDecorateErrorPages(true);
 
 		// then
-		assertTrue("For error pages (status code {@literal >=} 400) should return true", decoraManager.decorateStatusCode(statusCode));
+		assertTrue(decoraManager.decorateStatusCode(statusCode));
 	}
 
 	@Test
@@ -118,7 +121,7 @@ public class DecoraManagerTest {
 		String result = decoraManager.resolveDecorator(httpServletRequestMock, actionPath);
 
 		// then
-		assertNull("If decorator is not found, returns <code>null</code>.", result);
+		assertNull(result);
 	}
 
 	@Test
@@ -131,7 +134,7 @@ public class DecoraManagerTest {
 		String result = decoraManager.resolveDecorator(httpServletRequestMock, actionPath);
 
 		// then
-		assertEquals("Result value must be equal to default decorator path.", DecoraManager.DEFAULT_DECORATOR, result);
+		assertEquals(DecoraManager.DEFAULT_DECORATOR, result);
 	}
 
 }

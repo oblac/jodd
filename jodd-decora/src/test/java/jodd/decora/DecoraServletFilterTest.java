@@ -26,19 +26,19 @@
 package jodd.decora;
 
 import jodd.decora.parser.DecoraParser;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 public class DecoraServletFilterTest {
 
 	private DecoraServletFilter decoraServletFilter;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		decoraServletFilter = new DecoraServletFilter();
 	}
@@ -49,7 +49,7 @@ public class DecoraServletFilterTest {
 		DecoraManager decoraManager = decoraServletFilter.createDecoraManager();
 
 		// then
-		assertNotNull("New instance should be created.", decoraManager);
+		assertNotNull(decoraManager);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class DecoraServletFilterTest {
 		DecoraParser decoraParser = decoraServletFilter.createDecoraParser();
 
 		// then
-		assertNotNull("New instance should be created.", decoraParser);
+		assertNotNull(decoraParser);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class DecoraServletFilterTest {
 		HttpServletRequest httpServletRequest = decoraServletFilter.wrapRequest(httpServletRequestMock);
 
 		// then
-		assertNotNull("New instance should be created.", httpServletRequest);
+		assertNotNull(httpServletRequest);
 	}
 
 }

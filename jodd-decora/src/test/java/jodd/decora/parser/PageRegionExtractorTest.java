@@ -29,12 +29,12 @@ import jodd.decora.DecoraException;
 import jodd.decora.parser.PageRegionExtractor.RegionMarker;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,23 +43,22 @@ public class PageRegionExtractorTest {
 	private PageRegionExtractor pageRegionExtractor;
 	private LinkedList<RegionMarker> regionMarkers;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		pageRegionExtractor = new PageRegionExtractor(new DecoraTag[] {});
 		regionMarkers = new LinkedList<>();
 	}
 
-	@Test(expected = DecoraException.class)
+	@Test
 	public final void testEndRegionMarkersNotEmpty() {
 		// setup
 		regionMarkers.add(new RegionMarker("TEST"));
 		pageRegionExtractor.regionMarkers = regionMarkers;
 
 		// when
-		pageRegionExtractor.end();
-
-		// then
-		fail("A DecorationException must have occured because regionMarkers is not empty.");
+		assertThrows(DecoraException.class, () -> {
+			pageRegionExtractor.end();
+		});
 	}
 
 	public final void testEndRegionMarkersEmpty() {
@@ -73,7 +72,7 @@ public class PageRegionExtractorTest {
 		// DecoraException not expected
 	}
 
-	@Test(expected = DecoraException.class)
+	@Test
 	public final void testTag() {
 		// setup
 		Tag tag = mock(Tag.class);
@@ -82,10 +81,9 @@ public class PageRegionExtractorTest {
 		pageRegionExtractor.regionMarkers = regionMarkers;
 
 		// when
-		pageRegionExtractor.tag(tag);
-
-		// then
-		fail("A DecoraException must have occured because tag parameter not matches with any decoraTags.");
+		assertThrows(DecoraException.class, () -> {
+			pageRegionExtractor.tag(tag);
+		});
 	}
 
 }

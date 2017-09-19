@@ -30,8 +30,8 @@ import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.CharArrayReader;
@@ -39,13 +39,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DecoraParserTest {
 
 	protected String testDataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;

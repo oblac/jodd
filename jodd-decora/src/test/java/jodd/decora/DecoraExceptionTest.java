@@ -25,10 +25,10 @@
 
 package jodd.decora;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DecoraExceptionTest {
 
@@ -41,7 +41,7 @@ public class DecoraExceptionTest {
 		DecoraException decoraException = new DecoraException(cause);
 
 		// then
-		assertEquals("Cause field must be set.", cause, decoraException.getCause());
+		assertEquals(cause, decoraException.getCause());
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class DecoraExceptionTest {
 		DecoraException decoraException = new DecoraException(TEST_STRING);
 
 		// then
-		assertEquals("DetailMessage field must be set.", TEST_STRING, decoraException.getMessage());
+		assertEquals(TEST_STRING, decoraException.getMessage());
 	}
 
 	@Test
@@ -60,8 +60,8 @@ public class DecoraExceptionTest {
 		DecoraException decoraException = new DecoraException(TEST_STRING, cause);
 
 		// then
-		assertEquals("Cause field must be set.", cause, decoraException.getCause());
-		assertTrue("DetailMessage field must be set.", decoraException.getMessage().contains(TEST_STRING));
+		assertEquals(cause, decoraException.getCause());
+		assertTrue(decoraException.getMessage().contains(TEST_STRING));
 	}
 
 }

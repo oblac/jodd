@@ -25,8 +25,8 @@
 
 package jodd.decora.parser;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.Writer;
 
@@ -38,7 +38,7 @@ public class DecoraParserTestDecoratedPageTest {
 	private Writer writerMock;
 	private DecoraTag decoraTagMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		decoraParser = new DecoraParser();
 		writerMock = mock(Writer.class);
