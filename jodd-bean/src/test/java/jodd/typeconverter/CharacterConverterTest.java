@@ -26,9 +26,9 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.CharacterConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CharacterConverterTest {
 
@@ -46,7 +46,7 @@ public class CharacterConverterTest {
 
 		try {
 			characterConverter.convert("aa");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

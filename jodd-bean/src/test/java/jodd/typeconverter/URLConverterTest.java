@@ -26,12 +26,12 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.URLConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class URLConverterTest {
 

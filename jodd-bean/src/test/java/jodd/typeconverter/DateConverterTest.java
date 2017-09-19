@@ -27,15 +27,15 @@ package jodd.typeconverter;
 
 import jodd.datetime.JDateTime;
 import jodd.typeconverter.impl.DateConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DateConverterTest {
 

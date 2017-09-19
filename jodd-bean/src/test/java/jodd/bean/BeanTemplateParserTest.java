@@ -27,13 +27,13 @@ package jodd.bean;
 
 import jodd.bean.fixtures.Abean;
 import jodd.util.StringTemplateParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class BeanTemplateParserTest {
 

@@ -26,12 +26,12 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverterManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TypeConverterManagerTest {
 

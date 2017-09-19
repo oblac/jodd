@@ -29,10 +29,10 @@ import jodd.mutable.MutableInteger;
 import jodd.typeconverter.impl.ClassConverter;
 import jodd.util.fixtures.testdata.A;
 import jodd.util.fixtures.testdata.B;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClassConverterTest {
 
@@ -47,7 +47,7 @@ public class ClassConverterTest {
 
 		try {
 			classConverter.convert("foo.Klass");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

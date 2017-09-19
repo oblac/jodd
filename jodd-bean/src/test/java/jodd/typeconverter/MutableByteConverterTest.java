@@ -27,9 +27,9 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableByte;
 import jodd.typeconverter.impl.MutableByteConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MutableByteConverterTest {
 
@@ -48,7 +48,7 @@ public class MutableByteConverterTest {
 
 		try {
 			mutableByteConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

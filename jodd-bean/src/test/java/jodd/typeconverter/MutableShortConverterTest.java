@@ -27,9 +27,9 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableShort;
 import jodd.typeconverter.impl.MutableShortConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MutableShortConverterTest {
 
@@ -48,7 +48,7 @@ public class MutableShortConverterTest {
 
 		try {
 			mutableShortConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

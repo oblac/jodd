@@ -25,15 +25,15 @@
 
 package jodd.bean;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class BeanIndexPropertyTest {
 
@@ -108,7 +108,7 @@ public class BeanIndexPropertyTest {
 			assertNull(BeanUtil.pojo.getProperty(bean1, "array1" + suffix));
 			try {
 				BeanUtil.pojo.getProperty(bean1, "array1" + suffix + "[0]");
-				fail();	// fails to read index of null property
+				fail("error");	// fails to read index of null property
 			} catch (BeanException ignore) {
 			}
 
@@ -116,7 +116,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean1, "array1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignored) {
 			}
 
@@ -128,7 +128,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean1, "array2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignored) {
 			}
 
@@ -154,7 +154,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2, "array1" + suffix + "[0]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -164,7 +164,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2Long, "array1" + suffix + "[0]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -190,13 +190,13 @@ public class BeanIndexPropertyTest {
 			assertNull(BeanUtil.pojo.getProperty(bean1, "list1" + suffix));
 			try {
 				BeanUtil.pojo.getProperty(bean1, "list1" + suffix + "[0]");
-				fail();	// fails to read index of null property
+				fail("error");	// fails to read index of null property
 			} catch (BeanException ignored) {
 			}
 
 			try {
 				BeanUtil.pojo.setProperty(bean1, "list1" + suffix + "[0].data" + suffix, Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignored) {
 			}
 
@@ -221,7 +221,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2, "list1" + suffix + "[0]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -231,7 +231,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2Long, "list1" + suffix + "[0]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -258,7 +258,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean1, "map1" + suffix + "[x0].data" + suffix, Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignored) {
 			}
 
@@ -282,7 +282,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean1, "map2" + suffix + "[0].data" + suffix, Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignored) {
 			}
 
@@ -307,7 +307,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2, "map1" + suffix + "[0x]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -317,7 +317,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2Long, "map1" + suffix + "[0x]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -343,7 +343,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2, "map2" + suffix + "[0]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 
@@ -353,7 +353,7 @@ public class BeanIndexPropertyTest {
 
 			try {
 				BeanUtil.pojo.setProperty(bean2Long, "map2" + suffix + "[0]", Integer.valueOf(173));
-				fail();
+				fail("error");
 			} catch (BeanException ignore) {
 			}
 

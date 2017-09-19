@@ -36,14 +36,14 @@ import jodd.introspector.fixtures.One;
 import jodd.introspector.fixtures.OneSub;
 import jodd.introspector.fixtures.Overload;
 import jodd.introspector.fixtures.TwoSub;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IntrospectorTest {
 

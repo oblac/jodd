@@ -26,9 +26,9 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ShortConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ShortConverterTest {
 
@@ -51,17 +51,17 @@ public class ShortConverterTest {
 
 		try {
 			shortConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 		try {
 			shortConverter.convert("+32768");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 		try {
 			shortConverter.convert("-32769");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

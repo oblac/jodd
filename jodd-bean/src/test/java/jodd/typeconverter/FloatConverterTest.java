@@ -26,11 +26,11 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.FloatConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FloatConverterTest {
 
@@ -50,7 +50,7 @@ public class FloatConverterTest {
 
 		try {
 			floatConverter.convert("aaaa");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

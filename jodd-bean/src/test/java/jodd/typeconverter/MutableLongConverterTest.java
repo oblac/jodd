@@ -27,9 +27,9 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableLong;
 import jodd.typeconverter.impl.MutableLongConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MutableLongConverterTest {
 
@@ -50,7 +50,7 @@ public class MutableLongConverterTest {
 
 		try {
 			mutableLongConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

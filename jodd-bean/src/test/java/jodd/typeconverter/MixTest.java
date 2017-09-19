@@ -27,7 +27,7 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableInteger;
 import jodd.typeconverter.impl.CollectionConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,9 +41,9 @@ import static jodd.typeconverter.TypeConverterTestHelper.arro;
 import static jodd.typeconverter.TypeConverterTestHelper.iterableo;
 import static jodd.typeconverter.TypeConverterTestHelper.listo;
 import static jodd.typeconverter.TypeConverterTestHelper.seto;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MixTest {
 

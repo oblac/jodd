@@ -27,9 +27,9 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableInteger;
 import jodd.typeconverter.impl.MutableIntegerConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MutableIntegerConverterTest {
 
@@ -48,7 +48,7 @@ public class MutableIntegerConverterTest {
 
 		try {
 			mutableIntegerConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

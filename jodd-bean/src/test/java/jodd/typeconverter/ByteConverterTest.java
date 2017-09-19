@@ -26,9 +26,9 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ByteConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ByteConverterTest {
 
@@ -51,24 +51,24 @@ public class ByteConverterTest {
 
 		try {
 			assertEquals(Byte.valueOf((byte) 1), byteConverter.convert("1.5"));
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 
 		try {
 			byteConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 
 		try {
 			byteConverter.convert("128");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 		try {
 			byteConverter.convert("-129");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

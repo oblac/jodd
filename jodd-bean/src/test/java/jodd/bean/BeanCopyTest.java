@@ -28,14 +28,13 @@ package jodd.bean;
 import jodd.bean.fixtures.FooBean;
 import jodd.bean.fixtures.FooBeanString;
 import jodd.util.Wildcard;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanCopyTest {
 
@@ -597,8 +596,8 @@ public class BeanCopyTest {
 
 		BeanCopy.fromMap(propsSource).toBean(beanDest).forced(true).copy();
 
-		assertThat(beanDest.number, is(42));
-		assertThat(beanDest.child.number, is(43));
+		assertEquals(42, beanDest.number);
+		assertEquals(43, beanDest.child.number);
 	}
 
 	@Test
@@ -634,9 +633,9 @@ public class BeanCopyTest {
 			.copy();
 
 
-		assertThat(propsDest.size(), is(2));
-		assertThat((Integer) propsDest.get("number"), is(42));
-		assertThat((Integer) BeanUtil.pojo.getProperty(propsDest, "child.number"), is(43));
+		assertEquals(2, propsDest.size());
+		assertEquals(42, propsDest.get("number"));
+		assertEquals(Integer.valueOf(43), BeanUtil.pojo.getProperty(propsDest, "child.number"));
 	}
 
 	@Test
@@ -651,8 +650,8 @@ public class BeanCopyTest {
 
 		BeanCopy.fromBean(beanSource).toBean(beanDest).includeFields(true).copy();
 
-		assertThat(beanDest.number, is(42));
-		assertThat(beanDest.child.number, is(43));
+		assertEquals(42, beanDest.number);
+		assertEquals(43, beanDest.child.number);
 	}
 
 }

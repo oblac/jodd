@@ -27,14 +27,14 @@ package jodd.typeconverter;
 
 import jodd.datetime.JDateTime;
 import jodd.typeconverter.impl.SqlDateConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SqlDateConverterTest {
 
@@ -101,13 +101,13 @@ public class SqlDateConverterTest {
 
 		try {
 			sqlDateConverter.convert("2011.01.01");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 
 		try {
 			sqlDateConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

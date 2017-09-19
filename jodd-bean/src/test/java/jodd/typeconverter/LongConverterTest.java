@@ -26,9 +26,9 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.LongConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LongConverterTest {
 
@@ -54,17 +54,17 @@ public class LongConverterTest {
 
 		try {
 			longConverter.convert("9223372036854775808");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 		try {
 			longConverter.convert("-9223372036854775809");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 		try {
 			longConverter.convert("a");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 	}

@@ -25,10 +25,10 @@
 
 package jodd.typeconverter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static jodd.typeconverter.TypeConverterTestHelper.arrc;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClassArrayConverterTest {
 
@@ -46,7 +46,7 @@ public class ClassArrayConverterTest {
 
 		try {
 			classArrayConverter.convert("foo.Klass");
-			fail();
+			fail("error");
 		} catch (TypeConversionException ignore) {
 		}
 

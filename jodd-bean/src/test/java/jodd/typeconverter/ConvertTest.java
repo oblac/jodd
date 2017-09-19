@@ -26,7 +26,7 @@
 package jodd.typeconverter;
 
 import jodd.datetime.JDateTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -34,7 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("ALL")
 public class ConvertTest {
@@ -92,8 +92,8 @@ public class ConvertTest {
 
 	@Test
 	public void testArrayConversion() {
-		assertEquals(new String[]{"555", "12"}, Convert.toStringArray("555,12"));
-		assertEquals(new String[]{"555", " 12"}, Convert.toStringArray("555, 12"));
+		assertArrayEquals(new String[]{"555", "12"}, Convert.toStringArray("555,12"));
+		assertArrayEquals(new String[]{"555", " 12"}, Convert.toStringArray("555, 12"));
 		assertArrayEquals(new boolean[] {true, false, true}, Convert.toBooleanArray("1, 0, true"));
 		assertArrayEquals(new int[] {1, 2, -3}, Convert.toIntegerArray("1, 2, -3"));
 		assertArrayEquals(new long[] {-12, 2}, Convert.toLongArray("-12, 2"));
@@ -152,7 +152,7 @@ public class ConvertTest {
 
 		try {
 			barr = Convert.toBooleanArray(array);
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 
