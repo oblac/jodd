@@ -28,8 +28,8 @@ package jodd.lagarto.dom;
 import jodd.csselly.CSSelly;
 import jodd.csselly.CssSelector;
 import jodd.io.FileUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,13 +37,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NodeSelectorTest {
 
 	protected String testDataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;

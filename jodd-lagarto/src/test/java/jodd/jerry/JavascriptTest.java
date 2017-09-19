@@ -25,20 +25,20 @@
 
 package jodd.jerry;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JavascriptTest {
 
 	private ScriptEngine scriptEngine;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws ScriptException {
 		ScriptEngineManager factory = new ScriptEngineManager();
 

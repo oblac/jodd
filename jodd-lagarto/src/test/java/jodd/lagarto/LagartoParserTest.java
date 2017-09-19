@@ -30,15 +30,15 @@ import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import static jodd.util.StringPool.NEWLINE;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LagartoParserTest {
 
@@ -46,7 +46,7 @@ public class LagartoParserTest {
 	protected String testDataRoot2;
 	protected String testLiveRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;

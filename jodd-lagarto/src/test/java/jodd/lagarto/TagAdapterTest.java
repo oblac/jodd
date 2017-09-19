@@ -27,20 +27,20 @@ package jodd.lagarto;
 
 import jodd.io.FileUtil;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TagAdapterTest {
 
 	protected String testAdapterRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (testAdapterRoot != null) {
 			return;

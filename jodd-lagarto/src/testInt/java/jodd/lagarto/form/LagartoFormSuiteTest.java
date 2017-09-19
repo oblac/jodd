@@ -25,21 +25,17 @@
 
 package jodd.lagarto.form;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import jodd.exception.UncheckedException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	FormTextTest.class,
-})
-public class LagartoFormSuite extends LagartoFormSuiteBase {
+public class LagartoFormSuiteTest {
 
 	/**
 	 * Starts Tomcat after the suite.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() {
 		isSuite = true;
 		startTomcat();
@@ -48,7 +44,7 @@ public class LagartoFormSuite extends LagartoFormSuiteBase {
 	/**
 	 * Stop Tomcat after the suite.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void afterSuite() {
 		isSuite = false;
 		stopTomcat();
@@ -57,5 +53,49 @@ public class LagartoFormSuite extends LagartoFormSuiteBase {
 	public static void startTomcat() {
 		startTomcat("web-test-int.xml");
 	}
+
+	public static boolean isSuite;
+
+	// ---------------------------------------------------------------- tomcat
+
+	protected static TomcatTestServer server;
+
+	/**
+	 * Starts Tomcat.
+	 */
+	protected static void startTomcat(String webXmlFileName) {
+		if (server != null) {
+			return;
+		}
+		server = new TomcatTestServer(webXmlFileName);
+		try {
+			server.start();
+			System.out.println("Tomcat test server started");
+		} catch (Exception e) {
+			throw new UncheckedException(e);
+		}
+	}
+
+	/**
+	 * Stops Tomcat if not in the suite.
+	 */
+	public static void stopTomcat() {
+		if (server == null) {
+			return;
+		}
+		if (isSuite) {	// don't stop tomcat if it we are still running in the suite!
+			return;
+		}
+		try {
+			server.stop();
+		} catch (Exception ignore) {
+		} finally {
+			System.out.println("Tomcat test server stopped");
+			server = null;
+		}
+	}
+
+	@Nested
+	public class FormTextTest extends FormTextTestBase {}
 
 }

@@ -27,23 +27,11 @@ package jodd.lagarto.form;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FormTextTest {
-
-	@BeforeClass
-	public static void beforeClass() {
-		LagartoFormSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		LagartoFormSuite.stopTomcat();
-	}
+public abstract class FormTextTestBase {
 
 	private static final String TEXT_RESULT = "<input name=\"iname\" type=\"text\" value=\"foo\">";
 

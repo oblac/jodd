@@ -30,11 +30,11 @@ import jodd.csselly.selector.PseudoClass;
 import jodd.csselly.selector.PseudoClassSelector;
 import jodd.csselly.selector.PseudoFunctionExpression;
 import jodd.csselly.selector.PseudoFunctionSelector;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CSSellyTest {
 
@@ -302,14 +302,14 @@ public class CSSellyTest {
 		try {
 			CSSelly lexer = new CSSelly("div ^ b");
 			lexer.parse();
-			fail();
+			fail("error");
 		} catch (CSSellyException ex) {
 		}
 
 		try {
 			CSSelly lexer = new CSSelly("div:wrong-pseudo-class-name");
 			lexer.parse();
-			fail();
+			fail("error");
 		} catch (CSSellyException ex) {
 		}
 

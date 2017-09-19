@@ -27,8 +27,8 @@ package jodd.lagarto;
 
 import jodd.io.StreamUtil;
 import jodd.jerry.Jerry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,14 +38,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class StuckTest {
 
 	protected String testDataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;

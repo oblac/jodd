@@ -27,9 +27,9 @@ package jodd.lagarto.adapter;
 
 import jodd.lagarto.LagartoParser;
 import jodd.lagarto.TagWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UrlRewriterTest {
 

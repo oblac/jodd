@@ -27,8 +27,8 @@ package jodd.jerry;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,14 +37,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static jodd.jerry.Jerry.jerry;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JerryTest {
 	protected String testDataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;

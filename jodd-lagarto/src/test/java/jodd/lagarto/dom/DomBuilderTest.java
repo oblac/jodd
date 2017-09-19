@@ -26,9 +26,9 @@
 package jodd.lagarto.dom;
 
 import jodd.io.FastCharArrayWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DomBuilderTest {
 
