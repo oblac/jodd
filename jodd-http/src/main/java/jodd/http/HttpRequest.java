@@ -419,7 +419,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			String name = parameters[i].toString();
 
 			String value = parameters[i + 1].toString();
-			query.add(name, value == null ? null : value);
+			query.add(name, value);
 		}
 		return this;
 	}
