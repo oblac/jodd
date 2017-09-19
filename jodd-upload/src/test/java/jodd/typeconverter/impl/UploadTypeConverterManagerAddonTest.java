@@ -29,11 +29,11 @@ import jodd.Jodd;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.upload.FileUpload;
 import jodd.upload.typeconverter.FileUploadConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class UploadTypeConverterManagerAddonTest {
 
