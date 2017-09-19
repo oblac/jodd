@@ -25,13 +25,12 @@
 
 package jodd.mail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
 import static jodd.mail.SmtpServer.MAIL_SMTP_FROM;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SmtpServerTest {
 
@@ -48,7 +47,7 @@ public class SmtpServerTest {
 
         Properties sessionProperties = smtpServer.createSession().mailSession.getProperties();
 
-        assertThat(sessionProperties.getProperty("mail.smtp.from"), is("bounce@jodd.org"));
+        assertEquals("bounce@jodd.org", sessionProperties.getProperty("mail.smtp.from"));
     }
 
     @Test
@@ -60,6 +59,6 @@ public class SmtpServerTest {
 
         Properties sessionProperties = smtpServer.createSession().mailSession.getProperties();
 
-        assertThat(sessionProperties.getProperty("mail.smtp.from"), is("bounce@jodd.org"));
+        assertEquals("bounce@jodd.org", sessionProperties.getProperty("mail.smtp.from"));
     }
 }

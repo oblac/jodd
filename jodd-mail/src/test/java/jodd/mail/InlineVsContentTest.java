@@ -1,14 +1,14 @@
 package jodd.mail;
 
 import jodd.io.FileNameUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 import static jodd.mail.EmailAttachment.attachment;
 
-@Ignore("Real email sending required")
+@Disabled("Real email sending required")
 public class InlineVsContentTest {
 
 	public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");

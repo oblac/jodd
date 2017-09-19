@@ -8,6 +8,6 @@ dependencies {
 	compile lib.mail
 	//compile lib.activation
 	
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile lib.greenmail
 }

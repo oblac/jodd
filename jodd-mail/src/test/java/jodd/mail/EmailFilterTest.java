@@ -25,7 +25,7 @@
 
 package jodd.mail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.mail.Message;
 import javax.mail.search.AndTerm;
@@ -41,7 +41,7 @@ import javax.mail.search.SubjectTerm;
 import java.util.Date;
 
 import static jodd.mail.EmailFilter.filter;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EmailFilterTest {
 
