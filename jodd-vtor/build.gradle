@@ -7,5 +7,5 @@ dependencies {
 	compile project(':jodd-bean')
 
 	testCompile lib.mockito
-	testCompile lib.junit
+	testCompile lib.junit5
 }

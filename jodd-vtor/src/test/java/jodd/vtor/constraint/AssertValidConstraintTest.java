@@ -27,9 +27,9 @@ package jodd.vtor.constraint;
 
 import jodd.vtor.ValidationConstraintContext;
 import jodd.vtor.ValidationContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
@@ -47,7 +47,7 @@ public class AssertValidConstraintTest extends ConstraintTestBase {
         boolean valid = assertValidConstraint.isValid(vcc, null);
 
         //then
-        assertTrue("result must be true when validate null value", valid);
+        assertTrue(valid);
         verify(vcc, never()).validateWithin(eq(targetValidationContext), isNull());
     }
 
@@ -65,7 +65,7 @@ public class AssertValidConstraintTest extends ConstraintTestBase {
         boolean valid = assertValidConstraint.isValid(vcc, someValue);
 
         //then validateWithin must be called for validated value
-        assertTrue("result must be true when validate not value", valid);
+        assertTrue(valid);
         //validateWithin must be called for validated value
         verify(vcc).validateWithin(eq(targetValidationContext), eq(someValue));
     }

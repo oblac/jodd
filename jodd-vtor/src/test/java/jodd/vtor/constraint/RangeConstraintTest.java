@@ -25,9 +25,9 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,15 +36,15 @@ public class RangeConstraintTest extends ConstraintTestBase {
     @Test
     public void testConstructor1() {
         RangeConstraint rangeConstraint = new RangeConstraint();
-        assertEquals("value must be default", rangeConstraint.getMin(), 0.0, 0.01);
-        assertEquals("value must be default", rangeConstraint.getMax(), 0.0, 0.01);
+        assertEquals(0.0, rangeConstraint.getMin(), 0.01);
+        assertEquals(0.0, rangeConstraint.getMax(), 0.01);
     }
 
     @Test
     public void testConstructor2() {
         RangeConstraint rangeConstraint = new RangeConstraint(1.1, 10.1);
-        assertEquals("min value must be the same as was given to constructor", rangeConstraint.getMin(), 1.1, 0.01);
-        assertEquals("max value must be the same as was given to constructor", rangeConstraint.getMax(), 10.1, 0.01);
+        assertEquals(1.1, rangeConstraint.getMin(), 0.01);
+        assertEquals(10.1, rangeConstraint.getMax(), 0.01);
     }
 
 
@@ -53,8 +53,8 @@ public class RangeConstraintTest extends ConstraintTestBase {
         RangeConstraint rangeConstraint = new RangeConstraint();
         rangeConstraint.setMin(1.1);
         rangeConstraint.setMax(10.1);
-        assertEquals("method must return the same value as was given to set method", rangeConstraint.getMin(), 1.1, 0.01);
-        assertEquals("method must return the same value as was given to set method", rangeConstraint.getMax(), 10.1, 0.01);
+        assertEquals(1.1, rangeConstraint.getMin(), 0.01);
+        assertEquals(10.1, rangeConstraint.getMax(), 0.01);
     }
 
     @Test
@@ -65,21 +65,21 @@ public class RangeConstraintTest extends ConstraintTestBase {
         when(annotation.max()).thenReturn(10.1);
 
         rangeConstraint.configure(annotation);
-        assertEquals("method must return the same value as was set to annotation when configure", rangeConstraint.getMin(), 1.1, 0.01);
-        assertEquals("method must return the same value as was set to annotation when configure", rangeConstraint.getMax(), 10.1, 0.01);
+        assertEquals(1.1, rangeConstraint.getMin(), 0.01);
+        assertEquals(10.1, rangeConstraint.getMax(), 0.01);
     }
 
     @Test
     public void testValidate_WithValIsNull() {
-        assertTrue("result must be true when validate null value", RangeConstraint.validate(null, 1, 2));
+        assertTrue(RangeConstraint.validate(null, 1, 2));
     }
 
     @Test
     public void testIsValid() {
-        assertFalse("result must be false when validate value less than min", new RangeConstraint(1.1, 2.0).isValid(mockContext(), "1.0"));
-        assertFalse("result must be false when validate value grater than max", new RangeConstraint(1.1, 3.0).isValid(mockContext(), "3.1"));
-        assertTrue("result must be true when validate value grater than min and less than max", new RangeConstraint(2.0, 3.0).isValid(mockContext(), "2.8"));
-        assertTrue("result must be true when validate value equal to min", new RangeConstraint(2.1, 3.0).isValid(mockContext(), "2.1"));
-        assertTrue("result must be true when validate value equal to max", new RangeConstraint(1.0, 2.1).isValid(mockContext(), "2.1"));
+        assertFalse(new RangeConstraint(1.1, 2.0).isValid(mockContext(), "1.0"));
+        assertFalse(new RangeConstraint(1.1, 3.0).isValid(mockContext(), "3.1"));
+        assertTrue(new RangeConstraint(2.0, 3.0).isValid(mockContext(), "2.8"));
+        assertTrue(new RangeConstraint(2.1, 3.0).isValid(mockContext(), "2.1"));
+        assertTrue(new RangeConstraint(1.0, 2.1).isValid(mockContext(), "2.1"));
     }
 }

@@ -25,16 +25,16 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NotBlankConstraintTest extends ConstraintTestBase {
 
     @Test
     public void testValidate_WithNullValue() {
-        assertTrue("result must be true when validate a null value", NotBlankConstraint.validate(null));
+        assertTrue(NotBlankConstraint.validate(null));
     }
 
     @Test
@@ -43,9 +43,9 @@ public class NotBlankConstraintTest extends ConstraintTestBase {
         //this is an empty method nothing can be verified
         notBlankConstraint.configure(null);
 
-        assertTrue("result must be true when validate not empty string", notBlankConstraint.isValid(mockContext(), "abc"));
-        assertTrue("result must be true when validate string with space at the beginning", notBlankConstraint.isValid(mockContext(), " abc"));
-        assertFalse("result must be false when validate string with space", notBlankConstraint.isValid(mockContext(), " "));
-        assertFalse("result must be false when validate empty", notBlankConstraint.isValid(mockContext(), ""));
+        assertTrue(notBlankConstraint.isValid(mockContext(), "abc"));
+        assertTrue(notBlankConstraint.isValid(mockContext(), " abc"));
+        assertFalse(notBlankConstraint.isValid(mockContext(), " "));
+        assertFalse(notBlankConstraint.isValid(mockContext(), ""));
     }
 }

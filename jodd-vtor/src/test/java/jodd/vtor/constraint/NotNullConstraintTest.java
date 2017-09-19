@@ -25,10 +25,10 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NotNullConstraintTest extends ConstraintTestBase {
 
@@ -38,7 +38,7 @@ public class NotNullConstraintTest extends ConstraintTestBase {
         //this is an empty method nothing can be verified
         notNullConstraint.configure(null);
 
-        assertTrue("result must be true when validate not null value", notNullConstraint.isValid(mockContext(), new Object()));
-        assertFalse("result must be false when validate null value", notNullConstraint.isValid(mockContext(), null));
+        assertTrue(notNullConstraint.isValid(mockContext(), new Object()));
+        assertFalse(notNullConstraint.isValid(mockContext(), null));
     }
 }

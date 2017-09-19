@@ -25,9 +25,9 @@
 
 package jodd.vtor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VtorExceptionTest {
 
@@ -38,7 +38,7 @@ public class VtorExceptionTest {
         //when
         VtorException vtorException = new VtorException(cause);
         //then
-        assertEquals("created instance must have the same cause as was given to its constructor", vtorException.getCause(), cause);
+        assertEquals(cause, vtorException.getCause());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class VtorExceptionTest {
         //when
         VtorException vtorException = new VtorException(message);
         //then
-        assertEquals("created instance must have the same message as was given to its constructor", vtorException.getMessage(), message);
+        assertEquals(message, vtorException.getMessage());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class VtorExceptionTest {
         //when
         VtorException vtorException = new VtorException(message, cause);
         //then
-        assertEquals("created instance must return message with cause details when create instance with message and some cause", vtorException.getMessage(), message+"; <--- java.lang.RuntimeException");
-        assertEquals("created instance must have the same cause as was given to its constructor", vtorException.getCause(), cause);
+        assertEquals(message+"; <--- java.lang.RuntimeException", vtorException.getMessage());
+        assertEquals(cause, vtorException.getCause());
     }
 }

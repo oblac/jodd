@@ -26,9 +26,9 @@
 package jodd.vtor.constraint;
 
 import jodd.vtor.TestUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,13 +37,13 @@ public class MaxLengthConstraintTest extends ConstraintTestBase {
     @Test
     public void testConstructor1() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint();
-        assertEquals("value must be default", maxLengthConstraint.getMax(), 0);
+        assertEquals(0, maxLengthConstraint.getMax());
     }
 
     @Test
     public void testConstructor2() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint(10);
-        assertEquals("max value must be the same as was given to constructor", maxLengthConstraint.getMax(), 10);
+        assertEquals(10, maxLengthConstraint.getMax());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class MaxLengthConstraintTest extends ConstraintTestBase {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint();
         int maxValue = 100;
         maxLengthConstraint.setMax(maxValue);
-        assertEquals("method must return the same value as was given to set method", maxLengthConstraint.getMax(), maxValue);
+        assertEquals(maxValue, maxLengthConstraint.getMax());
     }
 
     @Test
@@ -62,18 +62,18 @@ public class MaxLengthConstraintTest extends ConstraintTestBase {
         when(annotation.value()).thenReturn(maxValue);
 
         maxLengthConstraint.configure(annotation);
-        assertEquals("method must return the same value as was set to annotation when configure", maxLengthConstraint.getMax(), maxValue);
+        assertEquals(maxValue, maxLengthConstraint.getMax());
     }
 
     @Test
     public void testValidate_WithValIsNull() {
-        assertTrue("result must be true when validate null value", MaxLengthConstraint.validate(null, 1));
+        assertTrue(MaxLengthConstraint.validate(null, 1));
     }
 
     @Test
     public void testMaxLengthConstraint() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint(3);
-        assertTrue("result must be true when validate a string with size less than maxValue", maxLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(3)));
-        assertFalse("result must be false when validate a string with size greater than maxValue", maxLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(4)));
+        assertTrue(maxLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(3)));
+        assertFalse(maxLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(4)));
     }
 }

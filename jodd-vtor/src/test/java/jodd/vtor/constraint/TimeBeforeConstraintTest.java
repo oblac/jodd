@@ -27,9 +27,9 @@ package jodd.vtor.constraint;
 
 import jodd.datetime.JDateTime;
 import jodd.datetime.JDateTimeDefault;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,14 +38,14 @@ public class TimeBeforeConstraintTest extends ConstraintTestBase {
     @Test
     public void testConstructor1() {
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint();
-        assertNull("time value must be null by default", timeBeforeConstraint.getTime());
+        assertNull(timeBeforeConstraint.getTime());
     }
 
     @Test
     public void testConstructor2() {
         JDateTime time = new JDateTime();
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint(time);
-        assertEquals("time must be the same as was given to constructor", timeBeforeConstraint.getTime(), time);
+        assertEquals(time, timeBeforeConstraint.getTime());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class TimeBeforeConstraintTest extends ConstraintTestBase {
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint();
         JDateTime time = new JDateTime();
         timeBeforeConstraint.setTime(time);
-        assertEquals("method must return the same time as was given to set method", timeBeforeConstraint.getTime(), time);
+        assertEquals(time, timeBeforeConstraint.getTime());
     }
 
     @Test
@@ -65,12 +65,12 @@ public class TimeBeforeConstraintTest extends ConstraintTestBase {
         when(annotation.value()).thenReturn(JDateTimeDefault.formatter.convert(time, JDateTimeDefault.format));
 
         timeBeforeConstraint.configure(annotation);
-        assertEquals("method must return the same time as was set to annotation when configure", timeBeforeConstraint.getTime(), time);
+        assertEquals(time, timeBeforeConstraint.getTime());
     }
 
     @Test
     public void testValidate_WithValIsNull() {
-        assertTrue("result must be true when validate null value", TimeBeforeConstraint.validate(null, new JDateTime("2011-05-01 10:11:12.344")));
+        assertTrue(TimeBeforeConstraint.validate(null, new JDateTime("2011-05-01 10:11:12.344")));
     }
 
     @Test
@@ -78,8 +78,8 @@ public class TimeBeforeConstraintTest extends ConstraintTestBase {
         JDateTime time = new JDateTime("2011-05-01 10:11:12.344");
         TimeBeforeConstraint constraint = new TimeBeforeConstraint(time.clone());
 
-        assertFalse("result must be true when validate time which is equal to constraint time", constraint.isValid(mockContext(), time.clone()));
-        assertTrue("result must be false when validate time which is less than constraint time", constraint.isValid(mockContext(), time.clone().subMinute(1)));
-        assertFalse("result must be true when validate time which is greater than constraint time", constraint.isValid(mockContext(), time.clone().addMinute(1)));
+        assertFalse(constraint.isValid(mockContext(), time.clone()));
+        assertTrue(constraint.isValid(mockContext(), time.clone().subMinute(1)));
+        assertFalse(constraint.isValid(mockContext(), time.clone().addMinute(1)));
     }
 }

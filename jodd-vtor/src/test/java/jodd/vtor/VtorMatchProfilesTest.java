@@ -25,25 +25,24 @@
 
 package jodd.vtor;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VtorMatchProfilesTest {
     private Vtor vtor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         vtor = new Vtor();
     }
 
     @Test
     public void testAllProfiles() {
-        assertTrue("result must be true when match a list with one element which is *", vtor.matchProfiles(new String[]{Vtor.ALL_PROFILES}));
-        assertFalse("result must be false when match a list with many elements", vtor.matchProfiles(new String[]{Vtor.ALL_PROFILES, "someProfile"}));
+        assertTrue(vtor.matchProfiles(new String[]{Vtor.ALL_PROFILES}));
+        assertFalse(vtor.matchProfiles(new String[]{Vtor.ALL_PROFILES, "someProfile"}));
     }
 
     @Test
@@ -52,32 +51,32 @@ public class VtorMatchProfilesTest {
         vtor.useProfile("testProfile1");
 
         //then
-        assertFalse("result must be false when match null value",
-                vtor.matchProfiles(null));
+        assertFalse(vtor.matchProfiles(null),
+            "result must be false when match null value");
 
-        assertFalse("result must be false when match list of profiles without any assigned profiles",
-                vtor.matchProfiles(new String[]{"testProfile2", "testProfile3"}));
+        assertFalse(vtor.matchProfiles(new String[]{"testProfile2", "testProfile3"}),
+            "result must be false when match list of profiles without any assigned profiles");
 
-        assertTrue("result must be true when match list of profiles with one assigned profile",
-                vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}));
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}),
+            "result must be true when match list of profiles with one assigned profile");
 
-        assertTrue("result must be true when match list of profiles with one assigned profile",
-                vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}));
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}),
+            "result must be true when match list of profiles with one assigned profile");
 
-        assertTrue("result must be true when match list of profiles with one assigned profile",
-                vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}));
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}),
+            "result must be true when match list of profiles with one assigned profile");
 
-        assertTrue("result must be true when match list of profiles with one assigned profile",
-                vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}));
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile1", "testProfile2", "testProfile3"}),
+            "result must be true when match list of profiles with one assigned profile");
 
-        assertTrue("result must be true when match unordered list of profiles with one assigned profile",
-                vtor.matchProfiles(new String[]{"testProfile2", "testProfile1", "testProfile3"}));
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile2", "testProfile1", "testProfile3"}),
+            "result must be true when match unordered list of profiles with one assigned profile");
 
-        assertFalse("result must be false when match a list of profiles with one wrong mandatory profile",
-                vtor.matchProfiles(new String[]{"+testProfile2", "testProfile1", "testProfile3"}));
+        assertFalse(vtor.matchProfiles(new String[]{"+testProfile2", "testProfile1", "testProfile3"}),
+            "result must be false when match a list of profiles with one wrong mandatory profile");
 
-        assertFalse("result must be false when match a list of profiles with one assigned profile which was marked as optional",
-                vtor.matchProfiles(new String[]{"testProfile2", "-testProfile1", "testProfile3"}));
+        assertFalse(vtor.matchProfiles(new String[]{"testProfile2", "-testProfile1", "testProfile3"}),
+            "result must be false when match a list of profiles with one assigned profile which was marked as optional");
     }
 
     @Test
@@ -86,9 +85,9 @@ public class VtorMatchProfilesTest {
         vtor.useProfile(Vtor.DEFAULT_PROFILE);
 
         //then
-        assertTrue("result must be true when match null value", vtor.matchProfiles(null));
-        assertTrue("result must be true when match a list with empty profile", vtor.matchProfiles(new String[]{"testProfile2", "", "testProfile3"}));
-        assertFalse("result must be false when match a list without empty profile", vtor.matchProfiles(new String[]{"testProfile2", "testProfile3"}));
+        assertTrue(vtor.matchProfiles(null), "result must be true when match null value");
+        assertTrue(vtor.matchProfiles(new String[]{"testProfile2", "", "testProfile3"}), "result must be true when match a list with empty profile");
+        assertFalse(vtor.matchProfiles(new String[]{"testProfile2", "testProfile3"}), "result must be false when match a list without empty profile");
     }
 
 }

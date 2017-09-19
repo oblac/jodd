@@ -25,12 +25,12 @@
 
 package jodd.vtor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 public class ViolationTest {
@@ -45,10 +45,10 @@ public class ViolationTest {
         Violation violation = new Violation("niceViolation", validatedObject, invalidValue);
 
         //then
-        assertEquals("validatedObject must be equal to a validatedObject which was given to constructor", violation.getValidatedObject(), validatedObject);
-        assertEquals("invalidValue must be equal to a invalidValue which was given to constructor", violation.getInvalidValue(), invalidValue);
-        assertNull("violation must be null", violation.getCheck());
-        assertNull("constraint must be null", violation.getConstraint());
+        assertEquals(validatedObject, violation.getValidatedObject(), "validatedObject must be equal to a validatedObject which was given to constructor");
+        assertEquals(invalidValue, violation.getInvalidValue(), "invalidValue must be equal to a invalidValue which was given to constructor");
+        assertNull(violation.getCheck());
+        assertNull(violation.getConstraint());
     }
 
     @Test
@@ -63,11 +63,11 @@ public class ViolationTest {
         Violation violation = new Violation("niceViolation", validatedObject, invalidValue, niceCheck);
 
         //then
-        assertEquals("name must be equal to a name of violation which was given to constructor", violation.getName(), "niceViolation");
-        assertEquals("ValidatedObject must be equal to a ValidatedObject which was given to constructor", violation.getValidatedObject(), validatedObject);
-        assertEquals("InvalidValue must be equal to a InvalidValue which was given to constructor", violation.getInvalidValue(), invalidValue);
-        assertEquals("Check must be equal to a Check which was given to constructor", violation.getCheck(), niceCheck);
-        assertEquals("Constraint must be equal to a Constraint which was given to constructor", violation.getConstraint(), constr);
+        assertEquals("niceViolation", violation.getName());
+        assertEquals(validatedObject, violation.getValidatedObject());
+        assertEquals(invalidValue, violation.getInvalidValue());
+        assertEquals(niceCheck, violation.getCheck());
+        assertEquals(constr, violation.getConstraint());
     }
 
 

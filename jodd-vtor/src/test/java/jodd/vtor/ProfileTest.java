@@ -28,12 +28,12 @@ package jodd.vtor;
 import jodd.vtor.constraint.MinLengthConstraint;
 import jodd.vtor.fixtures.Too;
 import jodd.vtor.fixtures.Zoo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ProfileTest {
 

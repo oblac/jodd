@@ -25,9 +25,9 @@
 
 package jodd.vtor.constraint;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,14 +36,14 @@ public class WildcardMatchConstraintTest extends ConstraintTestBase {
     @Test
     public void testConstructor1() {
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint();
-        assertNull("pattern value must be null by default", wildcardMatchConstraint.getPattern());
+        assertNull(wildcardMatchConstraint.getPattern());
     }
 
     @Test
     public void testConstructor2() {
         String pattern = "foo";
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint(pattern);
-        assertEquals("pattern must be the same as was given to constructor", wildcardMatchConstraint.getPattern(), pattern);
+        assertEquals(pattern, wildcardMatchConstraint.getPattern());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class WildcardMatchConstraintTest extends ConstraintTestBase {
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint();
         String pattern = "foo";
         wildcardMatchConstraint.setPattern(pattern);
-        assertEquals("method must return the same pattern as was given to set method", wildcardMatchConstraint.getPattern(), pattern);
+        assertEquals(pattern, wildcardMatchConstraint.getPattern());
     }
 
     @Test
@@ -61,12 +61,12 @@ public class WildcardMatchConstraintTest extends ConstraintTestBase {
         String pattern = "foo";
         when(annotation.value()).thenReturn(pattern);
         wildcardMatchConstraint.configure(annotation);
-        assertEquals("method must return the same pattern as was set to annotation when configure", wildcardMatchConstraint.getPattern(), pattern);
+        assertEquals(pattern, wildcardMatchConstraint.getPattern());
     }
 
     @Test
     public void testValidate_WithValIsNull() {
-        assertTrue("result must be true when validate null value", WildcardMatchConstraint.validate(null, "*"));
+        assertTrue(WildcardMatchConstraint.validate(null, "*"));
     }
 
     @Test

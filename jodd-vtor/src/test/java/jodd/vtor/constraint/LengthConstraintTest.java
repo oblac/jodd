@@ -26,30 +26,30 @@
 package jodd.vtor.constraint;
 
 import jodd.vtor.TestUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class LengthConstraintTest extends ConstraintTestBase {
     @Test
     public void testValidate_WithNullValue() {
-        assertTrue("result must be true when validate a null value", LengthConstraint.validate(null, 1, 2));
+        assertTrue(LengthConstraint.validate(null, 1, 2), "result must be true when validate a null value");
     }
 
     @Test
     public void testConstructor1() {
         LengthConstraint lengthConstraint = new LengthConstraint();
-        assertEquals("value must be default", lengthConstraint.getMin(), 0);
-        assertEquals("value must be default", lengthConstraint.getMax(), 0);
+        assertEquals(0, lengthConstraint.getMin());
+        assertEquals(0, lengthConstraint.getMax());
     }
 
     @Test
     public void testConstructor2() {
         LengthConstraint lengthConstraint = new LengthConstraint(5, 10);
-        assertEquals("min value must be the same as was given to constructor", lengthConstraint.getMin(), 5);
-        assertEquals("max value must be the same as was given to constructor", lengthConstraint.getMax(), 10);
+        assertEquals(5, lengthConstraint.getMin());
+        assertEquals(10, lengthConstraint.getMax());
     }
 
     @Test
@@ -57,8 +57,8 @@ public class LengthConstraintTest extends ConstraintTestBase {
         LengthConstraint lengthConstraint = new LengthConstraint();
         lengthConstraint.setMin(5);
         lengthConstraint.setMax(10);
-        assertEquals("min value must be the same as was given to set method", lengthConstraint.getMin(), 5);
-        assertEquals("max value must be the same as was given to set method", lengthConstraint.getMax(), 10);
+        assertEquals(5, lengthConstraint.getMin());
+        assertEquals(10, lengthConstraint.getMax());
     }
 
     @Test
@@ -69,19 +69,18 @@ public class LengthConstraintTest extends ConstraintTestBase {
         when(annotation.max()).thenReturn(10);
 
         lengthConstraint.configure(annotation);
-        assertEquals("min value must be the same as was set to annotation when configure", lengthConstraint.getMin(), 5);
-        assertEquals("max value must be the same as was set to annotation when configure", lengthConstraint.getMax(), 10);
+        assertEquals(5, lengthConstraint.getMin());
+        assertEquals(10, lengthConstraint.getMax());
     }
 
     @Test
     public void testLengthConstraint() {
         LengthConstraint lengthConstraint = new LengthConstraint(4, 6);
-        assertFalse("result must be false when validate string with length 7 ", lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(7)));
-        assertFalse("result must be false when validate string with length 3", lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(3)));
-        assertTrue("result must be true when validate string with length 4", lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(4)));
-        assertTrue("result must be true when validate string with length 6", lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(6)));
-        assertTrue("result must be true when validate string with length 5", lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(5)));
+        assertFalse(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(7)));
+        assertFalse(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(3)));
+        assertTrue(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(4)));
+        assertTrue(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(6)));
+        assertTrue(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(5)));
     }
-
 
 }
