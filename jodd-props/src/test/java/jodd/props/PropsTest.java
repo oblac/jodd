@@ -25,14 +25,14 @@
 
 package jodd.props;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PropsTest extends BasePropsTest {
 
@@ -526,7 +526,7 @@ public class PropsTest extends BasePropsTest {
 
 		try {
 			it.next();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 	}
@@ -552,7 +552,7 @@ public class PropsTest extends BasePropsTest {
 		assertFalse(it.hasNext());
 		try {
 			it.next();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 
