@@ -29,10 +29,10 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocTestCase;
 import jodd.madvoc.interceptor.*;
 import jodd.petite.PetiteContainer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class InterceptorsManagerTest extends MadvocTestCase {
 
@@ -178,10 +178,10 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		};
 		try {
 			Class<? extends ActionInterceptor>[] out = im.expand(in);
-			fail();
+			fail("error");
 		} catch (MadvocException ignore) {
 		} catch (Exception ignored) {
-			fail();
+			fail("error");
 		}
 	}
 

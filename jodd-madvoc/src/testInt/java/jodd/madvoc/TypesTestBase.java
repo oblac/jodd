@@ -27,28 +27,16 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MissingActionTest {
-
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
-	}
+public abstract class TypesTestBase {
 
 	@Test
-	public void testMissingAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/missing.html?data.miss=123").send();
-		assertEquals(":null", response.bodyText().trim());
+	public void testTypesOne() {
+		HttpResponse response = HttpRequest.get("localhost:8173/types.one.html").query("listA","1,2,3").send();
+		assertEquals("+ [1, 2, 3]2", response.bodyText().trim());
 	}
 
 }

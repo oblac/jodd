@@ -27,43 +27,29 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import jodd.http.up.ByteArrayUploadable;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MoveTest {
+public abstract class RawActionTestBase {
 
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
+	@Test
+	public void testRawAction() {
+		HttpResponse response = HttpRequest.get("localhost:8173/raw.html").send();
+		assertEquals("this is some raw direct result", response.bodyText().trim());
 	}
 
 	@Test
-	public void testMoveWithFiles() {
-		HttpResponse response;
-		response = HttpRequest
-				.post("localhost:8173/mv/upload.html")
-				.form("uploadFiles[0]", new ByteArrayUploadable(new byte[] {65, 66, 67}, "hello.txt"))
-				.form("uploadFiles[1]", new byte[] {75, 77, 78})
-				.form("uploadFileNames[0]", "a1")
-				.form("uploadFileNames[1]", "a2")
-				.send();
+	public void testRawTextAction() {
+		HttpResponse response = HttpRequest.get("localhost:8173/raw.text.html").send();
+		assertEquals("some raw txt", response.bodyText().trim());
+	}
 
-		assertEquals(302, response.statusCode());
-
-		String location = response.header("location");
-
-		response = HttpRequest.get(location).send();
-
-		assertEquals("33hello.txt 33uploadFiles[1] a1 a2 ", response.bodyText());
+	@Test
+	public void testRawDownloadAction() {
+		HttpResponse response = HttpRequest.get("localhost:8173/raw.download").send();
+		assertEquals("attachment;filename=\"jodd-download.txt\";filename*=utf8''jodd-download.txt", response.header("content-disposition"));
+		assertEquals("file from jodd.org!", response.bodyText().trim());
 	}
 
 }

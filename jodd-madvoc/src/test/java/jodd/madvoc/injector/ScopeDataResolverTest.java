@@ -30,9 +30,9 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScopeDataResolverTest {
 

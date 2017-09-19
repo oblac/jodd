@@ -30,12 +30,12 @@ import jodd.madvoc.ActionDef;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ActionsManagerTest {
 
@@ -107,7 +107,7 @@ public class ActionsManagerTest {
 
 		try {
 			actionsManager.register(FooAction.class, "two", new ActionDef("/xxx-${two}"));
-			Assert.fail();
+			fail("error");
 		} catch (Exception ex) {
 			// ignore
 		}

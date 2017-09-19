@@ -27,49 +27,41 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RestActionTest {
+public abstract class IntcptActionTestBase {
 
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
+	@Test
+	public void testIn1Action() {
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in1.html?foo=173").send();
+		assertEquals("param:  = 173", response.bodyText().trim());
 	}
 
 	@Test
-	public void testRestAction1() {
-		HttpResponse response = HttpRequest.get("localhost:8173/re/view/123").send();
-		assertEquals("123", response.bodyText().trim());
+	public void testIn2Action() {
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in2.html?foo=173&foo2=173").send();
+		assertEquals("param: 173 = 173", response.bodyText().trim());
 	}
 
 	@Test
-	public void testRestAction2() {
-		HttpResponse response = HttpRequest.get("localhost:8173/re/view2/g-321.html").send();
-		assertEquals(302, response.statusCode());
-
-		response = HttpRequest.get(response.header("location")).send();
-		assertEquals("321", response.bodyText().trim());
+	public void testAppendingAction() {
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap.html").send();
+		assertEquals("value=appending<jodd>", response.bodyText().trim());
 	}
 
 	@Test
-	public void testRestAction3() {
-		HttpResponse response = HttpRequest.get("localhost:8173/re/view3/555").send();
-		assertEquals("555", response.bodyText().trim());
+	public void testAppending2Action() {
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap2.html").send();
+		assertEquals("value=appending2<heyp>", response.bodyText().trim());
 	}
 
 	@Test
-	public void testRestAction3_nomatch() {
-		HttpResponse response = HttpRequest.get("localhost:8173/re/view3/1x2").send();
-		assertEquals(404, response.statusCode());
+	public void testAppending3Action() {
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap3.html").send();
+		assertEquals("value=appending3<jodd>", response.bodyText().trim());
 	}
+
 
 }

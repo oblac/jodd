@@ -27,55 +27,43 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import jodd.http.up.ByteArrayUploadable;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BookActionTest {
+public abstract class MoveTestBase {
 
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() {
-		MadvocSuite.startTomcat();
+		MadvocSuiteTest.startTomcat();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void afterClass() {
-		MadvocSuite.stopTomcat();
+		MadvocSuiteTest.stopTomcat();
 	}
 
 	@Test
-	public void testBookGet() {
+	public void testMoveWithFiles() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8173/book/123").send();
-
-		assertEquals("MyBook: 123:Songs of Distant Earth.", response.bodyText().trim());
-	}
-
-	@Test
-	public void testBookPost() {
-		HttpResponse response;
-		response = HttpRequest.post("localhost:8173/book/123").send();
-
-		assertEquals("NewBook: 123:Songs of Distant Earth.", response.bodyText().trim());
-	}
-
-	@Test
-	public void testBookPut() {
-		HttpResponse response;
-		response = HttpRequest.put("localhost:8173/book/123").send();
-
-		assertEquals("OldBook: 123:Songs of Distant Earth.", response.bodyText().trim());
-	}
-
-	@Test
-	public void testBookPartial() {
-		HttpResponse response = HttpRequest.put("localhost:8173/bookPartial.hello.html")
-				.query("book.iban", "123123123")
-				.query("book.foo", "not used")
+		response = HttpRequest
+				.post("localhost:8173/mv/upload.html")
+				.form("uploadFiles[0]", new ByteArrayUploadable(new byte[] {65, 66, 67}, "hello.txt"))
+				.form("uploadFiles[1]", new byte[] {75, 77, 78})
+				.form("uploadFileNames[0]", "a1")
+				.form("uploadFileNames[1]", "a2")
 				.send();
 
-		assertEquals("Hi123123123", response.bodyText().trim());
+		assertEquals(302, response.statusCode());
+
+		String location = response.header("location");
+
+		response = HttpRequest.get(location).send();
+
+		assertEquals("33hello.txt 33uploadFiles[1] a1 a2 ", response.bodyText());
 	}
+
 }

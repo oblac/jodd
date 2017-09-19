@@ -27,41 +27,16 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RawActionTest {
-
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
-	}
+public abstract class MissingActionTestBase {
 
 	@Test
-	public void testRawAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/raw.html").send();
-		assertEquals("this is some raw direct result", response.bodyText().trim());
-	}
-
-	@Test
-	public void testRawTextAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/raw.text.html").send();
-		assertEquals("some raw txt", response.bodyText().trim());
-	}
-
-	@Test
-	public void testRawDownloadAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/raw.download").send();
-		assertEquals("attachment;filename=\"jodd-download.txt\";filename*=utf8''jodd-download.txt", response.header("content-disposition"));
-		assertEquals("file from jodd.org!", response.bodyText().trim());
+	public void testMissingAction() {
+		HttpResponse response = HttpRequest.get("localhost:8173/missing.html?data.miss=123").send();
+		assertEquals(":null", response.bodyText().trim());
 	}
 
 }

@@ -25,56 +25,18 @@
 
 package jodd.madvoc;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
+import org.junit.jupiter.api.Test;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-		HelloActionTest.class,
-		SimpleTest.class,
-		RawActionTest.class,
-		UrlActionTest.class,
-		OneTwoActionTest.class,
-		IntcptActionTest.class,
-		RestActionTest.class,
-		FilterTest.class,
-		SessionScopeTest.class,
-		AlphaTest.class,
-		ArgsTest.class,
-		TypesTest.class,
-		ExcTest.class,
-		UserActionTest.class,
-		AsyncTest.class,
-		MoveTest.class,
-		BookActionTest.class,
-		ResultsTest.class,
-		TagActionTest.class,
-		MissingActionTest.class
-})
-public class MadvocSuite extends MadvocSuiteBase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	/**
-	 * Starts Tomcat after the suite.
-	 */
-	@BeforeClass
-	public static void beforeClass() {
-		isSuite = true;
-		startTomcat();
-	}
+public abstract class SimpleTestBase {
 
-	/**
-	 * Stop Tomcat after the suite.
-	 */
-	@AfterClass
-	public static void afterSuite() {
-		isSuite = false;
-		stopTomcat();
-	}
-
-	public static void startTomcat() {
-		startTomcat("web-test-int.xml");
+	@Test
+	public void testHelloAction() {
+		HttpResponse response = HttpRequest.get("localhost:8173/hello.html").send();
+		assertEquals("hello", response.bodyText().trim());
 	}
 
 }

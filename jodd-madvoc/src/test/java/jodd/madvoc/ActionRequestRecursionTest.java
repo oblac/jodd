@@ -31,12 +31,12 @@ import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.util.ClassUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActionRequestRecursionTest {
 

@@ -28,23 +28,11 @@ package jodd.madvoc;
 import jodd.http.HttpBrowser;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AlphaTest {
-
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
-	}
+public abstract class AlphaTestBase {
 
 	@Test
 	public void testForwardTo() {

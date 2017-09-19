@@ -25,55 +25,31 @@
 
 package jodd.madvoc;
 
+import jodd.http.HttpBrowser;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IntcptActionTest {
+public abstract class UserActionTestBase {
 
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
+	@Test
+	public void testUserActionGet() {
+		HttpBrowser httpBrowser = new HttpBrowser();
+		HttpResponse response = httpBrowser.sendRequest(
+				HttpRequest.get("localhost:8173/sys/user/123"));
 
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
+		assertEquals("Huh 123.", response.bodyText().trim());
 	}
 
 	@Test
-	public void testIn1Action() {
-		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in1.html?foo=173").send();
-		assertEquals("param:  = 173", response.bodyText().trim());
-	}
+	public void testUserActionPost() {
+		HttpBrowser httpBrowser = new HttpBrowser();
+		HttpResponse response = httpBrowser.sendRequest(
+				HttpRequest.post("localhost:8173/sys/user/123"));
 
-	@Test
-	public void testIn2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in2.html?foo=173&foo2=173").send();
-		assertEquals("param: 173 = 173", response.bodyText().trim());
+		assertEquals("Post 123.", response.bodyText().trim());
 	}
-
-	@Test
-	public void testAppendingAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap.html").send();
-		assertEquals("value=appending<jodd>", response.bodyText().trim());
-	}
-
-	@Test
-	public void testAppending2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap2.html").send();
-		assertEquals("value=appending2<heyp>", response.bodyText().trim());
-	}
-
-	@Test
-	public void testAppending3Action() {
-		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap3.html").send();
-		assertEquals("value=appending3<jodd>", response.bodyText().trim());
-	}
-
 
 }

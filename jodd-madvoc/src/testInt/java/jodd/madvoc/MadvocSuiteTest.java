@@ -26,8 +26,30 @@
 package jodd.madvoc;
 
 import jodd.exception.UncheckedException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 
-public abstract class MadvocSuiteBase {
+public class MadvocSuiteTest {
+
+	/**
+	 * Starts Tomcat after the suite.
+	 */
+	@BeforeAll
+	public static void beforeClass() {
+		isSuite = true;
+		startTomcat();
+	}
+
+	/**
+	 * Stop Tomcat after the suite.
+	 */
+	@AfterAll
+	public static void afterSuite() {
+		isSuite = false;
+		stopTomcat();
+	}
+
 
 	public static boolean isSuite;
 
@@ -70,4 +92,50 @@ public abstract class MadvocSuiteBase {
 		}
 	}
 
+	public static void startTomcat() {
+		startTomcat("web-test-int.xml");
+	}
+
+	// ---------------------------------------------------------------- go
+
+	@Nested
+	class HelloActionTest extends HelloActionTestBase {}
+	@Nested
+	class SimpleTest extends SimpleTestBase {}
+	@Nested
+	class RawActionTest extends RawActionTestBase {}
+	@Nested
+	class UrlActionTest extends UrlActionTestBase {}
+	@Nested
+	class OneTwoActionTest extends OneTwoActionTestBase {}
+	@Nested
+	class IntcptActionTest extends IntcptActionTestBase {}
+	@Nested
+	class RestActionTest extends RestActionTestBase {}
+	@Nested
+	class FilterTest extends FilterTestBase {}
+	@Nested
+	class SessionScopeTest extends SessionScopeTestBase {}
+	@Nested
+	class AlphaTest extends AlphaTestBase {}
+	@Nested
+	class ArgsTest extends ArgsTestBase {}
+	@Nested
+	class TypesTest extends TypesTestBase {}
+	@Nested
+	class ExcTest extends ExcTestBase {}
+	@Nested
+	class UserActionTest extends UserActionTestBase {}
+	@Nested
+	class AsyncTest extends AsyncTestBase {}
+	@Nested
+	class MoveTest extends MoveTestBase {}
+	@Nested
+	class BookActionTest extends BookActionTestBase {}
+	@Nested
+	class ResultsTest extends ResultsTestBase {}
+	@Nested
+	class TagActionTest extends TagActionTestBase {}
+	@Nested
+	class MissingActionTest extends MissingActionTestBase {}
 }

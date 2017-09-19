@@ -28,40 +28,25 @@ package jodd.madvoc;
 import jodd.http.HttpBrowser;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserActionTest {
+public abstract class ExcTestBase {
 
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
+	@Test
+	public void testException() {
+		HttpBrowser httpBrowser = new HttpBrowser();
+		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8173/exc.html"));
 
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
+		assertEquals("500!", response.bodyText().trim());
 	}
 
 	@Test
-	public void testUserActionGet() {
+	public void testRedirect500() {
 		HttpBrowser httpBrowser = new HttpBrowser();
-		HttpResponse response = httpBrowser.sendRequest(
-				HttpRequest.get("localhost:8173/sys/user/123"));
+		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8173/exc.red.html"));
 
-		assertEquals("Huh 123.", response.bodyText().trim());
+		assertEquals("500!", response.bodyText().trim());
 	}
-
-	@Test
-	public void testUserActionPost() {
-		HttpBrowser httpBrowser = new HttpBrowser();
-		HttpResponse response = httpBrowser.sendRequest(
-				HttpRequest.post("localhost:8173/sys/user/123"));
-
-		assertEquals("Post 123.", response.bodyText().trim());
-	}
-
 }

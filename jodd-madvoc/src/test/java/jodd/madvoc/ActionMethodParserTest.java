@@ -36,9 +36,9 @@ import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.fixtures.tst2.Boo4Action;
 import jodd.madvoc.fixtures.tst2.Boo5Action;
 import jodd.madvoc.fixtures.tst2.ReAction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionMethodParserTest extends MadvocTestCase {
 

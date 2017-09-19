@@ -25,40 +25,39 @@
 
 package jodd.madvoc;
 
-import jodd.http.HttpBrowser;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ExcTest {
+public abstract class RestActionTestBase {
 
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
+	@Test
+	public void testRestAction1() {
+		HttpResponse response = HttpRequest.get("localhost:8173/re/view/123").send();
+		assertEquals("123", response.bodyText().trim());
 	}
 
 	@Test
-	public void testException() {
-		HttpBrowser httpBrowser = new HttpBrowser();
-		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8173/exc.html"));
+	public void testRestAction2() {
+		HttpResponse response = HttpRequest.get("localhost:8173/re/view2/g-321.html").send();
+		assertEquals(302, response.statusCode());
 
-		assertEquals("500!", response.bodyText().trim());
+		response = HttpRequest.get(response.header("location")).send();
+		assertEquals("321", response.bodyText().trim());
 	}
 
 	@Test
-	public void testRedirect500() {
-		HttpBrowser httpBrowser = new HttpBrowser();
-		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8173/exc.red.html"));
-
-		assertEquals("500!", response.bodyText().trim());
+	public void testRestAction3() {
+		HttpResponse response = HttpRequest.get("localhost:8173/re/view3/555").send();
+		assertEquals("555", response.bodyText().trim());
 	}
+
+	@Test
+	public void testRestAction3_nomatch() {
+		HttpResponse response = HttpRequest.get("localhost:8173/re/view3/1x2").send();
+		assertEquals(404, response.statusCode());
+	}
+
 }

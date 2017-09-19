@@ -27,58 +27,18 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import jodd.madvoc.action.ArgsAction;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ArgsTest {
-
-	@BeforeClass
-	public static void beforeClass() {
-		MadvocSuite.startTomcat();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		MadvocSuite.stopTomcat();
-	}
+public abstract class AsyncTestBase {
 
 	@Test
-	public void testArgs() {
+	public void testAsync() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8173/args.hello.html?id=1").send();
+		response = HttpRequest.get("localhost:8173/async.html").send();
 
-		assertEquals("+ mad 1voc + jodd 1", response.bodyText().trim());
-	}
-
-	@Test
-	public void testArgs2() {
-		ArgsAction.User.counter = 0;
-		HttpResponse response;
-		response = HttpRequest.get("localhost:8173/args.world.html")
-				.query("who", "me")
-				.query("name", "Jupiter")
-				.query("hello.id", "1")
-				.query("id", "3")
-				.query("muti", "7")
-				.send();
-
-		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**8**jojo", response.bodyText().trim());
-	}
-
-	@Test
-	public void testArgs3() {
-		ArgsAction.User.counter = 0;
-		HttpResponse response;
-		response = HttpRequest.get("localhost:8173/args.user.html")
-				.query("user.id", "3")
-				.query("user.username", "Frank")
-				.send();
-
-		assertEquals("Hello Frank, you are number 3 or 1.", response.bodyText().trim());
+		assertEquals("async TASK!", response.bodyText().trim());
 	}
 
 }
