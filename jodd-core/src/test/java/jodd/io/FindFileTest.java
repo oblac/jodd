@@ -29,22 +29,22 @@ import jodd.io.findfile.FindFile;
 import jodd.io.findfile.RegExpFindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.mutable.MutableInteger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FindFileTest {
 
 	protected String dataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;

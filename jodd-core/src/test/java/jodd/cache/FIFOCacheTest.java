@@ -26,10 +26,9 @@
 package jodd.cache;
 
 import jodd.util.ThreadUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FIFOCacheTest extends BaseCacheTest {
 
@@ -116,12 +115,11 @@ public class FIFOCacheTest extends BaseCacheTest {
 		fifoCache.put("1", Integer.valueOf(1));
 		fifoCache.put("1", Integer.valueOf(11));
 
-		assertThat(3, equalTo(fifoCache.size()));
+		assertEquals(3, fifoCache.size());
 
-		assertThat(11, equalTo(fifoCache.get("1")));
-		assertThat(2, equalTo(fifoCache.get("2")));
-		assertThat(3, equalTo(fifoCache.get("3")));
-
+		assertEquals(Integer.valueOf(11), fifoCache.get("1"));
+		assertEquals(Integer.valueOf(2), fifoCache.get("2"));
+		assertEquals(Integer.valueOf(3), fifoCache.get("3"));
 	}
 
 	@Override

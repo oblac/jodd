@@ -25,15 +25,15 @@
 
 package jodd.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NaturalOrderComparatorTest {
 
@@ -372,13 +372,13 @@ public class NaturalOrderComparatorTest {
 		String input = "\ns1: " + s1 + "\ns2: " + s2 + "\ns3: " + s3;
 
 		if (c12 > 0 && c23 > 0) {
-			assertTrue(input,  c13 > 0);
+			assertTrue(c13 > 0, input);
 		}
 		else if (c12 < 0 && c23 < 0) {
-			assertTrue(input, c13 < 0);
+			assertTrue(c13 < 0, input);
 		}
 		else if (c12 == 0 & c23 == 0) {
-			assertTrue(input, c13 == 0);
+			assertTrue(c13 == 0, input);
 		}
 	}
 }

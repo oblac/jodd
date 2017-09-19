@@ -26,12 +26,12 @@
 package jodd.datetime;
 
 import jodd.util.ObjectUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 public class JDateTimeSerializationTest {
 

@@ -27,22 +27,22 @@ package jodd.io.watch;
 
 import jodd.io.FileUtil;
 import jodd.util.ThreadUtil;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Ignore("test does not give consistent results - run each method individually")
+@Disabled("test does not give consistent results - run each method individually")
 public class DirWatcherTest {
 
 	protected String dataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;

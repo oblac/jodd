@@ -32,7 +32,7 @@ import jodd.mutable.ValueHolder;
 import jodd.mutable.ValueHolderWrapper;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClassLoaderUtilTest {
 
@@ -92,7 +92,7 @@ public class ClassLoaderUtilTest {
 			Class joddClass = ClassLoaderUtil.loadClass("jodd.util.ClassLoaderUtilTest");
 			assertNotNull(joddClass);
 		} catch (ClassNotFoundException ignore) {
-			fail();
+			fail("error");
 		}
 		assertEquals(Integer.class, ClassLoaderUtil.loadClass("java.lang.Integer"));
 		assertEquals(int.class, ClassLoaderUtil.loadClass("int"));

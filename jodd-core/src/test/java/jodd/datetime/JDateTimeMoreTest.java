@@ -25,15 +25,15 @@
 
 package jodd.datetime;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 public class JDateTimeMoreTest {
 
@@ -398,16 +398,16 @@ public class JDateTimeMoreTest {
 		JDateTime jdt0 = new JDateTime(1350936803760L);
 		JDateTime jdt1 = new JDateTime(2012, 10, 22, 22, 13, 23, 760);
 
-		Assert.assertEquals(1350936803760L, jdt1.getTimeInMillis());
-		Assert.assertEquals(1350936803760L, jdt0.getTimeInMillis());
-		Assert.assertEquals(1350936803760L, jdt.getTimeInMillis());
+		assertEquals(1350936803760L, jdt1.getTimeInMillis());
+		assertEquals(1350936803760L, jdt0.getTimeInMillis());
+		assertEquals(1350936803760L, jdt.getTimeInMillis());
 		assertEquals(42596945, jdt.getJulianDate().getSignificantFraction());
 		assertEquals(42596944, jdt0.getJulianDate().getSignificantFraction());
 		assertEquals(42596944, jdt1.getJulianDate().getSignificantFraction());
 
-		Assert.assertEquals(jdt0, jdt1);
-		Assert.assertEquals(jdt, jdt0);
-		Assert.assertEquals(jdt, jdt1);
+		assertEquals(jdt0, jdt1);
+		assertEquals(jdt, jdt0);
+		assertEquals(jdt, jdt1);
 
 		JDateTimeDefault.timeZone = null;
 	}

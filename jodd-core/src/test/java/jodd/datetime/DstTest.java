@@ -25,14 +25,14 @@
 
 package jodd.datetime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import static java.util.Calendar.HOUR;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DstTest {
 

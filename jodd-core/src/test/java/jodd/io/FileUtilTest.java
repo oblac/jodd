@@ -26,21 +26,21 @@
 package jodd.io;
 
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileUtilTest {
 
 	protected String dataRoot;
 	protected String utfdataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;

@@ -25,15 +25,15 @@
 
 package jodd.exception;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static jodd.exception.ExceptionUtil.getExceptionChain;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
 public class ExceptionUtilTest {
@@ -52,7 +52,7 @@ public class ExceptionUtilTest {
 	public void testExceptionChain() {
 		try {
 			throwTwoExceptions();
-			fail();
+			fail("error");
 		} catch (Exception ex) {
 			Throwable[] ts = getExceptionChain(ex);
 
@@ -72,7 +72,7 @@ public class ExceptionUtilTest {
 	public void testThrowChecked() {
 		try {
 			throwMe();
-			fail();
+			fail("error");
 		} catch (Exception ex) {
 			assertEquals(IOException.class, ex.getClass());
 		}

@@ -26,19 +26,19 @@
 package jodd.util.collection;
 
 import jodd.util.StringUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Random;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JoddArrayListTest {
 
@@ -74,14 +74,14 @@ public class JoddArrayListTest {
 		jal = (JoddArrayList<String>) jal0.clone();
 		try {
 			jal.removeFirst();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 
 		jal = (JoddArrayList<String>) jal0.clone();
 		try {
 			jal.removeLast();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 
@@ -890,12 +890,12 @@ public class JoddArrayListTest {
 
 		try {
 			jal.get(0);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 		try {
 			jal.get(1);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 
@@ -910,7 +910,7 @@ public class JoddArrayListTest {
 
 		try {
 			jal.get(0);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 
@@ -1036,7 +1036,7 @@ public class JoddArrayListTest {
 
 		try {
 			iterator.next();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 
@@ -1078,7 +1078,7 @@ public class JoddArrayListTest {
 
 		try {
 			iterator.next();
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 

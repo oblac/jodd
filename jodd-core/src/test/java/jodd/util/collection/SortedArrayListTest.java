@@ -25,9 +25,9 @@
 
 package jodd.util.collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,7 @@ import java.util.Comparator;
 
 import jodd.util.RandomString;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SortedArrayListTest {
 
@@ -60,19 +60,19 @@ public class SortedArrayListTest {
 		
 		try {
 			list.add(2, "ddd");
-			fail();
+			fail("error");
 		} catch (UnsupportedOperationException e) {
 			// ignore
 		}
 		try {
 			list.set(2, "ddd");
-			fail();
+			fail("error");
 		} catch (UnsupportedOperationException e) {
 			// ignore
 		}
 		try {
 			list.addAll(2, new ArrayList<String>());
-			fail();
+			fail("error");
 		} catch (UnsupportedOperationException e) {
 			// ignore
 		}

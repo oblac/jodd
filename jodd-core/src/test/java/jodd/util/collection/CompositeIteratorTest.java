@@ -25,15 +25,15 @@
 
 package jodd.util.collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CompositeIteratorTest {
 
@@ -43,7 +43,7 @@ public class CompositeIteratorTest {
 		
 		try {
 			compositeIterator.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException e) {
 			// ignore
 		}
@@ -54,7 +54,7 @@ public class CompositeIteratorTest {
 		
 		try {
 			compositeIterator.add(iterator);
-			fail();
+			fail("error");
 		} catch (IllegalArgumentException iaex) {
 			// ignore
 		}
@@ -177,7 +177,7 @@ public class CompositeIteratorTest {
 		compositeIterator.add(list2.iterator());
 		try {
 			compositeIterator.remove();
-			fail();
+			fail("error");
 		} catch (Exception e) {
 			// ignore
 		}

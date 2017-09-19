@@ -28,27 +28,27 @@ package jodd.datetime;
 import jodd.datetime.format.Iso8601JdtFormatter;
 import jodd.datetime.format.JdtFormat;
 import jodd.datetime.format.JdtFormatter;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class FormatterTest {
 
 	Locale originalLocale;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		originalLocale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		Locale.setDefault(originalLocale);
 	}
@@ -136,7 +136,7 @@ public class FormatterTest {
 
 		try {
 			jdt.parse("2003-4-x");
-			fail();
+			fail("error");
 		} catch (NumberFormatException nfex) {
 			// ignore
 		}

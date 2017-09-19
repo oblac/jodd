@@ -3,7 +3,7 @@ ext.moduleName = 'Jodd Core'
 ext.moduleDescription = 'Jodd Core tools and huge number of utilities.'
 
 dependencies {
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile 'org.webjars:jquery:2.1.1'
 }
 

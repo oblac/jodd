@@ -25,8 +25,8 @@
 
 package jodd.util.collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -36,7 +36,7 @@ import java.util.NoSuchElementException;
 
 import jodd.util.CollectionUtil;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CompositeEnumerationTest {
 
@@ -46,7 +46,7 @@ public class CompositeEnumerationTest {
 		
 		try {
 			compositeEnumeration.nextElement();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException e) {
 			// ignore
 		}
@@ -57,7 +57,7 @@ public class CompositeEnumerationTest {
 		
 		try {
 			compositeEnumeration.add(e);
-			fail();
+			fail("error");
 		} catch (IllegalArgumentException iaex) {
 			// ignore
 		}

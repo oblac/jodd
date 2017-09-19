@@ -26,14 +26,14 @@
 package jodd.util;
 
 import jodd.mutable.MutableInteger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class FuturesTest {
 
@@ -65,7 +65,7 @@ public class FuturesTest {
 			.get();
 
 		if (value == null) {
-			fail();
+			fail("error");
 		}
 	}
 

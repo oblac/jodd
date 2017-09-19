@@ -38,7 +38,7 @@ import jodd.util.fixtures.testdata.C;
 import jodd.util.fixtures.testdata.JavaBean;
 import jodd.util.fixtures.testdata2.D;
 import jodd.util.fixtures.testdata2.E;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClassUtilTest {
 

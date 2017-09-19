@@ -26,19 +26,19 @@
 package jodd.io.findfile;
 
 import jodd.util.StringUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FindFile2Test {
 
 	protected String dataRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;

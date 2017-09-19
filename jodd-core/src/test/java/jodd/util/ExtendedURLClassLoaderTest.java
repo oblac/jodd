@@ -28,8 +28,7 @@ package jodd.util;
 import jodd.io.FileUtil;
 import jodd.util.cl.ExtendedURLClassLoader;
 import jodd.util.fixtures.testdata.A;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,11 +36,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ExtendedURLClassLoaderTest {
 
@@ -88,7 +83,7 @@ public class ExtendedURLClassLoaderTest {
 		ecl.addParentOnlyRules(A.class.getName());
 		try {
 			ecl.loadClass(A.class.getName());
-			Assert.fail();
+			fail("error");
 		} catch (ClassNotFoundException ignore) {}
 	}
 
@@ -113,7 +108,7 @@ public class ExtendedURLClassLoaderTest {
 		ecl.addLoaderOnlyRules(A.class.getName());
 		try {
 			ecl.loadClass(A.class.getName());
-			Assert.fail();
+			fail("error");
 		} catch (ClassNotFoundException ignore) {}
 	}
 

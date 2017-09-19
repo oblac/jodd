@@ -25,13 +25,13 @@
 
 package jodd.util.buffer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FastBuffersTest {
 
@@ -144,19 +144,19 @@ public class FastBuffersTest {
 
 		try {
 			fcb.charAt(-1);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ioobex) {
 		}
 
 		try {
 			fcb.charAt(0);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ioobex) {
 		}
 
 		try {
 			fcb.charAt(1);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ioobex) {
 		}
 
@@ -165,7 +165,7 @@ public class FastBuffersTest {
 
 		try {
 			fcb.charAt(1);
-			fail();
+			fail("error");
 		} catch (IndexOutOfBoundsException ioobex) {
 		}
 	}
@@ -220,7 +220,7 @@ public class FastBuffersTest {
 
 		try {
 			it.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 		}
 	}

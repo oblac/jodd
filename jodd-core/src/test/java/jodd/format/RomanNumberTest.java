@@ -25,15 +25,15 @@
 
 package jodd.format;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static jodd.format.RomanNumber.convertToArabic;
 import static jodd.format.RomanNumber.convertToRoman;
 import static jodd.format.RomanNumber.isValidRomanNumber;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class RomanNumberTest {
 
@@ -55,7 +55,7 @@ public class RomanNumberTest {
 
 		try {
 			convertToRoman(-1);
-			fail();
+			fail("error");
 		} catch (Exception ignore) {
 		}
 	}

@@ -25,14 +25,14 @@
 
 package jodd.util.collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("AutoBoxing")
 public class ArrayIteratorTest {
@@ -53,14 +53,14 @@ public class ArrayIteratorTest {
 
 		try {
 			ae.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}
 		
 		try {
 			ae.remove();
-			fail();
+			fail("error");
 		} catch (UnsupportedOperationException nseex) {
 			// ignore
 		}
@@ -79,7 +79,7 @@ public class ArrayIteratorTest {
 
 		try {
 			ae.next();
-			fail();
+			fail("error");
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}

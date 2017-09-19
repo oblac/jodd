@@ -25,12 +25,12 @@
 
 package jodd.datetime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JDateTimeTest {
 

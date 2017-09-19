@@ -25,17 +25,12 @@
 
 package jodd.util;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ArraysUtilTest {
 
@@ -46,7 +41,7 @@ public class ArraysUtilTest {
 	Long[] yy;
 	Object[] oo;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		x = new int[5];
 		xx = new Long[5];
@@ -113,19 +108,19 @@ public class ArraysUtilTest {
 		assertArrayEquals(new long[] { 1l, 2l }, ArraysUtil.join(longs1));
 		assertArrayEquals(new long[] { 1l, 2l, 3l, 4l }, ArraysUtil.join(longs1, longs2));
 
-		assertArrayEquals(new float[0], ArraysUtil.join(new float[0][]), 0);
-		assertArrayEquals(new float[] {}, ArraysUtil.join(new float[0]), 0);
+		assertArrayEquals(new float[0], ArraysUtil.join(new float[0][]), 0.1f);
+		assertArrayEquals(new float[] {}, ArraysUtil.join(new float[0]), 0.1f);
 		float[] floats1 = new float[] { 1.0f, 2.0f };
 		float[] floats2 = new float[] { 3.0f, 4.0f };
-		assertArrayEquals(new float[] { 1.0f, 2.0f }, ArraysUtil.join(floats1), 0);
-		assertArrayEquals(new float[] { 1.0f, 2.0f, 3.0f, 4.0f }, ArraysUtil.join(floats1, floats2), 0);
+		assertArrayEquals(new float[] { 1.0f, 2.0f }, ArraysUtil.join(floats1), 0.1f);
+		assertArrayEquals(new float[] { 1.0f, 2.0f, 3.0f, 4.0f }, ArraysUtil.join(floats1, floats2), 0.1f);
 
-		assertArrayEquals(new double[0], ArraysUtil.join(new double[0][]), 0);
-		assertArrayEquals(new double[] {}, ArraysUtil.join(new double[0]), 0);
+		assertArrayEquals(new double[0], ArraysUtil.join(new double[0][]), 0.1);
+		assertArrayEquals(new double[] {}, ArraysUtil.join(new double[0]), 0.1);
 		double[] doubles1 = new double[] { 1.0, 2.0 };
 		double[] doubles2 = new double[] { 3.0, 4.0 };
-		assertArrayEquals(new double[] { 1.0, 2.0 }, ArraysUtil.join(doubles1), 0);
-		assertArrayEquals(new double[] { 1.0, 2.0, 3.0, 4.0 }, ArraysUtil.join(doubles1, doubles2), 0);
+		assertArrayEquals(new double[] { 1.0, 2.0 }, ArraysUtil.join(doubles1), 0.1);
+		assertArrayEquals(new double[] { 1.0, 2.0, 3.0, 4.0 }, ArraysUtil.join(doubles1, doubles2), 0.1);
 
 		assertBooleanArrayEquals(new boolean[0], ArraysUtil.join(new boolean[0][]));
 		assertBooleanArrayEquals(new boolean[] {}, ArraysUtil.join(new boolean[0]));
@@ -144,8 +139,8 @@ public class ArraysUtilTest {
 		assertArrayEquals(new char[] { 'f', 'o', 'o' }, ArraysUtil.append(new char[] { 'f', 'o' }, 'o'));
 		assertArrayEquals(new short[] { 1, 2, 3 }, ArraysUtil.append(new short[] { 1, 2 }, (short) 3));
 		assertArrayEquals(new long[] { 1, 2, 3 }, ArraysUtil.append(new long[] { 1, 2 }, 3l));
-		assertArrayEquals(new float[] { 1.0f, 2.0f, 3.0f }, ArraysUtil.append(new float[] { 1.0f, 2.0f }, 3.0f), 0);
-		assertArrayEquals(new double[] { 1.0, 2.0, 3.0 }, ArraysUtil.append(new double[] { 1.0, 2.0 }, 3.0), 0);
+		assertArrayEquals(new float[] { 1.0f, 2.0f, 3.0f }, ArraysUtil.append(new float[] { 1.0f, 2.0f }, 3.0f), 0.1f);
+		assertArrayEquals(new double[] { 1.0, 2.0, 3.0 }, ArraysUtil.append(new double[] { 1.0, 2.0 }, 3.0), 0.1);
 		assertBooleanArrayEquals(new boolean[] { true, true, false }, ArraysUtil.append(new boolean[] { true, true }, false));
 	}
 
@@ -194,17 +189,17 @@ public class ArraysUtilTest {
 
 		float[] floats1 = new float[] { 1.0f, 2.0f };
 		float[] floats2 = new float[] { 1.0f, 2.0f, 3.0f, 4.0f };
-		assertArrayEquals(new float[] { 1.0f, 2.0f }, ArraysUtil.resize(floats1, 2), 0);
-		assertArrayEquals(new float[] { 1.0f, 2.0f, 3.0f }, ArraysUtil.resize(floats2, 3), 0);
-		assertArrayEquals(new float[] { 1.0f, 2.0f, 0, 0, 0 }, ArraysUtil.resize(floats1, 5), 0);
-		assertArrayEquals(new float[] {}, ArraysUtil.resize(floats1, 0), 0);
+		assertArrayEquals(new float[] { 1.0f, 2.0f }, ArraysUtil.resize(floats1, 2), 0.1f);
+		assertArrayEquals(new float[] { 1.0f, 2.0f, 3.0f }, ArraysUtil.resize(floats2, 3), 0.1f);
+		assertArrayEquals(new float[] { 1.0f, 2.0f, 0, 0, 0 }, ArraysUtil.resize(floats1, 5), 0.1f);
+		assertArrayEquals(new float[] {}, ArraysUtil.resize(floats1, 0), 0.1f);
 
 		double[] doubles1 = new double[] { 1.0, 2.0 };
 		double[] doubles2 = new double[] { 1.0, 2.0, 3.0, 4.0 };
-		assertArrayEquals(new double[] { 1.0, 2.0 }, ArraysUtil.resize(doubles1, 2), 0);
-		assertArrayEquals(new double[] { 1.0, 2.0, 3.0 }, ArraysUtil.resize(doubles2, 3), 0);
-		assertArrayEquals(new double[] { 1.0, 2.0, 0, 0, 0 }, ArraysUtil.resize(doubles1, 5), 0);
-		assertArrayEquals(new double[] {}, ArraysUtil.resize(doubles1, 0), 0);
+		assertArrayEquals(new double[] { 1.0, 2.0 }, ArraysUtil.resize(doubles1, 2), 0.1);
+		assertArrayEquals(new double[] { 1.0, 2.0, 3.0 }, ArraysUtil.resize(doubles2, 3), 0.1);
+		assertArrayEquals(new double[] { 1.0, 2.0, 0, 0, 0 }, ArraysUtil.resize(doubles1, 5), 0.1);
+		assertArrayEquals(new double[] {}, ArraysUtil.resize(doubles1, 0), 0.1);
 
 		boolean[] booleans1 = new boolean[] { true, true };
 		boolean[] booleans2 = new boolean[] { true, true, false, false };
@@ -223,8 +218,8 @@ public class ArraysUtilTest {
 		assertArrayEquals(new char[] { 'f', 'o', 'o' }, ArraysUtil.subarray(new char[] { 'f', 'o', 'o', 'b', 'a', 'r' }, 0, 3));
 		assertArrayEquals(new short[] { 2, 3 }, ArraysUtil.subarray(new short[] { 1, 2, 3 }, 1, 2));
 		assertArrayEquals(new long[] { 2l, 3l }, ArraysUtil.subarray(new long[] { 1l, 2l, 3l }, 1, 2));
-		assertArrayEquals(new float[] { 2.0f, 3.0f }, ArraysUtil.subarray(new float[] { 1.0f, 2.0f, 3.0f }, 1, 2), 0);
-		assertArrayEquals(new double[] { 2.0, 3.0 }, ArraysUtil.subarray(new double[] { 1.0, 2.0, 3.0 }, 1, 2), 0);
+		assertArrayEquals(new float[] { 2.0f, 3.0f }, ArraysUtil.subarray(new float[] { 1.0f, 2.0f, 3.0f }, 1, 2), 0.1f);
+		assertArrayEquals(new double[] { 2.0, 3.0 }, ArraysUtil.subarray(new double[] { 1.0, 2.0, 3.0 }, 1, 2), 0.1);
 		assertBooleanArrayEquals(new boolean[] { true, false }, ArraysUtil.subarray(new boolean[] { true, true, false, false }, 1, 2));
 	}
 
@@ -293,21 +288,21 @@ public class ArraysUtilTest {
 
 		float[] floats1 = new float[] { 1, 2, 3, 4, 5 };
 		float[] floats2 = new float[] { 11, 12, 13 };
-		assertArrayEquals(new float[] { 1, 2, 3, 11, 12, 13, 4, 5 }, ArraysUtil.insert(floats1, floats2, 3), 0);
-		assertArrayEquals(new float[] { 11, 12, 13, 1, 2, 3, 4, 5 }, ArraysUtil.insert(floats1, floats2, 0), 0);
-		assertArrayEquals(new float[] { 1, 2, 3, 4, 5, 11, 12, 13 }, ArraysUtil.insert(floats1, floats2, 5), 0);
-		assertArrayEquals(new float[] { 1, 2, 3, 173, 4, 5 }, ArraysUtil.insert(floats1, 173, 3), 0);
-		assertArrayEquals(new float[] { 173, 1, 2, 3, 4, 5 }, ArraysUtil.insert(floats1, 173, 0), 0);
-		assertArrayEquals(new float[] { 1, 2, 3, 4, 5, 173 }, ArraysUtil.insert(floats1, 173, 5), 0);
+		assertArrayEquals(new float[] { 1, 2, 3, 11, 12, 13, 4, 5 }, ArraysUtil.insert(floats1, floats2, 3), 0.1f);
+		assertArrayEquals(new float[] { 11, 12, 13, 1, 2, 3, 4, 5 }, ArraysUtil.insert(floats1, floats2, 0), 0.1f);
+		assertArrayEquals(new float[] { 1, 2, 3, 4, 5, 11, 12, 13 }, ArraysUtil.insert(floats1, floats2, 5), 0.1f);
+		assertArrayEquals(new float[] { 1, 2, 3, 173, 4, 5 }, ArraysUtil.insert(floats1, 173, 3), 0.1f);
+		assertArrayEquals(new float[] { 173, 1, 2, 3, 4, 5 }, ArraysUtil.insert(floats1, 173, 0), 0.1f);
+		assertArrayEquals(new float[] { 1, 2, 3, 4, 5, 173 }, ArraysUtil.insert(floats1, 173, 5), 0.1f);
 
 		double[] doubles1 = new double[] { 1, 2, 3, 4, 5 };
 		double[] doubles2 = new double[] { 11, 12, 13 };
-		assertArrayEquals(new double[] { 1, 2, 3, 11, 12, 13, 4, 5 }, ArraysUtil.insert(doubles1, doubles2, 3), 0);
-		assertArrayEquals(new double[] { 11, 12, 13, 1, 2, 3, 4, 5 }, ArraysUtil.insert(doubles1, doubles2, 0), 0);
-		assertArrayEquals(new double[] { 1, 2, 3, 4, 5, 11, 12, 13 }, ArraysUtil.insert(doubles1, doubles2, 5), 0);
-		assertArrayEquals(new double[] { 1, 2, 3, 173, 4, 5 }, ArraysUtil.insert(doubles1, 173, 3), 0);
-		assertArrayEquals(new double[] { 173, 1, 2, 3, 4, 5 }, ArraysUtil.insert(doubles1, 173, 0), 0);
-		assertArrayEquals(new double[] { 1, 2, 3, 4, 5, 173 }, ArraysUtil.insert(doubles1, 173, 5), 0);
+		assertArrayEquals(new double[] { 1, 2, 3, 11, 12, 13, 4, 5 }, ArraysUtil.insert(doubles1, doubles2, 3), 0.1);
+		assertArrayEquals(new double[] { 11, 12, 13, 1, 2, 3, 4, 5 }, ArraysUtil.insert(doubles1, doubles2, 0), 0.1);
+		assertArrayEquals(new double[] { 1, 2, 3, 4, 5, 11, 12, 13 }, ArraysUtil.insert(doubles1, doubles2, 5), 0.1);
+		assertArrayEquals(new double[] { 1, 2, 3, 173, 4, 5 }, ArraysUtil.insert(doubles1, 173, 3), 0.1);
+		assertArrayEquals(new double[] { 173, 1, 2, 3, 4, 5 }, ArraysUtil.insert(doubles1, 173, 0), 0.1);
+		assertArrayEquals(new double[] { 1, 2, 3, 4, 5, 173 }, ArraysUtil.insert(doubles1, 173, 5), 0.1);
 
 		boolean[] booleans1 = new boolean[] { true, true, true };
 		boolean[] booleans2 = new boolean[] { false, false };
@@ -365,15 +360,15 @@ public class ArraysUtilTest {
 
 		float[] floats1 = new float[] { 1, 2, 3, 4, 5 };
 		float[] floats2 = new float[] { 11, 12, 13 };
-		assertArrayEquals(new float[] { 1, 2, 3, 11, 12, 13, 5 }, ArraysUtil.insertAt(floats1, floats2, 3), 0);
-		assertArrayEquals(new float[] { 11, 12, 13, 2, 3, 4, 5 }, ArraysUtil.insertAt(floats1, floats2, 0), 0);
-		assertArrayEquals(new float[] { 1, 2, 3, 4, 11, 12, 13 }, ArraysUtil.insertAt(floats1, floats2, 4), 0);
+		assertArrayEquals(new float[] { 1, 2, 3, 11, 12, 13, 5 }, ArraysUtil.insertAt(floats1, floats2, 3), 0.1f);
+		assertArrayEquals(new float[] { 11, 12, 13, 2, 3, 4, 5 }, ArraysUtil.insertAt(floats1, floats2, 0), 0.1f);
+		assertArrayEquals(new float[] { 1, 2, 3, 4, 11, 12, 13 }, ArraysUtil.insertAt(floats1, floats2, 4), 0.1f);
 
 		double[] doubles1 = new double[] { 1, 2, 3, 4, 5 };
 		double[] doubles2 = new double[] { 11, 12, 13 };
-		assertArrayEquals(new double[] { 1, 2, 3, 11, 12, 13, 5 }, ArraysUtil.insertAt(doubles1, doubles2, 3), 0);
-		assertArrayEquals(new double[] { 11, 12, 13, 2, 3, 4, 5 }, ArraysUtil.insertAt(doubles1, doubles2, 0), 0);
-		assertArrayEquals(new double[] { 1, 2, 3, 4, 11, 12, 13 }, ArraysUtil.insertAt(doubles1, doubles2, 4), 0);
+		assertArrayEquals(new double[] { 1, 2, 3, 11, 12, 13, 5 }, ArraysUtil.insertAt(doubles1, doubles2, 3), 0.1);
+		assertArrayEquals(new double[] { 11, 12, 13, 2, 3, 4, 5 }, ArraysUtil.insertAt(doubles1, doubles2, 0), 0.1);
+		assertArrayEquals(new double[] { 1, 2, 3, 4, 11, 12, 13 }, ArraysUtil.insertAt(doubles1, doubles2, 4), 0.1);
 
 		boolean[] booleans1 = new boolean[] { true, true, true };
 		boolean[] booleans2 = new boolean[] { false, false };
@@ -385,143 +380,143 @@ public class ArraysUtilTest {
 
 	@Test
 	public void testIndexOf() {
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, 1));
-		Assert.assertEquals(1, ArraysUtil.indexOf(x, 2));
-		Assert.assertEquals(4, ArraysUtil.indexOf(x, 5));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(x, 6));
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, 1, 0));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(x, 1, 2));
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, 1, 0, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(x, 1, 2, 2));
+		assertEquals(0, ArraysUtil.indexOf(x, 1));
+		assertEquals(1, ArraysUtil.indexOf(x, 2));
+		assertEquals(4, ArraysUtil.indexOf(x, 5));
+		assertEquals(-1, ArraysUtil.indexOf(x, 6));
+		assertEquals(0, ArraysUtil.indexOf(x, 1, 0));
+		assertEquals(-1, ArraysUtil.indexOf(x, 1, 2));
+		assertEquals(0, ArraysUtil.indexOf(x, 1, 0, 3));
+		assertEquals(-1, ArraysUtil.indexOf(x, 1, 2, 2));
 
-		Assert.assertEquals(1, ArraysUtil.indexOf(xx, Long.valueOf(2)));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(xx, Long.valueOf(12)));
-		Assert.assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12)));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(yy, Long.valueOf(12), 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12), 1));
+		assertEquals(1, ArraysUtil.indexOf(xx, Long.valueOf(2)));
+		assertEquals(-1, ArraysUtil.indexOf(xx, Long.valueOf(12)));
+		assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12)));
+		assertEquals(-1, ArraysUtil.indexOf(yy, Long.valueOf(12), 2));
+		assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12), 1));
 
 		byte[] bytes = new byte[] { 0, 1, 2 };
-		Assert.assertEquals(1, ArraysUtil.indexOf(bytes, (byte) 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(bytes, (byte) 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(bytes, (byte) 1, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(bytes, (byte) 1, 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(bytes, (byte) 1, 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(bytes, (byte) 1, 2, 2));
+		assertEquals(1, ArraysUtil.indexOf(bytes, (byte) 1));
+		assertEquals(-1, ArraysUtil.indexOf(bytes, (byte) 3));
+		assertEquals(1, ArraysUtil.indexOf(bytes, (byte) 1, 1));
+		assertEquals(-1, ArraysUtil.indexOf(bytes, (byte) 1, 2));
+		assertEquals(1, ArraysUtil.indexOf(bytes, (byte) 1, 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(bytes, (byte) 1, 2, 2));
 
 		char[] chars = new char[] { 'f', 'o', 'o' };
-		Assert.assertEquals(0, ArraysUtil.indexOf(chars, 'f'));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(chars, 'a'));
-		Assert.assertEquals(1, ArraysUtil.indexOf(new char[] { 'f', 'o', 'o', 'b', 'a' }, 'o', 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(chars, 'f', 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(chars, 'o', 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(chars, 'o', 2, 2));
+		assertEquals(0, ArraysUtil.indexOf(chars, 'f'));
+		assertEquals(-1, ArraysUtil.indexOf(chars, 'a'));
+		assertEquals(1, ArraysUtil.indexOf(new char[] { 'f', 'o', 'o', 'b', 'a' }, 'o', 1));
+		assertEquals(-1, ArraysUtil.indexOf(chars, 'f', 2));
+		assertEquals(1, ArraysUtil.indexOf(chars, 'o', 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(chars, 'o', 2, 2));
 
 		short[] shorts = new short[] { 0, 1, 2 };
-		Assert.assertEquals(1, ArraysUtil.indexOf(shorts, (short) 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(shorts, (short) 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(shorts, (short) 1, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(shorts, (short) 1, 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(shorts, (short) 1, 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(shorts, (short) 1, 2, 2));
+		assertEquals(1, ArraysUtil.indexOf(shorts, (short) 1));
+		assertEquals(-1, ArraysUtil.indexOf(shorts, (short) 3));
+		assertEquals(1, ArraysUtil.indexOf(shorts, (short) 1, 1));
+		assertEquals(-1, ArraysUtil.indexOf(shorts, (short) 1, 2));
+		assertEquals(1, ArraysUtil.indexOf(shorts, (short) 1, 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(shorts, (short) 1, 2, 2));
 
 		long[] longs = new long[] { 0, 1, 2 };
-		Assert.assertEquals(1, ArraysUtil.indexOf(longs, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(longs, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(longs, 1, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(longs, 1, 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(longs, 1, 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(longs, 1, 2, 2));
+		assertEquals(1, ArraysUtil.indexOf(longs, 1));
+		assertEquals(-1, ArraysUtil.indexOf(longs, 3));
+		assertEquals(1, ArraysUtil.indexOf(longs, 1, 1));
+		assertEquals(-1, ArraysUtil.indexOf(longs, 1, 2));
+		assertEquals(1, ArraysUtil.indexOf(longs, 1, 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(longs, 1, 2, 2));
 
 		float[] floats = new float[] { 0, 1, 2 };
-		Assert.assertEquals(1, ArraysUtil.indexOf(floats, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(floats, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(floats, 1, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(floats, 1, 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(floats, 1, 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(floats, 1, 2, 2));
+		assertEquals(1, ArraysUtil.indexOf(floats, 1));
+		assertEquals(-1, ArraysUtil.indexOf(floats, 3));
+		assertEquals(1, ArraysUtil.indexOf(floats, 1, 1));
+		assertEquals(-1, ArraysUtil.indexOf(floats, 1, 2));
+		assertEquals(1, ArraysUtil.indexOf(floats, 1, 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(floats, 1, 2, 2));
 
 		double[] doubles = new double[] { 0, 1, 2 };
-		Assert.assertEquals(1, ArraysUtil.indexOf(doubles, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(doubles, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(doubles, 1, 1));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(doubles, 1, 2));
-		Assert.assertEquals(1, ArraysUtil.indexOf(doubles, 1, 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(doubles, 1, 2, 2));
+		assertEquals(1, ArraysUtil.indexOf(doubles, 1));
+		assertEquals(-1, ArraysUtil.indexOf(doubles, 3));
+		assertEquals(1, ArraysUtil.indexOf(doubles, 1, 1));
+		assertEquals(-1, ArraysUtil.indexOf(doubles, 1, 2));
+		assertEquals(1, ArraysUtil.indexOf(doubles, 1, 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(doubles, 1, 2, 2));
 
 		boolean[] boolenas = new boolean[] { true, true, true };
-		Assert.assertEquals(0, ArraysUtil.indexOf(boolenas, true));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(boolenas, false));
-		Assert.assertEquals(1, ArraysUtil.indexOf(boolenas, true, 1));
-		Assert.assertEquals(1, ArraysUtil.indexOf(boolenas, true, 1, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(boolenas, true, 2, 2));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(new boolean[] { true, true, true, false }, true, 3));
+		assertEquals(0, ArraysUtil.indexOf(boolenas, true));
+		assertEquals(-1, ArraysUtil.indexOf(boolenas, false));
+		assertEquals(1, ArraysUtil.indexOf(boolenas, true, 1));
+		assertEquals(1, ArraysUtil.indexOf(boolenas, true, 1, 2));
+		assertEquals(-1, ArraysUtil.indexOf(boolenas, true, 2, 2));
+		assertEquals(-1, ArraysUtil.indexOf(new boolean[] { true, true, true, false }, true, 3));
 	}
 
 	@Test
 	public void testIndexOf2() {
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, new int[] {}));
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(x, new int[] { 1, 2, 3, 7 }));
-		Assert.assertEquals(1, ArraysUtil.indexOf(x, new int[] { 2, 3 }));
-		Assert.assertEquals(4, ArraysUtil.indexOf(x, new int[] { 5 }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }, 0));
-		Assert.assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }, 0, 3));
+		assertEquals(0, ArraysUtil.indexOf(x, new int[] {}));
+		assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }));
+		assertEquals(-1, ArraysUtil.indexOf(x, new int[] { 1, 2, 3, 7 }));
+		assertEquals(1, ArraysUtil.indexOf(x, new int[] { 2, 3 }));
+		assertEquals(4, ArraysUtil.indexOf(x, new int[] { 5 }));
+		assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }, 0));
+		assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }, 0, 3));
 
 		byte[] bytes = new byte[] { 0, 1, 2 };
-		Assert.assertEquals(0, ArraysUtil.indexOf(bytes, new byte[] { 0, 1 }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(bytes, new byte[] { 0, 1, 2, 7 }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(bytes, new byte[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(bytes, new byte[] { 1, 2 }, 1));
-		Assert.assertEquals(2, ArraysUtil.indexOf(bytes, new byte[] { 2 }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(bytes, new byte[] { 1, 3 }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(bytes, new byte[] { 0, 1 }));
+		assertEquals(-1, ArraysUtil.indexOf(bytes, new byte[] { 0, 1, 2, 7 }));
+		assertEquals(0, ArraysUtil.indexOf(bytes, new byte[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(bytes, new byte[] { 1, 2 }, 1));
+		assertEquals(2, ArraysUtil.indexOf(bytes, new byte[] { 2 }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(bytes, new byte[] { 1, 3 }, 1, 3));
 
 		char[] chars = new char[] { 'b', 'a', 'r' };
-		Assert.assertEquals(0, ArraysUtil.indexOf(chars, new char[] { 'b', 'a' }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(chars, new char[] { 'b', 'a', 'r', 'z' }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(chars, new char[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(chars, new char[] { 'a', 'r' }, 1));
-		Assert.assertEquals(2, ArraysUtil.indexOf(chars, new char[] { 'r' }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(chars, new char[] { 'a', 'z' }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(chars, new char[] { 'b', 'a' }));
+		assertEquals(-1, ArraysUtil.indexOf(chars, new char[] { 'b', 'a', 'r', 'z' }));
+		assertEquals(0, ArraysUtil.indexOf(chars, new char[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(chars, new char[] { 'a', 'r' }, 1));
+		assertEquals(2, ArraysUtil.indexOf(chars, new char[] { 'r' }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(chars, new char[] { 'a', 'z' }, 1, 3));
 
 		short[] shorts = new short[] { 0, 1, 2 };
-		Assert.assertEquals(0, ArraysUtil.indexOf(shorts, new short[] { 0, 1 }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(shorts, new short[] { 0, 1, 2, 7 }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(shorts, new short[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(shorts, new short[] { 1, 2 }, 1));
-		Assert.assertEquals(2, ArraysUtil.indexOf(shorts, new short[] { 2 }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(shorts, new short[] { 1, 3 }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(shorts, new short[] { 0, 1 }));
+		assertEquals(-1, ArraysUtil.indexOf(shorts, new short[] { 0, 1, 2, 7 }));
+		assertEquals(0, ArraysUtil.indexOf(shorts, new short[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(shorts, new short[] { 1, 2 }, 1));
+		assertEquals(2, ArraysUtil.indexOf(shorts, new short[] { 2 }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(shorts, new short[] { 1, 3 }, 1, 3));
 
 		long[] longs = new long[] { 0, 1, 2 };
-		Assert.assertEquals(0, ArraysUtil.indexOf(longs, new long[] { 0, 1 }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(longs, new long[] { 0, 1, 2, 7 }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(longs, new long[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(longs, new long[] { 1, 2 }, 1));
-		Assert.assertEquals(2, ArraysUtil.indexOf(longs, new long[] { 2 }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(longs, new long[] { 1, 3 }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(longs, new long[] { 0, 1 }));
+		assertEquals(-1, ArraysUtil.indexOf(longs, new long[] { 0, 1, 2, 7 }));
+		assertEquals(0, ArraysUtil.indexOf(longs, new long[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(longs, new long[] { 1, 2 }, 1));
+		assertEquals(2, ArraysUtil.indexOf(longs, new long[] { 2 }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(longs, new long[] { 1, 3 }, 1, 3));
 
 		float[] floats = new float[] { 0, 1, 2 };
-		Assert.assertEquals(0, ArraysUtil.indexOf(floats, new float[] { 0, 1 }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(floats, new float[] { 0, 1, 2, 7 }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(floats, new float[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(floats, new float[] { 1, 2 }, 1));
-		Assert.assertEquals(2, ArraysUtil.indexOf(floats, new float[] { 2 }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(floats, new float[] { 1, 3 }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(floats, new float[] { 0, 1 }));
+		assertEquals(-1, ArraysUtil.indexOf(floats, new float[] { 0, 1, 2, 7 }));
+		assertEquals(0, ArraysUtil.indexOf(floats, new float[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(floats, new float[] { 1, 2 }, 1));
+		assertEquals(2, ArraysUtil.indexOf(floats, new float[] { 2 }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(floats, new float[] { 1, 3 }, 1, 3));
 
 		double[] doubles = new double[] { 0, 1, 2 };
-		Assert.assertEquals(0, ArraysUtil.indexOf(doubles, new double[] { 0, 1 }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(doubles, new double[] { 0, 1, 2, 7 }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(doubles, new double[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(doubles, new double[] { 1, 2 }, 1));
-		Assert.assertEquals(2, ArraysUtil.indexOf(doubles, new double[] { 2 }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(doubles, new double[] { 1, 3 }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(doubles, new double[] { 0, 1 }));
+		assertEquals(-1, ArraysUtil.indexOf(doubles, new double[] { 0, 1, 2, 7 }));
+		assertEquals(0, ArraysUtil.indexOf(doubles, new double[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(doubles, new double[] { 1, 2 }, 1));
+		assertEquals(2, ArraysUtil.indexOf(doubles, new double[] { 2 }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(doubles, new double[] { 1, 3 }, 1, 3));
 
 		boolean[] booleans = new boolean[] { true, true, true };
-		Assert.assertEquals(0, ArraysUtil.indexOf(booleans, new boolean[] { true, true }));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(booleans, new boolean[] { true, true, true, false }));
-		Assert.assertEquals(0, ArraysUtil.indexOf(booleans, new boolean[] {}, 0, 3));
-		Assert.assertEquals(1, ArraysUtil.indexOf(booleans, new boolean[] { true, true }, 1));
-		Assert.assertEquals(1, ArraysUtil.indexOf(booleans, new boolean[] { true }, 1, 3));
-		Assert.assertEquals(-1, ArraysUtil.indexOf(booleans, new boolean[] { true, false }, 1, 3));
+		assertEquals(0, ArraysUtil.indexOf(booleans, new boolean[] { true, true }));
+		assertEquals(-1, ArraysUtil.indexOf(booleans, new boolean[] { true, true, true, false }));
+		assertEquals(0, ArraysUtil.indexOf(booleans, new boolean[] {}, 0, 3));
+		assertEquals(1, ArraysUtil.indexOf(booleans, new boolean[] { true, true }, 1));
+		assertEquals(1, ArraysUtil.indexOf(booleans, new boolean[] { true }, 1, 3));
+		assertEquals(-1, ArraysUtil.indexOf(booleans, new boolean[] { true, false }, 1, 3));
 	}
 
 	@Test
@@ -579,47 +574,47 @@ public class ArraysUtilTest {
 	public void testConvert() {
 		Integer[] src = new Integer[]{Integer.valueOf(1), null, Integer.valueOf(3)};
 		int[] dest = ArraysUtil.values(src);
-		Assert.assertEquals(3, dest.length);
-		Assert.assertEquals(1, dest[0]);
-		Assert.assertEquals(0, dest[1]);
-		Assert.assertEquals(3, dest[2]);
+		assertEquals(3, dest.length);
+		assertEquals(1, dest[0]);
+		assertEquals(0, dest[1]);
+		assertEquals(3, dest[2]);
 
 		src = ArraysUtil.valuesOf(dest);
-		Assert.assertEquals(3, src.length);
-		Assert.assertEquals(1, src[0].intValue());
-		Assert.assertEquals(0, src[1].intValue());
-		Assert.assertEquals(3, src[2].intValue());
+		assertEquals(3, src.length);
+		assertEquals(1, src[0].intValue());
+		assertEquals(0, src[1].intValue());
+		assertEquals(3, src[2].intValue());
 
 	}
 
 	@Test
 	public void testToString() {
-		Assert.assertEquals("null", ArraysUtil.toString((int[]) null));
-		Assert.assertEquals("", ArraysUtil.toString((new int[0])));
-		Assert.assertEquals("1", ArraysUtil.toString(new int[] { 1 }));
-		Assert.assertEquals("1,2,3", ArraysUtil.toString(new int[] { 1, 2, 3 }));
+		assertEquals("null", ArraysUtil.toString((int[]) null));
+		assertEquals("", ArraysUtil.toString((new int[0])));
+		assertEquals("1", ArraysUtil.toString(new int[] { 1 }));
+		assertEquals("1,2,3", ArraysUtil.toString(new int[] { 1, 2, 3 }));
 
-		Assert.assertEquals("null", ArraysUtil.toString((Object[]) null));
-		Assert.assertEquals("", ArraysUtil.toString((new Object[0])));
-		Assert.assertEquals("1,null,3.1",
+		assertEquals("null", ArraysUtil.toString((Object[]) null));
+		assertEquals("", ArraysUtil.toString((new Object[0])));
+		assertEquals("1,null,3.1",
 				ArraysUtil.toString(new Object[] { Integer.valueOf(1), null, Double.valueOf(3.1) }));
 
-		Assert.assertEquals("null", ArraysUtil.toString((String[]) null));
-		Assert.assertEquals("foo,bar", ArraysUtil.toString(new String[] { "foo", "bar" }));
-		Assert.assertEquals("null", ArraysUtil.toString((byte[]) null));
-		Assert.assertEquals("0,1,2", ArraysUtil.toString(new byte[] { 0, 1, 2 }));
-		Assert.assertEquals("null", ArraysUtil.toString((char[]) null));
-		Assert.assertEquals("f,o,o", ArraysUtil.toString(new char[] { 'f', 'o', 'o' }));
-		Assert.assertEquals("null", ArraysUtil.toString((short[]) null));
-		Assert.assertEquals("0,1,2", ArraysUtil.toString(new short[] { 0, 1, 2 }));
-		Assert.assertEquals("null", ArraysUtil.toString((long[]) null));
-		Assert.assertEquals("0,1,2", ArraysUtil.toString(new long[] { 0, 1, 2 }));
-		Assert.assertEquals("null", ArraysUtil.toString((float[]) null));
-		Assert.assertEquals("0.0,1.0,2.0", ArraysUtil.toString(new float[] { 0.0f, 1.0f, 2.0f }));
-		Assert.assertEquals("null", ArraysUtil.toString((double[]) null));
-		Assert.assertEquals("0.0,1.0,2.0", ArraysUtil.toString(new double[] { 0.0, 1.0, 2.0 }));
-		Assert.assertEquals("null", ArraysUtil.toString((boolean[]) null));
-		Assert.assertEquals("true,false", ArraysUtil.toString(new boolean[] { true, false }));
+		assertEquals("null", ArraysUtil.toString((String[]) null));
+		assertEquals("foo,bar", ArraysUtil.toString(new String[] { "foo", "bar" }));
+		assertEquals("null", ArraysUtil.toString((byte[]) null));
+		assertEquals("0,1,2", ArraysUtil.toString(new byte[] { 0, 1, 2 }));
+		assertEquals("null", ArraysUtil.toString((char[]) null));
+		assertEquals("f,o,o", ArraysUtil.toString(new char[] { 'f', 'o', 'o' }));
+		assertEquals("null", ArraysUtil.toString((short[]) null));
+		assertEquals("0,1,2", ArraysUtil.toString(new short[] { 0, 1, 2 }));
+		assertEquals("null", ArraysUtil.toString((long[]) null));
+		assertEquals("0,1,2", ArraysUtil.toString(new long[] { 0, 1, 2 }));
+		assertEquals("null", ArraysUtil.toString((float[]) null));
+		assertEquals("0.0,1.0,2.0", ArraysUtil.toString(new float[] { 0.0f, 1.0f, 2.0f }));
+		assertEquals("null", ArraysUtil.toString((double[]) null));
+		assertEquals("0.0,1.0,2.0", ArraysUtil.toString(new double[] { 0.0, 1.0, 2.0 }));
+		assertEquals("null", ArraysUtil.toString((boolean[]) null));
+		assertEquals("true,false", ArraysUtil.toString(new boolean[] { true, false }));
 
 	}
 
@@ -633,8 +628,8 @@ public class ArraysUtilTest {
 		assertArrayEquals(new char[]{'f','o','o'}, ArraysUtil.remove(new char[]{'f','o','o', 'b','a','r'}, 3, 3));
 		assertArrayEquals(new short[]{1, 2}, ArraysUtil.remove(new short[]{1, 2, 3, 4}, 2, 2));
 		assertArrayEquals(new long[]{1l, 2l}, ArraysUtil.remove(new long[]{1l, 2l, 3l, 4l}, 2, 2));
-		assertArrayEquals(new float[]{1.0f, 2.0f}, ArraysUtil.remove(new float[]{1.0f, 2.0f, 3.0f,4.0f}, 2, 2), 0);
-		assertArrayEquals(new double[]{1.0, 2.0}, ArraysUtil.remove(new double[]{1.0, 2.0, 3.0, 4.0}, 2, 2), 0);
+		assertArrayEquals(new float[]{1.0f, 2.0f}, ArraysUtil.remove(new float[]{1.0f, 2.0f, 3.0f,4.0f}, 2, 2), 0.1f);
+		assertArrayEquals(new double[]{1.0, 2.0}, ArraysUtil.remove(new double[]{1.0, 2.0, 3.0, 4.0}, 2, 2), 0.1);
 		assertBooleanArrayEquals(new boolean[]{true, true}, ArraysUtil.remove(new boolean[]{true, true, false, true}, 2, 2));
 	}
 
@@ -671,11 +666,11 @@ public class ArraysUtilTest {
 		assertArrayEquals(new long[] {}, ArraysUtil.longs());
 		assertArrayEquals(new long[] { 1, 2, 5 }, ArraysUtil.longs(1l, 2l, 5l));
 
-		assertArrayEquals(new float[] {}, ArraysUtil.floats(), 0);
-		assertArrayEquals(new float[] { 1.0f, 2.0f, 5.0f }, ArraysUtil.floats(1.0f, 2.0f, 5.0f), 0);
+		assertArrayEquals(new float[] {}, ArraysUtil.floats(), 0.1f);
+		assertArrayEquals(new float[] { 1.0f, 2.0f, 5.0f }, ArraysUtil.floats(1.0f, 2.0f, 5.0f), 0.1f);
 
-		assertArrayEquals(new double[] {}, ArraysUtil.doubles(), 0);
-		assertArrayEquals(new double[] { 1.0, 2.0, 5.0 }, ArraysUtil.doubles(1.0, 2.0, 5.0), 0);
+		assertArrayEquals(new double[] {}, ArraysUtil.doubles(), 0.1);
+		assertArrayEquals(new double[] { 1.0, 2.0, 5.0 }, ArraysUtil.doubles(1.0, 2.0, 5.0), 0.1);
 
 		assertBooleanArrayEquals(new boolean[] {}, ArraysUtil.booleans());
 		assertBooleanArrayEquals(new boolean[] { true, false }, ArraysUtil.booleans(true, false));
@@ -694,9 +689,9 @@ public class ArraysUtilTest {
 		assertArrayEquals(new Integer[] { 0, 1 }, ArraysUtil.valuesOf(new int[] { 0, 1 }));
 		assertArrayEquals(new long[] { 0, 1 }, ArraysUtil.values(new Long[] { 0l, 1l }));
 		assertArrayEquals(new Long[] { 0l, 1l }, ArraysUtil.valuesOf(new long[] { 0, 1 }));
-		assertArrayEquals(new float[] { 0.0f, 1.0f }, ArraysUtil.values(new Float[] { 0.0f, 1.0f }), 0);
+		assertArrayEquals(new float[] { 0.0f, 1.0f }, ArraysUtil.values(new Float[] { 0.0f, 1.0f }), 0.1f);
 		assertArrayEquals(new Float[] { 0.0f, 1.0f }, ArraysUtil.valuesOf(new float[] { 0.0f, 1.0f }));
-		assertArrayEquals(new double[] { 0.0, 1.0 }, ArraysUtil.values(new Double[] { 0.0, 1.0 }), 0);
+		assertArrayEquals(new double[] { 0.0, 1.0 }, ArraysUtil.values(new Double[] { 0.0, 1.0 }), 0.1);
 		assertArrayEquals(new Double[] { 0.0, 1.0 }, ArraysUtil.valuesOf(new double[] { 0.0, 1.0 }));
 		assertBooleanArrayEquals(new boolean[] { true, false }, ArraysUtil.values(new Boolean[] { true, false }));
 		assertArrayEquals(new Boolean[] { true, false }, ArraysUtil.valuesOf(new boolean[] { true, false }));
@@ -704,16 +699,16 @@ public class ArraysUtilTest {
 
 	@Test
 	public void testToStringArray() {
-		Assert.assertArrayEquals(new String[] {"1", null, "3.1"}, ArraysUtil.toStringArray((new Object[] {Integer.valueOf(1), null, Double.valueOf(3.1)})));
-		Assert.assertArrayEquals(new String[] {"1", "2", "3"}, ArraysUtil.toStringArray(new int[] {1, 2, 3}));
-		Assert.assertArrayEquals(new String[] {"foo", "bar"}, ArraysUtil.toStringArray(new String[] {"foo", "bar"}));
-		Assert.assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new byte[] {0, 1, 2}));
-		Assert.assertArrayEquals(new String[] {"f", "o", "o"}, ArraysUtil.toStringArray(new char[] {'f', 'o', 'o'}));
-		Assert.assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new short[] {0, 1, 2}));
-		Assert.assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new long[] {0, 1, 2}));
-		Assert.assertArrayEquals(new String[] {"0.0", "1.0", "2.0"}, ArraysUtil.toStringArray(new float[] {0.0f, 1.0f, 2.0f}));
-		Assert.assertArrayEquals(new String[] {"0.0", "1.0", "2.0"}, ArraysUtil.toStringArray(new double[] {0.0, 1.0, 2.0}));
-		Assert.assertArrayEquals(new String[] {"true", "false"}, ArraysUtil.toStringArray(new boolean[] {true, false}));
+		assertArrayEquals(new String[] {"1", null, "3.1"}, ArraysUtil.toStringArray((new Object[] {Integer.valueOf(1), null, Double.valueOf(3.1)})));
+		assertArrayEquals(new String[] {"1", "2", "3"}, ArraysUtil.toStringArray(new int[] {1, 2, 3}));
+		assertArrayEquals(new String[] {"foo", "bar"}, ArraysUtil.toStringArray(new String[] {"foo", "bar"}));
+		assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new byte[] {0, 1, 2}));
+		assertArrayEquals(new String[] {"f", "o", "o"}, ArraysUtil.toStringArray(new char[] {'f', 'o', 'o'}));
+		assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new short[] {0, 1, 2}));
+		assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new long[] {0, 1, 2}));
+		assertArrayEquals(new String[] {"0.0", "1.0", "2.0"}, ArraysUtil.toStringArray(new float[] {0.0f, 1.0f, 2.0f}));
+		assertArrayEquals(new String[] {"0.0", "1.0", "2.0"}, ArraysUtil.toStringArray(new double[] {0.0, 1.0, 2.0}));
+		assertArrayEquals(new String[] {"true", "false"}, ArraysUtil.toStringArray(new boolean[] {true, false}));
 
 		assertNull(ArraysUtil.toStringArray((Object[]) null));
 		assertNull(ArraysUtil.toStringArray((int[]) null));

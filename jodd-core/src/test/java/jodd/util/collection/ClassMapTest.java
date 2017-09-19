@@ -25,8 +25,8 @@
 
 package jodd.util.collection;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -36,14 +36,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ClassMapTest {
 
 	static Field table;
 
-	@BeforeClass
+	@BeforeAll
 	public static void start() throws NoSuchFieldException {
 		table = ClassMap.class.getDeclaredField("table");
 		table.setAccessible(true);
