@@ -29,9 +29,9 @@ import jodd.exception.UncheckedException;
 import jodd.jtx.data.WorkResourceManager;
 import jodd.jtx.data.WorkSession;
 import jodd.jtx.worker.LeanJtxWorker;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JtxManagerTest {
 
@@ -58,7 +58,7 @@ public class JtxManagerTest {
 
 		try {
 			work.writeValue("new value");
-			fail();
+			fail("error");
 		} catch (UncheckedException ignored) {
 		}
 

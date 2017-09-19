@@ -25,13 +25,13 @@
 
 package jodd.jtx.meta;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
 import static jodd.jtx.JtxIsolationLevel.*;
 import static jodd.jtx.JtxPropagationBehavior.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TransactionAnnotationTest {
 
