@@ -27,9 +27,9 @@ package jodd.paramo;
 
 import jodd.asm.TraceSignatureVisitor;
 import jodd.asm5.signature.SignatureReader;
-import jodd.paramo.data.Foo;
-import jodd.paramo.data.Generic;
-import jodd.paramo.data.NonGeneric;
+import jodd.paramo.fixtures.Foo;
+import jodd.paramo.fixtures.Generic;
+import jodd.paramo.fixtures.NonGeneric;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -176,7 +176,7 @@ public class ParamoTest {
 		mps = Paramo.resolveParameters(m);
 		assertEquals(1, mps.length);
 		assertEquals("zzz", mps[0].getName());
-		assertEquals("Ljava/util/Map<Ljava/lang/String;Ljodd/paramo/data/Bar<Ljava/lang/Long;>;>;", mps[0].getSignature());
+		assertEquals("Ljava/util/Map<Ljava/lang/String;Ljodd/paramo/fixtures/Bar<Ljava/lang/Long;>;>;", mps[0].getSignature());
 	}
 
 	@Test

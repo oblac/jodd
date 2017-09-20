@@ -26,12 +26,18 @@
 package jodd.jtx;
 
 import jodd.exception.UncheckedException;
-import jodd.jtx.data.WorkResourceManager;
-import jodd.jtx.data.WorkSession;
+import jodd.jtx.fixtures.WorkResourceManager;
+import jodd.jtx.fixtures.WorkSession;
 import jodd.jtx.worker.LeanJtxWorker;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JtxManagerTest {
 
