@@ -10,7 +10,7 @@ dependencies {
 	provided lib.servlet
 	provided lib.jsp
 
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile lib.mockito
 	testCompile lib.el_api
 }

@@ -25,8 +25,7 @@
 
 package jodd.servlet.filter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +33,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +72,7 @@ public class CharArrayResponseWrapperTest {
 		CharArrayResponseWrapper wrappedResponse = new CharArrayResponseWrapper(rw);
 		try {
 			wrappedResponse.getOutputStream();
-			Assert.fail();
+			fail("error");
 		} catch (IOException ignore) {
 		}
 

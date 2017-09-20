@@ -26,13 +26,13 @@
 package jodd.servlet.tag;
 
 import jodd.util.LoopIterator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LoopTagTest {
 
