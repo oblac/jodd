@@ -22,7 +22,7 @@ install:
 #  - sleep 15
 
 script:
-  - TERM=dumb ./gradlew testInt test codeCoverageReport
+  - TERM=dumb ./gradlew testAll codeCoverageReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
