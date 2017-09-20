@@ -67,9 +67,10 @@ ext {
 		log_log4j2_core:		  'org.apache.logging.log4j:log4j-core:[2.8,2.9)',
 
 //		asm:			'org.ow2.asm:asm:4.1',
+//		junit: 			'junit:junit:4.12',
 
-		junit: 			'junit:junit:4.12',
 		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.0.0',
+		junit5_console: 'org.junit.platform:junit-platform-console:1.0.0',
 		hamcrest:       'org.hamcrest:hamcrest-core:1.3',
 		mockito:		'org.mockito:mockito-core:2.10.0',
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
@@ -256,23 +257,59 @@ configure(javaModules()) {
 	}
 
 	task perf(type:JavaExec) {
-		group 'Project'
+		group 'Verification'
 		description 'Execute benchmarks.'
 
 		main 'org.openjdk.jmh.Main'
 		classpath = sourceSets.perf.runtimeClasspath
 	}
 
-	task testIntegration(type: Test, dependsOn: jar) {
+	task testUnit(type: JavaExec, dependsOn: compileTestJava) {
+		group 'Verification'
+		description 'Runs the unit tests.'
+
+		dependencies {
+			testRuntime lib.junit5_console
+		}
+		classpath = sourceSets.test.runtimeClasspath
+
+		main 'org.junit.platform.console.ConsoleLauncher'
+		args = ['--scan-classpath', sourceSets.test.output.classesDirs.asPath,
+				'--reports-dir', "${buildDir}/test-results/test"
+		]
+	}
+	test.dependsOn testUnit
+
+	task testIntegration(type: JavaExec, dependsOn: jar) {
 		group 'Verification'
 		description 'Runs the integration tests.'
-		testLogging {
-			showStandardStreams = true
+
+		dependencies {
+			testRuntime lib.junit5_console
 		}
 
-		testClassesDirs = sourceSets.testInt.output.classesDirs
 		classpath = sourceSets.testInt.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
+
+		main 'org.junit.platform.console.ConsoleLauncher'
+		args = ['--scan-classpath', sourceSets.testInt.output.classesDirs.asPath,
+				'--reports-dir', "${buildDir}/test-results/testInt"
+		]
+	}
+
+	afterEvaluate {
+		jacoco {
+			applyTo testUnit
+			applyTo testIntegration
+		}
+		testUnit.extensions.getByName("jacoco").excludes        = ['*Test*', '*.?', '*Foo*', 'jodd.asm5.*', '*.fixtures.*']
+		testIntegration.extensions.getByName("jacoco").excludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm5.*', '*.fixtures.*']
+	}
+	jacocoTestReport {
+		reports {
+			xml.enabled true
+			html.enabled true
+		}
 	}
 
 	//check.dependsOn testIntegration
@@ -319,35 +356,6 @@ configure(javaModules()) {
 			}
 		}
 	}
-
-	test {
-		jacoco {
-			excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*', '*.fixtures.*']
-		}
-	}
-
-	jacocoTestReport {
-		reports {
-			xml.enabled true
-			html.enabled true
-		}
-	}
-
-	// add fancy test output
-	tasks.withType(Test) {
-		beforeTest { descriptor ->
-			logger.lifecycle("\t" + descriptor)
-		}
-		afterSuite { desc, result ->
-			if (!desc.parent) { // will match the outermost suite
-				def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-				def startItem = '|  ', endItem = '  |'
-				def repeatLength = startItem.length() + output.length() + endItem.length()
-				println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-			}
-		}
-	}
-
 }
 
 // --- project ----------------------------------------------------------------
@@ -364,8 +372,6 @@ task buildModules {
 task testAll {
 	group 'Verification'
 	description 'Runs all the tests.'
-
-	//dependsOn javaTestModules().test
 
 	dependsOn javaModules().testIntegration
 	dependsOn javaModules().test
@@ -408,18 +414,6 @@ task javadocAll(type: Javadoc) {
 	outputs.dir destinationDir
 }
 
-task testReport(type: TestReport) {
-	group 'Reporting'
-	description 'Generates tests report.'
-
-	destinationDir = file("$buildDir/reports/tests")
-
-	//reportOn javaTestModules()*.test
-
-	reportOn javaBundleModules()*.test
-	reportOn javaBundleModules()*.testIntegration
-}
-
 dependencyReport {
 	projects = javaModules()
 }
@@ -460,9 +454,7 @@ task release() {
 	dependsOn buildModules
 	dependsOn testAll
 	dependsOn javadocAll
-	dependsOn testReport
 	dependsOn ':distribution:build'
-	dependsOn projectReport
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
