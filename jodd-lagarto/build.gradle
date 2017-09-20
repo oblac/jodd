@@ -13,6 +13,4 @@ dependencies {
 	testCompile lib.junit5
 	testCompile lib.tomcat_embed
 	testCompile project(':jodd-http')
-
-	testIntRuntime lib.junit5_console
 }

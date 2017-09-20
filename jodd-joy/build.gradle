@@ -23,6 +23,4 @@ dependencies {
 	testCompile lib.hsqldb
 	testCompile lib.tomcat_embed
 	testCompile lib.mockito
-
-	testIntRuntime lib.junit5_console
 }

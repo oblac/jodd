@@ -19,6 +19,4 @@ dependencies {
 	testCompile lib.junit5
 	testCompile lib.tomcat_embed
 	testCompile lib.mockito
-
-	testIntRuntime lib.junit5_console
 }
