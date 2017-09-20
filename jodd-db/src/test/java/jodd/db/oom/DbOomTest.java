@@ -33,8 +33,8 @@ import jodd.db.QueryMapper;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.fixtures.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,11 +45,11 @@ import java.util.Set;
 import static jodd.db.oom.ColumnAliasType.COLUMN_CODE;
 import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DbOomTest extends DbHsqldbTestCase {
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 

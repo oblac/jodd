@@ -30,14 +30,14 @@ import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.fixtures.Enumerator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static jodd.db.oom.sqlgen.DbEntitySql.insert;
 
 public class DbEnumTest extends DbHsqldbTestCase {
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 

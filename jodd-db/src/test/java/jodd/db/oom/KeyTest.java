@@ -28,11 +28,11 @@ package jodd.db.oom;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class KeyTest {
 
@@ -70,7 +70,7 @@ public class KeyTest {
 		try {
 			DbEntityDescriptor<User2> user2 = dbOomManager.registerEntity(User2.class);
 			user2.getColumnDescriptors();
-			fail();
+			fail("error");
 		}
 		catch (Exception ignore) {}
 

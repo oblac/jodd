@@ -26,13 +26,13 @@
 package jodd.db;
 
 import jodd.db.fixtures.DbHsqldbTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Types;
 
 import static jodd.util.ArraysUtil.ints;
 import static jodd.util.ArraysUtil.longs;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DbTestQueryStatement extends DbHsqldbTestCase {
 

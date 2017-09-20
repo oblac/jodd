@@ -31,9 +31,9 @@ import jodd.jtx.JtxException;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.worker.LeanJtxWorker;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DbPropagationTest extends DbHsqldbTestCase {
 
@@ -417,7 +417,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		// session #2: inner, never
 		try {
 			worker.maybeRequestTransaction(never(), CTX_2);
-			fail();
+			fail("error");
 		} catch (JtxException ignore) {
 		}
 	}
@@ -651,7 +651,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		// session #2: inner, mandatory
 		try {
 			worker.maybeRequestTransaction(mandatory(), CTX_2);
-			fail();
+			fail("error");
 		} catch (JtxException ignore) {
 		}
 	}

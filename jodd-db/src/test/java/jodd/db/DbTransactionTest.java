@@ -33,11 +33,11 @@ import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import jodd.util.ThreadUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DbTransactionTest extends DbHsqldbTestCase {
 
@@ -234,7 +234,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 			assertNotNull(session2);
 			assertSame(session1, session2);
 			executeCount(session1, "select count(*) from GIRL");
-			fail();
+			fail("error");
 		} catch (JtxException ignore) {
 
 		}
@@ -291,7 +291,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 		try {
 			tx.commit();
 		} catch (Exception ignore) {
-			fail();
+			fail("error");
 		}
 
 		assertTrue(tx.isCommitted());

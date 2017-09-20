@@ -8,9 +8,9 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
 import jodd.log.LoggerFactory;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Abstract base test class for working with databases.
@@ -20,7 +20,7 @@ public abstract class DbTestBase {
 	protected DbJtxTransactionManager dbtxm;
 	protected static CoreConnectionPool cp;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		DbManager.getInstance().setQueryMap(new DbPropsQueryMap());
 
@@ -44,13 +44,13 @@ public abstract class DbTestBase {
 		session.closeSession();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		dbtxm.close();
 		dbtxm = null;
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass()  throws Exception {
 		cp.close();
 		cp = null;

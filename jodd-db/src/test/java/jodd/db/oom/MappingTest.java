@@ -32,19 +32,19 @@ import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.fixtures.*;
 import jodd.db.type.SqlTypeManager;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class MappingTest extends DbHsqldbTestCase {
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		DbOomManager.resetAll();

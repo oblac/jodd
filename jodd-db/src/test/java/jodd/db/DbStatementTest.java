@@ -1,9 +1,9 @@
 package jodd.db;
 
 import jodd.db.fixtures.DbH2TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DbStatementTest extends DbH2TestCase {
 
@@ -15,7 +15,7 @@ public class DbStatementTest extends DbH2TestCase {
 
 		try {
 			q.setString(1, "value");
-			fail();
+			fail("error");
 		}
 		catch (DbSqlException ignore) {
 		}

@@ -31,21 +31,21 @@ import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl2;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("SimplifiableJUnitAssertion")
 public class EntityCacheTest extends DbHsqldbTestCase {
@@ -64,7 +64,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 	DbSession dbSession;
 
 	@Override
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 
@@ -83,7 +83,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 		assertEquals(1, DbEntitySql.insert(new Boy(3, "Hugo", 1)).query().executeUpdate());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		dbSession.closeSession();
 		super.tearDown();
@@ -323,7 +323,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 			if (girl.id.equals(2)) {
 				assertEquals(2, girl.getBoys().size());
 			} else {
-				fail();
+				fail("error");
 			}
 		}
 	}
@@ -342,7 +342,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 			} else if (girl.id.equals(2)) {
 				assertEquals(2, girl.getBoys().size());
 			} else {
-				fail();
+				fail("error");
 			}
 		}
 	}

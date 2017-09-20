@@ -26,14 +26,14 @@
 package jodd.db.debug;
 
 import jodd.db.fixtures.DbHsqldbTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoggablePreparedStatementTest extends DbHsqldbTestCase {
 

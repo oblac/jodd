@@ -34,13 +34,13 @@ import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.fixtures.Girl2;
 import jodd.db.oom.fixtures.IdName;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DbOom2Test extends DbH2TestCase {
 
@@ -92,7 +92,7 @@ public class DbOom2Test extends DbH2TestCase {
 
 		try {
 			q.find();        // this will fail since no entity is registered!
-			fail();
+			fail("error");
 		} catch (DbOomException doex) {
 			// ignore
 		}
@@ -144,7 +144,7 @@ public class DbOom2Test extends DbH2TestCase {
 				assertEquals(6, id);
 				try {
 					rs.getInt(2);
-					fail();
+					fail("error");
 				} catch (SQLException sex) {
 					// ignore
 				}

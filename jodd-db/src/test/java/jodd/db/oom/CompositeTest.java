@@ -32,19 +32,19 @@ import jodd.db.DbThreadSession;
 import jodd.db.oom.fixtures.User;
 import jodd.db.oom.fixtures.WizUser;
 import jodd.db.oom.fixtures.Wizard;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CompositeTest extends DbHsqldbTestCase {
 
 	DbSession session;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 
@@ -79,7 +79,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 		query.executeUpdate();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		session.closeSession();
 	}
