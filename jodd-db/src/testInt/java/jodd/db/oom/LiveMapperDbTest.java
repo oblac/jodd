@@ -29,10 +29,10 @@ import jodd.datetime.JDateTime;
 import jodd.db.DbSession;
 import jodd.db.oom.fixtures.Tester2;
 import jodd.db.oom.sqlgen.DbEntitySql;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LiveMapperDbTest extends DbBaseTest {
 

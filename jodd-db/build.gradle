@@ -22,19 +22,13 @@ dependencies {
 	compile project(':jodd-props'), optional
 	compile project(':jodd-log')
 
-	testCompile lib.junit
+	testCompile lib.junit5
 	testCompile lib.hsqldb
 	testCompile lib.h2db
 	testCompile lib.mysql
 	testCompile lib.postgresql
 	testCompile lib.mssql
 	testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-}
 
-// run db integration tests only through the suite
-// so we can control the embedded web server
-
-testIntegration {
-	scanForTestClasses false
-	include 'jodd/db/oom/*Suite.class'
+	testIntRuntime lib.junit5_console
 }

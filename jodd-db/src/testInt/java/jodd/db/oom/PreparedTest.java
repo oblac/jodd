@@ -2,9 +2,9 @@ package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PreparedTest extends DbBaseTest {
 

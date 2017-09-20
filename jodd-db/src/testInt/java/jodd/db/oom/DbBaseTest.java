@@ -34,7 +34,7 @@ import jodd.exception.UncheckedException;
 import jodd.log.LoggerFactory;
 import jodd.log.impl.NOPLogger;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract common DB integration test class.

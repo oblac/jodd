@@ -29,12 +29,12 @@ import jodd.db.DbSession;
 import jodd.db.oom.fixtures.Tester;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.util.SystemUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Live database test. Requires database services to be started.
@@ -50,12 +50,12 @@ public class LiveDatabaseTest extends DbBaseTest {
 				new MySql(),
 				new PostgreSql(),
 				new HsqlDb(),
-				new MsSqlDb(),
 		} :
 			new DbAccess[]{
 				new MySql(),
 				new PostgreSql(),
-				new HsqlDb()
+				new HsqlDb(),
+				new MsSqlDb()
 		};
 
 	/**

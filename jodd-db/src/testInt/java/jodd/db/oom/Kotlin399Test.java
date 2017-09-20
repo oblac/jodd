@@ -7,7 +7,7 @@ import jodd.db.oom.fixtures.Tester3;
 import jodd.db.oom.fixtures.Tester33;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.type.SqlTypeManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Kotlin399Test extends DbBaseTest {
 
