@@ -19,7 +19,7 @@
 
 **Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
 
-:speech_balloon: TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
+Talk with us at [gitter](https://gitter.im/oblac/jodd)!
 
 ## :zap: Jodd Modules
 
