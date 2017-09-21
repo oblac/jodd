@@ -1,5 +1,6 @@
-Jodd
-====
+<h1 align="center">Jodd</h1>
+<h4 align="center">Open-source Java micro-frameworks and tools; compact, yet powerful.</h4>
+
 
 [![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
 [![Build Status](https://img.shields.io/travis/oblac/jodd.svg)](https://travis-ci.org/oblac/jodd)
@@ -11,16 +12,12 @@ Jodd
 [![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=oblac/jodd&amp;utm_campaign=Badge_Grade)
 
-**Jodd** is set of open source Java micro-frameworks and tools; compact, yet powerful.
-
-**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
-
-:orange_book: READ about **Jodd**:
-
 + Official web site (site, documentation, information): http://jodd.org/
 + GitHub page (5 min overview): http://oblac.github.io/jodd
 + Jodd micro-frameworks (30 min overview): http://joddframework.org
 + One-page love: http://jodd.org/about
+
+**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
 
 :speech_balloon: TALK about **Jodd**: [jodd.slack.com](http://jodd.slack.com) 
 
