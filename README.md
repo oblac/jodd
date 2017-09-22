@@ -1,25 +1,24 @@
 <h1 align="center">Jodd</h1>
 <h4 align="center">Open-source Java micro-frameworks and tools; compact, yet powerful.</h4>
-
+<br>
 
 [![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
 [![Build Status](https://img.shields.io/travis/oblac/jodd.svg)](https://travis-ci.org/oblac/jodd)
 [![codecov](https://codecov.io/gh/oblac/jodd/branch/master/graph/badge.svg)](https://codecov.io/gh/oblac/jodd)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd)
+[![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
 [![Snapshot](https://api.bintray.com/packages/oblac/jodd/org.jodd%3Ajodd-core/images/download.svg)](https://bintray.com/oblac/jodd)
 [![JitPack](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
-[![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=oblac/jodd&amp;utm_campaign=Badge_Grade)
 
-+ Official web site (site, documentation, information): http://jodd.org/
++ Official web site (site & documentation): http://jodd.org/
 + GitHub page (5 min overview): http://oblac.github.io/jodd
 + Jodd micro-frameworks (30 min overview): http://joddframework.org
 + One-page love: http://jodd.org/about
++ Talk with us at [gitter](https://gitter.im/oblac/jodd)!
 
-**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb**
-
-Talk with us at [gitter](https://gitter.im/oblac/jodd)!
+<h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
 
 ## :zap: Jodd Modules
 
