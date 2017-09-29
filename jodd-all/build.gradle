@@ -27,9 +27,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from javaBundleModules().sourceSets.main.allSource
 }
-task javadocJar(type: Jar, dependsOn: javadoc) {
+task javadocJar(type: Jar, dependsOn: parent.javadocAll) {
     classifier = 'javadoc'
-    from javaBundleModules().javadoc.destinationDir
+    //from javaBundleModules().javadoc.destinationDir
+    from "${parent.buildDir}/reports/javadoc"
 }
 
 configurations {
