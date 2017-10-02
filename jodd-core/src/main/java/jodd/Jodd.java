@@ -67,6 +67,9 @@ public class Jodd {
 
 	private static boolean initialized = false;
 
+	/**
+	 * Jodd modules.
+	 */
 	public enum JoddModule {
 		CORE,
 		BEAN,
@@ -94,17 +97,10 @@ public class Jodd {
 		private Class<?> moduleClass;
 
 		/**
-		 * Returns {@code true} if module is loaded.
-		 */
-		public boolean isLoaded() {
-			return moduleClass != null;
-		}
-
-		/**
 		 * Loads a module by looking for the module classname on the classpath.
 		 */
-		synchronized void load() {
-			if (isLoaded()) {
+		private synchronized void load() {
+			if (Jodd.isModuleLoaded(this)) {
 				return;
 			}
 			final String moduleClassName = resolveClassName(this);
@@ -119,8 +115,8 @@ public class Jodd {
 		/**
 		 * Starts a module once all modules are loaded.
 		 */
-		synchronized void start() {
-			if (!isLoaded()) {
+		private synchronized void start() {
+			if (!Jodd.isModuleLoaded(this)) {
 				return;
 			}
 			try {
@@ -153,6 +149,13 @@ public class Jodd {
 		}
 
 		initialized = true;
+	}
+
+	/**
+	 * Returns {@code true} if module is loaded.
+	 */
+	public static boolean isModuleLoaded(JoddModule module) {
+		return module.moduleClass != null;
 	}
 
 	/**

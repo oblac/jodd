@@ -724,7 +724,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testJsonModule() {
-		assertTrue(Jodd.JoddModule.JSON.isLoaded());
+		assertTrue(Jodd.isModuleLoaded(Jodd.JoddModule.JSON));
 	}
 
 	@Test

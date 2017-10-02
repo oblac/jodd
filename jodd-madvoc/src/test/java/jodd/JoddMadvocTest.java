@@ -35,13 +35,13 @@ public class JoddMadvocTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertTrue (JoddModule.BEAN.isLoaded());
-		assertTrue (JoddModule.MADVOC.isLoaded());
-		assertFalse(JoddModule.MAIL.isLoaded());
-		assertTrue (JoddModule.PETITE.isLoaded());
-		assertTrue (JoddModule.PROPS.isLoaded());
-		assertTrue (JoddModule.SERVLET.isLoaded());
-		assertTrue (JoddModule.UPLOAD.isLoaded());
-		assertFalse(JoddModule.VTOR.isLoaded());
+		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.MADVOC));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.MAIL));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.PETITE));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.PROPS));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.SERVLET));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.UPLOAD));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.VTOR));
 	}
 }

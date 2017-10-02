@@ -35,15 +35,15 @@ public class JoddServletTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertTrue (JoddModule.BEAN.isLoaded());
-		assertFalse(JoddModule.HTTP.isLoaded());
-		assertFalse(JoddModule.MADVOC.isLoaded());
-		assertFalse(JoddModule.MAIL.isLoaded());
-		assertFalse(JoddModule.PETITE.isLoaded());
-		assertFalse(JoddModule.PROPS.isLoaded());
-		assertFalse(JoddModule.PROXETTA.isLoaded());
-		assertTrue (JoddModule.SERVLET.isLoaded());
-		assertTrue (JoddModule.UPLOAD.isLoaded());
-		assertFalse(JoddModule.VTOR.isLoaded());
+		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.HTTP));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.MADVOC));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.MAIL));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.PETITE));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.PROPS));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.PROXETTA));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.SERVLET));
+		assertTrue (Jodd.isModuleLoaded(JoddModule.UPLOAD));
+		assertFalse(Jodd.isModuleLoaded(JoddModule.VTOR));
 	}
 }

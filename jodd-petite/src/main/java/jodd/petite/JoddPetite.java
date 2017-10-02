@@ -45,7 +45,7 @@ public class JoddPetite {
 
 	public static void init() {
 		Jodd.initModule(
-			() -> useProxetta = Jodd.JoddModule.PROXETTA.isLoaded());
+			() -> useProxetta = Jodd.isModuleLoaded(Jodd.JoddModule.PROXETTA));
 	}
 
 }

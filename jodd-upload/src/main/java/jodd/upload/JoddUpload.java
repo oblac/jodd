@@ -41,7 +41,7 @@ public class JoddUpload {
 
 	public static void init() {
 		Jodd.initModule(() -> {
-			if (Jodd.JoddModule.BEAN.isLoaded()) {
+			if (Jodd.isModuleLoaded(Jodd.JoddModule.BEAN)) {
 				FileUploadBinder.registerTypeConverter();
 			}
 		});

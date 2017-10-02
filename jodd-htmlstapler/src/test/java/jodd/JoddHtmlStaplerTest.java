@@ -33,7 +33,7 @@ public class JoddHtmlStaplerTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertTrue(Jodd.JoddModule.HTML_STAPLER.isLoaded());
+		assertTrue(Jodd.isModuleLoaded(Jodd.JoddModule.HTML_STAPLER));
 	}
 
 }

@@ -46,7 +46,7 @@ public class JoddMadvoc {
 
 	public static void init() {
 		Jodd.initModule(
-			() -> useProxetta = JoddModule.PROXETTA.isLoaded());
+			() -> useProxetta = Jodd.isModuleLoaded(JoddModule.PROXETTA));
 	}
 
 }
