@@ -26,13 +26,12 @@
 package jodd.upload;
 
 import jodd.Jodd;
-import jodd.JoddModule;
 import jodd.upload.typeconverter.FileUploadBinder;
 
 /**
  * Jodd UPLOAD module.
  */
-public class JoddUpload implements JoddModule {
+public class JoddUpload {
 
 	// ---------------------------------------------------------------- module
 
@@ -41,13 +40,10 @@ public class JoddUpload implements JoddModule {
 	}
 
 	public static void init() {
-		Jodd.init(JoddUpload.class);
+		Jodd.initModule(() -> {
+			if (Jodd.JoddModule.BEAN.isLoaded()) {
+				FileUploadBinder.registerTypeConverter();
+			}
+		});
 	}
-
-	public void start() {
-		if (Jodd.isModuleLoaded(Jodd.BEAN)) {
-			FileUploadBinder.registerTypeConverter();
-		}
-	}
-
 }

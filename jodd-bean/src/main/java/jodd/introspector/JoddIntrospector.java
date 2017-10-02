@@ -41,7 +41,7 @@ public class JoddIntrospector {
 	}
 
 	public static void init() {
-		Jodd.init(JoddIntrospector.class);
+		Jodd.initModule();
 	}
 
 }

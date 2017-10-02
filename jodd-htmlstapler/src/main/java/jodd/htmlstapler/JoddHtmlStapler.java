@@ -39,7 +39,7 @@ public class JoddHtmlStapler {
 	}
 
 	public static void init() {
-		Jodd.init(JoddHtmlStapler.class);
+		Jodd.initModule();
 	}
 
 }

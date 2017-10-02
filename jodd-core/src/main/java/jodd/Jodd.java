@@ -25,219 +25,206 @@
 
 package jodd;
 
-import jodd.exception.UncheckedException;
-
-import java.lang.reflect.Field;
-
 /**
- * Jodd! This is the module manager for Jodd modules. On the very first access,
+ * Jodd! This is the simple module manager for Jodd modules. On the very first access,
  * all modules get loaded and information about available modules is set.
  * In some environments such OSGI, however, classloader lookup does not work.
  * Then you need to manually initialize all Jodd components that are in use.
  * <p>
- * Each module class contains some static global configuration.
- * Each module class has initialize itself in static block, so first access
- * to the config will also initialize the module. First module initialization
- * will trigger initialization of all modules (as defined in static block
- * of this class). Each module has to have static method <code>init()</code>
- * that register the module here. This method should be used when modules
- * can not be found by classloader.
+ * Each module must have the following code blocK at the bottom of the class:
+ * <pre>{@code
+ * static {
+ *     init();
+ * }
+ * public static void init() {
+ *     Jodd.initModule();
+ * }
+ * }</pre>
+ *
+ * <h2>How Jodd module gets loaded and initialized?</h2>
+ * There are two stages Jodd's modules are going through: 1) loading and 2) initialization.
+ * <b>Loading</b> is basically detecting if the module exist. Initialization runs some additional
+ * optional code block.
  * <p>
- * Important: static block and init methods <b>must</b> be declared <b>last</b>
- * in the module class! Also, if module class contains some default instance
- * (as part of the module's configuration), this instance must <b>not</b>
- * use any other configuration in the constructor! Otherwise, that value
- * could not be changed.
+ * There are two ways how modules are loaded:
+ * <p>
+ * By explicitly calling {@link Jodd#initAllModules()} - or by simply accessing
+ * the {@link Jodd} class (see {@link Jodd#JODD} :). This method loads all Jodd modules
+ * by simply loading each class. When class is loaded, it's static block is executed,
+ * and therefore the {@code init()} method as well:
+ * <pre>{@literal
+ * Jodd.static -> Jodd.initAllModules() -> JoddModule.NAME.static -> JoddModule.NAME.init() -> Jodd.initModule
+ * }</pre>
+ * <p>
+ * Second way is just by using the module's static class. It will load Jodd class as well:
+ * <pre>{@literal
+ * JoddModule.static -> Jodd.static -> Jodd.initAllModules() -> ...
+ * }</pre>
+ * <b>Initialization</b> happens once when <b>all</b> modules are loaded. It consist of running the
+ * initialization code blocks.
  */
 public class Jodd {
 
-	private static int ndx = 0;
-	private static boolean initAllModules = false;
+	private static boolean initialized = false;
 
-	public static final int CORE 			= ndx++;
-	public static final int BEAN 			= ndx++;
-	public static final int DB 				= ndx++;
-	public static final int DECORA 			= ndx++;
-	public static final int HTTP 			= ndx++;
-	public static final int HTML_STAPLER 	= ndx++;
-	public static final int INTROSPECTOR 	= ndx++;
-	public static final int JSON 			= ndx++;
-	public static final int JTX 			= ndx++;
-	public static final int LAGARTO 		= ndx++;
-	public static final int MADVOC 			= ndx++;
-	public static final int MAIL 			= ndx++;
-	public static final int PETITE 			= ndx++;
-	public static final int PROPS 			= ndx++;
-	public static final int PROXETTA 		= ndx++;
-	public static final int SERVLET 		= ndx++;
-	public static final int UPLOAD 			= ndx++;
-	public static final int VTOR 			= ndx++;
+	public enum JoddModule {
+		CORE,
+		BEAN,
+		DB,
+		DECORA,
+		HTTP,
+		HTML_STAPLER,
+		INTROSPECTOR,
+		JSON,
+		JTX,
+		LAGARTO,
+		MADVOC,
+		MAIL,
+		PETITE,
+		PROPS,
+		PROXETTA,
+		SERVLET,
+		UPLOAD,
+		VTOR;
 
-	private static final Object[] MODULES = new Object[ndx];
-	private static final String[] NAMES = new String[ndx];
+		static {
+			initAllModules();
+		}
+
+		private Class<?> moduleClass;
+
+		/**
+		 * Returns {@code true} if module is loaded.
+		 */
+		public boolean isLoaded() {
+			return moduleClass != null;
+		}
+
+		/**
+		 * Loads a module by looking for the module classname on the classpath.
+		 */
+		synchronized void load() {
+			if (isLoaded()) {
+				return;
+			}
+			final String moduleClassName = resolveClassName(this);
+
+			try {
+				this.moduleClass = Jodd.class.getClassLoader().loadClass(moduleClassName);
+			} catch (ClassNotFoundException ignore) {
+				// module not found
+			}
+		}
+
+		/**
+		 * Starts a module once all modules are loaded.
+		 */
+		synchronized void start() {
+			if (!isLoaded()) {
+				return;
+			}
+			try {
+				// create new instance to force loading of the class
+				moduleClass.newInstance();
+			}
+			catch (Exception ignore) {
+			}
+		}
+	}
 
 	static {
 		initAllModules();
 	}
 
 	/**
-	 * Manual initialization of a module.
+	 * Loads and initializes all modules on the classpath.
 	 */
-	public static void init(Class joddModuleClass) {
-		String name = joddModuleClass.getName();
+	private synchronized static void initAllModules() {
+		if (initialized) {
+			return;
+		}
 
-		int moduleId = -1;
+		for (JoddModule joddModule : JoddModule.values()) {
+			joddModule.load();
+		}
 
-		for (int i = 0; i < NAMES.length; i++) {
-			String moduleName = NAMES[i];
-			if (name.equals(moduleName)) {
-				moduleId = i;
+		for (JoddModule joddModule : JoddModule.values()) {
+			joddModule.start();
+		}
+
+		initialized = true;
+	}
+
+	/**
+	 * @see #initModule(Runnable)
+	 */
+	public static void initModule() {
+		initModule(null);
+	}
+
+	/**
+	 * Initializes the Jodd module.
+	 * Must be called only from the module's class, since it resolves the module from the
+	 * calling hierarchy.
+	 */
+	public static void initModule(Runnable initRunnable) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+
+		for (StackTraceElement stackTraceElement : stackTrace) {
+			final String className = stackTraceElement.getClassName();
+
+			for (JoddModule joddModule : JoddModule.values()) {
+				if (className.equals(resolveClassName(joddModule))) {
+					joddModule.load();
+
+					if (initRunnable != null) {
+						initRunnable.run();
+					}
+
+					return;
+				}
+			}
+		}
+
+		throw new RuntimeException("Only Jodd module can be initialized!");
+	}
+
+	private static String resolveClassName(JoddModule joddModule) {
+		String moduleName = joddModule.name();
+
+		String packageName = moduleName.toLowerCase();
+
+		// remove all underscores from package name
+		while (true) {
+			int ndx = packageName.indexOf('_');
+
+			if (ndx == -1) {
 				break;
 			}
+
+			packageName = packageName.substring(0, ndx) +
+				packageName.substring(ndx + 1);
 		}
 
-		if (moduleId == -1) {
-			throw new IllegalArgumentException("Invalid module: " + joddModuleClass);
-		}
+		moduleName = moduleName.substring(0, 1).toUpperCase() +
+			moduleName.substring(1, moduleName.length()).toLowerCase();
 
-		Object module = MODULES[moduleId];
+		// make CamelCase class name
+		while (true) {
+			int ndx = moduleName.indexOf('_');
 
-		if (module != null) {
-			if (module.getClass() == joddModuleClass) {
-				// already registered
-				return;
+			if (ndx == -1) {
+				break;
 			}
+
+			moduleName = moduleName.substring(0, ndx) +
+				moduleName.substring(ndx + 1, ndx + 2).toUpperCase() +
+				moduleName.substring(ndx + 2);
 		}
 
-		MODULES[moduleId] = joddModuleClass;
-
-		updateModuleInstance(moduleId);
+		return "jodd." + packageName + ".Jodd" + moduleName;
 	}
 
-	/**
-	 * Loads all modules on the classpath by using classloader
-	 * of this class.
-	 */
-	public static void initAllModules() {
-		if (initAllModules) {
-			return;
-		}
-		initAllModules = true;
-
-		final Field[] fields = Jodd.class.getFields();
-
-		final ClassLoader classLoader = Jodd.class.getClassLoader();
-
-		for (Field field : fields) {
-			Object fieldValue;
-
-			try {
-				fieldValue = field.get(null);
-				if (!(fieldValue instanceof Integer)) {
-					continue;
-				}
-			} catch (IllegalAccessException iaex) {
-				throw new UncheckedException(iaex);
-			}
-
-			int index = (Integer) fieldValue;
-
-			String moduleName = field.getName();
-
-			String packageName = moduleName.toLowerCase();
-
-			while (true) {
-				int ndx = packageName.indexOf('_');
-
-				if (ndx == -1) {
-					break;
-				}
-
-				packageName = packageName.substring(0, ndx) +
-					packageName.substring(ndx + 1);
-			}
-
-			moduleName = moduleName.substring(0, 1).toUpperCase() +
-					moduleName.substring(1, moduleName.length()).toLowerCase();
-
-			while (true) {
-				int ndx = moduleName.indexOf('_');
-
-				if (ndx == -1) {
-					break;
-				}
-
-				moduleName = moduleName.substring(0, ndx) +
-					moduleName.substring(ndx + 1, ndx + 2).toUpperCase() +
-					moduleName.substring(ndx + 2);
-			}
-
-
-			String moduleClass = "jodd." + packageName + ".Jodd" + moduleName;
-
-			NAMES[index] = moduleClass;
-
-			try {
-				MODULES[index] = classLoader.loadClass(moduleClass);
-			} catch (ClassNotFoundException cnfex) {
-				// ignore
-			}
-		}
-
-		for (int i = 0; i < MODULES.length; i++) {
-			updateModuleInstance(i);
-		}
-	}
-
-	/**
-	 * Updates modules instances by creating new modules.
-	 * When new module is created, {@link JoddModule#start()}
-	 * will be called only once.
-	 */
-	private static void updateModuleInstance(int moduleId) {
-		Object module = MODULES[moduleId];
-
-		if (module == null) {
-			return;
-		}
-
-		if (module instanceof Class) {
-			Class type = (Class) module;
-			try {
-
-				module = type.newInstance();
-				MODULES[moduleId] = module;
-
-				if (module instanceof JoddModule) {
-					((JoddModule) module).start();
-				}
-			} catch (Exception ex) {
-				MODULES[moduleId] = null;
-				throw new UncheckedException(ex);
-			}
-		}
-	}
-
-	// ---------------------------------------------------------------- checkers
-
-	/**
-	 * Returns <code>true</code> if module is loaded.
-	 */
-	public static boolean isModuleLoaded(int moduleNdx) {
-		return MODULES[moduleNdx] != null;
-	}
-
-	/**
-	 * Returns module instance if module is loaded. It may return:
-	 * <ul>
-	 *     <li>null - when module is not registered</li>
-	 *     <li>class - when module is registered, but not yet loaded</li>
-	 *     <li>object - when module is registered and loaded</li>
-	 * </ul>
-	 */
-	public static Object getModule(int moduleNdx) {
-		return MODULES[moduleNdx];
-	}
 
 	/**
 	 * Ascii art of Jodds name. Every serious framework needs one:)

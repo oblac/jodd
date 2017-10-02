@@ -25,9 +25,9 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.Jodd;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.upload.FileUpload;
+import jodd.upload.JoddUpload;
 import jodd.upload.typeconverter.FileUploadConverter;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +39,7 @@ public class UploadTypeConverterManagerAddonTest {
 
 	@Test
 	public void testRegistration() {
-		Jodd.initAllModules();
+		JoddUpload.init();
 
 		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.lookup(FileUpload.class);
 

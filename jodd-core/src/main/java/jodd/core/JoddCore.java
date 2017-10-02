@@ -69,7 +69,7 @@ public class JoddCore {
 	}
 
 	public static void init() {
-		Jodd.init(JoddCore.class);
+		Jodd.initModule();
 	}
 
 }

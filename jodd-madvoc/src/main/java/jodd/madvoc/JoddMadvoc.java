@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.Jodd;
+import jodd.Jodd.JoddModule;
 
 /**
  * Jodd MADVOC module.
@@ -44,9 +45,8 @@ public class JoddMadvoc {
 	}
 
 	public static void init() {
-		Jodd.init(JoddMadvoc.class);
-
-		useProxetta = Jodd.isModuleLoaded(Jodd.PROXETTA);
+		Jodd.initModule(
+			() -> useProxetta = JoddModule.PROXETTA.isLoaded());
 	}
 
 }

@@ -44,7 +44,7 @@ public class JoddMail {
 	}
 
 	public static void init() {
-		Jodd.init(JoddMail.class);
+		Jodd.initModule();
 	}
 
 }

@@ -39,6 +39,6 @@ public class JoddServlet {
 	}
 
 	public static void init() {
-		Jodd.init(JoddServlet.class);
+		Jodd.initModule();
 	}
 }

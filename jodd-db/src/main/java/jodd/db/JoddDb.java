@@ -39,7 +39,7 @@ public class JoddDb {
 	}
 
 	public static void init() {
-		Jodd.init(JoddDb.class);
+		Jodd.initModule();
 	}
 
 }

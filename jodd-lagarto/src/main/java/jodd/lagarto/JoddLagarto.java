@@ -39,7 +39,7 @@ public class JoddLagarto {
 	}
 
 	public static void init() {
-		Jodd.init(JoddLagarto.class);
+		Jodd.initModule();
 	}
 
 }

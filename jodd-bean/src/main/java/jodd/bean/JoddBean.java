@@ -47,9 +47,10 @@ public class JoddBean {
 	}
 
 	public static void init() {
-		//JoddIntrospector.init();
-		Jodd.init(JoddBean.class);
-		introspector = JoddIntrospector.introspector;
+		Jodd.initModule(() -> {
+			// set introspector once when introspector module is loaded
+			introspector = JoddIntrospector.introspector;
+		});
 	}
 
 }

@@ -39,7 +39,7 @@ public class JoddDecora {
 	}
 
 	public static void init() {
-		Jodd.init(JoddDecora.class);
+		Jodd.initModule();
 	}
 
 }

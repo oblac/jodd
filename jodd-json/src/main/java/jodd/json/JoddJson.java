@@ -109,7 +109,7 @@ public class JoddJson {
 	}
 
 	public static void init() {
-		Jodd.init(JoddJson.class);
+		Jodd.initModule();
 	}
 
 }

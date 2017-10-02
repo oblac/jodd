@@ -27,14 +27,13 @@ package jodd;
 
 import org.junit.jupiter.api.Test;
 
-import static jodd.Jodd.HTML_STAPLER;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JoddHtmlStaplerTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertTrue(Jodd.isModuleLoaded(HTML_STAPLER));
+		assertTrue(Jodd.JoddModule.HTML_STAPLER.isLoaded());
 	}
 
 }

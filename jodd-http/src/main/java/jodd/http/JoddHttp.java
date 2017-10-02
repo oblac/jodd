@@ -85,7 +85,7 @@ public class JoddHttp {
 	}
 
 	public static void init() {
-		Jodd.init(JoddHttp.class);
+		Jodd.initModule();
 	}
 
 }

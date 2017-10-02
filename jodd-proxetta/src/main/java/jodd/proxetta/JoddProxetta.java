@@ -94,7 +94,7 @@ public class JoddProxetta {
 	}
 
 	public static void init() {
-		Jodd.init(JoddProxetta.class);
+		Jodd.initModule();
 	}
 
 }

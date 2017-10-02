@@ -39,7 +39,7 @@ public class JoddProps {
 	}
 
 	public static void init() {
-		Jodd.init(JoddProps.class);
+		Jodd.initModule();
 	}
 
 }

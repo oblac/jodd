@@ -48,7 +48,12 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import static jodd.util.ArraysUtil.ints;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsonParserTest {
 
@@ -719,7 +724,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testJsonModule() {
-		assertTrue(Jodd.isModuleLoaded(Jodd.JSON));
+		assertTrue(Jodd.JoddModule.JSON.isLoaded());
 	}
 
 	@Test
