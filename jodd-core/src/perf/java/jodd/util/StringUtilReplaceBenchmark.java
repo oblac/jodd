@@ -19,7 +19,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * <p>
  * Run:
  * <code>
- * gw :jodd-core:perf -PStringReplaceBenchmark
+ * gw :jodd-core:perf -PStringUtilReplaceBenchmark
  * </code>
  * </p>
  *
@@ -28,7 +28,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @Fork(value = 3, jvmArgsAppend = "-Djmh.stack.lines=3")
 @Warmup(iterations = 5)
 @Measurement(iterations = 7)
-public class StringReplaceBenchmark {
+public class StringUtilReplaceBenchmark {
 
     private static final String SHORT_STRING_NO_MATCH = "abc";
     private static final String SHORT_STRING_ONE_MATCH = "a'bc";
