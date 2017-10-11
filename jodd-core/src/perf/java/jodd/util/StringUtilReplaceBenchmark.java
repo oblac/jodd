@@ -7,14 +7,15 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
 /**
- * Benchmark for <i>replace</i> method from following classes
+ * Benchmark for {@link StringUtil#replace(String, String, String)} method. <br/>
+ * Following methods will be compared:
  * <ol>
  *     <li>{@link String#replace(CharSequence, CharSequence)}</li>
  *     <li>{@link org.apache.commons.lang3.StringUtils#replace(String, String, String)}</li>
  *     <li>{@link StringUtil#replace(String, String, String)}</li>
  * </ol>
  *
- * code was originally published on <a href="https://blog.jooq.org/2017/10/11/benchmarking-jdk-string-replace-vs-apache-commons-stringutils-replace/#comment-151887">jOOQ blog</a> but slightly modified.
+ * Code was originally published on <a href="https://blog.jooq.org/2017/10/11/benchmarking-jdk-string-replace-vs-apache-commons-stringutils-replace/#comment-151887">jOOQ blog</a> , but slightly modified.
  *
  * <p>
  * Run:
@@ -23,7 +24,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * </code>
  * </p>
  *
- * <b>Note:</b> in Java 9 the {@link String#replace(CharSequence, CharSequence)} will perform much better!
+ * <b>Note:</b> in Java 9 the method {@link String#replace(CharSequence, CharSequence)} will perform much better!
  */
 @Fork(value = 3, jvmArgsAppend = "-Djmh.stack.lines=3")
 @Warmup(iterations = 5)
