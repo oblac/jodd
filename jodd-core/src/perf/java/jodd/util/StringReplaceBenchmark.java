@@ -19,7 +19,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * <p>
  * Run:
  * <code>
- * gw :jodd-core:perf -PStringBandBenchmark
+ * gw :jodd-core:perf -PStringReplaceBenchmark
  * </code>
  * </p>
  *
