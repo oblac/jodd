@@ -59,12 +59,12 @@ public class StringUtil {
 		int length = s.length();
 		StringBuilder sb = new StringBuilder(length + with.length());
 		do {
-			sb.append(s.substring(c, i));
+			sb.append(s, c, i);
 			sb.append(with);
 			c = i + sub.length();
 		} while ((i = s.indexOf(sub, c)) != -1);
 		if (c < length) {
-			sb.append(s.substring(c, length));
+			sb.append(s, c, length);
 		}
 		return sb.toString();
 	}
