@@ -151,24 +151,27 @@ public class NetUtil {
 	 * Downloads resource as byte array.
 	 */
 	public static byte[] downloadBytes(String url) throws IOException {
-		InputStream inputStream = new URL(url).openStream();
-		return StreamUtil.readBytes(inputStream);
+		try (InputStream inputStream = new URL(url).openStream()) {
+			return StreamUtil.readBytes(inputStream);
+		}
 	}
 
 	/**
 	 * Downloads resource as String.
 	 */
 	public static String downloadString(String url, String encoding) throws IOException {
-		InputStream inputStream = new URL(url).openStream();
-		return new String(StreamUtil.readChars(inputStream, encoding));
+		try (InputStream inputStream = new URL(url).openStream()) {
+			return new String(StreamUtil.readChars(inputStream, encoding));
+		}
 	}
 
 	/**
 	 * Downloads resource as String.
 	 */
 	public static String downloadString(String url) throws IOException {
-		InputStream inputStream = new URL(url).openStream();
-		return new String(StreamUtil.readChars(inputStream));
+		try (InputStream inputStream = new URL(url).openStream()) {
+			return new String(StreamUtil.readChars(inputStream));
+		}
 	}
 
 	/**
