@@ -362,6 +362,7 @@ configure(javaModules()) {
 
 apply plugin: 'project-report'
 apply plugin: 'jacoco'
+apply from: "${gradleScriptDir}/license.gradle"
 
 def javaBundleModulesSources = javaBundleModules().sourceSets.main
 

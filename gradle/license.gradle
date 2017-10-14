@@ -1,0 +1,157 @@
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
+task license {
+    group 'License'
+    description 'Check for files without a license header'
+    doLast {
+        license(false)
+    }
+}
+
+task licenseUpdate {
+    group 'License'
+    description 'Updates files without a license header'
+    doLast {
+        license(true)
+    }
+}
+
+def license(overwrite) {
+    def headerLines = file('LICENSE').readLines()
+
+    // header
+    def doubleslashHeader = ""
+    def doubleslashPrefix = "//"
+    def doubleslashIsBlock = false
+    def doubleslashStart = ""
+    def doubleslashEnd = ""
+    headerLines.forEach { line ->
+        line = "// " + line
+        doubleslashHeader += line.trim() + "\n"
+    }
+
+    // header
+    def hashHeader = ""
+    def hashPrefix = "#"
+    def hashIsBlock = false
+    def hashStart = ""
+    def hashEnd = ""
+    headerLines.forEach { line ->
+        line = "# " + line
+        hashHeader += line.trim() + "\n"
+    }
+
+    // header
+    def tagHeader = ""
+    def tagPrefix = ""
+    def tagIsBlock = true
+    def tagStart = "<!--\n"
+    def tagEnd = "-->\n"
+    headerLines.forEach { line ->
+        tagHeader += line.trim() + "\n"
+    }
+    tagHeader = tagStart + tagHeader + tagEnd
+
+
+    // gather sources
+    def allSource = javaBundleModules().sourceSets.main.allSource +
+            javaBundleModules().sourceSets.test.allJava +
+            javaBundleModules().sourceSets.testInt.allJava +
+            javaBundleModules().sourceSets.perf.allJava
+
+    allSource.files.each { fileList ->
+        fileList.each { file ->
+
+            def fileNamePath = file.absolutePath
+            fileNamePath = fileNamePath.substring(project.rootDir.absolutePath.length() + 1)
+
+            // default header, java
+            def headerContent = doubleslashHeader
+            def headerPrefix = doubleslashPrefix
+            def headerIsBlock = doubleslashIsBlock
+            def headerStart = doubleslashStart
+            def headerEnd = doubleslashEnd
+
+            // python, properties
+            if (file.name.endsWith(".py") || file.name.endsWith(".properties")) {
+                headerContent = hashHeader
+                headerPrefix = hashPrefix
+                headerIsBlock = hashIsBlock
+                headerStart = hashStart
+                headerEnd = hashEnd
+            }
+
+            // xml, tld
+            if (file.name.endsWith(".xml") || file.name.endsWith(".tld")) {
+                headerContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + tagHeader
+                headerPrefix = tagPrefix
+                headerIsBlock = tagIsBlock
+                headerStart = tagStart
+                headerEnd = tagEnd
+            }
+
+            // *** 3rd PARTY LIBS, SPECIAL CASES ***
+            if (
+                file.absolutePath.contains("src/main/java/jodd/asm5/") ||
+                file.name.equals("BCrypt.java") ||
+                file.name.equals("NanoHTTPD.java")
+            ) {
+                headerContent = null
+            }
+
+
+            // apply the license
+            if (headerContent != null) {
+                def fileText = file.text
+
+                if (fileText.startsWith(headerContent) == false) {
+                    println(fileNamePath)
+
+                    if (overwrite) {
+                        // remove existing header
+                        if (headerIsBlock) {
+                            int ndx = fileText.indexOf(headerEnd)
+                            if (ndx >= 0) {
+                                fileText = fileText.substring(ndx + headerEnd.length())
+                            }
+                        }
+                        else {
+                            while (fileText.startsWith(headerPrefix)) {
+                                int ndx = fileText.indexOf("\n")
+                                fileText = fileText.substring(ndx + 1)
+                            }
+                        }
+
+                        // add the new header
+                        fileText = headerContent + fileText
+
+                        file.write(fileText)
+                    }
+                }
+            }
+        }
+    }
+}
