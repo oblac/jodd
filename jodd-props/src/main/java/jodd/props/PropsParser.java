@@ -152,6 +152,9 @@ public class PropsParser implements Cloneable {
 					case '\r':
 					case '\n':
 						// if the EOL is \n or \r\n, escapes both chars
+						if (c == '\n') {
+							ndx--;
+						}
 						state = ParseState.ESCAPE_NEWLINE;
 						break;
 					// encode UTF character

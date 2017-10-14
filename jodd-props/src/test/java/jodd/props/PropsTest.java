@@ -32,7 +32,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class PropsTest extends BasePropsTest {
 
@@ -426,7 +432,7 @@ public class PropsTest extends BasePropsTest {
 		p.setValueTrimLeft(true);
 		p.load(readDataFile("test3.props"));
 
-		assertEquals("\r\n\tHello from\r\n\tthe multiline\r\n\tvalue\r\n", p.getValue("email.footer"));
+		assertEquals("\n\tHello from\n\tthe multiline\n\tvalue\n", p.getValue("email.footer"));
 		assertEquals("aaa", p.getValue("email.header"));
 	}
 
