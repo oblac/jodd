@@ -4,10 +4,20 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.9...master)
 
+## Performance
+
++ **core** - `StringUtil#replace` optimized a bit.
+
 ### Bug Fixes
 
 + **core** - fixed issue with `StringUtil` and empty strings.
++ **props** - fixed issue with multi-line strings and line endings.
 
+### System
+
++ **licenses** - added back headers for all 3rd party code.
++ **files** - files line endings unified.
++ **gradle** - updated to Gradle 4.2.
 
 ## [3.9.1](https://github.com/oblac/jodd/compare/v3.9...3.9.1)
 

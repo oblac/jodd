@@ -910,4 +910,28 @@ public class PropsTest extends BasePropsTest {
 		assertEquals("cn=accountname,ou=users,o=organization", props.getValue("account-dn"));
 	}
 
+
+	@Test
+	public void testDifferentLineEndings() {
+		Props props = new Props();
+		props.setIgnorePrefixWhitespacesOnNewLine(true);
+		props.load("text=line1\\\n   line2\\\r\n   line3\\\r   line4");
+
+		assertEquals("line1line2line3line4", props.getValue("text"));
+
+		props = new Props();
+		props.setIgnorePrefixWhitespacesOnNewLine(false);
+		props.load("text=line1\\\n   line2\\\r\n   line3\\\r   line4");
+
+		assertEquals("line1   line2   line3   line4", props.getValue("text"));
+
+		props = new Props();
+		props.setIgnorePrefixWhitespacesOnNewLine(false);
+		props.setEscapeNewLineValue("|");
+		props.load("text=line1\\\n   line2\\\r\n   line3\\\r   line4");
+
+		assertEquals("line1|   line2|   line3|   line4", props.getValue("text"));
+	}
+
+
 }
