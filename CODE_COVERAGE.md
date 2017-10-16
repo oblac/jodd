@@ -10,9 +10,9 @@ Linux/Unix/OSX:
 
 	./gradlew codeCoverageReport
 
-This will generate the code coverage report for ALL the modules.
+This will generate the code coverage report for **ALL** the modules.
 
-**Note**: since the code coverage task runs the integration tests, be sure that testing docker containers are up and running:
+_NOTE_: since the code coverage task runs the integration tests, be sure that testing docker containers are up and running:
 
 	cd docker
 	docker-compose -f docker-compose-test.yml up  
@@ -38,3 +38,4 @@ For example:
 	./gradlew :jodd-core:codeCoverage
 	open jodd-core/build/reports/jacoco/index.html
 	
+_NOTE_: Package `jodd.asm5` is _excluded_ from code coverage, but still reported locally.
