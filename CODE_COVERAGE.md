@@ -4,14 +4,37 @@ To generate the code coverage report, execute the following command:
 
 Windows:
 
-	gradlew.bat jacocoReport
+	gradlew.bat codeCoverageReport
 
 Linux/Unix/OSX:
 
-	./gradlew jacocoReport
+	./gradlew codeCoverageReport
 
-This will generate code coverage report for all the modules.
-In order to view the report for a single module, open the following file:
+This will generate the code coverage report for ALL the modules.
 
-	<MODULE_NAME>/build/reports/jacoco/test/html/index.html
+**Note**: since the code coverage task runs the integration tests, be sure that testing docker containers are up and running:
 
+	cd docker
+	docker-compose -f docker-compose-test.yml up  
+
+### Reports location
+
+Code Coverage report is located here:
+
+	build/reports/jacoco/codeCoverageReport/html/index.html
+	
+## Code Coverage for a single module :star:
+
+Run:
+
+	./gradlew :<MODULE>:codeCoverage
+
+The result is located in:
+
+	MODULE/build/reports/jacoco/index.html
+	
+For example:
+
+	./gradlew :jodd-core:codeCoverage
+	open jodd-core/build/reports/jacoco/index.html
+	

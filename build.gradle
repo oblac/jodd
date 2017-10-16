@@ -312,6 +312,22 @@ configure(javaModules()) {
 		}
 	}
 
+	task codeCoverage(type: JacocoReport) {
+		group 'Verification'
+		description 'Generates code coverage reports for a single module'
+
+		executionData fileTree("${buildDir}/jacoco/").include("*.exec")
+		sourceSets sourceSets.main
+
+		reports {
+			html.enabled true
+			html.destination file("${buildDir}/reports/jacoco")
+		}
+	}
+
+	codeCoverage.dependsOn testUnit
+	codeCoverage.dependsOn testIntegration
+
 	//check.dependsOn testIntegration
 	//testIntegration.mustRunAfter test
 
@@ -428,6 +444,9 @@ task bintray {
 }
 
 task codeCoverageReport(type: JacocoReport) {
+	group 'Verification'
+	description 'Generates code coverage reports for the whole project'
+
 	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 	jacocoClasspath
 
@@ -438,7 +457,7 @@ task codeCoverageReport(type: JacocoReport) {
 	reports {
 		xml.enabled true
 		xml.destination file("${buildDir}/reports/jacoco/report.xml")
-		html.enabled false
+		html.enabled true
 		csv.enabled false
 	}
 }
