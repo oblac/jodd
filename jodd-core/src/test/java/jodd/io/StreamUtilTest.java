@@ -125,7 +125,7 @@ public class StreamUtilTest {
 	}
 
     @Test
-    public void testCompareReaderInstances() throws Exception {
+    public void testCompareWithReaderInstances_ExpectedSuccessfulCompare() throws Exception {
 
         boolean actual;
         try (FileReader input_1 = new FileReader(textFile); FileReader input_2 = new FileReader(textFile)) {
@@ -134,6 +134,19 @@ public class StreamUtilTest {
 
         // asserts
         assertTrue(actual);
+    }
+
+    @Test
+    public void testCompareWithReaderInstances_ExpectedNotSuccessfulCompare() throws Exception {
+
+        boolean actual;
+
+        try (FileReader input_1 = new FileReader(textFile); CharArrayReader input_2 = new CharArrayReader(new char[] {'t','e','s','t',' ','f','i','l','e','!'})) {
+            actual = StreamUtil.compare(input_1, input_2);
+        }
+
+        // asserts
+        assertFalse(actual);
     }
 
 }
