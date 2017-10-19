@@ -31,12 +31,7 @@ import jodd.util.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StreamUtilTest {
 
 	protected String dataRoot;
+	File textFile;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -52,6 +48,7 @@ public class StreamUtilTest {
 		}
 		URL data = ClassLoaderUtil.getResourceUrl("jodd/io/data");
 		dataRoot = data.getFile();
+		textFile = new File(dataRoot, "file/a.txt");
 	}
 
 	@Test
@@ -111,28 +108,24 @@ public class StreamUtilTest {
 
 
 	@Test
-	public void testCompare() {
-		try {
-			File file = new File(dataRoot, "file/a.txt");
-			FileInputStream in1 = new FileInputStream(file);
+	public void testCompare() throws Exception {
+        File file = textFile;
+        FileInputStream in1 = new FileInputStream(file);
 
-			String content = "test file\r\n";
-			if (file.length() == 10) {
-				content = StringUtil.remove(content, '\r');
-			}
-			ByteArrayInputStream in2 = new ByteArrayInputStream(content.getBytes());
-			assertTrue(StreamUtil.compare(in1, in2));
-			StreamUtil.close(in2);
-			StreamUtil.close(in1);
-		} catch (IOException e) {
-			fail("StreamUtil.testCloneCompare " + e.toString());
-		}
+        String content = "test file\r\n";
+        if (file.length() == 10) {
+            content = StringUtil.remove(content, '\r');
+        }
+        ByteArrayInputStream in2 = new ByteArrayInputStream(content.getBytes());
+        assertTrue(StreamUtil.compare(in1, in2));
+        StreamUtil.close(in2);
+        StreamUtil.close(in1);
 	}
 
 	@Test
 	public void testGetBytes() {
 		try {
-			FileInputStream in = new FileInputStream(new File(dataRoot, "file/a.txt"));
+			FileInputStream in = new FileInputStream(textFile);
 			byte[] data = StreamUtil.readBytes(in);
 			StreamUtil.close(in);
 
@@ -140,7 +133,7 @@ public class StreamUtilTest {
 			s = StringUtil.remove(s, '\r');
 			assertEquals("test file\n", s);
 
-			in = new FileInputStream(new File(dataRoot, "file/a.txt"));
+			in = new FileInputStream(textFile);
 			String str = new String(StreamUtil.readChars(in));
 			StreamUtil.close(in);
 			str = StringUtil.remove(str, '\r');
@@ -149,4 +142,17 @@ public class StreamUtilTest {
 			fail("StreamUtil.testGetBytes " + e.toString());
 		}
 	}
+
+    @Test
+    public void testCompareReaderInstances() throws Exception {
+
+        boolean actual;
+        try (FileReader input_1 = new FileReader(textFile); FileReader input_2 = new FileReader(textFile)) {
+            actual = StreamUtil.compare(input_1, input_2);
+        }
+
+        // asserts
+        assertTrue(actual);
+    }
+
 }
