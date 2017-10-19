@@ -36,6 +36,9 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test class for {@link StreamUtil}
+ */
 public class StreamUtilTest {
 
 	private String dataRoot;
