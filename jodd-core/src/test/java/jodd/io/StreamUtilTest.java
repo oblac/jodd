@@ -152,4 +152,42 @@ public class StreamUtilTest {
         assertFalse(actual);
     }
 
+    @Test
+    public void testCopyReaderWriterCharCount() throws Exception {
+	    // charCount < input data
+        try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
+             StringWriter writer = new StringWriter()) {
+
+            final String expected = "jodd";
+
+            StreamUtil.copy(reader, writer, 4);
+
+            // asserts
+            assertEquals(expected, writer.toString());
+        }
+
+        // charCount == input data
+        try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
+             StringWriter writer = new StringWriter()) {
+
+            final String expected = "jodd is cool";
+
+            StreamUtil.copy(reader, writer, 12);
+
+            // asserts
+            assertEquals(expected, writer.toString());
+        }
+
+        // charCount > input data
+        try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
+             StringWriter writer = new StringWriter()) {
+
+            final String expected = "jodd is cool";
+
+            StreamUtil.copy(reader, writer, 456);
+
+            // asserts
+            assertEquals(expected, writer.toString());
+        }
+    }
 }
