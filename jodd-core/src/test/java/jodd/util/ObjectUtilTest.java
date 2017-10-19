@@ -43,20 +43,20 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ObjectUtilTest {
 
-    private static final File baseDir = new File(SystemUtil.tempDir(), "jodd/ObjectUtilTest");
+    private static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/ObjectUtilTest");
 
     @BeforeAll
     public static void beforeAll() throws Exception {
-        if (baseDir.exists()) {
+        if (BASE_DIR.exists()) {
             // clean up all subdirs & files
-            Files.walk(baseDir.toPath(),FileVisitOption.FOLLOW_LINKS)
+            Files.walk(BASE_DIR.toPath(),FileVisitOption.FOLLOW_LINKS)
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .peek(System.out::println)
                     .forEach(File::delete);
         }
         // created directory is needed for tests
-        baseDir.mkdirs();
+        BASE_DIR.mkdirs();
     }
 
 	@Test
@@ -105,7 +105,7 @@ public class ObjectUtilTest {
     public void testWriteObject() throws Exception {
 
 	    final String instanceToWrite = "Jodd - The Unbearable Lightness of Java :-)";
-	    final File targetFile = new File(baseDir, "testWriteObject.ser");
+	    final File targetFile = new File(BASE_DIR, "testWriteObject.ser");
 
 	    ObjectUtil.writeObject(targetFile, instanceToWrite);
     }
@@ -114,7 +114,7 @@ public class ObjectUtilTest {
     public void testReadObject() throws Exception {
 
         final String expected = "Jodd - The Unbearable Lightness of Java :-)";
-        final File targetFile = new File(baseDir, "testReadObject.ser");
+        final File targetFile = new File(BASE_DIR, "testReadObject.ser");
 
         // ensure that file exists with other data
         FileUtil.writeString(targetFile, "only test data");
