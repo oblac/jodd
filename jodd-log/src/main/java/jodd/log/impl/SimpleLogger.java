@@ -52,7 +52,7 @@ public class SimpleLogger implements Logger {
 
 	@Override
 	public boolean isEnabled(Level level) {
-		return level.isEnabledFor(level);
+		return level.isEnabledFor(this.level);
 	}
 
 	@Override
