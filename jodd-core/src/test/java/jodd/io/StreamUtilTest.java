@@ -38,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class StreamUtilTest {
 
-	protected String dataRoot;
-	File textFile;
+	private String dataRoot;
+	private File textFile;
 
 	@BeforeEach
 	public void setUp() throws Exception {
