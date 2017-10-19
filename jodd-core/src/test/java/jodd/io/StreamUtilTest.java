@@ -52,39 +52,28 @@ public class StreamUtilTest {
 	}
 
 	@Test
-	public void testCopy() {
+	public void testCopy() throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try {
-			StreamUtil.copy(in, out);
-		} catch (IOException ioex) {
-			fail("StreamUtil.copy " + ioex.toString());
-		}
+        StreamUtil.copy(in, out);
 		assertEquals("input", out.toString());
 		StreamUtil.close(out);
 		StreamUtil.close(in);
 	}
 
 	@Test
-	public void testCopyWithSize() {
+	public void testCopyWithSize() throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try {
-			StreamUtil.copy(in, out, 3);
-		} catch (IOException ioex) {
-			fail("StreamUtil.copy " + ioex.toString());
-		}
-		assertEquals("inp", out.toString());
+        StreamUtil.copy(in, out, 3);
+
+        assertEquals("inp", out.toString());
 		StreamUtil.close(out);
 		StreamUtil.close(in);
 
 		in = new ByteArrayInputStream("input".getBytes());
 		out = new ByteArrayOutputStream();
-		try {
-			StreamUtil.copy(in, out, 5);
-		} catch (IOException ioex) {
-			fail("StreamUtil.copy " + ioex.toString());
-		}
+        StreamUtil.copy(in, out, 5);
 		assertEquals("input", out.toString());
 		StreamUtil.close(out);
 		StreamUtil.close(in);
@@ -94,11 +83,7 @@ public class StreamUtilTest {
 		JoddCore.ioBufferSize = 3;
 		in = new ByteArrayInputStream("input".getBytes());
 		out = new ByteArrayOutputStream();
-		try {
-			StreamUtil.copy(in, out, 5);
-		} catch (IOException ioex) {
-			fail("StreamUtil.copy " + ioex.toString());
-		}
+        StreamUtil.copy(in, out, 5);
 		assertEquals("input", out.toString());
 		StreamUtil.close(out);
 		StreamUtil.close(in);
@@ -123,24 +108,20 @@ public class StreamUtilTest {
 	}
 
 	@Test
-	public void testGetBytes() {
-		try {
-			FileInputStream in = new FileInputStream(textFile);
-			byte[] data = StreamUtil.readBytes(in);
-			StreamUtil.close(in);
+	public void testGetBytes() throws Exception {
+        FileInputStream in = new FileInputStream(textFile);
+        byte[] data = StreamUtil.readBytes(in);
+        StreamUtil.close(in);
 
-			String s = new String(data);
-			s = StringUtil.remove(s, '\r');
-			assertEquals("test file\n", s);
+        String s = new String(data);
+        s = StringUtil.remove(s, '\r');
+        assertEquals("test file\n", s);
 
-			in = new FileInputStream(textFile);
-			String str = new String(StreamUtil.readChars(in));
-			StreamUtil.close(in);
-			str = StringUtil.remove(str, '\r');
-			assertEquals("test file\n", str);
-		} catch (IOException e) {
-			fail("StreamUtil.testGetBytes " + e.toString());
-		}
+        in = new FileInputStream(textFile);
+        String str = new String(StreamUtil.readChars(in));
+        StreamUtil.close(in);
+        str = StringUtil.remove(str, '\r');
+        assertEquals("test file\n", str);
 	}
 
     @Test
