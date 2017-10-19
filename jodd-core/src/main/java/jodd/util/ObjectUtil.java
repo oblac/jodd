@@ -58,7 +58,7 @@ public class ObjectUtil {
 		try {
 			Method cloneMethod = source.getClass().getDeclaredMethod("clone");
 			cloneMethod.setAccessible(true);
-			return (T) cloneMethod.invoke(null);
+			return (T) cloneMethod.invoke(source);
 		} catch (Exception ex) {
 			throw new CloneNotSupportedException("Can't clone() the object: " + ex.getMessage());
 		}
