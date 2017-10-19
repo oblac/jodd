@@ -107,7 +107,6 @@ public class StreamUtilTest {
 		StreamUtil.close(in);
 
 		JoddCore.ioBufferSize = temp;
-
 	}
 
 
@@ -125,8 +124,6 @@ public class StreamUtilTest {
 			assertTrue(StreamUtil.compare(in1, in2));
 			StreamUtil.close(in2);
 			StreamUtil.close(in1);
-		} catch (FileNotFoundException e) {
-			fail("StreamUtil.testCloneCompare " + e.toString());
 		} catch (IOException e) {
 			fail("StreamUtil.testCloneCompare " + e.toString());
 		}
@@ -148,8 +145,6 @@ public class StreamUtilTest {
 			StreamUtil.close(in);
 			str = StringUtil.remove(str, '\r');
 			assertEquals("test file\n", str);
-		} catch (FileNotFoundException e) {
-			fail("StreamUtil.testGetBytes " + e.toString());
 		} catch (IOException e) {
 			fail("StreamUtil.testGetBytes " + e.toString());
 		}
