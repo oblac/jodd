@@ -29,6 +29,8 @@ import jodd.core.JoddCore;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -54,140 +56,170 @@ public class StreamUtilTest {
 		textFile = new File(dataRoot, "file/a.txt");
 	}
 
-	@Test
-	public void testCopy() throws Exception {
-		ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-        StreamUtil.copy(in, out);
-		assertEquals("input", out.toString());
-		StreamUtil.close(out);
-		StreamUtil.close(in);
-	}
+    @Nested
+    @DisplayName("tests for StreamUtil#readBytes - methods")
+    public class ReadBytes {
 
-	@Test
-	public void testCopyWithSize() throws Exception {
-		ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-        StreamUtil.copy(in, out, 3);
+        @Test
+        public void testReadBytes_InputStream() throws Exception {
 
-        assertEquals("inp", out.toString());
-		StreamUtil.close(out);
-		StreamUtil.close(in);
+            final String expected = "test file\n";
 
-		in = new ByteArrayInputStream("input".getBytes());
-		out = new ByteArrayOutputStream();
-        StreamUtil.copy(in, out, 5);
-		assertEquals("input", out.toString());
-		StreamUtil.close(out);
-		StreamUtil.close(in);
-
-		int temp = JoddCore.ioBufferSize;
-
-		JoddCore.ioBufferSize = 3;
-		in = new ByteArrayInputStream("input".getBytes());
-		out = new ByteArrayOutputStream();
-        StreamUtil.copy(in, out, 5);
-		assertEquals("input", out.toString());
-		StreamUtil.close(out);
-		StreamUtil.close(in);
-
-		JoddCore.ioBufferSize = temp;
-	}
-
-
-	@Test
-	public void testCompare() throws Exception {
-        File file = textFile;
-        FileInputStream in1 = new FileInputStream(file);
-
-        String content = "test file\r\n";
-        if (file.length() == 10) {
-            content = StringUtil.remove(content, '\r');
-        }
-        ByteArrayInputStream in2 = new ByteArrayInputStream(content.getBytes());
-        assertTrue(StreamUtil.compare(in1, in2));
-        StreamUtil.close(in2);
-        StreamUtil.close(in1);
-	}
-
-	@Test
-	public void testGetBytes() throws Exception {
-        FileInputStream in = new FileInputStream(textFile);
-        byte[] data = StreamUtil.readBytes(in);
-        StreamUtil.close(in);
-
-        String s = new String(data);
-        s = StringUtil.remove(s, '\r');
-        assertEquals("test file\n", s);
-
-        in = new FileInputStream(textFile);
-        String str = new String(StreamUtil.readChars(in));
-        StreamUtil.close(in);
-        str = StringUtil.remove(str, '\r');
-        assertEquals("test file\n", str);
-	}
-
-    @Test
-    public void testCompareWithReaderInstances_ExpectedSuccessfulCompare() throws Exception {
-
-        boolean actual;
-        try (FileReader input_1 = new FileReader(textFile); FileReader input_2 = new FileReader(textFile)) {
-            actual = StreamUtil.compare(input_1, input_2);
-        }
-
-        // asserts
-        assertTrue(actual);
-    }
-
-    @Test
-    public void testCompareWithReaderInstances_ExpectedNotSuccessfulCompare() throws Exception {
-
-        boolean actual;
-
-        try (FileReader input_1 = new FileReader(textFile); CharArrayReader input_2 = new CharArrayReader(new char[] {'t','e','s','t',' ','f','i','l','e','!'})) {
-            actual = StreamUtil.compare(input_1, input_2);
-        }
-
-        // asserts
-        assertFalse(actual);
-    }
-
-    @Test
-    public void testCopyReaderWriterCharCount() throws Exception {
-	    // charCount < input data
-        try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
-             StringWriter writer = new StringWriter()) {
-
-            final String expected = "jodd";
-
-            StreamUtil.copy(reader, writer, 4);
-
-            // asserts
-            assertEquals(expected, writer.toString());
-        }
-
-        // charCount == input data
-        try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
-             StringWriter writer = new StringWriter()) {
-
-            final String expected = "jodd is cool";
-
-            StreamUtil.copy(reader, writer, 12);
-
-            // asserts
-            assertEquals(expected, writer.toString());
-        }
-
-        // charCount > input data
-        try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
-             StringWriter writer = new StringWriter()) {
-
-            final String expected = "jodd is cool";
-
-            StreamUtil.copy(reader, writer, 456);
-
-            // asserts
-            assertEquals(expected, writer.toString());
+            try (FileInputStream inputStream = new FileInputStream(textFile)) {
+                byte[] data = StreamUtil.readBytes(inputStream);
+                String s = new String(data);
+                s = StringUtil.remove(s, '\r');
+                assertEquals(expected, s);
+            }
         }
     }
+
+	@Nested
+    @DisplayName("tests for StreamUtil#readChars - methods")
+    public class ReadChars {
+
+	    @Test
+	    public void testReadChars_InputStream() throws Exception {
+
+	        final String expected = "test file\n";
+
+            try (FileInputStream inputStream = new FileInputStream(textFile)) {
+                String str = new String(StreamUtil.readChars(inputStream));
+                str = StringUtil.remove(str, '\r');
+                assertEquals(expected, str);
+            }
+        }
+
+    }
+
+    @Nested
+    @DisplayName("tests for StreamUtil#copy - methods")
+    public class Copy {
+
+        @Test
+        public void testCopy() throws Exception {
+            final String expected = "input";
+
+            try (ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
+                 ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                StreamUtil.copy(in, out);
+                assertEquals(expected, out.toString());
+            }
+        }
+
+        @Test
+        public void testCopyWithSize() throws Exception {
+
+            final int temp = JoddCore.ioBufferSize;
+
+            try {
+                ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                StreamUtil.copy(in, out, 3);
+
+                assertEquals("inp", out.toString());
+                StreamUtil.close(out);
+                StreamUtil.close(in);
+
+                in = new ByteArrayInputStream("input".getBytes());
+                out = new ByteArrayOutputStream();
+                StreamUtil.copy(in, out, 5);
+                assertEquals("input", out.toString());
+                StreamUtil.close(out);
+                StreamUtil.close(in);
+
+                JoddCore.ioBufferSize = 3;
+                in = new ByteArrayInputStream("input".getBytes());
+                out = new ByteArrayOutputStream();
+                StreamUtil.copy(in, out, 5);
+                assertEquals("input", out.toString());
+                StreamUtil.close(out);
+                StreamUtil.close(in);
+            } finally {
+                JoddCore.ioBufferSize = temp;
+            }
+        }
+
+        @Test
+        public void testCopyReaderWriterCharCount() throws Exception {
+            // charCount < input data
+            try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
+                 StringWriter writer = new StringWriter()) {
+
+                final String expected = "jodd";
+
+                StreamUtil.copy(reader, writer, 4);
+
+                // asserts
+                assertEquals(expected, writer.toString());
+            }
+
+            // charCount == input data
+            try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
+                 StringWriter writer = new StringWriter()) {
+
+                final String expected = "jodd is cool";
+
+                StreamUtil.copy(reader, writer, 12);
+
+                // asserts
+                assertEquals(expected, writer.toString());
+            }
+
+            // charCount > input data
+            try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
+                 StringWriter writer = new StringWriter()) {
+
+                final String expected = "jodd is cool";
+
+                StreamUtil.copy(reader, writer, 456);
+
+                // asserts
+                assertEquals(expected, writer.toString());
+            }
+        }
+
+    }
+
+    @Nested
+    @DisplayName("tests for StreamUtil#compare - methods")
+    public class Compare {
+
+        @Test
+        public void testCompareWithReaderInstances_ExpectedSuccessfulCompare() throws Exception {
+
+            boolean actual;
+            try (FileReader input_1 = new FileReader(textFile); FileReader input_2 = new FileReader(textFile)) {
+                actual = StreamUtil.compare(input_1, input_2);
+            }
+
+            // asserts
+            assertTrue(actual);
+        }
+
+        @Test
+        public void testCompareWithReaderInstances_ExpectedNotSuccessfulCompare() throws Exception {
+
+            boolean actual;
+
+            try (FileReader input_1 = new FileReader(textFile); CharArrayReader input_2 = new CharArrayReader(new char[] {'t','e','s','t',' ','f','i','l','e','!'})) {
+                actual = StreamUtil.compare(input_1, input_2);
+            }
+
+            // asserts
+            assertFalse(actual);
+        }
+
+        @Test
+        public void testCompareWithInputStreams_ExpectedSuccessfulCompare() throws Exception {
+            final String content = "test file\n";
+
+            try (FileInputStream in1 = new FileInputStream(textFile);
+                 ByteArrayInputStream in2 = new ByteArrayInputStream(content.getBytes())) {
+                assertTrue(StreamUtil.compare(in1, in2));
+            }
+        }
+
+    }
+
 }
