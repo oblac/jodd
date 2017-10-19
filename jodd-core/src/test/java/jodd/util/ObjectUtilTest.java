@@ -38,6 +38,9 @@ import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test class for {@link ObjectUtil}
+ */
 public class ObjectUtilTest {
 
     private static final File baseDir = new File(SystemUtil.tempDir(), "jodd/ObjectUtilTest");
@@ -78,7 +81,7 @@ public class ObjectUtilTest {
     }
 
     @Test
-    public void testCloneWithGivenInstance() throws Exception {
+    public void testCloneWithCloneableInstance() throws Exception {
 
 	    final MutableInteger instance_to_clone = new MutableInteger(MathUtil.randomInt(1, 1337));
 
@@ -88,6 +91,14 @@ public class ObjectUtilTest {
         assertNotNull(actual);
         assertFalse(instance_to_clone == actual);
         assertEquals(instance_to_clone , actual);
+    }
+
+    @Test
+    public void testCloneWithNoneCloneableInstance() throws Exception {
+
+        assertThrows(CloneNotSupportedException.class, () -> {
+            ObjectUtil.clone(new Object());
+        });
     }
 
     @Test
