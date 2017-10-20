@@ -25,172 +25,113 @@
 
 package jodd.io;
 
-import jodd.core.JoddCore;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import jodd.util.MathUtil;
+import jodd.util.SystemUtil;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.*;
-import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * test class for {@link StreamUtil}
+ * test class for {@link StreamUtil} <br/>
+ * <p>
+ *     tests for methods may be grouped in nested classes
+ * </p>
+ *
+ * @see Nested
  */
-public class StreamUtilTest {
+class StreamUtilTest {
 
-	private String dataRoot;
-	private File textFile;
+    static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/StreamUtilTest");
 
-	@BeforeEach
-	public void setUp() throws Exception {
-		if (dataRoot != null) {
-			return;
-		}
-		URL data = ClassLoaderUtil.getResourceUrl("jodd/io/data");
-		dataRoot = data.getFile();
-		textFile = new File(dataRoot, "file/a.txt");
-	}
-
-    @Nested
-    @DisplayName("tests for StreamUtil#readBytes - methods")
-    public class ReadBytes {
-
-        @Test
-        public void testReadBytes_InputStream() throws Exception {
-
-            final String expected = "test file\n";
-
-            try (FileInputStream inputStream = new FileInputStream(textFile)) {
-                byte[] data = StreamUtil.readBytes(inputStream);
-                String s = new String(data);
-                s = StringUtil.remove(s, '\r');
-                assertEquals(expected, s);
-            }
+    @BeforeAll
+    static void beforeAll() throws Exception {
+        if (BASE_DIR.exists()) {
+            // clean up all subdirs & files
+            Files.walk(BASE_DIR.toPath(), FileVisitOption.FOLLOW_LINKS)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .peek(System.out::println)
+                    .forEach(File::delete);
         }
-    }
-
-	@Nested
-    @DisplayName("tests for StreamUtil#readChars - methods")
-    public class ReadChars {
-
-	    @Test
-	    public void testReadChars_InputStream() throws Exception {
-
-	        final String expected = "test file\n";
-
-            try (FileInputStream inputStream = new FileInputStream(textFile)) {
-                String str = new String(StreamUtil.readChars(inputStream));
-                str = StringUtil.remove(str, '\r');
-                assertEquals(expected, str);
-            }
-        }
-
+        // created directory is needed for tests
+        BASE_DIR.mkdirs();
     }
 
     @Nested
-    @DisplayName("tests for StreamUtil#copy - methods")
-    public class Copy {
+    @DisplayName("tests for StreamUtil#close - method")
+    class Close {
 
-        @Test
-        public void testCopy() throws Exception {
-            final String expected = "input";
+        private class MyCloseable implements Closeable {
 
-            try (ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
-                 ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-                StreamUtil.copy(in, out);
-                assertEquals(expected, out.toString());
+            boolean closed = false;
+            boolean flushed = false;
+
+            @Override
+            public void close() throws IOException {
+                closed = true;
+            }
+        }
+
+        private class MyFlushable extends MyCloseable implements Flushable {
+            @Override
+            public void flush() throws IOException {
+                flushed = true;
             }
         }
 
         @Test
-        public void testCopyWithSize() throws Exception {
-
-            final int temp = JoddCore.ioBufferSize;
-
-            try {
-                ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                StreamUtil.copy(in, out, 3);
-
-                assertEquals("inp", out.toString());
-                StreamUtil.close(out);
-                StreamUtil.close(in);
-
-                in = new ByteArrayInputStream("input".getBytes());
-                out = new ByteArrayOutputStream();
-                StreamUtil.copy(in, out, 5);
-                assertEquals("input", out.toString());
-                StreamUtil.close(out);
-                StreamUtil.close(in);
-
-                JoddCore.ioBufferSize = 3;
-                in = new ByteArrayInputStream("input".getBytes());
-                out = new ByteArrayOutputStream();
-                StreamUtil.copy(in, out, 5);
-                assertEquals("input", out.toString());
-                StreamUtil.close(out);
-                StreamUtil.close(in);
-            } finally {
-                JoddCore.ioBufferSize = temp;
-            }
+        void close_with_null() {
+            StreamUtil.close(null);
         }
 
         @Test
-        public void testCopyReaderWriterCharCount() throws Exception {
-            // charCount < input data
-            try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
-                 StringWriter writer = new StringWriter()) {
+        void close_with_closeable_instance() {
+            final MyCloseable input = new MyCloseable();
 
-                final String expected = "jodd";
+            StreamUtil.close(input);
 
-                StreamUtil.copy(reader, writer, 4);
+            // asserts
+            assertTrue(input.closed);
+            assertFalse(input.flushed);
+        }
 
-                // asserts
-                assertEquals(expected, writer.toString());
-            }
+        @Test
+        void close_with_closeable_and_flushable_instance() {
+            final MyFlushable input = new MyFlushable();
 
-            // charCount == input data
-            try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
-                 StringWriter writer = new StringWriter()) {
+            StreamUtil.close(input);
 
-                final String expected = "jodd is cool";
-
-                StreamUtil.copy(reader, writer, 12);
-
-                // asserts
-                assertEquals(expected, writer.toString());
-            }
-
-            // charCount > input data
-            try (CharArrayReader reader = new CharArrayReader(new char[]{'j', 'o', 'd', 'd', ' ', 'i', 's', ' ', 'c', 'o', 'o', 'l'});
-                 StringWriter writer = new StringWriter()) {
-
-                final String expected = "jodd is cool";
-
-                StreamUtil.copy(reader, writer, 456);
-
-                // asserts
-                assertEquals(expected, writer.toString());
-            }
+            // asserts
+            assertTrue(input.closed);
+            assertTrue(input.flushed);
         }
 
     }
+
 
     @Nested
     @DisplayName("tests for StreamUtil#compare - methods")
-    public class Compare {
+    class Compare {
 
         @Test
-        public void testCompareWithReaderInstances_ExpectedSuccessfulCompare() throws Exception {
+        void testCompareWithReaderInstances_ExpectedSuccessfulCompare() throws Exception {
+
+            final String text = new String("jodd and german umlauts öäü".getBytes(),Charset.forName("ISO-8859-1"));
 
             boolean actual;
-            try (FileReader input_1 = new FileReader(textFile); FileReader input_2 = new FileReader(textFile)) {
-                actual = StreamUtil.compare(input_1, input_2);
+            try (StringReader reader_1 = new StringReader(text); StringReader reader_2 = new StringReader(text);) {
+                actual = StreamUtil.compare(reader_1, reader_2);
             }
 
             // asserts
@@ -198,12 +139,15 @@ public class StreamUtilTest {
         }
 
         @Test
-        public void testCompareWithReaderInstances_ExpectedNotSuccessfulCompare() throws Exception {
+        void testCompareWithReaderInstances_ExpectedNoSuccessfulCompare() throws Exception {
+
+            final String text_1 = "jodd and german umlauts öäü";
+            final String text_2 = new String(text_1.getBytes(),Charset.forName("ISO-8859-1"));
 
             boolean actual;
 
-            try (FileReader input_1 = new FileReader(textFile); CharArrayReader input_2 = new CharArrayReader(new char[] {'t','e','s','t',' ','f','i','l','e','!'})) {
-                actual = StreamUtil.compare(input_1, input_2);
+            try (StringReader reader_1 = new StringReader(text_1); StringReader reader_2 = new StringReader(text_2)) {
+                actual = StreamUtil.compare(reader_1, reader_2);
             }
 
             // asserts
@@ -211,15 +155,152 @@ public class StreamUtilTest {
         }
 
         @Test
-        public void testCompareWithInputStreams_ExpectedSuccessfulCompare() throws Exception {
-            final String content = "test file\n";
+        void testCompareWithInputStreams_ExpectedSuccessfulCompare() throws Exception {
 
-            try (FileInputStream in1 = new FileInputStream(textFile);
-                 ByteArrayInputStream in2 = new ByteArrayInputStream(content.getBytes())) {
-                assertTrue(StreamUtil.compare(in1, in2));
+            final String text = "jodd makes fun!" + System.lineSeparator();
+            final File file = new File(StreamUtilTest.BASE_DIR, "testCompareWithInputStreams_ExpectedSuccessfulCompare.txt");
+            FileUtil.writeString(file, text, "UTF-8");
+
+            boolean actual;
+
+            try (ByteArrayInputStream in1 = new ByteArrayInputStream(text.getBytes());
+                 FileInputStream in2 = new FileInputStream(file)) {
+                actual = StreamUtil.compare(in1, in2);
             }
+
+            // asserts
+            assertTrue(actual);
+        }
+
+        @Test
+        void testCompareWithInputStreams_ExpectedNoSuccessfulCompare() throws Exception {
+
+            final String text = "jodd makes fun!";
+            final File file = new File(StreamUtilTest.BASE_DIR, "testCompareWithInputStreams_ExpectedNoSuccessfulCompare.txt");
+            FileUtil.writeString(file, " " + text, "UTF-8");
+
+            boolean actual;
+
+            try (ByteArrayInputStream in1 = new ByteArrayInputStream(text.getBytes());
+                 FileInputStream in2 = new FileInputStream(file)) {
+                actual = StreamUtil.compare(in1, in2);
+            }
+
+            // asserts
+            assertFalse(actual);
         }
 
     }
 
+
+    @Nested
+    @DisplayName("tests for StreamUtil#readAvailableBytes - method")
+    class ReadAvailableBytes {
+
+        @Test
+        void testReadAvailableBytes_with_null() throws Exception {
+            assertThrows(NullPointerException.class, () -> {
+               StreamUtil.readAvailableBytes(null);
+            });
+        }
+
+        @Test
+        void testReadAvailableBytes_with_inputstream_from_empty_byte_arry() throws Exception {
+
+            final byte[] input = new byte[]{};
+
+            final int expected_length = 0;
+            final byte[] expected_array = new byte[]{};
+
+
+            final byte[] actual = StreamUtil.readAvailableBytes(new ByteArrayInputStream(input));
+
+            // asserts
+            assertNotNull(actual);
+            assertEquals(expected_length, actual.length);
+            assertArrayEquals(expected_array, actual);
+        }
+
+        @Test
+        void testReadAvailableBytes_with_inputstream() throws Exception {
+
+            final byte[] input = "jodd".getBytes();
+
+            final int expected_length = 4;
+            final byte[] expected_array = new byte[]{106,111,100,100};
+
+            final byte[] actual = StreamUtil.readAvailableBytes(new ByteArrayInputStream(input));
+
+            // asserts
+            assertNotNull(actual);
+            assertEquals(expected_length, actual.length);
+            assertArrayEquals(expected_array, actual);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("tests for StreamUtil#readChars - method")
+    class ReadChars {
+
+        @Nested
+        @DisplayName("tests for StreamUtil#readChars(InputStream input)")
+        class ReadChars_InputStream {
+
+            @Test
+            void testReadChars_InputStream(TestInfo testInfo) throws Exception {
+
+                final String text = "jodd - Get things done!" + System.lineSeparator();
+                final char[] expected = text.toCharArray();
+                final File file = new File(BASE_DIR, testInfo.getTestMethod().get().getName());
+
+                FileUtil.writeString(file, text, "UTF-8");
+
+                char[] actual = null;
+
+                try (FileInputStream inputStream = new FileInputStream(file)) {
+                    actual = StreamUtil.readChars(inputStream);
+                }
+
+                // asserts
+                assertNotNull(actual);
+                assertArrayEquals(expected, actual);
+            }
+
+        }
+
+        @Nested
+        @DisplayName("tests for StreamUtil#readChars(InputStream input, int charCount)")
+        @TestInstance(TestInstance.Lifecycle.PER_CLASS) // needed because static method in inner class is not allowed
+        class ReadChars_InputStream_CharCount {
+
+            @ParameterizedTest
+            @MethodSource("testdata")
+            void testReadChars_InputStream_CharCount_0(char[] expected, String text, int charCount ) throws Exception {
+
+                final int random = MathUtil.randomInt(1, 2500);
+                final File file = new File(BASE_DIR, "testReadChars_InputStream_CharCount_0.txt." + random);
+
+                FileUtil.writeString(file, text, "UTF-8");
+
+                char[] actual = null;
+
+                try (FileInputStream inputStream = new FileInputStream(file)) {
+                    actual = StreamUtil.readChars(inputStream, charCount);
+                }
+
+                // asserts
+                assertNotNull(actual);
+                assertArrayEquals(expected, actual);
+            }
+
+            Stream<Arguments> testdata() {
+                return Stream.of(
+                        Arguments.of("jodd".toCharArray(),"jodd", 34 )
+                );
+            }
+
+        }
+
+    }
 }
