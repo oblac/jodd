@@ -69,8 +69,9 @@ ext {
 //		asm:			'org.ow2.asm:asm:4.1',
 //		junit: 			'junit:junit:4.12',
 
-		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.0.0',
-		junit5_console: 'org.junit.platform:junit-platform-console:1.0.0',
+		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.0.1',
+		junit5_params:	'org.junit.jupiter:junit-jupiter-params:5.0.1',
+		junit5_console: 'org.junit.platform:junit-platform-console:1.0.1',
 		hamcrest:       'org.hamcrest:hamcrest-core:1.3',
 		mockito:		'org.mockito:mockito-core:2.10.0',
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
