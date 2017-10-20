@@ -155,10 +155,10 @@ class StreamUtilTest {
         }
 
         @Test
-        void testCompareWithInputStreams_ExpectedSuccessfulCompare() throws Exception {
+        void testCompareWithInputStreams_ExpectedSuccessfulCompare(TestInfo testInfo) throws Exception {
 
             final String text = "jodd makes fun!" + System.lineSeparator();
-            final File file = new File(StreamUtilTest.BASE_DIR, "testCompareWithInputStreams_ExpectedSuccessfulCompare.txt");
+            final File file = new File(StreamUtilTest.BASE_DIR, testInfo.getTestMethod().get().getName() + ".txt");
             FileUtil.writeString(file, text, "UTF-8");
 
             boolean actual;
@@ -173,10 +173,10 @@ class StreamUtilTest {
         }
 
         @Test
-        void testCompareWithInputStreams_ExpectedNoSuccessfulCompare() throws Exception {
+        void testCompareWithInputStreams_ExpectedNoSuccessfulCompare(TestInfo testInfo) throws Exception {
 
             final String text = "jodd makes fun!";
-            final File file = new File(StreamUtilTest.BASE_DIR, "testCompareWithInputStreams_ExpectedNoSuccessfulCompare.txt");
+            final File file = new File(StreamUtilTest.BASE_DIR, testInfo.getTestMethod().get().getName() + ".txt");
             FileUtil.writeString(file, " " + text, "UTF-8");
 
             boolean actual;
@@ -276,10 +276,10 @@ class StreamUtilTest {
 
             @ParameterizedTest
             @MethodSource("testdata")
-            void testReadChars_InputStream_CharCount_0(char[] expected, String text, int charCount ) throws Exception {
+            void testReadChars_InputStream_CharCount_0(char[] expected, String text, int charCount, TestInfo testInfo ) throws Exception {
 
                 final int random = MathUtil.randomInt(1, 2500);
-                final File file = new File(BASE_DIR, "testReadChars_InputStream_CharCount_0.txt." + random);
+                final File file = new File(BASE_DIR, testInfo.getTestMethod().get().getName() + "." + random);
 
                 FileUtil.writeString(file, text, "UTF-8");
 
@@ -296,7 +296,10 @@ class StreamUtilTest {
 
             Stream<Arguments> testdata() {
                 return Stream.of(
-                        Arguments.of("jodd".toCharArray(),"jodd", 34 )
+                        Arguments.of("jodd".toCharArray(),"jodd", 34 ),
+                        Arguments.of("jodd".toCharArray(),"jodd", 4 ),
+                        Arguments.of("jo".toCharArray(),"jodd", 2 ),
+                        Arguments.of("".toCharArray(),"jodd", 0 )
                 );
             }
 
