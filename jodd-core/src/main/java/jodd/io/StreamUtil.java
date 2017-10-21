@@ -207,17 +207,19 @@ public class StreamUtil {
 	 * Copies reader to output stream using buffer and specified encoding.
 	 */
 	public static void copy(Reader input, OutputStream output, String encoding) throws IOException {
-		Writer out = new OutputStreamWriter(output, encoding);
-		copy(input, out);
-		out.flush();
+        try (Writer out = new OutputStreamWriter(output, encoding)) {
+            copy(input, out);
+            out.flush();
+        }
 	}
 	/**
 	 * Copies specified number of characters from reader to output stream using buffer and specified encoding.
 	 */
 	public static void copy(Reader input, OutputStream output, String encoding, int charCount) throws IOException {
-		Writer out = new OutputStreamWriter(output, encoding);
-		copy(input, out, charCount);
-		out.flush();
+        try (Writer out = new OutputStreamWriter(output, encoding)) {
+            copy(input, out, charCount);
+            out.flush();
+        }
 	}
 
 
