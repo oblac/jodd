@@ -25,6 +25,7 @@
 
 package jodd.io;
 
+import jodd.util.ArraysUtil;
 import jodd.util.MathUtil;
 import jodd.util.SystemUtil;
 import org.junit.jupiter.api.*;
@@ -45,12 +46,12 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * test class for {@link StreamUtil} <br/>
  * <p>
- *     tests for methods may be grouped in nested classes
+ *     tests for methods are grouped in nested classes
  * </p>
  *
  * @see Nested
  */
-class StreamUtilTest {
+public class StreamUtilTest {
 
     static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/StreamUtilTest");
 
@@ -240,70 +241,325 @@ class StreamUtilTest {
     }
 
     @Nested
-    @DisplayName("tests for StreamUtil#readChars - method")
+    @DisplayName("tests for StreamUtil#readChars - methods")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS) // needed because annotation MethodSource requires static method without that
     class ReadChars {
 
-        @Nested
-        @DisplayName("tests for StreamUtil#readChars(InputStream input)")
-        class ReadChars_InputStream {
+        @Test
+        public void testReadChars_InputStream(TestInfo testInfo) throws Exception {
 
-            @Test
-            void testReadChars_InputStream(TestInfo testInfo) throws Exception {
+            final String text = "jodd - Get things done!" + System.lineSeparator();
+            final char[] expected = text.toCharArray();
+            final File file = new File(BASE_DIR, testInfo.getTestMethod().get().getName());
 
-                final String text = "jodd - Get things done!" + System.lineSeparator();
-                final char[] expected = text.toCharArray();
-                final File file = new File(BASE_DIR, testInfo.getTestMethod().get().getName());
+            FileUtil.writeString(file, text, "UTF-8");
 
-                FileUtil.writeString(file, text, "UTF-8");
+            char[] actual = null;
 
-                char[] actual = null;
-
-                try (FileInputStream inputStream = new FileInputStream(file)) {
-                    actual = StreamUtil.readChars(inputStream);
-                }
-
-                // asserts
-                assertNotNull(actual);
-                assertArrayEquals(expected, actual);
+            try (FileInputStream inputStream = new FileInputStream(file)) {
+                actual = StreamUtil.readChars(inputStream);
             }
 
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
         }
 
-        @Nested
-        @DisplayName("tests for StreamUtil#readChars(InputStream input, int charCount)")
-        @TestInstance(TestInstance.Lifecycle.PER_CLASS) // needed because static method in inner class is not allowed
-        class ReadChars_InputStream_CharCount {
 
-            @ParameterizedTest
-            @MethodSource("testdata")
-            void testReadChars_InputStream_CharCount_0(char[] expected, String text, int charCount, TestInfo testInfo ) throws Exception {
+        @ParameterizedTest
+        @MethodSource("testdata_testReadChars_InputStream_CharCount")
+        void testReadChars_InputStream_CharCount(char[] expected, String text, int charCount, TestInfo testInfo ) throws Exception {
 
-                final int random = MathUtil.randomInt(1, 2500);
-                final File file = new File(BASE_DIR, testInfo.getTestMethod().get().getName() + "." + random);
+            final int random = MathUtil.randomInt(1, 2500);
+            final File file = new File(BASE_DIR, testInfo.getTestMethod().get().getName() + "." + random);
 
-                FileUtil.writeString(file, text, "UTF-8");
+            FileUtil.writeString(file, text, "UTF-8");
 
-                char[] actual = null;
+            char[] actual = null;
 
-                try (FileInputStream inputStream = new FileInputStream(file)) {
-                    actual = StreamUtil.readChars(inputStream, charCount);
-                }
-
-                // asserts
-                assertNotNull(actual);
-                assertArrayEquals(expected, actual);
+            try (FileInputStream inputStream = new FileInputStream(file)) {
+                actual = StreamUtil.readChars(inputStream, charCount);
             }
 
-            Stream<Arguments> testdata() {
-                return Stream.of(
-                        Arguments.of("jodd".toCharArray(),"jodd", 34 ),
-                        Arguments.of("jodd".toCharArray(),"jodd", 4 ),
-                        Arguments.of("jo".toCharArray(),"jodd", 2 ),
-                        Arguments.of("".toCharArray(),"jodd", 0 )
-                );
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadChars_InputStream_CharCount() {
+            return Stream.of(
+                    Arguments.of("jodd".toCharArray(),"jodd", 34 ),
+                    Arguments.of("jodd".toCharArray(),"jodd", 4 ),
+                    Arguments.of("jo".toCharArray(),"jodd", 2 ),
+                    Arguments.of("".toCharArray(),"jodd", 0 )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadChars_InputStream_Encoding")
+        public void testReadChars_InputStream_Encoding(char[] expected, String text, String encoding) throws Exception {
+
+            char[] actual = null;
+
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(text.getBytes())) {
+                actual = StreamUtil.readChars(inputStream, encoding);
             }
 
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadChars_InputStream_Encoding() throws Exception {
+            return Stream.of(
+                    Arguments.of("äüö".toCharArray(),"äüö", "UTF-8" ),
+                    Arguments.of(new String("üöä".getBytes(), "ISO-8859-1").toCharArray(),"üöä", "ISO-8859-1" )
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadChars_InputStream_Encoding_CharCount")
+        public void testReadChars_InputStream_Encoding_CharCount(char[] expected, String text, String encoding, int charCount) throws Exception {
+
+            char[] actual = null;
+
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(text.getBytes())) {
+                actual = StreamUtil.readChars(inputStream, encoding, charCount);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadChars_InputStream_Encoding_CharCount() throws Exception {
+            return Stream.of(
+                    Arguments.of("äüö".toCharArray(),"äüö", "UTF-8", 4 ),
+                    Arguments.of("j".toCharArray(), "jodd", "ISO-8859-1", 1 ),
+                    Arguments.of(new String("jodd".getBytes(), "US-ASCII").toCharArray(),"jodd", "US-ASCII", 44 )
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadChars_Reader")
+        public void testReadChars_Reader(char[] expected, String text) throws Exception {
+
+            char[] actual = null;
+
+            try (StringReader reader = new StringReader(text)) {
+                actual = StreamUtil.readChars(reader);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadChars_Reader() throws Exception {
+            return Stream.of(
+                    Arguments.of("äüö".toCharArray(),"äüö" ),
+                    Arguments.of("jodd makes fun".toCharArray(), "jodd makes fun")
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadChars_Reader_CharCount")
+        public void testReadChars_Reader_CharCount(char[] expected, String text, int charCount) throws Exception {
+
+            char[] actual = null;
+
+            try (StringReader reader = new StringReader(text)) {
+                actual = StreamUtil.readChars(reader, charCount);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadChars_Reader_CharCount() throws Exception {
+            return Stream.of(
+                    Arguments.of("ä".toCharArray(),"äüö", 1 ),
+                    Arguments.of("jodd makes fun".toCharArray(), "jodd makes fun", "jodd makes fun".length()),
+                    Arguments.of("jodd makes fun".toCharArray(), "jodd makes fun", 478)
+            );
         }
 
     }
+
+    @Nested
+    @DisplayName("tests for StreamUtil#readBytes - methods")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS) // needed because annotation MethodSource requires static method without that
+    class ReadBytes {
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadBytes_InputStream")
+        public void testReadBytes_InputStream(byte[] expected, String text) throws Exception {
+
+            byte[] actual = null;
+
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(text.getBytes())) {
+                actual = StreamUtil.readBytes(inputStream);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadBytes_InputStream() throws Exception {
+            return Stream.of(
+                    Arguments.of("äöü".getBytes(),"äöü" ),
+                    Arguments.of("".getBytes(),"" )
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadBytes_InputStream_ByteCount")
+        public void testReadBytes_InputStream_ByteCount(byte[] expected, String text, int byteCount) throws Exception {
+
+            byte[] actual = null;
+
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(text.getBytes())) {
+                actual = StreamUtil.readBytes(inputStream, byteCount);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadBytes_InputStream_ByteCount() throws Exception {
+            return Stream.of(
+                    Arguments.of(ArraysUtil.subarray("ä".getBytes(),0,1), "äöü", 1),
+                    Arguments.of("jo".getBytes(), "jodd", 2),
+                    Arguments.of("".getBytes(), "", 8)
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadBytes_Reader")
+        public void testReadBytes_Reader(byte[] expected, String text) throws Exception {
+
+            byte[] actual = null;
+
+            try (StringReader reader = new StringReader(text)) {
+                actual = StreamUtil.readBytes(reader);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadBytes_Reader() throws Exception {
+            return Stream.of(
+                    Arguments.of("äöü".getBytes(), "äöü"),
+                    Arguments.of("".getBytes(), "")
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadBytes_Reader_ByteCount")
+        public void testReadBytes_Reader_ByteCount(byte[] expected, String text, int byteCount) throws Exception {
+
+            byte[] actual = null;
+
+            try (StringReader reader = new StringReader(text)) {
+                actual = StreamUtil.readBytes(reader, byteCount);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadBytes_Reader_ByteCount() throws Exception {
+            return Stream.of(
+                    Arguments.of("äö".getBytes(), "äöü", 2),
+                    Arguments.of("jodd".getBytes(), "jodd", 8),
+                    Arguments.of("".getBytes(), "jodd makes fun", 0),
+                    Arguments.of("".getBytes(), "", 4)
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadBytes_Reader_Encoding")
+        public void testReadBytes_Reader_Encoding(byte[] expected, String text, String encoding, TestInfo testInfo) throws Exception {
+
+            final int random = MathUtil.randomInt(1, 2500);
+            final File file = new File(StreamUtilTest.BASE_DIR, testInfo.getTestMethod().get().getName() + random);
+
+            FileUtil.writeString(file, text, encoding);
+
+            byte[] actual = null;
+
+            try (FileReader reader = new FileReader(file)) {
+                actual = StreamUtil.readBytes(reader, encoding);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadBytes_Reader_Encoding() throws Exception {
+            return Stream.of(
+                    Arguments.of("jodd".getBytes("ISO-8859-1"), "jodd" , "ISO-8859-1"),
+                    Arguments.of("üäö".getBytes("UTF-8"), "üäö" , "UTF-8")
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testReadBytes_Reader_Encoding_ByteCount")
+        public void testReadBytes_Reader_Encoding_ByteCount(byte[] expected, String text, String encoding, int byteCount, TestInfo testInfo) throws Exception {
+
+            final int random = MathUtil.randomInt(1, 2500);
+            final File file = new File(StreamUtilTest.BASE_DIR, testInfo.getTestMethod().get().getName() + random);
+
+            FileUtil.writeString(file, text, encoding);
+
+            byte[] actual = null;
+
+            try (FileReader reader = new FileReader(file)) {
+                actual = StreamUtil.readBytes(reader, encoding, byteCount);
+            }
+
+            // asserts
+            assertNotNull(actual);
+            assertArrayEquals(expected, actual);
+        }
+
+        Stream<Arguments> testdata_testReadBytes_Reader_Encoding_ByteCount() throws Exception {
+            return Stream.of(
+                    Arguments.of("jodd".getBytes("ISO-8859-1"), "jodd" , "ISO-8859-1", 10),
+                    Arguments.of("j".getBytes("ISO-8859-1"), "jodd" , "ISO-8859-1", 1),
+                    Arguments.of("üäö".getBytes("UTF-8"), "üäö" , "UTF-8", 3)
+            );
+        }
+
+    }
+
 }
+/**
+ US-ASCII
+ Seven-bit ASCII, a.k.a. ISO646-US, a.k.a. the Basic Latin block of the Unicode character set
+ ISO-8859-1
+ ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1
+ UTF-8
+ Eight-bit UCS Transformation Format
+ UTF-16BE
+ Sixteen-bit UCS Transformation Format, big-endian byte order
+ UTF-16LE
+ Sixteen-bit UCS Transformation Format, little-endian byte order
+ UTF-16
+ Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark
+ */
