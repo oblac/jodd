@@ -25,6 +25,7 @@
 
 package jodd.io;
 
+import jodd.core.JoddCore;
 import jodd.util.ArraysUtil;
 import jodd.util.MathUtil;
 import jodd.util.SystemUtil;
@@ -46,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * test class for {@link StreamUtil} <br/>
  * <p>
- *     tests for methods are grouped in nested classes
+ *     tests are grouped in nested classes
  * </p>
  *
  * @see Nested
@@ -548,18 +549,141 @@ public class StreamUtilTest {
 
     }
 
+    @Nested
+    @DisplayName("tests for StreamUtil#copy - methods")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS) // needed because annotation MethodSource requires static method without that
+    class Copy {
+
+        @Test
+        public void testCopy_Inputstream_Outputstream() throws Exception {
+
+            try (ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
+                 ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+                StreamUtil.copy(in, out);
+
+                // asserts
+                assertEquals("input", out.toString());
+            }
+
+        }
+
+        @ParameterizedTest
+        @MethodSource("testdata_testCopy_Inputstream_Outputstream_ByteCount")
+        public void testCopy_Inputstream_Outputstream_ByteCount(String expected, String text, int byteCount) throws Exception {
+
+            try (ByteArrayInputStream in = new ByteArrayInputStream(text.getBytes());
+                 ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+                StreamUtil.copy(in, out, byteCount);
+
+                // asserts
+                assertEquals(expected, out.toString());
+            }
+
+        }
+
+        Stream<Arguments> testdata_testCopy_Inputstream_Outputstream_ByteCount() throws Exception {
+            return Stream.of(
+                    Arguments.of("The Unbearable Lightness of Java", "The Unbearable Lightness of Java", JoddCore.ioBufferSize + 250),
+                    Arguments.of("j", "jodd" , 1),
+                    Arguments.of("jodd makes fun!", "jodd makes fun!",  15),
+                    Arguments.of("", "text does not matter",  0)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("testdata_testCopy_Inputstream_Writer_Encoding")
+        public void testCopy_Inputstream_Writer_Encoding(String expected, String text, String encoding) throws Exception {
+
+            try (ByteArrayInputStream in = new ByteArrayInputStream(text.getBytes());
+                 StringWriter writer = new StringWriter()) {
+
+                StreamUtil.copy(in, writer, encoding );
+
+                // asserts
+                assertEquals(expected, writer.toString());
+            }
+
+        }
+
+        Stream<Arguments> testdata_testCopy_Inputstream_Writer_Encoding() throws Exception {
+            return Stream.of(
+                    Arguments.of("The Unbearable Lightness of Java", "The Unbearable Lightness of Java", "UTF-8"),
+                    Arguments.of("Ã¼Ã¶Ã¤", "üöä", "ISO-8859-1"),
+                    Arguments.of("", "", "US-ASCII")
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("testdata_testCopy_Inputstream_Writer_Encoding_ByteCount")
+        public void testCopy_Inputstream_Writer_Encoding_ByteCount(String expected, String text, String encoding, int byteCount) throws Exception {
+
+            try (ByteArrayInputStream in = new ByteArrayInputStream(text.getBytes());
+                 StringWriter writer = new StringWriter()) {
+
+                StreamUtil.copy(in, writer, encoding, byteCount );
+
+                // asserts
+                assertEquals(expected, writer.toString());
+            }
+
+        }
+
+        Stream<Arguments> testdata_testCopy_Inputstream_Writer_Encoding_ByteCount() throws Exception {
+            return Stream.of(
+                    Arguments.of("The Unbearable ", "The Unbearable Lightness of Java", "US-ASCII", 15),
+                    Arguments.of("AbC", "AbC", "ISO-8859-1", 15)
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testCopy_Reader_Outpustream_Encoding")
+        public void testCopy_Reader_Outpustream_Encoding(byte[] expected, String text, String encoding) throws Exception {
+
+            try (StringReader reader = new StringReader(text);
+                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+                StreamUtil.copy(reader, outputStream, encoding);
+
+                // asserts
+                assertArrayEquals(expected, outputStream.toByteArray());
+            }
+
+        }
+
+        Stream<Arguments> testdata_testCopy_Reader_Outpustream_Encoding() throws Exception {
+            return Stream.of(
+                    Arguments.of(new byte[] {63,63,63}, "üöä", "US-ASCII"),
+                    Arguments.of(new byte[] {-61,-68,-61,-74,-61,-92}, "üöä", "UTF-8"),
+                    Arguments.of(new byte[] {106,111,100,100}, "jodd", "US-ASCII")
+            );
+        }
+
+
+        @ParameterizedTest
+        @MethodSource("testdata_testCopy_Reader_Outpustream_Encoding_CharCount")
+        public void testCopy_Reader_Outpustream_Encoding_CharCount(byte[] expected, String text, String encoding, int charCount) throws Exception {
+
+            try (StringReader reader = new StringReader(text);
+                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+                StreamUtil.copy(reader, outputStream, encoding, charCount);
+
+                // asserts
+                assertArrayEquals(expected, outputStream.toByteArray());
+            }
+
+        }
+
+        Stream<Arguments> testdata_testCopy_Reader_Outpustream_Encoding_CharCount() throws Exception {
+            return Stream.of(
+                    Arguments.of(new byte[] {63,63,63}, "üöä", "US-ASCII", 4),
+                    Arguments.of(new byte[] {-61,-68,-61,-74}, "üöä", "UTF-8", 2),
+                    Arguments.of(new byte[] {106,111,100,100}, "jodd", "US-ASCII", 8)
+            );
+        }
+    }
+
 }
-/**
- US-ASCII
- Seven-bit ASCII, a.k.a. ISO646-US, a.k.a. the Basic Latin block of the Unicode character set
- ISO-8859-1
- ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1
- UTF-8
- Eight-bit UCS Transformation Format
- UTF-16BE
- Sixteen-bit UCS Transformation Format, big-endian byte order
- UTF-16LE
- Sixteen-bit UCS Transformation Format, little-endian byte order
- UTF-16
- Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark
- */
