@@ -14,8 +14,10 @@ Please follow this style guide and naming conventions when sending your submissi
 + It is it OK to use experimental features, like `ParameterizedTest` - as long as you keep maintaining it.
 + Nested test classes do not have the suffix in their names.
 + Nested test classes should be in package scope.
++ Use static import for `Assert` methods.
++ try to have one test method per test feature.
 
-## Example
+### Test Example
 
 An example how a test class may look like.
 
@@ -41,7 +43,5 @@ public class StreamUtilTest {
     void testClose_with_closeable_instance() throws Exception {
       // test code
     }
-
 }
 ```
- 
