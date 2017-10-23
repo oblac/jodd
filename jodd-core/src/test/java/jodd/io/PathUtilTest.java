@@ -23,10 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.io;
 
-import jodd.io.FileUtil;
-import jodd.io.PathUtil;
+import jodd.util.RandomString;
+import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
