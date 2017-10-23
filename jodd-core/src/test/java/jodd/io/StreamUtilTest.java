@@ -29,12 +29,26 @@ import jodd.core.JoddCore;
 import jodd.util.ArraysUtil;
 import jodd.util.MathUtil;
 import jodd.util.SystemUtil;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.Flushable;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -42,15 +56,17 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * test class for {@link StreamUtil} <br/>
+ * Test class for {@link StreamUtil}.
  * <p>
- *     tests are grouped in nested classes
- * </p>
- *
- * @see Nested
+ * Tests are grouped in nested classes.
  */
 public class StreamUtilTest {
 
@@ -132,7 +148,7 @@ public class StreamUtilTest {
             final String text = new String("jodd and german umlauts öäü".getBytes(),Charset.forName("ISO-8859-1"));
 
             boolean actual;
-            try (StringReader reader_1 = new StringReader(text); StringReader reader_2 = new StringReader(text);) {
+            try (StringReader reader_1 = new StringReader(text); StringReader reader_2 = new StringReader(text)) {
                 actual = StreamUtil.compare(reader_1, reader_2);
             }
 
