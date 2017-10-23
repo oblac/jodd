@@ -35,12 +35,12 @@ public class StreamUtilTest {
   class Close {
 
     @Test
-    void testClose_with_null() throws Exception {
+    public void testClose_with_null() throws Exception {
       // test code  
     }
 
     @Test
-    void testClose_with_closeable_instance() throws Exception {
+    public void testClose_with_closeable_instance() throws Exception {
       // test code
     }
 }
