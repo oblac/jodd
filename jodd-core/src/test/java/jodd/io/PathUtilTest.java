@@ -42,23 +42,23 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class PathUtilTest {
 
-    static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/" + PathUtilTest.class.getSimpleName());
+	static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/" + PathUtilTest.class.getSimpleName());
 
-    @BeforeAll
-    public static void beforeAll() throws Exception {
-        if (BASE_DIR.exists()) {
-            // clean up all subdirs & files
-            Files.walk(BASE_DIR.toPath(), FileVisitOption.FOLLOW_LINKS)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .peek(System.out::println)
-                    .forEach(File::delete);
-        }
-        // created directory is needed for tests
-        BASE_DIR.mkdirs();
-    }
+	@BeforeAll
+	public static void beforeAll() throws Exception {
+		if (BASE_DIR.exists()) {
+			// clean up all subdirs & files
+			Files.walk(BASE_DIR.toPath(), FileVisitOption.FOLLOW_LINKS)
+					.sorted(Comparator.reverseOrder())
+					.map(Path::toFile)
+					.peek(System.out::println)
+					.forEach(File::delete);
+		}
+		// created directory is needed for tests
+		BASE_DIR.mkdirs();
+	}
 
-    @Test
+	@Test
 	public void testResolve() {
 		Path base = Paths.get(fixpath("/aaa/bbb"));
 
@@ -86,93 +86,93 @@ public class PathUtilTest {
 	}
 
 	@Nested
-    @DisplayName("tests for PathUtil#readString")
+	@DisplayName("tests for PathUtil#readString")
 	class ReadString {
 
-        @Test
-        public void testReadString_with_unknown_path() throws Exception {
+		@Test
+		public void testReadString_with_unknown_path() throws Exception {
 
-            assertThrows(IOException.class, () -> {
-               PathUtil.readString(new File(BASE_DIR, RandomString.getInstance().randomAlpha(8)).toPath());
-            });
-        }
+			assertThrows(IOException.class, () -> {
+			   PathUtil.readString(new File(BASE_DIR, RandomString.getInstance().randomAlpha(8)).toPath());
+			});
+		}
 
-        @Test
-        public void testReadString_with_new_file() throws Exception {
+		@Test
+		public void testReadString_with_new_file() throws Exception {
 
-            final String expected = "üöä ÜÖÄ ß";
+			final String expected = "üöä ÜÖÄ ß";
 
-            File file = new File(BASE_DIR, "file_with_german_umlaut.txt");
+			File file = new File(BASE_DIR, "file_with_german_umlaut.txt");
 
-            FileUtil.writeString(file, expected, "UTF-8");
+			FileUtil.writeString(file, expected, "UTF-8");
 
-            final String actual = PathUtil.readString(file.toPath());
+			final String actual = PathUtil.readString(file.toPath());
 
-            // asserts
-            assertEquals(expected, actual);
-        }
+			// asserts
+			assertEquals(expected, actual);
+		}
 
-    }
+	}
 
-    @Nested
-    @DisplayName("tests for PathUtil#deleteFileTree")
-    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    class DeleteFileTree {
+	@Nested
+	@DisplayName("tests for PathUtil#deleteFileTree")
+	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+	class DeleteFileTree {
 
-        File baseDir_Successful = new File(BASE_DIR, "DeleteFileTree_Succesful");
-        File baseDir_Not_Successful = new File(BASE_DIR, "DeleteFileTree_Not_Succesful");
-        File locked_file = new File(baseDir_Not_Successful, "abc/jodd.lock");
+		File baseDir_Successful = new File(BASE_DIR, "DeleteFileTree_Succesful");
+		File baseDir_Not_Successful = new File(BASE_DIR, "DeleteFileTree_Not_Succesful");
+		File locked_file = new File(baseDir_Not_Successful, "abc/jodd.lock");
 
-        @BeforeAll
-        public void beforeAll() throws Exception {
+		@BeforeAll
+		public void beforeAll() throws Exception {
 
-            // setup for successful deletion of paths
-            {
-                baseDir_Successful.mkdirs();
-                Files.createDirectories(new File(baseDir_Successful, "ggg/hhh/").toPath());
-                FileUtil.touch(new File(baseDir_Successful, "ggg/hhh/hello.txt"));
-                FileUtil.touch(new File(baseDir_Successful, "jodd.makes.fun"));
-            }
+			// setup for successful deletion of paths
+			{
+				baseDir_Successful.mkdirs();
+				Files.createDirectories(new File(baseDir_Successful, "ggg/hhh/").toPath());
+				FileUtil.touch(new File(baseDir_Successful, "ggg/hhh/hello.txt"));
+				FileUtil.touch(new File(baseDir_Successful, "jodd.makes.fun"));
+			}
 
-            // setup for non successful deletion of paths
-            {
-                baseDir_Not_Successful.mkdirs();
-                Files.createDirectories(new File(baseDir_Not_Successful, "abc/def").toPath());
-                FileUtil.touch(locked_file);
-            }
-        }
+			// setup for non successful deletion of paths
+			{
+				baseDir_Not_Successful.mkdirs();
+				Files.createDirectories(new File(baseDir_Not_Successful, "abc/def").toPath());
+				FileUtil.touch(locked_file);
+			}
+		}
 
-        @Test
-        public void testDeleteFileTree_successful() throws Exception {
-            assumeTrue(baseDir_Successful.exists());
+		@Test
+		public void testDeleteFileTree_successful() throws Exception {
+			assumeTrue(baseDir_Successful.exists());
 
-            PathUtil.deleteFileTree(baseDir_Successful.toPath());
+			PathUtil.deleteFileTree(baseDir_Successful.toPath());
 
-            // asserts
-            assertFalse(baseDir_Successful.exists());
-        }
+			// asserts
+			assertFalse(baseDir_Successful.exists());
+		}
 
-        @Test
-        public void testDeleteFileTree_not_successful() throws Exception {
-            assumeTrue(baseDir_Not_Successful.exists());
-            assumeTrue(locked_file.exists());
+		@Test
+		public void testDeleteFileTree_not_successful() throws Exception {
+			assumeTrue(baseDir_Not_Successful.exists());
+			assumeTrue(locked_file.exists());
 
-            assumeTrue(SystemUtil.isHostWindows()); // on windows host, test is sucessful. on linux host no io-exception is thorwn
-                                                    // for now no linux host is available for further investigations
+			assumeTrue(SystemUtil.isHostWindows()); // on windows host, test is sucessful. on linux host no io-exception is thorwn
+													// for now no linux host is available for further investigations
 
-            try (RandomAccessFile randomAccessFile = new RandomAccessFile(locked_file, "rw");
-                 FileLock lock = randomAccessFile.getChannel().lock())
-            {
-                assumeTrue(lock.isValid(), locked_file.getAbsolutePath() + " is NOT locked...");
+			try (RandomAccessFile randomAccessFile = new RandomAccessFile(locked_file, "rw");
+				 FileLock lock = randomAccessFile.getChannel().lock())
+			{
+				assumeTrue(lock.isValid(), locked_file.getAbsolutePath() + " is NOT locked...");
 
-                // asserts
-                IOException expectedException = assertThrows(IOException.class, () -> {
-                    PathUtil.deleteFileTree(baseDir_Not_Successful.toPath());
-                });
-                assertTrue(expectedException instanceof FileSystemException);
-                assertEquals(locked_file.getAbsolutePath(), ((FileSystemException)expectedException).getFile());
-            }
-        }
-    }
+				// asserts
+				IOException expectedException = assertThrows(IOException.class, () -> {
+					PathUtil.deleteFileTree(baseDir_Not_Successful.toPath());
+				});
+				assertTrue(expectedException instanceof FileSystemException);
+				assertEquals(locked_file.getAbsolutePath(), ((FileSystemException)expectedException).getFile());
+			}
+		}
+	}
 
 }
