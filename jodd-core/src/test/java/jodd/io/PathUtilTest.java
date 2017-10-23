@@ -157,9 +157,9 @@ public class PathUtilTest {
             assumeTrue(baseDir_Not_Successful.exists());
             assumeTrue(locked_file.exists());
 
-            RandomAccessFile randomAccessFile = new RandomAccessFile(locked_file, "rw");
-
-            try (FileLock lock = randomAccessFile.getChannel().lock()) {
+            try (RandomAccessFile randomAccessFile = new RandomAccessFile(locked_file, "rw");
+                 FileLock lock = randomAccessFile.getChannel().lock())
+            {
                 assumeTrue(lock.isValid(), locked_file.getAbsolutePath() + " is NOT locked...");
 
                 // asserts
