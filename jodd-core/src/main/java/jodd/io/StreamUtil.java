@@ -117,13 +117,17 @@ public class StreamUtil {
 
 
 	/**
-	 * Copies input stream to writer using buffer.
+	 * Copies input stream to writer using buffer - using jodds default encoding.
+     *
+     * @see JoddCore#encoding
 	 */
 	public static void copy(InputStream input, Writer output) throws IOException {
 		copy(input, output, JoddCore.encoding);
 	}
 	/**
-	 * Copies specified number of bytes from input stream to writer using buffer.
+	 * Copies specified number of bytes from input stream to writer using buffer - using jodds default encoding.
+     *
+     * @see JoddCore#encoding
 	 */
 	public static void copy(InputStream input, Writer output, int byteCount) throws IOException {
 		copy(input, output, JoddCore.encoding, byteCount);
@@ -184,13 +188,17 @@ public class StreamUtil {
 
 
 	/**
-	 * Copies reader to output stream using buffer.
+	 * Copies reader to output stream using buffer - using jodd default encoding.
+	 *
+	 * @see JoddCore#encoding
 	 */
 	public static void copy(Reader input, OutputStream output) throws IOException {
 		copy(input, output, JoddCore.encoding);
 	}
 	/**
-	 * Copies specified number of characters from reader to output stream using buffer.
+	 * Copies specified number of characters from reader to output stream using buffer - using jodd default encoding.
+     *
+     * @see JoddCore#encoding
 	 */
 	public static void copy(Reader input, OutputStream output, int charCount) throws IOException {
 		copy(input, output, JoddCore.encoding, charCount);
@@ -199,17 +207,19 @@ public class StreamUtil {
 	 * Copies reader to output stream using buffer and specified encoding.
 	 */
 	public static void copy(Reader input, OutputStream output, String encoding) throws IOException {
-		Writer out = new OutputStreamWriter(output, encoding);
-		copy(input, out);
-		out.flush();
+        try (Writer out = new OutputStreamWriter(output, encoding)) {
+            copy(input, out);
+            out.flush();
+        }
 	}
 	/**
 	 * Copies specified number of characters from reader to output stream using buffer and specified encoding.
 	 */
 	public static void copy(Reader input, OutputStream output, String encoding, int charCount) throws IOException {
-		Writer out = new OutputStreamWriter(output, encoding);
-		copy(input, out, charCount);
-		out.flush();
+        try (Writer out = new OutputStreamWriter(output, encoding)) {
+            copy(input, out, charCount);
+            out.flush();
+        }
 	}
 
 
