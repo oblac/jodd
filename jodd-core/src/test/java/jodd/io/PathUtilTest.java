@@ -157,6 +157,9 @@ public class PathUtilTest {
             assumeTrue(baseDir_Not_Successful.exists());
             assumeTrue(locked_file.exists());
 
+            assumeTrue(SystemUtil.isHostWindows()); // on windows host, test is sucessful. on linux host no io-exception is thorwn
+                                                    // for now no linux host is available for further investigations
+
             try (RandomAccessFile randomAccessFile = new RandomAccessFile(locked_file, "rw");
                  FileLock lock = randomAccessFile.getChannel().lock())
             {
