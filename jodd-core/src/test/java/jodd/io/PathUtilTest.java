@@ -28,16 +28,27 @@ package jodd.io;
 import jodd.util.RandomString;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
-import java.nio.file.*;
+import java.nio.file.FileSystemException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class PathUtilTest {
@@ -157,8 +168,12 @@ public class PathUtilTest {
 			assumeTrue(baseDir_Not_Successful.exists());
 			assumeTrue(locked_file.exists());
 
-			assumeTrue(SystemUtil.isHostWindows()); // on windows host, test is sucessful. on linux host no io-exception is thorwn
-													// for now no linux host is available for further investigations
+			assumeTrue(SystemUtil.isHostWindows());   // on windows host, test is successful. on linux host no io-exception is thrown
+
+			// When you use FileLock, it is purely advisory—acquiring a lock on a file may not stop you from doing anything:
+			// reading, writing, and deleting a file may all be possible even when another process has acquired a lock.
+			// Sometimes, a lock might do more than this on a particular platform, but this behavior is unspecified,
+			// and relying on more than is guaranteed in the class documentation is a recipe for failure.
 
 			try (RandomAccessFile randomAccessFile = new RandomAccessFile(locked_file, "rw");
 				 FileLock lock = randomAccessFile.getChannel().lock())
@@ -166,9 +181,8 @@ public class PathUtilTest {
 				assumeTrue(lock.isValid(), locked_file.getAbsolutePath() + " is NOT locked...");
 
 				// asserts
-				IOException expectedException = assertThrows(IOException.class, () -> {
-					PathUtil.deleteFileTree(baseDir_Not_Successful.toPath());
-				});
+				IOException expectedException = assertThrows(
+					IOException.class, () -> PathUtil.deleteFileTree(baseDir_Not_Successful.toPath()));
 				assertTrue(expectedException instanceof FileSystemException);
 				assertEquals(locked_file.getAbsolutePath(), ((FileSystemException)expectedException).getFile());
 			}
