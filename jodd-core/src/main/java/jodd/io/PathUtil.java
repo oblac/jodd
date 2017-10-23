@@ -63,13 +63,11 @@ public class PathUtil {
 	 * Reads path content.
 	 */
 	public static String readString(Path path) throws IOException {
-		BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
-
-		StringWriter writer = new StringWriter();
-
-		StreamUtil.copy(reader, writer);
-
-		return writer.toString();
+		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+			StringWriter writer = new StringWriter(); // flush & close not needed for StringWriter-instance
+			StreamUtil.copy(reader, writer);
+			return writer.toString();
+		}
 	}
 
 	/**
