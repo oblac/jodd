@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class FuturesTest {
 
 	@Test
-	public void testWithinBreaksAsyncExecution() throws ExecutionException, InterruptedException {
+	void testWithinBreaksAsyncExecution() throws ExecutionException, InterruptedException {
 		final CompletableFuture<String> asyncCode = CompletableFuture.supplyAsync(() -> {
 			ThreadUtil.sleep(3000);
 			return "done";
@@ -54,7 +54,7 @@ class FuturesTest {
 	}
 
 	@Test
-	public void testWithinAsyncFaster() throws ExecutionException, InterruptedException {
+	void testWithinAsyncFaster() throws ExecutionException, InterruptedException {
 		final CompletableFuture<String> asyncCode = CompletableFuture.supplyAsync(() -> {
 			ThreadUtil.sleep(1000);
 			return "done";
@@ -70,7 +70,7 @@ class FuturesTest {
 	}
 
 	@Test
-	public void testFailAfterOnManyTasks() throws ExecutionException, InterruptedException {
+	void testFailAfterOnManyTasks() throws ExecutionException, InterruptedException {
 		MutableInteger execCount = new MutableInteger();
 		MutableInteger interruptCount = new MutableInteger();
 

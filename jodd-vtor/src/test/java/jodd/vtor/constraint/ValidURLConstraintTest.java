@@ -118,14 +118,14 @@ class ValidURLConstraintTest {
 	};
 
 	@Test
-	public void testValidUrls() {
+	void testValidUrls() {
 		for (String url : SHOULD_MATCH) {
 			assertTrue(check(url));
 		}
 	}
 
 	@Test
-	public void testInvalidUrls() {
+	void testInvalidUrls() {
 		for (String url : SHOULD_NOT_MATCH) {
 			assertFalse(check(url));
 		}

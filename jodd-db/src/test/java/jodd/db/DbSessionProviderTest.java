@@ -39,7 +39,7 @@ class DbSessionProviderTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testThreadSessionProvider() {
+	void testThreadSessionProvider() {
 		// set connection provider and thread session manager
 		DbManager.getInstance().setConnectionProvider(cp);
 		DbManager.getInstance().setSessionProvider(new ThreadDbSessionProvider());

@@ -60,7 +60,7 @@ class DbOomTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testOrm() {
+	void testOrm() {
 		DbSession session = new DbThreadSession(cp);
 
 		// ---------------------------------------------------------------- insert

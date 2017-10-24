@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class InExRulesTest {
 
 	@Test
-	public void testIncludeExcludes() {
+	void testIncludeExcludes() {
 		InExRules<String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
 		assertTrue(inExRules.isBlacklist());
@@ -136,7 +136,7 @@ class InExRulesTest {
 	}
 
 	@Test
-	public void testSmartMode() {
+	void testSmartMode() {
 		InExRules<String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
 		assertTrue(inExRules.isBlacklist());

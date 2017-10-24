@@ -46,7 +46,7 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSessionProvider() {
+	void testSessionProvider() {
 		// prepare
 		JtxTransactionManager jtxManager = new DbJtxTransactionManager(cp);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);

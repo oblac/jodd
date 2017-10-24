@@ -38,7 +38,7 @@ class InlineVsContentTest {
 	public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");
 
 	@Test
-	public void testSendEmailWithVariousAttachaments() {
+	void testSendEmailWithVariousAttachaments() {
 		SmtpServer smtpServer = SmtpSslServer
 			.create("mail.joddframework.org")
 			.authenticateWith("t", "t");

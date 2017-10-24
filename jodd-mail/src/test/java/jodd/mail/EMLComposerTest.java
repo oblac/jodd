@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EMLComposerTest {
 
 	@Test
-	public void testWriteSimpleEmail() {
+	void testWriteSimpleEmail() {
 		Email email = Email.create().from("Joe@example.com").to("Pig@example.com").addText("Hello");
 
 		String eml = EMLComposer.create().compose(email);

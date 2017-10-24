@@ -77,7 +77,7 @@ class MixedScope343Test {
 	}
 
 	@Test
-	public void testWithMixingScopesSingletonAndProto(){
+	void testWithMixingScopesSingletonAndProto(){
 		ExternalBean externalBean = new ExternalBean();
 		// --> inject
 

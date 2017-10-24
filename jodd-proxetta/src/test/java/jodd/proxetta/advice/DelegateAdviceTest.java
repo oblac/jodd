@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class DelegateAdviceTest {
 
 	@Test
-	public void testCalcImplDelegate() {
+	void testCalcImplDelegate() {
 		CalcImpl calc = new CalcImpl();
 
 		Calc newCalc = DelegateAdviceUtil.applyAdvice(CalcImpl.class);

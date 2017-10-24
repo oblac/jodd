@@ -54,7 +54,7 @@ class ArraysTest {
 	public static final boolean[] BOOLEANS1 = new boolean[] {true, false, true};
 
 	@Test
-	public void testArrayToIntConversion() {
+	void testArrayToIntConversion() {
 		Integer[] objects = INTEGERS;
 		Object result = TypeConverterManager.convertType(objects, int[].class);
 
@@ -63,7 +63,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToArrayConversion() {
+	void testIntToArrayConversion() {
 		int[] primitives = INTS;
 		Object result = TypeConverterManager.convertType(primitives, Integer[].class);
 
@@ -72,7 +72,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToLongConversion() {
+	void testArrayToLongConversion() {
 		Long[] objects = LONGS;
 		Object result = TypeConverterManager.convertType(objects, long[].class);
 
@@ -81,7 +81,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testLongToArrayConversion() {
+	void testLongToArrayConversion() {
 		long[] primitives = LONGS1;
 		Object result = TypeConverterManager.convertType(primitives, Long[].class);
 
@@ -90,7 +90,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToFloatConversion() {
+	void testArrayToFloatConversion() {
 		Float[] objects = FLOATS;
 		Object result = TypeConverterManager.convertType(objects, float[].class);
 
@@ -99,7 +99,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testFloatToArrayConversion() {
+	void testFloatToArrayConversion() {
 		float[] primitives = FLOATS1;
 		Object result = TypeConverterManager.convertType(primitives, Float[].class);
 
@@ -108,7 +108,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToDoubleConversion() {
+	void testArrayToDoubleConversion() {
 		Double[] objects = DOUBLES;
 		Object result = TypeConverterManager.convertType(objects, double[].class);
 
@@ -117,7 +117,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testDoubleToArrayConversion() {
+	void testDoubleToArrayConversion() {
 		double[] primitives = DOUBLES1;
 		Object result = TypeConverterManager.convertType(primitives, Double[].class);
 
@@ -126,7 +126,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToShortConversion() {
+	void testArrayToShortConversion() {
 		Short[] objects = SHORTS;
 		Object result = TypeConverterManager.convertType(objects, short[].class);
 
@@ -135,7 +135,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testShortToArrayConversion() {
+	void testShortToArrayConversion() {
 		short[] primitives = SHORTS1;
 		Object result = TypeConverterManager.convertType(primitives, Short[].class);
 
@@ -144,7 +144,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToByteConversion() {
+	void testArrayToByteConversion() {
 		Byte[] objects = BYTES;
 		Object result = TypeConverterManager.convertType(objects, byte[].class);
 
@@ -153,7 +153,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testByteToArrayConversion() {
+	void testByteToArrayConversion() {
 		byte[] primitives = BYTES1;
 		Object result = TypeConverterManager.convertType(primitives, Byte[].class);
 
@@ -162,7 +162,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToCharConversion() {
+	void testArrayToCharConversion() {
 		Character[] objects = CHARACTERS;
 		Object result = TypeConverterManager.convertType(objects, char[].class);
 
@@ -171,7 +171,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testCharToArrayConversion() {
+	void testCharToArrayConversion() {
 		char[] primitives = CHARS;
 		Object result = TypeConverterManager.convertType(primitives, Character[].class);
 
@@ -180,7 +180,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testArrayToBooleanConversion() {
+	void testArrayToBooleanConversion() {
 		Boolean[] objects = BOOLEANS;
 		Object result = TypeConverterManager.convertType(objects, boolean[].class);
 
@@ -189,7 +189,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testBooleanToArrayConversion() {
+	void testBooleanToArrayConversion() {
 		boolean [] primitives = BOOLEANS1;
 		Object result = TypeConverterManager.convertType(primitives, Boolean[].class);
 
@@ -200,7 +200,7 @@ class ArraysTest {
 	// ---------------------------------------------------------------- single value
 
 	@Test
-	public void testArrayToIntConversionSingleValue() {
+	void testArrayToIntConversionSingleValue() {
 		Object result = TypeConverterManager.convertType(Integer.valueOf(173), int[].class);
 
 		assertNotNull(result);
@@ -208,7 +208,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToArrayConversionSingleValue() {
+	void testIntToArrayConversionSingleValue() {
 		Object result = TypeConverterManager.convertType(173, Integer[].class);
 
 		assertNotNull(result);
@@ -218,7 +218,7 @@ class ArraysTest {
 	// ---------------------------------------------------------------- string csv
 
 	@Test
-	public void testArrayToIntConversionCommaSeparated() {
+	void testArrayToIntConversionCommaSeparated() {
 		Object result = TypeConverterManager.convertType("1,2,3", int[].class);
 
 		assertNotNull(result);
@@ -226,7 +226,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToArrayConversionCommaSeparated() {
+	void testIntToArrayConversionCommaSeparated() {
 		Object result = TypeConverterManager.convertType("1,2,3", Integer[].class);
 
 		assertNotNull(result);
@@ -234,7 +234,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testMutableIntToArrayConversionCommaSeparated() {
+	void testMutableIntToArrayConversionCommaSeparated() {
 		Object result = TypeConverterManager.convertType("1,2,3", MutableInteger[].class);
 
 		assertNotNull(result);
@@ -249,7 +249,7 @@ class ArraysTest {
 	// ---------------------------------------------------------------- prim 2 prim
 
 	@Test
-	public void testIntToLongArray() {
+	void testIntToLongArray() {
 		Object result = TypeConverterManager.convertType(new int[] {1,2,3}, long[].class);
 
 		assertNotNull(result);
@@ -257,7 +257,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToLongArray2() {
+	void testIntToLongArray2() {
 		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, long[][].class);
 
 		assertNotNull(result);
@@ -265,7 +265,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToLongArray3() {
+	void testIntToLongArray3() {
 		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, Long[][].class);
 
 		assertNotNull(result);
@@ -275,7 +275,7 @@ class ArraysTest {
 	// ---------------------------------------------------------------- mutables
 
 	@Test
-	public void testMutableToInteger() {
+	void testMutableToInteger() {
 		Object mutables = new MutableInteger[] {
 				new MutableInteger(7),
 				new MutableInteger(3),
@@ -289,7 +289,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntegerToMutable() {
+	void testIntegerToMutable() {
 		Object integers = new Integer[] {
 				new Integer(7),
 				new Integer(3),
@@ -306,7 +306,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testMutableToInt() {
+	void testMutableToInt() {
 		Object mutables = new MutableInteger[] {
 				new MutableInteger(7),
 				new MutableInteger(3),
@@ -320,7 +320,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToMutable() {
+	void testIntToMutable() {
 		int[] array = new int[] {7,3,1};
 
 		Object result = TypeConverterManager.convertType(array, MutableInteger[].class);
@@ -336,7 +336,7 @@ class ArraysTest {
 	// ---------------------------------------------------------------- bigint
 
 	@Test
-	public void testBigIntegerToInteger() {
+	void testBigIntegerToInteger() {
 		Object bigIntegers = new BigInteger[] {
 				new BigInteger("7"),
 				new BigInteger("3"),
@@ -350,7 +350,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntegerToBigInteger() {
+	void testIntegerToBigInteger() {
 		Object integers = new Integer[] {
 				new Integer(7),
 				new Integer(3),
@@ -367,7 +367,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testBigIntegerToInt() {
+	void testBigIntegerToInt() {
 		Object bigIntegers = new BigInteger[] {
 				new BigInteger("7"),
 				new BigInteger("3"),
@@ -381,7 +381,7 @@ class ArraysTest {
 	}
 
 	@Test
-	public void testIntToBigInteger() {
+	void testIntToBigInteger() {
 		int[] array = new int[] {7,3,1};
 
 		Object result = TypeConverterManager.convertType(array, BigInteger[].class);

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HtmlCCommentExpressionMatcherTest {
 
 	@Test
-	public void testSingleExpressions() {
+	void testSingleExpressions() {
 		HtmlCCommentExpressionMatcher m = new HtmlCCommentExpressionMatcher();
 
 		assertFalse(m.match(5, "if IE 6"));
@@ -86,7 +86,7 @@ class HtmlCCommentExpressionMatcherTest {
 	}
 
 	@Test
-	public void testTwoExpressions() {
+	void testTwoExpressions() {
 		HtmlCCommentExpressionMatcher m = new HtmlCCommentExpressionMatcher();
 
 		assertTrue(m.match(5, "if (lt IE 6)&(lt IE 7)"));

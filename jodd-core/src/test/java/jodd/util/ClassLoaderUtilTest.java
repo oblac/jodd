@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClassLoaderUtilTest {
 
 	@Test
-	public void testStream() throws IOException {
+	void testStream() throws IOException {
 
 		InputStream is = ClassLoaderUtil.getClassAsStream(ClassLoaderUtilTest.class);
 		assertNotNull(is);
@@ -67,7 +67,7 @@ class ClassLoaderUtilTest {
 	}
 
 	@Test
-	public void testClassFileName() {
+	void testClassFileName() {
 		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class));
 		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest[].class));
 		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassLoaderUtil.getClassFileName(Boo.class));
@@ -81,7 +81,7 @@ class ClassLoaderUtilTest {
 	}
 
 	@Test
-	public void testLoadClass() throws Exception {
+	void testLoadClass() throws Exception {
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {
@@ -150,7 +150,7 @@ class ClassLoaderUtilTest {
 	}
 
 	@Test
-	public void testWebJars() {
+	void testWebJars() {
 		URL url = ClassLoaderUtil.getResourceUrl("/META-INF/resources/webjars/jquery");
 
 		File containerFile = FileUtil.toContainerFile(url);

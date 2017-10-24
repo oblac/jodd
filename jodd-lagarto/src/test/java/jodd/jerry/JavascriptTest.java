@@ -58,7 +58,7 @@ class JavascriptTest {
 	}
 
 	@Test
-	public void testEmbedded() throws ScriptException {
+	void testEmbedded() throws ScriptException {
 
 		String result = run(
 			"<div id='pizza'></div>",
@@ -68,7 +68,7 @@ class JavascriptTest {
 	}
 
 	@Test
-	public void testEmbedded_each() throws ScriptException {
+	void testEmbedded_each() throws ScriptException {
 
 		String result = run(
 			"<div id='pizza'><span class='p'></span><span class='p'></span><span class='p'></span></div>",

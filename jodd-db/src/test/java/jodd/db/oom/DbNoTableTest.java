@@ -51,7 +51,7 @@ class DbNoTableTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMappingNoTable() {
+	void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
 		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());

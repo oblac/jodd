@@ -70,7 +70,7 @@ class PathUtilTest {
 	}
 
 	@Test
-	public void testResolve() {
+	void testResolve() {
 		Path base = Paths.get(fixpath("/aaa/bbb"));
 
 		Path path = PathUtil.resolve(base, "ccc");
@@ -101,7 +101,7 @@ class PathUtilTest {
 	class ReadString {
 
 		@Test
-		public void testReadString_with_unknown_path() throws Exception {
+		void testReadString_with_unknown_path() throws Exception {
 
 			assertThrows(IOException.class, () -> {
 			   PathUtil.readString(new File(BASE_DIR, RandomString.getInstance().randomAlpha(8)).toPath());
@@ -109,7 +109,7 @@ class PathUtilTest {
 		}
 
 		@Test
-		public void testReadString_with_new_file() throws Exception {
+		void testReadString_with_new_file() throws Exception {
 
 			final String expected = "üöä ÜÖÄ ß";
 
@@ -154,7 +154,7 @@ class PathUtilTest {
 		}
 
 		@Test
-		public void testDeleteFileTree_successful() throws Exception {
+		void testDeleteFileTree_successful() throws Exception {
 			assumeTrue(baseDir_Successful.exists());
 
 			PathUtil.deleteFileTree(baseDir_Successful.toPath());
@@ -164,7 +164,7 @@ class PathUtilTest {
 		}
 
 		@Test
-		public void testDeleteFileTree_not_successful() throws Exception {
+		void testDeleteFileTree_not_successful() throws Exception {
 			assumeTrue(baseDir_Not_Successful.exists());
 			assumeTrue(locked_file.exists());
 

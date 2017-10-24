@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MutableFloatConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) TypeConverterManager.lookup(MutableFloat.class);
 
 		assertNull(mutableFloatConverter.convert(null));

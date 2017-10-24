@@ -46,7 +46,7 @@ class Log4j2LoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		//given
 		when(log.getName()).thenReturn(LoggerConstants.LOG);
 
@@ -55,7 +55,7 @@ class Log4j2LoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLog() {
+	void testLog() {
 		//when
 		logger.log(Logger.Level.TRACE, LoggerConstants.SIMPLE_MESSAGE);
 
@@ -88,7 +88,7 @@ class Log4j2LoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLevel() {
+	void testLevel() {
 		//when
 		logger.trace(LoggerConstants.TRACE_MESSAGE);
 
@@ -121,7 +121,7 @@ class Log4j2LoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testErrorWithThrowable() {
+	void testErrorWithThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -133,7 +133,7 @@ class Log4j2LoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testWarnWithThrowable() {
+	void testWarnWithThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -145,7 +145,7 @@ class Log4j2LoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLog4j2LoggerFactory() {
+	void testLog4j2LoggerFactory() {
 		//given
 		loggerProvider = Log4j2Logger.PROVIDER;
 

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class LocaleTest {
 
 	@Test
-	public void testFrench() {
+	void testFrench() {
 		JDateTime jdt = new JDateTime(2012, 12, 21);
 		jdt.setLocale(LocaleUtil.getLocale("fr"));
 		assertEquals("décembre", jdt.toString("MML"));

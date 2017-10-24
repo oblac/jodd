@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class BooleanArrayConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		BooleanArrayConverter booleanArrayConverter = (BooleanArrayConverter) TypeConverterManager.lookup(boolean[].class);
 
 		assertNull(booleanArrayConverter.convert(null));
@@ -59,7 +59,7 @@ class BooleanArrayConverterTest {
 	}
 
 	@Test
-	public void testArrayConversion() {
+	void testArrayConversion() {
 		Object[] booleanArray = new Object[]{Boolean.FALSE, "TRUE", Integer.valueOf(0)};
 
 		boolean[] arr1 = TypeConverterManager.convertType(booleanArray, boolean[].class);

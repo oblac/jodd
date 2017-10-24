@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AssertFalseConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testAssertFalse() {
+    void testAssertFalse() {
         AssertFalseConstraint assertFalseConstraint = new AssertFalseConstraint();
         //this is an empty method nothing can be verified
         assertFalseConstraint.configure(null);
@@ -45,7 +45,7 @@ class AssertFalseConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testAssertTrue() {
+    void testAssertTrue() {
         AssertFalseConstraint assertFalseConstraint = new AssertFalseConstraint();
         //this is an empty method nothing can be verified
         assertFalseConstraint.configure(null);

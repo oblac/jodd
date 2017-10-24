@@ -60,7 +60,7 @@ class ObjectUtilTest {
     }
 
 	@Test
-	public void testCloneViaSerialization() throws Exception {
+	void testCloneViaSerialization() throws Exception {
 
 		final MutableInteger mu = new MutableInteger(183);
 
@@ -73,7 +73,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
-	public void testCloneWithNull() throws Exception {
+	void testCloneWithNull() throws Exception {
 
 	    final Object actual = ObjectUtil.clone(null);
 
@@ -81,7 +81,7 @@ class ObjectUtilTest {
     }
 
     @Test
-    public void testCloneWithCloneableInstance() throws Exception {
+    void testCloneWithCloneableInstance() throws Exception {
 
 	    final MutableInteger instance_to_clone = new MutableInteger(MathUtil.randomInt(1, 1337));
 
@@ -94,7 +94,7 @@ class ObjectUtilTest {
     }
 
     @Test
-    public void testCloneWithNoneCloneableInstance() throws Exception {
+    void testCloneWithNoneCloneableInstance() throws Exception {
 
         assertThrows(CloneNotSupportedException.class, () -> {
             ObjectUtil.clone(new Object());
@@ -102,7 +102,7 @@ class ObjectUtilTest {
     }
 
     @Test
-    public void testWriteObject() throws Exception {
+    void testWriteObject() throws Exception {
 
 	    final String instanceToWrite = "Jodd - The Unbearable Lightness of Java :-)";
 	    final File targetFile = new File(BASE_DIR, "testWriteObject.ser");
@@ -111,7 +111,7 @@ class ObjectUtilTest {
     }
 
     @Test
-    public void testReadObject() throws Exception {
+    void testReadObject() throws Exception {
 
         final String expected = "Jodd - The Unbearable Lightness of Java :-)";
         final File targetFile = new File(BASE_DIR, "testReadObject.ser");
@@ -131,7 +131,7 @@ class ObjectUtilTest {
     }
 
     @Test
-    public void testObjectToByteArray() throws Exception {
+    void testObjectToByteArray() throws Exception {
 
         final String instanceToWrite = "Jodd - The Unbearable Lightness of Java :-)";
 
@@ -142,7 +142,7 @@ class ObjectUtilTest {
     }
 
     @Test
-    public void testByteArrayToObject() throws Exception {
+    void testByteArrayToObject() throws Exception {
 
         final String expected = "Jodd - The Unbearable Lightness of Java :-)";
         final byte[] input = new byte[] {-84,-19,0,5,116,0,43,74,111,100,100,32,45,32,84,104,101,32,85,110,98,101,97,

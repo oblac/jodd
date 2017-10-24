@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class LoggablePreparedStatementTest extends DbHsqldbTestCase {
 
 	@Test
-	public void testSetParameters() throws SQLException {
+	void testSetParameters() throws SQLException {
 		Connection connection = cp.getConnection();
 
 		PreparedStatement preparedStatement = LogabbleStatementFactory.prepared().create(connection, "select * from BOY t where t.id=?");

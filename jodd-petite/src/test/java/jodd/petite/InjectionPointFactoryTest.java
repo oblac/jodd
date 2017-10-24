@@ -41,7 +41,7 @@ class InjectionPointFactoryTest {
 	InjectionPointFactory ipf;
 
 	@Test
-	public void testDuplicateNamesSpecialCases() {
+	void testDuplicateNamesSpecialCases() {
 		String[] s = new String[]{};
 		ipf.removeDuplicateNames(s);
 		assertEquals(0, s.length);
@@ -61,7 +61,7 @@ class InjectionPointFactoryTest {
 	}
 
 	@Test
-	public void testDuplicateNames() {
+	void testDuplicateNames() {
 		String[] s = new String[]{"foo", "foo", "boo", "foo"};
 		ipf.removeDuplicateNames(s);
 		assertEquals("foo", s[0]);
@@ -71,7 +71,7 @@ class InjectionPointFactoryTest {
 	}
 
 	@Test
-	public void testDuplicateNames2() {
+	void testDuplicateNames2() {
 		String[] s = new String[]{"boo", "foo", "boo", "foo"};
 		ipf.removeDuplicateNames(s);
 		assertEquals("boo", s[0]);
@@ -81,7 +81,7 @@ class InjectionPointFactoryTest {
 	}
 
 	@Test
-	public void testDuplicateNames3() {
+	void testDuplicateNames3() {
 		String[] s = new String[]{"boo", "boo"};
 		ipf.removeDuplicateNames(s);
 		assertEquals("boo", s[0]);

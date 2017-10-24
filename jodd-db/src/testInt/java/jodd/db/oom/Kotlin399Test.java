@@ -55,7 +55,7 @@ class Kotlin399Test extends DbBaseTest {
 
 
 	@Test
-	public void test399() {
+	void test399() {
 		DbAccess db = new PostgreSql();
 
 		System.out.println("\t" + db.getClass().getSimpleName());

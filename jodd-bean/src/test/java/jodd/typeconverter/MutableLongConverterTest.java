@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MutableLongConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		MutableLongConverter mutableLongConverter = (MutableLongConverter) TypeConverterManager.lookup(MutableLong.class);
 
 		assertNull(mutableLongConverter.convert(null));

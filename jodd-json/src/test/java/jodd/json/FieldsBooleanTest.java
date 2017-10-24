@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FieldsBooleanTest {
 
 	@Test
-	public void testBooleanField() {
+	void testBooleanField() {
 		Active active = new Active();
 
 		String json = JsonSerializer.create().serialize(active);

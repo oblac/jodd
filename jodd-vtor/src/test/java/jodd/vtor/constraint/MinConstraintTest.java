@@ -33,26 +33,26 @@ import static org.mockito.Mockito.when;
 
 class MinConstraintTest extends ConstraintTestBase {
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MinConstraint minConstraint = new MinConstraint();
         assertEquals(0.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MinConstraint minConstraint = new MinConstraint(10.0);
         assertEquals(10.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testSetMin() {
+    void testSetMin() {
         MinConstraint minConstraint = new MinConstraint();
         minConstraint.setMin(10);
         assertEquals(10.0, minConstraint.getMin(), 0.01);
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MinConstraint minConstraint = new MinConstraint();
         Min annotation = mock(Min.class);
         when(annotation.value()).thenReturn(10.0);
@@ -62,14 +62,14 @@ class MinConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         MinConstraint minConstraint = new MinConstraint(12.5);
         assertTrue(minConstraint.isValid(mockContext(), "12.6"));
         assertFalse(minConstraint.isValid(mockContext(), "12.1"));
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(MinConstraint.validate(null, 12.5));
     }
 }

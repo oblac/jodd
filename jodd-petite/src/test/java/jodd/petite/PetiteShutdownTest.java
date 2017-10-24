@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PetiteShutdownTest {
 
 	@Test
-	public void testShutdown() {
+	void testShutdown() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);

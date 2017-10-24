@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class DbStatementTest extends DbH2TestCase {
 
 	@Test
-	public void testStatementVsPreparedStatement() throws Exception {
+	void testStatementVsPreparedStatement() throws Exception {
 		DbSession dbSession = createDbSession();
 
 		DbQuery q = new DbQuery("select 1;");

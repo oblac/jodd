@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class TimeUtilTest {
 
 	@Test
-	public void testFromToJulian() {
+	void testFromToJulian() {
 
 		DateTimeStamp time;
 		JulianDateStamp jds;
@@ -148,7 +148,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testFix() {
+	void testFix() {
 		DateTimeStamp t = new DateTimeStamp();
 		t.year = 2003;
 		t.month = 7;
@@ -166,7 +166,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testMonteCarlo() {
+	void testMonteCarlo() {
 		Random r = new Random();
 		for (int i = 0; i < 5000000; i++) {
 			double jd = r.nextFloat() * 3.0e6;
@@ -178,7 +178,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testDates() {
+	void testDates() {
 		DateTimeStamp t = new DateTimeStamp();
 		GregorianCalendar gc = new GregorianCalendar();
 		for (int y = 1970; y < 2100; y++) {
@@ -200,7 +200,7 @@ class TimeUtilTest {
 
 
 	@Test
-	public void testTimes() {
+	void testTimes() {
 		DateTimeStamp t = new DateTimeStamp();
 		GregorianCalendar gc = new GregorianCalendar();
 		t.year = gc.get(Calendar.YEAR);
@@ -222,7 +222,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testDayOfYear() {
+	void testDayOfYear() {
 
 		int doy = TimeUtil.dayOfYear(2003, 1, 1);
 		assertEquals(1, doy);
@@ -242,7 +242,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testSetAccumulation() {
+	void testSetAccumulation() {
 		DateTimeStamp gts1 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
 		DateTimeStamp gts2 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
 		assertEquals(0, gts1.compareTo(gts2));
@@ -258,7 +258,7 @@ class TimeUtilTest {
 
 
 	@Test
-	public void testSetDateAccumulation() {
+	void testSetDateAccumulation() {
 		DateTimeStamp gts1 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
 		DateTimeStamp gts2 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
 		assertEquals(0, gts1.compareTo(gts2));
@@ -273,7 +273,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testToCalendar() {
+	void testToCalendar() {
 		assertEquals(Calendar.JANUARY, TimeUtil.toCalendarMonth(JDateTime.JANUARY));
 		assertEquals(Calendar.DECEMBER, TimeUtil.toCalendarMonth(JDateTime.DECEMBER));
 
@@ -284,7 +284,7 @@ class TimeUtilTest {
 	}
 
 	@Test
-	public void testHttpTime() {
+	void testHttpTime() {
 		long millis = System.currentTimeMillis();
 
 		millis = (millis / 1000) * 1000;

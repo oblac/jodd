@@ -59,7 +59,7 @@ class MethrefJava8Test {
 	}
 
 	@Test
-	public void testMethrefOnInterfaceWithDefaultMethod() {
+	void testMethrefOnInterfaceWithDefaultMethod() {
 		Methref<Sara> methref = Methref.on(Sara.class);
 
 		methref.to().hello(123);

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LongConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		LongConverter longConverter = new LongConverter();
 
 		assertNull(longConverter.convert(null));

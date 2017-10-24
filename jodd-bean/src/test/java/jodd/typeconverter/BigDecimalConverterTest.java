@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class BigDecimalConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		BigDecimalConverter bigDecimalConverter = new BigDecimalConverter();
 
 		assertNull(bigDecimalConverter.convert(null));

@@ -62,12 +62,12 @@ class LagartoParserTest {
 	}
 
 	@Test
-	public void testHtmls() throws IOException {
+	void testHtmls() throws IOException {
 		_testHtmls(testDataRoot);
 	}
 
 	@Test
-	public void testHtmls2() throws IOException {
+	void testHtmls2() throws IOException {
 		_testHtmls(testDataRoot2);
 	}
 
@@ -123,7 +123,7 @@ class LagartoParserTest {
 	 * 13s
 	 */
 	@Test
-	public void testLiveHtmls() throws IOException {
+	void testLiveHtmls() throws IOException {
 		FindFile ff = new WildcardFindFile().include("**/*.html");
 		ff.searchPath(testLiveRoot);
 		File file;

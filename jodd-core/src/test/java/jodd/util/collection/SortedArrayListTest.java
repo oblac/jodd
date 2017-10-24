@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 class SortedArrayListTest {
 
 	@Test
-	public void testList1() {
+	void testList1() {
 		SortedArrayList<String> list = new SortedArrayList<>();
 
 		list.add("aaa");
@@ -79,7 +79,7 @@ class SortedArrayListTest {
 	}
 
 	@Test
-	public void testList2() {
+	void testList2() {
 		SortedArrayList<String> list = new SortedArrayList<>();
 
 		list.add("bbb");
@@ -101,7 +101,7 @@ class SortedArrayListTest {
 	}
 
 	@Test
-	public void testRandom() {
+	void testRandom() {
 		int total = 100000;
 
 		ArrayList<String> randomList = new ArrayList<>();
@@ -121,7 +121,7 @@ class SortedArrayListTest {
 	}
 	
 	@Test
-	public void testComparator(){
+	void testComparator(){
 		Comparator<String> comparator = new Comparator<String>() {
 			public int compare(String str1, String str2) {
 				if (str1 == null && str2 == null) {

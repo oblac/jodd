@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BeanWalkerTest {
 
 	@Test
-	public void testBeanWalking() {
+	void testBeanWalking() {
 		final List<String> names = new ArrayList<>();
 
 		BeanWalker beanWalker = BeanWalker.walk(new BeanWalker.BeanWalkerCallback() {
@@ -68,7 +68,7 @@ class BeanWalkerTest {
 	}
 
 	@Test
-	public void testBeanWalkingMap() {
+	void testBeanWalkingMap() {
 		Map<String, String> map = new HashMap<>();
 
 		map.put("simple", "qwe");

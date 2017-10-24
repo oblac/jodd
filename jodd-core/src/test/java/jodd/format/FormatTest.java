@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FormatTest {
 
 	@Test
-	public void testByte() {
+	void testByte() {
 		assertEquals("0b010001", Printf.str("%#08b", 0x11));
 		byte b = Byte.MAX_VALUE;
 		assertEquals("127", Printf.str("%i", b));
@@ -81,7 +81,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testShort() {
+	void testShort() {
 		short s = Short.MAX_VALUE;
 		assertEquals("32767", Printf.str("%i", s));
 		assertEquals("32767", Printf.str("%u", s));
@@ -119,7 +119,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testIntLong() {
+	void testIntLong() {
 		assertEquals("1", Printf.str("%d", 1));
 		assertEquals("17", Printf.str("%d", 17));
 		assertEquals("173", Printf.str("%d", 173));
@@ -220,7 +220,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testChar() {
+	void testChar() {
 		assertEquals("A", Printf.str("%c", 'A'));
 		assertEquals("c", Printf.str("%c", 'c'));
 		assertEquals("65", Printf.str("%d", 'A'));
@@ -244,7 +244,7 @@ class FormatTest {
 
 
 	@Test
-	public void testFormatedInt() {
+	void testFormatedInt() {
 		assertEquals("0001", Printf.str("%04d", 1));
 		assertEquals("+001", Printf.str("%+04d", 1));
 		assertEquals("-001", Printf.str("%+04d", -1));
@@ -267,7 +267,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertEquals("A", Printf.str("%c", 'A'));
 		assertEquals("str", Printf.str("%s", "str"));
 		assertEquals("% 1", Printf.str("%% %i", 1));
@@ -293,7 +293,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testFloats() {
+	void testFloats() {
 		assertEquals("1.700000", Printf.str("%f", 1.7));
 		assertEquals("1.7", Printf.str("%1.1f", 1.7));
 		assertEquals("1.7", Printf.str("%2.1f", 1.7));
@@ -330,7 +330,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testBoolean() {
+	void testBoolean() {
 		assertEquals("true", Printf.str("%l", true));
 		assertEquals("false", Printf.str("%l", false));
 		assertEquals("TRUE", Printf.str("%L", true));
@@ -347,7 +347,7 @@ class FormatTest {
 
 
 	@Test
-	public void testIntRanges() {
+	void testIntRanges() {
 		int i;
 
 		i = 0;
@@ -396,7 +396,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testLongRanges() {
+	void testLongRanges() {
 		long l;
 
 		l = 0;
@@ -479,7 +479,7 @@ class FormatTest {
 
 
 	@Test
-	public void testBinary() {
+	void testBinary() {
 		assertEquals("1", Printf.str("%b", 1));
 		assertEquals("11", Printf.str("%b", 3));
 		assertEquals("1101", Printf.str("%b", 13));
@@ -506,7 +506,7 @@ class FormatTest {
 	}
 
 	@Test
-	public void testSuccessive() {
+	void testSuccessive() {
 		String fmt = "...%i...%i...";
 		PrintfFormat pf = new PrintfFormat();
 		fmt = pf.reinit(fmt).form(1);
@@ -515,14 +515,14 @@ class FormatTest {
 	}
 
 	@Test
-	public void testNumbers() {
+	void testNumbers() {
 		String result = Printf.str("%i %3.2f %X", Integer.valueOf(173), Double.valueOf(1.73), Long.valueOf(10));
 
 		assertEquals("173 1.73 A", result);
 	}
 
 	@Test
-	public void testDoublesRound() {
+	void testDoublesRound() {
 		assertEquals(Printf.str("%1.0f", 0.50), "1");
 		assertEquals(Printf.str("%2.1f", 0.1499), "0.1");
 		assertEquals(Printf.str("%2.1f", 0.15), "0.2");
@@ -533,18 +533,18 @@ class FormatTest {
 	}
 
 	@Test
-	public void testObject() {
+	void testObject() {
 		assertTrue(Printf.str("%p", new Object()).length() > 4);
 		assertTrue(Printf.str("%p", new Integer(1)).length() > 4);
 	}
 
 	@Test
-	public void testMultipleObject() {
+	void testMultipleObject() {
 		assertEquals("173, hej true", Printf.str("%i, %s %l", 173, "hej", true));
 	}
 
 	@Test
-	public void testAlternateChar() {
+	void testAlternateChar() {
 		assertEquals("\\u41", Printf.str("%#c", 'A'));
 		assertEquals("\\u1a34", Printf.str("%#c", '\u1A34'));
 		assertEquals("\\uff00", Printf.str("%#c", '\uFF00'));

@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoopTagTest {
 
 	@Test
-	public void testLoopTag() throws JspException {
+	void testLoopTag() throws JspException {
 
 		final MockJspFragment jspFragment = new MockJspFragment();
 		final MockJspContext jspContext = new MockJspContext();

@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 class SendMailTest {
 
 	@Test
-	public void testFromToBccCc() throws MessagingException, IOException {
+	void testFromToBccCc() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("from@example.com")
 				.to("to1@example.com").to("Major Tom", "to2@example.com")
@@ -74,7 +74,7 @@ class SendMailTest {
 	}
 
 	@Test
-	public void testSimpleText() throws MessagingException, IOException {
+	void testSimpleText() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("from@example.com")
 				.to("to@example.com")
@@ -90,7 +90,7 @@ class SendMailTest {
 	}
 
 	@Test
-	public void testSimpleTextWithCyrilic() throws MessagingException, IOException {
+	void testSimpleTextWithCyrilic() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("Тијана Милановић <t@gmail.com>")
 				.to("Јодд <i@jodd.com>")
@@ -109,7 +109,7 @@ class SendMailTest {
 	}
 
 	@Test
-	public void testTextHtml() throws MessagingException, IOException {
+	void testTextHtml() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("from@example.com")
 				.to("to@example.com")
@@ -148,7 +148,7 @@ class SendMailTest {
 	}
 
 	@Test
-	public void testTextHtmlEmbedAttach1() throws MessagingException, IOException {
+	void testTextHtmlEmbedAttach1() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("from@example.com")
 				.to("to@example.com")
@@ -162,7 +162,7 @@ class SendMailTest {
 	}
 
 	@Test
-	public void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
+	void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
 		Email email = new Email();
 
 		email.from("from@example.com");

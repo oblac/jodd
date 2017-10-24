@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
 class ReturnTest {
 
 	@Test
-	public void testWrapperWithProxyReturns() throws Exception {
+	void testWrapperWithProxyReturns() throws Exception {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 				new ProxyAspect(ReflectionReplacementAdvice.class, new AllMethodsPointcut()));
 
@@ -79,7 +79,7 @@ class ReturnTest {
 	}
 
 	@Test
-	public void testNullReturns() throws Exception {
+	void testNullReturns() throws Exception {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 				new ProxyAspect(ReturnNullAdvice.class, new AllMethodsPointcut()));
 

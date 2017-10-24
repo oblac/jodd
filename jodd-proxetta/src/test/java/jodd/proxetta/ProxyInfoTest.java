@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ProxyInfoTest {
 
 	@Test
-	public void testProxyInfo_createNotRightAfterTheMethod() {
+	void testProxyInfo_createNotRightAfterTheMethod() {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
 		//proxetta.setDebugFolder(SystemUtil.userHome());
 

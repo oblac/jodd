@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ToCollectionTest {
 
 	@Test
-	public void testConvertToList() {
+	void testConvertToList() {
 		Set<String> set = new HashSet<>();
 		set.add("123");
 		set.add("456");

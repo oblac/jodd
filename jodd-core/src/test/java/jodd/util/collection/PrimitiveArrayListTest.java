@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PrimitiveArrayListTest {
 
 	@Test
-	public void testIntArrayList() {
+	void testIntArrayList() {
 		IntArrayList list = new IntArrayList();
 		assertEquals(0, list.size());
 		assertTrue(list.isEmpty());

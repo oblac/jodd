@@ -40,27 +40,27 @@ import static org.mockito.Mockito.*;
 class VtorTest extends VtorTestSupport {
 
     @Test
-    public void testCreate() throws Exception {
+    void testCreate() throws Exception {
         Vtor vtor = Vtor.create();
         assertNotNull(vtor);
     }
 
     @Test
-    public void testSetSeverity() throws Exception {
+    void testSetSeverity() throws Exception {
         Vtor vtor = new Vtor();
         vtor.setSeverity(1);
         assertEquals(vtor.severity, 1);
     }
 
     @Test
-    public void testValidateAllProfilesByDefault() throws Exception {
+    void testValidateAllProfilesByDefault() throws Exception {
         Vtor vtor = new Vtor();
         vtor.setValidateAllProfilesByDefault(true);
         assertTrue(vtor.isValidateAllProfilesByDefault());
     }
 
     @Test
-    public void testHasViolations() throws Exception {
+    void testHasViolations() throws Exception {
         Vtor vtor = new Vtor();
         assertFalse(vtor.hasViolations(), "method must return false when violations list is empty");
 
@@ -69,14 +69,14 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testAddViolation_withNullValue() throws Exception {
+    void testAddViolation_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
         vtor.addViolation(null);
         assertNull(vtor.getViolations());
     }
 
     @Test
-    public void testAddViolation_withTwoDifferentValues() throws Exception {
+    void testAddViolation_withTwoDifferentValues() throws Exception {
         //given
         Vtor vtor = new Vtor();
         Violation violation1 = mock(Violation.class);
@@ -95,14 +95,14 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testUseProfile_withNullValue() throws Exception {
+    void testUseProfile_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
         vtor.useProfile(null);
         assertNull(vtor.enabledProfiles);
     }
 
     @Test
-    public void testUseProfile_withTwoDifferentValues() throws Exception {
+    void testUseProfile_withTwoDifferentValues() throws Exception {
         //given
         Vtor vtor = new Vtor();
         vtor.useProfile("testProfile");
@@ -117,14 +117,14 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testUseProfiles_withNullValue() throws Exception {
+    void testUseProfiles_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
         vtor.useProfiles(null);
         assertNull(vtor.enabledProfiles);
     }
 
     @Test
-    public void testUseProfiles_withTwoDifferentValues() throws Exception {
+    void testUseProfiles_withTwoDifferentValues() throws Exception {
         //given
         Vtor vtor = new Vtor();
         vtor.useProfiles("testProfile1", "testProfile2");
@@ -149,7 +149,7 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testValidateFldHasChecker_isValidFalse() throws Exception {
+    void testValidateFldHasChecker_isValidFalse() throws Exception {
         //given
         ValidationConstraint testCheck1Constraint = mock(ValidationConstraint.class);
         //ValidationConstraint.isValid always returns false
@@ -166,7 +166,7 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testValidateFldHasChecker_isValidTrue() throws Exception {
+    void testValidateFldHasChecker_isValidTrue() throws Exception {
         //given
         ValidationConstraint testCheck1Constraint = mock(ValidationConstraint.class);
         //ValidationConstraint.isValid always returns false
@@ -183,7 +183,7 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testValidateCheckForDifferentProfile() throws Exception {
+    void testValidateCheckForDifferentProfile() throws Exception {
         //given a list of constraints with different profiles, one check has same profile as Vtor
         Vtor vtor = new Vtor();
         vtor.useProfile("profil1");
@@ -208,7 +208,7 @@ class VtorTest extends VtorTestSupport {
     }
 
     @Test
-    public void testValidateCheckSeverity() throws Exception {
+    void testValidateCheckSeverity() throws Exception {
         //given
         Vtor vtor = new Vtor();
         vtor.setSeverity(10);

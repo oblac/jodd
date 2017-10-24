@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class URIConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		URIConverter uriConverter = new URIConverter();
 
 		File f = new File("/folder/file.ext");

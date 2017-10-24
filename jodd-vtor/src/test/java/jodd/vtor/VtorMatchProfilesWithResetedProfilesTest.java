@@ -42,33 +42,33 @@ class VtorMatchProfilesWithResetedProfilesTest {
     }
 
     @Test
-    public void testValidateAllProfilesByDefaultIsTrue() {
+    void testValidateAllProfilesByDefaultIsTrue() {
         vtor.setValidateAllProfilesByDefault(true);
         assertTrue(vtor.matchProfiles(new String[]{"testProfile"}));
     }
 
     @Test
-    public void testNullProfiles() {
+    void testNullProfiles() {
         assertTrue(vtor.matchProfiles(null));
     }
 
     @Test
-    public void testEmptyListOfProfiles() {
+    void testEmptyListOfProfiles() {
         assertTrue(vtor.matchProfiles(new String[]{}));
     }
 
     @Test
-    public void testOneProfileIsEmpty() {
+    void testOneProfileIsEmpty() {
         assertTrue(vtor.matchProfiles(new String[]{"", "testProfile"}));
     }
 
     @Test
-    public void testOneProfileIsDefault() {
+    void testOneProfileIsDefault() {
         assertTrue(vtor.matchProfiles(new String[]{Vtor.DEFAULT_PROFILE, "testProfile"}));
     }
 
     @Test
-    public void testNonSpecialProfiles(){
+    void testNonSpecialProfiles(){
         assertFalse(vtor.matchProfiles(new String[]{"testProfile1", "testProfile2"}));
     }
 

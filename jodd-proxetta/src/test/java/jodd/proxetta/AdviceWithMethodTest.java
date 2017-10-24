@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class AdviceWithMethodTest {
 
 	@Test
-	public void testCollector() throws NoSuchFieldException, IllegalAccessException {
+	void testCollector() throws NoSuchFieldException, IllegalAccessException {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 				new ProxyAspect(CollectorAdvice.class, new AllTopMethodsPointcut())
 		);

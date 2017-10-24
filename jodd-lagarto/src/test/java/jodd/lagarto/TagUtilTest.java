@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TagUtilTest {
 
 	@Test
-	public void testEqualsChars() {
+	void testEqualsChars() {
 		assertTrue(TagUtil.equals(chars('a', 'b'), chars('a', 'b')));
 		assertFalse(TagUtil.equals(chars('A', 'B'), chars('a', 'b')));
 		assertTrue(TagUtil.equals(chars(), chars()));
@@ -43,7 +43,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testEqualsSeqChars() {
+	void testEqualsSeqChars() {
 		assertTrue(TagUtil.equals("ab", chars('a', 'b')));
 		assertFalse(TagUtil.equals("AB", chars('a', 'b')));
 		assertTrue(TagUtil.equals("", chars()));
@@ -52,7 +52,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testEqualsSeq() {
+	void testEqualsSeq() {
 		assertTrue(TagUtil.equals("ab", "ab"));
 		assertFalse(TagUtil.equals("AB", "ab"));
 		assertTrue(TagUtil.equals("", ""));
@@ -61,7 +61,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testEqualsCharsToLowercase() {
+	void testEqualsCharsToLowercase() {
 		assertTrue(TagUtil.equalsToLowercase("ab", chars('a', 'b')));
 		assertTrue(TagUtil.equalsToLowercase("AB", chars('a', 'b')));
 		assertTrue(TagUtil.equalsToLowercase("", chars()));
@@ -70,7 +70,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testEqualsSeqsToLowercase() {
+	void testEqualsSeqsToLowercase() {
 		assertTrue(TagUtil.equalsToLowercase("ab", "ab"));
 		assertTrue(TagUtil.equalsToLowercase("AB", "ab"));
 		assertTrue(TagUtil.equalsToLowercase("", ""));
@@ -79,7 +79,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testStartsWithLowercase() {
+	void testStartsWithLowercase() {
 		assertTrue(TagUtil.startsWithLowercase("ab", chars('a', 'b')));
 		assertTrue(TagUtil.startsWithLowercase("AB", chars('a', 'b')));
 		assertTrue(TagUtil.startsWithLowercase("", chars()));
@@ -88,7 +88,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testEqualsSeqCharsIgnoreCase() {
+	void testEqualsSeqCharsIgnoreCase() {
 		assertTrue(TagUtil.equalsIgnoreCase("ab", chars('a', 'b')));
 		assertTrue(TagUtil.equalsIgnoreCase("AB", chars('a', 'b')));
 		assertTrue(TagUtil.equalsIgnoreCase("", chars()));
@@ -97,7 +97,7 @@ class TagUtilTest {
 	}
 
 	@Test
-	public void testEqualsSeqIgnoreCase() {
+	void testEqualsSeqIgnoreCase() {
 		assertTrue(TagUtil.equalsIgnoreCase("ab", "ab"));
 		assertTrue(TagUtil.equalsIgnoreCase("AB", "ab"));
 		assertTrue(TagUtil.equalsIgnoreCase("", ""));

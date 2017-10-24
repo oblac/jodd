@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ProviderTest {
 
 	@Test
-	public void testInstanceMethodProvider() {
+	void testInstanceMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Solar.class, null, null, null, false);
@@ -52,7 +52,7 @@ class ProviderTest {
 
 
 	@Test
-	public void testInstanceMethodProviderManualRegistration() {
+	void testInstanceMethodProviderManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Solar2.class, null, null, null, false);
@@ -68,7 +68,7 @@ class ProviderTest {
 
 
 	@Test
-	public void testInstanceStaticMethodProvider() {
+	void testInstanceStaticMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Solar3.class, null, null, null, false);	// still needs to be a bean
@@ -82,7 +82,7 @@ class ProviderTest {
 
 
 	@Test
-	public void testProviderLookup() {
+	void testProviderLookup() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Solar3.class, null, null, null, false);

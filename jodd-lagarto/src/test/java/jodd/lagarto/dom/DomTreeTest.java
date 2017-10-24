@@ -50,7 +50,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testSpecialCases() {
+	void testSpecialCases() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -77,7 +77,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testDetach() {
+	void testDetach() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -96,7 +96,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testInsertRemoveDeepLevel() {
+	void testInsertRemoveDeepLevel() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -164,7 +164,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testAttributes() {
+	void testAttributes() {
 		Document document = new Document();
 
 		Element node = new Element(document, "div");
@@ -192,7 +192,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testChildren() {
+	void testChildren() {
 		Document document = new Document();
 
 		Element node = new Element(document, "div");
@@ -236,7 +236,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testCssPath() {
+	void testCssPath() {
 		Document document = new Document();
 
 		Element html = new Element(document, "html");
@@ -254,7 +254,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testToWrite() throws IOException {
+	void testToWrite() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></form></body></html>");
 		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input><input><img></form></body></html>", innerHtml);
@@ -316,7 +316,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testBr() throws IOException {
+	void testBr() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<div><br>some content <br>Some more</div>");
 		String innerHtml = document.getHtml();
 		assertEquals("<div><br>some content <br>Some more</div>", innerHtml);
@@ -329,7 +329,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testReindexOne() {
+	void testReindexOne() {
 		Document document = new Document();
 
 		Element one = new Element(document, "one");
@@ -358,7 +358,7 @@ class DomTreeTest {
 	}
 
 	@Test
-	public void testHasVsGet333() {
+	void testHasVsGet333() {
 		Document document = new Document();
 
 		Element one = new Element(document, "one");

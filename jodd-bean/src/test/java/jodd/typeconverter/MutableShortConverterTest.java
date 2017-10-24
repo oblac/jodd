@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MutableShortConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		MutableShortConverter mutableShortConverter = (MutableShortConverter) TypeConverterManager.lookup(MutableShort.class);
 
 		assertNull(mutableShortConverter.convert(null));

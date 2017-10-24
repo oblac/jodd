@@ -54,7 +54,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testConstructor() throws NoSuchMethodException {
+	void testConstructor() throws NoSuchMethodException {
 		Constructor c = Foo.class.getConstructor(String.class);
 		MethodParameter[] mps = Paramo.resolveParameters(c);
 		String[] s = resolveParameterNames(mps);
@@ -63,7 +63,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testOneParam() throws NoSuchMethodException {
+	void testOneParam() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("one", String.class);
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -72,7 +72,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testTwoParams() throws NoSuchMethodException {
+	void testTwoParams() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("two", String.class, String.class);
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -82,7 +82,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testNoParams() throws NoSuchMethodException {
+	void testNoParams() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("hello");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertNotNull(mps);
@@ -90,7 +90,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testArray() throws NoSuchMethodException {
+	void testArray() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("array", String.class, Integer[].class, float[].class);
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -101,7 +101,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testPrimitives() throws NoSuchMethodException {
+	void testPrimitives() throws NoSuchMethodException {
 		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primitives");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -117,7 +117,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testPrimitivesArrays1() throws NoSuchMethodException {
+	void testPrimitivesArrays1() throws NoSuchMethodException {
 		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr1");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -127,7 +127,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testPrimitivesArrays2() throws NoSuchMethodException {
+	void testPrimitivesArrays2() throws NoSuchMethodException {
 		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr2");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -141,7 +141,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testPrimitivesArrays3() throws NoSuchMethodException {
+	void testPrimitivesArrays3() throws NoSuchMethodException {
 		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		String[] s = resolveParameterNames(mps);
@@ -152,7 +152,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testNonGeneric() {
+	void testNonGeneric() {
 		Method m = ClassUtil.findDeclaredMethod(NonGeneric.class, "one");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(2, mps.length);
@@ -163,7 +163,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testGeneric() {
+	void testGeneric() {
 		Method m = ClassUtil.findDeclaredMethod(Generic.class, "one");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(2, mps.length);
@@ -180,7 +180,7 @@ class ParamoTest {
 	}
 
 	@Test
-	public void testGenericsWildcards() {
+	void testGenericsWildcards() {
 		Method m = ClassUtil.findDeclaredMethod(Generic.class, "three");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(3, mps.length);

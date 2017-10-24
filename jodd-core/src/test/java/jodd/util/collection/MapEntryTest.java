@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class MapEntryTest {
 
 	@Test
-	public void testMapEntryEquals() {
+	void testMapEntryEquals() {
 		MapEntry<String, Integer> mapEntry1 = MapEntry.create("foo", 3);
 		MapEntry<String, Integer> mapEntry2 = MapEntry.create("foo", 3);
 
@@ -42,7 +42,7 @@ class MapEntryTest {
 	}
 
 	@Test
-	public void testUnmodifiableMapEntry() {
+	void testUnmodifiableMapEntry() {
 		MapEntry<String, Integer> mapEntry1 = MapEntry.createUnmodifiable("foo", 3);
 
 		try {

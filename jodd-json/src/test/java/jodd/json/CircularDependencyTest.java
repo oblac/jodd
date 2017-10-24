@@ -61,7 +61,7 @@ class CircularDependencyTest {
 	}
 
 	@Test
-	public void testCircularDependency_none() {
+	void testCircularDependency_none() {
 		A a1 = new A();
 		a1.setName("a1");
 
@@ -85,7 +85,7 @@ class CircularDependencyTest {
 	}
 
 	@Test
-	public void testCircularDependency_property() {
+	void testCircularDependency_property() {
 		A a1 = new A();
 		a1.setName("a1");
 
@@ -110,7 +110,7 @@ class CircularDependencyTest {
 	}
 
 	@Test
-	public void testCircularDependency_propertyArray() {
+	void testCircularDependency_propertyArray() {
 		A a1 = new A();
 		a1.setName("a1");
 

@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 class ServletDispatcherResultTest {
 
 	@Test
-	public void testServletDispatcherLookup() throws Exception {
+	void testServletDispatcherLookup() throws Exception {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 

@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MimeTypesTest {
 
 	@Test
-	public void testSimpleMime() {
+	void testSimpleMime() {
 		assertEquals("application/atom+xml", MimeTypes.getMimeType("atom"));
 		assertEquals("audio/x-wav", MimeTypes.getMimeType("wav"));
 		assertEquals("image/jpeg", MimeTypes.getMimeType("jpg"));
@@ -47,7 +47,7 @@ class MimeTypesTest {
 	}
 
 	@Test
-	public void testFind() {
+	void testFind() {
 		String[] extensionArray = MimeTypes.findExtensionsByMimeTypes("image/jpeg", false);
 
 		String extensions = ArraysUtil.toString(extensionArray) + ',';
@@ -65,7 +65,7 @@ class MimeTypesTest {
 	}
 
 	@Test
-	public void testFindWithWildcards() {
+	void testFindWithWildcards() {
 		String[] extensionArray = MimeTypes.findExtensionsByMimeTypes("image/*", true);
 
 		String extensions = ArraysUtil.toString(extensionArray) + ',';

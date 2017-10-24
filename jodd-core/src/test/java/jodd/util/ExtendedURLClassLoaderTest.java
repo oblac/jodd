@@ -43,7 +43,7 @@ class ExtendedURLClassLoaderTest {
 	private final URLClassLoader cl = (URLClassLoader) this.getClass().getClassLoader();
 
 	@Test
-	public void testLoadSystemClasses() throws ClassNotFoundException {
+	void testLoadSystemClasses() throws ClassNotFoundException {
 		URL[] urls = new URL[0];
 
 		// parent-first
@@ -62,7 +62,7 @@ class ExtendedURLClassLoaderTest {
 	}
 
 	@Test
-	public void testParentFirst() throws ClassNotFoundException {
+	void testParentFirst() throws ClassNotFoundException {
 		URLClassLoader parentCL = (URLClassLoader) A.class.getClassLoader();
 		URL[] urls = parentCL.getURLs();
 
@@ -88,7 +88,7 @@ class ExtendedURLClassLoaderTest {
 	}
 
 	@Test
-	public void testParentLast() throws ClassNotFoundException {
+	void testParentLast() throws ClassNotFoundException {
 		URLClassLoader parentCL = (URLClassLoader) A.class.getClassLoader();
 		URL[] urls = parentCL.getURLs();
 
@@ -113,7 +113,7 @@ class ExtendedURLClassLoaderTest {
 	}
 
 	@Test
-	public void testGetResource() throws IOException {
+	void testGetResource() throws IOException {
 		File tempRoot = FileUtil.createTempDirectory("jodd", "tmp");
 		File temp = new File(tempRoot, "pckg");
 		FileUtil.mkdir(temp);

@@ -45,7 +45,7 @@ class MatrixTest {
 	}
 
 	@Test
-	public void testIntMatrix2() {
+	void testIntMatrix2() {
 		ArrayList<List<Integer>> matrix = new ArrayList<>();
 
 		matrix.add(intsList(1, 2, 3));
@@ -60,7 +60,7 @@ class MatrixTest {
 	}
 
 	@Test
-	public void testStringToIntMatrix() {
+	void testStringToIntMatrix() {
 		String[][] strings = new String[][] {
 				{"123", "865"},
 				{"432", "345", "9832"}
@@ -75,7 +75,7 @@ class MatrixTest {
 	}
 
 	@Test
-	public void testIntToStringMatrix() {
+	void testIntToStringMatrix() {
 		int[][] values = new int[][] {
 				{123, 865},
 				{432, 345, 9832}

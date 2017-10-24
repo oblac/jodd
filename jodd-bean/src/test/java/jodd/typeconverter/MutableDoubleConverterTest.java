@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MutableDoubleConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) TypeConverterManager.lookup(MutableDouble.class);
 
 		assertNull(mutableDoubleConverter.convert(null));

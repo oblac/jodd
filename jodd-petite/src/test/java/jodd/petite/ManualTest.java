@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ManualTest {
 
 	@Test
-	public void testManualRegistration() {
+	void testManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
@@ -68,7 +68,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualRegistration2() {
+	void testManualRegistration2() {
 		PetiteContainer pc = new PetiteContainer();
 
 		petite(pc).bean(SomeService.class).register();
@@ -93,7 +93,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualRegistrationUsingAnnotations() {
+	void testManualRegistrationUsingAnnotations() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, false);
@@ -111,7 +111,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualRegistrationUsingAnnotations2() {
+	void testManualRegistrationUsingAnnotations2() {
 		PetiteContainer pc = new PetiteContainer();
 
 		petite(pc).bean(SomeService.class).register();
@@ -131,7 +131,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinitionUsingAnnotations() {
+	void testManualDefinitionUsingAnnotations() {
 
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
@@ -150,7 +150,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinitionUsingAnnotations2() {
+	void testManualDefinitionUsingAnnotations2() {
 
 		PetiteContainer pc = new PetiteContainer();
 
@@ -171,7 +171,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinition() {
+	void testManualDefinition() {
 
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
@@ -195,7 +195,7 @@ class ManualTest {
 	}
 
 	@Test
-	public void testManualDefinition2() {
+	void testManualDefinition2() {
 
 		PetiteContainer pc = new PetiteContainer();
 

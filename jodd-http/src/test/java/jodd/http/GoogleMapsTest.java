@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class GoogleMapsTest {
 
 	@Test
-	public void testNoBody() throws IOException {
+	void testNoBody() throws IOException {
 		/*HttpResponse httpResponse = HttpRequest.get("http://maps.googleapis.com/maps/api/geocode/json")
 		                .query("address", "14621")
 		                .query("sensor", "false")
@@ -59,7 +59,7 @@ class GoogleMapsTest {
 	}
 
 	@Test
-	public void testNoContentLength() throws IOException {
+	void testNoContentLength() throws IOException {
 		URL data = RawTest.class.getResource("3-response.txt");
 		byte[] fileContent = FileUtil.readBytes(data.getFile());
 

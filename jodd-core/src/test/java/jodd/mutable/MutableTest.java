@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MutableTest {
 
 	@Test
-	public void testMutableInteger() {
+	void testMutableInteger() {
 		MutableInteger m = new MutableInteger();
 
 		assertTrue(m instanceof Number);
@@ -53,7 +53,7 @@ class MutableTest {
 	}
 
 	@Test
-	public void testMutableLong() {
+	void testMutableLong() {
 		MutableLong m = new MutableLong();
 
 		assertTrue(m instanceof Number);
@@ -73,7 +73,7 @@ class MutableTest {
 	}
 
 	@Test
-	public void testMutableShort() {
+	void testMutableShort() {
 		MutableShort m = new MutableShort();
 
 		assertTrue(m instanceof Number);
@@ -93,7 +93,7 @@ class MutableTest {
 	}
 
 	@Test
-	public void testMutableByte() {
+	void testMutableByte() {
 		MutableByte m = new MutableByte();
 
 		assertTrue(m instanceof Number);
@@ -113,7 +113,7 @@ class MutableTest {
 	}
 
 	@Test
-	public void testMutableFloat() {
+	void testMutableFloat() {
 		MutableFloat m = new MutableFloat();
 
 		assertTrue(m instanceof Number);
@@ -132,7 +132,7 @@ class MutableTest {
 	}
 
 	@Test
-	public void testMutableDouble() {
+	void testMutableDouble() {
 		MutableDouble m = new MutableDouble();
 
 		assertTrue(m instanceof Number);
@@ -151,7 +151,7 @@ class MutableTest {
 	}
 
 	@Test
-	public void testMutableBoolean() {
+	void testMutableBoolean() {
 		MutableBoolean m = new MutableBoolean();
 
 		m.set(true);

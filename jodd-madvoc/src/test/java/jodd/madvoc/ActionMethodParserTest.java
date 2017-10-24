@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
-	public void testDefaultMethods() {
+	void testDefaultMethods() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -60,7 +60,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMethod() {
+	void testMethod() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -96,7 +96,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMethodWithPackage() {
+	void testMethodWithPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -138,7 +138,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 
 	@Test
-	public void testClasses() {
+	void testClasses() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -165,7 +165,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testClassesWithPackage() {
+	void testClassesWithPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -194,7 +194,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testClassesWithoutPackage() {
+	void testClassesWithoutPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -218,7 +218,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testPackage() {
+	void testPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -242,7 +242,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testNoPackage() {
+	void testNoPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -266,7 +266,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testEndSlashClassName() {
+	void testEndSlashClassName() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -285,7 +285,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMacros() {
+	void testMacros() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -342,7 +342,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMacrosWildcards() {
+	void testMacrosWildcards() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -384,7 +384,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMacrosDups() {
+	void testMacrosDups() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -418,7 +418,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMarkerClass() {
+	void testMarkerClass() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -448,7 +448,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testZqq() {
+	void testZqq() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);

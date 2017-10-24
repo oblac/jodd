@@ -90,7 +90,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_useCache_noHints() {
+	void testMapRows2Types_useCache_noHints() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		List<Object[]> result = q.cacheEntities(true).list(Girl2.class, Boy.class);
@@ -118,7 +118,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_useCache_noHints_LEFT() {
+	void testMapRows2Types_useCache_noHints_LEFT() {
 
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
@@ -151,7 +151,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_useCache_useHints_1perRow() {
+	void testMapRows2Types_useCache_useHints_1perRow() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).list(Girl2.class, Boy.class);
@@ -175,7 +175,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_useCache_useHints_1perRow_LEFT() {
+	void testMapRows2Types_useCache_useHints_1perRow_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).list(Girl2.class, Boy.class);
@@ -201,7 +201,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware() {
+	void testMapRows2Types_entityAware() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(Girl2.class, Boy.class);
@@ -219,7 +219,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_LEFT() {
+	void testMapRows2Types_entityAware_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(Girl2.class, Boy.class);
@@ -240,7 +240,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_List() {
+	void testMapRows2Types_entityAware_List() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(1, Girl2.class, Boy.class);
@@ -254,7 +254,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_List_LEFT() {
+	void testMapRows2Types_entityAware_List_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").entityAwareMode(true).list(2, Girl2.class, Boy.class);
@@ -270,7 +270,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Set() {
+	void testMapRows2Types_entityAware_Set() {
 
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
@@ -289,7 +289,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Set_LEFT() {
+	void testMapRows2Types_entityAware_Set_LEFT() {
 
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
@@ -312,7 +312,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 
 
 	@Test
-	public void testMapRows2Types_entityAware_Max() {
+	void testMapRows2Types_entityAware_Max() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSet(1, Girl2.class, Boy.class);
@@ -329,7 +329,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Max_LEFT() {
+	void testMapRows2Types_entityAware_Max_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
 		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSet(2, Girl2.class, Boy.class);
@@ -348,7 +348,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Iterator() {
+	void testMapRows2Types_entityAware_Iterator() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterate(Girl2.class, Boy.class);
@@ -373,7 +373,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Iterator_LEFT() {
+	void testMapRows2Types_entityAware_Iterator_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
 		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterate(Girl2.class, Boy.class);
@@ -399,7 +399,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Find() {
+	void testMapRows2Types_entityAware_Find() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		Girl2 girl1 = q.withHints("g", "g.boys").entityAwareMode(true).find(Girl2.class, Boy.class);
@@ -409,7 +409,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapRows2Types_entityAware_Find_LEFT() {
+	void testMapRows2Types_entityAware_Find_LEFT() {
 		DbOomQuery q = new DbOomQuery(sql(TSQL_LEFT));
 
 		Girl2 girl0 = q.withHints("g", "g.boys").entityAwareMode(true).find(Girl2.class, Boy.class);

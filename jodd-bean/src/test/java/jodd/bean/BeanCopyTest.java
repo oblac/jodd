@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BeanCopyTest {
 
 	@Test
-	public void testCopy() {
+	void testCopy() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanCopy.beans(fb, dest).copy();
@@ -119,7 +119,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyIncludes() {
+	void testCopyIncludes() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanCopy.beans(fb, dest).excludeAll().include("fooInteger", "fooLong").copy();
@@ -159,7 +159,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyExcludes() {
+	void testCopyExcludes() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanCopy.beans(fb, dest).exclude("fooInteger", "fooLong").copy();
@@ -202,7 +202,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyTemplate() {
+	void testCopyTemplate() {
 		FooBean fooBean = createFooBean();
 		FooBean dest = new FooBean();
 
@@ -243,7 +243,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyProperties() {
+	void testCopyProperties() {
 		Properties properties = new Properties();
 
 		properties.put("fooInteger", Integer.valueOf(1));
@@ -330,7 +330,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testLessToMore() {
+	void testLessToMore() {
 		Less less = new Less();
 		less.data = "data";
 		less.number = new Integer(2);
@@ -347,7 +347,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyMap() {
+	void testCopyMap() {
 		Map map = new HashMap();
 		map.put("fooint", Integer.valueOf(102));
 		map.put("fooString", "mao");
@@ -365,7 +365,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyIgnoreNulls() {
+	void testCopyIgnoreNulls() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 
@@ -454,7 +454,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testCopyWithFields() {
+	void testCopyWithFields() {
 		Source source = new Source();
 		HashMap dest = new HashMap();
 
@@ -526,7 +526,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testIncludeExclude() {
+	void testIncludeExclude() {
 		Moo moo = new Moo();
 		HashMap map = new HashMap();
 
@@ -584,7 +584,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testFromMapToBean() throws Exception {
+	void testFromMapToBean() throws Exception {
 		Properties propsSource = new Properties();
 
 		propsSource.put("number", 42);
@@ -601,7 +601,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testFromMapToMap() throws Exception {
+	void testFromMapToMap() throws Exception {
 		Properties propsSource = new Properties();
 
 		propsSource.put("number", 42);
@@ -617,7 +617,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testFromBeanToMap() throws Exception {
+	void testFromBeanToMap() throws Exception {
 		PropertyBean beanSource = new PropertyBean();
 
 		beanSource.number = 42;
@@ -639,7 +639,7 @@ class BeanCopyTest {
 	}
 
 	@Test
-	public void testFromBeanToBean() throws Exception {
+	void testFromBeanToBean() throws Exception {
 		PropertyBean beanSource = new PropertyBean();
 
 		beanSource.number = 42;

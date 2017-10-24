@@ -263,7 +263,7 @@ class StreamUtilTest {
     class ReadChars {
 
         @Test
-        public void testReadChars_InputStream(TestInfo testInfo) throws Exception {
+        void testReadChars_InputStream(TestInfo testInfo) throws Exception {
 
             final String text = "jodd - Get things done!" + System.lineSeparator();
             final char[] expected = text.toCharArray();
@@ -314,7 +314,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadChars_InputStream_Encoding")
-        public void testReadChars_InputStream_Encoding(char[] expected, String text, String encoding) throws Exception {
+        void testReadChars_InputStream_Encoding(char[] expected, String text, String encoding) throws Exception {
 
             char[] actual = null;
 
@@ -337,7 +337,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadChars_InputStream_Encoding_CharCount")
-        public void testReadChars_InputStream_Encoding_CharCount(char[] expected, String text, String encoding, int charCount) throws Exception {
+        void testReadChars_InputStream_Encoding_CharCount(char[] expected, String text, String encoding, int charCount) throws Exception {
 
             char[] actual = null;
 
@@ -361,7 +361,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadChars_Reader")
-        public void testReadChars_Reader(char[] expected, String text) throws Exception {
+        void testReadChars_Reader(char[] expected, String text) throws Exception {
 
             char[] actual = null;
 
@@ -384,7 +384,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadChars_Reader_CharCount")
-        public void testReadChars_Reader_CharCount(char[] expected, String text, int charCount) throws Exception {
+        void testReadChars_Reader_CharCount(char[] expected, String text, int charCount) throws Exception {
 
             char[] actual = null;
 
@@ -414,7 +414,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadBytes_InputStream")
-        public void testReadBytes_InputStream(byte[] expected, String text) throws Exception {
+        void testReadBytes_InputStream(byte[] expected, String text) throws Exception {
 
             byte[] actual = null;
 
@@ -437,7 +437,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadBytes_InputStream_ByteCount")
-        public void testReadBytes_InputStream_ByteCount(byte[] expected, String text, int byteCount) throws Exception {
+        void testReadBytes_InputStream_ByteCount(byte[] expected, String text, int byteCount) throws Exception {
 
             byte[] actual = null;
 
@@ -461,7 +461,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadBytes_Reader")
-        public void testReadBytes_Reader(byte[] expected, String text) throws Exception {
+        void testReadBytes_Reader(byte[] expected, String text) throws Exception {
 
             byte[] actual = null;
 
@@ -484,7 +484,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadBytes_Reader_ByteCount")
-        public void testReadBytes_Reader_ByteCount(byte[] expected, String text, int byteCount) throws Exception {
+        void testReadBytes_Reader_ByteCount(byte[] expected, String text, int byteCount) throws Exception {
 
             byte[] actual = null;
 
@@ -509,7 +509,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadBytes_Reader_Encoding")
-        public void testReadBytes_Reader_Encoding(byte[] expected, String text, String encoding, TestInfo testInfo) throws Exception {
+        void testReadBytes_Reader_Encoding(byte[] expected, String text, String encoding, TestInfo testInfo) throws Exception {
 
             final int random = MathUtil.randomInt(1, 2500);
             final File file = new File(StreamUtilTest.BASE_DIR, testInfo.getTestMethod().get().getName() + random);
@@ -537,7 +537,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testReadBytes_Reader_Encoding_ByteCount")
-        public void testReadBytes_Reader_Encoding_ByteCount(byte[] expected, String text, String encoding, int byteCount, TestInfo testInfo) throws Exception {
+        void testReadBytes_Reader_Encoding_ByteCount(byte[] expected, String text, String encoding, int byteCount, TestInfo testInfo) throws Exception {
 
             final int random = MathUtil.randomInt(1, 2500);
             final File file = new File(StreamUtilTest.BASE_DIR, testInfo.getTestMethod().get().getName() + random);
@@ -571,7 +571,7 @@ class StreamUtilTest {
     class Copy {
 
         @Test
-        public void testCopy_Inputstream_Outputstream() throws Exception {
+        void testCopy_Inputstream_Outputstream() throws Exception {
 
             try (ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
                  ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -586,7 +586,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testCopy_Inputstream_Outputstream_ByteCount")
-        public void testCopy_Inputstream_Outputstream_ByteCount(String expected, String text, int byteCount) throws Exception {
+        void testCopy_Inputstream_Outputstream_ByteCount(String expected, String text, int byteCount) throws Exception {
 
             try (ByteArrayInputStream in = new ByteArrayInputStream(text.getBytes());
                  ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -610,7 +610,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testCopy_Inputstream_Writer_Encoding")
-        public void testCopy_Inputstream_Writer_Encoding(String expected, String text, String encoding) throws Exception {
+        void testCopy_Inputstream_Writer_Encoding(String expected, String text, String encoding) throws Exception {
 
             try (ByteArrayInputStream in = new ByteArrayInputStream(text.getBytes());
                  StringWriter writer = new StringWriter()) {
@@ -633,7 +633,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testCopy_Inputstream_Writer_Encoding_ByteCount")
-        public void testCopy_Inputstream_Writer_Encoding_ByteCount(String expected, String text, String encoding, int byteCount) throws Exception {
+        void testCopy_Inputstream_Writer_Encoding_ByteCount(String expected, String text, String encoding, int byteCount) throws Exception {
 
             try (ByteArrayInputStream in = new ByteArrayInputStream(text.getBytes());
                  StringWriter writer = new StringWriter()) {
@@ -656,7 +656,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testCopy_Reader_Outpustream_Encoding")
-        public void testCopy_Reader_Outpustream_Encoding(byte[] expected, String text, String encoding) throws Exception {
+        void testCopy_Reader_Outpustream_Encoding(byte[] expected, String text, String encoding) throws Exception {
 
             try (StringReader reader = new StringReader(text);
                  ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -680,7 +680,7 @@ class StreamUtilTest {
 
         @ParameterizedTest
         @MethodSource("testdata_testCopy_Reader_Outpustream_Encoding_CharCount")
-        public void testCopy_Reader_Outpustream_Encoding_CharCount(byte[] expected, String text, String encoding, int charCount) throws Exception {
+        void testCopy_Reader_Outpustream_Encoding_CharCount(byte[] expected, String text, String encoding, int charCount) throws Exception {
 
             try (StringReader reader = new StringReader(text);
                  ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

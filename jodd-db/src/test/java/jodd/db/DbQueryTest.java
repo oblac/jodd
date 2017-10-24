@@ -60,7 +60,7 @@ class DbQueryTest {
 	}
 
 	@Test
-	public void testPrepareSql() {
+	void testPrepareSql() {
 		DbQueryEx dbp = new DbQueryEx();
 		assertEquals("aaa", dbp.prepare("aaa"));
 		assertFalse(dbp.prepared);

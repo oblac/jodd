@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 class ViolationTest {
 
     @Test
-    public void testConstructor1() throws Exception {
+    void testConstructor1() throws Exception {
         //given
         Object validatedObject = new Object();
         Object invalidValue = new Object();
@@ -52,7 +52,7 @@ class ViolationTest {
     }
 
     @Test
-    public void testConstructor2() throws Exception {
+    void testConstructor2() throws Exception {
         //given
         Object validatedObject = new Object();
         Object invalidValue = new Object();
@@ -72,7 +72,7 @@ class ViolationTest {
 
 
     @Test
-    public void testToString() throws Exception {
+    void testToString() throws Exception {
         //given
         Object validatedObject = new Object();
         Object invalidValue = new Object();

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CharUtilTest {
 
 	@Test
-	public void testToSimpleByteArray() {
+	void testToSimpleByteArray() {
 		char[] src = new char[]{0, 10, 'A', 127, 128, 255, 256};
 		byte[] dest = CharUtil.toSimpleByteArray(src);
 
@@ -49,7 +49,7 @@ class CharUtilTest {
 	}
 
 	@Test
-	public void testToSimpleCharArray() {
+	void testToSimpleCharArray() {
 		byte[] src = new byte[]{0, 10, 65, 127, -128, -1};
 		char[] dest = CharUtil.toSimpleCharArray(src);
 
@@ -62,7 +62,7 @@ class CharUtilTest {
 	}
 
 	@Test
-	public void testToAsciiByteArray() {
+	void testToAsciiByteArray() {
 		char[] src = new char[]{0, 10, 'A', 127, 128, 255, 256};
 		byte[] dest = CharUtil.toAsciiByteArray(src);
 
@@ -76,7 +76,7 @@ class CharUtilTest {
 	}
 
 	@Test
-	public void testToRawByteArray() {
+	void testToRawByteArray() {
 		char[] src = new char[]{0, 'A', 255, 256, 0xFF7F};
 		byte[] dest = CharUtil.toRawByteArray(src);
 
@@ -99,7 +99,7 @@ class CharUtilTest {
 	}
 
 	@Test
-	public void testToRawCharArray() {
+	void testToRawCharArray() {
 		byte[] src = new byte[]{0, 0, 0, 65, 0, -1, 1, 0, -1};
 		char[] dest = CharUtil.toRawCharArray(src);
 
@@ -114,7 +114,7 @@ class CharUtilTest {
 	}
 
 	@Test
-	public void testToByte() throws UnsupportedEncodingException {
+	void testToByte() throws UnsupportedEncodingException {
 		char[] src = "tstč".toCharArray();
 		assertEquals(4, src.length);
 		assertEquals(269, src[3]);
@@ -146,7 +146,7 @@ class CharUtilTest {
 	}
 
 	@Test
-	public void testHexToInt() {
+	void testHexToInt() {
 		assertEquals(0, CharUtil.hex2int('0'));
 		assertEquals(1, CharUtil.hex2int('1'));
 		assertEquals(2, CharUtil.hex2int('2'));

@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 class ValidationConstraintContextTest {
 
     @Test
-    public void testConstructor() throws Exception {
+    void testConstructor() throws Exception {
         Vtor vtor = mock(Vtor.class);
         Object target = new Object();
         ValidationConstraintContext context = new ValidationConstraintContext(vtor, target, "niceConstraint");
@@ -45,7 +45,7 @@ class ValidationConstraintContextTest {
     }
 
     @Test
-    public void testValidateWithin() throws Exception {
+    void testValidateWithin() throws Exception {
         Vtor vtor = mock(Vtor.class);
         Object target = new Object();
         ValidationConstraintContext context = new ValidationConstraintContext(vtor, target, "niceConstraint");

@@ -46,7 +46,7 @@ class DecoraParserTestDecoratedPageTest {
 	}
 
 	@Test
-	public void testWriteDecoratedPageDecoraTagLengthNegative() throws Exception {
+	void testWriteDecoratedPageDecoraTagLengthNegative() throws Exception {
 		// setup
 		when(decoraTagMock.getStartIndex()).thenReturn(-1);
 		DecoraTag[] decoraTags = { decoraTagMock };
@@ -61,7 +61,7 @@ class DecoraParserTestDecoratedPageTest {
 	}
 
 	@Test
-	public void testWriteDecoratedPageDecoraTagRegionUndefined() throws Exception {
+	void testWriteDecoratedPageDecoraTagRegionUndefined() throws Exception {
 		// setup
 		DecoraTag decoraTagMock2 = mock(DecoraTag.class);
 		when(decoraTagMock.isRegionUndefined()).thenReturn(true);

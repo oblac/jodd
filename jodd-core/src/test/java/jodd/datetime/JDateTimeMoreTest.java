@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 class JDateTimeMoreTest {
 
 	@Test
-	public void test1582() {
+	void test1582() {
 		JDateTime jdt1582 = new JDateTime(1582, 10, 4);
 		assertEquals(4, jdt1582.getDayOfWeek());
 		jdt1582.addDay(1);
@@ -49,7 +49,7 @@ class JDateTimeMoreTest {
 	}
 
 	@Test
-	public void testCompareToAndAdd() {
+	void testCompareToAndAdd() {
 		JDateTime gt1 = new JDateTime();
 		if (gt1.getDay() > 28) {        // back and forth adds works without corrections
 			gt1.setDay(28);                // for days that exists in all months
@@ -137,7 +137,7 @@ class JDateTimeMoreTest {
 
 
 	@Test
-	public void testWeekOfYear() {
+	void testWeekOfYear() {
 		JDateTime gt = new JDateTime();
 		GregorianCalendar gc = new GregorianCalendar();
 		int[] _fdiw = {0, GregorianCalendar.MONDAY, GregorianCalendar.TUESDAY, GregorianCalendar.WEDNESDAY, GregorianCalendar.THURSDAY, GregorianCalendar.FRIDAY, GregorianCalendar.SATURDAY, GregorianCalendar.SUNDAY};
@@ -189,7 +189,7 @@ class JDateTimeMoreTest {
 
 
 	@Test
-	public void testMillisProblems() {
+	void testMillisProblems() {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt = new JDateTime();
 
@@ -228,7 +228,7 @@ class JDateTimeMoreTest {
 
 
 	@Test
-	public void test1() {
+	void test1() {
 		DateTimeStamp dts = new DateTimeStamp(-2310, 3, 24, 7, 6, 16, 171);
 
 		JDateTime jdt = new JDateTime(dts);
@@ -244,7 +244,7 @@ class JDateTimeMoreTest {
 
 
 	@Test
-	public void testCtor() {
+	void testCtor() {
 		JDateTime jdt = new JDateTime("2011-04-01 12:32:22.123");
 		assertEquals(2011, jdt.getYear());
 		assertEquals(4, jdt.getMonth());
@@ -266,7 +266,7 @@ class JDateTimeMoreTest {
 
 
 	@Test
-	public void testMillis0() {
+	void testMillis0() {
 		JDateTime jdt = new JDateTime(0);
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(0);
@@ -276,7 +276,7 @@ class JDateTimeMoreTest {
 	// ---------------------------------------------------------------- additional
 
 	@Test
-	public void testAddMonthNoFix() {
+	void testAddMonthNoFix() {
 		JDateTime jdt;
 
 		// January, no fix
@@ -337,7 +337,7 @@ class JDateTimeMoreTest {
 	}
 
 	@Test
-	public void testWeeks() {
+	void testWeeks() {
 		JDateTime jdt = new JDateTime(2011, 1, 1);
 		assertEquals(0, jdt.getWeekOfMonth());    // in previous year!
 		assertEquals(52, jdt.getWeekOfYear());    // in previous year!
@@ -383,7 +383,7 @@ class JDateTimeMoreTest {
 	}
 
 	@Test
-	public void testNow() {
+	void testNow() {
 		long time = System.currentTimeMillis();
 		JDateTime jdt = new JDateTime(time);
 
@@ -391,7 +391,7 @@ class JDateTimeMoreTest {
 	}
 
 	@Test
-	public void testMillisPrecision() {
+	void testMillisPrecision() {
 		JDateTimeDefault.timeZone = TimeZone.getTimeZone("CET");
 
 		JDateTime jdt = new JDateTime(new JulianDateStamp(2456223, 0.42596945));

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class JDateTimeTest {
 
 	@Test
-	public void testSetGetMillis() {
+	void testSetGetMillis() {
 		JDateTime jdt = new JDateTime(2003, 2, 28, 23, 59, 59, 0);
 
 		for (int i = 0; i < 1000; i++) {
@@ -46,7 +46,7 @@ class JDateTimeTest {
 
 
 	@Test
-	public void testSet999Millis() {
+	void testSet999Millis() {
 
 		JDateTime jdt = new JDateTime();
 
@@ -64,7 +64,7 @@ class JDateTimeTest {
 
 
 	@Test
-	public void testDaysInMonth() {
+	void testDaysInMonth() {
 		JDateTime jdt = new JDateTime(2003, 1, 1);
 		assertEquals(31, jdt.getMonthLength());
 		assertEquals(28, jdt.getMonthLength(2));
@@ -76,7 +76,7 @@ class JDateTimeTest {
 
 
 	@Test
-	public void testToString() {
+	void testToString() {
 
 		JDateTime jdt = new JDateTime(2003, 1, 1, 1, 1, 1, 1);
 		assertEquals("2003-01-01 01:01:01.001", jdt.toString());
@@ -89,7 +89,7 @@ class JDateTimeTest {
 	}
 
 	@Test
-	public void testAddMonths() {
+	void testAddMonths() {
 		GregorianCalendar gc = new GregorianCalendar(2003, 0, 31);
 		gc.add(Calendar.MONTH, 1);
 		assertEquals(1, gc.get(Calendar.MONTH));
@@ -147,7 +147,7 @@ class JDateTimeTest {
 
 
 	@Test
-	public void testMiscSetsGets() {
+	void testMiscSetsGets() {
 		JDateTime gt = new JDateTime(2003, 11, 26, 21, 8, 25, 173);
 
 		gt.setYear(2002);
@@ -181,7 +181,7 @@ class JDateTimeTest {
 	}
 
 	@Test
-	public void testLeapYears() {
+	void testLeapYears() {
 
 		JDateTime gt = new JDateTime(1984, 2, 29);
 		assertTrue(gt.isLeapYear());
@@ -220,7 +220,7 @@ class JDateTimeTest {
 
 
 	@Test
-	public void testMillis() {
+	void testMillis() {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt = new JDateTime();
 
@@ -267,7 +267,7 @@ class JDateTimeTest {
 
 
 	@Test
-	public void testClone() {
+	void testClone() {
 		JDateTime now = new JDateTime(2009, 5, 1, 23, 45, 1, 0);
 		JulianDateStamp now3 = now.getJulianDate().clone();
 		JDateTime now2 = now.clone();

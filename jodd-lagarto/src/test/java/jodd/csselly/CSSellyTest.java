@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CSSellyTest {
 
 	@Test
-	public void testSingleSelectors() {
+	void testSingleSelectors() {
 		CSSelly lexer = new CSSelly("  div  ");
 		assertEquals("div", CSSelly.toString(lexer.parse()));
 
@@ -72,7 +72,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testMultipleSelectors() {
+	void testMultipleSelectors() {
 		CSSelly lexer = new CSSelly("  div  b#xo  foo.solid #jodd * #bib.box.red  ");
 		List<CssSelector> selectors = lexer.parse();
 
@@ -108,7 +108,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testAttributes() {
+	void testAttributes() {
 		CSSelly lexer = new CSSelly("div[a1='123']");
 		List<CssSelector> selectors = lexer.parse();
 		assertEquals(1, selectors.size());
@@ -131,7 +131,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testCombinators() {
+	void testCombinators() {
 		CSSelly lexer = new CSSelly("div b");
 		List<CssSelector> selectors = lexer.parse();
 		assertEquals(2, selectors.size());
@@ -177,7 +177,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testPseudoClasses() {
+	void testPseudoClasses() {
 		CSSelly lexer = new CSSelly("div:first-child");
 		List<CssSelector> selectors = lexer.parse();
 		assertEquals(1, selectors.size());
@@ -190,7 +190,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testPseudoFunctions() {
+	void testPseudoFunctions() {
 		CSSelly lexer = new CSSelly("div:nth-child(2n+1)");
 		List<CssSelector> selectors = lexer.parse();
 		assertEquals(1, selectors.size());
@@ -298,7 +298,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testErrors() {
+	void testErrors() {
 		try {
 			CSSelly lexer = new CSSelly("div ^ b");
 			lexer.parse();
@@ -322,14 +322,14 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testUppercaseClassNames() {
+	void testUppercaseClassNames() {
 		CSSelly lexer = new CSSelly("div.fooBar");
 		List<CssSelector> selectorList = lexer.parse();
 		assertEquals(1, selectorList.size());
 	}
 
 	@Test
-	public void testEscape() {
+	void testEscape() {
 
 		// element
 		CSSelly lexer = new CSSelly("itunes\\:image");
@@ -359,7 +359,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void testDoubleColon() {
+	void testDoubleColon() {
 		CSSelly lexer = new CSSelly("foo::image");
 		List<CssSelector> selectors = lexer.parse();
 
@@ -384,7 +384,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void test301() {
+	void test301() {
 		CSSelly lexerA = new CSSelly("input:not(':checked')");
 		CSSelly lexerB = new CSSelly("input:not(:checked)");
 
@@ -419,7 +419,7 @@ class CSSellyTest {
 	}
 
 	@Test
-	public void test407() {
+	void test407() {
 		CSSelly lexer = new CSSelly("div:nth-child(2) > div:nth-child(1)");
 
 		List<CssSelector> selectors = lexer.parse();

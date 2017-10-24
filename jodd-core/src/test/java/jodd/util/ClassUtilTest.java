@@ -58,7 +58,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClassUtilTest {
 
 	@Test
-	public void testMethod0() {
+	void testMethod0() {
 		TFooBean bean = new TFooBean();
 		Method m;
 		m = ClassUtil.getMethod0(TFooBean.class, "getMore", String.class, Integer.class);
@@ -85,7 +85,7 @@ class ClassUtilTest {
 
 
 	@Test
-	public void testMethod() {
+	void testMethod() {
 		TFooBean bean = new TFooBean();
 		Method m;
 		m = ClassUtil.findMethod(TFooBean.class, "getMore");
@@ -100,7 +100,7 @@ class ClassUtilTest {
 
 
 	@Test
-	public void testMatchClasses() {
+	void testMatchClasses() {
 		TFooBean a = new TFooBean();
 		TFooBean b = new TFooBean();
 		TFooBean2 c = new TFooBean2();
@@ -132,7 +132,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testMatchInterfaces() {
+	void testMatchInterfaces() {
 		assertTrue(ClassUtil.isTypeOf(HashMap.class, Map.class));
 		assertTrue(ClassUtil.isTypeOf(AbstractMap.class, Map.class));
 		assertTrue(ClassUtil.isTypeOf(Map.class, Map.class));
@@ -152,7 +152,7 @@ class ClassUtilTest {
 
 
 	@Test
-	public void testAccessibleA() {
+	void testAccessibleA() {
 		Method[] ms = ClassUtil.getAccessibleMethods(A.class, null);
 		assertEquals(4 + 11, ms.length);            // there are 11 accessible Object methods (9 public + 2 protected)
 		ms = ClassUtil.getAccessibleMethods(A.class);
@@ -178,7 +178,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testAccessibleB() {
+	void testAccessibleB() {
 		Method[] ms = ClassUtil.getAccessibleMethods(B.class, null);
 		assertEquals(3 + 11, ms.length);
 		ms = ClassUtil.getAccessibleMethods(B.class);
@@ -204,7 +204,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testAccessibleC() {
+	void testAccessibleC() {
 		Method[] ms = ClassUtil.getAccessibleMethods(C.class, null);
 		assertEquals(5 + 11, ms.length);
 		ms = ClassUtil.getAccessibleMethods(C.class);
@@ -230,7 +230,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testAccessibleD() {
+	void testAccessibleD() {
 		Method[] ms = ClassUtil.getAccessibleMethods(D.class, null);
 		assertEquals(3 + 11, ms.length);
 		ms = ClassUtil.getAccessibleMethods(D.class);
@@ -255,7 +255,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testAccessibleE() {
+	void testAccessibleE() {
 		Method[] ms = ClassUtil.getAccessibleMethods(E.class, null);
 		assertEquals(5 + 11, ms.length);
 		ms = ClassUtil.getAccessibleMethods(E.class);
@@ -281,7 +281,7 @@ class ClassUtilTest {
 
 
 	@Test
-	public void testIsSubclassAndInterface() {
+	void testIsSubclassAndInterface() {
 		assertTrue(ClassUtil.isTypeOf(SBase.class, SBase.class));
 
 		assertTrue(ClassUtil.isTypeOf(SOne.class, SBase.class));
@@ -307,7 +307,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testBeanPropertyNames() {
+	void testBeanPropertyNames() {
 		String name = ClassUtil.getBeanPropertyGetterName(ClassUtil.findMethod(JavaBean.class, "getOne"));
 		assertEquals("one", name);
 
@@ -352,13 +352,13 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testIsSubClassForCommonTypes() {
+	void testIsSubClassForCommonTypes() {
 		assertTrue(ClassUtil.isTypeOf(Long.class, Long.class));
 		assertFalse(ClassUtil.isTypeOf(Long.class, long.class));
 	}
 
 /*	@Test
-	public void testGetCallerClass() {
+	void testGetCallerClass() {
 		assertFalse(Reflection.getCallerClass(0).equals(ReflectUtil.getCallerClass(0)));
 
 		assertEquals(Reflection.getCallerClass(1), ReflectUtil.getCallerClass(1));
@@ -369,7 +369,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testGetCallerClass2() throws NoSuchFieldException, IllegalAccessException {
+	void testGetCallerClass2() throws NoSuchFieldException, IllegalAccessException {
 		Field field = ReflectUtil.class.getDeclaredField("SECURITY_MANAGER");
 		field.setAccessible(true);
 		Object value = field.get(null);
@@ -407,7 +407,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testGetFieldConcreteType() throws NoSuchFieldException {
+	void testGetFieldConcreteType() throws NoSuchFieldException {
 		Field f1 = BaseClass.class.getField("f1");
 		Field f2 = BaseClass.class.getField("f2");
 		Field f3 = BaseClass.class.getField("f3");
@@ -432,7 +432,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testGetFieldConcreteType2() throws Exception {
+	void testGetFieldConcreteType2() throws Exception {
 		Field array1 = BaseClass.class.getField("array1");
 		Field f2 = ConcreteClass2.class.getField("f2");
 
@@ -457,7 +457,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testGetRawAndComponentType() throws NoSuchFieldException {
+	void testGetRawAndComponentType() throws NoSuchFieldException {
 
 		Class<Soo> sooClass = Soo.class;
 
@@ -507,7 +507,7 @@ class ClassUtilTest {
 	public static class Impl3 extends Impl2 {}
 
 	@Test
-	public void testGetRawWithImplClass() throws NoSuchFieldException {
+	void testGetRawWithImplClass() throws NoSuchFieldException {
 		Method number = ClassUtil.findMethod(Base2.class, "getNumber");
 		Method kiko = ClassUtil.findMethod(Base2.class, "getKiko");
 
@@ -543,7 +543,7 @@ class ClassUtilTest {
 
 
 	@Test
-	public void testClassGenerics1() {
+	void testClassGenerics1() {
 		Class[] componentTypes = ClassUtil.getGenericSupertypes(Base2.class);
 		assertNull(componentTypes);
 
@@ -570,7 +570,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testClassGenerics2() {
+	void testClassGenerics2() {
 		Class[] componentTypes = ClassUtil.getGenericSupertypes(Base22.class);
 		assertNull(componentTypes);
 
@@ -594,7 +594,7 @@ class ClassUtilTest {
 	public static class ImplAna4 extends ImplAna3 {}
 
 	@Test
-	public void testClassGenerics3() {
+	void testClassGenerics3() {
 		Class[] componentTypes = ClassUtil.getGenericSupertypes(BaseAna.class);
 		assertNull(componentTypes);
 
@@ -644,7 +644,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testFieldTypeToString() {
+	void testFieldTypeToString() {
 		Field[] fields = FieldType.class.getDeclaredFields();
 
 		Arrays.sort(fields, new Comparator<Field>() {
@@ -680,7 +680,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testMethodTypeToString() {
+	void testMethodTypeToString() {
 		Method[] methods = MethodReturnType.class.getDeclaredMethods();
 
 		Arrays.sort(methods, new Comparator<Method>() {
@@ -711,7 +711,7 @@ class ClassUtilTest {
 	public static class Mimple extends MethodParameterType<Long>{}
 
 	@Test
-	public void testMethodParameterTypeToString() {
+	void testMethodParameterTypeToString() {
 		String result = "";
 		Method method = null;
 		for (Method m : MethodParameterType.class.getDeclaredMethods()) {
@@ -755,7 +755,7 @@ class ClassUtilTest {
 	class SuperMan extends SuperUser implements Flying {}
 
 	@Test
-	public void testResolveAllInterfaces() {
+	void testResolveAllInterfaces() {
 		Class[] interfaces = ClassUtil.resolveAllInterfaces(HashMap.class);
 
 		assertTrue(interfaces.length >= 3);
@@ -813,7 +813,7 @@ class ClassUtilTest {
 	}
 
 	@Test
-	public void testResolveAllSuperclsses() {
+	void testResolveAllSuperclsses() {
 		Class[] subclasses = ClassUtil.resolveAllSuperclasses(User.class);
 		assertEquals(0, subclasses.length);
 

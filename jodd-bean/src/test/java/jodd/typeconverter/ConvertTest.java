@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConvertTest {
 
 	@Test
-	public void testAllConversions() {
+	void testAllConversions() {
 
 		assertEquals(new BigDecimal("11.2"), Convert.toBigDecimal("11.2"));
 		assertNull(Convert.toBigDecimal(null));
@@ -91,7 +91,7 @@ class ConvertTest {
 	}
 
 	@Test
-	public void testArrayConversion() {
+	void testArrayConversion() {
 		assertArrayEquals(new String[]{"555", "12"}, Convert.toStringArray("555,12"));
 		assertArrayEquals(new String[]{"555", " 12"}, Convert.toStringArray("555, 12"));
 		assertArrayEquals(new boolean[] {true, false, true}, Convert.toBooleanArray("1, 0, true"));
@@ -104,7 +104,7 @@ class ConvertTest {
 	}
 
 	@Test
-	public void testDefaultConversion() {
+	void testDefaultConversion() {
 
 		assertEquals(true, Convert.toBooleanValue(null, true));
 		assertEquals((byte) 23, Convert.toByteValue(null, (byte) 23));
@@ -145,7 +145,7 @@ class ConvertTest {
 	}
 
 	@Test
-	public void testChangeConverter() {
+	void testChangeConverter() {
 		String[] array = new String[]{"true", "false", "yeah"};
 
 		boolean[] barr;

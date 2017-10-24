@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AnnotationTest {
 
 	@Test
-	public void testAnn() {
+	void testAnn() {
 		Vtor vtor = new Vtor();
 		vtor.validate(new Woo());
 		List<Violation> v = vtor.getViolations();
@@ -58,7 +58,7 @@ class AnnotationTest {
 	}
 
 	@Test
-	public void testTime() {
+	void testTime() {
 		Vtor vtor = new Vtor();
 		vtor.validate(new Tad());
 

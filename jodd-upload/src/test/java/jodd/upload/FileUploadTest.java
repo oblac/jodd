@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FileUploadTest {
 
 	@Test
-	public void testFileNames() throws IOException {
+	void testFileNames() throws IOException {
 		URL data = FileUploadTest.class.getResource("upload.txt");
 		String file = data.getFile();
 

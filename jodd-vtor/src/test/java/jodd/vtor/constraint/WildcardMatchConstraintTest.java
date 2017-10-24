@@ -34,20 +34,20 @@ import static org.mockito.Mockito.when;
 class WildcardMatchConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint();
         assertNull(wildcardMatchConstraint.getPattern());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         String pattern = "foo";
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint(pattern);
         assertEquals(pattern, wildcardMatchConstraint.getPattern());
     }
 
     @Test
-    public void testSetPattern() {
+    void testSetPattern() {
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint();
         String pattern = "foo";
         wildcardMatchConstraint.setPattern(pattern);
@@ -55,7 +55,7 @@ class WildcardMatchConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         WildcardMatchConstraint wildcardMatchConstraint = new WildcardMatchConstraint();
         WildcardMatch annotation = mock(WildcardMatch.class);
         String pattern = "foo";
@@ -65,12 +65,12 @@ class WildcardMatchConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(WildcardMatchConstraint.validate(null, "*"));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         assertTrue(new WildcardMatchConstraint("a?c").isValid(mockContext(), "abc"));
         assertFalse(new WildcardMatchConstraint("axc").isValid(mockContext(), "abc"));
     }

@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LoggerFactoryTest {
 
 	@Test
-	public void testNopLogger() {
+	void testNopLogger() {
 		LoggerFactory.setLoggerProvider(NOPLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
 
@@ -61,7 +61,7 @@ class LoggerFactoryTest {
 	}
 
 	@Test
-	public void testSimpleFactory() {
+	void testSimpleFactory() {
 		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 		Logger log = LoggerFactory.getLogger("foo");
 		log.setLevel(Logger.Level.TRACE);

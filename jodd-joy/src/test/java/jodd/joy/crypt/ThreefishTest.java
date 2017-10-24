@@ -53,7 +53,7 @@ class ThreefishTest {
 	}
 
 	@Test
-	public void testSimple() throws UnsupportedEncodingException {
+	void testSimple() throws UnsupportedEncodingException {
 		String message = "Threefish!";
 		byte[] encrypted = threefish.encryptString(message);
 		String message2 = threefish.decryptString(encrypted);
@@ -67,7 +67,7 @@ class ThreefishTest {
 	}
 
 	@Test
-	public void testLoop() throws UnsupportedEncodingException {
+	void testLoop() throws UnsupportedEncodingException {
 
 		long reps = 10000;
 		while (reps-- > 0) {

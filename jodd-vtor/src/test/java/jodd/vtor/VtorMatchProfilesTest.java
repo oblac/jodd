@@ -40,13 +40,13 @@ class VtorMatchProfilesTest {
     }
 
     @Test
-    public void testAllProfiles() {
+    void testAllProfiles() {
         assertTrue(vtor.matchProfiles(new String[]{Vtor.ALL_PROFILES}));
         assertFalse(vtor.matchProfiles(new String[]{Vtor.ALL_PROFILES, "someProfile"}));
     }
 
     @Test
-    public void testMatchProfilesAgainstSomeProfile() {
+    void testMatchProfilesAgainstSomeProfile() {
         //when
         vtor.useProfile("testProfile1");
 
@@ -80,7 +80,7 @@ class VtorMatchProfilesTest {
     }
 
     @Test
-    public void testDefaultProfile() {
+    void testDefaultProfile() {
         //when
         vtor.useProfile(Vtor.DEFAULT_PROFILE);
 

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class StringTemplateParserTest {
 
 	@Test
-	public void testMap() {
+	void testMap() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -46,7 +46,7 @@ class StringTemplateParserTest {
 
 
 	@Test
-	public void testMissing() {
+	void testMissing() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -69,7 +69,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testInner() {
+	void testInner() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -85,7 +85,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testInner2() {
+	void testInner2() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -105,7 +105,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testResolver() {
+	void testResolver() {
 		StringTemplateParser stp = new StringTemplateParser();
 		StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
 			public String resolve(String macroName) {
@@ -116,7 +116,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testReplaceMissingKey() {
+	void testReplaceMissingKey() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -139,7 +139,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testResolveEscapes() {
+	void testResolveEscapes() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -158,7 +158,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testCustomMacrosEnds() {
+	void testCustomMacrosEnds() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		HashMap<String, String> map = new HashMap<>();
@@ -179,7 +179,7 @@ class StringTemplateParserTest {
 	}
 
 	@Test
-	public void testNonScript() {
+	void testNonScript() {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("foo", "bar");
 		map.put("bar", "zap");

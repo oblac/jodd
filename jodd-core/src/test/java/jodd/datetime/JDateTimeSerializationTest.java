@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 class JDateTimeSerializationTest {
 
 	@Test
-	public void testJDateTimeSerialization() throws IOException, ClassNotFoundException {
+	void testJDateTimeSerialization() throws IOException, ClassNotFoundException {
 		JDateTime jDateTime = new JDateTime();
 
 		JDateTime jDateTimeClone = ObjectUtil.cloneViaSerialization(jDateTime);

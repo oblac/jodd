@@ -34,26 +34,26 @@ import static org.mockito.Mockito.when;
 
 class MinLengthConstraintTest extends ConstraintTestBase {
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
         assertEquals(0, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint(10);
         assertEquals(10, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testSetMin() {
+    void testSetMin() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
         minLengthConstraint.setMin(10);
         assertEquals(10, minLengthConstraint.getMin());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();
         MinLength annotation = mock(MinLength.class);
         when(annotation.value()).thenReturn(10);
@@ -63,12 +63,12 @@ class MinLengthConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithNullValue() {
+    void testValidate_WithNullValue() {
         assertTrue(MinLengthConstraint.validate(null, 1));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         int min = 3;
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint(min);
         assertTrue(minLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(min)));

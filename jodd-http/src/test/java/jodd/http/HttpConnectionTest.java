@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class HttpConnectionTest {
 
 	@Test
-	public void testEcho() throws IOException {
+	void testEcho() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		HttpResponse response = HttpRequest.get("http://localhost:8081/hello?id=12").send();
@@ -60,7 +60,7 @@ class HttpConnectionTest {
 	}
 
 	@Test
-	public void testUpload() throws IOException {
+	void testUpload() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		File file = FileUtil.createTempFile();
@@ -91,7 +91,7 @@ class HttpConnectionTest {
 	}
 
 	@Test
-	public void testUploadWithUploadable() throws IOException {
+	void testUploadWithUploadable() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		HttpResponse response = HttpRequest
@@ -117,7 +117,7 @@ class HttpConnectionTest {
 	}
 
 	@Test
-	public void testUploadWithMonitor() throws IOException {
+	void testUploadWithMonitor() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
 		File file = FileUtil.createTempFile();

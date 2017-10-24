@@ -109,7 +109,7 @@ class SilentTest {
 	}
 
 	@Test
-	public void testSetPropertySilent() {
+	void testSetPropertySilent() {
 		Bean bean = new Bean();
 
 		try {
@@ -142,7 +142,7 @@ class SilentTest {
 	}
 
 	@Test
-	public void testGetPropertySilent() {
+	void testGetPropertySilent() {
 		Bean bean = new Bean();
 
 		assertNull(BeanUtil.silent.getProperty(bean, "miss"));
@@ -155,7 +155,7 @@ class SilentTest {
 	}
 
 	@Test
-	public void testSetPropertyForcedSilent() {
+	void testSetPropertyForcedSilent() {
 		Bean bean = new Bean();
 
 		try {

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class LooseTest {
 
 	@Test
-	public void testInvalidEscape() {
+	void testInvalidEscape() {
 		try {
 			assertEquals("ABC\\D", new JsonParser().parse("\"ABC\\D\""));
 			fail("error");
@@ -49,7 +49,7 @@ class LooseTest {
 	}
 
 	@Test
-	public void testQuotes() {
+	void testQuotes() {
 		try {
 			assertEquals("ABC", new JsonParser().parse("'ABC'"));
 			fail("error");
@@ -66,7 +66,7 @@ class LooseTest {
 	}
 
 	@Test
-	public void testUnquotes() {
+	void testUnquotes() {
 		Map<String, Object> map = new JsonParser().looseMode(true).parse("{foo: BAR , who : me}");
 
 		assertEquals(2, map.size());

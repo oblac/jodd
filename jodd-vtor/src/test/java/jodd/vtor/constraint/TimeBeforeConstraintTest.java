@@ -36,20 +36,20 @@ import static org.mockito.Mockito.when;
 class TimeBeforeConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint();
         assertNull(timeBeforeConstraint.getTime());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         JDateTime time = new JDateTime();
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint(time);
         assertEquals(time, timeBeforeConstraint.getTime());
     }
 
     @Test
-    public void testSetTime() {
+    void testSetTime() {
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint();
         JDateTime time = new JDateTime();
         timeBeforeConstraint.setTime(time);
@@ -57,7 +57,7 @@ class TimeBeforeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         TimeBeforeConstraint timeBeforeConstraint = new TimeBeforeConstraint();
         JDateTime time = new JDateTime();
         timeBeforeConstraint.setTime(time);
@@ -69,12 +69,12 @@ class TimeBeforeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(TimeBeforeConstraint.validate(null, new JDateTime("2011-05-01 10:11:12.344")));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         JDateTime time = new JDateTime("2011-05-01 10:11:12.344");
         TimeBeforeConstraint constraint = new TimeBeforeConstraint(time.clone());
 

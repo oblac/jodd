@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ClassConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		ClassConverter classConverter = new ClassConverter();
 
 		assertNull(classConverter.convert(null));
@@ -53,7 +53,7 @@ class ClassConverterTest {
 	}
 
 	@Test
-	public void testCast() {
+	void testCast() {
 
 		String s = "123";
 		Integer d = TypeConverterManager.convertType(s, Integer.class);

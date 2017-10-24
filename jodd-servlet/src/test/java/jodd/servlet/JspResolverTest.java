@@ -70,7 +70,7 @@ class JspResolverTest {
 	}
 
 	@Test
-	public void testAttributes() {
+	void testAttributes() {
 		assertEquals("value", JspResolver.attribute("name", servletRequest));
 		assertEquals("value2", JspResolver.attribute("name2", servletRequest));
 		assertEquals("value3-1", JspResolver.attribute("name3", servletRequest));
@@ -81,7 +81,7 @@ class JspResolverTest {
 	}
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		JspResolver jspResolver = new JspResolver(servletRequest);
 		assertEquals("value", jspResolver.value("name"));
 		assertEquals("value1", jspResolver.value("name2"));

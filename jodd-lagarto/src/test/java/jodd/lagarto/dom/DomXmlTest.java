@@ -51,7 +51,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testPeopleXml() throws IOException {
+	void testPeopleXml() throws IOException {
 		File file = new File(testDataRoot, "people.xml");
 		String xmlContent = FileUtil.readString(file);
 
@@ -81,7 +81,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testUpheaWebXml() throws IOException {
+	void testUpheaWebXml() throws IOException {
 		File file = new File(testDataRoot, "uphea-web.xml");
 		String xmlContent = FileUtil.readString(file);
 
@@ -96,7 +96,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testWhitespaces() throws IOException {
+	void testWhitespaces() throws IOException {
 		String xmlContent = "<foo>   <!--c-->  <bar>   </bar> <x/> </foo>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -122,7 +122,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testIgnoreComments() throws IOException {
+	void testIgnoreComments() throws IOException {
 		String xmlContent = "<foo>   <!--c-->  <bar>   </bar> <!--c--> <x/> <!--c--> </foo>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -137,7 +137,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testConditionalComments() throws IOException {
+	void testConditionalComments() throws IOException {
 		String xmlContent = "<foo><!--[if !IE]>--><bar>Jodd</bar><!--<![endif]--></foo>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -152,7 +152,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testConditionalComments2() throws IOException {
+	void testConditionalComments2() throws IOException {
 		String xmlContent = "<foo><![if !IE]><bar>Jodd</bar></foo>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -171,7 +171,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testAddDeleteModifyNode() throws IOException {
+	void testAddDeleteModifyNode() throws IOException {
 		File file = new File(testDataRoot, "people.xml");
 		String xmlContent = FileUtil.readString(file);
 
@@ -214,7 +214,7 @@ class DomXmlTest {
 	}
 
 	@Test
-	public void testXmlAndSingleQuotes() throws IOException {
+	void testXmlAndSingleQuotes() throws IOException {
 		File file = new File(testDataRoot, "people2.xml");
 		String xmlContent = FileUtil.readString(file);
 

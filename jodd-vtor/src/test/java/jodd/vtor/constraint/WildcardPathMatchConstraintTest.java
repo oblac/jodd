@@ -34,19 +34,19 @@ import static org.mockito.Mockito.when;
 class WildcardPathMatchConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         assertNull(wildcardPathMatchConstraint.getPattern());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint("foo");
         assertEquals(wildcardPathMatchConstraint.getPattern(), "foo");
     }
 
     @Test
-    public void testSetPattern() {
+    void testSetPattern() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         String pattern = "foo";
         wildcardPathMatchConstraint.setPattern(pattern);
@@ -55,7 +55,7 @@ class WildcardPathMatchConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         WildcardPathMatchConstraint wildcardPathMatchConstraint = new WildcardPathMatchConstraint();
         WildcardPathMatch annotation = mock(WildcardPathMatch.class);
         String pattern = "foo";
@@ -66,12 +66,12 @@ class WildcardPathMatchConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(WildcardPathMatchConstraint.validate(null, "*"));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         assertTrue(new WildcardPathMatchConstraint("/dir/**").isValid(mockContext(), "/dir/abc"));
         assertFalse(new WildcardPathMatchConstraint("/dir/abz").isValid(mockContext(), "/dir/abc"));
     }

@@ -41,7 +41,7 @@ import static org.mockito.Mockito.*;
 class ValidationContextTest {
 
     @Test
-    public void testResolveFor() throws Exception {
+    void testResolveFor() throws Exception {
         //when
         //Class ForCheck1 contains two fields. field1 has two constraints. Second field2 has a non constraint annotation
         ValidationContext context = ValidationContext.resolveFor(ClassForCheck1.class);
@@ -54,7 +54,7 @@ class ValidationContextTest {
     }
 
     @Test
-    public void testAddClassThrowVtorException() throws Exception {
+    void testAddClassThrowVtorException() throws Exception {
         ValidationContext context = new ValidationContext() {
             @Override
             protected <V extends ValidationConstraint> V newConstraint(Class<V> constraint, Class targetType) throws Exception {
@@ -65,7 +65,7 @@ class ValidationContextTest {
     }
 
     @Test
-    public void testCollectPropertyAnnotationChecks(){
+    void testCollectPropertyAnnotationChecks(){
         ValidationContext context = spy(new ValidationContext());
         PropertyDescriptor propertyDescriptor = mock(PropertyDescriptor.class);
         List<Check> list = new ArrayList<>();
@@ -74,7 +74,7 @@ class ValidationContextTest {
     }
 
     @Test
-    public void testAddClassChecksWithCache() throws Exception {
+    void testAddClassChecksWithCache() throws Exception {
         ValidationContext context = spy(new ValidationContext());
         try {
             context.addClassChecks(ClassForCheck1.class);

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class FastFloatBufferTest extends FastBufferTestBase {
 
 	@Test
-	public void testAppend() {
+	void testAppend() {
 		FastFloatBuffer buff = new FastFloatBuffer(3);
 
 		buff.append(buff);
@@ -60,7 +60,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testChunks() {
+	void testChunks() {
 		FastFloatBuffer buff = new FastFloatBuffer();
 
 		assertEquals(-1, buff.index());
@@ -94,7 +94,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testChunksOverflow() {
+	void testChunksOverflow() {
 		FastFloatBuffer buff = new FastFloatBuffer();
 
 		assertEquals(-1, buff.index());
@@ -127,7 +127,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testClear() {
+	void testClear() {
 		FastFloatBuffer buff = new FastFloatBuffer();
 
 		assertTrue(buff.isEmpty());
@@ -152,7 +152,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testToArray() {
+	void testToArray() {
 		FastFloatBuffer buff = new FastFloatBuffer();
 
 		int sum = 0;
@@ -186,7 +186,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testToSubArray() {
+	void testToSubArray() {
 		FastFloatBuffer buff = new FastFloatBuffer();
 
 		int total = SIZE + (SIZE / 2);

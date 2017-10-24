@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Iso8601JdtFormatterTest {
 
 	@Test
-	public void testFindPattern() {
+	void testFindPattern() {
 		Iso8601JdtFormatter formatter = new Iso8601JdtFormatter();
 
 		assertTrue(formatter.findPattern("YYYY".toCharArray(), 0) > -1);
@@ -50,7 +50,7 @@ class Iso8601JdtFormatterTest {
 	}
 
 	@Test
-	public void testParseWithDelimiters() {
+	void testParseWithDelimiters() {
 		Iso8601JdtFormatter formatter = new Iso8601JdtFormatter();
 
 		assertEquals(new DateTimeStamp(123, 1, 2), formatter.parse("123-1-2", "YYYY-MM-DD"));
@@ -61,7 +61,7 @@ class Iso8601JdtFormatterTest {
 	}
 
 	@Test
-	public void testParseWithoutDelimiters() {
+	void testParseWithoutDelimiters() {
 		Iso8601JdtFormatter formatter = new Iso8601JdtFormatter();
 
 		assertEquals(new DateTimeStamp(123, 1, 2), formatter.parse("01230102", "YYYYMMDD"));
@@ -70,7 +70,7 @@ class Iso8601JdtFormatterTest {
 
 
 	@Test
-	public void testParseBackAndFort() {
+	void testParseBackAndFort() {
 		String timePattern = "YYYYMMDDhhmmssmss";
 
 		JDateTime jdt = new JDateTime();
@@ -82,7 +82,7 @@ class Iso8601JdtFormatterTest {
 
 
 	@Test
-	public void testParse_423() {
+	void testParse_423() {
 		JDateTime jdt;
 
 		jdt = new JDateTime("20170808 100808", "YYYYMMDD hhmmss");

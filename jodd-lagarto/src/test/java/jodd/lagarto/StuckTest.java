@@ -55,7 +55,7 @@ class StuckTest {
 	}
 
 	@Test
-	public void testStuck() throws IOException {
+	void testStuck() throws IOException {
 		File file = new File(testDataRoot, "stuck.html.gz");
 		InputStream in = new GZIPInputStream(new FileInputStream(file));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

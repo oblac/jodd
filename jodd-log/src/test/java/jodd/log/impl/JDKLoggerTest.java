@@ -45,7 +45,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		//when
 		logger.getName();
 
@@ -54,7 +54,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLog() {
+	void testLog() {
 		//when
 		logger.log(Level.TRACE, LoggerConstants.SIMPLE_MESSAGE);
 
@@ -87,7 +87,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLevel() {
+	void testLevel() {
 		//when
 		logger.trace(LoggerConstants.TRACE_MESSAGE);
 
@@ -120,7 +120,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testErrorWithThrowable() {
+	void testErrorWithThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -132,7 +132,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testWarnWithThrowable() {
+	void testWarnWithThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -144,7 +144,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testJDKLoggerFactory() {
+	void testJDKLoggerFactory() {
 		//given
 		loggerProvider = JDKLogger.PROVIDER;
 

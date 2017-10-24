@@ -45,12 +45,12 @@ class CalendarConverterTest {
 	CalendarConverter calendarConverter = new CalendarConverter();
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		assertNull(calendarConverter.convert(null));
 	}
 
 	@Test
-	public void testCalendar2Calendar() {
+	void testCalendar2Calendar() {
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.setTimeInMillis(time);
 		Calendar calendar = calendarConverter.convert(calendar2);
@@ -58,42 +58,42 @@ class CalendarConverterTest {
 	}
 
 	@Test
-	public void testDate2Calendar() {
+	void testDate2Calendar() {
 		Date date = new Date(time);
 		Calendar calendar = calendarConverter.convert(date);
 		assertEquals(time, calendar.getTimeInMillis());
 	}
 
 	@Test
-	public void testTimestamp2Calendar() {
+	void testTimestamp2Calendar() {
 		Timestamp timestamp = new Timestamp(time);
 		Calendar calendar = calendarConverter.convert(timestamp);
 		assertEquals(time, calendar.getTimeInMillis());
 	}
 
 	@Test
-	public void testSqlDate2Calendar() {
+	void testSqlDate2Calendar() {
 		java.sql.Date date = new java.sql.Date(time);
 		Calendar calendar = calendarConverter.convert(date);
 		assertEquals(time, calendar.getTimeInMillis());
 	}
 
 	@Test
-	public void testSqlTime2Calendar() {
+	void testSqlTime2Calendar() {
 		java.sql.Time sqltime = new java.sql.Time(time);
 		Calendar calendar = calendarConverter.convert(sqltime);
 		assertEquals(time, calendar.getTimeInMillis());
 	}
 
 	@Test
-	public void testJDateTime2Calendar() {
+	void testJDateTime2Calendar() {
 		JDateTime jdt = new JDateTime(time);
 		Calendar calendar = calendarConverter.convert(jdt);
 		assertEquals(time, calendar.getTimeInMillis());
 	}
 
 	@Test
-	public void testCalendarDate() {
+	void testCalendarDate() {
 		JDateTime jdt = new JDateTime();
 
 		CalendarConverter calendarConverter = new CalendarConverter();

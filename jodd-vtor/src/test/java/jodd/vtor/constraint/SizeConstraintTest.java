@@ -39,21 +39,21 @@ import static org.mockito.Mockito.when;
 class SizeConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         SizeConstraint sizeConstraint = new SizeConstraint();
         assertEquals(0, sizeConstraint.getMin());
         assertEquals(0, sizeConstraint.getMax());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         SizeConstraint sizeConstraint = new SizeConstraint(10, 20);
         assertEquals(10, sizeConstraint.getMin());
         assertEquals(20, sizeConstraint.getMax());
     }
 
     @Test
-    public void testSetMinMax() {
+    void testSetMinMax() {
         SizeConstraint sizeConstraint = new SizeConstraint();
         sizeConstraint.setMin(10);
         sizeConstraint.setMax(20);
@@ -62,7 +62,7 @@ class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         SizeConstraint sizeConstraint = new SizeConstraint();
         Size annotation = mock(Size.class);
         when(annotation.min()).thenReturn(10);
@@ -74,7 +74,7 @@ class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(SizeConstraint.validate(null, 1, 2));
     }
 
@@ -86,7 +86,7 @@ class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_ForCollection() {
+    void testIsValid_ForCollection() {
         List<String> val = new ArrayList<>();
         val.add("1");
         val.add("2");
@@ -94,7 +94,7 @@ class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_ForMap() {
+    void testIsValid_ForMap() {
         Map<String, String> val = new HashMap<>();
         val.put("1", "one");
         val.put("2", "two");
@@ -102,12 +102,12 @@ class SizeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_ForArray() {
+    void testIsValid_ForArray() {
         sizeConstraintCheck(new String[]{"one", "two"});
     }
 
     @Test
-    public void testValidate_ForUnknownClass() {
+    void testValidate_ForUnknownClass() {
         assertFalse(SizeConstraint.validate(new Object(), 0, 1));
     }
 }

@@ -34,13 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class BCryptTest {
 
 	@Test
-	public void testBCrypt() {
+	void testBCrypt() {
 		String hash = BCrypt.hashpw("password", BCrypt.gensalt(7));
 		assertTrue(BCrypt.checkpw("password", hash));
 	}
 
 	@Test
-	public void testBCryptRandom() {
+	void testBCryptRandom() {
 		for (int rounds = 0; rounds < 1000; rounds++) {
 			String text = RandomString.getInstance().randomAlphaNumeric(10);
 
@@ -116,7 +116,7 @@ class BCryptTest {
 	 * Test method for 'BCrypt.hashpw(String, String)'
 	 */
 	@Test
-	public void testHashpw() {
+	void testHashpw() {
 		for (String[] test_vector : test_vectors) {
 			String plain = test_vector[0];
 			String salt = test_vector[1];
@@ -130,7 +130,7 @@ class BCryptTest {
 	 * Test method for 'BCrypt.gensalt(int)'
 	 */
 	@Test
-	public void testGensaltInt() {
+	void testGensaltInt() {
 		for (int i = 4; i <= 12; i++) {
 			for (int j = 0; j < test_vectors.length; j += 4) {
 				String plain = test_vectors[j][0];
@@ -146,7 +146,7 @@ class BCryptTest {
 	 * Test method for 'BCrypt.gensalt()'
 	 */
 	@Test
-	public void testGensalt() {
+	void testGensalt() {
 		for (int i = 0; i < test_vectors.length; i += 4) {
 			String plain = test_vectors[i][0];
 			String salt = BCrypt.gensalt();
@@ -161,7 +161,7 @@ class BCryptTest {
 	 * expecting success
 	 */
 	@Test
-	public void testCheckpw_success() {
+	void testCheckpw_success() {
 		for (String[] test_vector : test_vectors) {
 			String plain = test_vector[0];
 			String expected = test_vector[2];
@@ -174,7 +174,7 @@ class BCryptTest {
 	 * expecting failure
 	 */
 	@Test
-	public void testCheckpw_failure() {
+	void testCheckpw_failure() {
 		for (int i = 0; i < test_vectors.length; i++) {
 			int broken_index = (i + 4) % test_vectors.length;
 			String plain = test_vectors[i][0];
@@ -187,7 +187,7 @@ class BCryptTest {
 	 * Test for correct hashing of non-US-ASCII passwords
 	 */
 	@Test
-	public void testInternationalChars() {
+	void testInternationalChars() {
 		String pw1 = "\u2605\u2605\u2605\u2605\u2605\u2605\u2605\u2605";
 		String pw2 = "????????";
 

@@ -61,7 +61,7 @@ class WireBeansWithProxettaTest {
     }
 
     @Test
-    public void testWireExternalBeanAndCheckInjectedBean2Reference(){
+    void testWireExternalBeanAndCheckInjectedBean2Reference(){
         ExternalBean externalBean = new ExternalBean();
 
         // --> inject

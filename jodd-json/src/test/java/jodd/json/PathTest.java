@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PathTest {
 
 	@Test
-	public void testPaths() {
+	void testPaths() {
 		Path path = new Path();
 
 		assertEquals(0, path.length());

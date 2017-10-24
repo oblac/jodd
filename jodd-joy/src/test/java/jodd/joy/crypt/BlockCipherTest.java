@@ -53,7 +53,7 @@ class BlockCipherTest {
 	}
 
 	@Test
-	public void testBlock8() {
+	void testBlock8() {
 		FooBlockCipher cypher = new FooBlockCipher();
 
 		byte[] encrypted = cypher.encrypt("Jodd".getBytes());

@@ -41,7 +41,7 @@ class ScopeDataResolverTest {
 	}
 
 	@Test
-	public void testInAnnotations() {
+	void testInAnnotations() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
 		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(Action.class);
@@ -65,7 +65,7 @@ class ScopeDataResolverTest {
 	}
 
 	@Test
-	public void testGenericAction() {
+	void testGenericAction() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
 		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(GenAction.class);

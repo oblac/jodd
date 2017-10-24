@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JulianDateStampTest {
 
 	@Test
-	public void testSet() {
+	void testSet() {
 		JDateTime jdt = new JDateTime(2008, 12, 20, 10, 44, 55, 0);
 		JulianDateStamp jds = jdt.getJulianDate();
 		int i = jds.integer;
@@ -50,7 +50,7 @@ class JulianDateStampTest {
 	}
 
 	@Test
-	public void testbetween() {
+	void testbetween() {
 		JDateTime jdt = new JDateTime(2008, 12, 20, 0, 0, 0, 0);
 		JDateTime jdt2 = new JDateTime(2008, 12, 20, 0, 0, 0, 0);
 		assertEquals(0, jdt2.getJulianDate().daysBetween(jdt.getJulianDate()));
@@ -74,7 +74,7 @@ class JulianDateStampTest {
 
 
 	@Test
-	public void testDecimalFloating() {
+	void testDecimalFloating() {
 
 		DateTimeStamp dts = new DateTimeStamp(1970, 1, 13, 14, 24, 0, 0);
 		JDateTime jdt = new JDateTime(new JulianDateStamp(2440600, 0.1));

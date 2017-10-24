@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ActionResultTest extends MadvocTestCase {
 
 	@Test
-	public void testResolveResultPath() {
+	void testResolveResultPath() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
@@ -127,7 +127,7 @@ class ActionResultTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testMethodWithPrefix() {
+	void testMethodWithPrefix() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
@@ -162,7 +162,7 @@ class ActionResultTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testAlias() {
+	void testAlias() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
@@ -189,7 +189,7 @@ class ActionResultTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testAlias2() {
+	void testAlias2() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
@@ -208,7 +208,7 @@ class ActionResultTest extends MadvocTestCase {
 	}
 
 	@Test
-	public void testAlias3() {
+	void testAlias3() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 

@@ -94,7 +94,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testInsert() {
+	void testInsert() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.insert(g);
 		assertEquals("insert into GIRL (ID, NAME, SPECIALITY) values (:girl.id, :girl.name, :girl.speciality)", b.generateQuery());
@@ -102,14 +102,14 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testTruncate() {
+	void testTruncate() {
 		Girl g = new Girl(1, "sanja", "c++");
 		assertEquals("delete from GIRL", DbEntitySql.truncate(g).generateQuery());
 		assertEquals("delete from GIRL", DbEntitySql.truncate(Girl.class).generateQuery());
 	}
 
 	@Test
-	public void testUpdate() {
+	void testUpdate() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.update(g);
 		assertEquals("update GIRL Girl_ set ID=:girl.id, NAME=:girl.name, SPECIALITY=:girl.speciality  where (1=1)",
@@ -131,7 +131,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testUpdateColumn() {
+	void testUpdateColumn() {
 		BadGirl bg = new BadGirl(Integer.valueOf(1), "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.updateColumn(bg, "fooname", "Anja");
 		assertEquals(
@@ -144,7 +144,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testDelete() {
+	void testDelete() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.delete(g);
 		assertEquals("delete from GIRL where (GIRL.ID=:girl.id and GIRL.NAME=:girl.name and GIRL.SPECIALITY=:girl.speciality)",
@@ -178,7 +178,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testFrom() {
+	void testFrom() {
 		Girl g = new Girl(1, "sanja", "c++");
 
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ ",
@@ -192,7 +192,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testFind() {
+	void testFind() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.find(g);
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id and Girl_.NAME=:girl.name and Girl_.SPECIALITY=:girl.speciality)",
@@ -242,7 +242,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testCount() {
+	void testCount() {
 
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.count(g);
@@ -273,7 +273,7 @@ class DbEntitySqlTest {
 	}
 
 	@Test
-	public void testIncreaseDecrease() {
+	void testIncreaseDecrease() {
 		DbSqlBuilder b = DbEntitySql.increaseColumn(BadBoy.class, 1, "nejm", 5, true);
 		assertEquals("update BOY set NAME=NAME+:p0 where BOY.ID=:p1",
 				b.generateQuery());

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HtmlStaplerCssTest {
 
 	@Test
-	public void testRelativeCssUrls() {
+	void testRelativeCssUrls() {
 
 
 		HtmlStaplerBundlesManager htmlStapler = new HtmlStaplerBundlesManager("/", "", HtmlStaplerBundlesManager.Strategy.RESOURCES_ONLY);

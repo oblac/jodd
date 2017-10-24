@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 class AssertValidConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testIsValid_withNullValue() {
+    void testIsValid_withNullValue() {
         //given
         ValidationContext targetValidationContext = mock(ValidationContext.class);
         AssertValidConstraint assertValidConstraint = new AssertValidConstraint(targetValidationContext);
@@ -52,7 +52,7 @@ class AssertValidConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         //given
         ValidationContext targetValidationContext = mock(ValidationContext.class);
         AssertValidConstraint assertValidConstraint = new AssertValidConstraint(targetValidationContext);

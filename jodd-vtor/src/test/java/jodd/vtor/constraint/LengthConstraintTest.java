@@ -34,26 +34,26 @@ import static org.mockito.Mockito.when;
 
 class LengthConstraintTest extends ConstraintTestBase {
     @Test
-    public void testValidate_WithNullValue() {
+    void testValidate_WithNullValue() {
         assertTrue(LengthConstraint.validate(null, 1, 2), "result must be true when validate a null value");
     }
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         LengthConstraint lengthConstraint = new LengthConstraint();
         assertEquals(0, lengthConstraint.getMin());
         assertEquals(0, lengthConstraint.getMax());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         LengthConstraint lengthConstraint = new LengthConstraint(5, 10);
         assertEquals(5, lengthConstraint.getMin());
         assertEquals(10, lengthConstraint.getMax());
     }
 
     @Test
-    public void testSetMinMax() {
+    void testSetMinMax() {
         LengthConstraint lengthConstraint = new LengthConstraint();
         lengthConstraint.setMin(5);
         lengthConstraint.setMax(10);
@@ -62,7 +62,7 @@ class LengthConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         LengthConstraint lengthConstraint = new LengthConstraint();
         Length annotation = mock(Length.class);
         when(annotation.min()).thenReturn(5);
@@ -74,7 +74,7 @@ class LengthConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testLengthConstraint() {
+    void testLengthConstraint() {
         LengthConstraint lengthConstraint = new LengthConstraint(4, 6);
         assertFalse(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(7)));
         assertFalse(lengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(3)));

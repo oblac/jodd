@@ -37,7 +37,7 @@ class ByteArrayConverterTest {
 	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) TypeConverterManager.lookup(byte[].class);
 
 	@Test
-	public void testArrayConversion() {
+	void testArrayConversion() {
 		assertNull(byteArrayConverter.convert(null));
 
 		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(arrb(1, 7, 3)));
@@ -53,7 +53,7 @@ class ByteArrayConverterTest {
 	}
 
 	@Test
-	public void testNonArrayConversion() {
+	void testNonArrayConversion() {
 		assertEq(arrb(7), byteArrayConverter.convert(Byte.valueOf((byte) 7)));
 		assertEq(arrb(7), byteArrayConverter.convert(Integer.valueOf(7)));
 		assertEq(arrb(7), byteArrayConverter.convert("7"));

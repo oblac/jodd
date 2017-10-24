@@ -35,25 +35,25 @@ import static org.mockito.Mockito.when;
 
 class EqualToFieldConstraintTest extends ConstraintTestBase {
     @Test
-    public void testValidate_withNullValue() {
+    void testValidate_withNullValue() {
         assertTrue(EqualToFieldConstraint.validate(new Object(), null, "someField"));
     }
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         EqualToFieldConstraint equalToFieldConstraint = new EqualToFieldConstraint();
         assertNull(equalToFieldConstraint.getFieldName());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         String fieldName = "testField";
         EqualToFieldConstraint equalToFieldConstraint = new EqualToFieldConstraint(fieldName);
         assertEquals(fieldName, equalToFieldConstraint.getFieldName());
     }
 
     @Test
-    public void testSetFieldName() {
+    void testSetFieldName() {
         EqualToFieldConstraint equalToFieldConstraint = new EqualToFieldConstraint();
         String fieldName = "someField";
         equalToFieldConstraint.setFieldName(fieldName);
@@ -61,7 +61,7 @@ class EqualToFieldConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         EqualToFieldConstraint equalToFieldConstraint = new EqualToFieldConstraint();
         //set a field name through an annotation
         EqualToField fldAnnotation = mock(EqualToField.class);
@@ -73,7 +73,7 @@ class EqualToFieldConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_forEqualValues() {
+    void testIsValid_forEqualValues() {
         EqualToFieldConstraint equalToDeclaredFieldConstraint = new EqualToFieldConstraint("testField");
         ValidationConstraintContext cvv = mockContext();
         when(cvv.getTarget()).thenReturn(new TestBean("someValue"));
@@ -82,7 +82,7 @@ class EqualToFieldConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIsValid_forDifferentValues() {
+    void testIsValid_forDifferentValues() {
         EqualToFieldConstraint equalToDeclaredFieldConstraint = new EqualToFieldConstraint("testField");
         ValidationConstraintContext cvv = mockContext();
         when(cvv.getTarget()).thenReturn(new TestBean("someValue"));
@@ -90,13 +90,13 @@ class EqualToFieldConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_FieldNotFound() {
+    void testValidate_FieldNotFound() {
         TestBean testVal = new TestBean("someValue");
         assertThrows(VtorException.class, () -> EqualToFieldConstraint.validate(testVal, "someValue", "wrongField"));
     }
 
     @Test
-    public void testValidate_FieldValueIsNull() {
+    void testValidate_FieldValueIsNull() {
         TestBean testVal = new TestBean(null);
         assertFalse(EqualToFieldConstraint.validate(testVal, "someValue", "testField"));
     }

@@ -33,12 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NotBlankConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testValidate_WithNullValue() {
+    void testValidate_WithNullValue() {
         assertTrue(NotBlankConstraint.validate(null));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         NotBlankConstraint notBlankConstraint = new NotBlankConstraint();
         //this is an empty method nothing can be verified
         notBlankConstraint.configure(null);

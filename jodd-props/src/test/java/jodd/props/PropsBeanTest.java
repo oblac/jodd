@@ -41,7 +41,7 @@ class PropsBeanTest {
 	}
 
 	@Test
-	public void testInnerMapToBean() {
+	void testInnerMapToBean() {
 		String data = "http.port=10101\n" +
 			"http.address=localhost\n" +
 			"http.pool=30\n" +

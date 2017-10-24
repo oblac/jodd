@@ -35,7 +35,7 @@ import jodd.csselly.selector.Match;
 class MatchTest {
 
 	@Test
-	public void testIncludes() {
+	void testIncludes() {
 		boolean result = Match.INCLUDES.compare("toto", "toto");
         assertTrue(result);
         

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SmtpServerTest {
 
     @Test
-    public void testAddsPropertyToServerSession() {
+    void testAddsPropertyToServerSession() {
         Properties overridenProperties = new Properties();
 
         overridenProperties.setProperty("mail.smtp.from", "bounce@jodd.org");
@@ -51,7 +51,7 @@ class SmtpServerTest {
     }
 
     @Test
-    public void testAddsPropertyToServerSession2() {
+    void testAddsPropertyToServerSession2() {
         SmtpSslServer smtpServer = SmtpSslServer.create("some.host.com", 587)
                 .authenticateWith("test", "password")
                 .timeout(10)

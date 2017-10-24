@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UrlRewriterTest {
 
 	@Test
-	public void testUrlRewriter() {
+	void testUrlRewriter() {
 		LagartoParser lagartoParser = new LagartoParser(
 				"<a href=\"http://jodd.org\">1</a><a href=\"page.html\">2</a>", false);
 

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PageDataTest {
 
 	@Test
-	public void testPaging() {
+	void testPaging() {
 		PageData pd = new PageData(PageData.calcPageOfItem(0, 20), 50, 20);
 		assertEquals(1, pd.getCurrentPage());
 		assertEquals(0, pd.getFirstIndex());
@@ -67,7 +67,7 @@ class PageDataTest {
 	}
 
 	@Test
-	public void testOver() {
+	void testOver() {
 		PageData pd = new PageData(PageData.calcPageOfItem(-1, 20), 50, 20);
 		assertEquals(1, pd.getCurrentPage());
 		assertEquals(0, pd.getFirstIndex());
@@ -88,7 +88,7 @@ class PageDataTest {
 	}
 
 	@Test
-	public void testOne() {
+	void testOne() {
 		PageData pd = new PageData(1, 1, 20);
 		assertEquals(1, pd.getCurrentPage());
 		assertEquals(0, pd.getFirstIndex());
@@ -100,7 +100,7 @@ class PageDataTest {
 	}
 
 	@Test
-	public void testMinusOne() {
+	void testMinusOne() {
 		PageData pd = new PageData(-1, 100, 20);
 		assertEquals(1, pd.getCurrentPage());
 		assertEquals(0, pd.getFirstIndex());
@@ -113,7 +113,7 @@ class PageDataTest {
 	}
 
 	@Test
-	public void testZero() {
+	void testZero() {
 		PageData pd = new PageData(1, 0, 20);
 		assertTrue(pd.isLastPage());
 		assertTrue(pd.isFirstPage());
@@ -160,7 +160,7 @@ class PageDataTest {
 	}
 
 	@Test
-	public void testCalc() {
+	void testCalc() {
 		assertEquals(0, PageData.calcFirstItemIndexOfPage(1, 5, 3));
 		assertEquals(0, PageData.calcFirstItemIndexOfPage(1, 5, 10));
 		assertEquals(5, PageData.calcFirstItemIndexOfPage(2, 5, 10));
@@ -175,7 +175,7 @@ class PageDataTest {
 
 
 	@Test
-	public void testFlow() {
+	void testFlow() {
 		PageRequest pageRequest = new PageRequest();
 		pageRequest.setPage(1);
 		pageRequest.setSize(20);

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SetsTest {
 
 	@Test
-	public void testEmptySet() {
+	void testEmptySet() {
 		final PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
@@ -45,7 +45,7 @@ class SetsTest {
 	}
 
 	@Test
-	public void testOneHero() {
+	void testOneHero() {
 		final PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Batman.class, null, null, null, false);
@@ -62,7 +62,7 @@ class SetsTest {
 	}
 
 	@Test
-	public void testTwoHeros() {
+	void testTwoHeros() {
 		final PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Batman.class, null, null, null, false);
@@ -81,7 +81,7 @@ class SetsTest {
 	}
 
 	@Test
-	public void testCollection() {
+	void testCollection() {
 		final PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Superman.class, null, null, null, false);

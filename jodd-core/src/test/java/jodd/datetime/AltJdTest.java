@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AltJdTest {
 
 	@Test
-	public void testReduced() {
+	void testReduced() {
 		JDateTime jdt = new JDateTime(2454945.41707);
 		assertEquals(2454945.41707, jdt.getJulianDateDouble(), 1.0e-10);
 		assertEquals("2009-04-23 22:00:34.848", jdt.toString());
@@ -49,7 +49,7 @@ class AltJdTest {
 	}
 
 	@Test
-	public void testModified() {
+	void testModified() {
 		JDateTime jdt = new JDateTime(2454945.41707);
 
 		JulianDateStamp jds = jdt.getJulianDate().getModifiedJulianDate();
@@ -64,7 +64,7 @@ class AltJdTest {
 	}
 
 	@Test
-	public void testTruncated() {
+	void testTruncated() {
 		JDateTime jdt = new JDateTime(2454945.41707);
 
 		JulianDateStamp jds = jdt.getJulianDate().getTruncatedJulianDate();

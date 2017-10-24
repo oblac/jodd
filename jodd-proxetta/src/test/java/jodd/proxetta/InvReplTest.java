@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InvReplTest {
 
 	@Test
-	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {
+	void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {
 
 		InvokeProxetta proxetta = initProxetta();
 
@@ -83,7 +83,7 @@ class InvReplTest {
 	}
 
 	@Test
-	public void testSuper() {
+	void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
 			proxetta.builder(OneWithSuper.class).define();
@@ -94,7 +94,7 @@ class InvReplTest {
 	}
 
 	@Test
-	public void testInterface() {
+	void testInterface() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
 			proxetta.builder(Inter.class).newInstance();
@@ -104,7 +104,7 @@ class InvReplTest {
 	}
 
 	@Test
-	public void testCurrentTimeMillis() {
+	void testCurrentTimeMillis() {
 		TimeClass timeClass = (TimeClass) InvokeProxetta.withAspects(new InvokeAspect() {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
@@ -129,7 +129,7 @@ class InvReplTest {
 	}
 
 	@Test
-	public void testWimp() {
+	void testWimp() {
 		Wimp wimp = (Wimp) InvokeProxetta.withAspects(new InvokeAspect() {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {

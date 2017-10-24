@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FloatConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		FloatConverter floatConverter = new FloatConverter();
 
 		assertNull(floatConverter.convert(null));

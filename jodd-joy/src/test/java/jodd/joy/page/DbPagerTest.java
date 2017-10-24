@@ -39,7 +39,7 @@ class DbPagerTest {
 	}
 
 	@Test
-	public void testHsqlDbPager() {
+	void testHsqlDbPager() {
 		MyHsqlDbPager hsqlDbPager = new MyHsqlDbPager();
 
 		String sql = hsqlDbPager.buildCountSql2("select * from User u where u.id > 10");

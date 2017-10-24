@@ -57,7 +57,7 @@ class EMLParserTest {
 	}
 
 	@Test
-	public void testParseEML() throws FileNotFoundException, MessagingException {
+	void testParseEML() throws FileNotFoundException, MessagingException {
 		File emlFile = new File(testDataRoot, "example.eml");
 
 		ReceivedEmail email = EMLParser.create().parse(emlFile);
@@ -132,7 +132,7 @@ class EMLParserTest {
 	}
 
 	@Test
-	public void testParseEMLCyrilic() throws FileNotFoundException, MessagingException, UnsupportedEncodingException {
+	void testParseEMLCyrilic() throws FileNotFoundException, MessagingException, UnsupportedEncodingException {
 		File emlFile = new File(testDataRoot, "cyrilic.eml");
 
 		ReceivedEmail email = EMLParser.create().parse(emlFile);
@@ -161,7 +161,7 @@ class EMLParserTest {
 	}
 
 	@Test
-	public void testSimpleEML() throws FileNotFoundException, MessagingException {
+	void testSimpleEML() throws FileNotFoundException, MessagingException {
 		File emlFile = new File(testDataRoot, "simple.eml");
 
 		ReceivedEmail email = EMLParser.create().parse(emlFile);
@@ -189,7 +189,7 @@ class EMLParserTest {
 	}
 
 	@Test
-	public void testSimpleNullEML() throws FileNotFoundException, MessagingException {
+	void testSimpleNullEML() throws FileNotFoundException, MessagingException {
 		File emlFile = new File(testDataRoot, "simple-null.eml");
 
 		ReceivedEmail email = EMLParser.create().parse(emlFile);

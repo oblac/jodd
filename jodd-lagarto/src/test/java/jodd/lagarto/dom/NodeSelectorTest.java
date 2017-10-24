@@ -53,7 +53,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testTags() throws IOException {
+	void testTags() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div");
@@ -68,7 +68,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testMoreTags() throws IOException {
+	void testMoreTags() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div b");
@@ -90,7 +90,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testIdClass() throws IOException {
+	void testIdClass() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div#fiona");
@@ -121,7 +121,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testAttributes() throws IOException {
+	void testAttributes() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div[id]");
@@ -162,7 +162,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testCombinators() throws IOException {
+	void testCombinators() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("p#text > span");
@@ -185,7 +185,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testPseudoClasses() throws IOException {
+	void testPseudoClasses() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("p#text > em:first-child");
@@ -233,7 +233,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testPseudoFunctions() throws IOException {
+	void testPseudoFunctions() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("p#text > em:nth-child(2n+1)");
@@ -264,7 +264,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testDuplicatesRemoval() throws IOException {
+	void testDuplicatesRemoval() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select("div div");
@@ -273,7 +273,7 @@ class NodeSelectorTest {
 
 
 	@Test
-	public void testNodeSelector() throws IOException {
+	void testNodeSelector() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select(new NodeFilter() {
@@ -295,7 +295,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testTwoHtml() throws IOException {
+	void testTwoHtml() throws IOException {
 		File file = new File(testDataRoot, "two.html");
 		String htmlContent = FileUtil.readString(file);
 
@@ -329,7 +329,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testGroupOfSelectors() throws IOException {
+	void testGroupOfSelectors() throws IOException {
 		File file = new File(testDataRoot, "one.html");
 		String htmlContent = FileUtil.readString(file);
 
@@ -342,7 +342,7 @@ class NodeSelectorTest {
 	}
 	
 	@Test
-	public void testClassWithTabs() throws IOException {
+	void testClassWithTabs() throws IOException {
 		File file = new File(testDataRoot, "class-tabs.html");
 		String htmlContent = FileUtil.readString(file);
 
@@ -357,7 +357,7 @@ class NodeSelectorTest {
 	}
 
 	@Test
-	public void testCollectionOfSelectors() throws IOException {
+	void testCollectionOfSelectors() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<CssSelector> selectors1 = new CSSelly("body").parse();

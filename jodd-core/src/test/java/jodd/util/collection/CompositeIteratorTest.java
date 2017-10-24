@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 class CompositeIteratorTest {
 
 	@Test
-	public void testNextWithOne() {
+	void testNextWithOne() {
 		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		
 		try {
@@ -70,7 +70,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveWithOne() {
+	void testRemoveWithOne() {
 		CompositeIterator compositeIterator = new CompositeIterator();
 		List list = createList(4);
 		compositeIterator.add(list.iterator());
@@ -86,7 +86,7 @@ class CompositeIteratorTest {
 
 
 	@Test
-	public void testNextWithTwo() {
+	void testNextWithTwo() {
 		CompositeIterator compositeIterator = new CompositeIterator();
 		List list = createList(4);
 		int count = list.size();
@@ -105,7 +105,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveWithTwo() {
+	void testRemoveWithTwo() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 		int count = list1.size() + list2.size();
@@ -126,7 +126,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testNextWithThree() {
+	void testNextWithThree() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 		List<Integer> list3 = createList(4);
@@ -145,7 +145,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveWithThree() {
+	void testRemoveWithThree() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = new ArrayList<>();
 		List<Integer> list3 = createList(4);
@@ -168,7 +168,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testRemoveFail() {
+	void testRemoveFail() {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 
@@ -184,7 +184,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testPartialIterationWithThree1() {
+	void testPartialIterationWithThree1() {
 		List<Integer> list1 = createList(4);
 		Iterator<Integer> it1 = list1.iterator();
 		List<Integer> list2 = createList(3);
@@ -211,7 +211,7 @@ class CompositeIteratorTest {
 	}
 
 	@Test
-	public void testPartialIterationWithThree2() {
+	void testPartialIterationWithThree2() {
 		List<Integer> list1 = createList(4);
 		Iterator<Integer> it1 = list1.iterator();
 		List<Integer> list2 = createList(3);

@@ -57,7 +57,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testTable() {
+	void testTable() {
 		DbSqlBuilder s;
 
 		// [1]
@@ -141,7 +141,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testColumn() {
+	void testColumn() {
 		assertEquals("BOY.ID BOY", sql().column("Boy.id").table("Boy", null).generateQuery());
 		assertEquals("BOY.ID BOY", sql().column("Boy", "id").table("Boy", null).generateQuery());
 		assertEquals("Boy.ID BOY Boy", sql().column("Boy.id").table("Boy", "Boy").generateQuery());
@@ -163,7 +163,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testReferences() {
+	void testReferences() {
 		assertEquals("b.ID BOY b", sql().ref("b", "id").$(" ").table("Boy", "b").generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.+").$(" ").table("BadBoy", "b").generateQuery());
 		assertEquals("b BOY b", sql().ref("b").table("Boy", "b").generateQuery());
@@ -181,7 +181,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testInsert() {
+	void testInsert() {
 		Boy b = new Boy();
 
 		DbSqlBuilder dbc = sql().insert("Boy", b);
@@ -206,7 +206,7 @@ class DbSqlBuilderTest {
 
 	@Test
 	@SuppressWarnings({"unchecked"})
-	public void testValue() {
+	void testValue() {
 		Boy b = new Boy();
 		DbSqlBuilder dbc = new DbSqlBuilder();
 		assertEquals(":zzz", dbc.value("zzz", Integer.valueOf(b.girlId)).generateQuery());
@@ -233,7 +233,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testUpdateSet() {
+	void testUpdateSet() {
 		Boy b = new Boy();
 		b.id = 1;
 		b.girlId = 2;
@@ -264,13 +264,13 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		DbSqlBuilder dbc = sql().$("123").$("xxx");
 		assertEquals("123xxx", dbc.generateQuery());
 	}
 
 	@Test
-	public void testWhere() {
+	void testWhere() {
 		{
 			Boy b = new Boy();
 			b.id = 1;
@@ -322,7 +322,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testCriteria() {
+	void testCriteria() {
 		BadBoy bb = new BadBoy();
 		BadGirl bg = new BadGirl();
 
@@ -350,7 +350,7 @@ class DbSqlBuilderTest {
 	}
 
 	@Test
-	public void testCriteria2() {
+	void testCriteria2() {
 		Girl girl = new Girl();
 		girl.speciality = "piano";
 

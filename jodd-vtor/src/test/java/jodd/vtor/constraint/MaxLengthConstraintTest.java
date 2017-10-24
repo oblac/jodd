@@ -35,19 +35,19 @@ import static org.mockito.Mockito.when;
 class MaxLengthConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint();
         assertEquals(0, maxLengthConstraint.getMax());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint(10);
         assertEquals(10, maxLengthConstraint.getMax());
     }
 
     @Test
-    public void testSetMax() {
+    void testSetMax() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint();
         int maxValue = 100;
         maxLengthConstraint.setMax(maxValue);
@@ -55,7 +55,7 @@ class MaxLengthConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint();
         MaxLength annotation = mock(MaxLength.class);
         int maxValue = 100;
@@ -66,12 +66,12 @@ class MaxLengthConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(MaxLengthConstraint.validate(null, 1));
     }
 
     @Test
-    public void testMaxLengthConstraint() {
+    void testMaxLengthConstraint() {
         MaxLengthConstraint maxLengthConstraint = new MaxLengthConstraint(3);
         assertTrue(maxLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(3)));
         assertFalse(maxLengthConstraint.isValid(mockContext(), TestUtils.stringWithLength(4)));

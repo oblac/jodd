@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MadvocParamsInjectorTest {
 
 	@Test
-	public void testInjection() {
+	void testInjection() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 

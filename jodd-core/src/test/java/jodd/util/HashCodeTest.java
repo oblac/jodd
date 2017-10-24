@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HashCodeTest {
 
 	@Test
-	public void testhashCode() {
+	void testhashCode() {
 		int hash = HashCode.hash(0, "Hey");
 		hash = HashCode.hash(hash, 1);
 		hash = HashCode.hash(hash, 1.4);

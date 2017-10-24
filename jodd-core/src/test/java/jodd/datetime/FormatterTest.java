@@ -54,7 +54,7 @@ class FormatterTest {
 	}
 
 	@Test
-	public void testStringConversion() {
+	void testStringConversion() {
 		JDateTime jdt = new JDateTime(1975, 1, 1);
 		jdt.setTimeZone(TimeZone.getTimeZone("CET"));
 
@@ -97,7 +97,7 @@ class FormatterTest {
 
 
 	@Test
-	public void testExternalConversion() {
+	void testExternalConversion() {
 		JdtFormatter fmt = new Iso8601JdtFormatter();
 		JDateTime jdt = new JDateTime();
 		String s1 = fmt.convert(jdt, "YYYY-MM.DD");
@@ -106,7 +106,7 @@ class FormatterTest {
 
 
 	@Test
-	public void testQuotes() {
+	void testQuotes() {
 		JDateTime jdt = new JDateTime(1968, 9, 30);
 		assertEquals("SHe WAS Bsample'O'R'N ON 30 September 1968", jdt.toString("SHe 'WAS' 'Bsample''O''R''N' ON DD MML YYYY"));
 		assertEquals("5 is a week number and W is a letter", jdt.toString("W is a week number and 'W is a letter"));
@@ -120,7 +120,7 @@ class FormatterTest {
 
 
 	@Test
-	public void testParsing() {
+	void testParsing() {
 		JDateTime jdt = new JDateTime();
 		jdt.parse("2003-11-24 23:18:38.173");
 		assertEquals("2003-11-24 23:18:38.173", jdt.toString());
@@ -163,7 +163,7 @@ class FormatterTest {
 
 
 	@Test
-	public void testFormat() {
+	void testFormat() {
 		JdtFormat format = new JdtFormat(new Iso8601JdtFormatter(), "YYYY+DD+MM");
 		JDateTime jdt = new JDateTime(2002, 2, 22);
 		assertEquals("2002+22+02", jdt.toString(format));

@@ -34,7 +34,7 @@ class ClassArrayConverterTest {
 
 	@Test
 	@SuppressWarnings({"unchecked"})
-	public void testConversion() {
+	void testConversion() {
 		TypeConverter<Class[]> classArrayConverter = TypeConverterManager.lookup(Class[].class);
 
 		assertNull(classArrayConverter.convert(null));
@@ -55,7 +55,7 @@ class ClassArrayConverterTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testMoreClassArrayConversions() {
+	void testMoreClassArrayConversions() {
 		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n\r", Class[].class));
 		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\n", Class[].class));
 		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\r", Class[].class));

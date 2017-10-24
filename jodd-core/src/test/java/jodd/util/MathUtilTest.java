@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MathUtilTest {
 
 	@Test
-	public void testOddEven() {
+	void testOddEven() {
 		assertTrue(MathUtil.isEven(0));
 		assertTrue(MathUtil.isOdd(1));
 		assertTrue(MathUtil.isOdd(-1));
@@ -42,7 +42,7 @@ class MathUtilTest {
 	}
 
 	@Test
-	public void testFactorial() {
+	void testFactorial() {
 		assertEquals(0, MathUtil.factorial(-1));
 		assertEquals(1, MathUtil.factorial(0));
 		assertEquals(1, MathUtil.factorial(1));
@@ -53,7 +53,7 @@ class MathUtilTest {
 	}
 
 	@Test
-	public void testParseDigit() {
+	void testParseDigit() {
 		assertEquals(0, MathUtil.parseDigit('0'));
 		assertEquals(1, MathUtil.parseDigit('1'));
 		assertEquals(8, MathUtil.parseDigit('8'));
@@ -65,7 +65,7 @@ class MathUtilTest {
 	}
 
 	@Test
-	public void testRandom() {
+	void testRandom() {
 		assertTrue(0 == MathUtil.randomInt(0, 0));
 		int randomInt = MathUtil.randomInt(-10, 10);
 		assertTrue(randomInt < 10);

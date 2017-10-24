@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DbOom2Test extends DbH2TestCase {
 
 	@Test
-	public void testOrm2() {
+	void testOrm2() {
 		DbOomManager.resetAll();
 
 		DbSession session = new DbThreadSession(cp);

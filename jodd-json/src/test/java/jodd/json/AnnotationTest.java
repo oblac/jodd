@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AnnotationTest {
 
 	@Test
-	public void testAnnName() {
+	void testAnnName() {
 		Location location = new Location();
 
 		location.setLatitude(65);
@@ -55,7 +55,7 @@ class AnnotationTest {
 	}
 
 	@Test
-	public void testAnnNameWithClass() {
+	void testAnnNameWithClass() {
 		Location location = new Location();
 
 		location.setLatitude(65);
@@ -72,7 +72,7 @@ class AnnotationTest {
 	}
 
 	@Test
-	public void testAnnIncludeOfCollection() {
+	void testAnnIncludeOfCollection() {
 		App app = new App();
 
 		String json = new JsonSerializer().serialize(app);
@@ -82,7 +82,7 @@ class AnnotationTest {
 	}
 
 	@Test
-	public void testClassInArraySerialize() {
+	void testClassInArraySerialize() {
 		User user = new User();
 		user.setId(123);
 		user.setName("joe");
@@ -115,7 +115,7 @@ class AnnotationTest {
 	}
 
 	@Test
-	public void testCustomMap() {
+	void testCustomMap() {
 		String json = "{\"userId\" : 123, \"name\": 456}";
 
 		Map<String, Integer> map = JsonParser.create().parse(json);
@@ -146,7 +146,7 @@ class AnnotationTest {
 	}
 
 		@Test
-	public void testClassInArrayOrMapParse() {
+	void testClassInArrayOrMapParse() {
 		String json = "{\"userId\" : 123, \"name\":\"Joe\"}";
 
 		User user = JsonParser.create().parse(json, User.class);
@@ -176,7 +176,7 @@ class AnnotationTest {
 	}
 
 	@Test
-	public void testBeanSettersGetters() {
+	void testBeanSettersGetters() {
 		String json = "{\"foo.folder\":\"vvvv\"}";
 
 		{

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RuntimeUtilTest {
 
 	@Test
-	public void testJoddLocation() {
+	void testJoddLocation() {
 		String loc = RuntimeUtil.joddLocation();
 		assertTrue(loc.contains("jodd"));
 	}

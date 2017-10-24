@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class KeyTest {
 
 	@Test
-	public void testEqualEntities() {
+	void testEqualEntities() {
 		DbOomManager dbOomManager = DbOomManager.getInstance();
 		dbOomManager.reset();
 

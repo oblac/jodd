@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class JoddServletTest {
 
 	@Test
-	public void testLoadedModules() {
+	void testLoadedModules() {
 		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));
 		assertFalse(Jodd.isModuleLoaded(JoddModule.HTTP));
 		assertFalse(Jodd.isModuleLoaded(JoddModule.MADVOC));

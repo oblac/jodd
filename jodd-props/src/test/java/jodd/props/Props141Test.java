@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class Props141Test extends BasePropsTest {
 
 	@Test
-	public void test141Simple() throws IOException {
+	void test141Simple() throws IOException {
 		Props props = new Props();
 		String data = readDataFile("i141.props");
 		props.load(data);
@@ -48,7 +48,7 @@ class Props141Test extends BasePropsTest {
 	}
 
 	@Test
-	public void test141Complex() throws IOException {
+	void test141Complex() throws IOException {
 		Props props = new Props();
 		String data = readDataFile("i141-2.props");
 		props.load(data);

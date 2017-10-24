@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class BitsTest {
 
 	@Test
-	public void testBitsPutGet() {
+	void testBitsPutGet() {
 		byte[] bytes = new byte[10];
 
 		Bits.putBoolean(bytes, 0, true);

@@ -53,7 +53,7 @@ class TransactionAnnotationTest {
 
 
 	@Test
-	public void testTransactionAnnotationOnly() throws NoSuchMethodException {
+	void testTransactionAnnotationOnly() throws NoSuchMethodException {
 		TransactionAnnotation<Transaction> txAnnotation = new TransactionAnnotation<>(Transaction.class);
 		assertEquals(Transaction.class, txAnnotation.getAnnotationClass());
 
@@ -75,7 +75,7 @@ class TransactionAnnotationTest {
 	}
 
 	@Test
-	public void testCustomTransactionAnnotation() throws NoSuchMethodException {
+	void testCustomTransactionAnnotation() throws NoSuchMethodException {
 		TransactionAnnotation<CustomTransaction> txAnnotation = new TransactionAnnotation<>(CustomTransaction.class);
 		assertEquals(CustomTransaction.class, txAnnotation.getAnnotationClass());
 

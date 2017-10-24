@@ -34,26 +34,26 @@ import static org.mockito.Mockito.when;
 class MaxConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         MaxConstraint maxConstraint = new MaxConstraint();
         assertEquals(0.0, maxConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         MaxConstraint maxConstraint = new MaxConstraint(0.1);
         assertEquals(0.1, maxConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testSetMax() {
+    void testSetMax() {
         MaxConstraint maxConstraint = new MaxConstraint();
         maxConstraint.setMax(0.1);
         assertEquals(0.1, maxConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         MaxConstraint maxConstraint = new MaxConstraint();
         Max annotation = mock(Max.class);
         when(annotation.value()).thenReturn(0.1);
@@ -64,12 +64,12 @@ class MaxConstraintTest extends ConstraintTestBase {
 
 
     @Test
-    public void testValidate_WithNullValue() {
+    void testValidate_WithNullValue() {
         assertTrue(MaxConstraint.validate(null, 12.1));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         assertTrue(new MaxConstraint(12.5).isValid(mockContext(), "12.1"));
         assertFalse(new MaxConstraint(12.5).isValid(mockContext(), "12.6"));
     }

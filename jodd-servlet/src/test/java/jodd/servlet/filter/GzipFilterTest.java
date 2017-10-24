@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 class GzipFilterTest {
 
 	@Test
-	public void testEligibleExtensions() {
+	void testEligibleExtensions() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};
@@ -55,7 +55,7 @@ class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleAll() {
+	void testEligibleAll() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = null;
@@ -73,7 +73,7 @@ class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleWildcardMatches() {
+	void testEligibleWildcardMatches() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};
@@ -97,7 +97,7 @@ class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleWildcardMatchesAll() {
+	void testEligibleWildcardMatchesAll() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};
@@ -118,7 +118,7 @@ class GzipFilterTest {
 	}
 
 	@Test
-	public void testEligibleWildcardMatchesExcludes() {
+	void testEligibleWildcardMatchesExcludes() {
 		GzipFilter gzipFilter = new GzipFilter();
 		gzipFilter.requestParameterName = "gzip";
 		gzipFilter.extensions = new String[] {"html"};

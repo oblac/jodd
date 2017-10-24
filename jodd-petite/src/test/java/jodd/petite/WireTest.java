@@ -44,7 +44,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testContainer() {
+	void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
 		configurator.setExcludeAllEntries(true);
@@ -110,7 +110,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testCreate() {
+	void testCreate() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
 		pc.registerPetiteBean(Zoo.class, null, null, null, false);
@@ -129,7 +129,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testCtor() {
+	void testCtor() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(BooC.class, null, null, null, false);
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
@@ -157,7 +157,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testAutowire() {
+	void testAutowire() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false);
 		pc.registerPetiteBean(Loo.class, null, null, null, false);
@@ -190,7 +190,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testInterface() {
+	void testInterface() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
 		pc.registerPetiteBean(DefaultIoo.class, "ioo", null, null, false);
@@ -203,7 +203,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testSelf() {
+	void testSelf() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.addSelf();
 
@@ -215,7 +215,7 @@ class WireTest {
 	}
 
 	@Test
-	public void testInit() {
+	void testInit() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
 		pc.registerPetiteBean(Zoo.class, null, null, null, false);

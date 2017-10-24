@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 class HasSubstringConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         String someStr = "someStr";
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint(someStr, true);
         assertEquals(someStr, hasSubstringConstraint.getSubstring());
@@ -42,14 +42,14 @@ class HasSubstringConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         assertNull(hasSubstringConstraint.getSubstring());
         assertFalse(hasSubstringConstraint.isIgnoreCase());
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         HasSubstring annotation = mock(HasSubstring.class);
         String substring = "testString";
@@ -64,7 +64,7 @@ class HasSubstringConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testSetSubstring() {
+    void testSetSubstring() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         String someStr = "someStr";
         hasSubstringConstraint.setSubstring(someStr);
@@ -72,20 +72,20 @@ class HasSubstringConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testSetIgnoreCase() {
+    void testSetIgnoreCase() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         hasSubstringConstraint.setIgnoreCase(true);
         assertTrue(hasSubstringConstraint.isIgnoreCase());
     }
 
     @Test
-    public void testValidate_WithNullValue() {
+    void testValidate_WithNullValue() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         assertTrue(hasSubstringConstraint.isValid(mockContext(), null));
     }
 
     @Test
-    public void testIgnoreCase_False() {
+    void testIgnoreCase_False() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         hasSubstringConstraint.setSubstring("al");
         hasSubstringConstraint.setIgnoreCase(false);
@@ -96,7 +96,7 @@ class HasSubstringConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testIgnoreCase_True() {
+    void testIgnoreCase_True() {
         HasSubstringConstraint hasSubstringConstraint = new HasSubstringConstraint();
         hasSubstringConstraint.setSubstring("al");
         hasSubstringConstraint.setIgnoreCase(true);

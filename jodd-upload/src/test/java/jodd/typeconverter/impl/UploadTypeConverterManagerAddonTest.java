@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class UploadTypeConverterManagerAddonTest {
 
 	@Test
-	public void testRegistration() {
+	void testRegistration() {
 		JoddUpload.init();
 
 		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.lookup(FileUpload.class);

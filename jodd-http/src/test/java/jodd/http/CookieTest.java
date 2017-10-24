@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CookieTest {
 
 	@Test
-	public void testCookieParsing() {
+	void testCookieParsing() {
 		Cookie cookie = new Cookie("name=value");
 
 		assertEquals("name", cookie.getName());
@@ -56,7 +56,7 @@ class CookieTest {
 	}
 
 	@Test
-	public void test395() {
+	void test395() {
 		Cookie cookie = new Cookie("name=value;");
 
 		assertEquals("name", cookie.getName());
@@ -74,7 +74,7 @@ class CookieTest {
 	}
 
 	@Test
-	public void testSpecialCookieValues() {
+	void testSpecialCookieValues() {
 		Cookie cookie = new Cookie("name=value");
 
 		assertEquals("name", cookie.getName());

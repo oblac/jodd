@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class JoddHtmlStaplerTest {
 
 	@Test
-	public void testLoadedModules() {
+	void testLoadedModules() {
 		assertTrue(Jodd.isModuleLoaded(Jodd.JoddModule.HTML_STAPLER));
 	}
 

@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class PropsTest extends BasePropsTest {
 
 	@Test
-	public void testBasic() throws IOException {
+	void testBasic() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test.props"));
 
@@ -73,7 +73,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testEscapeNewValue() throws IOException {
+	void testEscapeNewValue() throws IOException {
 		Props p = new Props();
 		p.setEscapeNewLineValue("<br>");
 		p.load(readDataFile("test.props"));
@@ -81,7 +81,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testIgnorePrefixWhitespace() throws IOException {
+	void testIgnorePrefixWhitespace() throws IOException {
 		Props p = new Props();
 		p.setIgnorePrefixWhitespacesOnNewLine(false);
 		p.load(readDataFile("test.props"));
@@ -89,7 +89,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testProfiles() throws IOException {
+	void testProfiles() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test-profiles.props"));
 
@@ -147,7 +147,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testDefaultProfile() {
+	void testDefaultProfile() {
 		Props p = new Props();
 		p.load(
 				"key1=hello\n" +
@@ -160,7 +160,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testNestedProfiles() throws IOException {
+	void testNestedProfiles() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test-profiles.props"));
 
@@ -193,7 +193,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacros() throws IOException {
+	void testMacros() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
 
@@ -212,7 +212,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacrosNew() throws IOException {
+	void testMacrosNew() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
 
@@ -238,7 +238,7 @@ class PropsTest extends BasePropsTest {
 
 
 	@Test
-	public void testMacros2() throws IOException {
+	void testMacros2() throws IOException {
 		Props p = new Props();
 		p.setValue("key1", "**${key${key3}}**");
 		p.setValue("key3", "2");
@@ -248,7 +248,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacroNotExist() {
+	void testMacroNotExist() {
 		Props p = new Props();
 		p.setValue("mac1", "value1");
 		p.setValue("key1", "${mac1}");
@@ -260,7 +260,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacroNotExistIgnoreMissing() {
+	void testMacroNotExistIgnoreMissing() {
 		Props p = new Props();
 		p.setIgnoreMissingMacros(true);
 		p.setValue("mac1", "value1");
@@ -273,7 +273,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacroNotExistSkipEmpty() {
+	void testMacroNotExistSkipEmpty() {
 		Props p = new Props();
 		p.setIgnoreMissingMacros(true);
 		p.setSkipEmptyProps(false);
@@ -287,7 +287,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testClone() throws IOException {
+	void testClone() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
 
@@ -303,7 +303,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testEmpty() throws IOException {
+	void testEmpty() throws IOException {
 		Props p = new Props();
 		p.setSkipEmptyProps(false);
 		p.load(readDataFile("test-e.props"));
@@ -314,7 +314,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testActiveProfiles() throws IOException {
+	void testActiveProfiles() throws IOException {
 		Props p = loadProps("test-actp.props");
 
 		assertEquals("hello", p.getBaseValue("key1"));
@@ -326,7 +326,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testProperties() throws IOException {
+	void testProperties() throws IOException {
 		Props p = loadProps("test.properties");
 
 		assertEquals("value", p.getValue("one"));
@@ -335,7 +335,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testAdd() {
+	void testAdd() {
 		Props p = new Props();
 		p.setValue("key1", "val${key2}");
 
@@ -348,7 +348,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testDuplicate() throws IOException {
+	void testDuplicate() throws IOException {
 		Props p = new Props();
 		loadProps(p, "test-dupl.props");
 
@@ -364,7 +364,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testDoubleLoadsAndResolves() {
+	void testDoubleLoadsAndResolves() {
 		Props props = new Props();
 		props.load("pojoBean2.val2=123");
 		props.load("pojoBean2.val1=\\\\${pojo}");
@@ -380,7 +380,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testSystemProperties() {
+	void testSystemProperties() {
 		Props props = new Props();
 		assertEquals(0, props.countTotalProperties());
 		assertNull(props.getValue("user.dir"));
@@ -391,7 +391,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testEnvironment() {
+	void testEnvironment() {
 		Props props = new Props();
 		assertEquals(0, props.countTotalProperties());
 
@@ -400,7 +400,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testValueWithBracket() throws IOException {
+	void testValueWithBracket() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test3.props"));
 
@@ -427,7 +427,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMultilineValue() throws IOException {
+	void testMultilineValue() throws IOException {
 		Props p = new Props();
 		p.setValueTrimLeft(true);
 		p.load(readDataFile("test3.props"));
@@ -437,7 +437,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testAppend() {
+	void testAppend() {
 		Props p = new Props();
 		p.setAppendDuplicateProps(true);
 		p.load("foo=123\nfoo=456");
@@ -449,7 +449,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testAppend2() {
+	void testAppend2() {
 		Props p = new Props();
 		p.setAppendDuplicateProps(false);
 		p.load("foo=one\nfoo=two\nfoo+=three");
@@ -467,7 +467,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testAppendEof() {
+	void testAppendEof() {
 		Props p = new Props();
 		p.setAppendDuplicateProps(false);
 		p.load("foo=one\nfoo=two\nfoo+");
@@ -475,7 +475,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testActiveProfileBeforeInit() {
+	void testActiveProfileBeforeInit() {
 		Props p =  new Props();
 		p.setActiveProfiles("xxx");
 		p.load("foo=one");
@@ -484,7 +484,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testDoubleInitialization() {
+	void testDoubleInitialization() {
 		Props p =  new Props();
 		p.setValue("bar", "two.${foo}.${wer}");
 		p.setValue("foo", "one");
@@ -497,7 +497,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testCategoriesInValues() {
+	void testCategoriesInValues() {
 		Props p =  new Props();
 		p.load(	"[section]\n" +
 				"foo = aaa, [bbb:ccc]\n" +
@@ -508,7 +508,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testDuplicatedValue() {
+	void testDuplicatedValue() {
 		Props p = new Props();
 		p.setValue("foo", "bar");
 		p.setValue("foo", "aaa", "prof1");
@@ -523,7 +523,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testIteratorEmpty() {
+	void testIteratorEmpty() {
 		Props p = new Props();
 
 		Iterator<PropsEntry> it = p.iterator();
@@ -538,7 +538,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testIteratorSkip() {
+	void testIteratorSkip() {
 		Props p = new Props();
 
 		p.load("zorg<prof2>=zero\n" +
@@ -598,7 +598,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testIteratorSections() {
+	void testIteratorSections() {
 		Props p = new Props();
 
 		p.load("aaa.zorg<prof2>=zero\n" +
@@ -616,7 +616,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testGetAllProfiles() {
+	void testGetAllProfiles() {
 		Props p = new Props();
 
 		p.load("zorg<prof2>=zero\n" +
@@ -630,7 +630,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testGetProfilesForKey() {
+	void testGetProfilesForKey() {
 		Props p = new Props();
 
 		p.load("zorg<prof2>=zero\n" +
@@ -663,7 +663,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testChangeActiveProfile() {
+	void testChangeActiveProfile() {
 		Props p = new Props();
 
 		p.load("foo=one\n" +
@@ -679,7 +679,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testWeirdKey() {
+	void testWeirdKey() {
 		Props p = new Props();
 
 		p.load("org.jodd.Foo@Bar=one\n" +
@@ -692,7 +692,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMultipleProfilesAtOnce() {
+	void testMultipleProfilesAtOnce() {
 		Props p = new Props();
 		p.load(
 				"foo.one=111\n" +
@@ -717,7 +717,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacrosAndProfiles() {
+	void testMacrosAndProfiles() {
 		Props p = new Props();
 		p.load(
 				"one=111\n" +
@@ -740,7 +740,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testMacrosAndProfilesAsBefore() {
+	void testMacrosAndProfilesAsBefore() {
 		Props p = new Props();
 		p.load(
 				"one=111\n" +
@@ -807,7 +807,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testCopy() {
+	void testCopy() {
 		Props p = new Props();
 
 		p.load("foo.one=111\n" +
@@ -821,7 +821,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testCopyWithProfiles() {
+	void testCopyWithProfiles() {
 		Props p = new Props();
 		p.load(
 				"foo.one=111\n" +
@@ -868,7 +868,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testCopyEmpty() {
+	void testCopyEmpty() {
 		Props p = new Props();
 
 		p.load("foo.one=111\n" +
@@ -883,7 +883,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testIssue78() {
+	void testIssue78() {
 		String data =
 				"@profiles=o\n" +
 				"\n" +
@@ -900,7 +900,7 @@ class PropsTest extends BasePropsTest {
 	}
 
 	@Test
-	public void testAdditionalEquals() {
+	void testAdditionalEquals() {
 		String data =
 				"account-dn = cn=accountname,ou=users,o=organization\n";
 
@@ -912,7 +912,7 @@ class PropsTest extends BasePropsTest {
 
 
 	@Test
-	public void testDifferentLineEndings() {
+	void testDifferentLineEndings() {
 		Props props = new Props();
 		props.setIgnorePrefixWhitespacesOnNewLine(true);
 		props.load("text=line1\\\n   line2\\\r\n   line3\\\r   line4");

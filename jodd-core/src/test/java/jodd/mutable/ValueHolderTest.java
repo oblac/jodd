@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ValueHolderTest {
 
 	@Test
-	public void testValueHolder() {
+	void testValueHolder() {
 		ValueHolder<String> str = ValueHolderWrapper.create();
 		str.set("123");
 

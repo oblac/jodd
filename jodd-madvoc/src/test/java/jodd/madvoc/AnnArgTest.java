@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class AnnArgTest extends MadvocTestCase {
 
 	@Test
-	public void testDefaultMethods() {
+	void testDefaultMethods() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);

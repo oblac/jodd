@@ -104,7 +104,7 @@ class BufferTest {
 	}
 
 	@Test
-	public void testBufferAppend() {
+	void testBufferAppend() {
 		Buffer buffer = new Buffer();
 
 		assertEquals(0, buffer.size());
@@ -145,7 +145,7 @@ class BufferTest {
 	}
 
 	@Test
-	public void testBufferWrite1() throws IOException {
+	void testBufferWrite1() throws IOException {
 		Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;
@@ -188,7 +188,7 @@ class BufferTest {
 	}
 
 	@Test
-	public void testBufferWrite2() throws IOException {
+	void testBufferWrite2() throws IOException {
 		Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;
@@ -239,7 +239,7 @@ class BufferTest {
 	}
 
 	@Test
-	public void testBufferWrite3() throws IOException {
+	void testBufferWrite3() throws IOException {
 		Buffer buffer;
 		ByteArrayOutputStream baos;
 		SimpleProgressListener hpl;

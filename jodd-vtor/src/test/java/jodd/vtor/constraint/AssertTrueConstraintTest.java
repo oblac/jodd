@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AssertTrueConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testAssertTrue() {
+    void testAssertTrue() {
         AssertTrueConstraint assertTrueConstraint = new AssertTrueConstraint();
         //this is an empty method nothing can be verified
         assertTrueConstraint.configure(null);

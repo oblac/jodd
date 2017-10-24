@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DstTest {
 
 	@Test
-	public void testSpringForward() {
+	void testSpringForward() {
 		TimeZone englandTZ = TimeZone.getTimeZone("Europe/London");
 		TimeZone.setDefault(englandTZ);
 
@@ -77,7 +77,7 @@ class DstTest {
 	}
 
 /*
-	public void testOnSpringFormward() {
+	void testOnSpringFormward() {
 		TimeZone englandTZ = TimeZone.getTimeZone("Europe/London");
 		TimeZone.setDefault(englandTZ);
 
@@ -99,7 +99,7 @@ class DstTest {
 */
 
 	@Test
-	public void testFallBack() {
+	void testFallBack() {
 		TimeZone englandTZ = TimeZone.getTimeZone("Europe/London");
 		TimeZone.setDefault(englandTZ);
 

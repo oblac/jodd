@@ -55,7 +55,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testGzip() throws IOException {
+	void testGzip() throws IOException {
 		ZipUtil.gzip(new File(dataRoot, "sb.data"));
 		File gzipFile = new File(dataRoot, "sb.data.gz");
 		assertTrue(gzipFile.exists());
@@ -76,7 +76,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testZlib() throws IOException {
+	void testZlib() throws IOException {
 		ZipUtil.zlib(new File(dataRoot, "sb.data"));
 		File zlibFile = new File(dataRoot, "sb.data.zlib");
 		assertTrue(zlibFile.exists());
@@ -86,7 +86,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testZip() throws IOException {
+	void testZip() throws IOException {
 		ZipUtil.zip(new File(dataRoot, "sb.data"));
 		File zipFile = new File(dataRoot, "sb.data.zip");
 		assertTrue(zipFile.exists());
@@ -103,7 +103,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipDir() throws IOException {
+	void testZipDir() throws IOException {
 		ZipUtil.zip(new File(dataRoot));
 		File zipFile = new File(dataRoot + ".zip");
 		assertTrue(zipFile.exists());
@@ -128,7 +128,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipEmptyFolder() throws IOException {
+	void testZipEmptyFolder() throws IOException {
 		byte[] bytes = ZipBuilder
 			.createZipInMemory()
 			.addFolder("myEmptyFolder")
@@ -148,7 +148,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipBuilderFile() throws IOException {
+	void testZipBuilderFile() throws IOException {
 		File zipFile = new File(dataRoot, "test.zip");
 
 		ZipBuilder.createZipFile(zipFile)
@@ -178,7 +178,7 @@ class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipBuilderFileMemory() throws IOException {
+	void testZipBuilderFileMemory() throws IOException {
 		byte[] bytes = ZipBuilder.createZipInMemory()
 			.add(new File(dataRoot, "sb.data"))
 				.path("sbdata").comment("This is sb data file").save()

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class FloatArrayConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		FloatArrayConverter floatArrayConverter = (FloatArrayConverter) TypeConverterManager.lookup(float[].class);
 
 		assertNull(floatArrayConverter.convert(null));

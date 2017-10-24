@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 class ByteArrayResponseWrapperTest {
 
 	@Test
-	public void testWrite() throws IOException {
+	void testWrite() throws IOException {
 		HttpServletResponseWrapper rw = mock(HttpServletResponseWrapper.class);
 		ServletOutputStream os = mock(ServletOutputStream.class);
 

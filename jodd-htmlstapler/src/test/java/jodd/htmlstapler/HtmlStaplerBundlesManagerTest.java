@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HtmlStaplerBundlesManagerTest {
 
 	@Test
-	public void testRandomDigest() {
+	void testRandomDigest() {
 		HtmlStaplerBundlesManager hsbm = new HtmlStaplerBundlesManager("/ctx", "/", RESOURCES_ONLY);
 
 		String digest = hsbm.createDigest("source");

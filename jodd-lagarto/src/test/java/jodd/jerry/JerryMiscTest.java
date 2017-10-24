@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class JerryMiscTest {
 
 	@Test
-	public void testTextContentDecoding() {
+	void testTextContentDecoding() {
 		String html = "<html><body><div>&#1054;&#1076;&#1112;&#1072;&#1074;&#1080; &#1089;&#1077;</div></body></html>";
 
 		Jerry doc = Jerry.jerry(html);
@@ -59,7 +59,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testTextContentDecoding2() {
+	void testTextContentDecoding2() {
 		String html = "<html><body><div></div></body></html>";
 
 		Jerry doc = Jerry.jerry(html);
@@ -72,7 +72,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testAppend1() {
+	void testAppend1() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
@@ -87,7 +87,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testAppend2() {
+	void testAppend2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
@@ -102,7 +102,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testAppend3() {
+	void testAppend3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXhtmlMode();
@@ -117,7 +117,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testNullForEmpty() {
+	void testNullForEmpty() {
 		Jerry doc = Jerry.jerry().parse("<html></html>");
 
 		assertNull(doc.$("#not-a-valid-id").attr("someAttribute"));
@@ -128,7 +128,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testFirstNotDirectly() {
+	void testFirstNotDirectly() {
 		Jerry doc = Jerry.jerry().parse("<html><div>one</div><p>two</p><div>three</div><p>four</p></html>");
 
 		assertEquals(2, doc.$("div").size());
@@ -141,7 +141,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testIterator1() {
+	void testIterator1() {
 		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
 
 		Iterator<Jerry> iterator = doc.find(".foo").iterator();
@@ -156,7 +156,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testIterator2() {
+	void testIterator2() {
 		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
 
 		Iterator<Jerry> iterator = doc.find(".notfound").iterator();
@@ -171,7 +171,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testHtmlNodesOwner() {
+	void testHtmlNodesOwner() {
 		Jerry doc = Jerry.jerry().parse("<div>1<div id='x'>2</div>3</div>");
 
 		doc.$("#x").html("<span>wow</span>");
@@ -188,7 +188,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testContains() {
+	void testContains() {
 		Jerry doc = Jerry.jerry().parse("<body>aaa<p>foo 401(k) bar</p>xxx</body>");
 
 		Jerry p = doc.$("p:contains('401(k)')");
@@ -199,7 +199,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testCustomPseudoClass() {
+	void testCustomPseudoClass() {
 		PseudoClassSelector.registerPseudoClass(MyPseudoClass.class);
 
 		Jerry doc = Jerry.jerry().parse("<body><p jodd-attr='1'>found</p><p>not found</p></body>");
@@ -222,7 +222,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testCustomPseudoFunction() {
+	void testCustomPseudoFunction() {
 		PseudoFunctionSelector.registerPseudoFunction(MyPseudoFunction.class);
 
 		Jerry doc = Jerry.jerry().parse("<body><p>not found</p><div>This!</div></body>");
@@ -251,7 +251,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testCreateElementError() {
+	void testCreateElementError() {
 		Jerry j = Jerry.jerry("1<span>2</span>3<span></span>4");
 
 		j.attr("id", "test");
@@ -263,7 +263,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testCustomerDetails() {
+	void testCustomerDetails() {
 		Jerry doc = Jerry.jerry("<p>to<br>{customerDetails}</p>");
 
 		doc.$("p").each(($this, index) -> {
@@ -278,7 +278,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		String html = null;
 		Jerry jerry = Jerry.jerry(html);
 
@@ -293,7 +293,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void test233() {
+	void test233() {
 		String html = "<div><span>name</span>value</div>";
 
 		Jerry $ = Jerry.jerry(html);
@@ -312,7 +312,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void testEmptyClassAttribute() {
+	void testEmptyClassAttribute() {
 		Jerry doc = Jerry.jerry("<div class></div>");
 
 		try {
@@ -323,7 +323,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void test250() {
+	void test250() {
 		String html = "<html>\n" +
 			"  <body>\n" +
 			"    <a href=\"/go?to=foobar&index=null\" title=\"Choice 1\">link</a>\n" +
@@ -340,7 +340,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void test279() {
+	void test279() {
 		String html = "<html><body><div>x</div></body></html>";
 
 		Jerry $ = Jerry.jerry(html);
@@ -356,7 +356,7 @@ class JerryMiscTest {
 	}
 
 	@Test
-	public void test321() {
+	void test321() {
 		String html = "<head><title>test &amp; blah</title><body><h1>test &amp; blah<b>bold</b></h1></body>";
 
 		Jerry doc = Jerry.jerry(html);

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class LocaleConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		LocaleConverter localeConverter = new LocaleConverter();
 
 		assertNull(localeConverter.convert(null));

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JsonWriterTest {
 
 	@Test
-	public void testJsonWriter() {
+	void testJsonWriter() {
 		StringBuilder sb = new StringBuilder();
 		JsonWriter jsonWriter = new JsonWriter(sb, false);
 

@@ -86,7 +86,7 @@ class PathRefTest {
 	}
 
 	@Test
-	public void testPathCollection() {
+	void testPathCollection() {
 		Pathref<User> p = Pathref.on(User.class);
 
 		assertEquals("address", p.path(p.to().getAddress()));
@@ -97,7 +97,7 @@ class PathRefTest {
 	}
 
 	@Test
-	public void testPathAll() {
+	void testPathAll() {
 		Pathref<User> p = Pathref.on(User.class);
 
 		assertEquals("address", p.path(p.to().getAddress()));

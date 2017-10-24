@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class DefaultAppCoreTest {
 
 	@Test
-	public void testAppPropsNameAndPattern() {
+	void testAppPropsNameAndPattern() {
 		AppCore appCore = new AppCore();
 
 		appCore.initCore();

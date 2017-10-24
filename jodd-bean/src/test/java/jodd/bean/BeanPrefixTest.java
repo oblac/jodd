@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BeanPrefixTest {
 
 	@Test
-	public void testFieldPrefix1() {
+	void testFieldPrefix1() {
 		LifeBean lifeBean = new LifeBean();
 
 		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
@@ -65,7 +65,7 @@ class BeanPrefixTest {
 	}
 
 	@Test
-	public void testFieldPrefix1withEmpty() {
+	void testFieldPrefix1withEmpty() {
 		LifeBean lifeBean = new LifeBean();
 
 		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
@@ -94,7 +94,7 @@ class BeanPrefixTest {
 	}
 
 	@Test
-	public void testFieldPrefix2() {
+	void testFieldPrefix2() {
 		BeanUtilBean beanUtilBean = new BeanUtilBean();
 
 		LifeBean lifeBean = new LifeBean();

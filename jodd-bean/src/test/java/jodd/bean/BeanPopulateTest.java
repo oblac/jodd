@@ -56,7 +56,7 @@ class BeanPopulateTest {
 	}
 
 	@Test
-	public void testPopulate() {
+	void testPopulate() {
 
 		Map fooMap = new HashMap();
 		fooMap.put("one", "ONE");

@@ -54,7 +54,7 @@ class HttpBrowserTest {
 	}
 
 	@Test
-	public void testBrowser() {
+	void testBrowser() {
 		HttpBrowser httpBrowser = new HttpBrowser();
 
 		httpBrowser.sendRequest(
@@ -76,7 +76,7 @@ class HttpBrowserTest {
 	}
 
 	@Test
-	public void testBrowserRedirect() {
+	void testBrowserRedirect() {
 		HttpBrowser httpBrowser = new HttpBrowser();
 
 		httpBrowser.sendRequest(HttpRequest.get("localhost:8173/redirect"));

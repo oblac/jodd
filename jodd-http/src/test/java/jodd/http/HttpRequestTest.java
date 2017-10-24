@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HttpRequestTest {
 
 	@Test
-	public void testQueryParameters() {
+	void testQueryParameters() {
 		HttpRequest httpRequest = new HttpRequest();
 
 		httpRequest.path("");
@@ -106,7 +106,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void testFormParamsObjects() {
+	void testFormParamsObjects() {
 		Map<String, Object> params = new HashMap<>();
 		params.put("state", 1);
 
@@ -117,7 +117,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void testSet() {
+	void testSet() {
 		HttpRequest httpRequest = new HttpRequest();
 		httpRequest.set("GET http://jodd.org:173/index.html?light=true");
 
@@ -185,7 +185,7 @@ class HttpRequestTest {
 
 
 	@Test
-	public void testInOutForm() {
+	void testInOutForm() {
 		HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
 		request.header("User-Agent", "Scaly");
 		request.form("one", "funny");
@@ -210,7 +210,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void testNegativeContentLength() {
+	void testNegativeContentLength() {
 		HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
 		request.contentLength(-123);
 
@@ -236,7 +236,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void testFileUpload() throws IOException {
+	void testFileUpload() throws IOException {
 		HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
 
 		request.header("User-Agent", "Scaly").form("one", "funny");
@@ -276,7 +276,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void testUrl() {
+	void testUrl() {
 		HttpRequest httpRequest = new HttpRequest();
 		httpRequest.set("GET http://jodd.org:173/index.html?light=true");
 
@@ -289,7 +289,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void testBasicAuthorizationCanBeSetToNullAndIsIgnoredSilently() {
+	void testBasicAuthorizationCanBeSetToNullAndIsIgnoredSilently() {
 		HttpRequest httpRequest = new HttpRequest();
 		String[][] input = new String[][]{
 				{"non-null", null},
@@ -310,7 +310,7 @@ class HttpRequestTest {
 	}
 
 	@Test
-	public void test394() {
+	void test394() {
 		HttpRequest request = HttpRequest.get("https://jodd.org/random link");
 		assertEquals("GET", request.method());
 		assertEquals("https://jodd.org/random link", request.url());
@@ -330,7 +330,7 @@ class HttpRequestTest {
 	}
 	
 	@Test
-	public void testCapitalizeHeaders() {
+	void testCapitalizeHeaders() {
 
 		// true
 

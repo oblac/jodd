@@ -85,7 +85,7 @@ class CompositeTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testCustomName() {
+	void testCustomName() {
 		DbOomQuery dbOomQuery = sql("select $C{u.*} from $T{User u}").query();
 		User user = dbOomQuery.find(User.class);
 
@@ -101,7 +101,7 @@ class CompositeTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testAdditionalColumn() {
+	void testAdditionalColumn() {
 		// default
 
 		DbOomQuery dbOomQuery = sql("select $C{u.*}, 243 from $T{User u}").query();
@@ -138,7 +138,7 @@ class CompositeTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testExtend() {
+	void testExtend() {
 		DbOomQuery dbOomQuery = sql("select $C{w.*}, $C{w.user:u.*} from $T{Wizard w} inner join $T{User u} on $w.wizardId=$u.userId").query();
 
 		Wizard wizard = dbOomQuery.find(/*Wizard.class, User.class*/);

@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ActionRequestRecursionTest {
 
 	@Test
-	public void testFiltersPassAndInterceptorsPass() throws Exception {
+	void testFiltersPassAndInterceptorsPass() throws Exception {
 		MyActionRequest actionRequest = createMyActionRequest(
 				arr(new FilterPass(1), new FilterPass(2)),
 				arr(new InterceptorPass(1), new InterceptorPass(2))
@@ -52,7 +52,7 @@ class ActionRequestRecursionTest {
 	}
 
 	@Test
-	public void testFiltersStopAndInterceptorsPass1() throws Exception {
+	void testFiltersStopAndInterceptorsPass1() throws Exception {
 		MyActionRequest actionRequest = createMyActionRequest(
 				arr(new FilterStop(), new FilterPass(2)),
 				arr(new InterceptorPass(1), new InterceptorPass(2))
@@ -63,7 +63,7 @@ class ActionRequestRecursionTest {
 	}
 
 	@Test
-	public void testFiltersStopAndInterceptorsPass2() throws Exception {
+	void testFiltersStopAndInterceptorsPass2() throws Exception {
 		MyActionRequest actionRequest = createMyActionRequest(
 				arr(new FilterPass(1), new FilterStop()),
 				arr(new InterceptorPass(1), new InterceptorPass(2))
@@ -74,7 +74,7 @@ class ActionRequestRecursionTest {
 	}
 
 	@Test
-	public void testFiltersPassAndInterceptorsStop1() throws Exception {
+	void testFiltersPassAndInterceptorsStop1() throws Exception {
 		MyActionRequest actionRequest = createMyActionRequest(
 				arr(new FilterPass(1), new FilterPass(2)),
 				arr(new InterceptorPass(1), new InterceptorStop())
@@ -85,7 +85,7 @@ class ActionRequestRecursionTest {
 	}
 
 	@Test
-	public void testFiltersPassAndInterceptorsStop2() throws Exception {
+	void testFiltersPassAndInterceptorsStop2() throws Exception {
 		MyActionRequest actionRequest = createMyActionRequest(
 				arr(new FilterPass(1), new FilterPass(2)),
 				arr(new InterceptorStop(), new InterceptorPass(2))
@@ -96,7 +96,7 @@ class ActionRequestRecursionTest {
 	}
 
 	@Test
-	public void testFiltersPassAndInterceptorsStop3() throws Exception {
+	void testFiltersPassAndInterceptorsStop3() throws Exception {
 		MyActionRequest actionRequest = createMyActionRequest(
 				arr(new FilterPass(1), new FilterPass(2)),
 				arr(new InterceptorPass(1), new InterceptorStop(), new InterceptorPass(3))

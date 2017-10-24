@@ -54,7 +54,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testInvalidTag() {
+	void testInvalidTag() {
 		String html = "<html>text1<=>text2</html>";
 
 		LagartoParser lagartoParser = new LagartoParser(html, false);
@@ -87,7 +87,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testNonQuotedAttributeValue() {
+	void testNonQuotedAttributeValue() {
 		String html = "<a href=123>xxx</a>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -108,7 +108,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testIssue23_0() throws IOException {
+	void testIssue23_0() throws IOException {
 		File file = new File(testDataRoot, "index-4-v0.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -121,7 +121,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testIssue23_1() throws IOException {
+	void testIssue23_1() throws IOException {
 		File file = new File(testDataRoot, "index-4-v1.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -134,7 +134,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testIssue23() throws IOException {
+	void testIssue23() throws IOException {
 		File file = new File(testDataRoot, "index-4.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -225,7 +225,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testNamespaces() throws IOException {
+	void testNamespaces() throws IOException {
 		File file = new File(testDataRoot, "namespace.xml");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -262,7 +262,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testPreserveCC() throws IOException {
+	void testPreserveCC() throws IOException {
 		File file = new File(testDataRoot, "preserve-cc.html");
 
 		String expectedResult = FileUtil.readString(file);
@@ -278,7 +278,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testKelkoo() throws Exception {
+	void testKelkoo() throws Exception {
 		File file = new File(testDataRoot, "kelkoo.html");
 		Jerry jerry;
 		try {
@@ -302,7 +302,7 @@ class ParsingProblemsTest {
 	}
 
 	@Test
-	public void testEntity() throws Exception {
+	void testEntity() throws Exception {
 		assertEquals(
 			"<head><title>Peanut Butter &amp; Jelly</title>" +
 				"it's yummy &amp; delicious</head>",

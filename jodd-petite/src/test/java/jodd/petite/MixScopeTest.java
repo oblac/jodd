@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MixScopeTest {
 
 	@Test
-	public void testPrototypeInSingleton() {
+	void testPrototypeInSingleton() {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
@@ -73,7 +73,7 @@ class MixScopeTest {
 	}
 
 	@Test
-	public void testPrototypeInSingleton2() {
+	void testPrototypeInSingleton2() {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
@@ -103,7 +103,7 @@ class MixScopeTest {
 	}
 
 	@Test
-	public void testSingleFactoryInstance() {
+	void testSingleFactoryInstance() {
 
 		Small.instanceCounter = 0;
 
@@ -135,7 +135,7 @@ class MixScopeTest {
 	}
 
 	@Test
-	public void testThreadLocalScopeInSingleton() {
+	void testThreadLocalScopeInSingleton() {
 
 		Small.instanceCounter = 0;
 

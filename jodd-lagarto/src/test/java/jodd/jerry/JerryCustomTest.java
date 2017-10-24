@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JerryCustomTest {
 
 	@Test
-	public void testConditionalTags() {
+	void testConditionalTags() {
 		Jerry.JerryParser jerry = new Jerry.JerryParser();
 
 		((LagartoDOMBuilder) jerry.getDOMBuilder()).getConfig().setIgnoreComments(true);
@@ -56,7 +56,7 @@ class JerryCustomTest {
 	}
 
 	@Test
-	public void testConditionalTags2() {
+	void testConditionalTags2() {
 		Jerry.JerryParser jerry = new Jerry.JerryParser();
 		((LagartoDOMBuilder) jerry.getDOMBuilder()).getConfig()
 				.setIgnoreComments(true)
@@ -81,7 +81,7 @@ class JerryCustomTest {
 
 
 	@Test
-	public void testConditionalTags3() {
+	void testConditionalTags3() {
 		Jerry.JerryParser jerry = new Jerry.JerryParser();
 		((LagartoDOMBuilder) jerry.getDOMBuilder()).getConfig()
 				.setIgnoreComments(true)

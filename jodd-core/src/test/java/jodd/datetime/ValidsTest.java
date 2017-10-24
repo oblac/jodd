@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ValidsTest {
 
 	@Test
-	public void testValidDateTime() {
+	void testValidDateTime() {
 		assertTrue(TimeUtil.isValidDate(2002, 1, 31));
 		assertFalse(TimeUtil.isValidDate(2002, 1, 32));
 		assertFalse(TimeUtil.isValidDate(2002, 2, 29));
@@ -63,7 +63,7 @@ class ValidsTest {
 
 
 	@Test
-	public void testIsValid() {
+	void testIsValid() {
 		JDateTime jdt = new JDateTime();
 		assertTrue(jdt.isValid("2002-01-31"));
 		assertTrue(jdt.isValid("2002-1-31"));
@@ -108,7 +108,7 @@ class ValidsTest {
 	}
 
 	@Test
-	public void testIsValid2() {
+	void testIsValid2() {
 		JDateTime jdt = new JDateTime();
 		String date = jdt.toString("YYYY-MM-DD");
 

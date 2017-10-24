@@ -88,7 +88,7 @@ class ProxettaAwareContainerTest {
 	}
 
 	@Test
-	public void testProxyProxetta() {
+	void testProxyProxetta() {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 			new ProxyAspect(AddStringAdvice.class, new AllRealMethodsPointcut()));
 

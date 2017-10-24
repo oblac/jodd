@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		CharacterConverter characterConverter = new CharacterConverter();
 
 		assertNull(characterConverter.convert(null));

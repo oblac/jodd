@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class IfTagTest {
 
 	@Test
-	public void testIfTag() throws JspException {
+	void testIfTag() throws JspException {
 
 		final MockJspFragment jspFragment = new MockJspFragment();
 

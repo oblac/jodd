@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ArrayEnumerationTest {
 
 	@Test
-	public void testEnumeration() {
+	void testEnumeration() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(i);
@@ -57,7 +57,7 @@ class ArrayEnumerationTest {
 	}
 
 	@Test
-	public void testEnumerationFrom() {
+	void testEnumerationFrom() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(i, 2, 2);

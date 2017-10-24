@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PageNavTest {
 
 	@Test
-	public void testPage() {
+	void testPage() {
 		PageNav nav = new PageNav(9, 3, 10);
 		assertEquals(1, nav.getFrom());
 		assertEquals(9, nav.getTo());

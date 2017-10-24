@@ -152,7 +152,7 @@ class JsonSerializerTest {
 	// ---------------------------------------------------------------- tests
 
 	@Test
-	public void testSimpleMap() {
+	void testSimpleMap() {
 		Map map = new LinkedHashMap();
 
 		map.put("one", "uno");
@@ -198,7 +198,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testInMapVsInBeanbsInList() {
+	void testInMapVsInBeanbsInList() {
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("myid", Integer.valueOf(4343));
 		ArrayList<String> names = new ArrayList<>();
@@ -236,7 +236,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testSimpleObjects() {
+	void testSimpleObjects() {
 		Foo foo = new Foo();
 		foo.setName("jodd");
 		foo.setId(Long.valueOf(976));
@@ -252,7 +252,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testSimpleList() {
+	void testSimpleList() {
 		List list = new LinkedList();
 
 		list.add("one");
@@ -266,7 +266,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testSimpleArray() {
+	void testSimpleArray() {
 		int[] numbers = ints(1, 2, 3, 4, 5);
 
 		JsonSerializer jsonSerializer = new JsonSerializer();
@@ -293,7 +293,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testEscapeChars() {
+	void testEscapeChars() {
 		String json = "\"1\\\" 2\\\\ 3\\/ 4\\b 5\\f 6\\n 7\\r 8\\t\"";
 
 		String str = new JsonParser().parse(json);
@@ -306,7 +306,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		String text = "Hello";
 
 		String json = new JsonSerializer().serialize(new StringBuilder(text));
@@ -317,7 +317,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testChar() {
+	void testChar() {
 		Character character = Character.valueOf('J');
 
 		String json = new JsonSerializer().serialize(character);
@@ -326,7 +326,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testClass() {
+	void testClass() {
 		String json = new JsonSerializer().serialize(JoddJson.class);
 
 		assertEquals("\"" + JoddJson.class.getName() + "\"", json);
@@ -371,7 +371,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testStrictMode() {
+	void testStrictMode() {
 		Cook cook = new Cook();
 		JsonAnnotationManager jam = JoddJson.annotationManager;
 
@@ -411,7 +411,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testCuriousModeOfSerialization() {
+	void testCuriousModeOfSerialization() {
 		Map<String, Object> map = new HashMap<>();
 
 		List<Integer> numbers = new ArrayList<>();
@@ -452,7 +452,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testCircularDependenciesBean() {
+	void testCircularDependenciesBean() {
 		White white = new White();
 		white.setIntensity(20);
 
@@ -473,7 +473,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testCircularDependenciesMap() {
+	void testCircularDependenciesMap() {
 		Map<String, Object> white = new HashMap<>();
 		white.put("intensity", Integer.valueOf(20));
 
@@ -496,7 +496,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testCircularDependenciesArray() {
+	void testCircularDependenciesArray() {
 		WhiteBar[] whiteBars = new WhiteBar[1];
 
 		WhiteBar white = new WhiteBar();
@@ -511,7 +511,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testExcludingNulls() {
+	void testExcludingNulls() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("one", null);
 
@@ -535,7 +535,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testFiles() {
+	void testFiles() {
 		FileMan fileMan = new FileMan();
 		File userHome = new File(SystemUtil.userHome());
 		fileMan.setFile(userHome);
@@ -546,7 +546,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testSerializeSets() {
+	void testSerializeSets() {
 		HitList hitList = new HitList();
 
 		hitList.setNames(new HashSet<String>());
@@ -571,7 +571,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testSerializeStringEscapes() {
+	void testSerializeStringEscapes() {
 		String path = "/foo/bar";
 
 		String json = JsonSerializer
@@ -587,7 +587,7 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	public void testClassMetaData() {
+	void testClassMetaData() {
 		String json = JsonSerializer
 			.create()
 			.withClassMetadata(true)

@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 class CharArrayResponseWrapperTest {
 
 	@Test
-	public void testWriter() {
+	void testWriter() {
 		HttpServletResponse response = mock(HttpServletResponse.class);
 
 		CharArrayResponseWrapper wrappedResponse = new CharArrayResponseWrapper(response);
@@ -64,7 +64,7 @@ class CharArrayResponseWrapperTest {
 	}
 
 	@Test
-	public void testBytes() throws IOException {
+	void testBytes() throws IOException {
 		HttpServletResponseWrapper rw = mock(HttpServletResponseWrapper.class);
 		ServletOutputStream os = mock(ServletOutputStream.class);
 		when(rw.getOutputStream()).thenReturn(os);

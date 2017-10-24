@@ -45,7 +45,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	 * Tests if rollback works.
 	 */
 	@Test
-	public void testRollback() throws SQLException {
+	void testRollback() throws SQLException {
 		// prepare manager
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
@@ -78,7 +78,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- misc
 
 /*
-	public void testIsolation() throws SQLException {
+	void testIsolation() throws SQLException {
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
 
@@ -119,7 +119,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 
 	// ---------------------------------------------------------------- presentation layer
 	@Test
-	public void testAction() {
+	void testAction() {
 		assertNotNull(dbtxm);
 		assertTotals(0, 0);
 		assertEquals(0, dbtxm.totalThreadTransactions());
@@ -219,7 +219,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 
 	// ---------------------------------------------------------------- test time
 	@Test
-	public void testTime() {
+	void testTime() {
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
 
@@ -244,7 +244,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 
 	// ---------------------------------------------------------------- thread
 	@Test
-	public void testThread() {
+	void testThread() {
 		final JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
 		final int[] count = new int[1];
@@ -280,7 +280,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 
 	// ---------------------------------------------------------------- notx
 	@Test
-	public void testNoTx() {
+	void testNoTx() {
 
 		final JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));

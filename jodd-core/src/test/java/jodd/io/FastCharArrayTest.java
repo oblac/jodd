@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FastCharArrayTest {
 
 	@Test
-	public void testFcat() throws IOException {
+	void testFcat() throws IOException {
 		FastCharArrayWriter fcaw = new FastCharArrayWriter();
 
 		fcaw.write(65);
@@ -51,7 +51,7 @@ class FastCharArrayTest {
 	}
 
 	@Test
-	public void testFcatSingle() throws IOException {
+	void testFcatSingle() throws IOException {
 		FastCharArrayWriter fcaw = new FastCharArrayWriter();
 
 		fcaw.write(73);
@@ -67,7 +67,7 @@ class FastCharArrayTest {
 	}
 
 	@Test
-	public void testWriteTo() throws IOException {
+	void testWriteTo() throws IOException {
 		FastCharArrayWriter fcaw = new FastCharArrayWriter(2);
 		fcaw.write("Hello");
 		fcaw.write(' ');

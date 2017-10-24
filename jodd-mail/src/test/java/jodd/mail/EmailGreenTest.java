@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EmailGreenTest {
 
 	@Test
-	public void testInlineAttachmentAfterSending() {
+	void testInlineAttachmentAfterSending() {
 		GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
 		greenMail.setUser("green@mail.com", "green", "pwd");
 		greenMail.start();

@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 class ArrayIteratorTest {
 
 	@Test
-	public void testArrayIteration() {
+	void testArrayIteration() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayIterator<Integer> ae = new ArrayIterator<>(i);
@@ -68,7 +68,7 @@ class ArrayIteratorTest {
 	}
 
 	@Test
-	public void testArrayIterationFrom() {
+	void testArrayIterationFrom() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayIterator<Integer> ae = new ArrayIterator<>(i, 2, 2);

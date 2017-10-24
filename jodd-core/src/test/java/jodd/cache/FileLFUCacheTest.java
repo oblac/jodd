@@ -53,7 +53,7 @@ class FileLFUCacheTest {
 	}
 
 	@Test
-	public void testCache() throws IOException {
+	void testCache() throws IOException {
 		FileLFUCache cache = new FileLFUCache(25);
 
 		assertEquals(25, cache.maxSize());

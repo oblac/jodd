@@ -99,7 +99,7 @@ class KeepAliveTest {
 	};
 
 	@Test
-	public void testKeepAlive() {
+	void testKeepAlive() {
 		currentResponse = 0;
 
 		// ->
@@ -158,7 +158,7 @@ class KeepAliveTest {
 	}
 
 	@Test
-	public void testKeepAliveBrowser() {
+	void testKeepAliveBrowser() {
 		HttpBrowser browser = new HttpBrowser();
 		browser.setKeepAlive(true);
 		browser.setHttpConnectionProvider(httpConnectionProvider);

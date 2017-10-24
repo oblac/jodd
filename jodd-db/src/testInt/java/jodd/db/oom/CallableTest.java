@@ -52,7 +52,7 @@ class CallableTest extends DbBaseTest {
 	}
 
 	@Test
-	public void testCallableStatementDebugFalse() {
+	void testCallableStatementDebugFalse() {
 		DbBaseTest.DbAccess db = new PostgreSql();
 		init();
 		db.initDb();
@@ -67,7 +67,7 @@ class CallableTest extends DbBaseTest {
 	}
 
 	@Test
-	public void testCallableStatementDebugTrue() {
+	void testCallableStatementDebugTrue() {
 		DbBaseTest.DbAccess db = new PostgreSql();
 		init();
 		db.initDb();

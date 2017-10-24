@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AsmUtilTest {
 
 	@Test
-	public void testTyperef2Name() {
+	void testTyperef2Name() {
 		assertEquals("java.lang.String", AsmUtil.typeref2Name("Ljava/lang/String;"));
 	}
 }

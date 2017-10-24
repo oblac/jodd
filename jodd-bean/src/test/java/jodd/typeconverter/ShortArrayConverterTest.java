@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ShortArrayConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) TypeConverterManager.lookup(short[].class);
 
 		assertNull(shortArrayConverter.convert(null));

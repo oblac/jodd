@@ -73,7 +73,7 @@ class DbHintTest extends DbHsqldbTestCase {
 
 
 	@Test
-	public void testHint() {
+	void testHint() {
 		DbSession dbSession = new DbThreadSession(cp);
 
 		// prepare data

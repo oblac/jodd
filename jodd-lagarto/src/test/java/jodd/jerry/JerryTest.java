@@ -54,7 +54,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testText1() {
+	void testText1() {
 		String html = readFile("text1.html");
 		String text = jerry(html).$("div.demo-container").text();
 
@@ -64,7 +64,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHtml1() {
+	void testHtml1() {
 		String html = readFile("html1.html");
 		String text = jerry(html).$("div.demo-container").html();
 
@@ -72,7 +72,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHtml2() {
+	void testHtml2() {
 		String html = readFile("html2.html");
 		String htmlOK = readFile("html2-ok.html");
 
@@ -85,7 +85,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHtml3() {
+	void testHtml3() {
 		String html = readFile("html3.html");
 		String htmlOK = readFile("html3-ok.html");
 
@@ -96,7 +96,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHtml4() {
+	void testHtml4() {
 		String html = readFile("html4.html");
 		String htmlOK = readFile("html4-ok.html");
 
@@ -107,7 +107,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHtml5() {
+	void testHtml5() {
 		String html = readFile("html5.html");
 		String htmlOK = readFile("html5-ok.html");
 
@@ -119,7 +119,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testAdd() {
+	void testAdd() {
 		String html = readFile("add.html");
 		String htmlOK = readFile("add-ok.html");
 
@@ -131,7 +131,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testEnd() {
+	void testEnd() {
 		String html = readFile("end.html");
 		String htmlOK = readFile("end-ok.html");
 
@@ -140,7 +140,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testNot() {
+	void testNot() {
 		String html = readFile("not.html");
 		String htmlOK = readFile("not-ok.html");
 
@@ -149,7 +149,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testFirst() {
+	void testFirst() {
 		String html = readFile("first.html");
 		String htmlOK = readFile("first-ok.html");
 
@@ -158,7 +158,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testLast() {
+	void testLast() {
 		String html = readFile("last.html");
 		String htmlOK = readFile("last-ok.html");
 
@@ -167,7 +167,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testAddClass() {
+	void testAddClass() {
 		String html = readFile("addClass.html");
 		String htmlOK = readFile("addClass-ok.html");
 
@@ -176,7 +176,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoLast() {
+	void testPseudoLast() {
 		String html = readFile("pseudoLast.html");
 		String htmlOK = readFile("pseudoLast-ok.html");
 
@@ -185,7 +185,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoFirst() {
+	void testPseudoFirst() {
 		String html = readFile("pseudoFirst.html");
 		String htmlOK = readFile("pseudoFirst-ok.html");
 
@@ -194,7 +194,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoButton() {
+	void testPseudoButton() {
 		String html = readFile("pseudoButton.html");
 		String htmlOK = readFile("pseudoButton-ok.html");
 
@@ -205,7 +205,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoCheckbox() {
+	void testPseudoCheckbox() {
 		String html = readFile("pseudoCheckbox.html");
 		String htmlOK = readFile("pseudoCheckbox-ok.html");
 
@@ -216,7 +216,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoFile() {
+	void testPseudoFile() {
 		String html = readFile("pseudoFile.html");
 		String htmlOK = readFile("pseudoFile-ok.html");
 
@@ -227,7 +227,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoInput() {
+	void testPseudoInput() {
 		String html = readFile("pseudoInput.html");
 		String htmlOK = readFile("pseudoInput-ok.html");
 
@@ -240,7 +240,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoHeader() {
+	void testPseudoHeader() {
 		String html = readFile("pseudoHeader.html");
 		String htmlOK = readFile("pseudoHeader-ok.html");
 
@@ -250,7 +250,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoParent() {
+	void testPseudoParent() {
 		String html = readFile("pseudoParent.html");
 		String htmlOK = readFile("pseudoParent-ok.html");
 
@@ -260,7 +260,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoSelected() {
+	void testPseudoSelected() {
 		String html = readFile("pseudoSelected.html");
 		String htmlOK = readFile("pseudoSelected-ok.html");
 
@@ -275,7 +275,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoEq() {
+	void testPseudoEq() {
 		String html = readFile("pseudoEq.html");
 		String htmlOK = readFile("pseudoEq-ok.html");
 
@@ -285,7 +285,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoEq2() {
+	void testPseudoEq2() {
 		String html = readFile("pseudoEq2.html");
 		String htmlOK = readFile("pseudoEq2-ok.html");
 
@@ -302,7 +302,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoHas() {
+	void testPseudoHas() {
 		String html = readFile("pseudoHas.html");
 		String htmlOK = readFile("pseudoHas-ok.html");
 
@@ -312,7 +312,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoNot() {
+	void testPseudoNot() {
 		String html = readFile("pseudoNot.html");
 		String htmlOK = readFile("pseudoNot-ok.html");
 
@@ -322,7 +322,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoEven() {
+	void testPseudoEven() {
 		String html = readFile("pseudoEven.html");
 		String htmlOK = readFile("pseudoEven-ok.html");
 
@@ -333,7 +333,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoGt() {
+	void testPseudoGt() {
 		String html = readFile("pseudoGt.html");
 		String htmlOK = readFile("pseudoGt-ok.html");
 
@@ -344,7 +344,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoContains() {
+	void testPseudoContains() {
 		String html = readFile("pseudoContains.html");
 		String htmlOK = readFile("pseudoContains-ok.html");
 
@@ -355,7 +355,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPseudoContains2() {
+	void testPseudoContains2() {
 		String html = readFile("pseudoContains.html");
 		String htmlOK = readFile("pseudoContains-ok.html");
 
@@ -366,7 +366,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testNext() {
+	void testNext() {
 		String html = readFile("next.html");
 		String htmlOK = readFile("next-ok.html");
 
@@ -377,7 +377,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testPrevNextAll() {
+	void testPrevNextAll() {
 		String html = readFile("prevNextAll.html");
 		String htmlOK = readFile("prevNextAll-ok.html");
 
@@ -389,7 +389,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testEq() {
+	void testEq() {
 		String html = readFile("eq.html");
 		String htmlOK = readFile("eq-ok.html");
 
@@ -401,7 +401,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHas() {
+	void testHas() {
 		String html = readFile("has.html");
 		String htmlOK = readFile("has-ok.html");
 
@@ -412,7 +412,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHas2() {
+	void testHas2() {
 		String html = readFile("has2.html");
 		String htmlOK = readFile("has2-ok.html");
 
@@ -428,7 +428,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testChildrenVsContents() {
+	void testChildrenVsContents() {
 		String html = readFile("contents.html");
 		String htmlOK = readFile("contents-ok.html");
 
@@ -442,7 +442,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testSibling() {
+	void testSibling() {
 		String html = readFile("sibling.html");
 		String htmlOK = readFile("sibling-ok.html");
 
@@ -453,7 +453,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testSibling2() {
+	void testSibling2() {
 		String html = readFile("sibling2.html");
 		String htmlOK = readFile("sibling2-ok.html");
 
@@ -465,7 +465,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testRemove() {
+	void testRemove() {
 		String html = readFile("remove.html");
 		String htmlOK = readFile("remove-ok.html");
 
@@ -476,7 +476,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testEmpty() {
+	void testEmpty() {
 		String html = readFile("empty.html");
 		String htmlOK = readFile("empty-ok.html");
 
@@ -487,7 +487,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testAppendPrepend() {
+	void testAppendPrepend() {
 		String html = readFile("appendPrepend.html");
 		String htmlOK = readFile("appendPrepend-ok.html");
 
@@ -499,7 +499,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testBefore() {
+	void testBefore() {
 		String html = readFile("before.html");
 		String htmlOK = readFile("before-ok.html");
 
@@ -510,7 +510,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testAfter() {
+	void testAfter() {
 		String html = readFile("after.html");
 		String htmlOK = readFile("after-ok.html");
 
@@ -521,7 +521,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testReplaceWith() {
+	void testReplaceWith() {
 		String html = readFile("replaceWith.html");
 		String htmlOK = readFile("replaceWith-ok.html");
 
@@ -532,7 +532,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testUnwrap() {
+	void testUnwrap() {
 		String html = readFile("unwrap.html");
 		String htmlOK = readFile("unwrap-ok.html");
 
@@ -543,7 +543,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testIs() {
+	void testIs() {
 		String html = readFile("is.html");
 		String htmlOK = readFile("is-ok.html");
 
@@ -565,7 +565,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testIs2() {
+	void testIs2() {
 		String html = readFile("is2.html");
 		String htmlOK = readFile("is2-ok.html");
 
@@ -577,7 +577,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testIs3() {
+	void testIs3() {
 		String html = readFile("is3.html");
 		String htmlOK = readFile("is3-ok.html");
 
@@ -589,7 +589,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testFilter() {
+	void testFilter() {
 		String html = readFile("filter.html");
 		String htmlOK = readFile("filter-ok.html");
 
@@ -600,7 +600,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testFilter2() {
+	void testFilter2() {
 		String html = readFile("filter2.html");
 		String htmlOK = readFile("filter2-ok.html");
 
@@ -611,7 +611,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testFilter2_2() {
+	void testFilter2_2() {
 		String html = readFile("filter2.html");
 		String htmlOK = readFile("filter2-ok2.html");
 
@@ -622,7 +622,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testFilter3() {
+	void testFilter3() {
 		String html = readFile("filter3.html");
 		String htmlOK = readFile("filter3-ok.html");
 
@@ -635,7 +635,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testFilter4() {
+	void testFilter4() {
 		String html = readFile("filter4.html");
 		String htmlOK = readFile("filter4-ok.html");
 
@@ -648,7 +648,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testForm() {
+	void testForm() {
 		String html = readFile("form.html");
 
 		Jerry doc = jerry(html);
@@ -670,7 +670,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testHtmlAll() {
+	void testHtmlAll() {
 		Jerry j = Jerry.jerry("<div><span>1</span></div><div><span>2</span></div>");
 
 		assertEquals(j.htmlAll(true), j.htmlAll(false));
@@ -690,7 +690,7 @@ class JerryTest {
 	}
 
 	@Test
-	public void testCamelCaseClassesIssue() {
+	void testCamelCaseClassesIssue() {
 		Jerry j = Jerry.jerry("<div id='d'></div>");
 
 		j.$("#d").css("background-color", "red");

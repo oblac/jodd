@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FIFOCacheTest extends BaseCacheTest {
 
 	@Test
-	public void testCache() {
+	void testCache() {
 		Cache<String, String> cache = new FIFOCache<>(3);
 		assertEquals(3, cache.limit());
 		assertEquals(0, cache.size());
@@ -66,7 +66,7 @@ class FIFOCacheTest extends BaseCacheTest {
 	}
 
 	@Test
-	public void testCacheTime() {
+	void testCacheTime() {
 		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -82,7 +82,7 @@ class FIFOCacheTest extends BaseCacheTest {
 	}
 
 	@Test
-	public void testCacheTime2() {
+	void testCacheTime2() {
 		Cache<String, String> cache = new FIFOCache<>(3, 50);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -96,7 +96,7 @@ class FIFOCacheTest extends BaseCacheTest {
 	}
 
 	@Test
-	public void testPrune() {
+	void testPrune() {
 		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -107,7 +107,7 @@ class FIFOCacheTest extends BaseCacheTest {
 	}
 
 	@Test
-	public void testOrder() {
+	void testOrder() {
 		FIFOCache<String, Integer> fifoCache = new FIFOCache<>(3);
 		fifoCache.put("1", Integer.valueOf(1));
 		fifoCache.put("2", Integer.valueOf(2));

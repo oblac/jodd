@@ -50,7 +50,7 @@ class PreparedTest extends DbBaseTest {
 	}
 
 	@Test
-	public void testPreparedStatementDebugFalse() {
+	void testPreparedStatementDebugFalse() {
 		DbBaseTest.DbAccess db = new PreparedTest.PostgreSql();
 		init();
 		db.initDb();
@@ -65,7 +65,7 @@ class PreparedTest extends DbBaseTest {
 	}
 
 	@Test
-	public void testPrepredStatementDebugTrue() {
+	void testPrepredStatementDebugTrue() {
 		DbBaseTest.DbAccess db = new PreparedTest.PostgreSql();
 		init();
 		db.initDb();

@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DbMiscTest extends DbHsqldbTestCase {
 
 	@Test
-	public void testBig() throws Exception {
+	void testBig() throws Exception {
 		DbSession session = new DbSession(cp);
 
 		DbQuery query = new DbQuery(session, "girlCount");
@@ -139,7 +139,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSetMap() throws SQLException {
+	void testSetMap() throws SQLException {
 		DbSession session = new DbSession(cp);
 		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = :id");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -154,7 +154,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSetObjects() throws SQLException {
+	void testSetObjects() throws SQLException {
 		DbSession session = new DbSession(cp);
 		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = ?");
 		Object[] o = {Integer.valueOf(1)};

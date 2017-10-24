@@ -52,7 +52,7 @@ class GenericDaoTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testAppDao1() {
+	void testAppDao1() {
 		DbSession session = new DbSession(cp);
 		ThreadDbSessionHolder.set(session);
 

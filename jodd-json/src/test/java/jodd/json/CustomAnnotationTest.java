@@ -46,7 +46,7 @@ class CustomAnnotationTest {
 	}
 
 	@Test
-	public void testAnnName() {
+	void testAnnName() {
 		LocationAlt location = new LocationAlt();
 
 		location.setLatitude(65);
@@ -63,7 +63,7 @@ class CustomAnnotationTest {
 	}
 
 	@Test
-	public void testAnnNameWithClass() {
+	void testAnnNameWithClass() {
 		LocationAlt location = new LocationAlt();
 
 		location.setLatitude(65);

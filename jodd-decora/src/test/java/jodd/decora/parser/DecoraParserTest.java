@@ -55,7 +55,7 @@ class DecoraParserTest {
 	}
 
 	@Test
-	public void testDecoraParser() throws IOException {
+	void testDecoraParser() throws IOException {
 		DecoraParser decoraParser = new DecoraParser();
 
 		FindFile ff = new WildcardFindFile().include("*.*ml");

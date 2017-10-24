@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LocaleUtilTest {
 
 	@Test
-	public void testLocaleUtil() {
+	void testLocaleUtil() {
 		Locale locale1 = LocaleUtil.getLocale("fr", "FR");
 		Locale locale2 = LocaleUtil.getLocale("fr_FR");
 		assertSame(locale1, locale2);

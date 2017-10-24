@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RestResourcePathTest {
 
 	@Test
-	public void testResolve() {
+	void testResolve() {
 		RestResourcePath restResourcePath = new RestResourcePath();
 
 		assertEquals("GET", restResourcePath.resolveHttpMethodFromMethodName("get"));

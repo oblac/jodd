@@ -52,7 +52,7 @@ class DirWatcherTest {
 	}
 
 	@Test
-	public void testDirWatcher() throws IOException {
+	void testDirWatcher() throws IOException {
 		DirWatcher dirWatcher = new DirWatcher(dataRoot, "*.md");
 
 		final StringBuilder sb = new StringBuilder();
@@ -82,7 +82,7 @@ class DirWatcherTest {
 	}
 
 	@Test
-	public void testDirWatcherWithFile() throws IOException {
+	void testDirWatcherWithFile() throws IOException {
 		DirWatcher dirWatcher = new DirWatcher(dataRoot)
 				.monitor("*.md")
 				.useWatchFile("watch.txt");
@@ -118,7 +118,7 @@ class DirWatcherTest {
 	}
 
 	@Test
-	public void testBlankStart() throws IOException {
+	void testBlankStart() throws IOException {
 		DirWatcher dirWatcher = new DirWatcher(dataRoot)
 				.monitor("*.txt")
 				.startBlank(true);

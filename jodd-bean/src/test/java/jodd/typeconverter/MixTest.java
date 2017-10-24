@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MixTest {
 
 	@Test
-	public void testStringArrayMix() {
+	void testStringArrayMix() {
 		String[] strings;
 
 		strings = TypeConverterManager.convertType(new Class[]{Long.class, int.class}, String[].class);
@@ -81,7 +81,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testIntArrayMix() {
+	void testIntArrayMix() {
 		int[] ints;
 
 		ints = TypeConverterManager.convertType("123, 234", int[].class);
@@ -110,7 +110,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testLongArrayMix() {
+	void testLongArrayMix() {
 		long[] longs;
 
 		longs = TypeConverterManager.convertType("123, 234", long[].class);
@@ -139,7 +139,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testFloatArrayMix() {
+	void testFloatArrayMix() {
 		float[] floats;
 
 		floats = TypeConverterManager.convertType("123.1, 234.2", float[].class);
@@ -168,7 +168,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testDoubleArrayMix() {
+	void testDoubleArrayMix() {
 		double[] doubles;
 
 		doubles = TypeConverterManager.convertType("123.1, 234.2", double[].class);
@@ -197,7 +197,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testByteArrayMix() {
+	void testByteArrayMix() {
 		byte[] bytes;
 
 		bytes = TypeConverterManager.convertType("123, -12", byte[].class);
@@ -226,7 +226,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testShortArrayMix() {
+	void testShortArrayMix() {
 		short[] shorts;
 
 		shorts = TypeConverterManager.convertType("123, -12", short[].class);
@@ -255,7 +255,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testCharArrayMix() {
+	void testCharArrayMix() {
 		char[] chars;
 
 		chars = TypeConverterManager.convertType("123, -12", char[].class);
@@ -283,7 +283,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testMultipleArrays() {
+	void testMultipleArrays() {
 		MutableInteger[] mutableIntegers = TypeConverterManager.convertType(arri(1,2,3,4), MutableInteger[].class);
 
 		assertEquals(4, mutableIntegers.length);
@@ -294,7 +294,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testCollections() {
+	void testCollections() {
 		List list1 = TypeConverterManager.convertType(arri(1,2,3), List.class);
 		assertEquals(listo(1,2,3), list1);
 
@@ -316,7 +316,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testCollectionsWithComponentType() {
+	void testCollectionsWithComponentType() {
 		TypeConverterManagerBean tcm = TypeConverterManager.getDefaultTypeConverterManager();
 
 		CollectionConverter cc = new CollectionConverter(tcm, List.class, String.class);
@@ -333,7 +333,7 @@ class MixTest {
 	}
 
 	@Test
-	public void testListToArray() {
+	void testListToArray() {
 		List<Long> list = new ArrayList<>();
 		list.add(1L);
 		list.add(9L);

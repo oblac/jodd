@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class RomanNumberTest {
 
 	@Test
-	public void testConvertToRoman() {
+	void testConvertToRoman() {
 		assertEquals(convertToRoman(1), "I");
 		assertEquals(convertToRoman(2), "II");
 		assertEquals(convertToRoman(3), "III");
@@ -61,7 +61,7 @@ class RomanNumberTest {
 	}
 
 	@Test
-	public void testConvertToArabic() {
+	void testConvertToArabic() {
 		assertEquals(convertToArabic("I"), 1);
 		assertEquals(convertToArabic("II"), 2);
 		assertEquals(convertToArabic("III"), 3);
@@ -78,7 +78,7 @@ class RomanNumberTest {
 	}
 
 	@Test
-	public void testIsValidRomanNumber() {
+	void testIsValidRomanNumber() {
 		assertTrue(isValidRomanNumber("I"));
 		assertTrue(isValidRomanNumber("IV"));
 		assertTrue(isValidRomanNumber("V"));

@@ -54,7 +54,7 @@ class TimeoutTest {
 	}
 
 	@Test
-	public void testTimeout() {
+	void testTimeout() {
 		HttpRequest httpRequest = HttpRequest.get("localhost:8173/slow");
 		httpRequest.timeout(1000);
 

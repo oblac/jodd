@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NotNullConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         NotNullConstraint notNullConstraint = new NotNullConstraint();
         //this is an empty method nothing can be verified
         notNullConstraint.configure(null);

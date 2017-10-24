@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BeforeAfterTest {
 
 	@Test
-	public void testBefore() {
+	void testBefore() {
 		JDateTime now = new JDateTime();
 		JDateTime future = now.clone();
 		future.addSecond(1);
@@ -62,7 +62,7 @@ class BeforeAfterTest {
 	}
 
 	@Test
-	public void testAfter() {
+	void testAfter() {
 		JDateTime now = new JDateTime();
 		JDateTime past = now.clone();
 		past.subSecond(1);

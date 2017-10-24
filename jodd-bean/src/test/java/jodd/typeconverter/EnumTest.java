@@ -36,7 +36,7 @@ class EnumTest {
 	}
 
 	@Test
-	public void testCastEnums() {
+	void testCastEnums() {
 		En en = TypeConverterManager.convertType("ONE", En.class);
 		assertEquals(En.ONE, en);
 		en = TypeConverterManager.convertType("TWO", En.class);

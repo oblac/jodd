@@ -51,7 +51,7 @@ class ShutdownTest {
 	public static final String ATTR_NAME = SessionScope.class.getName() + ".SESSION_BEANS.";
 
 	@Test
-	public void testSingletonDestroyMethods() {
+	void testSingletonDestroyMethods() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
@@ -67,7 +67,7 @@ class ShutdownTest {
 	}
 
 	@Test
-	public void testSessionExpired() {
+	void testSessionExpired() {
 		// http session
 		HttpSession session = createSession("S1");
 		HttpServletRequest request = createRequest(session);
@@ -108,7 +108,7 @@ class ShutdownTest {
 	}
 
 	@Test
-	public void testSessionShutdown() {
+	void testSessionShutdown() {
 		// http session
 		HttpSession session = createSession("S2");
 		HttpServletRequest request = createRequest(session);

@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EmailFilterTest {
 
 	@Test
-	public void testAnd1() {
+	void testAnd1() {
 		EmailFilter emailFilter =
 			filter()
 				.from("from");
@@ -56,7 +56,7 @@ class EmailFilterTest {
 	}
 
 	@Test
-	public void testAnd2() {
+	void testAnd2() {
 		EmailFilter emailFilter =
 			filter()
 				.from("from")
@@ -71,7 +71,7 @@ class EmailFilterTest {
 	}
 
 	@Test
-	public void testOr2() {
+	void testOr2() {
 		EmailFilter emailFilter =
 			filter().or(
 					filter().from("from"),
@@ -89,7 +89,7 @@ class EmailFilterTest {
 	}
 
 	@Test
-	public void testOr2Alt() {
+	void testOr2Alt() {
 		EmailFilter emailFilter =
 			filter().or()
 					.from("from")
@@ -105,7 +105,7 @@ class EmailFilterTest {
 	}
 
 	@Test
-	public void testAndOrNot() {
+	void testAndOrNot() {
 		EmailFilter emailFilter =
 					filter()
 						.from("from")
@@ -133,7 +133,7 @@ class EmailFilterTest {
 	}
 
 	@Test
-	public void testAndOrNotAlt() {
+	void testAndOrNotAlt() {
 		EmailFilter emailFilter =
 					filter()
 						.or(
@@ -164,7 +164,7 @@ class EmailFilterTest {
 	}
 
 	@Test
-	public void testReceivedDate() {
+	void testReceivedDate() {
 		EmailFilter emailFilter = EmailFilter.filter()
 			.receivedDate(EmailFilter.Operator.EQ, 1000)
 			.sentDate(EmailFilter.Operator.GT, 2000);

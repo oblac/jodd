@@ -40,7 +40,7 @@ class BeanTemplateParserTest {
 	BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 	@Test
-	public void testTemplate() {
+	void testTemplate() {
 		Abean a = new Abean();
 
 		assertEquals("xxxx", beanTemplateParser.parse("xxxx", a));
@@ -65,7 +65,7 @@ class BeanTemplateParserTest {
 	}
 
 	@Test
-	public void testNoParenthes() {
+	void testNoParenthes() {
 		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 		Map<String, Object> ctx = new HashMap<>();
@@ -76,7 +76,7 @@ class BeanTemplateParserTest {
 	}
 
 	@Test
-	public void testMap() {
+	void testMap() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
@@ -84,7 +84,7 @@ class BeanTemplateParserTest {
 	}
 
 	@Test
-	public void testMissing() {
+	void testMissing() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
@@ -100,7 +100,7 @@ class BeanTemplateParserTest {
 	}
 
 	@Test
-	public void testInner() {
+	void testInner() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
@@ -112,7 +112,7 @@ class BeanTemplateParserTest {
 	}
 
 	@Test
-	public void testReplaceMissingKey() {
+	void testReplaceMissingKey() {
 		StringTemplateParser stp = new StringTemplateParser();
 
 		BeanTemplateParser btp = new BeanTemplateParser();
@@ -137,7 +137,7 @@ class BeanTemplateParserTest {
 	}
 
 	@Test
-	public void testResolveEscapes() {
+	void testResolveEscapes() {
 		Abean a = new Abean();
 		BeanTemplateParser btp = new BeanTemplateParser();
 		btp.setResolveEscapes(false);

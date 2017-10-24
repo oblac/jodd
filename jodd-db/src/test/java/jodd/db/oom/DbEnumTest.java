@@ -47,7 +47,7 @@ class DbEnumTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testEnums() {
+	void testEnums() {
 		DbSession session = new DbThreadSession(cp);
 
 		String sql = "create table ENUMERATOR(ID int, NAME varchar(20), STATUS int)";

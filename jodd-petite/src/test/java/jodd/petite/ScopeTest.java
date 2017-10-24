@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScopeTest {
 
 	@Test
-	public void testThreadLocalScope() throws InterruptedException {
+	void testThreadLocalScope() throws InterruptedException {
 		final PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Foo.class, "foo", null, null, false);
@@ -77,7 +77,7 @@ class ScopeTest {
 	}
 
 	@Test
-	public void testScopeAccept() {
+	void testScopeAccept() {
 		final PetiteContainer pc = new PetiteContainer();
 
 		SingletonScope singletonScope = pc.resolveScope(SingletonScope.class);

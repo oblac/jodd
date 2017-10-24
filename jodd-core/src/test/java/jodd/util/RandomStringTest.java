@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class RandomStringTest {
 
 	@Test
-	public void testRepeatableSequence() {
+	void testRepeatableSequence() {
 		RandomString randomString = new RandomString(123);
 
 		String rnd = randomString.randomAlpha(2);
@@ -46,7 +46,7 @@ class RandomStringTest {
 	}
 
 	@Test
-	public void testRandomBase64() {
+	void testRandomBase64() {
 		long iter = 10000;
 
 		RandomString randomString = new RandomString();

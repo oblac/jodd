@@ -49,7 +49,7 @@ class ActionsManagerTest {
 	}
 
 	@Test
-	public void testActionPathMacros1() {
+	void testActionPathMacros1() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -66,7 +66,7 @@ class ActionsManagerTest {
 	}
 
 	@Test
-	public void testActionPathMacros2() {
+	void testActionPathMacros2() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -86,7 +86,7 @@ class ActionsManagerTest {
 	}
 
 	@Test
-	public void testActionPathMacros3() {
+	void testActionPathMacros3() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -114,7 +114,7 @@ class ActionsManagerTest {
 	}
 
 	@Test
-	public void testActionPathMacros4() {
+	void testActionPathMacros4() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -141,7 +141,7 @@ class ActionsManagerTest {
 	}
 
 	@Test
-	public void testActionPathMacrosRegexp() {
+	void testActionPathMacrosRegexp() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
@@ -159,7 +159,7 @@ class ActionsManagerTest {
 	}
 
 	@Test
-	public void testActionPathMacrosWildcard() {
+	void testActionPathMacrosWildcard() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);

@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class BeanUtilGenericsTest {
 
 	@Test
-	public void testAllBeanSetters() {
+	void testAllBeanSetters() {
 		Woof woof = new Woof();
 		Class type = woof.getClass();
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
@@ -73,7 +73,7 @@ class BeanUtilGenericsTest {
 	}
 
 	@Test
-	public void testSetField() {
+	void testSetField() {
 		BaseClass base = new BaseClass();
 
 		BeanUtil.pojo.setProperty(base, "f1", Integer.valueOf(173));
@@ -116,7 +116,7 @@ class BeanUtilGenericsTest {
 	}
 
 	@Test
-	public void testSetProperty() {
+	void testSetProperty() {
 		BaseClass base = new BaseClass();
 
 		BeanUtil.pojo.setProperty(base, "foo1", Integer.valueOf(173));

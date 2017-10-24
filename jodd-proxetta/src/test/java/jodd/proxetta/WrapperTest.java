@@ -44,7 +44,7 @@ class WrapperTest {
 	}
 
 	@Test
-	public void testClassWrapper() throws Exception {
+	void testClassWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
@@ -89,7 +89,7 @@ class WrapperTest {
 	}
 
 	@Test
-	public void testClassWrapperCastToInterface() throws Exception {
+	void testClassWrapperCastToInterface() throws Exception {
 		Calc calc = new CalcImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
@@ -125,7 +125,7 @@ class WrapperTest {
 	}
 
 	@Test
-	public void testInterfaceWrapper() throws Exception {
+	void testInterfaceWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
@@ -166,7 +166,7 @@ class WrapperTest {
 
 
 	@Test
-	public void testPartialMethodsWrapped() throws Exception {
+	void testPartialMethodsWrapped() throws Exception {
 
 		Calc calc = new CalcSuperImpl();
 
@@ -210,7 +210,7 @@ class WrapperTest {
 	}
 
 	@Test
-	public void testNoPointcutMatched() throws Exception {
+	void testNoPointcutMatched() throws Exception {
 
 		Calc calc = new CalcSuperImpl();
 

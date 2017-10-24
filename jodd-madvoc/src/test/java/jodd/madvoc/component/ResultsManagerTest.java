@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ResultsManagerTest {
 
 	@Test
-	public void testDuplicateResults1() {
+	void testDuplicateResults1() {
 		ResultsManager resultsManager = new ResultsManager() {
 			@Override
 			protected void initializeResult(ActionResult result) {
@@ -64,7 +64,7 @@ class ResultsManagerTest {
 	}
 
 	@Test
-	public void testDuplicateResults2() {
+	void testDuplicateResults2() {
 		ResultsManager resultsManager = new ResultsManager() {
 			@Override
 			protected void initializeResult(ActionResult result) {

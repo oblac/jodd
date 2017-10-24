@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class StringConverterTest {
 
 	@Test
-	public void testStringConverter() {
+	void testStringConverter() {
 		StringConverter stringConverter = new StringConverter();
 
 		assertNull(stringConverter.convert(null));

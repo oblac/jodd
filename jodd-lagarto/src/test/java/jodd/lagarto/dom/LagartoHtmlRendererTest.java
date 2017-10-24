@@ -67,7 +67,7 @@ class LagartoHtmlRendererTest {
 	}
 
 	@Test
-	public void testCases() {
+	void testCases() {
 		String html = "<html><boDY><div id=\"z\" fooBar=\"aAa\">some Text</div></boDY></html>";
 		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
 
@@ -250,7 +250,7 @@ class LagartoHtmlRendererTest {
 	}
 
 	@Test
-	public void testVKSethi() throws IOException {
+	void testVKSethi() throws IOException {
 		String html = FileUtil.readString(new File(testDataRoot, "vksethi.html"));
 		String htmlExpected = FileUtil.readString(new File(testDataRoot, "vksethi-out.html"));
 

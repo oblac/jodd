@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class IntHashMapTest {
 
 	@Test
-	public void testIntHashMap() {
+	void testIntHashMap() {
 		IntHashMap ihm = new IntHashMap();
 
 		assertTrue(ihm.isEmpty());

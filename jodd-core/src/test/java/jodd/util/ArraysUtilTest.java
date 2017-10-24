@@ -58,7 +58,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testJoin() {
+	void testJoin() {
 		assertArrayEquals(new int[] {}, ArraysUtil.join(new int[0]));
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 5 }, ArraysUtil.join(x));
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 5, 11, 12, 13 }, ArraysUtil.join(x, y));
@@ -131,7 +131,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testAppend() {
+	void testAppend() {
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 5, 100 }, ArraysUtil.append(x, 100));
 		assertArrayEquals(new long[] { 1, 2, 3, 4, 5, 100 }, ArraysUtil.values(ArraysUtil.append(xx, Long.valueOf(100))));
 		assertArrayEquals(new String[] { "f", "o", "o" }, ArraysUtil.append(new String[] { "f", "o" }, "o"));
@@ -145,7 +145,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testResize() {
+	void testResize() {
 		assertArrayEquals(new int[] { 1, 2, 3 }, ArraysUtil.resize(x, 3));
 		assertArrayEquals(new long[] { 1, 2, 3 }, ArraysUtil.values(ArraysUtil.resize(xx, 3)));
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 5, 0, 0 }, ArraysUtil.resize(x, 7));
@@ -210,7 +210,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testSub() {
+	void testSub() {
 		assertArrayEquals(new int[] { 2, 3, 4 }, ArraysUtil.subarray(x, 1, 3));
 		assertArrayEquals(new long[] { 2, 3, 4 }, ArraysUtil.values(ArraysUtil.subarray(xx, 1, 3)));
 		assertArrayEquals(new String[] { "f", "o", "o" }, ArraysUtil.subarray(new String[] { "f", "o", "o", "b", "a", "r" }, 0, 3));
@@ -224,7 +224,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testInsert() {
+	void testInsert() {
 		assertArrayEquals(new int[] { 1, 2, 3, 11, 12, 13, 4, 5 }, ArraysUtil.insert(x, y, 3));
 		assertArrayEquals(new int[] { 11, 12, 13, 1, 2, 3, 4, 5 }, ArraysUtil.insert(x, y, 0));
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 5, 11, 12, 13 }, ArraysUtil.insert(x, y, 5));
@@ -315,7 +315,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testInsertAt() {
+	void testInsertAt() {
 		assertArrayEquals(new int[] { 1, 2, 3, 11, 12, 13, 5 }, ArraysUtil.insertAt(x, y, 3));
 		assertArrayEquals(new int[] { 11, 12, 13, 2, 3, 4, 5 }, ArraysUtil.insertAt(x, y, 0));
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 11, 12, 13 }, ArraysUtil.insertAt(x, y, 4));
@@ -379,7 +379,7 @@ class ArraysUtilTest {
 
 
 	@Test
-	public void testIndexOf() {
+	void testIndexOf() {
 		assertEquals(0, ArraysUtil.indexOf(x, 1));
 		assertEquals(1, ArraysUtil.indexOf(x, 2));
 		assertEquals(4, ArraysUtil.indexOf(x, 5));
@@ -453,7 +453,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testIndexOf2() {
+	void testIndexOf2() {
 		assertEquals(0, ArraysUtil.indexOf(x, new int[] {}));
 		assertEquals(0, ArraysUtil.indexOf(x, new int[] { 1, 2, 3 }));
 		assertEquals(-1, ArraysUtil.indexOf(x, new int[] { 1, 2, 3, 7 }));
@@ -520,7 +520,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testContains() {
+	void testContains() {
 		assertTrue(ArraysUtil.contains(x, 1));
 		assertTrue(ArraysUtil.contains(x, 2));
 		assertTrue(ArraysUtil.contains(x, 5));
@@ -547,7 +547,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testContains2() {
+	void testContains2() {
 		assertTrue(ArraysUtil.contains(x, new int[] {}));
 		assertTrue(ArraysUtil.contains(x, new int[] { 1, 2, 3 }));
 		assertFalse(ArraysUtil.contains(x, new int[] { 1, 2, 3, 7 }));
@@ -571,7 +571,7 @@ class ArraysUtilTest {
 
 
 	@Test
-	public void testConvert() {
+	void testConvert() {
 		Integer[] src = new Integer[]{Integer.valueOf(1), null, Integer.valueOf(3)};
 		int[] dest = ArraysUtil.values(src);
 		assertEquals(3, dest.length);
@@ -588,7 +588,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertEquals("null", ArraysUtil.toString((int[]) null));
 		assertEquals("", ArraysUtil.toString((new int[0])));
 		assertEquals("1", ArraysUtil.toString(new int[] { 1 }));
@@ -619,7 +619,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testRemove() {
+	void testRemove() {
 		assertArrayEquals(new int[]{1, 2, 5}, ArraysUtil.remove(x, 2, 2));
 		assertArrayEquals(new int[]{1}, ArraysUtil.remove(x, 1, 4));
 		assertArrayEquals(new long[]{1, 3, 4, 5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
@@ -634,7 +634,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testSuperType() {
+	void testSuperType() {
 		oo = new Object[] {Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(5)};
 
 		oo = ArraysUtil.append(oo, Integer.valueOf(7));
@@ -647,7 +647,7 @@ class ArraysUtilTest {
 	}
 	
 	@Test
-	public void testArray() {
+	void testArray() {
 		assertArrayEquals(new Integer[] {}, ArraysUtil.array());
 		assertArrayEquals(new Integer[] { 1, 2, 5 }, ArraysUtil.array(1, 2, 5));
 
@@ -678,7 +678,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testValues() {
+	void testValues() {
 		assertArrayEquals(new byte[] { 0, 1 }, ArraysUtil.values(new Byte[] { 0, 1 }));
 		assertArrayEquals(new Byte[] { 0, 1 }, ArraysUtil.valuesOf(new byte[] { 0, 1 }));
 		assertArrayEquals(new char[] { 'f', 'o', 'o' }, ArraysUtil.values(new Character[] { 'f', 'o', 'o' }));
@@ -698,7 +698,7 @@ class ArraysUtilTest {
 	}
 
 	@Test
-	public void testToStringArray() {
+	void testToStringArray() {
 		assertArrayEquals(new String[] {"1", null, "3.1"}, ArraysUtil.toStringArray((new Object[] {Integer.valueOf(1), null, Double.valueOf(3.1)})));
 		assertArrayEquals(new String[] {"1", "2", "3"}, ArraysUtil.toStringArray(new int[] {1, 2, 3}));
 		assertArrayEquals(new String[] {"foo", "bar"}, ArraysUtil.toStringArray(new String[] {"foo", "bar"}));

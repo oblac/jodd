@@ -44,12 +44,12 @@ class DateConverterTest {
 	DateConverter dateConverter = new DateConverter();
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		assertNull(dateConverter.convert(null));
 	}
 
 	@Test
-	public void testCalendar2Date() {
+	void testCalendar2Date() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		Date date = dateConverter.convert(calendar);
@@ -57,35 +57,35 @@ class DateConverterTest {
 	}
 
 	@Test
-	public void testDate2Date() {
+	void testDate2Date() {
 		Date date2 = new Date(time);
 		Date date = dateConverter.convert(date2);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testTimestamp2Date() {
+	void testTimestamp2Date() {
 		Timestamp timestamp = new Timestamp(time);
 		Date date = dateConverter.convert(timestamp);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testSqlDate2Date() {
+	void testSqlDate2Date() {
 		java.sql.Date date2 = new java.sql.Date(time);
 		Date date = dateConverter.convert(date2);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testSqlTime2Date() {
+	void testSqlTime2Date() {
 		Time sqltime = new Time(time);
 		Date date = dateConverter.convert(sqltime);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testJDateTime2Date() {
+	void testJDateTime2Date() {
 		JDateTime jdt = new JDateTime(time);
 		Date date = dateConverter.convert(jdt);
 		assertEquals(time, date.getTime());
@@ -94,7 +94,7 @@ class DateConverterTest {
 
 	@Test
 	@SuppressWarnings({"deprecation"})
-	public void testConversion() {
+	void testConversion() {
 		assertNull(dateConverter.convert(null));
 
 		assertEquals(new Date(885858), dateConverter.convert("885858"));

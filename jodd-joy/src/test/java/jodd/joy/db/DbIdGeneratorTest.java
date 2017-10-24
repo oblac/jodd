@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DbIdGeneratorTest extends DbHsqldbTestCase {
 
 	@Test
-	public void testIdGen() throws Exception {
+	void testIdGen() throws Exception {
 		DbSession session = new DbSession(cp);
 		ThreadDbSessionHolder.set(session);
 

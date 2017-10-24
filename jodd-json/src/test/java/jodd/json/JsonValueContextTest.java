@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JsonValueContextTest {
 
 	@Test
-	public void testJsonValueContextBean() {
+	void testJsonValueContextBean() {
 		Surfer surfer = new Surfer();
 
 		surfer.setName("Igor");
@@ -56,7 +56,7 @@ class JsonValueContextTest {
 	}
 
 	@Test
-	public void testJsonValueContextList() {
+	void testJsonValueContextList() {
 		List<String> list = new ArrayList<>();
 
 		list.add("one");
@@ -78,7 +78,7 @@ class JsonValueContextTest {
 	}
 
 	@Test
-	public void testJsonValueContextArray() {
+	void testJsonValueContextArray() {
 		String[] array = new String[] {"one", "two", "three"};
 
 		JsonSerializer jsonSerializer = new JsonSerializer()
@@ -96,7 +96,7 @@ class JsonValueContextTest {
 	}
 
 	@Test
-	public void testJsonValueContextArray2() {
+	void testJsonValueContextArray2() {
 		Object[] array = new Object[] {new Surfer(), "two", "three"};
 
 		JsonSerializer jsonSerializer = new JsonSerializer()

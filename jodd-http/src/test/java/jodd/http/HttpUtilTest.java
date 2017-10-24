@@ -33,13 +33,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HttpUtilTest {
 
 	@Test
-	public void testNiceHeaderNames() {
+	void testNiceHeaderNames() {
 		assertEquals("Content-Type", HttpUtil.prepareHeaderParameterName("conTent-tyPe"));
 		assertEquals("ETag", HttpUtil.prepareHeaderParameterName("etag"));
 	}
 
 	@Test
-	public void testMediaTypeAndParameters() {
+	void testMediaTypeAndParameters() {
 		String contentType = "text/html";
 
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
@@ -73,7 +73,7 @@ class HttpUtilTest {
 	}
 
 	@Test
-	public void testDefaultPort() {
+	void testDefaultPort() {
 		HttpRequest request;
 
 		request = HttpRequest.get("jodd.org");
@@ -102,7 +102,7 @@ class HttpUtilTest {
 	}
 
 	@Test
-	public void testBuildQuery() {
+	void testBuildQuery() {
 		HttpMultiMap<String> map = HttpMultiMap.newCaseInsensitiveMap();
 
 		assertEquals("", HttpUtil.buildQuery(map, StringPool.UTF_8));

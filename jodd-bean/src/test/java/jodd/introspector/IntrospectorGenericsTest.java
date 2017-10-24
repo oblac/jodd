@@ -54,7 +54,7 @@ class IntrospectorGenericsTest {
 	public static class Foo extends MethodParameterType<Integer> {}
 
 	@Test
-	public void testFields() throws NoSuchFieldException {
+	void testFields() throws NoSuchFieldException {
 		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
@@ -105,7 +105,7 @@ class IntrospectorGenericsTest {
 	}
 
 	@Test
-	public void testMethods() throws NoSuchMethodException {
+	void testMethods() throws NoSuchMethodException {
 		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());

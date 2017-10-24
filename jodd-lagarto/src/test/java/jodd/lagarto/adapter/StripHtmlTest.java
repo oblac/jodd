@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class StripHtmlTest {
 
 	@Test
-	public void testStripHtml() {
+	void testStripHtml() {
 		LagartoParser lagartoParser = new LagartoParser(
 				"<html>  <div   id='a'>   x \n\n\n </div>  </html>", false);
 

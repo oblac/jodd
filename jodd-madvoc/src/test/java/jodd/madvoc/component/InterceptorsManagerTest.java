@@ -38,7 +38,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpand() {
+	void testExpand() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
 		im.madvocConfig.defaultInterceptors = new Class[]{ServletConfigInterceptor.class};
@@ -55,7 +55,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpand2() {
+	void testExpand2() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, LogEchoInterceptor.class, ServletConfigInterceptor.class};
@@ -77,7 +77,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpandStack() {
+	void testExpandStack() {
 		InjectorsManager injectorsManager = new InjectorsManager();
 		injectorsManager.scopeDataResolver = new ScopeDataResolver();
 		injectorsManager.madvocConfig = new MadvocConfig();
@@ -116,7 +116,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 	
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpandConfigurableStack() {
+	void testExpandConfigurableStack() {
 		InjectorsManager injectorsManager = new InjectorsManager();
 		injectorsManager.scopeDataResolver = new ScopeDataResolver();
 		injectorsManager.madvocConfig = new MadvocConfig();
@@ -163,7 +163,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 	
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpandSelf() {
+	void testExpandSelf() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
 
@@ -188,7 +188,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpandStack2() {
+	void testExpandStack2() {
 		InjectorsManager injectorsManager = new InjectorsManager();
 		injectorsManager.scopeDataResolver = new ScopeDataResolver();
 		injectorsManager.madvocConfig = new MadvocConfig();

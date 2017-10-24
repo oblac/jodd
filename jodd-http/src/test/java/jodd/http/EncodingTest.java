@@ -62,7 +62,7 @@ class EncodingTest {
 	}
 
 	@Test
-	public void testContentTypeHeader() {
+	void testContentTypeHeader() {
 		HttpRequest req = HttpRequest.get("localhost/hello");
 
 		assertNull(req.contentType());
@@ -89,19 +89,19 @@ class EncodingTest {
 	}
 
 	@Test
-	public void testRequestEncoding1() throws IOException {
+	void testRequestEncoding1() throws IOException {
 		testRequestEncoding(1);
 	}
 	@Test
-	public void testRequestEncoding2() throws IOException {
+	void testRequestEncoding2() throws IOException {
 		testRequestEncoding(2);
 	}
 	@Test
-	public void testRequestEncoding3() throws IOException {
+	void testRequestEncoding3() throws IOException {
 		testRequestEncoding(3);
 	}
 	@Test
-	public void testRequestEncoding4() throws IOException {
+	void testRequestEncoding4() throws IOException {
 		testRequestEncoding(4);
 	}
 	private void testRequestEncoding(int i) throws IOException {
@@ -146,15 +146,15 @@ class EncodingTest {
 	}
 
 	@Test
-	public void testFormParams1() {
+	void testFormParams1() {
 		testFormParams(1);
 	}
 	@Test
-	public void testFormParams2() {
+	void testFormParams2() {
 		testFormParams(2);
 	}
 	@Test
-	public void testFormParams3() {
+	void testFormParams3() {
 		testFormParams(3);
 	}
 	private void testFormParams(int i) {
@@ -195,11 +195,11 @@ class EncodingTest {
 	}
 
 	@Test
-	public void testQueryParams1() throws IOException {
+	void testQueryParams1() throws IOException {
 		testQueryParams(1);
 	}
 	@Test
-	public void testQueryParams2() throws IOException {
+	void testQueryParams2() throws IOException {
 		testQueryParams(2);
 	}
 	private void testQueryParams(int i) throws IOException {
@@ -226,7 +226,7 @@ class EncodingTest {
 	}
 
 	@Test
-	public void testMultipart() {
+	void testMultipart() {
 		HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
 		request
 			.formEncoding("UTF-8")		// optional
@@ -250,7 +250,7 @@ class EncodingTest {
 	}
 
 	@Test
-	public void testUploadWithUploadable() throws IOException {
+	void testUploadWithUploadable() throws IOException {
 		HttpResponse response = HttpRequest
 				.post("http://localhost:8173/echo2")
 				.multipart(true)

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PeriodTest {
 
 	@Test
-	public void testClose() {
+	void testClose() {
 		JDateTime jdt1 = new JDateTime(2013, 1, 28, 0, 0, 0, 0);
 		JDateTime jdt2 = new JDateTime(2013, 1, 28, 1, 0, 0, 0);
 
@@ -55,7 +55,7 @@ class PeriodTest {
 	}
 
 	@Test
-	public void testMinuses() {
+	void testMinuses() {
 		JDateTime jdt1 = new JDateTime(2013, 1, 27, 23, 59, 59, 999);
 		JDateTime jdt2 = new JDateTime(2013, 1, 28, 0, 0, 0, 0);
 
@@ -69,7 +69,7 @@ class PeriodTest {
 	}
 
 	@Test
-	public void testSame() {
+	void testSame() {
 		JDateTime jdt = new JDateTime();
 
 		Period period = new Period(jdt, jdt);
@@ -81,7 +81,7 @@ class PeriodTest {
 	}
 
 	@Test
-	public void testOneDay() {
+	void testOneDay() {
 		JDateTime jdt1 = new JDateTime();
 		JDateTime jdt2 = jdt1.clone();
 		jdt2.addDay(1);
@@ -95,7 +95,7 @@ class PeriodTest {
 	}
 
 	@Test
-	public void testYear() {
+	void testYear() {
 		JDateTime jdt1 = new JDateTime(2013, 1, 1);
 		JDateTime jdt2 = new JDateTime(2012, 1, 1);
 

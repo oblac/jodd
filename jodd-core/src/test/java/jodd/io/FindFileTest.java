@@ -54,7 +54,7 @@ class FindFileTest {
 	}
 
 	@Test
-	public void testTwoAccept() {
+	void testTwoAccept() {
 		FindFile ff = new WildcardFindFile()
 						.include("**/*file/a.png")
 						.include("**/*file/a.txt")
@@ -88,7 +88,7 @@ class FindFileTest {
 	}
 
 	@Test
-	public void testWildcardFile() {
+	void testWildcardFile() {
 		FindFile ff = new WildcardFindFile()
 				.include("**/*file/a*")
 				.recursive(true)
@@ -151,7 +151,7 @@ class FindFileTest {
 
 
 	@Test
-	public void testWildcardPath() {
+	void testWildcardPath() {
 		FindFile ff = new WildcardFindFile()
 				.include("**/file/*")
 				.recursive(true)
@@ -186,7 +186,7 @@ class FindFileTest {
 	}
 
 	@Test
-	public void testRegexp() {
+	void testRegexp() {
 		FindFile ff = new RegExpFindFile()
 				.include(".*/a[.].*")
 				.recursive(true)
@@ -222,7 +222,7 @@ class FindFileTest {
 	}
 
 	@Test
-	public void testFindAll() {
+	void testFindAll() {
 		List<File> foundedFiles = new WildcardFindFile()
 			.include("**/*file/a*")
 			.recursive(true)

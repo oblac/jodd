@@ -43,12 +43,12 @@ class SqlDateConverterTest {
 	SqlDateConverter sqlDateConverter = new SqlDateConverter();
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		assertNull(sqlDateConverter.convert(null));
 	}
 
 	@Test
-	public void testCalendar2SqlDate() {
+	void testCalendar2SqlDate() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		Date date = sqlDateConverter.convert(calendar);
@@ -56,42 +56,42 @@ class SqlDateConverterTest {
 	}
 
 	@Test
-	public void testDate2SqlDate() {
+	void testDate2SqlDate() {
 		java.util.Date date2 = new java.util.Date(time);
 		Date date = sqlDateConverter.convert(date2);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testTimestamp2SqlDate() {
+	void testTimestamp2SqlDate() {
 		Timestamp timestamp = new Timestamp(time);
 		Date date = sqlDateConverter.convert(timestamp);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testSqlDate2SqlDate() {
+	void testSqlDate2SqlDate() {
 		Date date2 = new Date(time);
 		Date date = sqlDateConverter.convert(date2);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testSqlTime2SqlDate() {
+	void testSqlTime2SqlDate() {
 		Time sqltime = new Time(time);
 		Date date = sqlDateConverter.convert(sqltime);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testJDateTime2SqlDate() {
+	void testJDateTime2SqlDate() {
 		JDateTime jdt = new JDateTime(time);
 		Date date = sqlDateConverter.convert(jdt);
 		assertEquals(time, date.getTime());
 	}
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		assertNull(sqlDateConverter.convert(null));
 
 		assertEquals(Date.valueOf("2011-01-01"), sqlDateConverter.convert(Date.valueOf("2011-01-01")));

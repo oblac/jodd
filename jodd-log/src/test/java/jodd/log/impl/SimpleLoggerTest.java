@@ -54,19 +54,19 @@ class SimpleLoggerTest extends LoggerTestBase {
 
 	@Override
 	@Test
-	public void testIsEnabled() {
+	void testIsEnabled() {
 		assertTrue(logger.isEnabled(Level.DEBUG));
 	}
 
 	@Test
-	public void testBasicOperations() throws Exception {
+	void testBasicOperations() throws Exception {
 		assertTrue(slf.getElapsedTime() >= 0);
 		assertEquals(logger.getName(), LoggerConstants.SIMPLE_LOGGER);
 	}
 
 	@Override
 	@Test
-	public void testIsLevelEnabled() {
+	void testIsLevelEnabled() {
 		//when
 		initializeLogFactoryAndLogger(Logger.Level.DEBUG);
 
@@ -99,7 +99,7 @@ class SimpleLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLogLevel() {
+	void testLogLevel() {
 		//given
 		setUpOutputStream();
 
@@ -141,7 +141,7 @@ class SimpleLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testLog() {
+	void testLog() {
 		//given
 		setUpOutputStream();
 
@@ -154,7 +154,7 @@ class SimpleLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testThrowable() {
+	void testThrowable() {
 		//given
 		throwable = mock(Throwable.class);
 		setUpOutputStream();

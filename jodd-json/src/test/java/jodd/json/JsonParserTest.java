@@ -76,7 +76,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSimpleJson() {
+	void testSimpleJson() {
 		JsonParser jsonParser = new JsonParser();
 
 		Object value = jsonParser.parse("true");
@@ -159,7 +159,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSimpleConversions() {
+	void testSimpleConversions() {
 		JsonParser jsonParser = new JsonParser();
 
 		assertEquals(173, jsonParser.parse("\"173\"", Integer.class).intValue());
@@ -169,7 +169,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testConversionsToObject() {
+	void testConversionsToObject() {
 		JsonParser jsonParser = new JsonParser();
 		assertEquals("173", jsonParser.parse("\"173\"", Object.class));
 		assertEquals(123, jsonParser.parse("123", Object.class));
@@ -179,7 +179,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testStringEscapes() {
+	void testStringEscapes() {
 		JsonParser jsonParser = new JsonParser();
 
 		assertEquals("\n4", jsonParser.parse("\"\\n\\u0034\""));
@@ -192,7 +192,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testFeatures() {
+	void testFeatures() {
 		JsonParser jsonParser = new JsonParser();
 
 		Map map = jsonParser.parse("{}");
@@ -276,7 +276,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSimpleMap() {
+	void testSimpleMap() {
 		JsonParser jsonParser = new JsonParser();
 
 		Object value = jsonParser.parse("   { \"one\" : true}   ");
@@ -300,7 +300,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSimpleArray() {
+	void testSimpleArray() {
 		JsonParser jsonParser = new JsonParser();
 
 		Object value = jsonParser.parse("[true, false, true, [\"A\", \"BB\"]]");
@@ -325,7 +325,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSimpleMatrix() {
+	void testSimpleMatrix() {
 		JsonParser jsonParser = new JsonParser();
 
 		ArrHolder arrHolder = jsonParser.parse("{\"pos\":[1,2,3,4,5,6,7,8]}", ArrHolder.class);
@@ -426,7 +426,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSimpleObject() {
+	void testSimpleObject() {
 		JsonParser jsonParser = new JsonParser();
 
 		Foo foo = jsonParser
@@ -453,7 +453,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testObjectAttribute() {
+	void testObjectAttribute() {
 		JsonParser jsonParser = new JsonParser();
 		jsonParser.map(Wildcard.class);
 
@@ -551,7 +551,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testComplexObject() throws IOException {
+	void testComplexObject() throws IOException {
 		JoddJson.classMetadataName = "class";
 
 		JsonParser jsonParser = new JsonParser();
@@ -626,7 +626,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testComplexMaps() throws IOException {
+	void testComplexMaps() throws IOException {
 		JsonParser jsonParser = new JsonParser();
 		String json = FileUtil.readString(new File(dataRoot, "complexMaps.json"));
 
@@ -649,7 +649,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testActionLabel() throws Exception {
+	void testActionLabel() throws Exception {
 		JsonParser jsonParser = new JsonParser();
 		String json = FileUtil.readString(new File(dataRoot, "actionLabel.json"));
 		Map<String, Object> map;
@@ -671,7 +671,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testCitmCatalog() throws Exception {
+	void testCitmCatalog() throws Exception {
 		FileInputStream fis = new FileInputStream(new File(dataRoot, "citm_catalog.json.gz"));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -697,7 +697,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testString() {
+	void testString() {
 		assertEquals("123", new JsonParser().parse("\"" + "123" + "\""));
 
 		assertEquals("12\n3", new JsonParser().parse("\"" + "12\\n3" + "\""));
@@ -723,12 +723,12 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testJsonModule() {
+	void testJsonModule() {
 		assertTrue(Jodd.isModuleLoaded(Jodd.JoddModule.JSON));
 	}
 
 	@Test
-	public void testInvalidJson() {
+	void testInvalidJson() {
 		try {
 			new JsonParser().parse("\"" + "123" + "\",");
 			fail("error");
@@ -742,7 +742,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testKeys() {
+	void testKeys() {
 		String json = "{\"123\" : \"name\"}";
 
 		Map<Long, String> map = new JsonParser().map("keys", Long.class).parse(json);
@@ -775,7 +775,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testMapOfListArrays() {
+	void testMapOfListArrays() {
 		String json = "{\"data\" : {\"123\" : [1,2,3]}}";
 
 		MapHolder mapHolder = new JsonParser().parse(json, MapHolder.class);
@@ -805,7 +805,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testAnnotationNameChangeFirstTime() {
+	void testAnnotationNameChangeFirstTime() {
 		String json = "{\"first_name\":\"Djordje\"}";
 
 		Glista jsonGlista = new JsonParser().parse(json, Glista.class);
@@ -814,7 +814,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testEscapeAtTheEndOfLongString() {
+	void testEscapeAtTheEndOfLongString() {
 		String s = StringUtil.repeat('A', 800);
 		String json = "\"" + s + "\\n\"";
 
@@ -826,7 +826,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testNamesWithDots() {
+	void testNamesWithDots() {
 		String json = "{\"foo.bar\":123}";
 
 		FooBar fooBar = new JsonParser().parse(json, FooBar.class);
@@ -836,7 +836,7 @@ class JsonParserTest {
 	}
 
 	@Test
-	public void testSets() {
+	void testSets() {
 		String json = "{\"names\":[\"Pig\",\"Joe\"],\"numbers\":[173,22]}";
 
 		HitList hitList = JsonParser.create().parse(json, HitList.class);

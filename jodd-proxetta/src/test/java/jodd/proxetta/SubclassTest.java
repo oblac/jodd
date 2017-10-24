@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SubclassTest {
 
 	@Test
-	public void test1() {
+	void test1() {
 
 		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
@@ -88,7 +88,7 @@ class SubclassTest {
 	}
 
 	@Test
-	public void testProxyClassNames() {
+	void testProxyClassNames() {
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(true);
 
@@ -142,7 +142,7 @@ class SubclassTest {
 	}
 
 	@Test
-	public void testInnerOverride() {
+	void testInnerOverride() {
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
 		ProxyProxettaBuilder builder = proxyProxetta.builder();
 		builder.setTarget(Two.class);
@@ -155,7 +155,7 @@ class SubclassTest {
 	}
 
 	@Test
-	public void testJdk() throws Exception {
+	void testJdk() throws Exception {
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(false);
 

@@ -47,12 +47,12 @@ class JDateTimeConverterTest {
 	JDateTimeConverter jDateTimeConverter = new JDateTimeConverter();
 
 	@Test
-	public void testNull() {
+	void testNull() {
 		assertNull(jDateTimeConverter.convert(null));
 	}
 
 	@Test
-	public void testCalendar2JDateTime() {
+	void testCalendar2JDateTime() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		JDateTime jdt = jDateTimeConverter.convert(calendar);
@@ -60,35 +60,35 @@ class JDateTimeConverterTest {
 	}
 
 	@Test
-	public void testDate2JDateTime() {
+	void testDate2JDateTime() {
 		Date date = new Date(time);
 		JDateTime jdt = jDateTimeConverter.convert(date);
 		assertEquals(time, jdt.getTimeInMillis());
 	}
 
 	@Test
-	public void testTimestamp2JDateTime() {
+	void testTimestamp2JDateTime() {
 		Timestamp timestamp = new Timestamp(time);
 		JDateTime jdt = jDateTimeConverter.convert(timestamp);
 		assertEquals(time, jdt.getTimeInMillis());
 	}
 
 	@Test
-	public void testSqlDate2JDateTime() {
+	void testSqlDate2JDateTime() {
 		java.sql.Date date = new java.sql.Date(time);
 		JDateTime jdt = jDateTimeConverter.convert(date);
 		assertEquals(time, jdt.getTimeInMillis());
 	}
 
 	@Test
-	public void testSqlTime2JDateTime() {
+	void testSqlTime2JDateTime() {
 		Time sqltime = new Time(time);
 		JDateTime jdt = jDateTimeConverter.convert(sqltime);
 		assertEquals(time, jdt.getTimeInMillis());
 	}
 
 	@Test
-	public void testJDateTime2JDateTime() {
+	void testJDateTime2JDateTime() {
 		JDateTime jdt2 = new JDateTime(time);
 		JDateTime jdt = jDateTimeConverter.convert(jdt2);
 		assertEquals(time, jdt.getTimeInMillis());
@@ -96,7 +96,7 @@ class JDateTimeConverterTest {
 
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		assertNull(jDateTimeConverter.convert(null));
 
 		assertEquals(new JDateTime(2010, 10, 10), jDateTimeConverter.convert(new JDateTime(2010, 10, 10)));
@@ -105,7 +105,7 @@ class JDateTimeConverterTest {
 	}
 
 	@Test
-	public void testLoadFromStoreTo() {
+	void testLoadFromStoreTo() {
 		Calendar c = Calendar.getInstance();
 		c.set(2001, 0, 1, 2, 3, 4);
 		c.set(Calendar.MILLISECOND, 500);

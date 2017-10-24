@@ -46,7 +46,7 @@ class NetUtilTest {
     }
 
     @Test
-    public void testDownloadString() throws IOException {
+    void testDownloadString() throws IOException {
         final String expected = "Jodd - The Unbearable Lightness of Java - üäößÜÄÖ";
 
         final String actual = NetUtil.downloadString(joddInfoTxt.toExternalForm());
@@ -56,7 +56,7 @@ class NetUtilTest {
     }
 
     @Test
-    public void testDownloadStringWithUTF8Encoding() throws IOException {
+    void testDownloadStringWithUTF8Encoding() throws IOException {
         final String expected = "Jodd - The Unbearable Lightness of Java - üäößÜÄÖ";
 
         final String actual = NetUtil.downloadString(joddInfoTxt.toExternalForm(), "UTF-8");
@@ -66,7 +66,7 @@ class NetUtilTest {
     }
 
     @Test
-    public void testDownloadStringWithISO88591Encoding() throws IOException {
+    void testDownloadStringWithISO88591Encoding() throws IOException {
         // due to ISO-8859-1 encoding
         final String expected = "Jodd - The Unbearable Lightness of Java - Ã¼Ã¤Ã¶Ã\u009FÃ\u009CÃ\u0084Ã\u0096";
 
@@ -77,7 +77,7 @@ class NetUtilTest {
     }
 
     @Test
-    public void testDownloadBytes() throws IOException {
+    void testDownloadBytes() throws IOException {
         final byte[] expected = new byte[] {74,111,100,100,32,45,32,84,104,101,32,85,110,98,101,97,114,97,98,108,101,32,
                 76,105,103,104,116,110,101,115,115,32,111,102,32,74,97,118,97,32,45,32,-61,-68,-61,-92,-61,-74,-61,-97,-61,-100,-61,-124,-61,-106};
         final byte[] actual = NetUtil.downloadBytes(joddInfoTxt.toExternalForm());
@@ -88,7 +88,7 @@ class NetUtilTest {
     }
 
     @Test
-    public void testDownloadFile() throws IOException {
+    void testDownloadFile() throws IOException {
         final byte[] expected = new byte[] {74,111,100,100,32,45,32,84,104,101,32,85,110,98,101,97,114,97,98,108,101,32,
                 76,105,103,104,116,110,101,115,115,32,111,102,32,74,97,118,97,32,45,32,-61,-68,-61,-92,-61,-74,-61,-97,-61,-100,-61,-124,-61,-106};
 

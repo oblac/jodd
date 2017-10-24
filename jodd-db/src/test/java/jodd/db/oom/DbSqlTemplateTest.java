@@ -60,7 +60,7 @@ class DbSqlTemplateTest {
 	}
 
 	@Test
-	public void testAliasNoAlias() {
+	void testAliasNoAlias() {
 		DbSqlBuilder st;
 
 		st = sql("$T{Boy} $Boy.id $C{Boy.id}");
@@ -72,7 +72,7 @@ class DbSqlTemplateTest {
 
 
 	@Test
-	public void testTables() {
+	void testTables() {
 		DbSqlBuilder st;
 
 		// 1
@@ -107,13 +107,13 @@ class DbSqlTemplateTest {
 
 
 	@Test
-	public void testManyTables() {
+	void testManyTables() {
 		DbSqlBuilder st = sql("$T{Boy, Girl girl}");
 		assertEquals("BOY, GIRL girl", st.generateQuery());
 	}
 
 	@Test
-	public void testColumns1() {
+	void testColumns1() {
 		DbSqlBuilder st;
 
 		// 1
@@ -150,7 +150,7 @@ class DbSqlTemplateTest {
 
 
 	@Test
-	public void testColumns2() {
+	void testColumns2() {
 		DbSqlBuilder st;
 
 		// 1
@@ -174,7 +174,7 @@ class DbSqlTemplateTest {
 
 
 	@Test
-	public void testColumns3() {
+	void testColumns3() {
 		DbSqlBuilder st;
 
 		st = sql("$C{b.id,b.name} from $T{b b}").use("b", Boy.class);
@@ -208,7 +208,7 @@ class DbSqlTemplateTest {
 	}
 
 	@Test
-	public void testColumns4() {
+	void testColumns4() {
 		DbSqlBuilder st;
 		
 		st = sql("$T{b b} | $C{b.[name]} | $C{b.[id,name]} | $C{b.[id,name,girlId]}").use("b", Boy.class);
@@ -226,7 +226,7 @@ class DbSqlTemplateTest {
 	}
 
 	@Test
-	public void testReferencesAndEscapes() {
+	void testReferencesAndEscapes() {
 		DbSqlBuilder st;
 
 		assertEquals("...$foo...", new DbSqlBuilder("...\\$foo...").generateQuery());
@@ -266,7 +266,7 @@ class DbSqlTemplateTest {
 
 
 	@Test
-	public void testMatch() {
+	void testMatch() {
 		DbSqlBuilder st;
 
 		Boy boy = new Boy();
@@ -320,7 +320,7 @@ class DbSqlTemplateTest {
 
 
 	@Test
-	public void testJoin() {
+	void testJoin() {
 		DbSqlBuilder st = sql("select $C{bb.*}, $C{bg.+} from $T{BadGirl bg} join $T{Boy bb} on $bg.+=bb.GIRL_ID");
 		assertEquals("select bb.GIRL_ID, bb.ID, bb.NAME, bg.ID from GIRL bg join BOY bb on bg.ID=bb.GIRL_ID", st.generateQuery());
 	}

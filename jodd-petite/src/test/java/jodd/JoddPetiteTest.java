@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class JoddPetiteTest {
 
 	@Test
-	public void testLoadedModules() {
+	void testLoadedModules() {
 		assertTrue(JoddPetite.useProxetta);
 
 		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));

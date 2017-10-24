@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class ObjectToMapTest {
 
 	@Test
-	public void testConvertObjectToMapSimple() {
+	void testConvertObjectToMapSimple() {
 		Hill hill = new Hill();
 		hill.setHeight("173");
 		hill.setName("JoddHillWood");
@@ -61,7 +61,7 @@ class ObjectToMapTest {
 	}
 
 	@Test
-	public void testConvertPersonToMap() {
+	void testConvertPersonToMap() {
 		Person jodder = new DataCreator().createJodder();
 
 		final Map<String, Object> target = new HashMap<>();
@@ -86,7 +86,7 @@ class ObjectToMapTest {
 	}
 
 	@Test
-	public void testConvertPersonToMap2() {
+	void testConvertPersonToMap2() {
 		Person jodder = new DataCreator().createJodder();
 
 		final Map<String, Object> target = new HashMap<>();

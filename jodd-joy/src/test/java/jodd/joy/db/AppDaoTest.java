@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class AppDaoTest extends DbHsqldbTestCase {
 
 	@Test
-	public void testAppDao1() {
+	void testAppDao1() {
 		DbSession session = new DbSession(cp);
 		ThreadDbSessionHolder.set(session);
 

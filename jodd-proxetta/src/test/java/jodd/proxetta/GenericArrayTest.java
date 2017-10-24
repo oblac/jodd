@@ -45,7 +45,7 @@ class GenericArrayTest {
 	}
 
 	@Test
-	public void testClassesWithGenericArraysAsReturnValueProxy() {
+	void testClassesWithGenericArraysAsReturnValueProxy() {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
 			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);

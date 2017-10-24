@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 class HttpServletRequestParamMapTest {
 
 	@Test
-	public void testParamMap() {
+	void testParamMap() {
 		HttpServletRequest servletRequest = mock(HttpServletRequest.class);
 		when(servletRequest.getParameterValues("a")).thenReturn(new String[] {"1"});
 		when(servletRequest.getParameterValues("b")).thenReturn(new String[] {"2", "22"});

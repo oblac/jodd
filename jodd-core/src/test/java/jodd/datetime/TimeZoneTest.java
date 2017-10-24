@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TimeZoneTest {
 
 	@Test
-	public void testTimeZones() {
+	void testTimeZones() {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt1 = new JDateTime();
 		gc.setTimeInMillis(jdt1.getTimeInMillis());
@@ -88,7 +88,7 @@ class TimeZoneTest {
 	}
 
 	@Test
-	public void testTzOffset() {
+	void testTzOffset() {
 		JDateTime now = new JDateTime(2009, 5, 1, 23, 45, 1, 0);
 		now.changeTimeZone(TimeZone.getTimeZone("Europe/Belgrade"));
 		TimeZone tz1 = now.getTimeZone();
@@ -105,7 +105,7 @@ class TimeZoneTest {
 	}
 
 	@Test
-	public void testDlt() {
+	void testDlt() {
 		TimeZone cetTimeZone = TimeZone.getTimeZone("CET");
 		TimeZone cestTimeZone = TimeZone.getTimeZone("CEST");
 
@@ -120,7 +120,7 @@ class TimeZoneTest {
 	}
 
 	@Test
-	public void testChangeTimezones() {
+	void testChangeTimezones() {
 		TimeZone gmtTZ = TimeZone.getTimeZone("GMT");
 		TimeZone gmt3TZ = TimeZone.getTimeZone("GMT+3");
 

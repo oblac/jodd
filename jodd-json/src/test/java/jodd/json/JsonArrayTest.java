@@ -59,7 +59,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetInteger() {
+	void testGetInteger() {
 		jsonArray.add(123);
 		assertEquals(Integer.valueOf(123), jsonArray.getInteger(0));
 		try {
@@ -96,7 +96,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetLong() {
+	void testGetLong() {
 		jsonArray.add(123L);
 		assertEquals(Long.valueOf(123L), jsonArray.getLong(0));
 		try {
@@ -133,7 +133,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetFloat() {
+	void testGetFloat() {
 		jsonArray.add(123f);
 		assertEquals(Float.valueOf(123f), jsonArray.getFloat(0));
 		try {
@@ -170,7 +170,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetDouble() {
+	void testGetDouble() {
 		jsonArray.add(123d);
 		assertEquals(Double.valueOf(123d), jsonArray.getDouble(0));
 		try {
@@ -207,7 +207,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetString() {
+	void testGetString() {
 		jsonArray.add("foo");
 		assertEquals("foo", jsonArray.getString(0));
 		try {
@@ -237,7 +237,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetBoolean() {
+	void testGetBoolean() {
 		jsonArray.add(true);
 		assertEquals(true, jsonArray.getBoolean(0));
 		jsonArray.add(false);
@@ -269,7 +269,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetBinary() {
+	void testGetBinary() {
 		byte[] bytes = randomByteArray(10);
 		jsonArray.add(bytes);
 		assertArrayEquals(bytes, jsonArray.getBinary(0));
@@ -301,7 +301,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetJsonObject() {
+	void testGetJsonObject() {
 		JsonObject obj = new JsonObject().put("foo", "bar");
 		jsonArray.add(obj);
 		assertEquals(obj, jsonArray.getJsonObject(0));
@@ -332,7 +332,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetJsonArray() {
+	void testGetJsonArray() {
 		JsonArray arr = new JsonArray().add("foo");
 		jsonArray.add(arr);
 		assertEquals(arr, jsonArray.getJsonArray(0));
@@ -363,7 +363,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testGetValue() {
+	void testGetValue() {
 		jsonArray.add(123);
 		assertEquals(123, jsonArray.getValue(0));
 		jsonArray.add(123L);
@@ -422,49 +422,49 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testAddEnum() {
+	void testAddEnum() {
 		assertSame(jsonArray, jsonArray.add(JsonObjectTest.SomeEnum.FOO));
 		assertEquals(JsonObjectTest.SomeEnum.FOO.toString(), jsonArray.getString(0));
 	}
 
 	@Test
-	public void testAddString() {
+	void testAddString() {
 		assertSame(jsonArray, jsonArray.add("foo"));
 		assertEquals("foo", jsonArray.getString(0));
 	}
 
 	@Test
-	public void testAddCharSequence() {
+	void testAddCharSequence() {
 		assertSame(jsonArray, jsonArray.add(new StringBuilder("bar")));
 		assertEquals("bar", jsonArray.getString(0));
 	}
 
 	@Test
-	public void testAddInteger() {
+	void testAddInteger() {
 		assertSame(jsonArray, jsonArray.add(123));
 		assertEquals(Integer.valueOf(123), jsonArray.getInteger(0));
 	}
 
 	@Test
-	public void testAddLong() {
+	void testAddLong() {
 		assertSame(jsonArray, jsonArray.add(123L));
 		assertEquals(Long.valueOf(123L), jsonArray.getLong(0));
 	}
 
 	@Test
-	public void testAddFloat() {
+	void testAddFloat() {
 		assertSame(jsonArray, jsonArray.add(123f));
 		assertEquals(Float.valueOf(123f), jsonArray.getFloat(0));
 	}
 
 	@Test
-	public void testAddDouble() {
+	void testAddDouble() {
 		assertSame(jsonArray, jsonArray.add(123d));
 		assertEquals(Double.valueOf(123d), jsonArray.getDouble(0));
 	}
 
 	@Test
-	public void testAddBoolean() {
+	void testAddBoolean() {
 		assertSame(jsonArray, jsonArray.add(true));
 		assertEquals(true, jsonArray.getBoolean(0));
 		jsonArray.add(false);
@@ -472,21 +472,21 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testAddJsonObject() {
+	void testAddJsonObject() {
 		JsonObject obj = new JsonObject().put("foo", "bar");
 		assertSame(jsonArray, jsonArray.add(obj));
 		assertEquals(obj, jsonArray.getJsonObject(0));
 	}
 
 	@Test
-	public void testAddJsonArray() {
+	void testAddJsonArray() {
 		JsonArray arr = new JsonArray().add("foo");
 		assertSame(jsonArray, jsonArray.add(arr));
 		assertEquals(arr, jsonArray.getJsonArray(0));
 	}
 
 	@Test
-	public void testAddBinary() {
+	void testAddBinary() {
 		byte[] bytes = randomByteArray(10);
 		assertSame(jsonArray, jsonArray.add(bytes));
 		assertArrayEquals(bytes, jsonArray.getBinary(0));
@@ -494,7 +494,7 @@ class JsonArrayTest {
 
 	@Test
 	@SuppressWarnings("UnnecessaryBoxing")
-	public void testAddObject() {
+	void testAddObject() {
 		jsonArray.add((Object) "bar");
 		jsonArray.add((Object) (Integer.valueOf(123)));
 		jsonArray.add((Object) (Long.valueOf(123L)));
@@ -537,7 +537,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testAddAllJsonArray() {
+	void testAddAllJsonArray() {
 		jsonArray.add("bar");
 		JsonArray arr = new JsonArray().add("foo").add(48);
 		assertSame(jsonArray, jsonArray.addAll(arr));
@@ -546,14 +546,14 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testAddNull() {
+	void testAddNull() {
 		assertSame(jsonArray, jsonArray.addNull());
 		assertEquals(null, jsonArray.getString(0));
 		assertTrue(jsonArray.hasNull(0));
 	}
 
 	@Test
-	public void testHasNull() {
+	void testHasNull() {
 		jsonArray.addNull();
 		jsonArray.add("foo");
 		assertEquals(null, jsonArray.getString(0));
@@ -562,7 +562,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testContains() {
+	void testContains() {
 		jsonArray.add("wibble");
 		jsonArray.add(true);
 		jsonArray.add(123);
@@ -583,7 +583,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testRemoveByObject() {
+	void testRemoveByObject() {
 		jsonArray.add("wibble");
 		jsonArray.add(true);
 		jsonArray.add(123);
@@ -597,7 +597,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testRemoveByPos() {
+	void testRemoveByPos() {
 		jsonArray.add("wibble");
 		jsonArray.add(true);
 		jsonArray.add(123);
@@ -611,7 +611,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testSize() {
+	void testSize() {
 		jsonArray.add("wibble");
 		jsonArray.add(true);
 		jsonArray.add(123);
@@ -619,7 +619,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testClear() {
+	void testClear() {
 		jsonArray.add("wibble");
 		jsonArray.add(true);
 		jsonArray.add(123);
@@ -630,7 +630,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testIterator() {
+	void testIterator() {
 		jsonArray.add("foo");
 		jsonArray.add(123);
 		JsonObject obj = new JsonObject().put("foo", "bar");
@@ -652,7 +652,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testStream() {
+	void testStream() {
 		jsonArray.add("foo");
 		jsonArray.add(123);
 		JsonObject obj = new JsonObject().put("foo", "bar");
@@ -675,7 +675,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testEncode() throws Exception {
+	void testEncode() throws Exception {
 		jsonArray.add("foo");
 		jsonArray.add(123);
 		jsonArray.add(1234L);
@@ -694,7 +694,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testDecode() {
+	void testDecode() {
 		byte[] bytes = randomByteArray(10);
 		String strBytes = Base64.getEncoder().encodeToString(bytes);
 		String json = "[\"foo\",123,1234,1.23,2.34,true,\"" + strBytes + "\",null,{\"foo\":\"bar\"},[\"foo\",123]]";
@@ -715,13 +715,13 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		jsonArray.add("foo").add(123);
 		assertEquals(JsonSerializer.create().serialize(jsonArray), jsonArray.toString());
 	}
 
 	@Test
-	public void testGetList() {
+	void testGetList() {
 		JsonObject obj = new JsonObject().put("quux", "wibble");
 		jsonArray.add("foo").add(123).add(obj);
 		List<Object> list = jsonArray.list();
@@ -734,7 +734,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testCreateFromList() {
+	void testCreateFromList() {
 		List<Object> list = new ArrayList<>();
 		list.add("foo");
 		list.add(123);
@@ -745,7 +745,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testCreateFromListCharSequence() {
+	void testCreateFromListCharSequence() {
 		List<Object> list = new ArrayList<>();
 		list.add("foo");
 		list.add(123);
@@ -758,7 +758,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testCreateFromListNestedJsonObject() {
+	void testCreateFromListNestedJsonObject() {
 		List<Object> list = new ArrayList<>();
 		list.add("foo");
 		list.add(123);
@@ -772,7 +772,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testCreateFromListNestedMap() {
+	void testCreateFromListNestedMap() {
 		List<Object> list = new ArrayList<>();
 		list.add("foo");
 		list.add(123);
@@ -788,7 +788,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testCreateFromListNestedJsonArray() {
+	void testCreateFromListNestedJsonArray() {
 		List<Object> list = new ArrayList<>();
 		list.add("foo");
 		list.add(123);
@@ -802,7 +802,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testCreateFromListNestedList() {
+	void testCreateFromListNestedList() {
 		List<Object> list = new ArrayList<>();
 		list.add("foo");
 		list.add(123);
@@ -819,7 +819,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testJsonArrayEquality() {
+	void testJsonArrayEquality() {
 		JsonObject obj = new JsonObject(Collections.singletonMap("abc", Collections.singletonList(3)));
 		assertEquals(obj, new JsonObject(Collections.singletonMap("abc", Collections.singletonList(3))));
 		assertEquals(obj, new JsonObject(Collections.singletonMap("abc", Collections.singletonList(3L))));
@@ -837,7 +837,7 @@ class JsonArrayTest {
 	}
 
 	@Test
-	public void testRemoveMethodReturnedObject() {
+	void testRemoveMethodReturnedObject() {
 		JsonArray obj = new JsonArray();
 		obj.add("bar")
 			.add(new JsonObject().put("name", "vert.x").put("count", 2))

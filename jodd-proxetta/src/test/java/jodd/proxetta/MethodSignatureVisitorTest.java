@@ -55,7 +55,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature1() throws IOException {
+	void testMethodSignature1() throws IOException {
 		MethodInfo mi = getMethodSignatureForSingleMethod(M1.class);
 
 		assertEquals(0, mi.getArgumentsCount());
@@ -82,7 +82,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature2() throws IOException {
+	void testMethodSignature2() throws IOException {
 		MethodInfo mi = getMethodSignatureForSingleMethod(M2.class);
 
 		assertEquals(2, mi.getArgumentsCount());
@@ -118,7 +118,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature3() throws IOException {
+	void testMethodSignature3() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M3.class);
 
 		assertEquals(2, msv.getArgumentsCount());
@@ -154,7 +154,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature4() throws IOException {
+	void testMethodSignature4() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M4.class);
 
 		assertEquals(2, msv.getArgumentsCount());
@@ -190,7 +190,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature5() throws IOException {
+	void testMethodSignature5() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M5.class);
 
 		assertEquals(2, msv.getArgumentsCount());
@@ -225,7 +225,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature6() throws IOException {
+	void testMethodSignature6() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M6.class);
 
 		assertEquals(2, msv.getArgumentsCount());
@@ -261,7 +261,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature7() throws IOException {
+	void testMethodSignature7() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M7.class);
 
 		assertEquals(2, msv.getArgumentsCount());
@@ -297,7 +297,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature8() throws IOException {
+	void testMethodSignature8() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M8.class);
 
 		assertEquals(0, msv.getArgumentsCount());
@@ -319,7 +319,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature9() throws IOException {
+	void testMethodSignature9() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M9.class);
 
 		assertEquals(1, msv.getArgumentsCount());
@@ -346,7 +346,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature10() throws IOException {
+	void testMethodSignature10() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M10.class);
 
 		assertEquals(2, msv.getArgumentsCount());
@@ -367,7 +367,7 @@ class MethodSignatureVisitorTest {
 	}
 
 	@Test
-	public void testMethodSignature11() throws IOException {
+	void testMethodSignature11() throws IOException {
 		MethodInfo msv = getMethodSignatureForSingleMethod(M11.class);
 
 		assertEquals(1, msv.getArgumentsCount());

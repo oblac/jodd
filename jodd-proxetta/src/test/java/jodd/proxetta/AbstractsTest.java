@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class AbstractsTest {
 
 	@Test
-	public void testAbstract1() throws Exception {
+	void testAbstract1() throws Exception {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
 				return true;
@@ -53,7 +53,7 @@ class AbstractsTest {
 	}
 
 	@Test
-	public void testAbstract2() {
+	void testAbstract2() {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
 				return true;
@@ -68,7 +68,7 @@ class AbstractsTest {
 	}
 
 	@Test
-	public void testInterface() {
+	void testInterface() {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
 				return true;
@@ -83,7 +83,7 @@ class AbstractsTest {
 	}
 
 	@Test
-	public void testAdviceWithInnerClass() {
+	void testAdviceWithInnerClass() {
 		ProxyAspect proxyAspect = new ProxyAspect(InvalidAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
 				return true;

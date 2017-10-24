@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LFUCacheTest {
 
 	@Test
-	public void testCache() {
+	void testCache() {
 		Cache<String, String> cache = new LFUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -54,7 +54,7 @@ class LFUCacheTest {
 	}
 
 	@Test
-	public void testCache2() {
+	void testCache2() {
 		Cache<String, String> cache = new LFUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -74,7 +74,7 @@ class LFUCacheTest {
 	}
 
 	@Test
-	public void testCacheTime() {
+	void testCacheTime() {
 		Cache<String, String> cache = new LFUCache<>(3);
 		cache.put("1", "1", 50);
 		assertNotNull(cache.get("1"));
@@ -103,7 +103,7 @@ class LFUCacheTest {
 	}
 
 	@Test
-	public void testPrune() {
+	void testPrune() {
 		Cache<String, String> cache = new LFUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -119,7 +119,7 @@ class LFUCacheTest {
 	}
 
 	@Test
-	public void testBoosting() {
+	void testBoosting() {
 		Cache<String, String> cache = new LFUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
@@ -165,7 +165,7 @@ class LFUCacheTest {
 	}
 
 	@Test
-	public void testOnRemove() {
+	void testOnRemove() {
 		final MutableInteger mutableInteger = new MutableInteger();
 		Cache<String, String> cache = new LFUCache<String, String>(2) {
 			@Override

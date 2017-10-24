@@ -47,7 +47,7 @@ class EmailUtilTest {
 	}
 
 	@Test
-	public void testExtractContentType() {
+	void testExtractContentType() {
 		String contentType = "multipart/mixed;";
 		assertEquals("multipart/mixed", EmailUtil.extractMimeType(contentType));
 		assertNull(EmailUtil.extractEncoding(contentType));

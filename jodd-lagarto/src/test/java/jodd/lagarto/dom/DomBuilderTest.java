@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DomBuilderTest {
 
 	@Test
-	public void testSimpleDomCreation() {
+	void testSimpleDomCreation() {
 		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 
 		Document root = new LagartoDOMBuilder().parse(page);
@@ -87,7 +87,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testClone() {
+	void testClone() {
 		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 		Document root = new LagartoDOMBuilder().parse(page);
 
@@ -104,7 +104,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testSiblingsAndNames() {
+	void testSiblingsAndNames() {
 		Document document = new LagartoDOMBuilder().parse("<div id='top'><p id='id1'>one</p>text1<p id='id2'>two</p>text2<p id='id3'>three</p>text3</div>");
 		Element topDiv = (Element) document.getFirstChild();
 		Element p1 = (Element) topDiv.getFirstChild();
@@ -152,7 +152,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testNamesAndChilds() {
+	void testNamesAndChilds() {
 		Document document = new LagartoDOMBuilder().parse("<div id='top'><p id='id1'>one</p><span id='t1'>text1</span><p id='id2'>two</p><span id='t2'>text2</span><p id='id3'>three</p><span id='t3'>text3</span></div>");
 		Element topDiv = (Element) document.getFirstChild();
 		Element p1 = (Element) topDiv.getFirstChild();
@@ -190,7 +190,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testUnclosedTag() {
+	void testUnclosedTag() {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input>text<input>text<img></form></body></html>");
 		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input>text<input>text<img></form></body></html>", innerHtml);
@@ -209,7 +209,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testUnclosedTag2() {
+	void testUnclosedTag2() {
 		Document document = new LagartoDOMBuilder().parse(
 				"<DL>\n" +
 						"<DT><A HREF=\"../java/awt/PageAttributes.MediaType.html#D\"><B>D</B></A> - \n" +
@@ -231,7 +231,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testUncapital() {
+	void testUncapital() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe'></body></html>");
 		String innerHtml = document.getHtml();
@@ -246,7 +246,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testEncode() {
+	void testEncode() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<div foo=\"q&nbsp;w\">a&lt;b</div>");
 		Element div = (Element) document.getFirstChild();
@@ -265,7 +265,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testXmlDec() {
+	void testXmlDec() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
 		Document document = lagartoDOMBuilder.parse("<?xml version=\"1.0\"?><div?></div>");
@@ -282,7 +282,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testOrphanAttribute() {
+	void testOrphanAttribute() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<div qwe '8989' foo zoo='123'/>");
 
@@ -298,7 +298,7 @@ class DomBuilderTest {
 	}
 
 	@Test
-	public void testAppendable() {
+	void testAppendable() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<div foo=\"123\">some <b>nice</b> text</div>");
 		Element div = (Element) document.getFirstChild();
@@ -317,7 +317,7 @@ class DomBuilderTest {
 	}
 
     @Test
-    public void testDoubleDecode() {
+    void testDoubleDecode() {
         LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
         Document document = lagartoDOMBuilder.parse("<div title=\"&amp;lt;root /&amp;gt;\">");
         Element div = (Element) document.getFirstChild();

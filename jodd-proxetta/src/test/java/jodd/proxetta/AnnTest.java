@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AnnTest {
 
 	@Test
-	public void testMethodAnnotationsProxy() {
+	void testMethodAnnotationsProxy() {
 		ProxyProxetta proxetta = ProxyProxetta
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice.class,
@@ -69,7 +69,7 @@ class AnnTest {
 	}
 
 	@Test
-	public void testClassAnnotationsProxy() {
+	void testClassAnnotationsProxy() {
 		ProxyProxetta proxetta = ProxyProxetta
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice2.class,
@@ -94,7 +94,7 @@ class AnnTest {
 	}
 
 	@Test
-	public void testMethodAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	void testMethodAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		WrapperProxetta proxetta = WrapperProxetta
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice.class,
@@ -120,7 +120,7 @@ class AnnTest {
 	}
 
 	@Test
-	public void testClassAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	void testClassAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		WrapperProxetta proxetta = WrapperProxetta
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice2.class,

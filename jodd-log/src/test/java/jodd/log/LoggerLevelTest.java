@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LoggerLevelTest {
 
 	@Test
-	public void testIsTraceEnabledFor() {
+	void testIsTraceEnabledFor() {
 		final Logger.Level level = TRACE;
 		assertTrue(level.isEnabledFor(TRACE));
 		assertFalse(level.isEnabledFor(DEBUG));
@@ -49,7 +49,7 @@ class LoggerLevelTest {
 	}
 
 	@Test
-	public void testIsDebugEnabledFor() {
+	void testIsDebugEnabledFor() {
 		final Logger.Level level = DEBUG;
 		assertTrue(level.isEnabledFor(TRACE));
 		assertTrue(level.isEnabledFor(DEBUG));
@@ -59,7 +59,7 @@ class LoggerLevelTest {
 	}
 
 	@Test
-	public void testIsInfoEnabledFor() {
+	void testIsInfoEnabledFor() {
 		final Logger.Level level = INFO;
 		assertTrue(level.isEnabledFor(TRACE));
 		assertTrue(level.isEnabledFor(DEBUG));
@@ -69,7 +69,7 @@ class LoggerLevelTest {
 	}
 
 	@Test
-	public void testIsWarnEnabledFor() {
+	void testIsWarnEnabledFor() {
 		final Logger.Level level = WARN;
 		assertTrue(level.isEnabledFor(TRACE));
 		assertTrue(level.isEnabledFor(DEBUG));
@@ -79,7 +79,7 @@ class LoggerLevelTest {
 	}
 
 	@Test
-	public void testIsErrorEnabledFor() {
+	void testIsErrorEnabledFor() {
 		final Logger.Level level = ERROR;
 		assertTrue(level.isEnabledFor(TRACE));
 		assertTrue(level.isEnabledFor(DEBUG));
@@ -89,7 +89,7 @@ class LoggerLevelTest {
 	}
 
 	@Test
-	public void testLevelValueOf() {
+	void testLevelValueOf() {
 		assertEquals(ERROR, Logger.Level.valueOf("ERROR"));
 		assertEquals(INFO, Logger.Level.valueOf("INFO"));
 		assertEquals(WARN, Logger.Level.valueOf("WARN"));

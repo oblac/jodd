@@ -59,7 +59,7 @@ class ActionAnnotationTest {
 	}
 
 	@Test
-	public void testActionAnnotationOnly() throws NoSuchMethodException {
+	void testActionAnnotationOnly() throws NoSuchMethodException {
 		ActionAnnotation<Action> actionAnnotation = new ActionAnnotation<>(Action.class);
 		assertEquals(Action.class, actionAnnotation.getAnnotationClass());
 
@@ -81,7 +81,7 @@ class ActionAnnotationTest {
 	}
 
 	@Test
-	public void testCustomActionAnnotation() throws NoSuchMethodException {
+	void testCustomActionAnnotation() throws NoSuchMethodException {
 		ActionAnnotation<CustomAction> actionAnnotation = new ActionAnnotation<>(CustomAction.class);
 		assertEquals(CustomAction.class, actionAnnotation.getAnnotationClass());
 
@@ -103,7 +103,7 @@ class ActionAnnotationTest {
 	}
 
 	@Test
-	public void testMiscActionAnnotation() throws NoSuchMethodException {
+	void testMiscActionAnnotation() throws NoSuchMethodException {
 		ActionAnnotation<MiscAnnotation> actionAnnotation = new ActionAnnotation<>(MiscAnnotation.class);
 		assertEquals(MiscAnnotation.class, actionAnnotation.getAnnotationClass());
 

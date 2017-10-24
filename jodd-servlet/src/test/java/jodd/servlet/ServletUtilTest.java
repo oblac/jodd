@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ServletUtilTest {
 
 	@Test
-	public void testPrepareParameters() {
+	void testPrepareParameters() {
 		String[] p = new String[]{"one", "", " three ", null, "five"};
 		p = ServletUtil.prepareParameters(p, true, false, false);
 		assertEquals("three", p[2]);

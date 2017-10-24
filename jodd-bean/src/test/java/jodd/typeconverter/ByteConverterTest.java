@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ByteConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		ByteConverter byteConverter = new ByteConverter();
 
 		assertNull(byteConverter.convert(null));

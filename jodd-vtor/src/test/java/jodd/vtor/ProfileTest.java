@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ProfileTest {
 
 	@Test
-	public void testProfiles() {
+	void testProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(true);
 		Zoo zoo = new Zoo();
@@ -82,7 +82,7 @@ class ProfileTest {
 
 
 	@Test
-	public void testDefaultProfiles() {
+	void testDefaultProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
 		Zoo zoo = new Zoo();
@@ -109,7 +109,7 @@ class ProfileTest {
 
 
 	@Test
-	public void testMinusPlusProfiles() {
+	void testMinusPlusProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
 		vtor.useProfile("default");
@@ -158,7 +158,7 @@ class ProfileTest {
 	}
 
 	@Test
-	public void testAsJoyAction() {
+	void testAsJoyAction() {
 		Vtor vtor = new Vtor();
 		vtor.useProfiles(Vtor.DEFAULT_PROFILE, "register");
 		vtor.validate(new Too());

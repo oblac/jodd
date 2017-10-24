@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class EmailAddressTest {
 
 	@Test
-	public void testMailFromString() {
+	void testMailFromString() {
 		EmailAddress mailAddress = new EmailAddress("admin@jodd.com");
 		assertNull(mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
@@ -53,7 +53,7 @@ class EmailAddressTest {
 	}
 
 	@Test
-	public void testMailFromEmailAddress() {
+	void testMailFromEmailAddress() {
 		EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("admin@jodd.com");
 		assertNull(mailAddress.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress.getEmail());
@@ -68,7 +68,7 @@ class EmailAddressTest {
 	}
 
 	@Test
-	public void testMailFromInternetAddress() throws AddressException {
+	void testMailFromInternetAddress() throws AddressException {
 		EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress("Jenny Doe <admin@jodd.com>");
 		EmailAddress mailAddress2 = new EmailAddress(mailAddress.toInternetAddress());
 
@@ -77,7 +77,7 @@ class EmailAddressTest {
 	}
 
 	@Test
-	public void testIssue211() {
+	void testIssue211() {
 		String testAddress = "Some One<someone@yahoo.com>";
 		EmailAddress addr = new EmailAddress(testAddress);
 

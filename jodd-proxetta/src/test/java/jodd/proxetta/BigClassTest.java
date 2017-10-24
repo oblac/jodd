@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BigClassTest {
 
 	@Test
-	public void testAllFeatures() throws IOException, IllegalAccessException, InstantiationException {
+	void testAllFeatures() throws IOException, IllegalAccessException, InstantiationException {
 		StatCounter.counter = 0;
 		final MutableBoolean firstTime = new MutableBoolean(true);
 

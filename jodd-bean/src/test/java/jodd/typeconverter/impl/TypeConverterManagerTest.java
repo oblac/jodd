@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class TypeConverterManagerTest {
 
 	@Test
-	public void testRegistration() {
+	void testRegistration() {
 		FileConverter fileTypeConverter = (FileConverter) TypeConverterManager.lookup(File.class);
 
 		assertNotNull(fileTypeConverter);

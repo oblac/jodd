@@ -42,7 +42,7 @@ class InitMethodTest {
 	}
 
 	@Test
-	public void testPostConstructor() {
+	void testPostConstructor() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -67,7 +67,7 @@ class InitMethodTest {
 	}
 
 	@Test
-	public void testPostDefine() {
+	void testPostDefine() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -92,7 +92,7 @@ class InitMethodTest {
 	}
 
 	@Test
-	public void testPostInitialize() {
+	void testPostInitialize() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
@@ -117,7 +117,7 @@ class InitMethodTest {
 	}
 
 	@Test
-	public void testPostAll() {
+	void testPostAll() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans

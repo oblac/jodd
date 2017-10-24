@@ -56,7 +56,7 @@ class GenericsTest {
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueWrapper() {
+	void testClassesWithGenericsAsReturnValueWrapper() {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
 			WrapperProxetta proxetta = WrapperProxetta.withAspects(aspect);
@@ -69,7 +69,7 @@ class GenericsTest {
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueProxy() {
+	void testClassesWithGenericsAsReturnValueProxy() {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
 			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);

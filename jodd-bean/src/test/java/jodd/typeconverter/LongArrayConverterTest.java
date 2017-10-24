@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class LongArrayConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		LongArrayConverter longArrayConverter = (LongArrayConverter) TypeConverterManager.lookup(long[].class);
 
 		assertNull(longArrayConverter.convert(null));

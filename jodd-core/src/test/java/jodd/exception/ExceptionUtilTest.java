@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class ExceptionUtilTest {
 
 	@Test
-	public void testCurrentStackTrace() {
+	void testCurrentStackTrace() {
 		StackTraceElement[] sts =ExceptionUtil.getCurrentStackTrace();
 
 		StackTraceElement st = sts[0];
@@ -49,7 +49,7 @@ class ExceptionUtilTest {
 	}
 
 	@Test
-	public void testExceptionChain() {
+	void testExceptionChain() {
 		try {
 			throwTwoExceptions();
 			fail("error");
@@ -69,7 +69,7 @@ class ExceptionUtilTest {
 	}
 
 	@Test
-	public void testThrowChecked() {
+	void testThrowChecked() {
 		try {
 			throwMe();
 			fail("error");

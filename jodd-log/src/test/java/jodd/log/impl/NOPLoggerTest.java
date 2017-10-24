@@ -45,17 +45,17 @@ class NOPLoggerTest extends LoggerTestBase {
 
 	@Override
 	@Test
-	public void testIsEnabled() {
+	void testIsEnabled() {
 		assertFalse(logger.isEnabled(Level.DEBUG));
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		assertEquals(logger.getName(), name);
 	}
 
 	@Test
-	public void testLog() {
+	void testLog() {
 		//given
 		throwable = mock(Throwable.class);
 
@@ -73,7 +73,7 @@ class NOPLoggerTest extends LoggerTestBase {
 	}
 
 	@Test
-	public void testNopLoggerFactory() {
+	void testNopLoggerFactory() {
 		//given
 		loggerProvider = NOPLogger.PROVIDER;
 

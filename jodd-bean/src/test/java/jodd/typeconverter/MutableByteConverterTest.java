@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MutableByteConverterTest {
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		MutableByteConverter mutableByteConverter = (MutableByteConverter) TypeConverterManager.lookup(MutableByte.class);
 
 		assertNull(mutableByteConverter.convert(null));

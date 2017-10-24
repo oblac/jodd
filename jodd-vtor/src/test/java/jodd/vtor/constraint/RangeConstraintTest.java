@@ -34,14 +34,14 @@ import static org.mockito.Mockito.when;
 class RangeConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         RangeConstraint rangeConstraint = new RangeConstraint();
         assertEquals(0.0, rangeConstraint.getMin(), 0.01);
         assertEquals(0.0, rangeConstraint.getMax(), 0.01);
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         RangeConstraint rangeConstraint = new RangeConstraint(1.1, 10.1);
         assertEquals(1.1, rangeConstraint.getMin(), 0.01);
         assertEquals(10.1, rangeConstraint.getMax(), 0.01);
@@ -49,7 +49,7 @@ class RangeConstraintTest extends ConstraintTestBase {
 
 
     @Test
-    public void testSetMinMax() {
+    void testSetMinMax() {
         RangeConstraint rangeConstraint = new RangeConstraint();
         rangeConstraint.setMin(1.1);
         rangeConstraint.setMax(10.1);
@@ -58,7 +58,7 @@ class RangeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         RangeConstraint rangeConstraint = new RangeConstraint();
         Range annotation = mock(Range.class);
         when(annotation.min()).thenReturn(1.1);
@@ -70,12 +70,12 @@ class RangeConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(RangeConstraint.validate(null, 1, 2));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         assertFalse(new RangeConstraint(1.1, 2.0).isValid(mockContext(), "1.0"));
         assertFalse(new RangeConstraint(1.1, 3.0).isValid(mockContext(), "3.1"));
         assertTrue(new RangeConstraint(2.0, 3.0).isValid(mockContext(), "2.8"));

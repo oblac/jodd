@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class FastCharBufferTest extends FastBufferTestBase {
 
 	@Test
-	public void testAppendString() {
+	void testAppendString() {
 		FastCharBuffer fcb = new FastCharBuffer(10);
 
 		fcb.append("12345678");
@@ -49,7 +49,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testRandomAppends() {
+	void testRandomAppends() {
 		StringBuilder sb = new StringBuilder(10);
 		FastCharBuffer fcb = new FastCharBuffer(10);
 
@@ -68,7 +68,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 
 
 	@Test
-	public void testAppend() {
+	void testAppend() {
 		FastCharBuffer buff = new FastCharBuffer(3);
 
 		buff.append(buff);
@@ -92,7 +92,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testChunks() {
+	void testChunks() {
 		FastCharBuffer buff = new FastCharBuffer();
 
 		assertEquals(-1, buff.index());
@@ -126,7 +126,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testChunksOverflow() {
+	void testChunksOverflow() {
 		FastCharBuffer buff = new FastCharBuffer();
 
 		assertEquals(-1, buff.index());
@@ -159,7 +159,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testClear() {
+	void testClear() {
 		FastCharBuffer buff = new FastCharBuffer();
 
 		assertTrue(buff.isEmpty());
@@ -184,7 +184,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testToArray() {
+	void testToArray() {
 		FastCharBuffer buff = new FastCharBuffer();
 
 		int sum = 0;
@@ -218,7 +218,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	public void testToSubArray() {
+	void testToSubArray() {
 		FastCharBuffer buff = new FastCharBuffer();
 
 		int total = SIZE + (SIZE/2);

@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MiscTest {
 
 	@Test
-	public void testOne() {
+	void testOne() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
 		assertEquals(1, pc.getTotalBeans());
@@ -75,7 +75,7 @@ class MiscTest {
 	}
 
 	@Test
-	public void testTwo() {
+	void testTwo() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
 		assertEquals(1, pc.getTotalBeans());
@@ -96,7 +96,7 @@ class MiscTest {
 
 
 	@Test
-	public void testAdd() {
+	void testAdd() {
 		PetiteContainer pc = new PetiteContainer();
 		Foo foo = new Foo();
 		pc.addBean("foo", foo);
@@ -106,7 +106,7 @@ class MiscTest {
 	}
 
 	@Test
-	public void testAdd2WithCircDep() {
+	void testAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
@@ -149,7 +149,7 @@ class MiscTest {
 	}
 
 	@Test
-	public void testNoAdd2WithCircDep() {
+	void testNoAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
@@ -185,7 +185,7 @@ class MiscTest {
 	}
 
 	@Test
-	public void test243() {
+	void test243() {
 		PetiteContainer pc = new PetiteContainer();
 		new PetiteRegistry(pc).provider("provider").type(PetiteDemo.class).method("getOne").args().register();
 	}
@@ -208,7 +208,7 @@ class MiscTest {
 	}
 
 	@Test
-	public void test244() {
+	void test244() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(BeanOne.class, null, null, null, false);
 		pc.registerPetiteBean(BeanTwo.class, null, null, null, false);

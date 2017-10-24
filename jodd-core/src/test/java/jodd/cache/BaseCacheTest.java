@@ -42,7 +42,7 @@ public abstract class BaseCacheTest {
 	protected abstract <K,V> Cache<K,V> createCache(int size);
 
 	@Test
-	public void testSnapshot() {
+	void testSnapshot() {
 		Cache<String, Integer> cache = createCache(3);
 
 		cache.put("1", 1);
@@ -58,7 +58,7 @@ public abstract class BaseCacheTest {
 	}
 
 	@Test
-	public void testConcurrency() throws InterruptedException {
+	void testConcurrency() throws InterruptedException {
 		final int total = 100000;
 		final int threads = 100;
 

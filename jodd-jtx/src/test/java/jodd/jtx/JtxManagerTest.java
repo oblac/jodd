@@ -54,7 +54,7 @@ class JtxManagerTest {
 	// ---------------------------------------------------------------- ro
 
 	@Test
-	public void testReadOnly() {
+	void testReadOnly() {
 		JtxTransactionManager manager = createManager();
 		JtxTransaction jtx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(true));
 		WorkSession work = jtx.requestResource(WorkSession.class);
@@ -75,7 +75,7 @@ class JtxManagerTest {
 	// ---------------------------------------------------------------- rollback
 
 	@Test
-	public void testRollback() {
+	void testRollback() {
 		JtxTransactionManager manager = createManager();
 		JtxTransaction jtx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
 		WorkSession work = jtx.requestResource(WorkSession.class);
@@ -92,7 +92,7 @@ class JtxManagerTest {
 	// ---------------------------------------------------------------- required
 
 	@Test
-	public void testPropagationRequired() {
+	void testPropagationRequired() {
 
 		JtxTransactionManager manager = createManager();
 
@@ -121,7 +121,7 @@ class JtxManagerTest {
 	}
 
 	@Test
-	public void testPropagationRequiredWithWorker() {
+	void testPropagationRequiredWithWorker() {
 
 		LeanJtxWorker worker = createWorker();
 
@@ -149,7 +149,7 @@ class JtxManagerTest {
 	// ---------------------------------------------------------------- supports
 
 	@Test
-	public void testPropagationSupports() {
+	void testPropagationSupports() {
 
 		JtxTransactionManager manager = createManager();
 
@@ -168,7 +168,7 @@ class JtxManagerTest {
 	// ---------------------------------------------------------------- required
 
 	@Test
-	public void testPropagationRequiresNew() {
+	void testPropagationRequiresNew() {
 
 		JtxTransactionManager manager = createManager();
 

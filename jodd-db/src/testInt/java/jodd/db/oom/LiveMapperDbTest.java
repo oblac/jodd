@@ -123,7 +123,7 @@ class LiveMapperDbTest extends DbBaseTest {
 	// ---------------------------------------------------------------- test
 
 	@Test
-	public void testLiveMapperDb() throws Exception {
+	void testLiveMapperDb() throws Exception {
 		for (DbAccess db : databases) {
 			System.out.println("\t" + db.getClass().getSimpleName());
 			init();

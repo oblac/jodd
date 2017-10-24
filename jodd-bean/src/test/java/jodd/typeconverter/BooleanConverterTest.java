@@ -42,7 +42,7 @@ class BooleanConverterTest {
 
 
 	@Test
-	public void testConversion() {
+	void testConversion() {
 		assertNull(booleanConverter.convert(null));
 
 		assertEquals(Boolean.TRUE, booleanConverter.convert(Boolean.TRUE));
@@ -68,12 +68,12 @@ class BooleanConverterTest {
 	}
 
 	@Test
-	public void testConversionWithBlankInput() {
+	void testConversionWithBlankInput() {
 		assertThrows(TypeConversionException.class, () -> booleanConverter.convert("    "));
 	}
 
 	@Test
-	public void testConversionWithUnrecognizedInput() {
+	void testConversionWithUnrecognizedInput() {
 		assertThrows(TypeConversionException.class, () -> booleanConverter.convert("asd#%^&(412"));
 	}
 

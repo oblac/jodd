@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HtmlDecoderTest {
 
 	@Test
-	public void testHexDecimal() {
+	void testHexDecimal() {
 		String s;
 		s = HtmlDecoder.decode("&#xFF;");
 		assertEquals(1, s.length());
@@ -60,7 +60,7 @@ class HtmlDecoderTest {
 	}
 
 	@Test
-	public void testEntities() {
+	void testEntities() {
 		String s;
 
 		s = HtmlDecoder.decode("&amp;");
@@ -81,7 +81,7 @@ class HtmlDecoderTest {
 	}
 
 	@Test
-	public void testSameNames() {
+	void testSameNames() {
 		String s;
 
 		s = HtmlDecoder.decode("&aacute;");
@@ -94,7 +94,7 @@ class HtmlDecoderTest {
 	}
 
 	@Test
-	public void testDecodeNotFound() {
+	void testDecodeNotFound() {
 		String s = "switchTab(&quot;Senthil1&quot;);showWorkFlow(&quot;/xyz/abc.jsp?strWorkId=1691&archived=0&quot;);";
 
 		String out = HtmlDecoder.decode(s);
@@ -103,7 +103,7 @@ class HtmlDecoderTest {
 	}
 
 	@Test
-	public void testEmitTwoChars() {
+	void testEmitTwoChars() {
 		String s = "Hey&acE;!";
 
 		String out = HtmlDecoder.decode(s);
@@ -112,7 +112,7 @@ class HtmlDecoderTest {
 	}
 
 	@Test
-	public void testDetectName() {
+	void testDetectName() {
 		char[] str = "&nbsp;".toCharArray();
 		assertEquals("nbsp", HtmlDecoder.detectName(str, 1));
 

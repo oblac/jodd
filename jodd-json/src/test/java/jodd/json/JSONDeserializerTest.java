@@ -58,7 +58,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDeserializeNoIncludes() {
+	void testDeserializeNoIncludes() {
 		Person jodder = creator.createJodder();
 		String json = new JsonSerializer().serialize(jodder);
 		Person jsonJodder = new JsonParser().parse(json, Person.class);
@@ -81,7 +81,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDeserializeWithPath() {
+	void testDeserializeWithPath() {
 		Person igor = creator.createJodder();
 		Map map = new HashMap();
 		map.put("person", igor);
@@ -107,7 +107,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDeserializeWithIncludes() {
+	void testDeserializeWithIncludes() {
 		Person igor = creator.createJodder();
 		String json = new JsonSerializer().include("phones", "hobbies").serialize(igor);
 		Person jsonIgor = new JsonParser().parse(json, Person.class);
@@ -117,7 +117,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testSubClassDeserialize() {
+	void testSubClassDeserialize() {
 		Employee dilbert = creator.createDilbert();
 
 		String json = new JsonSerializer().include("phones", "hobbies").serialize(dilbert);
@@ -129,7 +129,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDeserializeInterfaces() {
+	void testDeserializeInterfaces() {
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer().include("powers").setClassMetadataName("class").serialize(superman);
 		Hero jsonSuperMan = new JsonParser().setClassMetadataName("class").parse(json, Hero.class);
@@ -142,7 +142,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDeserializeInterfaces2() {
+	void testDeserializeInterfaces2() {
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer().include("powers").withClassMetadata(true).serialize(superman);
 		Hero jsonSuperMan = new JsonParser().withClassMetadata(true).parse(json, Hero.class);
@@ -155,7 +155,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testNoClassHints() {
+	void testNoClassHints() {
 		JoddJson.classMetadataName = null;
 
 		Hero superman = creator.createSuperman();
@@ -176,7 +176,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testNoHintsButClassesForCollection() {
+	void testNoHintsButClassesForCollection() {
 		JoddJson.classMetadataName = "class";
 
 		Hero superman = creator.createSuperman();
@@ -189,7 +189,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testNoClassHintsForCollections() {
+	void testNoClassHintsForCollections() {
 		JoddJson.classMetadataName = "class";
 
 		Hero superman = creator.createSuperman();
@@ -215,7 +215,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testListSerialization() {
+	void testListSerialization() {
 		JoddJson.classMetadataName = "class";
 
 		Person modesty = creator.createModesty();
@@ -245,7 +245,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testGenericTypeDeserialization() {
+	void testGenericTypeDeserialization() {
 		JoddJson.classMetadataName = "class";
 
 		Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
@@ -271,7 +271,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testGenericTypeDeserialization2() {
+	void testGenericTypeDeserialization2() {
 		Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
 
 		String json = new JsonSerializer()
@@ -294,7 +294,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testGeneralMapDeserialization() {
+	void testGeneralMapDeserialization() {
 		JoddJson.classMetadataName = "class";
 
 		String json = new JsonSerializer().exclude("*.class").serialize(creator.createJodder());
@@ -307,7 +307,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testGeneralMapDeserialization2() {
+	void testGeneralMapDeserialization2() {
 		String json = new JsonSerializer().serialize(creator.createJodder());
 		Map<String, Object> deserialized = new JsonParser().parse(json);
 
@@ -318,7 +318,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testListDeserializationNoClass() {
+	void testListDeserializationNoClass() {
 		JoddJson.classMetadataName = "class";
 
 		Person modesty = creator.createModesty();
@@ -340,7 +340,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testListDeserializationNoClass2() {
+	void testListDeserializationNoClass2() {
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
 		Person pedro = creator.createPedro();
@@ -360,7 +360,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDateTransforming() throws ParseException {
+	void testDateTransforming() throws ParseException {
 		final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 		Person foo = new Person("Foo", "Bar", new Date(), null, null);
 		foo.setBirthdate(df.parse("2009/01/02"));
@@ -392,7 +392,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testMapWithEmbeddedObject() {
+	void testMapWithEmbeddedObject() {
 		Map<String, Network> networks = new JsonParser()
 				.setClassMetadataName("class")
 				.parse("{\"1\": {\"class\":\"" + Network.class.getName() + "\", \"name\": \"Jodd\"} }");
@@ -406,7 +406,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testMapWithEmbeddedObject2() {
+	void testMapWithEmbeddedObject2() {
 		JoddJson.classMetadataName = null;
 
 		Map<String, Pair<Phone, Network>> complex = new JsonParser()
@@ -426,7 +426,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testListWithEmbeddedObject() {
+	void testListWithEmbeddedObject() {
 		List<Network> networks = new JsonParser()
 				.setClassMetadataName("class")
 				.parse("[" +
@@ -444,7 +444,7 @@ class JSONDeserializerTest {
 
 
 	@Test
-	public void testArrayType() {
+	void testArrayType() {
 		Person igor = creator.createJodder();
 		Person modesty = creator.createModesty();
 
@@ -460,7 +460,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testEmptyArray() {
+	void testEmptyArray() {
 		Group group = new JsonParser().parse("{\"people\": [], \"groupName\": \"Nobody\" }", Group.class);
 		assertEquals("Nobody", group.getGroupName());
 		assertEquals(0, group.getPeople().length);
@@ -468,7 +468,7 @@ class JSONDeserializerTest {
 
 
 	@Test
-	public void testNullDeserialization() {
+	void testNullDeserialization() {
 		String input = "{\"property\": null, \"property2\":5, \"property3\":\"abc\"}";
 
 		JsonParser deserializer = new JsonParser();
@@ -483,7 +483,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testPrimitives() {
+	void testPrimitives() {
 		List<Date> dates = new ArrayList<>();
 		dates.add(new Date());
 		dates.add(new Date(1970, 1, 12));
@@ -520,7 +520,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testArray() {
+	void testArray() {
 		Person[] p = new Person[3];
 		p[0] = creator.createJodder();
 		p[1] = creator.createDilbert();
@@ -538,7 +538,7 @@ class JSONDeserializerTest {
 
 
 	@Test
-	public void testDeserializationIntoPublicFields() {
+	void testDeserializationIntoPublicFields() {
 		JoddJson.classMetadataName = "class";
 
 		Spiderman spiderman = new Spiderman();
@@ -553,7 +553,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testAutoTypeConvertToNumerical() {
+	void testAutoTypeConvertToNumerical() {
 		Account account = new JsonParser()
 				.parse("{\"id\": \"5\", \"accountNumber\": \"1234567-123\"}", Account.class);
 		assertEquals(new Integer(5), account.getId());
@@ -563,7 +563,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testDeserializeURL() {
+	void testDeserializeURL() {
 		String json = "{\n" +
 				"  \"oslc_cm:next\": \"http:\\/\\/localhost:9080\\/results\\/3\",\n" +
 				"  \"oslc_cm:previous\": \"http:\\/\\/localhost:9080\\/results\\/1\", \n" +
@@ -586,7 +586,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testPoint() {
+	void testPoint() {
 		JoddJson.classMetadataName = "__class";
 		String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));
 		Point2D.Float point = new JsonParser().parse(json);
@@ -595,7 +595,7 @@ class JSONDeserializerTest {
 	}
 
 	@Test
-	public void testUnixEpoch() {
+	void testUnixEpoch() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
 

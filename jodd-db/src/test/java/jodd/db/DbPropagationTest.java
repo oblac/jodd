@@ -47,7 +47,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequired() {
+	void testRequired() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -81,7 +81,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToRequiredCommit() {
+	void testRequiredToRequiredCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -118,7 +118,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToRequiredRollback() {
+	void testRequiredToRequiredRollback() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -157,7 +157,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSupportsToRequiredCommit() {
+	void testSupportsToRequiredCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -202,7 +202,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSupportsNone() {
+	void testSupportsNone() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -234,7 +234,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToSupportsCommit() {
+	void testRequiredToSupportsCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -272,7 +272,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	@Test
-	public void testSupportsToSupportsCommit() {
+	void testSupportsToSupportsCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -316,7 +316,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testNotSupported() {
+	void testNotSupported() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -349,7 +349,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 /*
-	public void testRequiredToNotSupported() {
+	void testRequiredToNotSupported() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -399,7 +399,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToNever() {
+	void testRequiredToNever() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -423,7 +423,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSupportsToNeverCommit() {
+	void testSupportsToNeverCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -468,7 +468,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 /*
-	public void testRequiredToRequiredNewCommit() {
+	void testRequiredToRequiredNewCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -508,7 +508,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 */
 
 /*
-	public void testRequiredToRequiredNewRollback() {
+	void testRequiredToRequiredNewRollback() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -550,7 +550,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 */
 
 	@Test
-	public void testSupportsToRequiresNewCommit() {
+	void testSupportsToRequiresNewCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -595,7 +595,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testRequiredToMandatoryCommit() {
+	void testRequiredToMandatoryCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
@@ -632,7 +632,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testSupportsToMandatory() {
+	void testSupportsToMandatory() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 

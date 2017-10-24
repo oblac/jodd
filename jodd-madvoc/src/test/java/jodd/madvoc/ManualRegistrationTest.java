@@ -56,7 +56,7 @@ class ManualRegistrationTest {
 	}
 
 	@Test
-	public void testManualAction() {
+	void testManualAction() {
 		Madvoc madvoc = new Madvoc();
 		madvoc.setMadvocConfiguratorClass(ManualRegistration.class);
 		madvoc.startNewWebApplication(null);

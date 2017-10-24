@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IntrospectorTest {
 
 	@Test
-	public void testBasic() {
+	void testBasic() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
 		assertNotNull(cd);
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
@@ -91,7 +91,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testExtends() {
+	void testExtends() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 		assertNotNull(cd);
 
@@ -156,7 +156,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testCtors() {
+	void testCtors() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Ac.class);
 		CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
 		int c = 0;
@@ -192,7 +192,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testSameFieldDifferentClass() {
+	void testSameFieldDifferentClass() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("shared", false);
@@ -209,7 +209,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertyMatches() {
+	void testPropertyMatches() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Cbean.class);
 
 		PropertyDescriptor pd;
@@ -251,7 +251,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testOverload() {
+	void testOverload() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Overload.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
@@ -266,14 +266,14 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testSerialUid() {
+	void testSerialUid() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 
 		assertNull(cd.getFieldDescriptor("serialVersionUID", true));
 	}
 
 	@Test
-	public void testStaticFieldsForProperties() {
+	void testStaticFieldsForProperties() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Mojo.class);
 
 		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
@@ -296,7 +296,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertiesOneClass() throws InvocationTargetException, IllegalAccessException {
+	void testPropertiesOneClass() throws InvocationTargetException, IllegalAccessException {
 		ClassDescriptor cd = ClassIntrospector.lookup(One.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
@@ -345,7 +345,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertiesOneSubClass() throws InvocationTargetException, IllegalAccessException {
+	void testPropertiesOneSubClass() throws InvocationTargetException, IllegalAccessException {
 		ClassDescriptor cd = ClassIntrospector.lookup(OneSub.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
@@ -385,7 +385,7 @@ class IntrospectorTest {
 	}
 
 	@Test
-	public void testPropertiesTwoSubClass() throws InvocationTargetException, IllegalAccessException {
+	void testPropertiesTwoSubClass() throws InvocationTargetException, IllegalAccessException {
 		ClassDescriptor cd = ClassIntrospector.lookup(TwoSub.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();

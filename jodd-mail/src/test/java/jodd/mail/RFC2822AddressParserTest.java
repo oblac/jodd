@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RFC2822AddressParserTest {
 
 	@Test
-	public void testEmailAddress() {
+	void testEmailAddress() {
 		RFC2822AddressParser.ParsedAddress address = new RFC2822AddressParser().parse("igor@jodd.org");
 
 		assertEquals(null, address.getPersonalName());
@@ -52,7 +52,7 @@ class RFC2822AddressParserTest {
 	}
 
 	@Test
-	public void testValidEmails() {
+	void testValidEmails() {
 		assertTrue(new RFC2822AddressParser().parse("bob @example.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("\"bob\"  @  example.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("\"bob\" (hi) @  example.com").isValid());
@@ -76,7 +76,7 @@ class RFC2822AddressParserTest {
 	}
 
 	@Test
-	public void testReturnPath() {
+	void testReturnPath() {
 		assertTrue(new RFC2822AddressParser().parse("\"[Kayaks]\" <kayaks@kayaks.org>").isValid());
 		assertFalse(new RFC2822AddressParser().parse("\"[Kayaks]\" <kayaks@kayaks.org>").isValidReturnPath());
 
@@ -85,7 +85,7 @@ class RFC2822AddressParserTest {
 	}
 
 	@Test
-	public void testCommentAsName() {
+	void testCommentAsName() {
 		RFC2822AddressParser.ParsedAddress address = new RFC2822AddressParser().parse("<bob@example.com> (Bob Smith)");
 		assertEquals("Bob Smith", address.getPersonalName());
 
@@ -103,7 +103,7 @@ class RFC2822AddressParserTest {
 	}
 
 	@Test
-	public void testValidEmails2() {
+	void testValidEmails2() {
 		assertTrue(new RFC2822AddressParser().parse("me@example.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("a.nonymous@example.com").isValid());
 		assertTrue(new RFC2822AddressParser().parse("name+tag@example.com").isValid());

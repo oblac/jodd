@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TupleTest {
 
 	@Test
-	public void testTuple() {
+	void testTuple() {
 		Tuple tuple = Tuple.of("one", "two");
 		assertEquals(2, tuple.size());
 		assertEquals("one", tuple.get(0));

@@ -49,7 +49,7 @@ class IntrospectorPropertyGenericsTest {
 	}
 
 	@Test
-	public void testGenAction() {
+	void testGenAction() {
 		ClassDescriptor cd = ClassIntrospector.lookup(GenAction.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("input", true);
@@ -73,7 +73,7 @@ class IntrospectorPropertyGenericsTest {
 	}
 
 	@Test
-	public void testNormal() {
+	void testNormal() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Normal.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("input", true);

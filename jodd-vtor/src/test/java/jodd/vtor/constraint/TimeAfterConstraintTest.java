@@ -36,20 +36,20 @@ import static org.mockito.Mockito.when;
 class TimeAfterConstraintTest extends ConstraintTestBase {
 
     @Test
-    public void testConstructor1() {
+    void testConstructor1() {
         TimeAfterConstraint timeAfterConstraint = new TimeAfterConstraint();
         assertNull(timeAfterConstraint.getTime());
     }
 
     @Test
-    public void testConstructor2() {
+    void testConstructor2() {
         JDateTime time = new JDateTime();
         TimeAfterConstraint timeAfterConstraint = new TimeAfterConstraint(time);
         assertEquals(time, timeAfterConstraint.getTime());
     }
 
     @Test
-    public void testSetTime() {
+    void testSetTime() {
         TimeAfterConstraint timeAfterConstraint = new TimeAfterConstraint();
         JDateTime time = new JDateTime();
         timeAfterConstraint.setTime(time);
@@ -57,7 +57,7 @@ class TimeAfterConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         TimeAfterConstraint timeAfterConstraint = new TimeAfterConstraint();
         JDateTime time = new JDateTime();
         TimeAfter annotation = mock(TimeAfter.class);
@@ -68,12 +68,12 @@ class TimeAfterConstraintTest extends ConstraintTestBase {
     }
 
     @Test
-    public void testValidate_WithValIsNull() {
+    void testValidate_WithValIsNull() {
         assertTrue(TimeAfterConstraint.validate(null, new JDateTime("2011-05-01 10:11:12.344")));
     }
 
     @Test
-    public void testIsValid() {
+    void testIsValid() {
         JDateTime time = new JDateTime("2011-05-01 10:11:12.344");
         TimeAfterConstraint constraint = new TimeAfterConstraint(time.clone());
 

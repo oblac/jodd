@@ -38,7 +38,7 @@ class FullTypeTest {
 	}
 
 	@Test
-	public void testFullTypeProperty() {
+	void testFullTypeProperty() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
 
@@ -67,7 +67,7 @@ class FullTypeTest {
 	}
 
 	@Test
-	public void testFullTypeMethodCtor() {
+	void testFullTypeMethodCtor() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
 
@@ -87,7 +87,7 @@ class FullTypeTest {
 	}
 
 	@Test
-	public void testOptionalAndNotAllReferences() {
+	void testOptionalAndNotAllReferences() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setDefaultWiringMode(WiringMode.OPTIONAL);
 		pc.getConfig().setUseFullTypeNames(false);

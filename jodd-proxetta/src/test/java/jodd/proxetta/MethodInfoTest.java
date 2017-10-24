@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MethodInfoTest {
 
 	@Test
-	public void testMethodInfo() {
+	void testMethodInfo() {
 
 		final ValueHolder<MethodInfo> valueHolder = ValueHolderWrapper.create();
 

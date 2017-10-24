@@ -48,7 +48,7 @@ class FindFile2Test {
 	}
 
 	@Test
-	public void testAcceptAndWalk() {
+	void testAcceptAndWalk() {
 		final StringBuilder s1 = new StringBuilder();
 		final StringBuilder s2 = new StringBuilder();
 
@@ -98,7 +98,7 @@ class FindFile2Test {
 	}
 
 	@Test
-	public void testTwoRoots() {
+	void testTwoRoots() {
 
 		FindFile ff =
 			new WildcardFindFile()
@@ -130,7 +130,7 @@ class FindFile2Test {
 	}
 
 	@Test
-	public void testTwoRootsAndWildcardMatchTypes() {
+	void testTwoRootsAndWildcardMatchTypes() {
 
 		WildcardFindFile wff = new WildcardFindFile();
 		wff.includeDirs(true);
@@ -188,7 +188,7 @@ class FindFile2Test {
 	}
 
 	@Test
-	public void testNonExisting() {
+	void testNonExisting() {
 		FindFile wff = new FindFile();
 
 		wff.includeDirs(true);
@@ -206,7 +206,7 @@ class FindFile2Test {
 	}
 
 	@Test
-	public void testNotFound() {
+	void testNotFound() {
 		WildcardFindFile wff = new WildcardFindFile();
 		wff.includeDirs(true);
 		wff.includeFiles(true);
@@ -227,7 +227,7 @@ class FindFile2Test {
 
 
 	@Test
-	public void testSort() {
+	void testSort() {
 		final StringBuilder str = new StringBuilder();
 
 		FindFile ff = new FindFile();
@@ -295,7 +295,7 @@ class FindFile2Test {
 	}
 
 	@Test
-	public void testJustFoldersAndFiles() {
+	void testJustFoldersAndFiles() {
 		FindFile ff = new FindFile();
 		ff.includeDirs(false);
 		ff.includeFiles(true);

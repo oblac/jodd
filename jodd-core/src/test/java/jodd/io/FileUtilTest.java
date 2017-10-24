@@ -52,7 +52,7 @@ class FileUtilTest {
 	}
 
 	@Test
-	public void testFileManipulation() throws IOException {
+	void testFileManipulation() throws IOException {
 		FileUtil.copy(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data"));
 		assertFalse(FileUtil.isNewer(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
 		assertFalse(FileUtil.isOlder(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
@@ -60,7 +60,7 @@ class FileUtilTest {
 	}
 
 	@Test
-	public void testString() {
+	void testString() {
 		String s = "This is a test file\nIt only has\nthree lines!!";
 
 		try {
@@ -105,7 +105,7 @@ class FileUtilTest {
 	}
 
 	@Test
-	public void testUnicodeString() {
+	void testUnicodeString() {
 		String s = "This is a test file\nIt only has\nthree lines!!";
 
 		char[] buf = s.toCharArray();
@@ -135,7 +135,7 @@ class FileUtilTest {
 	}
 
 	@Test
-	public void testFileManipulations() {
+	void testFileManipulations() {
 		String root = dataRoot + "/file/";
 		String tmp = root + "tmp/";
 		String tmp2 = root + "xxx/";
@@ -226,7 +226,7 @@ class FileUtilTest {
 	}
 
 	@Test
-	public void testBytes() {
+	void testBytes() {
 		try {
 			File file = new File(dataRoot + "/file/a.txt");
 			byte[] bytes = FileUtil.readBytes(dataRoot + "/file/a.txt");
@@ -243,7 +243,7 @@ class FileUtilTest {
 	}
 
 	@Test
-	public void testUTFReads() throws IOException {
+	void testUTFReads() throws IOException {
 		String content = FileUtil.readUTFString(new File(utfdataRoot, "utf-8.txt"));
 		content = content.replace("\r\n", "\n");
 

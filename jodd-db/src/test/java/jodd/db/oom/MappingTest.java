@@ -51,7 +51,7 @@ class MappingTest extends DbHsqldbTestCase {
 	}
 
 	@Test
-	public void testMapping() throws SQLException {
+	void testMapping() throws SQLException {
 		DbSession session = new DbThreadSession(cp);
 
 		executeUpdate(session, "drop table FOO if exists");

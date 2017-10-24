@@ -38,7 +38,7 @@ class ConcurrencyTest {
 	 * http://code.google.com/p/jodd/issues/detail?id=4
 	 */
 	@Test
-	public void testPutGetAndPrune() throws InterruptedException {
+	void testPutGetAndPrune() throws InterruptedException {
 		LFUCache<String, String> lfuCache = new LFUCache<>(2, 0);
 
 		lfuCache.put("1", "value");

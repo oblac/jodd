@@ -54,7 +54,7 @@ class HttpRedirectTest {
 	}
 
 	@Test
-	public void testRedirect() {
+	void testRedirect() {
 		HttpRequest httpRequest = HttpRequest.get("localhost:8173/redirect");
 
 		HttpResponse httpResponse = httpRequest.send();

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PropertyTest {
 
 	@Test
-	public void testSet() {
+	void testSet() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(PojoBean2.class, null, null, null, false);
 
@@ -49,7 +49,7 @@ class PropertyTest {
 	}
 
 	@Test
-	public void testSetWithMultipleDots() {
+	void testSetWithMultipleDots() {
 		PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(PojoBean2.class, "pojo", null, null, false);
@@ -76,7 +76,7 @@ class PropertyTest {
 	}
 
 	@Test
-	public void testGet() {
+	void testGet() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(PojoBean2.class, null, null, null, false);
 
@@ -93,7 +93,7 @@ class PropertyTest {
 	}
 
 	@Test
-	public void testCount() {
+	void testCount() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Moo.class, null, null, null, false);
 		pc.registerPetiteBean(Joo.class, null, null, null, false);
@@ -120,7 +120,7 @@ class PropertyTest {
 	}
 
 	@Test
-	public void testProps() {
+	void testProps() {
 		Props props = new Props();
 		props.load("pojoBean2.val2=123");
 		props.load("pojoBean2.val1=\\\\${pojo}");

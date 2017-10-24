@@ -99,7 +99,7 @@ class SipHashTest {
 	};
 
 	@Test
-	public void testSipHash() {
+	void testSipHash() {
 		long k0 = 0x0706050403020100L;
 		long k1 = 0x0f0e0d0c0b0a0908L;
 		for (int i = 0; i < EXPECTED.length; ++i) {

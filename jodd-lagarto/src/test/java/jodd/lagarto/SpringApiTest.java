@@ -50,7 +50,7 @@ class SpringApiTest {
 	}
 
 	@Test
-	public void testPortletUtils() throws IOException {
+	void testPortletUtils() throws IOException {
 		File file = new File(testDataRoot, "PortletUtils.html");
 		String content = FileUtil.readString(file);
 
@@ -67,7 +67,7 @@ class SpringApiTest {
 	}
 
 	@Test
-	public void testAbstractFormController() throws IOException {
+	void testAbstractFormController() throws IOException {
 		File file = new File(testDataRoot, "AbstractFormController.html");
 		String content = FileUtil.readString(file);
 

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StrictCompareTest {
 
 	@Test
-	public void testTableNameDefault() {
+	void testTableNameDefault() {
 		DbOomManager.resetAll();
 		DbOomManager dboom = DbOomManager.getInstance();
 

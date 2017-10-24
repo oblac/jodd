@@ -54,7 +54,7 @@ class DbSqlTemplateWithPrefixTest {
 	}
 
 	@Test
-	public void testTablePrefixSuffix() {
+	void testTablePrefixSuffix() {
 		DbSqlBuilder st;
 
 		st = sql("$T{Boy} $Boy.id $C{Boy.id}");
