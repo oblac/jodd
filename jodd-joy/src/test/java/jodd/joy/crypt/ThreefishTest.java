@@ -34,7 +34,7 @@ import java.io.UnsupportedEncodingException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ThreefishTest {
+class ThreefishTest {
 
 	Threefish threefish;
 

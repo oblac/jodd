@@ -34,7 +34,7 @@ import javax.servlet.jsp.tagext.JspFragment;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LoopTagTest {
+class LoopTagTest {
 
 	@Test
 	public void testLoopTag() throws JspException {

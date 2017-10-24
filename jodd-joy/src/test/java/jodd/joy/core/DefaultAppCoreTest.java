@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DefaultAppCoreTest {
+class DefaultAppCoreTest {
 
 	@Test
 	public void testAppPropsNameAndPattern() {

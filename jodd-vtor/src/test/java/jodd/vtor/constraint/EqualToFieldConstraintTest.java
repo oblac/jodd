@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EqualToFieldConstraintTest extends ConstraintTestBase {
+class EqualToFieldConstraintTest extends ConstraintTestBase {
     @Test
     public void testValidate_withNullValue() {
         assertTrue(EqualToFieldConstraint.validate(new Object(), null, "someField"));

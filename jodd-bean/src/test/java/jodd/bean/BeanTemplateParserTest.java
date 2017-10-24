@@ -35,7 +35,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class BeanTemplateParserTest {
+class BeanTemplateParserTest {
 
 	BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 

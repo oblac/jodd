@@ -32,7 +32,7 @@ import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JDateTimeTest {
+class JDateTimeTest {
 
 	@Test
 	public void testSetGetMillis() {

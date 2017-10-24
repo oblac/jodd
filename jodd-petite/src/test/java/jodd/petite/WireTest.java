@@ -36,7 +36,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class WireTest {
+class WireTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {

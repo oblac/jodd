@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Base32Test {
+class Base32Test {
 
 	@Test
 	public void testEncode32() {

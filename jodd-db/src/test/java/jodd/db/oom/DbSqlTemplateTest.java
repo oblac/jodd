@@ -40,7 +40,7 @@ import static jodd.db.oom.ColumnAliasType.*;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbSqlTemplateTest {
+class DbSqlTemplateTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {

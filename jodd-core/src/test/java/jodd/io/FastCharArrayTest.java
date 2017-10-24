@@ -34,7 +34,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FastCharArrayTest {
+class FastCharArrayTest {
 
 	@Test
 	public void testFcat() throws IOException {

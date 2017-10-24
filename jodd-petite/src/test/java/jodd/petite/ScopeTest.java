@@ -39,7 +39,7 @@ import java.util.concurrent.Semaphore;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ScopeTest {
+class ScopeTest {
 
 	@Test
 	public void testThreadLocalScope() throws InterruptedException {

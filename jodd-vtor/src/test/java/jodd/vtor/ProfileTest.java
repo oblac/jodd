@@ -35,7 +35,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ProfileTest {
+class ProfileTest {
 
 	@Test
 	public void testProfiles() {

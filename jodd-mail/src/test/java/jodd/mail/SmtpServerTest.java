@@ -32,7 +32,7 @@ import java.util.Properties;
 import static jodd.mail.SmtpServer.MAIL_SMTP_FROM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SmtpServerTest {
+class SmtpServerTest {
 
     @Test
     public void testAddsPropertyToServerSession() {

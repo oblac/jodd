@@ -40,7 +40,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ParsingProblemsTest {
+class ParsingProblemsTest {
 
 	protected String testDataRoot;
 

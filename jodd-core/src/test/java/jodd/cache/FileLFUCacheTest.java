@@ -34,7 +34,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FileLFUCacheTest {
+class FileLFUCacheTest {
 
 	private File tempFolder = new File(SystemUtil.tempDir());
 

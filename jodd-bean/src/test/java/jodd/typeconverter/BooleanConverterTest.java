@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BooleanConverterTest {
+class BooleanConverterTest {
 
 	private static BooleanConverter booleanConverter;
 

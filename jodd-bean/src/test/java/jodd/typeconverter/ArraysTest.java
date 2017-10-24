@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ArraysTest {
+class ArraysTest {
 
 	public static final Integer[] INTEGERS = new Integer[] {1, 2, 3};
 	public static final int[] INTS = new int[] {1, 2, 3};

@@ -42,7 +42,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbOom2Test extends DbH2TestCase {
+class DbOom2Test extends DbH2TestCase {
 
 	@Test
 	public void testOrm2() {

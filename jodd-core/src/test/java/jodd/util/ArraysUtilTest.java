@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ArraysUtilTest {
+class ArraysUtilTest {
 
 	int[] x;
 	int[] y;

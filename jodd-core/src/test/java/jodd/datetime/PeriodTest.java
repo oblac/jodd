@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PeriodTest {
+class PeriodTest {
 
 	@Test
 	public void testClose() {

@@ -30,7 +30,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 
-public class MadvocSuiteTest {
+class MadvocSuiteTest {
 
 	/**
 	 * Starts Tomcat after the suite.

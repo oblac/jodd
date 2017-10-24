@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ShutdownTest {
+class ShutdownTest {
 
 	public static final String ATTR_NAME = SessionScope.class.getName() + ".SESSION_BEANS.";
 

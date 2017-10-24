@@ -33,7 +33,7 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class LocaleConverterTest {
+class LocaleConverterTest {
 
 	@Test
 	public void testConversion() {

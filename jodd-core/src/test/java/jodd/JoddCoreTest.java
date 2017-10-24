@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static jodd.Jodd.JoddModule;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class JoddCoreTest {
+class JoddCoreTest {
 
 	@Test
 	public void testLoadedModules() {

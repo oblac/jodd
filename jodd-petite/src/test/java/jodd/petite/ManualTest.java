@@ -36,7 +36,7 @@ import static jodd.petite.PetiteRegistry.petite;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ManualTest {
+class ManualTest {
 
 	@Test
 	public void testManualRegistration() {

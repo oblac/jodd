@@ -43,7 +43,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.verify.VerificationTimes.exactly;
 
-public class ProxyTest {
+class ProxyTest {
 
 	private ClientAndProxy proxy;
 	private ClientAndServer mockServer;

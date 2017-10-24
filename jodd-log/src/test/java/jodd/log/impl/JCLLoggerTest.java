@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class JCLLoggerTest extends LoggerTestBase {
+class JCLLoggerTest extends LoggerTestBase {
 
 	private Log log;
 

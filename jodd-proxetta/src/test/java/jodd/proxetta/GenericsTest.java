@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class GenericsTest {
+class GenericsTest {
 
 	public static class Bar<T> {
 	}

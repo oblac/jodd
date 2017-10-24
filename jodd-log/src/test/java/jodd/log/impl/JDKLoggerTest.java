@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class JDKLoggerTest extends LoggerTestBase {
+class JDKLoggerTest extends LoggerTestBase {
 
 	private java.util.logging.Logger log;
 

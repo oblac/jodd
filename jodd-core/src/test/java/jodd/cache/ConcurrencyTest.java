@@ -32,7 +32,7 @@ import java.util.concurrent.Semaphore;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ConcurrencyTest {
+class ConcurrencyTest {
 
 	/**
 	 * http://code.google.com/p/jodd/issues/detail?id=4

@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class HasSubstringConstraintTest extends ConstraintTestBase {
+class HasSubstringConstraintTest extends ConstraintTestBase {
 
     @Test
     public void testConstructor1() {

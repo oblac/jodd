@@ -34,7 +34,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BinarySearchTest {
+class BinarySearchTest {
 
 	protected List<String> list;
 	protected BinarySearch<String> listBinarySearch;

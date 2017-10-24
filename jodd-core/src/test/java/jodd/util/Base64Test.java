@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Base64Test {
+class Base64Test {
 
 	String text = "Man is distinguished, not only by his reason, but by this singular passion from other animals," +
 			" which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge," +

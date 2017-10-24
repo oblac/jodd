@@ -35,7 +35,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FileUploadTest {
+class FileUploadTest {
 
 	@Test
 	public void testFileNames() throws IOException {

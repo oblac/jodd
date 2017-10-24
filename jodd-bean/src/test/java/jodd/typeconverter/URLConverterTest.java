@@ -33,7 +33,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class URLConverterTest {
+class URLConverterTest {
 
 	@Test
 	public void testConversion() {

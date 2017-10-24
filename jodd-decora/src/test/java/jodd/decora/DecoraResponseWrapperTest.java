@@ -38,7 +38,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DecoraResponseWrapperTest {
+class DecoraResponseWrapperTest {
 
 	private DecoraResponseWrapper decoraResponseWrapper;
 	private HttpServletRequest originalRequest;

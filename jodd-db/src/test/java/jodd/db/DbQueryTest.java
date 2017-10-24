@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbQueryTest {
+class DbQueryTest {
 
 	static class DbQueryEx extends DbQueryParser {
 		public DbQueryEx() {

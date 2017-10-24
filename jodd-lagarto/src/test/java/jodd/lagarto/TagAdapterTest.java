@@ -36,7 +36,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TagAdapterTest {
+class TagAdapterTest {
 
 	protected String testAdapterRoot;
 

@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class VtorMatchProfilesTest {
+class VtorMatchProfilesTest {
     private Vtor vtor;
 
     @BeforeEach

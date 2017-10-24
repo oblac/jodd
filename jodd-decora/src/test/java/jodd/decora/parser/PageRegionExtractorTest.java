@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PageRegionExtractorTest {
+class PageRegionExtractorTest {
 
 	private PageRegionExtractor pageRegionExtractor;
 	private LinkedList<RegionMarker> regionMarkers;

@@ -33,7 +33,7 @@ import java.io.File;
 import static jodd.mail.EmailAttachment.attachment;
 
 @Disabled("Real email sending required")
-public class InlineVsContentTest {
+class InlineVsContentTest {
 
 	public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");
 

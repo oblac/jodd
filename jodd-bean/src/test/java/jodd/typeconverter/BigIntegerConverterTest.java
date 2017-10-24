@@ -33,7 +33,7 @@ import java.math.BigInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class BigIntegerConverterTest {
+class BigIntegerConverterTest {
 
 	@Test
 	public void testConversion() {

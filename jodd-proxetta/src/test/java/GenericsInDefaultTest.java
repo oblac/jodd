@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class GenericsInDefaultTest {
+class GenericsInDefaultTest {
 
 	public static class Bar<T> {
 	}

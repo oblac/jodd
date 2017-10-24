@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RuntimeUtilTest {
+class RuntimeUtilTest {
 
 	@Test
 	public void testJoddLocation() {

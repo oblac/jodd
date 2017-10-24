@@ -47,7 +47,7 @@ import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbOomTest extends DbHsqldbTestCase {
+class DbOomTest extends DbHsqldbTestCase {
 
 	@BeforeEach
 	public void setUp() throws Exception {

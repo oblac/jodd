@@ -32,7 +32,7 @@ import static jodd.typeconverter.TypeConverterTestHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ByteArrayConverterTest {
+class ByteArrayConverterTest {
 
 	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) TypeConverterManager.lookup(byte[].class);
 

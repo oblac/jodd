@@ -40,7 +40,7 @@ import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CompositeTest extends DbHsqldbTestCase {
+class CompositeTest extends DbHsqldbTestCase {
 
 	DbSession session;
 

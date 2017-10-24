@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InvReplTest {
+class InvReplTest {
 
 	@Test
 	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {

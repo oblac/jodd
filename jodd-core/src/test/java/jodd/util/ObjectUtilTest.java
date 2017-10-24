@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * test class for {@link ObjectUtil}
  */
-public class ObjectUtilTest {
+class ObjectUtilTest {
 
     private static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/ObjectUtilTest");
 

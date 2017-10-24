@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class LiveMapperDbTest extends DbBaseTest {
+class LiveMapperDbTest extends DbBaseTest {
 
 	/**
 	 * DATABASES TO TEST!
@@ -48,7 +48,7 @@ public class LiveMapperDbTest extends DbBaseTest {
 	/**
 	 * MySql.
 	 */
-	public class MySql extends MySqlDbAccess {
+	class MySql extends MySqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {
@@ -71,7 +71,7 @@ public class LiveMapperDbTest extends DbBaseTest {
 	/**
 	 * PostgreSql.
 	 */
-	public class PostgreSql extends PostgreSqlDbAccess {
+	class PostgreSql extends PostgreSqlDbAccess {
 
 		@Override
 		public void initDb() {
@@ -101,7 +101,7 @@ public class LiveMapperDbTest extends DbBaseTest {
 	/**
 	 * HsqlDB.
 	 */
-	public class HsqlDb extends HsqlDbAccess {
+	class HsqlDb extends HsqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PathMacroTest {
+class PathMacroTest {
 
 	private static final String[] SEP1 = new String[] {
 			StringPool.DOLLAR_LEFT_BRACE, StringPool.COLON, StringPool.RIGHT_BRACE

@@ -38,7 +38,7 @@ import java.util.Enumeration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExtendedURLClassLoaderTest {
+class ExtendedURLClassLoaderTest {
 
 	private final URLClassLoader cl = (URLClassLoader) this.getClass().getClassLoader();
 

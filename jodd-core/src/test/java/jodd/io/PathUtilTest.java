@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class PathUtilTest {
+class PathUtilTest {
 
 	static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/" + PathUtilTest.class.getSimpleName());
 

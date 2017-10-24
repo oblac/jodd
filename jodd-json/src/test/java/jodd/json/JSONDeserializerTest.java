@@ -41,7 +41,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JSONDeserializerTest {
+class JSONDeserializerTest {
 
 	private static final double DELTA = 0.000000001;
 

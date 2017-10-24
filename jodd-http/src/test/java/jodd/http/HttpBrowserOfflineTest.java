@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HttpBrowserOfflineTest {
+class HttpBrowserOfflineTest {
 
 	@Test
 	public void testDefaultParameters() {

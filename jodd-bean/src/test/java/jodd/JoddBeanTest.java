@@ -41,7 +41,7 @@ import static jodd.Jodd.isModuleLoaded;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JoddBeanTest {
+class JoddBeanTest {
 
 	@Test
 	public void testLoadedModules() {

@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ParamoTest {
+class ParamoTest {
 
 	private String[] resolveParameterNames(MethodParameter[] methodParameters) {
 		String[] result = new String[methodParameters.length];

@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JtxManagerTest {
+class JtxManagerTest {
 
 	private JtxTransactionManager createManager() {
 		JtxTransactionManager jtxManager = new JtxTransactionManager();

@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ActionResultTest extends MadvocTestCase {
+class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	public void testResolveResultPath() {

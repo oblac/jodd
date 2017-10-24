@@ -34,7 +34,7 @@ import jodd.petite.scope.ThreadLocalScope;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MixScopeTest {
+class MixScopeTest {
 
 	@Test
 	public void testPrototypeInSingleton() {

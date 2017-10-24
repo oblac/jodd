@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class PropsTest extends BasePropsTest {
+class PropsTest extends BasePropsTest {
 
 	@Test
 	public void testBasic() throws IOException {

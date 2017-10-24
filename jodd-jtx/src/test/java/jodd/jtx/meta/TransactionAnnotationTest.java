@@ -33,7 +33,7 @@ import static jodd.jtx.JtxIsolationLevel.*;
 import static jodd.jtx.JtxPropagationBehavior.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TransactionAnnotationTest {
+class TransactionAnnotationTest {
 
 	@Transaction
 	public void hello() {

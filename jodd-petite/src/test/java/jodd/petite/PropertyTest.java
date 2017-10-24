@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PropertyTest {
+class PropertyTest {
 
 	@Test
 	public void testSet() {

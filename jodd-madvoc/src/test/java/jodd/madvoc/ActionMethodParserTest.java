@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ActionMethodParserTest extends MadvocTestCase {
+class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	public void testDefaultMethods() {

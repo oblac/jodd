@@ -42,7 +42,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JSONSerializationTest {
+class JSONSerializationTest {
 
 	private Person jodder;
 	private Person modesty;

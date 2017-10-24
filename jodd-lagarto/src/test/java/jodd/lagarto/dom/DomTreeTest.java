@@ -36,7 +36,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DomTreeTest {
+class DomTreeTest {
 
 	protected String testDataRoot;
 

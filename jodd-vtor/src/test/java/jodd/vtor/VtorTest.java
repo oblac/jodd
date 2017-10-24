@@ -37,7 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class VtorTest extends VtorTestSupport {
+class VtorTest extends VtorTestSupport {
 
     @Test
     public void testCreate() throws Exception {

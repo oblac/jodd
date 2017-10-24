@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbPropagationTest extends DbHsqldbTestCase {
+class DbPropagationTest extends DbHsqldbTestCase {
 
 	private static final String CTX_1 = "ctx #1";
 	private static final String CTX_2 = "ctx #2";

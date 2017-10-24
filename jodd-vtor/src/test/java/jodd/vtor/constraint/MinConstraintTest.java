@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MinConstraintTest extends ConstraintTestBase {
+class MinConstraintTest extends ConstraintTestBase {
     @Test
     public void testConstructor1() {
         MinConstraint minConstraint = new MinConstraint();

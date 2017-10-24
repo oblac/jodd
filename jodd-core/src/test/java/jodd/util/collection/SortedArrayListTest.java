@@ -37,7 +37,7 @@ import jodd.util.RandomString;
 
 import org.junit.jupiter.api.Test;
 
-public class SortedArrayListTest {
+class SortedArrayListTest {
 
 	@Test
 	public void testList1() {

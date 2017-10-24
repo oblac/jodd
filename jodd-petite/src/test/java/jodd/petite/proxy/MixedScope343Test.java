@@ -40,7 +40,7 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MixedScope343Test {
+class MixedScope343Test {
 
 	private PetiteContainer petiteContainer;
 

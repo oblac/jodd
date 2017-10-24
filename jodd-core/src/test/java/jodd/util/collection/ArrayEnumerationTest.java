@@ -31,7 +31,7 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ArrayEnumerationTest {
+class ArrayEnumerationTest {
 
 	@Test
 	public void testEnumeration() {

@@ -38,7 +38,7 @@ import jodd.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
 
-public class CompositeEnumerationTest {
+class CompositeEnumerationTest {
 
 	@Test
 	public void testNextWithOne() {

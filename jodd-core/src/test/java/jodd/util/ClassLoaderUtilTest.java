@@ -42,7 +42,7 @@ import java.net.URLClassLoader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ClassLoaderUtilTest {
+class ClassLoaderUtilTest {
 
 	@Test
 	public void testStream() throws IOException {

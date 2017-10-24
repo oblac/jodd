@@ -32,7 +32,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class Props141Test extends BasePropsTest {
+class Props141Test extends BasePropsTest {
 
 	@Test
 	public void test141Simple() throws IOException {

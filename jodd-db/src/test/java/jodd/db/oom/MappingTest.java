@@ -42,7 +42,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class MappingTest extends DbHsqldbTestCase {
+class MappingTest extends DbHsqldbTestCase {
 
 	@BeforeEach
 	public void setUp() throws Exception {

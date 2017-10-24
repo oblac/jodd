@@ -32,9 +32,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CallableTest extends DbBaseTest {
+class CallableTest extends DbBaseTest {
 
-	public class PostgreSql extends PostgreSqlDbAccess {
+	class PostgreSql extends PostgreSqlDbAccess {
 		@Override
 		public String getCreateTableSql() {
 			return "create table TESTER (" +

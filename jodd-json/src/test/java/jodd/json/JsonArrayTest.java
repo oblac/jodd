@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JsonArrayTest {
+class JsonArrayTest {
 
 	private JsonArray jsonArray;
 

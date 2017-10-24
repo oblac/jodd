@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ProxettaAwareContainerTest {
+class ProxettaAwareContainerTest {
 
 	@PetiteBean
 	public static class SecretService {

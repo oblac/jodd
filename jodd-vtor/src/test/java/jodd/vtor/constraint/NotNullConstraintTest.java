@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class NotNullConstraintTest extends ConstraintTestBase {
+class NotNullConstraintTest extends ConstraintTestBase {
 
     @Test
     public void testIsValid() {

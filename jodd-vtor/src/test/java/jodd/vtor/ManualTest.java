@@ -35,7 +35,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ManualTest {
+class ManualTest {
 
 	@Test
 	public void testManualConfig() {

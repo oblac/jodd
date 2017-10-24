@@ -35,7 +35,7 @@ import java.sql.Types;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LoggablePreparedStatementTest extends DbHsqldbTestCase {
+class LoggablePreparedStatementTest extends DbHsqldbTestCase {
 
 	@Test
 	public void testSetParameters() throws SQLException {

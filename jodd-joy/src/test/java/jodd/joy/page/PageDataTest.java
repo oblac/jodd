@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PageDataTest {
+class PageDataTest {
 
 	@Test
 	public void testPaging() {

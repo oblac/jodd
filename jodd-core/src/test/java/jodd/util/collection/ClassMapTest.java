@@ -39,7 +39,7 @@ import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ClassMapTest {
+class ClassMapTest {
 
 	static Field table;
 

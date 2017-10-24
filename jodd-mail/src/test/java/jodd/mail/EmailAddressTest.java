@@ -32,7 +32,7 @@ import javax.mail.internet.AddressException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class EmailAddressTest {
+class EmailAddressTest {
 
 	@Test
 	public void testMailFromString() {

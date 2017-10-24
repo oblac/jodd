@@ -33,7 +33,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-public class JDateTimeSerializationTest {
+class JDateTimeSerializationTest {
 
 	@Test
 	public void testJDateTimeSerialization() throws IOException, ClassNotFoundException {

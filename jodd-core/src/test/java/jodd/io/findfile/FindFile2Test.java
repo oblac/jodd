@@ -34,7 +34,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FindFile2Test {
+class FindFile2Test {
 
 	protected String dataRoot;
 

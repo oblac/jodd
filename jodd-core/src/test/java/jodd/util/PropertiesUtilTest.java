@@ -34,7 +34,7 @@ import static jodd.util.PropertiesUtil.resolveProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class PropertiesUtilTest {
+class PropertiesUtilTest {
 
 	@Test
 	public void testResolve() throws IOException {

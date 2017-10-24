@@ -34,7 +34,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class TimeUtilTest {
+class TimeUtilTest {
 
 	@Test
 	public void testFromToJulian() {

@@ -35,7 +35,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
-public class CompositeIteratorTest {
+class CompositeIteratorTest {
 
 	@Test
 	public void testNextWithOne() {

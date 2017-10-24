@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class DecoraServletFilterTest {
+class DecoraServletFilterTest {
 
 	private DecoraServletFilter decoraServletFilter;
 

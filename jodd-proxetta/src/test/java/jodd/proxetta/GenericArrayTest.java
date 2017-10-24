@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class GenericArrayTest {
+class GenericArrayTest {
 
 	public static class Foo<Stuff> {
 		public Stuff[] getArray() {

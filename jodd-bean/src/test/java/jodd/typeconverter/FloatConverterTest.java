@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FloatConverterTest {
+class FloatConverterTest {
 
 	@Test
 	public void testConversion() {

@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DbIdGeneratorTest extends DbHsqldbTestCase {
+class DbIdGeneratorTest extends DbHsqldbTestCase {
 
 	@Test
 	public void testIdGen() throws Exception {

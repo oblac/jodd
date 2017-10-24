@@ -41,7 +41,7 @@ import java.util.zip.GZIPInputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class StuckTest {
+class StuckTest {
 
 	protected String testDataRoot;
 

@@ -32,7 +32,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PropsBeanTest {
+class PropsBeanTest {
 
 	public static class HttpConfig {
 		public int port;

@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JoddArrayListTest {
+class JoddArrayListTest {
 
 	/**
 	 * Empty list: P = S = E (pivot = start = end)

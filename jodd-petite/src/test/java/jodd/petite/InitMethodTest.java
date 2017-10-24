@@ -35,7 +35,7 @@ import static jodd.petite.meta.InitMethodInvocationStrategy.POST_DEFINE;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InitMethodTest {
+class InitMethodTest {
 
 	private void defineBean(PetiteContainer petiteContainer, String beanName, Class type) {
 		petiteContainer.registerPetiteBean(type, beanName, null, null, true);

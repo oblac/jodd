@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HtmlXmlXhtmlTest {
+class HtmlXmlXhtmlTest {
 
 	private static final String HTML_STRING = "<html><meta><body><div>xxx<br>zzz</div><span></span></body></html>";
 	private static final String XHTML_STRING = "<html><meta/><body><div>xxx<br/>zzz</div><span></span></body></html>";

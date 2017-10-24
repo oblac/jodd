@@ -35,7 +35,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class UploadTypeConverterManagerAddonTest {
+class UploadTypeConverterManagerAddonTest {
 
 	@Test
 	public void testRegistration() {

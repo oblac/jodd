@@ -45,7 +45,7 @@ import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IntrospectorTest {
+class IntrospectorTest {
 
 	@Test
 	public void testBasic() {

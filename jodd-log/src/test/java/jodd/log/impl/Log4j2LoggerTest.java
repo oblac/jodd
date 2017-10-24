@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class Log4j2LoggerTest extends LoggerTestBase {
+class Log4j2LoggerTest extends LoggerTestBase {
 
 	private org.apache.logging.log4j.Logger log;
 

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-public class ExceptionUtilTest {
+class ExceptionUtilTest {
 
 	@Test
 	public void testCurrentStackTrace() {

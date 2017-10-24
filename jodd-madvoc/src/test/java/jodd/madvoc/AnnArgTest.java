@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class AnnArgTest extends MadvocTestCase {
+class AnnArgTest extends MadvocTestCase {
 
 	@Test
 	public void testDefaultMethods() {

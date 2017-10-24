@@ -34,7 +34,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class UnicodeInputStreamTest {
+class UnicodeInputStreamTest {
 
 	@Test
 	public void testUtf8() throws IOException {

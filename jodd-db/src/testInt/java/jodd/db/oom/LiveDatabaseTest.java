@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * Live database test. Requires database services to be started.
  */
-public class LiveDatabaseTest extends DbBaseTest {
+class LiveDatabaseTest extends DbBaseTest {
 
 	/**
 	 * DATABASES TO TEST!
@@ -53,7 +53,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 	/**
 	 * MySql.
 	 */
-	public class MySql extends MySqlDbAccess {
+	class MySql extends MySqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {
@@ -74,7 +74,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 	/**
 	 * PostgreSql.
 	 */
-	public class PostgreSql extends PostgreSqlDbAccess {
+	class PostgreSql extends PostgreSqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {
@@ -95,7 +95,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 	/**
 	 * MsSql.
 	 */
-	public class MsSqlDb extends MsSqlDbAccess {
+	class MsSqlDb extends MsSqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {
@@ -115,7 +115,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 	/**
 	 * HsqlDB.
 	 */
-	public class HsqlDb extends HsqlDbAccess {
+	class HsqlDb extends HsqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {

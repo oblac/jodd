@@ -35,7 +35,7 @@ import java.util.TimeZone;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-public class JDateTimeMoreTest {
+class JDateTimeMoreTest {
 
 	@Test
 	public void test1582() {

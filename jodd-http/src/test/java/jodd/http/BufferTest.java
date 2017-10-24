@@ -40,9 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class BufferTest {
+class BufferTest {
 
-	public class SimpleUploadable implements Uploadable {
+	class SimpleUploadable implements Uploadable {
 
 		final int size;
 		final byte[] bytes;
@@ -85,7 +85,7 @@ public class BufferTest {
 		}
 	}
 
-	public class SimpleProgressListener extends HttpProgressListener {
+	class SimpleProgressListener extends HttpProgressListener {
 
 		StringBuilder sb = new StringBuilder();
 

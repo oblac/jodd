@@ -32,7 +32,7 @@ import java.util.List;
 import static jodd.pathref.Pathref.ALL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PathRefTest {
+class PathRefTest {
 
 	public static class User {
 		public String getName() {

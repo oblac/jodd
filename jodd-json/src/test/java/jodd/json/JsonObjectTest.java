@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JsonObjectTest {
+class JsonObjectTest {
 	@Test
 	public void testGetInteger() {
 		JsonObject jsonObject = new JsonObject();

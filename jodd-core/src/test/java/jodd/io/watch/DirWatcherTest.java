@@ -38,7 +38,7 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Disabled("test does not give consistent results - run each method individually")
-public class DirWatcherTest {
+class DirWatcherTest {
 
 	protected String dataRoot;
 

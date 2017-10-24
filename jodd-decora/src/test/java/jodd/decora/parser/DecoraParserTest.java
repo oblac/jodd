@@ -41,7 +41,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DecoraParserTest {
+class DecoraParserTest {
 
 	protected String testDataRoot;
 

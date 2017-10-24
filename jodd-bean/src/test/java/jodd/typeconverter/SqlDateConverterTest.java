@@ -36,7 +36,7 @@ import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SqlDateConverterTest {
+class SqlDateConverterTest {
 
 	private static long time = new JDateTime(2011, 11, 1, 9, 10, 12, 567).getTimeInMillis();
 

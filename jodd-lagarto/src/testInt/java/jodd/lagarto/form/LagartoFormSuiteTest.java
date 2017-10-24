@@ -30,7 +30,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 
-public class LagartoFormSuiteTest {
+class LagartoFormSuiteTest {
 
 	/**
 	 * Starts Tomcat after the suite.
@@ -96,6 +96,6 @@ public class LagartoFormSuiteTest {
 	}
 
 	@Nested
-	public class FormTextTest extends FormTextTestBase {}
+	class FormTextTest extends FormTextTestBase {}
 
 }

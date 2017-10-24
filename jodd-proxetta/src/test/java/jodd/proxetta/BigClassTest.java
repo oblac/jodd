@@ -41,7 +41,7 @@ import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BigClassTest {
+class BigClassTest {
 
 	@Test
 	public void testAllFeatures() throws IOException, IllegalAccessException, InstantiationException {

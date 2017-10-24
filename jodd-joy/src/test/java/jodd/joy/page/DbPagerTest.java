@@ -30,9 +30,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DbPagerTest {
+class DbPagerTest {
 
-	public class MyHsqlDbPager extends HsqlDbPager {
+	class MyHsqlDbPager extends HsqlDbPager {
 		public String buildCountSql2(String sql) {
 			return super.buildCountSql(sql);
 		}

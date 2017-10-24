@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbSessionProviderTest extends DbHsqldbTestCase {
+class DbSessionProviderTest extends DbHsqldbTestCase {
 
 	@AfterEach
 	public void tearDown() {

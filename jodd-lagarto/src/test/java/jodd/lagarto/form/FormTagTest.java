@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FormTagTest {
+class FormTagTest {
 
 	static FormFieldResolver foo = new FormFieldResolver() {
 		public Object value(String name) {

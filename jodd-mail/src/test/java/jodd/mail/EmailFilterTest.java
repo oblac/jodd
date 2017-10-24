@@ -43,7 +43,7 @@ import java.util.Date;
 import static jodd.mail.EmailFilter.filter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EmailFilterTest {
+class EmailFilterTest {
 
 	@Test
 	public void testAnd1() {

@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.lang.reflect.Field;
 
 
-public class ReturnTest {
+class ReturnTest {
 
 	@Test
 	public void testWrapperWithProxyReturns() throws Exception {

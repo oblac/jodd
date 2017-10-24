@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ActionsManagerTest {
+class ActionsManagerTest {
 
 	public static class FooAction {
 		public void one() {

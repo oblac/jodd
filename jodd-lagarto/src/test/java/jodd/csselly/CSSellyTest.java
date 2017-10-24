@@ -36,7 +36,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CSSellyTest {
+class CSSellyTest {
 
 	@Test
 	public void testSingleSelectors() {

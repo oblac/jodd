@@ -32,7 +32,7 @@ import java.io.UnsupportedEncodingException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CharUtilTest {
+class CharUtilTest {
 
 	@Test
 	public void testToSimpleByteArray() {

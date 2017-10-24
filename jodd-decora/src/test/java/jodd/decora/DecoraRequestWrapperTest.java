@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class DecoraRequestWrapperTest {
+class DecoraRequestWrapperTest {
 
 	private HttpServletRequest httpServletRequestMock;
 	private final String TEST_STRING = "TEST";

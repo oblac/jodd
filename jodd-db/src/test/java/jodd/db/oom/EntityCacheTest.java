@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("SimplifiableJUnitAssertion")
-public class EntityCacheTest extends DbHsqldbTestCase {
+class EntityCacheTest extends DbHsqldbTestCase {
 
 	public static final String TSQL =
 			"select $C{g.id, g.name, g.speciality}, $C{b.*} from " +

@@ -32,7 +32,7 @@ import java.io.Writer;
 
 import static org.mockito.Mockito.*;
 
-public class DecoraParserTestDecoratedPageTest {
+class DecoraParserTestDecoratedPageTest {
 
 	private DecoraParser decoraParser;
 	private Writer writerMock;

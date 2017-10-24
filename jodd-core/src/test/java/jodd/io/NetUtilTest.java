@@ -36,7 +36,7 @@ import java.net.URL;
 /**
  * test class for {@link NetUtil}
  */
-public class NetUtilTest {
+class NetUtilTest {
 
     private static URL joddInfoTxt;
 

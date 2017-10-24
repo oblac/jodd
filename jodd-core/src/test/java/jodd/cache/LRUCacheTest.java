@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LRUCacheTest extends BaseCacheTest {
+class LRUCacheTest extends BaseCacheTest {
 
 	@Test
 	public void testCache() {

@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ActionRequestRecursionTest {
+class ActionRequestRecursionTest {
 
 	@Test
 	public void testFiltersPassAndInterceptorsPass() throws Exception {
@@ -108,7 +108,7 @@ public class ActionRequestRecursionTest {
 
 	// ---------------------------------------------------------------- internal
 
-	public class MyActionRequest extends ActionRequest {
+	class MyActionRequest extends ActionRequest {
 		public String data = "";
 		public MyActionRequest(MadvocController madvocController, String actionPath, ActionConfig config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 			super(madvocController, actionPath, config, action, servletRequest, servletResponse);
@@ -120,11 +120,11 @@ public class ActionRequestRecursionTest {
 		}
 	}
 
-	public class Action {
+	class Action {
 		public void view() {}
 	}
 
-	public class FilterPass extends BaseActionFilter {
+	class FilterPass extends BaseActionFilter {
 		final int i;
 		public FilterPass(int i) {
 			this.i = i;
@@ -137,14 +137,14 @@ public class ActionRequestRecursionTest {
 			return result;
 		}
 	}
-	public class FilterStop extends BaseActionFilter {
+	class FilterStop extends BaseActionFilter {
 		public Object filter(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-X";
 			return "stop";
 		}
 	}
 
-	public class InterceptorPass extends BaseActionInterceptor {
+	class InterceptorPass extends BaseActionInterceptor {
 		final int i;
 		public InterceptorPass(int i) {
 			this.i = i;
@@ -157,14 +157,14 @@ public class ActionRequestRecursionTest {
 			return result;
 		}
 	}
-	public class InterceptorStop extends BaseActionInterceptor {
+	class InterceptorStop extends BaseActionInterceptor {
 		public Object intercept(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-x";
 			return "stop";
 		}
 	}
 
-	public class SimpleMadvocController extends MadvocController {
+	class SimpleMadvocController extends MadvocController {
 		@Override
 		public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
 			((MyActionRequest)actionRequest).data += "-R";

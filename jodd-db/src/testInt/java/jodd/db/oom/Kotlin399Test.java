@@ -33,9 +33,9 @@ import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.type.SqlTypeManager;
 import org.junit.jupiter.api.Test;
 
-public class Kotlin399Test extends DbBaseTest {
+class Kotlin399Test extends DbBaseTest {
 
-	public class PostgreSql extends PostgreSqlDbAccess {
+	class PostgreSql extends PostgreSqlDbAccess {
 
 		@Override
 		public String getCreateTableSql() {

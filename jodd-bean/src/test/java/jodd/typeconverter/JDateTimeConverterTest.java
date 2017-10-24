@@ -40,7 +40,7 @@ import java.util.GregorianCalendar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class JDateTimeConverterTest {
+class JDateTimeConverterTest {
 
 	private static long time = new JDateTime(2011, 11, 1, 9, 10, 12, 567).getTimeInMillis();
 

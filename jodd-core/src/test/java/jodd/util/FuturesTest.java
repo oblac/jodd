@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class FuturesTest {
+class FuturesTest {
 
 	@Test
 	public void testWithinBreaksAsyncExecution() throws ExecutionException, InterruptedException {

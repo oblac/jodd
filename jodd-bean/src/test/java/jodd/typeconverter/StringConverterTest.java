@@ -32,7 +32,7 @@ import static jodd.typeconverter.TypeConverterTestHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class StringConverterTest {
+class StringConverterTest {
 
 	@Test
 	public void testStringConverter() {

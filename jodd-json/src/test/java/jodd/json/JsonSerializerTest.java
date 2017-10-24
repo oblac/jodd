@@ -40,7 +40,7 @@ import static jodd.util.ArraysUtil.bytes;
 import static jodd.util.ArraysUtil.ints;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JsonSerializerTest {
+class JsonSerializerTest {
 
 	public static class Foo {
 

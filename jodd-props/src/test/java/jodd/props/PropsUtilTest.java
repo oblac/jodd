@@ -38,7 +38,7 @@ import java.util.Properties;
 import static jodd.props.PropertiesToPropsTestHelper.assertEqualsToPropsFile;
 import static jodd.props.PropertiesToPropsTestHelper.safelyWritePropertiesToProps;
 
-public class PropsUtilTest {
+class PropsUtilTest {
 
 	private static final String PROPSUTIL_CONVERT_PATH = "propsutil/convert";
 

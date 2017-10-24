@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class AppDaoTest extends DbHsqldbTestCase {
+class AppDaoTest extends DbHsqldbTestCase {
 
 	@Test
 	public void testAppDao1() {

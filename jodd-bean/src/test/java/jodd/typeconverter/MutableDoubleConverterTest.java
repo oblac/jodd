@@ -33,7 +33,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MutableDoubleConverterTest {
+class MutableDoubleConverterTest {
 
 	@Test
 	public void testConversion() {

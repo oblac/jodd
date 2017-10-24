@@ -36,7 +36,7 @@ import java.net.URL;
 import static jodd.lagarto.dom.LagartoHtmlRendererNodeVisitor.Case.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LagartoHtmlRendererTest {
+class LagartoHtmlRendererTest {
 
 	protected String testDataRoot;
 

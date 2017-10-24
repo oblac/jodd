@@ -39,7 +39,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbTransactionTest extends DbHsqldbTestCase {
+class DbTransactionTest extends DbHsqldbTestCase {
 
 	/**
 	 * Tests if rollback works.

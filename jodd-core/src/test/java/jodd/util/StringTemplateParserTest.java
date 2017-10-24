@@ -32,7 +32,7 @@ import java.util.HashMap;
 import static jodd.util.StringTemplateParser.createMapMacroResolver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StringTemplateParserTest {
+class StringTemplateParserTest {
 
 	@Test
 	public void testMap() {

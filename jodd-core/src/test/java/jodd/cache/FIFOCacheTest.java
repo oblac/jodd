@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FIFOCacheTest extends BaseCacheTest {
+class FIFOCacheTest extends BaseCacheTest {
 
 	@Test
 	public void testCache() {

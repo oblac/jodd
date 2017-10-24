@@ -42,7 +42,7 @@ import java.util.zip.GZIPInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CatalogTest {
+class CatalogTest {
 
 	protected String dataRoot;
 

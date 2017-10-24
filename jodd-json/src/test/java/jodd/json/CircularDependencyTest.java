@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("Duplicates")
-public class CircularDependencyTest {
+class CircularDependencyTest {
 
 	public static class A {
 		private String name = null;

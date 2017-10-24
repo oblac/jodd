@@ -32,7 +32,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MadvocUtilTest extends MadvocTestCase {
+class MadvocUtilTest extends MadvocTestCase {
 
 	@Test
 	public void testLasNdx2() {

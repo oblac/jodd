@@ -31,7 +31,7 @@ import static jodd.Jodd.JoddModule;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JoddDbTest {
+class JoddDbTest {
 
 	@Test
 	public void testLoadedModules() {

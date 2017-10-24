@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MaxConstraintTest extends ConstraintTestBase {
+class MaxConstraintTest extends ConstraintTestBase {
 
     @Test
     public void testConstructor1() {

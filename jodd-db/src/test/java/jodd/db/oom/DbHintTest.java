@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class DbHintTest extends DbHsqldbTestCase {
+class DbHintTest extends DbHsqldbTestCase {
 
 	@BeforeEach
 	public void setUp() throws Exception {

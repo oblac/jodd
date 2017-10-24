@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
-public class ViolationTest {
+class ViolationTest {
 
     @Test
     public void testConstructor1() throws Exception {

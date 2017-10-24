@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FullTypeTest {
+class FullTypeTest {
 
 	private void registerBean(PetiteContainer petiteContainer, Class beanType) {
 		petiteContainer.registerPetiteBean(beanType, null, null, null, false);

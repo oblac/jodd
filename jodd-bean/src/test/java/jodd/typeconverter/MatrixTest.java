@@ -34,7 +34,7 @@ import static jodd.util.ArraysUtil.ints;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MatrixTest {
+class MatrixTest {
 
 	private List<Integer> intsList(int... array) {
 		ArrayList<Integer> list = new ArrayList<>();

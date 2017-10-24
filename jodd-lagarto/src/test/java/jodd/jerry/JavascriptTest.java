@@ -34,7 +34,7 @@ import javax.script.ScriptException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JavascriptTest {
+class JavascriptTest {
 
 	private ScriptEngine scriptEngine;
 

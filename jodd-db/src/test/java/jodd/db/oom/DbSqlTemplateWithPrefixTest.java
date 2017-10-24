@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DbSqlTemplateWithPrefixTest {
+class DbSqlTemplateWithPrefixTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {

@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JspResolverTest {
+class JspResolverTest {
 
 	static class Foo {
 		String name = "Hello";

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LengthConstraintTest extends ConstraintTestBase {
+class LengthConstraintTest extends ConstraintTestBase {
     @Test
     public void testValidate_WithNullValue() {
         assertTrue(LengthConstraint.validate(null, 1, 2), "result must be true when validate a null value");

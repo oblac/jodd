@@ -33,7 +33,7 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FastBuffersTest {
+class FastBuffersTest {
 
 	@Test
 	public void testEmptyBuffer() {

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test primitive arrays
  */
-public class PrimitiveArrayListTest {
+class PrimitiveArrayListTest {
 
 	@Test
 	public void testIntArrayList() {

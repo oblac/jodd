@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class AbstractsTest {
+class AbstractsTest {
 
 	@Test
 	public void testAbstract1() throws Exception {

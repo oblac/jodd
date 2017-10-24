@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class GenericDaoTest extends DbHsqldbTestCase {
+class GenericDaoTest extends DbHsqldbTestCase {
 
 	@BeforeEach
 	public void setUp() throws Exception {

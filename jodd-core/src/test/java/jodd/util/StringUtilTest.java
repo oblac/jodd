@@ -36,7 +36,7 @@ import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StringUtilTest {
+class StringUtilTest {
 
 	@Test
 	public void testSplit() {

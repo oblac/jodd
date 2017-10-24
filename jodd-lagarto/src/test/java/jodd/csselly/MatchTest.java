@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import jodd.csselly.selector.Match;
 
-public class MatchTest {
+class MatchTest {
 
 	@Test
 	public void testIncludes() {

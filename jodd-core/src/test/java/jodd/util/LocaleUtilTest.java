@@ -32,7 +32,7 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LocaleUtilTest {
+class LocaleUtilTest {
 
 	@Test
 	public void testLocaleUtil() {

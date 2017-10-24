@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class ValidationContextTest {
+class ValidationContextTest {
 
     @Test
     public void testResolveFor() throws Exception {

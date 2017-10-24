@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MinLengthConstraintTest extends ConstraintTestBase {
+class MinLengthConstraintTest extends ConstraintTestBase {
     @Test
     public void testConstructor1() {
         MinLengthConstraint minLengthConstraint = new MinLengthConstraint();

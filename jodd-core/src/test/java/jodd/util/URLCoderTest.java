@@ -35,7 +35,7 @@ import static jodd.util.URLDecoder.decodeQuery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class URLCoderTest {
+class URLCoderTest {
 	
 	@Test
 	public void testEncodeScheme() {

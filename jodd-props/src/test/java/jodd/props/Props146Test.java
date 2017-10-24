@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Props146Test {
+class Props146Test {
 
 	@Test
 	public void testIssue146ActiveProfile() {

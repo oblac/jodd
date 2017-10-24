@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import static jodd.typeconverter.TypeConverterTestHelper.arrc;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ClassArrayConverterTest {
+class ClassArrayConverterTest {
 
 	@Test
 	@SuppressWarnings({"unchecked"})

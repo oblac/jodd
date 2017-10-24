@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DelegateAdviceTest {
+class DelegateAdviceTest {
 
 	@Test
 	public void testCalcImplDelegate() {

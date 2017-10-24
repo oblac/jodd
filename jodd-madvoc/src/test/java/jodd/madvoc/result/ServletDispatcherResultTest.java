@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ServletDispatcherResultTest {
+class ServletDispatcherResultTest {
 
 	@Test
 	public void testServletDispatcherLookup() throws Exception {
@@ -150,7 +150,7 @@ public class ServletDispatcherResultTest {
 		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);
 	}
 
-	public class Action {
+	class Action {
 		public void view() {}
 	}
 

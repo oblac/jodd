@@ -41,7 +41,7 @@ import java.util.List;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DbHint2Test extends DbHsqldbTestCase {
+class DbHint2Test extends DbHsqldbTestCase {
 
 	@AfterEach
 	@Override

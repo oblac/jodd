@@ -68,7 +68,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * Tests are grouped in nested classes.
  */
-public class StreamUtilTest {
+class StreamUtilTest {
 
     static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/StreamUtilTest");
 

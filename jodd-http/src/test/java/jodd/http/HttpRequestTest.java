@@ -37,7 +37,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HttpRequestTest {
+class HttpRequestTest {
 
 	@Test
 	public void testQueryParameters() {

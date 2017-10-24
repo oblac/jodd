@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class SendMailTest {
+class SendMailTest {
 
 	@Test
 	public void testFromToBccCc() throws MessagingException, IOException {

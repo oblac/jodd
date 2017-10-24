@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DbMiscTest extends DbHsqldbTestCase {
+class DbMiscTest extends DbHsqldbTestCase {
 
 	@Test
 	public void testBig() throws Exception {

@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MutableLongConverterTest {
+class MutableLongConverterTest {
 
 	@Test
 	public void testConversion() {

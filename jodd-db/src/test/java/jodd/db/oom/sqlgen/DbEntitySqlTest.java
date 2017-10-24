@@ -38,7 +38,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class DbEntitySqlTest {
+class DbEntitySqlTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {

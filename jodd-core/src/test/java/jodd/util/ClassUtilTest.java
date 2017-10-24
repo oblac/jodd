@@ -55,7 +55,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ClassUtilTest {
+class ClassUtilTest {
 
 	@Test
 	public void testMethod0() {
@@ -750,9 +750,9 @@ public class ClassUtilTest {
 	public interface Vigilante {}
 	public interface Flying extends Vigilante {}
 	public interface SuperMario extends Flying, Cool {}
-	public class User implements SomeGuy {}
-	public class SuperUser extends User implements Cool {}
-	public class SuperMan extends SuperUser implements Flying {}
+	class User implements SomeGuy {}
+	class SuperUser extends User implements Cool {}
+	class SuperMan extends SuperUser implements Flying {}
 
 	@Test
 	public void testResolveAllInterfaces() {

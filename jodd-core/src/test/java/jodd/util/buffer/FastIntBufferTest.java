@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class FastIntBufferTest extends FastBufferTestBase {
+class FastIntBufferTest extends FastBufferTestBase {
 
 	@Test
 	public void testAppend() {

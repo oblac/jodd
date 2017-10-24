@@ -36,7 +36,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class SilentTest {
+class SilentTest {
 
 	public static class Bean {
 		protected Data data = new Data();

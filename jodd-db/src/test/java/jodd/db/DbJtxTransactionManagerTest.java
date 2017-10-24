@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
+class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 
 	@AfterEach
 	public void tearDown() {

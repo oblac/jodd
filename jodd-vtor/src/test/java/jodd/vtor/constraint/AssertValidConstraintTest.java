@@ -34,7 +34,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
 
-public class AssertValidConstraintTest extends ConstraintTestBase {
+class AssertValidConstraintTest extends ConstraintTestBase {
 
     @Test
     public void testIsValid_withNullValue() {

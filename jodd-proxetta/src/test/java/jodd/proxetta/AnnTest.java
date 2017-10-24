@@ -41,7 +41,7 @@ import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AnnTest {
+class AnnTest {
 
 	@Test
 	public void testMethodAnnotationsProxy() {

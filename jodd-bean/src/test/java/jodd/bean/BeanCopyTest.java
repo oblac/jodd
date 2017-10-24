@@ -36,7 +36,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BeanCopyTest {
+class BeanCopyTest {
 
 	@Test
 	public void testCopy() {

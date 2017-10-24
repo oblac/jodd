@@ -42,7 +42,7 @@ import static jodd.asm.AsmUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class MethodSignatureVisitorTest {
+class MethodSignatureVisitorTest {
 
 	private static final String CLASS_NAME = MethodSignatureVisitorTest.class.getName();
 	private static final String CLASS_SIGNATURE = CLASS_NAME.replace('.', '/');

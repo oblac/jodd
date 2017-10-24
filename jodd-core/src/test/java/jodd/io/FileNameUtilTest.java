@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings({"SimplifiableJUnitAssertion"})
-public class FileNameUtilTest {
+class FileNameUtilTest {
 
 	@Test
 	public void testPrefixLength() {

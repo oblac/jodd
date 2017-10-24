@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 
 import static jodd.db.oom.sqlgen.DbEntitySql.insert;
 
-public class DbEnumTest extends DbHsqldbTestCase {
+class DbEnumTest extends DbHsqldbTestCase {
 
 	@BeforeEach
 	public void setUp() throws Exception {

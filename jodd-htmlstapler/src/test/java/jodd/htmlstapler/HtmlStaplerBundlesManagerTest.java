@@ -31,7 +31,7 @@ import static jodd.htmlstapler.HtmlStaplerBundlesManager.Strategy.RESOURCES_ONLY
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HtmlStaplerBundlesManagerTest {
+class HtmlStaplerBundlesManagerTest {
 
 	@Test
 	public void testRandomDigest() {

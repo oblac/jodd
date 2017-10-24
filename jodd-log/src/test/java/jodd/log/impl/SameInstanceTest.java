@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class SameInstanceTest {
+class SameInstanceTest {
 
 	@Test
 	public void testSameLogger_JCL() {

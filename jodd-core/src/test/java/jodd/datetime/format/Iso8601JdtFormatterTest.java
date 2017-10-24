@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Iso8601JdtFormatterTest {
+class Iso8601JdtFormatterTest {
 
 	@Test
 	public void testFindPattern() {

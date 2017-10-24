@@ -40,7 +40,7 @@ import jodd.util.collection.ArrayEnumeration;
 
 import org.junit.jupiter.api.Test;
 
-public class UtilTest {
+class UtilTest {
 
 	@Test
 	public void testEquals() {

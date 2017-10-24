@@ -29,7 +29,7 @@ import jodd.exception.UncheckedException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-public class JoySuiteTest {
+class JoySuiteTest {
 
 	public static boolean isSuite;
 

@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JerryMiscTest {
+class JerryMiscTest {
 
 	@Test
 	public void testTextContentDecoding() {

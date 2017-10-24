@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ActionAnnotationTest {
+class ActionAnnotationTest {
 
 	@Action
 	public void hello() {

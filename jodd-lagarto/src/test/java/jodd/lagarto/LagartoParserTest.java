@@ -40,7 +40,7 @@ import java.net.URL;
 import static jodd.util.StringPool.NEWLINE;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LagartoParserTest {
+class LagartoParserTest {
 
 	protected String testDataRoot;
 	protected String testDataRoot2;

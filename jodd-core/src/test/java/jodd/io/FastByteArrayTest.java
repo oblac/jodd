@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FastByteArrayTest {
+class FastByteArrayTest {
 
 	@Test
 	public void testFbat() throws IOException {

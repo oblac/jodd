@@ -40,7 +40,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SubclassTest {
+class SubclassTest {
 
 	@Test
 	public void test1() {

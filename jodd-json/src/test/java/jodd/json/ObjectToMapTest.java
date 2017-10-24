@@ -36,7 +36,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class ObjectToMapTest {
+class ObjectToMapTest {
 
 	@Test
 	public void testConvertObjectToMapSimple() {

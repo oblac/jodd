@@ -45,7 +45,7 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("UnnecessaryBoxing")
-public class BeanUtilTest {
+class BeanUtilTest {
 
 	@Test
 	public void testSimpleProperty() {

@@ -38,7 +38,7 @@ import java.util.TimeZone;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class FormatterTest {
+class FormatterTest {
 
 	Locale originalLocale;
 

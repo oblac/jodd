@@ -34,7 +34,7 @@ import java.util.TimeZone;
 import static java.util.Calendar.HOUR;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DstTest {
+class DstTest {
 
 	@Test
 	public void testSpringForward() {

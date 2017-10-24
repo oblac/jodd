@@ -43,7 +43,7 @@ import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DbSqlBuilderTest {
+class DbSqlBuilderTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
