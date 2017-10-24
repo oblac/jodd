@@ -4,44 +4,41 @@ Please follow this style guide and naming conventions when sending your submissi
 
 ## Code
 
-+ Use TABS and not spaces for indentation.
++ Use TABS and not spaces for indentation (it)
 
 ## Test
 
 + Test classes ends with `*Test`, e.g. `StringUtilTest`.
 + Test methods starts with `test*`, e.g. `testReplace()`.
-+ Test methods and classes are `public`.
-+ It is it OK to use experimental features, like `ParameterizedTest` - as long as you keep maintaining it.
++ Test methods and classes are package scoped.
++ It is it OK to use experimental features of Junit 5 - as long as you keep maintaining it.
 + Nested test classes do not have the suffix in their names.
-+ Nested test classes should be in package scope.
 + Use static import for `Assert` methods.
-+ try to have one test method per test feature.
++ Try to have one test method per feature.
 
-### Test Example
-
-An example how a test class may look like.
+### Test class example
 
 ```java
-// imports 
-public class StreamUtilTest {
+class FooTest {
 
-  @Test
-  public void testSomething() throws Exception {
-      // test code
-  }
-
-  @Nested
-  @DisplayName("tests for StreamUtil#close - method")
-  class Close {
-
-    @Test
-    void testClose_with_null() throws Exception {
-      // test code  
-    }
-
-    @Test
-    void testClose_with_closeable_instance() throws Exception {
-      // test code
-    }
+	@Test
+	void testSomething() {
+	  // test code
+	}
+	
+	@Nested
+	@DisplayName("tests for a feature set")
+	class FeatureSet {
+		
+		@Test
+		void testFeature_with_null() {
+		  // test code  
+		}
+	
+		@Test
+		void testFeature_with_something_else() {
+		  // test code
+		}
+	}
 }
 ```
