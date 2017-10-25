@@ -26,14 +26,34 @@
 package jodd.mutable;
 
 /**
- * Lazy immutable {@link jodd.mutable.ValueHolder}.
- * @param <T> value type
+ * Default implementation of a {@link Value}.
  */
-@FunctionalInterface
-public interface ValueProvider<T> {
+class ValueImpl<T> implements Value<T> {
+
+	private T value;
+
+	ValueImpl(T v) {
+		this.value = v;
+	}
+
+	@Override
+	public T get() {
+		return value;
+	}
+
+	@Override
+	public void set(T value) {
+		this.value = value;
+	}
 
 	/**
-	 * Returns value.
+	 * Simple to-string representation of a value.
 	 */
-	T get();
+	@Override
+	public String toString() {
+		if (value == null) {
+			return "value: {null}";
+		}
+		return "value: {" + value.toString() + '}';
+	}
 }

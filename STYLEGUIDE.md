@@ -43,3 +43,8 @@ class FooTest {
 	}
 }
 ```
+
+
+## Architecture
+
++ Interfaces may contain static factories (see `Value`).

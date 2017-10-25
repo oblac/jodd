@@ -25,19 +25,22 @@
 
 package jodd.mutable;
 
-/**
- * Generic mutable value holder for holding objects.
- */
-public interface ValueHolder<T> extends ValueProvider<T> {
+import org.junit.jupiter.api.Test;
 
-	/**
-	 * Returns value.
-	 */
-	public T get();
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	/**
-	 * Sets new value.
-	 */
-	public void set(T value);
+class ValueTest {
 
+	@Test
+	void testValue() {
+		Value<String> str = Value.of(null);
+		str.set("123");
+
+		assertEquals("123", str.get());
+
+		str = Value.of("123");
+		str.set("1234");
+
+		assertEquals("1234", str.get());
+	}
 }

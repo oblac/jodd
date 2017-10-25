@@ -28,8 +28,7 @@ package jodd.util;
 import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.findfile.ClassScanner;
-import jodd.mutable.ValueHolder;
-import jodd.mutable.ValueHolderWrapper;
+import jodd.mutable.Value;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ClassLoaderUtilTest {
 
@@ -155,7 +157,7 @@ class ClassLoaderUtilTest {
 
 		File containerFile = FileUtil.toContainerFile(url);
 
-		final ValueHolder<String> jqueryName = ValueHolderWrapper.create();
+		final Value<String> jqueryName = Value.of(null);
 
 		ClassScanner classScanner = new ClassScanner() {
 			@Override

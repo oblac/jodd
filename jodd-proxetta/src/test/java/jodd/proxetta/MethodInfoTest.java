@@ -25,8 +25,7 @@
 
 package jodd.proxetta;
 
-import jodd.mutable.ValueHolder;
-import jodd.mutable.ValueHolderWrapper;
+import jodd.mutable.Value;
 import jodd.proxetta.fixtures.data.Foo;
 import jodd.proxetta.fixtures.data.FooAnn;
 import jodd.proxetta.fixtures.data.FooProxyAdvice;
@@ -43,19 +42,18 @@ class MethodInfoTest {
 	@Test
 	void testMethodInfo() {
 
-		final ValueHolder<MethodInfo> valueHolder = ValueHolderWrapper.create();
+		final Value<MethodInfo> value = Value.of(null);
 
 		ProxyAspect proxyAspect = new ProxyAspect(
 				FooProxyAdvice.class,
-				new ProxyPointcut() {
-					public boolean apply(MethodInfo methodInfo) {
-						if (methodInfo.getMethodName().equals("p1")) {
-							valueHolder.set(methodInfo);
-							return true;
-						}
-						return false;
+				methodInfo -> {
+					if (methodInfo.getMethodName().equals("p1")) {
+						value.set(methodInfo);
+						return true;
 					}
-		});
+					return false;
+				}
+		);
 
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(proxyAspect);
 		proxyProxetta.setClassNameSuffix("$$$Proxetta888");
@@ -65,7 +63,7 @@ class MethodInfoTest {
 
 		assertNotNull(foo);
 
-		MethodInfo mi = valueHolder.get();
+		MethodInfo mi = value.get();
 
 		assertEquals("p1", mi.getMethodName());
 		assertEquals(Foo.class.getName().replace('.', '/'), mi.getClassname());

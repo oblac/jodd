@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * tests for class {@link RuntimeUtil}
+ * Tests for class {@link RuntimeUtil}.
  */
 class RuntimeUtilTest {
 

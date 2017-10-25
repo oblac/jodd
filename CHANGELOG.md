@@ -19,6 +19,7 @@ All notable changes to Jodd project are documented here.
 
 ### Breaking changes
 
++ **core** - `Value` is a new name for refactored `ValueHolder`. 
 + **proxetta** - Proxetta module is now not optional any more.
 
 ### System
