@@ -25,6 +25,8 @@
 
 package jodd.log;
 
+import java.util.function.Supplier;
+
 /**
  * Simple Logger interface. It defines only logger methods with string
  * argument as our coding style and approach insist in always using if block
@@ -72,7 +74,23 @@ public interface Logger {
 	 */
 	public void log(Level level, String message);
 
+	/**
+	 * Logs a message at provided logging level.
+	 */
+	public default void log(Level level, Supplier<String> messageSupplier) {
+		if (isEnabled(level)) {
+			log(level, messageSupplier.get());
+		}
+	}
+
 	public void log(Level level, String message, Throwable throwable);
+
+	public default void log(Level level, Supplier<String> messageSupplier, Throwable throwable) {
+		if (isEnabled(level)) {
+			log(level, messageSupplier.get(), throwable);
+		}
+	}
+
 
 	// ---------------------------------------------------------------- level
 
@@ -93,6 +111,15 @@ public interface Logger {
 	 */
 	public void trace(String message);
 
+	/**
+	 * Logs a message at TRACE level.
+	 */
+	public default void trace(Supplier<String> messageSupplier) {
+		if (isTraceEnabled()) {
+			trace(messageSupplier.get());
+		}
+	}
+
 	// ---------------------------------------------------------------- debug
 
 	/**
@@ -105,6 +132,15 @@ public interface Logger {
 	 */
 	public void debug(String message);
 
+	/**
+	 * Logs a message at DEBUG level.
+	 */
+	public default void debug(Supplier<String> messageSupplier) {
+		if (isDebugEnabled()) {
+			debug(messageSupplier.get());
+		}
+	}
+
 	// ---------------------------------------------------------------- info
 	/**
 	 * Returns <code>true</code> if INFO level is enabled.
@@ -115,6 +151,15 @@ public interface Logger {
 	 * Logs a message at INFO level.
 	 */
 	public void info(String message);
+
+	/**
+	 * Logs a message at INFO level.
+	 */
+	public default void info(Supplier<String> messageSupplier) {
+		if (isInfoEnabled()) {
+			info(messageSupplier.get());
+		}
+	}
 
 	// ---------------------------------------------------------------- warn
 
@@ -133,6 +178,24 @@ public interface Logger {
 	 */
 	public void warn(String message, Throwable throwable);
 
+	/**
+	 * Logs a message at WARN level.
+	 */
+	public default void warn(Supplier<String> messageSupplier) {
+		if (isWarnEnabled()) {
+			warn(messageSupplier.get());
+		}
+	}
+
+	/**
+	 * Logs a message at WARN level.
+	 */
+	public default void warn(Supplier<String> messageSupplier, Throwable throwable) {
+		if (isWarnEnabled()) {
+			warn(messageSupplier.get(), throwable);
+		}
+	}
+
 	// ---------------------------------------------------------------- error
 
 	/**
@@ -149,5 +212,23 @@ public interface Logger {
 	 * Logs a message at ERROR level.
 	 */
 	public void error(String message, Throwable throwable);
+
+	/**
+	 * Logs a message at ERROR level.
+	 */
+	public default void error(Supplier<String> messageSupplier) {
+		if (isErrorEnabled()) {
+			error(messageSupplier.get());
+		}
+	}
+
+	/**
+	 * Logs a message at ERROR level.
+	 */
+	public default void error(Supplier<String> messageSupplier, Throwable throwable) {
+		if (isErrorEnabled()) {
+			error(messageSupplier.get(), throwable);
+		}
+	}
 
 }

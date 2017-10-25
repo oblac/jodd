@@ -4,6 +4,10 @@ All notable changes to Jodd project are documented here.
 
 ## [Unreleased](https://github.com/oblac/jodd/compare/v3.9...master)
 
+### Features
+
++ **log** - added `Supplier<String>` variants for lazy message evaluation on logging methods.
+
 ## Performance
 
 + **core** - `StringUtil#replace` optimized a bit.
