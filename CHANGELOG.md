@@ -13,11 +13,16 @@ All notable changes to Jodd project are documented here.
 + **core** - fixed issue with `StringUtil` and empty strings.
 + **props** - fixed issue with multi-line strings and line endings.
 
+### Breaking changes
+
++ **proxetta** - Proxetta module is now not optional any more.
+
 ### System
 
++ **tests** - more tests added.
 + **licenses** - added back headers for all 3rd party code.
 + **files** - files line endings unified.
-+ **gradle** - updated to Gradle 4.2.
++ **gradle** - updated to Gradle 4.2.1.
 
 ## [3.9.1](https://github.com/oblac/jodd/compare/v3.9...3.9.1)
 
