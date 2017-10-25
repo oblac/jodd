@@ -49,14 +49,14 @@ class ProxyTest {
 	private ClientAndServer mockServer;
 
 	@BeforeEach
-	public void startProxy() {
+	void startProxy() {
 		mockServer = startClientAndServer(1080);
 		proxy = startClientAndProxy(1090);
 		setupMockServer();
 	}
 
 	@AfterEach
-	public void stopProxy() {
+	void stopProxy() {
 		proxy.stop();
 		mockServer.stop();
 	}

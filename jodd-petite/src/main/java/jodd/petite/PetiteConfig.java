@@ -45,7 +45,7 @@ public class PetiteConfig {
 		        PetiteReference.TYPE_SHORT_NAME,
 				PetiteReference.TYPE_FULL_NAME
 		};
-		useParamo = JoddPetite.useProxetta;
+		useParamo = true;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
 		useAltBeanNames = true;
@@ -171,15 +171,9 @@ public class PetiteConfig {
 
 	/**
 	 * Specifies if <b>Paramo</b> tool should be used to resolve
-	 * method and ctor argument names. If <b>Paramo</b> is not
-	 * available, this property can't be set (i.e. will be
-	 * always <code>false</code>).
+	 * method and ctor argument names.
 	 */
 	public void setUseParamo(boolean useParamo) {
-		if (!JoddPetite.useProxetta) {
-			log.warn("Feature not available without Proxetta");
-			return;
-		}
 		this.useParamo = useParamo;
 	}
 
@@ -194,13 +188,8 @@ public class PetiteConfig {
 
 	/**
 	 * Defines if scoped proxies should be wired.
-	 * Only available with Proxetta.
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
-		if (!JoddPetite.useProxetta) {
-			log.warn("Feature not available without Proxetta");
-			return;
-		}
 		this.wireScopedProxy = wireScopedProxy;
 	}
 
@@ -213,13 +202,8 @@ public class PetiteConfig {
 	 * If {@link #wireScopedProxy} is not set, then enabling this flag
 	 * will throw an exception on mixed scopes. If {@link #wireScopedProxy} is set
 	 * enabling this flag will just issue a warn message in the log.
-	 * Only available with Proxetta.
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
-		if (!JoddPetite.useProxetta) {
-			log.warn("Feature not available without Proxetta");
-			return;
-		}
 		this.detectMixedScopes = detectMixedScopes;
 	}
 }

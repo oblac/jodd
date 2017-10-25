@@ -9,7 +9,7 @@ dependencies {
 	compile project(':jodd-log')
 
 	compile project(':jodd-servlet'), optional
-	compile project(':jodd-proxetta'), optional
+	compile project(':jodd-proxetta')
 
 	provided lib.servlet, optional
 

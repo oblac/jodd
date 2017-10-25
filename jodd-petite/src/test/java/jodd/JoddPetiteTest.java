@@ -25,7 +25,6 @@
 
 package jodd;
 
-import jodd.petite.JoddPetite;
 import org.junit.jupiter.api.Test;
 
 import static jodd.Jodd.JoddModule;
@@ -36,8 +35,6 @@ class JoddPetiteTest {
 
 	@Test
 	void testLoadedModules() {
-		assertTrue(JoddPetite.useProxetta);
-
 		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));
 		assertFalse(Jodd.isModuleLoaded(JoddModule.HTTP));
 		assertFalse(Jodd.isModuleLoaded(JoddModule.MADVOC));

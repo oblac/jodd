@@ -10,7 +10,7 @@ dependencies {
 	compile project(':jodd-servlet')
 	compile project(':jodd-petite')
 	compile project(':jodd-log')
-	compile project(':jodd-proxetta'), optional
+	compile project(':jodd-proxetta')
 
 	provided lib.servlet
 	provided lib.jsp

@@ -27,15 +27,14 @@ package jodd.petite;
 
 import jodd.bean.BeanUtil;
 import jodd.introspector.Setter;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
+import jodd.typeconverter.Convert;
 
 import java.util.Collection;
-
-import jodd.typeconverter.Convert;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 /**
  * Petite IOC container.
@@ -67,20 +66,10 @@ public class PetiteContainer extends PetiteBeans {
 	public PetiteContainer(PetiteConfig config) {
 		super(config);
 
-		if (JoddPetite.useProxetta) {
-			scopedProxyManager = new ScopedProxyManager();
-		} else {
-			scopedProxyManager = null;
-		}
+		scopedProxyManager = new ScopedProxyManager();
 
 		if (log.isDebugEnabled()) {
 			log.debug("Petite container created");
-
-			if (JoddPetite.useProxetta) {
-				log.debug("Petite proxy features enabled");
-			} else {
-				log.debug("Petite proxy features not available");
-			}
 		}
 	}
 

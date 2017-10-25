@@ -17,7 +17,7 @@ dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
 	compile project(':jodd-jtx'), optional
-	compile project(':jodd-proxetta'), optional
+	compile project(':jodd-proxetta')
 	compile project(':jodd-props'), optional
 	compile project(':jodd-log')
 
