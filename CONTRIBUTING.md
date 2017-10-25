@@ -16,7 +16,8 @@ However, before sending a patch, please make sure that the following applies:
 * Your commit message is descriptive.
 * Your patch doesn't have useless merge commits.
 * Your coding style is similar to ours.
-* Your patch is 100% tested. We don't accept any test regressions.
+* Your patch is 100% tested. We don't accept any test regressions. 
+* See our [styleguide](STYLEGUIDE.md) how tests should be written.
 * All tests checks pass.
 * You understand that we're super grateful for your patch!
 
