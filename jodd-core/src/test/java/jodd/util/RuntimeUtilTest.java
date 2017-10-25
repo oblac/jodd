@@ -25,10 +25,20 @@
 
 package jodd.util;
 
+import jodd.util.RuntimeUtil.ProcessResult;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+/**
+ * tests for class {@link RuntimeUtil}
+ */
 class RuntimeUtilTest {
 
 	@Test
@@ -36,4 +46,80 @@ class RuntimeUtilTest {
 		String loc = RuntimeUtil.joddLocation();
 		assertTrue(loc.contains("jodd"));
 	}
+
+	@Nested
+	@DisplayName("tests for RuntimeUtil#run")
+	class Run {
+
+		private Process process = null;
+
+		@Test
+		void testRun_on_windows() throws Exception {
+
+			assumeTrue(SystemUtil.isHostWindows(), "no windows host");
+
+			process = new ProcessBuilder("cmd.exe", "/c", "dir").start();
+
+			ProcessResult processResult = RuntimeUtil.run(process);
+
+			// asserts
+			doAsserts(processResult);
+		}
+
+		@Test
+		void testRun_on_linux() throws Exception {
+
+			assumeTrue(SystemUtil.isHostLinux(), "no linux host");
+
+			process = new ProcessBuilder("bash", "-c", "ls").start();
+
+			ProcessResult processResult = RuntimeUtil.run(process);
+
+			// asserts
+			doAsserts(processResult);
+		}
+
+		private void doAsserts(final ProcessResult processResult) {
+			assertNotNull(processResult.getOutput());
+			assertTrue(!processResult.getOutput().isEmpty());
+			if (processResult.getExitCode() != 0) {
+				System.err.println(processResult.getOutput()); // print error messages
+			}
+			assertEquals(0, processResult.getExitCode());
+		}
+
+		@AfterEach
+		void afterEachTest() {
+
+			if (process != null) {
+				try {
+					process.destroy();
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+
+		}
+
+	}
+
+	@Test
+	void testAvailableMemoryPercent() {
+
+		final float actual = RuntimeUtil.availableMemoryPercent();
+
+		// asserts
+		assertTrue(actual >= 0);
+		assertTrue(actual <= 100);
+	}
+
+	@Test
+	void testAvailableMemory() {
+
+		final long actual = RuntimeUtil.availableMemory();
+
+		// asserts
+		assertTrue(actual >= 0);
+	}
+
 }
