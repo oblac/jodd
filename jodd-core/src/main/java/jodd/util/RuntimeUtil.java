@@ -42,7 +42,7 @@ public class RuntimeUtil {
 	// ---------------------------------------------------------------- memory
 
 	/**
-	 * Returns the amount of available memory (free memory plus never allocated memory).
+	 * Returns the amount of available memory (free memory plus never allocated memory) in bytes.
 	 */
 	public static long availableMemory() {
 		return Runtime.getRuntime().freeMemory() + (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory());
