@@ -50,12 +50,7 @@ class MultiComparatorTest {
 	void testCompare_with_null_entry_in_list() {
 
 		final List<Comparator<Object>> comparators = new ArrayList<>();
-		comparators.add(new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				return 0;
-			}
-		});
+		comparators.add((o1, o2) -> 0);
 		comparators.add(null);
 
 		// asserts
@@ -75,18 +70,8 @@ class MultiComparatorTest {
 	void testCompare_with_expected_negative_value() {
 
 		final List<Comparator<Object>> comparators = new ArrayList<>();
-		Stream.of(0, 0, 0).forEach(c -> comparators.add(new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				return c;
-			}
-		}));
-		comparators.add(new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				return -77;
-			}
-		});
+		Stream.of(0, 0, 0).forEach(c -> comparators.add((o1, o2) -> c));
+		comparators.add((o1, o2) -> -77);
 
 		// asserts
 		assertEquals(-77, new MultiComparator<>(comparators).compare(new Object(), new Object()));
@@ -96,22 +81,11 @@ class MultiComparatorTest {
 	void testCompare_with_expected_positive_value() {
 
 		final List<Comparator<Object>> comparators = new ArrayList<>();
-		Stream.of(0, 0, 0).forEach(c -> comparators.add(new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				return c;
-			}
-		}));
-		comparators.add(new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				return 23;
-			}
-		});
+		Stream.of(0, 0, 0).forEach(c -> comparators.add((o1, o2) -> c));
+		comparators.add((o1, o2) -> 23);
 
 		// asserts
 		assertEquals(23, new MultiComparator<>(comparators).compare(new Object(), new Object()));
 	}
-
 
 }
