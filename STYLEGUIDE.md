@@ -47,4 +47,6 @@ class FooTest {
 
 ## Architecture
 
-+ Interfaces may contain static factories (see `Value`).
++ Interfaces may contain static factories (see `Value.of()`).
++ Common sense is assumed. Jodd does not handle all possible misusages of the API. For example, we will not check for `null` and then throw custom exception.
++ `null` usage should be generally avoided. 

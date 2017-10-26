@@ -43,7 +43,7 @@ class MultiComparatorTest {
 	@Test
 	void testCompare_with_null_list() {
 		// asserts
-		assertThrows(NullPointerException.class, () -> {new MultiComparator<>(null).compare(new Object(), new Object());});
+		assertThrows(NullPointerException.class, () -> new MultiComparator<>(null).compare(new Object(), new Object()));
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class MultiComparatorTest {
 		comparators.add(null);
 
 		// asserts
-		assertThrows(NullPointerException.class, () -> {new MultiComparator<>(comparators).compare(new Object(), new Object());});
+		assertThrows(NullPointerException.class, () -> new MultiComparator<>(comparators).compare(new Object(), new Object()));
 	}
 
 	@Test
