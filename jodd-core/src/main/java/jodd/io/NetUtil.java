@@ -99,7 +99,7 @@ public class NetUtil {
 	}
 
 	/**
-	 * checks given string against ip address v4 format
+	 * Checks given string against IP address v4 format.
 	 *
 	 * @param input an ip address - may be null
 	 * @return <tt>true</tt> if param has a valid ip v4 format <tt>false</tt> otherwise

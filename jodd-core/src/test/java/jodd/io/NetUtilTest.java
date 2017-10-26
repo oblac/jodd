@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * test class for {@link NetUtil}
+ * Test class for {@link NetUtil}.
  */
 class NetUtilTest {
 
