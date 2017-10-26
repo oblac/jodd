@@ -1382,7 +1382,7 @@ public class FileUtil {
 			return false;
 		}
 
-		return Files.isSymbolicLink(file.toPath());
+		return java.nio.file.Files.isSymbolicLink(file.toPath());
 	}
 
 	// ---------------------------------------------------------------- digests
