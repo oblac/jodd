@@ -22,15 +22,20 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
+
 package jodd.io;
 
 import jodd.util.SystemUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -107,4 +112,36 @@ class NetUtilTest {
 		assertArrayEquals(expected, NetUtil.downloadBytes((targetFile.toURI().toURL().toExternalForm())));
 	}
 
+	@ParameterizedTest
+	@MethodSource("testdata_testValidateAgaintIPAdressV4Format")
+	void testValidateAgaintIPAdressV4Format(final boolean expected, final String input) {
+		final boolean actual = NetUtil.validateAgaintIPAdressV4Format(input);
+
+		// asserts
+		assertEquals(expected, actual);
+	}
+
+	static Stream<Arguments> testdata_testValidateAgaintIPAdressV4Format() {
+		return Stream.of(
+				Arguments.of(true, "127.0.0.1"),
+				Arguments.of(true, "6.6.6.6"),
+				Arguments.of(true, "10.255.255.254"), // true although reserved address (10/8 (10.0.0.0 -> 10.255.255.255) (an old school Class A netblock))
+				Arguments.of(true, "172.131.255.233"), // true although reserved address (172.16/12 (172.16.0.0 -> 172.131.255.255 )
+				Arguments.of(true, "0.42.42.42"), // true although the first byte of a Class A address cannot be 0
+				// invalid
+				Arguments.of(false, null),
+				Arguments.of(false, "267.6.6.6"),
+				Arguments.of(false, "6.289.6.6"),
+				Arguments.of(false, "6.6.256.6"),
+				Arguments.of(false, "6.6.2.261"),
+				Arguments.of(false, "6,6.2.1"),
+				Arguments.of(false, "6.6,2.44"),
+				Arguments.of(false, "6.6.2,44"),
+				Arguments.of(false, "6.6.2.44 "),
+				Arguments.of(false, "6.6.."),
+				Arguments.of(false, "a.b.c.d"),
+				Arguments.of(false, "34.67.3o.11"),
+				Arguments.of(false, "244")
+		);
+	}
 }
