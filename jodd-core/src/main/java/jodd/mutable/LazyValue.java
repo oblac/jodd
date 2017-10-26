@@ -25,51 +25,53 @@
 
 package jodd.mutable;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 /**
- * Creates {@link jodd.mutable.ValueHolder} instances.
+ * Holder of a value that is computed lazy.
  */
-public class ValueHolderWrapper {
+public class LazyValue<T> implements Supplier<T> {
+
+	private Supplier<T> supplier;
+	private volatile boolean initialized;
+	private T value;
 
 	/**
-	 * Creates new empty {@link jodd.mutable.ValueHolder}.
+	 * Creates new instance of LazyValue.
 	 */
-	public static <T> ValueHolder<T> create() {
-		return new ValueHolderImpl<>(null);
+	public static <T> LazyValue<T> of(final Supplier<T> supplier) {
+		return new LazyValue<>(supplier);
+	}
+
+	private LazyValue(final Supplier<T> supplier) {
+		this.supplier = supplier;
 	}
 
 	/**
-	 * Wraps existing instance to {@link jodd.mutable.ValueHolder}.
+	 * Returns the value. Value will be computed on first call.
 	 */
-	public static <T> ValueHolder<T> wrap(final T value) {
-		return new ValueHolderImpl<>(value);
-	}
-
-	static class ValueHolderImpl<T> implements ValueHolder<T> {
-
-		T value;
-
-		ValueHolderImpl(T v) {
-			this.value = v;
-		}
-
-		public T get() {
-			return value;
-		}
-
-		public void set(T value) {
-			this.value = value;
-		}
-
-		/**
-		 * Simple to-string representation.
-		 */
-		@Override
-		public String toString() {
-			if (value == null) {
-				return "{null}";
+	@Override
+	public T get() {
+		if (!initialized) {
+			synchronized (this) {
+				if (!initialized) {
+					T t = supplier.get();
+					value = t;
+					initialized = true;
+					supplier = null;
+					return t;
+				}
 			}
-			return '{' + value.toString() + '}';
 		}
-
+		return value;
 	}
+
+	/**
+	 * Returns an optional of current value.
+	 */
+	public Optional<T> optional() {
+		return Optional.ofNullable(get());
+	}
+
 }

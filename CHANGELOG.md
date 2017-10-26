@@ -6,6 +6,7 @@ All notable changes to Jodd project are documented here.
 
 ### Features
 
++ **core** - added `LazyValue`
 + **log** - added `Supplier<String>` variants for lazy message evaluation on logging methods.
 
 ## Performance
@@ -24,7 +25,7 @@ All notable changes to Jodd project are documented here.
 
 ### System
 
-+ **tests** - more tests added.
++ **tests** - more tests added, junit5 style
 + **licenses** - added back headers for all 3rd party code.
 + **files** - files line endings unified.
 + **gradle** - updated to Gradle 4.2.1.

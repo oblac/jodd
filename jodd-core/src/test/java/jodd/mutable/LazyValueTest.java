@@ -25,31 +25,29 @@
 
 package jodd.mutable;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+import org.junit.jupiter.api.Test;
 
-/**
- * Generic mutable value holder for holding objects.
- */
-public interface Value<T> extends Supplier<T> {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-	/**
-	 * Creates default value wrapper.
-	 */
-	public static <R> Value<R> of(R value) {
-		return new ValueImpl<>(value);
+class LazyValueTest {
+
+	@Test
+	void testLazyValue() {
+		LazyValue<String> str = LazyValue.of(() -> "123");
+
+		assertEquals("123", str.get());
+		assertTrue(str.optional().isPresent());
 	}
 
-	/**
-	 * Returns optional wrapper of the value.
-	 */
-	public default Optional<T> optional() {
-		return Optional.ofNullable(get());
-	}
+	@Test
+	void testValue_void() {
+		LazyValue<String> str = LazyValue.of(() -> null);
 
-	/**
-	 * Sets new value.
-	 */
-	public void set(T value);
+		assertNull(str.get());
+		assertFalse(str.optional().isPresent());
+	}
 
 }
