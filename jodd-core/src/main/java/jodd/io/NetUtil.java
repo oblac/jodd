@@ -102,8 +102,7 @@ public class NetUtil {
 	 * checks given string against ip address v4 format
 	 *
 	 * @param input an ip address - may be null
-	 * @return <tt>true</tt> if param has a valid ip v4 format <br/><tt>false</tt> otherwise
-	 *
+	 * @return <tt>true</tt> if param has a valid ip v4 format <tt>false</tt> otherwise
 	 * @see <a href="https://en.wikipedia.org/wiki/IP_address#IPv4_addresses">ip address v4</a>
 	 */
 	public static boolean validateAgaintIPAdressV4Format(String input) {
