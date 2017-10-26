@@ -8,6 +8,10 @@ Log it in our *issue tracker* (in GitHub or in old GoogleCode) or send a note to
 ## :question: Need help?
 Simply contact our *support* via email - or ask question on [stackoverflow](https://stackoverflow.com/questions/tagged/jodd).
 
+## :bar_chart: What is currently developing?
+
+The best way to get overall information on what's planned is by using the [ZenHub](https://www.zenhub.com) plugin.
+
 ## :star2: Have a patch?
 The best way to make sure your issue or feature is addressed is to submit a patch. We accept patches through all mediums: pull requests, email, issue comment, link to a snippet, graffiti outside of John's apartment, etc.
 

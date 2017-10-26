@@ -99,8 +99,9 @@ Feel free to [contribute](CONTRIBUTING.md)! Follow these steps:
 
 First time only:
 
-+ fork the **Jodd** repo (`upstream`) to your GitHub account (`origin`).
++ fork the **Jodd** repo (`upstream`) to your GitHub account (`origin`)
 + clone `origin` as your `local` repo
++ install the [ZenHub](https://www.zenhub.com) plugin to track tasks
 
 Every other time:
 
