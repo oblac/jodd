@@ -18,7 +18,7 @@ dependencies {
 	compile project(':jodd-bean')
 	compile project(':jodd-jtx')
 	compile project(':jodd-proxetta')
-	compile project(':jodd-props'), optional
+	compile project(':jodd-props')
 	compile project(':jodd-log')
 
 	testCompile lib.junit5
