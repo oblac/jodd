@@ -26,7 +26,9 @@
 package jodd.io;
 
 import jodd.util.StringUtil;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -34,6 +36,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class FileUtilTest {
 
@@ -292,7 +298,5 @@ class FileUtilTest {
 		// asserts
 		assertEquals(expected, actual.toLowerCase());
 	}
-
-
 
 }
