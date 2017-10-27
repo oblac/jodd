@@ -36,14 +36,12 @@ public class JoddUpload {
 	// ---------------------------------------------------------------- module
 
 	static {
-		init();
-	}
-
-	public static void init() {
 		Jodd.initModule(() -> {
 			if (Jodd.isModuleLoaded(Jodd.JoddModule.BEAN)) {
 				FileUploadBinder.registerTypeConverter();
 			}
 		});
 	}
+
+	public static void init() {}
 }

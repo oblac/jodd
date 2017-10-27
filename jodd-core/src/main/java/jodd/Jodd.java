@@ -34,11 +34,9 @@ package jodd;
  * Each module must have the following code blocK at the bottom of the class:
  * <pre>{@code
  * static {
- *     init();
- * }
- * public static void init() {
  *     Jodd.initModule();
  * }
+ * public static void init() {}
  * }</pre>
  *
  * <h2>How Jodd module gets loaded and initialized?</h2>

@@ -43,14 +43,12 @@ public class JoddBean {
 	// ---------------------------------------------------------------- module
 
 	static {
-		init();
-	}
-
-	public static void init() {
 		Jodd.initModule(() -> {
 			// set introspector once when introspector module is loaded
 			introspector = JoddIntrospector.introspector;
 		});
 	}
+
+	public static void init() {}
 
 }
