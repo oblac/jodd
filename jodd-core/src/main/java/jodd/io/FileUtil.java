@@ -1377,21 +1377,12 @@ public class FileUtil {
 	 * Determines whether the specified file is a symbolic link rather than an actual file.
 	 * Always returns <code>false</code> on Windows.
 	 */
-	public static boolean isSymlink(final File file) throws IOException {
+	public static boolean isSymlink(final File file) {
 		if (SystemUtil.isHostWindows()) {
 			return false;
 		}
 
-		File fileInCanonicalDir;
-
-		if (file.getParent() == null) {
-			fileInCanonicalDir = file;
-		} else {
-			File canonicalDir = file.getParentFile().getCanonicalFile();
-			fileInCanonicalDir = new File(canonicalDir, file.getName());
-		}
-
-		return !fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile());
+		return java.nio.file.Files.isSymbolicLink(file.toPath());
 	}
 
 	// ---------------------------------------------------------------- digests
