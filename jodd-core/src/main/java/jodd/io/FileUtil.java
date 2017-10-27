@@ -1410,6 +1410,8 @@ public class FileUtil {
 			}
 		}
 		finally {
+			StreamUtil.close(dis);
+			StreamUtil.close(bis);
 			StreamUtil.close(fis);
 		}
 
@@ -1420,43 +1422,45 @@ public class FileUtil {
 	 * Creates MD5 digest of a file.
 	 */
 	public static String md5(final File file) throws IOException {
-		MessageDigest md5Digest = null;
-		try {
-			md5Digest = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException ignore) {
-		}
-
-		byte[] digest = digest(file, md5Digest);
-
-		return StringUtil.toHexString(digest);
+		return _createDigestOfFileWithAlgorithm(file, "MD5");
 	}
 
 	/**
 	 * Creates SHA-1 digest of a file.
 	 */
-	public static String sha(final File file) throws IOException {
-		MessageDigest md5Digest = null;
-		try {
-			md5Digest = MessageDigest.getInstance("SHA-1");
-		} catch (NoSuchAlgorithmException ignore) {
-		}
-
-		byte[] digest = digest(file, md5Digest);
-
-		return StringUtil.toHexString(digest);
+	public static String sha1(final File file) throws IOException {
+		return _createDigestOfFileWithAlgorithm(file, "SHA-1");
 	}
 
 	/**
 	 * Creates SHA-256 digest of a file.
 	 */
 	public static String sha256(final File file) throws IOException {
-		MessageDigest md5Digest = null;
+		return _createDigestOfFileWithAlgorithm(file, "SHA-256");
+	}
+
+	/**
+	 * Creates SHA-384 digest of a file.
+	 */
+	public static String sha384(final File file) throws IOException {
+		return _createDigestOfFileWithAlgorithm(file, "SHA-384");
+	}
+
+	/**
+	 * Creates SHA-512 digest of a file.
+	 */
+	public static String sha512(final File file) throws IOException {
+		return _createDigestOfFileWithAlgorithm(file, "SHA-512");
+	}
+
+	private static String _createDigestOfFileWithAlgorithm(final File file, final String algorithm) throws IOException {
+		MessageDigest messageDigest = null;
 		try {
-			md5Digest = MessageDigest.getInstance("SHA-256");
+			messageDigest = MessageDigest.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException ignore) {
 		}
 
-		byte[] digest = digest(file, md5Digest);
+		byte[] digest = digest(file, messageDigest);
 
 		return StringUtil.toHexString(digest);
 	}
