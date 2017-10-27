@@ -25,11 +25,11 @@
 
 package jodd.http.net;
 
-import jodd.http.HttpException;
-import jodd.http.JoddHttp;
 import jodd.http.HttpConnection;
 import jodd.http.HttpConnectionProvider;
+import jodd.http.HttpException;
 import jodd.http.HttpRequest;
+import jodd.http.JoddHttp;
 import jodd.http.ProxyInfo;
 import jodd.util.StringUtil;
 
@@ -64,6 +64,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 *
 	 * @see #createSocket(String, int, int)
 	 */
+	@Override
 	public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
 		SocketHttpConnection httpConnection;
 
@@ -179,7 +180,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 		// sslSocket is now ready
 
-		String enabledProtocols = JoddHttp.defaultSecureEnabledProtocols;
+		String enabledProtocols = JoddHttp.defaults().getSecureEnabledProtocols();
 
 		if (enabledProtocols != null) {
 			String[] values = StringUtil.splitc(enabledProtocols, ',');

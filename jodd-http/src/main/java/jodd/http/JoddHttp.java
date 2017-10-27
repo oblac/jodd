@@ -26,59 +26,20 @@
 package jodd.http;
 
 import jodd.Jodd;
-import jodd.http.net.SocketHttpConnectionProvider;
-import jodd.util.MimeTypes;
-import jodd.util.StringPool;
 
 /**
  * Jodd HTTP module.
  */
 public class JoddHttp {
 
-	/**
-	 * Default HTTP transport provider.
-	 */
-	public static HttpConnectionProvider httpConnectionProvider = new SocketHttpConnectionProvider();
+	private static final JoddHttpDefaults defaults = new JoddHttpDefaults();
 
 	/**
-	 * Default HTTP query parameters encoding (UTF-8).
+	 * Returns {@link JoddHttpDefaults default configuration}.
 	 */
-	public static String defaultQueryEncoding = StringPool.UTF_8;
-
-	/**
-	 * Default form encoding (UTF-8).
-	 */
-	public static String defaultFormEncoding = StringPool.UTF_8;
-
-	/**
-	 * Default body media type (text/html).
-	 */
-	public static String defaultBodyMediaType = MimeTypes.MIME_TEXT_HTML;
-
-	/**
-	 * Default body encoding (UTF-8).
-	 */
-	public static String defaultBodyEncoding = StringPool.UTF_8;
-
-	/**
-	 * CSV of default enabled secured protocols. By default the value is
-	 * read from system property <code>https.protocols</code>.
-	 */
-	public static String defaultSecureEnabledProtocols = System.getProperty("https.protocols");
-	
-	/**
-	 * Default user agent (Jodd HTTP)
-	 */
-	public static String defaultUserAgent = "Jodd HTTP";
-
-	/**
-	 * Flag that controls if headers should be rewritten and capitalized in PascalCase.
-	 * When disabled, header keys are used as they are passed.
-	 * When flag is enabled, header keys will be capitalized.
-	 */
-	public static boolean defaultCapitalizeHeaderKeys = true;
-
-	// ---------------------------------------------------------------- module
+	public static JoddHttpDefaults defaults() {
+		return defaults;
+	}
 
 	static {
 		Jodd.initModule();

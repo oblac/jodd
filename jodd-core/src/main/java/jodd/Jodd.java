@@ -31,7 +31,7 @@ package jodd;
  * In some environments such OSGI, however, classloader lookup does not work.
  * Then you need to manually initialize all Jodd components that are in use.
  * <p>
- * Each module must have the following code blocK at the bottom of the class:
+ * Each module must have the following code blocK at the <b>bottom</b> of the class:
  * <pre>{@code
  * static {
  *     Jodd.initModule();
