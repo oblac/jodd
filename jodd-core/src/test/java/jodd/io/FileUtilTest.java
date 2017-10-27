@@ -27,6 +27,8 @@ package jodd.io;
 
 import jodd.util.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -41,7 +43,7 @@ class FileUtilTest {
 	protected String utfdataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -271,4 +273,68 @@ class FileUtilTest {
 		content163 = content163.replace("\r\n", "\n");
 		assertEquals(content, content163);
 	}
+
+	@Nested
+	@DisplayName("tests for digest-algorithms")
+	class Digest {
+
+		private File file;
+
+		@BeforeEach
+		void beforeEach() throws Exception {
+			file = new File(FileUtilTest.class.getResource("data/file/a.png").toURI());
+		}
+
+		@Test
+		void testMd5() throws IOException {
+			final String expected = "529a2cfd3346c7fe17b845b6ec90fcfd".toUpperCase();
+
+			final String actual = FileUtil.md5(file);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+
+		@Test
+		void testSha1() throws IOException {
+			final String expected = "7687b985b2eeff4a981480cead1787bd3f26929c".toUpperCase();
+
+			final String actual = FileUtil.sha1(file);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+
+		@Test
+		void testSha256() throws IOException {
+			final String expected = "b2a3dec0059df342e9b33721957fd54221ab7fb7daa99d9f35af729dc2568e51".toUpperCase();
+
+			final String actual = FileUtil.sha256(file);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+
+		@Test
+		void testSha384() throws IOException {
+			final String expected = "1eb67f4b35ae69bbd815dbceee9584c9a65b82e8a209b0a3ab9e6def0a74cf5915228ce32f6154ba5c9ee6dfc66f6414".toUpperCase();
+
+			final String actual = FileUtil.sha384(file);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+
+		@Test
+		void testSha512() throws IOException {
+			final String expected = "4b53d8ca344fc63dd0a69b2ef4c5275279b4c31a834d5e0501a0ab646d1cc56f15e45a019e3f46597be288924b8b6fba19e4ebad1552f5007d56e7f12c3cb1d2".toUpperCase();
+
+			final String actual = FileUtil.sha512(file);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+	}
+
+
 }
