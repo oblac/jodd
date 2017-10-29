@@ -27,20 +27,20 @@ package jodd.upload.impl;
 
 import jodd.core.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
-import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartRequestInputStream;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Smart {@link FileUpload} implementation that defer the action of what to do with uploaded file
@@ -157,7 +157,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 		}
 
-		tempFile = FileUtil.createTempFile(JoddCore.tempFilePrefix, TMP_FILE_SUFFIX, uploadPath);
+		tempFile = FileUtil.createTempFile(JoddCore.defaults().getTempFilePrefix(), TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;

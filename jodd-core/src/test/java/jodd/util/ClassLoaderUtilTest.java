@@ -127,7 +127,7 @@ class ClassLoaderUtilTest {
 
 		// special case
 
-		DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) JoddCore.classLoaderStrategy;
+		DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) JoddCore.defaults().getClassLoaderStrategy();
 
 		defaultClassLoaderStrategy.setLoadArrayClassByComponentTypes(true);
 

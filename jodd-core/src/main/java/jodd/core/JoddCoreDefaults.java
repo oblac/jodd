@@ -23,57 +23,63 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.mail;
+package jodd.core;
 
-import jodd.core.JoddCore;
+import jodd.util.StringPool;
+import jodd.util.cl.ClassLoaderStrategy;
+import jodd.util.cl.DefaultClassLoaderStrategy;
 
-/**
- * Represents e-mail message: string with mime type and encoding.
- */
-public class EmailMessage {
-
-	private final String content;
-	private final String mimeType;
-	private final String encoding;
+public class JoddCoreDefaults {
 
 	/**
-	 * Defines email content.
+	 * Default temp file prefix.
 	 */
-	public EmailMessage(String content, String mimeType, String encoding) {
-		this.content = content;
-		this.mimeType = mimeType;
+	private String tempFilePrefix = "jodd-";
+
+	/**
+	 * Default file encoding (UTF8).
+	 */
+	private String encoding = StringPool.UTF_8;
+
+	/**
+	 * Default IO buffer size (16 KB).
+	 */
+	private int ioBufferSize = 16384;
+
+	/**
+	 * Default class loader strategy.
+	 */
+	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+
+	public String getTempFilePrefix() {
+		return tempFilePrefix;
+	}
+
+	public void setTempFilePrefix(String tempFilePrefix) {
+		this.tempFilePrefix = tempFilePrefix;
+	}
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
 
-	/**
-	 * Defines UTF-8 email content.
-	 */
-	public EmailMessage(String content, String mimeType) {
-		this.content = content;
-		this.mimeType = mimeType;
-		this.encoding = JoddCore.defaults().getEncoding();
+	public int getIoBufferSize() {
+		return ioBufferSize;
 	}
 
-	// ---------------------------------------------------------------- getters
-
-	/**
-	 * Returns message content.
-	 */
-	public String getContent() {
-		return content;
+	public void setIoBufferSize(int ioBufferSize) {
+		this.ioBufferSize = ioBufferSize;
 	}
 
-	/**
-	 * Returns message mime type.
-	 */
-	public String getMimeType() {
-		return mimeType;
+	public ClassLoaderStrategy getClassLoaderStrategy() {
+		return classLoaderStrategy;
 	}
 
-	/**
-	 * Returns message encoding.
-	 */
-	public String getEncoding() {
-		return encoding;
+	public void setClassLoaderStrategy(ClassLoaderStrategy classLoaderStrategy) {
+		this.classLoaderStrategy = classLoaderStrategy;
 	}
 }
