@@ -25,32 +25,58 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmUtil;
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.AnnotationVisitor;
-
-import static jodd.asm5.Opcodes.ACC_ABSTRACT;
-import static jodd.asm5.Opcodes.ACC_NATIVE;
-import static jodd.asm5.Opcodes.ASTORE;
-import static jodd.asm5.Opcodes.GETFIELD;
-import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.asm5.Opcodes.ARETURN;
-import static jodd.asm5.Opcodes.POP;
-import static jodd.asm5.Opcodes.POP2;
-import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm5.Opcodes.INVOKEINTERFACE;
-import static jodd.asm5.Opcodes.INVOKESTATIC;
-import static jodd.asm5.Opcodes.ALOAD;
-import jodd.proxetta.ProxettaException;
-import jodd.proxetta.ProxyTarget;
-import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.proxetta.JoddProxetta.executeMethodName;
 import jodd.asm.AnnotationVisitorAdapter;
+import jodd.asm.AsmUtil;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.asm5.AnnotationVisitor;
+import jodd.asm5.MethodVisitor;
+import jodd.proxetta.JoddProxetta;
+import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxyTarget;
 import jodd.proxetta.ProxyTargetReplacement;
 
 import java.util.List;
+
+import static jodd.asm5.Opcodes.ACC_ABSTRACT;
+import static jodd.asm5.Opcodes.ACC_NATIVE;
+import static jodd.asm5.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.ARETURN;
+import static jodd.asm5.Opcodes.ASTORE;
+import static jodd.asm5.Opcodes.GETFIELD;
+import static jodd.asm5.Opcodes.INVOKEINTERFACE;
+import static jodd.asm5.Opcodes.INVOKESPECIAL;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm5.Opcodes.POP;
+import static jodd.asm5.Opcodes.POP2;
+import static jodd.proxetta.asm.ProxettaAsmUtil.adviceFieldName;
+import static jodd.proxetta.asm.ProxettaAsmUtil.adviceMethodName;
+import static jodd.proxetta.asm.ProxettaAsmUtil.castToReturnType;
+import static jodd.proxetta.asm.ProxettaAsmUtil.checkArgumentIndex;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentsCountMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isCreateArgumentsArrayMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isCreateArgumentsClassArrayMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isInvokeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isReturnTypeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isReturnValueMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isSetArgumentMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetClassAnnotationMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetClassMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodAnnotationMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodDescriptionMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodNameMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodSignatureMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadStaticMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadVirtualMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.prepareReturnValue;
+import static jodd.proxetta.asm.ProxettaAsmUtil.storeMethodArgumentFromObject;
+import static jodd.proxetta.asm.ProxettaAsmUtil.visitReturn;
 
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class ProxettaMethodBuilder extends EmptyMethodVisitor {
@@ -187,7 +213,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-				if (!name.equals(executeMethodName)) {
+				if (!name.equals(JoddProxetta.defaults().getExecuteMethodName())) {
 					return null;
 				}
 

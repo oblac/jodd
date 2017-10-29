@@ -25,30 +25,30 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AnnotationVisitorAdapter;
 import jodd.asm.AsmUtil;
-import jodd.proxetta.ProxettaException;
-import jodd.asm5.ClassVisitor;
-import jodd.asm5.MethodVisitor;
+import jodd.asm.EmptyClassVisitor;
 import jodd.asm5.AnnotationVisitor;
-import jodd.asm5.ClassReader;
 import jodd.asm5.Attribute;
+import jodd.asm5.ClassReader;
+import jodd.asm5.ClassVisitor;
 import jodd.asm5.FieldVisitor;
+import jodd.asm5.MethodVisitor;
+import jodd.proxetta.JoddProxetta;
+import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxyAspect;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jodd.asm5.Opcodes.ACC_ABSTRACT;
-import static jodd.asm5.Opcodes.INVOKESTATIC;
-import static jodd.asm5.Opcodes.RETURN;
 import static jodd.asm5.Opcodes.ALOAD;
 import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.proxetta.JoddProxetta.initMethodName;
-import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.RETURN;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
-import jodd.proxetta.ProxyAspect;
-import jodd.asm.AnnotationVisitorAdapter;
-import jodd.asm.EmptyClassVisitor;
-
-import java.util.List;
-import java.util.ArrayList;
+import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 
 /**
  * Proxetta class builder.
@@ -199,7 +199,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * This created init method is called from each destination's constructor.
 	 */
 	protected void makeProxyConstructor() {
-		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL, initMethodName, DESC_VOID, null, null);
+		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL, JoddProxetta.defaults().getInitMethodName(), DESC_VOID, null, null);
 		mv.visitCode();
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {

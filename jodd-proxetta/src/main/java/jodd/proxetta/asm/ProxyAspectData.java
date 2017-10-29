@@ -26,32 +26,38 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
+import jodd.asm.EmptyClassVisitor;
+import jodd.asm.EmptyMethodVisitor;
 import jodd.asm.MethodAdapter;
+import jodd.asm5.ClassReader;
 import jodd.asm5.FieldVisitor;
 import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
-import jodd.asm5.ClassReader;
-import static jodd.asm5.Opcodes.INVOKESTATIC;
-import static jodd.asm5.Opcodes.ALOAD;
-import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm5.Opcodes.INVOKEINTERFACE;
-import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.proxetta.JoddProxetta.*;
-import jodd.proxetta.ProxyAspect;
+import jodd.io.StreamUtil;
+import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxyAdvice;
+import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.util.ClassLoaderUtil;
-import jodd.io.StreamUtil;
-import jodd.asm.EmptyClassVisitor;
-import jodd.asm.EmptyMethodVisitor;
 
-import java.io.InputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
+
+import static jodd.asm5.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.INVOKEINTERFACE;
+import static jodd.asm5.Opcodes.INVOKESPECIAL;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
+import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
+import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
+import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
+import static jodd.proxetta.asm.ProxettaAsmUtil.adviceFieldName;
+import static jodd.proxetta.asm.ProxettaAsmUtil.adviceMethodName;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isStoreOpcode;
 
 /**
  * Data of single aspect.
@@ -181,7 +187,7 @@ final class ProxyAspectData {
 					if (!desc.equals(DESC_VOID)) {
 						throw new ProxettaException("Invalid static initialization block description for advice: " + advice.getName());
 					}
-					name = clinitMethodName + methodDivider + aspectIndex;
+					name = JoddProxetta.defaults().getClinitMethodName() + JoddProxetta.defaults().getMethodDivider() + aspectIndex;
 					access |= AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL;
 					wd.addAdviceClinitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
@@ -221,7 +227,7 @@ final class ProxyAspectData {
 						throw new ProxettaException("Advices can have only default constructors. Invalid advice: " + advice.getName());
 					}
 
-					name = initMethodName + methodDivider + aspectIndex;
+					name = JoddProxetta.defaults().getInitMethodName() + JoddProxetta.defaults().getMethodDivider() + aspectIndex;
 					access = ProxettaAsmUtil.makePrivateFinalAccess(access);
 					wd.addAdviceInitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
@@ -279,7 +285,7 @@ final class ProxyAspectData {
 				} else
 
 				// other methods
-				if (!name.equals(executeMethodName)) {
+				if (!name.equals(JoddProxetta.defaults().getExecuteMethodName())) {
 					name = adviceMethodName(name, aspectIndex);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 

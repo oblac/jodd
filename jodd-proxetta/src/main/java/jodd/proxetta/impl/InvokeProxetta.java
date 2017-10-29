@@ -25,8 +25,8 @@
 
 package jodd.proxetta.impl;
 
-import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.InvokeAspect;
+import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.Proxetta;
 
 /**
@@ -38,7 +38,7 @@ public class InvokeProxetta extends Proxetta<InvokeProxetta> {
 
 	public InvokeProxetta(InvokeAspect... aspects) {
 		this.invokeAspects = aspects;
-		classNameSuffix = JoddProxetta.invokeProxyClassNameSuffix;
+		classNameSuffix = JoddProxetta.defaults().getInvokeProxyClassNameSuffix();
 	}
 
 	/**

@@ -25,6 +25,7 @@
 
 package jodd.proxetta.impl;
 
+import jodd.asm5.ClassReader;
 import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.ProxettaException;
@@ -32,7 +33,6 @@ import jodd.proxetta.ProxettaUtil;
 import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
-import jodd.asm5.ClassReader;
 
 /**
  * Creates wrapper using ASM library.
@@ -48,7 +48,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 
 	protected Class targetClassOrInterface;
 	protected Class targetInterface;
-	protected String targetFieldName = JoddProxetta.wrapperTargetFieldName;
+	protected String targetFieldName = JoddProxetta.defaults().getWrapperTargetFieldName();
 
 	/**
 	 * Defines class or interface to wrap.
