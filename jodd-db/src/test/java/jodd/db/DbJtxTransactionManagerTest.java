@@ -40,8 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 
+	@Override
 	@AfterEach
-	public void tearDown() {
+	protected void tearDown() {
 		DbManager.resetAll();
 	}
 

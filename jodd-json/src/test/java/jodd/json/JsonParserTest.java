@@ -60,7 +60,7 @@ class JsonParserTest {
 	protected String dataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -71,7 +71,7 @@ class JsonParserTest {
 	}
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		JoddJson.defaults().setClassMetadataName(null);
 	}
 

@@ -27,7 +27,12 @@ package jodd.json;
 
 import jodd.datetime.JDateTime;
 import jodd.io.StreamUtil;
-import jodd.json.fixtures.model.cat.*;
+import jodd.json.fixtures.model.cat.Area;
+import jodd.json.fixtures.model.cat.Catalog;
+import jodd.json.fixtures.model.cat.Event;
+import jodd.json.fixtures.model.cat.Performance;
+import jodd.json.fixtures.model.cat.Price;
+import jodd.json.fixtures.model.cat.SeatCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,14 +45,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CatalogTest {
 
 	protected String dataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}

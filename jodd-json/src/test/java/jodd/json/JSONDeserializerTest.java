@@ -69,12 +69,12 @@ class JSONDeserializerTest {
 	private DataCreator creator;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		creator = new DataCreator();
 	}
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		JoddJson.defaults().setClassMetadataName(null);
 	}
 

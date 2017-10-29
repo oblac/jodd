@@ -25,7 +25,12 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.fixtures.data.*;
+import jodd.proxetta.fixtures.data.Calc;
+import jodd.proxetta.fixtures.data.CalcImpl;
+import jodd.proxetta.fixtures.data.CalcSuper;
+import jodd.proxetta.fixtures.data.CalcSuperImpl;
+import jodd.proxetta.fixtures.data.StatCounter;
+import jodd.proxetta.fixtures.data.StatCounterAdvice;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
@@ -34,12 +39,15 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class WrapperTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		StatCounter.counter = 0;
 	}
 
@@ -48,6 +56,7 @@ class WrapperTest {
 		Calc calc = new CalcImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return !methodInfo.isRootMethod() && methodInfo.isPublicMethod();
 			}
@@ -93,6 +102,7 @@ class WrapperTest {
 		Calc calc = new CalcImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return !methodInfo.isRootMethod() && methodInfo.isPublicMethod();
 			}
@@ -129,6 +139,7 @@ class WrapperTest {
 		Calc calc = new CalcImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod() && methodInfo.isPublicMethod();
 			}
@@ -171,6 +182,7 @@ class WrapperTest {
 		Calc calc = new CalcSuperImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return
 						methodInfo.isPublicMethod() &&
@@ -215,6 +227,7 @@ class WrapperTest {
 		Calc calc = new CalcSuperImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return false;
 			}

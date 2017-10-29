@@ -39,7 +39,7 @@ class JDKLoggerTest extends LoggerTestBase {
 	private java.util.logging.Logger log;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		log = mock(java.util.logging.Logger.class);
 		logger = new JDKLogger(log);
 	}

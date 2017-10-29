@@ -66,9 +66,10 @@ public class FileUtil {
 	private static final String MSG_UNABLE_TO_DELETE = "Unable to delete: ";
 
 	/**
-	 * Simple factory for <code>File</code> objects.
+	 * Simple factory for <code>File</code> objects but with home resolving.
 	 */
-	private static File file(String fileName) {
+	public static File file(String fileName) {
+		fileName = StringUtil.replace(fileName, "~", SystemUtil.userHome());
 		return new File(fileName);
 	}
 

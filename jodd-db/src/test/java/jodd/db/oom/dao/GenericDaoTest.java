@@ -25,9 +25,9 @@
 
 package jodd.db.oom.dao;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.ThreadDbSessionHolder;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.DbOomManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GenericDaoTest extends DbHsqldbTestCase {
 
+	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 
 		DbOomManager.resetAll();

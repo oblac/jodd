@@ -26,20 +26,32 @@
 package jodd.petite;
 
 import jodd.petite.config.AutomagicPetiteConfigurator;
-import jodd.petite.scope.ProtoScope;
-import jodd.petite.fixtures.tst.*;
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.BooC;
+import jodd.petite.fixtures.tst.BooC2;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Goo;
+import jodd.petite.fixtures.tst.Ioo;
+import jodd.petite.fixtures.tst.Loo;
+import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.fixtures.tst.impl.DefaultIoo;
+import jodd.petite.scope.ProtoScope;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class WireTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		Foo.instanceCounter = 0;
 	}
 

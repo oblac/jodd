@@ -25,11 +25,11 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.fixtures.BadBoy;
 import jodd.db.oom.fixtures.BadGirl;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DbSqlTemplateWithPrefixTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();

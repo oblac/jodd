@@ -38,7 +38,7 @@ public abstract class DbHsqldbTestCase {
 	protected CoreConnectionPool cp;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		cp = new CoreConnectionPool();
 		cp.setDriver("org.hsqldb.jdbcDriver");
 		cp.setUrl("jdbc:hsqldb:mem:test");
@@ -76,7 +76,7 @@ public abstract class DbHsqldbTestCase {
 	}
 
 	@AfterEach
-	public void tearDown() throws Exception {
+	void tearDown() throws Exception {
 		dbtxm.close();
 //		cp.close();
 		dbtxm = null;

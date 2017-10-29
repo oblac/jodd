@@ -26,10 +26,10 @@
 package jodd.lagarto;
 
 import jodd.io.FileUtil;
-import jodd.lagarto.dom.Element;
-import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.jerry.Jerry;
 import jodd.lagarto.dom.Document;
+import jodd.lagarto.dom.Element;
+import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.util.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,14 +38,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ParsingProblemsTest {
 
 	protected String testDataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}

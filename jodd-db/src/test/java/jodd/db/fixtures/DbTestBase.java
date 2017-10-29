@@ -32,8 +32,8 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
 import jodd.log.LoggerFactory;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
@@ -45,7 +45,7 @@ public abstract class DbTestBase {
 	protected static CoreConnectionPool cp;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		DbManager.getInstance().setQueryMap(new DbPropsQueryMap());
 
 		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
@@ -69,13 +69,13 @@ public abstract class DbTestBase {
 	}
 
 	@AfterEach
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
 		dbtxm.close();
 		dbtxm = null;
 	}
 
 	@AfterAll
-	public static void tearDownAfterClass()  throws Exception {
+	static void tearDownAfterClass()  throws Exception {
 		cp.close();
 		cp = null;
 	}

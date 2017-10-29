@@ -39,7 +39,7 @@ class NOPLoggerTest extends LoggerTestBase {
 	private String name = "NOPLogger";
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		logger = new NOPLogger(name);
 	}
 

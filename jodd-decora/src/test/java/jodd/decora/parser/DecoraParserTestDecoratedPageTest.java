@@ -30,7 +30,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.Writer;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class DecoraParserTestDecoratedPageTest {
 
@@ -39,7 +42,7 @@ class DecoraParserTestDecoratedPageTest {
 	private DecoraTag decoraTagMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		decoraParser = new DecoraParser();
 		writerMock = mock(Writer.class);
 		decoraTagMock = mock(DecoraTag.class);

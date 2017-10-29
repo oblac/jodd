@@ -40,7 +40,7 @@ class BinarySearchTest {
 	protected BinarySearch<String> listBinarySearch;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		list = new ArrayList<>();
 		list.add("aaa");    // 0
 		list.add("bbb");

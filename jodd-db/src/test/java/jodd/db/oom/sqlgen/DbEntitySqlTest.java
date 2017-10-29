@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class DbEntitySqlTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();

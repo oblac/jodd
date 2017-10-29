@@ -41,7 +41,7 @@ class TagAdapterTest {
 	protected String testAdapterRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (testAdapterRoot != null) {
 			return;
 		}

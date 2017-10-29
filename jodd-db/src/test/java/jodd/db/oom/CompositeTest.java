@@ -25,10 +25,10 @@
 
 package jodd.db.oom;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.User;
 import jodd.db.oom.fixtures.WizUser;
 import jodd.db.oom.fixtures.Wizard;
@@ -44,8 +44,9 @@ class CompositeTest extends DbHsqldbTestCase {
 
 	DbSession session;
 
+	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 
 		DbOomManager.resetAll();
@@ -79,8 +80,9 @@ class CompositeTest extends DbHsqldbTestCase {
 		query.executeUpdate();
 	}
 
+	@Override
 	@AfterEach
-	public void tearDown() {
+	protected void tearDown() {
 		session.closeSession();
 	}
 

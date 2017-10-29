@@ -25,12 +25,12 @@
 
 package jodd.db.oom;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl2;
+import jodd.db.oom.sqlgen.DbEntitySql;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 
 	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 
 		DbOomManager.resetAll();
@@ -84,7 +84,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	}
 
 	@AfterEach
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
 		dbSession.closeSession();
 		super.tearDown();
 	}

@@ -26,11 +26,16 @@
 package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.Boo;
+import jodd.db.oom.fixtures.BooSqlType;
+import jodd.db.oom.fixtures.Foo;
+import jodd.db.oom.fixtures.FooColor;
+import jodd.db.oom.fixtures.FooWeight;
+import jodd.db.oom.fixtures.FooWeigthSqlType;
 import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.db.oom.fixtures.*;
 import jodd.db.type.SqlTypeManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,8 +49,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MappingTest extends DbHsqldbTestCase {
 
+	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 		DbOomManager.resetAll();
 	}

@@ -45,7 +45,7 @@ class DbHint2Test extends DbHsqldbTestCase {
 
 	@AfterEach
 	@Override
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
 		DbSession session = new DbSession(cp);
 
 		executeUpdate(session, "drop table GIRL if exists");
@@ -98,7 +98,7 @@ class DbHint2Test extends DbHsqldbTestCase {
 
 	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 
 		DbOomManager.resetAll();

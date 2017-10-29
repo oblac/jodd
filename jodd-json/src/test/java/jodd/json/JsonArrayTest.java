@@ -54,7 +54,7 @@ class JsonArrayTest {
 	private JsonArray jsonArray;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		jsonArray = new JsonArray();
 	}
 

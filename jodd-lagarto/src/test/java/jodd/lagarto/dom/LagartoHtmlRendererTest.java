@@ -33,7 +33,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static jodd.lagarto.dom.LagartoHtmlRendererNodeVisitor.Case.*;
+import static jodd.lagarto.dom.LagartoHtmlRendererNodeVisitor.Case.DEFAULT;
+import static jodd.lagarto.dom.LagartoHtmlRendererNodeVisitor.Case.LOWERCASE;
+import static jodd.lagarto.dom.LagartoHtmlRendererNodeVisitor.Case.RAW;
+import static jodd.lagarto.dom.LagartoHtmlRendererNodeVisitor.Case.UPPERCASE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LagartoHtmlRendererTest {
@@ -41,7 +44,7 @@ class LagartoHtmlRendererTest {
 	protected String testDataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -50,7 +53,7 @@ class LagartoHtmlRendererTest {
 	}
 
 	@Test
-	public void simpleTest() {
+	void testSimple() {
 		String html = "<html><boDY><div id=\"z\" fooBar=\"aAa\">some Text</div></boDY></html>";
 		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
 

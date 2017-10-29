@@ -48,7 +48,7 @@ class SimpleLoggerTest extends LoggerTestBase {
 	private String output;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		initializeLogFactoryAndLogger(Logger.Level.DEBUG);
 	}
 

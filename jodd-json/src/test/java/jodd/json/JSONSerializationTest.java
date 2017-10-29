@@ -68,7 +68,7 @@ class JSONSerializationTest {
 
 	@BeforeEach
 	@SuppressWarnings({"unchecked"})
-	public void setUp() {
+	void setUp() {
 		DataCreator dataCreator = new DataCreator();
 		pedroZip = new Zipcode("848485");
 		Person pedro = dataCreator.createPedro();
@@ -87,7 +87,7 @@ class JSONSerializationTest {
 	}
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		JoddJson.defaults().setClassMetadataName(null);
 	}
 

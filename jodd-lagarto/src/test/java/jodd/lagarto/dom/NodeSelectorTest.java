@@ -37,14 +37,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NodeSelectorTest {
 
 	protected String testDataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -277,6 +280,7 @@ class NodeSelectorTest {
 		NodeSelector nodeSelector = createNodeFilter();
 
 		List<Node> nodes = nodeSelector.select(new NodeFilter() {
+			@Override
 			public boolean accept(Node node) {
 				if (node.getNodeType() != Node.NodeType.ELEMENT) {
 					return false;

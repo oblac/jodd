@@ -39,17 +39,10 @@ class ThreefishTest {
 	Threefish threefish;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		threefish = new Threefish(Threefish.BLOCK_SIZE_BITS_1024);
 		threefish.init("This is a key message and I feel good", 0x1122334455667788L, 0xFF00FF00AABB9933L);
 
-	}
-
-	private void assertEqualsArray(byte[] expected, byte[] value) {
-		assertEquals(expected.length, value.length);
-		for (int i = 0; i < expected.length; i++) {
-			assertEquals(expected[i], value[i]);
-		}
 	}
 
 	@Test

@@ -35,7 +35,7 @@ class VtorMatchProfilesTest {
     private Vtor vtor;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         vtor = new Vtor();
     }
 
