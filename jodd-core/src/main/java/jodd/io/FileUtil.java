@@ -243,7 +243,7 @@ public class FileUtil {
 		copyFile(file(src), file(dest));
 	}
 	/**
-	 * Copies a file to another file with specified {@link FileUtilParams copy params}.
+	 * Copies a file to another file.
 	 */
 	public static void copyFile(File src, File dest) throws IOException {
 		checkFileCopy(src, dest);
