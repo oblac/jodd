@@ -34,11 +34,20 @@ import jodd.util.SystemUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static jodd.util.ArraysUtil.bytes;
 import static jodd.util.ArraysUtil.ints;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JsonSerializerTest {
 
@@ -373,7 +382,7 @@ class JsonSerializerTest {
 	@Test
 	void testStrictMode() {
 		Cook cook = new Cook();
-		JsonAnnotationManager jam = JoddJson.annotationManager;
+		JsonAnnotationManager jam = JoddJson.defaults().getAnnotationManager();
 
 		JsonAnnotationManager.TypeData typeData = jam.lookupTypeData(Cook.class);
 

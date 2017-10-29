@@ -25,7 +25,19 @@
 
 package jodd.json;
 
-import jodd.json.fixtures.mock.*;
+import jodd.json.fixtures.mock.Address;
+import jodd.json.fixtures.mock.Employee;
+import jodd.json.fixtures.mock.Friend;
+import jodd.json.fixtures.mock.Hill;
+import jodd.json.fixtures.mock.Mountain;
+import jodd.json.fixtures.mock.Network;
+import jodd.json.fixtures.mock.Person;
+import jodd.json.fixtures.mock.Phone;
+import jodd.json.fixtures.mock.Spiderman;
+import jodd.json.fixtures.mock.Surfer;
+import jodd.json.fixtures.mock.TestClass2;
+import jodd.json.fixtures.mock.TestClass3;
+import jodd.json.fixtures.mock.Zipcode;
 import jodd.json.fixtures.model.ListContainer;
 import jodd.json.impl.ObjectJsonSerializer;
 import org.junit.jupiter.api.AfterEach;
@@ -40,7 +52,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JSONSerializationTest {
 
@@ -74,12 +88,12 @@ class JSONSerializationTest {
 
 	@AfterEach
 	public void tearDown() {
-		JoddJson.classMetadataName = null;
+		JoddJson.defaults().setClassMetadataName(null);
 	}
 
 	@Test
 	void testObject() {
-		JoddJson.classMetadataName = "class";
+		JoddJson.defaults().setClassMetadataName("class");
 		JsonSerializer serializer = new JsonSerializer();
 
 		String jodderJson = serializer.serialize(jodder);
@@ -231,7 +245,7 @@ class JSONSerializationTest {
 
 	@Test
 	void testListOfObjects() {
-		JoddJson.classMetadataName = "class";
+		JoddJson.defaults().setClassMetadataName("class");
 
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.serialize(people);
@@ -409,7 +423,7 @@ class JSONSerializationTest {
 
 	@Test
 	void testWildcards() {
-		JoddJson.classMetadataName = "class";
+		JoddJson.defaults().setClassMetadataName("class");
 		JsonSerializer serializer = new JsonSerializer();
 		String json = serializer.include("phones").exclude("*.class").serialize(jodder);
 
@@ -600,18 +614,18 @@ class JSONSerializationTest {
 		mountain.setHeight("123");
 		mountain.setWild(true);
 
-		JoddJson.serializationSubclassAware = false;
+		JoddJson.defaults().setSerializationSubclassAware(false);
 
-		JoddJson.annotationManager.reset();
+		JoddJson.defaults().getAnnotationManager().reset();
 		json = new JsonSerializer().serialize(mountain);
 
 		assertAttribute("height", json);
 		assertAttribute("name", json);
 		assertAttribute("wild", json);
 
-		JoddJson.serializationSubclassAware = true;
+		JoddJson.defaults().setSerializationSubclassAware(true);
 
-		JoddJson.annotationManager.reset();
+		JoddJson.defaults().getAnnotationManager().reset();
 		json = new JsonSerializer().serialize(mountain);
 
 		assertAttribute("height", json);

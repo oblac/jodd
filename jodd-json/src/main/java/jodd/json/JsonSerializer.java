@@ -33,7 +33,7 @@ import jodd.util.buffer.FastCharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
+import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
 
 /**
  * JSON serializer.
@@ -59,9 +59,9 @@ public class JsonSerializer {
 		}
 	};
 
-	protected String classMetadataName = JoddJson.classMetadataName;
-	protected boolean strictStringEncoding = JoddJson.strictStringEncoding;
-	protected boolean deep = JoddJson.deepSerialization;
+	protected String classMetadataName = JoddJson.defaults().getClassMetadataName();
+	protected boolean strictStringEncoding = JoddJson.defaults().isStrictStringEncoding();
+	protected boolean deep = JoddJson.defaults().isDeepSerialization();
 	protected Class[] excludedTypes = null;
 	protected String[] excludedTypeNames = null;
 	protected boolean excludeNulls = false;
@@ -84,7 +84,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer withSerializer(Class type, TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
-			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaultSerializers);
+			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaults().getDefaultSerializers());
 		}
 
 		typeSerializersMap.register(type, typeJsonSerializer);
@@ -221,7 +221,7 @@ public class JsonSerializer {
 
 	/**
 	 * Specifies strict string encoding.
-	 * @see JoddJson#strictStringEncoding
+	 * @see JoddJsonDefaults#strictStringEncoding
 	 */
 	public JsonSerializer strictStringEncoding(boolean strictStringEncoding) {
 		this.strictStringEncoding = strictStringEncoding;

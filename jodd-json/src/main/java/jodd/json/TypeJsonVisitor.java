@@ -55,7 +55,7 @@ public abstract class TypeJsonVisitor {
 
 		this.type = type;
 
-		typeData = JoddJson.annotationManager.lookupTypeData(type);
+		typeData = JoddJson.defaults().getAnnotationManager().lookupTypeData(type);
 	}
 
 	/**

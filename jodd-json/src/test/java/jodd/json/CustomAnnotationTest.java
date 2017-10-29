@@ -37,12 +37,12 @@ class CustomAnnotationTest {
 
 	@BeforeEach
 	public void setUp() {
-		JoddJson.jsonAnnotation = JSON2.class;
+		JoddJson.defaults().setJsonAnnotation(JSON2.class);
 	}
 
 	@AfterEach
 	public void tearDown() {
-		JoddJson.jsonAnnotation = JSON.class;
+		JoddJson.defaults().setJsonAnnotation(JSON.class);
 	}
 
 	@Test
