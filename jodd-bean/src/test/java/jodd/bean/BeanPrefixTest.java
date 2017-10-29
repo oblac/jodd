@@ -28,7 +28,6 @@ package jodd.bean;
 import jodd.bean.fixtures.LifeBean;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.JoddIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import org.junit.jupiter.api.Test;
 
@@ -44,13 +43,13 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_"});
+		JoddBean.runtime().introspector(new CachingIntrospector(true, true, true, new String[] {"_"}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
-		ClassDescriptor cd = JoddIntrospector.introspector.lookup(LifeBean.class);
+		ClassDescriptor cd = JoddBean.runtime().introspector().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -61,7 +60,7 @@ class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals(null, pds[2].getFieldDescriptor());
 
-		JoddIntrospector.introspector = new CachingIntrospector();
+		JoddBean.runtime().introspector(new CachingIntrospector());
 	}
 
 	@Test
@@ -72,14 +71,14 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_", ""});
+		JoddBean.runtime().introspector(new CachingIntrospector(true, true, true, new String[] {"_", ""}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
 
-		ClassDescriptor cd = JoddIntrospector.introspector.lookup(LifeBean.class);
+		ClassDescriptor cd = JoddBean.runtime().introspector().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -90,7 +89,7 @@ class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals("www", pds[2].getFieldDescriptor().getName());
 
-		JoddIntrospector.introspector = new CachingIntrospector();
+		JoddBean.runtime().introspector(new CachingIntrospector());
 	}
 
 	@Test

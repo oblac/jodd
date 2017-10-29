@@ -75,7 +75,6 @@ public class Jodd {
 		DECORA,
 		HTTP,
 		HTML_STAPLER,
-		INTROSPECTOR,
 		JSON,
 		JTX,
 		LAGARTO,

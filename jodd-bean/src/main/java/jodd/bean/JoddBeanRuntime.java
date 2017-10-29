@@ -23,23 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.introspector;
+package jodd.bean;
 
-import jodd.Jodd;
+import jodd.introspector.CachingIntrospector;
+import jodd.introspector.Introspector;
 
-public class JoddIntrospector {
+public class JoddBeanRuntime {
+
+	private Introspector introspector = new CachingIntrospector();
 
 	/**
-	 * Default {@link Introspector} implementation.
+	 * Returns the {@link Introspector} implementation.
 	 */
-	public static Introspector introspector = new CachingIntrospector();
-
-	// ---------------------------------------------------------------- module
-
-	static {
-		Jodd.initModule();
+	public Introspector introspector() {
+		return introspector;
 	}
 
-	public static void init() {}
-
+	/**
+	 * Changes the {@link Introspector} implementation.
+	 */
+	public void introspector(Introspector introspector) {
+		this.introspector = introspector;
+	}
 }

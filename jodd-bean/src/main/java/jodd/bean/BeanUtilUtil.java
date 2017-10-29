@@ -49,7 +49,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- introspector
 
-	protected Introspector introspector = JoddBean.introspector;
+	protected Introspector introspector = JoddBean.runtime().introspector();
 	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
 
 	/**

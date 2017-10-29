@@ -26,27 +26,20 @@
 package jodd.bean;
 
 import jodd.Jodd;
-import jodd.introspector.Introspector;
-import jodd.introspector.JoddIntrospector;
 
 /**
  * Jodd BEAN module.
  */
 public class JoddBean {
 
-	/**
-	 * Default {@link Introspector} implementation.
-	 */
-	public static Introspector introspector;
+	private static JoddBeanRuntime runtime = new JoddBeanRuntime();
 
-
-	// ---------------------------------------------------------------- module
+	public static JoddBeanRuntime runtime() {
+		return runtime;
+	}
 
 	static {
-		Jodd.initModule(() -> {
-			// set introspector once when introspector module is loaded
-			introspector = JoddIntrospector.introspector;
-		});
+		Jodd.initModule();
 	}
 
 	public static void init() {}
