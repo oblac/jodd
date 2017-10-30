@@ -27,7 +27,7 @@ package jodd.bean;
 
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.Introspector;
-import jodd.typeconverter.ConvertBean;
+import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConverterManager;
 
 /**
@@ -36,8 +36,8 @@ import jodd.typeconverter.TypeConverterManager;
 public class JoddBeanRuntime {
 
 	private Introspector introspector = new CachingIntrospector();
-	private ConvertBean convertBean = new ConvertBean();
-	private TypeConverterManager typeConverterManager = new TypeConverterManager(convertBean);
+	private Converter converter = new Converter();
+	private TypeConverterManager typeConverterManager = new TypeConverterManager(converter);
 
 	/**
 	 * Returns the {@link Introspector} implementation. Default is {@link CachingIntrospector}.
@@ -70,14 +70,17 @@ public class JoddBeanRuntime {
 	}
 
 	/**
-	 * Returns {@link ConvertBean}.
+	 * Returns {@link Converter}.
 	 */
-	public ConvertBean convertBean() {
-		return convertBean;
+	public Converter converter() {
+		return converter;
 	}
 
-	public JoddBeanRuntime convertBean(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	/**
+	 * Defines the {@link Converter}.
+	 */
+	public JoddBeanRuntime converter(Converter converter) {
+		this.converter = converter;
 		return this;
 	}
 

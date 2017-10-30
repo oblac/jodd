@@ -26,7 +26,7 @@
 package jodd.servlet.filter;
 
 import jodd.core.JoddCore;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -134,7 +134,7 @@ public class CharacterEncodingFilter implements Filter {
 		if (this.encoding == null) {
 			this.encoding = JoddCore.defaults().getEncoding();
 		}
-		this.ignore = Convert.toBooleanValue(filterConfig.getInitParameter("ignore"), true);
+		this.ignore = Converter.get().toBooleanValue(filterConfig.getInitParameter("ignore"), true);
 	}
 
 	/**

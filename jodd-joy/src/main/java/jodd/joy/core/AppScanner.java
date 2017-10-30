@@ -26,9 +26,9 @@
 package jodd.joy.core;
 
 import jodd.io.findfile.ClassFinder;
-import jodd.typeconverter.Convert;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.typeconverter.Converter;
 
 /**
  * <code>AppScanner</code> defines entries that will be included/excluded in
@@ -106,8 +106,8 @@ public class AppScanner {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("Scan entries: " + Convert.toString(includedEntries));
-			log.debug("Scan jars: " + Convert.toString(includedJars));
+			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
+			log.debug("Scan jars: " + Converter.get().toString(includedJars));
 			log.debug("Scan ignore exception: " + ignoreExceptions);
 		}
 

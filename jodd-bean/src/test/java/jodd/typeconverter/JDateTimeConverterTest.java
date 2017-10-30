@@ -109,9 +109,9 @@ class JDateTimeConverterTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2001, 0, 1, 2, 3, 4);
 		c.set(Calendar.MILLISECOND, 500);
-		JDateTime jdt = Convert.toJDateTime(c);
+		JDateTime jdt = Converter.get().toJDateTime(c);
 		assertEquals("2001-01-01 02:03:04.500", jdt.toString());
-		Calendar c1 = Convert.toCalendar(jdt);
+		Calendar c1 = Converter.get().toCalendar(jdt);
 		assertEquals(2001, c1.get(Calendar.YEAR));
 		assertEquals(0, c1.get(Calendar.MONTH));
 		assertEquals(1, c1.get(Calendar.DAY_OF_MONTH));
@@ -123,9 +123,9 @@ class JDateTimeConverterTest {
 
 		GregorianCalendar gc = new GregorianCalendar(2002, 5, 2, 3, 4, 5);
 		gc.set(GregorianCalendar.MILLISECOND, 600);
-		jdt = Convert.toJDateTime(gc);
+		jdt = Converter.get().toJDateTime(gc);
 		assertEquals("2002-06-02 03:04:05.600", jdt.toString());
-		GregorianCalendar gc1 = (GregorianCalendar) Convert.toCalendar(jdt);
+		GregorianCalendar gc1 = (GregorianCalendar) Converter.get().toCalendar(jdt);
 
 		assertEquals(2002, gc1.get(GregorianCalendar.YEAR));
 		assertEquals(5, gc1.get(GregorianCalendar.MONTH));
@@ -137,9 +137,9 @@ class JDateTimeConverterTest {
 
 
 		Date d = new Date(101, 2, 3, 4, 5, 6);
-		jdt = Convert.toJDateTime(d);
+		jdt = Converter.get().toJDateTime(d);
 		assertEquals("2001-03-03 04:05:06.000", jdt.toString());
-		Date d2 = Convert.toDate(jdt);
+		Date d2 = Converter.get().toDate(jdt);
 		assertEquals(101, d2.getYear());
 		assertEquals(2, d2.getMonth());
 		assertEquals(3, d2.getDate());
@@ -162,7 +162,7 @@ class JDateTimeConverterTest {
 
 
 		java.sql.Date sd = new java.sql.Date(123, 4, 5);
-		jdt = Convert.toJDateTime(sd);
+		jdt = Converter.get().toJDateTime(sd);
 		assertEquals("2023-05-05 00:00:00.000", jdt.toString());
 		java.sql.Date sd2 = new java.sql.Date(1, 2, 3);
 		SqlDateConverter sqlDateConverter = new SqlDateConverter();
@@ -173,7 +173,7 @@ class JDateTimeConverterTest {
 
 
 		Timestamp st = new Timestamp(123, 4, 5, 6, 7, 8, 500000000);
-		jdt = Convert.toJDateTime(st);
+		jdt = Converter.get().toJDateTime(st);
 		assertEquals("2023-05-05 06:07:08.500", jdt.toString());
 		SqlTimestampConverter sqlTimestampConverter = new SqlTimestampConverter();
 		Timestamp st2 = sqlTimestampConverter.convert(jdt);

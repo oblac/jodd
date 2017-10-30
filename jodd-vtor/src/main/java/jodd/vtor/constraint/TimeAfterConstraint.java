@@ -26,7 +26,7 @@
 package jodd.vtor.constraint;
 
 import jodd.datetime.JDateTime;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -53,12 +53,14 @@ public class TimeAfterConstraint implements ValidationConstraint<TimeAfter> {
 
 	// ---------------------------------------------------------------- configure
 
+	@Override
 	public void configure(TimeAfter annotation) {
 		time = new JDateTime(annotation.value());
 	}
 
 	// ---------------------------------------------------------------- validate
 
+	@Override
 	public boolean isValid(ValidationConstraintContext vcc, Object value) {
 		return validate(value, time);
 	}
@@ -68,7 +70,7 @@ public class TimeAfterConstraint implements ValidationConstraint<TimeAfter> {
 		if (value == null) {
 			return true;
 		}
-		JDateTime now = Convert.toJDateTime(value);
+		JDateTime now = Converter.get().toJDateTime(value);
 		return now.isAfter(then);
 	}
 }

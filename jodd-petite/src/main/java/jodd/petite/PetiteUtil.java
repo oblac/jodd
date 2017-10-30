@@ -27,7 +27,7 @@ package jodd.petite;
 
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.scope.Scope;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Constructor;
@@ -88,7 +88,7 @@ public class PetiteUtil {
 			return null;
 		}
 
-		String[] refNames = Convert.toStringArray(value);
+		String[] refNames = Converter.get().toStringArray(value);
 
 		// convert to double str array
 		String[][] references = new String[refNames.length][];

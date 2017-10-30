@@ -25,6 +25,7 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.datetime.JDateTime;
 
 import java.math.BigDecimal;
@@ -32,9 +33,17 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ConvertBean {
+/**
+ * Simple and fast and direct conversion.
+ */
+public class Converter {
 
-
+	/**
+	 * Returns default instance.
+	 */
+	public static Converter get() {
+		return JoddBean.runtime().converter();
+	}
 
 	/**
 	 * List of common types. Used for faster lookup and when needed to be used

@@ -90,7 +90,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	}
 
 	/**
-	 * Convert to collection.
+	 * Converter to collection.
 	 */
 	protected Object convertToCollection(Object value, Class destinationType, Class componentType) {
 		return typeConverterManager.convertToCollection(value, destinationType, componentType);

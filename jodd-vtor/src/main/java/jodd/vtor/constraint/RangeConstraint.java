@@ -25,7 +25,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -62,6 +62,7 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 
 	// ---------------------------------------------------------------- configure
 
+	@Override
 	public void configure(Range annotation) {
 		this.min = annotation.min();
 		this.max = annotation.max();
@@ -69,6 +70,7 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 
 	// ---------------------------------------------------------------- valid
 
+	@Override
 	public boolean isValid(ValidationConstraintContext vcc, Object value) {
 		return validate(value, min, max);
 	}
@@ -77,7 +79,7 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 		if (value == null) {
 			return true;
 		}
-		double val = Convert.toDoubleValue(value);
+		double val = Converter.get().toDoubleValue(value);
 		return val >= min && val <= max;
 	}
 

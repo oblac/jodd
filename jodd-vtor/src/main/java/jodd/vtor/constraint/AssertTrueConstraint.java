@@ -25,7 +25,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -33,17 +33,19 @@ public class AssertTrueConstraint implements ValidationConstraint<AssertTrue>  {
 
 	// ---------------------------------------------------------------- configure
 
+	@Override
 	public void configure(AssertTrue annotation) {
 	}
 
 	// ---------------------------------------------------------------- valid
 
+	@Override
 	public boolean isValid(ValidationConstraintContext vcc, Object value) {
 		return validate(value);
 	}
 
 	public static boolean validate(Object value) {
-		return Convert.toBooleanValue(value, true);
+		return Converter.get().toBooleanValue(value, true);
 	}
 
 }

@@ -25,7 +25,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -53,12 +53,14 @@ public class MinConstraint implements ValidationConstraint<Min> {
 
 	// ---------------------------------------------------------------- configure
 
+	@Override
 	public void configure(Min annotation) {
 		this.min = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
+	@Override
 	public boolean isValid(ValidationConstraintContext vcc, Object value) {
 		return validate(value, min);
 	}
@@ -67,7 +69,7 @@ public class MinConstraint implements ValidationConstraint<Min> {
 		if (value == null) {
 			return true;
 		}
-		double val = Convert.toDoubleValue(value);
+		double val = Converter.get().toDoubleValue(value);
 		return val > min;
 	}
 }

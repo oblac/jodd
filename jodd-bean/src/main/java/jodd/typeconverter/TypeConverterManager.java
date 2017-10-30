@@ -104,12 +104,12 @@ public class TypeConverterManager {
 	}
 
 	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);
-	private final ConvertBean convertBean;
+	private final Converter converter;
 
 	// ---------------------------------------------------------------- methods
 
-	public TypeConverterManager(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	public TypeConverterManager(Converter converter) {
+		this.converter = converter;
 		registerDefaults();
 	}
 
@@ -257,7 +257,7 @@ public class TypeConverterManager {
 	 * @param typeConverter	converter for provided class
 	 */
 	public void register(Class type, TypeConverter typeConverter) {
-		convertBean.register(type, typeConverter);
+		converter.register(type, typeConverter);
 		converters.put(type, typeConverter);
 	}
 
@@ -265,7 +265,7 @@ public class TypeConverterManager {
 	 * Un-registers converter for given type.
 	 */
 	public void unregister(Class type) {
-		convertBean.register(type, null);
+		converter.register(type, null);
 		converters.remove(type);
 	}
 
@@ -281,14 +281,14 @@ public class TypeConverterManager {
 		return converters.get(type);
 	}
 
-	// ---------------------------------------------------------------- convert
+	// ---------------------------------------------------------------- converter
 
 	/**
 	 * Converts an object to destination type. If type is registered, it's
 	 * {@link TypeConverter} will be used. If not, it scans of destination is
 	 * an array or enum, as those two cases are handled in a special way.
 	 * <p>
-	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert}
+	 * If destination type is one of common types, consider using {@link Converter}
 	 * instead for somewhat faster approach (no lookup).
 	 */
 	@SuppressWarnings({"unchecked"})

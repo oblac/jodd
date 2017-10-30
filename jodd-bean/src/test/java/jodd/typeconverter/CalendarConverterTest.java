@@ -99,6 +99,6 @@ class CalendarConverterTest {
 		CalendarConverter calendarConverter = new CalendarConverter();
 		Calendar gc = calendarConverter.convert(jdt);
 		DateFormat df = new SimpleDateFormat();
-		assertEquals(df.format(gc.getTime()), df.format(Convert.toDate(jdt)));
+		assertEquals(df.format(gc.getTime()), df.format(Converter.get().toDate(jdt)));
 	}
 }

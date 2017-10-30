@@ -26,7 +26,7 @@
 package jodd.db;
 
 import jodd.db.type.SqlType;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.PreparedStatement;
@@ -104,22 +104,22 @@ public class DbUtil {
 			case Types.VARCHAR:
 			case Types.LONGVARCHAR:
 			case Types.CHAR:
-				preparedStatement.setString(index, Convert.toString(value));
+				preparedStatement.setString(index, Converter.get().toString(value));
 				break;
 
 			case Types.INTEGER:
 			case Types.SMALLINT:
 			case Types.TINYINT:
-				preparedStatement.setInt(index, Convert.toIntValue(value));
+				preparedStatement.setInt(index, Converter.get().toIntValue(value));
 				break;
 
 			case Types.BIGINT:
-				preparedStatement.setLong(index, Convert.toLongValue(value));
+				preparedStatement.setLong(index, Converter.get().toLongValue(value));
 				break;
 
 			case Types.BOOLEAN:
 			case Types.BIT:
-				preparedStatement.setBoolean(index, Convert.toBooleanValue(value));
+				preparedStatement.setBoolean(index, Converter.get().toBooleanValue(value));
 				break;
 
 			case Types.DATE:
@@ -128,16 +128,16 @@ public class DbUtil {
 
 			case Types.NUMERIC:
 			case Types.DECIMAL:
-				preparedStatement.setBigDecimal(index, Convert.toBigDecimal(value));
+				preparedStatement.setBigDecimal(index, Converter.get().toBigDecimal(value));
 				break;
 
 			case Types.DOUBLE:
-				preparedStatement.setDouble(index, Convert.toDoubleValue(value));
+				preparedStatement.setDouble(index, Converter.get().toDoubleValue(value));
 				break;
 
 			case Types.REAL:
 			case Types.FLOAT:
-				preparedStatement.setFloat(index, Convert.toFloatValue(value));
+				preparedStatement.setFloat(index, Converter.get().toFloatValue(value));
 			    break;
 
 			case Types.TIME:
