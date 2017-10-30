@@ -536,6 +536,21 @@ class JSONDeserializerTest {
 		assertEquals("Modesty", jsonP[2].getFirstname());
 	}
 
+	@Test
+	void testArray_boolean() {
+		final boolean[] input = new boolean[] {true,false,true};
+		final boolean[] expected_bools = input;
+		final String expected_json = "[true,false,true]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+		final boolean[] actual_bools = new JsonParser().parse(actual_json, boolean[].class);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertNotNull(actual_bools);
+		assertEquals(expected_json, actual_json);
+		assertArrayEquals(expected_bools, actual_bools);
+	}
 
 	@Test
 	void testDeserializationIntoPublicFields() {
