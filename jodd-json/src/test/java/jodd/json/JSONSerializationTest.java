@@ -34,10 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -672,6 +669,20 @@ class JSONSerializationTest {
 		assertEquals("{\"name\":\"Lucy\"}", json);
 	}
 
+	@Test
+	void testSerializeCalendar() throws Exception {
+		final Calendar input = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"), Locale.GERMANY);
+		input.clear();
+		input.setTimeInMillis(1512166354000L);
+
+		final String expected_json = "1512166354000";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
 
 	// ---------------------------------------------------------------- custom asserts
 
