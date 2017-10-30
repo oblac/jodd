@@ -44,14 +44,14 @@ class DecoraServletFilterInitTest {
 	private DecoraParser decoraParser;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		decoraServletFilter = new DecoraServletFilter();
 		filterConfigMock = mock(FilterConfig.class);
 		decoraParser = null;
 	}
 
 	@Test
-	public final void testInitManagerNullParserNull() throws ServletException {
+	void testInitManagerNullParserNull() throws ServletException {
 		// setup
 		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(null);
@@ -65,7 +65,7 @@ class DecoraServletFilterInitTest {
 	}
 
 	@Test
-	public final void testInitManagerThrowException() throws ServletException {
+	void testInitManagerThrowException() throws ServletException {
 		// setup
 		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn("TEST");
@@ -78,7 +78,7 @@ class DecoraServletFilterInitTest {
 	}
 
 	@Test
-	public final void testInitParserThrowException() throws ServletException {
+	void testInitParserThrowException() throws ServletException {
 		// setup
 		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(null);
@@ -91,7 +91,7 @@ class DecoraServletFilterInitTest {
 	}
 
 	@Test
-	public final void testInitManagerSetted() throws ServletException, ClassNotFoundException {
+	void testInitManagerSetted() throws ServletException, ClassNotFoundException {
 		// setup
 		DecoraManager decoraManager = null;
 		decoraServletFilter.decoraManager = decoraManager;
@@ -106,7 +106,7 @@ class DecoraServletFilterInitTest {
 	}
 
 	@Test
-	public final void testInitParserSetted() throws ServletException, ClassNotFoundException {
+	void testInitParserSetted() throws ServletException, ClassNotFoundException {
 		// setup
 		decoraServletFilter.decoraParser = decoraParser;
 		when(filterConfigMock.getInitParameter(DecoraServletFilter.PARAM_DECORA_MANAGER)).thenReturn(null);

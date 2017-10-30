@@ -37,7 +37,7 @@ class JoySuiteTest {
 	 * Starts Tomcat after the suite.
 	 */
 	@BeforeAll
-	public static void beforeClass() {
+	static void beforeClass() {
 		isSuite = true;
 		startTomcat();
 	}
@@ -46,7 +46,7 @@ class JoySuiteTest {
 	 * Stop Tomcat after the suite.
 	 */
 	@AfterAll
-	public static void afterSuite() {
+	static void afterSuite() {
 		isSuite = false;
 		stopTomcat();
 	}

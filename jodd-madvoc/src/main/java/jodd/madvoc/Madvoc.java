@@ -25,6 +25,8 @@
 
 package jodd.madvoc;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
@@ -35,10 +37,8 @@ import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -124,7 +124,7 @@ public class Madvoc {
 	 */
 	public void configure(FilterConfig filterConfig) {
 		webAppClassName = filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP);
-		paramsFiles = Convert.toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
+		paramsFiles = Converter.get().toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
 		madvocConfiguratorClassName = filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
 	}
 
@@ -133,7 +133,7 @@ public class Madvoc {
 	 */
 	public void configure(ServletContext servletContext) {
 		webAppClassName = servletContext.getInitParameter(PARAM_MADVOC_WEBAPP);
-		paramsFiles = Convert.toStringArray(servletContext.getInitParameter(PARAM_MADVOC_PARAMS));
+		paramsFiles = Converter.get().toStringArray(servletContext.getInitParameter(PARAM_MADVOC_PARAMS));
 		madvocConfiguratorClassName = servletContext.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
 	}
 
@@ -316,13 +316,13 @@ public class Madvoc {
 	 */
 	protected Props loadMadvocParams(String[] patterns) {
 		if (log.isInfoEnabled()) {
-			log.info("Loading Madvoc parameters from: " + Convert.toString(patterns));
+			log.info("Loading Madvoc parameters from: " + Converter.get().toString(patterns));
 		}
 		try {
 			return PropsUtil.createFromClasspath(patterns);
 		} catch (Exception ex) {
 			throw new MadvocException("Unable to load Madvoc parameters from: " +
-					Convert.toString(patterns) + ".properties': " + ex.toString(), ex);
+					Converter.get().toString(patterns) + ".properties': " + ex.toString(), ex);
 		}
 	}
 

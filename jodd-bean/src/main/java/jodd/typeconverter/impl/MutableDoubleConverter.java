@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableDouble;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Converts given object to {@link MutableDouble}.
@@ -37,10 +37,11 @@ public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 	protected final TypeConverter<Double> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableDoubleConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverter = typeConverterManagerBean.lookup(Double.class);
+	public MutableDoubleConverter(TypeConverterManager typeConverterManager) {
+		typeConverter = typeConverterManager.lookup(Double.class);
 	}
 
+	@Override
 	public MutableDouble convert(Object value) {
 		if (value == null) {
 			return null;

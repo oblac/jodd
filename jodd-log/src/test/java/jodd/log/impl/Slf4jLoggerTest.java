@@ -40,7 +40,7 @@ class Slf4jLoggerTest extends LoggerTestBase {
 	private org.slf4j.Logger log;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		log = mock(org.slf4j.Logger.class);
 		logger = new Slf4jLogger(log);
 	}

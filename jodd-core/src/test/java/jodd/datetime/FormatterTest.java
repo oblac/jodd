@@ -43,13 +43,13 @@ class FormatterTest {
 	Locale originalLocale;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		originalLocale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
 	@AfterEach
-	public void tearDown() throws Exception {
+	void tearDown() throws Exception {
 		Locale.setDefault(originalLocale);
 	}
 

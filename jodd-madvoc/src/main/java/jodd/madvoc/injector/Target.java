@@ -130,7 +130,7 @@ public class Target {
 			int dotNdx = propertyName.indexOf('.');
 
 			if (dotNdx == -1) {
-				value = TypeConverterManager.convertType(propertyValue, type);
+				value = TypeConverterManager.get().convertType(propertyValue, type);
 				return;
 			}
 

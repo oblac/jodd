@@ -25,14 +25,14 @@
 
 package jodd.servlet.tag;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Iterator tag for iterating collections.
@@ -122,7 +122,7 @@ public class IteratorTag extends SimpleTagSupport {
 		} else if (items.getClass().isArray()) {
 			iterateArray((Object[]) items, from, count, pageContext);
 		} else if (items instanceof String) {
-			iterateArray(Convert.toStringArray(items), from, count, pageContext);
+			iterateArray(Converter.get().toStringArray(items), from, count, pageContext);
 		} else {
 			throw new JspException("Provided items are not iterable");
 		}

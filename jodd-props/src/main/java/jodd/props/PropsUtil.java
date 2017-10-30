@@ -48,7 +48,7 @@ public class PropsUtil {
 		final ClassScanner scanner = new ClassScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
-				String encoding = JoddCore.encoding;
+				String encoding = JoddCore.defaults().getEncoding();
 				if (StringUtil.endsWithIgnoreCase(entryData.getName(), ".properties")) {
 					encoding = StringPool.ISO_8859_1;
 				}

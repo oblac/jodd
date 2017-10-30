@@ -28,8 +28,8 @@ package jodd.petite.proxy;
 import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
-import jodd.petite.proxy.example1.ExternalBean;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
+import jodd.petite.proxy.example1.ExternalBean;
 import jodd.proxetta.impl.ProxyProxetta;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ class MixedScope343Test {
 	private PetiteContainer petiteContainer;
 
 	@BeforeEach
-	public void setupPetiteContainer() {
+	void setupPetiteContainer() {
 		PetiteConfig petiteConfig = PetiteHelper.createPetiteConfig();
 
 		ProxyProxetta proxyProxetta = PetiteHelper.createProxyProxetta();
@@ -57,7 +57,7 @@ class MixedScope343Test {
 	}
 
 	@AfterEach
-	public void teardownPetiteContainer() {
+	void teardownPetiteContainer() {
 		petiteContainer.shutdown();
 	}
 
@@ -65,13 +65,13 @@ class MixedScope343Test {
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
 	@BeforeEach
-	public void setUpStreams() {
+	void setUpStreams() {
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
 	}
 
 	@AfterEach
-	public void cleanUpStreams() {
+	void cleanUpStreams() {
 		System.setOut(null);
 		System.setErr(null);
 	}

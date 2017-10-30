@@ -25,7 +25,8 @@
 
 package jodd.db.servers;
 
-import jodd.db.oom.DbOomManager;
+import jodd.db.JoddDb;
+import jodd.db.oom.DbEntityManager;
 
 /**
  * Postgres.
@@ -39,9 +40,9 @@ public class PostgreSqlDbServer implements DbServer {
 	}
 
 	@Override
-	public void accept(DbOomManager dbOomManager) {
-		dbOomManager.getTableNames().setLowercase(true);
-		dbOomManager.getColumnNames().setLowercase(true);
+	public void accept(DbEntityManager dbEntityManager) {
+		JoddDb.defaults().getDbOomConfig().getTableNames().setLowercase(true);
+		JoddDb.defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}
 
 	@Override

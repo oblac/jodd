@@ -48,5 +48,8 @@ class FooTest {
 ## Architecture
 
 + Interfaces may contain static factories (see `Value.of()`).
-+ Common sense is assumed. Jodd does not handle all possible misusages of the API. For example, we will not check for `null` and then throw custom exception.
-+ `null` usage should be generally avoided. 
++ Common sense is assumed. Jodd does not handle all possible misusages of the API. For example, we will not check for `null` and then throw custom exception when it is obvious that methods should accept non-null value.
++ `null` usage should be generally avoided.
++ Jodd module may have `defaults()` static method that returns default configuration of the module. Try to minimise usage of this static call - rather get a value and pass it as an argument, then to fetch the value twice.
+Default configuration is a bean. Configuration can be split in multiple beans.  
++ Jodd module may have `runtime()` static methods that returns set of runtime components - parts of the module that represents some logic. Runtime is not a bean, but has methods to get and set the components. 

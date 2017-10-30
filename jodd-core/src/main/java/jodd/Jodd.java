@@ -31,14 +31,12 @@ package jodd;
  * In some environments such OSGI, however, classloader lookup does not work.
  * Then you need to manually initialize all Jodd components that are in use.
  * <p>
- * Each module must have the following code blocK at the bottom of the class:
+ * Each module must have the following code blocK at the <b>bottom</b> of the class:
  * <pre>{@code
  * static {
- *     init();
- * }
- * public static void init() {
  *     Jodd.initModule();
  * }
+ * public static void init() {}
  * }</pre>
  *
  * <h2>How Jodd module gets loaded and initialized?</h2>
@@ -77,7 +75,6 @@ public class Jodd {
 		DECORA,
 		HTTP,
 		HTML_STAPLER,
-		INTROSPECTOR,
 		JSON,
 		JTX,
 		LAGARTO,

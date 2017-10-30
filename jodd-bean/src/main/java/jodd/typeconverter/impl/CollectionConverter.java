@@ -28,7 +28,6 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.CsvUtil;
 
 import java.lang.reflect.Constructor;
@@ -43,26 +42,27 @@ import java.util.Set;
  */
 public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 	protected final Class<? extends Collection> collectionType;
 	protected final Class<T> targetComponentType;
 
 	public CollectionConverter(
 			Class<? extends Collection> collectionType,
 			Class<T> targetComponentType) {
-		this(TypeConverterManager.getDefaultTypeConverterManager(), collectionType, targetComponentType);
+		this(TypeConverterManager.get(), collectionType, targetComponentType);
 	}
 
 	public CollectionConverter(
-			TypeConverterManagerBean typeConverterManagerBean,
+			TypeConverterManager typeConverterManager,
 			Class<? extends Collection> collectionType,
 			Class<T> targetComponentType) {
 
-		this.typeConverterManagerBean = typeConverterManagerBean;
+		this.typeConverterManager = typeConverterManager;
 		this.collectionType = collectionType;
 		this.targetComponentType = targetComponentType;
 	}
 
+	@Override
 	public Collection<T> convert(Object value) {
 		if (value == null) {
 			return null;
@@ -81,7 +81,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * Converts type using type converter manager.
 	 */
 	protected T convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, targetComponentType);
+		return typeConverterManager.convertType(value, targetComponentType);
 	}
 
 	/**

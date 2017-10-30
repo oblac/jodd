@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,12 +38,13 @@ import java.util.List;
  */
 public class CharacterArrayConverter implements TypeConverter<char[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public CharacterArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public CharacterArrayConverter(TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
+	@Override
 	public char[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -64,7 +65,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected char convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, char.class).charValue();
+		return typeConverterManager.convertType(value, char.class).charValue();
 	}
 
 	/**

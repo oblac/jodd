@@ -25,68 +25,10 @@
 
 package jodd.db;
 
-import jodd.db.connection.ConnectionProvider;
-import jodd.db.querymap.QueryMap;
-
 /**
- * Db manager. Holds default Db configuration.
+ * Default configuration of a query.
  */
-@SuppressWarnings("RedundantFieldInitialization")
-public class DbManager {
-
-	// ---------------------------------------------------------------- singleton
-
-	private static DbManager dbManager = new DbManager();
-
-	/**
-	 * Returns instance of DbManager.
-	 */
-	public static DbManager getInstance() {
-		return dbManager;
-	}
-
-	/**
-	 * Sets the DbManager instance.
-	 */
-	public static void setInstance(DbManager manager) {
-		dbManager = manager;
-	}
-
-	/**
-	 * Resets all settings to default by creating a new DbManager instance.
-	 */
-	public static void resetAll() {
-		dbManager = new DbManager();
-	}
-
-	// ---------------------------------------------------------------- providers
-
-	protected ConnectionProvider connectionProvider = null;
-	protected DbSessionProvider sessionProvider = new ThreadDbSessionProvider();
-
-	public ConnectionProvider getConnectionProvider() {
-		return connectionProvider;
-	}
-
-	/**
-	 * Sets connection provider.
-	 */
-	public void setConnectionProvider(ConnectionProvider connectionProvider) {
-		this.connectionProvider = connectionProvider;
-	}
-
-	public DbSessionProvider getSessionProvider() {
-		return sessionProvider;
-	}
-
-	/**
-	 * Sets default session provider.
-	 */
-	public void setSessionProvider(DbSessionProvider sessionProvider) {
-		this.sessionProvider = sessionProvider;
-	}
-
-	// ---------------------------------------------------------------- query
+public class DbQueryConfig {
 
 	protected boolean forcePreparedStatement = false;
 	protected int type = DbQuery.TYPE_FORWARD_ONLY;
@@ -169,45 +111,4 @@ public class DbManager {
 		this.maxRows = maxRows;
 	}
 
-	// ---------------------------------------------------------------- debug
-
-	protected boolean debug = false;
-
-	public boolean isDebug() {
-		return debug;
-	}
-
-	/**
-	 * Enables debug mode.
-	 */
-	public void setDebug(boolean debug) {
-		this.debug = debug;
-	}
-
-	// ---------------------------------------------------------------- tx
-
-	protected DbTransactionMode transactionMode = new DbTransactionMode();
-
-	public DbTransactionMode getTransactionMode() {
-		return transactionMode;
-	}
-
-	public void setTransactionMode(DbTransactionMode transactionMode) {
-		this.transactionMode = transactionMode;
-	}
-
-	// ---------------------------------------------------------------- sql map
-
-	protected QueryMap queryMap;
-
-	/**
-	 * Returns {@link jodd.db.querymap.QueryMap} instance. May be <code>null</code>.
-	 */
-	public QueryMap getQueryMap() {
-		return queryMap;
-	}
-
-	public void setQueryMap(QueryMap queryMap) {
-		this.queryMap = queryMap;
-	}
 }

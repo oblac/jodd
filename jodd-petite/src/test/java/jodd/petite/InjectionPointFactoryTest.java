@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class InjectionPointFactoryTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		ipf = new InjectionPointFactory(new PetiteConfig());
 	}
 

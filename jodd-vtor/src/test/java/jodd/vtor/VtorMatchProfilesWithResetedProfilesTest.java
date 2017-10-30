@@ -35,7 +35,7 @@ class VtorMatchProfilesWithResetedProfilesTest {
     private Vtor vtor;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         //given
         vtor = new Vtor();
         vtor.resetProfiles();

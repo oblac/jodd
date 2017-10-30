@@ -26,11 +26,18 @@
 package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.fixtures.Boo;
+import jodd.db.oom.fixtures.BooSqlType;
+import jodd.db.oom.fixtures.Foo;
+import jodd.db.oom.fixtures.FooColor;
+import jodd.db.oom.fixtures.FooWeight;
+import jodd.db.oom.fixtures.FooWeigthSqlType;
 import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.db.oom.fixtures.*;
 import jodd.db.type.SqlTypeManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,10 +51,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MappingTest extends DbHsqldbTestCase {
 
+	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
-		DbOomManager.resetAll();
+
+		DbTestUtil.resetAll();
 	}
 
 	@Test
@@ -78,7 +87,8 @@ class MappingTest extends DbHsqldbTestCase {
 		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', '2010-01-20 01:02:03.4444', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
 		executeUpdate(session, sql);
 
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
+
 		dbOom.registerEntity(Foo.class);
 		SqlTypeManager.register(Boo.class, BooSqlType.class);
 		SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);

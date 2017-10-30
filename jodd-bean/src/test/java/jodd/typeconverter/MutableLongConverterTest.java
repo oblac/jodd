@@ -25,17 +25,21 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.mutable.MutableLong;
 import jodd.typeconverter.impl.MutableLongConverter;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class MutableLongConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableLongConverter mutableLongConverter = (MutableLongConverter) TypeConverterManager.lookup(MutableLong.class);
+		MutableLongConverter mutableLongConverter =
+			(MutableLongConverter) JoddBean.runtime().typeConverterManager().lookup(MutableLong.class);
 
 		assertNull(mutableLongConverter.convert(null));
 

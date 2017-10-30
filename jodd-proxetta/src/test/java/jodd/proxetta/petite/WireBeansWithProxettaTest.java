@@ -43,7 +43,7 @@ class WireBeansWithProxettaTest {
     private PetiteContainer petiteContainer;
 
     @BeforeEach
-    public void setupPetiteContainer() {
+    void setupPetiteContainer() {
         PetiteConfig petiteConfig = PetiteHelper.createPetiteConfig();
 
         ProxyProxetta proxyProxetta = PetiteHelper.createProxyProxetta();

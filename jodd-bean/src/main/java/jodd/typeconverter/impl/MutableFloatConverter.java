@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableFloat;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Converts given object to {@link MutableFloat}.
@@ -37,10 +37,11 @@ public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 	protected final TypeConverter<Float> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableFloatConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverter = typeConverterManagerBean.lookup(Float.class);
+	public MutableFloatConverter(TypeConverterManager typeConverterManager) {
+		typeConverter = typeConverterManager.lookup(Float.class);
 	}
 
+	@Override
 	public MutableFloat convert(Object value) {
 		if (value == null) {
 			return null;

@@ -51,7 +51,7 @@ public class EmailMessage {
 	public EmailMessage(String content, String mimeType) {
 		this.content = content;
 		this.mimeType = mimeType;
-		this.encoding = JoddCore.encoding;
+		this.encoding = JoddCore.defaults().getEncoding();
 	}
 
 	// ---------------------------------------------------------------- getters

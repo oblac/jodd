@@ -166,14 +166,6 @@ class FileUtilTest {
 			fail(ioex.toString());
 		}
 
-		// don't overwrite
-		try {
-			FileUtil.copyFileToDir(root + "a.txt", tmp, FileUtil.params().setOverwrite(false));
-			fail("copy file don't overwrite");
-		} catch (IOException e) {
-			// ignore
-		}
-
 		// move
 		try {
 			FileUtil.moveFile(root + "w.txt", tmp + "w.txt");
@@ -181,14 +173,6 @@ class FileUtilTest {
 		} catch (IOException ioex) {
 			fail(ioex.toString());
 		}
-
-		try {
-			FileUtil.moveFileToDir(root + "w.png", tmp, FileUtil.cloneParams().setOverwrite(false));
-			fail("move file don't overwrite");
-		} catch (IOException e) {
-			// ignore
-		}
-
 
 		// delete
 

@@ -26,9 +26,7 @@
 package jodd.servlet.filter;
 
 import jodd.core.JoddCore;
-import jodd.typeconverter.Convert;
-
-import java.io.IOException;
+import jodd.typeconverter.Converter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,6 +34,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.io.IOException;
 
 
 /**
@@ -88,6 +87,7 @@ public class CharacterEncodingFilter implements Filter {
 	/**
 	 * Take this filter out of service.
 	 */
+	@Override
 	public void destroy() {
 		this.encoding = null;
 		this.filterConfig = null;
@@ -107,6 +107,7 @@ public class CharacterEncodingFilter implements Filter {
 	 * @exception ServletException
 	 *                   if a servlet error occurs
 	 */
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		// Conditionally select and set the character encoding to be used
@@ -125,14 +126,15 @@ public class CharacterEncodingFilter implements Filter {
 	 *
 	 * @param filterConfig The filter configuration object
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 
 		this.filterConfig = filterConfig;
 		this.encoding = filterConfig.getInitParameter("encoding");
 		if (this.encoding == null) {
-			this.encoding = JoddCore.encoding;
+			this.encoding = JoddCore.defaults().getEncoding();
 		}
-		this.ignore = Convert.toBooleanValue(filterConfig.getInitParameter("ignore"), true);
+		this.ignore = Converter.get().toBooleanValue(filterConfig.getInitParameter("ignore"), true);
 	}
 
 	/**

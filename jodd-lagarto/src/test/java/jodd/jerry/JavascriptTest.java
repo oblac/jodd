@@ -39,7 +39,7 @@ class JavascriptTest {
 	private ScriptEngine scriptEngine;
 
 	@BeforeEach
-	public void setUp() throws ScriptException {
+	void setUp() throws ScriptException {
 		ScriptEngineManager factory = new ScriptEngineManager();
 
 		scriptEngine = factory.getEngineByName("javascript");

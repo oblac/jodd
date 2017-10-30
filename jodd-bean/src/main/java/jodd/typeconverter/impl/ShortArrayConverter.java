@@ -26,7 +26,7 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
@@ -38,12 +38,13 @@ import java.util.List;
  */
 public class ShortArrayConverter implements TypeConverter<short[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public ShortArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public ShortArrayConverter(TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
+	@Override
 	public short[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -64,7 +65,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected short convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, short.class).shortValue();
+		return typeConverterManager.convertType(value, short.class).shortValue();
 	}
 
 	/**

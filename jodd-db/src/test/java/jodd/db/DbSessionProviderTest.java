@@ -25,24 +25,41 @@
 
 package jodd.db;
 
+import jodd.db.connection.ConnectionProvider;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbSessionProviderTest extends DbHsqldbTestCase {
 
+	DbSessionProvider sessionProvider;
+	ConnectionProvider connectionProvider;
+
+	@BeforeEach
+	void setup() {
+		sessionProvider = JoddDb.runtime().sessionProvider();
+		connectionProvider = JoddDb.runtime().connectionProvider();
+	}
+
+	@Override
 	@AfterEach
-	public void tearDown() {
-		DbManager.resetAll();
+	protected void tearDown() {
+		JoddDb.runtime().sessionProvider(sessionProvider);
+		JoddDb.runtime().connectionProvider(connectionProvider);
 	}
 
 	@Test
 	void testThreadSessionProvider() {
 		// set connection provider and thread session manager
-		DbManager.getInstance().setConnectionProvider(cp);
-		DbManager.getInstance().setSessionProvider(new ThreadDbSessionProvider());
+		JoddDb.runtime().connectionProvider(cp);
+		JoddDb.runtime().sessionProvider(new ThreadDbSessionProvider());
 
 		for (int i = 0; i < 2; i++) {
 			// create thread session

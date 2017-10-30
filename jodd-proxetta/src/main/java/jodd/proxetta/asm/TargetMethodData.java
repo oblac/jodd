@@ -25,7 +25,7 @@
 
 package jodd.proxetta.asm;
 
-import static jodd.proxetta.JoddProxetta.methodDivider;
+import jodd.proxetta.JoddProxetta;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ final class TargetMethodData {
 	// ---------------------------------------------------------------- method names
 
 	private String methodName(int index) {
-		return methodName + methodDivider + proxyData[index].aspectIndex;
+		return methodName + JoddProxetta.defaults().getMethodDivider() + proxyData[index].aspectIndex;
 	}
 
 	/**

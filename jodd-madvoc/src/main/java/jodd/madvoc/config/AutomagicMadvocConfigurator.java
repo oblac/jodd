@@ -29,20 +29,20 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.io.findfile.ClassFinder;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
+import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
-import jodd.petite.meta.PetiteInject;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -84,6 +84,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	 * Configures web application from system classpath
 	 * @see #configure(java.io.File[])
 	 */
+	@Override
 	public void configure() {
 		configure(ClassLoaderUtil.getDefaultClasspath());
 	}
@@ -197,7 +198,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 			return;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
 		MethodDescriptor[] allMethodDescriptors = cd.getAllMethodDescriptors();
 		for (MethodDescriptor methodDescriptor : allMethodDescriptors) {

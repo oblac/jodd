@@ -32,14 +32,21 @@ import jodd.Jodd;
  */
 public class JoddDb {
 
-	// ---------------------------------------------------------------- module
+	private static JoddDbDefaults defaults = new JoddDbDefaults();
+	private static JoddDbRuntime runtime = new JoddDbRuntime();
+
+	public static JoddDbDefaults defaults() {
+		return defaults;
+	}
+
+	public static JoddDbRuntime runtime() {
+		return runtime;
+	}
 
 	static {
-		init();
-	}
-
-	public static void init() {
 		Jodd.initModule();
 	}
+
+	public static void init() {}
 
 }

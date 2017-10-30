@@ -38,7 +38,7 @@ public class ProxyProxetta extends Proxetta<ProxyProxetta> {
 
 	public ProxyProxetta(ProxyAspect... aspects) {
 		this.aspects = aspects;
-		classNameSuffix = JoddProxetta.proxyClassNameSuffix;
+		classNameSuffix = JoddProxetta.defaults().getProxyClassNameSuffix();
 	}
 
 	/**

@@ -37,13 +37,15 @@ import java.util.Properties;
 
 import static jodd.props.PropertiesToPropsTestHelper.assertEqualsToPropsFile;
 import static jodd.props.PropertiesToPropsTestHelper.safelyWritePropertiesToProps;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class PropsUtilTest {
 
 	private static final String PROPSUTIL_CONVERT_PATH = "propsutil/convert";
 
 	@Test
-	public void canUseBufferedWriterToWriteBasePropertiesToProps() throws IOException, URISyntaxException {
+	void testCanUseBufferedWriterToWriteBasePropertiesToProps() throws IOException, URISyntaxException {
 		final Properties properties = new Properties();
 		properties.setProperty("myOneProperty", "and it's value");
 
@@ -54,24 +56,22 @@ class PropsUtilTest {
 		final String expectedResourceFileName = getResourcePath("/singleProperty.props");
 		final String actual = stringWriter.toString();
 
-//        assertEqualProps(actual, expectedResourceFileName);
 		assertEqualsToPropsFile(actual, expectedResourceFileName);
 	}
 
 	@Test
-	public void canWriteBasePropertiesToProps() throws IOException, URISyntaxException {
+	void testCanWriteBasePropertiesToProps() throws IOException, URISyntaxException {
 		final Properties properties = new Properties();
 		properties.setProperty("myOneProperty", "and it's value");
 
 		final String actual = safelyWritePropertiesToProps(properties);
 		final String expectedResourceFileName = getResourcePath("singleProperty.props");
 
-//        assertEqualProps(actual, expectedResourceFileName);
 		assertEqualsToPropsFile(actual, expectedResourceFileName);
 	}
 
 	@Test
-	public void canWriteBaseWithProfilePropertiesToProps() throws IOException, URISyntaxException {
+	void testCanWriteBaseWithProfilePropertiesToProps() throws IOException, URISyntaxException {
 		final Properties baseProperties = new Properties();
 		baseProperties.setProperty("myOneProperty", "and it's value");
 
@@ -86,12 +86,11 @@ class PropsUtilTest {
 		final String actual = safelyWritePropertiesToProps(baseProperties, profiles);
 		final String expectedResourceFileName = getResourcePath("oneProfile.props");
 
-//        assertEqualProps(actual, expectedResourceFileName);
 		assertEqualsToPropsFile(actual, expectedResourceFileName);
 	}
 
 	@Test
-	public void canWriteBaseWithTwoProfilePropertiesToProps() throws IOException, URISyntaxException {
+	void testCanWriteBaseWithTwoProfilePropertiesToProps() throws IOException, URISyntaxException {
 		final Properties baseProperties = new Properties();
 		baseProperties.setProperty("myOneProperty", "and it's value");
 
@@ -115,7 +114,7 @@ class PropsUtilTest {
 	}
 
 	@Test
-	public void canWriteMoreProfileThanBasePropertiesToProps() throws IOException, URISyntaxException {
+	void testCanWriteMoreProfileThanBasePropertiesToProps() throws IOException, URISyntaxException {
 		final Properties baseProperties = new Properties();
 		baseProperties.setProperty("myOneProperty", "and it's value");
 
@@ -134,33 +133,56 @@ class PropsUtilTest {
 		final String actual = safelyWritePropertiesToProps(baseProperties, profiles);
 		final String expectedResourceFileName = getResourcePath("moreProfilePropertiesThanBase.props");
 
-//        assertEqualProps(actual, expectedResourceFileName);
 		assertEqualsToPropsFile(actual, expectedResourceFileName);
 	}
 
 	@Test
-	public void canWriteMultilineValuesToProps() throws IOException, URISyntaxException {
+	void testCanWriteMultilineValuesToProps() throws IOException, URISyntaxException {
 		final Properties baseProperties = new Properties();
 		baseProperties.setProperty("myOneProperty", "long value\\\nin two lines");
 
 		final String actual = safelyWritePropertiesToProps(baseProperties);
 		final String expectedResourceFileName = getResourcePath("multilineValue.props");
 
-//        assertEqualProps(actual, expectedResourceFileName);
 		assertEqualsToPropsFile(actual, expectedResourceFileName);
 	}
 
 	@Test
-	public void canWriteUtf8ValuesToProps() throws IOException, URISyntaxException {
+	void testCanWriteUtf8ValuesToProps() throws IOException, URISyntaxException {
 		final Properties baseProperties = new Properties();
 		baseProperties.setProperty("myOneProperty", "some utf8 \\u0161\\u0111\\u017e\\u010d\\u0107");
 
 		final String actual = safelyWritePropertiesToProps(baseProperties);
 		final String expectedResourceFileName = getResourcePath("utf8Value.props");
 
-//        assertEqualProps(actual, expectedResourceFileName);
 		assertEqualsToPropsFile(actual, expectedResourceFileName);
 	}
+
+	@Test
+	void testCreateFromClasspath_WithExistingFileThroughPattern() throws Exception {
+
+		final Props actual = PropsUtil.createFromClasspath("*jodd/props/data/test.properties");
+
+		// asserts
+		assertNotNull(actual);
+		assertEquals(3, actual.countTotalProperties());
+		assertEquals("value", actual.getValue("one"));
+		assertEquals("long valuein two lines", actual.getValue("two"));
+		assertEquals("some utf8 šđžčć", actual.getValue("three"));
+
+	}
+
+	@Test
+	void testCreateFromClasspath_WithNotExistingFileThroughPattern() throws Exception {
+
+		final Props actual = PropsUtil.createFromClasspath("*jodd/props/data/test_properties");
+
+		// asserts
+		assertNotNull(actual);
+		assertEquals(0, actual.countTotalProperties());
+		assertEquals(null, actual.getValue("one"));
+	}
+
 
 	private String getResourcePath(final String name) {
 		return PROPSUTIL_CONVERT_PATH + "/" + name;

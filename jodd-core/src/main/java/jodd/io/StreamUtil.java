@@ -25,8 +25,6 @@
 
 package jodd.io;
 
-import static jodd.core.JoddCore.ioBufferSize;
-
 import jodd.core.JoddCore;
 
 import java.io.BufferedInputStream;
@@ -75,6 +73,7 @@ public class StreamUtil {
 	 * to be wrapped to buffered, since copying is already optimized.
 	 */
 	public static int copy(InputStream input, OutputStream output) throws IOException {
+		final int ioBufferSize = JoddCore.defaults().getIoBufferSize();
 		byte[] buffer = new byte[ioBufferSize];
 		int count = 0;
 		int read;
@@ -92,6 +91,7 @@ public class StreamUtil {
 	 * Copies specified number of bytes from input stream to output stream using buffer.
 	 */
 	public static int copy(InputStream input, OutputStream output, int byteCount) throws IOException {
+		final int ioBufferSize = JoddCore.defaults().getIoBufferSize();
 		int bufferSize = (byteCount > ioBufferSize) ? ioBufferSize : byteCount;
 
 		byte[] buffer = new byte[bufferSize];
@@ -119,18 +119,18 @@ public class StreamUtil {
 	/**
 	 * Copies input stream to writer using buffer - using jodds default encoding.
      *
-     * @see JoddCore#encoding
+     * @see jodd.core.JoddCoreDefaults#encoding
 	 */
 	public static void copy(InputStream input, Writer output) throws IOException {
-		copy(input, output, JoddCore.encoding);
+		copy(input, output, JoddCore.defaults().getEncoding());
 	}
 	/**
 	 * Copies specified number of bytes from input stream to writer using buffer - using jodds default encoding.
      *
-     * @see JoddCore#encoding
+     * @see jodd.core.JoddCoreDefaults#encoding
 	 */
 	public static void copy(InputStream input, Writer output, int byteCount) throws IOException {
-		copy(input, output, JoddCore.encoding, byteCount);
+		copy(input, output, JoddCore.defaults().getEncoding(), byteCount);
 	}
 	/**
 	 * Copies input stream to writer using buffer and specified encoding.
@@ -150,6 +150,7 @@ public class StreamUtil {
 	 * Streams don't have to be wrapped to buffered, since copying is already optimized.
 	 */
 	public static int copy(Reader input, Writer output) throws IOException {
+		final int ioBufferSize = JoddCore.defaults().getIoBufferSize();
 		char[] buffer = new char[ioBufferSize];
 		int count = 0;
 		int read;
@@ -164,6 +165,7 @@ public class StreamUtil {
 	 * Copies specified number of characters from reader to writer using buffer.
 	 */
 	public static int copy(Reader input, Writer output, int charCount) throws IOException {
+		final int ioBufferSize = JoddCore.defaults().getIoBufferSize();
 		int bufferSize = (charCount > ioBufferSize) ? ioBufferSize : charCount;
 
 		char[] buffer = new char[bufferSize];
@@ -190,18 +192,18 @@ public class StreamUtil {
 	/**
 	 * Copies reader to output stream using buffer - using jodd default encoding.
 	 *
-	 * @see JoddCore#encoding
+	 * @see jodd.core.JoddCoreDefaults#encoding
 	 */
 	public static void copy(Reader input, OutputStream output) throws IOException {
-		copy(input, output, JoddCore.encoding);
+		copy(input, output, JoddCore.defaults().getEncoding());
 	}
 	/**
 	 * Copies specified number of characters from reader to output stream using buffer - using jodd default encoding.
      *
-     * @see JoddCore#encoding
+     * @see jodd.core.JoddCoreDefaults#encoding
 	 */
 	public static void copy(Reader input, OutputStream output, int charCount) throws IOException {
-		copy(input, output, JoddCore.encoding, charCount);
+		copy(input, output, JoddCore.defaults().getEncoding(), charCount);
 	}
 	/**
 	 * Copies reader to output stream using buffer and specified encoding.

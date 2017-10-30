@@ -37,9 +37,9 @@ import jodd.madvoc.result.Result;
 import jodd.petite.meta.PetiteInject;
 import jodd.typeconverter.TypeConverterManager;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -299,7 +299,7 @@ public class ResultsManager {
 							resultObject = resultValue;
 						}
 						else {
-							resultObject = TypeConverterManager.convertType(resultValue, targetClass);
+							resultObject = TypeConverterManager.get().convertType(resultValue, targetClass);
 						}
 					} catch (Exception ex) {
 						resultObject = resultValue;

@@ -25,10 +25,12 @@
 
 package jodd.db.oom.dao;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
 import jodd.db.ThreadDbSessionHolder;
-import jodd.db.oom.DbOomManager;
+import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.DbEntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,12 +43,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GenericDaoTest extends DbHsqldbTestCase {
 
+	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
+
 		dbOom.registerEntity(Girl.class);
 		dbOom.registerEntity(Boy.class);
 	}

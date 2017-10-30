@@ -25,10 +25,14 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.typeconverter.impl.ShortArrayConverter;
 import org.junit.jupiter.api.Test;
 
-import static jodd.typeconverter.TypeConverterTestHelper.*;
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arro;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -36,7 +40,7 @@ class ShortArrayConverterTest {
 
 	@Test
 	void testConversion() {
-		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) TypeConverterManager.lookup(short[].class);
+		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) JoddBean.runtime().typeConverterManager().lookup(short[].class);
 
 		assertNull(shortArrayConverter.convert(null));
 

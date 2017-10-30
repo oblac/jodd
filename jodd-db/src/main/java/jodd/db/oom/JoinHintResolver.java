@@ -25,18 +25,18 @@
 
 package jodd.db.oom;
 
+import jodd.bean.BeanUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
-import jodd.bean.BeanUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Joins an array of objects using provided hints.
@@ -96,7 +96,7 @@ public class JoinHintResolver {
 				Class hintPropertyType = BeanUtil.pojo.getPropertyType(value, hintPropertyName);
 
 				if (hintPropertyType != null) {
-					ClassDescriptor cd = ClassIntrospector.lookup(hintPropertyType);
+					ClassDescriptor cd = ClassIntrospector.get().lookup(hintPropertyType);
 
 					if (cd.isCollection()) {
 						// add element to collection

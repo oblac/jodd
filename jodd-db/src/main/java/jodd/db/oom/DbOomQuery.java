@@ -28,13 +28,14 @@ package jodd.db.oom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.mapper.DefaultResultSetMapper;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
 import jodd.db.type.SqlType;
-import jodd.util.StringUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.StringUtil;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -45,8 +46,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 import static jodd.db.oom.DbOomUtil.initialCollectionSize;
 
@@ -118,15 +119,6 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- initialization
 
-	protected DbOomManager dbOomManager = DbOomManager.getInstance();
-
-	/**
-	 * Returns used ORM manager.
-	 */
-	public DbOomManager getManager() {
-		return dbOomManager;
-	}
-
 	/**
 	 * Prepares the query after initialization. Besides default work, it checks if sql generator
 	 * is used, and if so, generator hints and query parameters will be used for this query.
@@ -196,9 +188,9 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- join hints
 
-	protected String[] hints;
+	protected final JoinHintResolver hintResolver = JoddDb.runtime().hintResolver();
 
-	protected JoinHintResolver hintResolver = dbOomManager.getHintResolver();
+	protected String[] hints;
 
 	/**
 	 * Specifies hints for the query. Provided string is
@@ -228,11 +220,11 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- result set
 
-	protected boolean cacheEntities = dbOomManager.isCacheEntitiesInResultSet();
+	protected boolean cacheEntities = JoddDb.defaults().getDbOomConfig().isCacheEntitiesInResultSet();
 
 	/**
 	 * Defines if entities should be cached in {@link ResultSetMapper}.
-	 * Overrides default value in {@link DbOomManager}.
+	 * Overrides default value in {@link DbEntityManager}.
 	 */
 	public DbOomQuery cacheEntities(boolean cacheEntities) {
 		this.cacheEntities = cacheEntities;
@@ -259,11 +251,10 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- db list
 
-	protected boolean entityAwareMode = dbOomManager.isEntityAwareMode();
+	protected boolean entityAwareMode = JoddDb.defaults().getDbOomConfig().isEntityAwareMode();
 
 	/**
 	 * Defines entity-aware mode for entities tracking in result collection.
-	 * @see DbOomManager#setEntityAwareMode(boolean)
 	 */
 	public DbOomQuery entityAwareMode(boolean entityAware) {
 		if (entityAware) {

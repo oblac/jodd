@@ -487,11 +487,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- query encoding
 
-	protected String queryEncoding = JoddHttp.defaultQueryEncoding;
+	protected String queryEncoding = JoddHttp.defaults().getQueryEncoding();
 
 	/**
 	 * Defines encoding for query parameters. Default value is
-	 * copied from {@link JoddHttp#defaultQueryEncoding}.
+	 * copied from {@link JoddHttpDefaults#queryEncoding}.
 	 */
 	public HttpRequest queryEncoding(String encoding) {
 		this.queryEncoding = encoding;
@@ -713,12 +713,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * Opens a new {@link HttpConnection connection} using either
-	 * provided or {@link JoddHttp#httpConnectionProvider default} connection
+	 * provided or {@link JoddHttpDefaults#httpConnectionProvider default} connection
 	 * provider.
 	 */
 	public HttpRequest open() {
 		if (httpConnectionProvider == null) {
-			return open(JoddHttp.httpConnectionProvider);
+			return open(JoddHttp.defaults().getHttpConnectionProvider());
 		}
 
 		return open(httpConnectionProvider);
@@ -872,7 +872,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// user-agent
 
 		if (header("User-Agent") == null) {
-			header("User-Agent", JoddHttp.defaultUserAgent);
+			header("User-Agent", JoddHttp.defaults().getUserAgent());
 		}
 
 		// POST method requires Content-Type to be set

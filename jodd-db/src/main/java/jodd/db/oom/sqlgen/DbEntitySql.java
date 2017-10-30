@@ -26,8 +26,8 @@
 package jodd.db.oom.sqlgen;
 
 import jodd.bean.BeanUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOomManager;
 import jodd.util.StringPool;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
@@ -75,7 +75,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder update(Object entity) {
 		String tableRef = createTableRefName(entity);
 
-		if (!DbOomManager.getInstance().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+		if (!JoddDb.defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
 			tableRef = null;
 		}
 
@@ -88,7 +88,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder updateAll(Object entity) {
 		String tableRef = createTableRefName(entity);
 
-		if (!DbOomManager.getInstance().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+		if (!JoddDb.defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
 			tableRef = null;
 		}
 
@@ -101,7 +101,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder updateColumn(Object entity, String columnRef, Object value) {
 		String tableRef = createTableRefName(entity);
 
-		if (!DbOomManager.getInstance().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+		if (!JoddDb.defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
 			tableRef = null;
 		}
 
@@ -216,11 +216,11 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder findForeign(Class entity, Object value) {
 		String tableRef = createTableRefName(entity);
-		DbOomManager dbOomManager = DbOomManager.getInstance();
-		DbEntityDescriptor dedFk = dbOomManager.lookupType(value.getClass());
 
-		String tableName = dbOomManager.getTableNames().convertTableNameToEntityName(dedFk.getTableName());
-		String columnName = dbOomManager.getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());
+		DbEntityDescriptor dedFk = JoddDb.runtime().dbEntityManager().lookupType(value.getClass());
+
+		String tableName = JoddDb.defaults().getDbOomConfig().getTableNames().convertTableNameToEntityName(dedFk.getTableName());
+		String columnName = JoddDb.defaults().getDbOomConfig().getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());
 
 		String fkColumn = uncapitalize(tableName) + capitalize(columnName);
 		Object idValue = BeanUtil.pojo.getProperty(value, dedFk.getIdPropertyName());

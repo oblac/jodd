@@ -26,7 +26,7 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CsvUtil;
 
 import java.lang.reflect.Array;
@@ -50,14 +50,15 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 
 	public static final char[] NUMBER_DELIMITERS = new char[] {',', ';', '\n'};
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 	protected final Class<T> targetComponentType;
 
-	public ArrayConverter(TypeConverterManagerBean typeConverterManagerBean, Class<T> targetComponentType) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public ArrayConverter(TypeConverterManager typeConverterManager, Class<T> targetComponentType) {
+		this.typeConverterManager = typeConverterManager;
 		this.targetComponentType = targetComponentType;
 	}
 
+	@Override
 	public T[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -78,7 +79,7 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected T convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, targetComponentType);
+		return typeConverterManager.convertType(value, targetComponentType);
 	}
 
 	/**

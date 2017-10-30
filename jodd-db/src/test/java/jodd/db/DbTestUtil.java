@@ -23,29 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.introspector;
+package jodd.db;
 
+import jodd.exception.UncheckedException;
 
-/**
- * Provides introspection analysis against any java class.
- * Implementations may cache {@link ClassDescriptor} objects to improve performance.
- * @see CachingIntrospector
- */
-public interface Introspector {
-	/**
-	 * Returns the {@link jodd.introspector.ClassDescriptor} object for specified class.
-	 */
-	ClassDescriptor lookup(Class type);
+import java.lang.reflect.Field;
 
-	/**
-	 * Registers new class type. If type already registered, it will be
-	 * reset and registered again with new class descriptor.
-	 */
-	ClassDescriptor register(Class type);
+public class DbTestUtil {
 
-	/**
-	 * Resets current cache.
-	 */
-	void reset();
+	public static void resetAll() {
+		try {
+			Field defaultsField = JoddDb.class.getDeclaredField("defaults");
+			defaultsField.setAccessible(true);
+			defaultsField.set(null, new JoddDbDefaults());
 
+			Field runtimeField = JoddDb.class.getDeclaredField("runtime");
+			runtimeField.setAccessible(true);
+			runtimeField.set(null, new JoddDbRuntime());
+		}
+		catch (Exception ex) {
+			throw new UncheckedException(ex);
+		}
+	}
 }

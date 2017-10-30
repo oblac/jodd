@@ -28,7 +28,7 @@ package jodd.typeconverter;
 /**
  * Object converter interface.
  *
- * @see jodd.typeconverter.TypeConverterManagerBean
+ * @see TypeConverterManager
  */
 public interface TypeConverter<T> {
 

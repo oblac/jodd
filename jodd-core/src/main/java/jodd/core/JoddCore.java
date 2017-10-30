@@ -26,50 +26,22 @@
 package jodd.core;
 
 import jodd.Jodd;
-import jodd.io.FileUtilParams;
-import jodd.util.StringPool;
-import jodd.util.cl.ClassLoaderStrategy;
-import jodd.util.cl.DefaultClassLoaderStrategy;
 
 /**
  * Jodd CORE module.
- * Contains some global defaults.
  */
 public class JoddCore {
 
-	/**
-	 * Default temp file prefix.
-	 */
-	public static String tempFilePrefix = "jodd-";
+	private static final JoddCoreDefaults defaults = new JoddCoreDefaults();
 
-	/**
-	 * Default file encoding (UTF8).
-	 */
-	public static String encoding = StringPool.UTF_8;
-
-	/**
-	 * Default IO buffer size (16 KB).
-	 */
-	public static int ioBufferSize = 16384;
-
-	/**
-	 * Default parameters used in {@link jodd.io.FileUtil} operations.
-	 */
-	public static FileUtilParams fileUtilParams = new FileUtilParams();
-
-	/**
-	 * Default class loader strategy.
-	 */
-	public static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
-
-	// ---------------------------------------------------------------- module
+	public static JoddCoreDefaults defaults() {
+		return defaults;
+	}
 
 	static {
-		init();
-	}
-
-	public static void init() {
 		Jodd.initModule();
 	}
+
+	public static void init() {}
 
 }

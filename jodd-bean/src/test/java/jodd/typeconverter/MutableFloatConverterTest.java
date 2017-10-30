@@ -25,19 +25,22 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.mutable.MutableFloat;
 import jodd.typeconverter.impl.MutableFloatConverter;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class MutableFloatConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) TypeConverterManager.lookup(MutableFloat.class);
+		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) JoddBean.runtime().typeConverterManager().lookup(MutableFloat.class);
 
 		assertNull(mutableFloatConverter.convert(null));
 

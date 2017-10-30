@@ -25,12 +25,14 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.sqlgen.ParameterValue;
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.fixtures.BadBoy;
 import jodd.db.oom.fixtures.BadGirl;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
+import jodd.db.oom.sqlgen.ParameterValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static jodd.db.oom.ColumnAliasType.*;
+import static jodd.db.oom.ColumnAliasType.COLUMN_CODE;
+import static jodd.db.oom.ColumnAliasType.TABLE_NAME;
+import static jodd.db.oom.ColumnAliasType.TABLE_REFERENCE;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,10 +50,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DbSqlBuilderTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
 		dbOom.registerType(Girl.class);
 		dbOom.registerType(BadGirl.class);
 		dbOom.registerType(Boy.class);

@@ -38,7 +38,7 @@ public class WrapperProxetta extends Proxetta<WrapperProxetta> {
 
 	public WrapperProxetta(ProxyAspect... aspects) {
 		this.aspects = aspects;
-		classNameSuffix = JoddProxetta.wrapperClassNameSuffix;
+		classNameSuffix = JoddProxetta.defaults().getWrapperClassNameSuffix();
 	}
 
 	public static WrapperProxetta withAspects(ProxyAspect... aspects) {

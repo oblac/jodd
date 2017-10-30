@@ -133,7 +133,7 @@ public class ActionConfig {
 	 * Finds result field in the action class.
 	 */
 	protected Field findResultField(Class actionClass) {
-		FieldDescriptor[] fields = ClassIntrospector.lookup(actionClass).getAllFieldDescriptors();
+		FieldDescriptor[] fields = ClassIntrospector.get().lookup(actionClass).getAllFieldDescriptors();
 		for (FieldDescriptor fd : fields) {
 			Field field = fd.getField();
 			if (ClassUtil.isTypeOf(field.getType(), Result.class)) {

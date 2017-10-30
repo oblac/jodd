@@ -233,7 +233,7 @@ public class URLCoder {
 		return encodeUriComponent(string, encoding, URIPart.UNRESERVED);
 	}
 	public static String encode(String string) {
-		return encodeUriComponent(string, JoddCore.encoding, URIPart.UNRESERVED);
+		return encodeUriComponent(string, JoddCore.defaults().getEncoding(), URIPart.UNRESERVED);
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class URLCoder {
 		return encodeUriComponent(scheme, encoding, URIPart.SCHEME);
 	}
 	public static String encodeScheme(String scheme) {
-		return encodeUriComponent(scheme, JoddCore.encoding, URIPart.SCHEME);
+		return encodeUriComponent(scheme, JoddCore.defaults().getEncoding(), URIPart.SCHEME);
 	}
 
 /*	/**
@@ -265,7 +265,7 @@ public class URLCoder {
 		return encodeUriComponent(userInfo, encoding, URIPart.USER_INFO);
 	}
 	public static String encodeUserInfo(String userInfo) {
-		return encodeUriComponent(userInfo, JoddCore.encoding, URIPart.USER_INFO);
+		return encodeUriComponent(userInfo, JoddCore.defaults().getEncoding(), URIPart.USER_INFO);
 	}
 
 	/**
@@ -275,7 +275,7 @@ public class URLCoder {
 		return encodeUriComponent(host, encoding, URIPart.HOST);
 	}
 	public static String encodeHost(String host) {
-		return encodeUriComponent(host, JoddCore.encoding, URIPart.HOST);
+		return encodeUriComponent(host, JoddCore.defaults().getEncoding(), URIPart.HOST);
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class URLCoder {
 		return encodeUriComponent(port, encoding, URIPart.PORT);
 	}
 	public static String encodePort(String port) {
-		return encodeUriComponent(port, JoddCore.encoding, URIPart.PORT);
+		return encodeUriComponent(port, JoddCore.defaults().getEncoding(), URIPart.PORT);
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class URLCoder {
 		return encodeUriComponent(path, encoding, URIPart.PATH);
 	}
 	public static String encodePath(String path) {
-		return encodeUriComponent(path, JoddCore.encoding, URIPart.PATH);
+		return encodeUriComponent(path, JoddCore.defaults().getEncoding(), URIPart.PATH);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class URLCoder {
 		return encodeUriComponent(segment, encoding, URIPart.PATH_SEGMENT);
 	}
 	public static String encodePathSegment(String segment) {
-		return encodeUriComponent(segment, JoddCore.encoding, URIPart.PATH_SEGMENT);
+		return encodeUriComponent(segment, JoddCore.defaults().getEncoding(), URIPart.PATH_SEGMENT);
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class URLCoder {
 		return encodeUriComponent(query, encoding, URIPart.QUERY);
 	}
 	public static String encodeQuery(String query) {
-		return encodeUriComponent(query, JoddCore.encoding, URIPart.QUERY);
+		return encodeUriComponent(query, JoddCore.defaults().getEncoding(), URIPart.QUERY);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class URLCoder {
 		return encodeUriComponent(queryParam, encoding, URIPart.QUERY_PARAM);
 	}
 	public static String encodeQueryParam(String queryParam) {
-		return encodeUriComponent(queryParam, JoddCore.encoding, URIPart.QUERY_PARAM);
+		return encodeUriComponent(queryParam, JoddCore.defaults().getEncoding(), URIPart.QUERY_PARAM);
 	}
 
 	/**
@@ -335,7 +335,7 @@ public class URLCoder {
 		return encodeUriComponent(fragment, encoding, URIPart.FRAGMENT);
 	}
 	public static String encodeFragment(String fragment) {
-		return encodeUriComponent(fragment, JoddCore.encoding, URIPart.FRAGMENT);
+		return encodeUriComponent(fragment, JoddCore.defaults().getEncoding(), URIPart.FRAGMENT);
 	}
 
 
@@ -345,7 +345,7 @@ public class URLCoder {
 	 * @see #encodeUri(String, String)
 	 */
 	public static String encodeUri(String uri) {
-		return encodeUri(uri, JoddCore.encoding);
+		return encodeUri(uri, JoddCore.defaults().getEncoding());
 	}
 	/**
 	 * Encodes the given source URI into an encoded String. All various URI components are
@@ -375,7 +375,7 @@ public class URLCoder {
 	 * @see #encodeHttpUrl(String, String)
 	 */
 	public static String encodeHttpUrl(String httpUrl) {
-		return encodeHttpUrl(httpUrl, JoddCore.encoding);
+		return encodeHttpUrl(httpUrl, JoddCore.defaults().getEncoding());
 	}
 	/**
 	 * Encodes the given HTTP URI into an encoded String. All various URI components are
@@ -465,7 +465,7 @@ public class URLCoder {
 	 * should be set previously or after the URL is built.
 	 */
 	public static Builder build(String path, boolean encodePath) {
-		return new Builder(path, encodePath, JoddCore.encoding);
+		return new Builder(path, encodePath, JoddCore.defaults().getEncoding());
 	}
 
 	public static class Builder {

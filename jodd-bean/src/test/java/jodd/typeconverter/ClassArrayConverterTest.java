@@ -25,17 +25,22 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import static jodd.typeconverter.TypeConverterTestHelper.arrc;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ClassArrayConverterTest {
+	
+	private TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
 
 	@Test
 	@SuppressWarnings({"unchecked"})
 	void testConversion() {
-		TypeConverter<Class[]> classArrayConverter = TypeConverterManager.lookup(Class[].class);
+		TypeConverter<Class[]> classArrayConverter = typeConverterManager.lookup(Class[].class);
 
 		assertNull(classArrayConverter.convert(null));
 
@@ -56,16 +61,16 @@ class ClassArrayConverterTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	void testMoreClassArrayConversions() {
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n\r", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\n", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\r", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\r\r", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n\n\n", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\n\r", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\r\n", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\r\r", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\r\r\r", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\n\n\n", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\n", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\r", Class[].class));
 
-		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\n\r", Class[].class));
-		assertEq(arrc(String.class), TypeConverterManager.convertType("\r\njava.lang.String,\r\n", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("java.lang.String,\r\n\r", Class[].class));
+		assertEq(arrc(String.class), typeConverterManager.convertType("\r\njava.lang.String,\r\n", Class[].class));
 	}
 
 	private void assertEq(Class<String>[] arr1, Class[] arr2) {

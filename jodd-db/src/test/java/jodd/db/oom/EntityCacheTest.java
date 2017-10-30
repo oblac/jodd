@@ -25,12 +25,14 @@
 
 package jodd.db.oom;
 
-import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.JoddDb;
+import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl2;
+import jodd.db.oom.sqlgen.DbEntitySql;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,11 +67,11 @@ class EntityCacheTest extends DbHsqldbTestCase {
 
 	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
 		dbOom.registerEntity(Girl2.class);
 		dbOom.registerEntity(Boy.class);
 
@@ -83,8 +85,9 @@ class EntityCacheTest extends DbHsqldbTestCase {
 		assertEquals(1, DbEntitySql.insert(new Boy(3, "Hugo", 1)).query().executeUpdate());
 	}
 
+	@Override
 	@AfterEach
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
 		dbSession.closeSession();
 		super.tearDown();
 	}

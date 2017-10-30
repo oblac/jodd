@@ -29,17 +29,18 @@ import jodd.typeconverter.impl.BooleanConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BooleanConverterTest {
 
 	private static BooleanConverter booleanConverter;
 
 	@BeforeEach
-	public void setUp(){
+	void setUp(){
 		booleanConverter = new BooleanConverter();
 	}
-
 
 	@Test
 	void testConversion() {

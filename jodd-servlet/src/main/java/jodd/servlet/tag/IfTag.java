@@ -25,7 +25,7 @@
 
 package jodd.servlet.tag;
 
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConversionException;
 
 import javax.servlet.jsp.JspException;
@@ -47,7 +47,7 @@ public class IfTag extends SimpleTagSupport {
 	public void doTag() throws JspException {
 		boolean testValue;
 		try {
-			testValue = Convert.toBooleanValue(test, false);
+			testValue = Converter.get().toBooleanValue(test, false);
 		} catch (TypeConversionException ignore) {
 			testValue = false;
 		}

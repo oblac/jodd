@@ -48,7 +48,7 @@ class EMLParserTest {
 	protected String testDataRoot;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}

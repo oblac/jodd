@@ -36,7 +36,7 @@ class LagartoFormSuiteTest {
 	 * Starts Tomcat after the suite.
 	 */
 	@BeforeAll
-	public static void beforeClass() {
+	static void beforeClass() {
 		isSuite = true;
 		startTomcat();
 	}
@@ -45,7 +45,7 @@ class LagartoFormSuiteTest {
 	 * Stop Tomcat after the suite.
 	 */
 	@AfterAll
-	public static void afterSuite() {
+	static void afterSuite() {
 		isSuite = false;
 		stopTomcat();
 	}

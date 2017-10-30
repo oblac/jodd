@@ -25,16 +25,19 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.mutable.MutableInteger;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ArraysTest {
+
+	private TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
 
 	public static final Integer[] INTEGERS = new Integer[] {1, 2, 3};
 	public static final int[] INTS = new int[] {1, 2, 3};
@@ -56,7 +59,7 @@ class ArraysTest {
 	@Test
 	void testArrayToIntConversion() {
 		Integer[] objects = INTEGERS;
-		Object result = TypeConverterManager.convertType(objects, int[].class);
+		Object result = typeConverterManager.convertType(objects, int[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(INTS, (int[]) result);
@@ -65,7 +68,7 @@ class ArraysTest {
 	@Test
 	void testIntToArrayConversion() {
 		int[] primitives = INTS;
-		Object result = TypeConverterManager.convertType(primitives, Integer[].class);
+		Object result = typeConverterManager.convertType(primitives, Integer[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(INTEGERS, (Integer[]) result);
@@ -74,7 +77,7 @@ class ArraysTest {
 	@Test
 	void testArrayToLongConversion() {
 		Long[] objects = LONGS;
-		Object result = TypeConverterManager.convertType(objects, long[].class);
+		Object result = typeConverterManager.convertType(objects, long[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(LONGS1, (long[]) result);
@@ -83,7 +86,7 @@ class ArraysTest {
 	@Test
 	void testLongToArrayConversion() {
 		long[] primitives = LONGS1;
-		Object result = TypeConverterManager.convertType(primitives, Long[].class);
+		Object result = typeConverterManager.convertType(primitives, Long[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(LONGS, (Long[]) result);
@@ -92,7 +95,7 @@ class ArraysTest {
 	@Test
 	void testArrayToFloatConversion() {
 		Float[] objects = FLOATS;
-		Object result = TypeConverterManager.convertType(objects, float[].class);
+		Object result = typeConverterManager.convertType(objects, float[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(FLOATS1, (float[]) result, 0.005f);
@@ -101,7 +104,7 @@ class ArraysTest {
 	@Test
 	void testFloatToArrayConversion() {
 		float[] primitives = FLOATS1;
-		Object result = TypeConverterManager.convertType(primitives, Float[].class);
+		Object result = typeConverterManager.convertType(primitives, Float[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(FLOATS, (Float[]) result);
@@ -110,7 +113,7 @@ class ArraysTest {
 	@Test
 	void testArrayToDoubleConversion() {
 		Double[] objects = DOUBLES;
-		Object result = TypeConverterManager.convertType(objects, double[].class);
+		Object result = typeConverterManager.convertType(objects, double[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(DOUBLES1, (double[]) result, 0.005f);
@@ -119,7 +122,7 @@ class ArraysTest {
 	@Test
 	void testDoubleToArrayConversion() {
 		double[] primitives = DOUBLES1;
-		Object result = TypeConverterManager.convertType(primitives, Double[].class);
+		Object result = typeConverterManager.convertType(primitives, Double[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(DOUBLES, (Double[]) result);
@@ -128,7 +131,7 @@ class ArraysTest {
 	@Test
 	void testArrayToShortConversion() {
 		Short[] objects = SHORTS;
-		Object result = TypeConverterManager.convertType(objects, short[].class);
+		Object result = typeConverterManager.convertType(objects, short[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(SHORTS1, (short[]) result);
@@ -137,7 +140,7 @@ class ArraysTest {
 	@Test
 	void testShortToArrayConversion() {
 		short[] primitives = SHORTS1;
-		Object result = TypeConverterManager.convertType(primitives, Short[].class);
+		Object result = typeConverterManager.convertType(primitives, Short[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(SHORTS, (Short[]) result);
@@ -146,7 +149,7 @@ class ArraysTest {
 	@Test
 	void testArrayToByteConversion() {
 		Byte[] objects = BYTES;
-		Object result = TypeConverterManager.convertType(objects, byte[].class);
+		Object result = typeConverterManager.convertType(objects, byte[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(BYTES1, (byte[]) result);
@@ -155,7 +158,7 @@ class ArraysTest {
 	@Test
 	void testByteToArrayConversion() {
 		byte[] primitives = BYTES1;
-		Object result = TypeConverterManager.convertType(primitives, Byte[].class);
+		Object result = typeConverterManager.convertType(primitives, Byte[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(BYTES, (Byte[]) result);
@@ -164,7 +167,7 @@ class ArraysTest {
 	@Test
 	void testArrayToCharConversion() {
 		Character[] objects = CHARACTERS;
-		Object result = TypeConverterManager.convertType(objects, char[].class);
+		Object result = typeConverterManager.convertType(objects, char[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(CHARS, (char[]) result);
@@ -173,7 +176,7 @@ class ArraysTest {
 	@Test
 	void testCharToArrayConversion() {
 		char[] primitives = CHARS;
-		Object result = TypeConverterManager.convertType(primitives, Character[].class);
+		Object result = typeConverterManager.convertType(primitives, Character[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(CHARACTERS, (Character[]) result);
@@ -182,7 +185,7 @@ class ArraysTest {
 	@Test
 	void testArrayToBooleanConversion() {
 		Boolean[] objects = BOOLEANS;
-		Object result = TypeConverterManager.convertType(objects, boolean[].class);
+		Object result = typeConverterManager.convertType(objects, boolean[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(BOOLEANS1, (boolean[]) result);
@@ -191,7 +194,7 @@ class ArraysTest {
 	@Test
 	void testBooleanToArrayConversion() {
 		boolean [] primitives = BOOLEANS1;
-		Object result = TypeConverterManager.convertType(primitives, Boolean[].class);
+		Object result = typeConverterManager.convertType(primitives, Boolean[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(BOOLEANS, (Boolean[]) result);
@@ -201,7 +204,7 @@ class ArraysTest {
 
 	@Test
 	void testArrayToIntConversionSingleValue() {
-		Object result = TypeConverterManager.convertType(Integer.valueOf(173), int[].class);
+		Object result = typeConverterManager.convertType(Integer.valueOf(173), int[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new int[] {173}, (int[]) result);
@@ -209,7 +212,7 @@ class ArraysTest {
 
 	@Test
 	void testIntToArrayConversionSingleValue() {
-		Object result = TypeConverterManager.convertType(173, Integer[].class);
+		Object result = typeConverterManager.convertType(173, Integer[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new Integer[] {173}, (Integer[]) result);
@@ -219,7 +222,7 @@ class ArraysTest {
 
 	@Test
 	void testArrayToIntConversionCommaSeparated() {
-		Object result = TypeConverterManager.convertType("1,2,3", int[].class);
+		Object result = typeConverterManager.convertType("1,2,3", int[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new int[] {1,2,3}, (int[]) result);
@@ -227,7 +230,7 @@ class ArraysTest {
 
 	@Test
 	void testIntToArrayConversionCommaSeparated() {
-		Object result = TypeConverterManager.convertType("1,2,3", Integer[].class);
+		Object result = typeConverterManager.convertType("1,2,3", Integer[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new Integer[] {1,2,3}, (Integer[]) result);
@@ -235,7 +238,7 @@ class ArraysTest {
 
 	@Test
 	void testMutableIntToArrayConversionCommaSeparated() {
-		Object result = TypeConverterManager.convertType("1,2,3", MutableInteger[].class);
+		Object result = typeConverterManager.convertType("1,2,3", MutableInteger[].class);
 
 		assertNotNull(result);
 		MutableInteger[] mutables = (MutableInteger[]) result;
@@ -250,7 +253,7 @@ class ArraysTest {
 
 	@Test
 	void testIntToLongArray() {
-		Object result = TypeConverterManager.convertType(new int[] {1,2,3}, long[].class);
+		Object result = typeConverterManager.convertType(new int[] {1,2,3}, long[].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new long[] {1,2,3}, (long[]) result);
@@ -258,7 +261,7 @@ class ArraysTest {
 
 	@Test
 	void testIntToLongArray2() {
-		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, long[][].class);
+		Object result = typeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, long[][].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new long[][] {{1, 2, 3}, {4, 5}}, (long[][]) result);
@@ -266,7 +269,7 @@ class ArraysTest {
 
 	@Test
 	void testIntToLongArray3() {
-		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, Long[][].class);
+		Object result = typeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, Long[][].class);
 
 		assertNotNull(result);
 		assertArrayEquals(new Long[][] {{1l, 2l, 3l}, {4l, 5l}}, (Long[][]) result);
@@ -282,7 +285,7 @@ class ArraysTest {
 				new MutableInteger(1)
 		};
 
-		Object result = TypeConverterManager.convertType(mutables, Integer[].class);
+		Object result = typeConverterManager.convertType(mutables, Integer[].class);
 		assertNotNull(result);
 
 		assertArrayEquals(new Integer[] {7,3,1}, (Integer[]) result);
@@ -296,7 +299,7 @@ class ArraysTest {
 				new Integer(1)
 		};
 
-		Object result = TypeConverterManager.convertType(integers, MutableInteger[].class);
+		Object result = typeConverterManager.convertType(integers, MutableInteger[].class);
 		assertNotNull(result);
 
 		MutableInteger[] mutables = (MutableInteger[]) result;
@@ -313,7 +316,7 @@ class ArraysTest {
 				new MutableInteger(1)
 		};
 
-		Object result = TypeConverterManager.convertType(mutables, int[].class);
+		Object result = typeConverterManager.convertType(mutables, int[].class);
 		assertNotNull(result);
 
 		assertArrayEquals(new int[] {7,3,1}, (int[]) result);
@@ -323,7 +326,7 @@ class ArraysTest {
 	void testIntToMutable() {
 		int[] array = new int[] {7,3,1};
 
-		Object result = TypeConverterManager.convertType(array, MutableInteger[].class);
+		Object result = typeConverterManager.convertType(array, MutableInteger[].class);
 		assertNotNull(result);
 
 		MutableInteger[] mutables = (MutableInteger[]) result;
@@ -343,7 +346,7 @@ class ArraysTest {
 				new BigInteger("1")
 		};
 
-		Object result = TypeConverterManager.convertType(bigIntegers, Integer[].class);
+		Object result = typeConverterManager.convertType(bigIntegers, Integer[].class);
 		assertNotNull(result);
 
 		assertArrayEquals(new Integer[] {7,3,1}, (Integer[]) result);
@@ -357,7 +360,7 @@ class ArraysTest {
 				new Integer(1)
 		};
 
-		Object result = TypeConverterManager.convertType(integers, BigInteger[].class);
+		Object result = typeConverterManager.convertType(integers, BigInteger[].class);
 		assertNotNull(result);
 
 		BigInteger[] bigIntegers = (BigInteger[]) result;
@@ -374,7 +377,7 @@ class ArraysTest {
 				new BigInteger("1")
 		};
 
-		Object result = TypeConverterManager.convertType(bigIntegers, int[].class);
+		Object result = typeConverterManager.convertType(bigIntegers, int[].class);
 		assertNotNull(result);
 
 		assertArrayEquals(new int[] {7, 3, 1}, (int[]) result);
@@ -384,7 +387,7 @@ class ArraysTest {
 	void testIntToBigInteger() {
 		int[] array = new int[] {7,3,1};
 
-		Object result = TypeConverterManager.convertType(array, BigInteger[].class);
+		Object result = typeConverterManager.convertType(array, BigInteger[].class);
 		assertNotNull(result);
 
 		BigInteger[] bigIntegers = (BigInteger[]) result;

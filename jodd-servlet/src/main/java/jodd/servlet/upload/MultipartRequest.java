@@ -113,7 +113,7 @@ public class MultipartRequest extends MultipartStreamParser {
 			this.characterEncoding = request.getCharacterEncoding();
 		}
 		if (this.characterEncoding == null) {
-			this.characterEncoding = JoddCore.encoding;
+			this.characterEncoding = JoddCore.defaults().getEncoding();
 		}
 	}
 

@@ -27,7 +27,7 @@ package jodd.db.debug;
 
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxyTarget;
-import jodd.typeconverter.Convert;
+import jodd.typeconverter.Converter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +45,7 @@ public class LoggableAdvice implements ProxyAdvice {
 
 	public String sqlTemplate;
 
+	@Override
 	public Object execute() {
 		int position = ((Integer) ProxyTarget.argument(1)).intValue();
 
@@ -113,7 +114,7 @@ public class LoggableAdvice implements ProxyAdvice {
 			strValue = "<null>";				// convert null to the string null
 		}
 		else {
-			strValue = Convert.toString(obj);	// all other objects (includes all Numbers, arrays, etc)
+			strValue = Converter.get().toString(obj);	// all other objects (includes all Numbers, arrays, etc)
 		}
 
 		// if we are setting a position larger than current size of parameterValues, first make it larger

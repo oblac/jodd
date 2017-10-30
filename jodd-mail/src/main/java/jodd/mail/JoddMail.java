@@ -32,19 +32,16 @@ import jodd.Jodd;
  */
 public class JoddMail {
 
-	/**
-	 * Mail system properties for fine-tuning the java Mail behavior.
-	 */
-	public static MailSystem mailSystem = new MailSystem();
+	private static JoddMailDefaults defaults = new JoddMailDefaults();
 
-	// ---------------------------------------------------------------- module
+	public static JoddMailDefaults defaults() {
+		return defaults;
+	}
 
 	static {
-		init();
-	}
-
-	public static void init() {
 		Jodd.initModule();
 	}
+
+	public static void init() {}
 
 }

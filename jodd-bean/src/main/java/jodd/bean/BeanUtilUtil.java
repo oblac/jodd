@@ -25,11 +25,10 @@
 
 package jodd.bean;
 
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.Getter;
-import jodd.introspector.Introspector;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Array;
@@ -49,35 +48,34 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- introspector
 
-	protected Introspector introspector = JoddBean.introspector;
-	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
+	protected ClassIntrospector introspector = ClassIntrospector.get();
+	protected TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	/**
-	 * Sets {@link Introspector introspector} implementation.
+	 * Sets {@link ClassIntrospector introspector} implementation.
 	 */
-	public void setIntrospector(Introspector introspector) {
+	public void setIntrospector(ClassIntrospector introspector) {
 		this.introspector = introspector;
 	}
 
 	/**
-	 * Returns {@link Introspector introspector} implementation.
+	 * Returns {@link ClassIntrospector introspector} implementation.
 	 */
-	@Override
-	public Introspector getIntrospector() {
+	public ClassIntrospector getIntrospector() {
 		return introspector;
 	}
 
 	/**
-	 * Sets {@link TypeConverterManagerBean type converter manager} implementation.
+	 * Sets {@link TypeConverterManager type converter manager} implementation.
 	 */
-	public void setTypeConverterManager(TypeConverterManagerBean typeConverterManager) {
+	public void setTypeConverterManager(TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	/**
-	 * Returns {@link TypeConverterManagerBean type converter manager} implementation.
+	 * Returns {@link TypeConverterManager type converter manager} implementation.
 	 */
-	public TypeConverterManagerBean getTypeConverterManager() {
+	public TypeConverterManager getTypeConverterManager() {
 		return typeConverterManager;
 	}
 
@@ -92,7 +90,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	}
 
 	/**
-	 * Convert to collection.
+	 * Converter to collection.
 	 */
 	protected Object convertToCollection(Object value, Class destinationType, Class componentType) {
 		return typeConverterManager.convertToCollection(value, destinationType, componentType);

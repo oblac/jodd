@@ -31,6 +31,7 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,9 +41,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 
+	DbSessionProvider sessionProvider;
+
+	@BeforeEach
+	void setup() {
+		sessionProvider = JoddDb.runtime().sessionProvider();
+	}
+
+	@Override
 	@AfterEach
-	public void tearDown() {
-		DbManager.resetAll();
+	protected void tearDown() {
+		JoddDb.runtime().sessionProvider(sessionProvider);
 	}
 
 	@Test
@@ -50,7 +59,8 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 		// prepare
 		JtxTransactionManager jtxManager = new DbJtxTransactionManager(cp);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
-		DbManager.getInstance().setSessionProvider(sessionProvider);
+
+		JoddDb.runtime().sessionProvider(sessionProvider);
 
 		for (int i = 0; i < 2; i++) {
 

@@ -41,11 +41,11 @@ class UploadTypeConverterManagerAddonTest {
 	void testRegistration() {
 		JoddUpload.init();
 
-		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.lookup(FileUpload.class);
+		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.get().lookup(FileUpload.class);
 
 		assertNotNull(fileUploadConverter);
 
-		FileConverter fileTypeConverter = (FileConverter) TypeConverterManager.lookup(File.class);
+		FileConverter fileTypeConverter = (FileConverter) TypeConverterManager.get().lookup(File.class);
 
 		assertNotNull(fileTypeConverter);
 		assertNotNull(fileTypeConverter.addonFileConverters);

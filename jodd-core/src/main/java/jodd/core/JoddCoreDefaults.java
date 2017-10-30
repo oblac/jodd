@@ -23,25 +23,63 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.introspector;
+package jodd.core;
 
-import jodd.Jodd;
+import jodd.util.StringPool;
+import jodd.util.cl.ClassLoaderStrategy;
+import jodd.util.cl.DefaultClassLoaderStrategy;
 
-public class JoddIntrospector {
+public class JoddCoreDefaults {
 
 	/**
-	 * Default {@link Introspector} implementation.
+	 * Default temp file prefix.
 	 */
-	public static Introspector introspector = new CachingIntrospector();
+	private String tempFilePrefix = "jodd-";
 
-	// ---------------------------------------------------------------- module
+	/**
+	 * Default file encoding (UTF8).
+	 */
+	private String encoding = StringPool.UTF_8;
 
-	static {
-		init();
+	/**
+	 * Default IO buffer size (16 KB).
+	 */
+	private int ioBufferSize = 16384;
+
+	/**
+	 * Default class loader strategy.
+	 */
+	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+
+	public String getTempFilePrefix() {
+		return tempFilePrefix;
 	}
 
-	public static void init() {
-		Jodd.initModule();
+	public void setTempFilePrefix(String tempFilePrefix) {
+		this.tempFilePrefix = tempFilePrefix;
 	}
 
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public int getIoBufferSize() {
+		return ioBufferSize;
+	}
+
+	public void setIoBufferSize(int ioBufferSize) {
+		this.ioBufferSize = ioBufferSize;
+	}
+
+	public ClassLoaderStrategy getClassLoaderStrategy() {
+		return classLoaderStrategy;
+	}
+
+	public void setClassLoaderStrategy(ClassLoaderStrategy classLoaderStrategy) {
+		this.classLoaderStrategy = classLoaderStrategy;
+	}
 }

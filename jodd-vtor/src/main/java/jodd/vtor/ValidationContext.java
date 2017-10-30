@@ -99,7 +99,7 @@ public class ValidationContext {
 		List<Check> list = cache.get(target);
 		if (list == null) {
 			list = new ArrayList<>();
-			ClassDescriptor cd = ClassIntrospector.lookup(target);
+			ClassDescriptor cd = ClassIntrospector.get().lookup(target);
 
 			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 			for (PropertyDescriptor propertyDescriptor : allProperties) {

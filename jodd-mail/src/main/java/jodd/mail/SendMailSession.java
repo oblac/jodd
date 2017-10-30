@@ -28,14 +28,14 @@ package jodd.mail;
 import jodd.util.StringPool;
 
 import javax.activation.DataHandler;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.MessagingException;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,7 +57,7 @@ public class SendMailSession implements AutoCloseable {
 	protected final Transport mailTransport;
 
 	static {
-		JoddMail.mailSystem.defineJavaMailSystemProperties();
+		EmailUtil.setupSystemMail();
 	}
 
 	/**

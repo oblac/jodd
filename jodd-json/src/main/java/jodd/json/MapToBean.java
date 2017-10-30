@@ -80,7 +80,7 @@ public class MapToBean {
 			target = jsonParser.newObjectInstance(targetType);
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
+		ClassDescriptor cd = ClassIntrospector.get().lookup(target.getClass());
 
 		boolean targetIsMap = target instanceof Map;
 
@@ -232,7 +232,7 @@ public class MapToBean {
 		}
 
 		try {
-			return TypeConverterManager.convertType(value, targetType);
+			return TypeConverterManager.get().convertType(value, targetType);
 		}
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);

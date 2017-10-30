@@ -25,13 +25,13 @@
 
 package jodd.db.oom.config;
 
-import jodd.db.oom.DbOomManager;
-import jodd.io.findfile.ClassFinder;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.meta.DbTable;
-import jodd.util.ClassLoaderUtil;
+import jodd.io.findfile.ClassFinder;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.ClassLoaderUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -54,7 +54,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		this(true);
 	}
 
-	protected DbOomManager dbOomManager;
+	protected DbEntityManager dbEntityManager;
 
 	protected long elapsed;
 
@@ -66,11 +66,11 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	}
 
 	/**
-	 * Configures {@link DbOomManager} with specified class path.
-	 * @see AutomagicDbOomConfigurator#configure(jodd.db.oom.DbOomManager)
+	 * Configures {@link DbEntityManager} with specified class path.
+	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager)
 	 */
-	public void configure(DbOomManager dbOomManager, File[] classpath) {
-		this.dbOomManager = dbOomManager;
+	public void configure(DbEntityManager dbEntityManager, File[] classpath) {
+		this.dbEntityManager = dbEntityManager;
 
 		rulesEntries.smartMode();
 
@@ -82,16 +82,16 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
 		if (log.isInfoEnabled()) {
-			log.info("DbOomManager configured in " + elapsed + " ms. Total entities: " + dbOomManager.getTotalNames());
+			log.info("DbEntityManager configured in " + elapsed + " ms. Total entities: " + dbEntityManager.getTotalNames());
 		}
 	}
 
 	/**
-	 * Configures {@link DbOomManager} with default class path.
-	 * @see AutomagicDbOomConfigurator#configure(jodd.db.oom.DbOomManager, java.io.File[])
+	 * Configures {@link DbEntityManager} with default class path.
+	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager, java.io.File[])
 	 */
-	public void configure(DbOomManager dbOomManager) {
-		configure(dbOomManager, ClassLoaderUtil.getDefaultClasspath());
+	public void configure(DbEntityManager dbEntityManager) {
+		configure(dbEntityManager, ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**
@@ -123,9 +123,9 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 			return;
 		}
 		if (registerAsEntities) {
-			dbOomManager.registerEntity(beanClass);
+			dbEntityManager.registerEntity(beanClass);
 		} else {
-			dbOomManager.registerType(beanClass);
+			dbEntityManager.registerType(beanClass);
 		}
 	}
 

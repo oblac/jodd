@@ -34,7 +34,7 @@ import jodd.jtx.JtxTransactionMode;
 public class JtxDbUtil {
 
 	/**
-	 * Convert JTX transaction mode to DB transaction mode.
+	 * Converter JTX transaction mode to DB transaction mode.
 	 */
 	public static DbTransactionMode convertToDbMode(JtxTransactionMode txMode) {
 		int isolation = -1;

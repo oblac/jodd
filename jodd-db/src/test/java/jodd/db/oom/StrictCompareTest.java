@@ -25,17 +25,20 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.fixtures.Tester;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class StrictCompareTest {
 
 	@Test
 	void testTableNameDefault() {
-		DbOomManager.resetAll();
-		DbOomManager dboom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbEntityManager dboom = JoddDb.runtime().dbEntityManager();
 
 		dboom.registerEntity(Tester.class);
 
@@ -53,7 +56,7 @@ class StrictCompareTest {
 		assertNotNull(ded.findByColumnName("iD"));
 
 		dboom.reset();
-		dboom.getTableNames().setLowercase(true);
+		JoddDb.defaults().getDbOomConfig().getTableNames().setLowercase(true);
 		dboom.registerEntity(Tester.class);
 
 		ded = dboom.lookupType(Tester.class);
@@ -70,8 +73,8 @@ class StrictCompareTest {
 		assertNotNull(ded.findByColumnName("iD"));
 
 		dboom.reset();
-		dboom.getTableNames().setChangeCase(false);
-		dboom.getTableNames().setSplitCamelCase(false);
+		JoddDb.defaults().getDbOomConfig().getTableNames().setChangeCase(false);
+		JoddDb.defaults().getDbOomConfig().getTableNames().setSplitCamelCase(false);
 		dboom.registerEntity(Tester.class);
 
 		ded = dboom.lookupType(Tester.class);

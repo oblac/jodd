@@ -47,7 +47,7 @@ class DecoraResponseWrapperTest {
 	private DecoraManager decoraManager;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		originalRequest = mock(HttpServletRequest.class);
 		originalResponse = mock(HttpServletResponse.class);
 		lastModifiedData = mock(LastModifiedData.class);
@@ -67,7 +67,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testPreResponseCommit() {
+	void testPreResponseCommit() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		when(lastModifiedData.getLastModified()).thenReturn(Long.valueOf(1));
@@ -83,7 +83,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testPreResponseCommit2() {
+	void testPreResponseCommit2() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		when(lastModifiedData.getLastModified()).thenReturn(Long.valueOf(-1));
@@ -99,7 +99,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testPreResponseCommit3() {
+	void testPreResponseCommit3() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		when(lastModifiedData.getLastModified()).thenReturn(Long.valueOf(-1));
@@ -115,7 +115,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testPreResponseCommit4() {
+	void testPreResponseCommit4() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		when(lastModifiedData.getLastModified()).thenReturn(Long.valueOf(1));
@@ -130,7 +130,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testPreResponseCommit5() {
+	void testPreResponseCommit5() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		when(lastModifiedData.getLastModified()).thenReturn(Long.valueOf(1));
@@ -145,7 +145,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testBufferContentType() {
+	void testBufferContentType() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		String testString = "TEST";
@@ -158,7 +158,7 @@ class DecoraResponseWrapperTest {
 	}
 
 	@Test
-	public final void testBufferStatusCode() {
+	void testBufferStatusCode() {
 		// setup
 		decoraResponseWrapper = new DecoraResponseWrapper(originalRequest, originalResponse, lastModifiedData, decoraManager);
 		int statusCode = 1;

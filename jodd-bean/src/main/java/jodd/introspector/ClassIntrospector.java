@@ -26,31 +26,31 @@
 package jodd.introspector;
 
 
+import jodd.bean.JoddBean;
+
 /**
- * Default class {@link Introspector} simply delegates method calls for
+ * Default class {@link ClassIntrospector} simply delegates method calls for
  * more convenient usage.
  */
-public class ClassIntrospector {
+public interface ClassIntrospector {
+
+	public static ClassIntrospector get() {
+		return JoddBean.runtime().classIntrospector();
+	}
 
 	/**
 	 * Returns class descriptor for specified type.
 	 */
-	public static ClassDescriptor lookup(Class type) {
-		return JoddIntrospector.introspector.lookup(type);
-	}
+	ClassDescriptor lookup(Class type);
 
 	/**
 	 * Registers new type.
 	 */
-	public static ClassDescriptor register(Class type) {
-		return JoddIntrospector.introspector.register(type);
-	}
+	ClassDescriptor register(Class type);
 
 	/**
 	 * Clears all cached data.
 	 */
-	public static void reset() {
-		JoddIntrospector.introspector.reset();
-	}
+	void reset();
 
 }

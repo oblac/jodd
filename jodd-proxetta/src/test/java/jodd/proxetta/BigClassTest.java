@@ -25,21 +25,33 @@
 
 package jodd.proxetta;
 
+import jodd.asm5.Type;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.mutable.MutableBoolean;
-import jodd.proxetta.fixtures.data.*;
+import jodd.proxetta.fixtures.data.Action;
+import jodd.proxetta.fixtures.data.BigFatJoe;
+import jodd.proxetta.fixtures.data.InterceptedBy;
+import jodd.proxetta.fixtures.data.MadvocAction;
+import jodd.proxetta.fixtures.data.PetiteBean;
+import jodd.proxetta.fixtures.data.PetiteInject;
+import jodd.proxetta.fixtures.data.StatCounter;
+import jodd.proxetta.fixtures.data.StatCounterAdvice;
+import jodd.proxetta.fixtures.data.Transaction;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
 import org.junit.jupiter.api.Test;
-import jodd.asm5.Type;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BigClassTest {
 
@@ -49,6 +61,7 @@ class BigClassTest {
 		final MutableBoolean firstTime = new MutableBoolean(true);
 
 		ProxyAspect aspect = new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			@Override
 			public boolean apply(MethodInfo mi) {
 				if (firstTime.value) {
 					firstTime.value = false;
@@ -159,7 +172,7 @@ class BigClassTest {
 
 
 		// test method annotation
-		ClassDescriptor cd = ClassIntrospector.lookup(clazz);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(clazz);
 		Method m = cd.getMethodDescriptor("publicMethod", false).getMethod();
 		assertNotNull(m);
 		Annotation[] aa = m.getAnnotations();

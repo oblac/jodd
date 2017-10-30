@@ -51,7 +51,7 @@ public class MethodResolver {
 
 	public MethodInjectionPoint[] resolve(Class type) {
 		// lookup methods
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<MethodInjectionPoint> list = new ArrayList<>();
 		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 

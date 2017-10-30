@@ -55,7 +55,7 @@ public class CtorResolver {
 	 * is thrown.
 	 */
 	public CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();
 		Constructor foundedCtor = null;
 		Constructor defaultCtor = null;

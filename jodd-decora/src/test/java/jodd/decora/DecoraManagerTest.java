@@ -41,12 +41,12 @@ class DecoraManagerTest {
 	private DecoraManager decoraManager;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		decoraManager = new DecoraManager();
 	}
 
 	@Test
-	public final void testIsDecorateErrorPages() {
+	void testIsDecorateErrorPages() {
 		// when
 		decoraManager.setDecorateErrorPages(true);
 
@@ -55,7 +55,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testDecorateRequest() {
+	void testDecorateRequest() {
 		// when
 		HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
 
@@ -64,7 +64,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testDecorateContentType() {
+	void testDecorateContentType() {
 		// when
 		String testString = "TEST";
 
@@ -73,7 +73,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testDecorateStatusCode() {
+	void testDecorateStatusCode() {
 		// when
 		int statusCode = 200;
 
@@ -82,7 +82,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testDecorateStatusCode2() {
+	void testDecorateStatusCode2() {
 		// when
 		int statusCode = 300;
 		decoraManager.setDecorateErrorPages(true);
@@ -92,7 +92,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testDecorateStatusCode3() {
+	void testDecorateStatusCode3() {
 		// when
 		int statusCode = 404;
 		decoraManager.setDecorateErrorPages(false);
@@ -102,7 +102,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testDecorateStatusCode4() {
+	void testDecorateStatusCode4() {
 		// when
 		int statusCode = 404;
 		decoraManager.setDecorateErrorPages(true);
@@ -112,7 +112,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testResolveDecoratorNull() {
+	void testResolveDecoratorNull() {
 		// setup
 		HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
 		String actionPath = "TEST";
@@ -125,7 +125,7 @@ class DecoraManagerTest {
 	}
 
 	@Test
-	public final void testResolveDecoratorNotNull() {
+	void testResolveDecoratorNotNull() {
 		// setup
 		HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
 		String actionPath = "TEST.html";

@@ -25,21 +25,23 @@
 
 package jodd.joy.core;
 
-import jodd.db.DbManager;
 import jodd.db.DbSessionProvider;
+import jodd.db.JoddDb;
 import jodd.db.connection.ConnectionProvider;
-import jodd.db.oom.DbOomManager;
+import jodd.db.jtx.DbJtxSessionProvider;
+import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
-import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
-import jodd.db.jtx.DbJtxSessionProvider;
-import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
@@ -53,8 +55,6 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
@@ -87,11 +87,11 @@ public abstract class DefaultAppCore {
 	 */
 	public static final String PETITE_DBPOOL = "dbpool";
 	/**
-	 * Petite bean name for <code>DbManager</code> instance.
+	 * Petite bean name for database configuration.
 	 */
 	public static final String PETITE_DB = "db";
 	/**
-	 * Petite bean name for <code>DbOomManager</code> instance.
+	 * Petite bean name for <code>DbEntityManager</code> instance.
 	 */
 	public static final String PETITE_DBOOM = "dboom";
 	/**
@@ -546,7 +546,7 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Initializes database. First, creates connection pool.
-	 * and transaction manager. Then, Jodds DbOomManager is
+	 * and transaction manager. Then, Jodds DbEntityManager is
 	 * configured. It is also configured automagically, by scanning
 	 * the class path for entities.
 	 */
@@ -577,26 +577,26 @@ public abstract class DefaultAppCore {
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		DbManager dbManager = DbManager.getInstance();
-		dbManager.setConnectionProvider(connectionProvider);
-		dbManager.setSessionProvider(sessionProvider);
-		petite.addBean(PETITE_DB, dbManager);
+		JoddDb.runtime().connectionProvider(connectionProvider);
+		JoddDb.runtime().sessionProvider(sessionProvider);
+		petite.addBean(PETITE_DB, JoddDb.defaults());           // todo -> this is for the configuration!, make this for each bean
 
-		DbOomManager dbOomManager = DbOomManager.getInstance();
-		petite.addBean(PETITE_DBOOM, dbOomManager);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.reset();
+		petite.addBean(PETITE_DBOOM, dbEntityManager);
 
 		// automatic configuration
-		registerDbEntities(dbOomManager);
+		registerDbEntities(dbEntityManager);
 	}
 
 	/**
 	 * Registers DbOom entities. By default, scans the
 	 * class path and register entities automagically.
 	 */
-	protected void registerDbEntities(DbOomManager dbOomManager) {
+	protected void registerDbEntities(DbEntityManager dbEntityManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 		appScanner.configure(dbcfg);
-		dbcfg.configure(dbOomManager);
+		dbcfg.configure(dbEntityManager);
 	}
 
 	/**

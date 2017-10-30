@@ -25,16 +25,16 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.introspector.PropertyDescriptor;
-import jodd.madvoc.ActionRequest;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.PropertyDescriptor;
+import jodd.madvoc.ActionRequest;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Performs some operation on all annotated properties. Helpful with injection of
@@ -48,6 +48,7 @@ public abstract class AnnotatedPropertyInterceptor extends BaseActionInterceptor
 		this.annotations = annotations;
 	}
 
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object action = actionRequest.getAction();
 		Class actionType = action.getClass();
@@ -82,7 +83,7 @@ public abstract class AnnotatedPropertyInterceptor extends BaseActionInterceptor
 			return properties;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
 		List<PropertyDescriptor> list = new ArrayList<>();

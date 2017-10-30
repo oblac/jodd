@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
+import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
 
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
@@ -74,7 +74,7 @@ public class JsonParser extends JsonParserBase {
 	protected char[] input;
 	protected int total;
 	protected Path path;
-	protected boolean useAltPaths = JoddJson.useAltPathsByParser;
+	protected boolean useAltPaths = JoddJson.defaults().isUseAltPathsByParser();
 	protected Class rootType;
 	protected MapToBean mapToBean;
 	protected boolean looseMode;
@@ -212,7 +212,7 @@ public class JsonParser extends JsonParserBase {
 
 	// ---------------------------------------------------------------- class meta data name
 
-	protected String classMetadataName = JoddJson.classMetadataName;
+	protected String classMetadataName = JoddJson.defaults().getClassMetadataName();
 
 	/**
 	 * Sets local class meta-data name.
@@ -825,7 +825,7 @@ public class JsonParser extends JsonParserBase {
 		JsonAnnotationManager.TypeData typeData = null;
 
 		if (targetType != null) {
-			targetTypeClassDescriptor = ClassIntrospector.lookup(targetType);
+			targetTypeClassDescriptor = ClassIntrospector.get().lookup(targetType);
 
 			// find if the target is really a map
 			// because when classMetadataName != null we are forcing
@@ -833,7 +833,7 @@ public class JsonParser extends JsonParserBase {
 
 			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
 
-			typeData = JoddJson.annotationManager.lookupTypeData(targetType);
+			typeData = JoddJson.defaults().getAnnotationManager().lookupTypeData(targetType);
 		}
 
 		if (isTargetRealTypeMap) {
@@ -892,7 +892,7 @@ public class JsonParser extends JsonParserBase {
 
 			if (!isTargetRealTypeMap) {
 				// replace key with real property value
-				key = JoddJson.annotationManager.resolveRealName(targetType, key);
+				key = JoddJson.defaults().getAnnotationManager().resolveRealName(targetType, key);
 			}
 
 			if (!isTargetTypeMap) {

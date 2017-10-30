@@ -25,12 +25,12 @@
 
 package jodd.json.meta;
 
-import jodd.json.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.json.JoddJson;
 import jodd.util.ArraysUtil;
 import jodd.util.InExRules;
 
@@ -123,7 +123,7 @@ public class JsonAnnotationManager {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
-			if (JoddJson.serializationSubclassAware) {
+			if (JoddJson.defaults().isSerializationSubclassAware()) {
 				typeData = findSubclassTypeData(type);
 			}
 
@@ -154,19 +154,19 @@ public class JsonAnnotationManager {
 	 * Finds type data of first annotated superclass or interface.
 	 */
 	protected TypeData findSubclassTypeData(Class type) {
-		if (type.getAnnotation(JoddJson.jsonAnnotation) != null) {
+		if (type.getAnnotation(JoddJson.defaults().getJsonAnnotation()) != null) {
 			// current type has annotation, dont find anything, let type data be created
 			return null;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		// lookup superclasses
 
 		Class[] superClasses = cd.getAllSuperclasses();
 
 		for (Class superClass : superClasses) {
-			if (superClass.getAnnotation(JoddJson.jsonAnnotation) != null) {
+			if (superClass.getAnnotation(JoddJson.defaults().getJsonAnnotation()) != null) {
 				// annotated subclass founded!
 				return _lookupTypeData(superClass);
 			}
@@ -175,7 +175,7 @@ public class JsonAnnotationManager {
 		Class[] interfaces = cd.getAllInterfaces();
 
 		for (Class interfaze : interfaces) {
-			if (interfaze.getAnnotation(JoddJson.jsonAnnotation) != null) {
+			if (interfaze.getAnnotation(JoddJson.defaults().getJsonAnnotation()) != null) {
 				// annotated subclass founded!
 				return _lookupTypeData(interfaze);
 			}
@@ -206,7 +206,7 @@ public class JsonAnnotationManager {
 	 * Scans class for annotations and returns {@link jodd.json.meta.JsonAnnotationManager.TypeData}.
 	 */
 	private TypeData scanClassForAnnotations(Class type) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
@@ -215,7 +215,7 @@ public class JsonAnnotationManager {
 		ArrayList<String> jsonNames = new ArrayList<>();
 		ArrayList<String> realNames = new ArrayList<>();
 
-		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
+		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.defaults().getJsonAnnotation());
 
 		for (PropertyDescriptor pd : pds) {
 			JSONAnnotationData data = null;

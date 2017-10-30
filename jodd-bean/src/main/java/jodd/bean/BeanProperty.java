@@ -26,9 +26,9 @@
 package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.Introspector;
-import jodd.introspector.PropertyDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.Getter;
+import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 
 /**
@@ -53,7 +53,7 @@ class BeanProperty {
 	// ---------------------------------------------------------------- bean and descriptor
 
 	final String fullName;  // initial name
-	final Introspector introspector;
+	final ClassIntrospector introspector;
 	Object bean;
 	private ClassDescriptor cd;
 	String name;        // property name

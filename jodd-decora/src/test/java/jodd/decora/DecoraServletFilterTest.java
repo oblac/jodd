@@ -39,12 +39,12 @@ class DecoraServletFilterTest {
 	private DecoraServletFilter decoraServletFilter;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		decoraServletFilter = new DecoraServletFilter();
 	}
 
 	@Test
-	public final void testCreateDecoraManager() {
+	void testCreateDecoraManager() {
 		// when
 		DecoraManager decoraManager = decoraServletFilter.createDecoraManager();
 
@@ -53,7 +53,7 @@ class DecoraServletFilterTest {
 	}
 
 	@Test
-	public final void testCreateDecoraParser() {
+	void testCreateDecoraParser() {
 		// when
 		DecoraParser decoraParser = decoraServletFilter.createDecoraParser();
 
@@ -62,7 +62,7 @@ class DecoraServletFilterTest {
 	}
 
 	@Test
-	public final void testDestroy() {
+	void testDestroy() {
 		// when
 		decoraServletFilter.destroy();
 
@@ -72,7 +72,7 @@ class DecoraServletFilterTest {
 	}
 
 	@Test
-	public final void testWrapRequest() {
+	void testWrapRequest() {
 		// setup
 		HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
 

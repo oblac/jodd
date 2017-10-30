@@ -233,7 +233,7 @@ public class TypeJsonSerializerMap {
 				return tjs;
 			}
 
-			ClassDescriptor cd = ClassIntrospector.lookup(type);
+			ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 			// check array
 

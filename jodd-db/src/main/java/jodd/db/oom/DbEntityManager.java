@@ -25,9 +25,9 @@
 
 package jodd.db.oom;
 
+import jodd.db.JoddDb;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
-import jodd.db.oom.sqlgen.SqlGenConfig;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.util.StringUtil;
@@ -36,82 +36,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DbOom manager. Contains various global settings, DB-OOM (database - object-oriented)
- * mapping definitions, naming conventions etc.
+ * DbOom Entity manager.
  * <p>
  * Important: configure settings before entity registration!
  * <p>
- * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.oom.mapper.ResultSetMapper}
+ * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.oom.mapper.ResultSetMapper})
  * to lookup for an entity from table name. Table names are read from result-set meta data, for example.
- * Moreover, it is not needed to use mappings at all: in that case just provide entity types during result set to
- * objects conversion.
- *
- * @see jodd.db.DbManager
+ * It is not needed to use mappings at all: in that case just provide entity types during the conversion of
+ * result set to objects.
  */
-public class DbOomManager {
+public class DbEntityManager {
 
-	private static final Logger log = LoggerFactory.getLogger(DbOomManager.class);
-
-	// ---------------------------------------------------------------- singleton
-
-	private static DbOomManager dbOomManager = new DbOomManager();
-
-	/**
-	 * Returns DbOom manager instance.
-	 */
-	public static DbOomManager getInstance() {
-		return dbOomManager;
-	}
-
-	/**
-	 * Sets new DbOom manager.
-	 */
-	public static void setInstance(DbOomManager oomManager) {
-		dbOomManager = oomManager;
-	}
-
-	/**
-	 * Resets DbOom Manager to defaults.
-	 * It's done by simply creating a new instance
-	 * of DbOom manager.
-	 */
-	public static void resetAll() {
-		dbOomManager = new DbOomManager();
-	}
-
-	// ---------------------------------------------------------------- naming
-
-	protected String schemaName;
-	protected TableNamingStrategy tableNames = new TableNamingStrategy();
-	protected ColumnNamingStrategy columnNames = new ColumnNamingStrategy();
-
-	/**
-	 * Returns current table name strategy.
-	 */
-	public TableNamingStrategy getTableNames() {
-		return tableNames;
-	}
-
-	/**
-	 * Sets new table name strategy.
-	 */
-	public void setTableNames(TableNamingStrategy tableNames) {
-		this.tableNames = tableNames;
-	}
-
-	/**
-	 * Returns current column name strategy.
-	 */
-	public ColumnNamingStrategy getColumnNames() {
-		return columnNames;
-	}
-
-	/**
-	 * Sets new column name strategy,
-	 */
-	public void setColumnNames(ColumnNamingStrategy columnNames) {
-		this.columnNames = columnNames;
-	}
+	private static final Logger log = LoggerFactory.getLogger(DbEntityManager.class);
 
 	// ---------------------------------------------------------------- registration
 
@@ -249,14 +185,16 @@ public class DbOomManager {
 		return ded;
 	}
 
-
 	/**
 	 * Creates {@link DbEntityDescriptor}.
 	 */
 	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
+		final String schemaName = JoddDb.defaults().getDbOomConfig().getSchemaName();
+		final TableNamingStrategy tableNames = JoddDb.defaults().getDbOomConfig().getTableNames();
+		final ColumnNamingStrategy columnNames = JoddDb.defaults().getDbOomConfig().getColumnNames();
+
 		return new DbEntityDescriptor<>(type, schemaName, tableNames, columnNames);
 	}
-
 
 	// ---------------------------------------------------------------- stats
 
@@ -283,110 +221,12 @@ public class DbOomManager {
 
 	/**
 	 * Resets the manager and clears descriptors maps.
-	 * The configuration is not changed, just table-related
-	 * data is cleared. To reset all, call {@link #resetAll()}.
 	 */
 	public void reset() {
 		descriptorsMap.clear();
 		entityNamesMap.clear();
 		tableNamesMap.clear();
 	}
-
-
-	// ---------------------------------------------------------------- table separators
-
-	protected String columnAliasSeparator = "$";
-
-	/**
-	 * Returns value for separator for column aliases that divides table reference and column name.
-	 */
-	public String getColumnAliasSeparator() {
-		return columnAliasSeparator;
-	}
-
-	/**
-	 * Specifies separator for column aliases that divides table reference and column name.
-	 * Separator should contains of characters that are not used in table names, such as:
-	 * '$' or '__'.
-	 */
-	public void setColumnAliasSeparator(String separator) {
-		this.columnAliasSeparator = separator;
-	}
-
-
-	// ---------------------------------------------------------------- hint resolver
-
-	protected JoinHintResolver hintResolver = new JoinHintResolver();
-
-	public JoinHintResolver getHintResolver() {
-		return hintResolver;
-	}
-
-	/**
-	 * Specifies hint resolver.
-	 */
-	public void setHintResolver(JoinHintResolver hintResolver) {
-		this.hintResolver = hintResolver;
-	}
-
-
-	// ---------------------------------------------------------------- default column alias type
-
-	protected ColumnAliasType defaultColumnAliasType;
-
-	public ColumnAliasType getDefaultColumnAliasType() {
-		return defaultColumnAliasType;
-	}
-
-	/**
-	 * Specifies default column alias type.
-	 */
-	public void setDefaultColumnAliasType(ColumnAliasType defaultColumnAliasType) {
-		this.defaultColumnAliasType = defaultColumnAliasType;
-	}
-
-
-	// ---------------------------------------------------------------- result set mapper
-
-	protected boolean cacheEntitiesInResultSet;
-
-	public boolean isCacheEntitiesInResultSet() {
-		return cacheEntitiesInResultSet;
-	}
-
-	/**
-	 * Defines if entities have to be cached in result set.
-	 * When cached, more memory is consumed during the existence of
-	 * {@link jodd.db.oom.mapper.ResultSetMapper}.
-	 */
-	public void setCacheEntitiesInResultSet(boolean cacheEntitiesInResultSet) {
-		this.cacheEntitiesInResultSet = cacheEntitiesInResultSet;
-	}
-
-	// ---------------------------------------------------------------- db list
-
-	protected boolean entityAwareMode;
-
-	/**
-	 * Returns <code>true</code> if entity-aware mode is enabled.
-	 */
-	public boolean isEntityAwareMode() {
-		return entityAwareMode;
-	}
-
-	/**
-	 * Defines entity-aware mode, when resulting collections does not have duplicates.
-	 * It make sense to enable it only if {@link #setCacheEntitiesInResultSet(boolean) cache} is set.
-	 * Therefore, enabling smart mode will also enable caching.
-	 */
-	public void setEntityAwareMode(boolean entityAwareMode) {
-		if (entityAwareMode) {
-			this.cacheEntitiesInResultSet = true;
-		}
-		this.entityAwareMode = entityAwareMode;
-	}
-
-	// ---------------------------------------------------------------- create entity
 
 	/**
 	 * Creates new entity instances.
@@ -397,18 +237,6 @@ public class DbOomManager {
 		} catch (Exception ex) {
 			throw new DbOomException(ex);
 		}
-	}
-
-
-	// ---------------------------------------------------------------- sqlgenconfig
-
-	private final SqlGenConfig sqlGenConfig = new SqlGenConfig();
-
-	/**
-	 * Returns {@link SqlGenConfig}.
-	 */
-	public SqlGenConfig getSqlGenConfig() {
-		return sqlGenConfig;
 	}
 
 }

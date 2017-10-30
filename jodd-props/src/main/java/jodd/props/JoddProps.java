@@ -35,11 +35,9 @@ public class JoddProps {
 	// ---------------------------------------------------------------- module
 
 	static {
-		init();
-	}
-
-	public static void init() {
 		Jodd.initModule();
 	}
+
+	public static void init() {}
 
 }

@@ -26,9 +26,9 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.bean.BeanUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOomManager;
 import jodd.util.StringUtil;
 
 /**
@@ -67,7 +67,9 @@ public class InsertChunk extends SqlChunk {
 
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
-			 if (dec.isId() && !DbOomManager.getInstance().getSqlGenConfig().isUpdateablePrimaryKey()) {
+			final boolean defaultIsUpdateablePrimaryKey = JoddDb.defaults().getSqlGenConfig().isUpdateablePrimaryKey();
+
+			 if (dec.isId() && !defaultIsUpdateablePrimaryKey) {
 			 	continue;
 			 }
 

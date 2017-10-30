@@ -36,13 +36,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CustomAnnotationTest {
 
 	@BeforeEach
-	public void setUp() {
-		JoddJson.jsonAnnotation = JSON2.class;
+	void setUp() {
+		JoddJson.defaults().setJsonAnnotation(JSON2.class);
 	}
 
 	@AfterEach
-	public void tearDown() {
-		JoddJson.jsonAnnotation = JSON.class;
+	void tearDown() {
+		JoddJson.defaults().setJsonAnnotation(JSON.class);
 	}
 
 	@Test

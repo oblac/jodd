@@ -49,7 +49,7 @@ public class ProviderResolver {
 	public ProviderDefinition[] resolve(BeanDefinition beanDefinition) {
 		Class type = beanDefinition.getType();
 
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
 		List<ProviderDefinition> list = new ArrayList<>();

@@ -25,7 +25,9 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.oom.DbOomManager;
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.fixtures.BadBoy;
 import jodd.db.oom.fixtures.BadGirl;
 import jodd.db.oom.fixtures.Boy;
@@ -41,10 +43,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class DbEntitySqlTest {
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
 
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);

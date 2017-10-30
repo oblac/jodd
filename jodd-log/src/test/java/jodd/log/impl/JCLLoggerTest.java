@@ -40,7 +40,7 @@ class JCLLoggerTest extends LoggerTestBase {
 	private Log log;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		log = mock(Log.class);
 		logger = new JCLLogger(log);
 	}

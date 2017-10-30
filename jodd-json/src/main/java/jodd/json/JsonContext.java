@@ -189,7 +189,7 @@ public class JsonContext extends JsonWriter {
 		// + globals
 
 		if (typeJsonSerializer == null) {
-			typeJsonSerializer = JoddJson.defaultSerializers.lookup(type);
+			typeJsonSerializer = JoddJson.defaults().getDefaultSerializers().lookup(type);
 		}
 
 		return typeJsonSerializer.serialize(this, object);
@@ -207,7 +207,7 @@ public class JsonContext extends JsonWriter {
 
 		if (propertyType != null) {
 			if (!jsonSerializer.deep) {
-				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
+				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.get().lookup(propertyType);
 
 				if (propertyTypeClassDescriptor.isArray()) {
 					return false;
@@ -226,8 +226,8 @@ public class JsonContext extends JsonWriter {
 
 			// + excluded types
 
-			if (JoddJson.excludedTypes != null) {
-				for (Class excludedType : JoddJson.excludedTypes) {
+			if (JoddJson.defaults().getExcludedTypes() != null) {
+				for (Class excludedType : JoddJson.defaults().getExcludedTypes()) {
 					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
@@ -245,8 +245,8 @@ public class JsonContext extends JsonWriter {
 
 			String propertyTypeName = propertyType.getName();
 
-			if (JoddJson.excludedTypeNames != null) {
-				for (String excludedTypeName : JoddJson.excludedTypeNames) {
+			if (JoddJson.defaults().getExcludedTypeNames() != null) {
+				for (String excludedTypeName : JoddJson.defaults().getExcludedTypeNames()) {
 					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
 						return false;
 					}

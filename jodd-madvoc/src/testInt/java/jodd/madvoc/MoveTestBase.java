@@ -37,17 +37,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public abstract class MoveTestBase {
 
 	@BeforeAll
-	public static void beforeClass() {
+	static void beforeClass() {
 		MadvocSuiteTest.startTomcat();
 	}
 
 	@AfterAll
-	public static void afterClass() {
+	static void afterClass() {
 		MadvocSuiteTest.stopTomcat();
 	}
 
 	@Test
-	public void testMoveWithFiles() {
+	void testMoveWithFiles() {
 		HttpResponse response;
 		response = HttpRequest
 				.post("localhost:8173/mv/upload.html")

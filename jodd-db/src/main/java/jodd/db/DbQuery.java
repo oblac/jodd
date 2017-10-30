@@ -26,11 +26,11 @@
 package jodd.db;
 
 import jodd.bean.BeanUtil;
+import jodd.db.querymap.QueryMap;
+import jodd.db.type.SqlType;
+import jodd.db.type.SqlTypeManager;
 import jodd.util.CharUtil;
 import jodd.util.collection.IntArrayList;
-import jodd.db.querymap.QueryMap;
-import jodd.db.type.SqlTypeManager;
-import jodd.db.type.SqlType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,13 +42,13 @@ import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.Ref;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.sql.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -75,6 +75,7 @@ public class DbQuery extends DbQueryBase {
 	 * Creates new query.
 	 */
 	public DbQuery(Connection conn, String sqlString) {
+		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
 		this.connection = conn;
 		this.sqlString = preprocessSql(sqlString);
 	}
@@ -83,6 +84,8 @@ public class DbQuery extends DbQueryBase {
 	 * Creates a new query from {@link DbSession}.
 	 */
 	public DbQuery(DbSession session, String sqlString) {
+		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
+
 		initSession(session);
 
 		this.session.attachQuery(this);
@@ -117,7 +120,7 @@ public class DbQuery extends DbQueryBase {
 			return sqlString;
 		}
 
-		QueryMap queryMap = DbManager.getInstance().getQueryMap();
+		QueryMap queryMap = JoddDb.runtime().queryMap();
 
 		if (queryMap != null) {
 			String sqlFromMap = queryMap.getQuery(sqlString);

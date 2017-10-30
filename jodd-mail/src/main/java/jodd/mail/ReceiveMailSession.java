@@ -44,7 +44,7 @@ public class ReceiveMailSession {
 	protected final Store store;
 
 	static {
-		JoddMail.mailSystem.defineJavaMailSystemProperties();
+		EmailUtil.setupSystemMail();
 	}
 
 	/**

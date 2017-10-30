@@ -25,14 +25,16 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.mutable.MutableInteger;
 import jodd.typeconverter.impl.ClassConverter;
 import jodd.util.fixtures.testdata.A;
 import jodd.util.fixtures.testdata.B;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ClassConverterTest {
 
@@ -56,17 +58,17 @@ class ClassConverterTest {
 	void testCast() {
 
 		String s = "123";
-		Integer d = TypeConverterManager.convertType(s, Integer.class);
+		Integer d = JoddBean.runtime().typeConverterManager().convertType(s, Integer.class);
 		assertEquals(123, d.intValue());
 
-		s = TypeConverterManager.convertType(d, String.class);
+		s = JoddBean.runtime().typeConverterManager().convertType(d, String.class);
 		assertEquals("123", s);
 
-		MutableInteger md = TypeConverterManager.convertType(s, MutableInteger.class);
+		MutableInteger md = JoddBean.runtime().typeConverterManager().convertType(s, MutableInteger.class);
 		assertEquals(123, md.intValue());
 
 		B b = new B();
-		A a = TypeConverterManager.convertType(b, A.class);
+		A a = JoddBean.runtime().typeConverterManager().convertType(b, A.class);
 		assertEquals(a, b);
 	}
 

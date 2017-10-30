@@ -50,7 +50,7 @@ class JspResolverTest {
 
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		servletRequest = mock(HttpServletRequest.class);
 		httpSession = mock(HttpSession.class);
