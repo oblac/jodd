@@ -29,12 +29,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default {@link jodd.introspector.Introspector introspector} that caches all class descriptors.
+ * Default {@link jodd.introspector.ClassIntrospector introspector} that caches all class descriptors.
  * It can examine either <b>accessible</b> or <b>supported</b> fields/methods/constructors.
  * <p>
  * It simply caches <b>all</b> class descriptors.
  */
-public class CachingIntrospector implements Introspector {
+public class CachingIntrospector implements ClassIntrospector {
 
 	protected final Map<Class, ClassDescriptor> cache;
 	protected final boolean scanAccessible;
@@ -50,7 +50,7 @@ public class CachingIntrospector implements Introspector {
 	}
 
 	/**
-	 * Creates new caching {@link Introspector}. It may scan
+	 * Creates new caching {@link ClassIntrospector}. It may scan
 	 * <b>accessible</b> or <b>supported</b> fields, methods or
 	 * constructors.
 	 */
@@ -65,6 +65,7 @@ public class CachingIntrospector implements Introspector {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ClassDescriptor lookup(Class type) {
 		ClassDescriptor cd = cache.get(type);
 		if (cd != null) {
@@ -79,6 +80,7 @@ public class CachingIntrospector implements Introspector {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ClassDescriptor register(Class type) {
 		ClassDescriptor cd = describeClass(type);
 		cache.put(type, cd);
@@ -96,6 +98,7 @@ public class CachingIntrospector implements Introspector {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void reset() {
 		cache.clear();
 	}

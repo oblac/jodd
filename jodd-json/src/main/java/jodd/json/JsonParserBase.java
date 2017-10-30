@@ -90,7 +90,7 @@ public abstract class JsonParserBase {
 			return new HashMap();
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(targetType);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(targetType);
 
 		CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
 		if (ctorDescriptor == null) {

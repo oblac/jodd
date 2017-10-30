@@ -100,7 +100,7 @@ public class PropertyDescriptor extends Descriptor {
 
 		for (Class superclass : superclasses) {
 
-			ClassDescriptor classDescriptor = ClassIntrospector.lookup(superclass);
+			ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(superclass);
 
 			fieldDescriptor = classDescriptor.getFieldDescriptor(fieldName, true);
 
@@ -116,6 +116,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Returns property name.
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}

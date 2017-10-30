@@ -25,7 +25,26 @@
 
 package jodd.bean;
 
-import jodd.bean.fixtures.*;
+import jodd.bean.fixtures.Abean;
+import jodd.bean.fixtures.Bbean;
+import jodd.bean.fixtures.Cbean;
+import jodd.bean.fixtures.Color;
+import jodd.bean.fixtures.EnumBean;
+import jodd.bean.fixtures.FooBean;
+import jodd.bean.fixtures.FooBean2;
+import jodd.bean.fixtures.FooBean3;
+import jodd.bean.fixtures.FooBean4;
+import jodd.bean.fixtures.FooBeanSlim;
+import jodd.bean.fixtures.GetIsBool;
+import jodd.bean.fixtures.Gig;
+import jodd.bean.fixtures.IsGetBool;
+import jodd.bean.fixtures.MixBean;
+import jodd.bean.fixtures.Status;
+import jodd.bean.fixtures.SubBean;
+import jodd.bean.fixtures.SupBean;
+import jodd.bean.fixtures.UppercaseBean;
+import jodd.bean.fixtures.XBean;
+import jodd.bean.fixtures.ZBean;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
@@ -42,7 +61,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("UnnecessaryBoxing")
 class BeanUtilTest {
@@ -1283,7 +1307,7 @@ class BeanUtilTest {
 		assertNotNull(value);
 		assertTrue((Boolean) value);
 
-		ClassDescriptor cd = ClassIntrospector.lookup(IsGetBool.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(IsGetBool.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
@@ -1302,7 +1326,7 @@ class BeanUtilTest {
 		assertNotNull(value);
 		assertTrue((Boolean) value);
 
-		cd = ClassIntrospector.lookup(GetIsBool.class);
+		cd = ClassIntrospector.get().lookup(GetIsBool.class);
 		assertEquals("flag", propertyDescriptors[0].getName());
 		assertEquals("isFlag", propertyDescriptors[0].getReadMethodDescriptor().getMethod().getName());
 		mds = cd.getAllMethodDescriptors();

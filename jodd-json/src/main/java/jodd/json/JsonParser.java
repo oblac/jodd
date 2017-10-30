@@ -825,7 +825,7 @@ public class JsonParser extends JsonParserBase {
 		JsonAnnotationManager.TypeData typeData = null;
 
 		if (targetType != null) {
-			targetTypeClassDescriptor = ClassIntrospector.lookup(targetType);
+			targetTypeClassDescriptor = ClassIntrospector.get().lookup(targetType);
 
 			// find if the target is really a map
 			// because when classMetadataName != null we are forcing

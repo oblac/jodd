@@ -62,7 +62,7 @@ public abstract class TypeJsonVisitor {
 	 * Visits a type.
 	 */
 	public void visit() {
-		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
+		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
 		if (classMetadataName != null) {
 			// process first 'meta' fields 'class'

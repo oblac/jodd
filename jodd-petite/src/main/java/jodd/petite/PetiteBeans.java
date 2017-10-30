@@ -30,14 +30,14 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -443,7 +443,7 @@ public abstract class PetiteBeans {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[][] ref = PetiteUtil.convertRefToReferences(references);
 
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		Constructor constructor = null;
 
 		if (paramTypes == null) {
@@ -480,7 +480,7 @@ public abstract class PetiteBeans {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[] references = reference == null ? null : new String[] {reference};
 
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
 		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
@@ -500,7 +500,7 @@ public abstract class PetiteBeans {
 	 */
 	public void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
 		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
 
@@ -524,7 +524,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[][] ref = PetiteUtil.convertRefToReferences(references);
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
 		Method method = null;
 		if (arguments == null) {
@@ -559,7 +559,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		if (initMethodNames == null) {
 			initMethodNames = StringPool.EMPTY_ARRAY;
 		}
@@ -588,7 +588,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteDestroyMethods(String beanName, String... destroyMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		if (destroyMethodNames == null) {
 			destroyMethodNames = StringPool.EMPTY_ARRAY;
 		}
@@ -627,7 +627,7 @@ public abstract class PetiteBeans {
 
 		Class beanType = beanDefinition.type;
 
-		ClassDescriptor cd = ClassIntrospector.lookup(beanType);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanType);
 		MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
 
 		if (md == null) {
@@ -648,7 +648,7 @@ public abstract class PetiteBeans {
 	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		MethodDescriptor md = cd.getMethodDescriptor(staticMethodName, arguments, true);
 
 		if (md == null) {

@@ -132,7 +132,7 @@ public class DbEntityDescriptor<E> {
 	 * Resolves list of all columns and properties.
 	 */
 	private void resolveColumnsAndProperties(Class type) {
-		PropertyDescriptor[] allProperties = ClassIntrospector.lookup(type).getAllPropertyDescriptors();
+		PropertyDescriptor[] allProperties = ClassIntrospector.get().lookup(type).getAllPropertyDescriptors();
 		List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
 		int idcount = 0;
 

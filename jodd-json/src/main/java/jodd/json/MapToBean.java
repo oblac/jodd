@@ -80,7 +80,7 @@ public class MapToBean {
 			target = jsonParser.newObjectInstance(targetType);
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
+		ClassDescriptor cd = ClassIntrospector.get().lookup(target.getClass());
 
 		boolean targetIsMap = target instanceof Map;
 

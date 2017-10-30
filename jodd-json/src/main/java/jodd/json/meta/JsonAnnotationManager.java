@@ -159,7 +159,7 @@ public class JsonAnnotationManager {
 			return null;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		// lookup superclasses
 
@@ -206,7 +206,7 @@ public class JsonAnnotationManager {
 	 * Scans class for annotations and returns {@link jodd.json.meta.JsonAnnotationManager.TypeData}.
 	 */
 	private TypeData scanClassForAnnotations(Class type) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 

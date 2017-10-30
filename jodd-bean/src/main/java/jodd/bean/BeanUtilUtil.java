@@ -25,8 +25,8 @@
 
 package jodd.bean;
 
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.Getter;
-import jodd.introspector.Introspector;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassUtil;
@@ -48,20 +48,20 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- introspector
 
-	protected Introspector introspector = Introspector.get();
+	protected ClassIntrospector introspector = ClassIntrospector.get();
 	protected TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	/**
-	 * Sets {@link Introspector introspector} implementation.
+	 * Sets {@link ClassIntrospector introspector} implementation.
 	 */
-	public void setIntrospector(Introspector introspector) {
+	public void setIntrospector(ClassIntrospector introspector) {
 		this.introspector = introspector;
 	}
 
 	/**
-	 * Returns {@link Introspector introspector} implementation.
+	 * Returns {@link ClassIntrospector introspector} implementation.
 	 */
-	public Introspector getIntrospector() {
+	public ClassIntrospector getIntrospector() {
 		return introspector;
 	}
 

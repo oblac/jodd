@@ -207,7 +207,7 @@ public class JsonContext extends JsonWriter {
 
 		if (propertyType != null) {
 			if (!jsonSerializer.deep) {
-				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
+				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.get().lookup(propertyType);
 
 				if (propertyTypeClassDescriptor.isArray()) {
 					return false;

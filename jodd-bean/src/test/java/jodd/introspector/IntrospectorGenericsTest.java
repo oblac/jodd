@@ -55,7 +55,7 @@ class IntrospectorGenericsTest {
 
 	@Test
 	void testFields() throws NoSuchFieldException {
-		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
 		assertEquals(4, cd.getAllFieldDescriptors().length);
@@ -87,7 +87,7 @@ class IntrospectorGenericsTest {
 		assertEquals(Long.class, fd4.getRawComponentType());
 
 		// impl
-		cd = ClassIntrospector.lookup(Foo.class);
+		cd = ClassIntrospector.get().lookup(Foo.class);
 
 		fd = cd.getFieldDescriptor("f", true);
 		fd2 = cd.getFieldDescriptor("f2", true);
@@ -106,7 +106,7 @@ class IntrospectorGenericsTest {
 
 	@Test
 	void testMethods() throws NoSuchMethodException {
-		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
 		assertEquals(5, cd.getAllMethodDescriptors().length);
@@ -168,7 +168,7 @@ class IntrospectorGenericsTest {
 
 		Class[] params2 = new Class[] {Integer.class, String.class, List.class, List.class, List.class};
 
-		ClassDescriptor cd1 = ClassIntrospector.lookup(Foo.class);
+		ClassDescriptor cd1 = ClassIntrospector.get().lookup(Foo.class);
 
 		assertEquals(0, Foo.class.getDeclaredMethods().length);
 

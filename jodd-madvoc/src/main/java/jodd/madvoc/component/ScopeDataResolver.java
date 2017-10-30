@@ -25,19 +25,19 @@
 
 package jodd.madvoc.component;
 
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
-import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Resolver for {@link jodd.madvoc.ScopeData scope data} for certain types.
@@ -273,7 +273,7 @@ public class ScopeDataResolver {
 	 * Returns <code>null</code> if there are no In and Out data.
 	 */
 	protected ScopeData inspectClassScopeData(Class actionClass, ScopeType scopeType) {
-		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 

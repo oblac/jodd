@@ -83,7 +83,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Returns all bean property names.
 	 */
 	protected String[] getAllBeanPropertyNames(Class type, boolean declared) {
-		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
+		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
@@ -178,6 +178,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Compares property name to the rules.
 	 */
+	@Override
 	public boolean accept(String propertyName, String rule, boolean include) {
 		return propertyName.equals(rule);
 	}

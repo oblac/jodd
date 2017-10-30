@@ -54,7 +54,7 @@ public class SetResolver {
 	 * Resolves all collections for given type.
 	 */
 	public SetInjectionPoint[] resolve(Class type, boolean autowire) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<SetInjectionPoint> list = new ArrayList<>();
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();

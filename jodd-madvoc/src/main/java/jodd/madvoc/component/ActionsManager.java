@@ -27,6 +27,8 @@ package jodd.madvoc.component;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.ActionDef;
@@ -36,8 +38,6 @@ import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.collection.SortedArrayList;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -82,6 +82,7 @@ public class ActionsManager {
 	 * Comparator that considers first chunks number then action path.
 	 */
 	public static class ActionConfigSetComparator implements Comparator<ActionConfigSet>, Serializable {
+		@Override
 		public int compare(ActionConfigSet set1, ActionConfigSet set2) {
 			int deep1 = set1.deep;
 			int deep2 = set2.deep;
@@ -131,7 +132,7 @@ public class ActionsManager {
 	 * Resolves action method for given action class ane method name.
 	 */
 	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
-		MethodDescriptor methodDescriptor = ClassIntrospector.lookup(actionClass).getMethodDescriptor(methodName, false);
+		MethodDescriptor methodDescriptor = ClassIntrospector.get().lookup(actionClass).getMethodDescriptor(methodName, false);
 		if (methodDescriptor == null) {
 			throw new MadvocException("Public method not found: " + actionClass.getSimpleName() + "#" + methodName);
 		}
