@@ -50,9 +50,9 @@ class DbHintTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
-		dbOomManager.registerEntity(Boy2.class);
-		dbOomManager.registerEntity(Girl.class);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.registerEntity(Boy2.class);
+		dbEntityManager.registerEntity(Girl.class);
 
 		q1 = sql("select $C{boy.*}, $C{girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
 

@@ -30,7 +30,7 @@ import jodd.db.DbTestUtil;
 import jodd.db.JoddDb;
 import jodd.db.ThreadDbSessionHolder;
 import jodd.db.fixtures.DbHsqldbTestCase;
-import jodd.db.oom.DbOomManager;
+import jodd.db.oom.DbEntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +49,7 @@ class GenericDaoTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
 
 		dbOom.registerEntity(Girl.class);
 		dbOom.registerEntity(Boy.class);

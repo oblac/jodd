@@ -52,9 +52,9 @@ class CompositeTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
-		dbOomManager.registerEntity(User.class);
-		dbOomManager.registerEntity(Wizard.class);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.registerEntity(User.class);
+		dbEntityManager.registerEntity(Wizard.class);
 
 		session = new DbThreadSession(cp);
 

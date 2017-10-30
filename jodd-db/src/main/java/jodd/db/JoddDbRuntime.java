@@ -26,7 +26,7 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
-import jodd.db.oom.DbOomManager;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.JoinHintResolver;
 import jodd.db.querymap.QueryMap;
 
@@ -36,7 +36,7 @@ public class JoddDbRuntime {
 	protected DbSessionProvider sessionProvider = new ThreadDbSessionProvider();
 	protected QueryMap queryMap;
 	protected JoinHintResolver hintResolver = new JoinHintResolver();
-	protected DbOomManager dbOomManager = new DbOomManager();
+	protected DbEntityManager dbEntityManager = new DbEntityManager();
 
 	/**
 	 * Returns hints resolver.
@@ -53,12 +53,12 @@ public class JoddDbRuntime {
 	}
 
 
-	public DbOomManager dbOomManager() {
-		return dbOomManager;
+	public DbEntityManager dbEntityManager() {
+		return dbEntityManager;
 	}
 
-	public void dbOomManager(DbOomManager dbOomManager) {
-		this.dbOomManager = dbOomManager;
+	public void dbEntityManager(DbEntityManager dbEntityManager) {
+		this.dbEntityManager = dbEntityManager;
 	}
 
 

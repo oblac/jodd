@@ -27,7 +27,7 @@ package jodd.joy.db;
 
 import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOomManager;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.DbOomQuery;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -66,9 +66,9 @@ public class DbIdGenerator {
 	public synchronized long nextId(Class entityType) {
 		MutableLong lastId = entityIdsMap.get(entityType);
 		if (lastId == null) {
-			DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
+			DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
 
-			DbEntityDescriptor ded = dbOomManager.lookupType(entityType);
+			DbEntityDescriptor ded = dbEntityManager.lookupType(entityType);
 			String tableName = ded.getTableName();
 			String idColumn = ded.getIdColumnName();
 

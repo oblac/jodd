@@ -217,7 +217,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder findForeign(Class entity, Object value) {
 		String tableRef = createTableRefName(entity);
 
-		DbEntityDescriptor dedFk = JoddDb.runtime().dbOomManager().lookupType(value.getClass());
+		DbEntityDescriptor dedFk = JoddDb.runtime().dbEntityManager().lookupType(value.getClass());
 
 		String tableName = JoddDb.defaults().getDbOomConfig().getTableNames().convertTableNameToEntityName(dedFk.getTableName());
 		String columnName = JoddDb.defaults().getDbOomConfig().getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());

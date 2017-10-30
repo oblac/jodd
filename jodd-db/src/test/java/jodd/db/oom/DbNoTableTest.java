@@ -49,8 +49,8 @@ class DbNoTableTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
-		dbOomManager.registerEntity(Bean1.class);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.registerEntity(Bean1.class);
 	}
 
 	@Test

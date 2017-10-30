@@ -45,7 +45,7 @@ public abstract class DbBaseTest {
 	public static final String DB_NAME = "jodd_test";
 
 	protected CoreConnectionPool connectionPool;
-	protected DbOomManager dboom;
+	protected DbEntityManager dboom;
 
 	protected void init() {
 		LoggerFactory.setLoggerProvider(name -> new NOPLogger("") {
@@ -66,7 +66,7 @@ public abstract class DbBaseTest {
 		});
 		DbTestUtil.resetAll();
 
-		dboom = JoddDb.runtime().dbOomManager();
+		dboom = JoddDb.runtime().dbEntityManager();
 
 		connectionPool = new CoreConnectionPool();
 	}

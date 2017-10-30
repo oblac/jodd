@@ -36,19 +36,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DbOom manager. Contains various global settings, DB-OOM (database - object-oriented)
- * mapping definitions, naming conventions etc.
+ * DbOom Entity manager.
  * <p>
  * Important: configure settings before entity registration!
  * <p>
- * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.oom.mapper.ResultSetMapper}
+ * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.oom.mapper.ResultSetMapper})
  * to lookup for an entity from table name. Table names are read from result-set meta data, for example.
- * Moreover, it is not needed to use mappings at all: in that case just provide entity types during result set to
- * objects conversion.
+ * It is not needed to use mappings at all: in that case just provide entity types during the conversion of
+ * result set to objects.
  */
-public class DbOomManager {
+public class DbEntityManager {
 
-	private static final Logger log = LoggerFactory.getLogger(DbOomManager.class);
+	private static final Logger log = LoggerFactory.getLogger(DbEntityManager.class);
 
 	// ---------------------------------------------------------------- registration
 
@@ -228,8 +227,6 @@ public class DbOomManager {
 		entityNamesMap.clear();
 		tableNamesMap.clear();
 	}
-
-	// ---------------------------------------------------------------- create entity
 
 	/**
 	 * Creates new entity instances.

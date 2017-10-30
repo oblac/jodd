@@ -30,6 +30,7 @@ import jodd.db.JoddDb;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbOomQuery;
 import jodd.db.type.SqlType;
@@ -215,7 +216,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				resultColumns.clear();
 				lastTableName = tableName;
 
-				DbEntityDescriptor ded = JoddDb.runtime().dbOomManager().lookupTableName(tableName);
+				DbEntityDescriptor ded = JoddDb.runtime().dbEntityManager().lookupTableName(tableName);
 				if (ded == null) {
 					throw new DbOomException(dbOomQuery, "Table name not registered: " + tableName);
 				}
@@ -244,7 +245,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			for (int i = 0; i < types.length; i++) {
 				Class type = types[i];
 				if (type != null) {
-					descs[i] = JoddDb.runtime().dbOomManager().lookupType(type);
+					descs[i] = JoddDb.runtime().dbEntityManager().lookupType(type);
 				}
 			}
 			cachedDbEntityDescriptors = descs;
@@ -256,7 +257,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * Creates table names for all specified types.
 	 * Since this is usually done once per result set, these names are cached.
 	 * Type name will be <code>null</code> for simple names, i.e. for all those
-	 * types that returns <code>null</code> when used by {@link jodd.db.oom.DbOomManager#lookupType(Class)}.
+	 * types that returns <code>null</code> when used by {@link DbEntityManager#lookupType(Class)}.
 	 */
 	protected String[] resolveTypesTableNames(Class[] types) {
 		if (types != cachedUsedTypes) {
@@ -299,7 +300,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				names[i] = null;
 				continue;
 			}
-			DbEntityDescriptor ded = JoddDb.runtime().dbOomManager().lookupType(types[i]);
+			DbEntityDescriptor ded = JoddDb.runtime().dbEntityManager().lookupType(types[i]);
 			if (ded != null) {
 				String tableName = ded.getTableName();
 				tableName = tableName.toUpperCase();
@@ -410,7 +411,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			if (tableMatched) {
 				if (!resultColumns.contains(columnName)) {
-					//DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
+					//DbEntityDescriptor ded = dbEntityManager.lookupType(currentType);
 					DbEntityDescriptor ded = dbEntityDescriptors[currentResult];
 
 					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
@@ -422,7 +423,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 						// if current entity instance does not exist (i.e. we are at the first column
 						// of some entity), create the instance and store it
 						if (result[currentResult] == null) {
-							result[currentResult] = JoddDb.runtime().dbOomManager().createEntityInstance(currentType);
+							result[currentResult] = JoddDb.runtime().dbEntityManager().createEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?

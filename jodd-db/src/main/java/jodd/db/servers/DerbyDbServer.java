@@ -25,7 +25,7 @@
 
 package jodd.db.servers;
 
-import jodd.db.oom.DbOomManager;
+import jodd.db.oom.DbEntityManager;
 
 /**
  * Apache Derby.
@@ -39,7 +39,7 @@ public class DerbyDbServer implements DbServer {
 	}
 
 	@Override
-	public void accept(DbOomManager dbOomManager) {
+	public void accept(DbEntityManager dbEntityManager) {
 	}
 
 	@Override

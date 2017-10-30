@@ -71,7 +71,7 @@ public abstract class TemplateData {
 		if (hints != null) {
 			hints.clear();
 		}
-		//columnAliasType = dbOomManager.getDefaultColumnAliasType();
+		//columnAliasType = dbEntityManager.getDefaultColumnAliasType();
 	}
 
 	protected void resetHard() {
@@ -253,7 +253,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(String entityName) {
-		DbEntityDescriptor ded = JoddDb.runtime().dbOomManager().lookupName(entityName);
+		DbEntityDescriptor ded = JoddDb.runtime().dbEntityManager().lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -264,7 +264,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(Class entity) {
-		DbEntityDescriptor ded = JoddDb.runtime().dbOomManager().lookupType(entity);
+		DbEntityDescriptor ded = JoddDb.runtime().dbEntityManager().lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
 		}

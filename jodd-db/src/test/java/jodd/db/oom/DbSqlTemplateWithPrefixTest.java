@@ -44,7 +44,7 @@ class DbSqlTemplateWithPrefixTest {
 	void setUp() throws Exception {
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
 
 		JoddDb.defaults().getDbOomConfig().getTableNames().setPrefix("PRE_");
 		JoddDb.defaults().getDbOomConfig().getTableNames().setSuffix("_SUF");

@@ -38,7 +38,7 @@ class StrictCompareTest {
 	@Test
 	void testTableNameDefault() {
 		DbTestUtil.resetAll();
-		DbOomManager dboom = JoddDb.runtime().dbOomManager();
+		DbEntityManager dboom = JoddDb.runtime().dbEntityManager();
 
 		dboom.registerEntity(Tester.class);
 

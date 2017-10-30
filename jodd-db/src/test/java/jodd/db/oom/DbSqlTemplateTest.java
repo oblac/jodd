@@ -52,11 +52,11 @@ class DbSqlTemplateTest {
 	void setUp() throws Exception {
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
-		dbOomManager.registerType(Boy.class);
-		dbOomManager.registerType(BadBoy.class);
-		dbOomManager.registerType(BadGirl.class);
-		dbOomManager.registerType(Girl.class);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.registerType(Boy.class);
+		dbEntityManager.registerType(BadBoy.class);
+		dbEntityManager.registerType(BadGirl.class);
+		dbEntityManager.registerType(Girl.class);
 	}
 
 	protected void assertContains(String string, String... chunks) {

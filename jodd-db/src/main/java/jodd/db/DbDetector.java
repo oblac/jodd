@@ -63,7 +63,7 @@ public class DbDetector {
 
 		cp.closeConnection(connection);
 
-		dbServer.accept(JoddDb.runtime().dbOomManager());
+		dbServer.accept(JoddDb.runtime().dbEntityManager());
 
 		return dbServer;
 	}

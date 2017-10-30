@@ -45,8 +45,8 @@ class DbEnumTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
-		dbOomManager.registerEntity(Enumerator.class);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.registerEntity(Enumerator.class);
 	}
 
 	@Test

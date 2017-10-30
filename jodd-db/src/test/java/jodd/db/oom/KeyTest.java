@@ -41,11 +41,11 @@ class KeyTest {
 	@Test
 	void testEqualEntities() {
 		DbTestUtil.resetAll();
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
 
-		DbEntityDescriptor<Foo> fooded = dbOomManager.registerEntity(Foo.class);
-		DbEntityDescriptor<Bar> barded = dbOomManager.registerEntity(Bar.class);
-		DbEntityDescriptor<User> userded = dbOomManager.registerEntity(User.class);
+		DbEntityDescriptor<Foo> fooded = dbEntityManager.registerEntity(Foo.class);
+		DbEntityDescriptor<Bar> barded = dbEntityManager.registerEntity(Bar.class);
+		DbEntityDescriptor<User> userded = dbEntityManager.registerEntity(User.class);
 
 		Foo foo = new Foo();
 		Bar bar = new Bar();
@@ -70,7 +70,7 @@ class KeyTest {
 		assertEquals(User.class.getName() + ":null", userded.getKeyValue(new User()));
 
 		try {
-			DbEntityDescriptor<User2> user2 = dbOomManager.registerEntity(User2.class);
+			DbEntityDescriptor<User2> user2 = dbEntityManager.registerEntity(User2.class);
 			user2.getColumnDescriptors();
 			fail("error");
 		}

@@ -30,7 +30,7 @@ import jodd.db.JoddDb;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
-import jodd.db.oom.DbOomManager;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
@@ -91,7 +91,7 @@ public abstract class DefaultAppCore {
 	 */
 	public static final String PETITE_DB = "db";
 	/**
-	 * Petite bean name for <code>DbOomManager</code> instance.
+	 * Petite bean name for <code>DbEntityManager</code> instance.
 	 */
 	public static final String PETITE_DBOOM = "dboom";
 	/**
@@ -546,7 +546,7 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Initializes database. First, creates connection pool.
-	 * and transaction manager. Then, Jodds DbOomManager is
+	 * and transaction manager. Then, Jodds DbEntityManager is
 	 * configured. It is also configured automagically, by scanning
 	 * the class path for entities.
 	 */
@@ -581,22 +581,22 @@ public abstract class DefaultAppCore {
 		JoddDb.runtime().sessionProvider(sessionProvider);
 		petite.addBean(PETITE_DB, JoddDb.defaults());           // todo -> this is for the configuration!, make this for each bean
 
-		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
-		dbOomManager.reset();
-		petite.addBean(PETITE_DBOOM, dbOomManager);
+		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		dbEntityManager.reset();
+		petite.addBean(PETITE_DBOOM, dbEntityManager);
 
 		// automatic configuration
-		registerDbEntities(dbOomManager);
+		registerDbEntities(dbEntityManager);
 	}
 
 	/**
 	 * Registers DbOom entities. By default, scans the
 	 * class path and register entities automagically.
 	 */
-	protected void registerDbEntities(DbOomManager dbOomManager) {
+	protected void registerDbEntities(DbEntityManager dbEntityManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 		appScanner.configure(dbcfg);
-		dbcfg.configure(dbOomManager);
+		dbcfg.configure(dbEntityManager);
 	}
 
 	/**

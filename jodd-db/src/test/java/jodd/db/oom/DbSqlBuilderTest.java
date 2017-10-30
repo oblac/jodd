@@ -53,7 +53,7 @@ class DbSqlBuilderTest {
 	void setUp() throws Exception {
 
 		DbTestUtil.resetAll();
-		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
+		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
 		dbOom.registerType(Girl.class);
 		dbOom.registerType(BadGirl.class);
 		dbOom.registerType(Boy.class);

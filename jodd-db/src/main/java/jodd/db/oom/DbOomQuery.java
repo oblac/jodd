@@ -224,7 +224,7 @@ public class DbOomQuery extends DbQuery {
 
 	/**
 	 * Defines if entities should be cached in {@link ResultSetMapper}.
-	 * Overrides default value in {@link DbOomManager}.
+	 * Overrides default value in {@link DbEntityManager}.
 	 */
 	public DbOomQuery cacheEntities(boolean cacheEntities) {
 		this.cacheEntities = cacheEntities;
