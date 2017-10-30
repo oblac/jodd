@@ -34,6 +34,9 @@ public class JoddBean {
 
 	private static JoddBeanRuntime runtime = new JoddBeanRuntime();
 
+	/**
+	 * Returns Jodd Bean runtime components.
+	 */
 	public static JoddBeanRuntime runtime() {
 		return runtime;
 	}

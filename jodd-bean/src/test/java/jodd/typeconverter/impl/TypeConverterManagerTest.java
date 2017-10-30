@@ -25,7 +25,7 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.TypeConverterManager;
+import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -37,7 +37,7 @@ class TypeConverterManagerTest {
 
 	@Test
 	void testRegistration() {
-		FileConverter fileTypeConverter = (FileConverter) TypeConverterManager.lookup(File.class);
+		FileConverter fileTypeConverter = (FileConverter) JoddBean.runtime().typeConverterManager().lookup(File.class);
 
 		assertNotNull(fileTypeConverter);
 		assertNull(fileTypeConverter.addonFileConverters);

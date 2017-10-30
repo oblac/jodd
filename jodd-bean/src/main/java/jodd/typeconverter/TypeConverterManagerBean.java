@@ -94,30 +94,22 @@ import java.util.TimeZone;
  * Contains a map of registered converters. User may add new converters.
  * Instantiable version of {@link TypeConverterManager}.
  */
-public class TypeConverterManagerBean {
+public class TypeConverterManagerBean implements TypeConverterManager {
 
 	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);
-
-	// ---------------------------------------------------------------- converter
-
-	protected ConvertBean convertBean = new ConvertBean();
-
-	/**
-	 * Returns {@link ConvertBean}.
-	 */
-	public ConvertBean getConvertBean() {
-		return convertBean;
-	}
+	private final ConvertBean convertBean;
 
 	// ---------------------------------------------------------------- methods
 
-	public TypeConverterManagerBean() {
+	public TypeConverterManagerBean(ConvertBean convertBean) {
+		this.convertBean = convertBean;
 		registerDefaults();
 	}
 
 	/**
 	 * Registers default set of converters.
 	 */
+	@Override
 	@SuppressWarnings( {"UnnecessaryFullyQualifiedName"})
 	public void registerDefaults() {
 		register(String.class, new StringConverter());
@@ -259,6 +251,7 @@ public class TypeConverterManagerBean {
 	 * @param type		class that converter is for
 	 * @param typeConverter	converter for provided class
 	 */
+	@Override
 	public void register(Class type, TypeConverter typeConverter) {
 		convertBean.register(type, typeConverter);
 		converters.put(type, typeConverter);
@@ -267,6 +260,7 @@ public class TypeConverterManagerBean {
 	/**
 	 * Un-registers converter for given type.
 	 */
+	@Override
 	public void unregister(Class type) {
 		convertBean.register(type, null);
 		converters.remove(type);
@@ -280,6 +274,7 @@ public class TypeConverterManagerBean {
 	 *
 	 * @return founded converter or <code>null</code>
 	 */
+	@Override
 	public TypeConverter lookup(Class type) {
 		return converters.get(type);
 	}
@@ -294,6 +289,7 @@ public class TypeConverterManagerBean {
 	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert}
 	 * instead for somewhat faster approach (no lookup).
 	 */
+	@Override
 	@SuppressWarnings({"unchecked"})
 	public <T> T convertType(Object value, Class<T> destinationType) {
 		if (destinationType == Object.class) {
@@ -352,24 +348,28 @@ public class TypeConverterManagerBean {
 	 * Special case of {@link #convertType(Object, Class)} when target is collection and
 	 * when component type is known.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Collection<T> convertToCollection(Object value, Class<? extends Collection> destinationType, Class componentType) {
+	public <C extends Collection<T>, T> C convertToCollection(Object value, Class<? extends Collection> destinationType, Class<T> componentType) {
 		if (value == null) {
 			return null;
 		}
 
 		// check same instances
 		if (ClassUtil.isInstanceOf(value, destinationType)) {
-			return (Collection<T>) value;
+			return (C) value;
 		}
+
+		final CollectionConverter collectionConverter;
 
 		if (componentType == null) {
-			componentType = Object.class;
+			collectionConverter = new CollectionConverter(destinationType, Object.class);
+		}
+		else {
+			collectionConverter = new CollectionConverter(destinationType, componentType);
 		}
 
-		CollectionConverter collectionConverter = new CollectionConverter(destinationType, componentType);
-
-		return collectionConverter.convert(value);
+		return (C) collectionConverter.convert(value);
 	}
 
 }

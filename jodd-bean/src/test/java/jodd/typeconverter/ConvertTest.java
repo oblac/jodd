@@ -25,6 +25,7 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.datetime.JDateTime;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("ALL")
 class ConvertTest {
@@ -172,7 +179,9 @@ class ConvertTest {
 
 		// change boolean converter! boolean[] depends on it!
 
-		TypeConverterManager.register(boolean.class, booleanTypeConverter);
+		TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
+
+		typeConverterManager.register(boolean.class, booleanTypeConverter);
 
 		barr = Convert.toBooleanArray(array);
 
@@ -181,8 +190,8 @@ class ConvertTest {
 		assertTrue(barr[2]);
 
 		// return back
-		TypeConverter tc = TypeConverterManager.lookup(Boolean.class);
-		TypeConverterManager.register(boolean.class, tc);
+		TypeConverter tc = typeConverterManager.lookup(Boolean.class);
+		typeConverterManager.register(boolean.class, tc);
 	}
 
 }

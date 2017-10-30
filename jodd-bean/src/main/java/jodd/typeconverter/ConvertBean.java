@@ -82,7 +82,6 @@ public class ConvertBean {
 	 */
 	protected TypeConverter[] typeConverters = new TypeConverter[commonTypes.length];
 
-
 	public void register(Class type, TypeConverter typeConverter) {
 		for (int i = 0; i < commonTypes.length; i++) {
 			Class commonType = commonTypes[i];

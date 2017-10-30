@@ -30,25 +30,14 @@ import java.util.Collection;
 /**
  * Provides dynamic object conversion to a type.
  * Contains a map of registered converters. User may add new converter.
- * Static version of {@link TypeConverterManagerBean}.
+ * @see TypeConverterManagerBean
  */
-public class TypeConverterManager {
-
-	private static final TypeConverterManagerBean TYPE_CONVERTER_MANAGER_BEAN = new TypeConverterManagerBean();
-
-	/**
-	 * Returns default {@link TypeConverterManager}.
-	 */
-	public static TypeConverterManagerBean getDefaultTypeConverterManager() {
-		return TYPE_CONVERTER_MANAGER_BEAN;
-	}
+public interface TypeConverterManager {
 
 	/**
 	 * Registers default set of converters.
 	 */
-	public static void registerDefaults() {
-		TYPE_CONVERTER_MANAGER_BEAN.registerDefaults();
-	}
+	void registerDefaults();
 
 	/**
 	 * Registers a converter for specified type.
@@ -57,13 +46,13 @@ public class TypeConverterManager {
 	 * @param type class that converter is for
 	 * @param typeConverter converter for provided class
 	 */
-	public static void register(Class type, TypeConverter typeConverter) {
-		TYPE_CONVERTER_MANAGER_BEAN.register(type, typeConverter);
-	}
+	void register(Class type, TypeConverter typeConverter);
 
-	public static void unregister(Class type) {
-		TYPE_CONVERTER_MANAGER_BEAN.unregister(type);
-	}
+	/**
+	 * Unregisters certain type from the type converter.
+	 * @param type class of a converter to remove
+	 */
+	void unregister(Class type);
 
 	/**
 	 * Retrieves converter for provided type. Only registered types are matched,
@@ -71,23 +60,17 @@ public class TypeConverterManager {
 	 *
 	 * @return founded converter or <code>null</code>
 	 */
-	public static TypeConverter lookup(Class type) {
-		return TYPE_CONVERTER_MANAGER_BEAN.lookup(type);
-	}
+	TypeConverter lookup(Class type);
 
 	/**
 	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
 	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
 	 */
-	public static <T> T convertType(Object value, Class<T> destinationType) {
-		return TYPE_CONVERTER_MANAGER_BEAN.convertType(value, destinationType);
-	}
+	<T> T convertType(Object value, Class<T> destinationType);
 
 	/**
 	 * Special conversion to collections, when component type is known.
 	 */
-	public static <T> T convertToCollection(Object value, Class<? extends Collection> destinationType, Class<?> componentType) {
-		return (T) TYPE_CONVERTER_MANAGER_BEAN.convertToCollection(value, destinationType, componentType);
-	}
+	<C extends Collection<T>, T> C convertToCollection(Object value, Class<? extends Collection> destinationType, Class<T> componentType);
 
 }

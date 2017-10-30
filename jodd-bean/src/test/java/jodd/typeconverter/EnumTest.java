@@ -25,6 +25,7 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,9 +38,9 @@ class EnumTest {
 
 	@Test
 	void testCastEnums() {
-		En en = TypeConverterManager.convertType("ONE", En.class);
+		En en = JoddBean.runtime().typeConverterManager().convertType("ONE", En.class);
 		assertEquals(En.ONE, en);
-		en = TypeConverterManager.convertType("TWO", En.class);
+		en = JoddBean.runtime().typeConverterManager().convertType("TWO", En.class);
 		assertEquals(En.TWO, en);
 	}
 

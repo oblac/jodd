@@ -25,11 +25,13 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.datetime.JDateTime;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Static version of {@link ConvertBean} of default {@link TypeConverterManagerBean}.
@@ -40,225 +42,225 @@ public class Convert {
 	 * Returns default {@link ConvertBean}. We should not store this instance
 	 * in a static variable as default {@link TypeConverterManagerBean} may be changed.
 	 */
-	protected static ConvertBean getConvertBean() {
-		return TypeConverterManager.getDefaultTypeConverterManager().getConvertBean();
+	protected static ConvertBean convertBean() {
+		return JoddBean.runtime().convertBean();
 	}
 
 	// ---------------------------------------------------------------- @@generated
 
 	public static BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
-		return getConvertBean().toBigDecimal(value, defaultValue);
+		return convertBean().toBigDecimal(value, defaultValue);
 	}
 
 	public static Boolean toBoolean(Object value) {
-		return getConvertBean().toBoolean(value);
+		return convertBean().toBoolean(value);
 	}
 
 	public static Boolean toBoolean(Object value, Boolean defaultValue) {
-		return getConvertBean().toBoolean(value, defaultValue);
+		return convertBean().toBoolean(value, defaultValue);
 	}
 
 	public static boolean toBooleanValue(Object value, boolean defaultValue) {
-		return getConvertBean().toBooleanValue(value, defaultValue);
+		return convertBean().toBooleanValue(value, defaultValue);
 	}
 
 	public static boolean toBooleanValue(Object value) {
-		return getConvertBean().toBooleanValue(value);
+		return convertBean().toBooleanValue(value);
 	}
 
 	public static Integer toInteger(Object value) {
-		return getConvertBean().toInteger(value);
+		return convertBean().toInteger(value);
 	}
 
 	public static Integer toInteger(Object value, Integer defaultValue) {
-		return getConvertBean().toInteger(value, defaultValue);
+		return convertBean().toInteger(value, defaultValue);
 	}
 
 	public static int toIntValue(Object value, int defaultValue) {
-		return getConvertBean().toIntValue(value, defaultValue);
+		return convertBean().toIntValue(value, defaultValue);
 	}
 
 	public static int toIntValue(Object value) {
-		return getConvertBean().toIntValue(value);
+		return convertBean().toIntValue(value);
 	}
 
 	public static Long toLong(Object value) {
-		return getConvertBean().toLong(value);
+		return convertBean().toLong(value);
 	}
 
 	public static Long toLong(Object value, Long defaultValue) {
-		return getConvertBean().toLong(value, defaultValue);
+		return convertBean().toLong(value, defaultValue);
 	}
 
 	public static long toLongValue(Object value, long defaultValue) {
-		return getConvertBean().toLongValue(value, defaultValue);
+		return convertBean().toLongValue(value, defaultValue);
 	}
 
 	public static long toLongValue(Object value) {
-		return getConvertBean().toLongValue(value);
+		return convertBean().toLongValue(value);
 	}
 
 	public static Float toFloat(Object value) {
-		return getConvertBean().toFloat(value);
+		return convertBean().toFloat(value);
 	}
 
 	public static Float toFloat(Object value, Float defaultValue) {
-		return getConvertBean().toFloat(value, defaultValue);
+		return convertBean().toFloat(value, defaultValue);
 	}
 
 	public static float toFloatValue(Object value, float defaultValue) {
-		return getConvertBean().toFloatValue(value, defaultValue);
+		return convertBean().toFloatValue(value, defaultValue);
 	}
 
 	public static float toFloatValue(Object value) {
-		return getConvertBean().toFloatValue(value);
+		return convertBean().toFloatValue(value);
 	}
 
 	public static Double toDouble(Object value) {
-		return getConvertBean().toDouble(value);
+		return convertBean().toDouble(value);
 	}
 
 	public static Double toDouble(Object value, Double defaultValue) {
-		return getConvertBean().toDouble(value, defaultValue);
+		return convertBean().toDouble(value, defaultValue);
 	}
 
 	public static double toDoubleValue(Object value, double defaultValue) {
-		return getConvertBean().toDoubleValue(value, defaultValue);
+		return convertBean().toDoubleValue(value, defaultValue);
 	}
 
 	public static double toDoubleValue(Object value) {
-		return getConvertBean().toDoubleValue(value);
+		return convertBean().toDoubleValue(value);
 	}
 
 	public static Short toShort(Object value) {
-		return getConvertBean().toShort(value);
+		return convertBean().toShort(value);
 	}
 
 	public static Short toShort(Object value, Short defaultValue) {
-		return getConvertBean().toShort(value, defaultValue);
+		return convertBean().toShort(value, defaultValue);
 	}
 
 	public static short toShortValue(Object value, short defaultValue) {
-		return getConvertBean().toShortValue(value, defaultValue);
+		return convertBean().toShortValue(value, defaultValue);
 	}
 
 	public static short toShortValue(Object value) {
-		return getConvertBean().toShortValue(value);
+		return convertBean().toShortValue(value);
 	}
 
 	public static Character toCharacter(Object value) {
-		return getConvertBean().toCharacter(value);
+		return convertBean().toCharacter(value);
 	}
 
 	public static Character toCharacter(Object value, Character defaultValue) {
-		return getConvertBean().toCharacter(value, defaultValue);
+		return convertBean().toCharacter(value, defaultValue);
 	}
 
 	public static char toCharValue(Object value, char defaultValue) {
-		return getConvertBean().toCharValue(value, defaultValue);
+		return convertBean().toCharValue(value, defaultValue);
 	}
 
 	public static char toCharValue(Object value) {
-		return getConvertBean().toCharValue(value);
+		return convertBean().toCharValue(value);
 	}
 
 	public static Byte toByte(Object value) {
-		return getConvertBean().toByte(value);
+		return convertBean().toByte(value);
 	}
 
 	public static Byte toByte(Object value, Byte defaultValue) {
-		return getConvertBean().toByte(value, defaultValue);
+		return convertBean().toByte(value, defaultValue);
 	}
 
 	public static byte toByteValue(Object value, byte defaultValue) {
-		return getConvertBean().toByteValue(value, defaultValue);
+		return convertBean().toByteValue(value, defaultValue);
 	}
 
 	public static byte toByteValue(Object value) {
-		return getConvertBean().toByteValue(value);
+		return convertBean().toByteValue(value);
 	}
 
 	public static boolean[] toBooleanArray(Object value) {
-		return getConvertBean().toBooleanArray(value);
+		return convertBean().toBooleanArray(value);
 	}
 
 	public static int[] toIntegerArray(Object value) {
-		return getConvertBean().toIntegerArray(value);
+		return convertBean().toIntegerArray(value);
 	}
 
 	public static long[] toLongArray(Object value) {
-		return getConvertBean().toLongArray(value);
+		return convertBean().toLongArray(value);
 	}
 
 	public static float[] toFloatArray(Object value) {
-		return getConvertBean().toFloatArray(value);
+		return convertBean().toFloatArray(value);
 	}
 
 	public static double[] toDoubleArray(Object value) {
-		return getConvertBean().toDoubleArray(value);
+		return convertBean().toDoubleArray(value);
 	}
 
 	public static short[] toShortArray(Object value) {
-		return getConvertBean().toShortArray(value);
+		return convertBean().toShortArray(value);
 	}
 
 	public static char[] toCharacterArray(Object value) {
-		return getConvertBean().toCharacterArray(value);
+		return convertBean().toCharacterArray(value);
 	}
 
 	public static String toString(Object value) {
-		return getConvertBean().toString(value);
+		return convertBean().toString(value);
 	}
 
 	public static String toString(Object value, String defaultValue) {
-		return getConvertBean().toString(value, defaultValue);
+		return convertBean().toString(value, defaultValue);
 	}
 
 	public static String[] toStringArray(Object value) {
-		return getConvertBean().toStringArray(value);
+		return convertBean().toStringArray(value);
 	}
 
 	public static Class toClass(Object value) {
-		return getConvertBean().toClass(value);
+		return convertBean().toClass(value);
 	}
 
 	public static Class[] toClassArray(Object value) {
-		return getConvertBean().toClassArray(value);
+		return convertBean().toClassArray(value);
 	}
 
 	public static JDateTime toJDateTime(Object value) {
-		return getConvertBean().toJDateTime(value);
+		return convertBean().toJDateTime(value);
 	}
 
 	public static JDateTime toJDateTime(Object value, JDateTime defaultValue) {
-		return getConvertBean().toJDateTime(value, defaultValue);
+		return convertBean().toJDateTime(value, defaultValue);
 	}
 
 	public static Date toDate(Object value) {
-		return getConvertBean().toDate(value);
+		return convertBean().toDate(value);
 	}
 
 	public static Date toDate(Object value, Date defaultValue) {
-		return getConvertBean().toDate(value, defaultValue);
+		return convertBean().toDate(value, defaultValue);
 	}
 
 	public static Calendar toCalendar(Object value) {
-		return getConvertBean().toCalendar(value);
+		return convertBean().toCalendar(value);
 	}
 
 	public static Calendar toCalendar(Object value, Calendar defaultValue) {
-		return getConvertBean().toCalendar(value, defaultValue);
+		return convertBean().toCalendar(value, defaultValue);
 	}
 
 	public static BigInteger toBigInteger(Object value) {
-		return getConvertBean().toBigInteger(value);
+		return convertBean().toBigInteger(value);
 	}
 
 	public static BigInteger toBigInteger(Object value, BigInteger defaultValue) {
-		return getConvertBean().toBigInteger(value, defaultValue);
+		return convertBean().toBigInteger(value, defaultValue);
 	}
 
 	public static BigDecimal toBigDecimal(Object value) {
-		return getConvertBean().toBigDecimal(value);
+		return convertBean().toBigDecimal(value);
 	}
 }
