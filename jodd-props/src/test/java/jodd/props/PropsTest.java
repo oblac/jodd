@@ -25,12 +25,15 @@
 
 package jodd.props;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Properties;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -933,5 +936,83 @@ class PropsTest extends BasePropsTest {
 		assertEquals("line1|   line2|   line3|   line4", props.getValue("text"));
 	}
 
+	@Nested
+	@DisplayName("test for Props#getXXXValue() - methods")
+	@TestInstance(TestInstance.Lifecycle.PER_CLASS) // needed because annotation MethodSource requires static method without that
+	class GetXXXValue {
 
+		Props props;
+
+		@BeforeEach
+		void beforeEach() {
+			props = new Props();
+			Map<String, String> map = new HashMap<>();
+
+			// test data
+			map.put("string_jodd", "jodd");
+			map.put("boolean_true", "true");
+			map.put("boolean_false", "false");
+			map.put("integer_0", "0");
+			map.put("integer_1234567890", "1234567890");
+			map.put("integer_-45232", "-45232");
+			map.put("long_0", "0");
+			map.put("long_1234567890", "1234567890");
+			map.put("long_-2789899", "-2789899");
+			map.put("double_1234567890_12", "1234567890.12");
+			map.put("double_12345678903333_34", "12345678903333.34");
+			map.put("double_-43478954.44", "-43478954.44");
+
+			props.load(map);
+		}
+
+		@ParameterizedTest (name = "{index} - Props#{1}(''{2}'') == {0}")
+		@MethodSource(value = "testdata")
+		void testGetXXXValue(final Object expected, final String methodName, final String key) throws Exception {
+
+			Method method = props.getClass().getDeclaredMethod(methodName, String.class);
+			final Object actual = method.invoke(props, key);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+
+		@ParameterizedTest (name = "{index} - Props#{1}(''{2}'', null) == {0}")
+		@MethodSource(value = "testdata")
+		void testGetXXXValue_WithProfile(final Object expected, final String methodName, final String key) throws Exception {
+
+			Method method = props.getClass().getDeclaredMethod(methodName, String.class, String[].class);
+			final Object actual = method.invoke(props, key, (String[])null);
+
+			// asserts
+			assertEquals(expected, actual);
+		}
+
+		private Stream<Arguments> testdata() {
+			return Stream.of(
+					// getValue
+					Arguments.of("jodd", "getValue", "string_jodd"),
+					Arguments.of(null, "getValue", "unknown_key"),
+					// getBooleanValue
+					Arguments.of(Boolean.TRUE, "getBooleanValue", "boolean_true"),
+					Arguments.of(Boolean.FALSE, "getBooleanValue", "boolean_false"),
+					Arguments.of(null, "getBooleanValue", "unknown_key"),
+					// getIntegerValue
+					Arguments.of(0, "getIntegerValue", "integer_0"),
+					Arguments.of(1234567890, "getIntegerValue", "integer_1234567890"),
+					Arguments.of(-45232, "getIntegerValue", "integer_-45232"),
+					Arguments.of(null, "getIntegerValue", "unknown_key"),
+					// getLongValue
+					Arguments.of(0L, "getLongValue", "long_0"),
+					Arguments.of(1234567890L, "getLongValue", "long_1234567890"),
+					Arguments.of(-2789899L, "getLongValue", "long_-2789899"),
+					Arguments.of(null, "getLongValue", "unknown_key"),
+					// getDoubleValue
+					Arguments.of(1234567890.12D, "getDoubleValue", "double_1234567890_12"),
+					Arguments.of(12345678903333.34D, "getDoubleValue", "double_12345678903333_34"),
+					Arguments.of(-43478954.44D, "getDoubleValue", "double_-43478954.44"),
+					Arguments.of(null, "getDoubleValue", "unknown_key")
+			);
+		}
+
+	}
 }
