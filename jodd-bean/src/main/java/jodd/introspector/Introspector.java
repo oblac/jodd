@@ -26,12 +26,22 @@
 package jodd.introspector;
 
 
+import jodd.bean.JoddBean;
+
 /**
  * Provides introspection analysis against any java class.
  * Implementations may cache {@link ClassDescriptor} objects to improve performance.
  * @see CachingIntrospector
  */
 public interface Introspector {
+
+	/**
+	 * Returns default instance.
+	 */
+	public static Introspector get() {
+		return JoddBean.runtime().introspector();
+	}
+
 	/**
 	 * Returns the {@link jodd.introspector.ClassDescriptor} object for specified class.
 	 */

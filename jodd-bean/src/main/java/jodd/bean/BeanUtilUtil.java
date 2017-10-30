@@ -29,7 +29,6 @@ import jodd.introspector.Getter;
 import jodd.introspector.Introspector;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Array;
@@ -49,8 +48,8 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- introspector
 
-	protected Introspector introspector = JoddBean.runtime().introspector();
-	protected TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
+	protected Introspector introspector = Introspector.get();
+	protected TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	/**
 	 * Sets {@link Introspector introspector} implementation.
@@ -67,14 +66,14 @@ abstract class BeanUtilUtil implements BeanUtil {
 	}
 
 	/**
-	 * Sets {@link TypeConverterManagerBean type converter manager} implementation.
+	 * Sets {@link TypeConverterManager type converter manager} implementation.
 	 */
-	public void setTypeConverterManager(TypeConverterManagerBean typeConverterManager) {
+	public void setTypeConverterManager(TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	/**
-	 * Returns {@link TypeConverterManagerBean type converter manager} implementation.
+	 * Returns {@link TypeConverterManager type converter manager} implementation.
 	 */
 	public TypeConverterManager getTypeConverterManager() {
 		return typeConverterManager;

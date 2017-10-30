@@ -25,12 +25,12 @@
 
 package jodd.json;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -137,7 +137,7 @@ public abstract class JsonParserBase {
 		}
 
 		try {
-			return JoddBean.runtime().typeConverterManager().convertType(value, targetType);
+			return TypeConverterManager.get().convertType(value, targetType);
 		}
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);

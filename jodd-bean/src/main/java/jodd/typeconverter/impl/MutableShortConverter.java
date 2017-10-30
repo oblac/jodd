@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableShort;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Converts given object to {@link MutableShort}.
@@ -37,10 +37,11 @@ public class MutableShortConverter implements TypeConverter<MutableShort> {
 	protected final TypeConverter<Short> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableShortConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverter = typeConverterManagerBean.lookup(Short.class);
+	public MutableShortConverter(TypeConverterManager typeConverterManager) {
+		typeConverter = typeConverterManager.lookup(Short.class);
 	}
 
+	@Override
 	public MutableShort convert(Object value) {
 		if (value == null) {
 			return null;

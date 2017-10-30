@@ -26,7 +26,7 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
@@ -38,12 +38,13 @@ import java.util.List;
  */
 public class FloatArrayConverter implements TypeConverter<float[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public FloatArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public FloatArrayConverter(TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
+	@Override
 	public float[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -64,7 +65,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected float convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, float.class).floatValue();
+		return typeConverterManager.convertType(value, float.class).floatValue();
 	}
 
 	/**

@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.bean.JoddBean;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
@@ -36,6 +35,7 @@ import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Result;
 import jodd.petite.meta.PetiteInject;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -299,7 +299,7 @@ public class ResultsManager {
 							resultObject = resultValue;
 						}
 						else {
-							resultObject = JoddBean.runtime().typeConverterManager().convertType(resultValue, targetClass);
+							resultObject = TypeConverterManager.get().convertType(resultValue, targetClass);
 						}
 					} catch (Exception ex) {
 						resultObject = resultValue;

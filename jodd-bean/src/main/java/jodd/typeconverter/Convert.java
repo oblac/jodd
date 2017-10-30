@@ -34,13 +34,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Static version of {@link ConvertBean} of default {@link TypeConverterManagerBean}.
+ * Static version of {@link ConvertBean} of default {@link TypeConverterManager}.
  */
 public class Convert {
 
 	/**
 	 * Returns default {@link ConvertBean}. We should not store this instance
-	 * in a static variable as default {@link TypeConverterManagerBean} may be changed.
+	 * in a static variable as default {@link TypeConverterManager} may be changed.
 	 */
 	protected static ConvertBean convertBean() {
 		return JoddBean.runtime().convertBean();

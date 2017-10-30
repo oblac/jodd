@@ -34,6 +34,8 @@ import java.util.Date;
 
 public class ConvertBean {
 
+
+
 	/**
 	 * List of common types. Used for faster lookup and when needed to be used
 	 * by other converters.

@@ -28,6 +28,7 @@ package jodd.bean;
 import jodd.bean.fixtures.LifeBean;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.Introspector;
 import jodd.introspector.PropertyDescriptor;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +50,7 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		ClassDescriptor cd = JoddBean.runtime().introspector().lookup(LifeBean.class);
+		ClassDescriptor cd = Introspector.get().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -78,7 +79,7 @@ class BeanPrefixTest {
 		assertEquals("foo", foo);
 
 
-		ClassDescriptor cd = JoddBean.runtime().introspector().lookup(LifeBean.class);
+		ClassDescriptor cd = Introspector.get().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);

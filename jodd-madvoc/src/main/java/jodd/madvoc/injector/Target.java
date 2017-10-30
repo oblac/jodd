@@ -26,8 +26,8 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.bean.JoddBean;
 import jodd.madvoc.MadvocException;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.lang.reflect.Constructor;
 
@@ -130,7 +130,7 @@ public class Target {
 			int dotNdx = propertyName.indexOf('.');
 
 			if (dotNdx == -1) {
-				value = JoddBean.runtime().typeConverterManager().convertType(propertyValue, type);
+				value = TypeConverterManager.get().convertType(propertyValue, type);
 				return;
 			}
 

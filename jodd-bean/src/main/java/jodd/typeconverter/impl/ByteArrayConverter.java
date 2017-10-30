@@ -28,7 +28,7 @@ package jodd.typeconverter.impl;
 import jodd.io.FileUtil;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 
 import java.io.File;
@@ -44,12 +44,13 @@ import java.util.List;
  */
 public class ByteArrayConverter implements TypeConverter<byte[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public ByteArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public ByteArrayConverter(TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
+	@Override
 	public byte[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -70,7 +71,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected byte convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, byte.class).byteValue();
+		return typeConverterManager.convertType(value, byte.class).byteValue();
 	}
 
 	/**

@@ -26,7 +26,7 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.StringUtil;
 import jodd.util.collection.IntArrayList;
 
@@ -38,12 +38,13 @@ import java.util.List;
  */
 public class IntegerArrayConverter implements TypeConverter<int[]> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 
-	public IntegerArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		this.typeConverterManagerBean = typeConverterManagerBean;
+	public IntegerArrayConverter(TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
 	}
 
+	@Override
 	public int[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -64,7 +65,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected int convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, int.class).intValue();
+		return typeConverterManager.convertType(value, int.class).intValue();
 	}
 
 	/**

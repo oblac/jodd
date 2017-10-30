@@ -26,7 +26,6 @@
 package jodd.db.oom.mapper;
 
 import jodd.bean.BeanUtil;
-import jodd.bean.JoddBean;
 import jodd.db.JoddDb;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityColumnDescriptor;
@@ -36,6 +35,7 @@ import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbOomQuery;
 import jodd.db.type.SqlType;
 import jodd.db.type.SqlTypeManager;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -333,7 +333,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					cachedColumnValue = sqlType.readValue(resultSet, colNdx + 1, destinationType, columnDbSqlType);
 				} else {
 					cachedColumnValue = resultSet.getObject(colNdx + 1);
-					cachedColumnValue = JoddBean.runtime().typeConverterManager().convertType(cachedColumnValue, destinationType);
+					cachedColumnValue = TypeConverterManager.get().convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
 				throw new DbOomException(dbOomQuery, "Invalid value for column #" + (colNdx + 1), sex);

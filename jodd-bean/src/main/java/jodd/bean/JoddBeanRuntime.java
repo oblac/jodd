@@ -29,7 +29,6 @@ import jodd.introspector.CachingIntrospector;
 import jodd.introspector.Introspector;
 import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Jodd Bean runtime components.
@@ -38,7 +37,7 @@ public class JoddBeanRuntime {
 
 	private Introspector introspector = new CachingIntrospector();
 	private ConvertBean convertBean = new ConvertBean();
-	private TypeConverterManager typeConverterManager = new TypeConverterManagerBean(convertBean);
+	private TypeConverterManager typeConverterManager = new TypeConverterManager(convertBean);
 
 	/**
 	 * Returns the {@link Introspector} implementation. Default is {@link CachingIntrospector}.

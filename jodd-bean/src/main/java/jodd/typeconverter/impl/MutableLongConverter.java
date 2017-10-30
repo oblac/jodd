@@ -27,7 +27,7 @@ package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableLong;
 import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Converts given object to a {@link MutableLong}.
@@ -37,10 +37,11 @@ public class MutableLongConverter implements TypeConverter<MutableLong> {
 	protected final TypeConverter<Long> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableLongConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverter = typeConverterManagerBean.lookup(Long.class);
+	public MutableLongConverter(TypeConverterManager typeConverterManager) {
+		typeConverter = typeConverterManager.lookup(Long.class);
 	}
 
+	@Override
 	public MutableLong convert(Object value) {
 		if (value == null) {
 			return null;
