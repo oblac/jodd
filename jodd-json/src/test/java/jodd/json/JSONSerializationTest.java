@@ -710,6 +710,19 @@ class JSONSerializationTest {
 		assertEquals(expected_json, actual_json);
 	}
 
+	@Test
+	void testSerializeLongArray() throws Exception {
+		final long[] input = new long[]{0L, -0L, 1L, -1L, 578437435345345L, -345357348234782L};
+
+		final String expected_json = "[0,0,1,-1,578437435345345,-345357348234782]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
 	// ---------------------------------------------------------------- custom asserts
 
 
