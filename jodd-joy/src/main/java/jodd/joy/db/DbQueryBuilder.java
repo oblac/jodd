@@ -25,7 +25,7 @@
 
 package jodd.joy.db;
 
-import jodd.db.DbManager;
+import jodd.db.JoddDb;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbOomQuery;
 import jodd.db.oom.DbSqlGenerator;
@@ -54,7 +54,7 @@ public class DbQueryBuilder {
 	protected final Map<String, String[]> methodParamNames;
 
 	public DbQueryBuilder() {
-		queryMap = DbManager.getInstance().getQueryMap();
+		queryMap = JoddDb.runtime().queryMap();
 		parsedSqlMap = new HashMap<>();
 		methodParamNames = new HashMap<>();
 	}

@@ -50,7 +50,6 @@ public class DbSession implements AutoCloseable {
 
 	// ---------------------------------------------------------------- init & close
 
-	protected final DbManager dbManager = DbManager.getInstance();
 	protected final ConnectionProvider connectionProvider;
 	protected Connection connection;
 
@@ -68,15 +67,16 @@ public class DbSession implements AutoCloseable {
 		log.debug("Creating new db session");
 
 		if (connectionProvider == null) {
-			connectionProvider = dbManager.connectionProvider;
+			connectionProvider = JoddDb.runtime().connectionProvider();
 			if (connectionProvider == null) {
 				throw new DbSqlException("Connection provider is not available");
 			}
 		}
+
 		this.connectionProvider = connectionProvider;
-		txActive = false;
-		txMode = dbManager.transactionMode;
-		queries = new HashSet<>();
+		this.txActive = false;
+		this.txMode = JoddDb.defaults().getTransactionMode();
+		this.queries = new HashSet<>();
 	}
 
 
@@ -256,7 +256,7 @@ public class DbSession implements AutoCloseable {
 	 * Starts transaction with default transaction mode.
 	 */
 	public void beginTransaction() {
-		beginTransaction(dbManager.transactionMode);
+		beginTransaction(JoddDb.defaults().getTransactionMode());
 	}
 
 	/**

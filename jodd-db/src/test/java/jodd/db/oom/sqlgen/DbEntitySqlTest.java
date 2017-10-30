@@ -25,6 +25,8 @@
 
 package jodd.db.oom.sqlgen;
 
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.fixtures.BadBoy;
 import jodd.db.oom.fixtures.BadGirl;
@@ -43,8 +45,8 @@ class DbEntitySqlTest {
 	@BeforeEach
 	void setUp() throws Exception {
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
 
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);

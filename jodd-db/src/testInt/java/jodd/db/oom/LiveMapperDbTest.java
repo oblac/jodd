@@ -27,6 +27,7 @@ package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
 import jodd.db.DbSession;
+import jodd.db.JoddDb;
 import jodd.db.oom.fixtures.Tester2;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import org.junit.jupiter.api.Test;
@@ -76,8 +77,8 @@ class LiveMapperDbTest extends DbBaseTest {
 		@Override
 		public void initDb() {
 			super.initDb();
-			dboom.getTableNames().setLowercase(true);
-			dboom.getColumnNames().setLowercase(true);
+			JoddDb.defaults().getDbOomConfig().getTableNames().setLowercase(true);
+			JoddDb.defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 		}
 
 		@Override

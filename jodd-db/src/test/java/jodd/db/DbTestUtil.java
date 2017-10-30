@@ -23,47 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom;
+package jodd.db;
 
-import jodd.db.DbTestUtil;
-import jodd.db.JoddDb;
-import jodd.db.oom.fixtures.BadBoy;
-import jodd.db.oom.fixtures.BadGirl;
-import jodd.db.oom.fixtures.Boy;
-import jodd.db.oom.fixtures.Girl;
-import jodd.db.oom.sqlgen.DbSqlBuilder;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import jodd.exception.UncheckedException;
 
-import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.lang.reflect.Field;
 
-class DbSqlTemplateWithPrefixTest {
+public class DbTestUtil {
 
-	@BeforeEach
-	void setUp() throws Exception {
+	public static void resetAll() {
+		try {
+			Field defaultsField = JoddDb.class.getDeclaredField("defaults");
+			defaultsField.setAccessible(true);
+			defaultsField.set(null, new JoddDbDefaults());
 
-		DbTestUtil.resetAll();
-		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
-
-		JoddDb.defaults().getDbOomConfig().getTableNames().setPrefix("PRE_");
-		JoddDb.defaults().getDbOomConfig().getTableNames().setSuffix("_SUF");
-
-		dbOom.registerType(Boy.class);
-		dbOom.registerType(BadBoy.class);
-		dbOom.registerType(BadGirl.class);
-		dbOom.registerType(Girl.class);
+			Field runtimeField = JoddDb.class.getDeclaredField("runtime");
+			runtimeField.setAccessible(true);
+			runtimeField.set(null, new JoddDbRuntime());
+		}
+		catch (Exception ex) {
+			throw new UncheckedException(ex);
+		}
 	}
-
-	@Test
-	void testTablePrefixSuffix() {
-		DbSqlBuilder st;
-
-		st = sql("$T{Boy} $Boy.id $C{Boy.id}");
-		assertEquals("PRE_BOY_SUF PRE_BOY_SUF.ID PRE_BOY_SUF.ID", st.generateQuery());
-
-		st = sql("$T{Boy b} $b.id $C{b.id}");
-		assertEquals("PRE_BOY_SUF b b.ID b.ID", st.generateQuery());
-	}
-
 }

@@ -30,15 +30,15 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
 import java.sql.CallableStatement;
-import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 import static jodd.db.DbQueryBase.State.CLOSED;
 import static jodd.db.DbQueryBase.State.CREATED;
@@ -53,16 +53,14 @@ abstract class DbQueryBase implements AutoCloseable {
 
 	// ---------------------------------------------------------------- ctor
 
-	protected final DbManager dbManager = DbManager.getInstance();
-
-	protected DbQueryBase() {
-		this.forcePreparedStatement = dbManager.forcePreparedStatement;
-		this.type = dbManager.type;
-		this.concurrencyType = dbManager.concurrencyType;
-		this.holdability = dbManager.holdability;
-		this.debug = dbManager.debug;
-		this.fetchSize = dbManager.fetchSize;
-		this.maxRows = dbManager.maxRows;
+	protected DbQueryBase(DbQueryConfig dbQueryConfig, boolean debug) {
+		this.forcePreparedStatement = dbQueryConfig.isForcePreparedStatement();
+		this.type = dbQueryConfig.getType();
+		this.concurrencyType = dbQueryConfig.getConcurrencyType();
+		this.holdability = dbQueryConfig.getHoldability();
+		this.debug = debug;
+		this.fetchSize = dbQueryConfig.getFetchSize();
+		this.maxRows = dbQueryConfig.getMaxRows();
 	}
 
 	// ---------------------------------------------------------------- query states
@@ -212,7 +210,7 @@ abstract class DbQueryBase implements AutoCloseable {
 			return;
 		}
 
-		DbSessionProvider dbSessionProvider = dbManager.sessionProvider;
+		DbSessionProvider dbSessionProvider = JoddDb.runtime().sessionProvider();
 
 		if (dbSessionProvider == null) {
 			throw new DbSqlException("Session provider not available.");
@@ -410,6 +408,7 @@ abstract class DbQueryBase implements AutoCloseable {
 	/**
 	 * Closes the query and all created results sets and detaches itself from the session.
 	 */
+	@Override
 	@SuppressWarnings({"ClassReferencesSubclass"})
 	public void close() {
 		SQLException sqlException = closeQuery();

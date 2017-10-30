@@ -25,6 +25,8 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
@@ -38,8 +40,8 @@ class KeyTest {
 
 	@Test
 	void testEqualEntities() {
-		DbOomManager dbOomManager = DbOomManager.getInstance();
-		dbOomManager.reset();
+		DbTestUtil.resetAll();
+		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
 
 		DbEntityDescriptor<Foo> fooded = dbOomManager.registerEntity(Foo.class);
 		DbEntityDescriptor<Bar> barded = dbOomManager.registerEntity(Bar.class);

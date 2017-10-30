@@ -24,10 +24,10 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.db.fixtures;
 
-import jodd.db.DbManager;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
@@ -46,7 +46,7 @@ public abstract class DbTestBase {
 
 	@BeforeEach
 	protected void setUp() throws Exception {
-		DbManager.getInstance().setQueryMap(new DbPropsQueryMap());
+		JoddDb.runtime().queryMap(new DbPropsQueryMap());
 
 		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {

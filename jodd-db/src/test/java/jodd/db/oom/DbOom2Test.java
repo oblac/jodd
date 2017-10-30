@@ -25,28 +25,34 @@
 
 package jodd.db.oom;
 
-import jodd.db.fixtures.DbH2TestCase;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.db.oom.sqlgen.DbSqlBuilder;
+import jodd.db.JoddDb;
+import jodd.db.fixtures.DbH2TestCase;
 import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.fixtures.Girl2;
 import jodd.db.oom.fixtures.IdName;
+import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DbOom2Test extends DbH2TestCase {
 
 	@Test
 	void testOrm2() {
-		DbOomManager.resetAll();
+		DbTestUtil.resetAll();
 
 		DbSession session = new DbThreadSession(cp);
 
@@ -97,24 +103,26 @@ class DbOom2Test extends DbH2TestCase {
 			// ignore
 		}
 
-		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
-		assertEquals(0, DbOomManager.getInstance().getTotalTableNames());
-		assertEquals(2, DbOomManager.getInstance().getTotalNames());
+		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
 
-		DbOomManager.getInstance().registerEntity(Girl.class, true);
+		assertEquals(2, dbOom.getTotalTypes());
+		assertEquals(0, dbOom.getTotalTableNames());
+		assertEquals(2, dbOom.getTotalNames());
+
+		dbOom.registerEntity(Girl.class, true);
 		girl = q.find();
 		checkGirl1(girl);
 
-		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
-		assertEquals(1, DbOomManager.getInstance().getTotalTableNames());
-		assertEquals(2, DbOomManager.getInstance().getTotalNames());
+		assertEquals(2, dbOom.getTotalTypes());
+		assertEquals(1, dbOom.getTotalTableNames());
+		assertEquals(2, dbOom.getTotalNames());
 
 		q.close();
 
 		session.closeSession();
 
 
-		/**
+		/*
 		 * Test fails on HSQLDB 1.8 since generated columns are not supported.
 		 */
 		session = new DbThreadSession(cp);
@@ -160,7 +168,7 @@ class DbOom2Test extends DbH2TestCase {
 
 
 		session = new DbThreadSession(cp);
-		DbOomManager.getInstance().registerEntity(Girl2.class, true);
+		dbOom.registerEntity(Girl2.class, true);
 		Girl2 g2 = new Girl2("Gwen");
 		q = DbEntitySql.insert(g2).query();
 		assertEquals("insert into GIRL (NAME) values (:girl2.name)", q.getQueryString());

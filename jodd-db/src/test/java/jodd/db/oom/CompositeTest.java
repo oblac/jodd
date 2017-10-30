@@ -27,7 +27,9 @@ package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.User;
 import jodd.db.oom.fixtures.WizUser;
@@ -49,10 +51,10 @@ class CompositeTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(User.class);
-		dbOom.registerEntity(Wizard.class);
+		DbTestUtil.resetAll();
+		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
+		dbOomManager.registerEntity(User.class);
+		dbOomManager.registerEntity(Wizard.class);
 
 		session = new DbThreadSession(cp);
 

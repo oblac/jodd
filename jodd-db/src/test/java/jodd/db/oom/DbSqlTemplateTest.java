@@ -25,6 +25,8 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbTestUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.fixtures.BadBoy;
 import jodd.db.oom.fixtures.BadGirl;
 import jodd.db.oom.fixtures.Boy;
@@ -49,12 +51,12 @@ class DbSqlTemplateTest {
 	@BeforeEach
 	void setUp() throws Exception {
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerType(Boy.class);
-		dbOom.registerType(BadBoy.class);
-		dbOom.registerType(BadGirl.class);
-		dbOom.registerType(Girl.class);
+		DbTestUtil.resetAll();
+		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
+		dbOomManager.registerType(Boy.class);
+		dbOomManager.registerType(BadBoy.class);
+		dbOomManager.registerType(BadGirl.class);
+		dbOomManager.registerType(Girl.class);
 	}
 
 	protected void assertContains(String string, String... chunks) {

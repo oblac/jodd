@@ -26,25 +26,25 @@
 package jodd.db.oom.mapper;
 
 import jodd.bean.BeanUtil;
+import jodd.db.JoddDb;
 import jodd.db.oom.ColumnData;
-import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOomManager;
-import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbOomQuery;
-import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
+import jodd.db.type.SqlTypeManager;
 import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Maps all columns of database result set (RS) row to objects.
@@ -54,7 +54,7 @@ import java.util.ArrayList;
  * <b>Preparation</b><br>
  * Default mapper reads RS column and table names from RS meta-data and external maps, if provided.
  * Since column name is always available in RS meta-data, it may be used to hold table name information.
- * Column names may contain table code separator ({@link jodd.db.oom.DbOomManager#getColumnAliasSeparator()} that
+ * Column names may contain table code separator that
  * divides column name to table reference and column name. Here, table reference may be either table name or
  * table alias. When it is table alias, external alias-to-name map must be provided.
  * Hence, this defines the table name, and there is no need to read it from RS meta-data.
@@ -87,7 +87,6 @@ import java.util.ArrayList;
  */
 public class DefaultResultSetMapper extends BaseResultSetMapper {
 
-	protected final DbOomManager dbOomManager;
 	protected final DbOomQuery dbOomQuery;
 	protected final boolean cacheEntities;
 	protected final int totalColumns;			// total number of columns
@@ -109,7 +108,6 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomQuery dbOomQuery) {
 		super(resultSet);
 		this.dbOomQuery = dbOomQuery;
-		this.dbOomManager = dbOomQuery.getManager();
 		this.cacheEntities = cacheEntities;
 
 		//this.resultColumns = new HashSet<String>();
@@ -136,7 +134,9 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				String tableName = null;
 
 				// resolve column and table name
-				int sepNdx = columnName.indexOf(dbOomManager.getColumnAliasSeparator());
+				final String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+
+				int sepNdx = columnName.indexOf(columnAliasSeparator);
 				if (sepNdx != -1) {
 					// column alias exist, result set is ignored and columnAliases contains table data
 					tableName = columnName.substring(0, sepNdx);
@@ -196,6 +196,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Class[] resolveTables() {
 		List<Class> classes = new ArrayList<>(tableNames.length);
 		String lastTableName = null;
@@ -214,7 +215,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				resultColumns.clear();
 				lastTableName = tableName;
 
-				DbEntityDescriptor ded = dbOomManager.lookupTableName(tableName);
+				DbEntityDescriptor ded = JoddDb.runtime().dbOomManager().lookupTableName(tableName);
 				if (ded == null) {
 					throw new DbOomException(dbOomQuery, "Table name not registered: " + tableName);
 				}
@@ -243,7 +244,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			for (int i = 0; i < types.length; i++) {
 				Class type = types[i];
 				if (type != null) {
-					descs[i] = dbOomManager.lookupType(type);
+					descs[i] = JoddDb.runtime().dbOomManager().lookupType(type);
 				}
 			}
 			cachedDbEntityDescriptors = descs;
@@ -298,7 +299,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				names[i] = null;
 				continue;
 			}
-			DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
+			DbEntityDescriptor ded = JoddDb.runtime().dbOomManager().lookupType(types[i]);
 			if (ded != null) {
 				String tableName = ded.getTableName();
 				tableName = tableName.toUpperCase();
@@ -344,6 +345,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object[] parseObjects(Class... types) {
 		resultColumns.clear();
 
@@ -420,7 +422,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 						// if current entity instance does not exist (i.e. we are at the first column
 						// of some entity), create the instance and store it
 						if (result[currentResult] == null) {
-							result[currentResult] = dbOomManager.createEntityInstance(currentType);
+							result[currentResult] = JoddDb.runtime().dbOomManager().createEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?

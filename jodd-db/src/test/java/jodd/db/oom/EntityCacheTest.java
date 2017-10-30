@@ -26,7 +26,9 @@
 package jodd.db.oom;
 
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl2;
@@ -68,8 +70,8 @@ class EntityCacheTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
 		dbOom.registerEntity(Girl2.class);
 		dbOom.registerEntity(Boy.class);
 
@@ -83,6 +85,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 		assertEquals(1, DbEntitySql.insert(new Boy(3, "Hugo", 1)).query().executeUpdate());
 	}
 
+	@Override
 	@AfterEach
 	protected void tearDown() throws Exception {
 		dbSession.closeSession();

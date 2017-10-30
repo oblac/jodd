@@ -27,7 +27,9 @@ package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
 import jodd.db.QueryMapper;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.BadBoy;
@@ -63,8 +65,9 @@ class DbOomTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
+		DbTestUtil.resetAll();
+		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
+
 		dbOom.registerEntity(Girl.class);
 		dbOom.registerEntity(BadBoy.class);
 	}

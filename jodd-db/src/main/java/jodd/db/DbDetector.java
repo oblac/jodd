@@ -25,8 +25,18 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
-import jodd.db.oom.DbOomManager;
-import jodd.db.servers.*;
+import jodd.db.servers.Db2DbServer;
+import jodd.db.servers.DbServer;
+import jodd.db.servers.DerbyDbServer;
+import jodd.db.servers.GenericDbServer;
+import jodd.db.servers.HsqlDbServer;
+import jodd.db.servers.InformixDbServer;
+import jodd.db.servers.MySqlDbServer;
+import jodd.db.servers.OracleDbServer;
+import jodd.db.servers.PostgreSqlDbServer;
+import jodd.db.servers.SQLiteDbServer;
+import jodd.db.servers.SqlServerDbServer;
+import jodd.db.servers.SybaseDbServer;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
@@ -53,7 +63,7 @@ public class DbDetector {
 
 		cp.closeConnection(connection);
 
-		dbServer.accept(DbOomManager.getInstance());
+		dbServer.accept(JoddDb.runtime().dbOomManager());
 
 		return dbServer;
 	}

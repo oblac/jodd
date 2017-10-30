@@ -26,7 +26,9 @@
 package jodd.db.oom;
 
 import jodd.db.DbSession;
+import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.meta.DbColumn;
@@ -46,9 +48,9 @@ class DbNoTableTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Bean1.class);
+		DbTestUtil.resetAll();
+		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
+		dbOomManager.registerEntity(Bean1.class);
 	}
 
 	@Test

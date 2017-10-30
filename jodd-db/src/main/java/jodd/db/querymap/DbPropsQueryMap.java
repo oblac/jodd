@@ -25,7 +25,7 @@
 
 package jodd.db.querymap;
 
-import jodd.db.DbManager;
+import jodd.db.JoddDb;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 
@@ -72,7 +72,7 @@ public class DbPropsQueryMap implements QueryMap {
 	 */
 	@Override
 	public String getQuery(String key) {
-		if (DbManager.getInstance().isDebug()) {
+		if (JoddDb.defaults().isDebug()) {
 			load();
 		}
 		return props.getValue(key);

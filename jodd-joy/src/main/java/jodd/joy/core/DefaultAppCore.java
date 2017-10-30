@@ -25,21 +25,23 @@
 
 package jodd.joy.core;
 
-import jodd.db.DbManager;
 import jodd.db.DbSessionProvider;
+import jodd.db.JoddDb;
 import jodd.db.connection.ConnectionProvider;
+import jodd.db.jtx.DbJtxSessionProvider;
+import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
-import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
-import jodd.db.jtx.DbJtxSessionProvider;
-import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
@@ -53,8 +55,6 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
@@ -87,7 +87,7 @@ public abstract class DefaultAppCore {
 	 */
 	public static final String PETITE_DBPOOL = "dbpool";
 	/**
-	 * Petite bean name for <code>DbManager</code> instance.
+	 * Petite bean name for database configuration.
 	 */
 	public static final String PETITE_DB = "db";
 	/**
@@ -577,12 +577,12 @@ public abstract class DefaultAppCore {
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		DbManager dbManager = DbManager.getInstance();
-		dbManager.setConnectionProvider(connectionProvider);
-		dbManager.setSessionProvider(sessionProvider);
-		petite.addBean(PETITE_DB, dbManager);
+		JoddDb.runtime().connectionProvider(connectionProvider);
+		JoddDb.runtime().sessionProvider(sessionProvider);
+		petite.addBean(PETITE_DB, JoddDb.defaults());           // todo -> this is for the configuration!, make this for each bean
 
-		DbOomManager dbOomManager = DbOomManager.getInstance();
+		DbOomManager dbOomManager = JoddDb.runtime().dbOomManager();
+		dbOomManager.reset();
 		petite.addBean(PETITE_DBOOM, dbOomManager);
 
 		// automatic configuration

@@ -25,6 +25,7 @@
 
 package jodd.db.servers;
 
+import jodd.db.JoddDb;
 import jodd.db.oom.DbOomManager;
 
 /**
@@ -40,7 +41,7 @@ public class SQLiteDbServer implements DbServer {
 
 	@Override
 	public void accept(DbOomManager dbOomManager) {
-		dbOomManager.getSqlGenConfig().setUpdateAcceptsTableAlias(false);
+		JoddDb.defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
 	}
 
 	@Override

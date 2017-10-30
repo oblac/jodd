@@ -25,9 +25,10 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
+import jodd.db.JoddDb;
 import jodd.db.oom.ColumnAliasType;
-import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.ArraysUtil;
@@ -249,7 +250,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 		String tableName = ded.getTableName();
 
 		ColumnAliasType columnAliasType = templateData.getColumnAliasType();
-		String columnAliasSeparator = templateData.getDbOomManager().getColumnAliasSeparator();
+		String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
 
 		if (columnAliasType == null || columnAliasType == ColumnAliasType.TABLE_REFERENCE) {
 			templateData.registerColumnDataForTableRef(tableRef, tableName);
@@ -273,13 +274,16 @@ public class ColumnsSelectChunk extends SqlChunk {
 		if (templateData.getColumnAliasType() != null) {     // create column aliases
 			String tableName = ded.getTableName();
 			query.append(AS);
+
+			final String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+
 			switch (templateData.getColumnAliasType()) {
 				case TABLE_NAME:
-					query.append(tableName).append(templateData.getDbOomManager().getColumnAliasSeparator()).append(column);
+					query.append(tableName).append(columnAliasSeparator).append(column);
 					break;
 				case TABLE_REFERENCE:
 					templateData.registerColumnDataForTableRef(tableRef, tableName);
-					query.append(tableRef).append(templateData.getDbOomManager().getColumnAliasSeparator()).append(column);
+					query.append(tableRef).append(columnAliasSeparator).append(column);
 					break;
 				case COLUMN_CODE:
 					String code = templateData.registerColumnDataForColumnCode(tableName, column);

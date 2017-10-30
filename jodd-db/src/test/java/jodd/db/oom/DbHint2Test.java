@@ -27,6 +27,7 @@ package jodd.db.oom;
 
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Boy4;
 import jodd.db.oom.fixtures.Girl4;
@@ -101,9 +102,8 @@ class DbHint2Test extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOomManager.resetAll();
+		DbOomManager dbOom = JoddDb.runtime().dbOomManager();
 
-		DbOomManager dbOom = DbOomManager.getInstance();
 		dbOom.registerEntity(Boy4.class);
 		dbOom.registerEntity(Girl4.class);
 		dbOom.registerEntity(Room.class);
