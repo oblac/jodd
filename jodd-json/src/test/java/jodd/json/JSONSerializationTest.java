@@ -46,10 +46,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -686,6 +683,59 @@ class JSONSerializationTest {
 		assertEquals("{\"name\":\"Lucy\"}", json);
 	}
 
+	@Test
+	void testSerializeCalendar() throws Exception {
+		final Calendar input = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"), Locale.GERMANY);
+		input.clear();
+		input.setTimeInMillis(1512166354000L);
+
+		final String expected_json = "1512166354000";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
+	@Test
+	void testSerializeDoubleArray() throws Exception {
+		final double[] input = new double[] {0,-0,1.23,-1.23, Double.NaN, -Double.NaN, 5784374.34, -3453321.99};
+
+		final String expected_json = "[0.0,0.0,1.23,-1.23,NaN,NaN,5784374.34,-3453321.99]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
+	@Test
+	void testSerializeFloatArray() throws Exception {
+		final float[] input = new float[]{0, -0, 1.23f, -1.23f, Float.NaN, -Float.NaN, 5784374.34F, -3453321.99f};
+
+		final String expected_json = "[0.0,0.0,1.23,-1.23,NaN,NaN,5784374.5,-3453322.0]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
+	@Test
+	void testSerializeLongArray() throws Exception {
+		final long[] input = new long[]{0L, -0L, 1L, -1L, 578437435345345L, -345357348234782L};
+
+		final String expected_json = "[0,0,1,-1,578437435345345,-345357348234782]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
 
 	// ---------------------------------------------------------------- custom asserts
 
