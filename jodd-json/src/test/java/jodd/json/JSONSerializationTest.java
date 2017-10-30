@@ -697,6 +697,19 @@ class JSONSerializationTest {
 		assertEquals(expected_json, actual_json);
 	}
 
+	@Test
+	void testSerializeFloatArray() throws Exception {
+		final float[] input = new float[]{0, -0, 1.23f, -1.23f, Float.NaN, -Float.NaN, 5784374.34F, -3453321.99f};
+
+		final String expected_json = "[0.0,0.0,1.23,-1.23,NaN,NaN,5784374.5,-3453322.0]";
+
+		final String actual_json = new JsonSerializer().serialize(input);
+
+		// asserts
+		assertNotNull(actual_json);
+		assertEquals(expected_json, actual_json);
+	}
+
 	// ---------------------------------------------------------------- custom asserts
 
 
