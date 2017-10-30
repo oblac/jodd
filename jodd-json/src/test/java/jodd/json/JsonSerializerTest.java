@@ -39,6 +39,7 @@ import java.util.*;
 import static jodd.util.ArraysUtil.bytes;
 import static jodd.util.ArraysUtil.ints;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class JsonSerializerTest {
 
@@ -535,7 +536,9 @@ class JsonSerializerTest {
 	}
 
 	@Test
-	void testFiles() {
+	void testFiles_on_linux() {
+		assumeTrue(SystemUtil.isHostLinux(), "no linux host");
+
 		FileMan fileMan = new FileMan();
 		File userHome = new File(SystemUtil.userHome());
 		fileMan.setFile(userHome);
@@ -543,6 +546,20 @@ class JsonSerializerTest {
 		String json = JsonSerializer.create().serialize(fileMan);
 
 		assertTrue(json.contains(SystemUtil.userHome()));
+	}
+
+	@Test
+	void testFiles_on_windows() {
+		assumeTrue(SystemUtil.isHostWindows(), "no windows host");
+
+		FileMan fileMan = new FileMan();
+		File userHome = new File(SystemUtil.userHome());
+		fileMan.setFile(userHome);
+
+		final String json = JsonSerializer.create().serialize(fileMan);
+		// C:\Users\xxxx will be user home on windows hsost;  char '\' is escpaed in json therefore the execution of "String#replace"
+		final String userhome_escpaed = SystemUtil.userHome().replace("\\", "\\\\");
+		assertTrue(json.contains(userhome_escpaed));
 	}
 
 	@Test
