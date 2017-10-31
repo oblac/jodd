@@ -33,7 +33,14 @@ import jodd.upload.typeconverter.FileUploadBinder;
  */
 public class JoddUpload {
 
-	// ---------------------------------------------------------------- module
+	private static final JoddUpload instance = new JoddUpload();
+
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddUpload get() {
+		return instance;
+	}
 
 	static {
 		Jodd.initModule(() -> {
