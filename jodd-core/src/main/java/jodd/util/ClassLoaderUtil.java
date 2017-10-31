@@ -25,9 +25,9 @@
 
 package jodd.util;
 
-import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.util.cl.ClassLoaderStrategy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,12 +62,7 @@ public class ClassLoaderUtil {
 			return clazz.getClassLoader();
 		}
 		else {
-			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-				@Override
-				public ClassLoader run() {
-					return clazz.getClassLoader();
-				}
-			});
+			return AccessController.doPrivileged((PrivilegedAction<ClassLoader>) clazz::getClassLoader);
 		}
 	}
 
@@ -93,12 +88,8 @@ public class ClassLoaderUtil {
 			return Thread.currentThread().getContextClassLoader();
 		}
 		else {
-			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-				@Override
-				public ClassLoader run() {
-					return Thread.currentThread().getContextClassLoader();
-				}
-			});
+			return AccessController.doPrivileged(
+				(PrivilegedAction<ClassLoader>) () -> Thread.currentThread().getContextClassLoader());
 		}
 	}
 
@@ -110,12 +101,8 @@ public class ClassLoaderUtil {
 			return ClassLoader.getSystemClassLoader();
 		}
 		else {
-			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-				@Override
-				public ClassLoader run() {
-					return ClassLoader.getSystemClassLoader();
-				}
-			});
+			return AccessController.doPrivileged(
+				(PrivilegedAction<ClassLoader>) ClassLoader::getSystemClassLoader);
 		}
 	}
 
@@ -584,7 +571,7 @@ public class ClassLoaderUtil {
 	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
 	public static Class loadClass(String className) throws ClassNotFoundException {
-		return JoddCore.defaults().getClassLoaderStrategy().loadClass(className, null);
+		return ClassLoaderStrategy.get().loadClass(className, null);
 	}
 	
 	/**
@@ -592,7 +579,7 @@ public class ClassLoaderUtil {
 	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
 	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-		return JoddCore.defaults().getClassLoaderStrategy().loadClass(className, classLoader);
+		return ClassLoaderStrategy.get().loadClass(className, classLoader);
 	}
 
 	// ---------------------------------------------------------------- misc

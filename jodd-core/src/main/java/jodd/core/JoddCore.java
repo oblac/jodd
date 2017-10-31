@@ -26,16 +26,23 @@
 package jodd.core;
 
 import jodd.Jodd;
+import jodd.util.cl.ClassLoaderStrategy;
+import jodd.util.cl.DefaultClassLoaderStrategy;
+
+import java.util.Objects;
 
 /**
  * Jodd CORE module.
  */
 public class JoddCore {
 
-	private static final JoddCoreDefaults defaults = new JoddCoreDefaults();
+	private static final JoddCore instance = new JoddCore();
 
-	public static JoddCoreDefaults defaults() {
-		return defaults;
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddCore get() {
+		return instance;
 	}
 
 	static {
@@ -43,5 +50,35 @@ public class JoddCore {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private JoddCoreDefaults defaults = new JoddCoreDefaults();
+	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+
+	/**
+	 * Returns defaults module configuration.
+	 */
+	public JoddCoreDefaults defaults() {
+		return defaults;
+	}
+
+	/**
+	 * Returns the classloader strategy implementation.
+	 */
+	public ClassLoaderStrategy classLoaderStrategy() {
+		return classLoaderStrategy;
+	}
+
+	/**
+	 * Defines classloader strategy implementation.
+	 */
+	public JoddCore classLoaderStrategy(ClassLoaderStrategy classLoaderStrategy) {
+		Objects.requireNonNull(classLoaderStrategy);
+		this.classLoaderStrategy = classLoaderStrategy;
+		return this;
+	}
+
+
 
 }

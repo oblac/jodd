@@ -119,7 +119,7 @@ public class EmailAddress {
 	 */
 	public InternetAddress toInternetAddress() throws AddressException {
 		try {
-			return new InternetAddress(email, personalName, JoddCore.defaults().getEncoding());
+			return new InternetAddress(email, personalName, JoddCore.get().defaults().getEncoding());
 		} catch (UnsupportedEncodingException ueex) {
 			throw new AddressException(ueex.toString());
 		}

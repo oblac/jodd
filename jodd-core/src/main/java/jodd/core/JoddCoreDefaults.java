@@ -26,60 +26,53 @@
 package jodd.core;
 
 import jodd.util.StringPool;
-import jodd.util.cl.ClassLoaderStrategy;
-import jodd.util.cl.DefaultClassLoaderStrategy;
 
 public class JoddCoreDefaults {
 
-	/**
-	 * Default temp file prefix.
-	 */
 	private String tempFilePrefix = "jodd-";
-
-	/**
-	 * Default file encoding (UTF8).
-	 */
 	private String encoding = StringPool.UTF_8;
-
-	/**
-	 * Default IO buffer size (16 KB).
-	 */
 	private int ioBufferSize = 16384;
 
 	/**
-	 * Default class loader strategy.
+	 * Returns default prefix for temporary files.
 	 */
-	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
-
 	public String getTempFilePrefix() {
 		return tempFilePrefix;
 	}
 
+	/**
+	 * Sets default file prefix.
+	 */
 	public void setTempFilePrefix(String tempFilePrefix) {
 		this.tempFilePrefix = tempFilePrefix;
 	}
 
+	/**
+	 * Returns default encoding used across the Jodd classes. "UTf-8".
+	 */
 	public String getEncoding() {
 		return encoding;
 	}
 
+	/**
+	 * Sets new encoding that is used across the Jodd library.
+	 */
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
 
+	/**
+	 * Returns buffer size for various IO operations.
+	 */
 	public int getIoBufferSize() {
 		return ioBufferSize;
 	}
 
+	/**
+	 * Sets new buffer size for various IO operations.
+	 */
 	public void setIoBufferSize(int ioBufferSize) {
 		this.ioBufferSize = ioBufferSize;
 	}
 
-	public ClassLoaderStrategy getClassLoaderStrategy() {
-		return classLoaderStrategy;
-	}
-
-	public void setClassLoaderStrategy(ClassLoaderStrategy classLoaderStrategy) {
-		this.classLoaderStrategy = classLoaderStrategy;
-	}
 }

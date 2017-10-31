@@ -25,10 +25,19 @@
 
 package jodd.util.cl;
 
+import jodd.core.JoddCore;
+
 /**
  * Class loader strategy defines how classes should be loaded.
  */
 public interface ClassLoaderStrategy {
+
+	/**
+	 * Returns default implementation.
+	 */
+	static ClassLoaderStrategy get() {
+		return JoddCore.get().classLoaderStrategy();
+	}
 
 	/**
 	 * Loads class with given name and optionally provided class loader.

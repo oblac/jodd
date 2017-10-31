@@ -146,7 +146,7 @@ public class Base64 {
 
 	public static byte[] encodeToByte(String s) {
 		try {
-			return encodeToByte(s.getBytes(JoddCore.defaults().getEncoding()), false);
+			return encodeToByte(s.getBytes(JoddCore.get().defaults().getEncoding()), false);
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -154,7 +154,7 @@ public class Base64 {
 
 	public static byte[] encodeToByte(String s, boolean lineSep) {
 		try {
-			return encodeToByte(s.getBytes(JoddCore.defaults().getEncoding()), lineSep);
+			return encodeToByte(s.getBytes(JoddCore.get().defaults().getEncoding()), lineSep);
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -208,7 +208,7 @@ public class Base64 {
 
 	public static String decodeToString(byte[] arr) {
 		try {
-			return new String(decode(arr), JoddCore.defaults().getEncoding());
+			return new String(decode(arr), JoddCore.get().defaults().getEncoding());
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -261,7 +261,7 @@ public class Base64 {
 
 	public static String encodeToString(String s) {
 		try {
-			return new String(encodeToChar(s.getBytes(JoddCore.defaults().getEncoding()), false));
+			return new String(encodeToChar(s.getBytes(JoddCore.get().defaults().getEncoding()), false));
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -269,7 +269,7 @@ public class Base64 {
 
 	public static String encodeToString(String s, boolean lineSep) {
 		try {
-			return new String(encodeToChar(s.getBytes(JoddCore.defaults().getEncoding()), lineSep));
+			return new String(encodeToChar(s.getBytes(JoddCore.get().defaults().getEncoding()), lineSep));
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -288,7 +288,7 @@ public class Base64 {
 
 	public static String decodeToString(String s) {
 		try {
-			return new String(decode(s), JoddCore.defaults().getEncoding());
+			return new String(decode(s), JoddCore.get().defaults().getEncoding());
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}

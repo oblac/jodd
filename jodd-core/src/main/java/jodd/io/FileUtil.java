@@ -131,7 +131,7 @@ public class FileUtil {
 		}
 		String filename = url.getFile().replace('/', File.separatorChar);
 
-		return URLDecoder.decode(filename, JoddCore.defaults().getEncoding());
+		return URLDecoder.decode(filename, JoddCore.get().defaults().getEncoding());
 	}
 
 	/**
@@ -565,11 +565,11 @@ public class FileUtil {
 	}
 
 	public static char[] readChars(String fileName) throws IOException {
-		return readChars(file(fileName), JoddCore.defaults().getEncoding());
+		return readChars(file(fileName), JoddCore.get().defaults().getEncoding());
 	}
 
 	public static char[] readChars(File file) throws IOException {
-		return readChars(file, JoddCore.defaults().getEncoding());
+		return readChars(file, JoddCore.get().defaults().getEncoding());
 	}
 
 	public static char[] readChars(String fileName, String encoding) throws IOException {
@@ -607,10 +607,10 @@ public class FileUtil {
 
 
 	public static void writeChars(File dest, char[] data) throws IOException {
-		outChars(dest, data, JoddCore.defaults().getEncoding(), false);
+		outChars(dest, data, JoddCore.get().defaults().getEncoding(), false);
 	}
 	public static void writeChars(String dest, char[] data) throws IOException {
-		outChars(file(dest), data, JoddCore.defaults().getEncoding(), false);
+		outChars(file(dest), data, JoddCore.get().defaults().getEncoding(), false);
 	}
 
 	public static void writeChars(File dest, char[] data, String encoding) throws IOException {
@@ -694,7 +694,7 @@ public class FileUtil {
 
 
 	public static String readString(String source) throws IOException {
-		return readString(file(source), JoddCore.defaults().getEncoding());
+		return readString(file(source), JoddCore.get().defaults().getEncoding());
 	}
 
 	public static String readString(String source, String encoding) throws IOException {
@@ -702,7 +702,7 @@ public class FileUtil {
 	}
 
 	public static String readString(File source) throws IOException {
-		return readString(source, JoddCore.defaults().getEncoding());
+		return readString(source, JoddCore.get().defaults().getEncoding());
 	}
 
 	/**
@@ -736,7 +736,7 @@ public class FileUtil {
 
 
 	public static void writeString(String dest, String data) throws IOException {
-		outString(file(dest), data, JoddCore.defaults().getEncoding(), false);
+		outString(file(dest), data, JoddCore.get().defaults().getEncoding(), false);
 	}
 
 	public static void writeString(String dest, String data, String encoding) throws IOException {
@@ -744,7 +744,7 @@ public class FileUtil {
 	}
 
 	public static void writeString(File dest, String data) throws IOException {
-		outString(dest, data, JoddCore.defaults().getEncoding(), false);
+		outString(dest, data, JoddCore.get().defaults().getEncoding(), false);
 	}
 
 	public static void writeString(File dest, String data, String encoding) throws IOException {
@@ -753,7 +753,7 @@ public class FileUtil {
 
 
 	public static void appendString(String dest, String data) throws IOException {
-		outString(file(dest), data, JoddCore.defaults().getEncoding(), true);
+		outString(file(dest), data, JoddCore.get().defaults().getEncoding(), true);
 	}
 
 	public static void appendString(String dest, String data, String encoding) throws IOException {
@@ -761,7 +761,7 @@ public class FileUtil {
 	}
 
 	public static void appendString(File dest, String data) throws IOException {
-		outString(dest, data, JoddCore.defaults().getEncoding(), true);
+		outString(dest, data, JoddCore.get().defaults().getEncoding(), true);
 	}
 
 	public static void appendString(File dest, String data, String encoding) throws IOException {
@@ -810,13 +810,13 @@ public class FileUtil {
 
 
 	public static String[] readLines(String source) throws IOException {
-		return readLines(file(source), JoddCore.defaults().getEncoding());
+		return readLines(file(source), JoddCore.get().defaults().getEncoding());
 	}
 	public static String[] readLines(String source, String encoding) throws IOException {
 		return readLines(file(source), encoding);
 	}
 	public static String[] readLines(File source) throws IOException {
-		return readLines(source, JoddCore.defaults().getEncoding());
+		return readLines(source, JoddCore.get().defaults().getEncoding());
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- temp
 
 	public static File createTempDirectory() throws IOException {
-		return createTempDirectory(JoddCore.defaults().getTempFilePrefix(), null, null);
+		return createTempDirectory(JoddCore.get().defaults().getTempFilePrefix(), null, null);
 	}
 
 	/**
@@ -1202,7 +1202,7 @@ public class FileUtil {
 	 * Simple method that creates temp file.
 	 */
 	public static File createTempFile() throws IOException {
-		return createTempFile(JoddCore.defaults().getTempFilePrefix(), null, null, true);
+		return createTempFile(JoddCore.get().defaults().getTempFilePrefix(), null, null, true);
 	}
 
 	/**
