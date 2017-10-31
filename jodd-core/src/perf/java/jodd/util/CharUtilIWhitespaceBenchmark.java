@@ -44,7 +44,7 @@ import org.openjdk.jmh.annotations.*;
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
 @State(Scope.Benchmark)
-public class CharUtilIsWhitespaceBenchmark {
+public class CharUtilIWhitespaceBenchmark {
 
 	private char[] chars = new char[256];
 
