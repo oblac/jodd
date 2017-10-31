@@ -39,6 +39,31 @@ import org.openjdk.jmh.annotations.*;
  * gw :jodd-core:perf -PCharUtilIsWhitespaceBenchmark
  * </code>
  * </pre>
+ * <p></p>
+ * Results:
+ * <table border="1">
+ *     <tr>
+ *         <th>Benchmark</th>
+ *         <th>Mode</th>
+ *         <th>Cnt</th>
+ *         <th>Score</th>
+ *         <th>Units</th>
+ *     </tr>
+ *     <tr>
+ *         <td>isWhitespace_Java</td>
+ *         <td>thrpt</td>
+ *         <td>10</td>
+ *         <td>5105465,482</td>
+ *         <td>ops/s</td>
+ *     </tr>
+ *     <tr>
+ *         <td>isWhitespace_Jodd</td>
+ *         <td>thrpt</td>
+ *         <td>10</td>
+ *         <td>786876458,721</td>
+ *         <td>ops/s</td>
+ *     </tr>
+ * </table>
  */
 @Fork(1)
 @Warmup(iterations = 10)
