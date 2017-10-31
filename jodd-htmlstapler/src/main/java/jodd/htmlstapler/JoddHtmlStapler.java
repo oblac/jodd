@@ -32,7 +32,14 @@ import jodd.Jodd;
  */
 public class JoddHtmlStapler {
 
-	// ---------------------------------------------------------------- module
+	private static final JoddHtmlStapler instance = new JoddHtmlStapler();
+
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddHtmlStapler get() {
+		return instance;
+	}
 
 	static {
 		Jodd.initModule();
