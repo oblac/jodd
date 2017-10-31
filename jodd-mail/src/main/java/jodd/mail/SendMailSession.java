@@ -57,7 +57,7 @@ public class SendMailSession implements AutoCloseable {
 	protected final Transport mailTransport;
 
 	static {
-		EmailUtil.setupSystemMail();
+		EmailUtil.setupSystemMailProperties();
 	}
 
 	/**

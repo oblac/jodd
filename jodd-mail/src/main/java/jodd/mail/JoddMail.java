@@ -32,10 +32,13 @@ import jodd.Jodd;
  */
 public class JoddMail {
 
-	private static JoddMailDefaults defaults = new JoddMailDefaults();
+	private static final JoddMail instance = new JoddMail();
 
-	public static JoddMailDefaults defaults() {
-		return defaults;
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddMail get() {
+		return instance;
 	}
 
 	static {
@@ -43,5 +46,16 @@ public class JoddMail {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private JoddMailDefaults defaults = new JoddMailDefaults();
+
+	/**
+	 * Returns defaults module configuration.
+	 */
+	public JoddMailDefaults defaults() {
+		return defaults;
+	}
 
 }

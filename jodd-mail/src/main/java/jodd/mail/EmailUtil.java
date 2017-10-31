@@ -118,9 +118,10 @@ public class EmailUtil {
 	/**
 	 * Setups the system email properties.
 	 */
-	public static void setupSystemMail() {
-		System.setProperty("mail.mime.encodefilename", Boolean.valueOf(JoddMail.defaults().isMailMimeEncodefilename()).toString());
-		System.setProperty("mail.mime.decodefilename", Boolean.valueOf(JoddMail.defaults().isMailMimeDecodefilename()).toString());
+	public static void setupSystemMailProperties() {
+		final JoddMailDefaults defaults = JoddMail.get().defaults();
+		System.setProperty("mail.mime.encodefilename", Boolean.valueOf(defaults.isMailMimeEncodefilename()).toString());
+		System.setProperty("mail.mime.decodefilename", Boolean.valueOf(defaults.isMailMimeDecodefilename()).toString());
 	}
 
 }

@@ -44,7 +44,7 @@ public class ReceiveMailSession {
 	protected final Store store;
 
 	static {
-		EmailUtil.setupSystemMail();
+		EmailUtil.setupSystemMailProperties();
 	}
 
 	/**

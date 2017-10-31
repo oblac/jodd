@@ -79,6 +79,4 @@ public class JoddCore {
 		return this;
 	}
 
-
-
 }
