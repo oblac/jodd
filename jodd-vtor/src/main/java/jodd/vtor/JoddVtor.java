@@ -32,7 +32,14 @@ import jodd.Jodd;
  */
 public class JoddVtor {
 
-	// ---------------------------------------------------------------- module
+	private static final JoddVtor instance = new JoddVtor();
+
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddVtor get() {
+		return instance;
+	}
 
 	static {
 		Jodd.initModule();
