@@ -66,9 +66,11 @@
             <property name="allowUndeclaredRTE" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
             <property name="allowMissingThrowsTags" value="true"/>
+            <property name="allowMissingParamTags" value="true"/>
         </module>
         <module name="JavadocType">
             <property name="scope" value="public"/>
+            <property name="allowMissingParamTags" value="true"/>
         </module>
         <module name="JavadocVariable">
             <property name="scope" value="public"/>
@@ -151,12 +153,12 @@
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <!--module name="VisibilityModifier"/-->
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+        <!--module name="FinalParameters"/-->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
