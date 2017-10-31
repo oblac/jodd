@@ -37,7 +37,7 @@ public interface Logger {
 	/**
 	 * Logger level.
 	 */
-	public enum Level {
+	enum Level {
 		TRACE(1),
 		DEBUG(2),
 		INFO(3),
@@ -59,33 +59,39 @@ public interface Logger {
 	}
 
 	/**
-	 * Returns Logger name.
+	 * Returns the logger name.
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * Returns <code>true</code> if certain logging
 	 * level is enabled.
 	 */
-	public boolean isEnabled(Level level);
+	boolean isEnabled(Level level);
 
 	/**
 	 * Logs a message at provided logging level.
 	 */
-	public void log(Level level, String message);
+	void log(Level level, String message);
 
 	/**
 	 * Logs a message at provided logging level.
 	 */
-	public default void log(Level level, Supplier<String> messageSupplier) {
+	default void log(Level level, Supplier<String> messageSupplier) {
 		if (isEnabled(level)) {
 			log(level, messageSupplier.get());
 		}
 	}
 
-	public void log(Level level, String message, Throwable throwable);
+	/**
+	 * Logs a message and displays exception info.
+	 */
+	void log(Level level, String message, Throwable throwable);
 
-	public default void log(Level level, Supplier<String> messageSupplier, Throwable throwable) {
+	/**
+	 * Logs a message and displays exception info.
+	 */
+	default void log(Level level, Supplier<String> messageSupplier, Throwable throwable) {
 		if (isEnabled(level)) {
 			log(level, messageSupplier.get(), throwable);
 		}
@@ -97,24 +103,24 @@ public interface Logger {
 	/**
 	 * Sets new level dynamically. Some implementations may not support it.
 	 */
-	public void setLevel(Level level);
+	void setLevel(Level level);
 
 	// ---------------------------------------------------------------- trace
 
 	/**
 	 * Returns <code>true</code> if TRACE level is enabled.
 	 */
-	public boolean isTraceEnabled();
+	boolean isTraceEnabled();
 
 	/**
 	 * Logs a message at TRACE level.
 	 */
-	public void trace(String message);
+	void trace(String message);
 
 	/**
 	 * Logs a message at TRACE level.
 	 */
-	public default void trace(Supplier<String> messageSupplier) {
+	default void trace(Supplier<String> messageSupplier) {
 		if (isTraceEnabled()) {
 			trace(messageSupplier.get());
 		}
@@ -125,17 +131,17 @@ public interface Logger {
 	/**
 	 * Returns <code>true</code> if DEBUG level is enabled.
 	 */
-	public boolean isDebugEnabled();
+	boolean isDebugEnabled();
 
 	/**
 	 * Logs a message at DEBUG level.
 	 */
-	public void debug(String message);
+	void debug(String message);
 
 	/**
 	 * Logs a message at DEBUG level.
 	 */
-	public default void debug(Supplier<String> messageSupplier) {
+	default void debug(Supplier<String> messageSupplier) {
 		if (isDebugEnabled()) {
 			debug(messageSupplier.get());
 		}
@@ -145,17 +151,17 @@ public interface Logger {
 	/**
 	 * Returns <code>true</code> if INFO level is enabled.
 	 */
-	public boolean isInfoEnabled();
+	boolean isInfoEnabled();
 
 	/**
 	 * Logs a message at INFO level.
 	 */
-	public void info(String message);
+	void info(String message);
 
 	/**
 	 * Logs a message at INFO level.
 	 */
-	public default void info(Supplier<String> messageSupplier) {
+	default void info(Supplier<String> messageSupplier) {
 		if (isInfoEnabled()) {
 			info(messageSupplier.get());
 		}
@@ -166,22 +172,22 @@ public interface Logger {
 	/**
 	 * Returns <code>true</code> if WARN level is enabled.
 	 */
-	public boolean isWarnEnabled();
+	boolean isWarnEnabled();
 
 	/**
 	 * Logs a message at WARN level.
 	 */
-	public void warn(String message);
+	void warn(String message);
 
 	/**
 	 * Logs a message at WARN level.
 	 */
-	public void warn(String message, Throwable throwable);
+	void warn(String message, Throwable throwable);
 
 	/**
 	 * Logs a message at WARN level.
 	 */
-	public default void warn(Supplier<String> messageSupplier) {
+	default void warn(Supplier<String> messageSupplier) {
 		if (isWarnEnabled()) {
 			warn(messageSupplier.get());
 		}
@@ -190,7 +196,7 @@ public interface Logger {
 	/**
 	 * Logs a message at WARN level.
 	 */
-	public default void warn(Supplier<String> messageSupplier, Throwable throwable) {
+	default void warn(Supplier<String> messageSupplier, Throwable throwable) {
 		if (isWarnEnabled()) {
 			warn(messageSupplier.get(), throwable);
 		}
@@ -201,22 +207,22 @@ public interface Logger {
 	/**
 	 * Returns <code>true</code> if ERROR level is enabled.
 	 */
-	public boolean isErrorEnabled();
+	boolean isErrorEnabled();
 
 	/**
 	 * Logs a message at ERROR level.
 	 */
-	public void error(String message);
+	void error(String message);
 
 	/**
 	 * Logs a message at ERROR level.
 	 */
-	public void error(String message, Throwable throwable);
+	void error(String message, Throwable throwable);
 
 	/**
 	 * Logs a message at ERROR level.
 	 */
-	public default void error(Supplier<String> messageSupplier) {
+	default void error(Supplier<String> messageSupplier) {
 		if (isErrorEnabled()) {
 			error(messageSupplier.get());
 		}
@@ -225,7 +231,7 @@ public interface Logger {
 	/**
 	 * Logs a message at ERROR level.
 	 */
-	public default void error(Supplier<String> messageSupplier, Throwable throwable) {
+	default void error(Supplier<String> messageSupplier, Throwable throwable) {
 		if (isErrorEnabled()) {
 			error(messageSupplier.get(), throwable);
 		}

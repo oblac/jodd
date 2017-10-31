@@ -70,6 +70,13 @@ public final class LoggerFactory {
 	}
 
 	/**
+	 * Disables the cache.
+	 */
+	public static void disableCache() {
+		loggers = null;
+	}
+
+	/**
 	 * Returns logger for given name. Repeated calls to this method with the
 	 * same argument should return the very same instance of the logger.
 	 */
