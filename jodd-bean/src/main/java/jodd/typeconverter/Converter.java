@@ -42,7 +42,7 @@ public class Converter {
 	 * Returns default instance.
 	 */
 	public static Converter get() {
-		return JoddBean.runtime().converter();
+		return JoddBean.get().converter();
 	}
 
 	/**

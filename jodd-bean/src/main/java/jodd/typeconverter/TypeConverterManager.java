@@ -100,7 +100,7 @@ public class TypeConverterManager {
 	 * Returns default instance.
 	 */
 	public static TypeConverterManager get() {
-		return JoddBean.runtime().typeConverterManager();
+		return JoddBean.get().typeConverterManager();
 	}
 
 	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);

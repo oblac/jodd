@@ -35,7 +35,7 @@ import jodd.bean.JoddBean;
 public interface ClassIntrospector {
 
 	public static ClassIntrospector get() {
-		return JoddBean.runtime().classIntrospector();
+		return JoddBean.get().classIntrospector();
 	}
 
 	/**

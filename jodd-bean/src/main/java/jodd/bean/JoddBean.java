@@ -26,19 +26,23 @@
 package jodd.bean;
 
 import jodd.Jodd;
+import jodd.introspector.CachingIntrospector;
+import jodd.introspector.ClassIntrospector;
+import jodd.typeconverter.Converter;
+import jodd.typeconverter.TypeConverterManager;
 
 /**
  * Jodd BEAN module.
  */
 public class JoddBean {
 
-	private static JoddBeanRuntime runtime = new JoddBeanRuntime();
+	private static final JoddBean instance = new JoddBean();
 
 	/**
-	 * Returns Jodd Bean runtime components.
+	 * Returns the module instance.
 	 */
-	public static JoddBeanRuntime runtime() {
-		return runtime;
+	public static JoddBean get() {
+		return instance;
 	}
 
 	static {
@@ -46,5 +50,58 @@ public class JoddBean {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private ClassIntrospector classIntrospector = new CachingIntrospector();
+	private Converter converter = new Converter();
+	private TypeConverterManager typeConverterManager = new TypeConverterManager(converter);
+
+	/**
+	 * Returns the {@link ClassIntrospector} implementation. Default is {@link CachingIntrospector}.
+	 */
+	public ClassIntrospector classIntrospector() {
+		return classIntrospector;
+	}
+
+	/**
+	 * Changes the {@link ClassIntrospector} implementation.
+	 */
+	public JoddBean classIntrospector(ClassIntrospector introspector) {
+		this.classIntrospector = introspector;
+		return this;
+	}
+
+	/**
+	 * Returns the {@link TypeConverterManager} instance.
+	 */
+	public TypeConverterManager typeConverterManager() {
+		return typeConverterManager;
+	}
+
+	/**
+	 * Defines the {@link TypeConverterManager} implementation.
+	 */
+	public JoddBean typeConverterManager(TypeConverterManager typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
+		return this;
+	}
+
+	/**
+	 * Returns the {@link Converter} instance.
+	 */
+	public Converter converter() {
+		return converter;
+	}
+
+	/**
+	 * Defines the {@link Converter}.
+	 */
+	public JoddBean converter(Converter converter) {
+		this.converter = converter;
+		return this;
+	}
+
+
 
 }

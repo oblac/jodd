@@ -179,7 +179,7 @@ class ConverterTest {
 
 		// change boolean converter! boolean[] depends on it!
 
-		TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.get().typeConverterManager();
 
 		typeConverterManager.register(boolean.class, booleanTypeConverter);
 

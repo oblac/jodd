@@ -58,17 +58,17 @@ class ClassConverterTest {
 	void testCast() {
 
 		String s = "123";
-		Integer d = JoddBean.runtime().typeConverterManager().convertType(s, Integer.class);
+		Integer d = JoddBean.get().typeConverterManager().convertType(s, Integer.class);
 		assertEquals(123, d.intValue());
 
-		s = JoddBean.runtime().typeConverterManager().convertType(d, String.class);
+		s = JoddBean.get().typeConverterManager().convertType(d, String.class);
 		assertEquals("123", s);
 
-		MutableInteger md = JoddBean.runtime().typeConverterManager().convertType(s, MutableInteger.class);
+		MutableInteger md = JoddBean.get().typeConverterManager().convertType(s, MutableInteger.class);
 		assertEquals(123, md.intValue());
 
 		B b = new B();
-		A a = JoddBean.runtime().typeConverterManager().convertType(b, A.class);
+		A a = JoddBean.get().typeConverterManager().convertType(b, A.class);
 		assertEquals(a, b);
 	}
 

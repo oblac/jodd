@@ -52,7 +52,7 @@ class MatrixTest {
 		matrix.add(intsList(1, 2, 3));
 		matrix.add(intsList(9, 8, 7));
 
-		int[][] arr = JoddBean.runtime().typeConverterManager().convertType(matrix, int[][].class);
+		int[][] arr = JoddBean.get().typeConverterManager().convertType(matrix, int[][].class);
 
 		assertEquals(2, arr.length);
 
@@ -67,7 +67,7 @@ class MatrixTest {
 				{"432", "345", "9832"}
 		};
 
-		int[][] arr = JoddBean.runtime().typeConverterManager().convertType(strings, int[][].class);
+		int[][] arr = JoddBean.get().typeConverterManager().convertType(strings, int[][].class);
 
 		assertEquals(2, arr.length);
 
@@ -82,7 +82,7 @@ class MatrixTest {
 				{432, 345, 9832}
 		};
 
-		String[][] arr = JoddBean.runtime().typeConverterManager().convertType(values, String[][].class);
+		String[][] arr = JoddBean.get().typeConverterManager().convertType(values, String[][].class);
 
 		assertEquals(2, arr.length);
 

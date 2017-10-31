@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ArraysTest {
 
-	private TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
+	private TypeConverterManager typeConverterManager = JoddBean.get().typeConverterManager();
 
 	public static final Integer[] INTEGERS = new Integer[] {1, 2, 3};
 	public static final int[] INTS = new int[] {1, 2, 3};

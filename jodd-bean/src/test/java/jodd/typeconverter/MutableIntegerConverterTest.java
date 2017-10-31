@@ -38,7 +38,7 @@ class MutableIntegerConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableIntegerConverter mutableIntegerConverter = (MutableIntegerConverter) JoddBean.runtime().typeConverterManager().lookup(MutableInteger.class);
+		MutableIntegerConverter mutableIntegerConverter = (MutableIntegerConverter) JoddBean.get().typeConverterManager().lookup(MutableInteger.class);
 
 		assertNull(mutableIntegerConverter.convert(null));
 

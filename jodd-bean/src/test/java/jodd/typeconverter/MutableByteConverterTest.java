@@ -38,7 +38,7 @@ class MutableByteConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableByteConverter mutableByteConverter = (MutableByteConverter) JoddBean.runtime().typeConverterManager().lookup(MutableByte.class);
+		MutableByteConverter mutableByteConverter = (MutableByteConverter) JoddBean.get().typeConverterManager().lookup(MutableByte.class);
 
 		assertNull(mutableByteConverter.convert(null));
 

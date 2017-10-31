@@ -44,7 +44,7 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		JoddBean.runtime().classIntrospector(new CachingIntrospector(true, true, true, new String[] {"_"}));
+		JoddBean.get().classIntrospector(new CachingIntrospector(true, true, true, new String[] {"_"}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
@@ -61,7 +61,7 @@ class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals(null, pds[2].getFieldDescriptor());
 
-		JoddBean.runtime().classIntrospector(new CachingIntrospector());
+		JoddBean.get().classIntrospector(new CachingIntrospector());
 	}
 
 	@Test
@@ -72,7 +72,7 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		JoddBean.runtime().classIntrospector(new CachingIntrospector(true, true, true, new String[] {"_", ""}));
+		JoddBean.get().classIntrospector(new CachingIntrospector(true, true, true, new String[] {"_", ""}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
@@ -90,7 +90,7 @@ class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals("www", pds[2].getFieldDescriptor().getName());
 
-		JoddBean.runtime().classIntrospector(new CachingIntrospector());
+		JoddBean.get().classIntrospector(new CachingIntrospector());
 	}
 
 	@Test

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class ClassArrayConverterTest {
 	
-	private TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
+	private TypeConverterManager typeConverterManager = JoddBean.get().typeConverterManager();
 
 	@Test
 	@SuppressWarnings({"unchecked"})

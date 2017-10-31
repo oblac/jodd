@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BooleanArrayConverterTest {
 
-	private TypeConverterManager typeConverterManager = JoddBean.runtime().typeConverterManager();
+	private TypeConverterManager typeConverterManager = JoddBean.get().typeConverterManager();
 
 	@Test
 	void testConversion() {
