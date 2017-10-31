@@ -66,7 +66,7 @@ public class PropsData implements Cloneable {
 	protected boolean skipEmptyProps = true;
 
 	public PropsData() {
-		this(new HashMap<String, PropsEntry>(), new HashMap<String, Map<String, PropsEntry>>());
+		this(new HashMap<>(), new HashMap<>());
 	}
 
 	protected PropsData(final HashMap<String, PropsEntry> properties, final HashMap<String, Map<String, PropsEntry>> profiles) {
@@ -242,24 +242,22 @@ public class PropsData implements Cloneable {
 			stringTemplateParser.setMissingKeyReplacement(StringPool.EMPTY);
 		}
 
-		final StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
-			public String resolve(String macroName) {
-				String[] lookupProfiles = profiles;
+		final StringTemplateParser.MacroResolver macroResolver = macroName -> {
+			String[] lookupProfiles = profiles;
 
-				int leftIndex = macroName.indexOf('<');
-				if (leftIndex != -1) {
-					int rightIndex = macroName.indexOf('>');
+			int leftIndex = macroName.indexOf('<');
+			if (leftIndex != -1) {
+				int rightIndex = macroName.indexOf('>');
 
-					String profiles = macroName.substring(leftIndex + 1, rightIndex);
-					macroName = macroName.substring(0, leftIndex).concat(macroName.substring(rightIndex + 1));
+				String profiles1 = macroName.substring(leftIndex + 1, rightIndex);
+				macroName = macroName.substring(0, leftIndex).concat(macroName.substring(rightIndex + 1));
 
-					lookupProfiles = StringUtil.splitc(profiles, ',');
+				lookupProfiles = StringUtil.splitc(profiles1, ',');
 
-					StringUtil.trimAll(lookupProfiles);
-				}
-
-				return lookupValue(macroName, lookupProfiles);
+				StringUtil.trimAll(lookupProfiles);
 			}
+
+			return lookupValue(macroName, lookupProfiles);
 		};
 
 		// start parsing

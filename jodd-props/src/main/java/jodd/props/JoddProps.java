@@ -32,7 +32,14 @@ import jodd.Jodd;
  */
 public class JoddProps {
 
-	// ---------------------------------------------------------------- module
+	private static final JoddProps instance = new JoddProps();
+
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddProps get() {
+		return instance;
+	}
 
 	static {
 		Jodd.initModule();
