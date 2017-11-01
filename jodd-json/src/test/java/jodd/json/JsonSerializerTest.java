@@ -383,7 +383,7 @@ class JsonSerializerTest {
 	@Test
 	void testStrictMode() {
 		Cook cook = new Cook();
-		JsonAnnotationManager jam = JoddJson.get().annotationManager();
+		JsonAnnotationManager jam = JsonAnnotationManager.get();
 
 		JsonAnnotationManager.TypeData typeData = jam.lookupTypeData(Cook.class);
 
