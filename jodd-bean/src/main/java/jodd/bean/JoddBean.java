@@ -31,6 +31,8 @@ import jodd.introspector.ClassIntrospector;
 import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConverterManager;
 
+import java.util.Objects;
+
 /**
  * Jodd BEAN module.
  */
@@ -68,6 +70,7 @@ public class JoddBean {
 	 * Changes the {@link ClassIntrospector} implementation.
 	 */
 	public JoddBean classIntrospector(ClassIntrospector introspector) {
+		Objects.requireNonNull(introspector);
 		this.classIntrospector = introspector;
 		return this;
 	}
@@ -83,6 +86,7 @@ public class JoddBean {
 	 * Defines the {@link TypeConverterManager} implementation.
 	 */
 	public JoddBean typeConverterManager(TypeConverterManager typeConverterManager) {
+		Objects.requireNonNull(typeConverterManager);
 		this.typeConverterManager = typeConverterManager;
 		return this;
 	}
@@ -98,10 +102,9 @@ public class JoddBean {
 	 * Defines the {@link Converter}.
 	 */
 	public JoddBean converter(Converter converter) {
+		Objects.requireNonNull(converter);
 		this.converter = converter;
 		return this;
 	}
-
-
 
 }
