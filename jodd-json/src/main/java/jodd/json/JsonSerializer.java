@@ -59,9 +59,9 @@ public class JsonSerializer {
 		}
 	};
 
-	protected String classMetadataName = JoddJson.defaults().getClassMetadataName();
-	protected boolean strictStringEncoding = JoddJson.defaults().isStrictStringEncoding();
-	protected boolean deep = JoddJson.defaults().isDeepSerialization();
+	protected String classMetadataName = JoddJson.get().defaults().getClassMetadataName();
+	protected boolean strictStringEncoding = JoddJson.get().defaults().isStrictStringEncoding();
+	protected boolean deep = JoddJson.get().defaults().isDeepSerialization();
 	protected Class[] excludedTypes = null;
 	protected String[] excludedTypeNames = null;
 	protected boolean excludeNulls = false;
@@ -84,7 +84,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer withSerializer(Class type, TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
-			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaults().getDefaultSerializers());
+			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.get().typeSerializers());
 		}
 
 		typeSerializersMap.register(type, typeJsonSerializer);

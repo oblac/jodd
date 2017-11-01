@@ -26,19 +26,22 @@
 package jodd.json;
 
 import jodd.Jodd;
+import jodd.json.meta.JsonAnnotationManager;
+
+import java.util.Objects;
 
 /**
  * Jodd JSON module.
  */
 public class JoddJson {
 
-	private static final JoddJsonDefaults defaults = new JoddJsonDefaults();
+	private static final JoddJson instance = new JoddJson();
 
 	/**
-	 * Returns {@link JoddJsonDefaults default configuration}.
+	 * Returns the module instance.
 	 */
-	public static JoddJsonDefaults defaults() {
-		return defaults;
+	public static JoddJson get() {
+		return instance;
 	}
 
 	static {
@@ -46,5 +49,50 @@ public class JoddJson {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private JoddJsonDefaults defaults = new JoddJsonDefaults();
+	private TypeJsonSerializerMap typeSerializers = new TypeJsonSerializerMap();
+	private JsonAnnotationManager annotationManager = new JsonAnnotationManager();
+
+	/**
+	 * Returns {@link JoddJsonDefaults default configuration}.
+	 */
+	public JoddJsonDefaults defaults() {
+		return defaults;
+	}
+
+	/**
+	 * Returns {@link TypeJsonSerializerMap type serializer map}
+	 */
+	public TypeJsonSerializerMap typeSerializers() {
+		return typeSerializers;
+	}
+
+	/**
+	 * Defines new type serializer map.
+	 */
+	public JoddJson typeSerializers(TypeJsonSerializerMap typeSerializers) {
+		Objects.requireNonNull(typeSerializers);
+		this.typeSerializers = typeSerializers;
+		return this;
+	}
+
+	/**
+	 * Returns {@link JsonAnnotationManager}.
+	 */
+	public JsonAnnotationManager annotationManager() {
+		return annotationManager;
+	}
+
+	/**
+	 * Sets new {@link JsonAnnotationManager}.
+	 */
+	public JoddJson setAnnotationManager(JsonAnnotationManager annotationManager) {
+		Objects.requireNonNull(annotationManager);
+		this.annotationManager = annotationManager;
+		return this;
+	}
 
 }

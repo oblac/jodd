@@ -65,6 +65,13 @@ import java.util.Map;
  */
 public class TypeJsonSerializerMap {
 
+	/**
+	 * Returns default instance.
+	 */
+	public static TypeJsonSerializerMap get() {
+		return JoddJson.get().typeSerializers();
+	}
+
 	private final TypeJsonSerializerMap defaultSerializerMap;
 
 	/**

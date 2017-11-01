@@ -72,7 +72,7 @@ class JsonParserTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JoddJson.get().defaults().setClassMetadataName(null);
 	}
 
 	@Test
@@ -552,7 +552,7 @@ class JsonParserTest {
 
 	@Test
 	void testComplexObject() throws IOException {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		JsonParser jsonParser = new JsonParser();
 		String json = FileUtil.readString(new File(dataRoot, "complex.json"));

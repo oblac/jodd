@@ -34,6 +34,7 @@ import jodd.json.JoddJson;
 import jodd.util.ArraysUtil;
 import jodd.util.InExRules;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,6 +46,13 @@ import java.util.Map;
  * Cached includes and excludes annotation data per type.
  */
 public class JsonAnnotationManager {
+
+	/**
+	 * Returns default instance.
+	 */
+	public static JsonAnnotationManager get() {
+		return JoddJson.get().annotationManager();
+	}
 
 	private final Map<Class, TypeData> typeDataMap;
 
@@ -123,7 +131,7 @@ public class JsonAnnotationManager {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
-			if (JoddJson.defaults().isSerializationSubclassAware()) {
+			if (JoddJson.get().defaults().isSerializationSubclassAware()) {
 				typeData = findSubclassTypeData(type);
 			}
 
@@ -154,8 +162,10 @@ public class JsonAnnotationManager {
 	 * Finds type data of first annotated superclass or interface.
 	 */
 	protected TypeData findSubclassTypeData(Class type) {
-		if (type.getAnnotation(JoddJson.defaults().getJsonAnnotation()) != null) {
-			// current type has annotation, dont find anything, let type data be created
+		final Class<? extends Annotation> defaultAnnotation = JoddJson.get().defaults().getJsonAnnotation();
+
+		if (type.getAnnotation(defaultAnnotation) != null) {
+			// current type has annotation, don't find anything, let type data be created
 			return null;
 		}
 
@@ -166,7 +176,7 @@ public class JsonAnnotationManager {
 		Class[] superClasses = cd.getAllSuperclasses();
 
 		for (Class superClass : superClasses) {
-			if (superClass.getAnnotation(JoddJson.defaults().getJsonAnnotation()) != null) {
+			if (superClass.getAnnotation(defaultAnnotation) != null) {
 				// annotated subclass founded!
 				return _lookupTypeData(superClass);
 			}
@@ -175,7 +185,7 @@ public class JsonAnnotationManager {
 		Class[] interfaces = cd.getAllInterfaces();
 
 		for (Class interfaze : interfaces) {
-			if (interfaze.getAnnotation(JoddJson.defaults().getJsonAnnotation()) != null) {
+			if (interfaze.getAnnotation(defaultAnnotation) != null) {
 				// annotated subclass founded!
 				return _lookupTypeData(interfaze);
 			}
@@ -215,7 +225,7 @@ public class JsonAnnotationManager {
 		ArrayList<String> jsonNames = new ArrayList<>();
 		ArrayList<String> realNames = new ArrayList<>();
 
-		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.defaults().getJsonAnnotation());
+		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.get().defaults().getJsonAnnotation());
 
 		for (PropertyDescriptor pd : pds) {
 			JSONAnnotationData data = null;

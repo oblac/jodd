@@ -74,7 +74,7 @@ public class JsonParser extends JsonParserBase {
 	protected char[] input;
 	protected int total;
 	protected Path path;
-	protected boolean useAltPaths = JoddJson.defaults().isUseAltPathsByParser();
+	protected boolean useAltPaths = JoddJson.get().defaults().isUseAltPathsByParser();
 	protected Class rootType;
 	protected MapToBean mapToBean;
 	protected boolean looseMode;
@@ -212,7 +212,7 @@ public class JsonParser extends JsonParserBase {
 
 	// ---------------------------------------------------------------- class meta data name
 
-	protected String classMetadataName = JoddJson.defaults().getClassMetadataName();
+	protected String classMetadataName = JoddJson.get().defaults().getClassMetadataName();
 
 	/**
 	 * Sets local class meta-data name.
@@ -833,7 +833,7 @@ public class JsonParser extends JsonParserBase {
 
 			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
 
-			typeData = JoddJson.defaults().getAnnotationManager().lookupTypeData(targetType);
+			typeData = JsonAnnotationManager.get().lookupTypeData(targetType);
 		}
 
 		if (isTargetRealTypeMap) {
@@ -892,7 +892,7 @@ public class JsonParser extends JsonParserBase {
 
 			if (!isTargetRealTypeMap) {
 				// replace key with real property value
-				key = JoddJson.defaults().getAnnotationManager().resolveRealName(targetType, key);
+				key = JsonAnnotationManager.get().resolveRealName(targetType, key);
 			}
 
 			if (!isTargetTypeMap) {

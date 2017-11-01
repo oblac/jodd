@@ -76,7 +76,7 @@ class JSONDeserializerTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JoddJson.get().defaults().setClassMetadataName(null);
 	}
 
 	@Test
@@ -160,7 +160,7 @@ class JSONDeserializerTest {
 		assertEquals(4, jsonSuperMan.getPowers().size());
 		assertHeroHasSuperPowers(jsonSuperMan);
 
-		JoddJson.defaults().setClassMetadataName(null);
+		JoddJson.get().defaults().setClassMetadataName(null);
 	}
 
 	@Test
@@ -173,12 +173,12 @@ class JSONDeserializerTest {
 		assertEquals(4, jsonSuperMan.getPowers().size());
 		assertHeroHasSuperPowers(jsonSuperMan);
 
-		JoddJson.defaults().setClassMetadataName(null);
+		JoddJson.get().defaults().setClassMetadataName(null);
 	}
 
 	@Test
 	void testNoClassHints() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JoddJson.get().defaults().setClassMetadataName(null);
 
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer().exclude("*.class").serialize(superman);
@@ -199,7 +199,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testNoHintsButClassesForCollection() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer()
@@ -212,7 +212,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testNoClassHintsForCollections() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer()
@@ -238,7 +238,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testListSerialization() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
@@ -268,7 +268,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testGenericTypeDeserialization() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
 
@@ -317,7 +317,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testGeneralMapDeserialization() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		String json = new JsonSerializer().exclude("*.class").serialize(creator.createJodder());
 		Map<String, Object> deserialized = new JsonParser().parse(json);
@@ -341,7 +341,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testListDeserializationNoClass() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
@@ -429,7 +429,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testMapWithEmbeddedObject2() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JoddJson.get().defaults().setClassMetadataName(null);
 
 		Map<String, Pair<Phone, Network>> complex = new JsonParser()
 				.map("values", Pair.class)
@@ -576,7 +576,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testDeserializationIntoPublicFields() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JoddJson.get().defaults().setClassMetadataName("class");
 
 		Spiderman spiderman = new Spiderman();
 		spiderman.spideySense = false;
@@ -624,7 +624,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testPoint() {
-		JoddJson.defaults().setClassMetadataName("__class");
+		JoddJson.get().defaults().setClassMetadataName("__class");
 		String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));
 		Point2D.Float point = new JsonParser().parse(json);
 		assertEquals(1.0f, point.x, DELTA);

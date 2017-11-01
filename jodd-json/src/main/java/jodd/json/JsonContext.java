@@ -189,7 +189,7 @@ public class JsonContext extends JsonWriter {
 		// + globals
 
 		if (typeJsonSerializer == null) {
-			typeJsonSerializer = JoddJson.defaults().getDefaultSerializers().lookup(type);
+			typeJsonSerializer = JoddJson.get().typeSerializers().lookup(type);
 		}
 
 		return typeJsonSerializer.serialize(this, object);
@@ -226,8 +226,8 @@ public class JsonContext extends JsonWriter {
 
 			// + excluded types
 
-			if (JoddJson.defaults().getExcludedTypes() != null) {
-				for (Class excludedType : JoddJson.defaults().getExcludedTypes()) {
+			if (JoddJson.get().defaults().getExcludedTypes() != null) {
+				for (Class excludedType : JoddJson.get().defaults().getExcludedTypes()) {
 					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
@@ -245,8 +245,8 @@ public class JsonContext extends JsonWriter {
 
 			String propertyTypeName = propertyType.getName();
 
-			if (JoddJson.defaults().getExcludedTypeNames() != null) {
-				for (String excludedTypeName : JoddJson.defaults().getExcludedTypeNames()) {
+			if (JoddJson.get().defaults().getExcludedTypeNames() != null) {
+				for (String excludedTypeName : JoddJson.get().defaults().getExcludedTypeNames()) {
 					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
 						return false;
 					}
@@ -263,7 +263,6 @@ public class JsonContext extends JsonWriter {
 
 		return true;
 	}
-
 
 	/**
 	 * Matched current path to queries. If match is found, provided include
