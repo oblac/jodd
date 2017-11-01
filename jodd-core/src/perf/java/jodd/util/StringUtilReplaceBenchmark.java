@@ -47,6 +47,41 @@ import org.openjdk.jmh.annotations.Warmup;
  * </code>
  * </p>
  *
+ * Results:
+ * <pre>
+ * Benchmark                                                                      Mode  Cnt          Score          Error  Units
+ * Base64Benchmark.decode_Apache_Base64                                          thrpt   10     437382.725 ±    17632.287  ops/s
+ * Base64Benchmark.decode_Java_Base64                                            thrpt   10    1128600.920 ±   128620.707  ops/s
+ * Base64Benchmark.decode_Jodd_Base64                                            thrpt   10    1996963.313 ±    60933.567  ops/s
+ * Base64Benchmark.encode_Apache_Base64                                          thrpt   10     444188.781 ±    17254.237  ops/s
+ * Base64Benchmark.encode_Java_Base64                                            thrpt   10    2372845.229 ±   161849.449  ops/s
+ * Base64Benchmark.encode_Jodd_Base64                                            thrpt   10    2421585.489 ±    98594.888  ops/s
+ * CharUtilIWhitespaceBenchmark.isWhitespace_Java                                thrpt   10   14734579.261 ±   254027.348  ops/s
+ * CharUtilIWhitespaceBenchmark.isWhitespace_Jodd                                thrpt   10  349237222.872 ± 15785727.034  ops/s
+ * StringBandBenchmark.string2                                                   thrpt   10   37818400.146 ±   466186.699  ops/s
+ * StringBandBenchmark.string3                                                   thrpt   10   17354566.314 ±   355497.906  ops/s
+ * StringBandBenchmark.stringBand2                                               thrpt   10   27789621.987 ±  1554213.757  ops/s
+ * StringBandBenchmark.stringBand3                                               thrpt   10   21079979.110 ±  1827100.524  ops/s
+ * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringNoMatch          thrpt   21   30664291.493 ±   506821.904  ops/s
+ * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringOneMatch         thrpt   21    8469800.841 ±   115709.770  ops/s
+ * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringSeveralMatches   thrpt   21    4844528.121 ±   143725.969  ops/s
+ * StringUtilReplaceBenchmark.apacheStringUtilsReplaceShortStringNoMatch         thrpt   21  210039642.933 ±  4099503.317  ops/s
+ * StringUtilReplaceBenchmark.apacheStringUtilsReplaceShortStringOneMatch        thrpt   21   13016923.170 ±   614851.521  ops/s
+ * StringUtilReplaceBenchmark.apacheStringUtilsReplaceShortStringSeveralMatches  thrpt   21    7339967.841 ±   105845.671  ops/s
+ * StringUtilReplaceBenchmark.stringReplaceLongStringNoMatch                     thrpt   21    6309114.450 ±    90470.839  ops/s
+ * StringUtilReplaceBenchmark.stringReplaceLongStringOneMatch                    thrpt   21    1854754.382 ±    43681.835  ops/s
+ * StringUtilReplaceBenchmark.stringReplaceLongStringSeveralMatches              thrpt   21    1412900.760 ±    22663.776  ops/s
+ * StringUtilReplaceBenchmark.stringReplaceShortStringNoMatch                    thrpt   21    7600231.241 ±   116226.095  ops/s
+ * StringUtilReplaceBenchmark.stringReplaceShortStringOneMatch                   thrpt   21    4406405.853 ±   146412.852  ops/s
+ * StringUtilReplaceBenchmark.stringReplaceShortStringSeveralMatches             thrpt   21    2952897.725 ±    26047.413  ops/s
+ * StringUtilReplaceBenchmark.stringUtilReplaceLongStringNoMatch                 thrpt   21   31411667.415 ±   451647.428  ops/s
+ * StringUtilReplaceBenchmark.stringUtilReplaceLongStringOneMatch                thrpt   21   10121698.874 ±   152851.456  ops/s
+ * StringUtilReplaceBenchmark.stringUtilReplaceLongStringSeveralMatches          thrpt   21    5091103.201 ±   136616.407  ops/s
+ * StringUtilReplaceBenchmark.stringUtilReplaceShortStringNoMatch                thrpt   21  207213639.747 ±  5682502.409  ops/s
+ * StringUtilReplaceBenchmark.stringUtilReplaceShortStringOneMatch               thrpt   21   19425478.685 ±   766128.831  ops/s
+ * StringUtilReplaceBenchmark.stringUtilReplaceShortStringSeveralMatches         thrpt   21    9633490.491 ±   159050.223  ops/s
+ * </pre>
+ *
  * <b>Note:</b> in Java 9 the method {@link String#replace(CharSequence, CharSequence)} will perform much better!
  */
 @Fork(value = 3, jvmArgsAppend = "-Djmh.stack.lines=3")
