@@ -39,11 +39,11 @@ public class ProxettaUtil {
 	public static Class getTargetClass(Class proxy) {
 		String name = proxy.getName();
 
-		if (name.endsWith(JoddProxetta.defaults().getProxyClassNameSuffix())) {
+		if (name.endsWith(JoddProxetta.get().defaults().getProxyClassNameSuffix())) {
 			return proxy.getSuperclass();
 		}
 
-		if (name.endsWith(JoddProxetta.defaults().getWrapperClassNameSuffix())) {
+		if (name.endsWith(JoddProxetta.get().defaults().getWrapperClassNameSuffix())) {
 			return getTargetWrapperType(proxy);
 		}
 
@@ -70,7 +70,7 @@ public class ProxettaUtil {
 	 * @see #injectTargetIntoWrapper(Object, Object, String)
 	 */
 	public static void injectTargetIntoWrapper(Object target, Object wrapper) {
-		injectTargetIntoWrapper(target, wrapper, JoddProxetta.defaults().getWrapperTargetFieldName());
+		injectTargetIntoWrapper(target, wrapper, JoddProxetta.get().defaults().getWrapperTargetFieldName());
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class ProxettaUtil {
 	public static Class getTargetWrapperType(Class wrapperClass) {
 		Field field;
 		try {
-			field = wrapperClass.getField(JoddProxetta.defaults().getWrapperTargetFieldName());
+			field = wrapperClass.getField(JoddProxetta.get().defaults().getWrapperTargetFieldName());
 		} catch (NoSuchFieldException nsfex) {
 			throw new ProxettaException(nsfex);
 		}

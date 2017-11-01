@@ -32,13 +32,13 @@ import jodd.Jodd;
  */
 public class JoddProxetta {
 
-	private static final JoddProxettaDefaults defaults = new JoddProxettaDefaults();
+	private static final JoddProxetta instance = new JoddProxetta();
 
 	/**
-	 * Returns {@link JoddProxettaDefaults default configuration}.
+	 * Returns the module instance.
 	 */
-	public static JoddProxettaDefaults defaults() {
-		return defaults;
+	public static JoddProxetta get() {
+		return instance;
 	}
 
 	static {
@@ -46,5 +46,17 @@ public class JoddProxetta {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private JoddProxettaDefaults defaults = new JoddProxettaDefaults();
+
+	/**
+	 * Returns {@link JoddProxettaDefaults default configuration}.
+	 */
+	public JoddProxettaDefaults defaults() {
+		return defaults;
+	}
+
 
 }

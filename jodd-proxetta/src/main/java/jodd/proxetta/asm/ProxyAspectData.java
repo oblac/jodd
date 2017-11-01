@@ -187,7 +187,7 @@ final class ProxyAspectData {
 					if (!desc.equals(DESC_VOID)) {
 						throw new ProxettaException("Invalid static initialization block description for advice: " + advice.getName());
 					}
-					name = JoddProxetta.defaults().getClinitMethodName() + JoddProxetta.defaults().getMethodDivider() + aspectIndex;
+					name = JoddProxetta.get().defaults().getClinitMethodName() + JoddProxetta.get().defaults().getMethodDivider() + aspectIndex;
 					access |= AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL;
 					wd.addAdviceClinitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
@@ -227,7 +227,7 @@ final class ProxyAspectData {
 						throw new ProxettaException("Advices can have only default constructors. Invalid advice: " + advice.getName());
 					}
 
-					name = JoddProxetta.defaults().getInitMethodName() + JoddProxetta.defaults().getMethodDivider() + aspectIndex;
+					name = JoddProxetta.get().defaults().getInitMethodName() + JoddProxetta.get().defaults().getMethodDivider() + aspectIndex;
 					access = ProxettaAsmUtil.makePrivateFinalAccess(access);
 					wd.addAdviceInitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
@@ -285,7 +285,7 @@ final class ProxyAspectData {
 				} else
 
 				// other methods
-				if (!name.equals(JoddProxetta.defaults().getExecuteMethodName())) {
+				if (!name.equals(JoddProxetta.get().defaults().getExecuteMethodName())) {
 					name = adviceMethodName(name, aspectIndex);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 

@@ -38,7 +38,7 @@ public class InvokeProxetta extends Proxetta<InvokeProxetta> {
 
 	public InvokeProxetta(InvokeAspect... aspects) {
 		this.invokeAspects = aspects;
-		classNameSuffix = JoddProxetta.defaults().getInvokeProxyClassNameSuffix();
+		classNameSuffix = JoddProxetta.get().defaults().getInvokeProxyClassNameSuffix();
 	}
 
 	/**

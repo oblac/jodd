@@ -132,14 +132,14 @@ public class ProxettaAsmUtil {
 	 * Builds advice field name.
 	 */
 	public static String adviceFieldName(String name, int index) {
-		return JoddProxetta.defaults().getFieldPrefix() + name + JoddProxetta.defaults().getFieldDivider() + index;
+		return JoddProxetta.get().defaults().getFieldPrefix() + name + JoddProxetta.get().defaults().getFieldDivider() + index;
 	}
 
 	/**
 	 * Builds advice method name.
 	 */
 	public static String adviceMethodName(String name, int index) {
-		return JoddProxetta.defaults().getMethodPrefix() + name + JoddProxetta.defaults().getMethodDivider() + index;
+		return JoddProxetta.get().defaults().getMethodPrefix() + name + JoddProxetta.get().defaults().getMethodDivider() + index;
 	}
 
 	// ---------------------------------------------------------------- load

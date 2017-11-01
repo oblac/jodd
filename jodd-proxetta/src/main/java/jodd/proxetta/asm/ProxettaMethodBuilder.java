@@ -213,7 +213,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-				if (!name.equals(JoddProxetta.defaults().getExecuteMethodName())) {
+				if (!name.equals(JoddProxetta.get().defaults().getExecuteMethodName())) {
 					return null;
 				}
 
