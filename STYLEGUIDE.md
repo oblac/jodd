@@ -44,12 +44,20 @@ class FooTest {
 }
 ```
 
+## Benchmarks
 
-## Architecture
++ Each benchmark is stored in separated `*Benchmark` class.
++ Benchmark methods are annotated with an annotation.
++ Don't use `BlackHole` argument if you can return the value.
++ Each benchmark class must contain results in the Javadoc of the class:
+just copy/paste whatever is the JMH output. 
+
+
+## Modules Architecture
 
 + Interfaces may contain static factories (see `Value.of()`).
 + Common sense is assumed. Jodd does not handle all possible misusages of the API. For example, we will not check for `null` and then throw custom exception when it is obvious that methods should accept non-null value.
 + `null` usage should be generally avoided.
-+ Jodd module may have `defaults()` static method that returns default configuration of the module. Try to minimise usage of this static call - rather get a value and pass it as an argument, then to fetch the value twice.
-Default configuration is a bean. Configuration can be split in multiple beans.  
-+ Jodd module may have `runtime()` static methods that returns set of runtime components - parts of the module that represents some logic. Runtime is not a bean, but has methods to get and set the components. 
++ Jodd module has `get()` static method that returns the module instance.
++ Default configuration of the module is stored as a bean in modules instance. Try to minimise usage of this static call - rather get a value and pass it as an argument, then to fetch the value twice. Default configuration is a bean. Configuration can be split in multiple beans.  
++ Module instance may have set of runtime components - parts of the module that represents some logic.
