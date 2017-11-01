@@ -24,7 +24,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.util;
 
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 
 /**
  * Benchmark for {@link CharUtil#isWhitespace(char)} method. <br/>
@@ -38,32 +44,6 @@ import org.openjdk.jmh.annotations.*;
  * <code>
  * gw :jodd-core:perf -PCharUtilIsWhitespaceBenchmark
  * </code>
- * </pre>
- * <p></p>
- * Results:
- * <table border="1">
- *     <tr>
- *         <th>Benchmark</th>
- *         <th>Mode</th>
- *         <th>Cnt</th>
- *         <th>Score</th>
- *         <th>Units</th>
- *     </tr>
- *     <tr>
- *         <td>isWhitespace_Java</td>
- *         <td>thrpt</td>
- *         <td>10</td>
- *         <td>5105465,482</td>
- *         <td>ops/s</td>
- *     </tr>
- *     <tr>
- *         <td>isWhitespace_Jodd</td>
- *         <td>thrpt</td>
- *         <td>10</td>
- *         <td>786876458,721</td>
- *         <td>ops/s</td>
- *     </tr>
- * </table>
  */
 @Fork(1)
 @Warmup(iterations = 10)
@@ -81,16 +61,20 @@ public class CharUtilIWhitespaceBenchmark {
 	}
 
 	@Benchmark
-	public void isWhitespace_Java() {
-		for (int c = 0 ; c < chars.length ; c++) {
-			Character.isWhitespace(chars[c]);
+	public boolean isWhitespace_Java() {
+		boolean result = false;
+		for (char aChar : chars) {
+			result = result || Character.isWhitespace(aChar);
 		}
+		return result;
 	}
 
 	@Benchmark
-	public void isWhitespace_Jodd() {
-		for (int c = 0 ; c < chars.length ; c++) {
-			CharUtil.isWhitespace(chars[c]);
+	public boolean isWhitespace_Jodd() {
+		boolean result = false;
+		for (char aChar : chars) {
+			result = result || CharUtil.isWhitespace(aChar);
 		}
+		return result;
 	}
 }

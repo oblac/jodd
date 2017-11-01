@@ -24,7 +24,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.util;
 
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.UnsupportedEncodingException;
@@ -53,7 +59,7 @@ import java.io.UnsupportedEncodingException;
  * </code>
  * </p>
  *
- * results :
+ * Results:
  * <pre>
  * Benchmark                                                        Mode  Cnt         Score        Error  Units
  * Base64Benchmark.encode_Java_Base64                              thrpt   10   1775775,115 ± 107760,428  ops/s
@@ -84,36 +90,37 @@ public class Base64Benchmark {
     // ----------------------------------------------------------------------- Java Base64
     
     @Benchmark
-    public void encode_Java_Base64(Blackhole blackhole) {
-        blackhole.consume(java.util.Base64.getEncoder().encodeToString(to_be_encoded));
+    public String encode_Java_Base64() {
+        return java.util.Base64.getEncoder().encodeToString(to_be_encoded);
     }
 
 	@Benchmark
-	public void decode_Java_Base64(Blackhole blackhole) {
-		blackhole.consume(java.util.Base64.getDecoder().decode(to_be_decoded));
+	public byte[] decode_Java_Base64() {
+		return java.util.Base64.getDecoder().decode(to_be_decoded);
 	}
 
     // ----------------------------------------------------------------------- Apache Commons Codec - Base64
     
     @Benchmark
-    public void encode_Apache_Base64(Blackhole blackhole) {
-        blackhole.consume(org.apache.commons.codec.binary.Base64.encodeBase64String(to_be_encoded));
+    public String encode_Apache_Base64() {
+        return org.apache.commons.codec.binary.Base64.encodeBase64String(to_be_encoded);
     }
 
 	@Benchmark
-	public void decode_Apache_Base64(Blackhole blackhole) {
-		blackhole.consume(org.apache.commons.codec.binary.Base64.decodeBase64(to_be_decoded));
+	public byte[] decode_Apache_Base64(Blackhole blackhole) {
+		return org.apache.commons.codec.binary.Base64.decodeBase64(to_be_decoded);
 	}
 
     // ----------------------------------------------------------------------- Jodd Base64
 
     @Benchmark
-    public void encode_Jodd_Base64(Blackhole blackhole) {
-        blackhole.consume(jodd.util.Base64.encodeToString(to_be_encoded, false));
+    public String encode_Jodd_Base64(Blackhole blackhole) {
+        return jodd.util.Base64.encodeToString(to_be_encoded, false);
     }
 
 	@Benchmark
-	public void decode_Jodd_Base64(Blackhole blackhole) {
-		blackhole.consume(jodd.util.Base64.decode(to_be_decoded));
+	public byte[] decode_Jodd_Base64(Blackhole blackhole) {
+		return jodd.util.Base64.decode(to_be_decoded);
 	}
+
 }
