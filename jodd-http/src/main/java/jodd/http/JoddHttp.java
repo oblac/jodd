@@ -26,19 +26,22 @@
 package jodd.http;
 
 import jodd.Jodd;
+import jodd.http.net.SocketHttpConnectionProvider;
+
+import java.util.Objects;
 
 /**
  * Jodd HTTP module.
  */
 public class JoddHttp {
 
-	private static final JoddHttpDefaults defaults = new JoddHttpDefaults();
+	private static final JoddHttp instance = new JoddHttp();
 
 	/**
-	 * Returns {@link JoddHttpDefaults default configuration}.
+	 * Returns the module instance.
 	 */
-	public static JoddHttpDefaults defaults() {
-		return defaults;
+	public static JoddHttp get() {
+		return instance;
 	}
 
 	static {
@@ -46,5 +49,32 @@ public class JoddHttp {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private JoddHttpDefaults defaults = new JoddHttpDefaults();
+	private HttpConnectionProvider httpConnectionProvider = new SocketHttpConnectionProvider();
+
+	/**
+	 * Returns {@link JoddHttpDefaults default configuration}.
+	 */
+	public JoddHttpDefaults defaults() {
+		return defaults;
+	}
+
+	/**
+	 * Returns default http connection provider.
+	 */
+	public HttpConnectionProvider httpConnectionProvider() {
+		return httpConnectionProvider;
+	}
+
+	/**
+	 * Defines the default HTTP transport provider.
+	 */
+	public void httpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+		Objects.requireNonNull(httpConnectionProvider);
+		this.httpConnectionProvider = httpConnectionProvider;
+	}
 
 }

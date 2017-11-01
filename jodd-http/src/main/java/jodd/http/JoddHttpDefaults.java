@@ -25,116 +25,115 @@
 
 package jodd.http;
 
-import jodd.http.net.SocketHttpConnectionProvider;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
 
 public class JoddHttpDefaults {
 
-	/**
-	 * Default HTTP transport provider.
-	 */
-	private HttpConnectionProvider httpConnectionProvider = new SocketHttpConnectionProvider();
-
-	/**
-	 * Default HTTP query parameters encoding (UTF-8).
-	 */
 	private String queryEncoding = StringPool.UTF_8;
-
-	/**
-	 * Default form encoding (UTF-8).
-	 */
 	private String formEncoding = StringPool.UTF_8;
-
-	/**
-	 * Default body media type (text/html).
-	 */
 	private String bodyMediaType = MimeTypes.MIME_TEXT_HTML;
+	private String bodyEncoding = StringPool.UTF_8;
+	private String secureEnabledProtocols = System.getProperty("https.protocols");
+	private String userAgent = "Jodd HTTP";
+	private boolean capitalizeHeaderKeys = true;
 
 	/**
-	 * Default body encoding (UTF-8).
+	 * Returns default query encoding.
 	 */
-	private String bodyEncoding = StringPool.UTF_8;
+	public String getQueryEncoding() {
+		return queryEncoding;
+	}
+
+	/**
+	 * Sets default HTTP query parameters encoding (UTF-8).
+	 */
+	public void setQueryEncoding(String queryEncoding) {
+		this.queryEncoding = queryEncoding;
+	}
+
+	/**
+	 * Returns default form encoding (UTF-8).
+	 */
+	public String getFormEncoding() {
+		return formEncoding;
+	}
+
+	/**
+	 * Sets default form encoding (UTF-8).
+	 */
+	public void setFormEncoding(String formEncoding) {
+		this.formEncoding = formEncoding;
+	}
+
+	/**
+	 * Returns body media type.
+	 */
+	public String getBodyMediaType() {
+		return bodyMediaType;
+	}
+
+	/**
+	 * Sets default body media type (text/html).
+	 */
+	public void setBodyMediaType(String bodyMediaType) {
+		this.bodyMediaType = bodyMediaType;
+	}
+
+	/**
+	 * Returns default body encoding (UTF-8).
+	 */
+	public String getBodyEncoding() {
+		return bodyEncoding;
+	}
+
+	/**
+	 * Sets default body encoding (UTF-8).
+	 */
+	public void setBodyEncoding(String bodyEncoding) {
+		this.bodyEncoding = bodyEncoding;
+	}
+
+	/**
+	 * @see #setSecureEnabledProtocols(String)
+	 */
+	public String getSecureEnabledProtocols() {
+		return secureEnabledProtocols;
+	}
 
 	/**
 	 * CSV of default enabled secured protocols. By default the value is
 	 * read from system property <code>https.protocols</code>.
 	 */
-	private String secureEnabledProtocols = System.getProperty("https.protocols");
+	public void setSecureEnabledProtocols(String secureEnabledProtocols) {
+		this.secureEnabledProtocols = secureEnabledProtocols;
+	}
 
 	/**
-	 * Default user agent (Jodd HTTP) value.
+	 * Returns default user agent value.
 	 */
-	private String userAgent = "Jodd HTTP";
+	public String getUserAgent() {
+		return userAgent;
+	}
+	/**
+	 * Sets default user agent value.
+	 */
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
+	}
+
+	/**
+	 * @see #setCapitalizeHeaderKeys(boolean)
+	 */
+	public boolean isCapitalizeHeaderKeys() {
+		return capitalizeHeaderKeys;
+	}
 
 	/**
 	 * Flag that controls if headers should be rewritten and capitalized in PascalCase.
 	 * When disabled, header keys are used as they are passed.
 	 * When flag is enabled, header keys will be capitalized.
 	 */
-	private boolean capitalizeHeaderKeys = true;
-
-
-	public HttpConnectionProvider getHttpConnectionProvider() {
-		return httpConnectionProvider;
-	}
-
-	public void setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
-		this.httpConnectionProvider = httpConnectionProvider;
-	}
-
-	public String getQueryEncoding() {
-		return queryEncoding;
-	}
-
-	public void setQueryEncoding(String queryEncoding) {
-		this.queryEncoding = queryEncoding;
-	}
-
-	public String getFormEncoding() {
-		return formEncoding;
-	}
-
-	public void setFormEncoding(String formEncoding) {
-		this.formEncoding = formEncoding;
-	}
-
-	public String getBodyMediaType() {
-		return bodyMediaType;
-	}
-
-	public void setBodyMediaType(String bodyMediaType) {
-		this.bodyMediaType = bodyMediaType;
-	}
-
-	public String getBodyEncoding() {
-		return bodyEncoding;
-	}
-
-	public void setBodyEncoding(String bodyEncoding) {
-		this.bodyEncoding = bodyEncoding;
-	}
-
-	public String getSecureEnabledProtocols() {
-		return secureEnabledProtocols;
-	}
-
-	public void setSecureEnabledProtocols(String secureEnabledProtocols) {
-		this.secureEnabledProtocols = secureEnabledProtocols;
-	}
-
-	public String getUserAgent() {
-		return userAgent;
-	}
-
-	public void setUserAgent(String userAgent) {
-		this.userAgent = userAgent;
-	}
-
-	public boolean isCapitalizeHeaderKeys() {
-		return capitalizeHeaderKeys;
-	}
-
 	public void setCapitalizeHeaderKeys(boolean capitalizeHeaderKeys) {
 		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
 	}

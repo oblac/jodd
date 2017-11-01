@@ -180,7 +180,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 		// sslSocket is now ready
 
-		String enabledProtocols = JoddHttp.defaults().getSecureEnabledProtocols();
+		String enabledProtocols = JoddHttp.get().defaults().getSecureEnabledProtocols();
 
 		if (enabledProtocols != null) {
 			String[] values = StringUtil.splitc(enabledProtocols, ',');
