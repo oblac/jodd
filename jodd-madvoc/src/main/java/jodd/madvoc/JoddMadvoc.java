@@ -32,7 +32,15 @@ import jodd.Jodd;
  */
 public class JoddMadvoc {
 
-	// ---------------------------------------------------------------- module
+	private static final JoddMadvoc instance = new JoddMadvoc();
+
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddMadvoc get() {
+		return instance;
+	}
+
 
 	static {
 		Jodd.initModule();
