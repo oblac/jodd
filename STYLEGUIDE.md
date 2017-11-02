@@ -50,7 +50,8 @@ class FooTest {
 + Benchmark methods are annotated with an annotation.
 + Don't use `BlackHole` argument if you can return the value.
 + Each benchmark class must contain results in the Javadoc of the class:
-just copy/paste whatever is the JMH output. 
+just copy/paste whatever is the JMH output.
++ Benchmarks are started with: `gradlew :<module>:<benchmark-class-name>` (e.g.: `gradlew :jodd-core:Base32Benchmark`) 
 
 
 ## Modules Architecture

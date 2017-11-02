@@ -257,12 +257,24 @@ configure(javaModules()) {
 		}
 	}
 
-	task perf(type:JavaExec) {
+	task perf(type:JavaExec, dependsOn: 'compile') {
 		group 'Verification'
-		description 'Execute benchmarks.'
+		description 'Execute ALL benchmarks.'
 
 		main 'org.openjdk.jmh.Main'
 		classpath = sourceSets.perf.runtimeClasspath
+	}
+
+	tasks.addRule("Pattern: <ClassName>Benchmark : Run benchmark.") { String className ->
+		if (className.endsWith("Benchmark")) {
+			println "\nRunning Benchmark: " + className + "\n"
+
+			task "$className"(type: JavaExec, dependsOn: 'build') {
+				main 'org.openjdk.jmh.Main'
+				args =  ['.' + className + '.*']
+				classpath = sourceSets.main.runtimeClasspath + sourceSets.perf.runtimeClasspath
+			}
+		}
 	}
 
 	task testUnit(type: JavaExec, dependsOn: compileTestJava) {
@@ -535,5 +547,5 @@ def date() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.2.1'
+	gradleVersion = '4.3'
 }
