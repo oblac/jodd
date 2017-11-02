@@ -354,7 +354,6 @@ class CharUtilTest {
 	@ParameterizedTest (name = "{index} - CharUtil.isWhitespace({1}) == {0}")
 	@MethodSource({"testdata_testIsWhitespace"})
 	void testIsWhitespace(final boolean expected, final char input) {
-		System.out.println(((int)input) + " is whitespace?    Jodd : " + CharUtil.isWhitespace(input) + " |  Java : " + Character.isWhitespace(input));
 		assertEquals(expected, CharUtil.isWhitespace(input));
 	}
 
