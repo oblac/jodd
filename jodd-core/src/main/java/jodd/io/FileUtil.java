@@ -1241,13 +1241,11 @@ public class FileUtil {
 
 	/**
 	 * Determines whether the specified file is a symbolic link rather than an actual file.
-	 * Always returns <code>false</code> on Windows.
+	 * 
+	 * @deprecated {@link java.nio.file.Files#isSymbolicLink(java.nio.file.Path)} provides this functionality natively as of Java 1.7.
 	 */
+	@Deprecated
 	public static boolean isSymlink(final File file) {
-		if (SystemUtil.isHostWindows()) {
-			return false;
-		}
-
 		return java.nio.file.Files.isSymbolicLink(file.toPath());
 	}
 
