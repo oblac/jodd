@@ -47,6 +47,7 @@ class FooTest {
 ## Benchmarks
 
 + Each benchmark is stored in separated `*Benchmark` class.
++ Benchmarks are executed via [jmh](http://openjdk.java.net/projects/code-tools/jmh/).
 + Benchmark methods are annotated with an annotation.
 + Don't use `BlackHole` argument if you can return the value.
 + Each benchmark class must contain results in the Javadoc of the class:
