@@ -102,7 +102,7 @@ class DbHint2Test extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.get().dbEntityManager();
 
 		dbOom.registerEntity(Boy4.class);
 		dbOom.registerEntity(Girl4.class);

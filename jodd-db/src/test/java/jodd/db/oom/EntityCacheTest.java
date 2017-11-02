@@ -71,7 +71,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.get().dbEntityManager();
 		dbOom.registerEntity(Girl2.class);
 		dbOom.registerEntity(Boy.class);
 

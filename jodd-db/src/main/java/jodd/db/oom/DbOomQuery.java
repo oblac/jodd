@@ -188,7 +188,7 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- join hints
 
-	protected final JoinHintResolver hintResolver = JoddDb.runtime().hintResolver();
+	protected final JoinHintResolver hintResolver = JoinHintResolver.get();
 
 	protected String[] hints;
 
@@ -220,7 +220,7 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- result set
 
-	protected boolean cacheEntities = JoddDb.defaults().getDbOomConfig().isCacheEntitiesInResultSet();
+	protected boolean cacheEntities = JoddDb.get().defaults().getDbOomConfig().isCacheEntitiesInResultSet();
 
 	/**
 	 * Defines if entities should be cached in {@link ResultSetMapper}.
@@ -251,7 +251,7 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- db list
 
-	protected boolean entityAwareMode = JoddDb.defaults().getDbOomConfig().isEntityAwareMode();
+	protected boolean entityAwareMode = JoddDb.get().defaults().getDbOomConfig().isEntityAwareMode();
 
 	/**
 	 * Defines entity-aware mode for entities tracking in result collection.

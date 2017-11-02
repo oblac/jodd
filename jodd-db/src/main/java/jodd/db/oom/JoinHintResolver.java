@@ -26,6 +26,7 @@
 package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
+import jodd.db.JoddDb;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.util.ArraysUtil;
@@ -43,6 +44,10 @@ import java.util.Map;
  * If hint is not available, methods returns the very same object array instance. 
  */
 public class JoinHintResolver {
+
+	public static JoinHintResolver get() {
+		return JoddDb.get().hintResolver();
+	}
 
 	public Object[] join(Object[] data, String hints) {
 		if (hints == null) {

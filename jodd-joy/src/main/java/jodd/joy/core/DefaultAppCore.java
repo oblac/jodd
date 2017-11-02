@@ -577,11 +577,11 @@ public abstract class DefaultAppCore {
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		JoddDb.runtime().connectionProvider(connectionProvider);
-		JoddDb.runtime().sessionProvider(sessionProvider);
-		petite.addBean(PETITE_DB, JoddDb.defaults());           // todo -> this is for the configuration!, make this for each bean
+		JoddDb.get().connectionProvider(connectionProvider);
+		JoddDb.get().sessionProvider(sessionProvider);
+		petite.addBean(PETITE_DB, JoddDb.get().defaults());           // todo -> this is for the configuration!, make this for each bean
 
-		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 		dbEntityManager.reset();
 		petite.addBean(PETITE_DBOOM, dbEntityManager);
 

@@ -23,31 +23,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db;
+package jodd.db.querymap;
 
 /**
- * Provide {@link DbSession} when requested by {@link DbQuery}.
- * Important: <code>DbSessionProvider</code> implementations
- * should NOT create new db sessions! <code>DbSession</code> should
- * be already created and somehow assigned to <code>DbSessionProvider</code>
- * implementation. User must control session opening and closing,
- * and not <code>DbSessionProvider</code>, as we can not figure
- * weather connection should be closed after closing a query;
- * or still hold on open for the next query.
+ * Void implementation of a query map.
  */
-public interface DbSessionProvider {
+public class EmptyQueryMap implements QueryMap {
 
-	/**
-	 * Returns default instance.
-	 */
-	public static DbSessionProvider get() {
-		return JoddDb.get().sessionProvider();
+	@Override
+	public void load() {
 	}
 
-	/**
-	 * Returns {@link DbSession}. May throws an exception
-	 * if session can not be provided.
-	 */
-	DbSession getDbSession();
-
+	@Override
+	public String getQuery(String key) {
+		return null;
+	}
 }

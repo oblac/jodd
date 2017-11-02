@@ -77,8 +77,8 @@ class LiveMapperDbTest extends DbBaseTest {
 		@Override
 		public void initDb() {
 			super.initDb();
-			JoddDb.defaults().getDbOomConfig().getTableNames().setLowercase(true);
-			JoddDb.defaults().getDbOomConfig().getColumnNames().setLowercase(true);
+			JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
+			JoddDb.get().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 		}
 
 		@Override

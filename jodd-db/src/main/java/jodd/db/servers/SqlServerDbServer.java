@@ -41,8 +41,8 @@ public class SqlServerDbServer implements DbServer {
 
 	@Override
 	public void accept(DbEntityManager dbEntityManager) {
-		JoddDb.defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
-		JoddDb.defaults().getSqlGenConfig().setUpdateablePrimaryKey(false);
+		JoddDb.get().defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
+		JoddDb.get().defaults().getSqlGenConfig().setUpdateablePrimaryKey(false);
 	}
 
 	@Override

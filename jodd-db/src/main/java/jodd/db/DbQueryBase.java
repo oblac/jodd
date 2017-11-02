@@ -210,7 +210,7 @@ abstract class DbQueryBase implements AutoCloseable {
 			return;
 		}
 
-		DbSessionProvider dbSessionProvider = JoddDb.runtime().sessionProvider();
+		DbSessionProvider dbSessionProvider = DbSessionProvider.get();
 
 		if (dbSessionProvider == null) {
 			throw new DbSqlException("Session provider not available.");

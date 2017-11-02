@@ -87,7 +87,7 @@ class MappingTest extends DbHsqldbTestCase {
 		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', '2010-01-20 01:02:03.4444', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
 		executeUpdate(session, sql);
 
-		DbEntityManager dbOom = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.get().dbEntityManager();
 
 		dbOom.registerEntity(Foo.class);
 		SqlTypeManager.register(Boo.class, BooSqlType.class);

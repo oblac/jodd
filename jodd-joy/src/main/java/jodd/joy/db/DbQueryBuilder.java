@@ -54,7 +54,7 @@ public class DbQueryBuilder {
 	protected final Map<String, String[]> methodParamNames;
 
 	public DbQueryBuilder() {
-		queryMap = JoddDb.runtime().queryMap();
+		queryMap = JoddDb.get().queryMap();
 		parsedSqlMap = new HashMap<>();
 		methodParamNames = new HashMap<>();
 	}

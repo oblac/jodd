@@ -25,24 +25,16 @@
 
 package jodd.db;
 
-import jodd.exception.UncheckedException;
-
-import java.lang.reflect.Field;
+import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.JoinHintResolver;
+import jodd.db.querymap.EmptyQueryMap;
 
 public class DbTestUtil {
 
 	public static void resetAll() {
-		try {
-			Field defaultsField = JoddDb.class.getDeclaredField("defaults");
-			defaultsField.setAccessible(true);
-			defaultsField.set(null, new JoddDbDefaults());
-
-			Field runtimeField = JoddDb.class.getDeclaredField("runtime");
-			runtimeField.setAccessible(true);
-			runtimeField.set(null, new JoddDbRuntime());
-		}
-		catch (Exception ex) {
-			throw new UncheckedException(ex);
-		}
+		JoddDb.get().dbEntityManager(new DbEntityManager());
+		JoddDb.get().queryMap(new EmptyQueryMap());
+		JoddDb.get().hintResolver(new JoinHintResolver());
+		JoddDb.get().defaults(new JoddDbDefaults());
 	}
 }

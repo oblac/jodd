@@ -50,7 +50,7 @@ class DbHintTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 		dbEntityManager.registerEntity(Boy2.class);
 		dbEntityManager.registerEntity(Girl.class);
 

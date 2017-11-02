@@ -250,7 +250,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 		String tableName = ded.getTableName();
 
 		ColumnAliasType columnAliasType = templateData.getColumnAliasType();
-		String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+		String columnAliasSeparator = JoddDb.get().defaults().getDbOomConfig().getColumnAliasSeparator();
 
 		if (columnAliasType == null || columnAliasType == ColumnAliasType.TABLE_REFERENCE) {
 			templateData.registerColumnDataForTableRef(tableRef, tableName);
@@ -275,7 +275,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 			String tableName = ded.getTableName();
 			query.append(AS);
 
-			final String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+			final String columnAliasSeparator = JoddDb.get().defaults().getDbOomConfig().getColumnAliasSeparator();
 
 			switch (templateData.getColumnAliasType()) {
 				case TABLE_NAME:

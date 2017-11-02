@@ -47,6 +47,13 @@ import java.util.Map;
  */
 public class DbEntityManager {
 
+	/**
+	 * Returns default instance.
+	 */
+	public static DbEntityManager get() {
+		return JoddDb.get().dbEntityManager();
+	}
+
 	private static final Logger log = LoggerFactory.getLogger(DbEntityManager.class);
 
 	// ---------------------------------------------------------------- registration
@@ -189,9 +196,9 @@ public class DbEntityManager {
 	 * Creates {@link DbEntityDescriptor}.
 	 */
 	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
-		final String schemaName = JoddDb.defaults().getDbOomConfig().getSchemaName();
-		final TableNamingStrategy tableNames = JoddDb.defaults().getDbOomConfig().getTableNames();
-		final ColumnNamingStrategy columnNames = JoddDb.defaults().getDbOomConfig().getColumnNames();
+		final String schemaName = JoddDb.get().defaults().getDbOomConfig().getSchemaName();
+		final TableNamingStrategy tableNames = JoddDb.get().defaults().getDbOomConfig().getTableNames();
+		final ColumnNamingStrategy columnNames = JoddDb.get().defaults().getDbOomConfig().getColumnNames();
 
 		return new DbEntityDescriptor<>(type, schemaName, tableNames, columnNames);
 	}

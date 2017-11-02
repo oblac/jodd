@@ -25,6 +25,8 @@
 
 package jodd.db.connection;
 
+import jodd.db.JoddDb;
+
 import java.sql.Connection;
 
 /**
@@ -35,6 +37,13 @@ import java.sql.Connection;
  * Implementations should provide a public default constructor.
  */
 public interface ConnectionProvider extends AutoCloseable {
+
+	/**
+	 * Returns default instance.
+	 */
+	public static ConnectionProvider get() {
+		return JoddDb.get().connectionProvider();
+	}
 
 	/**
 	 * Initialize the connection provider. May be called more then once;
@@ -55,6 +64,7 @@ public interface ConnectionProvider extends AutoCloseable {
 	/**
 	 * Closes a provider and releases all its resources.
 	 */
+	@Override
 	void close();
 
 }

@@ -26,21 +26,27 @@
 package jodd.db;
 
 import jodd.Jodd;
+import jodd.db.connection.ConnectionProvider;
+import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.JoinHintResolver;
+import jodd.db.pool.CoreConnectionPool;
+import jodd.db.querymap.EmptyQueryMap;
+import jodd.db.querymap.QueryMap;
+
+import java.util.Objects;
 
 /**
  * Jodd DB module.
  */
 public class JoddDb {
 
-	private static JoddDbDefaults defaults = new JoddDbDefaults();
-	private static JoddDbRuntime runtime = new JoddDbRuntime();
+	private static final JoddDb instance = new JoddDb();
 
-	public static JoddDbDefaults defaults() {
-		return defaults;
-	}
-
-	public static JoddDbRuntime runtime() {
-		return runtime;
+	/**
+	 * Returns the module instance.
+	 */
+	public static JoddDb get() {
+		return instance;
 	}
 
 	static {
@@ -48,5 +54,98 @@ public class JoddDb {
 	}
 
 	public static void init() {}
+
+	// ---------------------------------------------------------------- instance
+
+	private JoddDbDefaults defaults = new JoddDbDefaults();
+	private ConnectionProvider connectionProvider = new CoreConnectionPool();
+	private DbSessionProvider sessionProvider = new ThreadDbSessionProvider();
+	private QueryMap queryMap = new EmptyQueryMap();
+	private JoinHintResolver hintResolver = new JoinHintResolver();
+	private DbEntityManager dbEntityManager = new DbEntityManager();
+
+	/**
+	 * Returns default module configuration.
+	 */
+	public JoddDbDefaults defaults() {
+		return defaults;
+	}
+
+	public JoddDb defaults(JoddDbDefaults joddDbDefaults) {
+		Objects.requireNonNull(joddDbDefaults);
+		this.defaults = new JoddDbDefaults();
+		return this;
+	}
+
+	/**
+	 * Returns hints resolver.
+	 */
+	public JoinHintResolver hintResolver() {
+		return hintResolver;
+	}
+
+	/**
+	 * Specifies the hint resolver.
+	 */
+	public JoddDb hintResolver(JoinHintResolver hintResolver) {
+		Objects.requireNonNull(hintResolver);
+		this.hintResolver = hintResolver;
+		return this;
+	}
+
+	/**
+	 * Returns the manager for db entities.
+	 */
+	public DbEntityManager dbEntityManager() {
+		return dbEntityManager;
+	}
+
+	public JoddDb dbEntityManager(DbEntityManager dbEntityManager) {
+		Objects.requireNonNull(dbEntityManager);
+		this.dbEntityManager = dbEntityManager;
+		return this;
+	}
+
+	/**
+	 * Returns the connection provider.
+	 */
+	public ConnectionProvider connectionProvider() {
+		return connectionProvider;
+	}
+
+	/**
+	 * Sets the connection provider.
+	 */
+	public JoddDb connectionProvider(ConnectionProvider connectionProvider) {
+		Objects.requireNonNull(connectionProvider);
+		this.connectionProvider = connectionProvider;
+		return this;
+	}
+
+	public DbSessionProvider sessionProvider() {
+		return sessionProvider;
+	}
+
+	/**
+	 * Sets default session provider.
+	 */
+	public JoddDb sessionProvider(DbSessionProvider sessionProvider) {
+		Objects.requireNonNull(sessionProvider);
+		this.sessionProvider = sessionProvider;
+		return this;
+	}
+
+	/**
+	 * Returns {@link jodd.db.querymap.QueryMap} instance. May be <code>null</code>.
+	 */
+	public QueryMap queryMap() {
+		return queryMap;
+	}
+
+	public JoddDb queryMap(QueryMap queryMap) {
+		Objects.requireNonNull(queryMap);
+		this.queryMap = queryMap;
+		return this;
+	}
 
 }

@@ -49,7 +49,7 @@ class DbNoTableTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 		dbEntityManager.registerEntity(Bean1.class);
 	}
 

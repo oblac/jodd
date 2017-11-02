@@ -66,7 +66,7 @@ public class DbIdGenerator {
 	public synchronized long nextId(Class entityType) {
 		MutableLong lastId = entityIdsMap.get(entityType);
 		if (lastId == null) {
-			DbEntityManager dbEntityManager = JoddDb.runtime().dbEntityManager();
+			DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 
 			DbEntityDescriptor ded = dbEntityManager.lookupType(entityType);
 			String tableName = ded.getTableName();

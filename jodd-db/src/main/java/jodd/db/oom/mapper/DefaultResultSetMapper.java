@@ -135,7 +135,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				String tableName = null;
 
 				// resolve column and table name
-				final String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+				final String columnAliasSeparator = JoddDb.get().defaults().getDbOomConfig().getColumnAliasSeparator();
 
 				int sepNdx = columnName.indexOf(columnAliasSeparator);
 				if (sepNdx != -1) {
@@ -216,7 +216,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				resultColumns.clear();
 				lastTableName = tableName;
 
-				DbEntityDescriptor ded = JoddDb.runtime().dbEntityManager().lookupTableName(tableName);
+				DbEntityDescriptor ded = DbEntityManager.get().lookupTableName(tableName);
 				if (ded == null) {
 					throw new DbOomException(dbOomQuery, "Table name not registered: " + tableName);
 				}
@@ -245,7 +245,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			for (int i = 0; i < types.length; i++) {
 				Class type = types[i];
 				if (type != null) {
-					descs[i] = JoddDb.runtime().dbEntityManager().lookupType(type);
+					descs[i] = DbEntityManager.get().lookupType(type);
 				}
 			}
 			cachedDbEntityDescriptors = descs;
@@ -300,7 +300,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				names[i] = null;
 				continue;
 			}
-			DbEntityDescriptor ded = JoddDb.runtime().dbEntityManager().lookupType(types[i]);
+			DbEntityDescriptor ded = DbEntityManager.get().lookupType(types[i]);
 			if (ded != null) {
 				String tableName = ded.getTableName();
 				tableName = tableName.toUpperCase();
@@ -423,7 +423,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 						// if current entity instance does not exist (i.e. we are at the first column
 						// of some entity), create the instance and store it
 						if (result[currentResult] == null) {
-							result[currentResult] = JoddDb.runtime().dbEntityManager().createEntityInstance(currentType);
+							result[currentResult] = DbEntityManager.get().createEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?

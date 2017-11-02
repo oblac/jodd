@@ -46,7 +46,7 @@ public abstract class DbTestBase {
 
 	@BeforeEach
 	protected void setUp() throws Exception {
-		JoddDb.runtime().queryMap(new DbPropsQueryMap());
+		JoddDb.get().queryMap(new DbPropsQueryMap());
 
 		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {

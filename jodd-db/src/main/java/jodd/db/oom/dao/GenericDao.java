@@ -27,7 +27,6 @@ package jodd.db.oom.dao;
 
 import jodd.bean.BeanUtil;
 import jodd.db.DbQuery;
-import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.DbOomException;
@@ -104,7 +103,7 @@ public class GenericDao {
 	 * Otherwise, entity will be inserted into the database.
 	 */
 	public <E> E store(E entity) {
-		DbEntityManager dboom = JoddDb.runtime().dbEntityManager();
+		DbEntityManager dboom = DbEntityManager.get();
 		Class type = entity.getClass();
 		DbEntityDescriptor ded = dboom.lookupType(type);
 
@@ -244,7 +243,7 @@ public class GenericDao {
 
 			if (result != 0) {
 				// now reset the ID value
-				DbEntityManager dboom = JoddDb.runtime().dbEntityManager();
+				DbEntityManager dboom = DbEntityManager.get();
 				Class type = entity.getClass();
 				DbEntityDescriptor ded = dboom.lookupType(type);
 

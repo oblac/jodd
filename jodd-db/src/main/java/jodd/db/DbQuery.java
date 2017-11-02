@@ -75,7 +75,7 @@ public class DbQuery extends DbQueryBase {
 	 * Creates new query.
 	 */
 	public DbQuery(Connection conn, String sqlString) {
-		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
+		super(JoddDb.get().defaults().getQueryConfig(), JoddDb.get().defaults().isDebug());
 		this.connection = conn;
 		this.sqlString = preprocessSql(sqlString);
 	}
@@ -84,7 +84,7 @@ public class DbQuery extends DbQueryBase {
 	 * Creates a new query from {@link DbSession}.
 	 */
 	public DbQuery(DbSession session, String sqlString) {
-		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
+		super(JoddDb.get().defaults().getQueryConfig(), JoddDb.get().defaults().isDebug());
 
 		initSession(session);
 
@@ -120,14 +120,10 @@ public class DbQuery extends DbQueryBase {
 			return sqlString;
 		}
 
-		QueryMap queryMap = JoddDb.runtime().queryMap();
+		String sqlFromMap = QueryMap.get().getQuery(sqlString);
 
-		if (queryMap != null) {
-			String sqlFromMap = queryMap.getQuery(sqlString);
-
-			if (sqlFromMap != null) {
-				sqlString = sqlFromMap.trim();
-			}
+		if (sqlFromMap != null) {
+			sqlString = sqlFromMap.trim();
 		}
 
 		return sqlString;
