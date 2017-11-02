@@ -50,18 +50,6 @@ import org.openjdk.jmh.annotations.Warmup;
  * Results:
  * <pre>
  * Benchmark                                                                      Mode  Cnt          Score          Error  Units
- * Base64Benchmark.decode_Apache_Base64                                          thrpt   10     437382.725 ±    17632.287  ops/s
- * Base64Benchmark.decode_Java_Base64                                            thrpt   10    1128600.920 ±   128620.707  ops/s
- * Base64Benchmark.decode_Jodd_Base64                                            thrpt   10    1996963.313 ±    60933.567  ops/s
- * Base64Benchmark.encode_Apache_Base64                                          thrpt   10     444188.781 ±    17254.237  ops/s
- * Base64Benchmark.encode_Java_Base64                                            thrpt   10    2372845.229 ±   161849.449  ops/s
- * Base64Benchmark.encode_Jodd_Base64                                            thrpt   10    2421585.489 ±    98594.888  ops/s
- * CharUtilIWhitespaceBenchmark.isWhitespace_Java                                thrpt   10   14734579.261 ±   254027.348  ops/s
- * CharUtilIWhitespaceBenchmark.isWhitespace_Jodd                                thrpt   10  349237222.872 ± 15785727.034  ops/s
- * StringBandBenchmark.string2                                                   thrpt   10   37818400.146 ±   466186.699  ops/s
- * StringBandBenchmark.string3                                                   thrpt   10   17354566.314 ±   355497.906  ops/s
- * StringBandBenchmark.stringBand2                                               thrpt   10   27789621.987 ±  1554213.757  ops/s
- * StringBandBenchmark.stringBand3                                               thrpt   10   21079979.110 ±  1827100.524  ops/s
  * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringNoMatch          thrpt   21   30664291.493 ±   506821.904  ops/s
  * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringOneMatch         thrpt   21    8469800.841 ±   115709.770  ops/s
  * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringSeveralMatches   thrpt   21    4844528.121 ±   143725.969  ops/s

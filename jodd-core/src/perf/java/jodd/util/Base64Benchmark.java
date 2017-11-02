@@ -67,30 +67,6 @@ import java.io.UnsupportedEncodingException;
  * Base64Benchmark.encode_Apache_Base64                                          thrpt   10     425022.574 ±    6719.127  ops/s
  * Base64Benchmark.encode_Java_Base64                                            thrpt   10    2317106.258 ±   48035.465  ops/s
  * Base64Benchmark.encode_Jodd_Base64                                            thrpt   10    2308577.816 ±  111663.488  ops/s
- * CharUtilIWhitespaceBenchmark.isWhitespace_Java                                thrpt   10   14198643.215 ±  132409.477  ops/s
- * CharUtilIWhitespaceBenchmark.isWhitespace_Jodd                                thrpt   10  340392811.038 ± 5584431.305  ops/s
- * StringBandBenchmark.string2                                                   thrpt   10   35891067.323 ± 1044617.014  ops/s
- * StringBandBenchmark.string3                                                   thrpt   10   16578168.807 ± 1528910.415  ops/s
- * StringBandBenchmark.stringBand2                                               thrpt   10   26738669.712 ± 2399655.941  ops/s
- * StringBandBenchmark.stringBand3                                               thrpt   10   17382025.209 ± 8201893.387  ops/s
- * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringNoMatch          thrpt   21   30452115.098 ±  673893.391  ops/s
- * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringOneMatch         thrpt   21    7939333.083 ±  159884.176  ops/s
- * StringUtilReplaceBenchmark.apacheStringUtilsReplaceLongStringSeveralMatches   thrpt   21    4572341.549 ±  190924.651  ops/s
- * StringUtilReplaceBenchmark.apacheStringUtilsReplaceShortStringNoMatch         thrpt   21  200849811.354 ± 6004094.222  ops/s
- * StringUtilReplaceBenchmark.apacheStringUtilsReplaceShortStringOneMatch        thrpt   21   12733470.739 ±  204528.150  ops/s
- * StringUtilReplaceBenchmark.apacheStringUtilsReplaceShortStringSeveralMatches  thrpt   21    7037310.309 ±  240382.430  ops/s
- * StringUtilReplaceBenchmark.stringReplaceLongStringNoMatch                     thrpt   21    5985542.910 ±  145759.366  ops/s
- * StringUtilReplaceBenchmark.stringReplaceLongStringOneMatch                    thrpt   21    1760430.973 ±   61879.332  ops/s
- * StringUtilReplaceBenchmark.stringReplaceLongStringSeveralMatches              thrpt   21    1338152.084 ±   38966.154  ops/s
- * StringUtilReplaceBenchmark.stringReplaceShortStringNoMatch                    thrpt   21    6944636.309 ±  283722.384  ops/s
- * StringUtilReplaceBenchmark.stringReplaceShortStringOneMatch                   thrpt   21    4071359.788 ±  166071.428  ops/s
- * StringUtilReplaceBenchmark.stringReplaceShortStringSeveralMatches             thrpt   21    2660695.634 ±  247642.047  ops/s
- * StringUtilReplaceBenchmark.stringUtilReplaceLongStringNoMatch                 thrpt   21   30705952.332 ±  441294.722  ops/s
- * StringUtilReplaceBenchmark.stringUtilReplaceLongStringOneMatch                thrpt   21    9057931.761 ±  411462.754  ops/s
- * StringUtilReplaceBenchmark.stringUtilReplaceLongStringSeveralMatches          thrpt   21    4688956.630 ±  185023.595  ops/s
- * StringUtilReplaceBenchmark.stringUtilReplaceShortStringNoMatch                thrpt   21  203959018.661 ± 5308589.795  ops/s
- * StringUtilReplaceBenchmark.stringUtilReplaceShortStringOneMatch               thrpt   21   17706892.816 ± 1073079.702  ops/s
- * StringUtilReplaceBenchmark.stringUtilReplaceShortStringSeveralMatches         thrpt   21    8975422.713 ±  225388.842  ops/s
  * </pre>
  */
 @Fork(1)
