@@ -24,8 +24,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.util;
 
-import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 
 import java.io.UnsupportedEncodingException;
 
@@ -46,7 +51,7 @@ import java.io.UnsupportedEncodingException;
  * <p>
  * Run:
  * <code>
- * gw :jodd-core:perf -PBase32Benchmark
+ * gw :jodd-core:Base32Benchmark
  * </code>
  * </p>
  *

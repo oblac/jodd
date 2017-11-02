@@ -42,7 +42,7 @@ import org.openjdk.jmh.annotations.Warmup;
  *
  * Run:
  * <code>
- * gw :jodd-core:perf -PCharUtilIWhitespaceBenchmark
+ * gw :jodd-core:CharUtilIWhitespaceBenchmark
  * </code>
  * <p>
  * Results:

@@ -54,7 +54,7 @@ import java.io.UnsupportedEncodingException;
  * <p>
  * Run:
  * <code>
- * gw :jodd-core:perf -PBase64Benchmark
+ * gw :jodd-core:Base64Benchmark
  * </code>
  * </p>
  *

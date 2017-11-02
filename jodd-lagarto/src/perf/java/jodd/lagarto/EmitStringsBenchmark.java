@@ -38,12 +38,20 @@ import org.openjdk.jmh.annotations.Warmup;
 import java.io.IOException;
 
 /**
-
- Benchmark                                  Mode  Cnt     Score     Error  Units
- EmitStringsBenchmark.lagartoDomBuilder    thrpt   10  5198.527 ± 126.427  ops/s
- EmitStringsBenchmark.lagarto_emitStrings  thrpt   10  9519.027 ± 251.129  ops/s
- EmitStringsBenchmark.lagarto_noStrings    thrpt   10  9632.507 ± 113.255  ops/s
-
+ * <p>
+ * Run:
+ * <code>
+ * gw :jodd-lagarto:EmitStringsBenchmark
+ * </code>
+ * </p>
+ *
+ * Results:
+ * <pre>
+ * Benchmark                                  Mode  Cnt     Score     Error  Units
+ * EmitStringsBenchmark.lagartoDomBuilder    thrpt   10  5198.527 ± 126.427  ops/s
+ * EmitStringsBenchmark.lagarto_emitStrings  thrpt   10  9519.027 ± 251.129  ops/s
+ * EmitStringsBenchmark.lagarto_noStrings    thrpt   10  9632.507 ± 113.255  ops/s
+ * </pre>
  */
 @Fork(1)
 @Warmup(iterations = 10)

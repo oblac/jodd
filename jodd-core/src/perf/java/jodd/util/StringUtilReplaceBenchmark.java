@@ -43,7 +43,7 @@ import org.openjdk.jmh.annotations.Warmup;
  * <p>
  * Run:
  * <code>
- * gw :jodd-core:perf -PStringUtilReplaceBenchmark
+ * gw :jodd-core:StringUtilReplaceBenchmark
  * </code>
  * </p>
  *

@@ -35,7 +35,7 @@ import org.openjdk.jmh.annotations.Warmup;
 /**
  * Run:
  * <code>
- * gw :jodd-core:perf -PStringBandBenchmark
+ * gw :jodd-core:StringBandBenchmark
  * </code>
  * <p>
  * Results:
