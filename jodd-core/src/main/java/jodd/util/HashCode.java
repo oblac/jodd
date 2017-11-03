@@ -67,6 +67,10 @@ public class HashCode {
 		return (PRIME * seed) + (aBoolean ? 1231 : 1237);
 	}
 
+	public static int hash(boolean aBoolean) {
+		return hash(SEED, aBoolean);
+	}
+
 	/**
 	 * Calculates hash code for boolean array.
 	 */
@@ -80,11 +84,19 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(boolean[] booleanArray) {
+		return hash(SEED, booleanArray);
+	}
+
 	/**
 	 * Calculates hash code for boolean array.
 	 */
 	public static int hashBooleanArray(int seed, boolean... booleanArray) {
 		return hash(seed, booleanArray);
+	}
+
+	public static int hashBooleanArray(boolean... booleanArray) {
+		return hashBooleanArray(SEED, booleanArray);
 	}
 
 	// ---------------------------------------------------------------- char
@@ -94,6 +106,10 @@ public class HashCode {
 	 */
 	public static int hash(int seed, char aChar) {
 		return (PRIME * seed) + (int) aChar;
+	}
+
+	public static int hash(char aChar) {
+		return hash(SEED, aChar);
 	}
 
 	/**
@@ -109,11 +125,19 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(char[] charArray) {
+		return hash(SEED, charArray);
+	}
+
 	/**
 	 * Calculates hash code for char array.
 	 */
 	public static int hashCharArray(int seed, char... charArray) {
 		return hash(seed, charArray);
+	}
+
+	public static int hashCharArray(char... charArray) {
+		return hashCharArray(SEED, charArray);
 	}
 
 	// ---------------------------------------------------------------- ints
@@ -123,6 +147,10 @@ public class HashCode {
 	 */
 	public static int hash(int seed, int anInt) {
 		return (PRIME * seed) + anInt;
+	}
+
+	public static int hash(int anInt) {
+		return hash(SEED, anInt);
 	}
 
 	/**
@@ -138,11 +166,19 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(int[] intArray) {
+		return hash(SEED, intArray);
+	}
+
 	/**
 	 * Calculates hash code for int array.
 	 */
-	public static int hashIntArray(int seed, int... intArray) {
-	    return hash(seed, intArray);
+	public static int hashIntArrayWithSeed(int seed, int... intArray) {
+		return hash(seed, intArray);
+	}
+
+	public static int hashIntArray(int... intArray) {
+		return hashIntArrayWithSeed(SEED, intArray);
 	}
 
 
@@ -159,12 +195,22 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(short[] shortArray) {
+		return hash(SEED, shortArray);
+	}
+
 	/**
 	 * Calculates hash code for short array.
 	 */
 	public static int hashShortArray(int seed, short... shortArray) {
 		return hash(seed, shortArray);
 	}
+
+	public static int hashShortArray(short... shortArray) {
+		return hashShortArray(SEED, shortArray);
+	}
+
+	// ---------------------------------------------------------------- byte
 
 	/**
 	 * Calculates hash code for byte array.
@@ -179,6 +225,10 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(byte[] byteArray) {
+		return hash(SEED, byteArray);
+	}
+
 	/**
 	 * Calculates hash code for byte array.
 	 */
@@ -186,6 +236,9 @@ public class HashCode {
 		return hash(seed, byteArray);
 	}
 
+	public static int hashByteArray(byte... byteArray) {
+		return hashByteArray(SEED, byteArray);
+	}
 
 	// ---------------------------------------------------------------- long
 
@@ -194,6 +247,10 @@ public class HashCode {
 	 */
 	public static int hash(int seed, long aLong) {
 		return (PRIME * seed) + (int) (aLong ^ (aLong >>> 32));
+	}
+
+	public static int hash(long aLong) {
+		return hash(SEED, aLong);
 	}
 
 	/**
@@ -209,11 +266,19 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(long[] longArray) {
+		return hash(SEED, longArray);
+	}
+
 	/**
 	 * Calculates hash code for long array.
 	 */
 	public static int hashLongArray(int seed, long... longArray) {
 		return hash(seed, longArray);
+	}
+
+	public static int hashLongArray(long... longArray) {
+		return hashLongArray(SEED, longArray);
 	}
 
 	// ---------------------------------------------------------------- float
@@ -223,6 +288,10 @@ public class HashCode {
 	 */
 	public static int hash(int seed, float aFloat) {
 		return hash(seed, Float.floatToIntBits(aFloat));
+	}
+
+	public static int hash(float aFloat) {
+		return hash(SEED, aFloat);
 	}
 
 	/**
@@ -238,12 +307,19 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(float[] floatArray) {
+		return hash(SEED, floatArray);
+	}
 
 	/**
 	 * Calculates hash code for float array.
 	 */
 	public static int hashFloatArray(int seed, float... floatArray) {
 		return hash(seed, floatArray);
+	}
+
+	public static int hashFloatArray(float... floatArray) {
+		return hashFloatArray(SEED, floatArray);
 	}
 
 	// ---------------------------------------------------------------- double
@@ -253,6 +329,10 @@ public class HashCode {
 	 */
 	public static int hash(int seed, double aDouble) {
 		return hash(seed, Double.doubleToLongBits(aDouble));
+	}
+
+	public static int hash(double aDouble) {
+		return hash(SEED, aDouble);
 	}
 
 	/**
@@ -268,11 +348,19 @@ public class HashCode {
 		return seed;
 	}
 
+	public static int hash(double[] doubleArray) {
+		return hash(SEED, doubleArray);
+	}
+
 	/**
 	 * Calculates hash code for double array.
 	 */
 	public static int hashDoubleArray(int seed, double... doubleArray) {
-	    return hash(seed, doubleArray);
+		return hash(seed, doubleArray);
+	}
+
+	public static int hashDoubleArray(double... doubleArray) {
+		return hashDoubleArray(SEED, doubleArray);
 	}
 
 	// ---------------------------------------------------------------- object
@@ -298,4 +386,7 @@ public class HashCode {
 		return result;
 	}
 
+	public static int hash(Object aObject) {
+		return hash(SEED, aObject);
+	}
 }
