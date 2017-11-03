@@ -37,8 +37,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static jodd.util.HashCode.hash;
-
 /**
  * Universal all-in-one date and time class that uses Astronomical Julian
  * Dates for time calculations. Guaranteed precision for all manipulations
@@ -1634,13 +1632,13 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 
 	@Override
 	public int hashCode() {
-		int result = HashCode.SEED;
-		result = hash(result, time);
-		result = hash(result, timezone);
-		result = hash(result, monthFix);
-		result = hash(result, firstDayOfWeek);
-		result = hash(result, mustHaveDayOfFirstWeek);
-		return result;
+		return HashCode.create()
+				.hash(time)
+				.hash(timezone)
+				.hash(monthFix)
+				.hash(firstDayOfWeek)
+				.hash(mustHaveDayOfFirstWeek)
+				.get();
 	}
 
 
@@ -1671,6 +1669,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @return -1 if the current object is less than the argument, 0 if the argument is
 	 *         equal, and 1 if the current object is greater than the argument
 	 */
+	@Override
 	public int compareTo(Object o) {
 		return time.compareTo(((JDateTime) o).getDateTimeStamp());
 	}

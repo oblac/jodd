@@ -26,7 +26,6 @@
 package jodd.datetime;
 
 import jodd.util.HashCode;
-import static jodd.util.HashCode.hash;
 
 import java.io.Serializable;
 
@@ -174,6 +173,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	 * @throws ClassCastException if the specified object's type prevents it
 	 *         from being compared to this Object.
 	 */
+	@Override
 	public int compareTo(Object o) {
 		DateTimeStamp dts = (DateTimeStamp) o;
 
@@ -255,15 +255,15 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 
 	@Override
 	public int hashCode() {
-		int result = HashCode.SEED;
-		result = hash(result, year);
-		result = hash(result, month);
-		result = hash(result, day);
-		result = hash(result, hour);
-		result = hash(result, minute);
-		result = hash(result, second);
-		result = hash(result, millisecond);
-		return result;
+		return HashCode.create()
+				.hash(year)
+				.hash(month)
+				.hash(day)
+				.hash(hour)
+				.hash(minute)
+				.hash(second)
+				.hash(millisecond)
+				.get();
 	}
 
 // ---------------------------------------------------------------- clone

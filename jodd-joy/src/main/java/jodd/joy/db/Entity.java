@@ -27,8 +27,6 @@ package jodd.joy.db;
 
 import jodd.util.HashCode;
 
-import static jodd.util.HashCode.SEED;
-
 /**
  * Abstract entity. It may be used when <code>@DbId</code> annotation is not used.
  */
@@ -37,6 +35,7 @@ public abstract class Entity implements DbEntity {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isPersistent() {
 		return getEntityId() != 0;
 	}
@@ -44,6 +43,7 @@ public abstract class Entity implements DbEntity {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void detach() {
 		setEntityId(0);
 	}
@@ -52,10 +52,10 @@ public abstract class Entity implements DbEntity {
 
 	@Override
 	public int hashCode() {
-		int hash = SEED;
-		hash = HashCode.hash(hash, getEntityId());
-		hash = HashCode.hash(hash, getClass());
-		return hash;
+		return HashCode.create()
+				.hash(getEntityId())
+				.hash(getClass())
+				.get();
 	}
 
 	@Override

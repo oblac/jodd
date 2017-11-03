@@ -26,9 +26,19 @@
 package jodd.jtx;
 
 import jodd.util.HashCode;
-import static jodd.util.HashCode.hash;
-import static jodd.jtx.JtxPropagationBehavior.*;
-import static jodd.jtx.JtxIsolationLevel.*;
+
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_DEFAULT;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_NONE;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_READ_COMMITTED;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_READ_UNCOMMITTED;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_REPEATABLE_READ;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_SERIALIZABLE;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_MANDATORY;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_NEVER;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_NOT_SUPPORTED;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_REQUIRED;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_SUPPORTS;
 
 /**
  * Transaction mode is defined by {@link JtxPropagationBehavior propagation behavior},
@@ -232,12 +242,13 @@ s	 */
 
 	@Override
 	public int hashCode() {
-		int result = HashCode.SEED;
-		result = hash(result, propagationBehavior);
-		result = hash(result, readOnlyMode);
-		result = hash(result, isolationLevel);
-		result = hash(result, timeout);
-		return result;
+		return
+			HashCode.create()
+				.hash(propagationBehavior)
+				.hash(readOnlyMode)
+				.hash(isolationLevel)
+				.hash(timeout)
+				.get();
 	}
 
 

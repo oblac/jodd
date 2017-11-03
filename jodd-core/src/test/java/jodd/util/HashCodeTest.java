@@ -33,23 +33,27 @@ class HashCodeTest {
 
 	@Test
 	void testhashCode() {
-		int hash = HashCode.hash(0, "Hey");
-		hash = HashCode.hash(hash, 1);
-		hash = HashCode.hash(hash, 1.4);
-		hash = HashCode.hash(hash, 9f);
-		hash = HashCode.hash(hash, true);
-		hash = HashCode.hash(hash, ArraysUtil.ints(1,2,3,4));
-		hash = HashCode.hash(hash, new NameValue<>("A", "B"));
+		int hash = HashCode.create()
+			.hash("Hey")
+			.hash(1)
+			.hash(1.4)
+			.hash(9f)
+			.hash(true)
+			.hash(ArraysUtil.ints(1,2,3,4))
+			.hash(new NameValue<>("A", "B"))
+			.get();
 
 		int hash2 = hash;
 
-		hash = HashCode.hash(0, "Hey");
-		hash = HashCode.hash(hash, 1);
-		hash = HashCode.hash(hash, 1.4);
-		hash = HashCode.hash(hash, 9f);
-		hash = HashCode.hash(hash, true);
-		hash = HashCode.hash(hash, ArraysUtil.ints(1,2,3,4));
-		hash = HashCode.hash(hash, new NameValue<>("A", "B"));
+		hash = HashCode.create()
+			.hash("Hey")
+			.hash(1)
+			.hash(1.4)
+			.hash(9f)
+			.hash(true)
+			.hash(ArraysUtil.ints(1,2,3,4))
+			.hash(new NameValue<>("A", "B"))
+			.get();
 
 		assertEquals(hash, hash2);
 	}

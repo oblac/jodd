@@ -26,10 +26,9 @@
 package jodd.datetime;
 
 import jodd.util.HashCode;
-import static jodd.util.HashCode.hash;
 
-import java.math.BigDecimal;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Julian Date stamp, for high precision calculations. Julian date is a real
@@ -282,10 +281,10 @@ public class JulianDateStamp implements Serializable, Cloneable {
 
 	@Override
 	public int hashCode() {
-		int result = HashCode.SEED;
-		result = hash(result, integer);
-		result = hash(result, fraction);
-		return result;
+		return HashCode.create()
+			.hash(integer)
+			.hash(fraction)
+			.get();
 	}
 
 	// ---------------------------------------------------------------- clone

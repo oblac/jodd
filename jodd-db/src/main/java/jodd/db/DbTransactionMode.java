@@ -26,7 +26,6 @@
 package jodd.db;
 
 import jodd.util.HashCode;
-import static jodd.util.HashCode.hash;
 
 import java.sql.Connection;
 
@@ -119,10 +118,10 @@ public class DbTransactionMode {
 
 	@Override
 	public int hashCode() {
-		int result = HashCode.SEED;
-		result = hash(result, readOnlyMode);
-		result = hash(result, isolation);
-		return result;
+		return HashCode.create()
+				.hash(readOnlyMode)
+				.hash(isolation)
+				.get();
 	}
 
 
