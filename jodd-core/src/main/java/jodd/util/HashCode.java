@@ -54,10 +54,16 @@ public class HashCode {
 	private final int prime;
 	private int hashcode;
 
+	/**
+	 * Creates new HashCode calculator.
+	 */
 	public static HashCode create() {
 		return new HashCode(173, 37);
 	}
 
+	/**
+	 * Creates new HashCode calculator with custom seed and prime number.
+	 */
 	public static HashCode create(int seed, int prime) {
 		return new HashCode(seed, prime);
 	}
@@ -67,6 +73,9 @@ public class HashCode {
 		this.hashcode = seed;
 	}
 
+	/**
+	 * Returns the calculated hashcode value.
+	 */
 	public int get() {
 		return hashcode;
 	}
@@ -85,10 +94,12 @@ public class HashCode {
 	 * Calculates hash code for boolean array.
 	 */
 	public HashCode hash(boolean[] booleanArray) {
-		if (booleanArray != null) {
-			for (boolean aBoolean : booleanArray) {
-				hash(aBoolean);
-			}
+		if (booleanArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (boolean aBoolean : booleanArray) {
+			hash(aBoolean);
 		}
 		return this;
 	}
@@ -107,10 +118,12 @@ public class HashCode {
 	 * Calculates hash code for char array.
 	 */
 	public HashCode hash(char[] charArray) {
-		if (charArray != null) {
-			for (char aChar : charArray) {
-				hash(aChar);
-			}
+		if (charArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (char aChar : charArray) {
+			hash(aChar);
 		}
 		return this;
 	}
@@ -129,10 +142,12 @@ public class HashCode {
 	 * Calculates hash code for int array.
 	 */
 	public HashCode hash(int[] intArray) {
-		if (intArray != null) {
-			for (int anInt : intArray) {
-				hash(anInt);
-			}
+		if (intArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (int anInt : intArray) {
+			hash(anInt);
 		}
 		return this;
 	}
@@ -141,10 +156,12 @@ public class HashCode {
 	 * Calculates hash code for short array.
 	 */
 	public HashCode hash(short[] shortArray) {
-		if (shortArray != null) {
-			for (short aShort : shortArray) {
-				hash(aShort);
-			}
+		if (shortArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (short aShort : shortArray) {
+			hash(aShort);
 		}
 		return this;
 	}
@@ -153,10 +170,12 @@ public class HashCode {
 	 * Calculates hash code for byte array.
 	 */
 	public HashCode hash(byte[] byteArray) {
-		if (byteArray != null) {
-			for (byte aByte : byteArray) {
-				hash(aByte);
-			}
+		if (byteArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (byte aByte : byteArray) {
+			hash(aByte);
 		}
 		return this;
 	}
@@ -189,7 +208,7 @@ public class HashCode {
 	 * Calculates hash code for floats.
 	 */
 	public HashCode hash(float aFloat) {
-		hashcode = hash(hashcode, Float.floatToIntBits(aFloat));
+		hash(Float.floatToIntBits(aFloat));
 		return this;
 	}
 
@@ -197,10 +216,12 @@ public class HashCode {
 	 * Calculates hash code for float array.
 	 */
 	public HashCode hash(float[] floatArray) {
-		if (floatArray != null) {
-			for (float aFloat : floatArray) {
-				hash(aFloat);
-			}
+		if (floatArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (float aFloat : floatArray) {
+			hash(aFloat);
 		}
 		return this;
 	}
@@ -211,7 +232,7 @@ public class HashCode {
 	 * Calculates hash code for doubles.
 	 */
 	public HashCode hash(double aDouble) {
-		hashcode = hash(hashcode, Double.doubleToLongBits(aDouble));
+		hash(Double.doubleToLongBits(aDouble));
 		return this;
 	}
 
@@ -219,10 +240,12 @@ public class HashCode {
 	 * Calculates hash code for double array.
 	 */
 	public HashCode hash(double[] doubleArray) {
-		if (doubleArray != null) {
-			for (double aDouble : doubleArray) {
-				hash(aDouble);
-			}
+		if (doubleArray == null) {
+			hashcode = hashNull(hashcode);
+			return this;
+		}
+		for (double aDouble : doubleArray) {
+			hash(aDouble);
 		}
 		return this;
 	}
@@ -236,25 +259,44 @@ public class HashCode {
 	 * or a possibly-null object.
 	 */
 	public HashCode hash(Object aObject) {
-		hashcode = hash(hashcode, aObject);
+		hashcode = hashValue(hashcode, aObject);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- calculate
 
-	private int hash(int seed, Object aObject) {
-		int result = seed;
-		if (aObject == null) {
-			result = hash(result, 0);
-		} else if (!aObject.getClass().isArray()) {
-			result = hash(result, aObject.hashCode());
-		} else {
-			Object[] objects = (Object[]) aObject;
-			for (Object object : objects) {
-				result = hash(result, object);
-			}
+	/**
+	 * Returns hash for null value.
+	 */
+	private int hashNull(int seed) {
+		return prime * seed;
+	}
+
+	/**
+	 * Creates hash of a value.
+	 */
+	private int hashValue(int seed, Object object) {
+		if (object == null) {
+			return hashNull(seed);
 		}
-		return result;
+
+		if (object.getClass().isArray()) {
+			Object[] objects = (Object[]) object;
+			int result = seed;
+
+			for (Object element : objects) {
+				if (element != null) {
+					result = (prime * result) + element.hashCode();
+				}
+				else {
+					result = hashNull(result);
+				}
+			}
+
+			return result;
+		}
+
+		return (prime * seed) + object.hashCode();
 	}
 
 }
