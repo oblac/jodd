@@ -38,9 +38,11 @@ import jodd.json.impl.CharacterJsonSerializer;
 import jodd.json.impl.ClassJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
 import jodd.json.impl.DoubleArrayJsonSerializer;
+import jodd.json.impl.DoubleJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
 import jodd.json.impl.FileJsonSerializer;
 import jodd.json.impl.FloatArrayJsonSerializer;
+import jodd.json.impl.FloatJsonSerializer;
 import jodd.json.impl.IntArrayJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
 import jodd.json.impl.JDateTimeSerializer;
@@ -158,11 +160,13 @@ public class TypeJsonSerializerMap {
 		map.put(Long.class, jsonSerializer);
 		map.put(long.class, jsonSerializer);
 
-		map.put(Double.class, jsonSerializer);
-		map.put(double.class, jsonSerializer);
+		DoubleJsonSerializer doubleJsonSerializer = new DoubleJsonSerializer();
+		map.put(Double.class, doubleJsonSerializer);
+		map.put(double.class, doubleJsonSerializer);
 
-		map.put(Float.class, jsonSerializer);
-		map.put(float.class, jsonSerializer);
+		FloatJsonSerializer floatJsonSerializer = new FloatJsonSerializer();
+		map.put(Float.class, floatJsonSerializer);
+		map.put(float.class, floatJsonSerializer);
 
 		map.put(BigInteger.class, jsonSerializer);
 		map.put(BigDecimal.class, jsonSerializer);
@@ -170,6 +174,7 @@ public class TypeJsonSerializerMap {
 		// other
 
 		map.put(Boolean.class, new BooleanJsonSerializer());
+		map.put(boolean.class, new BooleanJsonSerializer());
 		map.put(Date.class, new DateJsonSerializer());
 		map.put(Calendar.class, new CalendarJsonSerializer());
 		map.put(JDateTime.class, new JDateTimeSerializer());
