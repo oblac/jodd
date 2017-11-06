@@ -28,7 +28,7 @@ All notable changes to Jodd project are documented here.
 + **tests** - more tests added, junit5 style
 + **licenses** - added back headers for all 3rd party code.
 + **files** - files line endings unified.
-+ **gradle** - updated to Gradle 4.2.1.
++ **gradle** - updated to Gradle 4.3
 
 ## [3.9.1](https://github.com/oblac/jodd/compare/v3.9...3.9.1)
 
