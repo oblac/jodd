@@ -134,9 +134,11 @@ public class HttpBrowser {
 
 		// send request
 
+		httpRequest.followRedirects(false);
+
 		while (true) {
 			this.httpRequest = httpRequest;
-			HttpResponse previouseResponse = this.httpResponse;
+			HttpResponse previousResponse = this.httpResponse;
 			this.httpResponse = null;
 
 			addDefaultHeaders(httpRequest);
@@ -145,7 +147,7 @@ public class HttpBrowser {
 			// send request
 			if (catchTransportExceptions) {
 				try {
-					this.httpResponse = _sendRequest(httpRequest, previouseResponse);
+					this.httpResponse = _sendRequest(httpRequest, previousResponse);
 				}
 				catch (HttpException httpException) {
 					httpResponse = new HttpResponse();
@@ -155,7 +157,7 @@ public class HttpBrowser {
 				}
 			}
 			else {
-				this.httpResponse =_sendRequest(httpRequest, previouseResponse);
+				this.httpResponse =_sendRequest(httpRequest, previousResponse);
 			}
 
 			readCookies(httpResponse);

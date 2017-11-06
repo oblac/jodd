@@ -36,6 +36,20 @@ public class HttpStatus {
 		return statusCode < 400;
 	}
 
+	/**
+	 * Returns {@code true} if status code indicates a redirect.
+	 */
+	public static boolean isRedirect(int statusCode) {
+		return statusCode >=300 && statusCode < 400;
+	}
+
+	/**
+	 * Returns {@code true} if status code indicates an error.
+	 */
+	public static boolean isError(int statusCode) {
+		return statusCode >= 500;
+	}
+
 	// ---------------------------------------------------------------- 1xx
 
 	/**

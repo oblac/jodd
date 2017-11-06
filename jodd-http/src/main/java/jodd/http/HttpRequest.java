@@ -632,6 +632,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	protected int timeout = -1;
 	protected int connectTimeout = -1;
+	protected boolean followRedirects = false;
 
 	/**
 	 * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or,
@@ -678,6 +679,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return connectTimeout;
 	}
 
+	/**
+	 * Defines if redirects responses should be followed. NOTE: when redirection is enabled,
+	 * the original URL will NOT be preserved in the request!
+	 */
+	public HttpRequest followRedirects(boolean followRedirects) {
+		this.followRedirects = followRedirects;
+		return this;
+	}
+
+	/**
+	 * Returns {@code true} if redirects are followed.
+	 */
+	public boolean isFollowRedirects() {
+		return this.followRedirects;
+	}
 
 	// ---------------------------------------------------------------- send
 
@@ -811,7 +827,31 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * connection will not be closed.
 	 */
 	public HttpResponse send() {
-		return _send();
+		if (!followRedirects) {
+			return _send();
+		}
+
+		while (true) {
+			HttpResponse httpResponse = _send();
+
+			int statusCode = httpResponse.statusCode();
+
+			if (HttpStatus.isRedirect(statusCode)) {
+				_reset();
+				set(httpResponse.location());
+				continue;
+			}
+
+			return httpResponse;
+		}
+	}
+
+	/**
+	 * Resets the request by resetting all additional values
+	 * added during the sending.
+	 */
+	private void _reset() {
+		headers.remove(HEADER_HOST);
 	}
 
 	private HttpResponse _send() {
