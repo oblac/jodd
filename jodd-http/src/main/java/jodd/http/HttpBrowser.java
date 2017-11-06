@@ -26,7 +26,6 @@
 package jodd.http;
 
 import jodd.exception.ExceptionUtil;
-import jodd.util.StringPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +164,11 @@ public class HttpBrowser {
 
 			// 301: moved permanently
 			if (statusCode == 301) {
-				String newPath = location(httpResponse);
+				String newPath = httpResponse.location();
+
+				if (newPath == null) {
+					break;
+				}
 
 				httpRequest = HttpRequest.get(newPath);
 				continue;
@@ -173,15 +176,23 @@ public class HttpBrowser {
 
 			// 302: redirect, 303: see other
 			if (statusCode == 302 || statusCode == 303) {
-				String newPath = location(httpResponse);
+				String newPath = httpResponse.location();
+
+				if (newPath == null) {
+					break;
+				}
 
 				httpRequest = HttpRequest.get(newPath);
 				continue;
 			}
 
-			// 307: temporary redirect
-			if (statusCode == 307) {
-				String newPath = location(httpResponse);
+			// 307: temporary redirect, 308: permanent redirect
+			if (statusCode == 307 || statusCode == 308) {
+				String newPath = httpResponse.location();
+
+				if (newPath == null) {
+					break;
+				}
 
 				String originalMethod = httpRequest.method();
 				httpRequest = new HttpRequest()
@@ -228,24 +239,6 @@ public class HttpBrowser {
 				httpRequest.headers.add(name, entry.getValue());
 			}
 		}
-	}
-
-	/**
-	 * Parse 'location' header to return the next location.
-	 * Specification (<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30">rfc2616</a>)
-	 * says that only absolute path must be provided, however, this does not
-	 * happens in the real world. There a <a href="https://tools.ietf.org/html/rfc7231#section-7.1.2">proposal</a>
-	 * that allows server name etc to be omitted.
-	 */
-	protected String location(HttpResponse httpResponse) {
-		String location = httpResponse.header("location");
-
-		if (location.startsWith(StringPool.SLASH)) {
-			HttpRequest httpRequest = httpResponse.getHttpRequest();
-			location = httpRequest.hostUrl() + location;
-		}
-
-		return location;
 	}
 
 	/**
