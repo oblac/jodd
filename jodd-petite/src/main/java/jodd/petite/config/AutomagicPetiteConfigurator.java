@@ -25,13 +25,13 @@
 
 package jodd.petite.config;
 
+import jodd.io.findfile.ClassFinder;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.petite.meta.PetiteBean;
-import jodd.io.findfile.ClassFinder;
 import jodd.util.ClassLoaderUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -60,13 +60,13 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	/**
 	 * Return elapsed number of milliseconds for configuration. 
 	 */
-	public long getElapsed() {
+	public long getElapsedTime() {
 		return elapsed;
 	}
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
-	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer)
+	 * @see AutomagicPetiteConfigurator#configure(PetiteContainer, File[])
 	 */
 	public void configure(PetiteContainer petiteContainer, File[] classpath) {
 		this.container = petiteContainer;
@@ -87,6 +87,7 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
 	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer, java.io.File[])
 	 */
+	@Override
 	public void configure(PetiteContainer petiteContainer) {
 		configure(petiteContainer, ClassLoaderUtil.getDefaultClasspath());
 	}

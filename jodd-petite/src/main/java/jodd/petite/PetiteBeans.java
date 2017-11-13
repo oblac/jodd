@@ -110,7 +110,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Returns parameter manager.
 	 */
-	public ParamManager getParamManager() {
+	public ParamManager paramManager() {
 		return paramManager;
 	}
 
@@ -119,7 +119,7 @@ public abstract class PetiteBeans {
 	 * All changes on config should be done <b>before</b>
 	 * beans registration process starts.
 	 */
-	public PetiteConfig getConfig() {
+	public PetiteConfig config() {
 		return petiteConfig;
 	}
 

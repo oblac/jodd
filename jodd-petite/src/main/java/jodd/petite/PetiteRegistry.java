@@ -40,7 +40,7 @@ public class PetiteRegistry {
 	/**
 	 * Starts with fluent registration.
 	 */
-	public static PetiteRegistry petite(PetiteContainer petiteContainer) {
+	public static PetiteRegistry of(PetiteContainer petiteContainer) {
 		return new PetiteRegistry(petiteContainer);
 	}
 
@@ -53,6 +53,13 @@ public class PetiteRegistry {
 	 */
 	public PetiteRegistry(PetiteContainer petiteContainer) {
 		this.petiteContainer = petiteContainer;
+	}
+
+	/**
+	 * Returns {@link PetiteContainer}.
+	 */
+	public PetiteContainer petiteContainer() {
+		return petiteContainer;
 	}
 
 	// ---------------------------------------------------------------- register bean

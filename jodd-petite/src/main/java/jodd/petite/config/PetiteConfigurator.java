@@ -30,8 +30,12 @@ import jodd.petite.PetiteContainer;
 /**
  * Petite container configurator.
  */
+@FunctionalInterface
 public interface PetiteConfigurator {
 
+	/**
+	 * Configures {@link PetiteContainer}.
+	 */
 	void configure(PetiteContainer petiteContainer);
 
 }

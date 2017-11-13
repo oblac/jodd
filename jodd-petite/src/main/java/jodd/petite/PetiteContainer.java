@@ -29,6 +29,7 @@ import jodd.bean.BeanUtil;
 import jodd.introspector.Setter;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.petite.config.PetiteConfigurator;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
@@ -38,6 +39,7 @@ import java.util.Collection;
 
 /**
  * Petite IOC container.
+ * @see PetiteRegistry for fluent java registration of Petite beans.
  */
 public class PetiteContainer extends PetiteBeans {
 
@@ -533,6 +535,17 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
+
+	// ---------------------------------------------------------------- configure
+
+	/**
+	 * Configures this instance with provided {@link PetiteConfigurator}.
+	 */
+	public PetiteContainer configureWith(PetiteConfigurator petiteConfigurator) {
+		petiteConfigurator.configure(this);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- shutdown
 
 	/**
@@ -548,7 +561,6 @@ public class PetiteContainer extends PetiteBeans {
 		scopes.clear();
 		providers.clear();
 		beanCollections.clear();
-
 	}
 
 }
