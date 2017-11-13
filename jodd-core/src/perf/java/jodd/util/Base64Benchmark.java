@@ -31,7 +31,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.UnsupportedEncodingException;
 
@@ -49,7 +48,7 @@ import java.io.UnsupportedEncodingException;
  *     <li>{@link java.util.Base64.Decoder#decode(String)}</li>
  *     <li>{@link org.apache.commons.codec.binary.Base64#decode(String)}</li>
  *     <li>{@link Base64#decode(String)}</li>
- * </ol>
+* </ol>
  *
  * <p>
  * Run:
@@ -104,19 +103,19 @@ public class Base64Benchmark {
     }
 
 	@Benchmark
-	public byte[] decode_Apache_Base64(Blackhole blackhole) {
+	public byte[] decode_Apache_Base64() {
 		return org.apache.commons.codec.binary.Base64.decodeBase64(to_be_decoded);
 	}
 
     // ----------------------------------------------------------------------- Jodd Base64
 
     @Benchmark
-    public String encode_Jodd_Base64(Blackhole blackhole) {
+    public String encode_Jodd_Base64() {
         return jodd.util.Base64.encodeToString(to_be_encoded, false);
     }
 
 	@Benchmark
-	public byte[] decode_Jodd_Base64(Blackhole blackhole) {
+	public byte[] decode_Jodd_Base64() {
 		return jodd.util.Base64.decode(to_be_decoded);
 	}
 
