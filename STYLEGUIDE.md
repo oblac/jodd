@@ -4,7 +4,7 @@ Please follow this style guide and naming conventions when sending your submissi
 
 ## Code
 
-+ Use TABS and not spaces for indentation (it)
++ Use TABS and not spaces for indentation.
 
 ## Test
 
@@ -55,11 +55,16 @@ just copy/paste whatever is the JMH output.
 + Benchmarks are started with: `gradlew :<module>:<benchmark-class-name>` (e.g.: `gradlew :jodd-core:Base32Benchmark`) 
 
 
-## Modules Architecture
+## General Architecture
 
 + Interfaces may contain static factories (see `Value.of()`).
 + Common sense is assumed. Jodd does not handle all possible misusages of the API. For example, we will not check for `null` and then throw custom exception when it is obvious that methods should accept non-null value.
 + `null` usage should be generally avoided.
++ Only beans have accessors (`getFoo()` and `setFoo()` methods). Method should not be named with e.g. `get` if it is not a bean.
++ Components are returned using methods without the `get` prefix.  
+
+## Modules
+
 + Jodd module has `get()` static method that returns the module instance.
 + Default configuration of the module is stored as a bean in modules instance. Try to minimise usage of this static call - rather get a value and pass it as an argument, then to fetch the value twice. Default configuration is a bean. Configuration can be split in multiple beans.  
 + Module instance may have set of runtime components - parts of the module that represents some logic.
