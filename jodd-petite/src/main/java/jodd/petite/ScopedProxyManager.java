@@ -25,14 +25,14 @@
 
 package jodd.petite;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.petite.proxetta.ProxettaBeanDefinition;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Field;
@@ -75,8 +75,8 @@ public class ScopedProxyManager {
 		Scope targetScope = targetBeanDefinition.scope;
 		Scope refBeanScope = refBeanDefinition.scope;
 
-		boolean detectMixedScopes = petiteContainer.getConfig().isDetectMixedScopes();
-		boolean wireScopedProxy = petiteContainer.getConfig().isWireScopedProxy();
+		boolean detectMixedScopes = petiteContainer.config().isDetectMixedScopes();
+		boolean wireScopedProxy = petiteContainer.config().isWireScopedProxy();
 
 		// when target scope is null then all beans can be injected into it
 		// similar to prototype scope

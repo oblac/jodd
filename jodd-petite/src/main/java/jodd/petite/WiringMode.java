@@ -26,7 +26,7 @@
 package jodd.petite;
 
 /**
- * Different wiring modes.
+ * Various wiring modes for beans.
  */
 public enum WiringMode {
 

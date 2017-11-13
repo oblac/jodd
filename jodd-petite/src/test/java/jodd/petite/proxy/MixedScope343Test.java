@@ -53,7 +53,8 @@ class MixedScope343Test {
 
 		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator();
 		petiteConfigurator.setIncludedEntries(this.getClass().getPackage().getName() + ".*");
-		petiteConfigurator.configure(petiteContainer);
+
+		petiteContainer.configureWith(petiteConfigurator);
 	}
 
 	@AfterEach

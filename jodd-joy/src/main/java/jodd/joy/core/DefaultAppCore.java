@@ -491,8 +491,10 @@ public abstract class DefaultAppCore {
 	 */
 	protected void registerPetiteContainerBeans(PetiteContainer petiteContainer) {
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
+
 		appScanner.configure(pcfg);
-		pcfg.configure(petiteContainer);
+
+		petiteContainer.configureWith(pcfg);
 	}
 
 	/**

@@ -48,11 +48,12 @@ public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
 	 * Matching parameters are named as given base name.
 	 * @param scopeData scope data is not used!
 	 */
+	@Override
 	public void injectContext(Target target, ScopeData[] scopeData, PetiteContainer madpc) {
 		Class targetType = target.resolveType();
 		String baseName = targetType.getName();
 
-		ParamManager madvocPetiteParamManager = madpc.getParamManager();
+		ParamManager madvocPetiteParamManager = madpc.paramManager();
 
 		String[] params = madvocPetiteParamManager.resolve(baseName, true);
 

@@ -25,15 +25,10 @@
 
 package jodd.petite;
 
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
-
 /**
  * Petite configuration.
  */
 public class PetiteConfig {
-
-	private static final Logger log = LoggerFactory.getLogger(PetiteConfig.class);
 
 	public PetiteConfig() {
 		defaultWiringMode = WiringMode.STRICT;

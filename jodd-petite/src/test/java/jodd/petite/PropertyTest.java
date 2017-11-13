@@ -31,7 +31,10 @@ import jodd.petite.fixtures.tst2.Moo;
 import jodd.props.Props;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class PropertyTest {
 
@@ -106,7 +109,7 @@ class PropertyTest {
 
 
 		pc = new PetiteContainer();
-		pc.getConfig().setDefaultWiringMode(WiringMode.AUTOWIRE);
+		pc.config().setDefaultWiringMode(WiringMode.AUTOWIRE);
 		pc.registerPetiteBean(Moo.class, null, null, null, false);
 		pc.registerPetiteBean(Joo.class, null, null, null, false);
 

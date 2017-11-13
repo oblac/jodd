@@ -53,9 +53,7 @@ public class PetiteWebApplication extends WebApplication {
 	protected PetiteContainer providePetiteContainer() {
 		PetiteContainer pc = createPetiteContainer();
 
-		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
-
-		configurator.configure(pc);
+		pc.configureWith(new AutomagicPetiteConfigurator());
 
 		return pc;
 	}

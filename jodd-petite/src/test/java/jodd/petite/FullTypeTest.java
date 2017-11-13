@@ -29,7 +29,9 @@ import jodd.petite.fixtures.tst2.Joo;
 import jodd.petite.fixtures.tst2.Koo;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class FullTypeTest {
 
@@ -40,7 +42,7 @@ class FullTypeTest {
 	@Test
 	void testFullTypeProperty() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setUseFullTypeNames(true);
+		pc.config().setUseFullTypeNames(true);
 
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);
@@ -69,7 +71,7 @@ class FullTypeTest {
 	@Test
 	void testFullTypeMethodCtor() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setUseFullTypeNames(true);
+		pc.config().setUseFullTypeNames(true);
 
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);
@@ -89,9 +91,9 @@ class FullTypeTest {
 	@Test
 	void testOptionalAndNotAllReferences() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setDefaultWiringMode(WiringMode.OPTIONAL);
-		pc.getConfig().setUseFullTypeNames(false);
-		pc.getConfig().setLookupReferences(PetiteReference.NAME);
+		pc.config().setDefaultWiringMode(WiringMode.OPTIONAL);
+		pc.config().setUseFullTypeNames(false);
+		pc.config().setLookupReferences(PetiteReference.NAME);
 
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);

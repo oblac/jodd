@@ -28,13 +28,13 @@ package jodd.petite;
 import jodd.util.PropertiesUtil;
 import jodd.util.StringPool;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
- * Parameter storage and resolver.
+ * Parameters storage and resolver. Parameters are injected into beans.
  */
 public class ParamManager {
 

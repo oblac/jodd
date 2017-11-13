@@ -59,13 +59,14 @@ class WireTest {
 	void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
+
 		configurator.setExcludeAllEntries(true);
 		configurator.setIncludedEntries("jodd.petite.fixtures.*");
 		configurator.setExcludedEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses");
 		configurator.setExcludedEntries(
 				"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses", "*Public*", "*Secret*", "*$*",
 			"jodd.petite.proxy.*");
-		configurator.configure(pc);
+		pc.configureWith(configurator);
 
 		assertEquals(1, pc.getTotalBeans());
 		assertEquals(1, pc.getTotalScopes());
@@ -188,7 +189,7 @@ class WireTest {
 		assertNull(goo.foo);
 
 		pc = new PetiteContainer();
-		pc.getConfig().setDefaultWiringMode(WiringMode.AUTOWIRE);
+		pc.config().setDefaultWiringMode(WiringMode.AUTOWIRE);
 		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false);
 		pc.registerPetiteBean(Loo.class, null, null, null, false);
 		pc.registerPetiteBean(Foo.class, null, null, null, false);

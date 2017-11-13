@@ -78,7 +78,7 @@ class ParamTest {
 	@Test
 	void testRefParamsNoResolve() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setResolveReferenceParameters(false);
+		pc.config().setResolveReferenceParameters(false);
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
 
 		pc.defineParameter("foo.name", "${name}");

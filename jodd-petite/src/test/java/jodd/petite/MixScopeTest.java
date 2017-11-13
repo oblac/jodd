@@ -32,7 +32,11 @@ import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MixScopeTest {
 
@@ -41,8 +45,8 @@ class MixScopeTest {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
 		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
@@ -77,8 +81,8 @@ class MixScopeTest {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
 		pc.registerPetiteBean(Big2.class, "big", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
@@ -108,8 +112,8 @@ class MixScopeTest {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
 		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
@@ -140,8 +144,8 @@ class MixScopeTest {
 		Small.instanceCounter = 0;
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.getConfig().setWireScopedProxy(true);
-		pc.getConfig().setDetectMixedScopes(true);
+		pc.config().setWireScopedProxy(true);
+		pc.config().setDetectMixedScopes(true);
 
 		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
 		pc.registerPetiteBean(Small.class, "small", ThreadLocalScope.class, null, false);
