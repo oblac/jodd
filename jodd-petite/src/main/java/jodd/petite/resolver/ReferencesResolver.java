@@ -25,12 +25,17 @@
 
 package jodd.petite.resolver;
 
+import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
+import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteException;
 import jodd.petite.PetiteReference;
-import jodd.petite.PetiteUtil;
+import jodd.petite.def.BeanReferences;
 import jodd.petite.meta.PetiteInject;
+import jodd.typeconverter.Converter;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Executable;
@@ -42,23 +47,36 @@ import java.lang.reflect.Parameter;
  */
 public class ReferencesResolver {
 
-	private final PetiteReference[] lookupReferences;
-	private final boolean useParamo;
+	private final PetiteConfig petiteConfig;
 
-	/**
-	 * Resolves references.
-	 */
-	public ReferencesResolver(PetiteReference[] lookupReferences, boolean useParamo) {
-		this.lookupReferences = lookupReferences;
-		this.useParamo = useParamo;
+	public ReferencesResolver(PetiteConfig petiteConfig) {
+		this.petiteConfig = petiteConfig;
 	}
 
+	/**
+	 * Resolves reference from given values. Returns bean reference of given value or defaults
+	 * if given name is blank.
+	 */
+	public BeanReferences resolveReferenceFromValue(PropertyDescriptor propertyDescriptor, String refName) {
+		BeanReferences references;
+
+		if (refName == null || refName.isEmpty()) {
+			references = buildDefaultReference(propertyDescriptor);
+		}
+		else {
+			references = BeanReferences.of(refName);
+		}
+
+		references = references.removeDuplicateNames();
+
+		return references;
+	}
 
 	/**
 	 * Takes given parameters references and returns reference set for given method or constructor.
 	 */
-	public String[][] resolveReferenceFromValues(Executable methodOrCtor, String... parameterReferences) {
-		String[][] references = PetiteUtil.convertRefToReferences(parameterReferences);
+	public BeanReferences[] resolveReferenceFromValues(Executable methodOrCtor, String... parameterReferences) {
+		BeanReferences[] references = convertRefToReferences(parameterReferences);
 
 		if (references == null || references.length == 0) {
 			references = buildDefaultReferences(methodOrCtor);
@@ -69,39 +87,71 @@ public class ReferencesResolver {
 				methodOrCtor.getDeclaringClass().getName() + '#' + methodOrCtor.getName());
 		}
 
-		removeDuplicateNames(references);
+		removeAllDuplicateNames(references);
 
 		return references;
 	}
 
 	/**
-	 * Extracts references from method or constructor annotation.
-	 * todo napravi klasu BeanReference
+	 * Extracts references for given property. Returns {@code null} if property is not marked with an
+	 * annotation.
 	 */
-	public String[][] readReferencesFromAnnotation(Executable methodOrCtor) {
+	public BeanReferences readReferenceFromAnnotation(PropertyDescriptor propertyDescriptor) {
+		final MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
+		final FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
 
+		PetiteInject ref = null;
+		if (writeMethodDescriptor != null) {
+			ref = writeMethodDescriptor.getMethod().getAnnotation(PetiteInject.class);
+		}
+		if (ref == null && fieldDescriptor != null) {
+			ref = fieldDescriptor.getField().getAnnotation(PetiteInject.class);
+		}
+
+		if (ref == null) {
+			return null;
+		}
+
+		BeanReferences reference = null;
+
+		String name = ref.value().trim();
+		if (name.length() != 0) {
+			reference = BeanReferences.of(name);
+		}
+
+		reference = updateReferencesWithDefaultsIfNeeded(propertyDescriptor, reference);
+
+		reference = reference.removeDuplicateNames();
+
+		return reference;
+	}
+
+	/**
+	 * Extracts references from method or constructor annotation.
+	 */
+	public BeanReferences[] readAllReferencesFromAnnotation(Executable methodOrCtor) {
 		PetiteInject petiteInject = methodOrCtor.getAnnotation(PetiteInject.class);
 
 		final Parameter[] parameters = methodOrCtor.getParameters();
 
-		String[][] references;
+		BeanReferences[] references;
 
 		final boolean hasAnnotationOnMethodOrCtor;
 
 		if (petiteInject != null) {
-			references = PetiteUtil.convertAnnValueToReferences(petiteInject.value());
+			references = convertAnnValueToReferences(petiteInject.value());
 
-			references = updateReferencesWithDefaultsIfNeeded(methodOrCtor, references);
+			//references = updateReferencesWithDefaultsIfNeeded(methodOrCtor, references);    // todo da li ovo mogu da izbacim?
 
 			hasAnnotationOnMethodOrCtor = true;
 		}
 		else {
-			references = new String[parameters.length][];
+			references = new BeanReferences[parameters.length];
 
 			hasAnnotationOnMethodOrCtor = false;
 		}
 
-		int parametersWtihAnnotationCount = 0;
+		int parametersWithAnnotationCount = 0;
 
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter parameter = parameters[i];
@@ -114,21 +164,27 @@ public class ReferencesResolver {
 			}
 
 			// there is annotation on argument, override values
-			references[i] = new String[] {readAnnotationValue(petiteInject)};
+			String annotationValue = readAnnotationValue(petiteInject);
 
-			parametersWtihAnnotationCount++;
+			if (annotationValue != null) {
+				references[i] = BeanReferences.of(annotationValue);
+			}
+
+			parametersWithAnnotationCount++;
 		}
 
 		if (!hasAnnotationOnMethodOrCtor) {
-			if (parametersWtihAnnotationCount == 0) {
+			if (parametersWithAnnotationCount == 0) {
 				return null;
 			}
-			if (parametersWtihAnnotationCount != parameters.length) {
+			if (parametersWithAnnotationCount != parameters.length) {
 				throw new PetiteException("All arguments must be annotated with PetiteInject");
 			}
 		}
 
 		references = updateReferencesWithDefaultsIfNeeded(methodOrCtor, references);
+
+		removeAllDuplicateNames(references);
 
 		return references;
 	}
@@ -145,8 +201,8 @@ public class ReferencesResolver {
 		return value;
 	}
 
-	private String[][] updateReferencesWithDefaultsIfNeeded(Executable methodOrCtor, String[][] references) {
-		String[][] defaultReferences = buildDefaultReferences(methodOrCtor);
+	private BeanReferences[] updateReferencesWithDefaultsIfNeeded(Executable methodOrCtor, BeanReferences[] references) {
+		BeanReferences[] defaultReferences = buildDefaultReferences(methodOrCtor);
 
 		if (references == null || references.length == 0) {
 			references = defaultReferences;
@@ -159,14 +215,20 @@ public class ReferencesResolver {
 
 		// apply default parameters
 		for (int i = 0; i < references.length; i++) {
-			String[] parameterReferences = references[i];
+			BeanReferences parameterReferences = references[i];
 
 			if (parameterReferenceIsNotSet(parameterReferences)) {
 				references[i] = defaultReferences[i];
 			}
 		}
 
-		removeDuplicateNames(references);
+		return references;
+	}
+
+	private BeanReferences updateReferencesWithDefaultsIfNeeded(PropertyDescriptor propertyDescriptor, BeanReferences references) {
+		if (references == null || references.isEmpty()) {
+			references = buildDefaultReference(propertyDescriptor);
+		}
 
 		return references;
 	}
@@ -174,20 +236,19 @@ public class ReferencesResolver {
 	/**
 	 * Returns {@code true} if given parameter references is not set.
 	 */
-	private boolean parameterReferenceIsNotSet(String[] parameterReferences) {
+	private boolean parameterReferenceIsNotSet(BeanReferences parameterReferences) {
 		if (parameterReferences == null) {
 			return true;
 		}
-		if ((parameterReferences.length == 1) && (parameterReferences[0] == null)) {
-			return true;
-		}
-		return false;
+		return parameterReferences.isEmpty();
 	}
 
 	/**
 	 * Builds default method references.
 	 */
-	private String[][] buildDefaultReferences(Executable methodOrCtor) {
+	private BeanReferences[] buildDefaultReferences(Executable methodOrCtor) {
+		final boolean useParamo = petiteConfig.getUseParamo();
+		final PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
 		MethodParameter[] methodParameters = null;
 
 		if (useParamo) {
@@ -195,20 +256,23 @@ public class ReferencesResolver {
 		}
 
 		final Class[] paramTypes = methodOrCtor.getParameterTypes();
-		final String[][] references = new String[paramTypes.length][];
+		final BeanReferences[] references = new BeanReferences[paramTypes.length];
 
 		for (int j = 0; j < paramTypes.length; j++) {
 			String[] ref = new String[lookupReferences.length];
-			references[j] = ref;
+			references[j] = BeanReferences.of(ref);
 
 			for (int i = 0; i < ref.length; i++) {
 				switch (lookupReferences[i]) {
-					case NAME:				ref[i] = methodParameters != null ? methodParameters[j].getName() : null;
-											break;
-					case TYPE_SHORT_NAME:	ref[i] = StringUtil.uncapitalize(paramTypes[j].getSimpleName());
-											break;
-					case TYPE_FULL_NAME:	ref[i] = paramTypes[j].getName();
-											break;
+					case NAME:
+						ref[i] = methodParameters != null ? methodParameters[j].getName() : null;
+						break;
+					case TYPE_SHORT_NAME:
+						ref[i] = StringUtil.uncapitalize(paramTypes[j].getSimpleName());
+						break;
+					case TYPE_FULL_NAME:
+						ref[i] = paramTypes[j].getName();
+						break;
 				}
 			}
 		}
@@ -217,38 +281,76 @@ public class ReferencesResolver {
 	}
 
 	/**
-	 * Removes duplicate names.
+	 * Builds default field references.
 	 */
-	private void removeDuplicateNames(String[][] referencesArr) {
-		for (String[] references : referencesArr) {
-			removeDuplicateNames(references);
+	public BeanReferences buildDefaultReference(PropertyDescriptor propertyDescriptor) {
+		final PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
+
+		final String[] references = new String[lookupReferences.length];
+
+		for (int i = 0; i < references.length; i++) {
+			switch (lookupReferences[i]) {
+				case NAME:
+					references[i] = propertyDescriptor.getName();
+					break;
+				case TYPE_SHORT_NAME:
+					references[i] = StringUtil.uncapitalize(propertyDescriptor.getType().getSimpleName());
+					break;
+				case TYPE_FULL_NAME:
+					references[i] = propertyDescriptor.getType().getName();
+					break;
+			}
 		}
+
+		return BeanReferences.of(references);
 	}
 
 	/**
-	 * Removes later duplicated references in an array by setting duplicates to {@code null}.
+	 * Removes duplicate names from bean references.
 	 */
-	private void removeDuplicateNames(String[] references) {
-		if (references.length < 2) {
-			return;
+	private void removeAllDuplicateNames(BeanReferences[] allBeanReferences) {
+		for (int i = 0; i < allBeanReferences.length; i++) {
+			BeanReferences references = allBeanReferences[i];
+			allBeanReferences[i] = references.removeDuplicateNames();
+		}
+	}
+
+
+	/**
+	 * Converts single string array to an array of bean references.
+	 */
+	private BeanReferences[] convertRefToReferences(String[] references) {
+		if (references == null) {
+			return null;
+		}
+		BeanReferences[] ref = new BeanReferences[references.length];
+
+		for (int i = 0; i < references.length; i++) {
+			ref[i] = BeanReferences.of(references[i]);
+		}
+		return ref;
+	}
+
+	/**
+	 * Converts comma-separated string into array of Bean references.
+	 */
+	private BeanReferences[] convertAnnValueToReferences(String value) {
+		if (value == null) {
+			return null;
 		}
 
-		for (int i = 1; i < references.length; i++) {
-			String thisRef = references[i];
-			if (thisRef == null) {
-				continue;
-			}
-
-			for (int j = 0; j < i; j++) {
-				if (references[j] == null) {
-					continue;
-				}
-				if (thisRef.equals(references[j])) {
-					references[i] = null;
-					break;
-				}
-			}
+		value = value.trim();
+		if (value.length() == 0) {
+			return null;
 		}
+
+		String[] refNames = Converter.get().toStringArray(value);
+
+		BeanReferences[] references = new BeanReferences[refNames.length];
+		for (int i = 0; i < refNames.length; i++) {
+			references[i] = BeanReferences.of(refNames[i].trim());
+		}
+		return references;
 	}
 
 }

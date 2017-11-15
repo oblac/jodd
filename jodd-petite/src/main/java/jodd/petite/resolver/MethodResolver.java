@@ -28,7 +28,8 @@ package jodd.petite.resolver;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
-import jodd.petite.MethodInjectionPoint;
+import jodd.petite.def.BeanReferences;
+import jodd.petite.def.MethodInjectionPoint;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
@@ -68,7 +69,7 @@ public class MethodResolver {
 				continue;
 			}
 
-			String[][] references = referencesResolver.readReferencesFromAnnotation(method);
+			BeanReferences[] references = referencesResolver.readAllReferencesFromAnnotation(method);
 
 			if (references != null) {
 				MethodInjectionPoint methodInjectionPoint = new MethodInjectionPoint(method, references);

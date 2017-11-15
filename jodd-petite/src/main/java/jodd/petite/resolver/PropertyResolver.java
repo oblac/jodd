@@ -27,12 +27,9 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
-import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.petite.InjectionPointFactory;
-import jodd.petite.PropertyInjectionPoint;
-import jodd.petite.meta.PetiteInject;
+import jodd.petite.def.BeanReferences;
+import jodd.petite.def.PropertyInjectionPoint;
 import jodd.util.ClassUtil;
 
 import java.util.ArrayList;
@@ -44,10 +41,10 @@ import java.util.List;
  */
 public class PropertyResolver {
 
-	protected final InjectionPointFactory injectionPointFactory;
+	protected final ReferencesResolver referencesResolver;
 
-	public PropertyResolver(InjectionPointFactory injectionPointFactory) {
-		this.injectionPointFactory = injectionPointFactory;
+	public PropertyResolver(ReferencesResolver referencesResolver) {
+		this.referencesResolver = referencesResolver;
 	}
 
 	/**
@@ -70,32 +67,18 @@ public class PropertyResolver {
 				continue;
 			}
 
-			MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
-			FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
+			BeanReferences reference = referencesResolver.readReferenceFromAnnotation(propertyDescriptor);
 
-			PetiteInject ref = null;
-
-			if (writeMethodDescriptor != null) {
-				ref = writeMethodDescriptor.getMethod().getAnnotation(PetiteInject.class);
-			}
-			if (ref == null && fieldDescriptor != null) {
-				ref = fieldDescriptor.getField().getAnnotation(PetiteInject.class);
-			}
-
-			if ((!autowire) && (ref == null)) {
-				continue;
-			}
-
-			String[] refName = null;
-
-			if (ref != null) {
-				String name = ref.value().trim();
-				if (name.length() != 0) {
-					refName = new String[] {name};
+			if (reference == null) {
+				if (!autowire) {
+					continue;
+				}
+				else {
+					reference = referencesResolver.buildDefaultReference(propertyDescriptor);
 				}
 			}
 
-			list.add(injectionPointFactory.createPropertyInjectionPoint(propertyDescriptor, refName));
+			list.add(new PropertyInjectionPoint(propertyDescriptor, reference));
 		}
 
 		PropertyInjectionPoint[] fields;

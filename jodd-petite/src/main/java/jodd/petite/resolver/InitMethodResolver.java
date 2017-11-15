@@ -25,11 +25,11 @@
 
 package jodd.petite.resolver;
 
-import jodd.introspector.MethodDescriptor;
-import jodd.petite.meta.PetiteInitMethod;
-import jodd.petite.PetiteException;
-import jodd.petite.InitMethodPoint;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.petite.PetiteException;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.meta.PetiteInitMethod;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

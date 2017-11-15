@@ -29,7 +29,7 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.petite.BeanDefinition;
-import jodd.petite.ProviderDefinition;
+import jodd.petite.def.ProviderDefinition;
 import jodd.petite.meta.PetiteProvider;
 import jodd.util.StringUtil;
 

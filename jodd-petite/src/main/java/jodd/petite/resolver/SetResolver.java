@@ -31,7 +31,7 @@ import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.petite.InjectionPointFactory;
-import jodd.petite.SetInjectionPoint;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
 

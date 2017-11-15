@@ -27,8 +27,8 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.MethodDescriptor;
-import jodd.petite.DestroyMethodPoint;
 import jodd.petite.PetiteException;
+import jodd.petite.def.DestroyMethodPoint;
 import jodd.petite.meta.PetiteDestroyMethod;
 
 import java.lang.reflect.Method;
