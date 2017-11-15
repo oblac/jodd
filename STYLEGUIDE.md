@@ -61,7 +61,8 @@ just copy/paste whatever is the JMH output.
 + Common sense is assumed. Jodd does not handle all possible misusages of the API. For example, we will not check for `null` and then throw custom exception when it is obvious that methods should accept non-null value.
 + `null` usage should be generally avoided.
 + Only beans have accessors (`getFoo()` and `setFoo()` methods). Method should not be named with e.g. `get` if it is not a bean.
-+ Components are returned using methods without the `get` prefix.  
++ Components are returned using methods without the `get` prefix.
++ Main components should have self-describing interface.
 
 ## Modules
 
