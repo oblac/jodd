@@ -93,13 +93,14 @@ public class CtorResolver {
 
 			}
 			references = referencesResolver.readAllReferencesFromAnnotation(foundedCtor);
-			if (references == null) {
-				references = new BeanReferences[0];
-			}
 		}
 
 		if (foundedCtor == null) {
 			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for: " + type.getName());
+		}
+
+		if (references == null) {
+			references = new BeanReferences[0];
 		}
 
 		return new CtorInjectionPoint(foundedCtor, references);
