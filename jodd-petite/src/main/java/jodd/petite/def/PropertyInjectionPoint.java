@@ -23,9 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.def;
 
 import jodd.introspector.PropertyDescriptor;
+
+import java.util.Objects;
 
 /**
  * Property injection point.
@@ -35,9 +37,12 @@ public class PropertyInjectionPoint {
 	public static final PropertyInjectionPoint[] EMPTY = new PropertyInjectionPoint[0]; 
 
 	public final PropertyDescriptor propertyDescriptor;
-	public final String[] references;
+	public final BeanReferences references;
 
-	PropertyInjectionPoint(PropertyDescriptor propertyDescriptor, String[] references) {
+	public PropertyInjectionPoint(PropertyDescriptor propertyDescriptor, BeanReferences references) {
+		Objects.requireNonNull(propertyDescriptor);
+		Objects.requireNonNull(references);
+
 		this.propertyDescriptor = propertyDescriptor;
 		this.references = references;
 	}

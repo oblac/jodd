@@ -23,23 +23,24 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.def;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
- * Method injection points.
+ * Destroy method point.
  */
-public class MethodInjectionPoint {
+public class DestroyMethodPoint {
 
-	public static final MethodInjectionPoint[] EMPTY = new MethodInjectionPoint[0]; 
+	public static final DestroyMethodPoint[] EMPTY = new DestroyMethodPoint[0];
 
 	public final Method method;
-	public final String[][] references;
 
-	MethodInjectionPoint(Method method, String[][] references) {
+	public DestroyMethodPoint(Method method) {
+		Objects.requireNonNull(method);
+
 		this.method = method;
-		this.references = references;
 	}
 
 }

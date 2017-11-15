@@ -23,15 +23,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.def;
 
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.petite.PetiteException;
 import jodd.util.ClassUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Set injection point.
@@ -47,6 +49,8 @@ public class SetInjectionPoint<T> {
 	public final Class targetClass;
 
 	public SetInjectionPoint(PropertyDescriptor propertyDescriptor) {
+		Objects.requireNonNull(propertyDescriptor);
+
 		this.propertyDescriptor = propertyDescriptor;
 		this.type = resolveSetType(propertyDescriptor);
 

@@ -23,21 +23,46 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.def;
 
-import java.lang.reflect.Constructor;
+import jodd.petite.PetiteException;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 /**
- * Holder for constructor injection points.
+ * Bean provider definition.
  */
-public class CtorInjectionPoint {
+public class ProviderDefinition {
 
-	public final Constructor constructor;
-	public final String[][] references;
+	public static final ProviderDefinition[] EMPTY = new ProviderDefinition[0];
 
-	CtorInjectionPoint(Constructor constructor, String[][] references) {
-		this.constructor = constructor;
-		this.references = references;
+	public final String name;
+	public final String beanName;
+	public final Method method;
+
+	public ProviderDefinition(String name, String beanName, Method method) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(beanName);
+		Objects.requireNonNull(method);
+
+		this.name = name;
+		this.beanName = beanName;
+		this.method = method;
 	}
-}
 
+	public ProviderDefinition(String name, Method staticMethod) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(staticMethod);
+
+		this.name = name;
+		if (!Modifier.isStatic(staticMethod.getModifiers())) {
+			throw new PetiteException("Provider method is not static: " + staticMethod);
+		}
+
+		this.method = staticMethod;
+		this.beanName = null;
+	}
+
+}

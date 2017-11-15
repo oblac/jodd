@@ -23,35 +23,37 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
+package jodd.petite.def;
+
+import jodd.petite.meta.InitMethodInvocationStrategy;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 /**
- * Bean provider definition.
+ * Init method point.
  */
-public class ProviderDefinition {
+public class InitMethodPoint implements Comparable {
 
-	public static final ProviderDefinition[] EMPTY = new ProviderDefinition[0];
+	public static final InitMethodPoint[] EMPTY = new InitMethodPoint[0];
 
-	protected String name;
-	protected String beanName;
-	protected Method method;
+	public final Method method;
+	public final int order;
+	public final InitMethodInvocationStrategy invocationStrategy;
 
-	public ProviderDefinition(String name, String beanName, Method method) {
-		this.name = name;
-		this.beanName = beanName;
+	public InitMethodPoint(Method method, int order, InitMethodInvocationStrategy invocationStrategy) {
+		Objects.requireNonNull(method);
+		Objects.requireNonNull(invocationStrategy);
+
 		this.method = method;
+		this.order = order == 0 ? (Integer.MAX_VALUE >> 1) : (order < 0 ? Integer.MAX_VALUE + order: order);
+		this.invocationStrategy = invocationStrategy;
 	}
 
-	public ProviderDefinition(String name, Method staticMethod) {
-		this.name = name;
-		if (!Modifier.isStatic(staticMethod.getModifiers())) {
-			throw new PetiteException("Provider method is not static: " + staticMethod);
-		}
-
-		this.method = staticMethod;
+	@Override
+	public int compareTo(Object other) {
+		InitMethodPoint that = (InitMethodPoint) other;
+		return Integer.compare(this.order, that.order);
 	}
 
 }

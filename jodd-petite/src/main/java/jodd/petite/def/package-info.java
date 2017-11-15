@@ -23,21 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
-
-import java.lang.reflect.Method;
-
 /**
- * Destroy method point.
+ * Bean definition classes.
  */
-public class DestroyMethodPoint {
-
-	public static final DestroyMethodPoint[] EMPTY = new DestroyMethodPoint[0];
-
-	public final Method method;
-
-	public DestroyMethodPoint(Method method) {
-		this.method = method;
-	}
-
-}
+package jodd.petite.def;

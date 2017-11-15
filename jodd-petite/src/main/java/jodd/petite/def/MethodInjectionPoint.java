@@ -23,33 +23,27 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite;
-
-import jodd.petite.meta.InitMethodInvocationStrategy;
+package jodd.petite.def;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
- * Init method point.
+ * Method injection points.
  */
-public class InitMethodPoint implements Comparable {
+public class MethodInjectionPoint {
 
-	public static final InitMethodPoint[] EMPTY = new InitMethodPoint[0];
+	public static final MethodInjectionPoint[] EMPTY = new MethodInjectionPoint[0]; 
 
 	public final Method method;
-	public final int order;
-	public final InitMethodInvocationStrategy invocationStrategy;
+	public final BeanReferences[] references;
 
-	public InitMethodPoint(Method method, int order, InitMethodInvocationStrategy invocationStrategy) {
+	public MethodInjectionPoint(Method method, BeanReferences[] references) {
+		Objects.requireNonNull(method);
+		Objects.requireNonNull(references);
+
 		this.method = method;
-		this.order = order == 0 ? (Integer.MAX_VALUE >> 1) : (order < 0 ? Integer.MAX_VALUE + order: order);
-		this.invocationStrategy = invocationStrategy;
-	}
-
-	@Override
-	public int compareTo(Object other) {
-		InitMethodPoint that = (InitMethodPoint) other;
-		return Integer.compare(this.order, that.order);
+		this.references = references;
 	}
 
 }
