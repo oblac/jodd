@@ -25,68 +25,29 @@
 
 package jodd.petite;
 
-import org.junit.jupiter.api.BeforeEach;
+import jodd.petite.fixtures.tst6.DaDrum;
+import jodd.petite.fixtures.tst6.Guitar;
+import jodd.petite.fixtures.tst6.TheBand;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class InjectionPointFactoryTest {
-
-	@BeforeEach
-	void setUp() throws Exception {
-		ipf = new InjectionPointFactory(new PetiteConfig());
-	}
-
-	InjectionPointFactory ipf;
+class MultipleArgumentTest {
 
 	@Test
-	void testDuplicateNamesSpecialCases() {
-		String[] s = new String[]{};
-		ipf.removeDuplicateNames(s);
-		assertEquals(0, s.length);
+	void testWiringMethodArguments() {
+		PetiteContainer pc = new PetiteContainer();
 
-		s = new String[]{"aaa"};
-		ipf.removeDuplicateNames(s);
-		assertEquals("aaa", s[0]);
+		pc.config().setDefaultWiringMode(WiringMode.OPTIONAL);
 
-		s = new String[]{null};
-		ipf.removeDuplicateNames(s);
-		assertNull(s[0]);
+		PetiteRegistry petiteRegistry = pc.createContainerRegistry();
 
-		s = new String[]{null, null};
-		ipf.removeDuplicateNames(s);
-		assertNull(s[0]);
-		assertNull(s[1]);
+		petiteRegistry.bean(DaDrum.class).register();
+		petiteRegistry.bean(Guitar.class).register();
+		petiteRegistry.bean(TheBand.class).register();
+
+		TheBand theBand = pc.getBean(TheBand.class);
+
+		assertTrue(theBand.isBandReady());
 	}
-
-	@Test
-	void testDuplicateNames() {
-		String[] s = new String[]{"foo", "foo", "boo", "foo"};
-		ipf.removeDuplicateNames(s);
-		assertEquals("foo", s[0]);
-		assertNull(s[1]);
-		assertEquals("boo", s[2]);
-		assertNull(s[3]);
-	}
-
-	@Test
-	void testDuplicateNames2() {
-		String[] s = new String[]{"boo", "foo", "boo", "foo"};
-		ipf.removeDuplicateNames(s);
-		assertEquals("boo", s[0]);
-		assertEquals("foo", s[1]);
-		assertNull(s[2]);
-		assertNull(s[3]);
-	}
-
-	@Test
-	void testDuplicateNames3() {
-		String[] s = new String[]{"boo", "boo"};
-		ipf.removeDuplicateNames(s);
-		assertEquals("boo", s[0]);
-		assertNull(s[1]);
-	}
-
-
 }

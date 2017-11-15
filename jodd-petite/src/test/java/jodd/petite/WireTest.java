@@ -64,7 +64,7 @@ class WireTest {
 		configurator.setIncludedEntries("jodd.petite.fixtures.*");
 		configurator.setExcludedEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses");
 		configurator.setExcludedEntries(
-				"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses", "*Public*", "*Secret*", "*$*",
+				"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses", "*Public*", "*Secret*", "*$*",
 			"jodd.petite.proxy.*");
 		pc.configureWith(configurator);
 

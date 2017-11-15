@@ -57,9 +57,9 @@ class FullTypeTest {
 		Joo joo = pc.getBean(Joo.class);
 		assertNotNull(joo);
 
-		koo = (Koo) pc.getBean(Koo.class.getName());
+		koo = pc.getBean(Koo.class.getName());
 		assertNotNull(koo);
-		joo = (Joo) pc.getBean(Joo.class.getName());
+		joo = pc.getBean(Joo.class.getName());
 		assertNotNull(joo);
 
 		assertNotNull(koo.joo);
@@ -76,9 +76,9 @@ class FullTypeTest {
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);
 
-		Koo koo = (Koo) pc.getBean(Koo.class.getName());
+		Koo koo = pc.getBean(Koo.class.getName());
 		assertNotNull(koo);
-		Joo joo = (Joo) pc.getBean(Joo.class.getName());
+		Joo joo = pc.getBean(Joo.class.getName());
 		assertNotNull(joo);
 
 		assertNotNull(koo.joo);
@@ -93,7 +93,7 @@ class FullTypeTest {
 		PetiteContainer pc = new PetiteContainer();
 		pc.config().setDefaultWiringMode(WiringMode.OPTIONAL);
 		pc.config().setUseFullTypeNames(false);
-		pc.config().setLookupReferences(PetiteReference.NAME);
+		pc.config().setLookupReferences(PetiteReferenceType.NAME);
 
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);
@@ -108,9 +108,9 @@ class FullTypeTest {
 		assertNull(koo.someNoJooName);
 		assertNotNull(koo.joo);
 
-		koo = (Koo) pc.getBean(Koo.class.getName());
+		koo = pc.getBean(Koo.class.getName());
 		assertNull(koo);
-		joo = (Joo) pc.getBean(Joo.class.getName());
+		joo = pc.getBean(Joo.class.getName());
 		assertNull(joo);
 
 	}
