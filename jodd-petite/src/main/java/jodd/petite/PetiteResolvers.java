@@ -25,12 +25,20 @@
 
 package jodd.petite;
 
+import jodd.petite.def.CtorInjectionPoint;
+import jodd.petite.def.DestroyMethodPoint;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.PropertyInjectionPoint;
+import jodd.petite.def.ProviderDefinition;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.resolver.CtorResolver;
 import jodd.petite.resolver.DestroyMethodResolver;
 import jodd.petite.resolver.InitMethodResolver;
 import jodd.petite.resolver.MethodResolver;
 import jodd.petite.resolver.PropertyResolver;
 import jodd.petite.resolver.ProviderResolver;
+import jodd.petite.resolver.ReferencesResolver;
 import jodd.petite.resolver.SetResolver;
 
 /**
@@ -38,22 +46,24 @@ import jodd.petite.resolver.SetResolver;
  */
 public class PetiteResolvers {
 
-	protected CtorResolver ctorResolver;
-	protected PropertyResolver propertyResolver;
-	protected MethodResolver methodResolver;
-	protected SetResolver setResolver;
-	protected InitMethodResolver initMethodResolver;
-	protected DestroyMethodResolver destroyMethodResolver;
-	protected ProviderResolver providerResolver;
+	protected final ReferencesResolver referencesResolver;
+	protected final CtorResolver ctorResolver;
+	protected final PropertyResolver propertyResolver;
+	protected final MethodResolver methodResolver;
+	protected final SetResolver setResolver;
+	protected final InitMethodResolver initMethodResolver;
+	protected final DestroyMethodResolver destroyMethodResolver;
+	protected final ProviderResolver providerResolver;
 
-	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
-		ctorResolver = new CtorResolver(injectionPointFactory);
-		propertyResolver = new PropertyResolver(injectionPointFactory);
-		methodResolver = new MethodResolver(injectionPointFactory);
-		setResolver = new SetResolver(injectionPointFactory);
-		initMethodResolver = new InitMethodResolver();
-		destroyMethodResolver = new DestroyMethodResolver();
-		providerResolver = new ProviderResolver();
+	public PetiteResolvers(ReferencesResolver referencesResolver) {
+		this.referencesResolver = referencesResolver;
+		this.ctorResolver = new CtorResolver(referencesResolver);
+		this.methodResolver = new MethodResolver(referencesResolver);
+		this.propertyResolver = new PropertyResolver(referencesResolver);
+		this.setResolver = new SetResolver();
+		this.initMethodResolver = new InitMethodResolver();
+		this.destroyMethodResolver = new DestroyMethodResolver();
+		this.providerResolver = new ProviderResolver();
 	}
 
 	// ---------------------------------------------------------------- delegates

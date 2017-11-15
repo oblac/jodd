@@ -30,6 +30,12 @@ import jodd.introspector.Setter;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.config.PetiteConfigurator;
+import jodd.petite.def.BeanReferences;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.PropertyInjectionPoint;
+import jodd.petite.def.ProviderDefinition;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
@@ -137,7 +143,7 @@ public class PetiteContainer extends PetiteBeans {
 		boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
 
 		for (PropertyInjectionPoint pip : def.properties) {
-			String[] refNames = pip.references;
+			BeanReferences refNames = pip.references;
 
 			Object value = null;
 
@@ -210,10 +216,10 @@ public class PetiteContainer extends PetiteBeans {
 			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
-			String[][] refNames = methodRef.references;
+			BeanReferences[] refNames = methodRef.references;
 			Object[] args = new Object[refNames.length];
 			for (int i = 0; i < refNames.length; i++) {
-				String[] refName = refNames[i];
+				BeanReferences refName = refNames[i];
 				Object value = null;
 
 				boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
@@ -310,15 +316,19 @@ public class PetiteContainer extends PetiteBeans {
 
 	/**
 	 * Returns Petite bean instance named as one of the provided names.
+	 * Returns {@code null} if bean is not found.
 	 */
-	protected Object getBean(String[] names) {
-		for (String name : names) {
-			if (name == null) {
-				continue;
-			}
-			Object bean = getBean(name);
-			if (bean != null) {
-				return bean;
+	protected Object getBean(BeanReferences beanReferences) {
+		final int total = beanReferences.size();
+
+		for (int i = 0; i < total; i++) {
+			String name = beanReferences.name(i);
+
+			if (name != null) {
+				Object bean = getBean(name);
+				if (bean != null) {
+					return bean;
+				}
 			}
 		}
 		return null;
@@ -545,6 +555,14 @@ public class PetiteContainer extends PetiteBeans {
 		petiteConfigurator.configure(this);
 		return this;
 	}
+
+	/**
+	 * Creates {@link PetiteRegistry} helper tool for this container.
+	 */
+	public PetiteRegistry createContainerRegistry() {
+		return PetiteRegistry.of(this);
+	}
+
 
 	// ---------------------------------------------------------------- shutdown
 

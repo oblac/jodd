@@ -25,6 +25,12 @@
 
 package jodd.petite;
 
+import jodd.petite.def.CtorInjectionPoint;
+import jodd.petite.def.DestroyMethodPoint;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.PropertyInjectionPoint;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.scope.Scope;
 import jodd.util.ArraysUtil;
 

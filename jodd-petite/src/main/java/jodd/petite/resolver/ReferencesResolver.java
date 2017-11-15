@@ -32,7 +32,7 @@ import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
 import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteException;
-import jodd.petite.PetiteReference;
+import jodd.petite.PetiteReferenceType;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.meta.PetiteInject;
 import jodd.typeconverter.Converter;
@@ -43,7 +43,6 @@ import java.lang.reflect.Parameter;
 
 /**
  * Annotation reader for methods and constructors.
- * todo remove petite utils here.
  */
 public class ReferencesResolver {
 
@@ -140,8 +139,6 @@ public class ReferencesResolver {
 
 		if (petiteInject != null) {
 			references = convertAnnValueToReferences(petiteInject.value());
-
-			//references = updateReferencesWithDefaultsIfNeeded(methodOrCtor, references);    // todo da li ovo mogu da izbacim?
 
 			hasAnnotationOnMethodOrCtor = true;
 		}
@@ -248,7 +245,7 @@ public class ReferencesResolver {
 	 */
 	private BeanReferences[] buildDefaultReferences(Executable methodOrCtor) {
 		final boolean useParamo = petiteConfig.getUseParamo();
-		final PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
+		final PetiteReferenceType[] lookupReferences = petiteConfig.getLookupReferences();
 		MethodParameter[] methodParameters = null;
 
 		if (useParamo) {
@@ -284,7 +281,7 @@ public class ReferencesResolver {
 	 * Builds default field references.
 	 */
 	public BeanReferences buildDefaultReference(PropertyDescriptor propertyDescriptor) {
-		final PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
+		final PetiteReferenceType[] lookupReferences = petiteConfig.getLookupReferences();
 
 		final String[] references = new String[lookupReferences.length];
 

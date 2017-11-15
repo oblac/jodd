@@ -31,8 +31,7 @@ package jodd.petite;
  * Petite Container will try to resolve name from various sources,
  * defined by this enumeration.
  */
-// todo rename to petiterefernecetype
-public enum PetiteReference {
+public enum PetiteReferenceType {
 
 	/**
 	 * Field or argument name is used as bean name.
@@ -52,10 +51,10 @@ public enum PetiteReference {
 	/**
 	 * Default array of reference types.
 	 */
-	public static PetiteReference[] DEFAULT = new PetiteReference[] {
-		PetiteReference.NAME,
-		PetiteReference.TYPE_SHORT_NAME,
-		PetiteReference.TYPE_FULL_NAME
+	public static PetiteReferenceType[] DEFAULT = new PetiteReferenceType[] {
+		PetiteReferenceType.NAME,
+		PetiteReferenceType.TYPE_SHORT_NAME,
+		PetiteReferenceType.TYPE_FULL_NAME
 	};
 
 }

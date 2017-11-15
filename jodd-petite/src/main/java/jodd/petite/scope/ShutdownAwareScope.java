@@ -26,8 +26,8 @@
 package jodd.petite.scope;
 
 import jodd.petite.BeanData;
-import jodd.petite.DestroyMethodPoint;
 import jodd.petite.PetiteUtil;
+import jodd.petite.def.DestroyMethodPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +91,7 @@ public abstract class ShutdownAwareScope implements Scope {
 	/**
 	 * Shutdowns the scope and calls all collected destroyable beans.
 	 */
+	@Override
 	public void shutdown() {
 		if (destroyableBeans == null) {
 			return;

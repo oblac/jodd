@@ -25,9 +25,9 @@
 
 package jodd.petite;
 
+import jodd.petite.def.DestroyMethodPoint;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.scope.Scope;
-import jodd.typeconverter.Converter;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Constructor;
@@ -74,42 +74,6 @@ public class PetiteUtil {
 				throw new PetiteException("Invalid destroy method: " + destroyMethodPoint.method, ex);
 			}
 		}
-	}
-
-	/**
-	 * Converts comma-separated string into double string array.
-	 */
-	public static String[][] convertAnnValueToReferences(String value) {
-		if (value == null) {
-			return null;
-		}
-		value = value.trim();
-		if (value.length() == 0) {
-			return null;
-		}
-
-		String[] refNames = Converter.get().toStringArray(value);
-
-		// convert to double str array
-		String[][] references = new String[refNames.length][];
-		for (int i = 0; i < refNames.length; i++) {
-			references[i] = new String[] {refNames[i].trim()};
-		}
-		return references;
-	}
-
-	/**
-	 * Converts single string array to double string array.
-	 */
-	public static String[][] convertRefToReferences(String[] references) {
-		if (references == null) {
-			return null;
-		}
-		String[][] ref = new String[references.length][];
-		for (int i = 0; i < references.length; i++) {
-			ref[i] = new String[] {references[i]};
-		}
-		return ref;
 	}
 
 	/**

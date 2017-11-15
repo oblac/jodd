@@ -30,7 +30,6 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.petite.InjectionPointFactory;
 import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
@@ -43,12 +42,6 @@ import java.util.List;
  * Resolves collection fields.
  */
 public class SetResolver {
-
-	protected final InjectionPointFactory injectionPointFactory;
-
-	public SetResolver(InjectionPointFactory injectionPointFactory) {
-		this.injectionPointFactory = injectionPointFactory;
-	}
 
 	/**
 	 * Resolves all collections for given type.
@@ -86,7 +79,7 @@ public class SetResolver {
 				continue;
 			}
 
-			list.add(injectionPointFactory.createSetInjectionPoint(propertyDescriptor));
+			list.add(new SetInjectionPoint(propertyDescriptor));
 		}
 
 		SetInjectionPoint[] fields;

@@ -32,7 +32,16 @@ import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.petite.def.BeanReferences;
+import jodd.petite.def.CtorInjectionPoint;
+import jodd.petite.def.DestroyMethodPoint;
+import jodd.petite.def.InitMethodPoint;
+import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.PropertyInjectionPoint;
+import jodd.petite.def.ProviderDefinition;
+import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.meta.InitMethodInvocationStrategy;
+import jodd.petite.resolver.ReferencesResolver;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
@@ -86,9 +95,9 @@ public abstract class PetiteBeans {
 	protected final PetiteConfig petiteConfig;
 
 	/**
-	 * {@link InjectionPointFactory Injection point factory}.
+	 * {@link ReferencesResolver bean reference resolver}.
 	 */
-	protected final InjectionPointFactory injectionPointFactory;
+	protected final ReferencesResolver referencesResolver;
 
 	/**
 	 * {@link PetiteResolvers Petite resolvers}.
@@ -102,8 +111,8 @@ public abstract class PetiteBeans {
 
 	protected PetiteBeans(PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
-		this.injectionPointFactory = new InjectionPointFactory(petiteConfig);
-		this.petiteResolvers = new PetiteResolvers(injectionPointFactory);
+		this.referencesResolver = new ReferencesResolver(petiteConfig);
+		this.petiteResolvers = new PetiteResolvers(referencesResolver);
 		this.paramManager = new ParamManager();
 	}
 
@@ -179,9 +188,13 @@ public abstract class PetiteBeans {
 	 * Lookups for first founded {@link BeanDefinition bean definition}.
 	 * Returns <code>null</code> if none of the beans is found.
 	 */
-	protected BeanDefinition lookupBeanDefinitions(String... names) {
-		for (String name : names) {
+	protected BeanDefinition lookupBeanDefinitions(BeanReferences beanReferences) {
+		final int total = beanReferences.size();
+		for (int i = 0; i < total; i++) {
+			final String name = beanReferences.name(i);
+
 			BeanDefinition beanDefinition = lookupBeanDefinition(name);
+
 			if (beanDefinition != null) {
 				return beanDefinition;
 			}
@@ -441,7 +454,6 @@ public abstract class PetiteBeans {
 	 */
 	public void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		String[][] ref = PetiteUtil.convertRefToReferences(references);
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		Constructor constructor = null;
@@ -466,7 +478,9 @@ public abstract class PetiteBeans {
 			throw new PetiteException("Constructor not found: " + beanDefinition.type.getName());
 		}
 
-		beanDefinition.ctor = injectionPointFactory.createCtorInjectionPoint(constructor, ref);
+		BeanReferences[] ref = referencesResolver.resolveReferenceFromValues(constructor, references);
+
+		beanDefinition.ctor = new CtorInjectionPoint(constructor, ref);
 	}
 
 	/**
@@ -478,16 +492,17 @@ public abstract class PetiteBeans {
 	 */
 	public void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		String[] references = reference == null ? null : new String[] {reference};
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+
 		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
-		PropertyInjectionPoint pip =
-				injectionPointFactory.createPropertyInjectionPoint(propertyDescriptor, references);
+		BeanReferences ref = referencesResolver.resolveReferenceFromValue(propertyDescriptor, reference);
+
+		PropertyInjectionPoint pip = new PropertyInjectionPoint(propertyDescriptor, ref);
 
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
@@ -508,7 +523,7 @@ public abstract class PetiteBeans {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
-		SetInjectionPoint sip = injectionPointFactory.createSetInjectionPoint(propertyDescriptor);
+		SetInjectionPoint sip = new SetInjectionPoint(propertyDescriptor);
 
 		beanDefinition.addSetInjectionPoint(sip);
 	}
@@ -523,12 +538,13 @@ public abstract class PetiteBeans {
 	 */
 	public void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		String[][] ref = PetiteUtil.convertRefToReferences(references);
+
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
 		Method method = null;
 		if (arguments == null) {
 			MethodDescriptor[] methods = cd.getAllMethodDescriptors(methodName);
+
 			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
 					throw new PetiteException(methods.length + " suitable methods found as injection points for: " + beanDefinition.type.getName() + '#' + methodName);
@@ -544,7 +560,10 @@ public abstract class PetiteBeans {
 		if (method == null) {
 			throw new PetiteException("Method not found: " + beanDefinition.type.getName() + '#' + methodName);
 		}
-		MethodInjectionPoint mip = injectionPointFactory.createMethodInjectionPoint(method, ref);
+
+		BeanReferences[] ref = referencesResolver.resolveReferenceFromValues(method, references);
+
+		MethodInjectionPoint mip = new MethodInjectionPoint(method, ref);
 
 		beanDefinition.addMethodInjectionPoint(mip);
 	}
@@ -719,7 +738,7 @@ public abstract class PetiteBeans {
 	 * Defines many parameters at once from {@link jodd.props.Props}.
 	 */
 	public void defineParameters(Props props) {
-		Map<?, ?> map = new HashMap<Object, Object>();
+		Map<?, ?> map = new HashMap<>();
 		props.extractProps(map);
 		defineParameters(map);
 	}
