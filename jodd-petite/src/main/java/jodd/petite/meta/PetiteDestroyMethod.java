@@ -25,6 +25,8 @@
 
 package jodd.petite.meta;
 
+import jodd.petite.PetiteContainer;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,8 +34,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Points to the Petite bean destroy method.
- * Destroy methods are called without an order.
+ * Markups the Petite bean destroy method.
+ * Destroy methods are called without an order when container is stopped.
+ * @see PetiteContainer#shutdown()
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

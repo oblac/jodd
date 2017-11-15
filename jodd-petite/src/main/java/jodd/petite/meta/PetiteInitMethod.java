@@ -26,15 +26,16 @@
 package jodd.petite.meta;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 
 /**
- * Points to the Petite bean init method.
+ * Markups the Petite bean initialization method. Initialization methods are called once when
+ * component instance is created.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -25,8 +25,8 @@
 
 package jodd.petite.meta;
 
-import jodd.petite.scope.Scope;
 import jodd.petite.WiringMode;
+import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 
 import java.lang.annotation.Documented;
@@ -36,7 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Petite bean annotation for classes.
+ * Petite bean annotation for classes markups the Petite components.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
