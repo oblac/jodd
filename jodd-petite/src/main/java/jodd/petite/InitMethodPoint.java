@@ -46,9 +46,10 @@ public class InitMethodPoint implements Comparable {
 		this.invocationStrategy = invocationStrategy;
 	}
 
+	@Override
 	public int compareTo(Object other) {
 		InitMethodPoint that = (InitMethodPoint) other;
-		return this.order == that.order ? 0 : (this.order > that.order ? 1 : -1);
+		return Integer.compare(this.order, that.order);
 	}
 
 }
