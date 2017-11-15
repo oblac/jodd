@@ -35,11 +35,7 @@ public class PetiteConfig {
 		detectDuplicatedBeanNames = false;
 		resolveReferenceParameters = true;
 		useFullTypeNames = false;
-		lookupReferences = new PetiteReference[] {
-				PetiteReference.NAME,
-		        PetiteReference.TYPE_SHORT_NAME,
-				PetiteReference.TYPE_FULL_NAME
-		};
+		lookupReferences = PetiteReference.DEFAULT;
 		useParamo = true;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
@@ -60,8 +56,9 @@ public class PetiteConfig {
 	/**
 	 * Enables alternative bean names.
 	 */
-	public void setUseAltBeanNames(boolean useAltBeanNames) {
+	public PetiteConfig setUseAltBeanNames(boolean useAltBeanNames) {
 		this.useAltBeanNames = useAltBeanNames;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -76,11 +73,12 @@ public class PetiteConfig {
 	/**
 	 * Specifies default wiring mode.
 	 */
-	public void setDefaultWiringMode(WiringMode defaultWiringMode) {
+	public PetiteConfig setDefaultWiringMode(WiringMode defaultWiringMode) {
 		if ((defaultWiringMode == null) || (defaultWiringMode == WiringMode.DEFAULT)) {
 			throw new PetiteException("Invalid default wiring mode: " + defaultWiringMode);
 		}
 		this.defaultWiringMode = defaultWiringMode;
+		return this;
 	}
 	/**
 	 * Resolves wiring mode by checking if default and <code>null</code> values.
@@ -105,8 +103,9 @@ public class PetiteConfig {
 	/**
 	 * Specifies if an exception should be thrown if two beans with same exception are registered with this container.
 	 */
-	public void setDetectDuplicatedBeanNames(boolean detectDuplicatedBeanNames) {
+	public PetiteConfig setDetectDuplicatedBeanNames(boolean detectDuplicatedBeanNames) {
 		this.detectDuplicatedBeanNames = detectDuplicatedBeanNames;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -121,8 +120,9 @@ public class PetiteConfig {
 	/**
 	 * Defines if reference parameters should be resolved.
 	 */
-	public void setResolveReferenceParameters(boolean resolveReferenceParameters) {
+	public PetiteConfig setResolveReferenceParameters(boolean resolveReferenceParameters) {
 		this.resolveReferenceParameters = resolveReferenceParameters;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -136,8 +136,9 @@ public class PetiteConfig {
 	/**
 	 * Specifies if type names should be full or short.
 	 */
-	public void setUseFullTypeNames(boolean useFullTypeNames) {
+	public PetiteConfig setUseFullTypeNames(boolean useFullTypeNames) {
 		this.useFullTypeNames = useFullTypeNames;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- references
@@ -152,8 +153,9 @@ public class PetiteConfig {
 	 * Specifies references for bean name lookup, when name
 	 * is not specified, in given order.
 	 */
-	public void setLookupReferences(PetiteReference... lookupReferences) {
+	public PetiteConfig setLookupReferences(PetiteReference... lookupReferences) {
 		this.lookupReferences = lookupReferences;
+		return this;
 	}
 
 	// ----------------------------------------------------------------
@@ -184,8 +186,9 @@ public class PetiteConfig {
 	/**
 	 * Defines if scoped proxies should be wired.
 	 */
-	public void setWireScopedProxy(boolean wireScopedProxy) {
+	public PetiteConfig setWireScopedProxy(boolean wireScopedProxy) {
 		this.wireScopedProxy = wireScopedProxy;
+		return this;
 	}
 
 	public boolean isDetectMixedScopes() {
@@ -198,7 +201,8 @@ public class PetiteConfig {
 	 * will throw an exception on mixed scopes. If {@link #wireScopedProxy} is set
 	 * enabling this flag will just issue a warn message in the log.
 	 */
-	public void setDetectMixedScopes(boolean detectMixedScopes) {
+	public PetiteConfig setDetectMixedScopes(boolean detectMixedScopes) {
 		this.detectMixedScopes = detectMixedScopes;
+		return this;
 	}
 }

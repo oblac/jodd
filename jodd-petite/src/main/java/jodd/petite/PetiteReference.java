@@ -31,6 +31,7 @@ package jodd.petite;
  * Petite Container will try to resolve name from various sources,
  * defined by this enumeration.
  */
+// todo rename to petiterefernecetype
 public enum PetiteReference {
 
 	/**
@@ -46,6 +47,15 @@ public enum PetiteReference {
 	/**
 	 * Full type name (package and class name) is used as bean name.
 	 */
-	TYPE_FULL_NAME
+	TYPE_FULL_NAME;
+
+	/**
+	 * Default array of reference types.
+	 */
+	public static PetiteReference[] DEFAULT = new PetiteReference[] {
+		PetiteReference.NAME,
+		PetiteReference.TYPE_SHORT_NAME,
+		PetiteReference.TYPE_FULL_NAME
+	};
 
 }
