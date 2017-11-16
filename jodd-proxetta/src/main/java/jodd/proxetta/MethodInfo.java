@@ -76,7 +76,7 @@ public interface MethodInfo {
 	String[] getExceptions();
 
 	/**
-	 * Returns java-like method signature of @{link #getDescription description}.
+	 * Returns java-like method signature of {@link #getDescription description}.
 	 * Does not contain any generic information.
 	 */
 	String getSignature();

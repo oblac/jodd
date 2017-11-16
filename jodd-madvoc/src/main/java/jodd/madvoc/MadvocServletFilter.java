@@ -25,11 +25,11 @@
 
 package jodd.madvoc;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -43,8 +43,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * <code>Madvoc</code> filter serves as a {@link jodd.madvoc.component.MadvocController controller} part
- * of the Madvoc framework. If {@link Madvoc} @{link WebApplication} is not already created,
+ * <b>Madvoc</b> filter serves as a {@link jodd.madvoc.component.MadvocController controller} part
+ * of the Madvoc framework. If {@link Madvoc} {@link WebApplication} is not already created,
  * this filter will initialize and configure the Madvoc using filter init parameters.
  */
 public class MadvocServletFilter implements Filter {
@@ -57,6 +57,7 @@ public class MadvocServletFilter implements Filter {
 	/**
 	 * Filter initialization.
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		ServletContext servletContext = filterConfig.getServletContext();
 
@@ -89,6 +90,7 @@ public class MadvocServletFilter implements Filter {
 	/**
 	 * Filter destruction.
 	 */
+	@Override
 	public void destroy() {
 		madvoc.stopWebApplication();
 	}
@@ -99,6 +101,7 @@ public class MadvocServletFilter implements Filter {
 	/**
 	 * Builds {@link ActionRequest} and invokes it. If action result is a chain, it repeats the process.
 	 */
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
