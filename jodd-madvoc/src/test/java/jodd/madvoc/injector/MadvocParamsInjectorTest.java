@@ -27,6 +27,7 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.MadvocContainer;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
 
@@ -36,10 +37,12 @@ class MadvocParamsInjectorTest {
 
 	@Test
 	void testInjection() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
+		PetiteContainer madpc = mcc.petite();
+
 		webapp.registerMadvocComponents();
 
-		PetiteContainer madpc = (PetiteContainer) webapp.getComponent(WebApplication.MADVOC_CONTAINER_NAME);
 		MadvocConfig madvocConfig = new MadvocConfig();
 
 		String baseName = FooBean.class.getName();

@@ -29,7 +29,6 @@ import jodd.log.LoggerFactory;
 import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.action.HelloAction;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.config.MadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApplication;
 
 import javax.servlet.ServletContext;
@@ -41,10 +40,10 @@ public class MyWebApplication extends PetiteWebApplication {
 	}
 
 	@Override
-	public void registerMadvocComponents() {
-		super.registerMadvocComponents();
+	public void registerMadvocComponents(ServletContext servletContext) {
+		super.registerMadvocComponents(servletContext);
 
-		registerComponent(MyRewriter.class);
+		mcc.registerComponent(MyRewriter.class);
 	}
 
 	@Override
@@ -54,8 +53,4 @@ public class MyWebApplication extends PetiteWebApplication {
 		madvocConfig.getRootPackages().addRootPackageOf(HelloAction.class);
 	}
 
-	@Override
-	public void configure(MadvocConfigurator configurator) {
-		super.configure(configurator);
-	}
 }

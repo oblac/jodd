@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
+import jodd.madvoc.component.MadvocContainer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,9 +35,11 @@ class AnnArgTest extends MadvocTestCase {
 
 	@Test
 	void testDefaultMethods() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
+
 		webapp.registerMadvocComponents();
-		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		ActionMethodParser actionMethodParser = mcc.lookupComponent(ActionMethodParser.class);
 
 		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.SuperAction#add");
 

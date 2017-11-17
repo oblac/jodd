@@ -50,9 +50,10 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros1() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
 		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
 
 		actionsManager.register(FooAction.class, "one", new ActionDef("/${one}"));
 
@@ -67,9 +68,10 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros2() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
 		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
 
 		actionsManager.register(FooAction.class, "one", new ActionDef("/${one}"));
 		actionsManager.register(FooAction.class, "two", new ActionDef("/xxx-${two}"));
@@ -87,9 +89,11 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros3() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
+
 		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
 
 		actionsManager.register(FooAction.class, "one", new ActionDef("/yyy-${one}"));
 		actionsManager.register(FooAction.class, "two", new ActionDef("/xxx-${two}"));
@@ -115,9 +119,11 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros4() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
+
 		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
 
 		actionsManager.register(FooAction.class, "one", new ActionDef("/${one}"));
 		actionsManager.register(FooAction.class, "one", new ActionDef("/dummy"));		// no macro
@@ -142,11 +148,13 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacrosRegexp() {
-		WebApplication webapp = new WebApplication(true);
-		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
 
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		webapp.registerMadvocComponents();
+		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
+
+		MadvocConfig madvocConfig = mcc.lookupComponent(MadvocConfig.class);
 		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
 		actionsManager.register(FooAction.class, "one", new ActionDef("/${one:[ab]+}"));
@@ -160,11 +168,12 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacrosWildcard() {
-		WebApplication webapp = new WebApplication(true);
+		WebApplication webapp = new WebApplication();
+		MadvocContainer mcc = webapp.init();
 		webapp.registerMadvocComponents();
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
 
-		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		MadvocConfig madvocConfig = mcc.lookupComponent(MadvocConfig.class);
 		madvocConfig.setPathMacroClass(WildcardPathMacros.class);
 
 		actionsManager.register(FooAction.class, "one", new ActionDef("/${one:a?a}"));

@@ -6,22 +6,27 @@
   		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
+	<listener>
+		<listener-class>jodd.madvoc.MadvocContextListener</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>madvoc.configurator</param-name>
+		<param-value>jodd.madvoc.MadvocTestIntegrationConfig</param-value>
+	</context-param>
+	<context-param>
+		<param-name>madvoc.webapp</param-name>
+		<param-value>jodd.madvoc.MyWebApplication</param-value>
+	</context-param>
+	<context-param>
+		<param-name>madvoc.params</param-name>
+		<param-value>/madvoc.props</param-value>
+	</context-param>
+
 	<filter>
 		<filter-name>madvoc</filter-name>
 		<filter-class>jodd.madvoc.MadvocServletFilter</filter-class>
 		<async-supported>true</async-supported>
-		<init-param>
-			<param-name>madvoc.configurator</param-name>
-			<param-value>jodd.madvoc.MadvocTestIntegrationConfig</param-value>
-		</init-param>
-		<init-param>
-			<param-name>madvoc.webapp</param-name>
-			<param-value>jodd.madvoc.MyWebApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>madvoc.params</param-name>
-			<param-value>/madvoc.props</param-value>
-		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>madvoc</filter-name>

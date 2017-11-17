@@ -27,9 +27,9 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ManualMadvocConfigurator;
+import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.result.TextResult;
-import jodd.madvoc.fixtures.tst.BooAction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ManualRegistrationTest {
 
 	public static class ManualRegistration extends ManualMadvocConfigurator {
+		@Override
 		public void configure() {
 			result(TextResult.class);
 			action()
@@ -61,7 +62,7 @@ class ManualRegistrationTest {
 		madvoc.setMadvocConfiguratorClass(ManualRegistration.class);
 		madvoc.startNewWebApplication(null);
 
-		ActionsManager actionsManager = madvoc.getWebApplication().getComponent(ActionsManager.class);
+		ActionsManager actionsManager = madvoc.madvocContainer().lookupComponent(ActionsManager.class);
 
 		assertEquals(2, actionsManager.getActionsCount());
 

@@ -27,7 +27,13 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocTestCase;
-import jodd.madvoc.interceptor.*;
+import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.madvoc.interceptor.AnnotatedPropertyInterceptor;
+import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
+import jodd.madvoc.interceptor.EchoInterceptor;
+import jodd.madvoc.interceptor.LogEchoInterceptor;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
 
@@ -88,6 +94,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.contextInjectorComponent.madvocController.servletContextProvider = new ServletContextProvider(null);
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
@@ -126,6 +133,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.contextInjectorComponent.madvocController.servletContextProvider = new ServletContextProvider(null);
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
@@ -199,6 +207,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.contextInjectorComponent.madvocController.servletContextProvider = new ServletContextProvider(null);
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
