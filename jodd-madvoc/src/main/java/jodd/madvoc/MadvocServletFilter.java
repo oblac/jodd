@@ -27,7 +27,6 @@ package jodd.madvoc;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
 
@@ -44,8 +43,7 @@ import java.io.IOException;
 
 /**
  * <b>Madvoc</b> filter serves as a {@link jodd.madvoc.component.MadvocController controller} part
- * of the Madvoc framework. If {@link Madvoc} {@link WebApplication} is not already created,
- * this filter will initialize and configure the Madvoc using filter init parameters.
+ * of the Madvoc framework.
  */
 public class MadvocServletFilter implements Filter {
 
@@ -63,40 +61,21 @@ public class MadvocServletFilter implements Filter {
 
 		madvoc = Madvoc.get(servletContext);
 		if (madvoc == null) {
-			madvoc = createMadvoc(filterConfig);
-
-			try {
-				madvoc.startNewWebApplication(servletContext);
-			} catch (Exception ex) {
-				throw new ServletException("Madvoc web application error", ex);
-			}
+			throw new ServletException("Madvoc not found! Use MadvocContextListener to create Madvoc.");
 		}
 
 		log = LoggerFactory.getLogger(MadvocServletFilter.class);
 
-		madvocController = madvoc.getMadvocController();
-	}
-
-	/**
-	 * Creates {@link Madvoc Madvoc web application} if not already created.
-	 * Override it to set custom {@link MadvocConfig Madvoc configurator} or other core settings.
-	 */
-	protected Madvoc createMadvoc(FilterConfig filterConfig) {
-		Madvoc madvoc = new Madvoc();
-		madvoc.configure(filterConfig);
-		return madvoc;
+		madvocController = madvoc.madvocController();
 	}
 
 	/**
 	 * Filter destruction.
 	 */
 	@Override
-	public void destroy() {
-		madvoc.stopWebApplication();
-	}
+	public void destroy() {}
 
 	// ---------------------------------------------------------------- do filter
-
 
 	/**
 	 * Builds {@link ActionRequest} and invokes it. If action result is a chain, it repeats the process.
@@ -119,22 +98,21 @@ public class MadvocServletFilter implements Filter {
 		}
 		if (actionPath != null) {	// action path is not consumed
 
-			actionPath = processUnhandledPath(actionPath, req, res);
+			boolean pathProcessed = processUnhandledPath(actionPath, req, res);
 
-			if (actionPath != null) {
+			if (!pathProcessed) {
 				chain.doFilter(request, response);
 			}
 		}
 	}
 
 	/**
-	 * Process unconsumed action paths. Returns <code>null</code> if action path is consumed,
-	 * otherwise returns action path to be consumed by filter chain.
-	 * By default it just returns action path.
+	 * Process unconsumed action paths. Returns {@code true} if action path is consumed,
+	 * otherwise returns {@code false} so to be consumed by filter chain.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected String processUnhandledPath(String actionPath, ServletRequest request, ServletResponse response) throws IOException, ServletException {
-		return actionPath;
+	protected boolean processUnhandledPath(String actionPath, ServletRequest request, ServletResponse response) throws IOException, ServletException {
+		return false;
 	}
 
 }
