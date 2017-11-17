@@ -214,10 +214,7 @@ public class ActionsManager {
 	public ActionConfig registerAction(ActionConfig actionConfig) {
 		String actionPath = actionConfig.actionPath;
 
-		if (log.isDebugEnabled()) {
-			log.debug("Registering Madvoc action: " + actionConfig.actionPath + " to: " +
-					actionConfig.getActionString());
-		}
+		log.debug(() -> "Madvoc action: " + actionConfig.actionPath + " => " + actionConfig.getActionString());
 
 		ActionConfigSet set = createActionConfigSet(actionConfig.actionPath);
 

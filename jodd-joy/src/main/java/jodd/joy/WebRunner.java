@@ -31,8 +31,8 @@ import jodd.joy.db.AppDao;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.madvoc.WebApplication;
 import jodd.madvoc.Madvoc;
+import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import jodd.util.StringUtil;
@@ -74,7 +74,7 @@ public abstract class WebRunner {
 		madvoc.setWebAppClass(webAppClass);
 		madvoc.startNewWebApplication(null);
 		
-		app = madvoc.getWebApplication();
+		app = madvoc.webApplication();
 
 		appCore = BeanUtil.declared.getProperty(app, "appCore");
 

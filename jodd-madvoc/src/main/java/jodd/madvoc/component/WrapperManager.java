@@ -57,7 +57,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 
 	// ---------------------------------------------------------------- container
 
-	protected Map<String, T> wrappers;
+	protected final Map<String, T> wrappers;
 
 	/**
 	 * Returns all action wrappers.
