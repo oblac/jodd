@@ -39,7 +39,6 @@ import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
-import jodd.typeconverter.Converter;
 
 import java.util.Collection;
 
@@ -101,7 +100,7 @@ public class PetiteContainer extends PetiteBeans {
 				if (args[i] == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
 						throw new PetiteException(
-								"Wiring constructor failed. References '" + Converter.get().toString(def.ctor.references[i]) +
+								"Wiring constructor failed. References '" + def.ctor.references[i] +
 								"' not found for constructor: " + def.ctor.constructor);
 					}
 				}
@@ -162,7 +161,7 @@ public class PetiteContainer extends PetiteBeans {
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
 					throw new PetiteException("Wiring failed. Beans references: '" +
-							Converter.get().toString(refNames) + "' not found for property: "+ def.type.getName() +
+							refNames + "' not found for property: "+ def.type.getName() +
 							'#' + pip.propertyDescriptor.getName());
 				}
 				continue;
@@ -240,7 +239,7 @@ public class PetiteContainer extends PetiteBeans {
 				if (value == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
 						throw new PetiteException("Wiring failed. Beans references: '" +
-								Converter.get().toString(refName) + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
+								refName + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
 					}
 				}
 			}

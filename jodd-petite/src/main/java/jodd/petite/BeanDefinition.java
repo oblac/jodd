@@ -240,10 +240,10 @@ public class BeanDefinition {
 	@Override
 	public String toString() {
 		return "BeanDefinition{" +
-				"name='" + name + '\'' +
+				"name=" + name +
 				", type=" + type +
-				", scope=" + scope +
-				", wiring= " + wiringMode +
+				", scope=" + scope.getClass().getSimpleName() +
+				", wiring=" + wiringMode +
 				'}';
 	}
 }
