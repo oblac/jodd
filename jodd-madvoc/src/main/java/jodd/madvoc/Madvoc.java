@@ -27,12 +27,9 @@ package jodd.madvoc;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.FiltersManager;
-import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.props.Props;
@@ -40,7 +37,6 @@ import jodd.props.PropsUtil;
 import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
 
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
 /**
@@ -120,48 +116,47 @@ public class Madvoc {
 	}
 
 	/**
-	 * Configures Madvoc by reading filter init parameters.
-	 */
-	public void configure(FilterConfig filterConfig) {
-		webAppClassName = filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP);
-		paramsFiles = Converter.get().toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
-		madvocConfiguratorClassName = filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
-	}
-
-	/**
 	 * Configures Madvoc by reading context init parameters.
 	 */
-	public void configure(ServletContext servletContext) {
+	public void configureWith(ServletContext servletContext) {
 		webAppClassName = servletContext.getInitParameter(PARAM_MADVOC_WEBAPP);
 		paramsFiles = Converter.get().toStringArray(servletContext.getInitParameter(PARAM_MADVOC_PARAMS));
 		madvocConfiguratorClassName = servletContext.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
 	}
 
-	// ---------------------------------------------------------------- start
+	// ---------------------------------------------------------------- main madvoc components
 
 	protected WebApplication webapp;
 	protected MadvocController madvocController;
 	protected MadvocConfig madvocConfig;
+	protected MadvocContainer madvocContainer;
 
 	/**
-	 * Returns Madvoc controller once web application is started.
+	 * Returns {@link MadvocController Madvoc controller} once web application is started.
 	 */
-	public MadvocController getMadvocController() {
+	public MadvocController madvocController() {
 		return madvocController;
 	}
 
 	/**
-	 * Returns Madvoc controller once web application is started.
+	 * Returns {@link MadvocConfig Madvoc config} once web application is started.
 	 */
-	public MadvocConfig getMadvocConfig() {
+	public MadvocConfig madvocConfig() {
 		return madvocConfig;
 	}
 
 	/**
-	 * Returns running web application.
+	 * Returns running {@link WebApplication web application}.
 	 */
-	public WebApplication getWebApplication() {
+	public WebApplication webApplication() {
 		return webapp;
+	}
+
+	/**
+	 * Returns {@link MadvocContainer Madvoc container}.
+	 */
+	public MadvocContainer madvocContainer() {
+		return madvocContainer;
 	}
 
 	// ---------------------------------------------------------------- lifecycle
@@ -192,8 +187,7 @@ public class Madvoc {
 		}
 	}
 	
-	private void start(ServletContext servletContext) { 
-
+	private void start(ServletContext servletContext) {
 		if (servletContext != null) {
 			this.servletContext = servletContext;
 
@@ -202,7 +196,7 @@ public class Madvoc {
 
 		// create and initialize web application
 		webapp = createWebApplication();
-		webapp.initWebApplication();
+		madvocContainer = webapp.init();
 
 		// init logger
 		log = LoggerFactory.getLogger(Madvoc.class);
@@ -217,58 +211,29 @@ public class Madvoc {
 		// params
 		if (paramsFiles != null) {
 			Props params = loadMadvocParams(paramsFiles);
-			webapp.defineParams(params);
+			madvocContainer.defineParams(params);
 		}
 
-		// configure
-		webapp.registerMadvocComponents();
-		madvocConfig = webapp.getComponent(MadvocConfig.class);
-		if (madvocConfig == null) {
-			throw new MadvocException("Madvoc configuration not found");
-		}
+		// register madvoc components
+
+		webapp.registerMadvocComponents(servletContext);
+
+		// config
+		madvocConfig = madvocContainer.lookupExistingComponent(MadvocConfig.class);
 		webapp.init(madvocConfig, servletContext);
-
-		// filters
-		FiltersManager filtersManager = webapp.getComponent(FiltersManager.class);
-		if (filtersManager == null) {
-			throw new MadvocException("Madvoc filers manager not found");
-		}
-		webapp.initFilters(filtersManager);
-
-		// interceptors
-		InterceptorsManager interceptorsManager = webapp.getComponent(InterceptorsManager.class);
-		if (interceptorsManager == null) {
-			throw new MadvocException("Madvoc interceptors manager not found");
-		}
-		webapp.initInterceptors(interceptorsManager);
-
-		// actions
-		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
-		if (actionsManager == null) {
-			throw new MadvocException("Madvoc actions manager not found");
-		}
-		webapp.initActions(actionsManager);
-
-		// results
-		ResultsManager resultsManager = webapp.getComponent(ResultsManager.class);
-		if (resultsManager == null) {
-			throw new MadvocException("Madvoc results manager not found");
-		}
-		webapp.initResults(resultsManager);
 
 		// configure with external configurator
 		MadvocConfigurator configurator = loadMadvocConfig();
 		webapp.configure(configurator);
 
 		// prepare web application
-		madvocController = webapp.getComponent(MadvocController.class);
-		if (madvocController == null) {
-			throw new MadvocException("Madvoc controller not found");
-		}
-		madvocController.init(servletContext);
+		madvocController = madvocContainer.lookupExistingComponent(MadvocController.class);
+
+
+		madvocContainer.fireInitEvent();
 
 		// web app is ready
-		webapp.ready();
+		madvocContainer.fireReadyEvent();
 	}
 
 	/**
@@ -333,7 +298,7 @@ public class Madvoc {
 	 */
 	protected MadvocConfigurator loadMadvocConfig() {
 		if ((madvocConfiguratorClassName != null) && (madvocConfiguratorClass != null)) {
-			throw new MadvocException("Ambiguous MadvocConfigurator setting");
+			throw new MadvocException("Ambiguous MadvocConfigurator setting: both class and class name is set.");
 		}
 		if ((madvocConfiguratorClassName == null) && (madvocConfiguratorClass == null)) {
 			log.info("Configuring Madvoc using default automagic configurator");
