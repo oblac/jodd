@@ -26,24 +26,24 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
+import jodd.io.StreamUtil;
+import jodd.io.ZipUtil;
+import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.InExRules;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
-import jodd.util.ArraysUtil;
-import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
-import jodd.io.ZipUtil;
 
-import java.net.URL;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
-import java.util.Enumeration;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static jodd.util.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
 import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
@@ -463,6 +463,15 @@ public abstract class ClassFinder {
 		}
 	}
 
+	/**
+	 * @see #isTypeSignatureInUse(EntryData, byte[])
+	 */
+	protected boolean isTypeSignatureInUse(EntryData entryData, byte[] bytes) {
+		InputStream inputStream = entryData.openInputStream();
+
+		return isTypeSignatureInUse(inputStream, bytes);
+	}
+
 	// ---------------------------------------------------------------- class loading
 
 	/**
@@ -472,16 +481,11 @@ public abstract class ClassFinder {
 	protected Class loadClass(String className) throws ClassNotFoundException {
 		try {
 			return ClassLoaderUtil.loadClass(className);
-		} catch (ClassNotFoundException cnfex) {
+		} catch (ClassNotFoundException | Error cnfex) {
 			if (ignoreException) {
 				return null;
 			}
 			throw cnfex;
-		} catch (Error error) {
-			if (ignoreException) {
-				return null;
-			}
-			throw error;
 		}
 	}
 
