@@ -57,8 +57,8 @@ class JerryTest {
 	void testText1() {
 		String html = readFile("text1.html");
 		String text = jerry(html).$("div.demo-container").text();
-
-		text = StringUtil.remove(text, "\n").trim();
+		String sub = (SystemUtil.isHostWindows()) ? "\r\n" : "\n";
+		text = StringUtil.remove(text, sub).trim();
 		text = StringUtil.compressChars(text, ' ');
 		assertEquals("Demonstration Box list item 1 list item 2", text);
 	}
