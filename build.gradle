@@ -374,7 +374,7 @@ configure(javaModules()) {
 			configure(options) {
 				windowTitle 'Jodd API Documentation'
 				docTitle "$project.moduleName $project.version API Documentation"
-				bottom = 'Copyright &#169; 2003-2013 <a href="http://jodd.org">Jodd Team</a>'
+				bottom = 'Copyright &#169; 2003-present <a href="http://jodd.org">Jodd Team</a>'
 				breakIterator = true
 				author = false
 				encoding = 'UTF-8'
