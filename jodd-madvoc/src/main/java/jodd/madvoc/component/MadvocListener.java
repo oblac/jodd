@@ -25,40 +25,57 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocException;
+
 /**
  * Madvoc events.
  */
-public interface MadvocListener {
+public class MadvocListener {
 
-	Class[] ALL_TYPES = new Class[] {Init.class, Start.class, Ready.class, Stop.class};
-
-	void onEvent();
+	public static Class[] ALL_TYPES = new Class[] {Start.class, Ready.class, Stop.class};
 
 	/**
-	 * Madvoc INIT handler.
-	 * Executed during initialisation phase: default Madvoc components are registered, but user components are not.
-	 * Default settings are applied, too.
-	 * <p>
-	 * DO NOT DEPEND ON CONFIGURATION AND OTHER COMPONENTS UNLESS YOU ARE SURE THEY ARE NOT GOING TO BE OVERWRITTEN.
+	 * Invoke the listener based on type.
+	 * Not very OOP, but works.
 	 */
-	interface Init extends MadvocListener {}
+	public static void invoke(Object listener, final Class listenerType) {
+		if (listenerType == Start.class) {
+			((Start) listener).start();
+			return;
+		}
+		if (listenerType == Ready.class) {
+			((Ready) listener).ready();
+			return;
+		}
+		if (listenerType == Stop.class) {
+			((Stop) listener).stop();
+			return;
+		}
+		throw new MadvocException("Invalid listener");
+	}
 
 	/**
 	 * Madvoc START handler.
 	 * All components are loaded. User for registering user actions.
 	 */
-	interface Start extends MadvocListener {}
+	public interface Start {
+		void start();
+	}
 
 	/**
 	 * Madvoc READY handler.
 	 * Invoked when all initialization is done: when both madvoc and user components and actions are loaded.
 	 * This phase is used for running any initialization that depends on the complete configuration.
 	 */
-	interface Ready extends MadvocListener {}
+	public interface Ready {
+		void ready();
+	}
 
 	/**
 	 *  Madvoc STOP handler. Invoked on Madvoc shutdown.
 	 */
-	interface Stop extends MadvocListener {}
+	public interface Stop {
+		void stop();
+	}
 
 }

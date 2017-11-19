@@ -35,6 +35,7 @@ import jodd.util.ClassUtil;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Madvoc container. Works internally with {@link jodd.petite.PetiteContainer}.
@@ -124,33 +125,67 @@ public class MadvocContainer {
 			this.name = name;
 			this.type = type;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			MadvocListenerDef that = (MadvocListenerDef) o;
+
+			if (!name.equals(that.name)) return false;
+			return type.equals(that.type);
+		}
+
+		@Override
+		public int hashCode() {
+			return 31 * name.hashCode() + type.hashCode();
+		}
 	}
+
+	private final Object listenersLock = new Object();
 
 	/**
 	 * Fires the Madvoc event.
+	 * Warning: since event handlers may register more handlers, we
+	 * must collect first the list of components that matches the type
+	 * and then to execute.
 	 */
 	public void fireEvent(Class listenerType) {
-		listeners.stream()
-			.filter(def -> def.type == listenerType)
-			.map(def -> def.name)
-			.forEach(name ->  {
-				MadvocListener listener = (MadvocListener) lookupComponent(name);
-				listener.onEvent();
-		});
+
+		while(true) {
+
+			List<MadvocListenerDef> listenersToFire;
+
+			synchronized (listenersLock) {
+				listenersToFire =
+					listeners.stream()
+						.filter(def -> def.type == listenerType)
+						.collect(Collectors.toList());
+
+				listeners.removeAll(listenersToFire);
+			}
+
+			if (listenersToFire.isEmpty()) {
+				// no more listeners, exit
+				return;
+			}
+
+			listenersToFire.forEach(l -> {
+				Object listener = lookupComponent(l.name);
+				MadvocListener.invoke(listener, listenerType);
+			});
+		}
 	}
 
 	/**
 	 * Registers event handler if not already registered.
 	 */
 	public void registerEventHandler(Class listenerType, String name) {
-		long existingCount =
-			listeners.stream()
-			.filter(def -> def.type == listenerType)
-			.filter(def -> def.name.equals(name))
-			.count();
-
-		if (existingCount == 0) {
-			listeners.add(new MadvocListenerDef(name, listenerType));
+		synchronized (listenersLock) {
+			MadvocListenerDef listenerDef = new MadvocListenerDef(name, listenerType);
+			listeners.remove(listenerDef);
+			listeners.add(listenerDef);
 		}
 	}
 

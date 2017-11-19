@@ -70,7 +70,7 @@ public class MadvocController implements MadvocListener.Ready {
 	protected Executor executor;
 
 	@Override
-	public void onEvent() {
+	public void ready() {
 		if (actionsManager.isAsyncModeOn()) {
 			executor = createAsyncExecutor();
 		}
