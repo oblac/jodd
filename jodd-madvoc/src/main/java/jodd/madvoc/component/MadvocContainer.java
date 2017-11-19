@@ -64,7 +64,7 @@ public class MadvocContainer {
 	/**
 	 * Registers component instance using its {@link #resolveBaseComponentName(Class) base name}.
 	 * Previously defined component will be removed.
-	 * @see #registerComponent(Class)
+	 * @see #registerComponentInstance(String, Object)
 	 */
 	public void registerComponentInstance(Object componentInstance) {
 		Class component = componentInstance.getClass();
@@ -100,6 +100,9 @@ public class MadvocContainer {
 
 	/**
 	 * Registers component instance and wires it with internal container.
+	 * Warning: in this moment we can not guarantee that all other components
+	 * are registered, replaced or configuration is update; therefore DO NOT
+	 * USE injection, unless you are absolutely sure it works.
 	 */
 	public void registerComponentInstance(String name, Object componentInstance) {
 		log.debug(() -> "Madvoc WebApp component [" + name + "] @ " + componentInstance.getClass().getName());
