@@ -25,56 +25,18 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.config.ManualMadvocConfigurator;
-import jodd.madvoc.fixtures.tst.BooAction;
-import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.result.TextResult;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class ManualRegistrationTest {
-
-	public static class ManualRegistration extends ManualMadvocConfigurator {
-		@Override
-		public void start() {
-			result(TextResult.class);
-			action()
-					.path("/hello")
-					.mapTo(BooAction.class, "foo1")
-					.bind();
-
-			action()
-					.path("/world")
-					.mapTo(BooAction.class, "foo2")
-					.interceptBy(EchoInterceptor.class)
-					.bind();
-
-			interceptor(EchoInterceptor.class).setPrefixIn("====> ");
-		}
-	}
+abstract class ComponentTestBase {
 
 	@Test
-	void testManualAction() {
-		WebApplication webApplication = WebApplication
-			.createWebApp()
-			.withMadvocComponent(ManualRegistration.class)
-			.start();
-
-		ActionsManager actionsManager = webApplication.madvocContainer().lookupComponent(ActionsManager.class);
-
-		assertEquals(2, actionsManager.getActionsCount());
-
-		ActionConfig actionConfig = actionsManager.lookup("/hello", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo1", actionConfig.actionClassMethod.getName());
-
-		actionConfig = actionsManager.lookup("/world", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo2", actionConfig.actionClassMethod.getName());
+	void testCustomComponent() {
+		HttpResponse response = HttpRequest.get("localhost:8173/component.html").send();
+		assertEquals("start-ready-UTF-8", response.bodyText().trim());
 	}
+
 }

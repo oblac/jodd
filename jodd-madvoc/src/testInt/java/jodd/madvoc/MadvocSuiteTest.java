@@ -138,4 +138,6 @@ class MadvocSuiteTest {
 	class TagActionTest extends TagActionTestBase {}
 	@Nested
 	class MissingActionTest extends MissingActionTestBase {}
+	@Nested
+	class ComponentTest extends ComponentTestBase {}
 }
