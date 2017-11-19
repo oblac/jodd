@@ -27,6 +27,7 @@ package jodd.jerry;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,9 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static jodd.jerry.Jerry.jerry;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class JerryTest {
 	protected String testDataRoot;
@@ -57,9 +56,11 @@ class JerryTest {
 	void testText1() {
 		String html = readFile("text1.html");
 		String text = jerry(html).$("div.demo-container").text();
+		String sub = (SystemUtil.isHostWindows()) ? "\r\n" : "\n";
 
-		text = StringUtil.remove(text, "\n").trim();
+		text = StringUtil.remove(text, sub).trim();
 		text = StringUtil.compressChars(text, ' ');
+
 		assertEquals("Demonstration Box list item 1 list item 2", text);
 	}
 
