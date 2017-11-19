@@ -35,10 +35,13 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.MadvocContainer;
+import jodd.madvoc.component.MadvocListener;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.MadvocComponent;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
@@ -57,7 +60,7 @@ import java.lang.reflect.Modifier;
  * Action class is scanned for the {@link MadvocAction}. All public methods with {@link Action}
  * are registered as Madvoc actions.
  */
-public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocConfigurator {
+public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocListener.Start {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
 
@@ -70,23 +73,25 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	@PetiteInject
 	protected ResultsManager resultsManager;
 
+	@PetiteInject
+	protected MadvocContainer madvocContainer;
+
 	protected String actionClassSuffix;         // default action class suffix, for class path search
 	protected String resultClassSuffix;         // default action result class suffix, for class path search
 	protected long elapsed;
+
+	protected final byte[] madvocComponentAnnotation;
 
 	public AutomagicMadvocConfigurator() {
 		actionClassSuffix = "Action";
 		resultClassSuffix = "Result";
 		elapsed = 0;
+		madvocComponentAnnotation = getTypeSignatureBytes(MadvocComponent.class);
 	}
 
-	/**
-	 * Configures web application from system classpath
-	 * @see #configure(java.io.File[])
-	 */
 	@Override
-	public void configure() {
-		configure(ClassLoaderUtil.getDefaultClasspath());
+	public void start() {
+		configureByScanningClassPath(ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**
@@ -96,9 +101,8 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	 * <li>invoking external configurations, if exist</li>
 	 * <li>applying defaults</li>
 	 * </ol>
-	 * @see #configure()
 	 */
-	public void configure(File[] classpath) {
+	protected void configureByScanningClassPath(File[] classpath) {
 		elapsed = System.currentTimeMillis();
 
 		rulesEntries.smartMode();
@@ -119,21 +123,26 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	@Override
 	protected void onEntry(EntryData entryData) {
 		String entryName = entryData.getName();
+
 		if (entryName.endsWith(actionClassSuffix)) {
 			try {
 				onActionClass(entryName);
-			} catch (ClassNotFoundException cnfex) {
-				if (log.isDebugEnabled()) {
-					log.debug("Invalid action skipped: {}" + entryName);
-				}
+			} catch (Exception ex) {
+				log.debug("Invalid Madvoc action, ignoring: " + entryName);
 			}
-		} else if (entryName.endsWith(resultClassSuffix)) {
+		}
+		else if (entryName.endsWith(resultClassSuffix)) {
 			try {
 				onResultClass(entryName);
-			} catch (ClassNotFoundException cnfex) {
-				if (log.isDebugEnabled()) {
-					log.debug("Invalid result skipped: {}" + entryName);
-				}
+			} catch (Exception ex) {
+				log.debug("Invalid Madvoc result ignoring: " + entryName);
+			}
+		}
+		else if (isTypeSignatureInUse(entryData, madvocComponentAnnotation)) {
+			try {
+				onMadvocComponentClass(entryName);
+			} catch (Exception ex) {
+				log.debug("Invalid Madvoc component ignoring: {}" + entryName);
 			}
 		}
 	}
@@ -236,9 +245,27 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		if (!checkClass(resultClass)) {
 			return;
 		}
+
 		if (ClassUtil.isTypeOf(resultClass, ActionResult.class)) {
 			resultsManager.register(resultClass);
 		}
+	}
+
+	/**
+	 * Registers new Madvoc component.
+	 */
+	protected void onMadvocComponentClass(String className) throws ClassNotFoundException {
+		Class componentClass = loadClass(className);
+
+		if (componentClass == null) {
+			return;
+		}
+
+		if (!checkClass(componentClass)) {
+			return;
+		}
+
+		madvocContainer.registerComponent(componentClass);
 	}
 
 }

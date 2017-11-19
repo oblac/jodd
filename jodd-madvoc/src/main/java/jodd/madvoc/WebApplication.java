@@ -148,7 +148,6 @@ public class WebApplication {
 		madvocComponents = null;
 
 		//// listeners
-		madvocContainer.fireEvent(MadvocListener.Init.class);
 		madvocContainer.fireEvent(MadvocListener.Start.class);
 		madvocContainer.fireEvent(MadvocListener.Ready.class);
 

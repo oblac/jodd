@@ -32,6 +32,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.MadvocListener;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -44,7 +45,7 @@ import java.lang.reflect.Method;
 /**
  * Madvoc configurator for manual configuration.
  */
-public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
+public abstract class ManualMadvocConfigurator implements MadvocListener.Start {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
