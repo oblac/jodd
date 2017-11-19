@@ -25,8 +25,8 @@
 
 package jodd.joy.core;
 
+import jodd.madvoc.WebApplication;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
-import jodd.madvoc.config.MadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApplication;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.petite.PetiteContainer;
@@ -52,32 +52,20 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * Starts {@link DefaultAppCore application core} before web application is initialized.
 	 */
 	@Override
-	public void init() {
+	public WebApplication start() {
 		defaultAppCore.start();
-		super.init();
+		return super.start();
 	}
 
 	/**
 	 * Registers default and additional {@link ProxettaAwareActionsManager}.
-	 * Because the custom action manager is registered using an instance,
-	 * all custom Madvoc components should be registered before it!
-	 * For that reason, custom madvoc components should be registered
-	 * using {@link #registerCustomMadvocComponents()}.
 	 */
 	@Override
 	protected final void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
-		registerCustomMadvocComponents();
-
+		// todo add proxetta provider? i.e. add add AppCore provider!!!
 		madvocContainer.registerComponentInstance(new ProxettaAwareActionsManager(defaultAppCore.getProxetta()));
-	}
-
-	/**
-	 * Registers custom madvoc components.
-	 * @see #registerMadvocComponents()
-	 */
-	protected void registerCustomMadvocComponents() {
 	}
 
 	/**
@@ -96,22 +84,22 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 
 	/**
 	 * Configures <code>AutomagicMadvocConfigurator</code>.
+	 * todo remove this by adding special class for configuration that takes the appCore and its AppScanner.
 	 */
-	@Override
-	public void configure(MadvocConfigurator configurator) {
+	@Deprecated
+	public void configure(Object configurator) {
 		if (configurator instanceof AutomagicMadvocConfigurator) {
 			AutomagicMadvocConfigurator madvocConfigurator = (AutomagicMadvocConfigurator) configurator;
 
 			defaultAppCore.getAppScanner().configure(madvocConfigurator);
 		}
-		super.configure(configurator);
 	}
 
 	/**
 	 * Destroys application context and Madvoc.
 	 */
 	@Override
-	protected void shutdown() {
+	public void shutdown() {
 		defaultAppCore.stop();
 		super.shutdown();
 	}
