@@ -28,7 +28,6 @@ package jodd.madvoc;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
-import jodd.madvoc.config.MadvocConfigurator;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Converter;
@@ -75,16 +74,17 @@ public class Madvoc {
 	// ---------------------------------------------------------------- config
 
 	protected String webAppClassName;
-	protected Class webAppClass;
+	protected Class webAppClass = WebApplication.class;
 	protected String[] paramsFiles;
 	protected String madvocConfiguratorClassName;
-	protected Class madvocConfiguratorClass;
+	protected Class madvocConfiguratorClass = AutomagicMadvocConfigurator.class;
 	
 	/**
 	 * Sets {@link WebApplication} class name.
 	 */
 	public void setWebAppClassName(String webAppClass) {
 		this.webAppClassName = webAppClass;
+		this.webAppClass = null;
 	}
 
 	/**
@@ -92,20 +92,23 @@ public class Madvoc {
 	 */
 	public void setWebAppClass(Class webAppClass) {
 		this.webAppClass = webAppClass;
+		this.webAppClassName = null;
 	}
 
 	/**
-	 * Sets {@link MadvocConfigurator} class name.
+	 * Sets the name of the class that is going to be used for configuration of user actions.
 	 */
 	public void setMadvocConfiguratorClassName(String madvocConfiguratorClassName) {
 		this.madvocConfiguratorClassName = madvocConfiguratorClassName;
+		this.madvocConfiguratorClass = null;
 	}
 
 	/**
-	 * Sets {@link MadvocConfigurator} class.
+	 * Sets class that will be used for configuring the user actions.
 	 */
 	public void setMadvocConfiguratorClass(Class madvocConfiguratorClass) {
 		this.madvocConfiguratorClass = madvocConfiguratorClass;
+		this.madvocConfiguratorClassName = null;
 	}
 
 	public void setParamsFiles(String[] paramsFiles) {
@@ -120,8 +123,6 @@ public class Madvoc {
 		paramsFiles = Converter.get().toStringArray(servletContext.getInitParameter(PARAM_MADVOC_PARAMS));
 		madvocConfiguratorClassName = servletContext.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
 	}
-
-
 
 	// ---------------------------------------------------------------- lifecycle
 
@@ -176,7 +177,7 @@ public class Madvoc {
 
 		log = LoggerFactory.getLogger(Madvoc.class);
 
-		// configure webapplication
+		// configure webapp
 
 		webapp.withServletContext(servletContext);
 
@@ -186,18 +187,17 @@ public class Madvoc {
 			webapp.withParams(params);
 		}
 
+		resolveMadvocConfigClass();
+
+		if (madvocConfiguratorClass != null) {
+			webapp.withMadvocComponent(madvocConfiguratorClass);
+		}
+
 		// initialize
 
 		log.info("Madvoc starting...");
 
-		webapp.init();
-
-		// configure with external configurator
-		MadvocConfigurator configurator = loadMadvocConfig();
-		webapp.configure(configurator);
-
-
-		webapp.ready();
+		webapp.start();
 
 		return webapp;
 	}
@@ -220,20 +220,16 @@ public class Madvoc {
 	// ---------------------------------------------------------------- loading configuration
 
 	/**
-	 * Loads {@link WebApplication}. If class name is <code>null</code>,
-	 * default web application will be loaded.
+	 * Creates {@link WebApplication}.
 	 */
 	protected WebApplication createWebApplication() {
-		if ((webAppClassName != null) && (webAppClass != null)) {
-			throw new MadvocException("Ambiguous WebApplication setting");
-		}
 		if ((webAppClassName == null) && (webAppClass == null)) {
 			return new WebApplication();
 		}
 
 		final WebApplication webApp;
 		try {
-			if (webAppClass == null) {
+			if (webAppClassName != null) {
 				webAppClass = ClassLoaderUtil.loadClass(webAppClassName);
 			}
 			webApp = (WebApplication) webAppClass.newInstance();
@@ -262,30 +258,24 @@ public class Madvoc {
 
 
 	/**
-	 * Loads {@link jodd.madvoc.config.MadvocConfigurator}. If class name is <code>null</code>,
-	 * {@link jodd.madvoc.config.AutomagicMadvocConfigurator} will be created.
+	 * Loads Madvoc component that will be used for configuring the user actions.
+	 * If class name is <code>null</code>, default {@link jodd.madvoc.config.AutomagicMadvocConfigurator}
+	 * will be used.
 	 */
-	protected MadvocConfigurator loadMadvocConfig() {
-		if ((madvocConfiguratorClassName != null) && (madvocConfiguratorClass != null)) {
-			throw new MadvocException("Ambiguous MadvocConfigurator setting: both class and class name is set.");
-		}
+	protected void resolveMadvocConfigClass() {
 		if ((madvocConfiguratorClassName == null) && (madvocConfiguratorClass == null)) {
-			log.info("Configuring Madvoc using default automagic configurator");
-			return new AutomagicMadvocConfigurator();
+			return;
 		}
 
-		MadvocConfigurator configurator;
 		try {
-			if (madvocConfiguratorClass == null) {
+			if (madvocConfiguratorClassName != null) {
 				madvocConfiguratorClass = ClassLoaderUtil.loadClass(madvocConfiguratorClassName);
 			}
 
-			configurator = (MadvocConfigurator) madvocConfiguratorClass.newInstance();
-			log.info("Configuring Madvoc using configurator: " + madvocConfiguratorClass.getName());
+			log.info("Configuring Madvoc using: " + madvocConfiguratorClass.getName());
 		} catch (Exception ex) {
 			throw new MadvocException("Unable to load Madvoc configurator class: " + madvocConfiguratorClassName, ex);
 		}
-		return configurator;
 	}
 
 }
