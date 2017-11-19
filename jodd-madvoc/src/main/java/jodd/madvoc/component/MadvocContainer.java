@@ -35,7 +35,6 @@ import jodd.util.ClassUtil;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Madvoc container. Works internally with {@link jodd.petite.PetiteContainer}.
@@ -54,7 +53,6 @@ public class MadvocContainer {
 	public MadvocContainer() {
 		madpc = new PetiteContainer();
 		madpc.addSelf(MADVOC_PETITE_CONTAINER_NAME);
-		registerComponent(this);
 	}
 
 	/**
@@ -69,26 +67,26 @@ public class MadvocContainer {
 	 * Previously defined component will be removed.
 	 * @see #registerComponent(Class)
 	 */
-	public final void registerComponent(Object componentInstance) {
+	public final void registerComponentInstance(Object componentInstance) {
 		Class component = componentInstance.getClass();
 		String name = resolveBaseComponentName(component);
-		registerComponent(name, componentInstance);
+		registerComponentInstance(name, componentInstance);
 	}
 
 	/**
 	 * Registers component using its {@link #resolveBaseComponentName(Class) base name}.
 	 * Previously defined component will be removed.
-	 * @see #registerComponent(Object)
+	 * @see #registerComponentInstance(Object)
 	 */
 	public final void registerComponent(Class component) {
 		String name = resolveBaseComponentName(component);
-		registerComponent(name, component);
+		registerComponentInstance(name, component);
 	}
 
 	/**
 	 * Registers Madvoc component with given name.
 	 */
-	public final void registerComponent(String name, Class component) {
+	public final void registerComponentInstance(String name, Class component) {
 		log.debug(() -> "Registering Madvoc component '" + name + "' of type " + component.getName());
 
 		madpc.removeBean(name);
@@ -114,7 +112,7 @@ public class MadvocContainer {
 	/**
 	 * Registers component instance and wires it with internal container.
 	 */
-	public final void registerComponent(String name, Object componentInstance) {
+	public final void registerComponentInstance(String name, Object componentInstance) {
 		log.debug(() -> "Registering Madvoc component '" + name + "' instance of " + componentInstance.getClass().getName());
 
 		madpc.removeBean(name);
@@ -209,16 +207,6 @@ public class MadvocContainer {
 
 
 	// ---------------------------------------------------------------- params
-
-	/**
-	 * Initialized web application parameters. Provided properties object is always non-<code>null</code>.
-	 * Simple defines parameters for internal container.
-	 */
-	public void defineParams(Properties properties) {
-		log.debug("Defining Madvoc parameters");
-
-		madpc.defineParameters(properties);
-	}
 
 	public void defineParams(Props props) {
 		log.debug("Defining Madvoc parameters");
