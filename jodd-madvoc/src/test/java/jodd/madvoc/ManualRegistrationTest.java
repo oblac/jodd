@@ -26,7 +26,6 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.config.ManualMadvocConfigurator;
 import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.result.TextResult;
@@ -37,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManualRegistrationTest {
 
-	public static class ManualRegistration extends ManualMadvocConfigurator {
+	public static class ManualRegistration extends MadvocApp {
 		@Override
 		public void start() {
 			result(TextResult.class);
@@ -57,7 +56,7 @@ class ManualRegistrationTest {
 	}
 
 	@Test
-	void testManualAction() {
+	void testManualAction_asComponent() {
 		WebApp webApp = WebApp
 			.createWebApp()
 			.withMadvocComponent(ManualRegistration.class)
@@ -77,4 +76,27 @@ class ManualRegistrationTest {
 		assertEquals(BooAction.class, actionConfig.getActionClass());
 		assertEquals("foo2", actionConfig.actionClassMethod.getName());
 	}
+
+/*	@Test
+	void testManualAction_asArgument() {
+		WebApp webApp = WebApp
+			.createWebApp()
+			.start(app -> {
+				app.
+			});
+
+		ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
+
+		assertEquals(2, actionsManager.getActionsCount());
+
+		ActionConfig actionConfig = actionsManager.lookup("/hello", "GET");
+		assertNotNull(actionConfig);
+		assertEquals(BooAction.class, actionConfig.getActionClass());
+		assertEquals("foo1", actionConfig.actionClassMethod.getName());
+
+		actionConfig = actionsManager.lookup("/world", "GET");
+		assertNotNull(actionConfig);
+		assertEquals(BooAction.class, actionConfig.getActionClass());
+		assertEquals("foo2", actionConfig.actionClassMethod.getName());
+	}*/
 }

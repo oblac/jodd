@@ -63,7 +63,6 @@ public class WebApp {
 		return new WebApp();
 	}
 
-
 	// ---------------------------------------------------------------- builder
 
 	protected ServletContext servletContext;
@@ -149,6 +148,7 @@ public class WebApp {
 
 		//// listeners
 		madvocContainer.fireEvent(MadvocListener.Start.class);
+
 		madvocContainer.fireEvent(MadvocListener.Ready.class);
 
 		ready();

@@ -23,10 +23,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.config;
+package jodd.madvoc;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
@@ -45,7 +43,7 @@ import java.lang.reflect.Method;
 /**
  * Madvoc configurator for manual configuration.
  */
-public abstract class ManualMadvocConfigurator implements MadvocListener.Start {
+public abstract class MadvocApp implements MadvocListener.Start {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -99,6 +97,22 @@ public abstract class ManualMadvocConfigurator implements MadvocListener.Start {
 	 */
 	public ActionBuilder action() {
 		return new ActionBuilder();
+	}
+
+	public ActionBuilder get(String path) {
+		return new ActionBuilder().path(path).httpMethod("GET");
+	}
+	public ActionBuilder post(String path) {
+		return new ActionBuilder().path(path).httpMethod("POST");
+	}
+	public ActionBuilder put(String path) {
+		return new ActionBuilder().path(path).httpMethod("PUT");
+	}
+	public ActionBuilder delete(String path) {
+		return new ActionBuilder().path(path).httpMethod("DELETE");
+	}
+	public ActionBuilder options(String path) {
+		return new ActionBuilder().path(path).httpMethod("OPTIONS");
 	}
 
 	public class ActionBuilder {
