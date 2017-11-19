@@ -46,9 +46,7 @@ public class MadvocContainer {
 	private static final Logger log = LoggerFactory.getLogger(MadvocContainer.class);
 
 	private final PetiteContainer madpc;
-	private final List<String> initListeners = new ArrayList<>();
-	private final List<String> readyListeners = new ArrayList<>();
-	private final List<String> stopListeners = new ArrayList<>();
+	private final List<MadvocListenerDef> listeners = new ArrayList<>();
 
 	public MadvocContainer() {
 		madpc = new PetiteContainer();
@@ -67,7 +65,7 @@ public class MadvocContainer {
 	 * Previously defined component will be removed.
 	 * @see #registerComponent(Class)
 	 */
-	public final void registerComponentInstance(Object componentInstance) {
+	public void registerComponentInstance(Object componentInstance) {
 		Class component = componentInstance.getClass();
 		String name = resolveBaseComponentName(component);
 		registerComponentInstance(name, componentInstance);
@@ -78,7 +76,7 @@ public class MadvocContainer {
 	 * Previously defined component will be removed.
 	 * @see #registerComponentInstance(Object)
 	 */
-	public final void registerComponent(Class component) {
+	public void registerComponent(Class component) {
 		String name = resolveBaseComponentName(component);
 		registerComponentInstance(name, component);
 	}
@@ -86,25 +84,15 @@ public class MadvocContainer {
 	/**
 	 * Registers Madvoc component with given name.
 	 */
-	public final void registerComponentInstance(String name, Class component) {
+	public void registerComponentInstance(String name, Class component) {
 		log.debug(() -> "Registering Madvoc component '" + name + "' of type " + component.getName());
 
 		madpc.removeBean(name);
 		madpc.registerPetiteBean(component, name, null, null, false);
 
-		if (ClassUtil.isTypeOf(component, MadvocListener.Init.class)) {
-			if (!initListeners.contains(name)) {
-				initListeners.add(name);
-			}
-		}
-		if (ClassUtil.isTypeOf(component, MadvocListener.Ready.class)) {
-			if (!readyListeners.contains(name)) {
-				readyListeners.add(name);
-			}
-		}
-		if (ClassUtil.isTypeOf(component, MadvocListener.Stop.class)) {
-			if (!stopListeners.contains(name)) {
-				stopListeners.add(name);
+		for (Class eventType : MadvocListener.ALL_TYPES) {
+			if (ClassUtil.isTypeOf(component, eventType)) {
+				registerEventHandler(eventType, name);
 			}
 		}
 	}
@@ -112,25 +100,15 @@ public class MadvocContainer {
 	/**
 	 * Registers component instance and wires it with internal container.
 	 */
-	public final void registerComponentInstance(String name, Object componentInstance) {
+	public void registerComponentInstance(String name, Object componentInstance) {
 		log.debug(() -> "Registering Madvoc component '" + name + "' instance of " + componentInstance.getClass().getName());
 
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);
 
-		if (ClassUtil.isInstanceOf(componentInstance, MadvocListener.Init.class)) {
-			if (!initListeners.contains(name)) {
-				initListeners.add(name);
-			}
-		}
-		if (ClassUtil.isInstanceOf(componentInstance, MadvocListener.Ready.class)) {
-			if (!readyListeners.contains(name)) {
-				readyListeners.add(name);
-			}
-		}
-		if (ClassUtil.isInstanceOf(componentInstance, MadvocListener.Stop.class)) {
-			if (!stopListeners.contains(name)) {
-				stopListeners.add(name);
+		for (Class eventType : MadvocListener.ALL_TYPES) {
+			if (ClassUtil.isInstanceOf(componentInstance, eventType)) {
+				registerEventHandler(eventType, name);
 			}
 		}
 	}
@@ -138,22 +116,43 @@ public class MadvocContainer {
 
 	// ---------------------------------------------------------------- listeners
 
-	/**
-	 * Fires the <b>init</b> event.
-	 */
-	public void fireInitEvent() {
-		initListeners.forEach(name ->  {
-			MadvocListener.Init listener = (MadvocListener.Init) lookupComponent(name);
-			listener.init();
-		});
+	protected static class MadvocListenerDef {
+		public final String name;
+		public final Class type;
+
+		public MadvocListenerDef(String name, Class type) {
+			this.name = name;
+			this.type = type;
+		}
 	}
-	public void fireReadyEvent() {
-		readyListeners.forEach(name ->  {
-			MadvocListener.Ready listener = (MadvocListener.Ready) lookupComponent(name);
-			listener.ready();
+
+	/**
+	 * Fires the Madvoc event.
+	 */
+	public void fireEvent(Class listenerType) {
+		listeners.stream()
+			.filter(def -> def.type == listenerType)
+			.map(def -> def.name)
+			.forEach(name ->  {
+				MadvocListener listener = (MadvocListener) lookupComponent(name);
+				listener.onEvent();
 		});
 	}
 
+	/**
+	 * Registers event handler if not already registered.
+	 */
+	public void registerEventHandler(Class listenerType, String name) {
+		long existingCount =
+			listeners.stream()
+			.filter(def -> def.type == listenerType)
+			.filter(def -> def.name.equals(name))
+			.count();
+
+		if (existingCount == 0) {
+			listeners.add(new MadvocListenerDef(name, listenerType));
+		}
+	}
 
 	// ---------------------------------------------------------------- lookup
 

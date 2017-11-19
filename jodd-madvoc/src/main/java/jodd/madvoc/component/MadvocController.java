@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * It also builds action objects and result paths. It handles initialization of
  * interceptors and results.
  */
-public class MadvocController implements MadvocListener.Init {
+public class MadvocController implements MadvocListener.Ready {
 
 	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
@@ -69,13 +69,8 @@ public class MadvocController implements MadvocListener.Init {
 
 	protected Executor executor;
 
-	/**
-	 * Initializes controller by providing application context.
-	 * Application context can be <code>null</code>
-	 * if application is not started in web environment (eg tests).
-	 */
 	@Override
-	public void init() {
+	public void onEvent() {
 		if (actionsManager.isAsyncModeOn()) {
 			executor = createAsyncExecutor();
 		}

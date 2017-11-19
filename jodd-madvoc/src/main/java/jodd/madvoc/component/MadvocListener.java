@@ -26,14 +26,13 @@
 package jodd.madvoc.component;
 
 /**
- * Madvoc listeners. There are 3 events:
- * <ul>
- *     <li>INIT</li>
- *     <li>READY</li>
- *     <li>SHUTDOWN</li>
- * </ul>
+ * Madvoc events.
  */
-public final class MadvocListener {
+public interface MadvocListener {
+
+	Class[] ALL_TYPES = new Class[] {Init.class, Start.class, Ready.class, Stop.class};
+
+	void onEvent();
 
 	/**
 	 * Madvoc INIT handler.
@@ -42,34 +41,24 @@ public final class MadvocListener {
 	 * <p>
 	 * DO NOT DEPEND ON CONFIGURATION AND OTHER COMPONENTS UNLESS YOU ARE SURE THEY ARE NOT GOING TO BE OVERWRITTEN.
 	 */
-	public interface Init {
-		/**
-		 * Invokes Madvoc initialization.
-		 * @see MadvocListener
-		 */
-		void init();
-	}
+	interface Init extends MadvocListener {}
+
+	/**
+	 * Madvoc START handler.
+	 * All components are loaded. User for registering user actions.
+	 */
+	interface Start extends MadvocListener {}
 
 	/**
 	 * Madvoc READY handler.
-	 * Invoked when all initialization is done. It is assumed that ALL components are registered.
+	 * Invoked when all initialization is done: when both madvoc and user components and actions are loaded.
 	 * This phase is used for running any initialization that depends on the complete configuration.
 	 */
-	public interface Ready {
-		/**
-		 * Invoked when Madvoc is ready.
-		 */
-		void ready();
-	}
+	interface Ready extends MadvocListener {}
 
 	/**
 	 *  Madvoc STOP handler. Invoked on Madvoc shutdown.
 	 */
-	public interface Stop {
-		/**
-		 * Invoked on Madvoc shutdown.
-		 */
-		void stop();
-	}
+	interface Stop extends MadvocListener {}
 
 }
