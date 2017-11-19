@@ -167,6 +167,9 @@ public class SimpleLogger implements Logger {
 			if (className.equals(SimpleLogger.class.getName())) {
 				continue;
 			}
+			if (className.equals(Logger.class.getName())) {
+				continue;
+			}
 			return shortenClassName(className)
 				+ '.' + stackTraceElement.getMethodName()
 				+ ':' + stackTraceElement.getLineNumber();
