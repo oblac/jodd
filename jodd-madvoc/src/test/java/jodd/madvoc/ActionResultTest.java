@@ -39,7 +39,7 @@ class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	void testResolveResultPath() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 		
 		ResultMapper resultMapper = webapp.madvocContainer.lookupComponent(ResultMapper.class);
@@ -130,7 +130,7 @@ class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	void testMethodWithPrefix() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
@@ -166,7 +166,7 @@ class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	void testAlias() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -193,7 +193,7 @@ class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	void testAlias2() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -212,7 +212,7 @@ class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	void testAlias3() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);

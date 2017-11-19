@@ -58,12 +58,12 @@ class ManualRegistrationTest {
 
 	@Test
 	void testManualAction() {
-		WebApplication webApplication = WebApplication
+		WebApp webApp = WebApp
 			.createWebApp()
 			.withMadvocComponent(ManualRegistration.class)
 			.start();
 
-		ActionsManager actionsManager = webApplication.madvocContainer().lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
 
 		assertEquals(2, actionsManager.getActionsCount());
 

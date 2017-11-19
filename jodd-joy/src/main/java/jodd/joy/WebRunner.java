@@ -32,7 +32,7 @@ import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import jodd.madvoc.Madvoc;
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import jodd.util.StringUtil;
@@ -48,7 +48,7 @@ public abstract class WebRunner {
 	 * Web application.
 	 */
 	protected Madvoc madvoc;
-	protected WebApplication app;
+	protected WebApp app;
 
 	/**
 	 * Application core.
@@ -68,7 +68,7 @@ public abstract class WebRunner {
 	/**
 	 * Starts the app web application and {@link #run() runs} user code.
 	 */
-	public void runWebApp(Class<? extends WebApplication> webAppClass) {
+	public void runWebApp(Class<? extends WebApp> webAppClass) {
 
 		madvoc = new Madvoc();
 		madvoc.setWebAppClass(webAppClass);

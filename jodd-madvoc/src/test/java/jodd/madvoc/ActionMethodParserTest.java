@@ -46,7 +46,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testDefaultMethods() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -64,7 +64,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testMethod() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -101,7 +101,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testMethodWithPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -144,7 +144,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testClasses() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -172,7 +172,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testClassesWithPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -202,7 +202,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testClassesWithoutPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -227,7 +227,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -252,7 +252,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testNoPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -277,7 +277,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testEndSlashClassName() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -297,7 +297,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testMacros() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 		
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -355,7 +355,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testMacrosWildcards() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -398,7 +398,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testMacrosDups() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -433,7 +433,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testMarkerClass() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
@@ -464,7 +464,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 	@Test
 	void testZqq() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);

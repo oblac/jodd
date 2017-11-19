@@ -28,9 +28,9 @@ package jodd.madvoc;
 import jodd.log.LoggerFactory;
 import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.action.HelloAction;
-import jodd.madvoc.petite.PetiteWebApplication;
+import jodd.madvoc.petite.PetiteWebApp;
 
-public class MyWebApplication extends PetiteWebApplication {
+public class MyWebApplication extends PetiteWebApp {
 
 	public MyWebApplication() {
 		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);

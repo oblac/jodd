@@ -36,7 +36,7 @@ import jodd.util.ClassLoaderUtil;
 import javax.servlet.ServletContext;
 
 /**
- * Maintain the lifecycle of a Madvoc {@link jodd.madvoc.WebApplication}.
+ * Maintain the lifecycle of a Madvoc {@link WebApp}.
  */
 public class Madvoc {
 
@@ -74,13 +74,13 @@ public class Madvoc {
 	// ---------------------------------------------------------------- config
 
 	protected String webAppClassName;
-	protected Class webAppClass = WebApplication.class;
+	protected Class webAppClass = WebApp.class;
 	protected String[] paramsFiles;
 	protected String madvocConfiguratorClassName;
 	protected Class madvocConfiguratorClass = AutomagicMadvocConfigurator.class;
 	
 	/**
-	 * Sets {@link WebApplication} class name.
+	 * Sets {@link WebApp} class name.
 	 */
 	public void setWebAppClassName(String webAppClass) {
 		this.webAppClassName = webAppClass;
@@ -88,7 +88,7 @@ public class Madvoc {
 	}
 
 	/**
-	 * Sets {@link WebApplication} class.
+	 * Sets {@link WebApp} class.
 	 */
 	public void setWebAppClass(Class webAppClass) {
 		this.webAppClass = webAppClass;
@@ -126,13 +126,13 @@ public class Madvoc {
 
 	// ---------------------------------------------------------------- lifecycle
 
-	protected WebApplication webapp;
+	protected WebApp webapp;
 	protected ServletContext servletContext;
 
 	/**
 	 * Returns web application once it is started.
 	 */
-	public WebApplication webapp() {
+	public WebApp webapp() {
 		return webapp;
 	}
 
@@ -143,13 +143,13 @@ public class Madvoc {
 	 * when web application is run out from container.
 	 */
 	@SuppressWarnings("InstanceofCatchParameter")
-	public WebApplication startNewWebApplication(ServletContext servletContext) {
+	public WebApp startNewWebApplication(ServletContext servletContext) {
 		try {
-			WebApplication webApplication = _start(servletContext);
+			WebApp webApp = _start(servletContext);
 
 			log.info("Madvoc is up and running.");
 
-			return webApplication;
+			return webApp;
 		}
 		catch (Exception ex) {
 			if (log != null) {
@@ -164,7 +164,7 @@ public class Madvoc {
 		}
 	}
 	
-	private WebApplication _start(ServletContext servletContext) {
+	private WebApp _start(ServletContext servletContext) {
 		if (servletContext != null) {
 			this.servletContext = servletContext;
 
@@ -220,19 +220,19 @@ public class Madvoc {
 	// ---------------------------------------------------------------- loading configuration
 
 	/**
-	 * Creates {@link WebApplication}.
+	 * Creates {@link WebApp}.
 	 */
-	protected WebApplication createWebApplication() {
+	protected WebApp createWebApplication() {
 		if ((webAppClassName == null) && (webAppClass == null)) {
-			return new WebApplication();
+			return new WebApp();
 		}
 
-		final WebApplication webApp;
+		final WebApp webApp;
 		try {
 			if (webAppClassName != null) {
 				webAppClass = ClassLoaderUtil.loadClass(webAppClassName);
 			}
-			webApp = (WebApplication) webAppClass.newInstance();
+			webApp = (WebApp) webAppClass.newInstance();
 		}
 		catch (Exception ex) {
 			throw new MadvocException("Unable to load Madvoc web application class: " + webAppClassName, ex);

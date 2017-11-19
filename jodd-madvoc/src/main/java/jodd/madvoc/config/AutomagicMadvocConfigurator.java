@@ -32,7 +32,7 @@ import jodd.io.findfile.ClassFinder;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocContainer;
@@ -52,7 +52,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * Default Madvoc configurator uses auto-magic to configure {@link WebApplication}.
+ * Default Madvoc configurator uses auto-magic to configure {@link WebApp}.
  * It searches the class path for all classes which names ends with 'Action' and 'Result'
  * suffixes. Each such class will be loaded and introspected to determine
  * if it represents valid Madvoc entity and then registered into the web application.

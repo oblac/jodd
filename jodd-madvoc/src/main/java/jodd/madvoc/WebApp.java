@@ -55,12 +55,12 @@ import java.util.List;
  * Custom implementations may override this class to enhance several different functionality.
  */
 @SuppressWarnings({"UnusedDeclaration"})
-public class WebApplication {
+public class WebApp {
 
 	private static Logger log;
 
-	public static WebApplication createWebApp() {
-		return new WebApplication();
+	public static WebApp createWebApp() {
+		return new WebApp();
 	}
 
 
@@ -73,7 +73,7 @@ public class WebApplication {
 	/**
 	 * Defines params to load.
 	 */
-	public WebApplication withParams(Props props) {
+	public WebApp withParams(Props props) {
 		propsList.add(props);
 		return this;
 	}
@@ -81,7 +81,7 @@ public class WebApplication {
 	/**
 	 * Defines servlet context. Must be called in the web environment.
 	 */
-	public WebApplication withServletContext(ServletContext servletContext) {
+	public WebApp withServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 		return this;
 	}
@@ -89,7 +89,7 @@ public class WebApplication {
 	/**
 	 * Registers additional Madvoc components that will be registered after default components.
 	 */
-	public WebApplication withMadvocComponent(Class madvocComponent) {
+	public WebApp withMadvocComponent(Class madvocComponent) {
 		madvocComponents.add(madvocComponent);
 		return this;
 	}
@@ -119,8 +119,8 @@ public class WebApplication {
 	/**
 	 * Initializes and starts web application.
 	 */
-	public WebApplication start() {
-		log = LoggerFactory.getLogger(WebApplication.class);
+	public WebApp start() {
+		log = LoggerFactory.getLogger(WebApp.class);
 
 		log.debug("Initializing Madvoc WebApp");
 

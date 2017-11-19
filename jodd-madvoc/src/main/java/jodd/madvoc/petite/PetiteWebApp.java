@@ -25,15 +25,15 @@
 
 package jodd.madvoc.petite;
 
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 
 /**
- * {@link jodd.madvoc.WebApplication WebApplication} that uses {@link jodd.petite.PetiteContainer Petite container}
+ * {@link WebApp WebApplication} that uses {@link jodd.petite.PetiteContainer Petite container}
  * for retrieving all instances.
  */
-public class PetiteWebApplication extends WebApplication {
+public class PetiteWebApp extends WebApp {
 
 	/**
 	 * Creates default Petite container that will be

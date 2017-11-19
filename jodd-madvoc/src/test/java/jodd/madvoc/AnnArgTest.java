@@ -34,7 +34,7 @@ class AnnArgTest extends MadvocTestCase {
 
 	@Test
 	void testDefaultMethods() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);

@@ -29,7 +29,7 @@ import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
 import jodd.util.ClassUtil;
@@ -50,7 +50,7 @@ class ServletDispatcherResultTest {
 
 	@Test
 	void testServletDispatcherLookup() throws Exception {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		final List<String> targets = new ArrayList<>();

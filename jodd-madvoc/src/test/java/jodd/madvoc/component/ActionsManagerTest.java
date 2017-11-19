@@ -27,7 +27,7 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionDef;
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros1() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -68,7 +68,7 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros2() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 		
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -89,7 +89,7 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros3() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -118,7 +118,7 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacros4() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -146,7 +146,7 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacrosRegexp() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
@@ -164,7 +164,7 @@ class ActionsManagerTest {
 
 	@Test
 	void testActionPathMacrosWildcard() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);

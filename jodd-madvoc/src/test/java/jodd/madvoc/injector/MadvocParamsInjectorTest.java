@@ -25,7 +25,7 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class MadvocParamsInjectorTest {
 
 	@Test
 	void testInjection() {
-		WebApplication webapp = new WebApplication();
+		WebApp webapp = new WebApp();
 		webapp.start();
 		PetiteContainer madpc = webapp.madvocContainer().petite();
 

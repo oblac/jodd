@@ -25,20 +25,20 @@
 
 package jodd.joy.core;
 
-import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApp;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
-import jodd.madvoc.petite.PetiteWebApplication;
+import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.petite.PetiteContainer;
 
 /**
  * Default web application.
  */
-public abstract class DefaultWebApplication extends PetiteWebApplication {
+public abstract class DefaultWebApp extends PetiteWebApp {
 
 	protected final DefaultAppCore defaultAppCore;
 
-	protected DefaultWebApplication() {
+	protected DefaultWebApp() {
 		defaultAppCore = createAppCore();
 	}
 
@@ -52,7 +52,7 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * Starts {@link DefaultAppCore application core} before web application is initialized.
 	 */
 	@Override
-	public WebApplication start() {
+	public WebApp start() {
 		defaultAppCore.start();
 		return super.start();
 	}
