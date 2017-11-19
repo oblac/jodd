@@ -25,11 +25,10 @@
 
 package jodd.joy.core;
 
-import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApplication;
+import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.petite.PetiteContainer;
 
 /**
@@ -53,9 +52,9 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * Starts {@link DefaultAppCore application core} before web application is initialized.
 	 */
 	@Override
-	protected void initWebApplication() {
+	public void init() {
 		defaultAppCore.start();
-		super.initWebApplication();
+		super.init();
 	}
 
 	/**
@@ -66,12 +65,12 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * using {@link #registerCustomMadvocComponents()}.
 	 */
 	@Override
-	public final void registerMadvocComponents() {
+	protected final void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
 		registerCustomMadvocComponents();
 
-		registerComponent(new ProxettaAwareActionsManager(defaultAppCore.getProxetta()));
+		madvocContainer.registerComponentInstance(new ProxettaAwareActionsManager(defaultAppCore.getProxetta()));
 	}
 
 	/**
@@ -102,6 +101,7 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	public void configure(MadvocConfigurator configurator) {
 		if (configurator instanceof AutomagicMadvocConfigurator) {
 			AutomagicMadvocConfigurator madvocConfigurator = (AutomagicMadvocConfigurator) configurator;
+
 			defaultAppCore.getAppScanner().configure(madvocConfigurator);
 		}
 		super.configure(configurator);
@@ -111,9 +111,9 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * Destroys application context and Madvoc.
 	 */
 	@Override
-	protected void destroy(MadvocConfig madvocConfig) {
+	protected void shutdown() {
 		defaultAppCore.stop();
-		super.destroy(madvocConfig);
+		super.shutdown();
 	}
 
 }

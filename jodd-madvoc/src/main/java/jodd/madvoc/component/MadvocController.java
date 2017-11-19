@@ -25,19 +25,19 @@
 
 package jodd.madvoc.component;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import javax.servlet.AsyncContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * It also builds action objects and result paths. It handles initialization of
  * interceptors and results.
  */
-public class MadvocController {
+public class MadvocController implements MadvocListener.Init {
 
 	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
@@ -64,7 +64,8 @@ public class MadvocController {
 	@PetiteInject
 	protected ResultsManager resultsManager;
 
-	protected ServletContext applicationContext;
+	@PetiteInject
+	protected ServletContextProvider servletContextProvider;
 
 	protected Executor executor;
 
@@ -73,9 +74,8 @@ public class MadvocController {
 	 * Application context can be <code>null</code>
 	 * if application is not started in web environment (eg tests).
 	 */
-	public void init(ServletContext servletContext) {
-		this.applicationContext = servletContext;
-
+	@Override
+	public void init() {
 		if (actionsManager.isAsyncModeOn()) {
 			executor = createAsyncExecutor();
 		}
@@ -92,14 +92,14 @@ public class MadvocController {
 				asyncConfig.getMaximumPoolSize(),
 				asyncConfig.getKeepAliveTimeMillis(),
 				TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>(asyncConfig.getQueueCapacity()));
+				new LinkedBlockingQueue<>(asyncConfig.getQueueCapacity()));
 	}
 
 	/**
 	 * Returns application context set during the initialization.
 	 */
 	public ServletContext getApplicationContext() {
-		return applicationContext;
+		return servletContextProvider.get();
 	}
 
 	// ---------------------------------------------------------------- invoke
@@ -182,6 +182,7 @@ public class MadvocController {
 			this.asyncContext = asyncContext;
 		}
 
+		@Override
 		public void run() {
 			try {
 				if (log.isDebugEnabled()) {

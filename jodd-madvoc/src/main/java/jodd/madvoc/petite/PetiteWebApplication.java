@@ -58,22 +58,21 @@ public class PetiteWebApplication extends WebApplication {
 		return pc;
 	}
 
-
 	/**
 	 * Registers {@link #providePetiteContainer() provided Petite container}
 	 * and Petite-aware Madvoc components.
 	 */
 	@Override
-	public void registerMadvocComponents() {
+	protected void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
 		PetiteContainer petiteContainer = providePetiteContainer();
-		registerComponent("petiteContainer", petiteContainer);
+		madvocContainer.registerComponentInstance("petiteContainer", petiteContainer);
 
-		registerComponent(PetiteMadvocController.class);
-		registerComponent(PetiteFilterManager.class);
-		registerComponent(PetiteInterceptorManager.class);
-		registerComponent(PetiteResultsManager.class);
+		madvocContainer.registerComponent(PetiteMadvocController.class);
+		madvocContainer.registerComponent(PetiteFilterManager.class);
+		madvocContainer.registerComponent(PetiteInterceptorManager.class);
+		madvocContainer.registerComponent(PetiteResultsManager.class);
 	}
 
 }
