@@ -27,9 +27,6 @@ package jodd.madvoc;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.component.MadvocContainer;
-import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.props.Props;
@@ -124,44 +121,19 @@ public class Madvoc {
 		madvocConfiguratorClassName = servletContext.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
 	}
 
-	// ---------------------------------------------------------------- main madvoc components
 
-	protected WebApplication webapp;
-	protected MadvocController madvocController;
-	protected MadvocConfig madvocConfig;
-	protected MadvocContainer madvocContainer;
-
-	/**
-	 * Returns {@link MadvocController Madvoc controller} once web application is started.
-	 */
-	public MadvocController madvocController() {
-		return madvocController;
-	}
-
-	/**
-	 * Returns {@link MadvocConfig Madvoc config} once web application is started.
-	 */
-	public MadvocConfig madvocConfig() {
-		return madvocConfig;
-	}
-
-	/**
-	 * Returns running {@link WebApplication web application}.
-	 */
-	public WebApplication webApplication() {
-		return webapp;
-	}
-
-	/**
-	 * Returns {@link MadvocContainer Madvoc container}.
-	 */
-	public MadvocContainer madvocContainer() {
-		return madvocContainer;
-	}
 
 	// ---------------------------------------------------------------- lifecycle
 
+	protected WebApplication webapp;
 	protected ServletContext servletContext;
+
+	/**
+	 * Returns web application once it is started.
+	 */
+	public WebApplication webapp() {
+		return webapp;
+	}
 
 	/**
 	 * Creates and starts new <code>Madvoc</code> web application.
@@ -170,11 +142,15 @@ public class Madvoc {
 	 * when web application is run out from container.
 	 */
 	@SuppressWarnings("InstanceofCatchParameter")
-	public void startNewWebApplication(ServletContext servletContext) {
+	public WebApplication startNewWebApplication(ServletContext servletContext) {
 		try {
-			start(servletContext);
+			WebApplication webApplication = _start(servletContext);
+
 			log.info("Madvoc is up and running.");
-		} catch (Exception ex) {
+
+			return webApplication;
+		}
+		catch (Exception ex) {
 			if (log != null) {
 				log.error("Madvoc startup failure.", ex);
 			} else {
@@ -187,53 +163,43 @@ public class Madvoc {
 		}
 	}
 	
-	private void start(ServletContext servletContext) {
+	private WebApplication _start(ServletContext servletContext) {
 		if (servletContext != null) {
 			this.servletContext = servletContext;
 
 			servletContext.setAttribute(MADVOC_ATTR, this);
 		}
 
-		// create and initialize web application
 		webapp = createWebApplication();
-		madvocContainer = webapp.init();
 
 		// init logger
+
 		log = LoggerFactory.getLogger(Madvoc.class);
-		log.info("Madvoc starting...");
 
-		if (webapp.getClass().equals(WebApplication.class)) {
-			log.info("Default Madvoc web application created.");
-		} else {
-			log.info("Madvoc web application: " + webAppClass.getName());
-		}
+		// configure webapplication
 
-		// params
+		webapp.withServletContext(servletContext);
+
 		if (paramsFiles != null) {
 			Props params = loadMadvocParams(paramsFiles);
-			madvocContainer.defineParams(params);
+
+			webapp.withParams(params);
 		}
 
-		// register madvoc components
+		// initialize
 
-		webapp.registerMadvocComponents(servletContext);
+		log.info("Madvoc starting...");
 
-		// config
-		madvocConfig = madvocContainer.lookupExistingComponent(MadvocConfig.class);
-		webapp.init(madvocConfig, servletContext);
+		webapp.init();
 
 		// configure with external configurator
 		MadvocConfigurator configurator = loadMadvocConfig();
 		webapp.configure(configurator);
 
-		// prepare web application
-		madvocController = madvocContainer.lookupExistingComponent(MadvocController.class);
 
+		webapp.ready();
 
-		madvocContainer.fireInitEvent();
-
-		// web app is ready
-		madvocContainer.fireReadyEvent();
+		return webapp;
 	}
 
 	/**
@@ -246,9 +212,10 @@ public class Madvoc {
 			servletContext.removeAttribute(MADVOC_ATTR);
 		}
 
-		webapp.destroy(madvocConfig);
-	}
+		webapp.shutdown();
 
+		webapp = null;
+	}
 
 	// ---------------------------------------------------------------- loading configuration
 
@@ -264,15 +231,17 @@ public class Madvoc {
 			return new WebApplication();
 		}
 
-		WebApplication webApp;
+		final WebApplication webApp;
 		try {
 			if (webAppClass == null) {
 				webAppClass = ClassLoaderUtil.loadClass(webAppClassName);
 			}
 			webApp = (WebApplication) webAppClass.newInstance();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new MadvocException("Unable to load Madvoc web application class: " + webAppClassName, ex);
 		}
+
 		return webApp;
 	}
 

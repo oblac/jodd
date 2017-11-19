@@ -44,8 +44,11 @@ import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.component.ServletContextProvider;
 import jodd.madvoc.config.MadvocConfigurator;
+import jodd.props.Props;
 
 import javax.servlet.ServletContext;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
@@ -56,70 +59,126 @@ public class WebApplication {
 
 	private static Logger log;
 
-	protected MadvocContainer mcc;
+	public static WebApplication createWebApp() {
+		return new WebApplication();
+	}
+
+
+	// ---------------------------------------------------------------- builder
+
+	protected ServletContext servletContext;
+	private List<Props> propsList = new ArrayList<>();
+	private List<Class> madvocComponents = new ArrayList<>();
 
 	/**
-	 * Initializes web application. Invoked very first.
+	 * Defines params to load.
 	 */
-	public MadvocContainer init() {
-		log = LoggerFactory.getLogger(WebApplication.class);
-		log.debug("Initializing Madvoc web application");
-
-		mcc = new MadvocContainer();
-
-		return mcc;
-	}
-
-	public void registerMadvocComponents() {
-		this.registerMadvocComponents(null);
+	public WebApplication withParams(Props props) {
+		propsList.add(props);
+		return this;
 	}
 
 	/**
-	 * Registers default Madvoc components.
-	 * Invoked before {@link #init(MadvocConfig , ServletContext) madvoc initialization}.
+	 * Defines servlet context. Must be called in the web environment.
 	 */
-	public void registerMadvocComponents(ServletContext servletContext) {
-		if (mcc == null) {
-			throw new MadvocException("WebApp not initialized. Call init() first!");
-		}
-		log.debug("Registering Madvoc components");
-
-		mcc.registerComponent(ActionMethodParamNameResolver.class);
-		mcc.registerComponent(ActionMethodParser.class);
-		mcc.registerComponent(ActionPathRewriter.class);
-		mcc.registerComponent(ActionPathMacroManager.class);
-		mcc.registerComponent(ActionsManager.class);
-		mcc.registerComponent(ContextInjectorComponent.class);
-		mcc.registerComponent(InjectorsManager.class);
-		mcc.registerComponent(InterceptorsManager.class);
-		mcc.registerComponent(FiltersManager.class);
-		mcc.registerComponent(MadvocConfig.class);
-		mcc.registerComponent(MadvocController.class);
-		mcc.registerComponent(ResultsManager.class);
-		mcc.registerComponent(ResultMapper.class);
-		mcc.registerComponent(ScopeDataResolver.class);
-		mcc.registerComponent(new ServletContextProvider(servletContext));
+	public WebApplication withServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		return this;
 	}
+
+	/**
+	 * Registers additional Madvoc components that will be registered after default components.
+	 */
+	public WebApplication withMadvocComponent(Class madvocComponent) {
+		madvocComponents.add(madvocComponent);
+		return this;
+	}
+
+	// ---------------------------------------------------------------- main components
+
+	protected MadvocConfig madvocConfig;
+	protected MadvocContainer madvocContainer;
+
+	/**
+	 * Returns {@link MadvocConfig Madvoc config} once web application is started.
+	 */
+	public MadvocConfig madvocConfig() {
+		return madvocConfig;
+	}
+
+	/**
+	 * Returns {@link MadvocContainer Madvoc container}.
+	 */
+	public MadvocContainer madvocContainer() {
+		return madvocContainer;
+	}
+
 
 	// ---------------------------------------------------------------- lifecycle
 
 	/**
-	 * Initializes web application custom configuration.
-	 * When running web application out from container,
-	 * <code>servletContext</code> may be <code>null</code>.
-	 * todo remove!
+	 * Initializes web application.
 	 */
-	@Deprecated
-	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
-		log.debug("Initializing Madvoc");
+	public void init() {
+		log = LoggerFactory.getLogger(WebApplication.class);
+
+		log.debug("Initializing Madvoc web application");
+
+		madvocContainer = new MadvocContainer();
+		madvocContainer.registerComponentInstance(madvocContainer);
+
+		//// props
+		for (Props props : propsList) {
+			madvocContainer.defineParams(props);
+		}
+
+		//// config
+		madvocContainer.registerComponent(MadvocConfig.class);
+		madvocConfig = madvocContainer.lookupExistingComponent(MadvocConfig.class);
+
+		//// components
+		registerMadvocComponents();
+
+		for (Class madvocComponent : madvocComponents) {
+			madvocContainer.registerComponent(madvocComponent);
+		}
+
 	}
+
+	/**
+	 * Registers default Madvoc components.
+	 */
+	protected void registerMadvocComponents() {
+		if (madvocContainer == null) {
+			throw new MadvocException("WebApp not initialized. Call init() first!");
+		}
+		log.debug("Registering Madvoc components");
+
+		madvocContainer.registerComponentInstance(new ServletContextProvider(servletContext));
+
+		madvocContainer.registerComponent(ActionMethodParamNameResolver.class);
+		madvocContainer.registerComponent(ActionMethodParser.class);
+		madvocContainer.registerComponent(ActionPathRewriter.class);
+		madvocContainer.registerComponent(ActionPathMacroManager.class);
+		madvocContainer.registerComponent(ActionsManager.class);
+		madvocContainer.registerComponent(ContextInjectorComponent.class);
+		madvocContainer.registerComponent(InjectorsManager.class);
+		madvocContainer.registerComponent(InterceptorsManager.class);
+		madvocContainer.registerComponent(FiltersManager.class);
+		madvocContainer.registerComponent(MadvocController.class);
+		madvocContainer.registerComponent(ResultsManager.class);
+		madvocContainer.registerComponent(ResultMapper.class);
+		madvocContainer.registerComponent(ScopeDataResolver.class);
+	}
+
+	// ---------------------------------------------------------------- lifecycle
 
 	/**
 	 * Invoked on web application destroy.
 	 * todo remove!
 	 */
 	@Deprecated
-	protected void destroy(MadvocConfig madvocConfig) {
+	protected void shutdown() {
 		log.debug("Destroying Madvoc");
 	}
 
@@ -132,8 +191,17 @@ public class WebApplication {
 	public void configure(MadvocConfigurator configurator) {
 		log.debug("Configuring Madvoc");
 
-		mcc.registerComponent(configurator);
+		madvocContainer.registerComponentInstance(configurator);
 
 		configurator.configure();
 	}
+
+	public void ready() {
+		//// init
+		madvocContainer.fireInitEvent();
+
+		//// ready
+		madvocContainer.fireReadyEvent();
+	}
+
 }
