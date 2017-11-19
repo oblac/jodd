@@ -422,7 +422,6 @@ task javadocAll(type: Javadoc) {
 	maxMemory '512m'
 
 	source javaBundleModulesSources.allJava
-	exclude '**/asm4/**'
 	exclude '**/asm5/**'
 
 	destinationDir = file("$buildDir/reports/javadoc")
@@ -431,13 +430,13 @@ task javadocAll(type: Javadoc) {
 	configure(options) {
 		windowTitle 'Jodd API Documentation'
 		docTitle "Jodd Project $project.version API Documentation"
-		bottom = 'Copyright &#169; 2003-2016 <a href="http://jodd.org">Jodd Team</a>'
+		bottom = 'Copyright &#169; 2003-present <a href="http://jodd.org">Jodd Team</a>'
 		breakIterator = true
 		author = false
 		encoding = 'UTF-8'
 		docEncoding = 'UTF-8'
 		stylesheetFile = file('src/main/javadoc/jodd.css')
-		source = '1.9'
+		source = '1.8'
 	}
 
 	inputs.files(javaBundleModulesSources.allSource + javaBundleModulesSources.compileClasspath)
