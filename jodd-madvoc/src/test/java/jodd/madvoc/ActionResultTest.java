@@ -28,7 +28,6 @@ package jodd.madvoc;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.fixtures.tst.BooAction;
 import org.junit.jupiter.api.Test;
@@ -41,10 +40,9 @@ class ActionResultTest extends MadvocTestCase {
 	@Test
 	void testResolveResultPath() {
 		WebApplication webapp = new WebApplication();
-		MadvocContainer mcc = webapp.init();
-
-		webapp.registerMadvocComponents();
-		ResultMapper resultMapper = mcc.lookupComponent(ResultMapper.class);
+		webapp.start();
+		
+		ResultMapper resultMapper = webapp.madvocContainer.lookupComponent(ResultMapper.class);
 
 		String path = "/boo.foo.html";
 		ResultPath resultPath = resultMapper.resolveResultPath(path, "ok");
@@ -133,11 +131,10 @@ class ActionResultTest extends MadvocTestCase {
 	@Test
 	void testMethodWithPrefix() {
 		WebApplication webapp = new WebApplication();
-		MadvocContainer mcc = webapp.init();
+		webapp.start();
 
-		webapp.registerMadvocComponents();
-		ResultMapper resultMapper = mcc.lookupComponent(ResultMapper.class);
-		MadvocConfig madvocConfig = mcc.lookupComponent(MadvocConfig.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
+		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.setResultPathPrefix("/WEB-INF");
 
 		String path = "/boo.foo";
@@ -170,16 +167,14 @@ class ActionResultTest extends MadvocTestCase {
 	@Test
 	void testAlias() {
 		WebApplication webapp = new WebApplication();
-		MadvocContainer mcc = webapp.init();
+		webapp.start();
 
-		webapp.registerMadvocComponents();
-
-		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo5");
 		actionsManager.registerPathAlias("ok", "xxx.jsp");
 		actionsManager.registerPathAlias("sok", "zzz");
 
-		ResultMapper resultMapper = mcc.lookupComponent(ResultMapper.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 
 		String path = "/boo.foo.html";
 
@@ -199,16 +194,14 @@ class ActionResultTest extends MadvocTestCase {
 	@Test
 	void testAlias2() {
 		WebApplication webapp = new WebApplication();
-		MadvocContainer mcc = webapp.init();
+		webapp.start();
 
-		webapp.registerMadvocComponents();
-
-		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo2");
 		actionsManager.registerPathAlias("/boo.foo2.xxx", "/aliased");
 
-		ResultMapper resultMapper = mcc.lookupComponent(ResultMapper.class);
-		ActionMethodParser actionMethodParser = mcc.lookupComponent(ActionMethodParser.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
 		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
 		String path = cfg.getActionPath();
@@ -220,11 +213,9 @@ class ActionResultTest extends MadvocTestCase {
 	@Test
 	void testAlias3() {
 		WebApplication webapp = new WebApplication();
-		MadvocContainer mcc = webapp.init();
+		webapp.start();
 
-		webapp.registerMadvocComponents();
-
-		ActionsManager actionsManager = mcc.lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo2");
 
 		assertEquals("/boo.foo2.xxx", actionsManager.lookup(BooAction.class.getName() + "#foo2").actionPath);

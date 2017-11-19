@@ -30,7 +30,6 @@ import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApplication;
-import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
 import jodd.util.ClassUtil;
@@ -52,9 +51,7 @@ class ServletDispatcherResultTest {
 	@Test
 	void testServletDispatcherLookup() throws Exception {
 		WebApplication webapp = new WebApplication();
-		MadvocContainer mcc = webapp.init();
-
-		webapp.registerMadvocComponents();
+		webapp.start();
 
 		final List<String> targets = new ArrayList<>();
 
@@ -66,7 +63,7 @@ class ServletDispatcherResultTest {
 			}
 		};
 
-		ResultMapper resultMapper = mcc.lookupComponent(ResultMapper.class);
+		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 		BeanUtil.declared.setProperty(sdr, "resultMapper", resultMapper);
 
 		ActionRequest actionRequest = createActionRequest("/hello.world.html");

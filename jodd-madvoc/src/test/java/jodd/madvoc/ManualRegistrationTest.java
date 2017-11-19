@@ -39,7 +39,7 @@ class ManualRegistrationTest {
 
 	public static class ManualRegistration extends ManualMadvocConfigurator {
 		@Override
-		public void configure() {
+		public void onEvent() {
 			result(TextResult.class);
 			action()
 					.path("/hello")
@@ -58,11 +58,12 @@ class ManualRegistrationTest {
 
 	@Test
 	void testManualAction() {
-		Madvoc madvoc = new Madvoc();
-		madvoc.setMadvocConfiguratorClass(ManualRegistration.class);
-		madvoc.startNewWebApplication(null);
+		WebApplication webApplication = WebApplication
+			.createWebApp()
+			.withMadvocComponent(ManualRegistration.class)
+			.start();
 
-		ActionsManager actionsManager = madvoc.madvocContainer().lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webApplication.madvocContainer().lookupComponent(ActionsManager.class);
 
 		assertEquals(2, actionsManager.getActionsCount());
 
