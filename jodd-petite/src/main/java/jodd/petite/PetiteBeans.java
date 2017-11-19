@@ -298,10 +298,10 @@ public abstract class PetiteBeans {
 
 		// registration
 		if (log.isDebugEnabled()) {
-			log.debug("Register bean " + name +
-					" of type " + type.getSimpleName() +
-					" in " + scopeType.getSimpleName() +
-					" using wiring mode " + wiringMode.toString());
+			log.debug("Petite bean: [" + name +
+					"] -> " + type.getSimpleName() +
+					"@" + scopeType.getSimpleName() +
+					":" + wiringMode.toString());
 		}
 
 		// register

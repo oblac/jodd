@@ -150,7 +150,7 @@ public class ResultsManager {
 			}
 
 			if (log.isInfoEnabled()) {
-				log.debug("ActionResult registered: " + resultValueType + " -> " + actionResultClass);
+				log.debug("ActionResult: [" + resultValueType + "] -> " + actionResultClass);
 			}
 
 			typeResults.put(resultValueType, result);
