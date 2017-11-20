@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TypesUtilTest {
 
-	private static final IntArrayList list = new IntArrayList(40);
+	private static final IntArrayList list = new IntArrayList(39);
 	
 	@BeforeAll
 	static void beforeAll() throws Exception {
