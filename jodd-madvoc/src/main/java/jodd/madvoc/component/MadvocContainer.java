@@ -155,7 +155,6 @@ public class MadvocContainer {
 	 * and then to execute.
 	 */
 	public void fireEvent(Class listenerType) {
-
 		while(true) {
 
 			List<MadvocListenerDef> listenersToFire;
@@ -206,10 +205,21 @@ public class MadvocContainer {
 	/**
 	 * Returns existing component. Throws an exception if component is not registered.
 	 */
-	public <T> T lookupExistingComponent(Class<T> component) {
+	public <T> T requestComponent(Class<T> component) {
 		T existingComponent = lookupComponent(component);
 		if (existingComponent == null) {
 			throw new MadvocException("Madvoc component not found: " + component.getName());
+		}
+		return existingComponent;
+	}
+
+	/**
+	 * Returns existing component. Throws an exception if component is not registered.
+	 */
+	public <T> T requestComponent(String componentName) {
+		T existingComponent = (T) lookupComponent(componentName);
+		if (existingComponent == null) {
+			throw new MadvocException("Madvoc component not found: " + componentName);
 		}
 		return existingComponent;
 	}

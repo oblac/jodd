@@ -50,6 +50,8 @@ import jodd.util.ClassUtil;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Default Madvoc configurator uses auto-magic to configure {@link WebApp}.
@@ -112,6 +114,9 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 		} catch (Exception ex) {
 			throw new MadvocException("Scan classpath error", ex);
 		}
+
+		runnableList.forEach(Runnable::run);
+
 		elapsed = System.currentTimeMillis() - elapsed;
 		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getActionsCount());
 	}
@@ -187,6 +192,8 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 
 	// ---------------------------------------------------------------- handlers
 
+	protected List<Runnable> runnableList = new ArrayList<>();
+
 	/**
 	 * Builds action configuration on founded action class.
 	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
@@ -227,7 +234,8 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 			if (!hasAnnotation) {
 				continue;
 			}
-			actionsManager.register(actionClass, method);
+
+			runnableList.add(() -> actionsManager.register(actionClass, method));
 		}
 	}
 
@@ -247,7 +255,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 		}
 
 		if (ClassUtil.isTypeOf(resultClass, ActionResult.class)) {
-			resultsManager.register(resultClass);
+			runnableList.add(() -> resultsManager.register(resultClass));
 		}
 	}
 

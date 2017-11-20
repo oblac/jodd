@@ -134,7 +134,7 @@ public class WebApp {
 
 		//// config
 		madvocContainer.registerComponent(MadvocConfig.class);
-		madvocConfig = madvocContainer.lookupExistingComponent(MadvocConfig.class);
+		madvocConfig = madvocContainer.requestComponent(MadvocConfig.class);
 
 		configureMadvoc();
 

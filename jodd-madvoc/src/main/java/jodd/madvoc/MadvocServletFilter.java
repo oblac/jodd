@@ -68,7 +68,7 @@ public class MadvocServletFilter implements Filter {
 		log = LoggerFactory.getLogger(MadvocServletFilter.class);
 
 		madvocController =
-			madvoc.webapp().madvocContainer().lookupExistingComponent(MadvocController.class);
+			madvoc.webapp().madvocContainer().requestComponent(MadvocController.class);
 	}
 
 	/**
