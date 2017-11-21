@@ -61,7 +61,7 @@ class TypesUtilTest {
 
 	@ParameterizedTest
 	@MethodSource(value = "testData_isIntegerType")
-	void isIntegerType(final boolean expected, final int input) {
+	void testIsIntegerType(final boolean expected, final int input) {
 		assertEquals(expected, TypesUtil.isIntegerType(input));
 	}
 
@@ -76,7 +76,7 @@ class TypesUtilTest {
 
 	@ParameterizedTest
 	@MethodSource(value = "testData_isStringType")
-	void isStringType(final boolean expected, final int input) {
+	void testIsStringType(final boolean expected, final int input) {
 		assertEquals(expected, TypesUtil.isStringType(input));
 	}
 
