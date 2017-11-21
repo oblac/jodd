@@ -56,8 +56,8 @@ class JtxDbUtilTest {
 
 		final List<Arguments> params = new ArrayList<>();
 
+		// ISOLATION_DEFAULT
 		{
-			// ISOLATION_DEFAULT
 			final boolean readonly = RandomUtils.nextBoolean();
 
 			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
@@ -71,8 +71,8 @@ class JtxDbUtilTest {
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
 
+		// ISOLATION_NONE
 		{
-			// ISOLATION_NONE
 			final boolean readonly = RandomUtils.nextBoolean();
 
 			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
@@ -86,8 +86,8 @@ class JtxDbUtilTest {
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
 
+		// ISOLATION_READ_COMMITTED
 		{
-			// ISOLATION_READ_COMMITTED
 			final boolean readonly = RandomUtils.nextBoolean();
 
 			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
@@ -101,8 +101,8 @@ class JtxDbUtilTest {
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
 
+		// ISOLATION_READ_UNCOMMITTED
 		{
-			// ISOLATION_READ_UNCOMMITTED
 			final boolean readonly = RandomUtils.nextBoolean();
 
 			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
@@ -116,9 +116,8 @@ class JtxDbUtilTest {
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
 
-
+		// ISOLATION_REPEATABLE_READ
 		{
-			// ISOLATION_REPEATABLE_READ
 			final boolean readonly = RandomUtils.nextBoolean();
 
 			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
@@ -132,8 +131,8 @@ class JtxDbUtilTest {
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
 
+		// ISOLATION_SERIALIZABLE
 		{
-			// ISOLATION_SERIALIZABLE
 			final boolean readonly = RandomUtils.nextBoolean();
 
 			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
