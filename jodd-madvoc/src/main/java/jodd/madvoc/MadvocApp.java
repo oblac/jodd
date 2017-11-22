@@ -39,11 +39,23 @@ import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 /**
  * Madvoc configurator for manual configuration.
  */
 public abstract class MadvocApp implements MadvocListener.Start {
+
+	/**
+	 * Creates
+	 */
+	public static MadvocApp create() {
+		return new MadvocApp() {
+			@Override
+			public void start() {
+			}
+		};
+	}
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -68,26 +80,55 @@ public abstract class MadvocApp implements MadvocListener.Start {
 	/**
 	 * Registers result class.
 	 */
-	public void result(Class<? extends ActionResult> resultClass) {
+	public MadvocApp result(Class<? extends ActionResult> resultClass) {
 		resultsManager.register(resultClass);
+		return this;
+	}
+
+	/**
+	 * Registers result and configures it.
+	 */
+	public <R extends ActionResult> MadvocApp result(Class<R> resultClass, Consumer<R> resultConsumer) {
+		R actionResult = (R) resultsManager.register(resultClass);
+		resultConsumer.accept(actionResult);
+		return this;
 	}
 
 	// ---------------------------------------------------------------- wrappers
 
 	/**
-	 * Returns interceptor instance for further configuration.
+	 * Defines an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionInterceptor> T interceptor(Class<T> actionInterceptorClass) {
-		return (T) interceptorsManager.resolve(actionInterceptorClass);
+	public <T extends ActionInterceptor> MadvocApp interceptor(Class<T> actionInterceptorClass) {
+		interceptorsManager.resolve(actionInterceptorClass);
+		return this;
+	}
+
+	/**
+	 * Defines an interceptor.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends ActionInterceptor> MadvocApp interceptor(Class<T> actionInterceptorClass, Consumer<T> interceptorConsumer) {
+		T interceptor = (T) interceptorsManager.resolve(actionInterceptorClass);
+		interceptorConsumer.accept(interceptor);
+		return this;
 	}
 
 	/**
 	 * Returns action filter instance for further configuration.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionFilter> T filter(Class<T> actionFilterClass) {
-		return (T) filtersManager.resolve(actionFilterClass);
+	public <T extends ActionFilter> MadvocApp filter(Class<T> actionFilterClass) {
+		filtersManager.resolve(actionFilterClass);
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends ActionFilter> MadvocApp filter(Class<T> actionFilterClass, Consumer<T> filterConsumer) {
+		T filter = (T) filtersManager.resolve(actionFilterClass);
+		filterConsumer.accept(filter);
+		return this;
 	}
 
 	// ---------------------------------------------------------------- actions
@@ -268,7 +309,7 @@ public abstract class MadvocApp implements MadvocListener.Start {
 		/**
 		 * Binds and finalize action configuration.
 		 */
-		public void bind() {
+		public MadvocApp bind() {
 			if (actionMethodString != null) {
 				actionClassMethod = actionsManager.resolveActionMethod(actionClass, actionMethodString);
 			}
@@ -297,6 +338,8 @@ public abstract class MadvocApp implements MadvocListener.Start {
 			if (alias != null) {
 				actionsManager.registerPathAlias(alias, actionPath);
 			}
+
+			return MadvocApp.this;
 		}
 
 		/**

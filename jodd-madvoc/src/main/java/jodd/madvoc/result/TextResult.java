@@ -45,6 +45,7 @@ public class TextResult extends BaseActionResult<String> {
 		super(NAME);
 	}
 
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 

@@ -51,7 +51,7 @@ class ManualRegistrationTest {
 					.interceptBy(EchoInterceptor.class)
 					.bind();
 
-			interceptor(EchoInterceptor.class).setPrefixIn("====> ");
+			interceptor(EchoInterceptor.class, i->i.setPrefixIn("====> "));
 		}
 	}
 
@@ -62,7 +62,7 @@ class ManualRegistrationTest {
 			.withMadvocComponent(ManualRegistration.class)
 			.start();
 
-		ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webApp.madvocContainer().requestComponent(ActionsManager.class);
 
 		assertEquals(2, actionsManager.getActionsCount());
 
@@ -77,15 +77,26 @@ class ManualRegistrationTest {
 		assertEquals("foo2", actionConfig.actionClassMethod.getName());
 	}
 
-/*	@Test
+	@Test
 	void testManualAction_asArgument() {
 		WebApp webApp = WebApp
 			.createWebApp()
-			.start(app -> {
-				app.
-			});
+			.start(madvoc -> madvoc
+				.result(TextResult.class)
+				.action()
+					.path("/hello")
+					.mapTo(BooAction.class, "foo1")
+					.bind()
+				.action()
+					.path("/world")
+					.mapTo(BooAction.class, "foo2")
+					.interceptBy(EchoInterceptor.class)
+					.bind()
+				.interceptor(EchoInterceptor.class, i->i.setPrefixIn("====> ")
+				)
+			);
 
-		ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
+		ActionsManager actionsManager = webApp.madvocContainer().requestComponent(ActionsManager.class);
 
 		assertEquals(2, actionsManager.getActionsCount());
 
@@ -98,5 +109,5 @@ class ManualRegistrationTest {
 		assertNotNull(actionConfig);
 		assertEquals(BooAction.class, actionConfig.getActionClass());
 		assertEquals("foo2", actionConfig.actionClassMethod.getName());
-	}*/
+	}
 }

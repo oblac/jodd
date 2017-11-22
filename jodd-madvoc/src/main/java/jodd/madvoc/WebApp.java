@@ -49,6 +49,7 @@ import jodd.props.Props;
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
@@ -68,6 +69,7 @@ public class WebApp {
 	protected ServletContext servletContext;
 	private List<Props> propsList = new ArrayList<>();
 	private List<Class> madvocComponents = new ArrayList<>();
+	private List<Consumer<MadvocApp>> madvocAppConsumerList = new ArrayList<>();
 
 	/**
 	 * Defines params to load.
@@ -112,8 +114,15 @@ public class WebApp {
 		return madvocContainer;
 	}
 
-
 	// ---------------------------------------------------------------- lifecycle
+
+	/**
+	 * Initializes and starts web application.
+	 */
+	public WebApp start(Consumer<MadvocApp> madvocAppConsumer) {
+		madvocAppConsumerList.add(madvocAppConsumer);
+		return start();
+	}
 
 	/**
 	 * Initializes and starts web application.
@@ -152,6 +161,16 @@ public class WebApp {
 		initalized();
 
 		madvocContainer.fireEvent(MadvocListener.Start.class);
+
+		if (!madvocAppConsumerList.isEmpty()) {
+
+			MadvocApp madvocApp = MadvocApp.create();
+			madvocContainer.registerComponentInstance(madvocApp);
+
+			for (Consumer<MadvocApp> madvocAppConsumer : madvocAppConsumerList) {
+				madvocAppConsumer.accept(madvocApp);
+			}
+		}
 
 		started();
 
