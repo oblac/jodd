@@ -267,7 +267,7 @@ public class AsmUtil {
 	 * Converts java-class name ("foo.Bar") to bytecode-name ("foo/bar").
 	 */
 	public static String typeToSignature(Class type) {
-		return type.getName().replace('.', '/');
+		return typeToSignature(type.getName());
 	}
 
 	/**
