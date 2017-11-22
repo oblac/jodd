@@ -147,7 +147,13 @@ public class WebApp {
 		madvocComponents = null;
 
 		//// listeners
+		madvocContainer.fireEvent(MadvocListener.Init.class);
+
+		initalized();
+
 		madvocContainer.fireEvent(MadvocListener.Start.class);
+
+		started();
 
 		madvocContainer.fireEvent(MadvocListener.Ready.class);
 
@@ -190,7 +196,19 @@ public class WebApp {
 	}
 
 	/**
-	 * Called when Madvoc is up and running.
+	 * Called when Madvoc is initialized, at the end of the {@link MadvocListener.Init INIT} phase.
+	 */
+	protected void initalized() {
+	}
+	/**
+	 * Called when Madvoc is started, at the end of the {@link MadvocListener.Start START} phase.
+	 */
+
+	protected void started() {
+	}
+
+	/**
+	 * Called when Madvoc is ready, at the end of the {@link MadvocListener.Ready READY} phase.
 	 */
 	protected void ready() {
 	}

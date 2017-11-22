@@ -36,7 +36,7 @@ abstract class ComponentTestBase {
 	@Test
 	void testCustomComponent() {
 		HttpResponse response = HttpRequest.get("localhost:8173/component.html").send();
-		assertEquals("start-ready-UTF-8", response.bodyText().trim());
+		assertEquals("init-start-ready-UTF-8", response.bodyText().trim());
 	}
 
 }

@@ -29,7 +29,7 @@ import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
 
 @MadvocComponent
-public class MyComponent implements MadvocListener.Start, MadvocListener.Ready {
+public class MyComponent implements MadvocListener.Init, MadvocListener.Ready, MadvocListener.Start {
 
 	@PetiteInject
 	MadvocConfig madvocConfig;
@@ -45,12 +45,17 @@ public class MyComponent implements MadvocListener.Start, MadvocListener.Ready {
 	}
 
 	@Override
-	public void start() {
-		string +="start-";
+	public void init() {
+		string +="init-";
 	}
 
 	@Override
 	public void ready() {
 		string +="ready-";
+	}
+
+	@Override
+	public void start() {
+		string +="start-";
 	}
 }

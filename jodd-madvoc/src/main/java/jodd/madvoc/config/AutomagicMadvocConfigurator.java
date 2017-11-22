@@ -62,7 +62,7 @@ import java.util.List;
  * Action class is scanned for the {@link MadvocAction}. All public methods with {@link Action}
  * are registered as Madvoc actions.
  */
-public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocListener.Start {
+public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocListener.Init, MadvocListener.Start {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
 
@@ -84,16 +84,34 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 
 	protected final byte[] madvocComponentAnnotation;
 
+	protected List<Runnable> webappConfigurations = new ArrayList<>();
+	protected List<Runnable> madvocComponents = new ArrayList<>();
+
 	public AutomagicMadvocConfigurator() {
 		actionClassSuffix = "Action";
 		resultClassSuffix = "Result";
-		elapsed = 0;
 		madvocComponentAnnotation = getTypeSignatureBytes(MadvocComponent.class);
 	}
 
 	@Override
-	public void start() {
+	public void init() {
+		elapsed = System.currentTimeMillis();
+
 		configureByScanningClassPath(ClassLoaderUtil.getDefaultClasspath());
+
+		madvocComponents.forEach(Runnable::run);
+
+		elapsed = System.currentTimeMillis() - elapsed;
+	}
+
+	@Override
+	public void start() {
+		long now = System.currentTimeMillis();
+
+		webappConfigurations.forEach(Runnable::run);
+
+		elapsed += (System.currentTimeMillis() - now);
+		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getActionsCount());
 	}
 
 	/**
@@ -105,8 +123,6 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 	 * </ol>
 	 */
 	protected void configureByScanningClassPath(File[] classpath) {
-		elapsed = System.currentTimeMillis();
-
 		rulesEntries.smartMode();
 
 		try {
@@ -114,11 +130,6 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 		} catch (Exception ex) {
 			throw new MadvocException("Scan classpath error", ex);
 		}
-
-		runnableList.forEach(Runnable::run);
-
-		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getActionsCount());
 	}
 
 
@@ -192,8 +203,6 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 
 	// ---------------------------------------------------------------- handlers
 
-	protected List<Runnable> runnableList = new ArrayList<>();
-
 	/**
 	 * Builds action configuration on founded action class.
 	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
@@ -235,7 +244,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 				continue;
 			}
 
-			runnableList.add(() -> actionsManager.register(actionClass, method));
+			webappConfigurations.add(() -> actionsManager.register(actionClass, method));
 		}
 	}
 
@@ -255,7 +264,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 		}
 
 		if (ClassUtil.isTypeOf(resultClass, ActionResult.class)) {
-			runnableList.add(() -> resultsManager.register(resultClass));
+			webappConfigurations.add(() -> resultsManager.register(resultClass));
 		}
 	}
 
@@ -273,7 +282,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 			return;
 		}
 
-		madvocContainer.registerComponent(componentClass);
+		madvocComponents.add(() -> madvocContainer.registerComponent(componentClass));
 	}
 
 }

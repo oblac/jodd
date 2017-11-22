@@ -32,13 +32,17 @@ import jodd.madvoc.MadvocException;
  */
 public class MadvocListener {
 
-	public static Class[] ALL_TYPES = new Class[] {Start.class, Ready.class, Stop.class};
+	public static Class[] ALL_TYPES = new Class[] {Init.class, Start.class, Ready.class, Stop.class};
 
 	/**
 	 * Invoke the listener based on type.
 	 * Not very OOP, but works.
 	 */
 	public static void invoke(Object listener, final Class listenerType) {
+		if (listenerType == Init.class) {
+			((Init) listener).init();
+			return;
+		}
 		if (listenerType == Start.class) {
 			((Start) listener).start();
 			return;
@@ -55,16 +59,25 @@ public class MadvocListener {
 	}
 
 	/**
-	 * Madvoc START handler.
-	 * All components are loaded. User for registering user actions.
+	 * Madvoc <b>INIT</b> handler.
+	 * Components are being registered. Should not request for an instance during this phase, since dependencies
+	 * may still not be registered or updated.
+	 */
+	public interface Init {
+		void init();
+	}
+
+	/**
+	 * Madvoc <b>START</b> handler.
+	 * All components are registered. Web application is being loaded.
 	 */
 	public interface Start {
 		void start();
 	}
 
 	/**
-	 * Madvoc READY handler.
-	 * Invoked when all initialization is done: when both madvoc and user components and actions are loaded.
+	 * Madvoc <b>READY</b> handler.
+	 * Initialization is done: everything is registered.
 	 * This phase is used for running any initialization that depends on the complete configuration.
 	 */
 	public interface Ready {
