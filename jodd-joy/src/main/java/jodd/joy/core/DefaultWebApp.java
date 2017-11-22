@@ -29,6 +29,7 @@ import jodd.madvoc.WebApp;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
+import jodd.madvoc.proxetta.ProxettaProvider;
 import jodd.petite.PetiteContainer;
 
 /**
@@ -63,9 +64,7 @@ public abstract class DefaultWebApp extends PetiteWebApp {
 	@Override
 	protected final void registerMadvocComponents() {
 		super.registerMadvocComponents();
-
-		// todo add proxetta provider? i.e. add add AppCore provider!!!
-		madvocContainer.registerComponentInstance(new ProxettaAwareActionsManager(defaultAppCore.getProxetta()));
+		madvocContainer.registerComponentInstance((ProxettaProvider) defaultAppCore::getProxetta);
 	}
 
 	/**
@@ -78,7 +77,7 @@ public abstract class DefaultWebApp extends PetiteWebApp {
 	 * new Petite container; that is fine when e.g. there are no layers.
 	 */
 	@Override
-	protected PetiteContainer providePetiteContainer() {
+	protected PetiteContainer createAndInitializePetiteContainer() {
 		return defaultAppCore.getPetite();
 	}
 

@@ -23,24 +23,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.auth;
+package jodd.madvoc.proxetta;
 
-/**
- * User AUTH data.
- */
-public interface UserAuth {
+import jodd.proxetta.impl.ProxyProxetta;
 
-	/**
-	 * Returns users ID used for authentication.
-	 * Usually it is the same as users own ID.
-	 */
-	public String getUserAuthId();
+import java.util.function.Supplier;
 
-	/**
-	 * Returns hashed password.
-	 * Usually this is the value that is
-	 * stored in the database.
-	 */
-	public String getHashedPassword();
+public interface ProxettaProvider extends Supplier<ProxyProxetta> {
 
+	@Override
+	ProxyProxetta get();
 }
