@@ -45,7 +45,7 @@ class AsmUtilTest {
 	@ParameterizedTest
 	@MethodSource(value = "testdata_testTypeToTyperef")
 	void testTypeToTyperef(final String expected, final Class input) {
-   		assertEquals(expected, AsmUtil.typeToTyperef(input));
+		assertEquals(expected, AsmUtil.typeToTyperef(input));
 	}
 
 	private static List<Arguments> testdata_testTypeToTyperef() {
