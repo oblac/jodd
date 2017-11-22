@@ -102,7 +102,7 @@ public class Base64 {
 	/**
 	 * Decodes a BASE64 encoded char array.
 	 */
-	public byte[] decode(char[] arr) {
+	public static byte[] decode(char[] arr) {
 		int length = arr.length;
 		if (length == 0) {
 			return new byte[0];
