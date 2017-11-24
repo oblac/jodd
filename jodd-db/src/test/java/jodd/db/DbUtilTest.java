@@ -307,7 +307,7 @@ class DbUtilTest {
 		}
 	}
 
-	// all convertes are simple and not full of special convertions :-)
+	// all converters are simple - no special handling is available - e.g. support different input data / types
 
 	static class ToSqlDateArgumentConverter extends SimpleArgumentConverter {
 
