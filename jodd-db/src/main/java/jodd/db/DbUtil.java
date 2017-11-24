@@ -98,6 +98,7 @@ public class DbUtil {
 	public static void setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType) throws SQLException {
 		if (value == null) {
 			preparedStatement.setNull(index, Types.NULL);
+			return;
 		}
 
 		switch (targetSqlType) {
