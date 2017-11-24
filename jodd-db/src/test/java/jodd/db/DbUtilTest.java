@@ -25,16 +25,22 @@
 
 package jodd.db;
 
+import jodd.db.type.SqlType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.math.BigDecimal;
+import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DbUtilTest {
 
@@ -175,4 +181,207 @@ class DbUtilTest {
 
 	}
 
+	@Nested
+	@DisplayName("tests for setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType)")
+	class SetPreparedStatementObject {
+
+		private PreparedStatement mock = null;
+		private final int index = 1;
+
+		@BeforeEach
+		void before() {
+			mock = Mockito.mock(PreparedStatement.class);
+		}
+
+		@Test
+		void value_is_null() throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, null, Types.INTEGER);
+
+			Mockito.verify(mock, Mockito.times(1)).setNull(index, Types.NULL);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"Jodd, 12", "Jodd, -1", "Jodd, 1"})
+		void call_setString(String value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setString(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"23, 4", "23, 5", "23, -6"})
+		void call_setInt(Integer value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setInt(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"77, -5"})
+		void call_setLong(Long value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setLong(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"true, 16", "false, -7"})
+		void call_setBoolean(Boolean value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setBoolean(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"1511517069757, 91"})
+		void call_setDate(@ConvertWith(ToSqlDateArgumentConverter.class) Date value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setDate(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"33.11, 2", "111.11, 3"})
+		void call_setBigDecimal(@ConvertWith(ToBigDecimalArgumentConverter.class) BigDecimal value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setBigDecimal(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"45.66, 8"})
+		void call_setDouble(Double value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setDouble(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"45.66, 7", "88.55, 6"})
+		void call_setFloat(Float value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setFloat(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"21:44:06, 92"})
+		void call_setTime(@ConvertWith(ToSqlTimeArgumentConverter.class) Time value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setTime(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"1511517069757, 93"})
+		void call_setTimestamp(@ConvertWith(ToSqlTimestampArgumentConverter.class) Timestamp value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setTimestamp(index, value);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = {"65, -2", "123,-3"})
+		void call_setBytes(@ConvertWith(ToByteArrayArgumentConverter.class) byte[] value, int targetSqlType) throws SQLException {
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setBytes(index, value);
+		}
+
+		@Test
+		void call_setObject() throws SQLException {
+			final Object value = new Object();
+			final int targetSqlType = Types.BLOB; // Blob not used before
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setObject(index, value, targetSqlType);
+		}
+
+		@Test
+		void call_setObject_with_DB_SQLTYPE_NOT_AVAILABLE() throws SQLException {
+			final Object value = new Object();
+			final int targetSqlType = SqlType.DB_SQLTYPE_NOT_AVAILABLE;
+			DbUtil.setPreparedStatementObject(mock, index, value, targetSqlType);
+
+			Mockito.verify(mock, Mockito.times(1)).setObject(index, value);
+		}
+	}
+
+	// all convertes are simple and not full of special convertions :-)
+
+	static class ToSqlDateArgumentConverter extends SimpleArgumentConverter {
+
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			assertEquals(java.sql.Date.class, targetType, "Can only convert to " + Date.class.getCanonicalName());
+			Long value = null;
+			try {
+				value = Long.parseLong(source.toString());
+			} catch (Exception e) {
+				fail("failure while converting " + source + " into an instance of " + targetType.getCanonicalName() );
+			}
+			return new Date(value);
+		}
+
+	}
+
+	static class ToBigDecimalArgumentConverter extends SimpleArgumentConverter {
+
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			assertEquals(BigDecimal.class, targetType, "Can only convert to " + BigDecimal.class.getCanonicalName());
+			try {
+				return BigDecimal.valueOf(Double.parseDouble(source.toString()));
+			} catch (Exception e) {
+				fail("failure while converting " + source + " into an instance of " + targetType.getCanonicalName());
+			}
+			return null;
+		}
+
+	}
+
+	static class ToSqlTimeArgumentConverter extends SimpleArgumentConverter {
+
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			assertEquals(Time.class, targetType, "Can only convert to " + Time.class.getCanonicalName());
+			try {
+				return Time.valueOf(source.toString());
+			} catch (Exception e) {
+				fail("failure while converting " + source + " into an instance of " + targetType.getCanonicalName());
+			}
+			return null;
+		}
+
+	}
+
+	static class ToSqlTimestampArgumentConverter extends SimpleArgumentConverter {
+
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			assertEquals(Timestamp.class, targetType, "Can only convert to " + Timestamp.class.getCanonicalName());
+			try {
+				return new Timestamp(Long.parseLong(source.toString()));
+			} catch (Exception e) {
+				fail("failure while converting " + source + " into an instance of " + targetType.getCanonicalName());
+			}
+			return null;
+		}
+
+	}
+
+	static class ToByteArrayArgumentConverter extends SimpleArgumentConverter {
+
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			assertEquals(byte[].class, targetType, "Can only convert to " + byte[].class.getCanonicalName());
+			try {
+				return new byte[] {Byte.parseByte(source.toString())};
+			} catch (Exception e) {
+				fail("failure while converting " + source + " into an instance of " + targetType.getCanonicalName());
+			}
+			return null;
+		}
+
+	}
 }
