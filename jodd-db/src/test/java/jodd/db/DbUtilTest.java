@@ -58,12 +58,18 @@ class DbUtilTest {
 			Statement mock = Mockito.mock(Statement.class);
 			Mockito.doThrow(SQLException.class).when(mock).close();
 			DbUtil.close(mock);
+
+			// Mock verify
+			Mockito.verify(mock, Mockito.times(1)).close();			
 		}
 
 		@Test
 		void close_without_exception() throws SQLException {
 			Statement mock = Mockito.mock(Statement.class);
 			DbUtil.close(mock);
+
+			// Mock verify
+			Mockito.verify(mock, Mockito.times(1)).close();
 		}
 
 	}
