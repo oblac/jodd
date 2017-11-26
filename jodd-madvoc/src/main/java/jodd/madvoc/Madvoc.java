@@ -143,7 +143,7 @@ public class Madvoc {
 	 * when web application is run out from container.
 	 */
 	@SuppressWarnings("InstanceofCatchParameter")
-	public WebApp startNewWebApplication(ServletContext servletContext) {
+	public WebApp startWebApplication(ServletContext servletContext) {
 		try {
 			WebApp webApp = _start(servletContext);
 

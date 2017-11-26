@@ -72,7 +72,7 @@ public abstract class WebRunner {
 
 		madvoc = new Madvoc();
 		madvoc.setWebAppClass(webAppClass);
-		app = madvoc.startNewWebApplication(null);
+		app = madvoc.startWebApplication(null);
 
 		appCore = BeanUtil.declared.getProperty(app, "appCore");
 

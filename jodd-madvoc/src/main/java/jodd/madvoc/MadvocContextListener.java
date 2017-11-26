@@ -49,7 +49,7 @@ public class MadvocContextListener implements ServletContextListener {
 
 		madvoc.configureWith(servletContext);
 
-		madvoc.startNewWebApplication(servletContext);
+		madvoc.startWebApplication(servletContext);
 	}
 
 	/**
