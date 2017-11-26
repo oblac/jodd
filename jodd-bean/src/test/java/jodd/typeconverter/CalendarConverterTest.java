@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CalendarConverterTest {
@@ -101,4 +102,27 @@ class CalendarConverterTest {
 		DateFormat df = new SimpleDateFormat();
 		assertEquals(df.format(gc.getTime()), df.format(Converter.get().toDate(jdt)));
 	}
+
+	@Test
+	void testNumberToCalendar() {
+		final Long input = time;
+
+		final Calendar actual =  new CalendarConverter().convert(input);
+
+		// asserts
+		assertNotNull(actual);
+		assertEquals(time, actual.getTimeInMillis());
+	}
+
+	@Test
+	void testStringWithOnlyDigitsToCalendar() {
+		final String input = String.valueOf(time);
+
+		final Calendar actual =  new CalendarConverter().convert(input);
+
+		// asserts
+		assertNotNull(actual);
+		assertEquals(time, actual.getTimeInMillis());
+	}
+
 }
