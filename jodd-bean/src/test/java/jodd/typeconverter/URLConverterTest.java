@@ -26,21 +26,54 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.URLConverter;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class URLConverterTest {
 
 	@Test
-	void testConversion() {
-		URLConverter urlConverter = new URLConverter();
+	void testConvert_with_null_input() {
+		final URLConverter urlConverter = new URLConverter();
 
-		File f = new File("/folder/file.ext");
-		URL url = urlConverter.convert(f);
-		assertNotNull(url);
+		final URL actual = urlConverter.convert(null);
+
+		//asserts
+		assertNull(actual);
 	}
+
+	@ParameterizedTest
+	@MethodSource("testdata_testConvert_with_non_null_input")
+	void testConvert_with_non_null_input(final Object input) {
+		final URLConverter urlConverter = new URLConverter();
+
+		final URL actual = urlConverter.convert(input);
+
+		// asserts
+		assertNotNull(actual);
+	}
+
+	private static Collection<Arguments> testdata_testConvert_with_non_null_input() throws Exception{
+
+		final List<Arguments> params = new ArrayList<>();
+
+		params.add(Arguments.of(new URL("http://jodd.org/")));
+		params.add(Arguments.of(new File(SystemUtil.tempDir(), "jodd.txt")));
+		params.add(Arguments.of(new File(SystemUtil.tempDir(), "jodd.txt").toURI()));
+		params.add(Arguments.of("http://jodd.org/"));
+
+		return params;
+	}
+
 }
