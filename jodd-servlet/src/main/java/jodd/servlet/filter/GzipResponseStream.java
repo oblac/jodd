@@ -25,11 +25,11 @@
 
 package jodd.servlet.filter;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * GZIP response stream.
@@ -94,6 +94,16 @@ public class GzipResponseStream extends ServletOutputStream {
 	protected void setBuffer(int threshold) {
 		compressionThreshold = threshold;
 		buffer = new byte[compressionThreshold];
+	}
+
+	@Override
+	public boolean isReady() {
+		return output.isReady();
+	}
+
+	@Override
+	public void setWriteListener(WriteListener writeListener) {
+		output.setWriteListener(writeListener);
 	}
 
 	/**
