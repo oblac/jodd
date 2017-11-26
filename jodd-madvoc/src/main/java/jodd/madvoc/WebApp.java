@@ -182,7 +182,8 @@ public class WebApp {
 	}
 
 	/**
-	 * Hook for manual Madvoc configuration.
+	 * Hook for manual Madvoc configuration. No component is registered, only {@link MadvocConfig}
+	 * and {@link MadvocContainer}.
 	 */
 	protected void configureMadvoc() {
 	}
@@ -216,18 +217,21 @@ public class WebApp {
 
 	/**
 	 * Called when Madvoc is initialized, at the end of the {@link MadvocListener.Init INIT} phase.
+	 * @see MadvocListener.Init
 	 */
 	protected void initalized() {
 	}
+
 	/**
 	 * Called when Madvoc is started, at the end of the {@link MadvocListener.Start START} phase.
+	 * @see MadvocListener.Start
 	 */
-
 	protected void started() {
 	}
 
 	/**
 	 * Called when Madvoc is ready, at the end of the {@link MadvocListener.Ready READY} phase.
+	 * @see MadvocListener.Ready
 	 */
 	protected void ready() {
 	}

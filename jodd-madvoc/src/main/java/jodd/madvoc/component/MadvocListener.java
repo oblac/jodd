@@ -61,7 +61,7 @@ public class MadvocListener {
 	/**
 	 * Madvoc <b>INIT</b> handler.
 	 * Components are being registered. Should not request for an instance during this phase, since dependencies
-	 * may still not be registered or updated.
+	 * may still not be registered or updated. May be used for registration of additional components.
 	 */
 	public interface Init {
 		void init();
@@ -69,7 +69,9 @@ public class MadvocListener {
 
 	/**
 	 * Madvoc <b>START</b> handler.
-	 * All components are registered. Web application is being loaded.
+	 * All components are registered. Web application is being loaded. Should not use any web application
+	 * component (action, filter, interceptor, result...) during this phase. New web application components
+	 * may be registered.
 	 */
 	public interface Start {
 		void start();
