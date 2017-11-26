@@ -34,6 +34,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -52,7 +53,7 @@ class JtxDbUtilTest {
 		assertTrue(expected.equals(actual));
 	}
 
-	private static Arguments[] testData_testConvertToDbMode() {
+	private static Collection<Arguments> testData_testConvertToDbMode() {
 
 		final List<Arguments> params = new ArrayList<>();
 
@@ -146,7 +147,7 @@ class JtxDbUtilTest {
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
 
-		return params.toArray(new Arguments[0]);
+		return params;
 	}
 
 }
