@@ -47,7 +47,7 @@ ext {
 
 	// libraries
 
-	tomcatVersion = '7.0.47'
+	tomcatVersion = '7.0.82'
 
 	lib = [
 		mail:			[
@@ -55,19 +55,16 @@ ext {
 							'com.sun.mail:javax.mail:1.6.0'
 						],
 		activation:		'javax.activation:activation:1.1.1',
-		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
-		jsp:			'javax.servlet.jsp:jsp-api:2.2',
+		servlet:		'javax.servlet:javax.servlet-api:3.1.0',
+		jsp:			'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1',
 
-		log_slf4j:			'org.slf4j:slf4j-api:[1.7,1.8)',
-		log_slf4j_simple:	'org.slf4j:slf4j-simple:[1.7,1.8)',
-		log_logback_core: 	'ch.qos.logback:logback-core:[1.2,1.3)',
+		log_slf4j:			 'org.slf4j:slf4j-api:[1.7,1.8)',
+		log_slf4j_simple:	 'org.slf4j:slf4j-simple:[1.7,1.8)',
+		log_logback_core: 	 'ch.qos.logback:logback-core:[1.2,1.3)',
 		log_logback_classic: 'ch.qos.logback:logback-classic:[1.2,1.3)',
-		log_jcl:        	'commons-logging:commons-logging:[1.2,1.3)',
-		log_log4j2:		  'org.apache.logging.log4j:log4j-api:[2.8,2.9)',
-		log_log4j2_core:		  'org.apache.logging.log4j:log4j-core:[2.8,2.9)',
-
-//		asm:			'org.ow2.asm:asm:4.1',
-//		junit: 			'junit:junit:4.12',
+		log_jcl:        	 'commons-logging:commons-logging:[1.2,1.3)',
+		log_log4j2:		     'org.apache.logging.log4j:log4j-api:[2.8,2.9)',
+		log_log4j2_core:     'org.apache.logging.log4j:log4j-core:[2.8,2.9)',
 
 		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.0.2',
 		junit5_params:	'org.junit.jupiter:junit-jupiter-params:5.0.2',
@@ -81,7 +78,7 @@ ext {
 		mssql:			'com.microsoft.sqlserver:mssql-jdbc:6.1.0.jre8',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
 		greenmail:		'com.icegreen:greenmail:1.5.2',
-		//el_api:		'javax.el:el-api:2.2',
+
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
 		tomcat_embed:	[
 							"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
