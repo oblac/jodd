@@ -36,6 +36,7 @@ import java.lang.reflect.Modifier;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,13 +66,13 @@ class TypesUtilTest {
 		assertEquals(expected, TypesUtil.isIntegerType(input));
 	}
 
-	private static Arguments[] testData_isIntegerType() {
+	private static Collection<Arguments> testData_isIntegerType() {
 		final List<Integer> integerTypes = Arrays.asList(Types.INTEGER, Types.SMALLINT, Types.TINYINT, Types.BIT);
 		final List<Arguments> args = new ArrayList<>();
 		Arrays.stream(ALL_TYPES.toArray())
 				.forEach(intStream -> args.add(Arguments.of(integerTypes.contains(intStream), intStream)));
 
-		return args.toArray(new Arguments[0]);
+		return args;
 	}
 
 	@ParameterizedTest
@@ -80,13 +81,13 @@ class TypesUtilTest {
 		assertEquals(expected, TypesUtil.isStringType(input));
 	}
 
-	private static Arguments[] testData_isStringType() {
+	private static Collection<Arguments> testData_isStringType() {
 		final List<Integer> stringTypes = Arrays.asList(Types.VARCHAR, Types.CHAR);
 		final List<Arguments> args = new ArrayList<>();
 		Arrays.stream(ALL_TYPES.toArray())
 				.forEach(intStream -> args.add(Arguments.of(stringTypes.contains(intStream), intStream)));
 
-		return args.toArray(new Arguments[0]);
+		return args;
 	}
 
 }
