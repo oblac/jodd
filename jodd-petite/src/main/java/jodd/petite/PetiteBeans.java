@@ -298,9 +298,9 @@ public abstract class PetiteBeans {
 
 		// registration
 		if (log.isDebugEnabled()) {
-			log.debug("Petite bean: [" + name +
-					"] -> " + type.getSimpleName() +
-					"@" + scopeType.getSimpleName() +
+			log.info("Petite bean: [" + name +
+					"] --> " + type.getName() +
+					" @ " + scopeType.getSimpleName() +
 					":" + wiringMode.toString());
 		}
 

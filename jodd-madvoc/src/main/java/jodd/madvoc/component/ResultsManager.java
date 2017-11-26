@@ -124,7 +124,7 @@ public class ResultsManager {
 			}
 
 			if (log.isInfoEnabled()) {
-				log.debug("ActionResult registered: " + resultName + " -> " + actionResultClass);
+				log.debug("Madvoc ActionResult: " + resultName + " --> " + actionResultClass);
 			}
 
 			stringResults.put(resultName, result);
@@ -150,17 +150,13 @@ public class ResultsManager {
 			}
 
 			if (log.isInfoEnabled()) {
-				log.debug("ActionResult: [" + resultValueType + "] -> " + actionResultClass);
+				log.debug("Madvoc ActionResult: [" + resultValueType.getName() + "] --> " + actionResultClass);
 			}
 
 			typeResults.put(resultValueType, result);
 		}
 
 		// + all results
-
-		if (log.isInfoEnabled()) {
-			log.debug("ActionResult registered: " + actionResultClass);
-		}
 
 		allResults.put(actionResultClass, result);
 

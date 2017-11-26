@@ -86,7 +86,7 @@ public class MadvocContainer {
 	 * Registers Madvoc component with given name.
 	 */
 	public void registerComponentInstance(String name, Class component) {
-		log.debug(() -> "Madvoc WebApp component [" + name + "] @ " + component.getName());
+		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
 
 		madpc.removeBean(name);
 		madpc.registerPetiteBean(component, name, null, null, false);
@@ -105,7 +105,7 @@ public class MadvocContainer {
 	 * USE injection, unless you are absolutely sure it works.
 	 */
 	public void registerComponentInstance(String name, Object componentInstance) {
-		log.debug(() -> "Madvoc WebApp component [" + name + "] @ " + componentInstance.getClass().getName());
+		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + componentInstance.getClass().getName());
 
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);
