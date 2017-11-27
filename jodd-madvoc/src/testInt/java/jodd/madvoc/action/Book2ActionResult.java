@@ -27,7 +27,6 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.result.BaseActionResult;
-import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,6 +37,7 @@ public class Book2ActionResult extends BaseActionResult<Book> {
 		return null;
 	}
 
+	@Override
 	public void render(ActionRequest actionRequest, Book book) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 
@@ -46,7 +46,9 @@ public class Book2ActionResult extends BaseActionResult<Book> {
 		String method = actionRequest.getActionConfig().getActionMethod();
 
 		if (method.equalsIgnoreCase("PUT")) {
-			DispatcherUtil.forward(request, actionRequest.getHttpServletResponse(), "/book/put.jsp");
+			// JSPs only permit GET POST or HEAD
+			//DispatcherUtil.forward(request, actionRequest.getHttpServletResponse(), "/book/put.jsp");
+			actionRequest.getHttpServletResponse().getWriter().write("OldBook: " + book.getIban() + ":" + book.getName() + ".");
 		}
 	}
 }
