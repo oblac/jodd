@@ -27,7 +27,6 @@ package jodd.http;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,11 +45,6 @@ class TimeoutTest {
 	@AfterAll
 	static void stopServer() throws Exception {
 		testServer.stop();
-	}
-
-	@BeforeEach
-	void setUp() {
-		EchoServlet.testinit();
 	}
 
 	@Test

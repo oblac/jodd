@@ -23,30 +23,24 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http;
+package jodd.http.fixture;
 
 import jodd.util.StringPool;
-import jodd.util.ThreadUtil;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class SlowServlet extends HttpServlet {
+@MultipartConfig
+public class Echo2Servlet extends EchoServlet {
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ThreadUtil.sleep(5000);
-		write(resp, "OK");
-	}
-
-	protected void write(HttpServletResponse resp, String text) throws IOException {
-		if (text != null) {
-			resp.setContentLength(text.getBytes(StringPool.UTF_8).length);
-			resp.setContentType("text/html;charset=UTF-8");
-			resp.getWriter().write(text);
-			resp.flushBuffer();
-		}
+	protected void readAll(HttpServletRequest req) throws IOException {
+		Data.ref.queryString = req.getQueryString();
+		Data.ref.header = copyHeaders(req);
+		Data.ref.params = copyParams(req, StringPool.UTF_8);
+		Data.ref.parts = copyParts(req);
+		Data.ref.fileNames = copyFileName(req);
 	}
 
 }

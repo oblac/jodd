@@ -34,6 +34,7 @@ public class TomcatServer extends TestServer {
 
 	protected Tomcat tomcat;
 
+	@Override
 	public void start() throws Exception {
 		super.start();
 
@@ -42,11 +43,12 @@ public class TomcatServer extends TestServer {
 		tomcat = new Tomcat();
 		tomcat.setPort(8173);
 		tomcat.setBaseDir(workingDir);
-		tomcat.addWebapp("/", webRoot.getAbsolutePath());
+		tomcat.addWebapp("", webRoot.getAbsolutePath());
 
 		tomcat.start();
 	}
 
+	@Override
 	public void stop() throws Exception {
 		tomcat.stop();
 		tomcat.destroy();

@@ -7,7 +7,7 @@
 	<servlet>
 		<display-name>EchoServlet</display-name>
 		<servlet-name>EchoServlet</servlet-name>
-		<servlet-class>jodd.http.EchoServlet</servlet-class>
+		<servlet-class>jodd.http.fixture.EchoServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -18,7 +18,7 @@
 	<servlet>
 		<display-name>Echo2Servlet</display-name>
 		<servlet-name>Echo2Servlet</servlet-name>
-		<servlet-class>jodd.http.Echo2Servlet</servlet-class>
+		<servlet-class>jodd.http.fixture.Echo2Servlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -27,9 +27,20 @@
 	</servlet-mapping>
 
 	<servlet>
+		<display-name>Echo3Servlet</display-name>
+		<servlet-name>Echo3Servlet</servlet-name>
+		<servlet-class>jodd.http.fixture.Echo3Servlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Echo3Servlet</servlet-name>
+		<url-pattern>/echo3</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<display-name>TargetServlet</display-name>
 		<servlet-name>TargetServlet</servlet-name>
-		<servlet-class>jodd.http.TargetServlet</servlet-class>
+		<servlet-class>jodd.http.fixture.TargetServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -40,7 +51,7 @@
 	<servlet>
 		<display-name>RedirectServlet</display-name>
 		<servlet-name>RedirectServlet</servlet-name>
-		<servlet-class>jodd.http.RedirectServlet</servlet-class>
+		<servlet-class>jodd.http.fixture.RedirectServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -51,7 +62,7 @@
 	<servlet>
 		<display-name>SlowServlet</display-name>
 		<servlet-name>SlowServlet</servlet-name>
-		<servlet-class>jodd.http.SlowServlet</servlet-class>
+		<servlet-class>jodd.http.fixture.SlowServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

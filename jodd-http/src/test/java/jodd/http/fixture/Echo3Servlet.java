@@ -23,47 +23,24 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http;
+package jodd.http.fixture;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import jodd.util.StringPool;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
-class HttpRedirectTest {
+@MultipartConfig
+public class Echo3Servlet extends EchoServlet {
 
-	static TestServer testServer;
-
-	@BeforeAll
-	static void startServer() throws Exception {
-		testServer = new TomcatServer();
-		testServer.start();
-	}
-
-	@AfterAll
-	static void stopServer() throws Exception {
-		testServer.stop();
-	}
-
-	@Test
-	void testRedirect() {
-		HttpRequest httpRequest = HttpRequest.get("localhost:8173/redirect");
-
-		HttpResponse httpResponse = httpRequest.send();
-
-		assertEquals(302, httpResponse.statusCode);
-
-		HttpBrowser httpBrowser = new HttpBrowser();
-
-		httpBrowser.sendRequest(
-				HttpRequest.get("localhost:8173/redirect"));
-
-		httpResponse = httpBrowser.getHttpResponse();
-
-		assertNotNull(httpResponse);
-		assertEquals("target!", httpResponse.body());
+	@Override
+	protected void readAll(HttpServletRequest req) throws IOException {
+		Data.ref.queryString = req.getQueryString();
+		Data.ref.header = copyHeaders(req);
+		Data.ref.params = copyParams(req, StringPool.ISO_8859_1);
+		Data.ref.parts = copyParts(req);
+		Data.ref.fileNames = copyFileName(req);
 	}
 
 }

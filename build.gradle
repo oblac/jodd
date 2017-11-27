@@ -47,7 +47,7 @@ ext {
 
 	// libraries
 
-	tomcatVersion = '7.0.82'
+	tomcatVersion = '8.0.47'
 
 	lib = [
 		mail:			[

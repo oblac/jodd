@@ -61,22 +61,26 @@ public abstract class TestServer {
 
 		// classes
 
-		File classes = new File(webInfFolder, "classes/jodd/http");
+		File classes = new File(webInfFolder, "classes/jodd/http/fixture");
 		classes.mkdirs();
 
-		URL echoServletUrl = TestServer.class.getResource("EchoServlet.class");
+		URL echoServletUrl = TestServer.class.getResource("fixture/EchoServlet.class");
 		File echoServletFile = FileUtil.toFile(echoServletUrl);
 		FileUtil.copyFileToDir(echoServletFile, classes);
 
-		echoServletUrl = TestServer.class.getResource("Echo2Servlet.class");
+		echoServletUrl = TestServer.class.getResource("fixture/Echo2Servlet.class");
 		echoServletFile = FileUtil.toFile(echoServletUrl);
 		FileUtil.copyFileToDir(echoServletFile, classes);
 
-		URL redirectServletUrl = TestServer.class.getResource("RedirectServlet.class");
+		echoServletUrl = TestServer.class.getResource("fixture/Echo3Servlet.class");
+		echoServletFile = FileUtil.toFile(echoServletUrl);
+		FileUtil.copyFileToDir(echoServletFile, classes);
+
+		URL redirectServletUrl = TestServer.class.getResource("fixture/RedirectServlet.class");
 		File redirectServletFile = FileUtil.toFile(redirectServletUrl);
 		FileUtil.copyFileToDir(redirectServletFile, classes);
 
-		URL targetServletUrl = TestServer.class.getResource("TargetServlet.class");
+		URL targetServletUrl = TestServer.class.getResource("fixture/TargetServlet.class");
 		File targetServletFile = FileUtil.toFile(targetServletUrl);
 		FileUtil.copyFileToDir(targetServletFile, classes);
 	}

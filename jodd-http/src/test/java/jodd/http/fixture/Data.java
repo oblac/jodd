@@ -23,23 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http;
+package jodd.http.fixture;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.servlet.http.Cookie;
+import java.util.Map;
 
-/**
- * Simply redirects to '/target'.
- */
-public class RedirectServlet extends HttpServlet {
+public class Data {
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	public static Data ref;
 
-		resp.sendRedirect("/target");
-	}
+	public boolean get;
+	public boolean post;
+	public String queryString;
+	public String body;
+	public Map<String, String> header;
+	public Map<String, String> params;
+	public Map<String, String> parts;
+	public Map<String, String> fileNames;
+	public Cookie[] cookies;
 }

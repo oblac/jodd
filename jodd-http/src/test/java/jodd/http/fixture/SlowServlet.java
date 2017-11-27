@@ -23,47 +23,32 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http;
+package jodd.http.fixture;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import jodd.util.StringPool;
+import jodd.util.ThreadUtil;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-class HttpRedirectTest {
+public class SlowServlet extends HttpServlet {
 
-	static TestServer testServer;
-
-	@BeforeAll
-	static void startServer() throws Exception {
-		testServer = new TomcatServer();
-		testServer.start();
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ThreadUtil.sleep(5000);
+		write(resp, "OK");
 	}
 
-	@AfterAll
-	static void stopServer() throws Exception {
-		testServer.stop();
-	}
-
-	@Test
-	void testRedirect() {
-		HttpRequest httpRequest = HttpRequest.get("localhost:8173/redirect");
-
-		HttpResponse httpResponse = httpRequest.send();
-
-		assertEquals(302, httpResponse.statusCode);
-
-		HttpBrowser httpBrowser = new HttpBrowser();
-
-		httpBrowser.sendRequest(
-				HttpRequest.get("localhost:8173/redirect"));
-
-		httpResponse = httpBrowser.getHttpResponse();
-
-		assertNotNull(httpResponse);
-		assertEquals("target!", httpResponse.body());
+	protected void write(HttpServletResponse resp, String text) throws IOException {
+		if (text != null) {
+			resp.setContentLength(text.getBytes(StringPool.UTF_8).length);
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().write(text);
+			resp.flushBuffer();
+		}
 	}
 
 }

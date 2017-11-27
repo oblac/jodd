@@ -23,21 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http;
+package jodd.http.fixture;
 
-import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@MultipartConfig
-public class Echo2Servlet extends EchoServlet {
+public class TargetServlet extends HttpServlet {
 
-	protected void readAll(HttpServletRequest req) throws IOException {
-		ref.queryString = req.getQueryString();
-		ref.header = copyHeaders(req);
-		ref.params = copyParams(req);
-		ref.parts = copyParts(req);
-		ref.fileNames = copyFileName(req);
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		resp.getWriter().write("target!");
 	}
+
 
 }

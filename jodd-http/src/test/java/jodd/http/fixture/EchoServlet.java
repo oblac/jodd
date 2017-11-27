@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http;
+package jodd.http.fixture;
 
 import jodd.io.StreamUtil;
 import jodd.util.StringPool;
@@ -31,8 +31,11 @@ import jodd.util.StringUtil;
 import org.apache.catalina.core.ApplicationPart;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -43,46 +46,30 @@ import java.util.Map;
 
 public class EchoServlet extends HttpServlet {
 
-	public static Data ref;
-
-	public static void testinit() {
-		ref = new Data();
-	}
-
-	public static class Data {
-		public boolean get;
-		public boolean post;
-		public String queryString;
-		public String body;
-		public Map<String, String> header;
-		public Map<String, String> params;
-		public Map<String, String> parts;
-		public Map<String, String> fileNames;
-		public Cookie[] cookies;
-	}
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ref.get = true;
-		ref.post = false;
+		Data.ref = new Data();
+		Data.ref.get = true;
+		Data.ref.post = false;
 		readAll(req);
 
-		if (ref.cookies != null) {
-			for (Cookie cookie : ref.cookies) {
+		if (Data.ref.cookies != null) {
+			for (Cookie cookie : Data.ref.cookies) {
 				cookie.setValue(cookie.getValue() + "!");
 				resp.addCookie(cookie);
 			}
 		}
 
-		write(resp, ref.body);
+		write(resp, Data.ref.body);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ref.post = true;
-		ref.get = false;
+		Data.ref = new Data();
+		Data.ref.post = true;
+		Data.ref.get = false;
 		readAll(req);
-		write(resp, ref.body);
+		write(resp, Data.ref.body);
 	}
 
 	// ---------------------------------------------------------------- write
@@ -99,10 +86,10 @@ public class EchoServlet extends HttpServlet {
 	// ---------------------------------------------------------------- read all
 
 	protected void readAll(HttpServletRequest req) throws IOException {
-		ref.body = readRequestBody(req);
-		ref.queryString = req.getQueryString();
-		ref.header = copyHeaders(req);
-		ref.cookies = req.getCookies();
+		Data.ref.body = readRequestBody(req);
+		Data.ref.queryString = req.getQueryString();
+		Data.ref.header = copyHeaders(req);
+		Data.ref.cookies = req.getCookies();
 	}
 
 	protected String readRequestBody(HttpServletRequest request) throws IOException {
@@ -125,7 +112,7 @@ public class EchoServlet extends HttpServlet {
 		return header;
 	}
 
-	protected Map<String, String> copyParams(HttpServletRequest req) {
+	protected Map<String, String> copyParams(HttpServletRequest req, String fromEncoding) {
 		String charset = req.getParameter("enc");
 
 		Enumeration enumeration = req.getParameterNames();
@@ -135,7 +122,7 @@ public class EchoServlet extends HttpServlet {
 			String name = enumeration.nextElement().toString();
 			String value = req.getParameter(name);
 			if (charset != null) {
-				value = StringUtil.convertCharset(value, StringPool.ISO_8859_1, charset);
+				value = StringUtil.convertCharset(value, fromEncoding, charset);
 			}
 			params.put(name, value);
 		}
@@ -145,6 +132,9 @@ public class EchoServlet extends HttpServlet {
 
 	protected Map<String, String> copyParts(HttpServletRequest req) {
 		Map<String, String> parts = new HashMap<>();
+		if (req.getContentType() == null) {
+			return parts;
+		}
 		if (req.getContentType() != null && !req.getContentType().toLowerCase().contains("multipart/form-data")) {
 			return parts;
 		}
@@ -158,10 +148,7 @@ public class EchoServlet extends HttpServlet {
 				parts.put(p.getName(), new String(StreamUtil.readBytes(p.getInputStream()), enc));
 			}
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch (ServletException e) {
+		catch (IOException | ServletException e) {
 			e.printStackTrace();
 		}
 
@@ -170,6 +157,9 @@ public class EchoServlet extends HttpServlet {
 
 	protected Map<String, String> copyFileName(HttpServletRequest req) {
 		Map<String, String> parts = new HashMap<>();
+		if (req.getContentType() == null) {
+			return parts;
+		}
 		if (req.getContentType() != null && !req.getContentType().toLowerCase().contains("multipart/form-data")) {
 			return parts;
 		}
@@ -184,10 +174,7 @@ public class EchoServlet extends HttpServlet {
 				}
 			}
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch (ServletException e) {
+		catch (IOException | ServletException e) {
 			e.printStackTrace();
 		}
 
