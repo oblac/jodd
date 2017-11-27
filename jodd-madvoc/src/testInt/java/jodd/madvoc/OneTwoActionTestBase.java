@@ -39,7 +39,7 @@ public abstract class OneTwoActionTestBase {
 		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
-		String redirectLocation = response.header("location");
+		String redirectLocation = response.location();
 
 		response = HttpRequest.get(redirectLocation).send();
 		assertEquals("value = [333]", response.bodyText());
@@ -51,7 +51,7 @@ public abstract class OneTwoActionTestBase {
 		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
-		String redirectLocation = response.header("location");
+		String redirectLocation = response.location();
 
 		response = HttpRequest.get(redirectLocation).send();
 		assertEquals("value = [777]", response.bodyText());
@@ -63,7 +63,7 @@ public abstract class OneTwoActionTestBase {
 		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
-		String redirectLocation = response.header("location");
+		String redirectLocation = response.location();
 
 		response = HttpRequest.get(redirectLocation).send();
 		assertEquals("value = [888]", response.bodyText());

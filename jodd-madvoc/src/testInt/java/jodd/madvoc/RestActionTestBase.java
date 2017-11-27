@@ -44,7 +44,7 @@ public abstract class RestActionTestBase {
 		HttpResponse response = HttpRequest.get("localhost:8173/re/view2/g-321.html").send();
 		assertEquals(302, response.statusCode());
 
-		response = HttpRequest.get(response.header("location")).send();
+		response = HttpRequest.get(response.location()).send();
 		assertEquals("321", response.bodyText().trim());
 	}
 

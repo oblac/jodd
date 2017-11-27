@@ -59,7 +59,7 @@ public abstract class MoveTestBase {
 
 		assertEquals(302, response.statusCode());
 
-		String location = response.header("location");
+		String location = response.location();
 
 		response = HttpRequest.get(location).send();
 
