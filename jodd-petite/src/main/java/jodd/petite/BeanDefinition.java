@@ -34,25 +34,29 @@ import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.scope.Scope;
 import jodd.util.ArraysUtil;
 
+import java.util.function.Consumer;
+
 /**
  * Petite bean definition and cache. Consist of bean data that defines a bean
  * and cache, that might not be initialized (if <code>null</code>).
  * To initialize cache, get the bean instance from container.
  */
-public class BeanDefinition {
+public class BeanDefinition<T> {
 
-	public BeanDefinition(String name, Class type, Scope scope, WiringMode wiringMode) {
+	public BeanDefinition(String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> beanInitConsumer) {
 		this.name = name;
 		this.type = type;
 		this.scope = scope;
 		this.wiringMode = wiringMode;
+		this.consumer = beanInitConsumer;
 	}
 
 	// finals
-	protected final String name;		// bean name
-	protected final Class type;			// bean type
-	protected final Scope scope;  		// bean scope, may be null for beans that are not stored in scope but just wired
+	protected final String name;		    // bean name
+	protected final Class<T> type;			// bean type
+	protected final Scope scope;  		    // bean scope, may be null for beans that are not stored in scope but just wired
 	protected final WiringMode wiringMode;	// wiring mode
+	protected final Consumer<T> consumer;   // bean consumer, may be null
 
 	// cache
 	protected CtorInjectionPoint ctor;
@@ -75,7 +79,7 @@ public class BeanDefinition {
 	/**
 	 * Returns bean type.
 	 */
-	public Class type() {
+	public Class<T> type() {
 		return type;
 	}
 
@@ -94,6 +98,13 @@ public class BeanDefinition {
 	 */
 	public WiringMode wiringMode() {
 		return wiringMode;
+	}
+
+	/**
+	 * Returns an optional consumer.
+	 */
+	public Consumer<T> consumer() {
+		return consumer;
 	}
 
 	// ---------------------------------------------------------------- cache getters

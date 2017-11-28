@@ -30,18 +30,20 @@ import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.ProxyAspect;
 
+import java.util.function.Consumer;
+
 /**
  * Enhanced version of {@link BeanDefinition} that keeps data about original
  * target class and applied proxy aspects.
  */
-public class ProxettaBeanDefinition extends BeanDefinition {
+public class ProxettaBeanDefinition<T> extends BeanDefinition<T> {
 
 	public final ProxyAspect[] proxyAspects;
 	public final Class originalTarget;
 
 	public ProxettaBeanDefinition(
-			String name, Class type, Scope scope, WiringMode wiringMode, Class originalTarget, ProxyAspect[] proxyAspects) {
-		super(name, type, scope, wiringMode);
+			String name, Class<T> type, Scope scope, WiringMode wiringMode, Class originalTarget, ProxyAspect[] proxyAspects, Consumer<T> consumer) {
+		super(name, type, scope, wiringMode, consumer);
 		this.originalTarget = originalTarget;
 		this.proxyAspects = proxyAspects;
 	}

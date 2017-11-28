@@ -237,21 +237,27 @@ public abstract class PetiteBeans {
 
 	/**
 	 * Creates {@link jodd.petite.BeanDefinition} on
-	 * {@link #registerPetiteBean(Class, String, Class, WiringMode, boolean) bean registration}.
+	 * {@link #registerPetiteBean(Class, String, Class, WiringMode, boolean, Consumer) bean registration}.
 	 * This is a hook for modifying the bean data, like passing proxifed class etc.
 	 * By default returns new instance of {@link jodd.petite.BeanDefinition}.
 	 */
-	protected BeanDefinition createBeanDefinitionForRegistration(
-			String name, Class type, Scope scope, WiringMode wiringMode) {
+	protected <T> BeanDefinition createBeanDefinitionForRegistration(
+			String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> consumer) {
 
-		return new BeanDefinition(name, type, scope, wiringMode);
+		return new BeanDefinition<>(name, type, scope, wiringMode, consumer);
 	}
 
 	/**
 	 * Registers a bean using provided class that is annotated.
 	 */
 	public BeanDefinition registerPetiteBean(Class type) {
-		return registerPetiteBean(type, null, null, null, false);
+		return registerPetiteBean(type, null, null, null, false, null);
+	}
+	/**
+	 * Registers a bean using provided class that is annotated.
+	 */
+	public <T> BeanDefinition<T> registerPetiteBean(Class<T> type, Consumer<T> consumer) {
+		return registerPetiteBean(type, null, null, null, false, consumer);
 	}
 
 	/**
@@ -263,11 +269,13 @@ public abstract class PetiteBeans {
 	 * @param wiringMode wiring mode, if <code>null</code> it will be resolved from the class (annotation or default one)
 	 * @param define when set to <code>true</code> bean will be defined - all injection points will be set to none
 	 */
-	public BeanDefinition registerPetiteBean(
-			Class type, String name,
+	public <T> BeanDefinition<T> registerPetiteBean(
+			Class<T> type, String name,
 			Class<? extends Scope> scopeType,
 			WiringMode wiringMode,
-			boolean define) {
+			boolean define,
+			Consumer<T> consumer
+	) {
 
 		if (name == null) {
 			name = resolveBeanName(type);
@@ -310,7 +318,7 @@ public abstract class PetiteBeans {
 
 		// register
 		Scope scope = resolveScope(scopeType);
-		BeanDefinition beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode);
+		BeanDefinition<T> beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode, consumer);
 
 		registerBean(name, beanDefinition);
 

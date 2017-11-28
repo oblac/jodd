@@ -29,6 +29,8 @@ import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.util.ClassUtil;
 
+import java.util.function.Consumer;
+
 /**
  * Petite registry helps with manual registration
  * of Petite beans by allowing fluent interface.
@@ -68,21 +70,22 @@ public class PetiteRegistry {
 	 * Starts with bean registration. Example:
 	 * <code>bean(Foo.class).name("").scope(...).wiringMode(...).define().register();</code>
 	 *
-	 * @see PetiteBeans#registerPetiteBean(Class, String, Class, WiringMode, boolean)
+	 * @see PetiteBeans#registerPetiteBean(Class, String, Class, WiringMode, boolean, Consumer)
 	 */
 	public BeanRegister bean(Class beanType) {
 		return new BeanRegister(beanType);
 	}
 
-	public class BeanRegister {
+	public class BeanRegister<T> {
 
-		protected final Class beanType;
-		protected String beanName;
-		protected Class<? extends Scope> scopeType;
-		protected WiringMode wiringMode;
-		protected boolean define;
+		private final Class<T> beanType;
+		private String beanName;
+		private Class<? extends Scope> scopeType;
+		private WiringMode wiringMode;
+		private boolean define;
+		private Consumer<T> consumer;
 
-		private BeanRegister(Class beanType) {
+		private BeanRegister(Class<T> beanType) {
 			this.beanType = beanType;
 		}
 
@@ -119,11 +122,16 @@ public class PetiteRegistry {
 			return this;
 		}
 
+		public BeanRegister with(Consumer<T> consumer) {
+			this.consumer = consumer;
+			return this;
+		}
+
 		/**
 		 * Registers a bean.
 		 */
 		public void register() {
-			petiteContainer.registerPetiteBean(beanType, beanName, scopeType, wiringMode, define);
+			petiteContainer.registerPetiteBean(beanType, beanName, scopeType, wiringMode, define, consumer);
 		}
 	}
 
