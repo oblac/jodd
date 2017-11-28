@@ -29,7 +29,6 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -46,11 +45,7 @@ public class DelegateAdviceUtil {
 	 */
 	private static final ProxyProxetta PROXY_PROXETTA =
 			ProxyProxetta.withAspects(
-				new ProxyAspect(DelegateAdvice.class, new ProxyPointcutSupport() {
-					public boolean apply(MethodInfo methodInfo) {
-						return methodInfo.isPublicMethod();
-					}
-				}));
+				new ProxyAspect(DelegateAdvice.class, MethodInfo::isPublicMethod));
 
 	/**
 	 * Applies advice on given target class and returns proxy instance.

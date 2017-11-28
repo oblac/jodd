@@ -26,12 +26,10 @@
 package jodd.db.debug;
 
 import jodd.db.DbSqlException;
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaAsmUtil;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
-import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -53,20 +51,18 @@ public abstract class BaseLoggableFactory<T> {
 	 */
 	protected BaseLoggableFactory(Class<T> targetClass) {
 		this.targetClass = targetClass;
-		this.proxetta = WrapperProxetta.withAspects(new ProxyAspect(LoggableAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo methodInfo) {
-				int argumentsCount = methodInfo.getArgumentsCount();
-				char argumentType = 0;
-				if (argumentsCount >= 1) {
-					argumentType = methodInfo.getArgument(1).getOpcode();
-				}
-				return
-					methodInfo.getReturnType().getOpcode() == 'V' &&			// void-returning method
-						argumentType == 'I' &&									// first argument type
-						methodInfo.isPublicMethod() &&
-						methodInfo.getMethodName().startsWith("set") &&			// set*
-						(argumentsCount == 2 || argumentsCount == 3);			// number of arguments
+		this.proxetta = WrapperProxetta.withAspects(new ProxyAspect(LoggableAdvice.class, methodInfo -> {
+			int argumentsCount = methodInfo.getArgumentsCount();
+			char argumentType = 0;
+			if (argumentsCount >= 1) {
+				argumentType = methodInfo.getArgument(1).getOpcode();
 			}
+			return
+				methodInfo.getReturnType().getOpcode() == 'V' &&			// void-returning method
+					argumentType == 'I' &&									// first argument type
+					methodInfo.isPublicMethod() &&
+					methodInfo.getMethodName().startsWith("set") &&			// set*
+					(argumentsCount == 2 || argumentsCount == 3);			// number of arguments
 		}));
 	}
 
