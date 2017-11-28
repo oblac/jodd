@@ -80,7 +80,8 @@ public class MadvocServletFilter implements Filter {
 			return;
 		}
 
-		throw new ServletException("Madvoc nor WebApp not found! Use MadvocContextListener to create Madvoc or WebApp#withServletContext() to make it available.");
+		throw new ServletException("Madvoc nor WebApp not found! Use MadvocContextListener to create Madvoc or " +
+			"WebApp#withServletContext() to make it available.");
 	}
 
 	/**
