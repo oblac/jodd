@@ -48,7 +48,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static jodd.joy.JoddJoy.PETITE_DB;
-import static jodd.joy.JoddJoy.PETITE_DBOOM;
 import static jodd.joy.JoddJoy.PETITE_DBPOOL;
 
 public class JoyDb extends JoyBase {
@@ -139,7 +138,6 @@ public class JoyDb extends JoyBase {
 
 		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 		dbEntityManager.reset();
-		petiteContainerSupplier.get().addBean(PETITE_DBOOM, dbEntityManager);
 
 		// automatic configuration
 		if (config.autoConfiguration) {
@@ -195,7 +193,6 @@ public class JoyDb extends JoyBase {
 			if (log.isInfoEnabled()) {
 				log.info("Connected to database: " + name + " v" + version);
 			}
-
 		} catch (SQLException sex) {
 			log.error("DB connection failed: ", sex);
 		} finally {

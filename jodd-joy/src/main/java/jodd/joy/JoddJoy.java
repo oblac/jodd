@@ -58,10 +58,6 @@ public class JoddJoy {
 	 */
 	public static final String PETITE_DB = "db";
 	/**
-	 * Petite bean name for <code>DbEntityManager</code> instance.
-	 */
-	public static final String PETITE_DBOOM = "dboom";
-	/**
 	 * Petite bean name for {@link AppInit} bean.
 	 */
 	public static final String PETITE_INIT = "init";
@@ -73,7 +69,6 @@ public class JoddJoy {
 	 * Petite bean name for {@link JoyScanner} bean.
 	 */
 	public static final String PETITE_SCAN = "scan";
-
 
 	private static JoddJoy joddJoy;
 
@@ -195,7 +190,8 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- madvoc
 
-	private JoyMadvoc joyMadvoc = new JoyMadvoc(() -> joyProxetta.proxetta());
+	private JoyMadvoc joyMadvoc = new JoyMadvoc(
+		() -> joyPetite.petiteContainer(), () -> joyProxetta.proxetta(), () -> joyScanner);
 
 	// ---------------------------------------------------------------- start
 

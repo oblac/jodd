@@ -25,8 +25,10 @@
 
 package jodd.joy;
 
+import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaProvider;
+import jodd.petite.PetiteContainer;
 import jodd.proxetta.impl.ProxyProxetta;
 
 import javax.servlet.ServletContext;
@@ -34,18 +36,21 @@ import java.util.function.Supplier;
 
 public class JoyMadvoc extends JoyBase {
 
-	private ServletContext servletContext;
 	private final Supplier<ProxyProxetta> proxettaSupplier;
+	private final Supplier<PetiteContainer> petiteSupplier;
+	private final Supplier<JoyScanner> scannerSupplier;
+	private ServletContext servletContext;
+	private PetiteWebApp webApp;
 
-	public JoyMadvoc(Supplier<ProxyProxetta> proxettaSupplier) {
+	public JoyMadvoc(Supplier<PetiteContainer> petiteSupplier, Supplier<ProxyProxetta> proxettaSupplier, Supplier<JoyScanner> scannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
+		this.petiteSupplier = petiteSupplier;
+		this.scannerSupplier = scannerSupplier;
 	}
 
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
-
-	private PetiteWebApp webApp;
 
 	@Override
 	public void start() {
@@ -53,11 +58,13 @@ public class JoyMadvoc extends JoyBase {
 
 		log.info("MADVOC start  ----------");
 
-		webApp = new PetiteWebApp();
+		webApp = new PetiteWebApp().withPetiteContainer(petiteSupplier);
 
 		webApp.withServletContext(servletContext);
 
-		webApp.withMadvocComponent((ProxettaProvider) proxettaSupplier::get);
+		webApp.withMadvocComponent(new ProxettaProvider(proxettaSupplier.get()));
+
+		webApp.withMadvocComponent(AutomagicMadvocConfigurator.class, amc -> scannerSupplier.get().applyTo(amc));
 
 		webApp.start();
 	}
