@@ -23,24 +23,27 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.exception;
+package jodd.joy;
 
-import jodd.exception.UncheckedException;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
-/**
- * Just a simple application level unchecked exception.
- */
-public class AppException extends UncheckedException {
+public abstract class JoyBase {
 
-	public AppException(Throwable t) {
-		super(t);
+	protected JoyBase() {}
+
+	// ---------------------------------------------------------------- log
+
+	protected Logger log;
+
+	protected void initLogger() {
+		log = LoggerFactory.getLogger(this.getClass());
 	}
 
-	public AppException(String message) {
-		super(message);
-	}
+	// ---------------------------------------------------------------- lifecycle
 
-	public AppException(String message, Throwable t) {
-		super(message, t);
-	}
+	public abstract void start();
+
+	public abstract void stop();
+
 }

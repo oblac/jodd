@@ -23,12 +23,16 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.core;
+package jodd.joy;
 
 import jodd.io.findfile.ClassFinder;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.typeconverter.Converter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <code>AppScanner</code> defines entries that will be included/excluded in
@@ -36,74 +40,57 @@ import jodd.typeconverter.Converter;
  * By default, scanning entries includes all classes that belongs
  * to the project and to the Jodd.
  */
-public class AppScanner {
+public class JoyScanner extends JoyBase {
 
-	private static final Logger log = LoggerFactory.getLogger(AppScanner.class);
-
-	protected final DefaultAppCore appCore;
-
-	public AppScanner(DefaultAppCore appCore) {
-		this.appCore = appCore;
-	}
+	private static final Logger log = LoggerFactory.getLogger(JoyScanner.class);
 
 	/**
 	 * Scanning entries that will be examined by various
 	 * Jodd auto-magic tools.
 	 */
-	protected String[] includedEntries;
+	private List<String> includedEntries = new ArrayList<>();
 
 	/**
 	 * Scanning jars.
 	 */
-	protected String[] includedJars;
+	private List<String> includedJars = new ArrayList<>();
 
 	/**
 	 * Should scanning ignore the exception.
 	 */
-	protected boolean ignoreExceptions;
+	private boolean ignoreExceptions;
 
-	public String[] getIncludedEntries() {
-		return includedEntries;
+	public JoyScanner setIncludedEntries(String... includedEntries) {
+		Collections.addAll(this.includedEntries, includedEntries);
+		return this;
 	}
 
-	public void setIncludedEntries(String... includedEntries) {
-		this.includedEntries = includedEntries;
+	public JoyScanner setIncludedJars(String... includedJars) {
+		Collections.addAll(this.includedJars, includedJars);
+		return this;
 	}
 
-	public String[] getIncludedJars() {
-		return includedJars;
-	}
-
-	public void setIncludedJars(String... includedJars) {
-		this.includedJars = includedJars;
-	}
-
-	public boolean isIgnoreExceptions() {
-		return ignoreExceptions;
-	}
-
-	public void setIgnoreExceptions(boolean ignoreExceptions) {
+	public JoyScanner setIgnoreExceptions(boolean ignoreExceptions) {
 		this.ignoreExceptions = ignoreExceptions;
+		return this;
 	}
 
-	// ---------------------------------------------------------------- props
 
+	// ---------------------------------------------------------------- start
+
+	@Override
+	public void start() {
+		initLogger();
+		includedEntries.add("jodd.*");
+	}
 
 	/**
 	 * Configures scanner class finder. Works for all three scanners:
 	 * Petite, DbOom and Madvoc. All scanners by default include all jars,
 	 * but exclude all entries.
 	 */
-	public void configure(ClassFinder classFinder) {
-
+	public void applyTo(ClassFinder classFinder) {
 		classFinder.setExcludeAllEntries(true);
-
-		if (includedEntries == null) {
-			includedEntries = new String[] {
-					appCore.getClass().getPackage().getName() + ".*",
-					"jodd.*"
-			};
-		}
 
 		if (log.isDebugEnabled()) {
 			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
@@ -111,15 +98,12 @@ public class AppScanner {
 			log.debug("Scan ignore exception: " + ignoreExceptions);
 		}
 
-		if (includedEntries != null) {
-			classFinder.setIncludedEntries(includedEntries);
-		}
-
-		if (includedJars != null) {
-			classFinder.setIncludedJars(includedJars);
-		}
-
+		classFinder.setIncludedEntries(includedEntries.toArray(new String[includedEntries.size()]));
+		classFinder.setIncludedJars(includedJars.toArray(new String[includedJars.size()]));
 		classFinder.setIgnoreException(ignoreExceptions);
 	}
 
+	@Override
+	public void stop() {
+	}
 }

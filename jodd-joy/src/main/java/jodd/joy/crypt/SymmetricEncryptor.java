@@ -25,7 +25,7 @@
 
 package jodd.joy.crypt;
 
-import jodd.joy.exception.AppException;
+import jodd.joy.JoyException;
 import jodd.util.Base64;
 import jodd.util.StringUtil;
 
@@ -76,7 +76,7 @@ public class SymmetricEncryptor {
 			ecipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
 			dcipher.init(Cipher.DECRYPT_MODE, key, paramSpec);
 		} catch (Exception ex) {
-			throw new AppException(ex);
+			throw new JoyException(ex);
 		}
 	}
 
