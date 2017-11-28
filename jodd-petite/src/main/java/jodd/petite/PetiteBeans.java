@@ -109,11 +109,14 @@ public abstract class PetiteBeans {
 	 */
 	protected final ParamManager paramManager;
 
+	protected final AnnotationResolver annotationResolver;
+
 	protected PetiteBeans(PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
 		this.referencesResolver = new ReferencesResolver(petiteConfig);
 		this.petiteResolvers = new PetiteResolvers(referencesResolver);
 		this.paramManager = new ParamManager();
+		this.annotationResolver = new AnnotationResolver();
 	}
 
 	/**
@@ -226,7 +229,7 @@ public abstract class PetiteBeans {
 	 * of base type during registration of bean subclass.
 	 */
 	public String resolveBeanName(Class type) {
-		return PetiteUtil.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
+		return annotationResolver.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
 	}
 
 	// ---------------------------------------------------------------- register beans
@@ -269,13 +272,13 @@ public abstract class PetiteBeans {
 			name = resolveBeanName(type);
 		}
 		if (wiringMode == null) {
-			wiringMode = PetiteUtil.resolveBeanWiringMode(type);
+			wiringMode = annotationResolver.resolveBeanWiringMode(type);
 		}
 		if (wiringMode == WiringMode.DEFAULT) {
 			wiringMode = petiteConfig.getDefaultWiringMode();
 		}
 		if (scopeType == null) {
-			scopeType = PetiteUtil.resolveBeanScopeType(type);
+			scopeType = annotationResolver.resolveBeanScopeType(type);
 		}
 		if (scopeType == null) {
 			scopeType = SingletonScope.class;
@@ -346,14 +349,14 @@ public abstract class PetiteBeans {
 
 		Class type = beanDefinition.type();
 
-		if (PetiteUtil.beanHasAnnotationName(type)) {
+		if (annotationResolver.beanHasAnnotationName(type)) {
 			return;
 		}
 
 		Class[] interfaces = ClassUtil.resolveAllInterfaces(type);
 
 		for (Class anInterface : interfaces) {
-			String altName = PetiteUtil.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
+			String altName = annotationResolver.resolveBeanName(anInterface, petiteConfig.getUseFullTypeNames());
 
 			if (name.equals(altName)) {
 				continue;

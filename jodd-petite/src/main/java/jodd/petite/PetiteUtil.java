@@ -26,9 +26,6 @@
 package jodd.petite;
 
 import jodd.petite.def.DestroyMethodPoint;
-import jodd.petite.meta.PetiteBean;
-import jodd.petite.scope.Scope;
-import jodd.util.StringUtil;
 
 import java.lang.reflect.Constructor;
 
@@ -74,58 +71,6 @@ public class PetiteUtil {
 				throw new PetiteException("Invalid destroy method: " + destroyMethodPoint.method, ex);
 			}
 		}
-	}
-
-	/**
-	 * Resolves bean's auto-wire flag from the annotation. Returns default auto-wire if annotation doesn't exist.
-	 */
-	public static WiringMode resolveBeanWiringMode(Class type) {
-		PetiteBean petiteBean = ((Class<?>) type).getAnnotation(PetiteBean.class);
-		return petiteBean != null ? petiteBean.wiring() : WiringMode.DEFAULT;
-	}
-
-	/**
-	 * Resolves bean's scope type from the annotation. Returns <code>null</code>
-	 * if annotation doesn't exist.
-	 */
-	public static Class<? extends Scope> resolveBeanScopeType(Class type) {
-		PetiteBean petiteBean = ((Class<?>) type).getAnnotation(PetiteBean.class);
-		return petiteBean != null ? petiteBean.scope() : null;
-	}
-
-	/**
-	 * Resolves bean's name from bean annotation or type name. May be used for resolving bean name
-	 * of base type during registration of bean subclass.
-	 */
-	public static String resolveBeanName(Class type, boolean useLongTypeName) {
-		PetiteBean petiteBean = ((Class<?>)type).getAnnotation(PetiteBean.class);
-		String name = null;
-		if (petiteBean != null) {
-			name = petiteBean.value().trim();
-		}
-		if ((name == null) || (name.length() == 0)) {
-			if (useLongTypeName) {
-				name = type.getName();
-			} else {
-				name = StringUtil.uncapitalize(type.getSimpleName());
-			}
-		}
-		return name;
-	}
-
-	/**
-	 * Returns <code>true</code> if bean has name defined by Petite annotation.
-	 */
-	public static boolean beanHasAnnotationName(Class type) {
-		PetiteBean petiteBean = ((Class<?>)type).getAnnotation(PetiteBean.class);
-
-		if (petiteBean == null) {
-			return false;
-		}
-
-		String name = petiteBean.value().trim();
-
-		return !name.isEmpty();
 	}
 
 }
