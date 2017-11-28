@@ -4,13 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,9 +62,9 @@ class CollectionUtilTest {
 		@Test
 		void testAsIterator_with_empty_enumration() throws Exception {
 
-			Hashtable<String, String> input = new Hashtable<>();
+			final Hashtable<String, String> input = new Hashtable<>();
 
-			Iterator<String> actual = CollectionUtil.asIterator(input.keys());
+			final Iterator<String> actual = CollectionUtil.asIterator(input.keys());
 
 			// asserts
 			assertNotNull(actual);
@@ -81,13 +76,13 @@ class CollectionUtilTest {
 		@Test
 		void testAsIterator_with_data() throws Exception {
 
-			Hashtable<String, String> input = new Hashtable<>();
+			final Hashtable<String, String> input = new Hashtable<>();
 			input.put("jodd", "makes fun!");
 			input.put("headline", "The Unbearable Lightness of Java");
 			input.put("aim", "And enjoy the coding");
 
 
-			Iterator<String> actual = CollectionUtil.asIterator(input.keys());
+			final Iterator<String> actual = CollectionUtil.asIterator(input.keys());
 
 			// asserts
 			assertNotNull(actual);
@@ -118,9 +113,9 @@ class CollectionUtilTest {
 		@Test
 		void testAsEnumeration_with_empty_iterator() throws Exception {
 
-			Iterator<Integer> input = new ArrayList<Integer>().iterator();
+			final Iterator<Integer> input = new ArrayList<Integer>().iterator();
 
-			Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
+			final Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
 
 			// asserts
 			assertFalse(actual.hasMoreElements());
@@ -130,9 +125,9 @@ class CollectionUtilTest {
 		@Test
 		void testAsEnumeration_with_data() throws Exception {
 
-			Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
+			final Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
 
-			Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
+			final Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
 
 			// asserts
 			assertNotNull(actual);
@@ -150,6 +145,34 @@ class CollectionUtilTest {
 			assertThrows(NoSuchElementException.class, () -> {actual.nextElement();});
 		}
 
+	}
+
+	@Nested
+	@DisplayName("tests for CollectionUtil#asStream(Iterator<T> sourceIterator)")
+	class AsStream {
+
+		@Test
+		void testAsStream_with_empty_iterator() throws Exception {
+			final Iterator input = Collections.EMPTY_LIST.iterator();
+
+			final Stream actual = CollectionUtil.asStream(input);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(0L, actual.count());
+		}
+
+		@Test
+		void testAsStream_with_non_empty_iterator() throws Exception {
+			final Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
+
+			final Stream<Integer> actual = CollectionUtil.asStream(input);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(3L, actual.count());
+			assertThrows(IllegalStateException.class, () -> {actual.filter(p -> 1 == p);});
+		}
 	}
 
 }
