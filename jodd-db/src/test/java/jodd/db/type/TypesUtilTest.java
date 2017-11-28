@@ -25,14 +25,13 @@
 
 package jodd.db.type;
 
+import jodd.db.fixtures.JDBCTypesFixture;
 import jodd.util.buffer.FastIntBuffer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,17 +45,7 @@ class TypesUtilTest {
 
 	@BeforeAll
 	static void beforeAll() throws Exception {
-		Field[] fields = Types.class.getDeclaredFields();
-		for (Field field : fields) {
-			final int modifiers = field.getModifiers();
-			// catch all public static final int - fields
-			if (Modifier.isPublic(modifiers)
-					&& Modifier.isStatic(modifiers)
-					&& Modifier.isFinal(modifiers)
-					&& field.getType() == int.class) {
-				ALL_TYPES.append(field.getInt(field));
-			}
-		}
+		ALL_TYPES.append(JDBCTypesFixture.getJDBCTypes());
 	}
 
 	@ParameterizedTest
