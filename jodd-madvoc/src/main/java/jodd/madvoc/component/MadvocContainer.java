@@ -28,14 +28,13 @@ package jodd.madvoc.component;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
+import jodd.mutable.MutableInteger;
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
-import jodd.util.ClassUtil;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Madvoc container. Works internally with {@link jodd.petite.PetiteContainer}.
@@ -47,7 +46,6 @@ public class MadvocContainer {
 	private static final Logger log = LoggerFactory.getLogger(MadvocContainer.class);
 
 	private final PetiteContainer madpc;
-	private final List<MadvocListenerDef> listeners = new ArrayList<>();
 
 	public MadvocContainer() {
 		madpc = new PetiteContainer();
@@ -64,6 +62,7 @@ public class MadvocContainer {
 	/**
 	 * Registers component instance using its {@link #resolveBaseComponentName(Class) base name}.
 	 * Previously defined component will be removed.
+	 *
 	 * @see #registerComponentInstance(String, Object)
 	 */
 	public void registerComponentInstance(Object componentInstance) {
@@ -75,6 +74,7 @@ public class MadvocContainer {
 	/**
 	 * Registers component using its {@link #resolveBaseComponentName(Class) base name}.
 	 * Previously defined component will be removed.
+	 *
 	 * @see #registerComponentInstance(Object)
 	 */
 	public void registerComponent(Class component) {
@@ -90,12 +90,6 @@ public class MadvocContainer {
 
 		madpc.removeBean(name);
 		madpc.registerPetiteBean(component, name, null, null, false);
-
-		for (Class eventType : MadvocListener.ALL_TYPES) {
-			if (ClassUtil.isTypeOf(component, eventType)) {
-				registerEventHandler(eventType, name);
-			}
-		}
 	}
 
 	/**
@@ -109,44 +103,9 @@ public class MadvocContainer {
 
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);
-
-		for (Class eventType : MadvocListener.ALL_TYPES) {
-			if (ClassUtil.isInstanceOf(componentInstance, eventType)) {
-				registerEventHandler(eventType, name);
-			}
-		}
 	}
-
 
 	// ---------------------------------------------------------------- listeners
-
-	protected static class MadvocListenerDef {
-		public final String name;
-		public final Class type;
-
-		public MadvocListenerDef(String name, Class type) {
-			this.name = name;
-			this.type = type;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			MadvocListenerDef that = (MadvocListenerDef) o;
-
-			if (!name.equals(that.name)) return false;
-			return type.equals(that.type);
-		}
-
-		@Override
-		public int hashCode() {
-			return 31 * name.hashCode() + type.hashCode();
-		}
-	}
-
-	private final Object listenersLock = new Object();
 
 	/**
 	 * Fires the Madvoc event.
@@ -155,39 +114,26 @@ public class MadvocContainer {
 	 * and then to execute.
 	 */
 	public void fireEvent(Class listenerType) {
-		while(true) {
+		final Set<String> existing = new HashSet<>();
 
-			List<MadvocListenerDef> listenersToFire;
+		while (true) {
+			MutableInteger newCount = MutableInteger.of(0);
 
-			synchronized (listenersLock) {
-				listenersToFire =
-					listeners.stream()
-						.filter(def -> def.type == listenerType)
-						.collect(Collectors.toList());
+			madpc.forEachBeanType(listenerType, name -> {
+				if (existing.add(name)) {
+					// name not found, fire!
+					newCount.value++;
 
-				listeners.removeAll(listenersToFire);
-			}
-
-			if (listenersToFire.isEmpty()) {
-				// no more listeners, exit
-				return;
-			}
-
-			listenersToFire.forEach(l -> {
-				Object listener = lookupComponent(l.name);
-				MadvocListener.invoke(listener, listenerType);
+					Object listener = lookupComponent(name);
+					if (listener != null) {
+						MadvocListener.invoke(listener, listenerType);
+					}
+				}
 			});
-		}
-	}
 
-	/**
-	 * Registers event handler if not already registered.
-	 */
-	public void registerEventHandler(Class listenerType, String name) {
-		synchronized (listenersLock) {
-			MadvocListenerDef listenerDef = new MadvocListenerDef(name, listenerType);
-			listeners.remove(listenerDef);
-			listeners.add(listenerDef);
+			if (newCount.value == 0) {
+				break;
+			}
 		}
 	}
 

@@ -32,8 +32,6 @@ import jodd.madvoc.MadvocException;
  */
 public class MadvocListener {
 
-	public static Class[] ALL_TYPES = new Class[] {Init.class, Start.class, Ready.class, Stop.class};
-
 	/**
 	 * Invoke the listener based on type.
 	 * Not very OOP, but works.
