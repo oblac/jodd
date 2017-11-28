@@ -80,6 +80,7 @@ ext {
 		greenmail:		'com.icegreen:greenmail:1.5.2',
 
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
+		server_tomcat:	"org.apache.tomcat:tomcat-catalina:${tomcatVersion}",
 		tomcat_embed:	[
 							"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
 							"org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}",
