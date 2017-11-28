@@ -57,10 +57,7 @@ public class Madvoc {
 	
 	// ---------------------------------------------------------------- statics
 
-	/**
-	 * Context attribute name.
-	 */
-	public static final String MADVOC_ATTR = Madvoc.class.getName();
+	private static final String MADVOC_ATTR = Madvoc.class.getName();
 
 	/**
 	 * Returns <code>Madvoc</code> instance from servlet context.

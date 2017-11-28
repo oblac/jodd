@@ -61,14 +61,26 @@ public class MadvocServletFilter implements Filter {
 
 		madvoc = Madvoc.get(servletContext);
 
-		if (madvoc == null) {
-			throw new ServletException("Madvoc not found! Use MadvocContextListener to create Madvoc.");
+		if (madvoc != null) {
+			log = LoggerFactory.getLogger(this.getClass());
+
+			madvocController =
+				madvoc.webapp().madvocContainer().requestComponent(MadvocController.class);
+
+			return;
+		}
+		WebApp webApp = WebApp.get(servletContext);
+
+		if (webApp != null) {
+			log = LoggerFactory.getLogger(this.getClass());
+
+			madvocController =
+				webApp.madvocContainer().requestComponent(MadvocController.class);
+
+			return;
 		}
 
-		log = LoggerFactory.getLogger(MadvocServletFilter.class);
-
-		madvocController =
-			madvoc.webapp().madvocContainer().requestComponent(MadvocController.class);
+		throw new ServletException("Madvoc nor WebApp not found! Use MadvocContextListener to create Madvoc or WebApp#withServletContext() to make it available.");
 	}
 
 	/**

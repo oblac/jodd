@@ -45,10 +45,12 @@ import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.component.ServletContextProvider;
 import jodd.props.Props;
+import jodd.util.Consumers;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -60,16 +62,29 @@ public class WebApp {
 
 	private static Logger log;
 
+	private static final String WEBAPP_ATTR = WebApp.class.getName();
+
 	public static WebApp createWebApp() {
 		return new WebApp();
 	}
+
+	/**
+	 * Returns <code>WebApp</code> instance from servlet context.
+	 * May return <code>null</code> indicating <code>WebApp</code>
+	 * is not yet initialized.
+	 */
+	public static WebApp get(ServletContext servletContext) {
+		return (WebApp) servletContext.getAttribute(WEBAPP_ATTR);
+	}
+
 
 	// ---------------------------------------------------------------- builder
 
 	protected ServletContext servletContext;
 	private List<Props> propsList = new ArrayList<>();
 	private List<Class> madvocComponents = new ArrayList<>();
-	private List<Consumer<MadvocApp>> madvocAppConsumerList = new ArrayList<>();
+	private List<Object> madvocComponentInstances = new ArrayList<>();
+	private Consumers<MadvocApp> madvocAppConsumers = Consumers.empty();
 
 	/**
 	 * Defines params to load.
@@ -84,6 +99,7 @@ public class WebApp {
 	 */
 	public WebApp withServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
+		this.servletContext.setAttribute(WEBAPP_ATTR, this);
 		return this;
 	}
 
@@ -91,7 +107,18 @@ public class WebApp {
 	 * Registers additional Madvoc components that will be registered after default components.
 	 */
 	public WebApp withMadvocComponent(Class madvocComponent) {
+		Objects.requireNonNull(madvocComponent);
 		madvocComponents.add(madvocComponent);
+		return this;
+	}
+
+	/**
+	 * Registers Madvoc component <i>instance</i>. Use with caution, as injection of
+	 * components registered after this will fail.
+	 */
+	public WebApp withMadvocComponent(Object madvocComponent) {
+		Objects.requireNonNull(madvocComponent);
+		madvocComponentInstances.add(madvocComponent);
 		return this;
 	}
 
@@ -120,7 +147,7 @@ public class WebApp {
 	 * Initializes and starts web application.
 	 */
 	public WebApp start(Consumer<MadvocApp> madvocAppConsumer) {
-		madvocAppConsumerList.add(madvocAppConsumer);
+		madvocAppConsumers.add(madvocAppConsumer);
 		return start();
 	}
 
@@ -150,10 +177,13 @@ public class WebApp {
 		//// components
 		registerMadvocComponents();
 
-		for (Class madvocComponent : madvocComponents) {
-			madvocContainer.registerComponent(madvocComponent);
-		}
+		madvocComponents.forEach(
+			madvocComponent -> madvocContainer.registerComponent(madvocComponent));
 		madvocComponents = null;
+		madvocComponentInstances.forEach(
+			madvocComponent -> madvocContainer.registerComponentInstance(madvocComponent));
+		madvocComponentInstances = null;
+
 
 		//// listeners
 		madvocContainer.fireEvent(MadvocListener.Init.class);
@@ -162,15 +192,14 @@ public class WebApp {
 
 		madvocContainer.fireEvent(MadvocListener.Start.class);
 
-		if (!madvocAppConsumerList.isEmpty()) {
+		if (!madvocAppConsumers.isEmpty()) {
 
 			MadvocApp madvocApp = MadvocApp.create();
 			madvocContainer.registerComponentInstance(madvocApp);
 
-			for (Consumer<MadvocApp> madvocAppConsumer : madvocAppConsumerList) {
-				madvocAppConsumer.accept(madvocApp);
-			}
+			madvocAppConsumers.accept(madvocApp);
 		}
+		madvocAppConsumers = null;
 
 		started();
 
