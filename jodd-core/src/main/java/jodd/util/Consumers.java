@@ -103,4 +103,20 @@ public class Consumers<T> implements Consumer<T> {
 	public boolean isEmpty() {
 		return consumerList.isEmpty();
 	}
+
+	/**
+	 * Clears the list of consumers.
+	 */
+	public Consumer clear() {
+		consumerList.clear();
+		return this;
+	}
+
+	/**
+	 * Removes a consumer.
+	 */
+	public Consumers<T> remove(Consumer<T> consumer) {
+		consumerList.remove(consumer);
+		return this;
+	}
 }
