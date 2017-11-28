@@ -29,8 +29,16 @@ import jodd.proxetta.impl.ProxyProxetta;
 
 import java.util.function.Supplier;
 
-public interface ProxettaProvider extends Supplier<ProxyProxetta> {
+public class ProxettaProvider implements Supplier<ProxyProxetta> {
+
+	private final ProxyProxetta proxettaProvider;
+
+	public ProxettaProvider(ProxyProxetta proxettaProvider) {
+		this.proxettaProvider = proxettaProvider;
+	}
 
 	@Override
-	ProxyProxetta get();
+	public ProxyProxetta get() {
+		return proxettaProvider;
+	}
 }
