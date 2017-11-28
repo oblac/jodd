@@ -25,6 +25,7 @@
 
 package jodd.db.servers;
 
+import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityManager;
 
 /**
@@ -40,6 +41,8 @@ public class MySqlDbServer implements DbServer {
 
 	@Override
 	public void accept(DbEntityManager dbEntityManager) {
+		JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
+		JoddDb.get().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}
 
 	@Override
