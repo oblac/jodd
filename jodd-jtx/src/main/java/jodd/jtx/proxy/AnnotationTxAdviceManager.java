@@ -25,10 +25,9 @@
 
 package jodd.jtx.proxy;
 
-import jodd.jtx.JtxTransactionMode;
+import jodd.jtx.JoddJtx;
 import jodd.jtx.JtxTransactionManager;
-import jodd.jtx.meta.ReadWriteTransaction;
-import jodd.jtx.meta.Transaction;
+import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.meta.TransactionAnnotation;
 import jodd.jtx.meta.TransactionAnnotationData;
 import jodd.jtx.worker.LeanJtxWorker;
@@ -36,9 +35,9 @@ import jodd.proxetta.ProxettaException;
 import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Manager for {@link jodd.jtx.proxy.AnnotationTxAdvice}.
@@ -86,7 +85,7 @@ public class AnnotationTxAdviceManager {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.scopePattern = scopePattern;
-		registerAnnotations(Transaction.class, ReadWriteTransaction.class);
+		registerAnnotations(JoddJtx.get().defaults().getTxAnnotations());
 	}
 
 	// ---------------------------------------------------------------- methods

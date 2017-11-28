@@ -23,39 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.jtx;
+package jodd.jtx.meta;
 
-import jodd.Jodd;
+import jodd.jtx.JtxIsolationLevel;
+import jodd.jtx.JtxPropagationBehavior;
+import jodd.jtx.JtxTransactionMode;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Jodd JTX module.
+ * Read-only PROPAGATION_REQUIRED tx annotation marker.
  */
-public class JoddJtx {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+@Transaction(readOnly = true)
+public @interface ReadOnlyTransaction {
 
-	private static final JoddJtx instance = new JoddJtx();
+	JtxPropagationBehavior propagation() default JtxPropagationBehavior.PROPAGATION_REQUIRED;
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddJtx get() {
-		return instance;
-	}
+	JtxIsolationLevel isolation() default JtxIsolationLevel.ISOLATION_DEFAULT;
 
-	static {
-		Jodd.initModule();
-	}
-
-	public static void init() {}
-
-	// ---------------------------------------------------------------- instance
-
-	private JoddJtxDefaults defaults = new JoddJtxDefaults();
-
-	/**
-	 * Returns {@link JoddJtxDefaults default configuration}.
-	 */
-	public JoddJtxDefaults defaults() {
-		return defaults;
-	}
+	int timeout() default JtxTransactionMode.DEFAULT_TIMEOUT;
 
 }
