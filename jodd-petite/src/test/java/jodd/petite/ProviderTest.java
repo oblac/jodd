@@ -25,12 +25,12 @@
 
 package jodd.petite;
 
+import jodd.petite.fixtures.tst5.Planet;
 import jodd.petite.fixtures.tst5.Solar;
 import jodd.petite.fixtures.tst5.Solar2;
 import jodd.petite.fixtures.tst5.Solar3;
 import jodd.petite.fixtures.tst5.Sun;
 import jodd.petite.fixtures.tst5.Sun2;
-import jodd.petite.fixtures.tst5.Planet;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +42,8 @@ class ProviderTest {
 	void testInstanceMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar.class, null, null, null, false);
-		pc.registerPetiteBean(Sun.class, null, null, null, false);
+		pc.registerPetiteBean(Solar.class, null, null, null, false, null);
+		pc.registerPetiteBean(Sun.class, null, null, null, false, null);
 
 		Sun sun = pc.getBean(Sun.class);
 
@@ -55,8 +55,8 @@ class ProviderTest {
 	void testInstanceMethodProviderManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar2.class, null, null, null, false);
-		pc.registerPetiteBean(Sun2.class, null, null, null, false);
+		pc.registerPetiteBean(Solar2.class, null, null, null, false, null);
+		pc.registerPetiteBean(Sun2.class, null, null, null, false, null);
 
 		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ClassUtil.EMPTY_CLASS_ARRAY);
 		pc.registerPetitePropertyInjectionPoint("sun2", "planet", null);
@@ -71,8 +71,8 @@ class ProviderTest {
 	void testInstanceStaticMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar3.class, null, null, null, false);	// still needs to be a bean
-		pc.registerPetiteBean(Sun.class, null, null, null, false);
+		pc.registerPetiteBean(Solar3.class, null, null, null, false, null);	// still needs to be a bean
+		pc.registerPetiteBean(Sun.class, null, null, null, false, null);
 
 		Sun sun = pc.getBean(Sun.class);
 
@@ -85,9 +85,9 @@ class ProviderTest {
 	void testProviderLookup() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Solar3.class, null, null, null, false);
+		pc.registerPetiteBean(Solar3.class, null, null, null, false, null);
 
-		Planet earth = (Planet) pc.getBean("planet");
+		Planet earth = pc.getBean("planet");
 
 		assertEquals("Earth", earth.toString());
 	}

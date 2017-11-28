@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class FullTypeTest {
 
 	private void registerBean(PetiteContainer petiteContainer, Class beanType) {
-		petiteContainer.registerPetiteBean(beanType, null, null, null, false);
+		petiteContainer.registerPetiteBean(beanType, null, null, null, false, null);
 	}
 
 	@Test

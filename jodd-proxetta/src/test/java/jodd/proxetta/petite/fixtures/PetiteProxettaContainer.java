@@ -24,10 +24,15 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.proxetta.petite.fixtures;
 
-import jodd.petite.*;
+import jodd.petite.BeanDefinition;
+import jodd.petite.PetiteConfig;
+import jodd.petite.PetiteContainer;
+import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
+
+import java.util.function.Consumer;
 
 public class PetiteProxettaContainer extends PetiteContainer {
 
@@ -61,7 +66,7 @@ public class PetiteProxettaContainer extends PetiteContainer {
      * Applies proxetta on bean class before bean registration.
      */
     @Override
-    protected BeanDefinition createBeanDefinitionForRegistration(String name, Class type, Scope scope, WiringMode wiringMode) {
+    protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> consumer) {
         if (proxetta != null) {
             ProxyProxettaBuilder builder = proxetta.builder();
 
@@ -70,7 +75,7 @@ public class PetiteProxettaContainer extends PetiteContainer {
             type = builder.define();
         }
 
-        return super.createBeanDefinitionForRegistration(name, type, scope, wiringMode);
+        return super.createBeanDefinitionForRegistration(name, type, scope, wiringMode, consumer);
     }
 
     @Override

@@ -49,7 +49,7 @@ class MiscTest {
 	@Test
 	void testOne() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
+		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false, null);
 		assertEquals(1, pc.beansCount());
 
 		Object bizI = pc.getBean("biz");
@@ -57,10 +57,10 @@ class MiscTest {
 		assertTrue(bizI instanceof DefaultBizImpl);
 
 		pc = new PetiteContainer();
-		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
-		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false);            // override!
+		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false, null);
+		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false, null);            // override!
 		assertEquals(1, pc.beansCount());
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
 		pc.registerPetitePropertyInjectionPoint("biz", "foo", null);
 		pc.registerPetiteInitMethods("biz", POST_INITIALIZE, "init", "init2");
 
@@ -77,7 +77,7 @@ class MiscTest {
 	@Test
 	void testTwo() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
+		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false, null);
 		assertEquals(1, pc.beansCount());
 
 		Object bizI = pc.getBean("biz");
@@ -86,7 +86,7 @@ class MiscTest {
 		assertTrue(bizI instanceof DefaultBizImpl);
 
 		//pc = new PetiteContainer();			// same container!!!
-		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false);            // override! instance will be removed from the scope
+		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false, null);            // override! instance will be removed from the scope
 		assertEquals(1, pc.beansCount());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
@@ -109,8 +109,8 @@ class MiscTest {
 	void testAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
 
 		Foo foo = (Foo) pc.getBean("foo");
 		Boo boo = new Boo();
@@ -152,9 +152,9 @@ class MiscTest {
 	void testNoAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
 
 		Boo boo = (Boo) pc.getBean("boo");
 		Foo foo = (Foo) pc.getBean("foo");
@@ -210,8 +210,8 @@ class MiscTest {
 	@Test
 	void test244() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(BeanOne.class, null, null, null, false);
-		pc.registerPetiteBean(BeanTwo.class, null, null, null, false);
+		pc.registerPetiteBean(BeanOne.class, null, null, null, false, null);
+		pc.registerPetiteBean(BeanTwo.class, null, null, null, false, null);
 
 		BeanOne petiteBean = pc.getBean(BeanOne.class);
 

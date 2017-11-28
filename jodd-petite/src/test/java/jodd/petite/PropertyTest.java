@@ -41,12 +41,12 @@ class PropertyTest {
 	@Test
 	void testSet() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(PojoBean2.class, null, null, null, false);
+		pc.registerPetiteBean(PojoBean2.class, null, null, null, false, null);
 
 		pc.setBeanProperty("pojoBean2.val1", "value");
 		pc.setBeanProperty("pojoBean2.val2", "173");
 
-		PojoBean2 pojo2 = (PojoBean2) pc.getBean("pojoBean2");
+		PojoBean2 pojo2 = pc.getBean("pojoBean2");
 		assertEquals("value", pojo2.getVal1());
 		assertEquals(173, pojo2.getVal2().intValue());
 	}
@@ -55,7 +55,7 @@ class PropertyTest {
 	void testSetWithMultipleDots() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(PojoBean2.class, "pojo", null, null, false);
+		pc.registerPetiteBean(PojoBean2.class, "pojo", null, null, false, null);
 
 		try {
 			pc.setBeanProperty("poco", null);
@@ -65,15 +65,15 @@ class PropertyTest {
 		pc.setBeanProperty("pojo.val1", "value");
 		pc.setBeanProperty("pojo.bean.name", "foo");
 
-		PojoBean2 pojo2 = (PojoBean2) pc.getBean("pojo");
+		PojoBean2 pojo2 = pc.getBean("pojo");
 		assertEquals("value", pojo2.getVal1());
 		assertEquals("foo", pojo2.getBean().getName());
 
-		pc.registerPetiteBean(PojoBean2.class, "pojo.bean", null, null, false);
+		pc.registerPetiteBean(PojoBean2.class, "pojo.bean", null, null, false, null);
 		pc.setBeanProperty("pojo.bean.val1", "value");
 		pc.setBeanProperty("pojo.bean.val2", "173");
 
-		pojo2 = (PojoBean2) pc.getBean("pojo.bean");
+		pojo2 = pc.getBean("pojo.bean");
 		assertEquals("value", pojo2.getVal1());
 		assertEquals(173, pojo2.getVal2().intValue());
 	}
@@ -81,9 +81,9 @@ class PropertyTest {
 	@Test
 	void testGet() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(PojoBean2.class, null, null, null, false);
+		pc.registerPetiteBean(PojoBean2.class, null, null, null, false, null);
 
-		PojoBean2 pojo2 = (PojoBean2) pc.getBean("pojoBean2");
+		PojoBean2 pojo2 = pc.getBean("pojoBean2");
 		pojo2.setVal1("value");
 		pojo2.setVal2(Integer.valueOf(173));
 
@@ -98,8 +98,8 @@ class PropertyTest {
 	@Test
 	void testCount() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Moo.class, null, null, null, false);
-		pc.registerPetiteBean(Joo.class, null, null, null, false);
+		pc.registerPetiteBean(Moo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Joo.class, null, null, null, false, null);
 		Moo moo = pc.getBean(Moo.class);
 		assertNotNull(moo.joo);
 		assertNull(moo.jooNo);
@@ -110,8 +110,8 @@ class PropertyTest {
 
 		pc = new PetiteContainer();
 		pc.config().setDefaultWiringMode(WiringMode.AUTOWIRE);
-		pc.registerPetiteBean(Moo.class, null, null, null, false);
-		pc.registerPetiteBean(Joo.class, null, null, null, false);
+		pc.registerPetiteBean(Moo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Joo.class, null, null, null, false, null);
 
 		moo = pc.getBean(Moo.class);
 		assertNotNull(moo.joo);
@@ -132,7 +132,7 @@ class PropertyTest {
 		assertEquals("\\${pojo}", props.getValue("pojoBean2.val1"));
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(PojoBean2.class, null, null, null, false);
+		pc.registerPetiteBean(PojoBean2.class, null, null, null, false, null);
 		pc.defineParameters(props);
 
 		PojoBean2 pojoBean2 = pc.getBean(PojoBean2.class);

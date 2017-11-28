@@ -25,10 +25,17 @@
 
 package jodd.petite;
 
-import jodd.petite.fixtures.tst3.*;
+import jodd.petite.fixtures.tst3.Batgirl;
+import jodd.petite.fixtures.tst3.Batman;
+import jodd.petite.fixtures.tst3.GothamCity;
+import jodd.petite.fixtures.tst3.Metropolis;
+import jodd.petite.fixtures.tst3.Superman;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SetsTest {
 
@@ -36,7 +43,7 @@ class SetsTest {
 	void testEmptySet() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
+		pc.registerPetiteBean(GothamCity.class, null, null, null, false, null);
 
 		GothamCity gothamCity = pc.getBean(GothamCity.class);
 
@@ -48,8 +55,8 @@ class SetsTest {
 	void testOneHero() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Batman.class, null, null, null, false);
-		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
+		pc.registerPetiteBean(Batman.class, null, null, null, false, null);
+		pc.registerPetiteBean(GothamCity.class, null, null, null, false, null);
 
 		GothamCity gothamCity = pc.getBean(GothamCity.class);
 
@@ -65,9 +72,9 @@ class SetsTest {
 	void testTwoHeros() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Batman.class, null, null, null, false);
-		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
-		pc.registerPetiteBean(Batgirl.class, null, null, null, false);
+		pc.registerPetiteBean(Batman.class, null, null, null, false, null);
+		pc.registerPetiteBean(GothamCity.class, null, null, null, false, null);
+		pc.registerPetiteBean(Batgirl.class, null, null, null, false, null);
 
 		GothamCity gothamCity = pc.getBean(GothamCity.class);
 
@@ -84,8 +91,8 @@ class SetsTest {
 	void testCollection() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Superman.class, null, null, null, false);
-		pc.registerPetiteBean(Metropolis.class, null, null, null, false);
+		pc.registerPetiteBean(Superman.class, null, null, null, false, null);
+		pc.registerPetiteBean(Metropolis.class, null, null, null, false, null);
 
 		Metropolis metropolis = pc.getBean(Metropolis.class);
 

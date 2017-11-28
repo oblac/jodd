@@ -48,9 +48,9 @@ class MixScopeTest {
 		pc.config().setWireScopedProxy(true);
 		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false, null);
 
 		Big big = pc.getBean("big");
 
@@ -84,8 +84,8 @@ class MixScopeTest {
 		pc.config().setWireScopedProxy(true);
 		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big2.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
+		pc.registerPetiteBean(Big2.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false, null);
 
 		Big2 big = pc.getBean("big");
 
@@ -115,9 +115,9 @@ class MixScopeTest {
 		pc.config().setWireScopedProxy(true);
 		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Big.class, "big2", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ProtoScope.class, null, false, null);
 
 		Big big = pc.getBean("big");
 
@@ -147,8 +147,8 @@ class MixScopeTest {
 		pc.config().setWireScopedProxy(true);
 		pc.config().setDetectMixedScopes(true);
 
-		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false);
-		pc.registerPetiteBean(Small.class, "small", ThreadLocalScope.class, null, false);
+		pc.registerPetiteBean(Big.class, "big", SingletonScope.class, null, false, null);
+		pc.registerPetiteBean(Small.class, "small", ThreadLocalScope.class, null, false, null);
 
 		final Big big = pc.getBean("big");
 

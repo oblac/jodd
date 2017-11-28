@@ -25,11 +25,11 @@
 
 package jodd.petite;
 
-import jodd.petite.scope.SessionScope;
 import jodd.petite.fixtures.tst.Boo;
 import jodd.petite.fixtures.tst.Foo;
 import jodd.petite.fixtures.tst.Ses;
 import jodd.petite.fixtures.tst.Zoo;
+import jodd.petite.scope.SessionScope;
 import jodd.servlet.RequestContextListener;
 import org.junit.jupiter.api.Test;
 
@@ -54,9 +54,9 @@ class ShutdownTest {
 	void testSingletonDestroyMethods() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Foo.class, null, null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, null, null, false, null);
 
 		Boo boo = (Boo) pc.getBean("boo");
 		assertEquals(0, boo.getCount2());
@@ -82,7 +82,7 @@ class ShutdownTest {
 
 		// petite
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Ses.class, null, null, null, false);
+		pc.registerPetiteBean(Ses.class, null, null, null, false, null);
 
 		// callback not yet added
 		SessionScope.SessionBeans sessionBeans = (SessionScope.SessionBeans) session.getAttribute(ATTR_NAME);
@@ -123,7 +123,7 @@ class ShutdownTest {
 
 		// petite
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(Ses.class, null, null, null, false);
+		pc.registerPetiteBean(Ses.class, null, null, null, false, null);
 
 		Ses ses = (Ses) pc.getBean("ses");
 		assertNotNull(ses);

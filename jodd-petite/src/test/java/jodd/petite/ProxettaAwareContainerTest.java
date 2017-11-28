@@ -94,14 +94,14 @@ class ProxettaAwareContainerTest {
 
 		PetiteContainer papc = new ProxettaAwarePetiteContainer(proxetta);
 
-		papc.registerPetiteBean(SecretService.class, null, null, null, false);
-		BeanDefinition beanDefinition = papc.registerPetiteBean(PublicService.class, null, null, null, false);
-		papc.registerPetiteBean(PublicService2.class, null, null, null, false);
-		papc.registerPetiteBean(PublicService3.class, null, null, null, false);
+		papc.registerPetiteBean(SecretService.class, null, null, null, false, null);
+		BeanDefinition beanDefinition = papc.registerPetiteBean(PublicService.class, null, null, null, false, null);
+		papc.registerPetiteBean(PublicService2.class, null, null, null, false, null);
+		papc.registerPetiteBean(PublicService3.class, null, null, null, false, null);
 
 		assertNotEquals(PublicService.class, beanDefinition.type());
 
-		PublicService publicService = (PublicService) papc.getBean(beanDefinition.name());
+		PublicService publicService = papc.getBean(beanDefinition.name());
 		assertNotNull(publicService.secretService);
 		assertEquals("Hello World! And Universe, too!", publicService.hello());
 

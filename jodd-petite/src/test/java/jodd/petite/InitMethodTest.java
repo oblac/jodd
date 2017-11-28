@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class InitMethodTest {
 
 	private void defineBean(PetiteContainer petiteContainer, String beanName, Class type) {
-		petiteContainer.registerPetiteBean(type, beanName, null, null, true);
+		petiteContainer.registerPetiteBean(type, beanName, null, null, true, null);
 	}
 
 	@Test
@@ -59,7 +59,7 @@ class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo foo = (Foo) petiteContainer.getBean("foo");
+		Foo foo = petiteContainer.getBean("foo");
 
 		assertEquals("ctor null null", foo.result);
 		assertEquals("bar", foo.bar.toString());
@@ -84,7 +84,7 @@ class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo foo = (Foo) petiteContainer.getBean("foo");
+		Foo foo = petiteContainer.getBean("foo");
 
 		assertEquals("ctor bar null", foo.result);
 		assertEquals("bar", foo.bar.toString());
@@ -109,7 +109,7 @@ class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo foo = (Foo) petiteContainer.getBean("foo");
+		Foo foo = petiteContainer.getBean("foo");
 
 		assertEquals("ctor bar data", foo.result);
 		assertEquals("bar", foo.bar.toString());
@@ -136,7 +136,7 @@ class InitMethodTest {
 		petiteContainer.defineParameter("foo.data", "data");
 
 		// get bean
-		Foo2 foo = (Foo2) petiteContainer.getBean("foo");
+		Foo2 foo = petiteContainer.getBean("foo");
 
 		assertEquals("1 null null 2 bar null 3 bar data", foo.result);
 		assertEquals("bar", foo.bar.toString());

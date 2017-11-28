@@ -49,9 +49,9 @@ class ScopeTest {
 	void testThreadLocalScope() throws InterruptedException {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(Foo.class, "foo", null, null, false);
-		pc.registerPetiteBean(Zoo.class, null, null, null, false);
-		pc.registerPetiteBean(Boo.class, null, ThreadLocalScope.class, null, false);
+		pc.registerPetiteBean(Foo.class, "foo", null, null, false, null);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false, null);
+		pc.registerPetiteBean(Boo.class, null, ThreadLocalScope.class, null, false, null);
 
 		assertEquals(3, pc.beansCount());
 		assertEquals(2, pc.scopesCount());
