@@ -30,6 +30,7 @@ package jodd.proxetta;
  * Pointcut is a set of points in the application where advice should be applied, i.e.
  * which methods will be wrapped by proxy.
  */
+@FunctionalInterface
 public interface ProxyPointcut {
 
 	/**

@@ -26,13 +26,14 @@
 package jodd.proxetta.pointcuts;
 
 import jodd.proxetta.MethodInfo;
+import jodd.proxetta.ProxyPointcut;
 
 import java.lang.annotation.Annotation;
 
 /**
  * Pointcut on method with one of given annotations.
  */
-public class MethodAnnotationPointcut extends ProxyPointcutSupport {
+public class MethodAnnotationPointcut implements ProxyPointcut {
 
 	protected final Class<? extends Annotation>[] annotationClasses;
 
@@ -46,6 +47,7 @@ public class MethodAnnotationPointcut extends ProxyPointcutSupport {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean apply(MethodInfo methodInfo) {
 		return methodInfo.hasAnnotation(annotationClasses);
 	}
