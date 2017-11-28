@@ -135,69 +135,78 @@ public class Props implements Cloneable {
 	 * this method call, they might override active profiles
 	 * by using special property for active profiles (<code>@profiles</code>).
 	 */
-	public void setActiveProfiles(final String... activeProfiles) {
+	public Props setActiveProfiles(final String... activeProfiles) {
 		initialized = false;
 		this.activeProfiles = activeProfiles;
+		return this;
 	}
 
 	/**
 	 * Specifies the new line string when EOL is escaped.
 	 * Default value is an empty string.
 	 */
-	public void setEscapeNewLineValue(final String escapeNewLineValue) {
+	public Props setEscapeNewLineValue(final String escapeNewLineValue) {
 		parser.escapeNewLineValue = escapeNewLineValue;
+		return this;
 	}
 
 	/**
 	 * Specifies should the values be trimmed from the left.
 	 * Default is <code>true</code>.
 	 */
-	public void setValueTrimLeft(final boolean valueTrimLeft) {
+	public Props setValueTrimLeft(final boolean valueTrimLeft) {
 		parser.valueTrimLeft = valueTrimLeft;
+		return this;
 	}
 
 	/**
 	 * Specifies should the values be trimmed from the right.
 	 * Default is <code>true</code>.
 	 */
-	public void setValueTrimRight(final boolean valueTrimRight) {
+	public Props setValueTrimRight(final boolean valueTrimRight) {
 		parser.valueTrimRight = valueTrimRight;
+		return this;
 	}
 
 	/**
 	 * Defines if the prefix whitespaces should be ignored when value is split into the lines.
 	 */
-	public void setIgnorePrefixWhitespacesOnNewLine(final boolean ignorePrefixWhitespacesOnNewLine) {
+	public Props setIgnorePrefixWhitespacesOnNewLine(final boolean ignorePrefixWhitespacesOnNewLine) {
 		parser.ignorePrefixWhitespacesOnNewLine = ignorePrefixWhitespacesOnNewLine;
+		return this;
 	}
 
 	/**
 	 * Skips empty properties as they don't exist.
 	 */
-	public void setSkipEmptyProps(final boolean skipEmptyProps) {
+	public Props setSkipEmptyProps(final boolean skipEmptyProps) {
 		parser.skipEmptyProps = skipEmptyProps;
 		data.skipEmptyProps = skipEmptyProps;
+		return this;
 	}
 
 	/**
 	 * Appends duplicate props.
 	 */
-	public void setAppendDuplicateProps(final boolean appendDuplicateProps) {
+	public Props setAppendDuplicateProps(final boolean appendDuplicateProps) {
 		data.appendDuplicateProps = appendDuplicateProps;
+		return this;
 	}
 
 	/**
 	 * Ignore missing macros by replacing them with an empty string.
 	 */
-	public void setIgnoreMissingMacros(boolean ignoreMissingMacros) {
+	public Props setIgnoreMissingMacros(boolean ignoreMissingMacros) {
 		data.ignoreMissingMacros = ignoreMissingMacros;
+		return this;
 	}
 
 	/**
 	 * Enables multiline values.
 	 */
-	public void setMultilineValues(final boolean multilineValues) {
+	public Props setMultilineValues(final boolean multilineValues) {
 		parser.multilineValues = multilineValues;
+		return this;
 	}
 
 	/**
