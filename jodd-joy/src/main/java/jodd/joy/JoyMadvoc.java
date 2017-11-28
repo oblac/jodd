@@ -51,7 +51,7 @@ public class JoyMadvoc extends JoyBase {
 	public void start() {
 		initLogger();
 
-		log.info("MADVOC start");
+		log.info("MADVOC start  ----------");
 
 		webApp = new PetiteWebApp();
 

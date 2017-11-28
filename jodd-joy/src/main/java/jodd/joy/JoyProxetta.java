@@ -74,7 +74,7 @@ public class JoyProxetta extends JoyBase {
 	public void start() {
 		initLogger();
 
-		log.info("PROXETTA start");
+		log.info("PROXETTA start ----------");
 
 		proxyProxetta = ProxyProxetta.withAspects(config.proxyAspects.toArray(new ProxyAspect[0]));
 	}

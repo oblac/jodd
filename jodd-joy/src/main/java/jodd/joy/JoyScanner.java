@@ -81,7 +81,16 @@ public class JoyScanner extends JoyBase {
 	@Override
 	public void start() {
 		initLogger();
+
+		log.info("SCANNER start ----------");
+
 		includedEntries.add("jodd.*");
+
+		if (log.isDebugEnabled()) {
+			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
+			log.debug("Scan jars: " + Converter.get().toString(includedJars));
+			log.debug("Scan ignore exception: " + ignoreExceptions);
+		}
 	}
 
 	/**
@@ -91,12 +100,6 @@ public class JoyScanner extends JoyBase {
 	 */
 	public void applyTo(ClassFinder classFinder) {
 		classFinder.setExcludeAllEntries(true);
-
-		if (log.isDebugEnabled()) {
-			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
-			log.debug("Scan jars: " + Converter.get().toString(includedJars));
-			log.debug("Scan ignore exception: " + ignoreExceptions);
-		}
 
 		classFinder.setIncludedEntries(includedEntries.toArray(new String[includedEntries.size()]));
 		classFinder.setIncludedJars(includedJars.toArray(new String[includedJars.size()]));

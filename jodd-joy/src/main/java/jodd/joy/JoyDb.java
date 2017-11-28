@@ -113,7 +113,7 @@ public class JoyDb extends JoyBase {
 			return;
 		}
 
-		log.info("DB start");
+		log.info("DB start ----------");
 
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();

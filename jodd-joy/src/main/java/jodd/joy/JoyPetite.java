@@ -94,31 +94,35 @@ public class JoyPetite extends JoyBase {
 	public void start() {
 		initLogger();
 
-		log.info("PETITE start");
+		log.info("PETITE start  ----------");
 
-		PetiteContainer petite = createPetiteContainer();
+		petiteContainer = createPetiteContainer();
 
 		log.info("app in web: " + isWebApplication);
+
 		if (!isWebApplication) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).
-			petite.registerScope(SessionScope.class, new SingletonScope());
+			petiteContainer.registerScope(SessionScope.class, new SingletonScope());
 		}
 
 		// load parameters from properties files
-		petite.defineParameters(propsSupplier.get());
+		petiteContainer.defineParameters(propsSupplier.get());
 
-		petite.addBean(PETITE_SCAN, joyScannerSupplier.get());
+		petiteContainer.addBean(PETITE_SCAN, joyScannerSupplier.get());
 
 		// automagic configuration
 		if (config.autoConfiguration) {
-			registerPetiteContainerBeans(petite);
+			log.debug("Petite auto-configuration started...");
+
+			registerPetiteContainerBeans(petiteContainer);
 		}
 
-		config.petiteContainerConsumers.accept(petiteContainer);
+		log.debug("Petite manual configuration started...");
+		config.petiteContainerConsumers.accept(this.petiteContainer);
 
 		// add AppCore instance to Petite
-		petite.addBean(PETITE_CORE, this);
+		petiteContainer.addBean(PETITE_CORE, petiteContainer);
 	}
 
 	protected ProxettaAwarePetiteContainer createPetiteContainer() {

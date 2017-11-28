@@ -82,10 +82,14 @@ public class JoyProps extends JoyBase {
 	public void start() {
 		initLogger();
 
+		log.info("PROPS start ----------");
+
 		props = createProps();
 
 		props.loadSystemProperties("sys");
 		props.loadEnvironment("env");
+
+		log.info("Loaded sys&env props: " + props.countTotalProperties() + " propertes.");
 
 		props.setActiveProfiles(config.propsProfiles.toArray(new String[0]));
 
@@ -95,9 +99,11 @@ public class JoyProps extends JoyBase {
 			namePattern = "/" + nameSupplier.get() + "*.prop*";
 		}
 
-		log.debug("Loading props from classpath...");
+		log.debug("Loading props from classpath: " + namePattern);
 
 		PropsUtil.loadFromClasspath(props, namePattern);
+
+		log.info("Props is ready: " + props.countTotalProperties() + " propertes.");
 	}
 
 	/**
