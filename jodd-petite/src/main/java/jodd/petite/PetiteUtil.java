@@ -66,10 +66,10 @@ public class PetiteUtil {
 	 * without any order.
 	 */
 	public static void callDestroyMethods(BeanData beanData) {
-		DestroyMethodPoint[] dmp = beanData.getBeanDefinition().getDestroyMethodPoints();
+		DestroyMethodPoint[] dmp = beanData.definition().getDestroyMethodPoints();
 		for (DestroyMethodPoint destroyMethodPoint : dmp) {
 			try {
-				destroyMethodPoint.method.invoke(beanData.getBean());
+				destroyMethodPoint.method.invoke(beanData.instance());
 			} catch (Exception ex) {
 				throw new PetiteException("Invalid destroy method: " + destroyMethodPoint.method, ex);
 			}

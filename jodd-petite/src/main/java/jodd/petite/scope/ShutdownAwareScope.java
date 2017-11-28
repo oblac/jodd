@@ -44,7 +44,7 @@ public abstract class ShutdownAwareScope implements Scope {
 	 * Returns <code>true</code> if bean is destroyable.
 	 */
 	protected boolean isBeanDestroyable(BeanData beanData) {
-		DestroyMethodPoint[] dmp = beanData.getBeanDefinition().getDestroyMethodPoints();
+		DestroyMethodPoint[] dmp = beanData.definition().getDestroyMethodPoints();
 		return dmp != null && dmp.length != 0;
 	}
 

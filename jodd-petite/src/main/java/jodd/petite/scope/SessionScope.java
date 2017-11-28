@@ -86,6 +86,7 @@ public class SessionScope extends ShutdownAwareScope {
 			return beanMap;
 		}
 
+		@Override
 		public void valueBound(HttpSessionBindingEvent event) {
 			// do nothing
 		}
@@ -93,6 +94,7 @@ public class SessionScope extends ShutdownAwareScope {
 		/**
 		 * Session is destroyed.
 		 */
+		@Override
 		public void valueUnbound(HttpSessionBindingEvent event) {
 			for (BeanData beanData : beanMap.values()) {
 				destroyBean(beanData);
@@ -111,6 +113,7 @@ public class SessionScope extends ShutdownAwareScope {
 		super.shutdown();
 	}
 
+	@Override
 	public Object lookup(String name) {
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
@@ -122,9 +125,10 @@ public class SessionScope extends ShutdownAwareScope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.instance();
 	}
 
+	@Override
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
@@ -138,6 +142,7 @@ public class SessionScope extends ShutdownAwareScope {
 		registerDestroyableBeans(beanData);
 	}
 
+	@Override
 	public void remove(String name) {
 		if (totalRegisteredDestroyableBeans() == 0) {
 			return;
@@ -149,6 +154,7 @@ public class SessionScope extends ShutdownAwareScope {
 		}
 	}
 
+	@Override
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 

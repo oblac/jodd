@@ -27,12 +27,12 @@ package jodd.petite;
 
 /**
  * Petite bean is defined by {@link jodd.petite.BeanDefinition bean definition}
- * and bean instance.
+ * and it's bean instance.
  */
 public class BeanData {
 
-	protected final BeanDefinition beanDefinition;
-	protected final Object bean;
+	private final BeanDefinition beanDefinition;
+	private final Object bean;
 
 	public BeanData(BeanDefinition beanDefinition, Object bean) {
 		this.beanDefinition = beanDefinition;
@@ -40,16 +40,16 @@ public class BeanData {
 	}
 
 	/**
-	 * Returns Petite bean definition.
+	 * Returns {@link BeanDefinition}.
 	 */
-	public BeanDefinition getBeanDefinition() {
+	public BeanDefinition definition() {
 		return beanDefinition;
 	}
 
 	/**
 	 * Returns Petite bean instance.
 	 */
-	public Object getBean() {
+	public Object instance() {
 		return bean;
 	}
 }

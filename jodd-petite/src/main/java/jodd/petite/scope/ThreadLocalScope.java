@@ -46,21 +46,24 @@ public class ThreadLocalScope implements Scope {
 		}
 	};
 
+	@Override
 	public Object lookup(String name) {
 		Map<String, BeanData> threadLocalMap = context.get();
 		BeanData beanData = threadLocalMap.get(name);
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.instance();
 	}
 
+	@Override
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		BeanData beanData = new BeanData(beanDefinition, bean);
 		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.put(beanDefinition.getName(), beanData);
 	}
 
+	@Override
 	public void remove(String name) {
 		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.remove(name);
@@ -70,6 +73,7 @@ public class ThreadLocalScope implements Scope {
 	 * Defines allowed referenced scopes that can be injected into the
 	 * thread-local scoped bean.
 	 */
+	@Override
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
@@ -88,6 +92,7 @@ public class ThreadLocalScope implements Scope {
 		return false;
 	}
 
+	@Override
 	public void shutdown() {
 	}
 

@@ -70,9 +70,11 @@ public class RequestScope implements Scope {
 
 	// ---------------------------------------------------------------- scope
 
+	@Override
 	public void shutdown() {
 	}
 
+	@Override
 	public Object lookup(String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
 		Map<String, BeanData> map = getRequestMap(servletRequest);
@@ -84,9 +86,10 @@ public class RequestScope implements Scope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.instance();
 	}
 
+	@Override
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
 		Map<String, BeanData> map = getRequestMap(servletRequest);
@@ -98,6 +101,7 @@ public class RequestScope implements Scope {
 		map.put(beanDefinition.getName(), beanData);
 	}
 
+	@Override
 	public void remove(String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
 		Map<String, BeanData> map = getRequestMap(servletRequest);
@@ -106,6 +110,7 @@ public class RequestScope implements Scope {
 		}
 	}
 
+	@Override
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 

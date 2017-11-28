@@ -29,8 +29,8 @@ import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteUtil;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Singleton scope pools all bean instances so they will be created only once in
@@ -40,19 +40,22 @@ public class SingletonScope implements Scope {
 
 	protected Map<String, BeanData> instances = new HashMap<>();
 
+	@Override
 	public Object lookup(String name) {
 		BeanData beanData = instances.get(name);
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.getBean();
+		return beanData.instance();
 	}
 
+	@Override
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		BeanData beanData = new BeanData(beanDefinition, bean);
 		instances.put(beanDefinition.getName(), beanData);
 	}
 
+	@Override
 	public void remove(String name) {
 		instances.remove(name);
 	}
@@ -60,6 +63,7 @@ public class SingletonScope implements Scope {
 	/**
 	 * Allows only singleton scoped beans to be injected into the target singleton bean.
 	 */
+	@Override
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
@@ -77,6 +81,7 @@ public class SingletonScope implements Scope {
 	/**
 	 * Iterate all beans and invokes registered destroy methods.
 	 */
+	@Override
 	public void shutdown() {
 		for (BeanData beanData : instances.values()) {
 			PetiteUtil.callDestroyMethods(beanData);
