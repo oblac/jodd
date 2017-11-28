@@ -229,7 +229,7 @@ public class Jodd {
 	/**
 	 * Ascii art of Jodds name. Every serious framework needs one:)
 	 */
-	public static String JODD =
+	public static String JODD =       "\n" +
 		"          __          __    __\n" +
 		"         / /___  ____/ /___/ /\n" +
 		"    __  / / __ \\/ __  / __  / \n" +
