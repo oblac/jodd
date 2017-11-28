@@ -26,8 +26,6 @@
 package jodd.joy;
 
 import jodd.io.findfile.ClassFinder;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.typeconverter.Converter;
 
 import java.util.ArrayList;
@@ -42,8 +40,6 @@ import java.util.List;
  */
 public class JoyScanner extends JoyBase {
 
-	private static final Logger log = LoggerFactory.getLogger(JoyScanner.class);
-
 	/**
 	 * Scanning entries that will be examined by various
 	 * Jodd auto-magic tools.
@@ -51,7 +47,7 @@ public class JoyScanner extends JoyBase {
 	private List<String> includedEntries = new ArrayList<>();
 
 	/**
-	 * Scanning jars.
+	 * Included jars.
 	 */
 	private List<String> includedJars = new ArrayList<>();
 
@@ -84,8 +80,6 @@ public class JoyScanner extends JoyBase {
 
 		log.info("SCANNER start ----------");
 
-		includedEntries.add("jodd.*");
-
 		if (log.isDebugEnabled()) {
 			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
 			log.debug("Scan jars: " + Converter.get().toString(includedJars));
@@ -99,7 +93,13 @@ public class JoyScanner extends JoyBase {
 	 * but exclude all entries.
 	 */
 	public void applyTo(ClassFinder classFinder) {
-		classFinder.setExcludeAllEntries(true);
+		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
+			classFinder.setExcludeAllEntries(false);
+		}
+		else {
+			classFinder.setExcludeAllEntries(true);
+			includedEntries.add("jodd.*");
+		}
 
 		classFinder.setIncludedEntries(includedEntries.toArray(new String[includedEntries.size()]));
 		classFinder.setIncludedJars(includedJars.toArray(new String[includedJars.size()]));

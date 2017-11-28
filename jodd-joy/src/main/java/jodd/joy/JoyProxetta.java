@@ -76,7 +76,11 @@ public class JoyProxetta extends JoyBase {
 
 		log.info("PROXETTA start ----------");
 
-		proxyProxetta = ProxyProxetta.withAspects(config.proxyAspects.toArray(new ProxyAspect[0]));
+		ProxyAspect[] proxyAspects = config.proxyAspects.toArray(new ProxyAspect[0]);
+
+		log.debug("Total proxy aspects: " + proxyAspects.length);
+
+		proxyProxetta = ProxyProxetta.withAspects(proxyAspects);
 	}
 
 	protected ProxyAspect createTxProxyAspects() {

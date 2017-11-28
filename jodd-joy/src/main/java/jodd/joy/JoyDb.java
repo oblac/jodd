@@ -144,7 +144,6 @@ public class JoyDb extends JoyBase {
 			registerDbEntities(dbEntityManager);
 		}
 
-		log.debug("Detecting database");
 		DbDetector.detectDatabaseAndConfigureDbOom(connectionProvider);
 
 		config.dbEntityManagerConsumers.accept(dbEntityManager);
@@ -158,6 +157,8 @@ public class JoyDb extends JoyBase {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 
 		scannerSupplier.get().applyTo(dbcfg);
+
+		log.info("*DB Automagic scanning");
 
 		dbcfg.configure(dbEntityManager);
 	}

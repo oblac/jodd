@@ -113,7 +113,7 @@ public class JoyPetite extends JoyBase {
 
 		// automagic configuration
 		if (config.autoConfiguration) {
-			log.debug("Petite auto-configuration started...");
+			log.info("*PETITE Automagic scanning");
 
 			registerPetiteContainerBeans(petiteContainer);
 		}
