@@ -52,7 +52,7 @@ public class SingletonScope implements Scope {
 	@Override
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		BeanData beanData = new BeanData(beanDefinition, bean);
-		instances.put(beanDefinition.getName(), beanData);
+		instances.put(beanDefinition.name(), beanData);
 	}
 
 	@Override

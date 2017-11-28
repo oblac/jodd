@@ -68,21 +68,21 @@ public class BeanDefinition {
 	/**
 	 * Returns bean name.
 	 */
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
 	/**
 	 * Returns bean type.
 	 */
-	public Class getType() {
+	public Class type() {
 		return type;
 	}
 
 	/**
 	 * Returns beans scope type.
 	 */
-	public Class<? extends Scope> getScope() {
+	public Class<? extends Scope> scope() {
 		if (scope == null) {
 			return null;
 		}
@@ -92,7 +92,7 @@ public class BeanDefinition {
 	/**
 	 * Returns wiring mode.
 	 */
-	public WiringMode getWiringMode() {
+	public WiringMode wiringMode() {
 		return wiringMode;
 	}
 
@@ -101,49 +101,49 @@ public class BeanDefinition {
 	/**
 	 * Returns constructor injection point.
 	 */
-	public CtorInjectionPoint getCtorInjectionPoint() {
+	public CtorInjectionPoint ctorInjectionPoint() {
 		return ctor;
 	}
 
 	/**
 	 * Returns property injection points.
 	 */
-	public PropertyInjectionPoint[] getPropertyInjectionPoints() {
+	public PropertyInjectionPoint[] propertyInjectionPoints() {
 		return properties;
 	}
 
 	/**
 	 * Returns set injection points.
 	 */
-	public SetInjectionPoint[] getSetInjectionPoints() {
+	public SetInjectionPoint[] setterInjectionPoints() {
 		return sets;
 	}
 
 	/**
 	 * Returns method injection points.
 	 */
-	public MethodInjectionPoint[] getMethodInjectionPoints() {
+	public MethodInjectionPoint[] methodInjectionPoints() {
 		return methods;
 	}
 
 	/**
 	 * Returns init method points.
 	 */
-	public InitMethodPoint[] getInitMethodPoints() {
+	public InitMethodPoint[] InitMethodPoints() {
 		return initMethods;
 	}
 
 	/**
 	 * Returns destroy method points.
 	 */
-	public DestroyMethodPoint[] getDestroyMethodPoints() {
+	public DestroyMethodPoint[] destroyMethodPoints() {
 		return destroyMethods;
 	}
 
 	/**
 	 * Returns parameters.
 	 */
-	public String[] getParams() {
+	public String[] params() {
 		return params;
 	}
 

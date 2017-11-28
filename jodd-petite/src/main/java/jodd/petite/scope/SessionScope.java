@@ -137,7 +137,7 @@ public class SessionScope extends ShutdownAwareScope {
 		}
 
 		BeanData beanData = new BeanData(beanDefinition, bean);
-		map.put(beanDefinition.getName(), beanData);
+		map.put(beanDefinition.name(), beanData);
 
 		registerDestroyableBeans(beanData);
 	}

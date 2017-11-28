@@ -47,7 +47,7 @@ public class ProviderResolver {
 	 * Resolves all providers in the class
 	 */
 	public ProviderDefinition[] resolve(BeanDefinition beanDefinition) {
-		Class type = beanDefinition.getType();
+		Class type = beanDefinition.type();
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
@@ -78,7 +78,7 @@ public class ProviderResolver {
 			if (Modifier.isStatic(method.getModifiers())) {
 				providerDefinition = new ProviderDefinition(providerName, method);
 			} else {
-				providerDefinition = new ProviderDefinition(providerName, beanDefinition.getName(), method);
+				providerDefinition = new ProviderDefinition(providerName, beanDefinition.name(), method);
 			}
 
 			list.add(providerDefinition);

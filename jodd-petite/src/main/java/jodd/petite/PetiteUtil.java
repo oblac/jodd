@@ -66,7 +66,7 @@ public class PetiteUtil {
 	 * without any order.
 	 */
 	public static void callDestroyMethods(BeanData beanData) {
-		DestroyMethodPoint[] dmp = beanData.definition().getDestroyMethodPoints();
+		DestroyMethodPoint[] dmp = beanData.definition().destroyMethodPoints();
 		for (DestroyMethodPoint destroyMethodPoint : dmp) {
 			try {
 				destroyMethodPoint.method.invoke(beanData.instance());

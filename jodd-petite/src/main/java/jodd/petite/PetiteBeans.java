@@ -321,7 +321,7 @@ public abstract class PetiteBeans {
 
 		// define
 		if (define) {
-			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(beanDefinition.getType());
+			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(beanDefinition.type());
 			beanDefinition.properties = PropertyInjectionPoint.EMPTY;
 			beanDefinition.methods = MethodInjectionPoint.EMPTY;
 			beanDefinition.initMethods = InitMethodPoint.EMPTY;
@@ -344,7 +344,7 @@ public abstract class PetiteBeans {
 			return;
 		}
 
-		Class type = beanDefinition.getType();
+		Class type = beanDefinition.type();
 
 		if (PetiteUtil.beanHasAnnotationName(type)) {
 			return;

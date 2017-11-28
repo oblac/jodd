@@ -98,7 +98,7 @@ public class RequestScope implements Scope {
 		}
 
 		BeanData beanData = new BeanData(beanDefinition, bean);
-		map.put(beanDefinition.getName(), beanData);
+		map.put(beanDefinition.name(), beanData);
 	}
 
 	@Override

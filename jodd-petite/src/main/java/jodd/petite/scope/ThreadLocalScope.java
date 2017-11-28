@@ -60,7 +60,7 @@ public class ThreadLocalScope implements Scope {
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		BeanData beanData = new BeanData(beanDefinition, bean);
 		Map<String, BeanData> threadLocalMap = context.get();
-		threadLocalMap.put(beanDefinition.getName(), beanData);
+		threadLocalMap.put(beanDefinition.name(), beanData);
 	}
 
 	@Override

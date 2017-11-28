@@ -48,14 +48,14 @@ public class TestOneInterfaceLookup {
 
 		BeanDefinition beanDefinition = pc.lookupBeanDefinition("myBiz");
 		assertNotNull(beanDefinition);
-		assertEquals("myBiz", beanDefinition.getName());
+		assertEquals("myBiz", beanDefinition.name());
 
 		Biz myBiz = pc.getBean("myBiz");
 		assertNotNull(myBiz);
 
 		BeanDefinition altBeanDefinition = pc.lookupBeanDefinition("biz");
 		assertNotNull(altBeanDefinition);
-		assertEquals("myBiz", altBeanDefinition.getName());
+		assertEquals("myBiz", altBeanDefinition.name());
 		assertSame(beanDefinition, altBeanDefinition);
 
 		Biz myBiz2 = pc.getBean("biz");
@@ -74,7 +74,7 @@ public class TestOneInterfaceLookup {
 
 		beanDefinition = pc.lookupBeanDefinition("myBiz");
 		assertNotNull(beanDefinition);
-		assertEquals("myBiz", beanDefinition.getName());
+		assertEquals("myBiz", beanDefinition.name());
 
 		altBeanDefinition = pc.lookupBeanDefinition("biz");
 		assertNull(altBeanDefinition);
@@ -95,7 +95,7 @@ public class TestOneInterfaceLookup {
 
 		beanDefinition = pc.lookupBeanDefinition("myBiz");
 		assertNotNull(beanDefinition);
-		assertEquals("myBiz", beanDefinition.getName());
+		assertEquals("myBiz", beanDefinition.name());
 
 		altBeanDefinition = pc.lookupBeanDefinition("biz");
 		assertNull(altBeanDefinition);

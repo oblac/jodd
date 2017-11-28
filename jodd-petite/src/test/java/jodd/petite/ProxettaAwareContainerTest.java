@@ -99,9 +99,9 @@ class ProxettaAwareContainerTest {
 		papc.registerPetiteBean(PublicService2.class, null, null, null, false);
 		papc.registerPetiteBean(PublicService3.class, null, null, null, false);
 
-		assertNotEquals(PublicService.class, beanDefinition.getType());
+		assertNotEquals(PublicService.class, beanDefinition.type());
 
-		PublicService publicService = (PublicService) papc.getBean(beanDefinition.getName());
+		PublicService publicService = (PublicService) papc.getBean(beanDefinition.name());
 		assertNotNull(publicService.secretService);
 		assertEquals("Hello World! And Universe, too!", publicService.hello());
 
