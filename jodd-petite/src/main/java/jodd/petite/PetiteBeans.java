@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Base layer of {@link PetiteContainer Petite Container}.
@@ -687,22 +688,48 @@ public abstract class PetiteBeans {
 	/**
 	 * Returns total number of registered beans.
 	 */
-	public int getTotalBeans() {
+	public int beansCount() {
 		return beans.size();
 	}
 
 	/**
 	 * Returns total number of used scopes.
 	 */
-	public int getTotalScopes() {
+	public int scopesCount() {
 		return scopes.size();
 	}
 
 	/**
-	 * Returns set of all bean names.
+	 * Returns set of all bean names. The returned set is a safe
+	 * snapshot of all bean names.
 	 */
-	public Set<String> getBeanNames() {
-		return beans.keySet();
+	public Set<String> beanNames() {
+		return new HashSet<>(beans.keySet());
+	}
+
+	/**
+	 * Iterates all beans. Iteration occurs over the {@link #beanNames() snapshot of bean names}.
+	 */
+	public void forEachBean(Consumer<BeanDefinition> beanDefinitionConsumer) {
+		final Set<String> names = beanNames();
+		for (String beanName : names) {
+			BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
+
+			if (beanDefinition != null) {
+				beanDefinitionConsumer.accept(beanDefinition);
+			}
+		}
+	}
+
+	/**
+	 * Iterates all beans that are of given type.
+	 */
+	public void forEachBeanType(Class type, Consumer<String> beanNameConsumer) {
+		forEachBean(bd -> {
+			if (ClassUtil.isTypeOf(bd.type, type)) {
+				beanNameConsumer.accept(bd.name);
+			}
+		});
 	}
 
 	// ---------------------------------------------------------------- params

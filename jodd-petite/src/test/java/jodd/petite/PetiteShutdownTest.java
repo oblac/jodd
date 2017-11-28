@@ -40,10 +40,10 @@ class PetiteShutdownTest {
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		pc.shutdown();
 
-		assertEquals(0, pc.getTotalBeans());
+		assertEquals(0, pc.beansCount());
 	}
 }

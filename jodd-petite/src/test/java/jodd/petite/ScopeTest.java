@@ -25,19 +25,23 @@
 
 package jodd.petite;
 
+import jodd.petite.fixtures.tst.Boo;
+import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.RequestScope;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
-import jodd.petite.fixtures.tst.Boo;
-import jodd.petite.fixtures.tst.Foo;
-import jodd.petite.fixtures.tst.Zoo;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Semaphore;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScopeTest {
 
@@ -49,8 +53,8 @@ class ScopeTest {
 		pc.registerPetiteBean(Zoo.class, null, null, null, false);
 		pc.registerPetiteBean(Boo.class, null, ThreadLocalScope.class, null, false);
 
-		assertEquals(3, pc.getTotalBeans());
-		assertEquals(2, pc.getTotalScopes());
+		assertEquals(3, pc.beansCount());
+		assertEquals(2, pc.scopesCount());
 
 		final Boo boo = (Boo) pc.getBean("boo");
 		final Foo foo = (Foo) pc.getBean("foo");

@@ -46,9 +46,9 @@ class ManualTest {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
-		Set<String> names = pc.getBeanNames();
+		Set<String> names = pc.beanNames();
 		assertEquals(2, names.size());
 
 		assertTrue(names.contains("pojo"));
@@ -77,7 +77,7 @@ class ManualTest {
 		PetiteRegistry.of(pc).bean(SomeService.class).register();
 		PetiteRegistry.of(pc).bean(PojoBean.class).name("pojo").register();
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		PetiteRegistry.of(pc).wire("pojo").ctor().bind();
 		PetiteRegistry.of(pc).wire("pojo").property("service").ref("someService").bind();
@@ -100,7 +100,7 @@ class ManualTest {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, false);
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		PojoAnnBean pojoBean = pc.getBean("pojo");
 		SomeService ss = pc.getBean("someService");
@@ -120,7 +120,7 @@ class ManualTest {
 		PetiteRegistry.of(pc).bean(SomeService.class).register();
 		PetiteRegistry.of(pc).bean(PojoAnnBean.class).name("pojo").register();
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		PojoAnnBean pojoBean = pc.getBean("pojo");
 		SomeService ss = pc.getBean("someService");
@@ -139,7 +139,7 @@ class ManualTest {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, true);
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		PojoAnnBean pojoBean = pc.getBean("pojo");
 		SomeService ss = pc.getBean("someService");
@@ -160,7 +160,7 @@ class ManualTest {
 		PetiteRegistry.of(pc).bean(SomeService.class).register();
 		PetiteRegistry.of(pc).bean(PojoAnnBean.class).name("pojo").define().register();
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		PojoAnnBean pojoBean = pc.getBean("pojo");
 		SomeService ss = pc.getBean("someService");
@@ -179,7 +179,7 @@ class ManualTest {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, true);
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		pc.registerPetiteCtorInjectionPoint("pojo", null, null);
 		pc.registerPetitePropertyInjectionPoint("pojo", "service", "someService");
@@ -204,7 +204,7 @@ class ManualTest {
 		petiteRegistry.bean(SomeService.class).register();
 		petiteRegistry.bean(PojoBean.class).name("pojo").define().register();
 
-		assertEquals(2, petiteRegistry.petiteContainer().getTotalBeans());
+		assertEquals(2, petiteRegistry.petiteContainer().beansCount());
 
 
 		petiteRegistry.wire("pojo").ctor().bind();

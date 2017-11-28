@@ -28,12 +28,12 @@ package jodd.petite;
 import jodd.petite.fixtures.data.Biz;
 import jodd.petite.fixtures.data.DefaultBiz;
 import jodd.petite.fixtures.data.DefaultBizImpl;
-import jodd.petite.meta.PetiteBean;
-import jodd.petite.meta.PetiteInject;
-import jodd.petite.scope.ProtoScope;
 import jodd.petite.fixtures.tst.Boo;
 import jodd.petite.fixtures.tst.Foo;
 import jodd.petite.fixtures.tst.Zoo;
+import jodd.petite.meta.PetiteBean;
+import jodd.petite.meta.PetiteInject;
+import jodd.petite.scope.ProtoScope;
 import org.junit.jupiter.api.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
@@ -50,7 +50,7 @@ class MiscTest {
 	void testOne() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
-		assertEquals(1, pc.getTotalBeans());
+		assertEquals(1, pc.beansCount());
 
 		Object bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
@@ -59,12 +59,12 @@ class MiscTest {
 		pc = new PetiteContainer();
 		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
 		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false);            // override!
-		assertEquals(1, pc.getTotalBeans());
+		assertEquals(1, pc.beansCount());
 		pc.registerPetiteBean(Foo.class, null, null, null, false);
 		pc.registerPetitePropertyInjectionPoint("biz", "foo", null);
 		pc.registerPetiteInitMethods("biz", POST_INITIALIZE, "init", "init2");
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
 		assertFalse(bizI instanceof DefaultBizImpl);
@@ -78,7 +78,7 @@ class MiscTest {
 	void testTwo() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(DefaultBizImpl.class, null, null, null, false);
-		assertEquals(1, pc.getTotalBeans());
+		assertEquals(1, pc.beansCount());
 
 		Object bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
@@ -87,7 +87,7 @@ class MiscTest {
 
 		//pc = new PetiteContainer();			// same container!!!
 		pc.registerPetiteBean(DefaultBiz.class, null, null, null, false);            // override! instance will be removed from the scope
-		assertEquals(1, pc.getTotalBeans());
+		assertEquals(1, pc.beansCount());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
 		assertFalse(bizI instanceof DefaultBizImpl);

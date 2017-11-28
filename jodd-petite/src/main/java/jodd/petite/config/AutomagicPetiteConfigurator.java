@@ -80,7 +80,7 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 			throw new PetiteException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.getTotalBeans());
+		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.beansCount());
 	}
 
 	/**

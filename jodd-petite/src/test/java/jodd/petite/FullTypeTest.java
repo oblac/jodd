@@ -47,7 +47,7 @@ class FullTypeTest {
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		assertNull(pc.getBean("koo"));
 		assertNull(pc.getBean("joo"));
@@ -98,7 +98,7 @@ class FullTypeTest {
 		registerBean(pc, Koo.class);
 		registerBean(pc, Joo.class);
 
-		assertEquals(2, pc.getTotalBeans());
+		assertEquals(2, pc.beansCount());
 
 		Koo koo = pc.getBean(Koo.class);
 		assertNotNull(koo);
