@@ -30,6 +30,10 @@ package jodd.mutable;
  */
 public final class MutableLong extends Number implements Comparable<MutableLong>, Cloneable {
 
+	public static MutableLong of(long value) {
+		return new MutableLong(value);
+	}
+
 	public MutableLong() {
 	}
 
@@ -150,6 +154,7 @@ public final class MutableLong extends Number implements Comparable<MutableLong>
 	/**
 	 * Compares value of two same instances.
 	 */
+	@Override
 	public int compareTo(MutableLong other) {
 		return value < other.value ? -1 : (value == other.value ? 0 : 1);
 	}

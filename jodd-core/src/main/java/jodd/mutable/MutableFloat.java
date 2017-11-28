@@ -30,6 +30,10 @@ package jodd.mutable;
  */
 public final class MutableFloat extends Number implements Comparable<MutableFloat>, Cloneable {
 
+	public static MutableFloat of(float value) {
+		return new MutableFloat(value);
+	}
+
 	public MutableFloat() {
 	}
 
@@ -164,6 +168,7 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	/**
 	 * Compares value of two same instances.
 	 */
+	@Override
 	public int compareTo(MutableFloat other) {
 		return Float.compare(value, other.value);
 	}

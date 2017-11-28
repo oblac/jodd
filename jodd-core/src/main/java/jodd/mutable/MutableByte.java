@@ -30,6 +30,10 @@ package jodd.mutable;
  */
 public final class MutableByte extends Number implements Comparable<MutableByte>, Cloneable {
 
+	public static MutableByte of(byte value) {
+		return new MutableByte(value);
+	}
+
 	public MutableByte() {
 	}
 
@@ -150,6 +154,7 @@ public final class MutableByte extends Number implements Comparable<MutableByte>
 	/**
 	 * Compares value of two same instances.
 	 */
+	@Override
 	public int compareTo(MutableByte other) {
 		return value < other.value ? -1 : (value == other.value ? 0 : 1);
 	}

@@ -30,6 +30,10 @@ package jodd.mutable;
  */
 public final class MutableDouble extends Number implements Comparable<MutableDouble>, Cloneable {
 
+	public static MutableDouble of(double value) {
+		return new MutableDouble(value);
+	}
+
 	public MutableDouble() {
 	}
 
@@ -165,6 +169,7 @@ public final class MutableDouble extends Number implements Comparable<MutableDou
 	/**
 	 * Compares value of two same instances.
 	 */
+	@Override
 	public int compareTo(MutableDouble other) {
 		return Double.compare(value, other.value);
 	}

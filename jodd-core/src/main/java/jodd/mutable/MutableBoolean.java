@@ -30,6 +30,10 @@ package jodd.mutable;
  */
 public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneable {
 
+	public static MutableBoolean of(boolean value) {
+		return new MutableBoolean(value);
+	}
+
 	public MutableBoolean() {
 	}
 
@@ -123,6 +127,7 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 	/**
 	 * Compares value of two same instances.
 	 */
+	@Override
 	public int compareTo(MutableBoolean o) {
 		return (value == o.value) ? 0 : (!value ? -1 : 1);
 	}
