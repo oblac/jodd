@@ -33,10 +33,10 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.joy.exception.AppException;
+import jodd.joy.JoyException;
+import jodd.joy.JoyScanner;
+import jodd.jtx.JoddJtx;
 import jodd.jtx.JtxTransactionManager;
-import jodd.jtx.meta.ReadWriteTransaction;
-import jodd.jtx.meta.Transaction;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
@@ -63,6 +63,14 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
+import static jodd.joy.JoddJoy.PETITE_CORE;
+import static jodd.joy.JoddJoy.PETITE_DB;
+import static jodd.joy.JoddJoy.PETITE_DBOOM;
+import static jodd.joy.JoddJoy.PETITE_DBPOOL;
+import static jodd.joy.JoddJoy.PETITE_INIT;
+import static jodd.joy.JoddJoy.PETITE_PROPS;
+import static jodd.joy.JoddJoy.PETITE_SCAN;
+
 /**
  * Default application core. Contains init points to
  * all application frameworks and layers.
@@ -70,43 +78,9 @@ import java.sql.SQLException;
 public abstract class DefaultAppCore {
 
 	/**
-	 * Application system property - application folder.
-	 */
-	public static final String APP_DIR = "app.dir";
-	/**
 	 * Application system property - flag if web application is detected..
 	 */
 	public static final String APP_WEB = "app.web";
-
-	/**
-	 * Petite bean name for AppCore (this instance).
-	 */
-	public static final String PETITE_CORE = "core";
-	/**
-	 * Petite bean name for database pool.
-	 */
-	public static final String PETITE_DBPOOL = "dbpool";
-	/**
-	 * Petite bean name for database configuration.
-	 */
-	public static final String PETITE_DB = "db";
-	/**
-	 * Petite bean name for <code>DbEntityManager</code> instance.
-	 */
-	public static final String PETITE_DBOOM = "dboom";
-	/**
-	 * Petite bean name for {@link AppInit} bean.
-	 */
-	public static final String PETITE_INIT = "init";
-	/**
-	 * Petite bean name for application props.
-	 */
-	public static final String PETITE_PROPS = "props";
-	/**
-	 * Petite bean name for {@link AppScanner} bean.
-	 */
-	public static final String PETITE_SCAN = "scan";
-
 
 	/**
 	 * Logger. Resolved during {@link #initLogger() initialization}.
@@ -168,7 +142,7 @@ public abstract class DefaultAppCore {
 		}
 
 		if (jtxAnnotations == null) {
-			jtxAnnotations = new Class[] {Transaction.class, ReadWriteTransaction.class};
+			jtxAnnotations = JoddJtx.get().defaults().getTxAnnotations();
 		}
 
 		if (jtxScopePattern == null) {
@@ -179,7 +153,7 @@ public abstract class DefaultAppCore {
 			resolveAppDir(appPropsName);		// app directory is resolved from location of 'app.props'.
 		}
 
-		System.setProperty(APP_DIR, appDir);
+		//System.setProperty(APP_DIR, appDir);
 		System.setProperty(APP_WEB, Boolean.toString(isWebApplication));
 	}
 
@@ -204,7 +178,7 @@ public abstract class DefaultAppCore {
 	protected void resolveAppDir(String classPathFileName) {
 		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName);
 		if (url == null) {
-			throw new AppException("Failed to resolve app dir, missing: " + classPathFileName);
+			throw new JoyException("Failed to resolve app dir, missing: " + classPathFileName);
 		}
 		String protocol = url.getProtocol();
 
@@ -369,24 +343,24 @@ public abstract class DefaultAppCore {
 
 	// ---------------------------------------------------------------- scanning
 
-	protected AppScanner appScanner;
+	protected JoyScanner appScanner;
 
 	/**
 	 * Returns scanner.
 	 */
-	public AppScanner getAppScanner() {
+	public JoyScanner getAppScanner() {
 		return appScanner;
 	}
 
 	/**
-	 * Initializes {@link AppScanner}.
+	 * Initializes {@link JoyScanner}.
 	 */
 	protected void initScanner() {
 		if (appScanner != null) {
 			return;
 		}
 
-		appScanner = new AppScanner(this);
+		appScanner = new JoyScanner();
 	}
 
 	// ---------------------------------------------------------------- proxetta
@@ -492,7 +466,7 @@ public abstract class DefaultAppCore {
 	protected void registerPetiteContainerBeans(PetiteContainer petiteContainer) {
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
 
-		appScanner.configure(pcfg);
+		appScanner.applyTo(pcfg);
 
 		petiteContainer.configureWith(pcfg);
 	}
@@ -597,7 +571,7 @@ public abstract class DefaultAppCore {
 	 */
 	protected void registerDbEntities(DbEntityManager dbEntityManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
-		appScanner.configure(dbcfg);
+		appScanner.applyTo(dbcfg);
 		dbcfg.configure(dbEntityManager);
 	}
 
