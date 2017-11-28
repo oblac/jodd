@@ -35,6 +35,7 @@ import jodd.props.Props;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Madvoc container. Works internally with {@link jodd.petite.PetiteContainer}.
@@ -60,6 +61,42 @@ public class MadvocContainer {
 	}
 
 	/**
+	 * Registers component using its {@link #resolveBaseComponentName(Class) base name}.
+	 * Previously defined component will be removed.
+	 *
+	 * @see #registerComponentInstance(Object)
+	 */
+	public void registerComponent(Class component) {
+		String name = resolveBaseComponentName(component);
+		registerComponent(name, component);
+	}
+
+	public <T> void registerComponent(Class<T> component, Consumer<T> consumer) {
+		String name = resolveBaseComponentName(component);
+		registerComponent(name, component, consumer);
+	}
+
+	/**
+	 * Registers Madvoc component with given name.
+	 */
+	public void registerComponent(String name, Class component) {
+		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
+
+		madpc.removeBean(name);
+		madpc.registerPetiteBean(component, name, null, null, false, null);
+	}
+
+	/**
+	 * Registers Madvoc component with given name.
+	 */
+	public <T> void registerComponent(String name, Class<T> component, Consumer<T> consumer) {
+		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
+
+		madpc.removeBean(name);
+		madpc.registerPetiteBean(component, name, null, null, false, consumer);
+	}
+
+	/**
 	 * Registers component instance using its {@link #resolveBaseComponentName(Class) base name}.
 	 * Previously defined component will be removed.
 	 *
@@ -69,27 +106,6 @@ public class MadvocContainer {
 		Class component = componentInstance.getClass();
 		String name = resolveBaseComponentName(component);
 		registerComponentInstance(name, componentInstance);
-	}
-
-	/**
-	 * Registers component using its {@link #resolveBaseComponentName(Class) base name}.
-	 * Previously defined component will be removed.
-	 *
-	 * @see #registerComponentInstance(Object)
-	 */
-	public void registerComponent(Class component) {
-		String name = resolveBaseComponentName(component);
-		registerComponentInstance(name, component);
-	}
-
-	/**
-	 * Registers Madvoc component with given name.
-	 */
-	public void registerComponentInstance(String name, Class component) {
-		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
-
-		madpc.removeBean(name);
-		madpc.registerPetiteBean(component, name, null, null, false);
 	}
 
 	/**

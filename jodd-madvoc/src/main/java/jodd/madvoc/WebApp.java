@@ -45,6 +45,7 @@ import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.component.ServletContextProvider;
 import jodd.props.Props;
+import jodd.util.ClassConsumer;
 import jodd.util.Consumers;
 
 import javax.servlet.ServletContext;
@@ -82,7 +83,7 @@ public class WebApp {
 
 	protected ServletContext servletContext;
 	private List<Props> propsList = new ArrayList<>();
-	private List<Class> madvocComponents = new ArrayList<>();
+	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
 	private Consumers<MadvocApp> madvocAppConsumers = Consumers.empty();
 
@@ -108,7 +109,13 @@ public class WebApp {
 	 */
 	public WebApp withMadvocComponent(Class madvocComponent) {
 		Objects.requireNonNull(madvocComponent);
-		madvocComponents.add(madvocComponent);
+		madvocComponents.add(ClassConsumer.of(madvocComponent));
+		return this;
+	}
+
+	public <T> WebApp withMadvocComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
+		Objects.requireNonNull(madvocComponent);
+		madvocComponents.add(ClassConsumer.of(madvocComponent, componentConsumer));
 		return this;
 	}
 
@@ -178,7 +185,7 @@ public class WebApp {
 		registerMadvocComponents();
 
 		madvocComponents.forEach(
-			madvocComponent -> madvocContainer.registerComponent(madvocComponent));
+			madvocComponent -> madvocContainer.registerComponent(madvocComponent.type(), madvocComponent.consumer()));
 		madvocComponents = null;
 		madvocComponentInstances.forEach(
 			madvocComponent -> madvocContainer.registerComponentInstance(madvocComponent));

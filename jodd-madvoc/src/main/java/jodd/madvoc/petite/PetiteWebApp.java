@@ -29,6 +29,9 @@ import jodd.madvoc.WebApp;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 /**
  * {@link WebApp WebApplication} that uses {@link jodd.petite.PetiteContainer Petite container}
  * for retrieving all instances.
@@ -40,23 +43,24 @@ public class PetiteWebApp extends WebApp {
 	/**
 	 * Provides {@link PetiteContainer Petite container} instance that will be used as application context.
 	 */
-	protected PetiteContainer createAndInitializePetiteContainer() {
+	private Supplier<PetiteContainer> petiteContainerSupplier = () -> {
 		PetiteContainer pc = new PetiteContainer();
-
 		pc.configureWith(new AutomagicPetiteConfigurator());
-
 		return pc;
+	};
+
+	public PetiteWebApp withPetiteContainer(Supplier<PetiteContainer> petiteContainerSupplier) {
+		Objects.requireNonNull(petiteContainerSupplier);
+		this.petiteContainerSupplier = petiteContainerSupplier;
+		return this;
 	}
 
-	/**
-	 * Registers {@link #createAndInitializePetiteContainer() provided Petite container}
-	 * and Petite-aware Madvoc components.
-	 */
 	@Override
 	protected void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
-		PetiteContainer petiteContainer = createAndInitializePetiteContainer();
+		PetiteContainer petiteContainer = petiteContainerSupplier.get();
+
 		madvocContainer.registerComponentInstance(PETITE_CONTAINER_NAME, petiteContainer);
 
 		madvocContainer.registerComponent(PetiteMadvocController.class);
