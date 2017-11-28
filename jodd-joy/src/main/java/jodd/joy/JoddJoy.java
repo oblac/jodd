@@ -26,11 +26,13 @@
 package jodd.joy;
 
 import jodd.Jodd;
+import jodd.joy.core.AppInit;
 import jodd.joy.server.Server;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.LoggerProvider;
 import jodd.log.impl.SimpleLogger;
+import jodd.petite.PetiteContainer;
 
 import javax.servlet.ServletContext;
 import java.util.Objects;
@@ -38,6 +40,40 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class JoddJoy {
+
+	/**
+	 * System property: application folder.
+	 */
+	public static final String APP_DIR = "app.dir";
+	/**
+	 * Petite bean name for AppCore (this instance).
+	 */
+	public static final String PETITE_CORE = "core";
+	/**
+	 * Petite bean name for database pool.
+	 */
+	public static final String PETITE_DBPOOL = "dbpool";
+	/**
+	 * Petite bean name for database configuration.
+	 */
+	public static final String PETITE_DB = "db";
+	/**
+	 * Petite bean name for <code>DbEntityManager</code> instance.
+	 */
+	public static final String PETITE_DBOOM = "dboom";
+	/**
+	 * Petite bean name for {@link AppInit} bean.
+	 */
+	public static final String PETITE_INIT = "init";
+	/**
+	 * Petite bean name for application props.
+	 */
+	public static final String PETITE_PROPS = "props";
+	/**
+	 * Petite bean name for {@link JoyScanner} bean.
+	 */
+	public static final String PETITE_SCAN = "scan";
+
 
 	private static JoddJoy joddJoy;
 
@@ -84,7 +120,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- paths
 
-	private JoyPath joyPath = new JoyPath();
+	private JoyPaths joyPaths = new JoyPaths();
 
 	// ---------------------------------------------------------------- props
 
@@ -145,7 +181,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- db
 
-	private JoyDb joyDb = new JoyDb(() -> joyScanner);
+	private JoyDb joyDb = new JoyDb(() -> joyPetite.petiteContainer(), () -> joyScanner);
 
 	public JoddJoy withDb(JoyDb joyDb) {
 		Objects.requireNonNull(joyDb);
@@ -165,7 +201,9 @@ public class JoddJoy {
 
 	private Logger log;
 
-	// starts everything
+	/**
+	 * Starts the Joy.
+	 */
 	public void start(ServletContext servletContext) {
 		LoggerProvider loggerProvider = null;
 
@@ -183,23 +221,56 @@ public class JoddJoy {
 		log.info("Ah, Joy!");
 		log.info("Logging using: " + loggerProvider.getClass().getSimpleName());
 
-		joyPath.start();
-		joyProps.start();
-		joyScanner.start();
-		joyProxetta.start();
-		joyPetite.start();
-		joyDb.start();
+		try {
+			joyPaths.start();
+			joyProps.start();
+			joyScanner.start();
+			joyProxetta.start();
+			joyPetite.start();
+			joyDb.start();
 
-		joyMadvoc.setServletContext(servletContext);
-		joyMadvoc.start();
+			joyMadvoc.setServletContext(servletContext);
+			joyMadvoc.start();
 
-		// cleanup
-		joyScanner = null;
-		joyProps = null;
+			runJoyInitBeans();
+
+			// cleanup things we will not use
+
+			joyScanner = null;
+			joyProps = null;
+		}
+		catch (Exception ex) {
+			if (log != null) {
+				log.error(ex.toString(), ex);
+			} else {
+				System.out.println(ex.toString());
+				ex.printStackTrace();
+			}
+			stop();
+			throw ex;
+		}
 	}
 
+	/**
+	 * Stops the Joy.
+	 */
 	public void stop() {
-		joyDb.stop();
+		try {
+			joyDb.stop();
+			joyPetite.stop();
+		}
+		catch (Exception ignore) {
+		}
+	}
+
+	protected void runJoyInitBeans() {
+		final PetiteContainer pc = joyPetite.petiteContainer();
+		pc.forEachBeanType(JoyInit.class, beanName -> {
+			JoyInit joyInit = pc.getBean(beanName);
+			if (joyInit != null) {
+				joyInit.joy();
+			}
+		});
 	}
 
 	// ---------------------------------------------------------------- run

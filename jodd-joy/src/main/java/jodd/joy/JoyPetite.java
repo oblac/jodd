@@ -37,7 +37,8 @@ import jodd.util.Consumers;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static jodd.joy.core.DefaultAppCore.PETITE_CORE;
+import static jodd.joy.JoddJoy.PETITE_CORE;
+import static jodd.joy.JoddJoy.PETITE_SCAN;
 
 public class JoyPetite extends JoyBase {
 
@@ -49,7 +50,10 @@ public class JoyPetite extends JoyBase {
 	protected PetiteContainer petiteContainer;
 	protected boolean isWebApplication = true;  // todo add this value as well!
 
-	public JoyPetite(Supplier<ProxyProxetta> proxettaSupplier, Supplier<JoyScanner> joyScannerSupplier, Supplier<Props> propsSupplier) {
+	public JoyPetite(
+			Supplier<ProxyProxetta> proxettaSupplier,
+			Supplier<JoyScanner> joyScannerSupplier,
+			Supplier<Props> propsSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.propsSupplier = propsSupplier;
@@ -103,6 +107,8 @@ public class JoyPetite extends JoyBase {
 
 		// load parameters from properties files
 		petite.defineParameters(propsSupplier.get());
+
+		petite.addBean(PETITE_SCAN, joyScannerSupplier.get());
 
 		// automagic configuration
 		if (config.autoConfiguration) {

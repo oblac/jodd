@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.db.DbDetector;
 import jodd.db.DbSessionProvider;
 import jodd.db.JoddDb;
 import jodd.db.connection.ConnectionProvider;
@@ -37,6 +38,7 @@ import jodd.jtx.JoddJtx;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
+import jodd.petite.PetiteContainer;
 import jodd.util.Consumers;
 
 import java.sql.Connection;
@@ -45,17 +47,23 @@ import java.sql.SQLException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static jodd.joy.JoddJoy.PETITE_DB;
+import static jodd.joy.JoddJoy.PETITE_DBOOM;
+import static jodd.joy.JoddJoy.PETITE_DBPOOL;
+
 public class JoyDb extends JoyBase {
 
 	protected final Supplier<JoyScanner> scannerSupplier;
+	protected final Supplier<PetiteContainer> petiteContainerSupplier;
 	protected final Config config = new Config();
 
 	protected ConnectionProvider connectionProvider;
 	protected JtxTransactionManager jtxManager;
 	protected String jtxScopePattern;
 
-	public JoyDb(Supplier<JoyScanner> scannerSupplier) {
+	public JoyDb(Supplier<PetiteContainer> petiteContainerSupplier, Supplier<JoyScanner> scannerSupplier) {
 		this.scannerSupplier = scannerSupplier;
+		this.petiteContainerSupplier = petiteContainerSupplier;
 	}
 
 	public Config config() {
@@ -109,6 +117,7 @@ public class JoyDb extends JoyBase {
 
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
+		petiteContainerSupplier.get().addBean(PETITE_DBPOOL, connectionProvider);
 		connectionProvider.init();
 
 		checkConnectionProvider();
@@ -126,16 +135,19 @@ public class JoyDb extends JoyBase {
 		// global settings
 		JoddDb.get().connectionProvider(connectionProvider);
 		JoddDb.get().sessionProvider(sessionProvider);
+		petiteContainerSupplier.get().addBean(PETITE_DB, JoddDb.get().defaults());           // todo -> this is for the configuration!, make this for each bean
 
 		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 		dbEntityManager.reset();
+		petiteContainerSupplier.get().addBean(PETITE_DBOOM, dbEntityManager);
 
 		// automatic configuration
 		if (config.autoConfiguration) {
 			registerDbEntities(dbEntityManager);
 		}
 
-		//todo detector
+		log.debug("Detecting database");
+		DbDetector.detectDatabaseAndConfigureDbOom(connectionProvider);
 
 		config.dbEntityManagerConsumers.accept(dbEntityManager);
 	}
