@@ -26,7 +26,6 @@
 package jodd.joy;
 
 import jodd.Jodd;
-import jodd.joy.core.AppInit;
 import jodd.joy.server.Server;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -57,14 +56,6 @@ public class JoddJoy {
 	 * Petite bean name for database configuration.
 	 */
 	public static final String PETITE_DB = "db";
-	/**
-	 * Petite bean name for {@link AppInit} bean.
-	 */
-	public static final String PETITE_INIT = "init";
-	/**
-	 * Petite bean name for application props.
-	 */
-	public static final String PETITE_PROPS = "props";
 	/**
 	 * Petite bean name for {@link JoyScanner} bean.
 	 */
