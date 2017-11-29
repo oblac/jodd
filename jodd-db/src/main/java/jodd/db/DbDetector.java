@@ -95,7 +95,7 @@ public class DbDetector {
 				return new Db2DbServer();
 			}
 
-			return new GenericDbServer();
+			throw new DbSqlException(sex);
 		}
 
 		if (dbName.equals("Apache Derby")) {
