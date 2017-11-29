@@ -89,7 +89,7 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * Wraps iterator as a stream.
+	 * Wraps an iterator as a stream.
 	 */
 	public static <T> Stream<T> asStream(Iterator<T> sourceIterator) {
 		return asStream(sourceIterator, false);

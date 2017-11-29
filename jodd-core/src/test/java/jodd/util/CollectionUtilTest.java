@@ -1,16 +1,36 @@
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 package jodd.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,9 +87,9 @@ class CollectionUtilTest {
 		@Test
 		void testAsIterator_with_empty_enumration() throws Exception {
 
-			Hashtable<String, String> input = new Hashtable<>();
+			final Hashtable<String, String> input = new Hashtable<>();
 
-			Iterator<String> actual = CollectionUtil.asIterator(input.keys());
+			final Iterator<String> actual = CollectionUtil.asIterator(input.keys());
 
 			// asserts
 			assertNotNull(actual);
@@ -81,13 +101,13 @@ class CollectionUtilTest {
 		@Test
 		void testAsIterator_with_data() throws Exception {
 
-			Hashtable<String, String> input = new Hashtable<>();
+			final Hashtable<String, String> input = new Hashtable<>();
 			input.put("jodd", "makes fun!");
 			input.put("headline", "The Unbearable Lightness of Java");
 			input.put("aim", "And enjoy the coding");
 
 
-			Iterator<String> actual = CollectionUtil.asIterator(input.keys());
+			final Iterator<String> actual = CollectionUtil.asIterator(input.keys());
 
 			// asserts
 			assertNotNull(actual);
@@ -118,9 +138,9 @@ class CollectionUtilTest {
 		@Test
 		void testAsEnumeration_with_empty_iterator() throws Exception {
 
-			Iterator<Integer> input = new ArrayList<Integer>().iterator();
+			final Iterator<Integer> input = new ArrayList<Integer>().iterator();
 
-			Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
+			final Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
 
 			// asserts
 			assertFalse(actual.hasMoreElements());
@@ -130,9 +150,9 @@ class CollectionUtilTest {
 		@Test
 		void testAsEnumeration_with_data() throws Exception {
 
-			Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
+			final Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
 
-			Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
+			final Enumeration<Integer> actual = CollectionUtil.asEnumeration(input);
 
 			// asserts
 			assertNotNull(actual);
@@ -150,6 +170,34 @@ class CollectionUtilTest {
 			assertThrows(NoSuchElementException.class, () -> {actual.nextElement();});
 		}
 
+	}
+
+	@Nested
+	@DisplayName("tests for CollectionUtil#asStream(Iterator<T> sourceIterator)")
+	class AsStream {
+
+		@Test
+		void testAsStream_with_empty_iterator() throws Exception {
+			final Iterator input = Collections.EMPTY_LIST.iterator();
+
+			final Stream actual = CollectionUtil.asStream(input);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(0L, actual.count());
+		}
+
+		@Test
+		void testAsStream_with_non_empty_iterator() throws Exception {
+			final Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
+
+			final Stream<Integer> actual = CollectionUtil.asStream(input);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(3L, actual.count());
+			assertThrows(IllegalStateException.class, () -> {actual.filter(p -> 1 == p);});
+		}
 	}
 
 }
