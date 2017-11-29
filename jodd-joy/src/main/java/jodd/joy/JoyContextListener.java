@@ -25,8 +25,6 @@
 
 package jodd.joy;
 
-import jodd.madvoc.Madvoc;
-
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -38,8 +36,6 @@ import static javax.servlet.DispatcherType.INCLUDE;
 import static javax.servlet.DispatcherType.REQUEST;
 
 public class JoyContextListener implements ServletContextListener {
-
-	protected Madvoc madvoc;
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -63,8 +59,6 @@ public class JoyContextListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		ServletContext servletContext = sce.getServletContext();
-
 		JoddJoy.get().stop();
 	}
 }
