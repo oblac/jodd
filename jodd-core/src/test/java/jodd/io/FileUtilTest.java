@@ -26,8 +26,10 @@
 package jodd.io;
 
 import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -282,5 +284,122 @@ class FileUtilTest {
 		// asserts
 		assertEquals(expected, actual.toLowerCase());
 	}
+
+	@Nested
+	@DisplayName("tests for FileUtil#isBinary")
+	class IsBinary {
+
+		@Test
+		void check_against_binary_file() throws Exception {
+			final File input = new File(FileUtilTest.class.getResource("data/file/a.png").toURI());
+
+			final boolean actual = FileUtil.isBinary(input);
+			
+			// asserts
+			assertEquals(true, actual);
+		}
+
+		@Test
+		void check_against_text_file() throws Exception {
+			final File input = new File(FileUtilTest.class.getResource("data/file/a.txt").toURI());
+
+			final boolean actual = FileUtil.isBinary(input);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void check_against_created_text_file() throws Exception {
+			final File input = FileUtil.createTempFile();
+			FileUtil.writeString(input, "jodd makes fun!");
+
+			final boolean actual = FileUtil.isBinary(input);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void check_against_created_binary_file() throws Exception {
+			final File input = FileUtil.createTempFile();
+			// first bytes of a zip / jar file
+			FileUtil.writeBytes(input, new byte[] {0x50, 0x4b, 0x03, 0x04, 0x14, 0x20, 0x08, 0x08, 0x08, 0x20, 0x09,
+					0x76, 0x19, 0x45, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 });
+
+			final boolean actual = FileUtil.isBinary(input);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+	}
+
+	@Nested
+	@DisplayName("tests for FileUtil#isExistingFile")
+	class IsExistingFile {
+
+		@Test
+		void file_exists() throws Exception {
+			final File input = new File(FileUtilTest.class.getResource("data/file/a.txt").toURI());
+
+			final boolean actual = FileUtil.isExistingFile(input);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+		@Test
+		void file_not_exists() throws Exception {
+			final File input = FileUtil.createTempFile("hello", ".jodd", new File(SystemUtil.tempDir()), false);
+
+			final boolean actual = FileUtil.isExistingFile(input);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void file_is_null() throws Exception {
+			final boolean actual = FileUtil.isExistingFile(null);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+	}
+
+	@Nested
+	@DisplayName("tests for FileUtil#isExistingFolder")
+	class IsExistingFolder {
+
+		@Test
+		void folder_exists() throws Exception {
+			final File input = new File(FileUtilTest.class.getResource("data/file/a.txt").toURI()).getParentFile();
+
+			final boolean actual = FileUtil.isExistingFolder(input);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+		@Test
+		void folder_not_exists() throws Exception {
+			final File input = new File(SystemUtil.tempDir(), "/folder-does-not-exists");
+
+			final boolean actual = FileUtil.isExistingFolder(input);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void folder_is_null() throws Exception {
+			final boolean actual = FileUtil.isExistingFolder(null);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+	}
+
 
 }
