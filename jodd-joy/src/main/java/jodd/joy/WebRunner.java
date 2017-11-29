@@ -25,8 +25,6 @@
 
 package jodd.joy;
 
-import jodd.bean.BeanUtil;
-import jodd.joy.core.DefaultAppCore;
 import jodd.joy.db.AppDao;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
@@ -51,11 +49,6 @@ public abstract class WebRunner {
 	protected WebApp app;
 
 	/**
-	 * Application core.
-	 */
-	protected DefaultAppCore appCore;
-
-	/**
 	 * Application dao.
 	 */
 	protected AppDao appDao;
@@ -70,6 +63,7 @@ public abstract class WebRunner {
 	 */
 	public void runWebApp(Class<? extends WebApp> webAppClass) {
 
+/*
 		madvoc = new Madvoc();
 		madvoc.setWebAppClass(webAppClass);
 		app = madvoc.startWebApplication(null);
@@ -81,6 +75,7 @@ public abstract class WebRunner {
 		appDao = appCore.getPetite().getBean(AppDao.class);
 
 		petite = appCore.getPetite();
+*/
 
 		JtxTransaction tx = startRwTx();
 		try {
