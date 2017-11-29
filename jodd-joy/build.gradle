@@ -14,6 +14,8 @@ dependencies {
 	compile project(':jodd-log')
 	compile project(':jodd-lagarto')
 
+	compile lib.server_tomcat, optional
+
 	provided lib.servlet
 	provided lib.jsp
 
