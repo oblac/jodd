@@ -36,7 +36,7 @@ public class NameValue<N, V> {
 	/**
 	 * Simple static constructor.
 	 */
-	public static <T,R> NameValue of(T name, R value) {
+	public static <T,R> NameValue<T,R> of(T name, R value) {
 		return new NameValue<>(name, value);
 	}
 
@@ -61,9 +61,14 @@ public class NameValue<N, V> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this.getClass() != o.getClass()) {
+		if (o == null || this.getClass() != o.getClass()) {
 			return false;
 		}
+
+		if (this == o) {
+			return true;
+		}
+
 		NameValue that = (NameValue) o;
 
 		Object n1 = name();
