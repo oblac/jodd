@@ -120,6 +120,7 @@ public class JoyDb extends JoyBase {
 		connectionProvider.init();
 
 		checkConnectionProvider();
+		DbDetector.detectDatabaseAndConfigureDbOom(connectionProvider);
 
 		// transactions manager
 		jtxManager = createJtxTransactionManager(connectionProvider);
@@ -143,8 +144,6 @@ public class JoyDb extends JoyBase {
 		if (config.autoConfiguration) {
 			registerDbEntities(dbEntityManager);
 		}
-
-		DbDetector.detectDatabaseAndConfigureDbOom(connectionProvider);
 
 		config.dbEntityManagerConsumers.accept(dbEntityManager);
 	}
