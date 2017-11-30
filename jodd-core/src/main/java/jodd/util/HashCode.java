@@ -58,7 +58,7 @@ public class HashCode {
 	 * Creates new HashCode calculator.
 	 */
 	public static HashCode create() {
-		return new HashCode(173, 37);
+		return create(173, 37);
 	}
 
 	/**
