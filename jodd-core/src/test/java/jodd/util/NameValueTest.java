@@ -71,6 +71,22 @@ class NameValueTest {
 				params.add(Arguments.of(true, input, equals_check));
 			}
 
+			// values and names -> null
+			{
+				final NameValue<String, String> input = NameValue.of(null, null);
+				final NameValue<String, String> equals_check = NameValue.of(null, null);
+				params.add(Arguments.of(true, input, equals_check));
+			}
+
+			// values and names -> each same instance
+			{
+				final String name = "jodd";
+				final String value = "fun";
+				final NameValue<String, String> input = NameValue.of(name, value);
+				final NameValue<String, String> equals_check = NameValue.of(name, value);
+				params.add(Arguments.of(true, input, equals_check));
+			}
+
 			// ###  equals -> false ###
 
 			// name different
