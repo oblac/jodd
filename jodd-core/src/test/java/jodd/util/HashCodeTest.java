@@ -25,19 +25,26 @@
 
 package jodd.util;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.jupiter.api.Test;
+import org.apache.commons.text.RandomStringGenerator;
+import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HashCodeTest {
 
-	@Test
+	@RepeatedTest(5)
 	void testhashCode() {
+
+		// from 'new' apache project commons-text
+		final RandomStringGenerator generator = new RandomStringGenerator.Builder()
+				.withinRange('0', 'z')
+				.filteredBy(Character::isLetterOrDigit)
+				.build();
+
 		final boolean randomBoolean = RandomUtils.nextBoolean();
 		final boolean[] randomBooleanArray = new boolean[] {randomBoolean, !randomBoolean};
-		final String randomString = RandomStringUtils.randomAscii(10);
+		final String randomString = generator.generate(10);
 		final int randomInt = RandomUtils.nextInt();
 		final short randomShort = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
 		final byte[] randomByteArray = RandomUtils.nextBytes(5);
@@ -45,7 +52,7 @@ class HashCodeTest {
 		final long randomLong = RandomUtils.nextLong(1L, 250000L);
 		final float randomFloat = RandomUtils.nextFloat(1F, 250000F);
 		final double randomDouble = RandomUtils.nextDouble(1F, 250000F);
-		final NameValue<String, String> randomNameValue = new NameValue<>(RandomStringUtils.randomAscii(10), RandomStringUtils.randomAscii(10));
+		final NameValue<String, String> randomNameValue = new NameValue<>(generator.generate(10), generator.generate(10));
 		final Object[] randomObjectArray = new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null };
 		
 		final int hash_1 = HashCode.create()
