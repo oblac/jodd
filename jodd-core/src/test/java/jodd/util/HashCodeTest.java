@@ -46,7 +46,8 @@ class HashCodeTest {
 		final float randomFloat = RandomUtils.nextFloat(1F, 250000F);
 		final double randomDouble = RandomUtils.nextDouble(1F, 250000F);
 		final NameValue<String, String> randomNameValue = new NameValue<>(RandomStringUtils.randomAscii(10), RandomStringUtils.randomAscii(10));
-
+		final Object[] randomObjectArray = new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null };
+		
 		final int hash_1 = HashCode.create()
 			// boolean
 			.hash(randomBoolean)
@@ -84,7 +85,7 @@ class HashCodeTest {
 			.hash(randomString)
 			.hash((Object)null)
 			.hash(new Object[] {})
-			.hash(new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null })
+			.hash(randomObjectArray)
 			.get();
 
 		final int hash_2 = HashCode.create()
@@ -124,7 +125,7 @@ class HashCodeTest {
 			.hash(randomString)
 			.hash((Object)null)
 			.hash(new Object[] {})
-			.hash(new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null })
+			.hash(randomObjectArray)
 			.get();
 
 		assertEquals(hash_1, hash_2);
