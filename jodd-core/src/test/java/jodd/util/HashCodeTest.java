@@ -25,6 +25,8 @@
 
 package jodd.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,28 +35,98 @@ class HashCodeTest {
 
 	@Test
 	void testhashCode() {
-		int hash = HashCode.create()
-			.hash("Hey")
-			.hash(1)
-			.hash(1.4)
-			.hash(9f)
-			.hash(true)
-			.hash(ArraysUtil.ints(1,2,3,4))
-			.hash(new NameValue<>("A", "B"))
+		final boolean randomBoolean = RandomUtils.nextBoolean();
+		final boolean[] randomBooleanArray = new boolean[] {randomBoolean, !randomBoolean};
+		final String randomString = RandomStringUtils.randomAscii(10);
+		final int randomInt = RandomUtils.nextInt();
+		final short randomShort = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
+		final byte[] randomByteArray = RandomUtils.nextBytes(5);
+		final byte randomByte = randomByteArray[0];
+		final long randomLong = RandomUtils.nextLong(1L, 250000L);
+		final float randomFloat = RandomUtils.nextFloat(1F, 250000F);
+		final double randomDouble = RandomUtils.nextDouble(1F, 250000F);
+		final NameValue<String, String> randomNameValue = new NameValue<>(RandomStringUtils.randomAscii(10), RandomStringUtils.randomAscii(10));
+
+		final int hash_1 = HashCode.create()
+			// boolean
+			.hash(randomBoolean)
+			.hash((boolean[]) null)
+			.hash(randomBooleanArray)
+			// char
+			.hash(randomString.charAt(0))
+			.hash((char[]) null)
+			.hash(new char[]{randomString.charAt(0), randomString.charAt(1)})
+			// int
+			.hash(randomInt)
+			.hash((int[]) null)
+			.hash(new int[]{randomInt})
+			// short
+			.hash(randomShort)
+			.hash((short[]) null)
+			.hash(new short[]{randomShort})
+			// byte
+			.hash(randomByte)
+			.hash((byte[]) null)
+			.hash(new byte[]{randomByte})
+			// long
+			.hash(randomLong)
+			.hash((long[]) null)
+			.hash(new long[]{randomLong})
+			// float
+			.hash(randomFloat)
+			.hash((float[]) null)
+			.hash(new float[]{randomFloat})
+			// double
+			.hash(randomDouble)
+			.hash((double[]) null)
+			.hash(new double[]{randomDouble})
+			// Object
+			.hash(randomString)
+			.hash((Object)null)
+			.hash(new Object[] {})
+			.hash(new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null })
 			.get();
 
-		int hash2 = hash;
-
-		hash = HashCode.create()
-			.hash("Hey")
-			.hash(1)
-			.hash(1.4)
-			.hash(9f)
-			.hash(true)
-			.hash(ArraysUtil.ints(1,2,3,4))
-			.hash(new NameValue<>("A", "B"))
+		final int hash_2 = HashCode.create()
+			// boolean
+			.hash(randomBoolean)
+			.hash((boolean[]) null)
+			.hash(randomBooleanArray)
+			// char
+			.hash(randomString.charAt(0))
+			.hash((char[]) null)
+			.hash(new char[]{randomString.charAt(0), randomString.charAt(1)})
+			// int
+			.hash(randomInt)
+			.hash((int[]) null)
+			.hash(new int[]{randomInt})
+			// short
+			.hash(randomShort)
+			.hash((short[]) null)
+			.hash(new short[]{randomShort})
+			// byte
+			.hash(randomByte)
+			.hash((byte[]) null)
+			.hash(new byte[]{randomByte})
+			// long
+			.hash(randomLong)
+			.hash((long[]) null)
+			.hash(new long[]{randomLong})
+			// float
+			.hash(randomFloat)
+			.hash((float[]) null)
+			.hash(new float[]{randomFloat})
+			// double
+			.hash(randomDouble)
+			.hash((double[]) null)
+			.hash(new double[]{randomDouble})
+			// Object
+			.hash(randomString)
+			.hash((Object)null)
+			.hash(new Object[] {})
+			.hash(new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null })
 			.get();
 
-		assertEquals(hash, hash2);
+		assertEquals(hash_1, hash_2);
 	}
 }
