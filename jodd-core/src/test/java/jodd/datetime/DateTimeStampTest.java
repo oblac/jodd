@@ -2,6 +2,7 @@ package jodd.datetime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -96,5 +97,17 @@ class DateTimeStampTest {
 
 			return params;
 		}
+	}
+
+	@Test
+	void testToString() {
+
+		final String expected = "2017-12-12 11:56:23.12";
+		final DateTimeStamp input = new DateTimeStamp(2017,12,12,11,56,23,12);
+
+		final String actual = input.toString();
+
+		// asserts
+		assertEquals(expected, actual);
 	}
 }
