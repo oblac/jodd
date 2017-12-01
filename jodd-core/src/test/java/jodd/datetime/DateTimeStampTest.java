@@ -58,7 +58,7 @@ class DateTimeStampTest {
 	class Equals {
 
 		@ParameterizedTest
-		@MethodSource("testData_testCompareTo")
+		@MethodSource("testData_testEquals")
 		void testEquals(final boolean expected, final DateTimeStamp input_1, final Object input_2) {
 			final boolean actual = input_1.equals(input_2);
 
@@ -66,7 +66,7 @@ class DateTimeStampTest {
 			assertEquals(expected, actual);
 		}
 
-		private Collection<Arguments> testData_testCompareTo () {
+		private Collection<Arguments> testData_testEquals () {
 			final List<Arguments> params = new ArrayList<>();
 
 			{
