@@ -231,4 +231,48 @@ class DateTimeStampTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("tests for DateTimeStamp#isEqualDate")
+	class IsEqualDate {
+
+		@Test
+		void is_equal() {
+			final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+			final DateTimeStamp input_2 = new DateTimeStamp(2017,12,12,33,11,44,77);
+
+			assertEquals(true, input_1.isEqualDate(input_2));
+		}
+
+		@Test
+		void is_not_equal_due_to_day() {
+			final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+			final DateTimeStamp input_2 = new DateTimeStamp(2017,12,11,11,56,23,12);
+
+			assertEquals(false, input_1.isEqualDate(input_2));
+		}
+
+	}
+
+	@Nested
+	@DisplayName("tests for DateTimeStamp#isEqualTime")
+	class IsEqualTime {
+
+		@Test
+		void is_equal() throws Exception {
+			final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+			final DateTimeStamp input_2 = new DateTimeStamp(2018,9,2,11,56,23,12);
+
+			assertEquals(true, input_1.isEqualTime(input_2));
+		}
+
+		@Test
+		void is_not_equal_due_to_hour() {
+			final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+			final DateTimeStamp input_2 = new DateTimeStamp(2018,11,23,10,56,23,12);
+
+			assertEquals(false, input_1.isEqualTime(input_2));
+		}
+
+	}
+
 }
