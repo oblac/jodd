@@ -176,7 +176,7 @@ public class Madvoc {
 
 		// configure webapp
 
-		webapp.withServletContext(servletContext);
+		webapp.bindServletContext(servletContext);
 
 		if (paramsFiles != null) {
 			Props params = loadMadvocParams(paramsFiles);
@@ -187,7 +187,7 @@ public class Madvoc {
 		resolveMadvocConfigClass();
 
 		if (madvocConfiguratorClass != null) {
-			webapp.withMadvocComponent(madvocConfiguratorClass);
+			webapp.registerComponent(madvocConfiguratorClass);
 		}
 
 		// initialize

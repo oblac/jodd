@@ -86,6 +86,7 @@ public class WebApp {
 	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
 	private Consumers<MadvocApp> madvocAppConsumers = Consumers.empty();
+	private Consumers<MadvocConfig> madvocConfigConsumers = Consumers.empty();
 
 	/**
 	 * Defines params to load.
@@ -98,22 +99,22 @@ public class WebApp {
 	/**
 	 * Defines servlet context. Must be called in the web environment.
 	 */
-	public WebApp withServletContext(ServletContext servletContext) {
+	public WebApp bindServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 		this.servletContext.setAttribute(WEBAPP_ATTR, this);
 		return this;
 	}
 
 	/**
-	 * Registers additional Madvoc components that will be registered after default components.
+	 * Registers additional Madvoc components after the registration of default components.
 	 */
-	public WebApp withMadvocComponent(Class madvocComponent) {
+	public WebApp registerComponent(Class<?> madvocComponent) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponents.add(ClassConsumer.of(madvocComponent));
 		return this;
 	}
 
-	public <T> WebApp withMadvocComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
+	public <T> WebApp registerComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponents.add(ClassConsumer.of(madvocComponent, componentConsumer));
 		return this;
@@ -123,26 +124,31 @@ public class WebApp {
 	 * Registers Madvoc component <i>instance</i>. Use with caution, as injection of
 	 * components registered after this will fail.
 	 */
-	public WebApp withMadvocComponent(Object madvocComponent) {
+	public WebApp registerComponent(Object madvocComponent) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponentInstances.add(madvocComponent);
 		return this;
 	}
 
+	/**
+	 * Configures the {@link MadvocConfig}.
+	 */
+	public WebApp configure(Consumer<MadvocConfig> madvocConfigConsumer) {
+		madvocConfigConsumers.add(madvocConfigConsumer);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- main components
 
-	protected MadvocConfig madvocConfig;
-	protected MadvocContainer madvocContainer;
+	protected final MadvocContainer madvocContainer;
 
-	/**
-	 * Returns {@link MadvocConfig Madvoc config} once web application is started.
-	 */
-	public MadvocConfig madvocConfig() {
-		return madvocConfig;
+	public WebApp() {
+		madvocContainer = new MadvocContainer();
+		madvocContainer.registerComponentInstance(madvocContainer);
 	}
 
 	/**
-	 * Returns {@link MadvocContainer Madvoc container}.
+	 * Returns {@link MadvocContainer Madvoc container}. It is created very first.
 	 */
 	public MadvocContainer madvocContainer() {
 		return madvocContainer;
@@ -166,9 +172,6 @@ public class WebApp {
 
 		log.debug("Initializing Madvoc WebApp");
 
-		madvocContainer = new MadvocContainer();
-		madvocContainer.registerComponentInstance(madvocContainer);
-
 		//// props
 		for (Props props : propsList) {
 			madvocContainer.defineParams(props);
@@ -177,9 +180,10 @@ public class WebApp {
 
 		//// config
 		madvocContainer.registerComponent(MadvocConfig.class);
-		madvocConfig = madvocContainer.requestComponent(MadvocConfig.class);
+		final MadvocConfig madvocConfig = madvocContainer.requestComponent(MadvocConfig.class);
 
-		configureMadvoc();
+		madvocConfigConsumers.accept(madvocConfig);
+		configureMadvoc(madvocConfig);
 
 		//// components
 		registerMadvocComponents();
@@ -218,10 +222,10 @@ public class WebApp {
 	}
 
 	/**
-	 * Hook for manual Madvoc configuration. No component is registered, only {@link MadvocConfig}
-	 * and {@link MadvocContainer}.
+	 * Hook for manual Madvoc configuration. No component is registered yet. You can use
+	 * only {@link MadvocConfig} and {@link MadvocContainer}.
 	 */
-	protected void configureMadvoc() {
+	protected void configureMadvoc(MadvocConfig madvocConfig) {
 	}
 
 	/**

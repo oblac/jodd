@@ -59,7 +59,7 @@ class ManualRegistrationTest {
 	void testManualAction_asComponent() {
 		WebApp webApp = WebApp
 			.createWebApp()
-			.withMadvocComponent(ManualRegistration.class)
+			.registerComponent(ManualRegistration.class)
 			.start();
 
 		ActionsManager actionsManager = webApp.madvocContainer().requestComponent(ActionsManager.class);
