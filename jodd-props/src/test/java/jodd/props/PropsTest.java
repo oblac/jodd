@@ -435,7 +435,7 @@ class PropsTest extends BasePropsTest {
 		p.setValueTrimLeft(true);
 		p.load(readDataFile("test3.props"));
 
-		assertEquals("\n\tHello from\n\tthe multiline\n\tvalue\n", p.getValue("email.footer"));
+		assertEquals(System.lineSeparator() + "\tHello from" + System.lineSeparator() + "\tthe multiline" + System.lineSeparator() + "\tvalue" + System.lineSeparator() , p.getValue("email.footer"));
 		assertEquals("aaa", p.getValue("email.header"));
 	}
 

@@ -88,13 +88,12 @@ class MixedScope343Test {
 
 		System.out.println("RUN!");
 		externalBean.execute();
-
-		assertEquals("RUN!\n" +
-			"execute now : jodd.petite.proxy.example1.impl.MainPetiteBean\n" +
-			"execute now : jodd.petite.proxy.example1.impl.SubPetiteBean\n" +
-			"Executing jodd.petite.proxy.example1.impl.SubPetiteBean$$Proxetta\n" +
-			"executing jodd.petite.proxy.example1.impl.MainPetiteBean$$Proxetta\n" +
-			"executing non jodd petite bean -> jodd.petite.proxy.example1.ExternalBean\n",
+		assertEquals("RUN!" + System.lineSeparator() +
+			"execute now : jodd.petite.proxy.example1.impl.MainPetiteBean" + System.lineSeparator() +
+			"execute now : jodd.petite.proxy.example1.impl.SubPetiteBean" + System.lineSeparator() +
+			"Executing jodd.petite.proxy.example1.impl.SubPetiteBean$$Proxetta" + System.lineSeparator() +
+			"executing jodd.petite.proxy.example1.impl.MainPetiteBean$$Proxetta" + System.lineSeparator() +
+			"executing non jodd petite bean -> jodd.petite.proxy.example1.ExternalBean" + System.lineSeparator(),
 			outContent.toString());
 	}
 }
