@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DateTimeStampTest {
 
@@ -134,5 +135,22 @@ class DateTimeStampTest {
 
 		// asserts
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	void testClone() throws Exception {
+
+		final DateTimeStamp input = new DateTimeStamp(2017,12,12,11,56,23,12);
+
+		final DateTimeStamp clone = input.clone();
+
+		// asserts
+		assertEquals(input.getYear(), clone.getYear());
+		assertEquals(input.getMonth(), clone.getMonth());
+		assertEquals(input.getDay(), clone.getDay());
+		assertEquals(input.getHour(), clone.getHour());
+		assertEquals(input.getMinute(), clone.getMinute());
+		assertEquals(input.getSecond(), clone.getSecond());
+		assertEquals(input.getMillisecond(), clone.getMillisecond());
 	}
 }
