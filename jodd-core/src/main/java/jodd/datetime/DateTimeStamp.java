@@ -237,11 +237,11 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 
 	@Override
 	public boolean equals(Object object) {
+		if (object == null || this.getClass() != object.getClass()) {
+			return false;
+		}
 		if (this == object) {
 			return true;
-		}
-		if (this.getClass() != object.getClass()) {
-			return false;
 		}
 		DateTimeStamp stamp = (DateTimeStamp) object;
 		return  (stamp.year == this.year) &&
