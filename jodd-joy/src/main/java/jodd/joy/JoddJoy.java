@@ -139,7 +139,10 @@ public class JoddJoy {
 	// ---------------------------------------------------------------- petite
 
 	private JoyPetite joyPetite =
-		new JoyPetite(() -> joyProxetta.proxetta(), () -> joyScanner, () -> joyProps.props());
+		new JoyPetite(
+			() -> joyProxetta.proxetta(),
+			() -> joyScanner,
+			() -> joyProps.props());
 
 	public JoddJoy withPetite(Consumer<JoyPetite.Config> petiteConsumer) {
 		petiteConsumer.accept(joyPetite.config);
@@ -148,7 +151,10 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- db
 
-	private JoyDb joyDb = new JoyDb(() -> joyPetite.petiteContainer(), () -> joyScanner);
+	private JoyDb joyDb =
+		new JoyDb(
+			() -> joyPetite.petiteContainer(),
+			() -> joyScanner);
 
 	public JoddJoy withDb(Consumer<JoyDb.Config> dbConsumer) {
 		dbConsumer.accept(joyDb.config());
@@ -157,8 +163,12 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- madvoc
 
-	private JoyMadvoc joyMadvoc = new JoyMadvoc(
-		() -> joyPetite.petiteContainer(), () -> joyProxetta.proxetta(), () -> joyScanner);
+	private JoyMadvoc joyMadvoc =
+		new JoyMadvoc(
+			() -> joyPetite.petiteContainer(),
+			() -> joyProxetta.proxetta(),
+			() -> joyScanner,
+			() -> joyProps.props());
 
 	public JoddJoy withWebApp(Consumer<WebApp> webAppConsumer) {
 		joyMadvoc.add(webAppConsumer);

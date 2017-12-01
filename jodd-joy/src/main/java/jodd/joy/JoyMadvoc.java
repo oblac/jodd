@@ -31,6 +31,7 @@ import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaProvider;
 import jodd.petite.PetiteContainer;
+import jodd.props.Props;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.Consumers;
 
@@ -44,13 +45,15 @@ public class JoyMadvoc extends JoyBase {
 	private final Supplier<PetiteContainer> petiteSupplier;
 	private final Supplier<JoyScanner> scannerSupplier;
 	private final Consumers<WebApp> webAppConsumers;
+	private final Supplier<Props> propsSupplier;
 	private ServletContext servletContext;
 	private PetiteWebApp webApp;
 
-	public JoyMadvoc(Supplier<PetiteContainer> petiteSupplier, Supplier<ProxyProxetta> proxettaSupplier, Supplier<JoyScanner> scannerSupplier) {
+	public JoyMadvoc(Supplier<PetiteContainer> petiteSupplier, Supplier<ProxyProxetta> proxettaSupplier, Supplier<JoyScanner> scannerSupplier, Supplier<Props> propsSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.petiteSupplier = petiteSupplier;
 		this.scannerSupplier = scannerSupplier;
+		this.propsSupplier = propsSupplier;
 		this.webAppConsumers = Consumers.empty();
 	}
 
@@ -73,6 +76,7 @@ public class JoyMadvoc extends JoyBase {
 		webApp.withPetiteContainer(petiteSupplier);
 
 		webApp.bindServletContext(servletContext);
+		webApp.withParams(propsSupplier.get());
 
 		webApp.registerComponent(new ProxettaProvider(proxettaSupplier.get()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
