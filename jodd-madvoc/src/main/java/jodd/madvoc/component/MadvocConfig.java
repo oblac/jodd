@@ -54,7 +54,7 @@ import static jodd.util.StringPool.RIGHT_BRACE;
  * New custom component that requires configuration may override and enhance this config
  * with new configuration. 
  */
-public class MadvocConfig {
+public final class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
