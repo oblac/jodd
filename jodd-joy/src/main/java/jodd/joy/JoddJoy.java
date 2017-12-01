@@ -31,6 +31,7 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.LoggerProvider;
 import jodd.log.impl.SimpleLogger;
+import jodd.madvoc.WebApp;
 import jodd.petite.PetiteContainer;
 
 import javax.servlet.ServletContext;
@@ -77,7 +78,7 @@ public class JoddJoy {
 	/**
 	 * Default name used for various components.
 	 */
-	public JoddJoy name(String name) {
+	public JoddJoy setAppName(String name) {
 		Objects.requireNonNull(name);
 		this.name = name;
 		return this;
@@ -112,11 +113,6 @@ public class JoddJoy {
 
 	private JoyProps joyProps = new JoyProps(() -> name);
 
-	public JoddJoy withProps(JoyProps joyProps) {
-		Objects.requireNonNull(joyProps);
-		this.joyProps = joyProps;
-		return this;
-	}
 	public JoddJoy withProps(Consumer<JoyProps.Config> propsConsumer) {
 		propsConsumer.accept(joyProps.config);
 		return this;
@@ -126,11 +122,6 @@ public class JoddJoy {
 
 	private JoyScanner joyScanner = new JoyScanner();
 
-	public JoddJoy withScanner(JoyScanner joyScanner) {
-		Objects.requireNonNull(joyScanner);
-		this.joyScanner = joyScanner;
-		return this;
-	}
 	public JoddJoy withScanner(Consumer<JoyScanner> scannerConsumer) {
 		scannerConsumer.accept(joyScanner);
 		return this;
@@ -140,11 +131,6 @@ public class JoddJoy {
 
 	private JoyProxetta joyProxetta = new JoyProxetta();
 
-	public JoddJoy withProxetta(JoyProxetta joyProxetta) {
-		Objects.requireNonNull(joyProxetta);
-		this.joyProxetta = joyProxetta;
-		return this;
-	}
 	public JoddJoy withProxetta(Consumer<JoyProxetta.Config> proxettaConsumer) {
 		proxettaConsumer.accept(joyProxetta.config);
 		return this;
@@ -155,11 +141,6 @@ public class JoddJoy {
 	private JoyPetite joyPetite =
 		new JoyPetite(() -> joyProxetta.proxetta(), () -> joyScanner, () -> joyProps.props());
 
-	public JoddJoy withPetite(JoyPetite joyPetite) {
-		Objects.requireNonNull(joyPetite);
-		this.joyPetite = joyPetite;
-		return this;
-	}
 	public JoddJoy withPetite(Consumer<JoyPetite.Config> petiteConsumer) {
 		petiteConsumer.accept(joyPetite.config);
 		return this;
@@ -169,11 +150,6 @@ public class JoddJoy {
 
 	private JoyDb joyDb = new JoyDb(() -> joyPetite.petiteContainer(), () -> joyScanner);
 
-	public JoddJoy withDb(JoyDb joyDb) {
-		Objects.requireNonNull(joyDb);
-		this.joyDb = joyDb;
-		return this;
-	}
 	public JoddJoy withDb(Consumer<JoyDb.Config> dbConsumer) {
 		dbConsumer.accept(joyDb.config());
 		return this;
@@ -183,6 +159,11 @@ public class JoddJoy {
 
 	private JoyMadvoc joyMadvoc = new JoyMadvoc(
 		() -> joyPetite.petiteContainer(), () -> joyProxetta.proxetta(), () -> joyScanner);
+
+	public JoddJoy withWebApp(Consumer<WebApp> webAppConsumer) {
+		joyMadvoc.add(webAppConsumer);
+		return this;
+	}
 
 	// ---------------------------------------------------------------- start
 

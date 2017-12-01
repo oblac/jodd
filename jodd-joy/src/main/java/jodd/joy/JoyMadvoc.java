@@ -25,14 +25,17 @@
 
 package jodd.joy;
 
+import jodd.madvoc.WebApp;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaProvider;
 import jodd.petite.PetiteContainer;
 import jodd.proxetta.impl.ProxyProxetta;
+import jodd.util.Consumers;
 
 import javax.servlet.ServletContext;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class JoyMadvoc extends JoyBase {
@@ -40,6 +43,7 @@ public class JoyMadvoc extends JoyBase {
 	private final Supplier<ProxyProxetta> proxettaSupplier;
 	private final Supplier<PetiteContainer> petiteSupplier;
 	private final Supplier<JoyScanner> scannerSupplier;
+	private final Consumers<WebApp> webAppConsumers;
 	private ServletContext servletContext;
 	private PetiteWebApp webApp;
 
@@ -47,10 +51,15 @@ public class JoyMadvoc extends JoyBase {
 		this.proxettaSupplier = proxettaSupplier;
 		this.petiteSupplier = petiteSupplier;
 		this.scannerSupplier = scannerSupplier;
+		this.webAppConsumers = Consumers.empty();
 	}
 
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
+	}
+
+	public void add(Consumer<WebApp> webAppConsumer) {
+		this.webAppConsumers.add(webAppConsumer);
 	}
 
 	@Override
@@ -63,12 +72,14 @@ public class JoyMadvoc extends JoyBase {
 
 		webApp.withPetiteContainer(petiteSupplier);
 
-		webApp.withServletContext(servletContext);
+		webApp.bindServletContext(servletContext);
 
-		webApp.withMadvocComponent(new ProxettaProvider(proxettaSupplier.get()));
-		webApp.withMadvocComponent(ProxettaAwareActionsManager.class);
+		webApp.registerComponent(new ProxettaProvider(proxettaSupplier.get()));
+		webApp.registerComponent(ProxettaAwareActionsManager.class);
 
-		webApp.withMadvocComponent(AutomagicMadvocConfigurator.class, amc -> scannerSupplier.get().applyTo(amc));
+		webApp.registerComponent(AutomagicMadvocConfigurator.class, amc -> scannerSupplier.get().applyTo(amc));
+
+		webAppConsumers.accept(webApp);
 
 		webApp.start();
 	}
@@ -82,4 +93,5 @@ public class JoyMadvoc extends JoyBase {
 			webApp.shutdown();
 		}
 	}
+
 }
