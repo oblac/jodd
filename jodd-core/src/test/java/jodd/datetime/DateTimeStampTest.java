@@ -25,6 +25,8 @@
 
 package jodd.datetime;
 
+import jodd.util.ArraysUtil;
+import jodd.util.collection.IntArrayList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,13 +35,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DateTimeStampTest {
 
@@ -153,4 +152,83 @@ class DateTimeStampTest {
 		assertEquals(input.getSecond(), clone.getSecond());
 		assertEquals(input.getMillisecond(), clone.getMillisecond());
 	}
+
+	@Nested
+	@DisplayName("tests for DateTimeStamp#hashCode")
+	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+	class HashCode {
+
+		@ParameterizedTest
+		@MethodSource("testdata_testHashCode")
+		void testHashCode(final boolean equals, final DateTimeStamp input_1 , final DateTimeStamp input_2) {
+
+			final int hash_1 = input_1.hashCode();
+			final int hash_2 = input_2.hashCode();
+
+			assertTrue(equals == (hash_1 == hash_2));
+		}
+
+		private Collection<Arguments> testdata_testHashCode() throws Exception {
+			final List<Arguments> params = new ArrayList<>();
+
+			// same hashcode
+			{
+				final DateTimeStamp input = new DateTimeStamp(2017,12,12,11,56,23,12);
+				params.add(Arguments.of(true, input, input.clone()));
+			}
+
+			// diff : year
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2018,12,12,11,56,23,12);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			// diff : month
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2017,11,12,11,56,23,12);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			// diff : day
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2017,12,13,11,56,23,12);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			// diff : hour
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2017,12,12,10,56,23,12);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			// diff : minute
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2017,12,12,11,57,23,12);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			// diff : second
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2017,12,12,11,56,22,12);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			// diff : ms
+			{
+				final DateTimeStamp input_1 = new DateTimeStamp(2017,12,12,11,56,23,12);
+				final DateTimeStamp input_2 = new DateTimeStamp(2017,12,12,11,56,23,11);
+				params.add(Arguments.of(false, input_1, input_2));
+			}
+
+			return params;
+
+		}
+	}
+
 }
