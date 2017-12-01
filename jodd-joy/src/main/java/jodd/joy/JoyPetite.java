@@ -51,9 +51,8 @@ public class JoyPetite extends JoyBase {
 	protected boolean isWebApplication = true;  // todo add this value as well!
 
 	public JoyPetite(
-			Supplier<ProxyProxetta> proxettaSupplier,
-			Supplier<JoyScanner> joyScannerSupplier,
-			Supplier<Props> propsSupplier) {
+		Supplier<ProxyProxetta> proxettaSupplier,
+		Supplier<Props> propsSupplier, Supplier<JoyScanner> joyScannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.propsSupplier = propsSupplier;

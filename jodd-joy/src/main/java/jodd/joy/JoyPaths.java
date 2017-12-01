@@ -36,6 +36,15 @@ import static jodd.joy.JoddJoy.APP_DIR;
 
 public class JoyPaths extends JoyBase {
 
+	private String appDir;
+
+	/**
+	 * Returns app dir.
+	 */
+	public String appDir() {
+		return appDir;
+	}
+
 	@Override
 	public void start() {
 		initLogger();
@@ -56,7 +65,7 @@ public class JoyPaths extends JoyBase {
 			}
 		}
 
-		String appDir = url.getFile();
+		appDir = url.getFile();
 
 		int ndx = appDir.indexOf("WEB-INF");
 

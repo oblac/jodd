@@ -26,7 +26,6 @@
 package jodd.joy;
 
 import jodd.Jodd;
-import jodd.joy.server.Server;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.LoggerProvider;
@@ -71,6 +70,10 @@ public class JoddJoy {
 		return joddJoy;
 	}
 
+	public JoddJoy() {
+		joyPaths.start();
+	}
+
 	// ---------------------------------------------------------------- name
 
 	private String name = "joy";
@@ -93,25 +96,13 @@ public class JoddJoy {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- server
-
-	private Server server = new Server();
-
-	/**
-	 * Configures the server using a consumer.
-	 */
-	public JoddJoy withServer(Consumer<Server> serverConsumer) {
-		serverConsumer.accept(server);
-		return this;
-	}
-
 	// ---------------------------------------------------------------- paths
 
-	private JoyPaths joyPaths = new JoyPaths();
+	private final JoyPaths joyPaths = new JoyPaths();
 
 	// ---------------------------------------------------------------- props
 
-	private JoyProps joyProps = new JoyProps(() -> name);
+	private final JoyProps joyProps = new JoyProps(() -> name);
 
 	public JoddJoy withProps(Consumer<JoyProps.Config> propsConsumer) {
 		propsConsumer.accept(joyProps.config);
@@ -120,7 +111,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- scanner
 
-	private JoyScanner joyScanner = new JoyScanner();
+	private final JoyScanner joyScanner = new JoyScanner();
 
 	public JoddJoy withScanner(Consumer<JoyScanner> scannerConsumer) {
 		scannerConsumer.accept(joyScanner);
@@ -129,7 +120,7 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- proxetta
 
-	private JoyProxetta joyProxetta = new JoyProxetta();
+	private final JoyProxetta joyProxetta = new JoyProxetta();
 
 	public JoddJoy withProxetta(Consumer<JoyProxetta.Config> proxettaConsumer) {
 		proxettaConsumer.accept(joyProxetta.config);
@@ -138,11 +129,12 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- petite
 
-	private JoyPetite joyPetite =
+	private final JoyPetite joyPetite =
 		new JoyPetite(
-			() -> joyProxetta.proxetta(),
-			() -> joyScanner,
-			() -> joyProps.props());
+			joyProxetta::proxetta,
+			joyProps::props,
+			() -> joyScanner
+		);
 
 	public JoddJoy withPetite(Consumer<JoyPetite.Config> petiteConsumer) {
 		petiteConsumer.accept(joyPetite.config);
@@ -153,7 +145,7 @@ public class JoddJoy {
 
 	private JoyDb joyDb =
 		new JoyDb(
-			() -> joyPetite.petiteContainer(),
+			joyPetite::petiteContainer,
 			() -> joyScanner);
 
 	public JoddJoy withDb(Consumer<JoyDb.Config> dbConsumer) {
@@ -165,10 +157,11 @@ public class JoddJoy {
 
 	private JoyMadvoc joyMadvoc =
 		new JoyMadvoc(
-			() -> joyPetite.petiteContainer(),
-			() -> joyProxetta.proxetta(),
-			() -> joyScanner,
-			() -> joyProps.props());
+			joyPetite::petiteContainer,
+			joyProxetta::proxetta,
+			joyProps::props,
+			() -> joyScanner
+		);
 
 	public JoddJoy withWebApp(Consumer<WebApp> webAppConsumer) {
 		joyMadvoc.add(webAppConsumer);
@@ -214,8 +207,9 @@ public class JoddJoy {
 
 			// cleanup things we will not use
 
-			joyScanner = null;
-			joyProps = null;
+			// todo optimization
+			//joyScanner = null;
+			//joyProps = null;
 		}
 		catch (Exception ex) {
 			if (log != null) {
@@ -249,12 +243,6 @@ public class JoddJoy {
 				joyInit.joy();
 			}
 		});
-	}
-
-	// ---------------------------------------------------------------- run
-
-	public void run() {
-		// start Tomcat/Jetty using server data, then letting the conext listener to finish the work.
 	}
 
 }

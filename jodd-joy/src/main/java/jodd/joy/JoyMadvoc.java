@@ -49,7 +49,7 @@ public class JoyMadvoc extends JoyBase {
 	private ServletContext servletContext;
 	private PetiteWebApp webApp;
 
-	public JoyMadvoc(Supplier<PetiteContainer> petiteSupplier, Supplier<ProxyProxetta> proxettaSupplier, Supplier<JoyScanner> scannerSupplier, Supplier<Props> propsSupplier) {
+	public JoyMadvoc(Supplier<PetiteContainer> petiteSupplier, Supplier<ProxyProxetta> proxettaSupplier, Supplier<Props> propsSupplier, Supplier<JoyScanner> scannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.petiteSupplier = petiteSupplier;
 		this.scannerSupplier = scannerSupplier;

@@ -35,6 +35,13 @@ import static javax.servlet.DispatcherType.FORWARD;
 import static javax.servlet.DispatcherType.INCLUDE;
 import static javax.servlet.DispatcherType.REQUEST;
 
+/**
+ * Joy context listener. You can use it in several ways:
+ * <ul>
+ *     <li>Add it in the web.xml</li>
+ *     <li>Make a subclass and annotate it with @WebListener</li>
+ * </ul>
+ */
 public class JoyContextListener implements ServletContextListener {
 
 	@Override
@@ -43,18 +50,26 @@ public class JoyContextListener implements ServletContextListener {
 
 		JoddJoy joy = createJoy();
 
-		joy.withServer(server -> {
-			servletContext.addListener(jodd.servlet.RequestContextListener.class);
-
-			FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
-			filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, FORWARD, INCLUDE), true, "/*");
-		});
+		configureServletContext(servletContext);
 
 		joy.start(servletContext);
 	}
 
+	/**
+	 * Creates {@link JoddJoy}. This is a place where user can configure the app.
+	 */
 	protected JoddJoy createJoy() {
 		return JoddJoy.get();
+	}
+
+	/**
+	 * Configuration of servlet context.
+	 */
+	protected void configureServletContext(ServletContext servletContext) {
+		servletContext.addListener(jodd.servlet.RequestContextListener.class);
+
+		FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
+		filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, FORWARD, INCLUDE), true, "/*");
 	}
 
 	@Override
