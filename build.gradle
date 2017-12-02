@@ -76,7 +76,7 @@ ext {
 		mysql:			'mysql:mysql-connector-java:5.1.37',
 		mssql:			'com.microsoft.sqlserver:mssql-jdbc:6.1.0.jre8',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
-		greenmail:		'com.icegreen:greenmail:1.5.2',
+		greenmail:		'com.icegreen:greenmail:1.5.6',
 
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
 		server_tomcat:	"org.apache.tomcat:tomcat-catalina:${tomcatVersion}",
