@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm5.ClassVisitor;
-import jodd.asm5.Opcodes;
+import jodd.asm6.ClassVisitor;
+import jodd.asm6.Opcodes;
 
 /**
  * Empty class visitor.
@@ -34,7 +34,7 @@ import jodd.asm5.Opcodes;
 public abstract class EmptyClassVisitor extends ClassVisitor {
 
 	protected EmptyClassVisitor() {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM6);
 	}
 
 }

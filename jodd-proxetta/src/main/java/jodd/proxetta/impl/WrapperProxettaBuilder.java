@@ -25,7 +25,7 @@
 
 package jodd.proxetta.impl;
 
-import jodd.asm5.ClassReader;
+import jodd.asm6.ClassReader;
 import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.ProxettaException;

@@ -25,9 +25,9 @@
 
 package jodd.paramo;
 
+import jodd.asm6.ClassReader;
 import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
-import jodd.asm5.ClassReader;
 
 import java.io.IOException;
 import java.io.InputStream;

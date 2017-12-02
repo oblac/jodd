@@ -26,16 +26,15 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm5.AnnotationVisitor;
+import jodd.asm.EmptyAnnotationVisitor;
+import jodd.asm6.AnnotationVisitor;
+import jodd.proxetta.AnnotationInfo;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
-
-import jodd.proxetta.AnnotationInfo;
-import jodd.asm.EmptyAnnotationVisitor;
 
 
 /**
@@ -60,22 +59,27 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 
 	// ---------------------------------------------------------------- info
 
+	@Override
 	public String getAnnotationClassname() {
 		return className;
 	}
 
+	@Override
 	public String getAnnotationSignature() {
 		return desc;
 	}
 
+	@Override
 	public boolean isVisible() {
 		return visible;
 	}
 
+	@Override
 	public Object getElement(String name) {
 		return elements.get(name);
 	}
 
+	@Override
 	public Set<String> getElementNames() {
 		return elements.keySet();
 	}

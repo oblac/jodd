@@ -26,9 +26,9 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.ClassAdapter;
+import jodd.asm6.ClassVisitor;
+import jodd.asm6.MethodVisitor;
 import jodd.proxetta.InvokeAspect;
-import jodd.asm5.ClassVisitor;
-import jodd.asm5.MethodVisitor;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm5.ClassVisitor;
-import jodd.asm5.Opcodes;
+import jodd.asm6.ClassVisitor;
+import jodd.asm6.Opcodes;
 
 /**
  * An empty ClassVisitor that delegates to another ClassVisitor.
@@ -36,6 +36,6 @@ import jodd.asm5.Opcodes;
 public abstract class ClassAdapter extends ClassVisitor {
 
 	protected ClassAdapter(ClassVisitor cv) {
-		super(Opcodes.ASM5, cv);
+		super(Opcodes.ASM6, cv);
 	}
 }

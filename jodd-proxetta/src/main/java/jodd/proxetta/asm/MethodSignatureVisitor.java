@@ -27,9 +27,14 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
 import jodd.asm.TraceSignatureVisitor;
-import jodd.asm5.Opcodes;
-import jodd.asm5.signature.SignatureVisitor;
-import jodd.proxetta.*;
+import jodd.asm6.Opcodes;
+import jodd.asm6.signature.SignatureVisitor;
+import jodd.proxetta.AnnotationInfo;
+import jodd.proxetta.ClassInfo;
+import jodd.proxetta.GenericsReader;
+import jodd.proxetta.MethodInfo;
+import jodd.proxetta.ProxettaException;
+import jodd.proxetta.TypeInfo;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.collection.IntArrayList;

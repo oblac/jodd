@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm5.Opcodes;
-import jodd.asm5.signature.SignatureVisitor;
+import jodd.asm6.Opcodes;
+import jodd.asm6.signature.SignatureVisitor;
 
 /**
  * A {@link SignatureVisitor} that prints a disassembled view of the signature
@@ -81,21 +81,21 @@ public class TraceSignatureVisitor extends SignatureVisitor {
     private String separator = "";
 
     public TraceSignatureVisitor(final StringBuilder buf, boolean isInterface) {		// jodd: no final
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM6);
         this.isInterface = isInterface;
         this.declaration = buf;
     }
 
 /*
     public TraceSignatureVisitor(final int access) {
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM6);
         isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
         this.declaration = new StringBuilder();
     }
 */
 
     protected TraceSignatureVisitor(final StringBuilder buf) {	// jodd
-        super(Opcodes.ASM5);
+        super(Opcodes.ASM6);
         this.declaration = buf;
     }
 
