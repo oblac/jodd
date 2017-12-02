@@ -97,7 +97,7 @@ public class DbTestQueryStatement extends DbHsqldbTestCase {
 		query.close();
 
 		query = new DbQuery(session, "select count(*) from GIRL where id in (:ids!5)");
-		long[] ids = longs(1,2,3);
+		long[] ids = longs(1L,2L,3L);
 		query.setBatch("ids", ids, 0);
 		assertEquals(3, query.executeCount());
 		query.close();
@@ -109,7 +109,7 @@ public class DbTestQueryStatement extends DbHsqldbTestCase {
 		query.close();
 
 		query = new DbQuery(session, "select count(*) from GIRL where id in (:ids!5)");
-		Long[] ids2 = new Long[]{1l,2l,3l,4l};
+		Long[] ids2 = new Long[]{1L,2L,3L,4L};
 		query.setBatch("ids", ids2, 0);
 		assertEquals(3, query.executeCount());
 		query.close();
