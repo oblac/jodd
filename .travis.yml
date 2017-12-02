@@ -6,6 +6,11 @@ services:
 
 jdk:
   - oraclejdk8
+  - oraclejdk9
+
+matrix:
+  allow_failures:
+    - jdk: oraclejdk9
 
 before_install:
   # Disable services enabled by default
