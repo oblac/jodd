@@ -313,8 +313,8 @@ configure(javaModules()) {
 			applyTo testUnit
 			applyTo testIntegration
 		}
-		testUnit.extensions.getByName("jacoco").excludes        = ['*Test*', '*.?', '*Foo*', 'jodd.asm5.*', '*.fixtures.*']
-		testIntegration.extensions.getByName("jacoco").excludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm5.*', '*.fixtures.*']
+		testUnit.extensions.getByName("jacoco").excludes        = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*']
+		testIntegration.extensions.getByName("jacoco").excludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*']
 	}
 	jacocoTestReport {
 		reports {
@@ -367,7 +367,7 @@ configure(javaModules()) {
 	}
 
 	javadoc {
-		exclude '**/asm5/**'
+		exclude '**/asm6/**'
 		afterEvaluate {
 			configure(options) {
 				windowTitle 'Jodd API Documentation'
@@ -420,7 +420,7 @@ task javadocAll(type: Javadoc) {
 	maxMemory '512m'
 
 	source javaBundleModulesSources.allJava
-	exclude '**/asm5/**'
+	exclude '**/asm6/**'
 
 	destinationDir = file("$buildDir/reports/javadoc")
 	classpath = files(javaBundleModulesSources.compileClasspath)

@@ -1,4 +1,4 @@
 exclude_paths:
   - '**/src/test/**'
-  - '**/asm5/**'
+  - '**/asm6/**'
   - '**/*.py'

@@ -9,6 +9,6 @@
 	<suppress files=".*[/\\]test[/\\].*" checks=".+"/>
 	<suppress files=".*[/\\]testInt[/\\].*" checks=".+"/>
 	<suppress files=".*[/\\]perf[/\\].*" checks=".+"/>
-	<suppress files=".*[/\\]asm5[/\\].*" checks=".+"/>
+	<suppress files=".*[/\\]asm6[/\\].*" checks=".+"/>
 
 </suppressions>

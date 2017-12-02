@@ -4,6 +4,6 @@
 	<exclude-pattern>.*/test/.*</exclude-pattern>
 	<exclude-pattern>.*/testInt/.*</exclude-pattern>
 	<exclude-pattern>.*/perf/.*</exclude-pattern>
-	<exclude-pattern>.*/asm5/.*</exclude-pattern>
+	<exclude-pattern>.*/asm6/.*</exclude-pattern>
 
 </ruleset>

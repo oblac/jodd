@@ -38,4 +38,4 @@ For example:
 	./gradlew :jodd-core:codeCoverage
 	open jodd-core/build/reports/jacoco/index.html
 	
-_NOTE_: Package `jodd.asm5` is _excluded_ from code coverage, but still reported locally.
+_NOTE_: Package `jodd.asm6` is _excluded_ from code coverage, but still reported locally.
