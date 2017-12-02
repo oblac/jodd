@@ -16,4 +16,5 @@ Changes
 
 + package is renamed to: `jodd.asm6`.
 + `SignatureWriter` class is removed as not used.
-+ some JavaDoc links fixed or removed
++ some JavaDoc links fixed or removed.
++ `TraceSignatureVisitor` is added and modified. 
