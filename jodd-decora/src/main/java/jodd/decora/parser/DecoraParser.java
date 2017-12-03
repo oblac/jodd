@@ -54,7 +54,7 @@ public class DecoraParser {
 	 * but their region is not set.
 	 */
 	protected DecoraTag[] parseDecorator(char[] decoraContent) {
-		LagartoParser lagartoParser = new LagartoParser(decoraContent, true);
+		LagartoParser lagartoParser = new LagartoParser(decoraContent);
 		lagartoParser.getConfig().setEnableRawTextModes(false);
 
 		DecoratorTagVisitor visitor = new DecoratorTagVisitor();
@@ -66,7 +66,7 @@ public class DecoraParser {
 	 * Parses target page and extracts Decora regions for replacements.
 	 */
 	protected void parsePage(char[] pageContent, DecoraTag[] decoraTags) {
-		LagartoParser lagartoParser = new LagartoParser(pageContent, true);
+		LagartoParser lagartoParser = new LagartoParser(pageContent);
 		PageRegionExtractor writer = new PageRegionExtractor(decoraTags);
 		lagartoParser.parse(writer);
 	}

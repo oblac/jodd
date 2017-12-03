@@ -32,19 +32,18 @@ import jodd.lagarto.TagVisitor;
 import jodd.lagarto.TagWriter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.lagarto.filter.SimpleLagartoServletFilter;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -137,7 +136,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 			return null;
 		}
 
-		return new LagartoParsingProcessor(true) {
+		return new LagartoParsingProcessor() {
 			@Override
 			protected char[] parse(TagWriter rootTagWriter, HttpServletRequest request) {
 
