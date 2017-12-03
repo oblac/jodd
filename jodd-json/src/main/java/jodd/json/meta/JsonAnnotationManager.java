@@ -90,7 +90,7 @@ public class JsonAnnotationManager {
 		/**
 		 * Resolves real name from JSON name.
 		 */
-		public String resolveRealName(String jsonName) {
+		public CharSequence resolveRealName(CharSequence jsonName) {
 			if (jsonNames == null) {
 				return jsonName;
 			}
@@ -206,7 +206,7 @@ public class JsonAnnotationManager {
 	/**
 	 * Returns real property name for given JSON property.
 	 */
-	public String resolveRealName(Class type, String jsonName) {
+	public CharSequence resolveRealName(Class type, CharSequence jsonName) {
 		TypeData typeData = lookupTypeData(type);
 
 		return typeData.resolveRealName(jsonName);

@@ -29,7 +29,7 @@ import jodd.util.StringUtil;
 
 import java.util.Arrays;
 
-import static jodd.util.StringPool.*;
+import static jodd.util.StringPool.STAR;
 
 /**
  * Path query is used to match properties with some Path.
@@ -78,12 +78,12 @@ public class PathQuery {
 		int exprLen = expression.length;
 
 		while (pathNdx < pathLen) {
-			String current = path.get(pathNdx);
+			CharSequence current = path.get(pathNdx);
 
 			if (exprNdx < exprLen && expression[exprNdx].equals(STAR)) {
 				exprNdx++;
 			}
-			else if (exprNdx < exprLen && expression[exprNdx].equals(current)) {
+			else if (exprNdx < exprLen && expression[exprNdx].contentEquals(current)) {
 				pathNdx++;
 				exprNdx++;
 			}

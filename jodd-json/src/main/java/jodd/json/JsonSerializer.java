@@ -27,7 +27,6 @@ package jodd.json;
 
 import jodd.util.ArraysUtil;
 import jodd.util.InExRules;
-import jodd.util.UnsafeUtil;
 import jodd.util.buffer.FastCharBuffer;
 
 import java.util.HashMap;
@@ -247,7 +246,18 @@ public class JsonSerializer {
 
 		serialize(source, fastCharBuffer);
 
-		return UnsafeUtil.createString(fastCharBuffer.toArray());
+		return fastCharBuffer.toString();
+	}
+
+	/**
+	 * Serializes the object, but returns the {@link CharSequence}.
+	 */
+	public CharSequence serializeToCharSequence(Object source) {
+		FastCharBuffer fastCharBuffer = new FastCharBuffer();
+
+		serialize(source, fastCharBuffer);
+
+		return fastCharBuffer;
 	}
 
 	// ---------------------------------------------------------------- json context

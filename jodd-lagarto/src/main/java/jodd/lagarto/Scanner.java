@@ -28,30 +28,24 @@ package jodd.lagarto;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
-import java.nio.CharBuffer;
-
 /**
  * Utility scanner over a char buffer.
  */
 class Scanner {
 
-	protected final boolean emitStrings;
-
-	protected char[] input;
+	protected CharSequence input;
 	protected int ndx = 0;
 	protected int total;
 
-	Scanner(boolean emitStrings) {
-		this.emitStrings = emitStrings;
-	}
+	Scanner() { }
 
 	/**
 	 * Initializes scanner.
 	 */
-	protected void initialize(char[] input) {
+	protected void initialize(CharSequence input) {
 		this.input = input;
 		this.ndx = -1;
-		this.total = input.length;
+		this.total = input.length();
 	}
 
 	// ---------------------------------------------------------------- find
@@ -62,7 +56,7 @@ class Scanner {
 	 */
 	protected final int find(char target, int from, int end) {
 		while (from < end) {
-			if (input[from] == target) {
+			if (input.charAt(from) == target) {
 				break;
 			}
 			from++;
@@ -99,7 +93,7 @@ class Scanner {
 		int j = ndx;
 
 		for (int i = 0; i < target.length; i++, j++) {
-			if (input[j] != target[i]) {
+			if (input.charAt(j) != target[i]) {
 				return false;
 			}
 		}
@@ -126,7 +120,7 @@ class Scanner {
 		int j = ndx;
 
 		for (int i = 0; i < uppercaseTarget.length; i++, j++) {
-			char c = CharUtil.toUpperAscii(input[j]);
+			char c = CharUtil.toUpperAscii(input.charAt(j));
 
 			if (c != uppercaseTarget[i]) {
 				return false;
@@ -139,19 +133,14 @@ class Scanner {
 	// ---------------------------------------------------------------- char sequences
 
 	/**
-	 * Creates char sub-sequence from the input. It may return a <code>String</code>
-	 * of <code>CharBuffer</code>. Use <code>String</code> for DOM builder,
-	 * but for visitor use <code>CharBuffer</code> for better performances.
+	 * Creates char sub-sequence from the input.
 	 */
 	protected final CharSequence charSequence(int from, int to) {
-		int len = to - from;
-		if (len == 0) {
-			return emitStrings ? StringPool.EMPTY : EMPTY_CHAR_BUFFER;
+		if (from == to) {
+			return StringPool.EMPTY;
 		}
-		return emitStrings ? new String(input, from, len) : CharBuffer.wrap(input, from, len);
+		return input.subSequence(from, to);
 	}
-
-	protected static CharBuffer EMPTY_CHAR_BUFFER = CharBuffer.wrap(new char[0]);
 
 	// ---------------------------------------------------------------- position
 
@@ -185,7 +174,7 @@ class Scanner {
 		}
 
 		while (offset < position) {
-			char c = input[offset];
+			char c = input.charAt(offset);
 
 			if (c == '\n') {
 				line++;
