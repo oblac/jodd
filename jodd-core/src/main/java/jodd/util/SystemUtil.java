@@ -75,27 +75,6 @@ public class SystemUtil {
 	// because `hasUnsafe0` method relies on the `isHostAndroid` information.
 
 	private static final boolean IS_ANDROID = isAndroid0();
-	private static final boolean HAS_UNSAFE = hasUnsafe0();
-
-	/**
-	 * Returns <code>true</code> if system has the <code>Unsafe</code>.
-	 */
-	public static boolean hasUnsafe() {
-		return HAS_UNSAFE;
-	}
-
-	private static boolean hasUnsafe0() {
-		if (isHostAndroid()) {
-			return false;
-		}
-
-		try {
-			return PlatformInternal.hasUnsafe();
-		}
-		catch (Throwable t) {
-			return false;
-		}
-	}
 
 	// ---------------------------------------------------------------- android
 
