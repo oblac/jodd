@@ -36,7 +36,7 @@ class StripHtmlTest {
 	@Test
 	void testStripHtml() {
 		LagartoParser lagartoParser = new LagartoParser(
-				"<html>  <div   id='a'>   x \n\n\n </div>  </html>", false);
+				"<html>  <div   id='a'>   x \n\n\n </div>  </html>");
 
 		StringBuilder out = new StringBuilder();
 		StripHtmlTagAdapter stripHtmlTagAdapter = new StripHtmlTagAdapter(new TagWriter(out));

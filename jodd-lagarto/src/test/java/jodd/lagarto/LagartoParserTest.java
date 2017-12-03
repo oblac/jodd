@@ -146,7 +146,7 @@ class LagartoParserTest {
 	}
 
 	private String _parseEmpty(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content, false);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		lagartoParser.getConfig().setCalculatePosition(true);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {
@@ -263,7 +263,7 @@ class LagartoParserTest {
 		};
 
 
-		LagartoParser lagartoParser = new LagartoParser(content, false);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		lagartoParser.getConfig().setCalculatePosition(true);
 
 		if (isXml) {
