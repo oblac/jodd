@@ -26,7 +26,7 @@
 package jodd.decora.parser;
 
 import jodd.lagarto.Tag;
-import jodd.lagarto.TagUtil;
+import jodd.util.CharSequenceUtil;
 
 /**
  * Decora tag, defined by the name and its position in decorator file.
@@ -126,7 +126,7 @@ public class DecoraTag {
 				return false;
 			}
 
-			if (!TagUtil.equals(id, tagId)) {
+			if (!CharSequenceUtil.equals(id, tagId)) {
 				return false;
 			}
 		}

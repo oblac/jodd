@@ -27,8 +27,9 @@ package jodd.htmlstapler;
 
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
-import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
+import jodd.util.CharArraySequence;
+import jodd.util.CharSequenceUtil;
 import jodd.util.Util;
 
 /**
@@ -80,7 +81,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	// ---------------------------------------------------------------- css
 
-	private static final char[] T_LINK = new char[] {'l', 'i', 'n', 'k'};
+	private static final CharSequence T_LINK = CharArraySequence.of('l', 'i', 'n', 'k');
 
 	@Override
 	public void tag(Tag tag) {
@@ -88,7 +89,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 			if (tag.nameEquals(T_LINK)) {
 				CharSequence type = tag.getAttributeValue("type");
 
-				if (type != null && TagUtil.equalsIgnoreCase(type, "text/css")) {
+				if (type != null && CharSequenceUtil.equalsIgnoreCase(type, "text/css")) {
 					String media = Util.toString(tag.getAttributeValue("media"));
 
 					if (media == null || media.contains("screen")) {
