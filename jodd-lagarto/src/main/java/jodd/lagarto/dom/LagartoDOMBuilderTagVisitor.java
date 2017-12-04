@@ -30,10 +30,10 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
-import jodd.util.Util;
-import jodd.util.StringPool;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.StringPool;
+import jodd.util.Util;
 
 /**
  * Lagarto tag visitor that builds DOM tree.
@@ -83,6 +83,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Starts with DOM building.
 	 * Creates root {@link jodd.lagarto.dom.Document} node.
 	 */
+	@Override
 	public void start() {
 		log.debug("DomTree builder started");
 
@@ -100,6 +101,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	/**
 	 * Finishes the tree building. Closes unclosed tags.
 	 */
+	@Override
 	public void end() {
 		if (parentNode != rootNode) {
 
@@ -168,6 +170,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	/**
 	 * Visits tags.
 	 */
+	@Override
 	public void tag(Tag tag) {
 		if (!enabled) {
 			return;
@@ -391,6 +394,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- tree
 
+	@Override
 	public void script(Tag tag, CharSequence body) {
 		if (!enabled) {
 			return;
@@ -406,6 +410,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void comment(CharSequence comment) {
 		if (!enabled) {
 			return;
@@ -424,6 +429,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 	}
 
+	@Override
 	public void text(CharSequence text) {
 		if (!enabled) {
 			return;
@@ -436,6 +442,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 	}
 
+	@Override
 	public void cdata(CharSequence cdata) {
 		if (!enabled) {
 			return;
@@ -446,6 +453,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(cdataNode);
 	}
 
+	@Override
 	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 		if (!enabled) {
 			return;
@@ -456,6 +464,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(xmlDeclaration);
 	}
 
+	@Override
 	public void doctype(Doctype doctype) {
 		if (!enabled) {
 			return;
@@ -470,6 +479,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(documentType);
 	}
 
+	@Override
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 		String expressionString = expression.toString().trim();
 
@@ -497,6 +507,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- error
 
+	@Override
 	public void error(String message) {
 		rootNode.addError(message);
 		log.log(domBuilder.config.getParsingErrorLogLevel(), message);

@@ -632,10 +632,12 @@ public class JsonParser extends JsonParserBase {
 			char c = input.charAt(ndx);
 
 			if (c <= ' ' || CharUtil.equalsOne(c, UNQOUTED_DELIMETERS)) {
+				int currentNdx = ndx;
+
 				// done
 				skipWhiteSpaces();
 
-				return input.subSequence(startNdx, ndx);
+				return input.subSequence(startNdx, currentNdx);
 			}
 
 			ndx++;
