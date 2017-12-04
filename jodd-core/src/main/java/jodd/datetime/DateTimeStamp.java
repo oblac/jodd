@@ -271,7 +271,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 
 
 	@Override
-	protected DateTimeStamp clone() {
+	public DateTimeStamp clone() {
 		DateTimeStamp dts = new DateTimeStamp();
 		dts.year = this.year;
 		dts.month = this.month;
