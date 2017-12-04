@@ -125,7 +125,7 @@ public class SystemUtil {
 
 		try {
 			// 1.0
-			javaVersionNumber = 10;
+			javaVersionNumber = 0;
 
 			Class.forName("java.lang.Void");
 			// 1.1
@@ -140,7 +140,7 @@ public class SystemUtil {
 			javaVersionNumber++;
 
 			Class.forName("java.lang.CharSequence");
-			//1.4
+			// 1.4
 			javaVersionNumber++;
 
 			Class.forName("java.net.Proxy");
@@ -157,6 +157,10 @@ public class SystemUtil {
 
 			Class.forName("java.lang.reflect.Executable");
 			// 1.8
+			javaVersionNumber++;
+
+			Class.forName("java.lang.StackWalker");
+			// 1.9
 			javaVersionNumber++;
 		} catch (Throwable ignore) {
 		}
@@ -187,15 +191,16 @@ public class SystemUtil {
 		ArrayList<String> packages = new ArrayList<>();
 
 		switch (javaVersionNumber) {
-			case 18:
-			case 17:
-			case 16:
-			case 15:
+			case 9:
+			case 8:
+			case 7:
+			case 6:
+			case 5:
 				// in Java1.5, the apache stuff moved
 				packages.add("com.sun.org.apache");
 				// fall through...
-			case 14:
-				if (javaVersionNumber == 14) {
+			case 4:
+				if (javaVersionNumber == 4) {
 					packages.add("org.apache.crimson");
 					packages.add("org.apache.xalan");
 					packages.add("org.apache.xml");
@@ -205,7 +210,7 @@ public class SystemUtil {
 				packages.add("org.w3c.dom");
 				packages.add("org.xml.sax");
 				// fall through...
-			case 13:
+			case 3:
 				packages.add("org.omg");
 				packages.add("com.sun.corba");
 				packages.add("com.sun.jndi");
@@ -216,11 +221,11 @@ public class SystemUtil {
 				packages.add("sunw.io");
 				packages.add("sunw.util");
 				// fall through...
-			case 12:
+			case 2:
 				packages.add("com.sun.java");
 				packages.add("com.sun.image");
 				// fall through...
-			case 11:
+			case 1:
 			default:
 				// core stuff
 				packages.add("sun");
