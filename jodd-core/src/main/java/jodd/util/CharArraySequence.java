@@ -31,13 +31,15 @@ package jodd.util;
  */
 public class CharArraySequence implements CharSequence {
 
+	public static final CharSequence EMPTY = CharArraySequence.of();
+
 	private final char[] buffer;
 	private final int off, len;
 
 	/**
 	 * Static constructor that creates a char sequence using provided char array.
 	 */
-	public static CharSequence of(char[] value) {
+	public static CharSequence of(char... value) {
 		return new CharArraySequence(value);
 	}
 
