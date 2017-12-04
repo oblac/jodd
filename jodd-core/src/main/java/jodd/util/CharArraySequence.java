@@ -35,10 +35,21 @@ public class CharArraySequence implements CharSequence {
 	private final int off, len;
 
 	/**
-	 * Static constructor.
+	 * Static constructor that creates a char sequence using provided char array.
 	 */
 	public static CharSequence of(char[] value) {
 		return new CharArraySequence(value);
+	}
+
+	/**
+	 * Static constructor that creates a char sequence by making a copy of provided char array.
+	 */
+	public static CharSequence from(char[] value, int offset, int len) {
+		final char[] buffer = new char[value.length];
+
+		System.arraycopy(value, offset, buffer, 0, len);
+
+		return new CharArraySequence(buffer);
 	}
 
 	public CharArraySequence(char[] value) {
