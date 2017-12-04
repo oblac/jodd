@@ -546,7 +546,7 @@ class JsonSerializerTest {
 
 	@Test
 	void testFiles_on_linux() {
-		assumeTrue(SystemUtil.isHostLinux(), "no linux host");
+		assumeTrue(SystemUtil.isHostLinux() || SystemUtil.isHostMac(), "no linux host");
 
 		FileMan fileMan = new FileMan();
 		File userHome = new File(SystemUtil.userHome());

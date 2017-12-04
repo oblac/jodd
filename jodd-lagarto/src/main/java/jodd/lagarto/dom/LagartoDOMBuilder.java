@@ -130,16 +130,18 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Creates DOM tree from provided content.
 	 */
+	@Override
 	public Document parse(char[] content) {
-		LagartoParser lagartoParser = new LagartoParser(content, true);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		return doParse(lagartoParser);
 	}
 
 	/**
 	 * Creates DOM tree from the provided content.
 	 */
+	@Override
 	public Document parse(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content, true);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		return doParse(lagartoParser);
 	}
 

@@ -115,7 +115,7 @@ def license(overwrite) {
 
             // *** 3rd PARTY LIBS, SPECIAL CASES ***
             if (
-                file.absolutePath.contains("src/main/java/jodd/asm5/") ||
+                file.absolutePath.contains("src/main/java/jodd/asm6/") ||
                 file.name.equals("BCrypt.java") ||
                 file.name.equals("NanoHTTPD.java")
             ) {

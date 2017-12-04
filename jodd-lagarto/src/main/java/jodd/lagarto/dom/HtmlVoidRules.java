@@ -25,7 +25,7 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.TagUtil;
+import jodd.util.CharSequenceUtil;
 
 /**
  * Rules for void tags.
@@ -46,7 +46,7 @@ public class HtmlVoidRules {
 	 */
 	public boolean isVoidTag(CharSequence tagName) {
 		for (String html5VoidTag : HTML5_VOID_TAGS) {
-			if (TagUtil.equalsToLowercase(tagName, html5VoidTag)) {
+			if (CharSequenceUtil.equalsToLowercase(tagName, html5VoidTag)) {
 				return true;
 			}
 		}

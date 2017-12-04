@@ -36,7 +36,7 @@ class UrlRewriterTest {
 	@Test
 	void testUrlRewriter() {
 		LagartoParser lagartoParser = new LagartoParser(
-				"<a href=\"http://jodd.org\">1</a><a href=\"page.html\">2</a>", false);
+				"<a href=\"http://jodd.org\">1</a><a href=\"page.html\">2</a>");
 
 		StringBuilder out = new StringBuilder();
 		UrlRewriterTagAdapter urlRewriterTagAdapter = new UrlRewriterTagAdapter(new TagWriter(out)) {

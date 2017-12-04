@@ -32,7 +32,7 @@ import jodd.util.StringUtil;
  */
 public class Path {
 
-	protected String[] paths = new String[8];
+	protected CharSequence[] paths = new CharSequence[8];
 	protected int index = 0;
 	protected Path altPath;
 
@@ -52,7 +52,7 @@ public class Path {
 	/**
 	 * Creates path from given path elements.
 	 */
-	public Path(String... fields) {
+	public Path(CharSequence... fields) {
 		if (fields.length >= paths.length) {
 			paths = fields;
 		}
@@ -72,7 +72,7 @@ public class Path {
 	/**
 	 * Push element to the path.
 	 */
-	public Path push(String field) {
+	public Path push(CharSequence field) {
 		_push(field);
 
 		if (altPath != null) {
@@ -81,7 +81,7 @@ public class Path {
 		return this;
 	}
 
-	public Path push(String field, String altField) {
+	public Path push(CharSequence field, CharSequence altField) {
 		_push(field);
 
 		if (altPath != null) {
@@ -90,9 +90,9 @@ public class Path {
 		return this;
 	}
 
-	private void _push(String field) {
+	private void _push(CharSequence field) {
 		if (index == paths.length) {	// ensure size
-			String[] newPaths = new String[paths.length << 1];
+			CharSequence[] newPaths = new CharSequence[paths.length << 1];
 			System.arraycopy(paths, 0, newPaths, 0, paths.length);
 			paths = newPaths;
 		}
@@ -104,7 +104,7 @@ public class Path {
 	/**
 	 * Pop last element from the path.
 	 */
-	public String pop(){
+	public CharSequence pop(){
 		if (altPath != null) {
 			altPath.pop();
 		}
@@ -121,7 +121,7 @@ public class Path {
 	/**
 	 * Returns path chunk at given index.
 	 */
-	public String get(int i) {
+	public CharSequence get(int i) {
 		if (i >= index) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -133,7 +133,7 @@ public class Path {
 
 		builder.append('[');
 		for (int i = 0; i < index; i++) {
-			String current = paths[i];
+			CharSequence current = paths[i];
 			if (i > 0) {
 				builder.append('.');
 			}
@@ -176,7 +176,7 @@ public class Path {
 		int result = 1;
 
 		for (int i = 0; i < index; i++) {
-			String element = paths[i];
+			CharSequence element = paths[i];
 			result = 31 * result + (element == null ? 0 : element.hashCode());
 		}
 

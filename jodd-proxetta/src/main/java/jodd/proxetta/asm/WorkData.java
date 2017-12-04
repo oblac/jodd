@@ -25,11 +25,11 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm5.ClassVisitor;
+import jodd.asm6.ClassVisitor;
 import jodd.util.StringPool;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static jodd.util.StringPool.DOT;
 

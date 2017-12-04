@@ -25,7 +25,7 @@
 
 package jodd.proxetta;
 
-import jodd.asm5.Type;
+import jodd.asm6.Type;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.mutable.MutableBoolean;

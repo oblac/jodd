@@ -54,7 +54,7 @@ class TagAdapterTest {
 	void testCleanHtml() throws IOException {
 		File ff = new File(testAdapterRoot, "clean.html");
 
-		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff), false);
+		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff));
 
 		StringBuilder out = new StringBuilder();
 		TagWriter tagWriter = new TagWriter(out);
@@ -70,7 +70,7 @@ class TagAdapterTest {
 	void testTwoAdapters() throws IOException {
 		File ff = new File(testAdapterRoot, "two.html");
 
-		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff), false);
+		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff));
 		StringBuilder out = new StringBuilder();
 		TagWriter tagWriter = new TagWriter(out);
 

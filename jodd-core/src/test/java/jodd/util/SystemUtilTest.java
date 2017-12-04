@@ -25,7 +25,10 @@
 
 package jodd.util;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -37,7 +40,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static jodd.util.SystemUtil.*;
+import static jodd.util.SystemUtil.HTTP_PROXY_HOST;
+import static jodd.util.SystemUtil.HTTP_PROXY_PASSWORD;
+import static jodd.util.SystemUtil.HTTP_PROXY_PORT;
+import static jodd.util.SystemUtil.HTTP_PROXY_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -149,15 +155,4 @@ class SystemUtilTest {
 		}
 
 	}
-
-	@Test
-	void testJavaVersionNumber() {
-		final int expected = 18;
-
-		final int actual = SystemUtil.javaVersionNumber();
-
-		// asserts
-		assertEquals(expected, actual);
-	}
-
 }

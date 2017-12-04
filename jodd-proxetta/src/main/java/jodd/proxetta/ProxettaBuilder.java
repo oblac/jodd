@@ -25,20 +25,20 @@
 
 package jodd.proxetta;
 
+import jodd.asm6.ClassReader;
+import jodd.asm6.ClassWriter;
 import jodd.io.FileUtil;
-import jodd.proxetta.asm.TargetClassInfoReader;
-import jodd.proxetta.asm.WorkData;
-import jodd.util.StringUtil;
-import jodd.asm5.ClassReader;
-import jodd.asm5.ClassWriter;
-import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.proxetta.asm.TargetClassInfoReader;
+import jodd.proxetta.asm.WorkData;
+import jodd.util.ClassLoaderUtil;
+import jodd.util.StringUtil;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Proxetta builder. While {@link Proxetta} only holds aspects and

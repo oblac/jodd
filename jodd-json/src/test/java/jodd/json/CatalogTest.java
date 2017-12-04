@@ -54,7 +54,7 @@ class CatalogTest {
 	protected String dataRoot;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		if (dataRoot != null) {
 			return;
 		}

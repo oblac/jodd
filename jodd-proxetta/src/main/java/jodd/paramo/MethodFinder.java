@@ -26,12 +26,12 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyClassVisitor;
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.Type;
+import jodd.asm6.MethodVisitor;
+import jodd.asm6.Type;
 
 import java.lang.reflect.Modifier;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Lookups for specific method in order to start with

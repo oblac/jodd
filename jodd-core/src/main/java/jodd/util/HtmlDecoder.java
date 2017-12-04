@@ -93,11 +93,7 @@ public class HtmlDecoder {
 			ENTITY_NAMES[i++] = name.toCharArray();
 		}
 
-		Arrays.sort(ENTITY_NAMES, new Comparator<char[]>() {
-			public int compare(char[] o1, char[] o2) {
-				return new String(o1).compareTo(new String(o2));
-			}
-		});
+		Arrays.sort(ENTITY_NAMES, Comparator.comparing(String::new));
 	}
 
 	/**
@@ -170,12 +166,12 @@ mainloop:
 	/**
 	 * Detects the longest character reference name on given position in char array.
 	 */
-	public static String detectName(final char[] input, int ndx) {
+	public static String detectName(final CharSequence input, int ndx) {
 		final Ptr ptr = new Ptr();
 
 		int firstIndex = 0;
 		int lastIndex = ENTITY_NAMES.length - 1;
-		int len = input.length;
+		int len = input.length();
 		char[] lastName = null;
 
 		BinarySearchBase binarySearch = new BinarySearchBase() {
@@ -192,7 +188,7 @@ mainloop:
 		};
 
 		while (true) {
-			ptr.c = input[ndx];
+			ptr.c = input.charAt(ndx);
 
 			if (!CharUtil.isAlphaOrDigit(ptr.c)) {
 				return lastName != null ? new String(lastName) : null;
@@ -215,7 +211,7 @@ mainloop:
 			if (firstIndex == lastIndex) {
 				// only one element found, check the rest
 				for (int i = ptr.offset; i < element.length; i++) {
-					if (element[i] != input[ndx]) {
+					if (element[i] != input.charAt(ndx)) {
 						return lastName != null ? new String(lastName) : null;
 					}
 					ndx++;

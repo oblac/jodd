@@ -298,8 +298,8 @@ public class ClassLoaderUtil {
 		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
-			if (classLoader instanceof URLClassLoader) {
-				URL[] urls = ((URLClassLoader) classLoader).getURLs();
+			URL[] urls = Java.getURLs(classLoader);
+			if (urls != null) {
 				for (URL u : urls) {
 					File f = FileUtil.toFile(u);
 					if ((f != null) && f.exists()) {

@@ -44,6 +44,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,40 +68,6 @@ public class ClassUtil {
 	public static final String METHOD_GET_PREFIX = "get";
 	public static final String METHOD_IS_PREFIX = "is";
 	public static final String METHOD_SET_PREFIX = "set";
-
-	// ---------------------------------------------------------------- method0
-	private static Method _getMethod0;
-
-	static {
-		try {
-			_getMethod0 = Class.class.getDeclaredMethod("getMethod0", String.class, Class[].class);
-			_getMethod0.setAccessible(true);
-		} catch (Exception ignore) {
-			try {
-				_getMethod0 = Class.class.getMethod("getMethod", String.class, Class[].class);
-			} catch (Exception ignored) {
-				_getMethod0 =  null;
-			}
-		}
-	}
-
-	/**
-	 * Invokes private <code>Class.getMethod0()</code> without throwing <code>NoSuchMethodException</code>.
-	 * Returns only public methods or <code>null</code> if method not found. Since no exception is
-	 * throwing, it works faster.
-	 *
-	 * @param c      			class to inspect
-	 * @param name   			name of method to find
-	 * @param parameterTypes	parameter types
-	 * @return founded method, or null
-	 */
-	public static Method getMethod0(Class c, String name, Class... parameterTypes) {
-		try {
-			return (Method) _getMethod0.invoke(c, name, parameterTypes);
-		} catch (Exception ignore) {
-			return null;
-		}
-	}
 
 	// ---------------------------------------------------------------- find method
 
@@ -527,11 +495,15 @@ public class ClassUtil {
 	 * Checks first if the object is already accessible.
 	 */
 	public static void forceAccess(AccessibleObject accObject) {
-		if (accObject.isAccessible()) {
-			return;
-		}
 		try {
-			accObject.setAccessible(true);
+			if (System.getSecurityManager() == null)
+				accObject.setAccessible(true);
+			else {
+				AccessController.doPrivileged((PrivilegedAction) () -> {
+					accObject.setAccessible(true);
+					return null;
+				});
+			}
 		} catch (SecurityException sex) {
 			// ignore
 		}

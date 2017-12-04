@@ -55,11 +55,7 @@ public class FormTag extends BodyTagSupport {
 		BodyContent body = getBodyContent();
 		JspWriter out = body.getEnclosingWriter();
 
-		String bodytext = populateForm(body.getString(), new FormFieldResolver() {
-			public Object value(String name) {
-				return JspResolver.value(name, pageContext);
-			}
-		});
+		String bodytext = populateForm(body.getString(), name -> JspResolver.value(name, pageContext));
 
 		try {
 			out.print(bodytext);
@@ -78,7 +74,7 @@ public class FormTag extends BodyTagSupport {
 	}
 
 	protected String populateForm(String formHtml, FormFieldResolver resolver) {
-		LagartoParser lagartoParser = new LagartoParser(formHtml, true);
+		LagartoParser lagartoParser = new LagartoParser(formHtml);
 		StringBuilder result = new StringBuilder();
 
 		lagartoParser.parse(new FormProcessorVisitor(result, resolver));

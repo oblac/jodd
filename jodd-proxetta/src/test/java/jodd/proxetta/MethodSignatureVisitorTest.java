@@ -25,7 +25,7 @@
 
 package jodd.proxetta;
 
-import jodd.asm5.ClassReader;
+import jodd.asm6.ClassReader;
 import jodd.proxetta.asm.MethodSignatureVisitor;
 import jodd.proxetta.fixtures.TargetClassInfoReaderFixture;
 import jodd.proxetta.fixtures.data.FooAnn;
@@ -38,7 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static jodd.asm.AsmUtil.*;
+import static jodd.asm.AsmUtil.SIGNATURE_JAVA_LANG_DOUBLE;
+import static jodd.asm.AsmUtil.SIGNATURE_JAVA_LANG_INTEGER;
+import static jodd.asm.AsmUtil.SIGNATURE_JAVA_LANG_LONG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

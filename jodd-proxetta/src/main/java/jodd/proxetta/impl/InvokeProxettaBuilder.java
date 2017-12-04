@@ -25,11 +25,11 @@
 
 package jodd.proxetta.impl;
 
+import jodd.asm6.ClassReader;
 import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.asm.InvokeClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
-import jodd.asm5.ClassReader;
 
 import java.io.InputStream;
 

@@ -26,33 +26,32 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm5.MethodVisitor;
-import jodd.asm5.ClassReader;
-import jodd.asm5.AnnotationVisitor;
-import jodd.asm5.signature.SignatureReader;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.InputStream;
-import java.io.IOException;
-
-import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
-import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
-
-import jodd.proxetta.GenericsReader;
-import jodd.proxetta.ProxettaException;
-import jodd.proxetta.ClassInfo;
-import jodd.proxetta.AnnotationInfo;
-import jodd.util.ClassLoaderUtil;
-import jodd.io.StreamUtil;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.asm6.AnnotationVisitor;
+import jodd.asm6.ClassReader;
+import jodd.asm6.MethodVisitor;
+import jodd.asm6.signature.SignatureReader;
+import jodd.io.StreamUtil;
+import jodd.proxetta.AnnotationInfo;
+import jodd.proxetta.ClassInfo;
+import jodd.proxetta.GenericsReader;
+import jodd.proxetta.ProxettaException;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.StringPool;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
+import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 
 /**
  * Reads info from target class.
@@ -102,30 +101,37 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 	// ---------------------------------------------------------------- class interface
 
+	@Override
 	public String getPackage() {
 		return targetPackage;
 	}
 
+	@Override
 	public String getClassname() {
 		return targetClassname;
 	}
 
+	@Override
 	public String getSuperName() {
 		return superName;
 	}
 
+	@Override
 	public String getReference() {
 		return thisReference;
 	}
 
+	@Override
 	public String[] getSuperClasses() {
 		return superClasses;
 	}
 
+	@Override
 	public AnnotationInfo[] getAnnotations() {
 		return annotations;
 	}
 
+	@Override
 	public Map<String, String> getGenerics() {
 		return generics;
 	}
