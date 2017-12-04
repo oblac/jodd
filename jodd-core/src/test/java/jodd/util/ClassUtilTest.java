@@ -53,36 +53,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClassUtilTest {
-
-	@Test
-	void testMethod0() {
-		TFooBean bean = new TFooBean();
-		Method m;
-		m = ClassUtil.getMethod0(TFooBean.class, "getMore", String.class, Integer.class);
-		assertNotNull(m);
-
-		m = ClassUtil.getMethod0(bean.getClass(), "getMore", String.class, Integer.class);
-		assertNotNull(m);
-
-		m = ClassUtil.getMethod0(bean.getClass(), "getXXX", String.class, Integer.class);
-		assertNull(m);
-
-		m = ClassUtil.getMethod0(bean.getClass(), "getPublic");
-		assertNotNull(m);
-
-		m = ClassUtil.getMethod0(bean.getClass(), "getDefault");
-		assertNull(m);
-
-		m = ClassUtil.getMethod0(bean.getClass(), "getProtected");
-		assertNull(m);
-
-		m = ClassUtil.getMethod0(bean.getClass(), "getPrivate");
-		assertNull(m);
-	}
-
 
 	@Test
 	void testMethod() {
@@ -648,6 +625,7 @@ class ClassUtilTest {
 		Field[] fields = FieldType.class.getDeclaredFields();
 
 		Arrays.sort(fields, new Comparator<Field>() {
+			@Override
 			public int compare(Field o1, Field o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
@@ -684,6 +662,7 @@ class ClassUtilTest {
 		Method[] methods = MethodReturnType.class.getDeclaredMethods();
 
 		Arrays.sort(methods, new Comparator<Method>() {
+			@Override
 			public int compare(Method o1, Method o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
