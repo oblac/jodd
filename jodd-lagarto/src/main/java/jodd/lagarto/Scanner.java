@@ -25,8 +25,8 @@
 
 package jodd.lagarto;
 
+import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
-import jodd.util.StringPool;
 
 /**
  * Utility scanner over a char buffer.
@@ -69,7 +69,7 @@ class Scanner {
 	 * Finds character buffer in some range and returns its index.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	protected final int find(char[] target, int from, int end) {
+	protected final int find(CharSequence target, int from, int end) {
 		while (from < end) {
 			if (match(target, from)) {
 				break;
@@ -85,15 +85,15 @@ class Scanner {
 	/**
 	 * Matches char buffer with content on given location.
 	 */
-	protected final boolean match(char[] target, int ndx) {
-		if (ndx + target.length >= total) {
+	protected final boolean match(CharSequence target, int ndx) {
+		if (ndx + target.length() >= total) {
 			return false;
 		}
 
 		int j = ndx;
 
-		for (int i = 0; i < target.length; i++, j++) {
-			if (input.charAt(j) != target[i]) {
+		for (int i = 0; i < target.length(); i++, j++) {
+			if (input.charAt(j) != target.charAt(i)) {
 				return false;
 			}
 		}
@@ -104,7 +104,7 @@ class Scanner {
 	/**
 	 * Matches char buffer with content at current location case-sensitive.
 	 */
-	public final boolean match(char[] target) {
+	public final boolean match(CharSequence target) {
 		return match(target, ndx);
 	}
 
@@ -112,17 +112,17 @@ class Scanner {
 	 * Matches char buffer given in uppercase with content at current location, that will
 	 * be converted to upper case to make case-insensitive matching.
 	 */
-	public final boolean matchUpperCase(char[] uppercaseTarget) {
-		if (ndx + uppercaseTarget.length > total) {
+	public final boolean matchUpperCase(CharSequence uppercaseTarget) {
+		if (ndx + uppercaseTarget.length() > total) {
 			return false;
 		}
 
 		int j = ndx;
 
-		for (int i = 0; i < uppercaseTarget.length; i++, j++) {
+		for (int i = 0; i < uppercaseTarget.length(); i++, j++) {
 			char c = CharUtil.toUpperAscii(input.charAt(j));
 
-			if (c != uppercaseTarget[i]) {
+			if (c != uppercaseTarget.charAt(i)) {
 				return false;
 			}
 		}
@@ -137,7 +137,7 @@ class Scanner {
 	 */
 	protected final CharSequence charSequence(int from, int to) {
 		if (from == to) {
-			return StringPool.EMPTY;
+			return CharArraySequence.EMPTY;
 		}
 		return input.subSequence(from, to);
 	}

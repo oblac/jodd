@@ -31,7 +31,7 @@ import jodd.util.CharUtil;
 import jodd.util.HtmlDecoder;
 import jodd.util.StringPool;
 
-import static jodd.util.CharUtil.equalsOne;
+import static jodd.util.CharSequenceUtil.equalsOne;
 import static jodd.util.CharUtil.isAlpha;
 import static jodd.util.CharUtil.isDigit;
 
@@ -460,7 +460,7 @@ public class LagartoParser extends Scanner {
 			}
 			if (config.parseXmlTags) {
 				if (match(XML)) {
-					ndx += XML.length - 1;
+					ndx += XML.length() - 1;
 					if (xmlDeclaration == null) {
 						xmlDeclaration = new XmlDeclaration();
 					}
@@ -928,14 +928,14 @@ public class LagartoParser extends Scanner {
 
 			if (matchUpperCase(T_DOCTYPE)) {
 				state = DOCTYPE;
-				ndx += T_DOCTYPE.length - 1;
+				ndx += T_DOCTYPE.length() - 1;
 				return;
 			}
 
 			if (config.enableConditionalComments) {
 				// CC: downlevel-revealed starting
 				if (match(CC_IF)) {
-					int ccEndNdx = find(CC_END, ndx + CC_IF.length, total);
+					int ccEndNdx = find(CC_END, ndx + CC_IF.length(), total);
 
 					if (ccEndNdx == -1) {
 						ccEndNdx = total;
@@ -952,7 +952,7 @@ public class LagartoParser extends Scanner {
 
 				// CC: downlevel-* ending tag
 				if (match(CC_ENDIF)) {
-					ndx += CC_ENDIF.length;
+					ndx += CC_ENDIF.length();
 
 					int ccEndNdx = find('>', ndx, total);
 
@@ -975,7 +975,7 @@ public class LagartoParser extends Scanner {
 
 			if (config.parseXmlTags) {
 				if (match(CDATA)) {
-					ndx += CDATA.length - 1;
+					ndx += CDATA.length() - 1;
 
 					if (xmlDeclaration == null) {
 						xmlDeclaration = new XmlDeclaration();
@@ -995,7 +995,7 @@ public class LagartoParser extends Scanner {
 
 	protected int rawTextStart;
 	protected int rawTextEnd;
-	protected char[] rawTagName;
+	protected CharSequence rawTagName;
 
 	protected State RAWTEXT = new State() {
 		@Override
@@ -1135,7 +1135,7 @@ public class LagartoParser extends Scanner {
 	// ---------------------------------------------------------------- RCDATA
 
 	protected int rcdataTagStart = -1;
-	protected char[] rcdataTagName;
+	protected CharSequence rcdataTagName;
 
 	protected State RCDATA = new State() {
 		@Override
@@ -1577,12 +1577,12 @@ public class LagartoParser extends Scanner {
 				}
 
 				if (matchUpperCase(A_PUBLIC)) {
-					ndx += A_PUBLIC.length - 1;
+					ndx += A_PUBLIC.length() - 1;
 					state = AFTER_DOCTYPE_PUBLIC_KEYWORD;
 					return;
 				}
 				if (matchUpperCase(A_SYSTEM)) {
-					ndx += A_SYSTEM.length - 1;
+					ndx += A_SYSTEM.length() - 1;
 					state = AFTER_DOCTYPE_SYSTEM_KEYWORD;
 					return;
 				}
@@ -2659,21 +2659,21 @@ public class LagartoParser extends Scanner {
 					switch (xmlAttrCount) {
 						case 0:
 							if (match(XML_VERSION)) {
-								ndx += XML_VERSION.length - 1;
+								ndx += XML_VERSION.length() - 1;
 								state = AFTER_XML_ATTRIBUTE_NAME;
 								return;
 							}
 							break;
 						case 1:
 							if (match(XML_ENCODING)) {
-								ndx += XML_ENCODING.length - 1;
+								ndx += XML_ENCODING.length() - 1;
 								state = AFTER_XML_ATTRIBUTE_NAME;
 								return;
 							}
 							break;
 						case 2:
 							if (match(XML_STANDALONE)) {
-								ndx += XML_STANDALONE.length - 1;
+								ndx += XML_STANDALONE.length() - 1;
 								state = AFTER_XML_ATTRIBUTE_NAME;
 								return;
 							}
@@ -2880,7 +2880,7 @@ public class LagartoParser extends Scanner {
 
 	protected CharSequence textWrap() {
 		if (textLen == 0) {
-			return StringPool.EMPTY;
+			return CharArraySequence.EMPTY;
 		}
 
 		return new String(text, 0, textLen);    // todo use charSequence pointer instead!
@@ -2933,7 +2933,7 @@ public class LagartoParser extends Scanner {
 			// detect RAWTEXT tags
 
 			if (config.enableRawTextModes) {
-				for (char[] rawtextTagName : RAWTEXT_TAGS) {
+				for (CharSequence rawtextTagName : RAWTEXT_TAGS) {
 					if (tag.matchTagName(rawtextTagName)) {
 						tag.setRawTag(true);
 						state = RAWTEXT;
@@ -2945,7 +2945,7 @@ public class LagartoParser extends Scanner {
 
 				// detect RCDATA tag
 
-				for (char[] rcdataTextTagName : RCDATA_TAGS) {
+				for (CharSequence rcdataTextTagName : RCDATA_TAGS) {
 					if (tag.matchTagName(rcdataTextTagName)) {
 						state = RCDATA;
 						rcdataTagStart = ndx + 1;
@@ -2990,7 +2990,7 @@ public class LagartoParser extends Scanner {
 				return;
 			}
 
-			if (to > CC_ENDIF2.length && match(CC_ENDIF2, to - CC_ENDIF2.length)) {
+			if (to > CC_ENDIF2.length() && match(CC_ENDIF2, to - CC_ENDIF2.length())) {
 				// CC: downlevel-hidden ending
 				visitor.condComment(_ENDIF, false, true, true);
 
@@ -3078,10 +3078,10 @@ public class LagartoParser extends Scanner {
 
 	// ---------------------------------------------------------------- util
 
-	private boolean isAppropriateTagName(char[] lowerCaseNameToMatch, int from, int to) {
+	private boolean isAppropriateTagName(CharSequence lowerCaseNameToMatch, int from, int to) {
 		int len = to - from;
 
-		if (len != lowerCaseNameToMatch.length) {
+		if (len != lowerCaseNameToMatch.length()) {
 			return false;
 		}
 
@@ -3090,7 +3090,7 @@ public class LagartoParser extends Scanner {
 
 			c = CharUtil.toLowerAscii(c);
 
-			if (c != lowerCaseNameToMatch[k]) {
+			if (c != lowerCaseNameToMatch.charAt(k)) {
 				return false;
 			}
 		}
@@ -3103,56 +3103,56 @@ public class LagartoParser extends Scanner {
 	
 	// ---------------------------------------------------------------- names
 	
-	private static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
-	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
-	private static final char[] CONTINUE_CHARS = new char[] {'\t', '\n', '\r', ' ', '<', '&'};
+	private static final CharSequence TAG_WHITESPACES = CharArraySequence.of('\t', '\n', '\r', ' ');
+	private static final CharSequence TAG_WHITESPACES_OR_END = CharArraySequence.of('\t', '\n', '\r', ' ', '/', '>');
+	private static final CharSequence CONTINUE_CHARS = CharArraySequence.of('\t', '\n', '\r', ' ', '<', '&');
 
-	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
-	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
-	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
-	private static final char[] ATTR_INVALID_4 = new char[] {'"', '\'', '<', '=', '`'};
+	private static final CharSequence ATTR_INVALID_1 = CharArraySequence.of('\"', '\'', '<', '=');
+	private static final CharSequence ATTR_INVALID_2 = CharArraySequence.of('\"', '\'', '<');
+	private static final CharSequence ATTR_INVALID_3 = CharArraySequence.of('<', '=', '`');
+	private static final CharSequence ATTR_INVALID_4 = CharArraySequence.of('"', '\'', '<', '=', '`');
 
-	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
+	private static final CharSequence COMMENT_DASH = CharArraySequence.of('-', '-');
 
-	private static final char[] T_DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
-	private static final char[] T_SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
-	private static final char[] T_XMP = new char[] {'x', 'm', 'p'};
-	private static final char[] T_STYLE = new char[] {'s', 't', 'y', 'l', 'e'};
-	private static final char[] T_IFRAME = new char[] {'i', 'f', 'r', 'a', 'm', 'e'};
-	private static final char[] T_NOFRAMES = new char[] {'n', 'o', 'f', 'r', 'a', 'm', 'e', 's'};
-	private static final char[] T_NOEMBED = new char[] {'n', 'o', 'e', 'm', 'b', 'e', 'd'};
-	private static final char[] T_NOSCRIPT = new char[] {'n', 'o', 's', 'c', 'r', 'i', 'p', 't'};
-	private static final char[] T_TEXTAREA = new char[] {'t', 'e', 'x', 't', 'a', 'r', 'e', 'a'};
-	private static final char[] T_TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
+	private static final CharSequence T_DOCTYPE = CharArraySequence.of('D', 'O', 'C', 'T', 'Y', 'P', 'E');
+	private static final CharSequence T_SCRIPT = CharArraySequence.of('s', 'c', 'r', 'i', 'p', 't');
+	private static final CharSequence T_XMP = CharArraySequence.of('x', 'm', 'p');
+	private static final CharSequence T_STYLE = CharArraySequence.of('s', 't', 'y', 'l', 'e');
+	private static final CharSequence T_IFRAME = CharArraySequence.of('i', 'f', 'r', 'a', 'm', 'e');
+	private static final CharSequence T_NOFRAMES = CharArraySequence.of('n', 'o', 'f', 'r', 'a', 'm', 'e', 's');
+	private static final CharSequence T_NOEMBED = CharArraySequence.of('n', 'o', 'e', 'm', 'b', 'e', 'd');
+	private static final CharSequence T_NOSCRIPT = CharArraySequence.of('n', 'o', 's', 'c', 'r', 'i', 'p', 't');
+	private static final CharSequence T_TEXTAREA = CharArraySequence.of('t', 'e', 'x', 't', 'a', 'r', 'e', 'a');
+	private static final CharSequence T_TITLE = CharArraySequence.of('t', 'i', 't', 'l', 'e');
 
-	private static final char[] A_PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
-	private static final char[] A_SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
+	private static final CharSequence A_PUBLIC = CharArraySequence.of('P', 'U', 'B', 'L', 'I', 'C');
+	private static final CharSequence A_SYSTEM = CharArraySequence.of('S', 'Y', 'S', 'T', 'E', 'M');
 
-	private static final char[] CDATA = new char[] {'[', 'C', 'D', 'A', 'T', 'A', '['};
-	private static final char[] CDATA_END = new char[] {']', ']', '>'};
+	private static final CharSequence CDATA = CharArraySequence.of('[', 'C', 'D', 'A', 'T', 'A', '[');
+	private static final CharSequence CDATA_END = CharArraySequence.of(']', ']', '>');
 
-	private static final char[] XML = new char[] {'?', 'x', 'm', 'l'};
-	private static final char[] XML_VERSION = new char[] {'v', 'e', 'r', 's', 'i', 'o', 'n'};
-	private static final char[] XML_ENCODING = new char[] {'e', 'n', 'c', 'o', 'd', 'i', 'n', 'g'};
-	private static final char[] XML_STANDALONE = new char[] {'s', 't', 'a', 'n', 'd', 'a', 'l', 'o', 'n', 'e'};
+	private static final CharSequence XML = CharArraySequence.of('?', 'x', 'm', 'l');
+	private static final CharSequence XML_VERSION = CharArraySequence.of('v', 'e', 'r', 's', 'i', 'o', 'n');
+	private static final CharSequence XML_ENCODING = CharArraySequence.of('e', 'n', 'c', 'o', 'd', 'i', 'n', 'g');
+	private static final CharSequence XML_STANDALONE = CharArraySequence.of('s', 't', 'a', 'n', 'd', 'a', 'l', 'o', 'n', 'e');
 
-	private static final char[] CC_IF = new char[] {'[', 'i', 'f', ' '};
-	private static final char[] CC_ENDIF = new char[] {'[', 'e', 'n', 'd', 'i', 'f', ']'};
-	private static final char[] CC_ENDIF2 = new char[] {'<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']'};
-	private static final char[] CC_END = new char[] {']', '>'};
+	private static final CharSequence CC_IF = CharArraySequence.of('[', 'i', 'f', ' ');
+	private static final CharSequence CC_ENDIF = CharArraySequence.of('[', 'e', 'n', 'd', 'i', 'f', ']');
+	private static final CharSequence CC_ENDIF2 = CharArraySequence.of('<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']');
+	private static final CharSequence CC_END = CharArraySequence.of(']', '>');
 
 	// CDATA
-	private static final char[][] RAWTEXT_TAGS = new char[][] {
+	private static final CharSequence[] RAWTEXT_TAGS = new CharSequence[] {
 			T_XMP, T_STYLE, T_IFRAME, T_NOEMBED, T_NOFRAMES, T_NOSCRIPT, T_SCRIPT
 	};
 
-	private static final char[][] RCDATA_TAGS = new char[][] {
+	private static final CharSequence[] RCDATA_TAGS = new CharSequence[] {
 			T_TEXTAREA, T_TITLE
 	};
 
 	private static final char REPLACEMENT_CHAR = '\uFFFD';
 
-	private static final char[] INVALID_CHARS = new char[] {'\u000B', '\uFFFE', '\uFFFF'};
+	private static final CharSequence INVALID_CHARS = CharArraySequence.of('\u000B', '\uFFFE', '\uFFFF');
 	//, '\u1FFFE', '\u1FFFF', '\u2FFFE', '\u2FFFF', '\u3FFFE', '\u3FFFF', '\u4FFFE,
 	//	'\u4FFFF', '\u5FFFE', '\u5FFFF', '\u6FFFE', '\u6FFFF', '\u7FFFE', '\u7FFFF', '\u8FFFE', '\u8FFFF', '\u9FFFE,
 	//	'\u9FFFF', '\uAFFFE', '\uAFFFF', '\uBFFFE', '\uBFFFF', '\uCFFFE', '\uCFFFF', '\uDFFFE', '\uDFFFF', '\uEFFFE,
