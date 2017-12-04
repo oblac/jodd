@@ -519,7 +519,10 @@ public class JsonParser extends JsonParserBase {
 
 		growEmpty();
 
-		System.arraycopy(input, startNdx, text, 0, textLen);
+		for (int i = startNdx, j = 0; j < textLen; i++, j++) {
+			text[j] = input.charAt(i);
+		}
+		//System.arraycopy(input, startNdx, text, 0, textLen);
 
 		// escape char, process everything until the end
 		while (true) {
