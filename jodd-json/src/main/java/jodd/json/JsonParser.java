@@ -476,7 +476,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Parses a string.
 	 */
-	protected CharSequence parseString() {
+	protected String parseString() {
 		char quote = '\"';
 		if (looseMode) {
 			quote = consumeOneOf('\"', '\'');
@@ -493,7 +493,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Parses string content, once when starting quote has been consumer.
 	 */
-	protected CharSequence parseStringContent(final char quote) {
+	protected String parseStringContent(final char quote) {
 		int startNdx = ndx;
 
 		// roll-out until the end of the string or the escape char
@@ -503,7 +503,7 @@ public class JsonParser extends JsonParserBase {
 			if (c == quote) {
 				// no escapes found, just use existing string
 				ndx++;
-				return input.subSequence(startNdx, ndx - 1);
+				return input.subSequence(startNdx, ndx - 1).toString();
 			}
 
 			if (c == '\\') {
@@ -531,7 +531,7 @@ public class JsonParser extends JsonParserBase {
 			if (c == quote) {
 				// done
 				ndx++;
-				String str = new String(text, 0, textLen);
+				final String str = new String(text, 0, textLen);
 				textLen = 0;
 				return str;
 			}
@@ -625,7 +625,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Parses un-quoted string content.
 	 */
-	protected CharSequence parseUnquotedStringContent() {
+	protected String parseUnquotedStringContent() {
 		int startNdx = ndx;
 
 		while (true) {
@@ -637,7 +637,7 @@ public class JsonParser extends JsonParserBase {
 				// done
 				skipWhiteSpaces();
 
-				return input.subSequence(startNdx, currentNdx);
+				return input.subSequence(startNdx, currentNdx).toString();
 			}
 
 			ndx++;
@@ -874,8 +874,8 @@ public class JsonParser extends JsonParserBase {
 
 			koma = false;
 
-			CharSequence key = parseString();
-			CharSequence keyOriginal = key;
+			String key = parseString();
+			String keyOriginal = key;
 
 			skipWhiteSpaces();
 
@@ -898,7 +898,7 @@ public class JsonParser extends JsonParserBase {
 			}
 
 			if (!isTargetTypeMap) {
-				pd = targetTypeClassDescriptor.getPropertyDescriptor(key.toString(), true);
+				pd = targetTypeClassDescriptor.getPropertyDescriptor(key, true);
 
 				if (pd != null) {
 					propertyType = pd.getType();
@@ -917,7 +917,7 @@ public class JsonParser extends JsonParserBase {
 
 					path.pop();
 
-				if (typeData.rules.match(keyOriginal.toString(), !typeData.strict)) {
+				if (typeData.rules.match(keyOriginal, !typeData.strict)) {
 
 					if (pd != null) {
 						// only inject values if target property exist
