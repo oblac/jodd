@@ -29,6 +29,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagWriter;
 import jodd.mutable.MutableInteger;
+import jodd.util.CharArraySequence;
 import jodd.util.StringUtil;
 
 import java.util.HashMap;
@@ -39,11 +40,11 @@ import java.util.Map;
  */
 public class FormProcessorVisitor extends TagWriter {
 
-	private static final char[] INPUT = new char[] {'i', 'n', 'p', 'u', 't'};
-	private static final char[] TYPE = new char[] {'t', 'y', 'p', 'e'};
-	private static final char[] SELECT = new char[] {'s', 'e', 'l', 'e', 'c', 't'};
-	private static final char[] OPTION = new char[] {'o', 'p', 't', 'i', 'o', 'n'};
-	private static final char[] TEXTAREA = new char[] {'t', 'e', 'x', 't', 'a', 'r', 'e', 'a'};
+	private static final CharSequence INPUT = CharArraySequence.of('i', 'n', 'p', 'u', 't');
+	private static final CharSequence TYPE = CharArraySequence.of('t', 'y', 'p', 'e');
+	private static final CharSequence SELECT = CharArraySequence.of('s', 'e', 'l', 'e', 'c', 't');
+	private static final CharSequence OPTION = CharArraySequence.of('o', 'p', 't', 'i', 'o', 'n');
+	private static final CharSequence TEXTAREA = CharArraySequence.of('t', 'e', 'x', 't', 'a', 'r', 'e', 'a');
 
 	private static final String VALUE = "value";
 	private static final String NAME = "name";
@@ -154,7 +155,7 @@ public class FormProcessorVisitor extends TagWriter {
 				// checkbox group
 				String[] vs = StringUtil.toStringArray(valueObject);
 				for (String vsk : vs) {
-					if ((vsk != null) && (vsk.equals(tagValue))) {
+					if ((vsk != null) && (vsk.contentEquals(tagValue))) {
 						tag.setAttribute(CHECKED, null);
 					}
 				}
@@ -245,13 +246,13 @@ public class FormProcessorVisitor extends TagWriter {
 		if (vals.getClass().isArray()) {
 			String[] vs = StringUtil.toStringArray(vals);
 			for (String vsk : vs) {
-				if ((vsk != null) && (vsk.equals(tagValue))) {
+				if ((vsk != null) && (vsk.contentEquals(tagValue))) {
 					tag.setAttribute(SELECTED, null);
 				}
 			}
 		} else {
 			String value = StringUtil.toString(vals);
-			if (value.equals(tagValue)) {
+			if (value.contentEquals(tagValue)) {
 				tag.setAttribute(SELECTED, null);
 			}
 		}

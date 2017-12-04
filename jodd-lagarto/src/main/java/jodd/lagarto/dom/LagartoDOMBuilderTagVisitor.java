@@ -28,10 +28,10 @@ package jodd.lagarto.dom;
 import jodd.lagarto.Doctype;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
-import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.CharSequenceUtil;
 import jodd.util.StringPool;
 import jodd.util.Util;
 
@@ -342,7 +342,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		if (domBuilder.config.isUnclosedTagAsOrphanCheck()) {
 			Node thisNode = parentNode;
 
-			if (!TagUtil.equalsIgnoreCase(tag.getName(), "table")) {
+			if (!CharSequenceUtil.equalsIgnoreCase(tag.getName(), "table")) {
 
 				// check if there is table or list between this node
 				// and matching parent
