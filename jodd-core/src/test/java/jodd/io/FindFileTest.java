@@ -26,7 +26,6 @@
 package jodd.io;
 
 import jodd.io.findfile.FindFile;
-import jodd.io.findfile.RegExpFindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.mutable.MutableInteger;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,12 +44,18 @@ class FindFileTest {
 	protected String dataRoot;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		if (dataRoot != null) {
 			return;
 		}
 		URL data = FileUtilTest.class.getResource("data");
 		dataRoot = data.getFile();
+	}
+
+	@Test
+	void testUncompleted() {
+		List<File> fileList = FindFile.get().findAll();
+		assertEquals(0, fileList.size());
 	}
 
 	@Test
@@ -187,7 +192,7 @@ class FindFileTest {
 
 	@Test
 	void testRegexp() {
-		FindFile ff = new RegExpFindFile()
+		FindFile ff = FindFile.regexp()
 				.include(".*/a[.].*")
 				.recursive(true)
 				.includeDirs(true)

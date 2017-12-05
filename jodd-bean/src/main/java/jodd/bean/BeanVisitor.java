@@ -55,7 +55,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Include/exclude rules.
 	 */
-	protected InExRules<String, String> rules = new InExRules<>(this);
+	protected InExRules<String, String, String> rules = new InExRules<>(this);
 	/**
 	 * Flag for enabling declared properties, or just public ones.
 	 */

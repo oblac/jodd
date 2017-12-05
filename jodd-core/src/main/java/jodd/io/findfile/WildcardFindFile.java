@@ -36,8 +36,12 @@ import jodd.util.InExRules;
  */
 public class WildcardFindFile extends FindFile {
 
+	public static WildcardFindFile get() {
+		return new WildcardFindFile();
+	}
+
 	@Override
-	protected InExRules createRulesEngine() {
+	protected InExRules<String, String, String> createRulesEngine() {
 		return new InExRules<>(InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER);
 	}
 

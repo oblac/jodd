@@ -34,7 +34,7 @@ class InExRulesTest {
 
 	@Test
 	void testIncludeExcludes() {
-		InExRules<String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
+		InExRules<String, String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
 		assertTrue(inExRules.isBlacklist());
 		assertFalse(inExRules.isWhitelist());
@@ -137,7 +137,7 @@ class InExRulesTest {
 
 	@Test
 	void testSmartMode() {
-		InExRules<String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
+		InExRules<String, String, String> inExRules = new InExRules<>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
 		assertTrue(inExRules.isBlacklist());
 		assertFalse(inExRules.isWhitelist());

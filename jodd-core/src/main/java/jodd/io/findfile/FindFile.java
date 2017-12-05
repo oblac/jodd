@@ -25,6 +25,14 @@
 
 package jodd.io.findfile;
 
+import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
+import jodd.util.InExRules;
+import jodd.util.MultiComparator;
+import jodd.util.NaturalOrderComparator;
+import jodd.util.StringUtil;
+import jodd.util.collection.JoddArrayList;
+
 import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
@@ -35,14 +43,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import jodd.io.FileNameUtil;
-import jodd.io.FileUtil;
-import jodd.util.InExRules;
-import jodd.util.MultiComparator;
-import jodd.util.NaturalOrderComparator;
-import jodd.util.StringUtil;
-import jodd.util.collection.JoddArrayList;
 
 /**
  * Generic iterative file finder. Searches all files on specified search path.
@@ -55,6 +55,16 @@ import jodd.util.collection.JoddArrayList;
  * @see jodd.util.InExRules
  */
 public class FindFile implements Iterable<File> {
+
+	public static WildcardFindFile wildcard() {
+		return new WildcardFindFile();
+	}
+	public static RegExpFindFile regexp() {
+		return new RegExpFindFile();
+	}
+	public static FindFile get() {
+		return new FindFile();
+	}
 
 	/**
 	 * Match type.
@@ -84,20 +94,12 @@ public class FindFile implements Iterable<File> {
 	protected boolean walking = true;
 	protected Match matchType = Match.FULL_PATH;
 
-	public boolean recursive() {
-		return recursive;
-	}
-
 	/**
 	 * Activates recursive search.
 	 */
 	public FindFile recursive(boolean recursive) {
 		this.recursive = recursive;
 		return this;
-	}
-
-	public boolean includeDirs() {
-		return includeDirs;
 	}
 
 	/**
@@ -108,20 +110,12 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
-	public boolean includeFiles() {
-		return includeFiles;
-	}
-
 	/**
 	 * Include files in search.
 	 */
 	public FindFile includeFiles(boolean includeFiles) {
 		this.includeFiles = includeFiles;
 		return this;
-	}
-
-	public boolean walking() {
-		return walking;
 	}
 
 	/**
@@ -140,15 +134,24 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
-	public Match matchType() {
-		return matchType;
-	}
-
 	/**
 	 * Set {@link Match matching type}.
 	 */
 	public FindFile matchType(Match match) {
 		this.matchType = match;
+		return this;
+	}
+
+	public FindFile matchOnlyFileName() {
+		this.matchType = Match.NAME;
+		return this;
+	}
+	public FindFile matchFullPath() {
+		this.matchType = Match.FULL_PATH;
+		return this;
+	}
+	public FindFile matchRelativePath() {
+		this.matchType = Match.RELATIVE_PATH;
 		return this;
 	}
 
@@ -372,12 +375,12 @@ public class FindFile implements Iterable<File> {
 
 	// ---------------------------------------------------------------- matching
 
-	protected final InExRules<String, String> rules = createRulesEngine();
+	protected final InExRules<String, String, ?> rules = createRulesEngine();
 
 	/**
 	 * Creates rule engine.
 	 */
-	protected InExRules<String, String> createRulesEngine() {
+	protected InExRules<String, String, ?> createRulesEngine() {
 		return new InExRules<>();
 	}
 
@@ -648,16 +651,19 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Returns file walking iterator.
 	 */
+	@Override
 	public Iterator<File> iterator() {
 
 		return new Iterator<File>() {
 			private File nextFile;
 
+			@Override
 			public boolean hasNext() {
 				nextFile = nextFile();
 				return nextFile != null;
 			}
 
+			@Override
 			public File next() {
 				if (nextFile == null) {
 					throw new NoSuchElementException();
@@ -665,6 +671,7 @@ public class FindFile implements Iterable<File> {
 				return nextFile;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -775,6 +782,7 @@ public class FindFile implements Iterable<File> {
 			}
 		}
 
+		@Override
 		public int compare(File file1, File file2) {
 			if (file1.isFile() && file2.isDirectory()) {
 				return order;
@@ -798,6 +806,7 @@ public class FindFile implements Iterable<File> {
 			}
 		}
 
+		@Override
 		public int compare(File file1, File file2) {
 			int result = naturalOrderComparator.compare(file1.getName(), file2.getName());
 			if (result == 0) {
@@ -821,6 +830,7 @@ public class FindFile implements Iterable<File> {
 			}
 		}
 
+		@Override
 		public int compare(File file1, File file2) {
 			String ext1 = FileNameUtil.getExtension(file1.getName());
 			String ext2 = FileNameUtil.getExtension(file2.getName());
@@ -846,6 +856,7 @@ public class FindFile implements Iterable<File> {
 			}
 		}
 
+		@Override
 		public int compare(File file1, File file2) {
 			long diff = file1.lastModified() - file2.lastModified();
 			if (diff == 0) {
