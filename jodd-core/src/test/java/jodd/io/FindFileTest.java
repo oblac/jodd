@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -154,7 +155,6 @@ class FindFileTest {
 		assertEquals(2, countFiles2.get());
 	}
 
-
 	@Test
 	void testWildcardPath() {
 		FindFile ff = new WildcardFindFile()
@@ -241,6 +241,25 @@ class FindFileTest {
 
 		assertTrue(names.contains("a.png"));
 		assertTrue(names.contains("a.txt"));
+	}
 
+	@Test
+	void testConsumer() {
+		final List<File> foundedFiles = new ArrayList<>();
+
+		WildcardFindFile.get()
+			.include("**/*file/a*")
+			.recursive(true)
+			.includeDirs(true)
+			.onFile(foundedFiles::add)
+			.searchPath(dataRoot)
+			.findAll();
+
+		assertEquals(2, foundedFiles.size());
+
+		List<String> names = foundedFiles.stream().map(File::getName).collect(Collectors.toList());
+
+		assertTrue(names.contains("a.png"));
+		assertTrue(names.contains("a.txt"));
 	}
 }
