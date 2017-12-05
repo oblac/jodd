@@ -71,12 +71,12 @@ class ClassLoaderUtilTest {
 
 	@Test
 	void testClassFileName() {
-		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class));
-		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest[].class));
-		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassLoaderUtil.getClassFileName(Boo.class));
+		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassUtil.convertClassNameToFileName(ClassLoaderUtilTest.class));
+		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassUtil.convertClassNameToFileName(ClassLoaderUtilTest[].class));
+		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassUtil.convertClassNameToFileName(Boo.class));
 
-		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class.getName()));
-		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassLoaderUtil.getClassFileName(Boo.class.getName()));
+		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassUtil.convertClassNameToFileName(ClassLoaderUtilTest.class.getName()));
+		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassUtil.convertClassNameToFileName(Boo.class.getName()));
 	}
 
 	public static class Boo {
@@ -163,7 +163,7 @@ class ClassLoaderUtilTest {
 
 		ClassScanner classScanner = new ClassScanner() {
 			@Override
-			protected void onEntry(EntryData entryData) throws Exception {
+			protected void onEntry(EntryData entryData) {
 				if (entryData.getName().endsWith("jquery.js")) {
 					jqueryName.set(entryData.getName());
 				}
