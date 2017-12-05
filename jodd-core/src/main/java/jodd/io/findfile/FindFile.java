@@ -27,14 +27,13 @@ package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
+import jodd.util.Consumers;
 import jodd.util.InExRules;
 import jodd.util.MultiComparator;
-import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
 import jodd.util.collection.JoddArrayList;
 
 import java.io.File;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 /**
  * Generic iterative file finder. Searches all files on specified search path.
@@ -155,6 +155,20 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- consumer
+
+	private Consumers<File> consumers;
+
+	public FindFile with(Consumer<File> fileConsumer) {
+		if (consumers == null) {
+			consumers = Consumers.of(fileConsumer);
+		}
+		else {
+			consumers.add(fileConsumer);
+		}
+		return this;
+	}
+
 	// ---------------------------------------------------------------- search path
 
 	/**
@@ -196,7 +210,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies search paths.
 	 * @see #searchPath(String) 
 	 */
-	public FindFile searchPath(String... searchPaths) {
+	public FindFile searchPaths(String... searchPaths) {
 		for (String searchPath : searchPaths) {
 			searchPath(searchPath);
 		}
@@ -222,7 +236,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPath(URI... searchPath) {
+	public FindFile searchPaths(URI... searchPath) {
 		for (URI uri : searchPath) {
 			searchPath(uri);
 		}
@@ -244,7 +258,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPath(URL... searchPath) {
+	public FindFile searchPaths(URL... searchPath) {
 		for (URL url : searchPath) {
 			searchPath(url);
 		}
@@ -446,7 +460,13 @@ public class FindFile implements Iterable<File> {
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		return rules.match(matchingFilePath);
+		if (rules.match(matchingFilePath)) {
+			if (consumers != null) {
+				consumers.accept(file);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -769,103 +789,4 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- comparators
-
-	public static class FolderFirstComparator implements Comparator<File>, Serializable {
-		protected final int order;
-
-		public FolderFirstComparator(boolean foldersFirst) {
-			if (foldersFirst) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		@Override
-		public int compare(File file1, File file2) {
-			if (file1.isFile() && file2.isDirectory()) {
-				return order;
-			}
-			if (file1.isDirectory() && file2.isFile()) {
-				return -order;
-			}
-			return 0;
-		}
-	}
-
-	public static class FileNameComparator implements Comparator<File>, Serializable {
-		protected final int order;
-		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true, true);
-
-		public FileNameComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		@Override
-		public int compare(File file1, File file2) {
-			int result = naturalOrderComparator.compare(file1.getName(), file2.getName());
-			if (result == 0) {
-				return result;
-			}
-			if (result > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
-
-	public static class FileExtensionComparator implements Comparator<File>, Serializable {
-		protected final int order;
-
-		public FileExtensionComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		@Override
-		public int compare(File file1, File file2) {
-			String ext1 = FileNameUtil.getExtension(file1.getName());
-			String ext2 = FileNameUtil.getExtension(file2.getName());
-			long diff = ext1.compareToIgnoreCase(ext2);
-			if (diff == 0) {
-				return 0;
-			}
-			if (diff > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
-
-	public static class FileLastModifiedTimeComparator implements Comparator<File>, Serializable {
-		protected final int order;
-
-		public FileLastModifiedTimeComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		@Override
-		public int compare(File file1, File file2) {
-			long diff = file1.lastModified() - file2.lastModified();
-			if (diff == 0) {
-				return 0;
-			}
-			if (diff > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
 }
