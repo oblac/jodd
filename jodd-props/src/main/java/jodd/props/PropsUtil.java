@@ -26,6 +26,7 @@
 package jodd.props;
 
 import jodd.core.JoddCore;
+import jodd.exception.UncheckedException;
 import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -45,21 +46,21 @@ public class PropsUtil {
 	 * Loads props from classpath.
 	 */
 	public static void loadFromClasspath(final Props p, final String... patterns) {
-		final ClassScanner scanner = new ClassScanner() {
-			@Override
-			protected void onEntry(EntryData entryData) throws IOException {
-				String encoding = JoddCore.get().defaults().getEncoding();
-				if (StringUtil.endsWithIgnoreCase(entryData.getName(), ".properties")) {
-					encoding = StringPool.ISO_8859_1;
+		ClassScanner.get()
+			.onEntry(entryData -> {
+				String usedEncoding = JoddCore.get().defaults().getEncoding();
+				if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
+					usedEncoding = StringPool.ISO_8859_1;
 				}
-				p.load(entryData.openInputStream(), encoding);
-			}
-		};
-		scanner.setIncludeResources(true);
-		scanner.setIgnoreException(true);
-		scanner.setExcludeAllEntries(true);
-		scanner.setIncludedEntries(patterns);
-		scanner.scanDefaultClasspath();
+
+				final String encoding = usedEncoding;
+				UncheckedException.guard(() -> p.load(entryData.openInputStream(), encoding));
+			})
+		.includeResources(true)
+		.ignoreException(true)
+		.excludeAllEntries(true)
+		.includeEntries(patterns)
+		.scanDefaultClasspath();
 	}
 
 	/**
