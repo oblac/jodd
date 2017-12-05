@@ -25,12 +25,13 @@
 
 package jodd.joy;
 
-import jodd.io.findfile.ClassFinder;
+import jodd.io.findfile.ClassScanner;
 import jodd.typeconverter.Converter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * <code>AppScanner</code> defines entries that will be included/excluded in
@@ -38,7 +39,7 @@ import java.util.List;
  * By default, scanning entries includes all classes that belongs
  * to the project and to the Jodd.
  */
-public class JoyScanner extends JoyBase {
+public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 
 	/**
 	 * Scanning entries that will be examined by various
@@ -92,18 +93,20 @@ public class JoyScanner extends JoyBase {
 	 * Petite, DbOom and Madvoc. All scanners by default include all jars,
 	 * but exclude all entries.
 	 */
-	public void applyTo(ClassFinder classFinder) {
+	@Override
+	public void accept(ClassScanner classScanner) {
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
-			classFinder.setExcludeAllEntries(false);
+			classScanner.excludeAllEntries(false);
 		}
 		else {
-			classFinder.setExcludeAllEntries(true);
+			classScanner.excludeAllEntries(true);
 			includedEntries.add("jodd.*");
 		}
 
-		classFinder.setIncludedEntries(includedEntries.toArray(new String[includedEntries.size()]));
-		classFinder.setIncludedJars(includedJars.toArray(new String[includedJars.size()]));
-		classFinder.setIgnoreException(ignoreExceptions);
+		classScanner
+			.includeEntries(includedEntries.toArray(new String[includedEntries.size()]))
+			.includeJars(includedJars.toArray(new String[includedJars.size()]))
+			.ignoreException(ignoreExceptions);
 	}
 
 	@Override
