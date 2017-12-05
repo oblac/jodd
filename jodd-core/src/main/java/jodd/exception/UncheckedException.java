@@ -25,8 +25,11 @@
 
 package jodd.exception;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.util.concurrent.Callable;
 
 /**
  * Unchecked exception and also a wrapper for checked exceptions.
@@ -131,11 +134,43 @@ public class UncheckedException extends RuntimeException {
 	 * Wraps checked exceptions in a <code>UncheckedException</code>.
 	 * Unchecked exceptions are not wrapped.
 	 */
-	public static RuntimeException wrapChecked(Throwable t) {
-		if (t instanceof RuntimeException) {
-			return (RuntimeException) t;
+	public static <V> V guardAndReturn(Callable<V> callable) {
+		try {
+			return callable.call();
 		}
-		return new UncheckedException(t);
+		catch (IOException ioex) {
+			throw new UncheckedIOException(ioex);
+		}
+		catch (RuntimeException rtex) {
+			throw rtex;
+		}
+		catch (Exception t) {
+			throw new UncheckedException(t);
+		}
+	}
+
+	@FunctionalInterface
+	public interface CallableVoid {
+		public void call() throws Exception;
+	}
+
+	/**
+	 * Wraps checked exceptions in a <code>UncheckedException</code>.
+	 * Unchecked exceptions are not wrapped.
+	 */
+	public static void guard(CallableVoid callable) {
+		try {
+			callable.call();
+		}
+		catch (IOException ioex) {
+			throw new UncheckedIOException(ioex);
+		}
+		catch (RuntimeException rtex) {
+			throw rtex;
+		}
+		catch (Exception t) {
+			throw new UncheckedException(t);
+		}
 	}
 
 	/**
@@ -172,5 +207,6 @@ public class UncheckedException extends RuntimeException {
 	public Throwable getCause() {
 		return cause;
 	}
+
 
 }
