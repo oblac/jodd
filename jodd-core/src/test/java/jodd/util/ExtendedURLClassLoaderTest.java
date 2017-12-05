@@ -29,6 +29,7 @@ import jodd.core.JavaBridge;
 import jodd.io.FileUtil;
 import jodd.util.cl.ExtendedURLClassLoader;
 import jodd.util.fixtures.testdata.A;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -69,6 +70,8 @@ class ExtendedURLClassLoaderTest {
 
 	@Test
 	void testParentFirst() throws ClassNotFoundException {
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8);
+
 		ClassLoader parentCL = A.class.getClassLoader();
 
 		URL[] urls = JavaBridge.getURLs(parentCL);
@@ -96,6 +99,8 @@ class ExtendedURLClassLoaderTest {
 
 	@Test
 	void testParentLast() throws ClassNotFoundException {
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8);
+
 		ClassLoader parentCL = A.class.getClassLoader();
 		URL[] urls = JavaBridge.getURLs(parentCL);
 

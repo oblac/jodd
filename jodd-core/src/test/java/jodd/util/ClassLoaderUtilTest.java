@@ -31,6 +31,7 @@ import jodd.mutable.Value;
 import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -84,6 +85,7 @@ class ClassLoaderUtilTest {
 
 	@Test
 	void testLoadClass() throws Exception {
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8);
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {
