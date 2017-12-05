@@ -44,6 +44,9 @@ import static javax.servlet.DispatcherType.REQUEST;
  */
 public class JoyContextListener implements ServletContextListener {
 
+	protected boolean decoraEnabled = false;
+	protected String context = "/*";
+
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext servletContext = sce.getServletContext();
@@ -63,13 +66,18 @@ public class JoyContextListener implements ServletContextListener {
 	}
 
 	/**
-	 * Configuration of servlet context.
+	 * Configures servlet context.
 	 */
 	protected void configureServletContext(ServletContext servletContext) {
 		servletContext.addListener(jodd.servlet.RequestContextListener.class);
 
+		if (decoraEnabled) {
+			FilterRegistration filter = servletContext.addFilter("decora", jodd.decora.DecoraServletFilter.class);
+			filter.addMappingForUrlPatterns(null, true, context);
+		}
+
 		FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
-		filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, FORWARD, INCLUDE), true, "/*");
+		filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, FORWARD, INCLUDE), true, context);
 	}
 
 	@Override

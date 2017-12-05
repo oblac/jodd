@@ -97,6 +97,7 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	public void accept(ClassScanner classScanner) {
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
 			classScanner.excludeAllEntries(false);
+			classScanner.excludeEntries("ch.qos.logback.*");
 		}
 		else {
 			classScanner.excludeAllEntries(true);
