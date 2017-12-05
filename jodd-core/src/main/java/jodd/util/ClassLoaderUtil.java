@@ -298,7 +298,7 @@ public class ClassLoaderUtil {
 		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
-			URL[] urls = Java.getURLs(classLoader);
+			URL[] urls = JavaBridge.getURLs(classLoader);
 			if (urls != null) {
 				for (URL u : urls) {
 					File f = FileUtil.toFile(u);

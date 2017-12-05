@@ -70,7 +70,7 @@ class ExtendedURLClassLoaderTest {
 	void testParentFirst() throws ClassNotFoundException {
 		ClassLoader parentCL = A.class.getClassLoader();
 
-		URL[] urls = Java.getURLs(parentCL);
+		URL[] urls = JavaBridge.getURLs(parentCL);
 
 		// parent-first
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, true);
@@ -96,7 +96,7 @@ class ExtendedURLClassLoaderTest {
 	@Test
 	void testParentLast() throws ClassNotFoundException {
 		ClassLoader parentCL = A.class.getClassLoader();
-		URL[] urls = Java.getURLs(parentCL);
+		URL[] urls = JavaBridge.getURLs(parentCL);
 
 		// parent-last
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, false);
