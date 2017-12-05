@@ -159,7 +159,10 @@ public class FindFile implements Iterable<File> {
 
 	private Consumers<File> consumers;
 
-	public FindFile with(Consumer<File> fileConsumer) {
+	/**
+	 * Registers file consumer
+	 */
+	public FindFile onFile(Consumer<File> fileConsumer) {
 		if (consumers == null) {
 			consumers = Consumers.of(fileConsumer);
 		}
