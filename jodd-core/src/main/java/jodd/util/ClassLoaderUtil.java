@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.core.JavaBridge;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.cl.ClassLoaderStrategy;
@@ -291,7 +292,7 @@ public class ClassLoaderUtil {
 	 * <ul>
 	 * <li>file URLs from <code>URLClassLoader</code> (other URL protocols are ignored)</li>
 	 * <li>inner entries from containing <b>manifest</b> files (if exist)</li>
-	 * <li>bootstrap classpath</li>
+	 * <li>bootstrap classpath is ignored</li>
 	 * </ul>
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
@@ -316,25 +317,6 @@ public class ClassLoaderUtil {
 				}
 			}
 			classLoader = classLoader.getParent();
-		}
-
-		String bootstrap = SystemUtil.getSunBootClassPath();
-		if (bootstrap != null) {
-			String[] bootstrapFiles = StringUtil.splitc(bootstrap, File.pathSeparatorChar);
-			for (String bootstrapFile: bootstrapFiles) {
-				File f = new File(bootstrapFile);
-				if (f.exists()) {
-					try {
-						f = f.getCanonicalFile();
-
-						boolean newElement = classpaths.add(f);
-						if (newElement) {
-							addInnerClasspathItems(classpaths, f);
-						}
-					} catch (IOException ignore) {
-					}
-				}
-			}
 		}
 
 		File[] result = new File[classpaths.size()];

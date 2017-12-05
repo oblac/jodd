@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,7 +34,7 @@ import java.net.URLClassLoader;
  */
 public class JavaBridge {
 
-	public static String RESOURCE = JavaBridge.class.getName().replace('.', '/') + ".class";
+	private static final String RESOURCE = JavaBridge.class.getName().replace('.', '/') + ".class";
 
 	/**
 	 * Returns urls for the classloader
@@ -48,10 +48,20 @@ public class JavaBridge {
 			return urlClassLoader.getURLs();
 		}
 
-		URL url = classLoader.getResource(RESOURCE);
+		URL url = currentModuleURL();
 
 		if (url == null) {
 			return new URL[0];
+		}
+
+		return new URL[] {url};
+	}
+
+	private static URL currentModuleURL() {
+		URL url = JavaBridge.class.getClassLoader().getResource(RESOURCE);
+
+		if (url == null) {
+			return null;
 		}
 
 		// use root
@@ -60,12 +70,10 @@ public class JavaBridge {
 		urlString = urlString.substring(0, ndx) + urlString.substring(ndx + RESOURCE.length());
 
 		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e) {
-			return new URL[0];
+			return new URL(urlString);
+		} catch (MalformedURLException ignore) {
+			return null;
 		}
-
-		return new URL[] {url};
 	}
 
 }

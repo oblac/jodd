@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.core.JavaBridge;
 import jodd.io.FileUtil;
 import jodd.util.cl.ExtendedURLClassLoader;
 import jodd.util.fixtures.testdata.A;
