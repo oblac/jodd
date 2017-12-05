@@ -164,13 +164,13 @@ class ClassLoaderUtilTest {
 		ClassScanner classScanner = new ClassScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) {
-				if (entryData.getName().endsWith("jquery.js")) {
-					jqueryName.set(entryData.getName());
+				if (entryData.name().endsWith("jquery.js")) {
+					jqueryName.set(entryData.name());
 				}
 			}
 		};
 
-		classScanner.setIncludeResources(true);
+		classScanner.includeResources(true);
 		classScanner.scan(containerFile);
 
 		assertNotNull(url);
