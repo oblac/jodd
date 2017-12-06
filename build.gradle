@@ -313,8 +313,8 @@ configure(javaModules()) {
 			applyTo testUnit
 			applyTo testIntegration
 		}
-		testUnit.extensions.getByName("jacoco").excludes        = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*']
-		testIntegration.extensions.getByName("jacoco").excludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*']
+		testUnit.extensions.getByName("jacoco").excludes        = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*', '*.JavaBridge']
+		testIntegration.extensions.getByName("jacoco").excludes = ['*Test*', '*.?', '*Foo*', 'jodd.asm6.*', '*.fixtures.*', '*.JavaBridge']
 	}
 	jacocoTestReport {
 		reports {
@@ -328,7 +328,9 @@ configure(javaModules()) {
 		description 'Generates code coverage reports for a single module'
 
 		executionData fileTree("${buildDir}/jacoco/").include("*.exec")
-		sourceSets sourceSets.main
+		//sourceSets sourceSets.main
+		sourceDirectories = sourceSets.main.java
+		classDirectories = sourceSets.main.output.classesDirs
 
 		reports {
 			html.enabled true
