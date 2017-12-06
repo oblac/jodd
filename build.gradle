@@ -463,7 +463,9 @@ task codeCoverageReport(type: JacocoReport) {
 	jacocoClasspath
 
 	javaModules().each {
-		sourceSets it.sourceSets.main
+		//sourceSets it.sourceSets.main
+		sourceDirectories = it.sourceSets.main.java
+		classDirectories = it.sourceSets.main.output.classesDirs
 	}
 
 	reports {
