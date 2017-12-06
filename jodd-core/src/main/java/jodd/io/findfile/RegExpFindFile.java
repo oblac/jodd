@@ -35,19 +35,22 @@ import java.util.regex.Pattern;
  */
 public class RegExpFindFile extends FindFile {
 
+	public static RegExpFindFile get() {
+		return new RegExpFindFile();
+	}
+
 	@Override
-	protected InExRules createRulesEngine() {
-		return new InExRules<String, Object>() {
+	protected InExRules<String, String, Pattern> createRulesEngine() {
+		return new InExRules<String, String, Pattern>() {
 
 			@Override
-			protected void addRule(Object rule, boolean include) {
-				Pattern pattern = Pattern.compile((String) rule);
-				super.addRule(pattern, include);
+			protected Pattern makeRule(String rule) {
+				return Pattern.compile(rule);
 			}
 
 			@Override
-			public boolean accept(String path, Object pattern, boolean include) {
-				return ((Pattern) pattern).matcher(path).matches();
+			public boolean accept(String path, Pattern pattern, boolean include) {
+				return pattern.matcher(path).matches();
 			}
 		};
 	}

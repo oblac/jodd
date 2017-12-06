@@ -25,7 +25,7 @@
 
 package jodd.petite.config;
 
-import jodd.io.findfile.ClassFinder;
+import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.PetiteContainer;
@@ -34,7 +34,7 @@ import jodd.petite.meta.PetiteBean;
 import jodd.util.ClassLoaderUtil;
 
 import java.io.File;
-import java.io.InputStream;
+import java.util.function.Consumer;
 
 /**
  * Auto-magically configures Petite container by analyzing the classpath.
@@ -43,25 +43,28 @@ import java.io.InputStream;
  * annotation (not by loading the class!). If annotation is founded, class will be loaded and
  * registered as Petite bean.
  */
-public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteConfigurator {
+public class AutomagicPetiteConfigurator implements PetiteConfigurator {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicPetiteConfigurator.class);
-
-	protected final byte[] petiteBeanAnnotationBytes;
+	private final ClassScanner classScanner = new ClassScanner();
+	private PetiteContainer container;
+	private final byte[] petiteBeanAnnotationBytes;
+	protected long elapsed;
 
 	public AutomagicPetiteConfigurator() {
-		petiteBeanAnnotationBytes = getTypeSignatureBytes(PetiteBean.class);
+		petiteBeanAnnotationBytes = ClassScanner.bytecodeSignatureOfType(PetiteBean.class);
 	}
-
-	protected PetiteContainer container;
-
-	protected long elapsed;
 
 	/**
 	 * Return elapsed number of milliseconds for configuration. 
 	 */
-	public long getElapsedTime() {
+	public long elapsedTime() {
 		return elapsed;
+	}
+
+	public AutomagicPetiteConfigurator withScanner(Consumer<ClassScanner> scannerConsumer) {
+		scannerConsumer.accept(classScanner);
+		return this;
 	}
 
 	/**
@@ -71,11 +74,12 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	public void configure(PetiteContainer petiteContainer, File[] classpath) {
 		this.container = petiteContainer;
 
-		rulesEntries.smartMode();
+		classScanner.smartModeEntries();
+		classScanner.onEntry(ENTRY_CONSUMER);
 
 		elapsed = System.currentTimeMillis();
 		try {
-			scanPaths(classpath);
+			classScanner.scan(classpath);
 		} catch (Exception ex) {
 			throw new PetiteException("Scan classpath error", ex);
 		}
@@ -95,32 +99,33 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	/**
 	 * Scans all classes and registers only those annotated with {@link jodd.petite.meta.PetiteBean}.
 	 * Because of performance purposes, classes are not dynamically loaded; instead, their
-	 * file content is examined. 
+	 * file content is examined.
 	 */
-	@Override
-	protected void onEntry(EntryData entryData) {
-		String entryName = entryData.getName();
-		InputStream inputStream = entryData.openInputStream();
-		if (!isTypeSignatureInUse(inputStream, petiteBeanAnnotationBytes)) {
-			return;
-		}
-		Class<?> beanClass;
+	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
+		@Override
+		public void accept(ClassScanner.EntryData entryData) {
+			String entryName = entryData.name();
+			if (!entryData.isTypeSignatureInUse(petiteBeanAnnotationBytes)) {
+				return;
+			}
+			Class<?> beanClass;
 
-		try {
-			beanClass = loadClass(entryName);
-		} catch (ClassNotFoundException cnfex) {
-			throw new PetiteException("Unable to load class: " + cnfex, cnfex);
+			try {
+				beanClass = classScanner.loadClass(entryName);
+			} catch (ClassNotFoundException cnfex) {
+				throw new PetiteException("Unable to load class: " + cnfex, cnfex);
+			}
+
+			if (beanClass == null) {
+				return;
+			}
+
+			PetiteBean petiteBean = beanClass.getAnnotation(PetiteBean.class);
+			if (petiteBean == null) {
+				return;
+			}
+			container.registerPetiteBean(beanClass, null, null, null, false, null);
 		}
 
-		if (beanClass == null) {
-			return;
-		}
-
-		PetiteBean petiteBean = beanClass.getAnnotation(PetiteBean.class);
-		if (petiteBean == null) {
-			return;
-		}
-		container.registerPetiteBean(beanClass, null, null, null, false, null);
-	}
-
+	};
 }

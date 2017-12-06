@@ -28,7 +28,7 @@ package jodd.madvoc.config;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
-import jodd.io.findfile.ClassFinder;
+import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
@@ -47,11 +47,11 @@ import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Default Madvoc configurator uses auto-magic to configure {@link WebApp}.
@@ -62,9 +62,10 @@ import java.util.List;
  * Action class is scanned for the {@link MadvocAction}. All public methods with {@link Action}
  * are registered as Madvoc actions.
  */
-public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocListener.Init, MadvocListener.Start {
+public class AutomagicMadvocConfigurator implements MadvocListener.Init, MadvocListener.Start {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
+	private final ClassScanner classScanner = new ClassScanner();
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -90,14 +91,26 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 	public AutomagicMadvocConfigurator() {
 		actionClassSuffix = "Action";
 		resultClassSuffix = "Result";
-		madvocComponentAnnotation = getTypeSignatureBytes(MadvocComponent.class);
+		madvocComponentAnnotation = ClassScanner.bytecodeSignatureOfType(MadvocComponent.class);
+	}
+
+	public AutomagicMadvocConfigurator withScanner(Consumer<ClassScanner> scannerConsumer) {
+		scannerConsumer.accept(classScanner);
+		return this;
 	}
 
 	@Override
 	public void init() {
 		elapsed = System.currentTimeMillis();
 
-		configureByScanningClassPath(ClassLoaderUtil.getDefaultClasspath());
+		classScanner.smartModeEntries();
+		classScanner.onEntry(ENTRY_CONSUMER);
+
+		try {
+			classScanner.scan(ClassLoaderUtil.getDefaultClasspath());
+		} catch (Exception ex) {
+			throw new MadvocException("Scan classpath error", ex);
+		}
 
 		madvocComponents.forEach(Runnable::run);
 
@@ -114,54 +127,36 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getActionsCount());
 	}
 
-	/**
-	 * Configures web application from specified classpath. The whole process is done in the following steps:
-	 * <ol>
-	 * <li>scanning web application classpath</li>
-	 * <li>invoking external configurations, if exist</li>
-	 * <li>applying defaults</li>
-	 * </ol>
-	 */
-	protected void configureByScanningClassPath(File[] classpath) {
-		rulesEntries.smartMode();
-
-		try {
-			scanPaths(classpath);
-		} catch (Exception ex) {
-			throw new MadvocException("Scan classpath error", ex);
-		}
-	}
-
 
 	/**
 	 * Parses class name that matches madvoc-related names.
 	 */
-	@Override
-	protected void onEntry(EntryData entryData) {
-		String entryName = entryData.getName();
+	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
+		@Override
+		public void accept(ClassScanner.EntryData entryData) {
+			String entryName = entryData.name();
 
-		if (entryName.endsWith(actionClassSuffix)) {
-			try {
-				onActionClass(entryName);
-			} catch (Exception ex) {
-				log.debug("Invalid Madvoc action, ignoring: " + entryName);
+			if (entryName.endsWith(actionClassSuffix)) {
+				try {
+					onActionClass(entryName);
+				} catch (Exception ex) {
+					log.debug("Invalid Madvoc action, ignoring: " + entryName);
+				}
+			} else if (entryName.endsWith(resultClassSuffix)) {
+				try {
+					onResultClass(entryName);
+				} catch (Exception ex) {
+					log.debug("Invalid Madvoc result ignoring: " + entryName);
+				}
+			} else if (entryData.isTypeSignatureInUse(madvocComponentAnnotation)) {
+				try {
+					onMadvocComponentClass(entryName);
+				} catch (Exception ex) {
+					log.debug("Invalid Madvoc component ignoring: {}" + entryName);
+				}
 			}
 		}
-		else if (entryName.endsWith(resultClassSuffix)) {
-			try {
-				onResultClass(entryName);
-			} catch (Exception ex) {
-				log.debug("Invalid Madvoc result ignoring: " + entryName);
-			}
-		}
-		else if (isTypeSignatureInUse(entryData, madvocComponentAnnotation)) {
-			try {
-				onMadvocComponentClass(entryName);
-			} catch (Exception ex) {
-				log.debug("Invalid Madvoc component ignoring: {}" + entryName);
-			}
-		}
-	}
+	};
 
 	// ---------------------------------------------------------------- class check
 
@@ -209,7 +204,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")
 	protected void onActionClass(String className) throws ClassNotFoundException {
-		Class<?> actionClass = loadClass(className);
+		Class<?> actionClass = classScanner.loadClass(className);
 
 		if (actionClass == null) {
 			return;
@@ -253,7 +248,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected void onResultClass(String className) throws ClassNotFoundException {
-		Class resultClass = loadClass(className);
+		Class resultClass = classScanner.loadClass(className);
 
 		if (resultClass == null) {
 			return;
@@ -272,7 +267,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocLi
 	 * Registers new Madvoc component.
 	 */
 	protected void onMadvocComponentClass(String className) throws ClassNotFoundException {
-		Class componentClass = loadClass(className);
+		Class componentClass = classScanner.loadClass(className);
 
 		if (componentClass == null) {
 			return;

@@ -52,7 +52,7 @@ class MixedScope343Test {
 		petiteContainer = new ProxettaAwarePetiteContainer(proxyProxetta, petiteConfig);
 
 		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator();
-		petiteConfigurator.setIncludedEntries(this.getClass().getPackage().getName() + ".*");
+		petiteConfigurator.withScanner(scanner -> scanner.includeEntries(this.getClass().getPackage().getName() + ".*"));
 
 		petiteContainer.configureWith(petiteConfigurator);
 	}

@@ -26,7 +26,6 @@
 package jodd.io;
 
 import jodd.io.findfile.FindFile;
-import jodd.io.findfile.RegExpFindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.mutable.MutableInteger;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,12 +45,18 @@ class FindFileTest {
 	protected String dataRoot;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		if (dataRoot != null) {
 			return;
 		}
 		URL data = FileUtilTest.class.getResource("data");
 		dataRoot = data.getFile();
+	}
+
+	@Test
+	void testUncompleted() {
+		List<File> fileList = FindFile.get().findAll();
+		assertEquals(0, fileList.size());
 	}
 
 	@Test
@@ -149,7 +155,6 @@ class FindFileTest {
 		assertEquals(2, countFiles2.get());
 	}
 
-
 	@Test
 	void testWildcardPath() {
 		FindFile ff = new WildcardFindFile()
@@ -187,7 +192,7 @@ class FindFileTest {
 
 	@Test
 	void testRegexp() {
-		FindFile ff = new RegExpFindFile()
+		FindFile ff = FindFile.regexp()
 				.include(".*/a[.].*")
 				.recursive(true)
 				.includeDirs(true)
@@ -236,6 +241,25 @@ class FindFileTest {
 
 		assertTrue(names.contains("a.png"));
 		assertTrue(names.contains("a.txt"));
+	}
 
+	@Test
+	void testConsumer() {
+		final List<File> foundedFiles = new ArrayList<>();
+
+		WildcardFindFile.get()
+			.include("**/*file/a*")
+			.recursive(true)
+			.includeDirs(true)
+			.onFile(foundedFiles::add)
+			.searchPath(dataRoot)
+			.findAll();
+
+		assertEquals(2, foundedFiles.size());
+
+		List<String> names = foundedFiles.stream().map(File::getName).collect(Collectors.toList());
+
+		assertTrue(names.contains("a.png"));
+		assertTrue(names.contains("a.txt"));
 	}
 }

@@ -51,7 +51,7 @@ public class JsonSerializer {
 	protected Map<Path, TypeJsonSerializer> pathSerializersMap;
 	protected TypeJsonSerializerMap typeSerializersMap;
 
-	protected InExRules<Path, PathQuery> rules = new InExRules<Path, PathQuery>() {
+	protected InExRules<Path, PathQuery, PathQuery> rules = new InExRules<Path, PathQuery, PathQuery>() {
 		@Override
 		public boolean accept(Path value, PathQuery rule, boolean include) {
 			return rule.matches(value);

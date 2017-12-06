@@ -65,7 +65,7 @@ public class JsonAnnotationManager {
 	 * Type information read from annotations.
 	 */
 	public static class TypeData {
-		public final InExRules<String, String> rules;
+		public final InExRules<String, String, String> rules;
 		public final boolean strict;
 
 		public final String[] jsonNames;

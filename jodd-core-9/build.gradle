@@ -1,0 +1,18 @@
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.9
+targetCompatibility = 1.9
+
+dependencies {
+}
+
+// --- wrapper ----------------------------------------------------------------
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3.1'
+}

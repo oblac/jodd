@@ -28,26 +28,27 @@ package jodd.db.oom.config;
 import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.meta.DbTable;
-import jodd.io.findfile.ClassFinder;
+import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.util.ClassLoaderUtil;
 
 import java.io.File;
-import java.io.InputStream;
+import java.util.function.Consumer;
 
 /**
  * Auto-magically scans classpath for domain objects annotated with DbOom annotations.
  */
-public class AutomagicDbOomConfigurator extends ClassFinder {
+public class AutomagicDbOomConfigurator {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicDbOomConfigurator.class);
+	private final ClassScanner classScanner = new ClassScanner();
 
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;
 
 	public AutomagicDbOomConfigurator(boolean registerAsEntities) {
-		dbTableAnnotationBytes = getTypeSignatureBytes(DbTable.class);
+		dbTableAnnotationBytes = ClassScanner.bytecodeSignatureOfType(DbTable.class);
 		this.registerAsEntities = registerAsEntities;
 	}
 	public AutomagicDbOomConfigurator() {
@@ -65,6 +66,11 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		return elapsed;
 	}
 
+	public AutomagicDbOomConfigurator withScanner(Consumer<ClassScanner> scannerConsumer) {
+		scannerConsumer.accept(classScanner);
+		return this;
+	}
+
 	/**
 	 * Configures {@link DbEntityManager} with specified class path.
 	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager)
@@ -72,17 +78,18 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	public void configure(DbEntityManager dbEntityManager, File[] classpath) {
 		this.dbEntityManager = dbEntityManager;
 
-		rulesEntries.smartMode();
+		classScanner.smartModeEntries();
+		classScanner.onEntry(ENTRY_CONSUMER);
 
 		elapsed = System.currentTimeMillis();
 		try {
-			scanPaths(classpath);
+			classScanner.scan(classpath);
 		} catch (Exception ex) {
 			throw new DbOomException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
 		if (log.isInfoEnabled()) {
-			log.info("DbEntityManager configured in " + elapsed + " ms. Total entities: " + dbEntityManager.getTotalNames());
+			log.info("DbEntityManager configured in " + elapsed + "ms. Total entities: " + dbEntityManager.getTotalNames());
 		}
 	}
 
@@ -99,17 +106,17 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	 * Because of performance purposes, classes are not dynamically loaded; instead, their
 	 * file content is examined.
 	 */
+	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
 	@Override
-	protected void onEntry(EntryData entryData) {
-		String entryName = entryData.getName();
-		InputStream inputStream = entryData.openInputStream();
-		if (!isTypeSignatureInUse(inputStream, dbTableAnnotationBytes)) {
+	public void accept(ClassScanner.EntryData entryData) {
+		String entryName = entryData.name();
+		if (!entryData.isTypeSignatureInUse(dbTableAnnotationBytes)) {
 			return;
 		}
 
 		Class<?> beanClass;
 		try {
-			beanClass = loadClass(entryName);
+			beanClass = classScanner.loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
 			throw new DbOomException("Entry class not found: " + entryName, cnfex);
 		}
@@ -127,6 +134,6 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		} else {
 			dbEntityManager.registerType(beanClass);
 		}
-	}
+	}};
 
 }

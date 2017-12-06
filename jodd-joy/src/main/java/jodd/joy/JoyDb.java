@@ -155,7 +155,7 @@ public class JoyDb extends JoyBase {
 	protected void registerDbEntities(DbEntityManager dbEntityManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 
-		scannerSupplier.get().applyTo(dbcfg);
+		dbcfg.withScanner(classScanner -> scannerSupplier.get());
 
 		log.info("*DB Automagic scanning");
 

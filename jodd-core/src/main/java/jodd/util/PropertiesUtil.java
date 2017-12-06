@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.exception.UncheckedException;
 import jodd.io.StreamUtil;
 import jodd.io.findfile.ClassScanner;
 
@@ -33,8 +34,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Misc java.util.Properties utils.
@@ -155,11 +156,8 @@ public class PropertiesUtil {
 	 * Loads properties from string.
 	 */
 	public static void loadFromString(Properties p, String data) throws IOException {
-		ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes(StringPool.ISO_8859_1));
-		try {
+		try (ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes(StringPool.ISO_8859_1))) {
 			p.load(is);
-		} finally {
-			is.close();
 		}
 	}
 
@@ -210,17 +208,13 @@ public class PropertiesUtil {
 	 * Loads properties from classpath file(s). Properties are specified using wildcards.
 	 */
 	public static Properties loadFromClasspath(final Properties p, String... rootTemplate) {
-		ClassScanner scanner = new ClassScanner() {
-			@Override
-			protected void onEntry(EntryData entryData) throws IOException {
-				p.load(entryData.openInputStream());
-			}
-		};
-		scanner.setIncludeResources(true);
-		scanner.setIgnoreException(true);
-		scanner.setExcludeAllEntries(true);
-		scanner.setIncludedEntries(rootTemplate);
-		scanner.scanDefaultClasspath();
+			ClassScanner.get()
+				.onEntry(entryData -> UncheckedException.guard(() -> p.load(entryData.openInputStream())))
+			.includeResources(true)
+			.ignoreException(true)
+			.excludeAllEntries(true)
+			.includeEntries(rootTemplate)
+			.scanDefaultClasspath();
 		return p;
 	}
 
@@ -270,11 +264,7 @@ public class PropertiesUtil {
 		if (value == null) {
 			return null;
 		}
-		value = stp.parse(value, new StringTemplateParser.MacroResolver() {
-			public String resolve(String macroName) {
-				return getProperty(map, macroName);
-			}
-		});
+		value = stp.parse(value, macroName -> getProperty(map, macroName));
 
 		return value;
 	}

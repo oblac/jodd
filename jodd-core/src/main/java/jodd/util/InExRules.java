@@ -50,11 +50,18 @@ import java.util.List;
  * <p>
  * All Jodd classes that filters something uses this class to unify the
  * behavior across the Jodd library.
+ * <p>
+ * About generics: rule engine examine Values (V). Rules are defined as Definitions (D).
+ * They are stored internally as R, that is used with Values.
  */
-public class InExRules<T, R> implements InExRuleMatcher<T, R> {
+public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
+
+	public InExRules<String, String, String> get() {
+		return new InExRules<>();
+	}
 
 	protected List<Rule<R>> rules;
-	protected final InExRuleMatcher<T, R> inExRuleMatcher;
+	protected final InExRuleMatcher<V, R> inExRuleMatcher;
 	protected int includesCount;
 	protected int excludesCount;
 	protected boolean blacklist = true;
@@ -69,7 +76,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	/**
 	 * Creates instance that uses provided matcher.
 	 */
-	public InExRules(InExRuleMatcher<T, R> inExRuleMatcher) {
+	public InExRules(InExRuleMatcher<V, R> inExRuleMatcher) {
 		this.inExRuleMatcher = inExRuleMatcher;
 	}
 
@@ -223,21 +230,21 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	/**
 	 * Adds include rule.
 	 */
-	public void include(R rule) {
+	public void include(D rule) {
 		addRule(rule, true);
 	}
 
 	/**
 	 * Adds exclude rule.
 	 */
-	public void exclude(R rule) {
+	public void exclude(D rule) {
 		addRule(rule, false);
 	}
 
 	/**
 	 * Adds a rule. Duplicates are not allowed and will be ignored.
 	 */
-	protected void addRule(R rule, boolean include) {
+	protected void addRule(D ruleDefinition, boolean include) {
 		if (rules == null) {
 			rules = new ArrayList<>();
 		}
@@ -248,7 +255,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 			excludesCount++;
 		}
 
-		Rule<R> newRule = new Rule<>(rule, include);
+		Rule<R> newRule = new Rule<>(makeRule(ruleDefinition), include);
 
 		if (rules.contains(newRule)) {
 			return;
@@ -257,16 +264,20 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 		rules.add(newRule);
 	}
 
+	protected R makeRule(D rule) {
+		return (R) rule;
+	}
+
 	/**
 	 * Matches value against the set of rules using current white/black list mode.
 	 */
-	public boolean match(T value) {
+	public boolean match(V value) {
 		return match(value, blacklist);
 	}
 	/**
 	 * Matches value against the set of rules using provided white/black list mode.
 	 */
-	public boolean match(T value, boolean blacklist) {
+	public boolean match(V value, boolean blacklist) {
 		if (rules == null) {
 			return blacklist;
 		}
@@ -289,7 +300,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	 * Applies rules on given flag using current black/white list mode.
 	 * @see #apply(Object, boolean, boolean)
 	 */
-	public boolean apply(T value, boolean flag) {
+	public boolean apply(V value, boolean flag) {
 		return apply(value, blacklist, flag);
 	}
 
@@ -299,7 +310,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	 * chain several rules and have the rule engine change the flag
 	 * only when a rule is matched.
 	 */
-	public boolean apply(T value, final boolean blacklist, boolean flag) {
+	public boolean apply(V value, final boolean blacklist, boolean flag) {
 		if (rules == null) {
 			return flag;
 		}
@@ -319,7 +330,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	/**
 	 * Process includes rules.
 	 */
-	protected boolean processIncludes(T value, boolean include) {
+	protected boolean processIncludes(V value, boolean include) {
 		if (includesCount > 0) {
 			if (!include) {
 				for (Rule<R> rule : rules) {
@@ -340,7 +351,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	/**
 	 * Process excludes rules.
 	 */
-	protected boolean processExcludes(T value, boolean include) {
+	protected boolean processExcludes(V value, boolean include) {
 		if (excludesCount > 0) {
 			if (include) {
 				for (Rule<R> rule : rules) {
@@ -362,7 +373,8 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	 * Matches value against single rule. By default performs <code>equals</code> on value
 	 * against the rule.
 	 */
-	public boolean accept(T value, R rule, boolean include) {
+	@Override
+	public boolean accept(V value, R rule, boolean include) {
 		return value.equals(rule);
 	}
 

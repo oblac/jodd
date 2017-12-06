@@ -31,6 +31,7 @@ import jodd.mutable.Value;
 import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -70,12 +71,12 @@ class ClassLoaderUtilTest {
 
 	@Test
 	void testClassFileName() {
-		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class));
-		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest[].class));
-		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassLoaderUtil.getClassFileName(Boo.class));
+		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassUtil.convertClassNameToFileName(ClassLoaderUtilTest.class));
+		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassUtil.convertClassNameToFileName(ClassLoaderUtilTest[].class));
+		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassUtil.convertClassNameToFileName(Boo.class));
 
-		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class.getName()));
-		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassLoaderUtil.getClassFileName(Boo.class.getName()));
+		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassUtil.convertClassNameToFileName(ClassLoaderUtilTest.class.getName()));
+		assertEquals("jodd/util/ClassLoaderUtilTest$Boo.class", ClassUtil.convertClassNameToFileName(Boo.class.getName()));
 	}
 
 	public static class Boo {
@@ -84,6 +85,7 @@ class ClassLoaderUtilTest {
 
 	@Test
 	void testLoadClass() throws Exception {
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8);
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {
@@ -161,14 +163,14 @@ class ClassLoaderUtilTest {
 
 		ClassScanner classScanner = new ClassScanner() {
 			@Override
-			protected void onEntry(EntryData entryData) throws Exception {
-				if (entryData.getName().endsWith("jquery.js")) {
-					jqueryName.set(entryData.getName());
+			protected void onEntry(EntryData entryData) {
+				if (entryData.name().endsWith("jquery.js")) {
+					jqueryName.set(entryData.name());
 				}
 			}
 		};
 
-		classScanner.setIncludeResources(true);
+		classScanner.includeResources(true);
 		classScanner.scan(containerFile);
 
 		assertNotNull(url);

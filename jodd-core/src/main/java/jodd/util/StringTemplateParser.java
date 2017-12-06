@@ -344,6 +344,7 @@ public class StringTemplateParser {
 	/**
 	 * Macro value resolver.
 	 */
+	@FunctionalInterface
 	public interface MacroResolver {
 		/**
 		 * Resolves macro value for macro name founded in

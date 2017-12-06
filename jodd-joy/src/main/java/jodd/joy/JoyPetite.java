@@ -135,7 +135,7 @@ public class JoyPetite extends JoyBase {
 	protected void registerPetiteContainerBeans(PetiteContainer petiteContainer) {
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
 
-		joyScannerSupplier.get().applyTo(pcfg);
+		pcfg.withScanner(classScanner -> joyScannerSupplier.get());
 
 		petiteContainer.configureWith(pcfg);
 	}

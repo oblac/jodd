@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class WireTest {
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		Foo.instanceCounter = 0;
 	}
 
@@ -60,12 +60,15 @@ class WireTest {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
 
-		configurator.setExcludeAllEntries(true);
-		configurator.setIncludedEntries("jodd.petite.fixtures.*");
-		configurator.setExcludedEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses");
-		configurator.setExcludedEntries(
-				"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses", "*Public*", "*Secret*", "*$*",
-			"jodd.petite.proxy.*");
+		configurator.withScanner(classScanner ->
+			classScanner
+				.excludeAllEntries(true)
+				.includeEntries("jodd.petite.fixtures.*")
+				.excludeEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses")
+				.excludeEntries(
+					"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses",
+					"*Public*", "*Secret*", "*$*", "jodd.petite.proxy.*"));
+
 		pc.configureWith(configurator);
 
 		assertEquals(1, pc.beansCount());

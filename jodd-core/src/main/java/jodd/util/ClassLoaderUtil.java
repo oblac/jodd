@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.core.JavaBridge;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.cl.ClassLoaderStrategy;
@@ -34,10 +35,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -53,18 +51,6 @@ import java.util.jar.Manifest;
 public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- default class loader
-
-	/**
-	 * Returns class loader of a class, considering the security manager.
-	 */
-	public static ClassLoader getClassLoader(final Class<?> clazz) {
-		if (System.getSecurityManager() == null) {
-			return clazz.getClassLoader();
-		}
-		else {
-			return AccessController.doPrivileged((PrivilegedAction<ClassLoader>) clazz::getClassLoader);
-		}
-	}
 
 
 	/**
@@ -106,36 +92,6 @@ public class ClassLoaderUtil {
 		}
 	}
 
-	// ---------------------------------------------------------------- add class path
-
-	/**
-	 * Adds additional file or path to classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, ClassLoader)
-	 */
-	public static void addFileToClassPath(File path, ClassLoader classLoader) {
-		try {
-			addUrlToClassPath(FileUtil.toURL(path), classLoader);
-		} catch (MalformedURLException muex) {
-			throw new IllegalArgumentException("Invalid path: " + path, muex);
-		}
-	}
-
-	/**
-	 * Adds the content pointed by the URL to the classpath during runtime.
-	 * Uses reflection since <code>addURL</code> method of
-	 * <code>URLClassLoader</code> is protected.
-	 */
-	public static void addUrlToClassPath(URL url, ClassLoader classLoader) {
-		try {
-			Method addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-			addURLMethod.setAccessible(true);
-			addURLMethod.invoke(classLoader, url);
-		} catch (Exception ex) {
-			throw new IllegalArgumentException("Add URL failed: " + url, ex);
-		}
-	}
-
-
 	// ---------------------------------------------------------------- define class
 
 	/**
@@ -163,60 +119,9 @@ public class ClassLoaderUtil {
 		}
 	}
 
-	// ---------------------------------------------------------------- find class
-
-	/**
-	 * @see #findClass(String, java.net.URL[], ClassLoader)
-	 */
-	public static Class findClass(String className, File[] classPath, ClassLoader parent) {
-		URL[] urls = new URL[classPath.length];
-		for (int i = 0; i < classPath.length; i++) {
-			File file = classPath[i];
-			try {
-				urls[i] = FileUtil.toURL(file);
-			} catch (MalformedURLException ignore) {
-			}
-		}
-		return findClass(className, urls, parent);
-	}
-
-	/**
-	 * Finds and loads class on classpath even if it was already loaded.
-	 * @param className class name to find
-	 * @param classPath classpath
-	 * @param parent optional parent class loader, may be <code>null</code>
-	 */
-	public static Class findClass(String className, URL[] classPath, ClassLoader parent) {
-		URLClassLoader tempClassLoader = parent != null ? new URLClassLoader(classPath, parent) : new URLClassLoader(classPath);
-		try {
-			Method findClassMethod  = URLClassLoader.class.getDeclaredMethod("findClass", String.class);
-			findClassMethod.setAccessible(true);
-			return (Class) findClassMethod.invoke(tempClassLoader, className);
-		} catch (Throwable th) {
-			throw new RuntimeException("Class not found: " + className, th);
-		}
-	}
-
-
 	// ---------------------------------------------------------------- classpath
 
 	private static final String[] MANIFESTS = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
-
-	/**
-	 * Finds <b>tools.jar</b>. Returns <code>null</code> if does not exist.
-	 */
-	public static File findToolsJar() {
-		String javaHome = SystemUtil.javaHome();
-		if (javaHome == null) {
-			return null;
-		}
-		String tools = new File(javaHome).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
-		File toolsFile = new File(tools);
-		if (toolsFile.exists()) {
-			return toolsFile;
-		}
-		return null;
-	}
 
 	/**
 	 * Returns classpath item manifest or <code>null</code> if not found.
@@ -291,14 +196,14 @@ public class ClassLoaderUtil {
 	 * <ul>
 	 * <li>file URLs from <code>URLClassLoader</code> (other URL protocols are ignored)</li>
 	 * <li>inner entries from containing <b>manifest</b> files (if exist)</li>
-	 * <li>bootstrap classpath</li>
+	 * <li>bootstrap classpath is ignored</li>
 	 * </ul>
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
 		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
-			URL[] urls = Java.getURLs(classLoader);
+			URL[] urls = JavaBridge.getURLs(classLoader);
 			if (urls != null) {
 				for (URL u : urls) {
 					File f = FileUtil.toFile(u);
@@ -316,25 +221,6 @@ public class ClassLoaderUtil {
 				}
 			}
 			classLoader = classLoader.getParent();
-		}
-
-		String bootstrap = SystemUtil.getSunBootClassPath();
-		if (bootstrap != null) {
-			String[] bootstrapFiles = StringUtil.splitc(bootstrap, File.pathSeparatorChar);
-			for (String bootstrapFile: bootstrapFiles) {
-				File f = new File(bootstrapFile);
-				if (f.exists()) {
-					try {
-						f = f.getCanonicalFile();
-
-						boolean newElement = classpaths.add(f);
-						if (newElement) {
-							addInnerClasspathItems(classpaths, f);
-						}
-					} catch (IOException ignore) {
-					}
-				}
-			}
 		}
 
 		File[] result = new File[classpaths.size()];
@@ -470,32 +356,6 @@ public class ClassLoaderUtil {
 		return null;
 	}
 
-	// ---------------------------------------------------------------- get resource file
-
-	/**
-	 * Retrieves resource as file.
-	 * @see #getResourceFile(String) 
-	 */
-	public static File getResourceFile(String resourceName) {
-		return getResourceFile(resourceName, null);
-	}
-
-	/**
-	 * Retrieves resource as file. Resource is retrieved as {@link #getResourceUrl(String, ClassLoader) URL},
-	 * than it is converted to URI so it can be used by File constructor.
-	 */
-	public static File getResourceFile(String resourceName, ClassLoader classLoader) {
-		try {
-			URL resourceUrl = getResourceUrl(resourceName, classLoader);
-			if (resourceUrl == null) {
-				return null;
-			}
-			return new File(resourceUrl.toURI());
-		} catch (URISyntaxException ignore) {
-			return null;
-		}
-	}
-
 	// ---------------------------------------------------------------- get resource stream
 
 	/**
@@ -504,14 +364,6 @@ public class ClassLoaderUtil {
 	 */
 	public static InputStream getResourceAsStream(String resourceName) throws IOException {
 		return getResourceAsStream(resourceName, null);
-	}
-
-	/**
-	 * Opens a resource of the specified name for reading.
-	 * @see #getResourceAsStream(String, ClassLoader, boolean)
-	 */
-	public static InputStream getResourceAsStream(String resourceName, boolean useCache) throws IOException {
-		return getResourceAsStream(resourceName, null, useCache);
 	}
 
 	/**
@@ -545,7 +397,7 @@ public class ClassLoaderUtil {
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(Class clazz) throws IOException {
-		return getResourceAsStream(getClassFileName(clazz), clazz.getClassLoader());
+		return getResourceAsStream(ClassUtil.convertClassNameToFileName(clazz), clazz.getClassLoader());
 	}
 
 	/**
@@ -554,14 +406,14 @@ public class ClassLoaderUtil {
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(String className) throws IOException {
-		return getResourceAsStream(getClassFileName(className));
+		return getResourceAsStream(ClassUtil.convertClassNameToFileName(className));
 	}
 
 	/**
 	 * Opens a class of the specified name for reading using provided class loader.
 	 */
 	public static InputStream getClassAsStream(String className, ClassLoader classLoader) throws IOException {
-		return getResourceAsStream(getClassFileName(className), classLoader);
+		return getResourceAsStream(ClassUtil.convertClassNameToFileName(className), classLoader);
 	}
 
 	// ---------------------------------------------------------------- load class
@@ -580,27 +432,6 @@ public class ClassLoaderUtil {
 	 */
 	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
 		return ClassLoaderStrategy.get().loadClass(className, classLoader);
-	}
-
-	// ---------------------------------------------------------------- misc
-
-
-	/**
-	 * Resolves class file name from class name by replacing dot's with '/' separator
-	 * and adding class extension at the end. If array, component type is returned.
-	 */
-	public static String getClassFileName(Class clazz) {
-		if (clazz.isArray()) {
-			clazz = clazz.getComponentType();
-		}
-		return getClassFileName(clazz.getName());
-	}
-
-	/**
-	 * Resolves class file name from class name by replacing dot's with '/' separator.
-	 */
-	public static String getClassFileName(String className) {
-		return className.replace('.', '/') + ".class";
 	}
 
 }

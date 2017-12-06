@@ -25,8 +25,15 @@
 
 package jodd.io.findfile;
 
+import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
+import jodd.util.Consumers;
+import jodd.util.InExRules;
+import jodd.util.MultiComparator;
+import jodd.util.StringUtil;
+import jodd.util.collection.JoddArrayList;
+
 import java.io.File;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,14 +42,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import jodd.io.FileNameUtil;
-import jodd.io.FileUtil;
-import jodd.util.InExRules;
-import jodd.util.MultiComparator;
-import jodd.util.NaturalOrderComparator;
-import jodd.util.StringUtil;
-import jodd.util.collection.JoddArrayList;
+import java.util.function.Consumer;
 
 /**
  * Generic iterative file finder. Searches all files on specified search path.
@@ -55,6 +55,16 @@ import jodd.util.collection.JoddArrayList;
  * @see jodd.util.InExRules
  */
 public class FindFile implements Iterable<File> {
+
+	public static WildcardFindFile wildcard() {
+		return new WildcardFindFile();
+	}
+	public static RegExpFindFile regexp() {
+		return new RegExpFindFile();
+	}
+	public static FindFile get() {
+		return new FindFile();
+	}
 
 	/**
 	 * Match type.
@@ -84,20 +94,12 @@ public class FindFile implements Iterable<File> {
 	protected boolean walking = true;
 	protected Match matchType = Match.FULL_PATH;
 
-	public boolean recursive() {
-		return recursive;
-	}
-
 	/**
 	 * Activates recursive search.
 	 */
 	public FindFile recursive(boolean recursive) {
 		this.recursive = recursive;
 		return this;
-	}
-
-	public boolean includeDirs() {
-		return includeDirs;
 	}
 
 	/**
@@ -108,20 +110,12 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
-	public boolean includeFiles() {
-		return includeFiles;
-	}
-
 	/**
 	 * Include files in search.
 	 */
 	public FindFile includeFiles(boolean includeFiles) {
 		this.includeFiles = includeFiles;
 		return this;
-	}
-
-	public boolean walking() {
-		return walking;
 	}
 
 	/**
@@ -140,15 +134,41 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
-	public Match matchType() {
-		return matchType;
-	}
-
 	/**
 	 * Set {@link Match matching type}.
 	 */
 	public FindFile matchType(Match match) {
 		this.matchType = match;
+		return this;
+	}
+
+	public FindFile matchOnlyFileName() {
+		this.matchType = Match.NAME;
+		return this;
+	}
+	public FindFile matchFullPath() {
+		this.matchType = Match.FULL_PATH;
+		return this;
+	}
+	public FindFile matchRelativePath() {
+		this.matchType = Match.RELATIVE_PATH;
+		return this;
+	}
+
+	// ---------------------------------------------------------------- consumer
+
+	private Consumers<File> consumers;
+
+	/**
+	 * Registers file consumer
+	 */
+	public FindFile onFile(Consumer<File> fileConsumer) {
+		if (consumers == null) {
+			consumers = Consumers.of(fileConsumer);
+		}
+		else {
+			consumers.add(fileConsumer);
+		}
 		return this;
 	}
 
@@ -193,7 +213,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies search paths.
 	 * @see #searchPath(String) 
 	 */
-	public FindFile searchPath(String... searchPaths) {
+	public FindFile searchPaths(String... searchPaths) {
 		for (String searchPath : searchPaths) {
 			searchPath(searchPath);
 		}
@@ -219,7 +239,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPath(URI... searchPath) {
+	public FindFile searchPaths(URI... searchPath) {
 		for (URI uri : searchPath) {
 			searchPath(uri);
 		}
@@ -241,7 +261,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPath(URL... searchPath) {
+	public FindFile searchPaths(URL... searchPath) {
 		for (URL url : searchPath) {
 			searchPath(url);
 		}
@@ -372,12 +392,12 @@ public class FindFile implements Iterable<File> {
 
 	// ---------------------------------------------------------------- matching
 
-	protected final InExRules<String, String> rules = createRulesEngine();
+	protected final InExRules<String, String, ?> rules = createRulesEngine();
 
 	/**
 	 * Creates rule engine.
 	 */
-	protected InExRules<String, String> createRulesEngine() {
+	protected InExRules<String, String, ?> createRulesEngine() {
 		return new InExRules<>();
 	}
 
@@ -443,7 +463,13 @@ public class FindFile implements Iterable<File> {
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		return rules.match(matchingFilePath);
+		if (rules.match(matchingFilePath)) {
+			if (consumers != null) {
+				consumers.accept(file);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -648,16 +674,19 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Returns file walking iterator.
 	 */
+	@Override
 	public Iterator<File> iterator() {
 
 		return new Iterator<File>() {
 			private File nextFile;
 
+			@Override
 			public boolean hasNext() {
 				nextFile = nextFile();
 				return nextFile != null;
 			}
 
+			@Override
 			public File next() {
 				if (nextFile == null) {
 					throw new NoSuchElementException();
@@ -665,6 +694,7 @@ public class FindFile implements Iterable<File> {
 				return nextFile;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -762,99 +792,4 @@ public class FindFile implements Iterable<File> {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- comparators
-
-	public static class FolderFirstComparator implements Comparator<File>, Serializable {
-		protected final int order;
-
-		public FolderFirstComparator(boolean foldersFirst) {
-			if (foldersFirst) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			if (file1.isFile() && file2.isDirectory()) {
-				return order;
-			}
-			if (file1.isDirectory() && file2.isFile()) {
-				return -order;
-			}
-			return 0;
-		}
-	}
-
-	public static class FileNameComparator implements Comparator<File>, Serializable {
-		protected final int order;
-		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true, true);
-
-		public FileNameComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			int result = naturalOrderComparator.compare(file1.getName(), file2.getName());
-			if (result == 0) {
-				return result;
-			}
-			if (result > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
-
-	public static class FileExtensionComparator implements Comparator<File>, Serializable {
-		protected final int order;
-
-		public FileExtensionComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			String ext1 = FileNameUtil.getExtension(file1.getName());
-			String ext2 = FileNameUtil.getExtension(file2.getName());
-			long diff = ext1.compareToIgnoreCase(ext2);
-			if (diff == 0) {
-				return 0;
-			}
-			if (diff > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
-
-	public static class FileLastModifiedTimeComparator implements Comparator<File>, Serializable {
-		protected final int order;
-
-		public FileLastModifiedTimeComparator(boolean ascending) {
-			if (ascending) {
-				order = 1;
-			} else {
-				order = -1;
-			}
-		}
-
-		public int compare(File file1, File file2) {
-			long diff = file1.lastModified() - file2.lastModified();
-			if (diff == 0) {
-				return 0;
-			}
-			if (diff > 0) {
-				return order;
-			}
-			return -order;
-		}
-	}
 }
