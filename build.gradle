@@ -462,11 +462,16 @@ task codeCoverageReport(type: JacocoReport) {
 	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 	jacocoClasspath
 
+	// workaround for making jacoco working on java9
+	FileCollection srcdirs = files()
+	FileCollection classdirs = files()
 	javaModules().each {
 		//sourceSets it.sourceSets.main
-		sourceDirectories = it.sourceSets.main.java
-		classDirectories = it.sourceSets.main.output.classesDirs
+		srcdirs += it.sourceSets.main.java
+		classdirs += it.sourceSets.main.output.classesDirs
 	}
+	sourceDirectories = srcdirs
+	classDirectories = classdirs
 
 	reports {
 		xml.enabled true
