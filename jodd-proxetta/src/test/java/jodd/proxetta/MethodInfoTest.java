@@ -30,7 +30,7 @@ import jodd.proxetta.fixtures.data.Foo;
 import jodd.proxetta.fixtures.data.FooAnn;
 import jodd.proxetta.fixtures.data.FooProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,7 +57,7 @@ class MethodInfoTest {
 
 		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(proxyAspect);
 		proxyProxetta.setClassNameSuffix("$$$Proxetta888");
-		ProxyProxettaBuilder pb = proxyProxetta.builder();
+		ProxyProxettaFactory pb = proxyProxetta.proxy();
 		pb.setTarget(Foo.class);
 		Foo foo = (Foo) pb.newInstance();
 

@@ -56,7 +56,7 @@ import java.util.List;
  * <li> foo. (ending with a dot) - proxy package is set, proxy simple name is create from target simple class name.</li>
  * <li> foo.Foo - full proxy class name is specified.</li>
  * </ul>
- * @see ProxettaBuilder
+ * @see ProxettaFactory
  */
 @SuppressWarnings("unchecked")
 public abstract class Proxetta<T extends Proxetta, A> {
@@ -190,8 +190,8 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	// ---------------------------------------------------------------- builder
 
 	/**
-	 * Creates {@link ProxettaBuilder} with of this Proxetta.
+	 * Creates {@link ProxettaFactory} with of this Proxetta.
 	 */
-	public abstract ProxettaBuilder builder();
+	public abstract ProxettaFactory proxy();
 
 }

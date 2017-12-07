@@ -47,7 +47,7 @@ class AdviceWithMethodTest {
 
 //		proxetta.setDebugFolder("d:\\");
 
-		Foo foo = (Foo) proxetta.builder().setTarget(Foo.class).newInstance();
+		Foo foo = (Foo) proxetta.proxy().setTarget(Foo.class).newInstance();
 
 		Field field = foo.getClass().getDeclaredField("$__methods$0");
 

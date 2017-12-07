@@ -29,7 +29,7 @@ import jodd.proxetta.fixtures.data.ReflectionReplacementAdvice;
 import jodd.proxetta.fixtures.data.Retro;
 import jodd.proxetta.fixtures.data.ReturnNullAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +47,7 @@ class ReturnTest {
 		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(
 				new ProxyAspect(ReflectionReplacementAdvice.class, new AllMethodsPointcut()));
 
-		ProxyProxettaBuilder builder = proxetta.builder().setTarget(Retro.class).setTargetProxyClassName(".Retro2");
+		ProxyProxettaFactory builder = proxetta.proxy().setTarget(Retro.class).setTargetProxyClassName(".Retro2");
 
 //		proxetta.setDebugFolder("d:\\");
 
@@ -86,7 +86,7 @@ class ReturnTest {
 		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(
 				new ProxyAspect(ReturnNullAdvice.class, new AllMethodsPointcut()));
 
-		ProxyProxettaBuilder builder = proxetta.builder().setTarget(Retro.class).setTargetProxyClassName(".Retro3");
+		ProxyProxettaFactory builder = proxetta.proxy().setTarget(Retro.class).setTargetProxyClassName(".Retro3");
 
 //		proxetta.setDebugFolder("d:\\");
 

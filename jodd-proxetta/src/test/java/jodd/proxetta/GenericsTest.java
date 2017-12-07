@@ -27,9 +27,9 @@ package jodd.proxetta;
 
 import jodd.proxetta.advice.DelegateAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
+import jodd.proxetta.impl.WrapperProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +63,7 @@ class GenericsTest {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
 			WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspects(aspect);
-			WrapperProxettaBuilder builder = proxetta.builder().setTarget(Foo.class).setTargetInterface(IFoo.class);
+			WrapperProxettaFactory builder = proxetta.proxy().setTarget(Foo.class).setTargetInterface(IFoo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {
@@ -76,7 +76,7 @@ class GenericsTest {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
 			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
-			ProxyProxettaBuilder builder = proxetta.builder().setTarget(Foo.class);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(Foo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {

@@ -58,7 +58,7 @@ public class DelegateAdviceUtil {
 		if (adviceClass == null) {
 			// advice not yet created
 
-			adviceClass = PROXY_PROXETTA.builder().setTarget(targetClass).define();
+			adviceClass = PROXY_PROXETTA.proxy().setTarget(targetClass).define();
 
 			advicesMap.put(targetClass, adviceClass);
 		}

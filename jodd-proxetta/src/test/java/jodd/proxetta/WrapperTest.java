@@ -32,7 +32,7 @@ import jodd.proxetta.fixtures.data.CalcSuperImpl;
 import jodd.proxetta.fixtures.data.StatCounter;
 import jodd.proxetta.fixtures.data.StatCounterAdvice;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
+import jodd.proxetta.impl.WrapperProxettaFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +61,7 @@ class WrapperTest {
 		// wrapper over CLASS
 		// resulting object has ALL interfaces
 		// resulting object wraps ALL target class methods
-		WrapperProxettaBuilder builder = proxetta.builder().setTarget(calc.getClass());
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(calc.getClass());
 
 		Class calc2Class = builder.define();
 
@@ -102,7 +102,7 @@ class WrapperTest {
 		// wrapper over CLASS casted to interface,
 		// resulting object has ONE interface
 		// ALL target methods are wrapped
-		WrapperProxettaBuilder builder = proxetta.builder().setTarget(calc.getClass()).setTargetInterface(Calc.class).setTargetProxyClassName(".CalcImpl2");
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(calc.getClass()).setTargetInterface(Calc.class).setTargetProxyClassName(".CalcImpl2");
 
 		Class<Calc> calc2Class = builder.define();
 
@@ -134,7 +134,7 @@ class WrapperTest {
 		// wrapper over INTERFACE
 		// resulting object has ONE interface
 		// only interface methods are wrapped
-		WrapperProxettaBuilder builder = proxetta.builder().setTarget(Calc.class).setTargetProxyClassName(".CalcImpl3");
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(Calc.class).setTargetProxyClassName(".CalcImpl3");
 
 		Class<Calc> calc2Class = builder.define();
 
@@ -170,7 +170,7 @@ class WrapperTest {
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder().setTarget(CalcSuper.class);
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(CalcSuper.class);
 
 		Class<CalcSuper> calc2Class = builder.define();
 
@@ -208,7 +208,7 @@ class WrapperTest {
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder().setTarget(CalcSuper.class).setTargetProxyClassName(".CalcSuper22");
+		WrapperProxettaFactory builder = proxetta.proxy().setTarget(CalcSuper.class).setTargetProxyClassName(".CalcSuper22");
 
 		Class<CalcSuper> calc2Class = builder.define();
 

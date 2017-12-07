@@ -46,16 +46,16 @@ import java.io.InputStream;
  * configuration, <code>ProxettaBuilder</code> deals with the
  * actually building proxies and wrappers over provided target.
  */
-public abstract class ProxettaBuilder<T extends ProxettaBuilder, P extends Proxetta> {
+public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxetta> {
 
-	Logger log = LoggerFactory.getLogger(ProxettaBuilder.class);
+	Logger log = LoggerFactory.getLogger(ProxettaFactory.class);
 
 	protected final P proxetta;
 
 	/**
 	 * Creates new builder.
 	 */
-	protected ProxettaBuilder(P proxetta) {
+	protected ProxettaFactory(P proxetta) {
 		this.proxetta = proxetta;
 	}
 

@@ -134,7 +134,7 @@ class BigClassTest {
 			return !mi.isRootMethod();
 		});
 
-		byte[] classBytes = Proxetta.proxyProxetta().withAspect(aspect).builder().setTarget(BigFatJoe.class).create();
+		byte[] classBytes = Proxetta.proxyProxetta().withAspect(aspect).proxy().setTarget(BigFatJoe.class).create();
 //		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
 //		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
 //		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);

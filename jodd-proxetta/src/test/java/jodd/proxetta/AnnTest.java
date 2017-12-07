@@ -30,7 +30,7 @@ import jodd.proxetta.fixtures.data.HeroProxyAdvice;
 import jodd.proxetta.fixtures.data.HeroProxyAdvice2;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
+import jodd.proxetta.impl.WrapperProxettaFactory;
 import jodd.proxetta.pointcuts.AllRealMethodsPointcut;
 import org.junit.jupiter.api.Test;
 
@@ -59,10 +59,10 @@ class AnnTest {
 				//.setDebugFolder("/Users/igor/")
 				;
 
-		ProxettaBuilder proxettaBuilder = proxetta.builder();
-		proxettaBuilder.setTarget(Hero.class);
+		ProxettaFactory proxettaFactory = proxetta.proxy();
+		proxettaFactory.setTarget(Hero.class);
 		proxetta.setVariableClassName(true);
-		Hero hero = (Hero) proxettaBuilder.newInstance();
+		Hero hero = (Hero) proxettaFactory.newInstance();
 
 		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAYnull", hero.name());
 	}
@@ -85,10 +85,10 @@ class AnnTest {
 				//.setDebugFolder("/Users/igor/")
 				;
 
-		ProxettaBuilder proxettaBuilder = proxetta.builder();
-		proxettaBuilder.setTarget(Hero.class);
+		ProxettaFactory proxettaFactory = proxetta.proxy();
+		proxettaFactory.setTarget(Hero.class);
 		proxetta.setVariableClassName(true);
-		Hero hero = (Hero) proxettaBuilder.newInstance();
+		Hero hero = (Hero) proxettaFactory.newInstance();
 
 		assertEquals("SilverHero89W99.222None1000speeeeedXRAYnull", hero.name());
 	}
@@ -111,7 +111,7 @@ class AnnTest {
 				//.setDebugFolder("/Users/igor/")
 				;
 
-		WrapperProxettaBuilder proxettaBuilder = proxetta.builder();
+		WrapperProxettaFactory proxettaBuilder = proxetta.proxy();
 		proxettaBuilder.setTarget(Hero.class);
 		proxetta.setVariableClassName(true);
 		Object hero = proxettaBuilder.newInstance();
@@ -138,7 +138,7 @@ class AnnTest {
 				//.setDebugFolder("/Users/igor/")
 				;
 
-		WrapperProxettaBuilder proxettaBuilder = proxetta.builder();
+		WrapperProxettaFactory proxettaBuilder = proxetta.proxy();
 		proxettaBuilder.setTarget(Hero.class);
 		proxetta.setVariableClassName(true);
 		Object hero = proxettaBuilder.newInstance();

@@ -27,8 +27,8 @@ package jodd.proxetta.impl;
 
 import jodd.asm6.ClassReader;
 import jodd.proxetta.JoddProxetta;
-import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxettaFactory;
 import jodd.proxetta.ProxettaUtil;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
@@ -38,9 +38,9 @@ import jodd.proxetta.asm.WorkData;
 /**
  * Creates wrapper using ASM library.
  */
-public class WrapperProxettaBuilder extends ProxettaBuilder<WrapperProxettaBuilder, WrapperProxetta> {
+public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFactory, WrapperProxetta> {
 
-	public WrapperProxettaBuilder(WrapperProxetta wrapperProxetta) {
+	public WrapperProxettaFactory(WrapperProxetta wrapperProxetta) {
 		super(wrapperProxetta);
 	}
 
@@ -54,7 +54,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder<WrapperProxettaBuild
 	 * use {@link #setTargetInterface(Class)}.
 	 */
 	@Override
-	public WrapperProxettaBuilder setTarget(Class target) {
+	public WrapperProxettaFactory setTarget(Class target) {
 		super.setTarget(target);
 		this.targetClassOrInterface = target;
 		return this;
@@ -63,7 +63,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder<WrapperProxettaBuild
 	/**
 	 * Defines the interface of the resulting class.
 	 */
-	public WrapperProxettaBuilder setTargetInterface(Class targetInterface) {
+	public WrapperProxettaFactory setTargetInterface(Class targetInterface) {
 		if (!targetInterface.isInterface()) {
 			throw new ProxettaException("Not an interface: " + targetInterface.getName());
 		}
@@ -74,7 +74,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder<WrapperProxettaBuild
 	/**
 	 * Defines custom target field name.
 	 */
-	public WrapperProxettaBuilder setTargetFieldName(String targetFieldName) {
+	public WrapperProxettaFactory setTargetFieldName(String targetFieldName) {
 		this.targetFieldName = targetFieldName;
 		return this;
 	}

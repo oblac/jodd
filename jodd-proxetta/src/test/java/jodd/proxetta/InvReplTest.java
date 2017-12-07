@@ -55,7 +55,7 @@ class InvReplTest {
 		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
-		byte[] klazz = proxetta.builder().setTarget(One.class).create();
+		byte[] klazz = proxetta.proxy().setTarget(One.class).create();
 		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
@@ -94,7 +94,7 @@ class InvReplTest {
 	void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
-			proxetta.builder().setTarget(OneWithSuper.class).define();
+			proxetta.proxy().setTarget(OneWithSuper.class).define();
 			fail("error");
 		} catch (ProxettaException ignore) {
 
@@ -105,7 +105,7 @@ class InvReplTest {
 	void testInterface() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
-			proxetta.builder().setTarget(Inter.class).newInstance();
+			proxetta.proxy().setTarget(Inter.class).newInstance();
 			fail("error");
 		} catch (ProxettaException ignore) {
 		}
@@ -129,7 +129,7 @@ class InvReplTest {
 				}
 				return null;
 			}
-		}).builder().setTarget(TimeClass.class).newInstance();
+		}).proxy().setTarget(TimeClass.class).newInstance();
 
 		long time = timeClass.time();
 
@@ -148,7 +148,7 @@ class InvReplTest {
 			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
 				return InvokeReplacer.NONE;
 			}
-		}).builder().setTarget(Wimp.class).newInstance();
+		}).proxy().setTarget(Wimp.class).newInstance();
 
 		int i = wimp.foo();
 		assertEquals(0, i);

@@ -39,8 +39,8 @@ public class InvokeProxetta extends Proxetta<InvokeProxetta, InvokeAspect> {
 	}
 
 	@Override
-	public InvokeProxettaBuilder builder() {
-		return new InvokeProxettaBuilder(this);
+	public InvokeProxettaFactory proxy() {
+		return new InvokeProxettaFactory(this);
 	}
 
 }

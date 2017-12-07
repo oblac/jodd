@@ -42,7 +42,7 @@ class AbstractsTest {
 	void testAbstract1() {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
-		Abstra aaa = (Abstra) Proxetta.proxyProxetta().withAspect(proxyAspect).builder().setTarget(Abstra.class).newInstance();
+		Abstra aaa = (Abstra) Proxetta.proxyProxetta().withAspect(proxyAspect).proxy().setTarget(Abstra.class).newInstance();
 		assertNotNull(aaa);
 		aaa.foo();
 	}
@@ -52,7 +52,7 @@ class AbstractsTest {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
 		try {
-			Proxetta.proxyProxetta().withAspect(proxyAspect).builder().setTarget(Abstra2.class).newInstance();
+			Proxetta.proxyProxetta().withAspect(proxyAspect).proxy().setTarget(Abstra2.class).newInstance();
 			fail("error");
 		} catch (ProxettaException ignore) {
 		}
@@ -63,7 +63,7 @@ class AbstractsTest {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
 		try {
-			Proxetta.proxyProxetta().withAspects(proxyAspect).builder().setTarget(Inter.class).newInstance();
+			Proxetta.proxyProxetta().withAspects(proxyAspect).proxy().setTarget(Inter.class).newInstance();
 			fail("error");
 		} catch (ProxettaException ignore) {
 		}
@@ -74,7 +74,7 @@ class AbstractsTest {
 		ProxyAspect proxyAspect = new ProxyAspect(InvalidAdvice.class, methodInfo -> true);
 
 		try {
-			Proxetta.proxyProxetta().withAspect(proxyAspect).builder().setTarget(Foo.class).newInstance();
+			Proxetta.proxyProxetta().withAspect(proxyAspect).proxy().setTarget(Foo.class).newInstance();
 			fail("error");
 		} catch (ProxettaException ignore) {
 			System.out.println(ignore);

@@ -28,7 +28,7 @@ package jodd.methref;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
 /**
@@ -52,7 +52,7 @@ public class MethrefProxetta {
 	 * Generates new class.
 	 */
 	public Class defineProxy(Class target) {
-		ProxyProxettaBuilder builder = proxetta.builder();
+		ProxyProxettaFactory builder = proxetta.proxy();
 		builder.setTarget(target);
 		return builder.define();
 	}

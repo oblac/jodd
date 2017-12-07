@@ -30,7 +30,7 @@ import jodd.petite.PetiteContainer;
 import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 
 import java.util.function.Consumer;
 
@@ -68,7 +68,7 @@ public class PetiteProxettaContainer extends PetiteContainer {
     @Override
     protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> consumer) {
         if (proxetta != null) {
-            ProxyProxettaBuilder builder = proxetta.builder();
+            ProxyProxettaFactory builder = proxetta.proxy();
 
             builder.setTarget(type);
 

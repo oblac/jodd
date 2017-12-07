@@ -26,35 +26,35 @@
 package jodd.proxetta.impl;
 
 import jodd.asm6.ClassReader;
-import jodd.proxetta.ProxettaBuilder;
-import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.asm.ProxettaClassBuilder;
+import jodd.proxetta.InvokeAspect;
+import jodd.proxetta.ProxettaFactory;
+import jodd.proxetta.asm.InvokeClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 
 import java.io.InputStream;
 
 /**
- * Creates the proxy subclass using ASM library.
+ * Invocation replacer class processor.
  */
-public class ProxyProxettaBuilder extends ProxettaBuilder<ProxyProxettaBuilder, ProxyProxetta> {
+public class InvokeProxettaFactory extends ProxettaFactory<InvokeProxettaFactory, InvokeProxetta> {
 
-	public ProxyProxettaBuilder(ProxyProxetta proxyProxetta) {
-		super(proxyProxetta);
+	public InvokeProxettaFactory(InvokeProxetta invokeProxetta) {
+		super(invokeProxetta);
 	}
 
 	@Override
-	public ProxyProxettaBuilder setTarget(InputStream target) {
+	public InvokeProxettaFactory setTarget(InputStream target) {
 		return super.setTarget(target);
 	}
 
 	@Override
-	public ProxyProxettaBuilder setTarget(String targetName) {
+	public InvokeProxettaFactory setTarget(String targetName) {
 		return super.setTarget(targetName);
 	}
 
 	@Override
-	public ProxyProxettaBuilder setTarget(Class target) {
+	public InvokeProxettaFactory setTarget(Class target) {
 		return super.setTarget(target);
 	}
 
@@ -64,16 +64,16 @@ public class ProxyProxettaBuilder extends ProxettaBuilder<ProxyProxettaBuilder, 
 	@Override
 	protected WorkData process(ClassReader cr, TargetClassInfoReader targetClassInfoReader) {
 
-		ProxettaClassBuilder pcb = new ProxettaClassBuilder(
+		InvokeClassBuilder icb = new InvokeClassBuilder(
 				destClassWriter,
-				proxetta.getAspects(new ProxyAspect[0]),
+				proxetta.getAspects(new InvokeAspect[0]),
 				resolveClassNameSuffix(),
 				requestedProxyClassName,
 				targetClassInfoReader);
 
-		cr.accept(pcb, 0);
+		cr.accept(icb, 0);
 
-		return pcb.getWorkData();
+		return icb.getWorkData();
 	}
 
 }

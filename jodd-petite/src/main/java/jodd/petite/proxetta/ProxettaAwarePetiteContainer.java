@@ -32,7 +32,7 @@ import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 
 import java.util.function.Consumer;
 
@@ -60,7 +60,7 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 		if (proxetta != null) {
 			Class originalType = type;
 
-			ProxyProxettaBuilder builder = proxetta.builder();
+			ProxyProxettaFactory builder = proxetta.proxy();
 
 			builder.setTarget(type);
 

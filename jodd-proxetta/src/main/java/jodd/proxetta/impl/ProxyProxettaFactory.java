@@ -26,35 +26,35 @@
 package jodd.proxetta.impl;
 
 import jodd.asm6.ClassReader;
-import jodd.proxetta.InvokeAspect;
-import jodd.proxetta.ProxettaBuilder;
-import jodd.proxetta.asm.InvokeClassBuilder;
+import jodd.proxetta.ProxettaFactory;
+import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.asm.ProxettaClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 
 import java.io.InputStream;
 
 /**
- * Invocation replacer class processor.
+ * Creates the proxy subclass using ASM library.
  */
-public class InvokeProxettaBuilder extends ProxettaBuilder<InvokeProxettaBuilder, InvokeProxetta> {
+public class ProxyProxettaFactory extends ProxettaFactory<ProxyProxettaFactory, ProxyProxetta> {
 
-	public InvokeProxettaBuilder(InvokeProxetta invokeProxetta) {
-		super(invokeProxetta);
+	public ProxyProxettaFactory(ProxyProxetta proxyProxetta) {
+		super(proxyProxetta);
 	}
 
 	@Override
-	public InvokeProxettaBuilder setTarget(InputStream target) {
+	public ProxyProxettaFactory setTarget(InputStream target) {
 		return super.setTarget(target);
 	}
 
 	@Override
-	public InvokeProxettaBuilder setTarget(String targetName) {
+	public ProxyProxettaFactory setTarget(String targetName) {
 		return super.setTarget(targetName);
 	}
 
 	@Override
-	public InvokeProxettaBuilder setTarget(Class target) {
+	public ProxyProxettaFactory setTarget(Class target) {
 		return super.setTarget(target);
 	}
 
@@ -64,16 +64,16 @@ public class InvokeProxettaBuilder extends ProxettaBuilder<InvokeProxettaBuilder
 	@Override
 	protected WorkData process(ClassReader cr, TargetClassInfoReader targetClassInfoReader) {
 
-		InvokeClassBuilder icb = new InvokeClassBuilder(
+		ProxettaClassBuilder pcb = new ProxettaClassBuilder(
 				destClassWriter,
-				proxetta.getAspects(new InvokeAspect[0]),
+				proxetta.getAspects(new ProxyAspect[0]),
 				resolveClassNameSuffix(),
 				requestedProxyClassName,
 				targetClassInfoReader);
 
-		cr.accept(icb, 0);
+		cr.accept(pcb, 0);
 
-		return icb.getWorkData();
+		return pcb.getWorkData();
 	}
 
 }

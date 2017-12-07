@@ -30,7 +30,7 @@ import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaAsmUtil;
 import jodd.proxetta.impl.WrapperProxetta;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
+import jodd.proxetta.impl.WrapperProxettaFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -40,7 +40,7 @@ public abstract class BaseLoggableFactory<T> {
 	// ---------------------------------------------------------------- wrap
 
 	protected Class<T> wrappedStatement;
-	protected WrapperProxettaBuilder builder;
+	protected WrapperProxettaFactory builder;
 	protected Field sqlTemplateField;
 	protected Method getQueryStringMethod;
 	protected final WrapperProxetta proxetta;
@@ -73,7 +73,7 @@ public abstract class BaseLoggableFactory<T> {
 	@SuppressWarnings("unchecked")
 	protected T wrap(T preparedStatement, String sql) {
 		if (wrappedStatement == null) {
-			builder = proxetta.builder();
+			builder = proxetta.proxy();
 
 			// use just interface
 			builder.setTarget(targetClass);

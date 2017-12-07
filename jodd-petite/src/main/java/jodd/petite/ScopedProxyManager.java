@@ -32,7 +32,7 @@ import jodd.petite.scope.Scope;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaBuilder;
+import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
@@ -150,7 +150,7 @@ public class ScopedProxyManager {
 				proxetta.setClassNameSuffix("$ScopedProxy");
 				proxetta.setVariableClassName(true);
 
-				ProxyProxettaBuilder builder = proxetta.builder().setTarget(pbd.originalTarget);
+				ProxyProxettaFactory builder = proxetta.proxy().setTarget(pbd.originalTarget);
 
 				proxyClass = builder.define();
 
@@ -162,7 +162,7 @@ public class ScopedProxyManager {
 				proxetta.setClassNameSuffix("$ScopedProxy");
 				proxetta.setVariableClassName(true);
 
-				ProxyProxettaBuilder builder = proxetta.builder().setTarget(beanType);
+				ProxyProxettaFactory builder = proxetta.proxy().setTarget(beanType);
 
 				proxyClass = builder.define();
 

@@ -41,7 +41,7 @@ class ProxyInfoTest {
 		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspects());
 		//proxetta.setDebugFolder(SystemUtil.userHome());
 
-		DateDao dateDateProxy = (DateDao) proxetta.builder().setTarget(DateDao.class).newInstance();
+		DateDao dateDateProxy = (DateDao) proxetta.proxy().setTarget(DateDao.class).newInstance();
 
 		JDateTime jDateTime = dateDateProxy.currentTime();
 

@@ -78,7 +78,7 @@ class MethrefTest {
 
 		ProxyAspect a1 = new ProxyAspect(DummyAdvice.class, new AllTopMethodsPointcut());
 		ProxyProxetta pp = Proxetta.proxyProxetta().withAspect(a1);
-		Oink oink = (Oink) pp.builder().setTarget(Oink.class).newInstance();
+		Oink oink = (Oink) pp.proxy().setTarget(Oink.class).newInstance();
 
 		assertFalse(oink.getClass().equals(Oink.class));
 

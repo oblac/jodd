@@ -39,8 +39,8 @@ public class WrapperProxetta extends Proxetta<WrapperProxetta, ProxyAspect> {
 	}
 
 	@Override
-	public WrapperProxettaBuilder builder() {
-		return new WrapperProxettaBuilder(this);
+	public WrapperProxettaFactory proxy() {
+		return new WrapperProxettaFactory(this);
 	}
 
 }

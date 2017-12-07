@@ -25,6 +25,8 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.impl.WrapperProxettaFactory;
+
 import java.lang.reflect.Field;
 
 /**
@@ -53,7 +55,7 @@ public class ProxettaUtil {
 
 	/**
 	 * Injects some target instance into {@link jodd.proxetta.impl.WrapperProxetta wrapper} proxy
-	 * in given {@link jodd.proxetta.impl.WrapperProxettaBuilder#setTargetFieldName(String) target field name}.
+	 * in given {@link WrapperProxettaFactory#setTargetFieldName(String) target field name}.
 	 */
 	public static void injectTargetIntoWrapper(Object target, Object wrapper, String targetFieldName) {
 		try {

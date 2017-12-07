@@ -39,7 +39,7 @@ public class ProxyProxetta extends Proxetta<ProxyProxetta, ProxyAspect> {
 	}
 
 	@Override
-	public ProxyProxettaBuilder builder() {
-		return new ProxyProxettaBuilder(this);
+	public ProxyProxettaFactory proxy() {
+		return new ProxyProxettaFactory(this);
 	}
 }
