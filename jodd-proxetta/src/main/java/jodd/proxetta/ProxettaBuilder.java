@@ -34,6 +34,7 @@ import jodd.log.LoggerFactory;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 
 import java.io.File;
@@ -278,13 +279,10 @@ public abstract class ProxettaBuilder {
 			ClassLoader classLoader = proxetta.getClassLoader();
 
 			if (classLoader == null) {
+				classLoader = ClassLoaderUtil.getDefaultClassLoader();
 
-				if (targetClass != null) {
+				if ((classLoader == null) && (targetClass != null)) {
 					classLoader = targetClass.getClassLoader();
-				}
-
-				if (classLoader == null) {
-					classLoader = ClassLoaderUtil.getDefaultClassLoader();
 				}
 			}
 
@@ -305,7 +303,7 @@ public abstract class ProxettaBuilder {
 	public Object newInstance() {
 		Class type = define();
 		try {
-			return type.newInstance();
+			return ClassUtil.newInstance(type);
 		} catch (Exception ex) {
 			throw new ProxettaException("Invalid Proxetta class", ex);
 		}
