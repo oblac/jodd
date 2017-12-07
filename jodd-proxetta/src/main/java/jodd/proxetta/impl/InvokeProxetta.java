@@ -32,49 +32,15 @@ import jodd.proxetta.Proxetta;
 /**
  * Proxetta that does method (i.e. invocation) replacements.
  */
-public class InvokeProxetta extends Proxetta<InvokeProxetta> {
+public class InvokeProxetta extends Proxetta<InvokeProxetta, InvokeAspect> {
 
-	protected final InvokeAspect[] invokeAspects;
-
-	public InvokeProxetta(InvokeAspect... aspects) {
-		this.invokeAspects = aspects;
+	public InvokeProxetta() {
 		classNameSuffix = JoddProxetta.get().defaults().getInvokeProxyClassNameSuffix();
 	}
 
-	/**
-	 * Specifies invoke replacement aspects and creates this <code>Proxetta</code> instance.
-	 */
-	public static InvokeProxetta withAspects(InvokeAspect... aspects) {
-		return new InvokeProxetta(aspects);
-	}
-
-	public InvokeAspect[] getAspects() {
-		return invokeAspects;
-	}
-
-	// ---------------------------------------------------------------- implement
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public InvokeProxettaBuilder builder() {
 		return new InvokeProxettaBuilder(this);
-	}
-
-	// ---------------------------------------------------------------- shortcuts
-
-	public InvokeProxettaBuilder builder(Class target) {
-		InvokeProxettaBuilder builder = builder();
-		builder.setTarget(target);
-		return builder;
-	}
-
-	public InvokeProxettaBuilder builder(Class target, String targetProxyClassName) {
-		InvokeProxettaBuilder builder = builder();
-		builder.setTarget(target);
-		builder.setTargetProxyClassName(targetProxyClassName);
-		return builder;
 	}
 
 }

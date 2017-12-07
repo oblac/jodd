@@ -25,6 +25,14 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.impl.InvokeProxetta;
+import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.impl.WrapperProxetta;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Proxetta creates dynamic proxy classes in the run-time.
  * <p>
@@ -51,7 +59,28 @@ package jodd.proxetta;
  * @see ProxettaBuilder
  */
 @SuppressWarnings("unchecked")
-public abstract class Proxetta<T extends Proxetta> {
+public abstract class Proxetta<T extends Proxetta, A> {
+
+	/**
+	 * Creates a new instance of {@link WrapperProxetta}.
+	 */
+	public static WrapperProxetta wrapperProxetta() {
+		return new WrapperProxetta();
+	}
+
+	/**
+	 * Creates a new instance of {@link ProxyProxetta}.
+	 */
+	public static ProxyProxetta proxyProxetta() {
+		return new ProxyProxetta();
+	}
+
+	/**
+	 * Creates a new instance of {@link InvokeProxetta}.
+	 */
+	public static InvokeProxetta invokeProxetta() {
+		return new InvokeProxetta();
+	}
 
 	// ---------------------------------------------------------------- properties
 
@@ -60,6 +89,26 @@ public abstract class Proxetta<T extends Proxetta> {
 	protected boolean variableClassName;
 	protected String classNameSuffix;
 	protected String debugFolder;
+	protected final List<A> proxyAspectList = new ArrayList<>();
+
+	// ---------------------------------------------------------------- aspects
+
+	/**
+	 * Adds an aspect.
+	 */
+	public T withAspect(A proxyAspect) {
+		proxyAspectList.add(proxyAspect);
+		return (T) this;
+	}
+
+	public T withAspects(A... aspects) {
+		Collections.addAll(proxyAspectList, aspects);
+		return (T) this;
+	}
+
+	public A[] getAspects(A[] array) {
+		return proxyAspectList.toArray(array);
+	}
 
 	/**
 	 * Specifies 'forced' mode. If <code>true</code>, new proxy class will be created even if there are no
@@ -92,7 +141,6 @@ public abstract class Proxetta<T extends Proxetta> {
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
-
 
 	/**
 	 * Sets variable proxy class name so every time when new proxy class is created
@@ -142,7 +190,7 @@ public abstract class Proxetta<T extends Proxetta> {
 	// ---------------------------------------------------------------- builder
 
 	/**
-	 * Creates {@link ProxettaBuilder} with current options.
+	 * Creates {@link ProxettaBuilder} with of this Proxetta.
 	 */
 	public abstract ProxettaBuilder builder();
 

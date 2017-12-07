@@ -30,6 +30,7 @@ import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxettaUtil;
+import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
@@ -37,13 +38,10 @@ import jodd.proxetta.asm.WorkData;
 /**
  * Creates wrapper using ASM library.
  */
-public class WrapperProxettaBuilder extends ProxettaBuilder {
-
-	protected final WrapperProxetta wrapperProxetta;
+public class WrapperProxettaBuilder extends ProxettaBuilder<WrapperProxettaBuilder, WrapperProxetta> {
 
 	public WrapperProxettaBuilder(WrapperProxetta wrapperProxetta) {
 		super(wrapperProxetta);
-		this.wrapperProxetta = wrapperProxetta;
 	}
 
 	protected Class targetClassOrInterface;
@@ -56,26 +54,29 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 	 * use {@link #setTargetInterface(Class)}.
 	 */
 	@Override
-	public void setTarget(Class target) {
+	public WrapperProxettaBuilder setTarget(Class target) {
 		super.setTarget(target);
 		this.targetClassOrInterface = target;
+		return this;
 	}
 
 	/**
 	 * Defines the interface of the resulting class.
 	 */
-	public void setTargetInterface(Class targetInterface) {
+	public WrapperProxettaBuilder setTargetInterface(Class targetInterface) {
 		if (!targetInterface.isInterface()) {
 			throw new ProxettaException("Not an interface: " + targetInterface.getName());
 		}
 		this.targetInterface = targetInterface;
+		return this;
 	}
 
 	/**
 	 * Defines custom target field name.
 	 */
-	public void setTargetFieldName(String targetFieldName) {
+	public WrapperProxettaBuilder setTargetFieldName(String targetFieldName) {
 		this.targetFieldName = targetFieldName;
+		return this;
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 						targetInterface,
 						targetFieldName,
 						destClassWriter,
-						wrapperProxetta.getAspects(),
+						proxetta.getAspects(new ProxyAspect[0]),
 						resolveClassNameSuffix(),
 						requestedProxyClassName,
 						targetClassInfoReader);
@@ -98,7 +99,6 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 
 		return pcb.getWorkData();
 	}
-
 
 	/**
 	 * Injects target into wrapper.

@@ -26,6 +26,7 @@
 package jodd.proxetta.advice;
 
 import jodd.proxetta.MethodInfo;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -44,8 +45,9 @@ public class DelegateAdviceUtil {
 	 * Proxy Proxetta, applied on all public methods of the target class.
 	 */
 	private static final ProxyProxetta PROXY_PROXETTA =
-			ProxyProxetta.withAspects(
-				new ProxyAspect(DelegateAdvice.class, MethodInfo::isPublicMethod));
+		Proxetta
+			.proxyProxetta()
+			.withAspect(ProxyAspect.of(DelegateAdvice.class, MethodInfo::isPublicMethod));
 
 	/**
 	 * Applies advice on given target class and returns proxy instance.
@@ -56,7 +58,7 @@ public class DelegateAdviceUtil {
 		if (adviceClass == null) {
 			// advice not yet created
 
-			adviceClass = PROXY_PROXETTA.builder(targetClass).define();
+			adviceClass = PROXY_PROXETTA.builder().setTarget(targetClass).define();
 
 			advicesMap.put(targetClass, adviceClass);
 		}

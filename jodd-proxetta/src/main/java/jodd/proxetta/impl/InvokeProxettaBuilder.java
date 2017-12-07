@@ -26,6 +26,7 @@
 package jodd.proxetta.impl;
 
 import jodd.asm6.ClassReader;
+import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.asm.InvokeClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
@@ -36,28 +37,25 @@ import java.io.InputStream;
 /**
  * Invocation replacer class processor.
  */
-public class InvokeProxettaBuilder extends ProxettaBuilder {
-
-	protected final InvokeProxetta invokeProxetta;
+public class InvokeProxettaBuilder extends ProxettaBuilder<InvokeProxettaBuilder, InvokeProxetta> {
 
 	public InvokeProxettaBuilder(InvokeProxetta invokeProxetta) {
 		super(invokeProxetta);
-		this.invokeProxetta = invokeProxetta;
 	}
 
 	@Override
-	public void setTarget(InputStream target) {
-		super.setTarget(target);
+	public InvokeProxettaBuilder setTarget(InputStream target) {
+		return super.setTarget(target);
 	}
 
 	@Override
-	public void setTarget(String targetName) {
-		super.setTarget(targetName);
+	public InvokeProxettaBuilder setTarget(String targetName) {
+		return super.setTarget(targetName);
 	}
 
 	@Override
-	public void setTarget(Class target) {
-		super.setTarget(target);
+	public InvokeProxettaBuilder setTarget(Class target) {
+		return super.setTarget(target);
 	}
 
 	/**
@@ -68,7 +66,7 @@ public class InvokeProxettaBuilder extends ProxettaBuilder {
 
 		InvokeClassBuilder icb = new InvokeClassBuilder(
 				destClassWriter,
-				invokeProxetta.getAspects(),
+				proxetta.getAspects(new InvokeAspect[0]),
 				resolveClassNameSuffix(),
 				requestedProxyClassName,
 				targetClassInfoReader);

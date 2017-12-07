@@ -79,8 +79,8 @@ final class ProxyAspectData {
 
 	ProxyAspectData(WorkData wd, ProxyAspect aspect, int aspectIndex) {
 		this.aspect = aspect;
-		this.advice = aspect.getAdvice();
-		this.pointcut = aspect.getPointcut();
+		this.advice = aspect.advice();
+		this.pointcut = aspect.pointcut();
 		this.aspectIndex = aspectIndex;
 		this.wd = wd;
 		adviceClassReader = getCachedAdviceClassReader(advice);

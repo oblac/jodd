@@ -27,6 +27,7 @@ package jodd.proxetta.impl;
 
 import jodd.asm6.ClassReader;
 import jodd.proxetta.ProxettaBuilder;
+import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
@@ -36,28 +37,25 @@ import java.io.InputStream;
 /**
  * Creates the proxy subclass using ASM library.
  */
-public class ProxyProxettaBuilder extends ProxettaBuilder {
-
-	protected final ProxyProxetta proxyProxetta;
+public class ProxyProxettaBuilder extends ProxettaBuilder<ProxyProxettaBuilder, ProxyProxetta> {
 
 	public ProxyProxettaBuilder(ProxyProxetta proxyProxetta) {
 		super(proxyProxetta);
-		this.proxyProxetta = proxyProxetta;
 	}
 
 	@Override
-	public void setTarget(InputStream target) {
-		super.setTarget(target);
+	public ProxyProxettaBuilder setTarget(InputStream target) {
+		return super.setTarget(target);
 	}
 
 	@Override
-	public void setTarget(String targetName) {
-		super.setTarget(targetName);
+	public ProxyProxettaBuilder setTarget(String targetName) {
+		return super.setTarget(targetName);
 	}
 
 	@Override
-	public void setTarget(Class target) {
-		super.setTarget(target);
+	public ProxyProxettaBuilder setTarget(Class target) {
+		return super.setTarget(target);
 	}
 
 	/**
@@ -68,7 +66,7 @@ public class ProxyProxettaBuilder extends ProxettaBuilder {
 
 		ProxettaClassBuilder pcb = new ProxettaClassBuilder(
 				destClassWriter,
-				proxyProxetta.getAspects(),
+				proxetta.getAspects(new ProxyAspect[0]),
 				resolveClassNameSuffix(),
 				requestedProxyClassName,
 				targetClassInfoReader);

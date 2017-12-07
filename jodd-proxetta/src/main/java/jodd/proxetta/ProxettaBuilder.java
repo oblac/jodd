@@ -46,18 +46,19 @@ import java.io.InputStream;
  * configuration, <code>ProxettaBuilder</code> deals with the
  * actually building proxies and wrappers over provided target.
  */
-public abstract class ProxettaBuilder {
+public abstract class ProxettaBuilder<T extends ProxettaBuilder, P extends Proxetta> {
 
 	Logger log = LoggerFactory.getLogger(ProxettaBuilder.class);
 
-	protected final Proxetta proxetta;
+	protected final P proxetta;
 
 	/**
 	 * Creates new builder.
 	 */
-	protected ProxettaBuilder(Proxetta proxetta) {
+	protected ProxettaBuilder(P proxetta) {
 		this.proxetta = proxetta;
 	}
+
 	// ---------------------------------------------------------------- IN
 
 	/**
@@ -83,8 +84,9 @@ public abstract class ProxettaBuilder {
 	/**
 	 * Sets requested proxy class name.
 	 */
-	public void setTargetProxyClassName(String targetProxyClassName) {
+	public T setTargetProxyClassName(String targetProxyClassName) {
 		this.requestedProxyClassName = targetProxyClassName;
+		return (T)this;
 	}
 
 	// ---------------------------------------------------------------- IN targets
@@ -92,19 +94,21 @@ public abstract class ProxettaBuilder {
 	/**
 	 * Defines class input stream as a target.
 	 */
-	protected void setTarget(InputStream target) {
+	protected T setTarget(InputStream target) {
 		checkTarget();
 
 		targetInputStream = target;
 		targetClass = null;
 		targetClassName = null;
+
+		return (T) this;
 	}
 
 	/**
 	 * Defines class name as a target.
 	 * Class will not be loaded by classloader!
 	 */
-	protected void setTarget(String targetName) {
+	protected T setTarget(String targetName) {
 		checkTarget();
 
 		try {
@@ -119,12 +123,13 @@ public abstract class ProxettaBuilder {
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to get stream class name: " + targetName, ioex);
 		}
+		return (T) this;
 	}
 
 	/**
 	 * Defines class as a target.
 	 */
-	protected void setTarget(Class target) {
+	protected T setTarget(Class target) {
 		checkTarget();
 
 		try {
@@ -139,6 +144,7 @@ public abstract class ProxettaBuilder {
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
 		}
+		return (T) this;
 	}
 
 	/**
@@ -160,7 +166,6 @@ public abstract class ProxettaBuilder {
 	 * @see Proxetta#setVariableClassName(boolean)
  	 */
 	protected static int suffixCounter;
-
 
 	/**
 	 * Returns new suffix or <code>null</code> if suffix is not in use.
@@ -262,7 +267,9 @@ public abstract class ProxettaBuilder {
 
 			if (targetClass != null) {
 				return targetClass;
-			} else if (targetClassName != null) {
+			}
+
+			if (targetClassName != null) {
 				try {
 					return ClassLoaderUtil.loadClass(targetClassName);
 				} catch (ClassNotFoundException cnfex) {
