@@ -31,11 +31,8 @@ package jodd.db.querymap;
 public class EmptyQueryMap implements QueryMap {
 
 	@Override
-	public void load() {
-	}
-
-	@Override
 	public String getQuery(String key) {
 		return null;
 	}
+
 }

@@ -30,16 +30,12 @@ import jodd.db.JoddDb;
 /**
  * Storage of SQL queries.
  */
+@FunctionalInterface
 public interface QueryMap {
 
 	public static QueryMap get() {
 		return JoddDb.get().queryMap();
 	}
-
-	/**
-	 * (Re)loads the query map.
-	 */
-	public void load();
 
 	/**
 	 * Returns query for given key. Returns <code>null</code> if query not found.

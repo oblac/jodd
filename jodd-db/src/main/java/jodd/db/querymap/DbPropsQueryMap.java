@@ -42,7 +42,7 @@ public class DbPropsQueryMap implements QueryMap {
 
 	public DbPropsQueryMap(String... patterns) {
 		this.patterns = patterns;
-		load();
+		loadQueriesFromClasspath();
 	}
 
 	public DbPropsQueryMap() {
@@ -50,17 +50,13 @@ public class DbPropsQueryMap implements QueryMap {
 	}
 
 	/**
-	 * Returns <code>Props</code> for additional fine tuning.
+	 * Returns <code>Props</code>.
 	 */
-	public Props getProps() {
+	public Props props() {
 		return props;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void load() {
+	public void loadQueriesFromClasspath() {
 		props = PropsUtil.createFromClasspath(patterns);
 	}
 
@@ -73,7 +69,7 @@ public class DbPropsQueryMap implements QueryMap {
 	@Override
 	public String getQuery(String key) {
 		if (JoddDb.get().defaults().isDebug()) {
-			load();
+			loadQueriesFromClasspath();
 		}
 		return props.getValue(key);
 	}
