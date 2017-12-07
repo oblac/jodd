@@ -134,7 +134,7 @@ public class UncheckedException extends RuntimeException {
 	 * Wraps checked exceptions in a <code>UncheckedException</code>.
 	 * Unchecked exceptions are not wrapped.
 	 */
-	public static <V> V guardAndReturn(Callable<V> callable) {
+	public static <V> V callAndWrapException(Callable<V> callable) {
 		try {
 			return callable.call();
 		}
@@ -158,7 +158,7 @@ public class UncheckedException extends RuntimeException {
 	 * Wraps checked exceptions in a <code>UncheckedException</code>.
 	 * Unchecked exceptions are not wrapped.
 	 */
-	public static void guard(CallableVoid callable) {
+	public static void runAndWrapException(CallableVoid callable) {
 		try {
 			callable.call();
 		}

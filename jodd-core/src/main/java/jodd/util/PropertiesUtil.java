@@ -209,7 +209,7 @@ public class PropertiesUtil {
 	 */
 	public static Properties loadFromClasspath(final Properties p, String... rootTemplate) {
 			ClassScanner.get()
-				.onEntry(entryData -> UncheckedException.guard(() -> p.load(entryData.openInputStream())))
+				.onEntry(entryData -> UncheckedException.runAndWrapException(() -> p.load(entryData.openInputStream())))
 			.includeResources(true)
 			.ignoreException(true)
 			.excludeAllEntries(true)
