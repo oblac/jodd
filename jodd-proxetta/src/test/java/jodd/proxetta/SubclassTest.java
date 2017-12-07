@@ -25,7 +25,11 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.fixtures.data.*;
+import jodd.proxetta.fixtures.data.Foo;
+import jodd.proxetta.fixtures.data.FooProxyAdvice;
+import jodd.proxetta.fixtures.data.StatCounter;
+import jodd.proxetta.fixtures.data.StatCounterAdvice;
+import jodd.proxetta.fixtures.data.Two;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
@@ -38,18 +42,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SubclassTest {
 
 	@Test
 	void test1() {
 
-		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo methodInfo) {
-				return true;
-			}
-		});
+		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, methodInfo -> true);
 
 /*
 		byte[] b = Proxetta.withAspects(a1).createProxy(Foo.class);
@@ -59,7 +62,7 @@ class SubclassTest {
 			e.printStackTrace();
 		}
 */
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(a1);
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(a1);
 		proxyProxetta.setClassNameSuffix("$$$Proxetta");
 		ProxyProxettaBuilder pb = proxyProxetta.builder();
 		pb.setTarget(Foo.class);
@@ -89,7 +92,7 @@ class SubclassTest {
 
 	@Test
 	void testProxyClassNames() {
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(ProxyAspect.of(FooProxyAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(true);
 
 		ProxyProxettaBuilder builder = proxyProxetta.builder();
@@ -116,7 +119,8 @@ class SubclassTest {
 
 		proxyProxetta.setClassNameSuffix("$$Proxetta");
 		proxyProxetta.setVariableClassName(false);
-		builder = proxyProxetta.builder(Foo.class, ".Too");
+		builder = proxyProxetta.builder().setTarget(Foo.class).setTargetProxyClassName(".Too");
+
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
@@ -143,7 +147,7 @@ class SubclassTest {
 
 	@Test
 	void testInnerOverride() {
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
 		ProxyProxettaBuilder builder = proxyProxetta.builder();
 		builder.setTarget(Two.class);
 		builder.setTargetProxyClassName("foo.");
@@ -154,9 +158,10 @@ class SubclassTest {
 		assertEquals("foo.Two$$Proxetta", two.getClass().getName());
 	}
 
+	@SuppressWarnings({"CachedNumberConstructorCall", "UnnecessaryBoxing"})
 	@Test
-	void testJdk() throws Exception {
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()));
+	void testJdk() {
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(false);
 
 		ProxyProxettaBuilder builder = proxyProxetta.builder();
@@ -180,7 +185,7 @@ class SubclassTest {
 
 		StatCounter.counter = 0;
 
-		builder = proxyProxetta.builder(ArrayList.class, "foo.");
+		builder = proxyProxetta.builder().setTarget(ArrayList.class).setTargetProxyClassName("foo.");
 		List list = (List) builder.newInstance();
 		assertNotNull(list);
 		assertEquals("foo.ArrayList$$Proxetta", list.getClass().getName());
@@ -191,7 +196,7 @@ class SubclassTest {
 
 		System.out.println("----------set");
 
-		builder = proxyProxetta.builder(HashSet.class, "foo.");
+		builder = proxyProxetta.builder().setTarget(HashSet.class).setTargetProxyClassName("foo.");
 		Set set = (Set) builder.newInstance();
 
 		assertNotNull(set);

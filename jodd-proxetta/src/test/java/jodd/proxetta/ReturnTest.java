@@ -32,19 +32,22 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 class ReturnTest {
 
 	@Test
 	void testWrapperWithProxyReturns() throws Exception {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(
 				new ProxyAspect(ReflectionReplacementAdvice.class, new AllMethodsPointcut()));
 
-		ProxyProxettaBuilder builder = proxetta.builder(Retro.class, ".Retro2");
+		ProxyProxettaBuilder builder = proxetta.builder().setTarget(Retro.class).setTargetProxyClassName(".Retro2");
 
 //		proxetta.setDebugFolder("d:\\");
 
@@ -80,10 +83,10 @@ class ReturnTest {
 
 	@Test
 	void testNullReturns() throws Exception {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(
 				new ProxyAspect(ReturnNullAdvice.class, new AllMethodsPointcut()));
 
-		ProxyProxettaBuilder builder = proxetta.builder(Retro.class, ".Retro3");
+		ProxyProxettaBuilder builder = proxetta.builder().setTarget(Retro.class).setTargetProxyClassName(".Retro3");
 
 //		proxetta.setDebugFolder("d:\\");
 

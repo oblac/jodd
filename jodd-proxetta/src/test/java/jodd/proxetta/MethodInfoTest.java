@@ -55,7 +55,7 @@ class MethodInfoTest {
 				}
 		);
 
-		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(proxyAspect);
+		ProxyProxetta proxyProxetta = Proxetta.proxyProxetta().withAspect(proxyAspect);
 		proxyProxetta.setClassNameSuffix("$$$Proxetta888");
 		ProxyProxettaBuilder pb = proxyProxetta.builder();
 		pb.setTarget(Foo.class);

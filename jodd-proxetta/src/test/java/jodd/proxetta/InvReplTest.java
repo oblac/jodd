@@ -38,7 +38,6 @@ import jodd.proxetta.impl.InvokeProxetta;
 import jodd.util.ClassLoaderUtil;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -51,12 +50,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 class InvReplTest {
 
 	@Test
-	void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {
+	void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 
 		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
-		byte[] klazz = proxetta.builder(One.class).create();
+		byte[] klazz = proxetta.builder().setTarget(One.class).create();
 		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
@@ -95,7 +94,7 @@ class InvReplTest {
 	void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
-			proxetta.builder(OneWithSuper.class).define();
+			proxetta.builder().setTarget(OneWithSuper.class).define();
 			fail("error");
 		} catch (ProxettaException ignore) {
 
@@ -106,7 +105,7 @@ class InvReplTest {
 	void testInterface() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
-			proxetta.builder(Inter.class).newInstance();
+			proxetta.builder().setTarget(Inter.class).newInstance();
 			fail("error");
 		} catch (ProxettaException ignore) {
 		}
@@ -114,7 +113,7 @@ class InvReplTest {
 
 	@Test
 	void testCurrentTimeMillis() {
-		TimeClass timeClass = (TimeClass) InvokeProxetta.withAspects(new InvokeAspect() {
+		TimeClass timeClass = (TimeClass) Proxetta.invokeProxetta().withAspects(new InvokeAspect() {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod();
@@ -130,7 +129,7 @@ class InvReplTest {
 				}
 				return null;
 			}
-		}).builder(TimeClass.class).newInstance();
+		}).builder().setTarget(TimeClass.class).newInstance();
 
 		long time = timeClass.time();
 
@@ -139,7 +138,7 @@ class InvReplTest {
 
 	@Test
 	void testWimp() {
-		Wimp wimp = (Wimp) InvokeProxetta.withAspects(new InvokeAspect() {
+		Wimp wimp = (Wimp) Proxetta.invokeProxetta().withAspect(new InvokeAspect() {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return methodInfo.isTopLevelMethod();
@@ -149,7 +148,7 @@ class InvReplTest {
 			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
 				return InvokeReplacer.NONE;
 			}
-		}).builder(Wimp.class).newInstance();
+		}).builder().setTarget(Wimp.class).newInstance();
 
 		int i = wimp.foo();
 		assertEquals(0, i);
@@ -163,7 +162,7 @@ class InvReplTest {
 
 
 	protected InvokeProxetta initProxetta() {
-		return InvokeProxetta.withAspects(
+		return Proxetta.invokeProxetta().withAspects(
 				new InvokeAspect() {
 					@Override
 					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {

@@ -25,6 +25,7 @@
 package jodd.proxetta.petite.fixtures;
 
 import jodd.petite.PetiteConfig;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -50,7 +51,7 @@ public class PetiteHelper {
         
         //proxetta.setDebugFolder(SystemUtil.userHome() + "\\inka\\proxetta");
 
-        return ProxyProxetta.withAspects(aspect_logged);
+        return Proxetta.proxyProxetta().withAspects(aspect_logged);
     }
 
 }

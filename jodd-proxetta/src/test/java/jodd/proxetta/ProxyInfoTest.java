@@ -38,10 +38,10 @@ class ProxyInfoTest {
 
 	@Test
 	void testProxyInfo_createNotRightAfterTheMethod() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(aspects());
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspects());
 		//proxetta.setDebugFolder(SystemUtil.userHome());
 
-		DateDao dateDateProxy = (DateDao) proxetta.builder(DateDao.class).newInstance();
+		DateDao dateDateProxy = (DateDao) proxetta.builder().setTarget(DateDao.class).newInstance();
 
 		JDateTime jDateTime = dateDateProxy.currentTime();
 

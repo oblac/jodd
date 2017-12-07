@@ -29,11 +29,9 @@ import jodd.proxetta.fixtures.data.Hero;
 import jodd.proxetta.fixtures.data.HeroProxyAdvice;
 import jodd.proxetta.fixtures.data.HeroProxyAdvice2;
 import jodd.proxetta.impl.ProxyProxetta;
-
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
 import jodd.proxetta.pointcuts.AllRealMethodsPointcut;
-import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,9 +43,10 @@ class AnnTest {
 
 	@Test
 	void testMethodAnnotationsProxy() {
-		ProxyProxetta proxetta = ProxyProxetta
-				.withAspects(
-					new ProxyAspect(HeroProxyAdvice.class,
+		ProxyProxetta proxetta = Proxetta
+				.proxyProxetta()
+				.withAspect(
+					ProxyAspect.of(HeroProxyAdvice.class,
 							new AllRealMethodsPointcut() {
 								@Override
 								public boolean apply(MethodInfo methodInfo) {
@@ -70,8 +69,9 @@ class AnnTest {
 
 	@Test
 	void testClassAnnotationsProxy() {
-		ProxyProxetta proxetta = ProxyProxetta
-				.withAspects(
+		ProxyProxetta proxetta = Proxetta
+			.proxyProxetta()
+			.withAspect(
 					new ProxyAspect(HeroProxyAdvice2.class,
 							new AllRealMethodsPointcut() {
 								@Override
@@ -95,8 +95,9 @@ class AnnTest {
 
 	@Test
 	void testMethodAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		WrapperProxetta proxetta = WrapperProxetta
-				.withAspects(
+		WrapperProxetta proxetta = Proxetta
+			.wrapperProxetta()
+			.withAspect(
 					new ProxyAspect(HeroProxyAdvice.class,
 							new AllRealMethodsPointcut() {
 								@Override
@@ -121,7 +122,8 @@ class AnnTest {
 
 	@Test
 	void testClassAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		WrapperProxetta proxetta = WrapperProxetta
+		WrapperProxetta proxetta = Proxetta
+				.wrapperProxetta()
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice2.class,
 							new AllRealMethodsPointcut() {

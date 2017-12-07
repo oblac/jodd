@@ -25,6 +25,7 @@
 
 package jodd.methref;
 
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.fixtures.data.Str;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -76,8 +77,8 @@ class MethrefTest {
 		assertEquals("woink", m.ref());
 
 		ProxyAspect a1 = new ProxyAspect(DummyAdvice.class, new AllTopMethodsPointcut());
-		ProxyProxetta pp = ProxyProxetta.withAspects(a1);
-		Oink oink = (Oink) pp.builder(Oink.class).newInstance();
+		ProxyProxetta pp = Proxetta.proxyProxetta().withAspect(a1);
+		Oink oink = (Oink) pp.builder().setTarget(Oink.class).newInstance();
 
 		assertFalse(oink.getClass().equals(Oink.class));
 

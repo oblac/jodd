@@ -26,6 +26,7 @@
 package jodd.petite.proxy;
 
 import jodd.petite.PetiteConfig;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -47,7 +48,7 @@ public class PetiteHelper {
         ProxyPointcut pointcut_logged = new MethodAnnotationPointcut(Logged.class);
         ProxyAspect aspect_logged = new ProxyAspect(LogProxyAdvice.class, pointcut_logged);
 
-        ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect_logged);
+        ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspect(aspect_logged);
         //proxetta.setDebugFolder(SystemUtil.userHome() + "\\inka\\proxetta");
 
         return proxetta;

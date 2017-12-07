@@ -41,13 +41,13 @@ class AdviceWithMethodTest {
 
 	@Test
 	void testCollector() throws NoSuchFieldException, IllegalAccessException {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(
 				new ProxyAspect(CollectorAdvice.class, new AllTopMethodsPointcut())
 		);
 
 //		proxetta.setDebugFolder("d:\\");
 
-		Foo foo = (Foo) proxetta.builder(Foo.class).newInstance();
+		Foo foo = (Foo) proxetta.builder().setTarget(Foo.class).newInstance();
 
 		Field field = foo.getClass().getDeclaredField("$__methods$0");
 

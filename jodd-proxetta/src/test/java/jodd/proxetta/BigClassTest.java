@@ -38,7 +38,6 @@ import jodd.proxetta.fixtures.data.PetiteInject;
 import jodd.proxetta.fixtures.data.StatCounter;
 import jodd.proxetta.fixtures.data.StatCounterAdvice;
 import jodd.proxetta.fixtures.data.Transaction;
-import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.ClassLoaderUtil;
 import org.junit.jupiter.api.Test;
 
@@ -135,7 +134,7 @@ class BigClassTest {
 			return !mi.isRootMethod();
 		});
 
-		byte[] classBytes = ProxyProxetta.withAspects(aspect).builder(BigFatJoe.class).create();
+		byte[] classBytes = Proxetta.proxyProxetta().withAspect(aspect).builder().setTarget(BigFatJoe.class).create();
 //		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
 //		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
 //		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);

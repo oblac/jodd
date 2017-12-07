@@ -28,6 +28,7 @@ package jodd.petite;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllRealMethodsPointcut;
@@ -89,7 +90,7 @@ class ProxettaAwareContainerTest {
 
 	@Test
 	void testProxyProxetta() {
-		ProxyProxetta proxetta = ProxyProxetta.withAspects(
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspect(
 			new ProxyAspect(AddStringAdvice.class, new AllRealMethodsPointcut()));
 
 		PetiteContainer papc = new ProxettaAwarePetiteContainer(proxetta);

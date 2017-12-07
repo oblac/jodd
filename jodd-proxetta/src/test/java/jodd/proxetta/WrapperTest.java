@@ -54,14 +54,14 @@ class WrapperTest {
 	void testClassWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> !methodInfo.isRootMethod() && methodInfo.isPublicMethod()));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> !methodInfo.isRootMethod() && methodInfo.isPublicMethod()));
 
 //		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over CLASS
 		// resulting object has ALL interfaces
 		// resulting object wraps ALL target class methods
-		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass());
+		WrapperProxettaBuilder builder = proxetta.builder().setTarget(calc.getClass());
 
 		Class calc2Class = builder.define();
 
@@ -95,14 +95,14 @@ class WrapperTest {
 	void testClassWrapperCastToInterface() throws Exception {
 		Calc calc = new CalcImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> !methodInfo.isRootMethod() && methodInfo.isPublicMethod()));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> !methodInfo.isRootMethod() && methodInfo.isPublicMethod()));
 
 		//proxetta.setDebugFolder("/Users/igor");
 
 		// wrapper over CLASS casted to interface,
 		// resulting object has ONE interface
 		// ALL target methods are wrapped
-		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass(), Calc.class, ".CalcImpl2");
+		WrapperProxettaBuilder builder = proxetta.builder().setTarget(calc.getClass()).setTargetInterface(Calc.class).setTargetProxyClassName(".CalcImpl2");
 
 		Class<Calc> calc2Class = builder.define();
 
@@ -127,14 +127,14 @@ class WrapperTest {
 	void testInterfaceWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> methodInfo.isTopLevelMethod() && methodInfo.isPublicMethod()));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> methodInfo.isTopLevelMethod() && methodInfo.isPublicMethod()));
 
 		//proxetta.setDebugFolder("/Users/igor");
 
 		// wrapper over INTERFACE
 		// resulting object has ONE interface
 		// only interface methods are wrapped
-		WrapperProxettaBuilder builder = proxetta.builder(Calc.class, ".CalcImpl3");
+		WrapperProxettaBuilder builder = proxetta.builder().setTarget(Calc.class).setTargetProxyClassName(".CalcImpl3");
 
 		Class<Calc> calc2Class = builder.define();
 
@@ -165,12 +165,12 @@ class WrapperTest {
 
 		Calc calc = new CalcSuperImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> methodInfo.isPublicMethod() &&
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> methodInfo.isPublicMethod() &&
 				(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"))));
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder(CalcSuper.class);
+		WrapperProxettaBuilder builder = proxetta.builder().setTarget(CalcSuper.class);
 
 		Class<CalcSuper> calc2Class = builder.define();
 
@@ -204,11 +204,11 @@ class WrapperTest {
 
 		Calc calc = new CalcSuperImpl();
 
-		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, methodInfo -> false));
+		WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspect(new ProxyAspect(StatCounterAdvice.class, methodInfo -> false));
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder(CalcSuper.class, ".CalcSuper22");
+		WrapperProxettaBuilder builder = proxetta.builder().setTarget(CalcSuper.class).setTargetProxyClassName(".CalcSuper22");
 
 		Class<CalcSuper> calc2Class = builder.define();
 

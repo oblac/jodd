@@ -30,6 +30,7 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
+import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,10 +47,12 @@ class GenericsTest {
 
 	public static class Foo implements IFoo {
 		private String id;
+		@Override
 		public String getId() {
 			return id;
 		}
 		// remove the generic and it works
+		@Override
 		public Bar<Foo> getFoo() {
 			return null;
 		}
@@ -58,9 +61,9 @@ class GenericsTest {
 	@Test
 	void testClassesWithGenericsAsReturnValueWrapper() {
 		try {
-			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
-			WrapperProxetta proxetta = WrapperProxetta.withAspects(aspect);
-			WrapperProxettaBuilder builder = proxetta.builder(Foo.class, IFoo.class);
+			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
+			WrapperProxetta proxetta = Proxetta.wrapperProxetta().withAspects(aspect);
+			WrapperProxettaBuilder builder = proxetta.builder().setTarget(Foo.class).setTargetInterface(IFoo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {
@@ -71,9 +74,9 @@ class GenericsTest {
 	@Test
 	void testClassesWithGenericsAsReturnValueProxy() {
 		try {
-			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
-			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
-			ProxyProxettaBuilder builder = proxetta.builder(Foo.class);
+			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaBuilder builder = proxetta.builder().setTarget(Foo.class);
 			builder.newInstance();
 		}
 		catch (Exception ex) {
