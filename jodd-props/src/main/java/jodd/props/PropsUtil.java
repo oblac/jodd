@@ -54,7 +54,7 @@ public class PropsUtil {
 				}
 
 				final String encoding = usedEncoding;
-				UncheckedException.guard(() -> p.load(entryData.openInputStream(), encoding));
+				UncheckedException.runAndWrapException(() -> p.load(entryData.openInputStream(), encoding));
 			})
 		.includeResources(true)
 		.ignoreException(true)
