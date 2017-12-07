@@ -32,6 +32,7 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
 import jodd.log.LoggerFactory;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +47,13 @@ public abstract class DbTestBase {
 
 	@BeforeEach
 	protected void setUp() throws Exception {
-		JoddDb.get().queryMap(new DbPropsQueryMap());
+		DbPropsQueryMap queryMap = new DbPropsQueryMap();
+
+		if (SystemUtil.javaVersionNumber() == 9) {
+			queryMap.props().load(this.getClass().getClassLoader().getResourceAsStream("queries.sql.props"));
+		}
+
+		JoddDb.get().queryMap(queryMap);
 
 		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {

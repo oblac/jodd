@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DbTestQueryStatement extends DbHsqldbTestCase {
 
 	@Test
-	public void testParams() throws Exception {
+	public void testParams() {
 		DbSession session = new DbSession(cp);
 
 		DbQuery query = new DbQuery(session, "!girlCount");
