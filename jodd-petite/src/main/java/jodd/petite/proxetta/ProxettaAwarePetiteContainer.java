@@ -30,6 +30,7 @@ import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteContainer;
 import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
+import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 
@@ -53,6 +54,7 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 	/**
 	 * Applies proxetta on bean class before bean registration.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> consumer) {
 		if (proxetta != null) {
@@ -64,7 +66,7 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 
 			type = builder.define();
 
-			return new ProxettaBeanDefinition(name, type, scope, wiringMode, originalType, proxetta.getAspects(), consumer);
+			return new ProxettaBeanDefinition(name, type, scope, wiringMode, originalType, proxetta.getAspects(new ProxyAspect[0]), consumer);
 		}
 
 		return super.createBeanDefinitionForRegistration(name, type, scope, wiringMode, consumer);

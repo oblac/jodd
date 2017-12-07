@@ -29,11 +29,13 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.proxetta.ProxettaBeanDefinition;
 import jodd.petite.scope.Scope;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import jodd.util.ArraysUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -143,24 +145,24 @@ public class ScopedProxyManager {
 				ProxettaBeanDefinition pbd =
 					(ProxettaBeanDefinition) refBeanDefinition;
 
-				ProxyProxetta proxetta = ProxyProxetta.withAspects(ArraysUtil.insert(pbd.proxyAspects, aspect, 0));
+				ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(ArraysUtil.insert(pbd.proxyAspects, aspect, 0));
 
 				proxetta.setClassNameSuffix("$ScopedProxy");
 				proxetta.setVariableClassName(true);
 
-				ProxyProxettaBuilder builder = proxetta.builder(pbd.originalTarget);
+				ProxyProxettaBuilder builder = proxetta.builder().setTarget(pbd.originalTarget);
 
 				proxyClass = builder.define();
 
 				proxyClasses.put(beanType, proxyClass);
 			}
 			else {
-				ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
+				ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspect(aspect);
 
 				proxetta.setClassNameSuffix("$ScopedProxy");
 				proxetta.setVariableClassName(true);
 
-				ProxyProxettaBuilder builder = proxetta.builder(beanType);
+				ProxyProxettaBuilder builder = proxetta.builder().setTarget(beanType);
 
 				proxyClass = builder.define();
 
@@ -171,7 +173,7 @@ public class ScopedProxyManager {
 		Object proxy;
 
 		try {
-			proxy = proxyClass.newInstance();
+			proxy = ClassUtil.newInstance(proxyClass);
 
 			Field field = proxyClass.getField("$__petiteContainer$0");
 

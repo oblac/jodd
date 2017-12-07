@@ -25,6 +25,7 @@
 
 package jodd.pathref;
 
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
@@ -42,7 +43,7 @@ public class PathrefProxetta {
 	public PathrefProxetta() {
 		ProxyAspect aspects = new ProxyAspect(PathrefAdvice.class, new AllMethodsPointcut());
 
-		proxetta = ProxyProxetta.withAspects(aspects);
+		proxetta = Proxetta.proxyProxetta().withAspect(aspects);
 
 		proxetta.setClassNameSuffix(PATHREF_CLASSNAME_SUFFIX);
 	}

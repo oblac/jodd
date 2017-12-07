@@ -28,6 +28,7 @@ package jodd.joy;
 import jodd.jtx.JoddJtx;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.proxetta.MethodInfo;
+import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
@@ -80,7 +81,7 @@ public class JoyProxetta extends JoyBase {
 
 		log.debug("Total proxy aspects: " + proxyAspects.length);
 
-		proxyProxetta = ProxyProxetta.withAspects(proxyAspects);
+		proxyProxetta = Proxetta.proxyProxetta().withAspects(proxyAspects);
 	}
 
 	protected ProxyAspect createTxProxyAspects() {

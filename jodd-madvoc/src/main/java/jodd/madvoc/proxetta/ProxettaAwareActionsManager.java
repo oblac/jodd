@@ -71,7 +71,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 		Class existing = proxyActionClasses.get(actionClass);
 
 		if (existing == null) {
-			existing = proxetta.builder(actionClass).define();
+			existing = proxetta.builder().setTarget(actionClass).define();
 
 			proxyActionClasses.put(actionClass, existing);
 		}
