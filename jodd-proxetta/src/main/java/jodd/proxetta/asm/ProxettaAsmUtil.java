@@ -700,12 +700,13 @@ public class ProxettaAsmUtil {
 		if (enumClass != null) {
 			try {
 				String typeRef = AsmUtil.typeToTyperef(enumClass);
+				String typeSignature = AsmUtil.typeToSignature(enumClass);
 
 				// invoke
 				Method nameMethod = elementValue.getClass().getMethod("name");
 				String name = (String) nameMethod.invoke(elementValue);
 
-				mv.visitFieldInsn(GETSTATIC, typeRef, name, typeRef);
+				mv.visitFieldInsn(GETSTATIC, typeSignature, name, typeRef);
 
 				return;
 			} catch (Exception ignore) {

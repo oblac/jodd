@@ -49,7 +49,7 @@ class AnnTest {
 					ProxyAspect.of(HeroProxyAdvice.class,
 						((ProxyPointcut) MethodInfo::isTopLevelMethod).and(AllRealMethodsPointcut.get())
 					))
-				//.setDebugFolder("/Users/igor/")
+				//.setDebugFolder(FileUtil.file("~"))
 				;
 
 		ProxettaFactory proxettaFactory = proxetta.proxy();

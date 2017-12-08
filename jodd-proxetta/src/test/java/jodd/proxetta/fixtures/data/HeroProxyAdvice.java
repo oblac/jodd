@@ -32,6 +32,7 @@ import static jodd.proxetta.ProxyTarget.targetMethodAnnotation;
 
 public class HeroProxyAdvice implements ProxyAdvice {
 
+	@Override
 	public Object execute() throws Exception {
 		String name = "";
 
