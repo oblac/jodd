@@ -31,16 +31,20 @@ import jodd.proxetta.ProxyPointcut;
 import java.lang.annotation.Annotation;
 
 /**
- * Pointcut on method with one of given annotations.
+ * Pointcut on a method with one of given annotations.
  */
-public class MethodAnnotationPointcut implements ProxyPointcut {
+public class MethodWithAnnotationPointcut implements ProxyPointcut {
+
+	public static MethodWithAnnotationPointcut of(Class<? extends Annotation>... annotationClasses) {
+		return new MethodWithAnnotationPointcut(annotationClasses);
+	}
 
 	protected final Class<? extends Annotation>[] annotationClasses;
 
 	/**
 	 * Defines set of annotations we are looking for.
 	 */
-	public MethodAnnotationPointcut(Class<? extends Annotation>... annotationClasses) {
+	public MethodWithAnnotationPointcut(Class<? extends Annotation>... annotationClasses) {
 		this.annotationClasses = annotationClasses;
 	}
 

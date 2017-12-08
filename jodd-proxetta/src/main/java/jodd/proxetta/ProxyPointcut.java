@@ -25,7 +25,6 @@
 
 package jodd.proxetta;
 
-
 /**
  * Pointcut is a set of points in the application where advice should be applied, i.e.
  * which methods will be wrapped by proxy.
@@ -35,7 +34,22 @@ public interface ProxyPointcut {
 
 	/**
 	 * Returns <code>true</code> if method should be wrapped with the proxy.
+	 * Returns <code>false</code> if method should not be wrapped.
 	 */
 	boolean apply(MethodInfo methodInfo);
+
+	/**
+	 * Performs AND operation on this and the next proxy.
+	 */
+	default ProxyPointcut and(ProxyPointcut otherProxyPointcut) {
+		return (t) -> apply(t) && otherProxyPointcut.apply(t);
+	}
+
+	/**
+	 * Performs OR operation on this and the next proxy.
+	 */
+	default ProxyPointcut or(ProxyPointcut other) {
+		return (t) -> apply(t) || other.apply(t);
+	}
 
 }

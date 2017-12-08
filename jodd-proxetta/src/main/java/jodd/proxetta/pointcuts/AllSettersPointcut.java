@@ -33,6 +33,13 @@ import jodd.proxetta.ProxyPointcut;
  */
 public class AllSettersPointcut implements ProxyPointcut {
 
+	private static final AllSettersPointcut INSTANCE = new AllSettersPointcut();
+
+	public static AllSettersPointcut get() {
+		return INSTANCE;
+	}
+
+
 	@Override
 	public boolean apply(MethodInfo methodInfo) {
 		return

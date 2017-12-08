@@ -27,11 +27,11 @@ package jodd.joy;
 
 import jodd.jtx.JoddJtx;
 import jodd.jtx.proxy.AnnotationTxAdvice;
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
+import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,15 +87,10 @@ public class JoyProxetta extends JoyBase {
 	protected ProxyAspect createTxProxyAspects() {
 		return new ProxyAspect(
 			AnnotationTxAdvice.class,
-			new MethodAnnotationPointcut(JoddJtx.get().defaults().getTxAnnotations()) {
-				@Override
-				public boolean apply(MethodInfo methodInfo) {
-					return
-						methodInfo.isPublicMethod() &&
-							methodInfo.isTopLevelMethod() &&
-							super.apply(methodInfo);
-				}
-			});
+			((ProxyPointcut)
+				methodInfo -> methodInfo.isPublicMethod() && methodInfo.isTopLevelMethod())
+				.and(MethodWithAnnotationPointcut.of(JoddJtx.get().defaults().getTxAnnotations()))
+		);
 	}
 
 	@Override
