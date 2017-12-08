@@ -31,7 +31,9 @@ import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.proxy.example1.ExternalBean;
 import jodd.proxetta.impl.ProxyProxetta;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -78,7 +80,10 @@ class MixedScope343Test {
 	}
 
 	@Test
-	void testWithMixingScopesSingletonAndProto(){
+	void testWithMixingScopesSingletonAndProto() {
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8,
+			"Automagic configuration only works with MR-JAR jars as they don't work in exploded mode.");
+
 		ExternalBean externalBean = new ExternalBean();
 		// --> inject
 

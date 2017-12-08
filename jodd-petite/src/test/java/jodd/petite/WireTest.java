@@ -36,6 +36,8 @@ import jodd.petite.fixtures.tst.Loo;
 import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.fixtures.tst.impl.DefaultIoo;
 import jodd.petite.scope.ProtoScope;
+import jodd.util.SystemUtil;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,6 +59,9 @@ class WireTest {
 
 	@Test
 	void testContainer() {
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8,
+			"Automagic configuration only works with MR-JAR jars as they don't work in exploded mode.");
+
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
 
