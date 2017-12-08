@@ -30,7 +30,7 @@ import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
+import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 
 public class PetiteHelper {
 
@@ -45,7 +45,7 @@ public class PetiteHelper {
 
     public static ProxyProxetta createProxyProxetta() {
 
-        ProxyPointcut pointcut_logged = new MethodAnnotationPointcut(Logged.class);
+        ProxyPointcut pointcut_logged = new MethodWithAnnotationPointcut(Logged.class);
         ProxyAspect aspect_logged = new ProxyAspect(LogProxyAdvice.class, pointcut_logged);
 
         ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspect(aspect_logged);

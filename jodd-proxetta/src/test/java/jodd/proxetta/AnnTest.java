@@ -47,15 +47,8 @@ class AnnTest {
 				.proxyProxetta()
 				.withAspect(
 					ProxyAspect.of(HeroProxyAdvice.class,
-							new AllRealMethodsPointcut() {
-								@Override
-								public boolean apply(MethodInfo methodInfo) {
-									if (!methodInfo.isTopLevelMethod()) {
-										return false;
-									}
-									return super.apply(methodInfo);
-								}
-							}))
+						((ProxyPointcut) MethodInfo::isTopLevelMethod).and(AllRealMethodsPointcut.get())
+					))
 				//.setDebugFolder("/Users/igor/")
 				;
 
@@ -73,15 +66,8 @@ class AnnTest {
 			.proxyProxetta()
 			.withAspect(
 					new ProxyAspect(HeroProxyAdvice2.class,
-							new AllRealMethodsPointcut() {
-								@Override
-								public boolean apply(MethodInfo methodInfo) {
-									if (!methodInfo.isTopLevelMethod()) {
-										return false;
-									}
-									return super.apply(methodInfo);
-								}
-							}))
+						((ProxyPointcut) MethodInfo::isTopLevelMethod).and(AllRealMethodsPointcut.get())
+					))
 				//.setDebugFolder("/Users/igor/")
 				;
 
@@ -99,15 +85,8 @@ class AnnTest {
 			.wrapperProxetta()
 			.withAspect(
 					new ProxyAspect(HeroProxyAdvice.class,
-							new AllRealMethodsPointcut() {
-								@Override
-								public boolean apply(MethodInfo methodInfo) {
-									if (!methodInfo.isTopLevelMethod()) {
-										return false;
-									}
-									return super.apply(methodInfo);
-								}
-							}))
+						((ProxyPointcut) MethodInfo::isTopLevelMethod).and(AllRealMethodsPointcut.get())
+					))
 				//.setDebugFolder("/Users/igor/")
 				;
 
@@ -126,15 +105,8 @@ class AnnTest {
 				.wrapperProxetta()
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice2.class,
-							new AllRealMethodsPointcut() {
-								@Override
-								public boolean apply(MethodInfo methodInfo) {
-									if (!methodInfo.isTopLevelMethod()) {
-										return false;
-									}
-									return super.apply(methodInfo);
-								}
-							}))
+						((ProxyPointcut) MethodInfo::isTopLevelMethod).and(AllRealMethodsPointcut.get())
+					))
 				//.setDebugFolder("/Users/igor/")
 				;
 
