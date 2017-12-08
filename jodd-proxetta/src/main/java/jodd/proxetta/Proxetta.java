@@ -29,6 +29,7 @@ import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.WrapperProxetta;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,7 +89,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	protected ClassLoader classLoader;
 	protected boolean variableClassName;
 	protected String classNameSuffix;
-	protected String debugFolder;
+	protected File debugFolder;
 	protected final List<A> proxyAspectList = new ArrayList<>();
 
 	// ---------------------------------------------------------------- aspects
@@ -179,11 +180,19 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 * written to, for debugging purposes.
 	 */
 	public T setDebugFolder(String debugFolder) {
+		this.debugFolder = new File(debugFolder);
+		return (T) this;
+	}
+
+	public T setDebugFolder(File debugFolder) {
 		this.debugFolder = debugFolder;
 		return (T) this;
 	}
 
-	public String getDebugFolder() {
+	/**
+	 * Returns debug folder or {@code null} if debug folder does not exist.
+	 */
+	public File getDebugFolder() {
 		return debugFolder;
 	}
 

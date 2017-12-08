@@ -323,14 +323,13 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Writes created class content to output folder for debugging purposes.
 	 */
 	protected void dumpClassInDebugFolder(byte[] bytes) {
-		String debugFolder = proxetta.getDebugFolder();
+		File debugFolder = proxetta.getDebugFolder();
 		if (debugFolder == null) {
 			return;
 		}
 
-		File folder = new File(debugFolder);
-		if (!folder.exists()) {
-			folder.mkdirs();
+		if (!debugFolder.exists() || !debugFolder.isDirectory()) {
+			log.warn("Invalid debug folder: " + debugFolder);
 		}
 
 		String fileName = proxyClassName;
@@ -340,7 +339,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 
 		fileName += ".class";
 
-		File file = new File(folder, fileName);
+		File file = new File(debugFolder, fileName);
 		try {
 			FileUtil.writeBytes(file, bytes);
 		} catch (IOException ioex) {
