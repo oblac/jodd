@@ -26,7 +26,9 @@
 package jodd.madvoc;
 
 import jodd.exception.UncheckedException;
+import jodd.util.SystemUtil;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 
@@ -39,6 +41,8 @@ class MadvocSuiteTest {
 	static void beforeClass() {
 		isSuite = true;
 		startTomcat();
+		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8,
+			"The complete suite can not be tested on Java9 as Multi-Release JARS do not work in exploded mode.");
 	}
 
 	/**
