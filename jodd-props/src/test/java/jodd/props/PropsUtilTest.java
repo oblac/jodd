@@ -25,8 +25,7 @@
 
 package jodd.props;
 
-import jodd.util.SystemUtil;
-import org.junit.jupiter.api.Assumptions;
+import jodd.test.DisabledOnJava;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
@@ -161,10 +160,8 @@ class PropsUtilTest {
 	}
 
 	@Test
+	@DisabledOnJava(value = 9, description = "Classpath loading only works with MR-JAR jars as they don't work in exploded mode.")
 	void testCreateFromClasspath_WithExistingFileThroughPattern() {
-		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8,
-			"Classpath loading only works with MR-JAR jars as they don't work in exploded mode.");
-
 		final Props actual = PropsUtil.createFromClasspath("*jodd/props/data/test.properties");
 
 		// asserts

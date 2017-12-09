@@ -28,10 +28,10 @@ package jodd.util;
 import jodd.io.FileUtil;
 import jodd.io.findfile.ClassScanner;
 import jodd.mutable.Value;
+import jodd.test.DisabledOnJava;
 import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -84,8 +84,8 @@ class ClassLoaderUtilTest {
 	}
 
 	@Test
+	@DisabledOnJava(value = 9, description = "Default classloader is no longer URLClassLoader")
 	void testLoadClass() throws Exception {
-		Assumptions.assumeTrue(SystemUtil.javaVersionNumber() == 8);
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {

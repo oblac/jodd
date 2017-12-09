@@ -193,6 +193,7 @@ configure(javaModules()) {
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
+		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 		options.incremental = true
 		//configurations.compile.transitive = false
 	}
@@ -438,6 +439,8 @@ task javadocAll(type: Javadoc) {
 		stylesheetFile = file('src/main/javadoc/jodd.css')
 		source = '1.8'
 	}
+
+	options.addStringOption('Xdoclint:none', '-quiet')
 
 	inputs.files(javaBundleModulesSources.allSource + javaBundleModulesSources.compileClasspath)
 	outputs.dir destinationDir
