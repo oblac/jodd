@@ -25,27 +25,28 @@
 
 package jodd.db.type;
 
-import jodd.mutable.MutableInteger;
-import jodd.mutable.MutableFloat;
-import jodd.mutable.MutableDouble;
-import jodd.mutable.MutableByte;
+import jodd.datetime.JDateTime;
+import jodd.db.DbSqlException;
 import jodd.mutable.MutableBoolean;
+import jodd.mutable.MutableByte;
+import jodd.mutable.MutableDouble;
+import jodd.mutable.MutableFloat;
+import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
-import jodd.db.DbSqlException;
-import jodd.datetime.JDateTime;
+import jodd.util.ClassUtil;
 
-import java.util.HashMap;
-import java.sql.Timestamp;
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Array;
-import java.sql.Ref;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.Ref;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.HashMap;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -167,7 +168,7 @@ public class SqlTypeManager {
 		SqlType sqlType = sqlTypes.get(sqlTypeClass);
 		if (sqlType == null) {
 			try {
-				sqlType = sqlTypeClass.newInstance();
+				sqlType = ClassUtil.newInstance(sqlTypeClass);
 			} catch (Exception ex) {
 				throw new DbSqlException("SQL type not found: " + sqlTypeClass.getSimpleName(), ex);
 			}

@@ -120,7 +120,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 		}
 
 		try {
-			return collectionType.newInstance();
+			return collectionType.getDeclaredConstructor().newInstance();
 		} catch (Exception ex) {
 			throw new TypeConversionException(ex);
 		}

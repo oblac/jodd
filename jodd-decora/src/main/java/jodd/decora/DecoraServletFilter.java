@@ -26,12 +26,13 @@
 package jodd.decora;
 
 import jodd.decora.parser.DecoraParser;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 import jodd.servlet.wrapper.LastModifiedData;
 import jodd.util.ClassLoaderUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import jodd.util.ClassUtil;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -78,13 +79,14 @@ public class DecoraServletFilter implements Filter {
 	/**
 	 * Initializes Decora filter. Loads manager and parser from init parameters.
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		String decoraManagerClass = filterConfig.getInitParameter(PARAM_DECORA_MANAGER);
 
 		if (decoraManagerClass != null) {
 			try {
 				Class decoraManagerType = ClassLoaderUtil.loadClass(decoraManagerClass);
-				decoraManager = (DecoraManager) decoraManagerType.newInstance();
+				decoraManager = (DecoraManager) ClassUtil.newInstance(decoraManagerType);
 			} catch (Exception ex) {
 				log.error("Unable to load Decora manager class: " + decoraManagerClass, ex);
 				throw new ServletException(ex);
@@ -98,7 +100,7 @@ public class DecoraServletFilter implements Filter {
 		if (decoraParserClass != null) {
 			try {
 				Class decoraParserType = ClassLoaderUtil.loadClass(decoraParserClass);
-				decoraParser = (DecoraParser) decoraParserType.newInstance();
+				decoraParser = (DecoraParser) ClassUtil.newInstance(decoraParserType);
 			} catch (Exception ex) {
 				log.error("Unable to load Decora parser class: " + decoraParserClass, ex);
 				throw new ServletException(ex);
@@ -108,6 +110,7 @@ public class DecoraServletFilter implements Filter {
 		}
 	}
 
+	@Override
 	public void destroy() {
 	}
 
@@ -119,6 +122,7 @@ public class DecoraServletFilter implements Filter {
 		return new DecoraRequestWrapper(request);
 	}
 
+	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
 		final HttpServletRequest request = (HttpServletRequest) servletRequest;

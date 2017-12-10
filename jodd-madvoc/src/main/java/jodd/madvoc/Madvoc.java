@@ -32,6 +32,7 @@ import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.ClassUtil;
 
 import javax.servlet.ServletContext;
 
@@ -229,7 +230,7 @@ public class Madvoc {
 			if (webAppClassName != null) {
 				webAppClass = ClassLoaderUtil.loadClass(webAppClassName);
 			}
-			webApp = (WebApp) webAppClass.newInstance();
+			webApp = (WebApp) ClassUtil.newInstance(webAppClass);
 		}
 		catch (Exception ex) {
 			throw new MadvocException("Unable to load Madvoc web application class: " + webAppClassName, ex);

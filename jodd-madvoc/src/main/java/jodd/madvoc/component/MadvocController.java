@@ -33,6 +33,7 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
+import jodd.util.ClassUtil;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletContext;
@@ -233,7 +234,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 */
 	protected Object createAction(Class actionClass) {
 		try {
-			return actionClass.newInstance();
+			return ClassUtil.newInstance(actionClass);
 		} catch (Exception ex) {
 			throw new MadvocException("Invalid Madvoc action", ex);
 		}

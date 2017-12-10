@@ -28,6 +28,7 @@ package jodd.madvoc.component;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.ClassUtil;
 
 /**
  * Create and manage action path macros.
@@ -58,7 +59,7 @@ public class ActionPathMacroManager {
 	 */
 	protected PathMacros createPathMacro() {
 		try {
-			return madvocConfig.getPathMacroClass().newInstance();
+			return ClassUtil.newInstance(madvocConfig.getPathMacroClass());
 		} catch (Exception ex) {
 			throw new MadvocException(ex);
 		}

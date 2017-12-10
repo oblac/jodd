@@ -26,6 +26,7 @@
 package jodd.methref;
 
 import jodd.proxetta.ProxettaUtil;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class Methref<C> {
 		C proxy;
 
 		try {
-			proxy = (C) proxyClass.newInstance();
+			proxy = (C) ClassUtil.newInstance(proxyClass);
 		} catch (Exception ex) {
 			throw new MethrefException(ex);
 		}

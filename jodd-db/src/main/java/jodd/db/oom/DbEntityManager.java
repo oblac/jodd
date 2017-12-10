@@ -30,6 +30,7 @@ import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 
 import java.util.HashMap;
@@ -240,7 +241,7 @@ public class DbEntityManager {
 	 */
 	public <E> E createEntityInstance(Class<E> type) {
 		try {
-			return type.newInstance();
+			return ClassUtil.newInstance(type);
 		} catch (Exception ex) {
 			throw new DbOomException(ex);
 		}

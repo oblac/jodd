@@ -27,8 +27,6 @@ package jodd.exception;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static jodd.exception.ExceptionUtil.getExceptionChain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -68,22 +66,8 @@ class ExceptionUtilTest {
 		}
 	}
 
-	@Test
-	void testThrowChecked() {
-		try {
-			throwMe();
-			fail("error");
-		} catch (Exception ex) {
-			assertEquals(IOException.class, ex.getClass());
-		}
-	}
-
 	public void throwTwoExceptions() {
 		throw new IllegalArgumentException(new NullPointerException());
-	}
-
-	public void throwMe() {
-		ExceptionUtil.throwException(new IOException());
 	}
 
 }

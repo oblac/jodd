@@ -196,7 +196,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 */
 	protected <R extends T> R createWrapper(Class<R> wrapperClass) {
 		try {
-		    return wrapperClass.newInstance();
+		    return ClassUtil.newInstance(wrapperClass);
 		} catch (Exception ex) {
 			throw new MadvocException("Invalid Madvoc wrapper: " + wrapperClass, ex);
 		}

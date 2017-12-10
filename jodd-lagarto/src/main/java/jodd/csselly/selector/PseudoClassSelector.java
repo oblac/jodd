@@ -30,6 +30,7 @@ import jodd.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.lagarto.dom.NodeListFilter;
+import jodd.util.ClassUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	public static void registerPseudoClass(Class<? extends PseudoClass> pseudoClassType) {
 		PseudoClass pseudoClass;
 		try {
-			pseudoClass = pseudoClassType.newInstance();
+			pseudoClass = ClassUtil.newInstance(pseudoClassType);
 		} catch (Exception ex) {
 			throw new CSSellyException(ex);
 		}
@@ -128,6 +129,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	/**
 	 * Matches node to this selector.
 	 */
+	@Override
 	public boolean accept(Node node) {
 		return pseudoClass.match(node);
 	}
@@ -135,6 +137,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	/**
 	 * Accepts node within selected results. Invoked after results are matched.
 	 */
+	@Override
 	public boolean accept(List<Node> currentResults, Node node, int index) {
 		return pseudoClass.match(currentResults, node, index);
 	}

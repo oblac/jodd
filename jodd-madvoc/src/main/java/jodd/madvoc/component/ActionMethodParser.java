@@ -25,6 +25,8 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionNames;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
@@ -34,21 +36,20 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
+import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
+import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringPool;
-import jodd.petite.meta.PetiteInject;
+import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -107,7 +108,7 @@ public class ActionMethodParser {
 		ActionNamingStrategy namingStrategy;
 
 		try {
-			namingStrategy = actionPathNamingStrategy.newInstance();
+			namingStrategy = ClassUtil.newInstance(actionPathNamingStrategy);
 
 			contextInjectorComponent.injectContext(new Target(namingStrategy));
 		} catch (Exception ex) {

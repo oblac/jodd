@@ -544,7 +544,7 @@ public class ClassUtil {
 	 * Creates new instance of given class with given optional arguments.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(Class<T> clazz, Object... params) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+	public static <T> T newInstance(Class<T> clazz, Object... params) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		if (params.length == 0) {
 			return newInstance(clazz);
 		}
@@ -569,7 +569,7 @@ public class ClassUtil {
 	 * is faster then using a <code>HashMap</code>.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(Class<T> type) throws IllegalAccessException, InstantiationException {
+	public static <T> T newInstance(Class<T> type) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 		if (type.isPrimitive()) {
 			if (type == int.class) {
 				return (T) Integer.valueOf(0);
@@ -597,46 +597,50 @@ public class ClassUtil {
 			}
 			throw new IllegalArgumentException("Invalid primitive: " + type);
 		}
-		if (type == Integer.class) {
-			return (T) Integer.valueOf(0);
-		}
-		if (type == String.class) {
-			return (T) StringPool.EMPTY;
-		}
-		if (type == Long.class) {
-			return (T) Long.valueOf(0);
-		}
-		if (type == Boolean.class) {
-			return (T) Boolean.FALSE;
-		}
-		if (type == Float.class) {
-			return (T) Float.valueOf(0);
-		}
-		if (type == Double.class) {
-			return (T) Double.valueOf(0);
-		}
 
-		if (type == Map.class) {
-			return (T) new HashMap();
-		}
-		if (type == List.class) {
-			return (T) new ArrayList();
-		}
-		if (type == Set.class) {
-			return (T) new HashSet();
-		}
-		if (type == Collection.class) {
-			return (T) new ArrayList();
-		}
+		if (type.getName().startsWith("java.")) {
 
-		if (type == Byte.class) {
-			return (T) Byte.valueOf((byte) 0);
-		}
-		if (type == Short.class) {
-			return (T) Short.valueOf((short) 0);
-		}
-		if (type == Character.class) {
-			return (T) Character.valueOf((char) 0);
+			if (type == Integer.class) {
+				return (T) Integer.valueOf(0);
+			}
+			if (type == String.class) {
+				return (T) StringPool.EMPTY;
+			}
+			if (type == Long.class) {
+				return (T) Long.valueOf(0);
+			}
+			if (type == Boolean.class) {
+				return (T) Boolean.FALSE;
+			}
+			if (type == Float.class) {
+				return (T) Float.valueOf(0);
+			}
+			if (type == Double.class) {
+				return (T) Double.valueOf(0);
+			}
+
+			if (type == Map.class) {
+				return (T) new HashMap();
+			}
+			if (type == List.class) {
+				return (T) new ArrayList();
+			}
+			if (type == Set.class) {
+				return (T) new HashSet();
+			}
+			if (type == Collection.class) {
+				return (T) new ArrayList();
+			}
+
+			if (type == Byte.class) {
+				return (T) Byte.valueOf((byte) 0);
+			}
+			if (type == Short.class) {
+				return (T) Short.valueOf((short) 0);
+			}
+			if (type == Character.class) {
+				return (T) Character.valueOf((char) 0);
+			}
 		}
 
 		if (type.isEnum()) {
@@ -647,7 +651,11 @@ public class ClassUtil {
 			return (T) Array.newInstance(type.getComponentType(), 0);
 		}
 
-		return type.newInstance();
+		Constructor<T> declaredConstructor = type.getDeclaredConstructor();
+
+		forceAccess(declaredConstructor);
+
+		return declaredConstructor.newInstance();
 	}
 
 

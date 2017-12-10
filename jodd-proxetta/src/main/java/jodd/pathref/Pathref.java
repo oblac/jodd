@@ -93,7 +93,7 @@ public class Pathref<C> {
 		C proxy;
 
 		try {
-			proxy = (C) proxyClass.newInstance();
+			proxy = (C) ClassUtil.newInstance(proxyClass);
 		} catch (Exception ex) {
 			throw new PathrefException(ex);
 		}

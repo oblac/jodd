@@ -26,6 +26,7 @@
 package jodd.petite;
 
 import jodd.petite.def.DestroyMethodPoint;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
 
@@ -52,7 +53,7 @@ public class PetiteUtil {
 
 		// if first try failed, try default ctor
 		if (t == null) {
-			return type.newInstance();
+			return ClassUtil.newInstance(type);
 		}
 
 		return t;

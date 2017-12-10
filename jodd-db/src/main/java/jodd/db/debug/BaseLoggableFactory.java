@@ -31,6 +31,7 @@ import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaAsmUtil;
 import jodd.proxetta.impl.WrapperProxetta;
 import jodd.proxetta.impl.WrapperProxettaFactory;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -99,7 +100,7 @@ public abstract class BaseLoggableFactory<T> {
 
 		T wrapper;
 		try {
-			wrapper = wrappedStatement.newInstance();
+			wrapper = ClassUtil.newInstance(wrappedStatement);
 		} catch (Exception ex) {
 			throw new DbSqlException(ex);
 		}

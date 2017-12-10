@@ -36,6 +36,7 @@ import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Result;
 import jodd.petite.meta.PetiteInject;
 import jodd.typeconverter.TypeConverterManager;
+import jodd.util.ClassUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -329,7 +330,7 @@ public class ResultsManager {
 	 */
 	protected ActionResult createResult(Class<? extends ActionResult> actionResultClass) {
 		try {
-			return actionResultClass.newInstance();
+			return ClassUtil.newInstance(actionResultClass);
 		} catch (Exception ex) {
 			throw new MadvocException("Invalid Madvoc result: " + actionResultClass, ex);
 		}

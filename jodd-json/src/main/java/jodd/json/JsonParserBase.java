@@ -60,6 +60,7 @@ public abstract class JsonParserBase {
 	 * It returns a collection.
 	 * Later, the collection will be converted into the target type.
 	 */
+	@SuppressWarnings("unchecked")
 	protected Collection<Object> newArrayInstance(Class targetType) {
 		if (targetType == null ||
 			targetType == List.class ||
@@ -74,7 +75,7 @@ public abstract class JsonParserBase {
 		}
 
 		try {
-			return (Collection<Object>) targetType.newInstance();
+			return (Collection<Object>) targetType.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}

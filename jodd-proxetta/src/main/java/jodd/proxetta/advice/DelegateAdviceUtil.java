@@ -30,6 +30,7 @@ import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxetta;
+import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class DelegateAdviceUtil {
 		// create new advice instance and injects target instance to it
 
 		try {
-			Object advice = adviceClass.newInstance();
+			Object advice = ClassUtil.newInstance(adviceClass);
 
 			Field field = adviceClass.getField("$___target$0");
 

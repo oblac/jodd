@@ -83,7 +83,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 			// no default annotation on parent, create annotation
 			if (defaultAnnotation == null) {
 				try {
-					defaultAnnotation = defaultAnnotationClass.newInstance();
+					defaultAnnotation = defaultAnnotationClass.getDeclaredConstructor().newInstance();
 				} catch (Exception ignore) {
 				}
 			}

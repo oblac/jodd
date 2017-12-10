@@ -118,7 +118,7 @@ public class Jodd {
 			}
 			try {
 				// create new instance to force loading of the class
-				moduleClass.newInstance();
+				moduleClass.getDeclaredConstructor().newInstance();
 			}
 			catch (Exception ignore) {
 			}

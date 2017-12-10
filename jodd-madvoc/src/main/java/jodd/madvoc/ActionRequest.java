@@ -27,9 +27,9 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.injector.Target;
-import jodd.exception.ExceptionUtil;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.result.Result;
+import jodd.util.ClassUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +37,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+
+import static jodd.exception.ExceptionUtil.unwrapThrowable;
+import static jodd.exception.ExceptionUtil.wrapToException;
 
 
 /**
@@ -218,6 +221,7 @@ public class ActionRequest {
 		// result is executed AFTER the action AND interceptors
 
 		executionArray[index++] = new BaseActionWrapper() {
+			@Override
 			public Object invoke(ActionRequest actionRequest) throws Exception {
 				Object actionResult = actionRequest.invoke();
 
@@ -237,6 +241,7 @@ public class ActionRequest {
 		// action
 
 		executionArray[index] = new BaseActionWrapper() {
+			@Override
 			public Object invoke(ActionRequest actionRequest) throws Exception {
 				actionResult = invokeActionMethod();
 				return actionResult;
@@ -257,7 +262,7 @@ public class ActionRequest {
 				Result result = (Result) resultField.get(action);
 
 				if (result == null) {
-					result = (Result) resultField.getType().newInstance();
+					result = (Result) ClassUtil.newInstance(resultField.getType());
 					resultField.set(action, result);
 				}
 
@@ -354,7 +359,7 @@ public class ActionRequest {
 		try {
 			return actionConfig.actionClassMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
-			throw ExceptionUtil.extractTargetException(itex);
+			throw wrapToException(unwrapThrowable(itex));
 		}
 	}
 
