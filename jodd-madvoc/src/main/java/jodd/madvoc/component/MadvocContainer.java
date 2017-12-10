@@ -142,7 +142,7 @@ public class MadvocContainer {
 
 					Object listener = lookupComponent(name);
 					if (listener != null) {
-						MadvocListener.invoke(listener, listenerType);
+						MadvocComponentLifecycle.invoke(listener, listenerType);
 					}
 				}
 			});

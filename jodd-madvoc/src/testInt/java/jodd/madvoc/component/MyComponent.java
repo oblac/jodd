@@ -29,16 +29,12 @@ import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
 
 @MadvocComponent
-public class MyComponent implements MadvocListener.Init, MadvocListener.Ready, MadvocListener.Start {
+public class MyComponent implements MadvocComponentLifecycle.Init, MadvocComponentLifecycle.Ready, MadvocComponentLifecycle.Start {
 
 	@PetiteInject
 	MadvocConfig madvocConfig;
 
 	String string = "";
-
-	public MadvocConfig getMadvocConfig() {
-		return madvocConfig;
-	}
 
 	public String getString() {
 		return string + madvocConfig.encoding;

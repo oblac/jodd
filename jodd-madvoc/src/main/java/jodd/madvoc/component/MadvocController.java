@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * It also builds action objects and result paths. It handles initialization of
  * interceptors and results.
  */
-public class MadvocController implements MadvocListener.Ready {
+public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 

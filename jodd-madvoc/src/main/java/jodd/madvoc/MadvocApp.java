@@ -29,8 +29,8 @@ import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.component.MadvocListener;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 /**
  * Madvoc configurator for manual configuration.
  */
-public abstract class MadvocApp implements MadvocListener.Start {
+public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 
 	/**
 	 * Creates

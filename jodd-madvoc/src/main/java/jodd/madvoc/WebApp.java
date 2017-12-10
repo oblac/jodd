@@ -36,10 +36,10 @@ import jodd.madvoc.component.ContextInjectorComponent;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.component.MadvocListener;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ScopeDataResolver;
@@ -197,11 +197,11 @@ public class WebApp {
 
 
 		//// listeners
-		madvocContainer.fireEvent(MadvocListener.Init.class);
+		madvocContainer.fireEvent(MadvocComponentLifecycle.Init.class);
 
 		initalized();
 
-		madvocContainer.fireEvent(MadvocListener.Start.class);
+		madvocContainer.fireEvent(MadvocComponentLifecycle.Start.class);
 
 		if (!madvocAppConsumers.isEmpty()) {
 
@@ -214,7 +214,7 @@ public class WebApp {
 
 		started();
 
-		madvocContainer.fireEvent(MadvocListener.Ready.class);
+		madvocContainer.fireEvent(MadvocComponentLifecycle.Ready.class);
 
 		ready();
 
@@ -256,33 +256,34 @@ public class WebApp {
 	}
 
 	/**
-	 * Called when Madvoc is initialized, at the end of the {@link MadvocListener.Init INIT} phase.
-	 * @see MadvocListener.Init
+	 * Called when Madvoc is initialized, at the end of the {@link MadvocComponentLifecycle.Init INIT} phase.
+	 * @see MadvocComponentLifecycle
 	 */
 	protected void initalized() {
 	}
 
 	/**
-	 * Called when Madvoc is started, at the end of the {@link MadvocListener.Start START} phase.
-	 * @see MadvocListener.Start
+	 * Called when Madvoc is started, at the end of the {@link MadvocComponentLifecycle.Start START} phase.
+	 * @see MadvocComponentLifecycle
 	 */
 	protected void started() {
 	}
 
 	/**
-	 * Called when Madvoc is ready, at the end of the {@link MadvocListener.Ready READY} phase.
-	 * @see MadvocListener.Ready
+	 * Called when Madvoc is ready, at the end of the {@link MadvocComponentLifecycle.Ready READY} phase.
+	 * @see MadvocComponentLifecycle
 	 */
 	protected void ready() {
 	}
 
 	/**
 	 * Shutdows the web application. Triggers the STOP event.
+	 * @see MadvocComponentLifecycle
 	 */
 	public void shutdown() {
 		log.info("Madvoc shutting down...");
 
-		madvocContainer.fireEvent(MadvocListener.Stop.class);
+		madvocContainer.fireEvent(MadvocComponentLifecycle.Stop.class);
 	}
 
 }

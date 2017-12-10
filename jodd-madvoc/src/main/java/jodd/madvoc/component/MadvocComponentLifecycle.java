@@ -28,9 +28,48 @@ package jodd.madvoc.component;
 import jodd.madvoc.MadvocException;
 
 /**
- * Madvoc events.
+ * Madvoc component lifecycle events.
  */
-public class MadvocListener {
+public class MadvocComponentLifecycle {
+
+	/**
+	 * Madvoc <b>INIT</b> handler.
+	 * Components are being registered. Should not request for an instance during this phase, since dependencies
+	 * may still not be registered or updated. May be used for registration of additional components.
+	 */
+	@FunctionalInterface
+	public interface Init {
+		void init();
+	}
+
+	/**
+	 * Madvoc <b>START</b> handler.
+	 * All components are registered. Web application is being loaded. Should not use any web application
+	 * component (action, filter, interceptor, result...) during this phase. New web application components
+	 * may be registered.
+	 */
+	@FunctionalInterface
+	public interface Start {
+		void start();
+	}
+
+	/**
+	 * Madvoc <b>READY</b> handler.
+	 * Initialization is done: everything is registered.
+	 * This phase is used for running any initialization that depends on the complete configuration.
+	 */
+	@FunctionalInterface
+	public interface Ready {
+		void ready();
+	}
+
+	/**
+	 *  Madvoc STOP handler. Invoked on Madvoc shutdown.
+	 */
+	@FunctionalInterface
+	public interface Stop {
+		void stop();
+	}
 
 	/**
 	 * Invoke the listener based on type.
@@ -56,39 +95,6 @@ public class MadvocListener {
 		throw new MadvocException("Invalid listener");
 	}
 
-	/**
-	 * Madvoc <b>INIT</b> handler.
-	 * Components are being registered. Should not request for an instance during this phase, since dependencies
-	 * may still not be registered or updated. May be used for registration of additional components.
-	 */
-	public interface Init {
-		void init();
-	}
 
-	/**
-	 * Madvoc <b>START</b> handler.
-	 * All components are registered. Web application is being loaded. Should not use any web application
-	 * component (action, filter, interceptor, result...) during this phase. New web application components
-	 * may be registered.
-	 */
-	public interface Start {
-		void start();
-	}
-
-	/**
-	 * Madvoc <b>READY</b> handler.
-	 * Initialization is done: everything is registered.
-	 * This phase is used for running any initialization that depends on the complete configuration.
-	 */
-	public interface Ready {
-		void ready();
-	}
-
-	/**
-	 *  Madvoc STOP handler. Invoked on Madvoc shutdown.
-	 */
-	public interface Stop {
-		void stop();
-	}
 
 }

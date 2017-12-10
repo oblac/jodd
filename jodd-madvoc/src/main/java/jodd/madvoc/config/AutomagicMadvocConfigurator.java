@@ -34,9 +34,9 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocContainer;
-import jodd.madvoc.component.MadvocListener;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
@@ -62,7 +62,7 @@ import java.util.function.Consumer;
  * Action class is scanned for the {@link MadvocAction}. All public methods with {@link Action}
  * are registered as Madvoc actions.
  */
-public class AutomagicMadvocConfigurator implements MadvocListener.Init, MadvocListener.Start {
+public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Init, MadvocComponentLifecycle.Start {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
 	private final ClassScanner classScanner = new ClassScanner();
