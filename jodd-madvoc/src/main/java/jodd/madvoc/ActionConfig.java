@@ -57,14 +57,14 @@ public class ActionConfig {
 		/**
 		 * Returns parameter type.
 		 */
-		public Class getType() {
+		public Class type() {
 			return type;
 		}
 
 		/**
 		 * Returns parameter name.
 		 */
-		public String getName() {
+		public String name() {
 			return name;
 		}
 
@@ -72,7 +72,7 @@ public class ActionConfig {
 		 * Returns parameter Madvoc annotation type, one of
 		 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out} or {@link jodd.madvoc.meta.InOut}.
 		 */
-		public Class<? extends Annotation> getAnnotationType() {
+		public Class<? extends Annotation> annotationType() {
 			return annotationType;
 		}
 	}

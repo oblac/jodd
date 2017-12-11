@@ -290,15 +290,15 @@ public class ActionRequest {
 		for (int i = 0; i < methodParams.length; i++) {
 			ActionConfig.MethodParam mp = methodParams[i];
 
-			Class type = mp.getType();
+			Class type = mp.type();
 
 			Target t;
 
-			if (mp.getAnnotationType() == null) {
+			if (mp.annotationType() == null) {
 				// parameter is NOT annotated
 				t = new Target(createActionMethodArgument(type));
 			}
-			else if (mp.getAnnotationType() == Out.class) {
+			else if (mp.annotationType() == Out.class) {
 				// parameter is annotated with *only* OUT annotation
 				// we need to create the output AND to save the type
 				t = new Target(createActionMethodArgument(type), type);
