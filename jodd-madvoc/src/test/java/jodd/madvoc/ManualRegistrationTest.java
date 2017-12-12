@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.result.TextResult;

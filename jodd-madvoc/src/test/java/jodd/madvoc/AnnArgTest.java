@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
+import jodd.madvoc.config.ActionConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

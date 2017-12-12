@@ -25,12 +25,12 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionConfigSet;
 import jodd.util.StringUtil;
 
 /**
@@ -44,6 +44,7 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 		silent = true;
 	}
 
+	@Override
 	public void inject(ActionRequest actionRequest) {
 		ActionConfig config = actionRequest.getActionConfig();
 		ActionConfigSet set = config.getActionConfigSet();

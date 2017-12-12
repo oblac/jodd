@@ -25,9 +25,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
+import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.WebApp;
+import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
 import org.junit.jupiter.api.Test;

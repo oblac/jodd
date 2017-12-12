@@ -25,8 +25,8 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
+import jodd.madvoc.config.ActionDef;
+import jodd.madvoc.config.ActionNames;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -73,7 +73,7 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	}
 
 	/**
-	 * Single point of {@link jodd.madvoc.ActionDef} creation.
+	 * Single point of {@link ActionDef} creation.
 	 * Also performs the replacement of action path macros!
 	 */
 	protected ActionDef createActionDef(String path, String httpMethod, String resultBasePath, ActionNames actionNames) {

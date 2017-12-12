@@ -26,6 +26,8 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -130,6 +132,7 @@ class ActionRequestRecursionTest {
 			this.i = i;
 		}
 
+		@Override
 		public Object filter(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-F" + i;
 			Object result = actionRequest.invoke();
@@ -138,6 +141,7 @@ class ActionRequestRecursionTest {
 		}
 	}
 	class FilterStop extends BaseActionFilter {
+		@Override
 		public Object filter(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-X";
 			return "stop";
@@ -150,6 +154,7 @@ class ActionRequestRecursionTest {
 			this.i = i;
 		}
 
+		@Override
 		public Object intercept(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-I"+i;
 			Object result = actionRequest.invoke();
@@ -158,6 +163,7 @@ class ActionRequestRecursionTest {
 		}
 	}
 	class InterceptorStop extends BaseActionInterceptor {
+		@Override
 		public Object intercept(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-x";
 			return "stop";

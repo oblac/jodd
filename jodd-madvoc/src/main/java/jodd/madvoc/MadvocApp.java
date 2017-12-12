@@ -32,6 +32,8 @@ import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;

@@ -29,9 +29,9 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocUtil;
-import jodd.madvoc.ResultPath;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
+import jodd.madvoc.config.ResultPath;
 import jodd.madvoc.meta.In;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -64,6 +64,7 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 	 * Does its forward via a <code>RequestDispatcher</code>. If the dispatch fails, a 404 error
 	 * will be sent back in the http response.
 	 */
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
 
@@ -103,9 +104,9 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 
 		ResultPath resultPath = resultMapper.resolveResultPath(resultBasePath, resultValue);
 
-		String actionPath = resultPath.getPath();
+		String actionPath = resultPath.path();
 		String path = actionPath;
-		String value = resultPath.getValue();
+		String value = resultPath.value();
 
 		if (StringUtil.isEmpty(value)) {
 			value = null;

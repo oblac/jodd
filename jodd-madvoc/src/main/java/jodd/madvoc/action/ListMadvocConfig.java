@@ -25,13 +25,13 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
@@ -86,6 +86,7 @@ public class ListMadvocConfig {
 		interceptors = new ArrayList<>();
 		interceptors.addAll(interceptorValues);
 		Collections.sort(interceptors, new Comparator<ActionInterceptor>() {
+			@Override
 			public int compare(ActionInterceptor a1, ActionInterceptor a2) {
 				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
 			}
@@ -100,6 +101,7 @@ public class ListMadvocConfig {
 		filters = new ArrayList<>();
 		filters.addAll(filterValues);
 		Collections.sort(filters, new Comparator<ActionFilter>() {
+			@Override
 			public int compare(ActionFilter a1, ActionFilter a2) {
 				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
 			}
@@ -114,6 +116,7 @@ public class ListMadvocConfig {
 		results = new ArrayList<>();
 		results.addAll(resultsValues);
 		Collections.sort(results, new Comparator<ActionResult>() {
+			@Override
 			public int compare(ActionResult a1, ActionResult a2) {
 				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
 			}
@@ -126,6 +129,7 @@ public class ListMadvocConfig {
 	protected void collectActionConfigs() {
 		actions = actionsManager.getAllActionConfigurations();
 		Collections.sort(actions, new Comparator<ActionConfig>() {
+			@Override
 			public int compare(ActionConfig a1, ActionConfig a2) {
 				return a1.actionPath.compareTo(a2.actionPath);
 			}

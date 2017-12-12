@@ -27,10 +27,10 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ResultPath;
-import jodd.petite.meta.PetiteInject;
 import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ResultPath;
+import jodd.petite.meta.PetiteInject;
 import jodd.util.StringUtil;
 
 /**
@@ -203,7 +203,7 @@ public class ResultMapper {
 	 */
 	public String resolveResultPathString(String path, String value) {
 		ResultPath resultPath = resolveResultPath(path, value);
-		String result = resultPath.getPathValue();
+		String result = resultPath.pathValue();
 
 		return resolveAlias(result);
 	}

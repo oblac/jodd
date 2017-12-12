@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
+import jodd.madvoc.config.ActionConfig;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;

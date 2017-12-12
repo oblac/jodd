@@ -23,43 +23,41 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
-/**
- * Holder of result path value. Consists of 2 parts:
- * <ul>
- *     <li>path - the first part, that comes usually from action config</li>
- *     <li>value - second part, that comes from action, may be <code>null</code></li>
- * </ul>
- */
-public class ResultPath {
+import java.lang.annotation.Annotation;
 
-	protected final String path;
-	protected final String value;
+public class MethodParam {
 
-	public ResultPath(String path, String value) {
-		this.path = path;
-		this.value = value;
+	private final Class type;
+	private final String name;
+	private final Class<? extends Annotation> annotationType;
+
+	public MethodParam(Class type, String name, Class<? extends Annotation> annotationType) {
+		this.type = type;
+		this.name = name;
+		this.annotationType = annotationType;
 	}
 
-	public String getPath() {
-		return path;
+	/**
+	 * Returns parameter type.
+	 */
+	public Class type() {
+		return type;
 	}
 
-	public String getValue() {
-		return value;
+	/**
+	 * Returns parameter name.
+	 */
+	public String name() {
+		return name;
 	}
 
-	public String getPathValue() {
-		if (value == null) {
-			return path;
-		}
-		return path + '.' + value;
+	/**
+	 * Returns parameter Madvoc annotation type, one of
+	 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out} or {@link jodd.madvoc.meta.InOut}.
+	 */
+	public Class<? extends Annotation> annotationType() {
+		return annotationType;
 	}
-
-	@Override
-	public String toString() {
-		return getPathValue();
-	}
-
 }

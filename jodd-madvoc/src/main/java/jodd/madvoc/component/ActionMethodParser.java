@@ -25,14 +25,15 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.RootPackages;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionDef;
+import jodd.madvoc.config.ActionNames;
+import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -85,7 +86,7 @@ public class ActionMethodParser {
 	protected ActionMethodParamNameResolver actionMethodParamNameResolver;
 
 	/**
-	 * Parses action class and method and creates {@link jodd.madvoc.ActionDef parsed action definition}.
+	 * Parses action class and method and creates {@link ActionDef parsed action definition}.
 	 */
 	public ActionDef parseActionDef(final Class<?> actionClass, final Method actionMethod) {
 
@@ -504,7 +505,7 @@ public class ActionMethodParser {
 		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
-		ActionConfig.MethodParam[] params = new ActionConfig.MethodParam[paramTypes.length];
+		MethodParam[] params = new MethodParam[paramTypes.length];
 
 		Annotation[][] paramAnns = actionClassMethod.getParameterAnnotations();
 		String[] methodParamNames = null;
@@ -532,7 +533,7 @@ public class ActionMethodParser {
 
 				scopeData = scopeDataResolver.resolveScopeData(paramName, type, paramAnns[paramIndex]);
 
-				params[paramIndex] = new ActionConfig.MethodParam(
+				params[paramIndex] = new MethodParam(
 						paramTypes[paramIndex], paramName, scopeDataResolver.detectAnnotationType(paramAnns[paramIndex]));
 			}
 

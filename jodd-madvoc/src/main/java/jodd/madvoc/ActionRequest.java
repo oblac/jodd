@@ -26,6 +26,8 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.result.Result;
@@ -282,13 +284,13 @@ public class ActionRequest {
 			return new Target[] {new Target(action)};
 		}
 
-		ActionConfig.MethodParam[] methodParams = actionConfig.getMethodParams();
+		MethodParam[] methodParams = actionConfig.getMethodParams();
 		Target[] target = new Target[methodParams.length + 1];
 
 		target[0] = new Target(action);
 
 		for (int i = 0; i < methodParams.length; i++) {
-			ActionConfig.MethodParam mp = methodParams[i];
+			MethodParam mp = methodParams[i];
 
 			Class type = mp.type();
 

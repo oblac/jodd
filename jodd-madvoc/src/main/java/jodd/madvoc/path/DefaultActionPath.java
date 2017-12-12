@@ -25,8 +25,8 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
+import jodd.madvoc.config.ActionDef;
+import jodd.madvoc.config.ActionNames;
 import jodd.util.StringPool;
 
 import java.lang.reflect.Method;

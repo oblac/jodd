@@ -23,51 +23,43 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
 /**
- * Action definition is represented by action's path, http method and result base path.
+ * Holder of result path value. Consists of 2 parts:
+ * <ul>
+ *     <li>path - the first part, that comes usually from action config</li>
+ *     <li>value - second part, that comes from action, may be <code>null</code></li>
+ * </ul>
  */
-public class ActionDef {
+public class ResultPath {
 
-	protected final String actionPath;
-	protected final String actionMethod;
-	protected final String resultBasePath;
+	protected final String path;
+	protected final String value;
 
-	public ActionDef(String actionPath, String actionMethod, String resultBasePath) {
-		this.actionPath = actionPath;
-		this.actionMethod = actionMethod;
-		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
+	public ResultPath(String path, String value) {
+		this.path = path;
+		this.value = value;
 	}
 
-	public ActionDef(String actionPath, String actionMethod) {
-		this.actionPath = actionPath;
-		this.actionMethod = actionMethod;
-		this.resultBasePath = actionPath;
+	public String path() {
+		return path;
 	}
 
-	public ActionDef(String actionPath) {
-		this(actionPath, null);
+	public String value() {
+		return value;
 	}
 
-	/**
-	 * Returns action's path.
-	 */
-	public String actionPath() {
-		return actionPath;
+	public String pathValue() {
+		if (value == null) {
+			return path;
+		}
+		return path + '.' + value;
 	}
 
-	/**
-	 * Returns action's HTTP method.
-	 */
-	public String actionMethod() {
-		return actionMethod;
+	@Override
+	public String toString() {
+		return pathValue();
 	}
 
-	/**
-	 * Returns result base path.
-	 */
-	public String resultBasePath() {
-		return resultBasePath;
-	}
 }

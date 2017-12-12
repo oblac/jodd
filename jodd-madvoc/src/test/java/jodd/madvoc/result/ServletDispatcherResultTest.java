@@ -26,12 +26,12 @@
 package jodd.madvoc.result;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
+import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
+import jodd.madvoc.config.ActionConfig;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 

@@ -23,17 +23,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Result;
 import jodd.util.ClassUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -41,41 +41,6 @@ import java.lang.reflect.Method;
  * Action configuration and shared run-time data, used internally.
  */
 public class ActionConfig {
-
-	public static class MethodParam {
-
-		private final Class type;
-		private final String name;
-		private final Class<? extends Annotation> annotationType;
-
-		public MethodParam(Class type, String name, Class<? extends Annotation> annotationType) {
-			this.type = type;
-			this.name = name;
-			this.annotationType = annotationType;
-		}
-
-		/**
-		 * Returns parameter type.
-		 */
-		public Class type() {
-			return type;
-		}
-
-		/**
-		 * Returns parameter name.
-		 */
-		public String name() {
-			return name;
-		}
-
-		/**
-		 * Returns parameter Madvoc annotation type, one of
-		 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out} or {@link jodd.madvoc.meta.InOut}.
-		 */
-		public Class<? extends Annotation> annotationType() {
-			return annotationType;
-		}
-	}
 
 	// configuration
 	public final Class actionClass;

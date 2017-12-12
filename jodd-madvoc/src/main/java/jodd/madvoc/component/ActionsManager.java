@@ -29,10 +29,10 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionConfigSet;
-import jodd.madvoc.ActionDef;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionConfigSet;
+import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
@@ -191,12 +191,12 @@ public class ActionsManager {
 	/**
 	 * Registration main point. Does two things:
 	 * <ul>
-	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, jodd.madvoc.ActionDef) parse action}
-	 *     and creates {@link jodd.madvoc.ActionConfig}</li>
-	 *     <li>{@link #registerAction(jodd.madvoc.ActionConfig) registers} created {@link jodd.madvoc.ActionConfig}</li>
+	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, ActionDef) parse action}
+	 *     and creates {@link ActionConfig}</li>
+	 *     <li>{@link #registerAction(ActionConfig) registers} created {@link ActionConfig}</li>
 	 * </ul>
 	 * Returns created {@link ActionConfig}.
-	 * @see #registerAction(jodd.madvoc.ActionConfig)
+	 * @see #registerAction(ActionConfig)
 	 */
 	protected ActionConfig registerAction(Class actionClass, Method actionMethod, ActionDef actionDef) {
 		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionDef);
@@ -342,7 +342,7 @@ public class ActionsManager {
 	/**
 	 * Lookups action config for given action class and method string (aka 'action string').
 	 * The action string has the following format: <code>className#methodName</code>.
-	 * @see jodd.madvoc.ActionConfig#getActionString()
+	 * @see ActionConfig#getActionString()
 	 */
 	public ActionConfig lookup(String actionString) {
 		return configs.get(actionString);

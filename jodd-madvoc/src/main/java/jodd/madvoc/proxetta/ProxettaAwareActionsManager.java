@@ -25,9 +25,9 @@
 
 package jodd.madvoc.proxetta;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
+import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.config.ActionConfig;
 import jodd.petite.meta.PetiteInject;
 import jodd.proxetta.impl.ProxyProxetta;
 
@@ -51,7 +51,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 
 	/**
 	 * Registers actions and applies proxetta on actions that are not already registered.
-	 * We need to define {@link jodd.madvoc.ActionDef} before we apply the proxy, using
+	 * We need to define {@link ActionDef} before we apply the proxy, using
 	 * target action class.
 	 */
 	@Override

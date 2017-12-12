@@ -23,8 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.macro.PathMacros;
 import jodd.util.ArraysUtil;
 import jodd.util.StringUtil;
@@ -123,6 +124,7 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 
 	// ---------------------------------------------------------------- compare
 
+	@Override
 	public int compareTo(ActionConfigSet set) {
 		return this.actionPath.compareTo(set.actionPath);
 	}

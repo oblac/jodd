@@ -27,9 +27,9 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;

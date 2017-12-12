@@ -23,28 +23,51 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.path;
-
-import jodd.madvoc.config.ActionDef;
-import jodd.madvoc.config.ActionNames;
-
-import java.lang.reflect.Method;
+package jodd.madvoc.config;
 
 /**
- * Naming strategy for building paths and http method.
+ * Action definition is represented by action's path, http method and result base path.
  */
-public interface ActionNamingStrategy {
+public class ActionDef {
+
+	protected final String actionPath;
+	protected final String actionMethod;
+	protected final String resultBasePath;
+
+	public ActionDef(String actionPath, String actionMethod, String resultBasePath) {
+		this.actionPath = actionPath;
+		this.actionMethod = actionMethod;
+		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
+	}
+
+	public ActionDef(String actionPath, String actionMethod) {
+		this.actionPath = actionPath;
+		this.actionMethod = actionMethod;
+		this.resultBasePath = actionPath;
+	}
+
+	public ActionDef(String actionPath) {
+		this(actionPath, null);
+	}
 
 	/**
-	 * Builds {@link ActionDef}.
-	 *
-	 * @param actionClass action class
-	 * @param actionMethod action method
-	 * @param actionNames action names
+	 * Returns action's path.
 	 */
-	public ActionDef buildActionDef(
-			Class actionClass,
-			Method actionMethod,
-			ActionNames actionNames);
+	public String actionPath() {
+		return actionPath;
+	}
 
+	/**
+	 * Returns action's HTTP method.
+	 */
+	public String actionMethod() {
+		return actionMethod;
+	}
+
+	/**
+	 * Returns result base path.
+	 */
+	public String resultBasePath() {
+		return resultBasePath;
+	}
 }
