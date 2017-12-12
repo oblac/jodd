@@ -175,7 +175,7 @@ public class AnnotationTxAdviceManager {
 	 */
 	protected TransactionAnnotationData getTransactionAnnotation(Method method) {
 		for (TransactionAnnotation annotationInstance : annotationInstances) {
-			TransactionAnnotationData tad = annotationInstance.readAnnotationData(method);
+			TransactionAnnotationData tad = annotationInstance.readAnnotatedElement(method);
 			if (tad != null) {
 				return tad;
 			}

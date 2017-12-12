@@ -53,21 +53,21 @@ public class ActionDef {
 	/**
 	 * Returns action's path.
 	 */
-	public String getActionPath() {
+	public String actionPath() {
 		return actionPath;
 	}
 
 	/**
 	 * Returns action's HTTP method.
 	 */
-	public String getActionMethod() {
+	public String actionMethod() {
 		return actionMethod;
 	}
 
 	/**
 	 * Returns result base path.
 	 */
-	public String getResultBasePath() {
+	public String resultBasePath() {
 		return resultBasePath;
 	}
 }

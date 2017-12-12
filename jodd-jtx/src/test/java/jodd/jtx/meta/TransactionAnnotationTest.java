@@ -29,8 +29,12 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-import static jodd.jtx.JtxIsolationLevel.*;
-import static jodd.jtx.JtxPropagationBehavior.*;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_DEFAULT;
+import static jodd.jtx.JtxIsolationLevel.ISOLATION_SERIALIZABLE;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_MANDATORY;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_REQUIRED;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW;
+import static jodd.jtx.JtxPropagationBehavior.PROPAGATION_SUPPORTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TransactionAnnotationTest {
@@ -58,7 +62,7 @@ class TransactionAnnotationTest {
 		assertEquals(Transaction.class, txAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello");
-		TransactionAnnotationData<Transaction> annotationData = txAnnotation.readAnnotationData(method);
+		TransactionAnnotationData<Transaction> annotationData = txAnnotation.readAnnotatedElement(method);
 
 		assertEquals(ISOLATION_DEFAULT, annotationData.isolation);
 		assertEquals(PROPAGATION_SUPPORTS, annotationData.propagation);
@@ -66,7 +70,7 @@ class TransactionAnnotationTest {
 		assertEquals(-1, annotationData.timeout);
 
 		method = this.getClass().getMethod("hello2");
-		annotationData = txAnnotation.readAnnotationData(method);
+		annotationData = txAnnotation.readAnnotatedElement(method);
 
 		assertEquals(ISOLATION_SERIALIZABLE, annotationData.isolation);
 		assertEquals(PROPAGATION_REQUIRES_NEW, annotationData.propagation);
@@ -80,7 +84,7 @@ class TransactionAnnotationTest {
 		assertEquals(CustomTransaction.class, txAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello3");
-		TransactionAnnotationData<CustomTransaction> annotationData = txAnnotation.readAnnotationData(method);
+		TransactionAnnotationData<CustomTransaction> annotationData = txAnnotation.readAnnotatedElement(method);
 
 		assertEquals(ISOLATION_DEFAULT, annotationData.isolation);
 		assertEquals(PROPAGATION_REQUIRED, annotationData.propagation);
@@ -88,7 +92,7 @@ class TransactionAnnotationTest {
 		assertEquals(-1, annotationData.timeout);
 
 		method = this.getClass().getMethod("hello4");
-		annotationData = txAnnotation.readAnnotationData(method);
+		annotationData = txAnnotation.readAnnotatedElement(method);
 
 		assertEquals(ISOLATION_DEFAULT, annotationData.isolation);
 		assertEquals(PROPAGATION_MANDATORY, annotationData.propagation);

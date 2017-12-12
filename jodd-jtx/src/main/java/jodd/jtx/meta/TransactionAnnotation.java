@@ -31,7 +31,7 @@ import jodd.jtx.JtxTransactionMode;
 import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * Transaction annotation.
@@ -46,8 +46,8 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 	 * Need to override to make java compiler happy.
 	 */
 	@Override
-	public TransactionAnnotationData<A> readAnnotationData(AccessibleObject accessibleObject) {
-		return super.readAnnotationData(accessibleObject);
+	public TransactionAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
+		return super.readAnnotatedElement(annotatedElement);
 	}
 
 	/**

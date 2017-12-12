@@ -112,9 +112,9 @@ public class ActionConfig {
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
-		this.actionPath = actionDef.getActionPath();
-		this.actionMethod = actionDef.getActionMethod() == null ? null : actionDef.getActionMethod().toUpperCase();
-		this.resultBasePath = actionDef.getResultBasePath();
+		this.actionPath = actionDef.actionPath();
+		this.actionMethod = actionDef.actionMethod() == null ? null : actionDef.actionMethod().toUpperCase();
+		this.resultBasePath = actionDef.resultBasePath();
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		this.actionResult = actionResult;
 		this.async = async;

@@ -64,7 +64,7 @@ class ActionAnnotationTest {
 		assertEquals(Action.class, actionAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello");
-		ActionAnnotationData<Action> annotationData = actionAnnotation.readAnnotationData(method);
+		ActionAnnotationData<Action> annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);
@@ -72,7 +72,7 @@ class ActionAnnotationTest {
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello2");
-		annotationData = actionAnnotation.readAnnotationData(method);
+		annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertEquals("alias", annotationData.alias);
 		assertEquals("ext", annotationData.extension);
@@ -86,7 +86,7 @@ class ActionAnnotationTest {
 		assertEquals(CustomAction.class, actionAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello3");
-		ActionAnnotationData<CustomAction> annotationData = actionAnnotation.readAnnotationData(method);
+		ActionAnnotationData<CustomAction> annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertEquals("ALIAS", annotationData.alias);
 		assertEquals("EXT", annotationData.extension);
@@ -94,7 +94,7 @@ class ActionAnnotationTest {
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello4");
-		annotationData = actionAnnotation.readAnnotationData(method);
+		annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertEquals("ALIAS", annotationData.alias);
 		assertEquals("eee", annotationData.extension);
@@ -108,7 +108,7 @@ class ActionAnnotationTest {
 		assertEquals(MiscAnnotation.class, actionAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello5");
-		ActionAnnotationData<MiscAnnotation> annotationData = actionAnnotation.readAnnotationData(method);
+		ActionAnnotationData<MiscAnnotation> annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);
@@ -116,7 +116,7 @@ class ActionAnnotationTest {
 		assertEquals("VAL", annotationData.value);
 
 		method = this.getClass().getMethod("hello6");
-		annotationData = actionAnnotation.readAnnotationData(method);
+		annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);

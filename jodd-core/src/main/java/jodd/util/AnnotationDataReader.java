@@ -26,7 +26,7 @@
 package jodd.util;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * Annotation reader reads an annotation and returns {@link AnnotationData annotation data object}
@@ -105,31 +105,18 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 
 	/**
 	 * Returns <code>true</code> if annotation is present on
-	 * given accessible object.
+	 * given annotated element.
 	 */
-	public boolean hasAnnotation(AccessibleObject accessibleObject) {
-		return accessibleObject.isAnnotationPresent(annotationClass);
+	public boolean hasAnnotation(AnnotatedElement annotatedElement) {
+		return annotatedElement.isAnnotationPresent(annotationClass);
 	}
 
 	/**
-	 * Reads {@link AnnotationData annotation data} on provided accessible object.
+	 * Reads {@link AnnotationData annotation data} on provided annotated element.
 	 * If annotation is not presented, <code>null</code> is returned.
 	 */
-	public D readAnnotationData(AccessibleObject accessibleObject) {
-		A annotation = accessibleObject.getAnnotation(annotationClass);
-		if (annotation == null) {
-			return null;
-		}
-
-		return createAnnotationData(annotation);
-	}
-
-	/**
-	 * Reads {@link AnnotationData annotation data} on provided type.
-	 * If annotation is not presented, <code>null</code> is returned.
-	 */
-	public D readAnnotationData(Class<?> type) {
-		A annotation = type.getAnnotation(annotationClass);
+	public D readAnnotatedElement(AnnotatedElement annotatedElement) {
+		A annotation = annotatedElement.getAnnotation(annotationClass);
 		if (annotation == null) {
 			return null;
 		}

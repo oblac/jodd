@@ -29,7 +29,7 @@ import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * Action method annotation reader.
@@ -44,8 +44,8 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 s	 * Need to override to make java compiler happy.
 	 */
 	@Override
-	public ActionAnnotationData<A> readAnnotationData(AccessibleObject accessibleObject) {
-		return super.readAnnotationData(accessibleObject);
+	public ActionAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
+		return super.readAnnotatedElement(annotatedElement);
 	}
 
 	/**

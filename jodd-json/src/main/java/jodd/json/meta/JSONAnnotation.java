@@ -28,7 +28,7 @@ package jodd.json.meta;
 import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * JSON Annotation reader.
@@ -43,8 +43,8 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 	 * Need to override to make java compiler happy.
 	 */
 	@Override
-	public JSONAnnotationData<A> readAnnotationData(AccessibleObject accessibleObject) {
-		return super.readAnnotationData(accessibleObject);
+	public JSONAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
+		return super.readAnnotatedElement(annotatedElement);
 	}
 
 	/**
@@ -52,7 +52,6 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 	 */
 	@Override
 	protected JSONAnnotationData<A> createAnnotationData(A annotation) {
-
 		JSONAnnotationData<A> jad = new JSONAnnotationData<>(annotation);
 
 		jad.name = readString(annotation, "name", null);

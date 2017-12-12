@@ -160,7 +160,7 @@ public class ActionMethodParser {
 	protected ActionAnnotationData detectActionAnnotationData(Method actionMethod) {
 		ActionAnnotationData annotationData = null;
 		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-			annotationData = actionAnnotation.readAnnotationData(actionMethod);
+			annotationData = actionAnnotation.readAnnotatedElement(actionMethod);
 			if (annotationData != null) {
 				break;
 			}
@@ -175,7 +175,7 @@ public class ActionMethodParser {
 		final String alias = parseMethodAlias(annotationData);
 
 		if (alias != null) {
-			String aliasPath = StringUtil.cutToIndexOf(actionDef.getActionPath(), StringPool.HASH);
+			String aliasPath = StringUtil.cutToIndexOf(actionDef.actionPath(), StringPool.HASH);
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
 	}

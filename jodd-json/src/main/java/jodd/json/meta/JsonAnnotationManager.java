@@ -234,7 +234,7 @@ public class JsonAnnotationManager {
 
 				if (md != null) {
 					Method method = md.getMethod();
-					data = jsonAnnotation.readAnnotationData(method);
+					data = jsonAnnotation.readAnnotatedElement(method);
 				}
 			}
 
@@ -243,7 +243,7 @@ public class JsonAnnotationManager {
 
 				if (md != null) {
 					Method method = md.getMethod();
-					data = jsonAnnotation.readAnnotationData(method);
+					data = jsonAnnotation.readAnnotatedElement(method);
 				}
 			}
 
@@ -252,7 +252,7 @@ public class JsonAnnotationManager {
 
 				if (fd != null) {
 					Field field = fd.getField();
-					data = jsonAnnotation.readAnnotationData(field);
+					data = jsonAnnotation.readAnnotatedElement(field);
 				}
 			}
 
@@ -291,7 +291,7 @@ public class JsonAnnotationManager {
 
 		// type
 
-		JSONAnnotationData data = (JSONAnnotationData) jsonAnnotation.readAnnotationData(type);
+		JSONAnnotationData data = (JSONAnnotationData) jsonAnnotation.readAnnotatedElement(type);
 
 		return new TypeData(includedList, excludedList, data != null && data.isStrict(), jsons, reals);
 	}
