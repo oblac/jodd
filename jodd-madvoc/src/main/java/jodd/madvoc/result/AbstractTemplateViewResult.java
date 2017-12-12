@@ -66,7 +66,7 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
 		String actionAndResultPath = resultBasePath + (resultValue != null ? ':' + resultValue : StringPool.EMPTY);
 
@@ -100,7 +100,7 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 	 * Locates the target file from action path and the result value.
 	 */
 	protected String resolveTarget(ActionRequest actionRequest, String resultValue) {
-		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
 		ResultPath resultPath = resultMapper.resolveResultPath(resultBasePath, resultValue);
 

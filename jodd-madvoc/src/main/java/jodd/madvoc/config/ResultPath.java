@@ -28,7 +28,7 @@ package jodd.madvoc.config;
 /**
  * Holder of result path value. Consists of 2 parts:
  * <ul>
- *     <li>path - the first part, that comes usually from action config</li>
+ *     <li>path - the first part, that comes usually from action runtime</li>
  *     <li>value - second part, that comes from action, may be <code>null</code></li>
  * </ul>
  */

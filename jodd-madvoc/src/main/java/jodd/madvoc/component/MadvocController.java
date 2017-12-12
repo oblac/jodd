@@ -29,7 +29,7 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
@@ -105,7 +105,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 * Invokes action registered to provided action path, Provides action chaining, by invoking the next action request.
 	 * Returns <code>null</code> if action path is consumed and has been invoked by this controller; otherwise
 	 * the action path string is returned (it might be different than original one, provided in arguments).
-	 * On first invoke, initializes the action configuration before further proceeding.
+	 * On first invoke, initializes the action runtime before further proceeding.
 	 */
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
 		ActionRequest actionRequest = null;
@@ -122,13 +122,13 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
-			// resolve action configuration
-			ActionConfig actionConfig = actionsManager.lookup(actionPath, httpMethod);
-			if (actionConfig == null) {
+			// resolve action runtime
+			ActionRuntime actionRuntime = actionsManager.lookup(actionPath, httpMethod);
+			if (actionRuntime == null) {
 				return actionPath;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path '" + actionPath + "' using " + actionConfig.actionClass.getSimpleName());
+				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.actionClass.getSimpleName());
 			}
 
 			// set character encoding
@@ -145,15 +145,15 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			}
 
 			// create action object
-			Object action = createAction(actionConfig.actionClass);
+			Object action = createAction(actionRuntime.actionClass);
 
 			// create action request
 			ActionRequest previousRequest = actionRequest;
-			actionRequest = createActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
+			actionRequest = createActionRequest(actionPath, actionRuntime, action, servletRequest, servletResponse);
 			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			if (actionConfig.isAsync()) {
+			if (actionRuntime.isAsync()) {
 				AsyncContext asyncContext = servletRequest.startAsync();
 				executor.execute(new ActionRequestInvoker(asyncContext, actionRequest));
 			} else {
@@ -230,7 +230,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	// ---------------------------------------------------------------- create
 
 	/**
-	 * Creates new action object from {@link ActionConfig} using default constructor.
+	 * Creates new action object from {@link ActionRuntime} using default constructor.
 	 */
 	protected Object createAction(Class actionClass) {
 		try {
@@ -243,7 +243,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	/**
 	 * Creates new action request.
 	 * @param actionPath		action path
-	 * @param actionConfig		action configuration
+	 * @param actionRuntime		action runtime
 	 * @param action			action object
 	 * @param servletRequest	http request
 	 * @param servletResponse	http response
@@ -251,12 +251,12 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 */
 	protected ActionRequest createActionRequest(
 			String actionPath,
-			ActionConfig actionConfig,
+			ActionRuntime actionRuntime,
 			Object action,
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) {
 
-		return new ActionRequest(this, actionPath, actionConfig, action, servletRequest, servletResponse);
+		return new ActionRequest(this, actionPath, actionRuntime, action, servletRequest, servletResponse);
 	}
 
 }

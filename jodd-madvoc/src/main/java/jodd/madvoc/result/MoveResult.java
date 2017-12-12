@@ -30,9 +30,9 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
-import jodd.util.URLCoder;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.RandomString;
+import jodd.util.URLCoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -64,8 +64,9 @@ public class MoveResult extends BaseActionResult<String> {
 	/**
 	 * Saves action in the session under some id that is added as request parameter.
 	 */
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
 		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 

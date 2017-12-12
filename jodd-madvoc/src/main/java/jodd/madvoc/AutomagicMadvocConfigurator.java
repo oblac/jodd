@@ -197,7 +197,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	// ---------------------------------------------------------------- handlers
 
 	/**
-	 * Builds action configuration on founded action class.
+	 * Builds action runtime configuration on founded action class.
 	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")

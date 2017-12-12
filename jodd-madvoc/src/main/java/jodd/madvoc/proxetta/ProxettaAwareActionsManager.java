@@ -26,8 +26,8 @@
 package jodd.madvoc.proxetta;
 
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.petite.meta.PetiteInject;
 import jodd.proxetta.impl.ProxyProxetta;
 
@@ -55,7 +55,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	 * target action class.
 	 */
 	@Override
-	protected synchronized ActionConfig registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+	protected synchronized ActionRuntime registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
 		if (proxettaProvider == null) {
 			return super.registerAction(actionClass, actionMethod, actionDefinition);
 		}

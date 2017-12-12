@@ -31,7 +31,7 @@ import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
@@ -45,7 +45,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Helper action that returns sorted list of all registered action configurations,
+ * Helper action that returns sorted list of all registered action runtime configurations,
  * action results and interceptors. It can be extended as an Madvoc action or used independently.
  */
 public class ListMadvocConfig {
@@ -67,7 +67,7 @@ public class ListMadvocConfig {
 	protected ResultsManager resultsManager;
 
 	@Out
-	protected List<ActionConfig> actions;
+	protected List<ActionRuntime> actions;
 
 	@Out
 	protected List<ActionResult> results;
@@ -109,10 +109,10 @@ public class ListMadvocConfig {
 	}
 
 	/**
-	 * Collects all action configurations.
+	 * Collects all action runtime configurations.
 	 */
-	protected void collectActionConfigs() {
-		actions = actionsManager.getAllActionConfigurations();
+	protected void collectActionRuntimes() {
+		actions = actionsManager.getAllActionRuntimes();
 		Collections.sort(actions, Comparator.comparing(a -> a.actionPath));
 	}
 

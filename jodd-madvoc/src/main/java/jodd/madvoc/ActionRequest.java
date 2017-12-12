@@ -26,7 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.meta.Out;
@@ -52,7 +52,7 @@ import static jodd.exception.ExceptionUtil.wrapToException;
 public class ActionRequest {
 
 	protected final MadvocController madvocController;
-	protected final ActionConfig actionConfig;
+	protected final ActionRuntime actionRuntime;
 	protected final String actionPath;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
@@ -99,10 +99,10 @@ public class ActionRequest {
 	}
 
 	/**
-	 * Returns {@link ActionConfig action configuration}.
+	 * Returns {@link ActionRuntime action runtime} configuration.
 	 */
-	public ActionConfig getActionConfig() {
-		return actionConfig;
+	public ActionRuntime getActionRuntime() {
+		return actionRuntime;
 	}
 
 	/**
@@ -183,14 +183,14 @@ public class ActionRequest {
 	public ActionRequest(
 		MadvocController madvocController,
 			String actionPath,
-			ActionConfig actionConfig,
+			ActionRuntime actionRuntime,
 			Object action,
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) {
 
 		this.madvocController = madvocController;
 		this.actionPath = actionPath;
-		this.actionConfig = actionConfig;
+		this.actionRuntime = actionRuntime;
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		this.action = action;
@@ -206,8 +206,8 @@ public class ActionRequest {
 	 * in correct order.
 	 */
 	protected ActionWrapper[] createExecutionArray() {
-		int totalInterceptors = (this.actionConfig.interceptors != null ? this.actionConfig.interceptors.length : 0);
-		int totalFilters = (this.actionConfig.filters != null ? this.actionConfig.filters.length : 0);
+		int totalInterceptors = (this.actionRuntime.interceptors != null ? this.actionRuntime.interceptors.length : 0);
+		int totalFilters = (this.actionRuntime.filters != null ? this.actionRuntime.filters.length : 0);
 
 		ActionWrapper[] executionArray = new ActionWrapper[totalFilters + 1 + totalInterceptors + 1];
 
@@ -216,7 +216,7 @@ public class ActionRequest {
 		int index = 0;
 
 		if (totalFilters > 0) {
-			System.arraycopy(actionConfig.filters, 0, executionArray, index, totalFilters);
+			System.arraycopy(actionRuntime.filters, 0, executionArray, index, totalFilters);
 			index += totalFilters;
 		}
 
@@ -236,7 +236,7 @@ public class ActionRequest {
 		// interceptors
 
 		if (totalInterceptors > 0) {
-			System.arraycopy(actionConfig.interceptors, 0, executionArray, index, totalInterceptors);
+			System.arraycopy(actionRuntime.interceptors, 0, executionArray, index, totalInterceptors);
 			index += totalInterceptors;
 		}
 
@@ -258,7 +258,7 @@ public class ActionRequest {
 	 * and it's value is <code>null</code> it will be created.
 	 */
 	protected Result findResult() {
-		Field resultField = actionConfig.resultField;
+		Field resultField = actionRuntime.resultField;
 		if (resultField != null) {
 			try {
 				Result result = (Result) resultField.get(action);
@@ -280,11 +280,11 @@ public class ActionRequest {
 	 * Joins action and parameters into one array of Targets.
 	 */
 	protected Target[] makeTargets() {
-		if (!actionConfig.hasArguments) {
+		if (!actionRuntime.hasArguments) {
 			return new Target[] {new Target(action)};
 		}
 
-		MethodParam[] methodParams = actionConfig.getMethodParams();
+		MethodParam[] methodParams = actionRuntime.getMethodParams();
 		Target[] target = new Target[methodParams.length + 1];
 
 		target[0] = new Target(action);
@@ -359,7 +359,7 @@ public class ActionRequest {
 	protected Object invokeActionMethod() throws Exception {
 		Object[] params = extractParametersFromTargets();
 		try {
-			return actionConfig.actionClassMethod.invoke(action, params);
+			return actionRuntime.actionClassMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw wrapToException(unwrapThrowable(itex));
 		}

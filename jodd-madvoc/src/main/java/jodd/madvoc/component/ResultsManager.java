@@ -29,7 +29,7 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
@@ -230,9 +230,9 @@ public class ResultsManager {
 
 		if (actionResult == null) {
 			// + still not found, read @Action value
-			ActionConfig actionConfig = actionRequest.getActionConfig();
+			ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
+			Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
 			if (actionResultClass != null) {
 				actionResult = lookupAndRegisterIfMissing(actionResultClass);
 			}

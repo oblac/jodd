@@ -50,8 +50,9 @@ public class ChainResult extends BaseActionResult<String> {
 	/**
 	 * Sets the {@link jodd.madvoc.ActionRequest#setNextActionPath(String) next action request} for the chain.
 	 */
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
 		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 

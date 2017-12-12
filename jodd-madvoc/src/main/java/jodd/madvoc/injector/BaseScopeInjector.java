@@ -124,7 +124,7 @@ public abstract class BaseScopeInjector {
 	 * Returns scope data from action request and for current scope type.
 	 */
 	public ScopeData[] lookupScopeData(ActionRequest actionRequest) {
-		return actionRequest.getActionConfig().scopeData[scopeType.value()];
+		return actionRequest.getActionRuntime().scopeData[scopeType.value()];
 	}
 
 	/**

@@ -23,33 +23,23 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
-import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.config.ActionRuntime;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.ClassUtil;
-import jodd.util.StringUtil;
+import java.io.Serializable;
+import java.util.Comparator;
 
-import java.lang.reflect.Method;
+/**
+ * Comparator that considers first chunks number then action path.
+ */
+public class ActionRuntimeSetComparator implements Comparator<ActionRuntimeSet>, Serializable {
+	@Override
+	public int compare(ActionRuntimeSet set1, ActionRuntimeSet set2) {
+		int deep1 = set1.deep;
+		int deep2 = set2.deep;
 
-public abstract class MadvocTestCase {
-
-	protected ActionRuntime parse(ActionMethodParser actionMethodParser, String signature) {
-		Object[] data = resolveSignature(signature);
-		return actionMethodParser.parse((Class) data[0], (Method) data[1], null);
-	}
-
-	protected Object[] resolveSignature(String signature) {
-		String[] data = StringUtil.splitc(signature, '#');
-		try {
-			data[0] = this.getClass().getPackage().getName() + '.' + data[0];
-			Class c = ClassLoaderUtil.loadClass(data[0]);
-			Method m = ClassUtil.findMethod(c, data[1]);
-			return new Object[]{c, m};
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		if (deep1 == deep2) {
+			return set1.actionPath.compareTo(set2.actionPath);
 		}
+		return deep1 - deep2;
 	}
-
 }

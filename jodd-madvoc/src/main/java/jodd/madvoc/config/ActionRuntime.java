@@ -37,9 +37,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Action configuration and shared run-time data, used internally.
+ * Action runtime configuration and shared run-time data, used internally.
  */
-public class ActionConfig {
+public class ActionRuntime {
 
 	// configuration
 	public final Class actionClass;
@@ -58,11 +58,11 @@ public class ActionConfig {
 	public final boolean hasArguments;
 
 	// run-time data
-	protected ActionConfigSet actionConfigSet;
+	protected ActionRuntimeSet actionRuntimeSet;
 	public final ActionFilter[] filters;
 	public final ActionInterceptor[] interceptors;
 
-	public ActionConfig(
+	public ActionRuntime(
 			Class actionClass,
 			Method actionClassMethod,
 			ActionFilter[] filters,
@@ -159,8 +159,8 @@ public class ActionConfig {
 		return async;
 	}
 
-	public ActionConfigSet getActionConfigSet() {
-		return actionConfigSet;
+	public ActionRuntimeSet getActionRuntimeSet() {
+		return actionRuntimeSet;
 	}
 
 	/**

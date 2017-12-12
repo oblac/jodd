@@ -28,9 +28,9 @@ package jodd.madvoc.component;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.config.ScopeData;
@@ -56,7 +56,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 /**
- * Creates {@link ActionConfig action configurations} from action java method.
+ * Creates {@link ActionRuntime action runtime} configuration from action java method.
  * Reads all annotations and builds action path (i.e. configuration).
  * <p>
  * Invoked only during registration, so performance is not critical.
@@ -119,13 +119,13 @@ public class ActionMethodParser {
 	}
 
 	/**
-	 * Parses java action method annotation and returns its action configuration.
+	 * Parses java action method annotation and returns its action runtime.
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
 	 * @param actionDefinition optional action def, usually <code>null</code> so to be parsed
 	 */
-	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
+	public ActionRuntime parse(final Class<?> actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
 
 		// interceptors
 		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod);
@@ -146,7 +146,7 @@ public class ActionMethodParser {
 
 		final Class<? extends ActionResult> actionResult = parseActionResult(annotationData);
 
-		return createActionConfig(
+		return createActionRuntime(
 				actionClass, actionMethod,
 				actionResult,
 				actionFilters, actionInterceptors,
@@ -431,13 +431,13 @@ public class ActionMethodParser {
 		return actionNamingStrategyClass;
 	}
 
-	// ---------------------------------------------------------------- create action configuration
+	// ---------------------------------------------------------------- create action runtime
 
 	/**
-	 * Creates new instance of action configuration.
+	 * Creates new instance of action runtime configuration.
 	 * Initialize caches.
 	 */
-	public ActionConfig createActionConfig(
+	public ActionRuntime createActionRuntime(
 			Class actionClass,
 			Method actionClassMethod,
 			Class<? extends ActionResult> actionResult,
@@ -500,7 +500,7 @@ public class ActionMethodParser {
 			}
 		}
 
-		return new ActionConfig(
+		return new ActionRuntime(
 				actionClass,
 				actionClassMethod,
 				filters,

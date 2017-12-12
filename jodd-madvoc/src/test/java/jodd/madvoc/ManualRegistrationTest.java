@@ -26,7 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.result.TextResult;
@@ -67,15 +67,15 @@ class ManualRegistrationTest {
 
 		assertEquals(2, actionsManager.getActionsCount());
 
-		ActionConfig actionConfig = actionsManager.lookup("/hello", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo1", actionConfig.actionClassMethod.getName());
+		ActionRuntime actionRuntime = actionsManager.lookup("/hello", "GET");
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo1", actionRuntime.actionClassMethod.getName());
 
-		actionConfig = actionsManager.lookup("/world", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo2", actionConfig.actionClassMethod.getName());
+		actionRuntime = actionsManager.lookup("/world", "GET");
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo2", actionRuntime.actionClassMethod.getName());
 	}
 
 	@Test
@@ -101,14 +101,14 @@ class ManualRegistrationTest {
 
 		assertEquals(2, actionsManager.getActionsCount());
 
-		ActionConfig actionConfig = actionsManager.lookup("/hello", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo1", actionConfig.actionClassMethod.getName());
+		ActionRuntime actionRuntime = actionsManager.lookup("/hello", "GET");
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo1", actionRuntime.actionClassMethod.getName());
 
-		actionConfig = actionsManager.lookup("/world", "GET");
-		assertNotNull(actionConfig);
-		assertEquals(BooAction.class, actionConfig.getActionClass());
-		assertEquals("foo2", actionConfig.actionClassMethod.getName());
+		actionRuntime = actionsManager.lookup("/world", "GET");
+		assertNotNull(actionRuntime);
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo2", actionRuntime.actionClassMethod.getName());
 	}
 }

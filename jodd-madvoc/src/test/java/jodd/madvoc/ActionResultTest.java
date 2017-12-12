@@ -29,7 +29,7 @@ import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ResultPath;
 import jodd.madvoc.fixtures.tst.BooAction;
 import org.junit.jupiter.api.Test;
@@ -205,7 +205,7 @@ class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
 		String path = cfg.getActionPath();
 
 		String resultPath = resultMapper.resolveResultPathString(path, null);

@@ -32,8 +32,8 @@ import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
-import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
@@ -309,7 +309,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 		}
 
 		/**
-		 * Binds and finalize action configuration.
+		 * Binds and finalize action runtime configuration.
 		 */
 		public MadvocApp bind() {
 			if (actionMethodString != null) {
@@ -328,14 +328,14 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 				actionDefinition = new ActionDefinition(actionPath, method);
 			}
 
-			ActionConfig actionConfig =
-					actionMethodParser.createActionConfig(
+			ActionRuntime actionRuntime =
+					actionMethodParser.createActionRuntime(
 							actionClass, actionClassMethod,
 							actionResult,
 							actionFilterInstances, actionInterceptorInstances,
 						actionDefinition, async);
 
-			actionsManager.registerAction(actionConfig);
+			actionsManager.registerAction(actionRuntime);
 
 			if (alias != null) {
 				actionsManager.registerPathAlias(alias, actionPath);

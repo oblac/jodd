@@ -30,8 +30,8 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -140,14 +140,14 @@ class ServletDispatcherResultTest {
 		MadvocController madvocController = new MadvocController();
 
 		Object action = new Object();
-		ActionConfig actionConfig = new ActionConfig(
+		ActionRuntime actionRuntime = new ActionRuntime(
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
 				new ActionDefinition(actionPath, "GET"),
 				null, false, null, null);
 
-		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);
+		return new ActionRequest(madvocController, actionRuntime.getActionPath(), actionRuntime, action, servletRequest, servletResponse);
 	}
 
 	class Action {

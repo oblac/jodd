@@ -26,8 +26,8 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -112,7 +112,7 @@ class ActionRequestRecursionTest {
 
 	class MyActionRequest extends ActionRequest {
 		public String data = "";
-		public MyActionRequest(MadvocController madvocController, String actionPath, ActionConfig config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		public MyActionRequest(MadvocController madvocController, String actionPath, ActionRuntime config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 			super(madvocController, actionPath, config, action, servletRequest, servletResponse);
 		}
 		@Override
@@ -181,7 +181,7 @@ class ActionRequestRecursionTest {
 		SimpleMadvocController madvocController = new SimpleMadvocController();
 
 		Action action = new Action();
-		ActionConfig actionConfig = new ActionConfig(
+		ActionRuntime actionRuntime = new ActionRuntime(
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,
@@ -190,7 +190,7 @@ class ActionRequestRecursionTest {
 				false, null, null);
 
 		return new MyActionRequest(
-				madvocController, "actionPath", actionConfig, action, null, null);
+				madvocController, "actionPath", actionRuntime, action, null, null);
 	}
 
 	private <T> T[] arr(T... array) {

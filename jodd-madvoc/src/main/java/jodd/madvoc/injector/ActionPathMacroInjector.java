@@ -28,8 +28,8 @@ package jodd.madvoc.injector;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
-import jodd.madvoc.config.ActionConfig;
-import jodd.madvoc.config.ActionConfigSet;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.ActionRuntimeSet;
 import jodd.madvoc.config.ScopeData;
 import jodd.util.StringUtil;
 
@@ -46,8 +46,8 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		ActionConfig config = actionRequest.getActionConfig();
-		ActionConfigSet set = config.getActionConfigSet();
+		ActionRuntime config = actionRequest.getActionRuntime();
+		ActionRuntimeSet set = config.getActionRuntimeSet();
 
 		if (set.actionPathMacros == null) {
 			// no action path macros at all, just exit

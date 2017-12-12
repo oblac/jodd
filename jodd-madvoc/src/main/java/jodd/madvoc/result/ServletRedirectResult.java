@@ -25,9 +25,6 @@
 
 package jodd.madvoc.result;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
@@ -35,6 +32,8 @@ import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -63,8 +62,9 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 	/**
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
 		String resultPath;
 

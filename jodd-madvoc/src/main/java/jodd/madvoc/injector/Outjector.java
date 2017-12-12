@@ -26,12 +26,12 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionRuntime;
 
 /**
  * Outjector interface. Outjections happen on action invocation.
  * All injection data should be cached in {@link jodd.madvoc.ActionRequest}
- * or {@link ActionConfig}.
+ * or {@link ActionRuntime}.
  */
 public interface Outjector {
 
