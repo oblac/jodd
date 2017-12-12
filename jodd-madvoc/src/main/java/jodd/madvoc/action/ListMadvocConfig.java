@@ -85,12 +85,7 @@ public class ListMadvocConfig {
 		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAllInterceptors();
 		interceptors = new ArrayList<>();
 		interceptors.addAll(interceptorValues);
-		Collections.sort(interceptors, new Comparator<ActionInterceptor>() {
-			@Override
-			public int compare(ActionInterceptor a1, ActionInterceptor a2) {
-				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
-			}
-		});
+		Collections.sort(interceptors, Comparator.comparing(a -> a.getClass().getSimpleName()));
 	}
 
 	/**
@@ -100,12 +95,7 @@ public class ListMadvocConfig {
 		Collection<? extends ActionFilter> filterValues = filtersManager.getAllFilters();
 		filters = new ArrayList<>();
 		filters.addAll(filterValues);
-		Collections.sort(filters, new Comparator<ActionFilter>() {
-			@Override
-			public int compare(ActionFilter a1, ActionFilter a2) {
-				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
-			}
-		});
+		Collections.sort(filters, Comparator.comparing(a -> a.getClass().getSimpleName()));
 	}
 
 	/**
@@ -115,12 +105,7 @@ public class ListMadvocConfig {
 		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults();
 		results = new ArrayList<>();
 		results.addAll(resultsValues);
-		Collections.sort(results, new Comparator<ActionResult>() {
-			@Override
-			public int compare(ActionResult a1, ActionResult a2) {
-				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
-			}
-		});
+		Collections.sort(results, Comparator.comparing(a -> a.getClass().getSimpleName()));
 	}
 
 	/**
@@ -128,12 +113,7 @@ public class ListMadvocConfig {
 	 */
 	protected void collectActionConfigs() {
 		actions = actionsManager.getAllActionConfigurations();
-		Collections.sort(actions, new Comparator<ActionConfig>() {
-			@Override
-			public int compare(ActionConfig a1, ActionConfig a2) {
-				return a1.actionPath.compareTo(a2.actionPath);
-			}
-		});
+		Collections.sort(actions, Comparator.comparing(a -> a.actionPath));
 	}
 
 }
