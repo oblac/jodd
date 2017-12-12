@@ -28,25 +28,25 @@ package jodd.madvoc.config;
 /**
  * Action definition is represented by action's path, http method and result base path.
  */
-public class ActionDef {
+public class ActionDefinition {
 
 	protected final String actionPath;
 	protected final String actionMethod;
 	protected final String resultBasePath;
 
-	public ActionDef(String actionPath, String actionMethod, String resultBasePath) {
+	public ActionDefinition(String actionPath, String actionMethod, String resultBasePath) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
 	}
 
-	public ActionDef(String actionPath, String actionMethod) {
+	public ActionDefinition(String actionPath, String actionMethod) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 		this.resultBasePath = actionPath;
 	}
 
-	public ActionDef(String actionPath) {
+	public ActionDefinition(String actionPath) {
 		this(actionPath, null);
 	}
 

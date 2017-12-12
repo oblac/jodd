@@ -29,7 +29,7 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionConfig;
-import jodd.madvoc.config.ActionDef;
+import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.config.RootPackages;
@@ -86,9 +86,9 @@ public class ActionMethodParser {
 	protected ActionMethodParamNameResolver actionMethodParamNameResolver;
 
 	/**
-	 * Parses action class and method and creates {@link ActionDef parsed action definition}.
+	 * Parses action class and method and creates {@link ActionDefinition parsed action definition}.
 	 */
-	public ActionDef parseActionDef(final Class<?> actionClass, final Method actionMethod) {
+	public ActionDefinition parseActionDef(final Class<?> actionClass, final Method actionMethod) {
 
 		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
 
@@ -124,9 +124,9 @@ public class ActionMethodParser {
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
-	 * @param actionDef optional action def, usually <code>null</code> so to be parsed
+	 * @param actionDefinition optional action def, usually <code>null</code> so to be parsed
 	 */
-	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionDef actionDef) {
+	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
 
 		// interceptors
 		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod);
@@ -135,13 +135,13 @@ public class ActionMethodParser {
 		ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod);
 
 		// build action definition when not provided
-		if (actionDef == null) {
-			actionDef = parseActionDef(actionClass, actionMethod);
+		if (actionDefinition == null) {
+			actionDefinition = parseActionDef(actionClass, actionMethod);
 		}
 
 		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
 
-		detectAndRegisterAlias(annotationData, actionDef);
+		detectAndRegisterAlias(annotationData, actionDefinition);
 
 		final boolean async = parseMethodAsyncFlag(annotationData);
 
@@ -151,7 +151,7 @@ public class ActionMethodParser {
 				actionClass, actionMethod,
 				actionResult,
 				actionFilters, actionInterceptors,
-				actionDef,
+			actionDefinition,
 				async);
 	}
 
@@ -172,11 +172,11 @@ public class ActionMethodParser {
 	/**
 	 * Detects if alias is defined in annotation and registers it if so.
 	 */
-	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionDef actionDef) {
+	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionDefinition actionDefinition) {
 		final String alias = parseMethodAlias(annotationData);
 
 		if (alias != null) {
-			String aliasPath = StringUtil.cutToIndexOf(actionDef.actionPath(), StringPool.HASH);
+			String aliasPath = StringUtil.cutToIndexOf(actionDefinition.actionPath(), StringPool.HASH);
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
 	}
@@ -498,7 +498,7 @@ public class ActionMethodParser {
 			Class<? extends ActionResult> actionResult,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
-			ActionDef actionDef,
+			ActionDefinition actionDefinition,
 			boolean async)
 	{
 
@@ -560,7 +560,7 @@ public class ActionMethodParser {
 				actionClassMethod,
 				filters,
 				interceptors,
-				actionDef,
+			actionDefinition,
 				actionResult,
 				async,
 				allScopeData,

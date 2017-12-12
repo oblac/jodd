@@ -27,7 +27,7 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.config.ActionConfig;
-import jodd.madvoc.config.ActionDef;
+import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -185,7 +185,7 @@ class ActionRequestRecursionTest {
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,
-				new ActionDef("path", "method"),
+				new ActionDefinition("path", "method"),
 				null,
 				false, null, null);
 

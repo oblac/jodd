@@ -32,7 +32,7 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionConfigSet;
-import jodd.madvoc.config.ActionDef;
+import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
@@ -149,7 +149,7 @@ public class ActionsManager {
 	/**
 	 * Registers action with provided action signature.
 	 */
-	public ActionConfig register(String actionSignature, ActionDef actionDef) {
+	public ActionConfig register(String actionSignature, ActionDefinition actionDefinition) {
 		int ndx = actionSignature.indexOf('#');
 		if (ndx == -1) {
 			throw new MadvocException("Madvoc action signature syntax error: " + actionSignature);
@@ -162,15 +162,15 @@ public class ActionsManager {
 		} catch (ClassNotFoundException cnfex) {
 			throw new MadvocException("Madvoc action class not found: " + actionClassName, cnfex);
 		}
-		return register(actionClass, actionMethodName, actionDef);
+		return register(actionClass, actionMethodName, actionDefinition);
 	}
 
 	public ActionConfig register(Class actionClass, Method actionMethod) {
 		return registerAction(actionClass, actionMethod, null);
 	}
 
-	public ActionConfig register(Class actionClass, Method actionMethod, ActionDef actionDef) {
-		return registerAction(actionClass, actionMethod, actionDef);
+	public ActionConfig register(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
 
 	/**
@@ -181,9 +181,9 @@ public class ActionsManager {
 		return registerAction(actionClass, actionMethod, null);
 	}
 
-	public ActionConfig register(Class actionClass, String actionMethodName, ActionDef actionDef) {
+	public ActionConfig register(Class actionClass, String actionMethodName, ActionDefinition actionDefinition) {
 		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
-		return registerAction(actionClass, actionMethod, actionDef);
+		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
 
 	// ---------------------------------------------------------------- registration
@@ -191,15 +191,15 @@ public class ActionsManager {
 	/**
 	 * Registration main point. Does two things:
 	 * <ul>
-	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, ActionDef) parse action}
+	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, ActionDefinition) parse action}
 	 *     and creates {@link ActionConfig}</li>
 	 *     <li>{@link #registerAction(ActionConfig) registers} created {@link ActionConfig}</li>
 	 * </ul>
 	 * Returns created {@link ActionConfig}.
 	 * @see #registerAction(ActionConfig)
 	 */
-	protected ActionConfig registerAction(Class actionClass, Method actionMethod, ActionDef actionDef) {
-		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionDef);
+	protected ActionConfig registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionDefinition);
 		if (actionConfig == null) {
 			return null;
 		}

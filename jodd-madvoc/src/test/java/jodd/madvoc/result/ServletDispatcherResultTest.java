@@ -26,12 +26,12 @@
 package jodd.madvoc.result;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionDefinition;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -144,7 +144,7 @@ class ServletDispatcherResultTest {
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
-				new ActionDef(actionPath, "GET"),
+				new ActionDefinition(actionPath, "GET"),
 				null, false, null, null);
 
 		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);

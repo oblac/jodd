@@ -25,10 +25,10 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.config.ActionDef;
-import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.util.CharUtil;
@@ -44,7 +44,8 @@ public class RestResourcePath extends BaseNamingStrategy {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	public ActionDef buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
+	@Override
+	public ActionDefinition buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
 
 		String packageActionPath = actionNames.getPackageActionPath();
 		String classActionPath = actionNames.getClassActionPath();

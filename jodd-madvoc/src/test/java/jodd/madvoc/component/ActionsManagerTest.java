@@ -25,9 +25,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.config.ActionConfig;
+import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class ActionsManagerTest {
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
-		actionsManager.register(FooAction.class, "one", new ActionDef("/${one}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/${one}"));
 
 		ActionConfig actionConfig = actionsManager.lookup("/foo", null);
 		assertNotNull(actionConfig);
@@ -73,8 +73,8 @@ class ActionsManagerTest {
 		
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
-		actionsManager.register(FooAction.class, "one", new ActionDef("/${one}"));
-		actionsManager.register(FooAction.class, "two", new ActionDef("/xxx-${two}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/${one}"));
+		actionsManager.register(FooAction.class, "two", new ActionDefinition("/xxx-${two}"));
 
 		ActionConfig actionConfig = actionsManager.lookup("/foo", null);
 		assertEquals("one", actionConfig.actionClassMethod.getName());
@@ -94,8 +94,8 @@ class ActionsManagerTest {
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
-		actionsManager.register(FooAction.class, "one", new ActionDef("/yyy-${one}"));
-		actionsManager.register(FooAction.class, "two", new ActionDef("/xxx-${two}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/yyy-${one}"));
+		actionsManager.register(FooAction.class, "two", new ActionDefinition("/xxx-${two}"));
 
 		assertEquals(2, actionsManager.getActionsCount());
 
@@ -109,7 +109,7 @@ class ActionsManagerTest {
 		assertEquals("two", actionConfig.actionClassMethod.getName());
 
 		try {
-			actionsManager.register(FooAction.class, "two", new ActionDef("/xxx-${two}"));
+			actionsManager.register(FooAction.class, "two", new ActionDefinition("/xxx-${two}"));
 			fail("error");
 		} catch (Exception ex) {
 			// ignore
@@ -123,10 +123,10 @@ class ActionsManagerTest {
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
-		actionsManager.register(FooAction.class, "one", new ActionDef("/${one}"));
-		actionsManager.register(FooAction.class, "one", new ActionDef("/dummy"));		// no macro
-		actionsManager.register(FooAction.class, "two", new ActionDef("/${two}/${three}"));
-		actionsManager.register(FooAction.class, "three", new ActionDef("/life/${three}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/${one}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/dummy"));		// no macro
+		actionsManager.register(FooAction.class, "two", new ActionDefinition("/${two}/${three}"));
+		actionsManager.register(FooAction.class, "three", new ActionDefinition("/life/${three}"));
 
 		ActionConfig actionConfig = actionsManager.lookup("/foo", null);
 		assertEquals("one", actionConfig.actionClassMethod.getName());
@@ -153,7 +153,7 @@ class ActionsManagerTest {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
-		actionsManager.register(FooAction.class, "one", new ActionDef("/${one:[ab]+}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/${one:[ab]+}"));
 
 		ActionConfig actionConfig = actionsManager.lookup("/a", null);
 		assertNotNull(actionConfig);
@@ -171,7 +171,7 @@ class ActionsManagerTest {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.setPathMacroClass(WildcardPathMacros.class);
 
-		actionsManager.register(FooAction.class, "one", new ActionDef("/${one:a?a}"));
+		actionsManager.register(FooAction.class, "one", new ActionDefinition("/${one:a?a}"));
 
 		ActionConfig actionConfig = actionsManager.lookup("/aaa", null);
 		assertNotNull(actionConfig);

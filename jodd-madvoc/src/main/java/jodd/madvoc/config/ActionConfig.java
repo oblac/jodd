@@ -67,7 +67,7 @@ public class ActionConfig {
 			Method actionClassMethod,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
-			ActionDef actionDef,
+			ActionDefinition actionDefinition,
 			Class<? extends ActionResult> actionResult,
 			boolean async,
 			ScopeData[][] scopeData,
@@ -76,9 +76,9 @@ public class ActionConfig {
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
-		this.actionPath = actionDef.actionPath();
-		this.actionMethod = actionDef.actionMethod() == null ? null : actionDef.actionMethod().toUpperCase();
-		this.resultBasePath = actionDef.resultBasePath();
+		this.actionPath = actionDefinition.actionPath();
+		this.actionMethod = actionDefinition.actionMethod() == null ? null : actionDefinition.actionMethod().toUpperCase();
+		this.resultBasePath = actionDefinition.resultBasePath();
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		this.actionResult = actionResult;
 		this.async = async;
