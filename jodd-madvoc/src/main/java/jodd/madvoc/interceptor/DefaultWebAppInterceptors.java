@@ -25,9 +25,9 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.MadvocException;
 
 /**
  * Marker for default interceptors for easy configuration purposes.
@@ -36,6 +36,7 @@ import jodd.madvoc.component.MadvocConfig;
  */
 public final class DefaultWebAppInterceptors extends BaseActionInterceptor {
 
+	@Override
 	public String intercept(ActionRequest actionRequest) throws Exception {
 		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}

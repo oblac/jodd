@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;

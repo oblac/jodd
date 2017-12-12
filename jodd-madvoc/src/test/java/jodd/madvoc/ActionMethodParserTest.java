@@ -27,7 +27,6 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ActionRuntimeSet;
 import jodd.madvoc.fixtures.tst.Boo1Action;

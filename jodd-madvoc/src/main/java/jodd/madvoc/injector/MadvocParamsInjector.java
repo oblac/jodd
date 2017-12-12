@@ -25,8 +25,8 @@
 
 package jodd.madvoc.injector;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.config.ScopeData;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
 

@@ -33,7 +33,6 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.meta.Action;

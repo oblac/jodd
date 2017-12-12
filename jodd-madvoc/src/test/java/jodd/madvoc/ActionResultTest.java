@@ -27,7 +27,6 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ResultPath;

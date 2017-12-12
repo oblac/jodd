@@ -27,6 +27,7 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ResultPath;

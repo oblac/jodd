@@ -25,8 +25,8 @@
 
 package jodd.madvoc.path;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.Action;

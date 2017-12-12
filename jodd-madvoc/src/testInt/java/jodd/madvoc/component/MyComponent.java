@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
 
@@ -37,7 +38,7 @@ public class MyComponent implements MadvocComponentLifecycle.Init, MadvocCompone
 	String string = "";
 
 	public String getString() {
-		return string + madvocConfig.encoding;
+		return string + madvocConfig.getEncoding();
 	}
 
 	@Override

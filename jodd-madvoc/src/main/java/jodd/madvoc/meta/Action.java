@@ -25,6 +25,7 @@
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.StringPool;
@@ -73,7 +74,7 @@ public @interface Action {
 	/**
 	 * Action path extension. If equals to {@link #NONE} extension will be not
 	 * part of created action path. If empty, default extension will be used
-	 * (defined in {@link jodd.madvoc.component.MadvocConfig}.
+	 * (defined in {@link MadvocConfig}.
 	 */
 	String extension() default "";
 
@@ -103,7 +104,7 @@ public @interface Action {
 	/**
 	 * Defines action naming strategy for building action path.
 	 * When set to {@link jodd.madvoc.path.ActionNamingStrategy},
-	 * it will be defined from the {@link jodd.madvoc.component.MadvocConfig#getDefaultNamingStrategy()}.
+	 * it will be defined from the {@link MadvocConfig#getDefaultNamingStrategy()}.
 	 */
 	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
 

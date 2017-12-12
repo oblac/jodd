@@ -26,10 +26,10 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.config.ScopeData;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.meta.In;
 import jodd.util.StringUtil;
@@ -91,6 +91,7 @@ public class PreparableInterceptor extends BaseActionInterceptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object action = actionRequest.getAction();
 		if (action instanceof Preparable) {

@@ -27,6 +27,7 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.BaseActionWrapperStack;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.injector.Target;
 import jodd.petite.meta.PetiteInject;

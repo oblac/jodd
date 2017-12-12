@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.ApplicationScopeInjector;
 import jodd.madvoc.injector.MadvocContextScopeInjector;

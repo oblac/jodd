@@ -30,7 +30,6 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;

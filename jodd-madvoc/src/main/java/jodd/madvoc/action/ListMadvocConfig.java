@@ -25,11 +25,11 @@
 
 package jodd.madvoc.action;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;

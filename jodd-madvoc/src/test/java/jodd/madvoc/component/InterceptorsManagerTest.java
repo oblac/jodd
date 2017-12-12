@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocTestCase;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -47,7 +48,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 	void testExpand() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
-		im.madvocConfig.defaultInterceptors = new Class[]{ServletConfigInterceptor.class};
+		im.madvocConfig.setDefaultInterceptors(ServletConfigInterceptor.class);
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				EchoInterceptor.class,
@@ -64,7 +65,8 @@ class InterceptorsManagerTest extends MadvocTestCase {
 	void testExpand2() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
-		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, LogEchoInterceptor.class, ServletConfigInterceptor.class};
+		im.madvocConfig.setDefaultInterceptors(
+			EchoInterceptor.class, LogEchoInterceptor.class, ServletConfigInterceptor.class);
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				AnnotatedPropertyInterceptor.class,
@@ -98,7 +100,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
-		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
+		im.madvocConfig.setDefaultInterceptors(EchoInterceptor.class, ServletConfigInterceptor.class);
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				TestStack.class,
@@ -137,7 +139,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
-		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
+		im.madvocConfig.setDefaultInterceptors(EchoInterceptor.class, ServletConfigInterceptor.class);
 
 		injectorsManager.madpc.defineParameter(
 				TestConfigurableStack.class.getName() + ".interceptors",
@@ -175,10 +177,10 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
 
-		im.madvocConfig.setDefaultInterceptors(new Class[]{
-				EchoInterceptor.class,
-				DefaultWebAppInterceptors.class    // cyclic dependency
-		});
+		im.madvocConfig.setDefaultInterceptors(
+			EchoInterceptor.class,
+			DefaultWebAppInterceptors.class    // cyclic dependency
+		);
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				EchoInterceptor.class,
@@ -211,7 +213,7 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
-		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
+		im.madvocConfig.setDefaultInterceptors(EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class);
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				DefaultWebAppInterceptors.class,
@@ -232,14 +234,14 @@ class InterceptorsManagerTest extends MadvocTestCase {
 	public static class TestStack extends ActionInterceptorStack {
 		@SuppressWarnings({"unchecked"})
 		public TestStack() {
-			super(new Class[]{Test2Stack.class, DefaultWebAppInterceptors.class});
+			super(Test2Stack.class, DefaultWebAppInterceptors.class);
 		}
 	}
 
 	public static class Test2Stack extends ActionInterceptorStack {
 		@SuppressWarnings({"unchecked"})
 		public Test2Stack() {
-			super(new Class[]{AnnotatedPropertyInterceptor.class, LogEchoInterceptor.class});
+			super(AnnotatedPropertyInterceptor.class, LogEchoInterceptor.class);
 		}
 	}
 	

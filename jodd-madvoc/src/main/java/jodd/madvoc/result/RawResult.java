@@ -27,15 +27,15 @@ package jodd.madvoc.result;
 
 import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
 
 /**
  * Raw results directly writes byte context to the output.
@@ -47,6 +47,7 @@ public class RawResult extends BaseActionResult<RawResultData> {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
+	@Override
 	public void render(ActionRequest actionRequest, RawResultData resultValue) throws IOException {
 		if (resultValue == null) {
 			return;

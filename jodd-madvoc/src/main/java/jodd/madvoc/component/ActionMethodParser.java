@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.ScopeType;

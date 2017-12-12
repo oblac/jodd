@@ -26,8 +26,8 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
