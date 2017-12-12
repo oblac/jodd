@@ -43,7 +43,7 @@ public class Book2ActionResult extends BaseActionResult<Book> {
 
 		request.setAttribute("book", book);
 
-		String method = actionRequest.getActionRuntime().getActionMethod();
+		String method = actionRequest.getActionRuntime().actionMethod();
 
 		if (method.equalsIgnoreCase("PUT")) {
 			// JSPs only permit GET POST or HEAD

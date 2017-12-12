@@ -42,11 +42,11 @@ public class DefaultActionPath extends BaseNamingStrategy {
 			Method actionMethod,
 			ActionNames actionNames) {
 
-		String packageActionPath = actionNames.getPackageActionPath();
-		String classActionPath = actionNames.getClassActionPath();
-		String methodActionPath = actionNames.getMethodActionPath();
-		String extension = actionNames.getExtension();
-		String httpMethod = actionNames.getHttpMethod();
+		String packageActionPath = actionNames.packageActionPath();
+		String classActionPath = actionNames.classActionPath();
+		String methodActionPath = actionNames.methodActionPath();
+		String extension = actionNames.extension();
+		String httpMethod = actionNames.httpMethod();
 
 		String actionPath = classActionPath;
 

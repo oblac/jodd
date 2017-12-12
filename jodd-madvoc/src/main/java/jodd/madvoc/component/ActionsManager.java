@@ -195,17 +195,17 @@ public class ActionsManager {
 	 * exception will be thrown.
 	 */
 	public ActionRuntime registerAction(ActionRuntime actionRuntime) {
-		String actionPath = actionRuntime.actionPath;
+		String actionPath = actionRuntime.actionPath();
 
-		log.debug(() -> "Madvoc action: " + actionRuntime.actionPath + " => " + actionRuntime.getActionString());
+		log.debug(() -> "Madvoc action: " + actionRuntime.actionPath() + " => " + actionRuntime.actionString());
 
-		ActionRuntimeSet set = createActionRuntimeSet(actionRuntime.actionPath);
+		ActionRuntimeSet set = createActionRuntimeSet(actionRuntime.actionPath());
 
-		if (set.actionPathMacros != null) {
+		if (set.actionPathMacros() != null) {
 			// new action patch contain macros
 			int ndx = -1;
 			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).actionPath.equals(actionPath)) {
+				if (list.get(i).actionPath().equals(actionPath)) {
 					ndx = i;
 					break;
 				}
@@ -217,10 +217,10 @@ public class ActionsManager {
 			}
 		} else {
 			// action path is without macros
-			if (!map.containsKey(actionRuntime.actionPath)) {
-				map.put(actionRuntime.actionPath, set);
+			if (!map.containsKey(actionRuntime.actionPath())) {
+				map.put(actionRuntime.actionPath(), set);
 			} else {
-				set = map.get(actionRuntime.actionPath);
+				set = map.get(actionRuntime.actionPath());
 			}
 
 		}
@@ -234,14 +234,14 @@ public class ActionsManager {
 
 		// finally
 
-		runtimes.put(actionRuntime.getActionString(), actionRuntime);
+		runtimes.put(actionRuntime.actionString(), actionRuntime);
 
 		if (!isDuplicate) {
 			actionsCount++;
 		}
 
 		// async check
-		if (actionRuntime.isAsync()) {
+		if (actionRuntime.async()) {
 			asyncMode = true;
 		}
 
@@ -291,7 +291,7 @@ public class ActionsManager {
 		for (int i = 0; i < len; i++) {
 			actionRuntimeSet = list.get(i);
 
-			int deep = actionRuntimeSet.deep;
+			int deep = actionRuntimeSet.deep();
 			if (deep < actionPathDeep) {
 				continue;
 			}
@@ -301,7 +301,7 @@ public class ActionsManager {
 
 			// same deep level, try the fully match
 
-			int matchedChars = actionRuntimeSet.actionPathMacros.match(actionPath);
+			int matchedChars = actionRuntimeSet.actionPathMacros().match(actionPath);
 
 			if (matchedChars == -1) {
 				continue;
@@ -325,7 +325,7 @@ public class ActionsManager {
 	/**
 	 * Lookups action runtime config for given action class and method string (aka 'action string').
 	 * The action string has the following format: <code>className#methodName</code>.
-	 * @see ActionRuntime#getActionString()
+	 * @see ActionRuntime#actionString()
 	 */
 	public ActionRuntime lookup(String actionString) {
 		return runtimes.get(actionString);

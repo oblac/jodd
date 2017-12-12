@@ -42,25 +42,25 @@ import java.lang.reflect.Method;
 public class ActionRuntime {
 
 	// configuration
-	public final Class actionClass;
-	public final Method actionClassMethod;
-	public final Class<? extends ActionResult> actionResult;
-	public final String actionPath;
-	public final String actionMethod;
-	public final String resultBasePath;
-	public final Field resultField;
-	public final boolean async;
+	private final Class actionClass;
+	private final Method actionClassMethod;
+	private final Class<? extends ActionResult> actionResult;
+	private final String actionPath;
+	private final String actionMethod;
+	private final String resultBasePath;
+	private final Field resultField;
+	private final boolean async;
 
 	// scope data information matrix: [scope-type][target-index]
-	public final ScopeData[][] scopeData;
-	public final MethodParam[] methodParams;
+	private final ScopeData[][] scopeData;
+	private final MethodParam[] methodParams;
 
-	public final boolean hasArguments;
+	private final boolean hasArguments;
 
 	// run-time data
 	protected ActionRuntimeSet actionRuntimeSet;
-	public final ActionFilter[] filters;
-	public final ActionInterceptor[] interceptors;
+	private final ActionFilter[] filters;
+	private final ActionInterceptor[] interceptors;
 
 	public ActionRuntime(
 			Class actionClass,
@@ -113,60 +113,67 @@ public class ActionRuntime {
 	/**
 	 * Returns action class.
 	 */
-	public Class getActionClass() {
+	public Class actionClass() {
 		return actionClass;
 	}
 
 	/**
 	 * Returns action class method.
 	 */
-	public Method getActionClassMethod() {
+	public Method actionClassMethod() {
 		return actionClassMethod;
 	}
 
 	/**
 	 * Returns action path.
 	 */
-	public String getActionPath() {
+	public String actionPath() {
 		return actionPath;
 	}
 
 	/**
 	 * Returns action method.
 	 */
-	public String getActionMethod() {
+	public String actionMethod() {
 		return actionMethod;
 	}
 
 	/**
 	 * Returns action result base path.
 	 */
-	public String getResultBasePath() {
+	public String resultBasePath() {
 		return resultBasePath;
 	}
 
 	/**
 	 * Returns interceptor instances.
 	 */
-	public ActionInterceptor[] getInterceptors() {
+	public ActionInterceptor[] interceptors() {
 		return interceptors;
+	}
+
+	/**
+	 * Returns filters instances.
+	 */
+	public ActionFilter[] filters() {
+		return filters;
 	}
 
 	/**
 	 * Returns <code>true</code> if action is asynchronous.
 	 */
-	public boolean isAsync() {
+	public boolean async() {
 		return async;
 	}
 
-	public ActionRuntimeSet getActionRuntimeSet() {
+	public ActionRuntimeSet actionRuntimeSet() {
 		return actionRuntimeSet;
 	}
 
 	/**
 	 * Returns method parameters information, or <code>null</code> if method has no params.
 	 */
-	public MethodParam[] getMethodParams() {
+	public MethodParam[] methodParams() {
 		return methodParams;
 	}
 
@@ -174,8 +181,23 @@ public class ActionRuntime {
 	 * Returns action result class that will render the result.
 	 * may be <code>null</code>.
 	 */
-	public Class<? extends ActionResult> getActionResult() {
+	public Class<? extends ActionResult> actionResult() {
 		return actionResult;
+	}
+
+	public Field resultField() {
+		return resultField;
+	}
+
+	/**
+	 * Returns {@code true} if action has arguments.
+	 */
+	public boolean hasArguments() {
+		return hasArguments;
+	}
+
+	public ScopeData[][] scopeData() {
+		return scopeData;
 	}
 
 	// ---------------------------------------------------------------- to string
@@ -183,7 +205,7 @@ public class ActionRuntime {
 	/**
 	 * Returns action string in form 'actionClass#actionMethod'.
 	 */
-	public String getActionString() {
+	public String actionString() {
 		String className = actionClass.getName();
 
 		int ndx = className.indexOf("$$");
@@ -197,7 +219,7 @@ public class ActionRuntime {
 
 	@Override
 	public String toString() {
-		return "action: " + actionPath + (actionMethod == null ? "" : '#' + actionMethod) + "  -->  " + getActionString();
+		return "action: " + actionPath + (actionMethod == null ? "" : '#' + actionMethod) + "  -->  " + actionString();
 	}
 
 }

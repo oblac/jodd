@@ -85,7 +85,7 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	protected void printBefore(ActionRequest request) {
 		StringBuilder message = new StringBuilder(prefixIn);
 
-		message.append(request.getActionPath()).append("   [").append(request.getActionRuntime().getActionString()).append(']');
+		message.append(request.getActionPath()).append("   [").append(request.getActionRuntime().actionString()).append(']');
 		out(message.toString());
 	}
 

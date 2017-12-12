@@ -47,10 +47,10 @@ public class RestResourcePath extends BaseNamingStrategy {
 	@Override
 	public ActionDefinition buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
 
-		String packageActionPath = actionNames.getPackageActionPath();
-		String classActionPath = actionNames.getClassActionPath();
-		String methodActionPath = actionNames.getMethodActionPath();
-		String httpMethod = actionNames.getHttpMethod();
+		String packageActionPath = actionNames.packageActionPath();
+		String classActionPath = actionNames.classActionPath();
+		String methodActionPath = actionNames.methodActionPath();
+		String httpMethod = actionNames.httpMethod();
 
 		if (httpMethod == null) {
 			httpMethod = resolveHttpMethodFromMethodName(actionMethod.getName());
@@ -78,7 +78,7 @@ public class RestResourcePath extends BaseNamingStrategy {
 			if (httpMethod != null) {
 				resultPath += httpMethod.toLowerCase();
 			} else {
-				resultPath += actionNames.getMethodName();
+				resultPath += actionNames.methodName();
 			}
 		}
 

@@ -54,13 +54,13 @@ class ActionMethodParserTest extends MadvocTestCase {
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
-		assertEquals("/boo.foo.html", cfg.actionPath);
+		assertEquals("/boo.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#view");
-		assertEquals("/boo.html", cfg.actionPath);
+		assertEquals("/boo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#execute");
-		assertEquals("/boo.html", cfg.actionPath);
+		assertEquals("/boo.html", cfg.actionPath());
 
 	}
 
@@ -73,29 +73,29 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
 		assertNotNull(cfg);
-		assertEquals(BooAction.class, cfg.actionClass);
-		assertEquals("/boo.foo.html", cfg.actionPath);
+		assertEquals(BooAction.class, cfg.actionClass());
+		assertEquals("/boo.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo1");
-		assertEquals("/boo.xxx.html", cfg.actionPath);
+		assertEquals("/boo.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
-		assertEquals("/boo.foo2.xxx", cfg.actionPath);
+		assertEquals("/boo.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo3");
-		assertEquals("/boo.html", cfg.actionPath);
+		assertEquals("/boo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo4");
-		assertEquals("/xxx", cfg.actionPath);
-		assertNull(cfg.actionMethod);
+		assertEquals("/xxx", cfg.actionPath());
+		assertNull(cfg.actionMethod());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo41");
-		assertEquals("/xxx", cfg.actionPath);
-		assertEquals("DELETE", cfg.actionMethod);
+		assertEquals("/xxx", cfg.actionPath());
+		assertEquals("DELETE", cfg.actionMethod());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo5");
-		assertEquals("/xxx.html", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
+		assertEquals("/xxx.html", cfg.actionPath());
+		assertEquals("POST", cfg.actionMethod());
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 		assertEquals("/xxx.html", actionsManager.lookupPathAlias("dude"));
@@ -112,35 +112,35 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
 		assertNotNull(cfg);
-		assertEquals(BooAction.class, cfg.actionClass);
-		assertEquals("/fixtures/tst/boo.foo.html", cfg.actionPath);
+		assertEquals(BooAction.class, cfg.actionClass());
+		assertEquals("/fixtures/tst/boo.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo1");
-		assertEquals("/fixtures/tst/boo.xxx.html", cfg.actionPath);
+		assertEquals("/fixtures/tst/boo.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
-		assertEquals("/fixtures/tst/boo.foo2.xxx", cfg.actionPath);
+		assertEquals("/fixtures/tst/boo.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo3");
-		assertEquals("/fixtures/tst/boo.html", cfg.actionPath);
+		assertEquals("/fixtures/tst/boo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo4");
-		assertEquals("/xxx", cfg.actionPath);
-		assertNull(cfg.actionMethod);
+		assertEquals("/xxx", cfg.actionPath());
+		assertNull(cfg.actionMethod());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo41");
-		assertEquals("/xxx", cfg.actionPath);
-		assertEquals("DELETE", cfg.actionMethod);
+		assertEquals("/xxx", cfg.actionPath());
+		assertEquals("DELETE", cfg.actionMethod());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo5");
-		assertEquals("/xxx.html", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
+		assertEquals("/xxx.html", cfg.actionPath());
+		assertEquals("POST", cfg.actionMethod());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo6");
-		assertEquals("/fixtures/tst/boo.qfoo62.html", cfg.actionPath);
+		assertEquals("/fixtures/tst/boo.qfoo62.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo7");
-		assertEquals("/foo7.html", cfg.actionPath);
+		assertEquals("/foo7.html", cfg.actionPath());
 	}
 
 
@@ -153,22 +153,22 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo1Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo1Action.class, cfg.actionClass);
-		assertEquals("/boo1.foo.html", cfg.actionPath);
+		assertEquals(Boo1Action.class, cfg.actionClass());
+		assertEquals("/boo1.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo2Action.class, cfg.actionClass);
-		assertEquals("/bbb.foo.html", cfg.actionPath);
+		assertEquals(Boo2Action.class, cfg.actionClass());
+		assertEquals("/bbb.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo1");
-		assertEquals("/bbb.xxx.html", cfg.actionPath);
+		assertEquals("/bbb.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo2");
-		assertEquals("/bbb.foo2.xxx", cfg.actionPath);
+		assertEquals("/bbb.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo3");
-		assertEquals("/bbb.html", cfg.actionPath);
+		assertEquals("/bbb.html", cfg.actionPath());
 
 	}
 
@@ -183,22 +183,22 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo1Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo1Action.class, cfg.actionClass);
-		assertEquals("/fixtures/tst/boo1.foo.html", cfg.actionPath);
+		assertEquals(Boo1Action.class, cfg.actionClass());
+		assertEquals("/fixtures/tst/boo1.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo2Action.class, cfg.actionClass);
-		assertEquals("/fixtures/tst/bbb.foo.html", cfg.actionPath);
+		assertEquals(Boo2Action.class, cfg.actionClass());
+		assertEquals("/fixtures/tst/bbb.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo1");
-		assertEquals("/fixtures/tst/bbb.xxx.html", cfg.actionPath);
+		assertEquals("/fixtures/tst/bbb.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo2");
-		assertEquals("/fixtures/tst/bbb.foo2.xxx", cfg.actionPath);
+		assertEquals("/fixtures/tst/bbb.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo2Action#foo3");
-		assertEquals("/fixtures/tst/bbb.html", cfg.actionPath);
+		assertEquals("/fixtures/tst/bbb.html", cfg.actionPath());
 
 	}
 
@@ -213,17 +213,17 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo3Action.class, cfg.actionClass);
-		assertEquals("/bbb.foo.html", cfg.actionPath);
+		assertEquals(Boo3Action.class, cfg.actionClass());
+		assertEquals("/bbb.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo1");
-		assertEquals("/bbb.xxx.html", cfg.actionPath);
+		assertEquals("/bbb.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo2");
-		assertEquals("/bbb.foo2.xxx", cfg.actionPath);
+		assertEquals("/bbb.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo3");
-		assertEquals("/bbb.html", cfg.actionPath);
+		assertEquals("/bbb.html", cfg.actionPath());
 
 	}
 
@@ -238,17 +238,17 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo4Action.class, cfg.actionClass);
-		assertEquals("/ttt/www.foo.html", cfg.actionPath);
+		assertEquals(Boo4Action.class, cfg.actionClass());
+		assertEquals("/ttt/www.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo1");
-		assertEquals("/ttt/www.xxx.html", cfg.actionPath);
+		assertEquals("/ttt/www.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo2");
-		assertEquals("/ttt/www.foo2.xxx", cfg.actionPath);
+		assertEquals("/ttt/www.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo3");
-		assertEquals("/ttt/www.html", cfg.actionPath);
+		assertEquals("/ttt/www.html", cfg.actionPath());
 
 	}
 
@@ -263,17 +263,17 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo");
 		assertNotNull(cfg);
-		assertEquals(Boo5Action.class, cfg.actionClass);
-		assertEquals("/www.foo.html", cfg.actionPath);
+		assertEquals(Boo5Action.class, cfg.actionClass());
+		assertEquals("/www.foo.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo1");
-		assertEquals("/www.xxx.html", cfg.actionPath);
+		assertEquals("/www.xxx.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo2");
-		assertEquals("/www.foo2.xxx", cfg.actionPath);
+		assertEquals("/www.foo2.xxx", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo3");
-		assertEquals("/www.html", cfg.actionPath);
+		assertEquals("/www.html", cfg.actionPath());
 
 	}
 
@@ -288,13 +288,13 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.ReAction#hello");
 		assertNotNull(cfg);
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/hello.html", cfg.actionPath);
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/hello.html", cfg.actionPath());
 
 		cfg = parse(actionMethodParser, "fixtures.tst2.ReAction#macro");
 		assertNotNull(cfg);
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/user/${id}/macro.html", cfg.actionPath);
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/user/${id}/macro.html", cfg.actionPath());
 	}
 
 	@Test
@@ -310,38 +310,38 @@ class ActionMethodParserTest extends MadvocTestCase {
 		ActionRuntime cfg = actionsManager.lookup("/re/user/173/macro.html", "GET");
 
 		assertNotNull(cfg);
-		ActionRuntimeSet set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/user/${id}/macro.html", cfg.actionPath);
-		assertEquals(4, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
-		assertNull(set.actionPathMacros.getPatterns()[0]);
+		ActionRuntimeSet set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/user/${id}/macro.html", cfg.actionPath());
+		assertEquals(4, set.deep());
+		assertEquals(1, set.actionPathMacros().getMacrosCount());
+		assertEquals("id", set.actionPathMacros().getNames()[0]);
+		assertNull(set.actionPathMacros().getPatterns()[0]);
 
 
 		actionsManager.register(ReAction.class, "macro2");
 		cfg = actionsManager.lookup("/re/user/image/173/png/macro2.html", "GET");
 
 		assertNotNull(cfg);
-		set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/user/image/${id}/${fmt}/macro2.html", cfg.actionPath);
-		assertEquals(6, set.deep);
-		assertEquals(2, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
-		assertEquals("fmt", set.actionPathMacros.getNames()[1]);
+		set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/user/image/${id}/${fmt}/macro2.html", cfg.actionPath());
+		assertEquals(6, set.deep());
+		assertEquals(2, set.actionPathMacros().getMacrosCount());
+		assertEquals("id", set.actionPathMacros().getNames()[0]);
+		assertEquals("fmt", set.actionPathMacros().getNames()[1]);
 
 		actionsManager.register(ReAction.class, "macro3");
 		cfg = actionsManager.lookup("/re/users/173/macro3", "POST");
 
 		assertNotNull(cfg);
-		set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/users/${id}/macro3", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
-		assertEquals(4, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/users/${id}/macro3", cfg.actionPath());
+		assertEquals("POST", cfg.actionMethod());
+		assertEquals(4, set.deep());
+		assertEquals(1, set.actionPathMacros().getMacrosCount());
+		assertEquals("id", set.actionPathMacros().getNames()[0]);
 
 		cfg = actionsManager.lookup("/re/user/index.html", "GET");
 		assertNull(cfg);
@@ -375,25 +375,25 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		cfg = actionsManager.lookup("/re/wild123cat.html", "GET");
 		assertNotNull(cfg);
-		ActionRuntimeSet set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/wild${id}cat.html", cfg.actionPath);
-		assertEquals(2, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		ActionRuntimeSet set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/wild${id}cat.html", cfg.actionPath());
+		assertEquals(2, set.deep());
+		assertEquals(1, set.actionPathMacros().getMacrosCount());
+		assertEquals("id", set.actionPathMacros().getNames()[0]);
 
 		cfg = actionsManager.lookup("/re/wild123dog.html", "GET");
 		assertNull(cfg);
 
 		cfg = actionsManager.lookup("/re/wild123dog.html", "POST");
 		assertNotNull(cfg);
-		set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/wild${id}dog.html", cfg.actionPath);
-		assertEquals("POST", cfg.actionMethod);
-		assertEquals(2, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/wild${id}dog.html", cfg.actionPath());
+		assertEquals("POST", cfg.actionMethod());
+		assertEquals(2, set.deep());
+		assertEquals(1, set.actionPathMacros().getMacrosCount());
+		assertEquals("id", set.actionPathMacros().getNames()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
@@ -414,21 +414,21 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionRuntime cfg = actionsManager.lookup("/re/duplo/123", "GET");
 		assertNotNull(cfg);
-		ActionRuntimeSet set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/duplo/${id:^[0-9]+}", cfg.actionPath);
-		assertEquals(3, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("id", set.actionPathMacros.getNames()[0]);
+		ActionRuntimeSet set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/duplo/${id:^[0-9]+}", cfg.actionPath());
+		assertEquals(3, set.deep());
+		assertEquals(1, set.actionPathMacros().getMacrosCount());
+		assertEquals("id", set.actionPathMacros().getNames()[0]);
 
 		cfg = actionsManager.lookup("/re/duplo/aaa", "GET");
 		assertNotNull(cfg);
-		set = cfg.getActionRuntimeSet();
-		assertEquals(ReAction.class, cfg.actionClass);
-		assertEquals("/re/duplo/${sid}", cfg.actionPath);
-		assertEquals(3, set.deep);
-		assertEquals(1, set.actionPathMacros.getMacrosCount());
-		assertEquals("sid", set.actionPathMacros.getNames()[0]);
+		set = cfg.actionRuntimeSet();
+		assertEquals(ReAction.class, cfg.actionClass());
+		assertEquals("/re/duplo/${sid}", cfg.actionPath());
+		assertEquals(3, set.deep());
+		assertEquals(1, set.actionPathMacros().getMacrosCount());
+		assertEquals("sid", set.actionPathMacros().getNames()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
@@ -448,7 +448,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 		ActionRuntime cfg = actionsManager.lookup("/config/dba.delete_multi", "GET");
 		assertNotNull(cfg);
 
-		assertEquals("/${entityName}/dba.delete_multi", cfg.getActionPath());
+		assertEquals("/${entityName}/dba.delete_multi", cfg.actionPath());
 	}
 
 }

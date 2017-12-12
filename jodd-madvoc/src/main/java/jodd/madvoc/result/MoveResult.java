@@ -66,7 +66,7 @@ public class MoveResult extends BaseActionResult<String> {
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
 
 		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 

@@ -77,13 +77,13 @@ class ActionsManagerTest {
 		actionsManager.register(FooAction.class, "two", new ActionDefinition("/xxx-${two}"));
 
 		ActionRuntime actionRuntime = actionsManager.lookup("/foo", null);
-		assertEquals("one", actionRuntime.actionClassMethod.getName());
+		assertEquals("one", actionRuntime.actionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("/foo/boo", null);
 		assertNull(actionRuntime);
 
 		actionRuntime = actionsManager.lookup("/xxx-foo", null);
-		assertEquals("two", actionRuntime.actionClassMethod.getName());	// best match!
+		assertEquals("two", actionRuntime.actionClassMethod().getName());	// best match!
 
 	}
 
@@ -103,10 +103,10 @@ class ActionsManagerTest {
 		assertNull(actionRuntime);
 
 		actionRuntime = actionsManager.lookup("/yyy-111", null);
-		assertEquals("one", actionRuntime.actionClassMethod.getName());
+		assertEquals("one", actionRuntime.actionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("/xxx-222", null);
-		assertEquals("two", actionRuntime.actionClassMethod.getName());
+		assertEquals("two", actionRuntime.actionClassMethod().getName());
 
 		try {
 			actionsManager.register(FooAction.class, "two", new ActionDefinition("/xxx-${two}"));
@@ -129,13 +129,13 @@ class ActionsManagerTest {
 		actionsManager.register(FooAction.class, "three", new ActionDefinition("/life/${three}"));
 
 		ActionRuntime actionRuntime = actionsManager.lookup("/foo", null);
-		assertEquals("one", actionRuntime.actionClassMethod.getName());
+		assertEquals("one", actionRuntime.actionClassMethod().getName());
 
  		actionRuntime = actionsManager.lookup("/scott/ramonna", null);
-		assertEquals("two", actionRuntime.actionClassMethod.getName());
+		assertEquals("two", actionRuntime.actionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("/life/universe", null);
-		assertEquals("three", actionRuntime.actionClassMethod.getName());
+		assertEquals("three", actionRuntime.actionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("/scott/ramonna/envy", null);
 		assertNull(actionRuntime);

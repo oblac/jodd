@@ -34,11 +34,11 @@ import java.util.Comparator;
 public class ActionRuntimeSetComparator implements Comparator<ActionRuntimeSet>, Serializable {
 	@Override
 	public int compare(ActionRuntimeSet set1, ActionRuntimeSet set2) {
-		int deep1 = set1.deep;
-		int deep2 = set2.deep;
+		int deep1 = set1.deep();
+		int deep2 = set2.deep();
 
 		if (deep1 == deep2) {
-			return set1.actionPath.compareTo(set2.actionPath);
+			return set1.actionPath().compareTo(set2.actionPath());
 		}
 		return deep1 - deep2;
 	}

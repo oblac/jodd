@@ -232,7 +232,7 @@ public class ResultsManager {
 			// + still not found, read @Action value
 			ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
+			Class<? extends ActionResult> actionResultClass = actionRuntime.actionResult();
 			if (actionResultClass != null) {
 				actionResult = lookupAndRegisterIfMissing(actionResultClass);
 			}

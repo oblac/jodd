@@ -39,7 +39,7 @@ public class BookActionResult extends BaseActionResult<Book> {
 
 		request.setAttribute("book", book);
 
-		String method = actionRequest.getActionRuntime().getActionMethod();
+		String method = actionRequest.getActionRuntime().actionMethod();
 
 		if (method.equalsIgnoreCase("POST")) {
 			DispatcherUtil.forward(request, actionRequest.getHttpServletResponse(), "/book/post.jsp");

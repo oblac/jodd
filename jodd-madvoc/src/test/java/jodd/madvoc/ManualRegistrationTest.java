@@ -69,13 +69,13 @@ class ManualRegistrationTest {
 
 		ActionRuntime actionRuntime = actionsManager.lookup("/hello", "GET");
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.getActionClass());
-		assertEquals("foo1", actionRuntime.actionClassMethod.getName());
+		assertEquals(BooAction.class, actionRuntime.actionClass());
+		assertEquals("foo1", actionRuntime.actionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("/world", "GET");
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.getActionClass());
-		assertEquals("foo2", actionRuntime.actionClassMethod.getName());
+		assertEquals(BooAction.class, actionRuntime.actionClass());
+		assertEquals("foo2", actionRuntime.actionClassMethod().getName());
 	}
 
 	@Test
@@ -103,12 +103,12 @@ class ManualRegistrationTest {
 
 		ActionRuntime actionRuntime = actionsManager.lookup("/hello", "GET");
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.getActionClass());
-		assertEquals("foo1", actionRuntime.actionClassMethod.getName());
+		assertEquals(BooAction.class, actionRuntime.actionClass());
+		assertEquals("foo1", actionRuntime.actionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("/world", "GET");
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.getActionClass());
-		assertEquals("foo2", actionRuntime.actionClassMethod.getName());
+		assertEquals(BooAction.class, actionRuntime.actionClass());
+		assertEquals("foo2", actionRuntime.actionClassMethod().getName());
 	}
 }

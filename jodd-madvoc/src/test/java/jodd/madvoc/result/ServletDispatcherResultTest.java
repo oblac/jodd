@@ -147,7 +147,7 @@ class ServletDispatcherResultTest {
 				new ActionDefinition(actionPath, "GET"),
 				null, false, null, null);
 
-		return new ActionRequest(madvocController, actionRuntime.getActionPath(), actionRuntime, action, servletRequest, servletResponse);
+		return new ActionRequest(madvocController, actionRuntime.actionPath(), actionRuntime, action, servletRequest, servletResponse);
 	}
 
 	class Action {

@@ -64,7 +64,7 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
 
 		String resultPath;
 

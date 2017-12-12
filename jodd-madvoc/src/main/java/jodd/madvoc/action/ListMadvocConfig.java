@@ -40,7 +40,6 @@ import jodd.madvoc.result.ActionResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class ListMadvocConfig {
 		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAllInterceptors();
 		interceptors = new ArrayList<>();
 		interceptors.addAll(interceptorValues);
-		Collections.sort(interceptors, Comparator.comparing(a -> a.getClass().getSimpleName()));
+		interceptors.sort(Comparator.comparing(a -> a.getClass().getSimpleName()));
 	}
 
 	/**
@@ -95,7 +94,7 @@ public class ListMadvocConfig {
 		Collection<? extends ActionFilter> filterValues = filtersManager.getAllFilters();
 		filters = new ArrayList<>();
 		filters.addAll(filterValues);
-		Collections.sort(filters, Comparator.comparing(a -> a.getClass().getSimpleName()));
+		filters.sort(Comparator.comparing(a -> a.getClass().getSimpleName()));
 	}
 
 	/**
@@ -105,7 +104,7 @@ public class ListMadvocConfig {
 		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults();
 		results = new ArrayList<>();
 		results.addAll(resultsValues);
-		Collections.sort(results, Comparator.comparing(a -> a.getClass().getSimpleName()));
+		results.sort(Comparator.comparing(a -> a.getClass().getSimpleName()));
 	}
 
 	/**
@@ -113,7 +112,7 @@ public class ListMadvocConfig {
 	 */
 	protected void collectActionRuntimes() {
 		actions = actionsManager.getAllActionRuntimes();
-		Collections.sort(actions, Comparator.comparing(a -> a.actionPath));
+		actions.sort(Comparator.comparing(ActionRuntime::actionPath));
 	}
 
 }

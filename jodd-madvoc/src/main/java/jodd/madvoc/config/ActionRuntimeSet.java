@@ -40,14 +40,26 @@ import java.util.List;
  */
 public class ActionRuntimeSet implements Comparable<ActionRuntimeSet> {
 
-	protected ActionRuntime[] configs = new ActionRuntime[0];
+	private ActionRuntime[] configs = new ActionRuntime[0];
 
 	// action path
-	public final String actionPath;
+	private final String actionPath;
 	// simple count of '/', for faster matching
-	public final int deep;
+	private final int deep;
 	// macros
-	public final PathMacros actionPathMacros;
+	private final PathMacros actionPathMacros;
+
+	public String actionPath() {
+		return actionPath;
+	}
+
+	public int deep() {
+		return deep;
+	}
+
+	public PathMacros actionPathMacros() {
+		return actionPathMacros;
+	}
 
 	/**
 	 * Creates new action runtime set. It is set of {@link ActionRuntime}, i.e. Madvoc
@@ -76,15 +88,15 @@ public class ActionRuntimeSet implements Comparable<ActionRuntimeSet> {
 	 * new configuration replaces existing one.
 	 */
 	public boolean add(ActionRuntime cfg) {
-		if (!cfg.actionPath.equals(this.actionPath)) {
+		if (!cfg.actionPath().equals(this.actionPath)) {
 			throw new MadvocException("Invalid configuration");
 		}
 
 		cfg.actionRuntimeSet = this;
 
-		int ndx = lookupIndex(cfg.actionMethod);
+		int ndx = lookupIndex(cfg.actionMethod());
 		if (ndx == -1) {
-			if (cfg.actionMethod == null) {
+			if (cfg.actionMethod() == null) {
 				configs = ArraysUtil.append(configs, cfg);
 			} else {
 				configs = ArraysUtil.insert(configs, cfg, 0);
@@ -112,10 +124,10 @@ public class ActionRuntimeSet implements Comparable<ActionRuntimeSet> {
 		for (int i = 0; i < configs.length; i++) {
 			ActionRuntime config = configs[i];
 
-			if (config.actionMethod == null) {
+			if (config.actionMethod() == null) {
 				return i;
 			}
-			if (config.actionMethod.equals(method)) {
+			if (config.actionMethod().equals(method)) {
 				return i;
 			}
 		}

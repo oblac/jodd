@@ -128,7 +128,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				return actionPath;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.actionClass.getSimpleName());
+				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.actionClass().getSimpleName());
 			}
 
 			// set character encoding
@@ -145,7 +145,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			}
 
 			// create action object
-			Object action = createAction(actionRuntime.actionClass);
+			Object action = createAction(actionRuntime.actionClass());
 
 			// create action request
 			ActionRequest previousRequest = actionRequest;
@@ -153,7 +153,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			if (actionRuntime.isAsync()) {
+			if (actionRuntime.async()) {
 				AsyncContext asyncContext = servletRequest.startAsync();
 				executor.execute(new ActionRequestInvoker(asyncContext, actionRequest));
 			} else {

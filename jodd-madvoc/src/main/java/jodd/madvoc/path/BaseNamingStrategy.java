@@ -47,11 +47,11 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	 * it will not be replaced - so to emphasize the problem.
 	 */
 	protected String replaceActionNameMacros(String path, ActionNames actionNames) {
-		String packageName = actionNames.getPackageName();
-		String className = actionNames.getClassName();
-		String methodName = actionNames.getMethodName();
-		String extension = actionNames.getExtension();
-		String httpMethod = actionNames.getHttpMethod();
+		String packageName = actionNames.packageName();
+		String className = actionNames.className();
+		String methodName = actionNames.methodName();
+		String extension = actionNames.extension();
+		String httpMethod = actionNames.httpMethod();
 
 		if (packageName != null) {
 			path = StringUtil.replace(path, PACKAGE_MACRO, packageName);

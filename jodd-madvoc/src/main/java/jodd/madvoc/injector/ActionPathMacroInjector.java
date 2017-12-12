@@ -47,9 +47,9 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 	@Override
 	public void inject(ActionRequest actionRequest) {
 		ActionRuntime config = actionRequest.getActionRuntime();
-		ActionRuntimeSet set = config.getActionRuntimeSet();
+		ActionRuntimeSet set = config.actionRuntimeSet();
 
-		if (set.actionPathMacros == null) {
+		if (set.actionPathMacros() == null) {
 			// no action path macros at all, just exit
 			return;
 		}
@@ -63,8 +63,8 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 
 		Target[] targets = actionRequest.getTargets();
 
-		String[] names = set.actionPathMacros.getNames();
-		String[] values = set.actionPathMacros.extract(actionRequest.getActionPath());
+		String[] names = set.actionPathMacros().getNames();
+		String[] values = set.actionPathMacros().extract(actionRequest.getActionPath());
 
 		for (int ndx = 0; ndx < values.length; ndx++) {
 			String value = values[ndx];
