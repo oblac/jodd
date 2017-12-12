@@ -23,10 +23,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.config;
+package jodd.db.oom;
 
-import jodd.db.oom.DbEntityManager;
-import jodd.db.oom.DbOomException;
 import jodd.db.oom.meta.DbTable;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;

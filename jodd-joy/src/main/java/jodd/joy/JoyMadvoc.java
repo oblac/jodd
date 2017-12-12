@@ -25,8 +25,8 @@
 
 package jodd.joy;
 
+import jodd.madvoc.AutomagicMadvocConfigurator;
 import jodd.madvoc.WebApp;
-import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaProvider;

@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Madvoc configurators and configuration helper methods.
+ * Internal configuration classes.
  */
 package jodd.madvoc.config;
