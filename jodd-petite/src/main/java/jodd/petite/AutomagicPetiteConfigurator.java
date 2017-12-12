@@ -23,13 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite.config;
+package jodd.petite;
 
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.petite.PetiteContainer;
-import jodd.petite.PetiteException;
 import jodd.petite.meta.PetiteBean;
 import jodd.util.ClassLoaderUtil;
 
@@ -43,7 +41,7 @@ import java.util.function.Consumer;
  * annotation (not by loading the class!). If annotation is founded, class will be loaded and
  * registered as Petite bean.
  */
-public class AutomagicPetiteConfigurator implements PetiteConfigurator {
+public class AutomagicPetiteConfigurator {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicPetiteConfigurator.class);
 	private final ClassScanner classScanner = new ClassScanner();
@@ -91,7 +89,6 @@ public class AutomagicPetiteConfigurator implements PetiteConfigurator {
 	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
 	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer, java.io.File[])
 	 */
-	@Override
 	public void configure(PetiteContainer petiteContainer) {
 		configure(petiteContainer, ClassLoaderUtil.getDefaultClasspath());
 	}

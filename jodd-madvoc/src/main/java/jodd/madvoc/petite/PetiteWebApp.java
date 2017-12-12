@@ -26,8 +26,8 @@
 package jodd.madvoc.petite;
 
 import jodd.madvoc.WebApp;
+import jodd.petite.AutomagicPetiteConfigurator;
 import jodd.petite.PetiteContainer;
-import jodd.petite.config.AutomagicPetiteConfigurator;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -45,7 +45,7 @@ public class PetiteWebApp extends WebApp {
 	 */
 	private Supplier<PetiteContainer> petiteContainerSupplier = () -> {
 		PetiteContainer pc = new PetiteContainer();
-		pc.configureWith(new AutomagicPetiteConfigurator());
+		new AutomagicPetiteConfigurator().configure(pc);
 		return pc;
 	};
 
