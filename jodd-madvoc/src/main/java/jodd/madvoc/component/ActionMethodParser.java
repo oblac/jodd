@@ -47,7 +47,6 @@ import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
-import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -274,62 +273,8 @@ public class ActionMethodParser {
 
 			packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
 
-			String rootPackage = null;
-
-			if (packagePath != null) {
-				rootPackage = rootPackages.findRootPackageForActionPath(packagePath);
-			}
-
-			// try locating marker class
-			{
-				String packageName = actionPackageName;
-				String madvocRootPackageClassName = madvocConfig.getMadvocRootPackageClassName();
-
-				if (madvocRootPackageClassName != null) {
-					while (true) {
-						String className = packageName + '.' + madvocRootPackageClassName;
-						try {
-							Class<?> madvocRootPackageClass = ClassLoaderUtil.loadClass(className, actionClass.getClassLoader());
-
-							// class found, find the mapping
-							String mapping = StringPool.EMPTY;
-							MadvocAction madvocAction = madvocRootPackageClass.getAnnotation(MadvocAction.class);
-
-							if (madvocAction != null) {
-								mapping = madvocAction.value();
-							}
-
-							// register root package - so not to lookup twice
-							madvocConfig.getRootPackages().addRootPackage(packageName, mapping);
-
-							// repeat lookup
-							packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
-
-							break;
-						} catch (ClassNotFoundException ignore) {
-
-							// continue
-							int dotNdx = packageName.lastIndexOf('.');
-							if (dotNdx == -1) {
-								break;
-							}
-
-							packageName = packageName.substring(0, dotNdx);
-
-							if (rootPackage != null) {
-								// don't go beyond found root package
-								if (packageName.equals(rootPackage)) {
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-
 			rootPackages.registerPackageActionPath(actionPackageName, packagePath);
 		}
-
 
 		// read package-level annotation
 

@@ -69,7 +69,6 @@ public final class MadvocConfig {
 		defaultExtension = "html";
 		defaultNamingStrategy = DefaultActionPath.class;
 		rootPackages = new RootPackages();
-		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
 		preventCaching = true;
 		attributeMoveId = "_m_move_id";
@@ -262,29 +261,12 @@ public final class MadvocConfig {
 	// ---------------------------------------------------------------- packageRoot
 
 	protected RootPackages rootPackages;
-	protected String madvocRootPackageClassName;
 
 	/**
 	 * Returns root packages collection.
 	 */
 	public RootPackages getRootPackages() {
 		return rootPackages;
-	}
-
-	/**
-	 * Returns root package marker class name.
-	 * Returns <code>null</code> if these classes should be ignored.
-	 */
-	public String getMadvocRootPackageClassName() {
-		return madvocRootPackageClassName;
-	}
-
-	/**
-	 * Sets root package marker name. By setting it to <code>null</code>
-	 * this feature will be turned off.
-	 */
-	public void setMadvocRootPackageClassName(String madvocRootPackageClassName) {
-		this.madvocRootPackageClassName = madvocRootPackageClassName;
 	}
 
 	// ---------------------------------------------------------------- duplicates
@@ -461,7 +443,6 @@ public final class MadvocConfig {
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
 				",\n\trootPackages=" + rootPackages +
-				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
 				",\n\tasyncConfig='" + asyncConfig + '\'' +
 				"\n}";
 	}

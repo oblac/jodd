@@ -30,7 +30,6 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionConfigSet;
-import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.fixtures.tst.Boo1Action;
 import jodd.madvoc.fixtures.tst.Boo2Action;
 import jodd.madvoc.fixtures.tst.Boo3Action;
@@ -432,37 +431,6 @@ class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals("sid", set.actionPathMacros.getNames()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
-	}
-
-	@Test
-	void testMarkerClass() {
-		WebApp webapp = new WebApp();
-		webapp.start();
-
-		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		RootPackages rootPackages = madvocConfig.getRootPackages();
-
-		String thisPackageName = this.getClass().getPackage().getName();
-
-		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".fixtures.tst3"));
-		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst3.JohnAction#hello");
-		assertEquals("/root", rootPackages.getPackageActionPath(thisPackageName + ".fixtures.tst3"));
-		assertEquals("/root/john.hello.html", cfg.actionPath);
-
-		cfg = parse(actionMethodParser, "fixtures.tst3.JimAction#hello");
-		assertEquals("/my-root/jim.my-hello.html", cfg.actionPath);
-
-		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".fixtures.tst3.lvl1"));
-		cfg = parse(actionMethodParser, "fixtures.tst3.lvl1.EmaAction#hello");
-		assertEquals("/root/lvl1/ema.hello.html", cfg.actionPath);
-		assertEquals("/root/lvl1", rootPackages.getPackageActionPath(thisPackageName + ".fixtures.tst3.lvl1"));
-
-		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".fixtures.tst3.lvl2"));
-		cfg = parse(actionMethodParser, "fixtures.tst3.lvl2.DidyAction#hello");
-		assertEquals("/gig/didy.hello.html", cfg.actionPath);
-		assertEquals("/gig", rootPackages.getPackageActionPath(thisPackageName + ".fixtures.tst3.lvl2"));
-
 	}
 
 	@Test
