@@ -26,7 +26,7 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;

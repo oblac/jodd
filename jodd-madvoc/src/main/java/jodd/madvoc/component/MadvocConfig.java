@@ -25,7 +25,7 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.RootPackages;
+import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;

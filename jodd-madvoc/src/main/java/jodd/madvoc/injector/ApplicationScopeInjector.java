@@ -26,9 +26,9 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ScopeData;
 
 import javax.servlet.ServletContext;
 import java.util.Enumeration;
@@ -44,6 +44,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		silent = true;
 	}
 
+	@Override
 	public void inject(ActionRequest actionRequest) {
 		Target[] targets = actionRequest.getTargets();
 
@@ -79,6 +80,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		}
 	}
 
+	@Override
 	public void injectContext(Target target, ScopeData[] scopeData, ServletContext servletContext) {
 		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
@@ -99,6 +101,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		}
 	}
 
+	@Override
 	public void outject(ActionRequest actionRequest) {
 		ScopeData[] outjectData = lookupScopeData(actionRequest);
 		if (outjectData == null) {

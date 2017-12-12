@@ -30,6 +30,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionConfigSet;
+import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.fixtures.tst.Boo1Action;
 import jodd.madvoc.fixtures.tst.Boo2Action;
 import jodd.madvoc.fixtures.tst.Boo3Action;

@@ -26,9 +26,9 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ScopeData;
 
 /**
  * Abstract base class for HTTP scopes injection.

@@ -27,7 +27,6 @@ package jodd.madvoc.config;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;

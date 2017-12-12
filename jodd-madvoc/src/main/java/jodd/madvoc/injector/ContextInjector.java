@@ -25,7 +25,7 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.ScopeData;
+import jodd.madvoc.config.ScopeData;
 
 /**
  * Context injector. Context is injected only during the initialization.

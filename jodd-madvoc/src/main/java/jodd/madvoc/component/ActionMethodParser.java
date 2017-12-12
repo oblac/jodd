@@ -27,13 +27,13 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
-import jodd.madvoc.RootPackages;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionConfig;
 import jodd.madvoc.config.ActionDef;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.config.MethodParam;
+import jodd.madvoc.config.RootPackages;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
