@@ -40,7 +40,7 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 	}
 
 	/**
-s	 * Need to override to make java compiler happy.
+	 * Need to override to make java compiler happy.
 	 */
 	@Override
 	public ActionAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
