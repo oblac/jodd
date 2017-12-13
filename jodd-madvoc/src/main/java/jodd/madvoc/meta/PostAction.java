@@ -23,9 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.madvoc.meta;
-
-import jodd.madvoc.meta.Action;
+package jodd.madvoc.meta;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
