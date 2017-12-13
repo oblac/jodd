@@ -65,6 +65,11 @@ public class ClassUtil {
 	/** Empty class array. */
 	public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T>[] emptyClassArray() {
+		return EMPTY_CLASS_ARRAY;
+	}
+
 	public static final String METHOD_GET_PREFIX = "get";
 	public static final String METHOD_IS_PREFIX = "is";
 	public static final String METHOD_SET_PREFIX = "set";

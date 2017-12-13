@@ -107,7 +107,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * Returns <code>true</code> if annotation is present on
 	 * given annotated element.
 	 */
-	public boolean hasAnnotation(AnnotatedElement annotatedElement) {
+	public boolean hasAnnotationOn(AnnotatedElement annotatedElement) {
 		return annotatedElement.isAnnotationPresent(annotationClass);
 	}
 
@@ -219,7 +219,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 		}
 
 		/**
-		 * Returns annotation.
+		 * Returns annotation instance.
 		 */
 		public N getAnnotation() {
 			return annotation;
