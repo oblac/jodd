@@ -46,7 +46,7 @@ import java.lang.reflect.AnnotatedElement;
  * Besides overriding features and default values, this way we can finalize some element value
  * and prevent it from being modified by user.
  */
-public abstract class AnnotationDataReader<A extends Annotation, D extends AnnotationDataReader.AnnotationData<A>> {
+public abstract class AnnotationDataReader<A extends Annotation, D extends AnnotationData<A>> {
 
 	protected final Annotation defaultAnnotation;
 	protected final Class<A> annotationClass;
@@ -203,27 +203,6 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 			return defaultValue;
 		}
 		return value.intValue();
-	}
-
-	// ---------------------------------------------------------------- annotation data
-
-	/**
-	 * Base class for annotation data, for holding annotation elements values.
-	 */
-	public abstract static class AnnotationData<N extends Annotation> {
-
-		protected final N annotation;
-
-		protected AnnotationData(N annotation) {
-			this.annotation = annotation;
-		}
-
-		/**
-		 * Returns annotation instance.
-		 */
-		public N getAnnotation() {
-			return annotation;
-		}
 	}
 
 }

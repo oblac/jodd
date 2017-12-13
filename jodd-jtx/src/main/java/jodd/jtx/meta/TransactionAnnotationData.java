@@ -27,14 +27,14 @@ package jodd.jtx.meta;
 
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
-import jodd.util.AnnotationDataReader;
+import jodd.util.AnnotationData;
 
 import java.lang.annotation.Annotation;
 
 /**
  * {@link Transaction} annotation elements.
  */
-public class TransactionAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
+public class TransactionAnnotationData<A extends Annotation> extends AnnotationData<A> {
 
 	protected JtxPropagationBehavior propagation;
 	protected JtxIsolationLevel isolation;

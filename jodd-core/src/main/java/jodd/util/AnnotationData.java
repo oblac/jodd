@@ -23,34 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json.meta;
-
-import jodd.util.AnnotationData;
+package jodd.util;
 
 import java.lang.annotation.Annotation;
 
 /**
- * Holder for JSON annotation data.
+ * Base class for annotation data, for holding annotation elements values.
  */
-public class JSONAnnotationData<A extends Annotation> extends AnnotationData<A> {
+public abstract class AnnotationData<N extends Annotation> {
 
-	protected String name;
-	protected boolean included;
-	protected boolean strict;
+	protected final N annotation;
 
-	protected JSONAnnotationData(A annotation) {
-		super(annotation);
+	protected AnnotationData(N annotation) {
+		this.annotation = annotation;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public boolean isIncluded() {
-		return included;
-	}
-
-	public boolean isStrict() {
-		return strict;
+	/**
+	 * Returns annotation instance.
+	 */
+	public N getAnnotation() {
+		return annotation;
 	}
 }
