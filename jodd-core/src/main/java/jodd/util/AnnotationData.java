@@ -28,7 +28,7 @@ package jodd.util;
 import java.lang.annotation.Annotation;
 
 /**
- * Base class for annotation data, for holding annotation elements values.
+ * Base POJO bean class for annotation data, for holding annotation elements values.
  */
 public abstract class AnnotationData<N extends Annotation> {
 
@@ -41,7 +41,7 @@ public abstract class AnnotationData<N extends Annotation> {
 	/**
 	 * Returns annotation instance.
 	 */
-	public N getAnnotation() {
+	public N annotation() {
 		return annotation;
 	}
 }

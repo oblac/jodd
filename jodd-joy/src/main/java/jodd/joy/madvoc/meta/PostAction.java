@@ -41,7 +41,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Action(method = "POST")
-// todo remove ^
 public @interface PostAction {
 
 	String value() default "";

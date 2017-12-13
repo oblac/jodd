@@ -337,7 +337,7 @@ public class ActionMethodParser {
 	 */
 	protected void readMethodActionPath(ActionNames actionNames, String methodName, ActionAnnotationData annotationData, ActionConfig actionConfig) {
 		// read annotation
-		String methodActionPath = annotationData != null ? annotationData.getValue() : null;
+		String methodActionPath = annotationData != null ? annotationData.value() : null;
 
 		if (methodActionPath == null) {
 			methodActionPath = methodName;
@@ -364,7 +364,7 @@ public class ActionMethodParser {
 	protected void readMethodExtension(ActionNames actionNames, ActionAnnotationData annotationData, ActionConfig actionConfig) {
 		String extension = actionConfig.getExtension();
 		if (annotationData != null) {
-			String annExtension = annotationData.getExtension();
+			String annExtension = annotationData.extension();
 			if (annExtension != null) {
 				if (annExtension.equals(Action.NONE)) {
 					extension = null;
@@ -382,7 +382,7 @@ public class ActionMethodParser {
 	protected String parseMethodAlias(ActionAnnotationData annotationData) {
 		String alias = null;
 		if (annotationData != null) {
-			alias = annotationData.getAlias();
+			alias = annotationData.alias();
 		}
 		return alias;
 	}
@@ -393,7 +393,7 @@ public class ActionMethodParser {
 	private void readMethodHttpMethod(ActionNames actionNames, ActionAnnotationData annotationData) {
 		String method = null;
 		if (annotationData != null) {
-			method = annotationData.getMethod();
+			method = annotationData.method();
 		}
 
 		actionNames.setHttpMethod(method);
@@ -405,7 +405,7 @@ public class ActionMethodParser {
 	private boolean parseMethodAsyncFlag(ActionAnnotationData annotationData) {
 		boolean sync = false;
 		if (annotationData != null) {
-			sync = annotationData.isAsync();
+			sync = annotationData.async();
 		}
 		return sync;
 	}

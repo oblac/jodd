@@ -44,25 +44,24 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 		super(annotation);
 	}
 
-	public String getValue() {
+	public String value() {
 		return value;
 	}
 
-	public String getExtension() {
+	public String extension() {
 		return extension;
 	}
 
-	public String getAlias() {
+	public String alias() {
 		return alias;
 	}
 
-	public String getMethod() {
+	public String method() {
 		return method;
 	}
 
-	public boolean isAsync() {
+	public boolean async() {
 		return async;
 	}
-
 
 }

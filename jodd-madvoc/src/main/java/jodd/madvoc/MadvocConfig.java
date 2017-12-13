@@ -153,7 +153,7 @@ public final class MadvocConfig {
 		if (actionAnnotationData == null) {
 			return actionConfig;
 		}
-		return annotations.getOrDefault(actionAnnotationData.getAnnotation().annotationType(), actionConfig);
+		return annotations.getOrDefault(actionAnnotationData.annotation().annotationType(), actionConfig);
 	}
 
 	// ---------------------------------------------------------------- encoding

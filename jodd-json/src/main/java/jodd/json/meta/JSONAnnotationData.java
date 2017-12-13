@@ -42,15 +42,15 @@ public class JSONAnnotationData<A extends Annotation> extends AnnotationData<A> 
 		super(annotation);
 	}
 
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
-	public boolean isIncluded() {
+	public boolean included() {
 		return included;
 	}
 
-	public boolean isStrict() {
+	public boolean strict() {
 		return strict;
 	}
 }
