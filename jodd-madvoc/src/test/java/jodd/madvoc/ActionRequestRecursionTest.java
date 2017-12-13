@@ -179,6 +179,7 @@ class ActionRequestRecursionTest {
 
 	private MyActionRequest createMyActionRequest(ActionFilter[] actionFilters, ActionInterceptor[] actionInterceptors) {
 		SimpleMadvocController madvocController = new SimpleMadvocController();
+		MadvocConfig madvocConfig = new MadvocConfig();
 
 		Action action = new Action();
 		ActionRuntime actionRuntime = new ActionRuntime(
@@ -187,7 +188,7 @@ class ActionRequestRecursionTest {
 				actionFilters, actionInterceptors,
 				new ActionDefinition("path", "method"),
 				null,
-				false, null, null);
+				false, null, null, madvocConfig.getActionConfig());
 
 		return new MyActionRequest(
 				madvocController, "actionPath", actionRuntime, action, null, null);
