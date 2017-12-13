@@ -311,13 +311,15 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 		 * Binds and finalize action runtime configuration.
 		 */
 		public MadvocApp bind() {
+			final ActionConfig actionConfig = madvocConfig.getActionConfig();
+
 			if (actionMethodString != null) {
 				actionClassMethod = actionsManager.resolveActionMethod(actionClass, actionMethodString);
 			}
 
-			ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionFilters);
+			ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionConfig, actionFilters);
 
-			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionInterceptors);
+			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionConfig, actionInterceptors);
 
 			ActionDefinition actionDefinition;
 			if (resultBasePath != null) {
@@ -332,7 +334,9 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 							actionClass, actionClassMethod,
 							actionResult,
 							actionFilterInstances, actionInterceptorInstances,
-						actionDefinition, async);
+							actionDefinition, async,
+							actionConfig
+							);
 
 			actionsManager.registerAction(actionRuntime);
 

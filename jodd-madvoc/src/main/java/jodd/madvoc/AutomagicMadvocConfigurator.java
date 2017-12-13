@@ -227,7 +227,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 
 			boolean hasAnnotation = false;
 			for (ActionAnnotation<?> actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-				if (actionAnnotation.hasAnnotation(method)) {
+				if (actionAnnotation.hasAnnotationOn(method)) {
 					hasAnnotation = true;
 					break;
 				}

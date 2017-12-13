@@ -27,6 +27,7 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
@@ -259,8 +260,9 @@ public class ResultsManager {
 
 		if (actionResult == null) {
 			// + still not found, toString()
-
-			ActionResult defaultActionResult = lookupAndRegisterIfMissing(madvocConfig.getDefaultActionResult());
+			ActionConfig actionConfig = actionRequest.getActionRuntime().actionConfig();
+			Class<? extends ActionResult> defaultActionResultClass = actionConfig.getActionResult();
+			ActionResult defaultActionResult = lookupAndRegisterIfMissing(defaultActionResultClass);
 
 			if (stringResults.isEmpty()) {
 				// no string results registered, carry on with the defaults.

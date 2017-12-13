@@ -27,6 +27,7 @@ package jodd.madvoc.config;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
@@ -61,6 +62,7 @@ public class ActionRuntime {
 	protected ActionRuntimeSet actionRuntimeSet;
 	private final ActionFilter[] filters;
 	private final ActionInterceptor[] interceptors;
+	private final ActionConfig actionConfig;
 
 	public ActionRuntime(
 			Class actionClass,
@@ -71,7 +73,8 @@ public class ActionRuntime {
 			Class<? extends ActionResult> actionResult,
 			boolean async,
 			ScopeData[][] scopeData,
-			MethodParam[] methodParams
+			MethodParam[] methodParams,
+			ActionConfig actionConfig
 			)
 	{
 		this.actionClass = actionClass;
@@ -89,6 +92,7 @@ public class ActionRuntime {
 		this.interceptors = interceptors;
 		this.methodParams = methodParams;
 		this.resultField = findResultField(actionClass);
+		this.actionConfig = actionConfig;
 	}
 
 	// ---------------------------------------------------------------- result
@@ -198,6 +202,10 @@ public class ActionRuntime {
 
 	public ScopeData[][] scopeData() {
 		return scopeData;
+	}
+
+	public ActionConfig actionConfig() {
+		return actionConfig;
 	}
 
 	// ---------------------------------------------------------------- to string

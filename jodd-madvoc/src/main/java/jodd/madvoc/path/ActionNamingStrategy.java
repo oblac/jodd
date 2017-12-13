@@ -33,6 +33,7 @@ import java.lang.reflect.Method;
 /**
  * Naming strategy for building paths and http method.
  */
+@FunctionalInterface
 public interface ActionNamingStrategy {
 
 	/**

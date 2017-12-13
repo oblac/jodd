@@ -26,24 +26,27 @@
 package jodd.madvoc;
 
 import jodd.madvoc.config.RootPackages;
-import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
+import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
-import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.path.DefaultActionPath;
-import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
+import jodd.util.ArraysUtil;
+import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static jodd.util.StringPool.COLON;
 import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
@@ -58,16 +61,19 @@ public final class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
+		actionConfig = new ActionConfig(null);
+		actionConfig.setActionMethodNames("view", "execute");
+		actionConfig.setActionResult(ServletDispatcherResult.class);
+		actionConfig.setExtension("html");
+		actionConfig.setFilters();
+		actionConfig.setInterceptors(ServletConfigInterceptor.class);
+		actionConfig.setNamingStrategy(DefaultActionPath.class);
+
 		setActionAnnotations(Action.class, RestAction.class);
+
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
-		defaultActionResult = ServletDispatcherResult.class;
-		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
-		defaultFilters = null;
-		defaultActionMethodNames = new String[] {"view", "execute"};
-		defaultExtension = "html";
-		defaultNamingStrategy = DefaultActionPath.class;
 		rootPackages = new RootPackages();
 		detectDuplicatePathsEnabled = true;
 		preventCaching = true;
@@ -78,10 +84,49 @@ public final class MadvocConfig {
 		asyncConfig = new AsyncConfig();
 	}
 
+	// ---------------------------------------------------------------- action configs
+
+	private ActionConfig actionConfig;
+
+	public ActionConfig getActionConfig() {
+		return actionConfig;
+	}
+
+	public void setActionConfig(ActionConfig actionConfig) {
+		Objects.requireNonNull(actionConfig);
+		this.actionConfig = actionConfig;
+	}
+
 	// ---------------------------------------------------------------- action method annotations
 
-	protected Class<? extends Annotation>[] actionAnnotations;
-	private ActionAnnotation<?>[] actionAnnotationInstances;
+	private Map<Class<? extends Annotation>, ActionConfig> annotations = new HashMap<>();
+	private Class<? extends Annotation>[] actionAnnotations = ClassUtil.emptyClassArray();
+	private ActionAnnotation<?>[] actionAnnotationInstances = new ActionAnnotation[0];
+
+	public void setActionAnnotations(Class<? extends Annotation>... annotationsClasses) {
+
+		for (Class<? extends Annotation> annotation : annotationsClasses) {
+			ActionConfiguredBy actionConfiguredBy = annotation.getAnnotation(ActionConfiguredBy.class);
+
+			if (actionConfiguredBy != null) {
+				Class<? extends ActionConfig> actionConfigClass = actionConfiguredBy.value();
+				ActionConfig newActionConfig;
+
+				try {
+					Constructor<? extends ActionConfig> ctor = actionConfigClass.getDeclaredConstructor(ActionConfig.class);
+					newActionConfig = ctor.newInstance(this.actionConfig);
+				}
+				catch (Exception ex) {
+					throw new MadvocException("Invalid action configuration: " + actionConfigClass.getSimpleName(), ex);
+				}
+
+				annotations.put(annotation, newActionConfig);
+			}
+
+			actionAnnotations = ArraysUtil.append(actionAnnotations, annotation);
+			actionAnnotationInstances = ArraysUtil.append(actionAnnotationInstances, new ActionAnnotation<>(annotation));
+		}
+	}
 
 	/**
 	 * Returns array of action annotations.
@@ -91,30 +136,30 @@ public final class MadvocConfig {
 	}
 
 	/**
-	 * Sets action annotations. User may define custom annotations with predefined values.
-	 */
-	@SuppressWarnings( {"unchecked"})
-	public void setActionAnnotations(Class<? extends Annotation>... actionAnnotations) {
-		this.actionAnnotations = actionAnnotations;
-
-		this.actionAnnotationInstances = new ActionAnnotation<?>[actionAnnotations.length];
-		for (int i = 0; i < actionAnnotations.length; i++) {
-			Class<? extends Annotation> annotationClass = actionAnnotations[i];
-			actionAnnotationInstances[i] = new ActionAnnotation(annotationClass);
-		}
-	}
-
-	/**
 	 * Returns instances of action method annotation readers.
 	 */
 	public ActionAnnotation<?>[] getActionAnnotationInstances() {
 		return actionAnnotationInstances;
 	}
 
+	/**
+	 * Lookups action config for given annotation. If annotations is not registered, returns default
+	 * action configuration.
+	 */
+	public ActionConfig lookupActionConfig(Class<? extends Annotation> annotationType) {
+		return annotations.getOrDefault(annotationType, actionConfig);
+	}
+	public ActionConfig lookupActionConfig(ActionAnnotationData actionAnnotationData) {
+		if (actionAnnotationData == null) {
+			return actionConfig;
+		}
+		return annotations.getOrDefault(actionAnnotationData.getAnnotation().annotationType(), actionConfig);
+	}
+
 	// ---------------------------------------------------------------- encoding
 
-	protected String encoding;
-	protected boolean applyCharacterEncoding;
+	private String encoding;
+	private boolean applyCharacterEncoding;
 
 	/**
 	 * Returns character encoding.
@@ -127,6 +172,7 @@ public final class MadvocConfig {
 	 * Sets web application character encoding. If set to <code>null</code> encoding will be not applied.
 	 */
 	public void setEncoding(String encoding) {
+		Objects.requireNonNull(encoding);
 		this.encoding = encoding;
 	}
 
@@ -146,7 +192,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- file upload factory
 
-	protected FileUploadFactory fileUploadFactory;
+	private FileUploadFactory fileUploadFactory;
 
 	/**
 	 * Returns file upload factory.
@@ -162,105 +208,10 @@ public final class MadvocConfig {
 		this.fileUploadFactory = fileUploadFactory;
 	}
 
-	// ---------------------------------------------------------------- path
-
-	protected String defaultExtension;
-	protected String[] defaultActionMethodNames;
-	protected Class<? extends ActionNamingStrategy> defaultNamingStrategy;
-
-	/**
-	 * Returns default action extension.
-	 */
-	public String getDefaultExtension() {
-		return defaultExtension;
-	}
-
-	/**
-	 * Sets default action extension that will be appended when omitted.
-	 */
-	public void setDefaultExtension(String defaultExtension) {
-		this.defaultExtension = defaultExtension;
-	}
-
-	/**
-	 * Returns default action method names which will have empty method path.
-	 */
-	public String[] getDefaultActionMethodNames() {
-		return defaultActionMethodNames;
-	}
-
-	/**
-	 * Specifies default action names that do not have method paths.
-	 */
-	public void setDefaultActionMethodNames(String... defaultActionMethodNames) {
-		this.defaultActionMethodNames = defaultActionMethodNames;
-	}
-
-	public Class<? extends ActionNamingStrategy> getDefaultNamingStrategy() {
-		return defaultNamingStrategy;
-	}
-
-	/**
-	 * Specifies default {@link jodd.madvoc.path.ActionNamingStrategy} action naming strategy.
-	 */
-	public void setDefaultNamingStrategy(Class<? extends ActionNamingStrategy> defaultNamingStrategy) {
-		this.defaultNamingStrategy = defaultNamingStrategy;
-	}
-
-	// ---------------------------------------------------------------- default interceptors & filters
-
-	protected Class<? extends ActionInterceptor>[] defaultInterceptors;
-	protected Class<? extends ActionFilter>[] defaultFilters;
-
-	/**
-	 * Returns default interceptors.
-	 */
-	public Class<? extends ActionInterceptor>[] getDefaultInterceptors() {
-		return defaultInterceptors;
-	}
-
-	/**
-	 * Set default interceptors.
-	 */
-	public void setDefaultInterceptors(Class<? extends ActionInterceptor>... defaultInterceptors) {
-		this.defaultInterceptors = defaultInterceptors;
-	}
-
-	/**
-	 * Returns default filters.
-	 */
-	public Class<? extends ActionFilter>[] getDefaultFilters() {
-		return defaultFilters;
-	}
-
-	/**
-	 * Set default filters.
-	 */
-	public void setDefaultFilters(Class<? extends ActionFilter>[] defaultFilters) {
-		this.defaultFilters = defaultFilters;
-	}
-
-	// ---------------------------------------------------------------- default result type
-
-	protected Class<? extends ActionResult> defaultActionResult;
-
-	/**
-	 * Specifies default action result.
-	 */
-	public void setDefaultActionResult(Class<? extends ActionResult> defaultActionResult) {
-		this.defaultActionResult = defaultActionResult;
-	}
-
-	/**
-	 * Returns default action result.
-	 */
-	public Class<? extends ActionResult> getDefaultActionResult() {
-		return defaultActionResult;
-	}
 
 	// ---------------------------------------------------------------- packageRoot
 
-	protected RootPackages rootPackages;
+	private RootPackages rootPackages;
 
 	/**
 	 * Returns root packages collection.
@@ -271,7 +222,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- duplicates
 
-	protected boolean detectDuplicatePathsEnabled;
+	private boolean detectDuplicatePathsEnabled;
 
 	public boolean isDetectDuplicatePathsEnabled() {
 		return detectDuplicatePathsEnabled;
@@ -287,7 +238,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- caching
 
-	protected boolean preventCaching;
+	private boolean preventCaching;
 
 	public boolean isPreventCaching() {
 		return preventCaching;
@@ -302,7 +253,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- result
 
-	protected String resultPathPrefix;
+	private String resultPathPrefix;
 
 	/**
 	 * Returns default prefix for all result paths.
@@ -322,7 +273,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- attributes names
 
-	protected String attributeMoveId;
+	private String attributeMoveId;
 
 	public String getAttributeMoveId() {
 		return attributeMoveId;
@@ -337,8 +288,8 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- path macro class
 
-	protected Class<? extends PathMacros> pathMacroClass;
-	protected String[] pathMacroSeparators;
+	private Class<? extends PathMacros> pathMacroClass;
+	private String[] pathMacroSeparators;
 
 	/**
 	 * Returns current implementation for path macros.
@@ -362,18 +313,17 @@ public final class MadvocConfig {
 	/**
 	 * Sets path macro separators.
 	 */
-	public void setPathMacroSeparators(String[] pathMacroSeparators) {
+	public void setPathMacroSeparators(String... pathMacroSeparators) {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
 	// ---------------------------------------------------------------- async
 
 	public static class AsyncConfig {
-
-		protected int corePoolSize = 10;
-		protected int maximumPoolSize = 25;
-		protected long keepAliveTimeMillis = 50000L;
-		protected int queueCapacity = 100;
+		private int corePoolSize = 10;
+		private int maximumPoolSize = 25;
+		private long keepAliveTimeMillis = 50000L;
+		private int queueCapacity = 100;
 
 		public int getCorePoolSize() {
 			return corePoolSize;
@@ -433,10 +383,6 @@ public final class MadvocConfig {
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
 				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
 				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
-				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
-				",\n\tdefaultExtension='" + defaultExtension + '\'' +
-				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
-				",\n\tdefaultResultType='" + defaultActionResult.getName() + '\'' +
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +
@@ -448,10 +394,10 @@ public final class MadvocConfig {
 	}
 
 	private static String toString(Class[] classes) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (Class clazz : classes) {
-			s += "\n\t\t" + clazz.getName();
+			s.append("\n\t\t").append(clazz.getName());
 		}
-		return s;
+		return s.toString();
 	}
 }

@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.BaseActionWrapperStack;
 import jodd.madvoc.MadvocConfig;
@@ -98,13 +99,13 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 
 	/**
 	 * Resolves wrappers. Unregistered wrappers will be registered. Returned array may be
-	 * different size than size of provided array, due to {@link #expand(Class[]) expanding}.
+	 * different size than size of provided array, due to {@link #expand(ActionConfig, Class[]) expanding}.
 	 */
-	public T[] resolveAll(Class<? extends T>[] wrapperClasses) {
+	public T[] resolveAll(ActionConfig actionConfig, Class<? extends T>[] wrapperClasses) {
 		if (wrapperClasses == null) {
 			return null;
 		}
-		wrapperClasses = expand(wrapperClasses);
+		wrapperClasses = expand(actionConfig, wrapperClasses);
 		T[] result = createArray(wrapperClasses.length);
 
 		for (int i = 0; i < wrapperClasses.length; i++) {
@@ -134,7 +135,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	/**
 	 * Returns default wrappers from the configuration.
 	 */
-	protected abstract Class<? extends T>[] getDefaultWrappers();
+	protected abstract Class<? extends T>[] getDefaultWrappers(ActionConfig actionConfig);
 
 	/**
 	 * Returns marker wrapper class, shortcut for default web app wrappers.
@@ -145,7 +146,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Replaces all {@link #getDefaultWebAppWrapper()} with {@link #getDefaultWebAppWrapper()}
 	 * and {@link BaseActionWrapperStack} with stack values.
 	 */
-	protected Class<? extends T>[] expand(Class<? extends T>[] actionWrappers) {
+	protected Class<? extends T>[] expand(ActionConfig actionConfig, Class<? extends T>[] actionWrappers) {
 		if (actionWrappers == null) {
 			return null;
 		}
@@ -161,7 +162,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 			if (wrapperClass.equals(getDefaultWebAppWrapper())) {
 				list.remove(i);
 				// add default wrappers list
-				Class<? extends T>[] defaultWrappers = getDefaultWrappers();
+				Class<? extends T>[] defaultWrappers = getDefaultWrappers(actionConfig);
 				if (defaultWrappers != null) {
 					int ndx = i;
 					for (Class<? extends T> defaultWrapper : defaultWrappers) {
