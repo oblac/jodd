@@ -107,12 +107,10 @@ public class ActionMethodParser {
 
 		readMethodHttpMethod(actionNames, annotationData);
 
-		final Class<? extends ActionNamingStrategy> actionPathNamingStrategy = parseMethodNamingStrategy(annotationData, actionConfig);
-
 		ActionNamingStrategy namingStrategy;
 
 		try {
-			namingStrategy = ClassUtil.newInstance(actionPathNamingStrategy);
+			namingStrategy = ClassUtil.newInstance(actionConfig.getNamingStrategy());
 
 			contextInjectorComponent.injectContext(new Target(namingStrategy));
 		} catch (Exception ex) {
@@ -413,28 +411,6 @@ public class ActionMethodParser {
 			sync = annotationData.isAsync();
 		}
 		return sync;
-	}
-
-	/**
-	 * Reads method's action path naming strategy.
-	 */
-	@SuppressWarnings("unchecked")
-	private Class<? extends ActionNamingStrategy> parseMethodNamingStrategy(ActionAnnotationData annotationData, ActionConfig actionConfig) {
-		Class<? extends ActionNamingStrategy> actionNamingStrategyClass = null;
-
-		if (annotationData != null) {
-			actionNamingStrategyClass = annotationData.getPath();
-
-			if (actionNamingStrategyClass == ActionNamingStrategy.class) {
-				actionNamingStrategyClass = null;
-			}
-		}
-
-		if (actionNamingStrategyClass == null) {
-			actionNamingStrategyClass = actionConfig.getNamingStrategy();
-		}
-
-		return actionNamingStrategyClass;
 	}
 
 	// ---------------------------------------------------------------- create action runtime

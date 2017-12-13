@@ -25,8 +25,6 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.path.RestResourcePath;
 import jodd.madvoc.result.ActionResult;
 
 import java.lang.annotation.Documented;
@@ -76,10 +74,5 @@ public @interface RestAction {
 	 * that is going to render the result object.
 	 */
 	Class<? extends ActionResult> result() default ActionResult.class;
-
-	/**
-	 * Defines the way how mapping is done: using {@link jodd.madvoc.path.RestResourcePath}.
-	 */
-	Class<? extends ActionNamingStrategy> path() default RestResourcePath.class;
 
 }

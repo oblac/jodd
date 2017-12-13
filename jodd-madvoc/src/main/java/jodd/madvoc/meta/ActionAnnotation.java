@@ -25,7 +25,6 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
@@ -66,8 +65,6 @@ s	 * Need to override to make java compiler happy.
 		ad.method = readString(annotation, "method", null);
 
 		ad.async = readBoolean(annotation, "async", false);
-
-		ad.path = (Class<? extends ActionNamingStrategy>) readElement(annotation, "path");
 
 		ad.result = (Class<? extends jodd.madvoc.result.ActionResult>) readElement(annotation, "result");
 

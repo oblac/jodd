@@ -27,7 +27,6 @@ package jodd.madvoc.meta;
 
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.StringPool;
 
@@ -102,12 +101,5 @@ public @interface Action {
 	 * that is going to render the result object.
 	 */
 	Class<? extends ActionResult> result() default ActionResult.class;
-
-	/**
-	 * Defines action naming strategy for building action path.
-	 * When set to {@link jodd.madvoc.path.ActionNamingStrategy},
-	 * it will be defined from the {@link MadvocConfig#getDefaultNamingStrategy()}.
-	 */
-	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
 
 }

@@ -25,16 +25,15 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
-import jodd.util.AnnotationDataReader;
+import jodd.util.AnnotationData;
 
 import java.lang.annotation.Annotation;
 
 /**
  * {@link Action} annotation elements.
  */
-public class ActionAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
+public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A> {
 
 	protected String value;
 	protected String extension;
@@ -42,7 +41,6 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 	protected String method;
 	protected boolean async;
 	protected Class<? extends ActionResult> result;
-	protected Class<? extends ActionNamingStrategy> path;
 
 	protected ActionAnnotationData(A annotation) {
 		super(annotation);
@@ -70,9 +68,5 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 
 	public Class<? extends ActionResult> getResult() {
 		return result;
-	}
-
-	public Class<? extends ActionNamingStrategy> getPath() {
-		return path;
 	}
 }
