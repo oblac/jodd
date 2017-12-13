@@ -1,4 +1,5 @@
 // Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -24,8 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 package jodd.madvoc.meta;
-
-import jodd.madvoc.result.ActionResult;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -68,11 +67,5 @@ public @interface RestAction {
 	 * using Servlets 3.0 API.
 	 */
 	boolean async() default false;
-
-	/**
-	 * Defines {@link jodd.madvoc.result.ActionResult action result handler}
-	 * that is going to render the result object.
-	 */
-	Class<? extends ActionResult> result() default ActionResult.class;
 
 }

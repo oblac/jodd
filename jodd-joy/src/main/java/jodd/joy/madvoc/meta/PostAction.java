@@ -26,8 +26,6 @@
 package jodd.joy.madvoc.meta;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.result.ActionResult;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -43,6 +41,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Action(method = "POST")
+// todo remove ^
 public @interface PostAction {
 
 	String value() default "";
@@ -52,9 +51,5 @@ public @interface PostAction {
 	String alias() default "";
 
 	boolean async() default false;
-
-	Class<? extends ActionResult> result() default ActionResult.class;
-
-	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
 
 }

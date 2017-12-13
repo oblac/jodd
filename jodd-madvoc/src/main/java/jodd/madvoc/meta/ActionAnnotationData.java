@@ -25,7 +25,6 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.result.ActionResult;
 import jodd.util.AnnotationData;
 
 import java.lang.annotation.Annotation;
@@ -40,7 +39,6 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 	protected String alias;
 	protected String method;
 	protected boolean async;
-	protected Class<? extends ActionResult> result;
 
 	protected ActionAnnotationData(A annotation) {
 		super(annotation);
@@ -66,7 +64,5 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 		return async;
 	}
 
-	public Class<? extends ActionResult> getResult() {
-		return result;
-	}
+
 }

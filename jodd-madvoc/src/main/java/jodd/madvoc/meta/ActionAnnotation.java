@@ -66,8 +66,6 @@ s	 * Need to override to make java compiler happy.
 
 		ad.async = readBoolean(annotation, "async", false);
 
-		ad.result = (Class<? extends jodd.madvoc.result.ActionResult>) readElement(annotation, "result");
-
 		return ad;
 	}
 

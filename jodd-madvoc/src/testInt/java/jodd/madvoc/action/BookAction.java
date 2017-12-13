@@ -27,6 +27,7 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.meta.RestAction;
 
 @MadvocAction
@@ -54,7 +55,8 @@ public class BookAction {
 		return book;
 	}
 
-	@RestAction(value = "${iban}", result = Book2ActionResult.class)
+	@RestAction("${iban}")
+	@RenderWith(Book2ActionResult.class)
 	public Book put(@In long iban) {
 		Book book = new Book();
 

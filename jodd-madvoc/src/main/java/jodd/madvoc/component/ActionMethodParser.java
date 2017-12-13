@@ -45,6 +45,7 @@ import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
@@ -147,7 +148,7 @@ public class ActionMethodParser {
 
 		final boolean async = parseMethodAsyncFlag(annotationData);
 
-		final Class<? extends ActionResult> actionResult = parseActionResult(annotationData);
+		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
 
 		return createActionRuntime(
 				actionClass, actionMethod,
@@ -184,18 +185,14 @@ public class ActionMethodParser {
 		}
 	}
 
-	protected Class<? extends ActionResult> parseActionResult(ActionAnnotationData annotationData) {
-		if (annotationData == null) {
-			return null;
+	protected Class<? extends ActionResult> parseActionResult(Method actionMethod) {
+		RenderWith renderWith = actionMethod.getAnnotation(RenderWith.class);
+
+		if (renderWith != null) {
+			return renderWith.value();
 		}
 
-		Class<? extends ActionResult> actionResult = annotationData.getResult();
-
-		if (actionResult == ActionResult.class) {
-			return null;
-		}
-
-		return actionResult;
+		return null;
 	}
 
 	protected ActionInterceptor[] parseActionInterceptors(final Class<?> actionClass, final Method actionMethod, final ActionConfig actionConfig) {
