@@ -90,11 +90,11 @@ public class ActionMethodParser {
 	/**
 	 * Parses action class and method and creates {@link ActionDefinition parsed action definition}.
 	 */
-	public ActionDefinition parseActionDef(final Class<?> actionClass, final Method actionMethod) {
+	public ActionDefinition parseActionDefinition(final Class<?> actionClass, final Method actionMethod) {
 
 		final ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
 
-		final ActionConfig actionConfig = madvocConfig.lookupActionConfig(annotationData);
+		final ActionConfig actionConfig = resolveActionConfig(annotationData);
 
 		final ActionNames actionNames = new ActionNames();		// collector for all action names
 
@@ -131,7 +131,7 @@ public class ActionMethodParser {
 	public ActionRuntime parse(final Class<?> actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
 		final ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
 
-		final ActionConfig actionConfig = madvocConfig.lookupActionConfig(annotationData);
+		final ActionConfig actionConfig = resolveActionConfig(annotationData);
 
 		// interceptors
 		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod, actionConfig);
@@ -141,7 +141,7 @@ public class ActionMethodParser {
 
 		// build action definition when not provided
 		if (actionDefinition == null) {
-			actionDefinition = parseActionDef(actionClass, actionMethod);
+			actionDefinition = parseActionDefinition(actionClass, actionMethod);
 		}
 
 		detectAndRegisterAlias(annotationData, actionDefinition);
@@ -157,6 +157,13 @@ public class ActionMethodParser {
 				actionDefinition,
 				async,
 				actionConfig);
+	}
+
+	/**
+	 * Resolves action config.
+	 */
+	protected ActionConfig resolveActionConfig(ActionAnnotationData annotationData) {
+		return madvocConfig.lookupActionConfig(annotationData);
 	}
 
 	/**

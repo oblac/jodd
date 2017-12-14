@@ -63,7 +63,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 		final ProxyProxetta proxetta = proxettaProvider.get();
 
 		if (actionDefinition == null) {
-			actionDefinition = actionMethodParser.parseActionDef(actionClass, actionMethod);
+			actionDefinition = actionMethodParser.parseActionDefinition(actionClass, actionMethod);
 		}
 
 		// create proxy for action class if not already created
