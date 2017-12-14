@@ -178,6 +178,10 @@ public class DecoraServletFilter implements Filter {
 			writer.flush();
 
 			decorated = true;
+			log.debug(() -> "Decora applied on " + actionPath);
+		}
+		else {
+			log.debug(() -> "Decora not applied on " + actionPath);
 		}
 
 //		if (response.isCommitted() == false) {
