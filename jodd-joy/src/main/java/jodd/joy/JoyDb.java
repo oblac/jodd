@@ -52,7 +52,7 @@ import static jodd.joy.JoddJoy.PETITE_DBPOOL;
 
 public class JoyDb extends JoyBase {
 
-	protected final Supplier<JoyScanner> scannerSupplier;
+	protected final Supplier<JoyScanner> joyScannerSupplier;
 	protected final Supplier<PetiteContainer> petiteContainerSupplier;
 	protected final Config config = new Config();
 
@@ -60,8 +60,8 @@ public class JoyDb extends JoyBase {
 	protected JtxTransactionManager jtxManager;
 	protected String jtxScopePattern;
 
-	public JoyDb(Supplier<PetiteContainer> petiteContainerSupplier, Supplier<JoyScanner> scannerSupplier) {
-		this.scannerSupplier = scannerSupplier;
+	public JoyDb(Supplier<PetiteContainer> petiteContainerSupplier, Supplier<JoyScanner> joyScannerSupplier) {
+		this.joyScannerSupplier = joyScannerSupplier;
 		this.petiteContainerSupplier = petiteContainerSupplier;
 	}
 
@@ -155,7 +155,7 @@ public class JoyDb extends JoyBase {
 	protected void registerDbEntities(DbEntityManager dbEntityManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 
-		dbcfg.withScanner(classScanner -> scannerSupplier.get());
+		dbcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));
 
 		log.info("*DB Automagic scanning");
 

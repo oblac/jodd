@@ -81,7 +81,7 @@ public class JoyMadvoc extends JoyBase {
 		webApp.registerComponent(new ProxettaProvider(proxettaSupplier.get()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
 
-		webApp.registerComponent(AutomagicMadvocConfigurator.class, amc -> scannerSupplier.get());
+		webApp.registerComponent(AutomagicMadvocConfigurator.class, amc -> amc.withScanner(scannerSupplier.get()));
 
 		webAppConsumers.accept(webApp);
 

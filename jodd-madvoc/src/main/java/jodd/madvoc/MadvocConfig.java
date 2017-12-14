@@ -33,6 +33,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
+import jodd.madvoc.meta.PostAction;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPath;
 import jodd.madvoc.result.ServletDispatcherResult;
@@ -69,7 +70,7 @@ public final class MadvocConfig {
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
 		actionConfig.setNamingStrategy(DefaultActionPath.class);
 
-		setActionAnnotations(Action.class, RestAction.class);
+		setActionAnnotations(Action.class, PostAction.class, RestAction.class);
 
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
@@ -88,10 +89,16 @@ public final class MadvocConfig {
 
 	private ActionConfig actionConfig;
 
+	/**
+	 * Returns default {@link ActionConfig}.
+	 */
 	public ActionConfig getActionConfig() {
 		return actionConfig;
 	}
 
+	/**
+	 * Sets default action configuration.
+	 */
 	public void setActionConfig(ActionConfig actionConfig) {
 		Objects.requireNonNull(actionConfig);
 		this.actionConfig = actionConfig;
