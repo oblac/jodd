@@ -66,6 +66,13 @@ public class JoyContextListener implements ServletContextListener {
 	}
 
 	/**
+	 * Enables Decora.
+	 */
+	protected void enableDecora() {
+		decoraEnabled = true;
+	}
+
+	/**
 	 * Configures servlet context.
 	 */
 	protected void configureServletContext(ServletContext servletContext) {
