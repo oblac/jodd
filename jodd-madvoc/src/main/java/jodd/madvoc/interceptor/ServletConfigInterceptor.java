@@ -26,9 +26,9 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.InjectorsManager;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
@@ -56,6 +56,7 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 

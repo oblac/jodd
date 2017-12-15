@@ -25,8 +25,8 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.ActionConfig;
+import jodd.madvoc.MadvocConfig;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -44,6 +44,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@ActionConfiguredBy(ActionConfig.class)
 public @interface Action {
 
 	/**
@@ -73,7 +74,7 @@ public @interface Action {
 	/**
 	 * Action path extension. If equals to {@link #NONE} extension will be not
 	 * part of created action path. If empty, default extension will be used
-	 * (defined in {@link jodd.madvoc.component.MadvocConfig}.
+	 * (defined in {@link MadvocConfig}.
 	 */
 	String extension() default "";
 
@@ -93,18 +94,5 @@ public @interface Action {
 	 * using Servlets 3.0 API.
 	 */
 	boolean async() default false;
-
-	/**
-	 * Defines {@link jodd.madvoc.result.ActionResult action result handler}
-	 * that is going to render the result object.
-	 */
-	Class<? extends ActionResult> result() default ActionResult.class;
-
-	/**
-	 * Defines action naming strategy for building action path.
-	 * When set to {@link jodd.madvoc.path.ActionNamingStrategy},
-	 * it will be defined from the {@link jodd.madvoc.component.MadvocConfig#getDefaultNamingStrategy()}.
-	 */
-	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
 
 }

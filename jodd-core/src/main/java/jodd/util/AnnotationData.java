@@ -23,38 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.madvoc.meta;
+package jodd.util;
 
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.result.ActionResult;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
 
 /**
- * Post action annotation. Extension is set to '<b>NONE</b>' and method
- * is set to '<b>POST</b>'.
+ * Base POJO bean class for annotation data, for holding annotation elements values.
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-@Action(method = "POST")
-public @interface PostAction {
+public abstract class AnnotationData<N extends Annotation> {
 
-	String value() default "";
+	protected final N annotation;
 
-	String extension() default Action.NONE;
+	protected AnnotationData(N annotation) {
+		this.annotation = annotation;
+	}
 
-	String alias() default "";
-
-	boolean async() default false;
-
-	Class<? extends ActionResult> result() default ActionResult.class;
-
-	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
-
+	/**
+	 * Returns annotation instance.
+	 */
+	public N annotation() {
+		return annotation;
+	}
 }

@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.config;
+package jodd.madvoc;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -31,11 +31,8 @@ import jodd.introspector.MethodDescriptor;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.MadvocException;
-import jodd.madvoc.WebApp;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.meta.Action;
@@ -199,7 +196,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	// ---------------------------------------------------------------- handlers
 
 	/**
-	 * Builds action configuration on founded action class.
+	 * Builds action runtime configuration on founded action class.
 	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")
@@ -230,7 +227,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 
 			boolean hasAnnotation = false;
 			for (ActionAnnotation<?> actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-				if (actionAnnotation.hasAnnotation(method)) {
+				if (actionAnnotation.hasAnnotationOn(method)) {
 					hasAnnotation = true;
 					break;
 				}

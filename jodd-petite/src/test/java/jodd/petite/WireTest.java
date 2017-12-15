@@ -25,7 +25,6 @@
 
 package jodd.petite;
 
-import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.fixtures.tst.Boo;
 import jodd.petite.fixtures.tst.BooC;
 import jodd.petite.fixtures.tst.BooC2;
@@ -60,9 +59,9 @@ class WireTest {
 	@DisabledOnJava(value = 9, description = "Automagic configuration only works with MR-JAR jars as they don't work in exploded mode.")
 	void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
-		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
+		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator();
 
-		configurator.withScanner(classScanner ->
+		petiteConfigurator.withScanner(classScanner ->
 			classScanner
 				.excludeAllEntries(true)
 				.includeEntries("jodd.petite.fixtures.*")
@@ -71,7 +70,7 @@ class WireTest {
 					"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses",
 					"*Public*", "*Secret*", "*$*", "jodd.petite.proxy.*"));
 
-		pc.configureWith(configurator);
+		petiteConfigurator.configure(pc);
 
 		assertEquals(1, pc.beansCount());
 		assertEquals(1, pc.scopesCount());

@@ -35,10 +35,10 @@ public class UserAction {
 	@InOut
 	String id;
 
-	@RestAction(value = "${id}")
+	@RestAction(value = "{id}")
 	public void get() {}
 
-	@RestAction(value = "${id}")
+	@RestAction(value = "{id}")
 	public String post() {
 		return "#post";		// dont have to do this
 	}

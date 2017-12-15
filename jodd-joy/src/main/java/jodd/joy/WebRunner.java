@@ -30,8 +30,8 @@ import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import jodd.madvoc.Madvoc;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.WebApp;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import jodd.util.StringUtil;
 

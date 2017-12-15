@@ -39,6 +39,23 @@ import java.util.Map;
  */
 public class RequestScope implements Scope {
 
+	/**
+	 * Since request map is stored in the requests, app server may want to
+	 * persist it during the restart (for example).
+	 */
+	private class TransientBeanData {
+
+		private final transient BeanData beanData;
+
+		private TransientBeanData(BeanData beanData) {
+			this.beanData = beanData;
+		}
+
+		public BeanData get() {
+			return beanData;
+		}
+	}
+
 	// ---------------------------------------------------------------- request map
 
 	protected static final String ATTR_NAME = RequestScope.class.getName() + ".MAP.";
@@ -47,8 +64,8 @@ public class RequestScope implements Scope {
 	 * Returns instance map from http request.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, BeanData> getRequestMap(HttpServletRequest servletRequest) {
-		return (Map<String, BeanData>) servletRequest.getAttribute(ATTR_NAME);
+	protected Map<String, TransientBeanData> getRequestMap(HttpServletRequest servletRequest) {
+		return (Map<String, TransientBeanData>) servletRequest.getAttribute(ATTR_NAME);
 	}
 
 	/**
@@ -61,8 +78,8 @@ public class RequestScope implements Scope {
 	/**
 	 * Creates instance map and stores it in the request.
 	 */
-	protected Map<String, BeanData> createRequestMap(HttpServletRequest servletRequest) {
-		Map<String, BeanData> map = new HashMap<>();
+	protected Map<String, TransientBeanData> createRequestMap(HttpServletRequest servletRequest) {
+		Map<String, TransientBeanData> map = new HashMap<>();
 		servletRequest.setAttribute(ATTR_NAME, map);
 		return map;
 	}
@@ -77,12 +94,12 @@ public class RequestScope implements Scope {
 	@Override
 	public Object lookup(String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
-		Map<String, BeanData> map = getRequestMap(servletRequest);
+		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map == null) {
 			return null;
 		}
 
-		BeanData beanData = map.get(name);
+		BeanData beanData = map.get(name).get();
 		if (beanData == null) {
 			return null;
 		}
@@ -92,19 +109,19 @@ public class RequestScope implements Scope {
 	@Override
 	public void register(BeanDefinition beanDefinition, Object bean) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
-		Map<String, BeanData> map = getRequestMap(servletRequest);
+		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map == null) {
 			map = createRequestMap(servletRequest);
 		}
 
 		BeanData beanData = new BeanData(beanDefinition, bean);
-		map.put(beanDefinition.name(), beanData);
+		map.put(beanDefinition.name(), new TransientBeanData(beanData));
 	}
 
 	@Override
 	public void remove(String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
-		Map<String, BeanData> map = getRequestMap(servletRequest);
+		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map != null) {
 			map.remove(name);
 		}

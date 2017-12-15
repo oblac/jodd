@@ -23,7 +23,16 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-/**
- * DbOom configurators and configuration helper methods.
- */
-package jodd.db.oom.config;
+package jodd.madvoc.meta;
+
+import jodd.madvoc.ActionConfig;
+import jodd.madvoc.path.RestResourcePath;
+
+public class RestActionConfig extends ActionConfig {
+
+	public RestActionConfig(ActionConfig parentActionConfig) {
+		super(parentActionConfig);
+
+		setNamingStrategy(RestResourcePath.class);
+	}
+}

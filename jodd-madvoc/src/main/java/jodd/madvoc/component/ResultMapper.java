@@ -27,10 +27,11 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ResultPath;
-import jodd.petite.meta.PetiteInject;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.ResultPath;
+import jodd.petite.meta.PetiteInject;
 import jodd.util.StringUtil;
 
 /**
@@ -59,9 +60,9 @@ public class ResultMapper {
 	protected String lookupAlias(String alias) {
 		String value = actionsManager.lookupPathAlias(alias);
 		if (value == null) {
-			ActionConfig cfg = actionsManager.lookup(alias);
+			ActionRuntime cfg = actionsManager.lookup(alias);
 			if (cfg != null) {
-				value = cfg.actionPath;
+				value = cfg.actionPath();
 			}
 		}
 		return value;
@@ -203,7 +204,7 @@ public class ResultMapper {
 	 */
 	public String resolveResultPathString(String path, String value) {
 		ResultPath resultPath = resolveResultPath(path, value);
-		String result = resultPath.getPathValue();
+		String result = resultPath.pathValue();
 
 		return resolveAlias(result);
 	}

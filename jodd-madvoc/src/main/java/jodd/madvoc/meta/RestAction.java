@@ -1,4 +1,5 @@
 // Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -25,10 +26,6 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.path.RestResourcePath;
-import jodd.madvoc.result.ActionResult;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -43,6 +40,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@ActionConfiguredBy(RestActionConfig.class)
 public @interface RestAction {
 
 	/**
@@ -69,16 +67,5 @@ public @interface RestAction {
 	 * using Servlets 3.0 API.
 	 */
 	boolean async() default false;
-
-	/**
-	 * Defines {@link jodd.madvoc.result.ActionResult action result handler}
-	 * that is going to render the result object.
-	 */
-	Class<? extends ActionResult> result() default ActionResult.class;
-
-	/**
-	 * Defines the way how mapping is done: using {@link jodd.madvoc.path.RestResourcePath}.
-	 */
-	Class<? extends ActionNamingStrategy> path() default RestResourcePath.class;
 
 }

@@ -25,8 +25,8 @@
 
 package jodd.madvoc.injector;
 
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.WebApp;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
 

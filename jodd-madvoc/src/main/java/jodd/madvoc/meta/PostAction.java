@@ -23,7 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+package jodd.madvoc.meta;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * Additional Madvoc actions annotations.
+ * Post action annotation. Extension is set to '<b>NONE</b>' and method
+ * is set to '<b>POST</b>'.
  */
-package jodd.joy.madvoc.meta;
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+@Action(method = "POST")
+public @interface PostAction {
+
+	String value() default "";
+
+	String extension() default Action.NONE;
+
+	String alias() default "";
+
+	boolean async() default false;
+
+}

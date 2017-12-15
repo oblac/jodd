@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
+import jodd.madvoc.config.ActionRuntime;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,7 +40,7 @@ class AnnArgTest extends MadvocTestCase {
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "fixtures.tst.SuperAction#add");
+		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.SuperAction#add");
 
 		assertNotNull(cfg);
 	}

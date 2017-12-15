@@ -34,7 +34,13 @@ import java.util.Locale;
 import static jodd.util.ArraysUtil.array;
 import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class StringUtilTest {
 
@@ -198,10 +204,10 @@ class StringUtilTest {
 	void testIndexOf() {
 		String src = "1234567890qWeRtY";
 
-		assertEquals(1, StringUtil.indexOfIgnoreCase(src, new String[]{"345", "234"})[0]);
-		assertEquals(1, StringUtil.indexOfIgnoreCase(src, new String[]{"345", "234"})[1]);
-		assertEquals(0, StringUtil.lastIndexOfIgnoreCase(src, new String[]{"345", "234"})[0]);
-		assertEquals(2, StringUtil.lastIndexOfIgnoreCase(src, new String[]{"345", "234"})[1]);
+		assertEquals(1, StringUtil.indexOfIgnoreCase(src, "345", "234")[0]);
+		assertEquals(1, StringUtil.indexOfIgnoreCase(src, "345", "234")[1]);
+		assertEquals(0, StringUtil.lastIndexOfIgnoreCase(src, "345", "234")[0]);
+		assertEquals(2, StringUtil.lastIndexOfIgnoreCase(src, "345", "234")[1]);
 
 		assertEquals(10, StringUtil.indexOf(src, 'q', 5, 20));
 		assertEquals(10, StringUtil.indexOfIgnoreCase(src, 'Q', 5, 20));
@@ -360,7 +366,7 @@ class StringUtilTest {
 		assertEquals("werty", StringUtil.remove(s, 'q'));
 		assertEquals(s, StringUtil.remove(s, 'x'));
 		assertEquals("qeryq", StringUtil.removeChars(s, "wt"));
-		assertEquals("qeryq", StringUtil.removeChars(s, new char[]{'w', 't'}));
+		assertEquals("qeryq", StringUtil.removeChars(s, 'w', 't'));
 		assertEquals("", StringUtil.removeChars(s, "qwerty".toCharArray()));
 		assertEquals("", StringUtil.removeChars(s, "qwerty"));
 	}
@@ -385,9 +391,9 @@ class StringUtilTest {
 		assertFalse(StringUtil.equals(new String[] {"wer", "io"}, new String[] {"WER", "IO"}));
 		assertTrue(StringUtil.equalsIgnoreCase(new String[] {"wer", "io"}, new String[] {"WER", "IO"}));
 
-		assertEquals(1, StringUtil.indexOf(s, new String[]{"wer", "io"})[1]);
+		assertEquals(1, StringUtil.indexOf(s, "wer", "io")[1]);
 		assertEquals(7, StringUtil.indexOfIgnoreCase(s, new String[]{"wer", "IO"}, 2)[1]);
-		assertEquals(7, StringUtil.lastIndexOf(s, new String[]{"wer", "io"})[1]);
+		assertEquals(7, StringUtil.lastIndexOf(s, "wer", "io")[1]);
 		assertEquals(1, StringUtil.lastIndexOfIgnoreCase(s, new String[]{"WER", "io"}, 5)[1]);
 	}
 
@@ -746,11 +752,11 @@ class StringUtilTest {
 		assertFalse(StringUtil.equalsIgnoreCase(new String[] {"abc", "de"}, new String[] {"ABC"}));
 		assertFalse(StringUtil.equalsIgnoreCase(new String[] {"abc", "de"}, new String[] {"ab", "dE"}));
 
-		assertEquals(2, StringUtil.equalsOne("src", new String[] {"123", null, "src"}));
-		assertEquals(-1, StringUtil.equalsOne("src", new String[] {"123", null, "Src"}));
+		assertEquals(2, StringUtil.equalsOne("src", "123", null, "src"));
+		assertEquals(-1, StringUtil.equalsOne("src", "123", null, "Src"));
 
-		assertEquals(2, StringUtil.equalsOneIgnoreCase("sRc", new String[] {"123", null, "Src"}));
-		assertEquals(-1, StringUtil.equalsOneIgnoreCase("sRc", new String[] {"123", null, "Dsrc"}));
+		assertEquals(2, StringUtil.equalsOneIgnoreCase("sRc", "123", null, "Src"));
+		assertEquals(-1, StringUtil.equalsOneIgnoreCase("sRc", "123", null, "Dsrc"));
 	}
 
 	@Test
@@ -859,15 +865,15 @@ class StringUtilTest {
 		assertFalse(StringUtil.endsWithChar("asd", 's'));
 		assertFalse(StringUtil.endsWithChar("", 'd'));
 
-		assertEquals(3, StringUtil.startsWithOne("qwe123", new String[]{"Qwe", null, ".", "qwe"}));
-		assertEquals(-1, StringUtil.startsWithOne("qwe123", new String[]{"Qwe", null, ".", "we"}));
-		assertEquals(0, StringUtil.startsWithOneIgnoreCase("qwe123", new String[]{"Qwe", null, ".", "qwe"}));
-		assertEquals(-1, StringUtil.startsWithOneIgnoreCase("qwe123", new String[]{"we", null, ".", "we"}));
+		assertEquals(3, StringUtil.startsWithOne("qwe123", "Qwe", null, ".", "qwe"));
+		assertEquals(-1, StringUtil.startsWithOne("qwe123", "Qwe", null, ".", "we"));
+		assertEquals(0, StringUtil.startsWithOneIgnoreCase("qwe123", "Qwe", null, ".", "qwe"));
+		assertEquals(-1, StringUtil.startsWithOneIgnoreCase("qwe123", "we", null, ".", "we"));
 
-		assertEquals(3, StringUtil.endsWithOne("qwezxc", new String[] {"Zxc", null, ".", "zxc"}));
-		assertEquals(-1, StringUtil.endsWithOne("qwezxc", new String[] {"Zxc", null, ".", "zx"}));
-		assertEquals(0, StringUtil.endsWithOneIgnoreCase("qweZXC", new String[] {"Zxc", null, ".", "zxc"}));
-		assertEquals(-1, StringUtil.endsWithOneIgnoreCase("qweZXC", new String[] {"zx", null, ".", "zx"}));
+		assertEquals(3, StringUtil.endsWithOne("qwezxc", "Zxc", null, ".", "zxc"));
+		assertEquals(-1, StringUtil.endsWithOne("qwezxc", "Zxc", null, ".", "zx"));
+		assertEquals(0, StringUtil.endsWithOneIgnoreCase("qweZXC", "Zxc", null, ".", "zxc"));
+		assertEquals(-1, StringUtil.endsWithOneIgnoreCase("qweZXC", "zx", null, ".", "zx"));
 	}
 
 

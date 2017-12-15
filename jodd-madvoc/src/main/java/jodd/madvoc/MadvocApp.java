@@ -30,8 +30,9 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
@@ -307,33 +308,37 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 		}
 
 		/**
-		 * Binds and finalize action configuration.
+		 * Binds and finalize action runtime configuration.
 		 */
 		public MadvocApp bind() {
+			final ActionConfig actionConfig = madvocConfig.getActionConfig();
+
 			if (actionMethodString != null) {
 				actionClassMethod = actionsManager.resolveActionMethod(actionClass, actionMethodString);
 			}
 
-			ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionFilters);
+			ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionConfig, actionFilters);
 
-			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionInterceptors);
+			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionConfig, actionInterceptors);
 
-			ActionDef actionDef;
+			ActionDefinition actionDefinition;
 			if (resultBasePath != null) {
-				actionDef = new ActionDef(actionPath, method, resultBasePath);
+				actionDefinition = new ActionDefinition(actionPath, method, resultBasePath);
 			}
 			else {
-				actionDef = new ActionDef(actionPath, method);
+				actionDefinition = new ActionDefinition(actionPath, method);
 			}
 
-			ActionConfig actionConfig =
-					actionMethodParser.createActionConfig(
+			ActionRuntime actionRuntime =
+					actionMethodParser.createActionRuntime(
 							actionClass, actionClassMethod,
 							actionResult,
 							actionFilterInstances, actionInterceptorInstances,
-							actionDef, async);
+							actionDefinition, async,
+							actionConfig
+							);
 
-			actionsManager.registerAction(actionConfig);
+			actionsManager.registerAction(actionRuntime);
 
 			if (alias != null) {
 				actionsManager.registerPathAlias(alias, actionPath);

@@ -58,6 +58,7 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	/**
 	 * Measure action invocation time.
 	 */
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		printBefore(actionRequest);
 		long startTime = System.currentTimeMillis();
@@ -84,7 +85,7 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	protected void printBefore(ActionRequest request) {
 		StringBuilder message = new StringBuilder(prefixIn);
 
-		message.append(request.getActionPath()).append("   [").append(request.getActionConfig().getActionString()).append(']');
+		message.append(request.getActionPath()).append("   [").append(request.getActionRuntime().actionString()).append(']');
 		out(message.toString());
 	}
 

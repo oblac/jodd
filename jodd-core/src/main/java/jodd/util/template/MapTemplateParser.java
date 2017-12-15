@@ -23,11 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.fixtures.tst3;
+package jodd.util.template;
 
-import jodd.madvoc.meta.MadvocAction;
+import java.util.Map;
 
-@MadvocAction("root")
-public class MadvocRootPackage {
+public class MapTemplateParser extends StringTemplateParser {
 
+	/**
+	 * Creates new working template context of a map.
+	 */
+	public ContextTemplateParser of(Map map) {
+		return template -> parseWithMap(template, map);
+	}
+
+	public String parseWithMap(String template, Map map) {
+		return super.parse(template, macroName -> {
+			Object value = map.get(macroName);
+			if (value == null) {
+				return null;
+			}
+			return value.toString();
+		});
+	}
 }

@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
 /**
  * Holder for various action names used during path registration.
@@ -92,35 +92,35 @@ public class ActionNames {
 
 	// ---------------------------------------------------------------- getters
 
-	public String getPackageName() {
+	public String packageName() {
 		return packageName;
 	}
 
-	public String getPackageActionPath() {
+	public String packageActionPath() {
 		return packageActionPath;
 	}
 
-	public String getClassName() {
+	public String className() {
 		return className;
 	}
 
-	public String getClassActionPath() {
+	public String classActionPath() {
 		return classActionPath;
 	}
 
-	public String getMethodName() {
+	public String methodName() {
 		return methodName;
 	}
 
-	public String getMethodActionPath() {
+	public String methodActionPath() {
 		return methodActionPath;
 	}
 
-	public String getExtension() {
+	public String extension() {
 		return extension;
 	}
 
-	public String getHttpMethod() {
+	public String httpMethod() {
 		return httpMethod;
 	}
 }

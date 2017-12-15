@@ -23,28 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
-
-import jodd.madvoc.result.ActionResult;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package jodd.madvoc.config;
 
 /**
- * Class annotation that defines which Madvoc {@link jodd.madvoc.result.ActionResult action result}
- * will be used for rendering.
+ * Holds IN and OUT information for single scope.
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface RenderWith {
+public class ScopeData {
 
-	/**
-	 * Action result class that will be used to render action result return value.
-	 */
-	Class<? extends ActionResult> value();
+	public In[] in;
+	public Out[] out;
+
+	public static class In {
+		public Class type;			// property type
+		public String name;			// property name
+		public String target;		// real property name, if different from 'name'
+	}
+	public static class Out {
+		public Class type;			// property type
+		public String name;			// property name
+		public String target;		// real property name, if different from 'name'
+	}
 
 }

@@ -23,42 +23,76 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json.meta;
-
-import jodd.util.AnnotationDataReader;
+package jodd.util;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * JSON Annotation reader.
+ * Annotations collector.
  */
-public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A, JSONAnnotationData<A>> {
+public class Annotations<A extends Annotation> {
+	private final Class<A> annotationClass;
+	private final List<A> annotations = new ArrayList<>();
 
-	public JSONAnnotation(Class<A> annotationClass) {
-		super(annotationClass, JSON.class);
+	public Annotations(Class<A> annotationClass) {
+		this.annotationClass = annotationClass;
+	}
+
+	public static <T extends Annotation> Annotations of(Class<T> annotationClass) {
+		return new Annotations<>(annotationClass);
+	}
+
+	public Annotations onMethod(Method method) {
+		A a = method.getAnnotation(annotationClass);
+
+		if (a != null) {
+			annotations.add(a);
+		}
+		return this;
+	}
+
+	public Annotations onClass(Class type) {
+		A a = (A) type.getAnnotation(annotationClass);
+
+		if (a != null) {
+			annotations.add(a);
+		}
+		return this;
+	}
+
+	public Annotations onPackageHierarchyOf(Class type) {
+		return onPackageHierarchy(type.getPackage());
+	}
+
+	public Annotations onPackageHierarchy(Package pck) {
+		while (true) {
+			A a = pck.getAnnotation(annotationClass);
+
+			if (a != null) {
+				annotations.add(a);
+			}
+
+			String packageName = pck.getName();
+
+			int ndx = packageName.lastIndexOf('.');
+
+			if (ndx == -1) {
+				break;
+			}
+
+			pck = Package.getPackage(packageName.substring(0, ndx));
+		}
+
+		return this;
 	}
 
 	/**
-	 * Need to override to make java compiler happy.
+	 * Returns collected annotations.
 	 */
-	@Override
-	public JSONAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
-		return super.readAnnotatedElement(annotatedElement);
+	public List<A> collect() {
+		return annotations;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected JSONAnnotationData<A> createAnnotationData(A annotation) {
-		JSONAnnotationData<A> jad = new JSONAnnotationData<>(annotation);
-
-		jad.name = readString(annotation, "name", null);
-		jad.included = readBoolean(annotation, "include", true);
-		jad.strict = readBoolean(annotation, "strict", false);
-
-		return jad;
-	}
-
 }

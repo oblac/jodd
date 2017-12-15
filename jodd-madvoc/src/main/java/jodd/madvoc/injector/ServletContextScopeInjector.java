@@ -27,7 +27,7 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.servlet.CsrfShield;

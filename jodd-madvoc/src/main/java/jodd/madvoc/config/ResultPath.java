@@ -23,25 +23,43 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
 /**
- * Holds IN and OUT information for single scope.
+ * Holder of result path value. Consists of 2 parts:
+ * <ul>
+ *     <li>path - the first part, that comes usually from action runtime</li>
+ *     <li>value - second part, that comes from action, may be <code>null</code></li>
+ * </ul>
  */
-public class ScopeData {
+public class ResultPath {
 
-	public In[] in;
-	public Out[] out;
+	protected final String path;
+	protected final String value;
 
-	public static class In {
-		public Class type;			// property type
-		public String name;			// property name
-		public String target;		// real property name, if different from 'name'
+	public ResultPath(String path, String value) {
+		this.path = path;
+		this.value = value;
 	}
-	public static class Out {
-		public Class type;			// property type
-		public String name;			// property name
-		public String target;		// real property name, if different from 'name'
+
+	public String path() {
+		return path;
+	}
+
+	public String value() {
+		return value;
+	}
+
+	public String pathValue() {
+		if (value == null) {
+			return path;
+		}
+		return path + '.' + value;
+	}
+
+	@Override
+	public String toString() {
+		return pathValue();
 	}
 
 }

@@ -26,10 +26,10 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.result.MoveResult;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;

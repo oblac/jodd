@@ -27,7 +27,6 @@ package jodd.madvoc;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Converter;
@@ -257,7 +256,7 @@ public class Madvoc {
 
 	/**
 	 * Loads Madvoc component that will be used for configuring the user actions.
-	 * If class name is <code>null</code>, default {@link jodd.madvoc.config.AutomagicMadvocConfigurator}
+	 * If class name is <code>null</code>, default {@link AutomagicMadvocConfigurator}
 	 * will be used.
 	 */
 	protected void resolveMadvocConfigClass() {

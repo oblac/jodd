@@ -26,9 +26,9 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ScopeData;
 
 /**
  * Abstract base class for HTTP scopes injection.
@@ -124,7 +124,7 @@ public abstract class BaseScopeInjector {
 	 * Returns scope data from action request and for current scope type.
 	 */
 	public ScopeData[] lookupScopeData(ActionRequest actionRequest) {
-		return actionRequest.getActionConfig().scopeData[scopeType.value()];
+		return actionRequest.getActionRuntime().scopeData()[scopeType.value()];
 	}
 
 	/**

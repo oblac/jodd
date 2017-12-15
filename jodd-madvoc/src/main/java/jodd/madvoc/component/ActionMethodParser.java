@@ -26,13 +26,16 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
-import jodd.madvoc.RootPackages;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionNames;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.MethodParam;
+import jodd.madvoc.config.RootPackages;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -42,11 +45,11 @@ import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
-import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -56,7 +59,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 /**
- * Creates {@link ActionConfig action configurations} from action java method.
+ * Creates {@link ActionRuntime action runtime} configuration from action java method.
  * Reads all annotations and builds action path (i.e. configuration).
  * <p>
  * Invoked only during registration, so performance is not critical.
@@ -85,11 +88,13 @@ public class ActionMethodParser {
 	protected ActionMethodParamNameResolver actionMethodParamNameResolver;
 
 	/**
-	 * Parses action class and method and creates {@link jodd.madvoc.ActionDef parsed action definition}.
+	 * Parses action class and method and creates {@link ActionDefinition parsed action definition}.
 	 */
-	public ActionDef parseActionDef(final Class<?> actionClass, final Method actionMethod) {
+	public ActionDefinition parseActionDefinition(final Class<?> actionClass, final Method actionMethod) {
 
-		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+		final ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+
+		final ActionConfig actionConfig = resolveActionConfig(annotationData);
 
 		final ActionNames actionNames = new ActionNames();		// collector for all action names
 
@@ -97,18 +102,16 @@ public class ActionMethodParser {
 
 		readClassActionPath(actionNames, actionClass);
 
-		readMethodActionPath(actionNames, actionMethod.getName(), annotationData);
+		readMethodActionPath(actionNames, actionMethod.getName(), annotationData, actionConfig);
 
-		readMethodExtension(actionNames, annotationData);
+		readMethodExtension(actionNames, annotationData, actionConfig);
 
 		readMethodHttpMethod(actionNames, annotationData);
-
-		final Class<? extends ActionNamingStrategy> actionPathNamingStrategy = parseMethodNamingStrategy(annotationData);
 
 		ActionNamingStrategy namingStrategy;
 
 		try {
-			namingStrategy = ClassUtil.newInstance(actionPathNamingStrategy);
+			namingStrategy = ClassUtil.newInstance(actionConfig.getNamingStrategy());
 
 			contextInjectorComponent.injectContext(new Target(namingStrategy));
 		} catch (Exception ex) {
@@ -119,39 +122,48 @@ public class ActionMethodParser {
 	}
 
 	/**
-	 * Parses java action method annotation and returns its action configuration.
+	 * Parses java action method annotation and returns its action runtime.
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
-	 * @param actionDef optional action def, usually <code>null</code> so to be parsed
+	 * @param actionDefinition optional action def, usually <code>null</code> so to be parsed
 	 */
-	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionDef actionDef) {
+	public ActionRuntime parse(final Class<?> actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
+		final ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+
+		final ActionConfig actionConfig = resolveActionConfig(annotationData);
 
 		// interceptors
-		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod);
+		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod, actionConfig);
 
 		// filters
-		ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod);
+		ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod, actionConfig);
 
 		// build action definition when not provided
-		if (actionDef == null) {
-			actionDef = parseActionDef(actionClass, actionMethod);
+		if (actionDefinition == null) {
+			actionDefinition = parseActionDefinition(actionClass, actionMethod);
 		}
 
-		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
-
-		detectAndRegisterAlias(annotationData, actionDef);
+		detectAndRegisterAlias(annotationData, actionDefinition);
 
 		final boolean async = parseMethodAsyncFlag(annotationData);
 
-		final Class<? extends ActionResult> actionResult = parseActionResult(annotationData);
+		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
 
-		return createActionConfig(
+		return createActionRuntime(
 				actionClass, actionMethod,
 				actionResult,
 				actionFilters, actionInterceptors,
-				actionDef,
-				async);
+				actionDefinition,
+				async,
+				actionConfig);
+	}
+
+	/**
+	 * Resolves action config.
+	 */
+	protected ActionConfig resolveActionConfig(ActionAnnotationData annotationData) {
+		return madvocConfig.lookupActionConfig(annotationData);
 	}
 
 	/**
@@ -160,7 +172,7 @@ public class ActionMethodParser {
 	protected ActionAnnotationData detectActionAnnotationData(Method actionMethod) {
 		ActionAnnotationData annotationData = null;
 		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-			annotationData = actionAnnotation.readAnnotationData(actionMethod);
+			annotationData = actionAnnotation.readAnnotatedElement(actionMethod);
 			if (annotationData != null) {
 				break;
 			}
@@ -171,51 +183,47 @@ public class ActionMethodParser {
 	/**
 	 * Detects if alias is defined in annotation and registers it if so.
 	 */
-	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionDef actionDef) {
+	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionDefinition actionDefinition) {
 		final String alias = parseMethodAlias(annotationData);
 
 		if (alias != null) {
-			String aliasPath = StringUtil.cutToIndexOf(actionDef.getActionPath(), StringPool.HASH);
+			String aliasPath = StringUtil.cutToIndexOf(actionDefinition.actionPath(), StringPool.HASH);
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
 	}
 
-	protected Class<? extends ActionResult> parseActionResult(ActionAnnotationData annotationData) {
-		if (annotationData == null) {
-			return null;
+	protected Class<? extends ActionResult> parseActionResult(Method actionMethod) {
+		RenderWith renderWith = actionMethod.getAnnotation(RenderWith.class);
+
+		if (renderWith != null) {
+			return renderWith.value();
 		}
 
-		Class<? extends ActionResult> actionResult = annotationData.getResult();
-
-		if (actionResult == ActionResult.class) {
-			return null;
-		}
-
-		return actionResult;
+		return null;
 	}
 
-	protected ActionInterceptor[] parseActionInterceptors(final Class<?> actionClass, final Method actionMethod) {
+	protected ActionInterceptor[] parseActionInterceptors(final Class<?> actionClass, final Method actionMethod, final ActionConfig actionConfig) {
 		Class<? extends ActionInterceptor>[] interceptorClasses = readActionInterceptors(actionMethod);
 		if (interceptorClasses == null) {
 			interceptorClasses = readActionInterceptors(actionClass);
 		}
 		if (interceptorClasses == null) {
-			interceptorClasses = madvocConfig.getDefaultInterceptors();
+			interceptorClasses = actionConfig.getInterceptors();
 		}
 
-		return interceptorsManager.resolveAll(interceptorClasses);
+		return interceptorsManager.resolveAll(actionConfig, interceptorClasses);
 	}
 
-	protected ActionFilter[] parseActionFilters(Class<?> actionClass, Method actionMethod) {
+	protected ActionFilter[] parseActionFilters(Class<?> actionClass, Method actionMethod, ActionConfig actionConfig) {
 		Class<? extends ActionFilter>[] filterClasses = readActionFilters(actionMethod);
 		if (filterClasses == null) {
 			filterClasses = readActionFilters(actionClass);
 		}
 		if (filterClasses == null) {
-			filterClasses = madvocConfig.getDefaultFilters();
+			filterClasses = actionConfig.getFilters();
 		}
 
-		return filtersManager.resolveAll(filterClasses);
+		return filtersManager.resolveAll(actionConfig, filterClasses);
 	}
 
 	// ---------------------------------------------------------------- interceptors
@@ -273,62 +281,8 @@ public class ActionMethodParser {
 
 			packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
 
-			String rootPackage = null;
-
-			if (packagePath != null) {
-				rootPackage = rootPackages.findRootPackageForActionPath(packagePath);
-			}
-
-			// try locating marker class
-			{
-				String packageName = actionPackageName;
-				String madvocRootPackageClassName = madvocConfig.getMadvocRootPackageClassName();
-
-				if (madvocRootPackageClassName != null) {
-					while (true) {
-						String className = packageName + '.' + madvocRootPackageClassName;
-						try {
-							Class<?> madvocRootPackageClass = ClassLoaderUtil.loadClass(className, actionClass.getClassLoader());
-
-							// class found, find the mapping
-							String mapping = StringPool.EMPTY;
-							MadvocAction madvocAction = madvocRootPackageClass.getAnnotation(MadvocAction.class);
-
-							if (madvocAction != null) {
-								mapping = madvocAction.value();
-							}
-
-							// register root package - so not to lookup twice
-							madvocConfig.getRootPackages().addRootPackage(packageName, mapping);
-
-							// repeat lookup
-							packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
-
-							break;
-						} catch (ClassNotFoundException ignore) {
-
-							// continue
-							int dotNdx = packageName.lastIndexOf('.');
-							if (dotNdx == -1) {
-								break;
-							}
-
-							packageName = packageName.substring(0, dotNdx);
-
-							if (rootPackage != null) {
-								// don't go beyond found root package
-								if (packageName.equals(rootPackage)) {
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-
 			rootPackages.registerPackageActionPath(actionPackageName, packagePath);
 		}
-
 
 		// read package-level annotation
 
@@ -386,11 +340,11 @@ public class ActionMethodParser {
 
 	/**
 	 * Reads action method. Returns <code>null</code> if action method is {@link Action#NONE}
-	 * or if it is equals to {@link MadvocConfig#getDefaultActionMethodNames() default action names}.
+	 * or if it is equals to default action names.
 	 */
-	protected void readMethodActionPath(ActionNames actionNames, String methodName, ActionAnnotationData annotationData) {
+	protected void readMethodActionPath(ActionNames actionNames, String methodName, ActionAnnotationData annotationData, ActionConfig actionConfig) {
 		// read annotation
-		String methodActionPath = annotationData != null ? annotationData.getValue() : null;
+		String methodActionPath = annotationData != null ? annotationData.value() : null;
 
 		if (methodActionPath == null) {
 			methodActionPath = methodName;
@@ -401,7 +355,7 @@ public class ActionMethodParser {
 		}
 
 		// check for defaults
-		for (String path : madvocConfig.getDefaultActionMethodNames()) {
+		for (String path : actionConfig.getActionMethodNames()) {
 			if (methodActionPath.equals(path)) {
 				methodActionPath = null;
 				break;
@@ -414,10 +368,10 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's extension.
 	 */
-	protected void readMethodExtension(ActionNames actionNames, ActionAnnotationData annotationData) {
-		String extension = madvocConfig.getDefaultExtension();
+	protected void readMethodExtension(ActionNames actionNames, ActionAnnotationData annotationData, ActionConfig actionConfig) {
+		String extension = actionConfig.getExtension();
 		if (annotationData != null) {
-			String annExtension = annotationData.getExtension();
+			String annExtension = annotationData.extension();
 			if (annExtension != null) {
 				if (annExtension.equals(Action.NONE)) {
 					extension = null;
@@ -435,7 +389,7 @@ public class ActionMethodParser {
 	protected String parseMethodAlias(ActionAnnotationData annotationData) {
 		String alias = null;
 		if (annotationData != null) {
-			alias = annotationData.getAlias();
+			alias = annotationData.alias();
 		}
 		return alias;
 	}
@@ -446,7 +400,7 @@ public class ActionMethodParser {
 	private void readMethodHttpMethod(ActionNames actionNames, ActionAnnotationData annotationData) {
 		String method = null;
 		if (annotationData != null) {
-			method = annotationData.getMethod();
+			method = annotationData.method();
 		}
 
 		actionNames.setHttpMethod(method);
@@ -458,53 +412,32 @@ public class ActionMethodParser {
 	private boolean parseMethodAsyncFlag(ActionAnnotationData annotationData) {
 		boolean sync = false;
 		if (annotationData != null) {
-			sync = annotationData.isAsync();
+			sync = annotationData.async();
 		}
 		return sync;
 	}
 
-	/**
-	 * Reads method's action path naming strategy.
-	 */
-	@SuppressWarnings("unchecked")
-	private Class<? extends ActionNamingStrategy> parseMethodNamingStrategy(ActionAnnotationData annotationData) {
-		Class<? extends ActionNamingStrategy> actionNamingStrategyClass = null;
-
-		if (annotationData != null) {
-			actionNamingStrategyClass = annotationData.getPath();
-
-			if (actionNamingStrategyClass == ActionNamingStrategy.class) {
-				actionNamingStrategyClass = null;
-			}
-		}
-
-		if (actionNamingStrategyClass == null) {
-			actionNamingStrategyClass = madvocConfig.getDefaultNamingStrategy();
-		}
-
-		return actionNamingStrategyClass;
-	}
-
-	// ---------------------------------------------------------------- create action configuration
+	// ---------------------------------------------------------------- create action runtime
 
 	/**
-	 * Creates new instance of action configuration.
+	 * Creates new instance of action runtime configuration.
 	 * Initialize caches.
 	 */
-	public ActionConfig createActionConfig(
+	public ActionRuntime createActionRuntime(
 			Class actionClass,
 			Method actionClassMethod,
 			Class<? extends ActionResult> actionResult,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
-			ActionDef actionDef,
-			boolean async)
+			ActionDefinition actionDefinition,
+			boolean async,
+			ActionConfig actionConfig)
 	{
 
 		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
-		ActionConfig.MethodParam[] params = new ActionConfig.MethodParam[paramTypes.length];
+		MethodParam[] params = new MethodParam[paramTypes.length];
 
 		Annotation[][] paramAnns = actionClassMethod.getParameterAnnotations();
 		String[] methodParamNames = null;
@@ -532,7 +465,7 @@ public class ActionMethodParser {
 
 				scopeData = scopeDataResolver.resolveScopeData(paramName, type, paramAnns[paramIndex]);
 
-				params[paramIndex] = new ActionConfig.MethodParam(
+				params[paramIndex] = new MethodParam(
 						paramTypes[paramIndex], paramName, scopeDataResolver.detectAnnotationType(paramAnns[paramIndex]));
 			}
 
@@ -554,16 +487,17 @@ public class ActionMethodParser {
 			}
 		}
 
-		return new ActionConfig(
+		return new ActionRuntime(
 				actionClass,
 				actionClassMethod,
 				filters,
 				interceptors,
-				actionDef,
+				actionDefinition,
 				actionResult,
 				async,
 				allScopeData,
-				params);
+				params,
+				actionConfig);
 	}
 
 }

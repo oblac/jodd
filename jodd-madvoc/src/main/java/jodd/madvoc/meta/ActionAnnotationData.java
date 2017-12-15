@@ -25,54 +25,43 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.result.ActionResult;
-import jodd.util.AnnotationDataReader;
+import jodd.util.AnnotationData;
 
 import java.lang.annotation.Annotation;
 
 /**
  * {@link Action} annotation elements.
  */
-public class ActionAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
+public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A> {
 
 	protected String value;
 	protected String extension;
 	protected String alias;
 	protected String method;
 	protected boolean async;
-	protected Class<? extends ActionResult> result;
-	protected Class<? extends ActionNamingStrategy> path;
 
 	protected ActionAnnotationData(A annotation) {
 		super(annotation);
 	}
 
-	public String getValue() {
+	public String value() {
 		return value;
 	}
 
-	public String getExtension() {
+	public String extension() {
 		return extension;
 	}
 
-	public String getAlias() {
+	public String alias() {
 		return alias;
 	}
 
-	public String getMethod() {
+	public String method() {
 		return method;
 	}
 
-	public boolean isAsync() {
+	public boolean async() {
 		return async;
 	}
 
-	public Class<? extends ActionResult> getResult() {
-		return result;
-	}
-
-	public Class<? extends ActionNamingStrategy> getPath() {
-		return path;
-	}
 }

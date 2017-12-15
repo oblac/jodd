@@ -26,6 +26,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
@@ -34,7 +35,7 @@ import java.lang.reflect.Method;
 
 public abstract class MadvocTestCase {
 
-	protected ActionConfig parse(ActionMethodParser actionMethodParser, String signature) {
+	protected ActionRuntime parse(ActionMethodParser actionMethodParser, String signature) {
 		Object[] data = resolveSignature(signature);
 		return actionMethodParser.parse((Class) data[0], (Method) data[1], null);
 	}

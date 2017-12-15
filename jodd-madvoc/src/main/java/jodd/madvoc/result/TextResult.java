@@ -27,6 +27,9 @@ package jodd.madvoc.result;
 
 import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.meta.In;
 import jodd.util.MimeTypes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +42,9 @@ import java.io.OutputStream;
  */
 public class TextResult extends BaseActionResult<String> {
 
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
+
 	public static final String NAME = "text";
 
 	public TextResult() {
@@ -50,6 +56,11 @@ public class TextResult extends BaseActionResult<String> {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String encoding = response.getCharacterEncoding();
+
+		if (encoding == null) {
+			encoding = madvocConfig.getEncoding();
+		}
+
 		response.setContentType(MimeTypes.MIME_TEXT_PLAIN);
 		response.setCharacterEncoding(encoding);
 

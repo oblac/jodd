@@ -25,9 +25,9 @@
 
 package jodd.petite.proxy;
 
+import jodd.petite.AutomagicPetiteConfigurator;
 import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteContainer;
-import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.proxy.example1.ExternalBean;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -55,7 +55,7 @@ class MixedScope343Test {
 		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator();
 		petiteConfigurator.withScanner(scanner -> scanner.includeEntries(this.getClass().getPackage().getName() + ".*"));
 
-		petiteContainer.configureWith(petiteConfigurator);
+		petiteConfigurator.configure(petiteContainer);
 	}
 
 	@AfterEach

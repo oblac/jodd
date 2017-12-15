@@ -36,13 +36,13 @@ public class OneRedirectAction {
 	@Action
 	public String execute() {
 		value = "333";
-		return "redirect:/<two>?value=${value}";
+		return "redirect:/<two>?value={value}";
 	}
 
 	@Action
 	public String perm() {
 		value = "444";
-		return "url:/<two>?value=${value}";
+		return "url:/<two>?value={value}";
 	}
 
 	@Action

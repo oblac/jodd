@@ -25,12 +25,12 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.ActionRuntimeSet;
+import jodd.madvoc.config.ScopeData;
 import jodd.util.StringUtil;
 
 /**
@@ -44,11 +44,12 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 		silent = true;
 	}
 
+	@Override
 	public void inject(ActionRequest actionRequest) {
-		ActionConfig config = actionRequest.getActionConfig();
-		ActionConfigSet set = config.getActionConfigSet();
+		ActionRuntime config = actionRequest.getActionRuntime();
+		ActionRuntimeSet set = config.actionRuntimeSet();
 
-		if (set.actionPathMacros == null) {
+		if (set.actionPathMacros() == null) {
 			// no action path macros at all, just exit
 			return;
 		}
@@ -62,8 +63,8 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 
 		Target[] targets = actionRequest.getTargets();
 
-		String[] names = set.actionPathMacros.getNames();
-		String[] values = set.actionPathMacros.extract(actionRequest.getActionPath());
+		String[] names = set.actionPathMacros().getNames();
+		String[] values = set.actionPathMacros().extract(actionRequest.getActionPath());
 
 		for (int ndx = 0; ndx < values.length; ndx++) {
 			String value = values[ndx];

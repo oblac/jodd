@@ -23,51 +23,23 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * Action definition is represented by action's path, http method and result base path.
+ * Comparator that considers first chunks number then action path.
  */
-public class ActionDef {
+public class ActionRuntimeSetComparator implements Comparator<ActionRuntimeSet>, Serializable {
+	@Override
+	public int compare(ActionRuntimeSet set1, ActionRuntimeSet set2) {
+		int deep1 = set1.deep();
+		int deep2 = set2.deep();
 
-	protected final String actionPath;
-	protected final String actionMethod;
-	protected final String resultBasePath;
-
-	public ActionDef(String actionPath, String actionMethod, String resultBasePath) {
-		this.actionPath = actionPath;
-		this.actionMethod = actionMethod;
-		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
-	}
-
-	public ActionDef(String actionPath, String actionMethod) {
-		this.actionPath = actionPath;
-		this.actionMethod = actionMethod;
-		this.resultBasePath = actionPath;
-	}
-
-	public ActionDef(String actionPath) {
-		this(actionPath, null);
-	}
-
-	/**
-	 * Returns action's path.
-	 */
-	public String getActionPath() {
-		return actionPath;
-	}
-
-	/**
-	 * Returns action's HTTP method.
-	 */
-	public String getActionMethod() {
-		return actionMethod;
-	}
-
-	/**
-	 * Returns result base path.
-	 */
-	public String getResultBasePath() {
-		return resultBasePath;
+		if (deep1 == deep2) {
+			return set1.actionPath().compareTo(set2.actionPath());
+		}
+		return deep1 - deep2;
 	}
 }

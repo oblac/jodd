@@ -25,8 +25,6 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.config.AutomagicMadvocConfigurator;
-
 /**
  * Configurator that loads only actions for integration tests.
  */

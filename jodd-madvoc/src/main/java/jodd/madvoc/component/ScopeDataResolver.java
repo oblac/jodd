@@ -29,8 +29,9 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
@@ -40,8 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Resolver for {@link jodd.madvoc.ScopeData scope data} for certain types.
- * It does not cache anything as Scope data is cached in {@link jodd.madvoc.ActionConfig}.
+ * Resolver for {@link ScopeData scope data} for certain types.
+ * It does not cache anything as Scope data is cached in {@link ActionRuntime}.
  * Resolving only happens during the initialization, and it might be repeated for
  * certain types (as there is no cache), but that is acceptable to reduce memory
  * usage (no cache) and several lookups (for each interceptor) during every request.

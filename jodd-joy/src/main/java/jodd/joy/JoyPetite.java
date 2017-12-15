@@ -25,8 +25,8 @@
 
 package jodd.joy;
 
+import jodd.petite.AutomagicPetiteConfigurator;
 import jodd.petite.PetiteContainer;
-import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
@@ -135,9 +135,9 @@ public class JoyPetite extends JoyBase {
 	protected void registerPetiteContainerBeans(PetiteContainer petiteContainer) {
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
 
-		pcfg.withScanner(classScanner -> joyScannerSupplier.get());
+		pcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));
 
-		petiteContainer.configureWith(pcfg);
+		pcfg.configure(petiteContainer);
 	}
 
 	/**

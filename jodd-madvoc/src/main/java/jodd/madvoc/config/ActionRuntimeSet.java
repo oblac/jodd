@@ -23,8 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.madvoc.config;
 
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.macro.PathMacros;
 import jodd.util.ArraysUtil;
 import jodd.util.StringUtil;
@@ -34,56 +35,68 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Set of {@link ActionConfig action configs} with the same action path
+ * Set of {@link ActionRuntime action runtimes} with the same action path
  * but with different http method.
  */
-public class ActionConfigSet implements Comparable<ActionConfigSet> {
+public class ActionRuntimeSet implements Comparable<ActionRuntimeSet> {
 
-	protected ActionConfig[] configs = new ActionConfig[0];
+	private ActionRuntime[] configs = new ActionRuntime[0];
 
 	// action path
-	public final String actionPath;
+	private final String actionPath;
 	// simple count of '/', for faster matching
-	public final int deep;
+	private final int deep;
 	// macros
-	public final PathMacros actionPathMacros;
+	private final PathMacros actionPathMacros;
+
+	public String actionPath() {
+		return actionPath;
+	}
+
+	public int deep() {
+		return deep;
+	}
+
+	public PathMacros actionPathMacros() {
+		return actionPathMacros;
+	}
 
 	/**
-	 * Creates new action config set. It is set of <code>ActionConfig</code>s, i.e. Madvoc
+	 * Creates new action runtime set. It is set of {@link ActionRuntime}, i.e. Madvoc
 	 * actions, with the same action path and different http method.
 	 *
 	 * @param actionPath action path
 	 * @param pathMacros action path macros if existing any or <code>null</code>
 	 */
-	public ActionConfigSet(String actionPath, PathMacros pathMacros) {
+	public ActionRuntimeSet(String actionPath, PathMacros pathMacros) {
 		this.actionPath = actionPath;
 		this.deep = StringUtil.count(actionPath, '/');
 		this.actionPathMacros = pathMacros;
 	}
 
 	/**
-	 * Returns a new list of all action configs from this set.
+	 * Returns a new list of all action runtimes from this set.
 	 */
-	public List<ActionConfig> getActionConfigs() {
-		List<ActionConfig> list = new ArrayList<>(configs.length);
+	public List<ActionRuntime> getActionRuntimes() {
+		List<ActionRuntime> list = new ArrayList<>(configs.length);
 		Collections.addAll(list, configs);
 		return list;
 	}
 
 	/**
-	 * Adds action configuration. Returns <code>true</code> if
+	 * Adds action runtime configuration. Returns <code>true</code> if
 	 * new configuration replaces existing one.
 	 */
-	public boolean add(ActionConfig cfg) {
-		if (!cfg.actionPath.equals(this.actionPath)) {
+	public boolean add(ActionRuntime cfg) {
+		if (!cfg.actionPath().equals(this.actionPath)) {
 			throw new MadvocException("Invalid configuration");
 		}
 
-		cfg.actionConfigSet = this;
+		cfg.actionRuntimeSet = this;
 
-		int ndx = lookupIndex(cfg.actionMethod);
+		int ndx = lookupIndex(cfg.actionMethod());
 		if (ndx == -1) {
-			if (cfg.actionMethod == null) {
+			if (cfg.actionMethod() == null) {
 				configs = ArraysUtil.append(configs, cfg);
 			} else {
 				configs = ArraysUtil.insert(configs, cfg, 0);
@@ -96,9 +109,9 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	}
 
 	/**
-	 * Lookup for action config for given method.
+	 * Lookup for action runtime for given method.
 	 */
-	public ActionConfig lookup(String method) {
+	public ActionRuntime lookup(String method) {
 		int ndx = lookupIndex(method);
 		if (ndx == -1) {
 			return null;
@@ -109,12 +122,12 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	protected int lookupIndex(String method) {
 
 		for (int i = 0; i < configs.length; i++) {
-			ActionConfig config = configs[i];
+			ActionRuntime config = configs[i];
 
-			if (config.actionMethod == null) {
+			if (config.actionMethod() == null) {
 				return i;
 			}
-			if (config.actionMethod.equals(method)) {
+			if (config.actionMethod().equals(method)) {
 				return i;
 			}
 		}
@@ -123,7 +136,8 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 
 	// ---------------------------------------------------------------- compare
 
-	public int compareTo(ActionConfigSet set) {
+	@Override
+	public int compareTo(ActionRuntimeSet set) {
 		return this.actionPath.compareTo(set.actionPath);
 	}
 

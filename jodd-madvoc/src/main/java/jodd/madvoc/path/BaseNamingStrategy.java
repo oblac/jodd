@@ -25,8 +25,8 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionNames;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -35,11 +35,11 @@ import jodd.util.StringUtil;
  */
 public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 
-	protected static final String PACKAGE_MACRO = "${:package}";
-	protected static final String CLASS_MACRO = "${:class}";
-	protected static final String METHOD_MACRO = "${:method}";
-	protected static final String EXTENSION_MACRO = "${:ext}";
-	protected static final String HTTPMETHOD_MACRO = "${:http-method}";
+	protected static final String PACKAGE_MACRO = "{:package}";
+	protected static final String CLASS_MACRO = "{:class}";
+	protected static final String METHOD_MACRO = "{:method}";
+	protected static final String EXTENSION_MACRO = "{:ext}";
+	protected static final String HTTPMETHOD_MACRO = "{:http-method}";
 
 	/**
 	 * Replaces action path macros in the path.
@@ -47,11 +47,11 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	 * it will not be replaced - so to emphasize the problem.
 	 */
 	protected String replaceActionNameMacros(String path, ActionNames actionNames) {
-		String packageName = actionNames.getPackageName();
-		String className = actionNames.getClassName();
-		String methodName = actionNames.getMethodName();
-		String extension = actionNames.getExtension();
-		String httpMethod = actionNames.getHttpMethod();
+		String packageName = actionNames.packageName();
+		String className = actionNames.className();
+		String methodName = actionNames.methodName();
+		String extension = actionNames.extension();
+		String httpMethod = actionNames.httpMethod();
 
 		if (packageName != null) {
 			path = StringUtil.replace(path, PACKAGE_MACRO, packageName);
@@ -73,10 +73,10 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	}
 
 	/**
-	 * Single point of {@link jodd.madvoc.ActionDef} creation.
+	 * Single point of {@link ActionDefinition} creation.
 	 * Also performs the replacement of action path macros!
 	 */
-	protected ActionDef createActionDef(String path, String httpMethod, String resultBasePath, ActionNames actionNames) {
+	protected ActionDefinition createActionDef(String path, String httpMethod, String resultBasePath, ActionNames actionNames) {
 		path = replaceActionNameMacros(path, actionNames);
 
 		if (httpMethod != null) {
@@ -87,7 +87,7 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 			resultBasePath = replaceActionNameMacros(resultBasePath, actionNames);
 		}
 
-		return new ActionDef(path, httpMethod, resultBasePath);
+		return new ActionDefinition(path, httpMethod, resultBasePath);
 	}
 
 	/**

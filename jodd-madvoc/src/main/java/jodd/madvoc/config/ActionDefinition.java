@@ -23,28 +23,51 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
-
-import jodd.madvoc.result.ActionResult;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package jodd.madvoc.config;
 
 /**
- * Class annotation that defines which Madvoc {@link jodd.madvoc.result.ActionResult action result}
- * will be used for rendering.
+ * Action definition is represented by action's path, http method and result base path.
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface RenderWith {
+public class ActionDefinition {
+
+	protected final String actionPath;
+	protected final String actionMethod;
+	protected final String resultBasePath;
+
+	public ActionDefinition(String actionPath, String actionMethod, String resultBasePath) {
+		this.actionPath = actionPath;
+		this.actionMethod = actionMethod;
+		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
+	}
+
+	public ActionDefinition(String actionPath, String actionMethod) {
+		this.actionPath = actionPath;
+		this.actionMethod = actionMethod;
+		this.resultBasePath = actionPath;
+	}
+
+	public ActionDefinition(String actionPath) {
+		this(actionPath, null);
+	}
 
 	/**
-	 * Action result class that will be used to render action result return value.
+	 * Returns action's path.
 	 */
-	Class<? extends ActionResult> value();
+	public String actionPath() {
+		return actionPath;
+	}
 
+	/**
+	 * Returns action's HTTP method.
+	 */
+	public String actionMethod() {
+		return actionMethod;
+	}
+
+	/**
+	 * Returns result base path.
+	 */
+	public String resultBasePath() {
+		return resultBasePath;
+	}
 }

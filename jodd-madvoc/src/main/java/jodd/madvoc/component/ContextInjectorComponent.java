@@ -25,7 +25,7 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.ScopeData;
+import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.injector.Target;
 import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;

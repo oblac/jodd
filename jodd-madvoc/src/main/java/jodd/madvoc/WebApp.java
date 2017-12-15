@@ -37,7 +37,6 @@ import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;

@@ -25,215 +25,104 @@
 
 package jodd.madvoc;
 
-import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.result.Result;
-import jodd.util.ClassUtil;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 /**
- * Action configuration and shared run-time data, used internally.
+ * Action configuration.
  */
 public class ActionConfig {
 
-	public static class MethodParam {
+	private final ActionConfig parent;
 
-		private final Class type;
-		private final String name;
-		private final Class<? extends Annotation> annotationType;
+	private Class<? extends ActionResult> actionResult;
+	private Class<? extends ActionInterceptor>[] interceptors;
+	private Class<? extends ActionFilter>[] filters;
+	private String[] actionMethodNames;
+	private String extension;
+	private Class<? extends ActionNamingStrategy> namingStrategy;
 
-		public MethodParam(Class type, String name, Class<? extends Annotation> annotationType) {
-			this.type = type;
-			this.name = name;
-			this.annotationType = annotationType;
-		}
-
-		/**
-		 * Returns parameter type.
-		 */
-		public Class getType() {
-			return type;
-		}
-
-		/**
-		 * Returns parameter name.
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * Returns parameter Madvoc annotation type, one of
-		 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out} or {@link jodd.madvoc.meta.InOut}.
-		 */
-		public Class<? extends Annotation> getAnnotationType() {
-			return annotationType;
-		}
+	public ActionConfig(ActionConfig parentActionConfig) {
+		this.parent = parentActionConfig;
 	}
 
-	// configuration
-	public final Class actionClass;
-	public final Method actionClassMethod;
-	public final Class<? extends ActionResult> actionResult;
-	public final String actionPath;
-	public final String actionMethod;
-	public final String resultBasePath;
-	public final Field resultField;
-	public final boolean async;
-
-	// scope data information matrix: [scope-type][target-index]
-	public final ScopeData[][] scopeData;
-	public final MethodParam[] methodParams;
-
-	public final boolean hasArguments;
-
-	// run-time data
-	protected ActionConfigSet actionConfigSet;
-	public final ActionFilter[] filters;
-	public final ActionInterceptor[] interceptors;
-
-	public ActionConfig(
-			Class actionClass,
-			Method actionClassMethod,
-			ActionFilter[] filters,
-			ActionInterceptor[] interceptors,
-			ActionDef actionDef,
-			Class<? extends ActionResult> actionResult,
-			boolean async,
-			ScopeData[][] scopeData,
-			MethodParam[] methodParams
-			)
-	{
-		this.actionClass = actionClass;
-		this.actionClassMethod = actionClassMethod;
-		this.actionPath = actionDef.getActionPath();
-		this.actionMethod = actionDef.getActionMethod() == null ? null : actionDef.getActionMethod().toUpperCase();
-		this.resultBasePath = actionDef.getResultBasePath();
-		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
-		this.actionResult = actionResult;
-		this.async = async;
-
-		this.scopeData = scopeData;
-
-		this.filters = filters;
-		this.interceptors = interceptors;
-		this.methodParams = methodParams;
-		this.resultField = findResultField(actionClass);
-	}
-
-	// ---------------------------------------------------------------- result
-
-	/**
-	 * Finds result field in the action class.
-	 */
-	protected Field findResultField(Class actionClass) {
-		FieldDescriptor[] fields = ClassIntrospector.get().lookup(actionClass).getAllFieldDescriptors();
-		for (FieldDescriptor fd : fields) {
-			Field field = fd.getField();
-			if (ClassUtil.isTypeOf(field.getType(), Result.class)) {
-				field.setAccessible(true);
-				return field;
+	public Class<? extends ActionResult> getActionResult() {
+		if (actionResult == null) {
+			if (parent != null) {
+				return parent.getActionResult();
 			}
 		}
-		return null;
-	}
-
-	// ---------------------------------------------------------------- getters
-
-	/**
-	 * Returns action class.
-	 */
-	public Class getActionClass() {
-		return actionClass;
-	}
-
-	/**
-	 * Returns action class method.
-	 */
-	public Method getActionClassMethod() {
-		return actionClassMethod;
-	}
-
-	/**
-	 * Returns action path.
-	 */
-	public String getActionPath() {
-		return actionPath;
-	}
-
-	/**
-	 * Returns action method.
-	 */
-	public String getActionMethod() {
-		return actionMethod;
-	}
-
-	/**
-	 * Returns action result base path.
-	 */
-	public String getResultBasePath() {
-		return resultBasePath;
-	}
-
-	/**
-	 * Returns interceptor instances.
-	 */
-	public ActionInterceptor[] getInterceptors() {
-		return interceptors;
-	}
-
-	/**
-	 * Returns <code>true</code> if action is asynchronous.
-	 */
-	public boolean isAsync() {
-		return async;
-	}
-
-	public ActionConfigSet getActionConfigSet() {
-		return actionConfigSet;
-	}
-
-	/**
-	 * Returns method parameters information, or <code>null</code> if method has no params.
-	 */
-	public MethodParam[] getMethodParams() {
-		return methodParams;
-	}
-
-	/**
-	 * Returns action result class that will render the result.
-	 * may be <code>null</code>.
-	 */
-	public Class<? extends ActionResult> getActionResult() {
 		return actionResult;
 	}
 
-	// ---------------------------------------------------------------- to string
+	public void setActionResult(Class<? extends ActionResult> actionResult) {
+		this.actionResult = actionResult;
+	}
 
-	/**
-	 * Returns action string in form 'actionClass#actionMethod'.
-	 */
-	public String getActionString() {
-		String className = actionClass.getName();
-
-		int ndx = className.indexOf("$$");
-
-		if (ndx != -1) {
-			className = className.substring(0, ndx);
+	public Class<? extends ActionInterceptor>[] getInterceptors() {
+		if (interceptors == null) {
+			if (parent != null) {
+				return parent.getInterceptors();
+			}
 		}
-
-		return className + '#' + actionClassMethod.getName();
+		return interceptors;
 	}
 
-	@Override
-	public String toString() {
-		return "action: " + actionPath + (actionMethod == null ? "" : '#' + actionMethod) + "  -->  " + getActionString();
+	public void setInterceptors(Class<? extends ActionInterceptor>... interceptors) {
+		this.interceptors = interceptors;
 	}
 
+	public Class<? extends ActionFilter>[] getFilters() {
+		if (filters == null) {
+			if (parent != null) {
+				return parent.getFilters();
+			}
+		}
+		return filters;
+	}
+
+	public void setFilters(Class<? extends ActionFilter>... filters) {
+		this.filters = filters;
+	}
+
+	public String[] getActionMethodNames() {
+		if (actionMethodNames == null) {
+			if (parent != null) {
+				return parent.getActionMethodNames();
+			}
+		}
+		return actionMethodNames;
+	}
+
+	public void setActionMethodNames(String... actionMethodNames) {
+		this.actionMethodNames = actionMethodNames;
+	}
+
+	public String getExtension() {
+		if (extension == null) {
+			if (parent != null) {
+				return parent.getExtension();
+			}
+		}
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+
+	public Class<? extends ActionNamingStrategy> getNamingStrategy() {
+		if (namingStrategy == null) {
+			if (parent != null) {
+				return parent.getNamingStrategy();
+			}
+		}
+		return namingStrategy;
+	}
+
+	public void setNamingStrategy(Class<? extends ActionNamingStrategy> namingStrategy) {
+		this.namingStrategy = namingStrategy;
+	}
 }

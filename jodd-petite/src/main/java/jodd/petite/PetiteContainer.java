@@ -29,7 +29,6 @@ import jodd.bean.BeanUtil;
 import jodd.introspector.Setter;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.petite.config.PetiteConfigurator;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.InitMethodPoint;
 import jodd.petite.def.MethodInjectionPoint;
@@ -552,15 +551,7 @@ public class PetiteContainer extends PetiteBeans {
 	}
 
 
-	// ---------------------------------------------------------------- configure
-
-	/**
-	 * Configures this instance with provided {@link PetiteConfigurator}.
-	 */
-	public PetiteContainer configureWith(PetiteConfigurator petiteConfigurator) {
-		petiteConfigurator.configure(this);
-		return this;
-	}
+	// ---------------------------------------------------------------- registry
 
 	/**
 	 * Creates {@link PetiteRegistry} helper tool for this container.

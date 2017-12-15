@@ -29,20 +29,20 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionConfigSet;
-import jodd.madvoc.ActionDef;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.ActionRuntimeSet;
+import jodd.madvoc.config.ActionRuntimeSetComparator;
 import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.collection.SortedArrayList;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,48 +65,32 @@ public class ActionsManager {
 
 	protected int actionsCount;
 	protected boolean asyncMode;
-	protected final HashMap<String, ActionConfigSet> map;		// map of all action paths w/o macros
-	protected final SortedArrayList<ActionConfigSet> list;		// list of all action paths with macros
-	protected final HashMap<String, ActionConfig> configs;		// another map of all action configs
+	protected final HashMap<String, ActionRuntimeSet> map;		// map of all action paths w/o macros
+	protected final SortedArrayList<ActionRuntimeSet> list;		// list of all action paths with macros
+	protected final HashMap<String, ActionRuntime> runtimes;		// another map of all action runtimes
 	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {
 		this.map = new HashMap<>();
-		this.list = new SortedArrayList<>(new ActionConfigSetComparator());
+		this.list = new SortedArrayList<>(new ActionRuntimeSetComparator());
 		this.pathAliases = new HashMap<>();
-		this.configs = new HashMap<>();
+		this.runtimes = new HashMap<>();
 		this.asyncMode = false;
 	}
 
 	/**
-	 * Comparator that considers first chunks number then action path.
-	 */
-	public static class ActionConfigSetComparator implements Comparator<ActionConfigSet>, Serializable {
-		@Override
-		public int compare(ActionConfigSet set1, ActionConfigSet set2) {
-			int deep1 = set1.deep;
-			int deep2 = set2.deep;
-
-			if (deep1 == deep2) {
-				return set1.actionPath.compareTo(set2.actionPath);
-			}
-			return deep1 - deep2;
-		}
-	}
-
-	/**
-	 * Returns all registered action configurations.
+	 * Returns all registered action runtime configurations.
 	 * Returned list is a join of action paths
 	 * with and without the macro.
 	 */
-	public List<ActionConfig> getAllActionConfigurations() {
-		List<ActionConfig> all = new ArrayList<>(actionsCount);
+	public List<ActionRuntime> getAllActionRuntimes() {
+		List<ActionRuntime> all = new ArrayList<>(actionsCount);
 
-		for (ActionConfigSet set : map.values()) {
-			all.addAll(set.getActionConfigs());
+		for (ActionRuntimeSet set : map.values()) {
+			all.addAll(set.getActionRuntimes());
 		}
-		for (ActionConfigSet set : list) {
-			all.addAll(set.getActionConfigs());
+		for (ActionRuntimeSet set : list) {
+			all.addAll(set.getActionRuntimes());
 		}
 		return all;
 	}
@@ -142,14 +126,14 @@ public class ActionsManager {
 	/**
 	 * Registers action with provided action signature.
 	 */
-	public ActionConfig register(String actionSignature) {
+	public ActionRuntime register(String actionSignature) {
 		return register(actionSignature, null);
 	}
 
 	/**
 	 * Registers action with provided action signature.
 	 */
-	public ActionConfig register(String actionSignature, ActionDef actionDef) {
+	public ActionRuntime register(String actionSignature, ActionDefinition actionDefinition) {
 		int ndx = actionSignature.indexOf('#');
 		if (ndx == -1) {
 			throw new MadvocException("Madvoc action signature syntax error: " + actionSignature);
@@ -162,28 +146,28 @@ public class ActionsManager {
 		} catch (ClassNotFoundException cnfex) {
 			throw new MadvocException("Madvoc action class not found: " + actionClassName, cnfex);
 		}
-		return register(actionClass, actionMethodName, actionDef);
+		return register(actionClass, actionMethodName, actionDefinition);
 	}
 
-	public ActionConfig register(Class actionClass, Method actionMethod) {
+	public ActionRuntime register(Class actionClass, Method actionMethod) {
 		return registerAction(actionClass, actionMethod, null);
 	}
 
-	public ActionConfig register(Class actionClass, Method actionMethod, ActionDef actionDef) {
-		return registerAction(actionClass, actionMethod, actionDef);
+	public ActionRuntime register(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
 
 	/**
 	 * Registers action with provided action class and method name.
 	 */
-	public ActionConfig register(Class actionClass, String actionMethodName) {
+	public ActionRuntime register(Class actionClass, String actionMethodName) {
 		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
 		return registerAction(actionClass, actionMethod, null);
 	}
 
-	public ActionConfig register(Class actionClass, String actionMethodName, ActionDef actionDef) {
+	public ActionRuntime register(Class actionClass, String actionMethodName, ActionDefinition actionDefinition) {
 		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
-		return registerAction(actionClass, actionMethod, actionDef);
+		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
 
 	// ---------------------------------------------------------------- registration
@@ -191,38 +175,38 @@ public class ActionsManager {
 	/**
 	 * Registration main point. Does two things:
 	 * <ul>
-	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, jodd.madvoc.ActionDef) parse action}
-	 *     and creates {@link jodd.madvoc.ActionConfig}</li>
-	 *     <li>{@link #registerAction(jodd.madvoc.ActionConfig) registers} created {@link jodd.madvoc.ActionConfig}</li>
+	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, ActionDefinition) parse action}
+	 *     and creates {@link ActionRuntime}</li>
+	 *     <li>{@link #registerAction(ActionRuntime) registers} created {@link ActionRuntime}</li>
 	 * </ul>
-	 * Returns created {@link ActionConfig}.
-	 * @see #registerAction(jodd.madvoc.ActionConfig)
+	 * Returns created {@link ActionRuntime}.
+	 * @see #registerAction(ActionRuntime)
 	 */
-	protected ActionConfig registerAction(Class actionClass, Method actionMethod, ActionDef actionDef) {
-		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionDef);
-		if (actionConfig == null) {
+	protected ActionRuntime registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+		ActionRuntime actionRuntime = actionMethodParser.parse(actionClass, actionMethod, actionDefinition);
+		if (actionRuntime == null) {
 			return null;
 		}
-		return registerAction(actionConfig);
+		return registerAction(actionRuntime);
 	}
 
 	/**
-	 * Registers manually created {@link ActionConfig action configurations}.
+	 * Registers manually created {@link ActionRuntime action runtime configurations}.
 	 * Optionally, if action path with the same name already exist,
 	 * exception will be thrown.
 	 */
-	public ActionConfig registerAction(ActionConfig actionConfig) {
-		String actionPath = actionConfig.actionPath;
+	public ActionRuntime registerAction(ActionRuntime actionRuntime) {
+		String actionPath = actionRuntime.actionPath();
 
-		log.debug(() -> "Madvoc action: " + actionConfig.actionPath + " => " + actionConfig.getActionString());
+		log.debug(() -> "Madvoc action: " + actionRuntime.actionPath() + " => " + actionRuntime.actionString());
 
-		ActionConfigSet set = createActionConfigSet(actionConfig.actionPath);
+		ActionRuntimeSet set = createActionRuntimeSet(actionRuntime.actionPath());
 
-		if (set.actionPathMacros != null) {
+		if (set.actionPathMacros() != null) {
 			// new action patch contain macros
 			int ndx = -1;
 			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).actionPath.equals(actionPath)) {
+				if (list.get(i).actionPath().equals(actionPath)) {
 					ndx = i;
 					break;
 				}
@@ -234,65 +218,65 @@ public class ActionsManager {
 			}
 		} else {
 			// action path is without macros
-			if (!map.containsKey(actionConfig.actionPath)) {
-				map.put(actionConfig.actionPath, set);
+			if (!map.containsKey(actionRuntime.actionPath())) {
+				map.put(actionRuntime.actionPath(), set);
 			} else {
-				set = map.get(actionConfig.actionPath);
+				set = map.get(actionRuntime.actionPath());
 			}
 
 		}
-		boolean isDuplicate = set.add(actionConfig);
+		boolean isDuplicate = set.add(actionRuntime);
 
 		if (madvocConfig.isDetectDuplicatePathsEnabled()) {
 			if (isDuplicate) {
-				throw new MadvocException("Duplicate action path for " + actionConfig);
+				throw new MadvocException("Duplicate action path for " + actionRuntime);
 			}
 		}
 
 		// finally
 
-		configs.put(actionConfig.getActionString(), actionConfig);
+		runtimes.put(actionRuntime.actionString(), actionRuntime);
 
 		if (!isDuplicate) {
 			actionsCount++;
 		}
 
 		// async check
-		if (actionConfig.isAsync()) {
+		if (actionRuntime.async()) {
 			asyncMode = true;
 		}
 
-		return actionConfig;
+		return actionRuntime;
 	}
 
 	/**
-	 * Creates new action config set from the action path.
+	 * Creates new action runtime set from the action path.
 	 */
-	protected ActionConfigSet createActionConfigSet(String actionPath) {
+	protected ActionRuntimeSet createActionRuntimeSet(String actionPath) {
 		PathMacros pathMacros = actionPathMacroManager.buildActionPathMacros(actionPath);
 
-		return new ActionConfigSet(actionPath, pathMacros);
+		return new ActionRuntimeSet(actionPath, pathMacros);
 	}
 
 	// ---------------------------------------------------------------- look-up
 
 	/**
-	 * Returns action configurations for provided action path.
+	 * Returns action runtime configurations for provided action path.
 	 * First it lookups for exact <code>actionPath</code>.
 	 * If action path is not registered, it is split into chunks
 	 * and match against macros.
 	 * Returns <code>null</code> if action path is not registered.
 	 * <code>method</code> must be in uppercase.
 	 */
-	public ActionConfig lookup(String actionPath, String method) {
+	public ActionRuntime lookup(String actionPath, String method) {
 
 		// 1st try: the map
 
-		ActionConfigSet actionConfigSet = map.get(actionPath);
-		if (actionConfigSet != null) {
-			ActionConfig actionConfig = actionConfigSet.lookup(method);
-			if (actionConfig != null) {
-				return actionConfig;
+		ActionRuntimeSet actionRuntimeSet = map.get(actionPath);
+		if (actionRuntimeSet != null) {
+			ActionRuntime actionRuntime = actionRuntimeSet.lookup(method);
+			if (actionRuntime != null) {
+				return actionRuntime;
 			}
 		}
 
@@ -306,9 +290,9 @@ public class ActionsManager {
 		int maxMatchedChars = -1;
 
 		for (int i = 0; i < len; i++) {
-			actionConfigSet = list.get(i);
+			actionRuntimeSet = list.get(i);
 
-			int deep = actionConfigSet.deep;
+			int deep = actionRuntimeSet.deep();
 			if (deep < actionPathDeep) {
 				continue;
 			}
@@ -318,7 +302,7 @@ public class ActionsManager {
 
 			// same deep level, try the fully match
 
-			int matchedChars = actionConfigSet.actionPathMacros.match(actionPath);
+			int matchedChars = actionRuntimeSet.actionPathMacros().match(actionPath);
 
 			if (matchedChars == -1) {
 				continue;
@@ -334,18 +318,18 @@ public class ActionsManager {
 			return null;
 		}
 
-		ActionConfigSet set = list.get(lastMatched);
+		ActionRuntimeSet set = list.get(lastMatched);
 
 		return set.lookup(method);
 	}
 
 	/**
-	 * Lookups action config for given action class and method string (aka 'action string').
+	 * Lookups action runtime config for given action class and method string (aka 'action string').
 	 * The action string has the following format: <code>className#methodName</code>.
-	 * @see jodd.madvoc.ActionConfig#getActionString()
+	 * @see ActionRuntime#actionString()
 	 */
-	public ActionConfig lookup(String actionString) {
-		return configs.get(actionString);
+	public ActionRuntime lookup(String actionString) {
+		return runtimes.get(actionString);
 	}
 
 	// ---------------------------------------------------------------- aliases

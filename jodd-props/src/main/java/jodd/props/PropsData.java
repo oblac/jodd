@@ -26,13 +26,14 @@
 package jodd.props;
 
 import jodd.util.StringPool;
-import jodd.util.StringTemplateParser;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
+import jodd.util.template.StringTemplateParser;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Props data storage for base and profile properties.
@@ -76,10 +77,10 @@ public class PropsData implements Cloneable {
 
 	@Override
 	public PropsData clone() {
-		final HashMap<String, PropsEntry> newBase = new HashMap<>();
 		final HashMap<String, Map<String, PropsEntry>> newProfiles = new HashMap<>();
 
-		newBase.putAll(baseProperties);
+		final HashMap<String, PropsEntry> newBase = new HashMap<>(baseProperties);
+
 		for (final Map.Entry<String, Map<String, PropsEntry>> entry : profileProperties.entrySet()) {
 			final Map<String, PropsEntry> map = new HashMap<>(entry.getValue().size());
 			map.putAll(entry.getValue());
@@ -166,11 +167,7 @@ public class PropsData implements Cloneable {
 	 * Adds profile property.
 	 */
 	public void putProfileProperty(final String key, final String value, final String profile, final boolean append) {
-		Map<String, PropsEntry> map = profileProperties.get(profile);
-		if (map == null) {
-			map = new HashMap<>();
-			profileProperties.put(profile, map);
-		}
+		Map<String, PropsEntry> map = profileProperties.computeIfAbsent(profile, k -> new HashMap<>());
 		put(profile, map, key, value, append);
 	}
 
@@ -242,7 +239,7 @@ public class PropsData implements Cloneable {
 			stringTemplateParser.setMissingKeyReplacement(StringPool.EMPTY);
 		}
 
-		final StringTemplateParser.MacroResolver macroResolver = macroName -> {
+		final Function<String, String> macroResolver = macroName -> {
 			String[] lookupProfiles = profiles;
 
 			int leftIndex = macroName.indexOf('<');

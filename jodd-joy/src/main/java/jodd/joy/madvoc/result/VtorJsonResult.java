@@ -28,8 +28,8 @@ package jodd.joy.madvoc.result;
 import jodd.joy.madvoc.action.AppAction;
 import jodd.joy.vtor.VtorUtil;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.result.BaseActionResult;
 import jodd.util.CharUtil;
@@ -69,6 +69,7 @@ public class VtorJsonResult extends BaseActionResult<String> {
 	protected MadvocConfig madvocConfig;
 
 
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();

@@ -26,6 +26,8 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -110,7 +112,7 @@ class ActionRequestRecursionTest {
 
 	class MyActionRequest extends ActionRequest {
 		public String data = "";
-		public MyActionRequest(MadvocController madvocController, String actionPath, ActionConfig config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		public MyActionRequest(MadvocController madvocController, String actionPath, ActionRuntime config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 			super(madvocController, actionPath, config, action, servletRequest, servletResponse);
 		}
 		@Override
@@ -130,6 +132,7 @@ class ActionRequestRecursionTest {
 			this.i = i;
 		}
 
+		@Override
 		public Object filter(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-F" + i;
 			Object result = actionRequest.invoke();
@@ -138,6 +141,7 @@ class ActionRequestRecursionTest {
 		}
 	}
 	class FilterStop extends BaseActionFilter {
+		@Override
 		public Object filter(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-X";
 			return "stop";
@@ -150,6 +154,7 @@ class ActionRequestRecursionTest {
 			this.i = i;
 		}
 
+		@Override
 		public Object intercept(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-I"+i;
 			Object result = actionRequest.invoke();
@@ -158,6 +163,7 @@ class ActionRequestRecursionTest {
 		}
 	}
 	class InterceptorStop extends BaseActionInterceptor {
+		@Override
 		public Object intercept(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-x";
 			return "stop";
@@ -173,18 +179,19 @@ class ActionRequestRecursionTest {
 
 	private MyActionRequest createMyActionRequest(ActionFilter[] actionFilters, ActionInterceptor[] actionInterceptors) {
 		SimpleMadvocController madvocController = new SimpleMadvocController();
+		MadvocConfig madvocConfig = new MadvocConfig();
 
 		Action action = new Action();
-		ActionConfig actionConfig = new ActionConfig(
+		ActionRuntime actionRuntime = new ActionRuntime(
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,
-				new ActionDef("path", "method"),
+				new ActionDefinition("path", "method"),
 				null,
-				false, null, null);
+				false, null, null, madvocConfig.getActionConfig());
 
 		return new MyActionRequest(
-				madvocController, "actionPath", actionConfig, action, null, null);
+				madvocController, "actionPath", actionRuntime, action, null, null);
 	}
 
 	private <T> T[] arr(T... array) {

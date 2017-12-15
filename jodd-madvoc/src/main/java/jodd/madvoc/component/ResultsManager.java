@@ -29,7 +29,9 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
@@ -230,9 +232,9 @@ public class ResultsManager {
 
 		if (actionResult == null) {
 			// + still not found, read @Action value
-			ActionConfig actionConfig = actionRequest.getActionConfig();
+			ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
+			Class<? extends ActionResult> actionResultClass = actionRuntime.actionResult();
 			if (actionResultClass != null) {
 				actionResult = lookupAndRegisterIfMissing(actionResultClass);
 			}
@@ -258,8 +260,9 @@ public class ResultsManager {
 
 		if (actionResult == null) {
 			// + still not found, toString()
-
-			ActionResult defaultActionResult = lookupAndRegisterIfMissing(madvocConfig.getDefaultActionResult());
+			ActionConfig actionConfig = actionRequest.getActionRuntime().actionConfig();
+			Class<? extends ActionResult> defaultActionResultClass = actionConfig.getActionResult();
+			ActionResult defaultActionResult = lookupAndRegisterIfMissing(defaultActionResultClass);
 
 			if (stringResults.isEmpty()) {
 				// no string results registered, carry on with the defaults.

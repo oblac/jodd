@@ -25,9 +25,6 @@
 
 package jodd.madvoc.result;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
@@ -35,6 +32,8 @@ import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -47,14 +46,17 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 
 	public static final String NAME = "redirect";
 
-	protected BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
+	protected final BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 	public ServletRedirectResult() {
-		super(NAME);
+		this(NAME);
 	}
 
 	protected ServletRedirectResult(String name) {
 		super(name);
+		beanTemplateParser.setMacroPrefix(null);
+		beanTemplateParser.setMacroStart("{");
+		beanTemplateParser.setMacroEnd("}");
 	}
 
 	@In(scope = ScopeType.CONTEXT)
@@ -63,8 +65,9 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 	/**
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
+	@Override
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
 
 		String resultPath;
 
@@ -79,7 +82,7 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String path = resultPath;
-		path = beanTemplateParser.parse(path, actionRequest.getAction());
+		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
 
 		redirect(request, response, path);
 	}

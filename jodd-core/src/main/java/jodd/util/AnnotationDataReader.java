@@ -26,7 +26,7 @@
 package jodd.util;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * Annotation reader reads an annotation and returns {@link AnnotationData annotation data object}
@@ -46,7 +46,7 @@ import java.lang.reflect.AccessibleObject;
  * Besides overriding features and default values, this way we can finalize some element value
  * and prevent it from being modified by user.
  */
-public abstract class AnnotationDataReader<A extends Annotation, D extends AnnotationDataReader.AnnotationData<A>> {
+public abstract class AnnotationDataReader<A extends Annotation, D extends AnnotationData<A>> {
 
 	protected final Annotation defaultAnnotation;
 	protected final Class<A> annotationClass;
@@ -105,31 +105,18 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 
 	/**
 	 * Returns <code>true</code> if annotation is present on
-	 * given accessible object.
+	 * given annotated element.
 	 */
-	public boolean hasAnnotation(AccessibleObject accessibleObject) {
-		return accessibleObject.isAnnotationPresent(annotationClass);
+	public boolean hasAnnotationOn(AnnotatedElement annotatedElement) {
+		return annotatedElement.isAnnotationPresent(annotationClass);
 	}
 
 	/**
-	 * Reads {@link AnnotationData annotation data} on provided accessible object.
+	 * Reads {@link AnnotationData annotation data} on provided annotated element.
 	 * If annotation is not presented, <code>null</code> is returned.
 	 */
-	public D readAnnotationData(AccessibleObject accessibleObject) {
-		A annotation = accessibleObject.getAnnotation(annotationClass);
-		if (annotation == null) {
-			return null;
-		}
-
-		return createAnnotationData(annotation);
-	}
-
-	/**
-	 * Reads {@link AnnotationData annotation data} on provided type.
-	 * If annotation is not presented, <code>null</code> is returned.
-	 */
-	public D readAnnotationData(Class<?> type) {
-		A annotation = type.getAnnotation(annotationClass);
+	public D readAnnotatedElement(AnnotatedElement annotatedElement) {
+		A annotation = annotatedElement.getAnnotation(annotationClass);
 		if (annotation == null) {
 			return null;
 		}
@@ -216,27 +203,6 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 			return defaultValue;
 		}
 		return value.intValue();
-	}
-
-	// ---------------------------------------------------------------- annotation data
-
-	/**
-	 * Base class for annotation data, for holding annotation elements values.
-	 */
-	public abstract static class AnnotationData<N extends Annotation> {
-
-		protected final N annotation;
-
-		protected AnnotationData(N annotation) {
-			this.annotation = annotation;
-		}
-
-		/**
-		 * Returns annotation.
-		 */
-		public N getAnnotation() {
-			return annotation;
-		}
 	}
 
 }

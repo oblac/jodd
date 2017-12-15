@@ -140,10 +140,10 @@ public class AnnotationTxAdviceManager {
 				TransactionAnnotationData txAnn = getTransactionAnnotation(m);
 				if (txAnn != null) {
 					txMode = new JtxTransactionMode();
-					txMode.setPropagationBehaviour(txAnn.getPropagation());
-					txMode.setIsolationLevel(txAnn.getIsolation());
-					txMode.setReadOnly(txAnn.isReadOnly());
-					txMode.setTransactionTimeout(txAnn.getTimeout());
+					txMode.setPropagationBehaviour(txAnn.propagation());
+					txMode.setIsolationLevel(txAnn.isolation());
+					txMode.setReadOnly(txAnn.readOnly());
+					txMode.setTransactionTimeout(txAnn.timeout());
 				} else {
 					txMode = defaultTransactionMode;
 				}
@@ -175,7 +175,7 @@ public class AnnotationTxAdviceManager {
 	 */
 	protected TransactionAnnotationData getTransactionAnnotation(Method method) {
 		for (TransactionAnnotation annotationInstance : annotationInstances) {
-			TransactionAnnotationData tad = annotationInstance.readAnnotationData(method);
+			TransactionAnnotationData tad = annotationInstance.readAnnotatedElement(method);
 			if (tad != null) {
 				return tad;
 			}

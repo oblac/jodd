@@ -23,19 +23,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.petite.config;
+package jodd.util.template;
 
-import jodd.petite.PetiteContainer;
+import java.util.function.Function;
 
 /**
- * Petite container configurator.
+ * Context withing string template parser operates.
+ * Curried version of {@link StringTemplateParser#parse(String, Function)}
  */
 @FunctionalInterface
-public interface PetiteConfigurator {
-
-	/**
-	 * Configures {@link PetiteContainer}.
-	 */
-	void configure(PetiteContainer petiteContainer);
-
+public interface ContextTemplateParser {
+	String parse(String template);
 }

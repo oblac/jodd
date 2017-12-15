@@ -26,11 +26,12 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.config.ActionRuntime;
 
 /**
  * Injector interface. Injections happen on action invocation.
  * All injection data should be cached in {@link jodd.madvoc.ActionRequest}
- * or {@link jodd.madvoc.ActionConfig}.
+ * or {@link ActionRuntime}.
  */
 public interface Injector {
 

@@ -25,10 +25,10 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
+import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.util.CharUtil;
@@ -44,12 +44,13 @@ public class RestResourcePath extends BaseNamingStrategy {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	public ActionDef buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
+	@Override
+	public ActionDefinition buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
 
-		String packageActionPath = actionNames.getPackageActionPath();
-		String classActionPath = actionNames.getClassActionPath();
-		String methodActionPath = actionNames.getMethodActionPath();
-		String httpMethod = actionNames.getHttpMethod();
+		String packageActionPath = actionNames.packageActionPath();
+		String classActionPath = actionNames.classActionPath();
+		String methodActionPath = actionNames.methodActionPath();
+		String httpMethod = actionNames.httpMethod();
 
 		if (httpMethod == null) {
 			httpMethod = resolveHttpMethodFromMethodName(actionMethod.getName());
@@ -77,7 +78,7 @@ public class RestResourcePath extends BaseNamingStrategy {
 			if (httpMethod != null) {
 				resultPath += httpMethod.toLowerCase();
 			} else {
-				resultPath += actionNames.getMethodName();
+				resultPath += actionNames.methodName();
 			}
 		}
 

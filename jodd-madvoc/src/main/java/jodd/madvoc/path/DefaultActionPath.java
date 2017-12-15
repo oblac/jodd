@@ -25,8 +25,8 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionDef;
-import jodd.madvoc.ActionNames;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionNames;
 import jodd.util.StringPool;
 
 import java.lang.reflect.Method;
@@ -36,16 +36,17 @@ import java.lang.reflect.Method;
  */
 public class DefaultActionPath extends BaseNamingStrategy {
 
-	public ActionDef buildActionDef(
+	@Override
+	public ActionDefinition buildActionDef(
 			Class actionClass,
 			Method actionMethod,
 			ActionNames actionNames) {
 
-		String packageActionPath = actionNames.getPackageActionPath();
-		String classActionPath = actionNames.getClassActionPath();
-		String methodActionPath = actionNames.getMethodActionPath();
-		String extension = actionNames.getExtension();
-		String httpMethod = actionNames.getHttpMethod();
+		String packageActionPath = actionNames.packageActionPath();
+		String classActionPath = actionNames.classActionPath();
+		String methodActionPath = actionNames.methodActionPath();
+		String extension = actionNames.extension();
+		String httpMethod = actionNames.httpMethod();
 
 		String actionPath = classActionPath;
 

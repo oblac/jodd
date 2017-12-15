@@ -25,14 +25,14 @@
 
 package jodd.json.meta;
 
-import jodd.util.AnnotationDataReader;
+import jodd.util.AnnotationData;
 
 import java.lang.annotation.Annotation;
 
 /**
  * Holder for JSON annotation data.
  */
-public class JSONAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
+public class JSONAnnotationData<A extends Annotation> extends AnnotationData<A> {
 
 	protected String name;
 	protected boolean included;
@@ -42,15 +42,15 @@ public class JSONAnnotationData<A extends Annotation> extends AnnotationDataRead
 		super(annotation);
 	}
 
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
-	public boolean isIncluded() {
+	public boolean included() {
 		return included;
 	}
 
-	public boolean isStrict() {
+	public boolean strict() {
 		return strict;
 	}
 }
