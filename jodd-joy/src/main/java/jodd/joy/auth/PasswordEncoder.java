@@ -23,10 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.crypt;
+package jodd.joy.auth;
 
 import jodd.petite.meta.PetiteBean;
-import jodd.util.crypto.BCrypt;
+import jodd.util.crypt.BCrypt;
 
 /**
  * Encodes and validates passwords using {@link BCrypt}.

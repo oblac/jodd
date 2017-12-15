@@ -23,7 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-/**
- * Various encryption tools.
- */
-package jodd.joy.crypt;
+package jodd.util.crypt;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class PBKDF2HashTest {
+
+	@Test
+	public void simpleTest() {
+		PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
+
+		String hash = pbkdf2Hash.createHash("secret");
+
+		assertFalse(pbkdf2Hash.validatePassword("bad", hash));
+		assertTrue(pbkdf2Hash.validatePassword("secret", hash));
+	}
+}

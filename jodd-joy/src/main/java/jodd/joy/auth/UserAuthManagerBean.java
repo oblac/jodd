@@ -25,7 +25,6 @@
 
 package jodd.joy.auth;
 
-import jodd.joy.crypt.PasswordEncoder;
 import jodd.petite.meta.PetiteInject;
 
 /**

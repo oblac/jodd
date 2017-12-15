@@ -25,10 +25,10 @@
 
 package jodd.joy.auth;
 
-import jodd.joy.crypt.Threefish;
 import jodd.servlet.ServletUtil;
 import jodd.util.Base64;
 import jodd.util.StringUtil;
+import jodd.util.crypt.Threefish;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

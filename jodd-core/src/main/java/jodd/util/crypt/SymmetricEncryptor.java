@@ -23,9 +23,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.crypt;
+package jodd.util.crypt;
 
-import jodd.joy.JoyException;
 import jodd.util.Base64;
 import jodd.util.StringUtil;
 
@@ -41,7 +40,6 @@ import static jodd.util.StringPool.UTF_8;
 
 /**
  * Simple symmetric de/encryptor that uses PBE With MD5 And Triple DES.
- * IMPORTANT: Does not work without patching the JDK!
  */
 public class SymmetricEncryptor {
 
@@ -76,7 +74,7 @@ public class SymmetricEncryptor {
 			ecipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
 			dcipher.init(Cipher.DECRYPT_MODE, key, paramSpec);
 		} catch (Exception ex) {
-			throw new JoyException(ex);
+			throw new IllegalArgumentException(ex);
 		}
 	}
 
