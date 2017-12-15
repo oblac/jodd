@@ -53,21 +53,21 @@ public class TagAction {
 		BeanCopy.beans(source, dest).ignoreNulls(true).copy();
 	}
 
-	@RestAction(value = "disable/${id}")
+	@RestAction(value = "disable/{id}")
 	public String disable() {
 		tag = loadTagById(id);
 		return "text:disable-" + tag;
 	}
 
 	// if we want to use 'delete' with @RestAction and GET
-	@RestAction(value = "delete/${id}", method = Action.GET)
+	@RestAction(value = "delete/{id}", method = Action.GET)
 	public String delete() {
 		tag = loadTagById(id);
 		return "text:delete-" + tag;
 	}
 
-	@RestAction(value = "${id}")
-	//@RestAction(value = "edit/${id}")
+	@RestAction(value = "{id}")
+	//@RestAction(value = "edit/{id}")
 	public String edit() {
 		Tag oldTag = loadTagById(id);
 
@@ -78,7 +78,7 @@ public class TagAction {
 		return "text:edit-" + tag;
 	}
 
-	@RestAction(value = "${id}")
+	@RestAction(value = "{id}")
 	public String save() {
 		tag.setTagId(id);
 

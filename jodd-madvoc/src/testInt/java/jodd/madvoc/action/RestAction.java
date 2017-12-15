@@ -37,17 +37,17 @@ public class RestAction {
 	@InOut
 	long itemId;
 
-	@Action(value = "view/${itemId}", extension = NONE)
+	@Action(value = "view/{itemId}", extension = NONE)
 	public String viewItem() {
 		return "#view";
 	}
 
-	@Action(value = "view2/g-${itemId}")
+	@Action(value = "view2/g-{itemId}")
 	public String viewItem2() {
-		return "redirect:/re/view/${itemId}";
+		return "redirect:/re/view/{itemId}";
 	}
 
-	@Action(value = "view3/${itemId:^[0-9]+}", extension = NONE)
+	@Action(value = "view3/{itemId:^[0-9]+}", extension = NONE)
 	public String viewItem3() {
 		return "#view";
 	}

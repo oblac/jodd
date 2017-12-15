@@ -28,10 +28,10 @@ package jodd.madvoc.fixtures.tst3;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 
-@MadvocAction("/my-${:package}/${:class}")
+@MadvocAction("/my-{:package}/{:class}")
 public class JimAction {
 
-	@Action("my-${:method}")
+	@Action("my-{:method}")
 	public void hello() {}
 
 }
