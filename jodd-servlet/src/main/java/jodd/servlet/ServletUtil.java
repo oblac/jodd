@@ -25,31 +25,30 @@
 
 package jodd.servlet;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import jodd.io.FileNameUtil;
+import jodd.io.StreamUtil;
+import jodd.servlet.upload.MultipartRequest;
+import jodd.servlet.upload.MultipartRequestWrapper;
+import jodd.upload.FileUpload;
+import jodd.util.Base64;
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
+import jodd.util.net.MimeTypes;
+import jodd.util.net.URLCoder;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
-import javax.servlet.jsp.PageContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jodd.io.StreamUtil;
-import jodd.util.Base64;
-import jodd.util.StringPool;
-import jodd.util.MimeTypes;
-import jodd.io.FileNameUtil;
-import jodd.servlet.upload.MultipartRequestWrapper;
-import jodd.servlet.upload.MultipartRequest;
-import jodd.upload.FileUpload;
-import jodd.util.StringUtil;
-import jodd.util.URLCoder;
+import javax.servlet.jsp.PageContext;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * Miscellaneous servlet utilities.

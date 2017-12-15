@@ -23,7 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.util.net;
+
+import jodd.util.StringPool;
 
 /**
  * Encodes text and URL strings in various ways resulting HTML-safe text.
@@ -47,7 +49,7 @@ public class HtmlEncoder {
 	private static final char[] GT = "&gt;".toCharArray();
 	private static final char[] NBSP = "&nbsp;".toCharArray();
 
-	/**
+	/*
 	 * Creates HTML lookup tables for faster encoding.
 	 */
 	static {
@@ -90,7 +92,7 @@ public class HtmlEncoder {
 	 * <ul>
 	 *     <li><code>&amp;</code> with <code>&amp;amp;</code></li>
 	 *     <li><code>"</code> with <code>&amp;quot;</code></li>
-	 *     <li><code>&amp;nbsp;</code></li>
+	 *     <li><code>&amp;&nbsp;</code></li>
 	 * </ul>
 	 */
 	public static String attributeDoubleQuoted(CharSequence value) {
@@ -103,7 +105,7 @@ public class HtmlEncoder {
 	 * <ul>
 	 *     <li><code>&amp;</code> with <code>&amp;amp;</code></li>
 	 *     <li><code>'</code> with <code>&amp;#39;</code></li>
-	 *     <li><code>&amp;nbsp;</code></li>
+	 *     <li><code>&amp;&nbsp;</code></li>
 	 * </ul>
 	 */
 	public static String attributeSingleQuoted(CharSequence value) {

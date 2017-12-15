@@ -25,7 +25,7 @@
 
 package jodd.lagarto;
 
-import jodd.util.HtmlEncoder;
+import jodd.util.net.HtmlEncoder;
 
 import java.io.IOException;
 
@@ -50,12 +50,15 @@ public class TagWriter implements TagVisitor {
 
 	// ---------------------------------------------------------------- visitor
 
+	@Override
 	public void start() {
 	}
 
+	@Override
 	public void end() {
 	}
 
+	@Override
 	public void tag(Tag tag) {
 		try {
 			tag.writeTo(appendable);
@@ -64,6 +67,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void script(Tag tag, CharSequence body) {
 		try {
 			tag.writeTo(appendable);
@@ -76,6 +80,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void comment(CharSequence comment) {
 		try {
 			TagWriterUtil.writeComment(appendable, comment);
@@ -84,6 +89,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void text(CharSequence text) {
 		try {
 			appendable.append(HtmlEncoder.text(text));
@@ -92,6 +98,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void cdata(CharSequence cdata) {
 		try {
 			TagWriterUtil.writeCData(appendable, cdata);
@@ -100,6 +107,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 		try {
 			TagWriterUtil.writeXml(appendable, version, encoding, standalone);
@@ -108,6 +116,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void doctype(Doctype doctype) {
 		try {
 			TagWriterUtil.writeDoctype(
@@ -120,6 +129,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 		try {
 			TagWriterUtil.writeConditionalComment(appendable, expression, isStartingTag, isHidden, isHiddenEndTag);
@@ -128,6 +138,7 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	@Override
 	public void error(String message) {
 	}
 

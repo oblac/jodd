@@ -26,7 +26,7 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.meta.RenderWith;
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

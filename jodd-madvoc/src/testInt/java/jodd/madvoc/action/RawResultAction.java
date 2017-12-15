@@ -28,7 +28,7 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.result.RawData;
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 
 @MadvocAction
 public class RawResultAction {

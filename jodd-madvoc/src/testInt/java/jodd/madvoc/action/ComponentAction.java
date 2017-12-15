@@ -32,7 +32,7 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.result.RawData;
 import jodd.util.CharUtil;
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 
 @MadvocAction
 public class ComponentAction {

@@ -25,7 +25,7 @@
 
 package jodd.mail;
 
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 
 import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;

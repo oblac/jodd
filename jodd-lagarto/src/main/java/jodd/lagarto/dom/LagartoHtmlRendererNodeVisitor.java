@@ -26,7 +26,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.TagWriterUtil;
-import jodd.util.HtmlEncoder;
+import jodd.util.net.HtmlEncoder;
 
 import java.io.IOException;
 
@@ -41,6 +41,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		this.appendable = appendable;
 	}
 
+	@Override
 	public void cdata(CData cdata) {
 		String nodeValue = cdata.getNodeValue();
 		try {
@@ -50,6 +51,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		}
 	}
 
+	@Override
 	public void comment(Comment comment) {
 		String nodeValue = comment.getNodeValue();
 
@@ -60,10 +62,12 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		}
 	}
 
+	@Override
 	public void document(Document document) {
 		document.visitChildren(this);
 	}
 
+	@Override
 	public void documentType(DocumentType documentType) {
 		try {
 			TagWriterUtil.writeDoctype(appendable,
@@ -75,6 +79,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		}
 	}
 
+	@Override
 	public void text(Text text) {
 		String nodeValue = text.getTextValue();
 
@@ -85,6 +90,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		}
 	}
 
+	@Override
 	public void xmlDeclaration(XmlDeclaration xmlDeclaration) {
 		try {
 			TagWriterUtil.writeXml(appendable,
@@ -200,6 +206,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		}
 	}
 
+	@Override
 	public void element(Element element) {
 		try {
 			_element(element);

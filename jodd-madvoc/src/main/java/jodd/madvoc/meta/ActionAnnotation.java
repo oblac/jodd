@@ -25,7 +25,7 @@
 
 package jodd.madvoc.meta;
 
-import jodd.util.AnnotationDataReader;
+import jodd.util.annotation.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;

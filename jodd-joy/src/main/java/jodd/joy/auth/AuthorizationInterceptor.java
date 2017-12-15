@@ -25,13 +25,13 @@
 
 package jodd.joy.auth;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.DispatcherUtil;
-import jodd.util.URLCoder;
 import jodd.util.StringPool;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
+import jodd.util.net.URLCoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +49,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationInterceptor.class);
 
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();

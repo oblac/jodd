@@ -29,7 +29,7 @@ import jodd.core.JoddCore;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
-import jodd.util.URLDecoder;
+import jodd.util.net.URLDecoder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

@@ -27,7 +27,7 @@ package jodd.mail;
 
 import jodd.io.StreamUtil;
 import jodd.mail.att.ByteArrayAttachment;
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 import org.junit.jupiter.api.Test;
 
 import javax.activation.DataSource;
@@ -39,9 +39,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static jodd.mail.EmailAttachment.attachment;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class SendMailTest {
 

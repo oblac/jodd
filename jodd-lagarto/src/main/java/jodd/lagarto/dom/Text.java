@@ -25,9 +25,9 @@
 
 package jodd.lagarto.dom;
 
-import jodd.util.HtmlDecoder;
-import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
+import jodd.util.net.HtmlDecoder;
+import jodd.util.net.HtmlEncoder;
 
 /**
  * Text node. Text value is stored as node value in decoded, readable form.

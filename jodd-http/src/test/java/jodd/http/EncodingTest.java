@@ -27,8 +27,8 @@ package jodd.http;
 
 import jodd.http.fixture.Data;
 import jodd.http.up.ByteArrayUploadable;
-import jodd.util.MimeTypes;
 import jodd.util.StringPool;
+import jodd.util.net.MimeTypes;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;

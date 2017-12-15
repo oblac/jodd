@@ -31,7 +31,7 @@ import jodd.io.StreamUtil;
 import jodd.mail.att.ByteArrayAttachment;
 import jodd.mail.att.FileAttachment;
 import jodd.mail.att.InputStreamAttachment;
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 
 import java.io.File;
 import java.io.FileInputStream;

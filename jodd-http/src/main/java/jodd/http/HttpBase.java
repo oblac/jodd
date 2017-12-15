@@ -34,10 +34,10 @@ import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
-import jodd.util.MimeTypes;
 import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.net.MimeTypes;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

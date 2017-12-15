@@ -28,7 +28,7 @@ package jodd.lagarto;
 import jodd.util.ArraysUtil;
 import jodd.util.CharArraySequence;
 import jodd.util.CharSequenceUtil;
-import jodd.util.HtmlEncoder;
+import jodd.util.net.HtmlEncoder;
 
 import java.io.IOException;
 

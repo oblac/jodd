@@ -25,8 +25,8 @@
 
 package jodd.http;
 
-import jodd.util.MimeTypes;
 import jodd.util.StringPool;
+import jodd.util.net.MimeTypes;
 
 public class JoddHttpDefaults {
 

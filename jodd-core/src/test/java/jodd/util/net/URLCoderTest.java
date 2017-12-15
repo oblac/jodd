@@ -23,15 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.util.net;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static jodd.util.URLCoder.*;
-import static jodd.util.URLDecoder.decode;
-import static jodd.util.URLDecoder.decodeQuery;
+import static jodd.util.net.URLCoder.encodeFragment;
+import static jodd.util.net.URLCoder.encodeHost;
+import static jodd.util.net.URLCoder.encodeHttpUrl;
+import static jodd.util.net.URLCoder.encodePath;
+import static jodd.util.net.URLCoder.encodePathSegment;
+import static jodd.util.net.URLCoder.encodePort;
+import static jodd.util.net.URLCoder.encodeQuery;
+import static jodd.util.net.URLCoder.encodeQueryParam;
+import static jodd.util.net.URLCoder.encodeScheme;
+import static jodd.util.net.URLCoder.encodeUri;
+import static jodd.util.net.URLCoder.encodeUserInfo;
+import static jodd.util.net.URLDecoder.decode;
+import static jodd.util.net.URLDecoder.decodeQuery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

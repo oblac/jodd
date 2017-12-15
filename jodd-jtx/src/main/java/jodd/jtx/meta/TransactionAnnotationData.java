@@ -27,7 +27,7 @@ package jodd.jtx.meta;
 
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
-import jodd.util.AnnotationData;
+import jodd.util.annotation.AnnotationData;
 
 import java.lang.annotation.Annotation;
 

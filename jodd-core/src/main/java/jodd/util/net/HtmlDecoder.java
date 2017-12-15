@@ -23,9 +23,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.util.net;
 
 import jodd.io.StreamUtil;
+import jodd.util.BinarySearchBase;
+import jodd.util.CharUtil;
+import jodd.util.StringUtil;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -54,7 +57,7 @@ public class HtmlDecoder {
 			entityReferences.load(is);
 		}
 		catch (Exception ex) {
-			throw new IllegalStateException(ex);
+			throw new IllegalStateException("Can't load properties", ex);
 		} finally {
 			StreamUtil.close(is);
 		}

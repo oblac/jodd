@@ -23,9 +23,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.util.net;
 
 import jodd.io.StreamUtil;
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
+import jodd.util.Wildcard;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +71,7 @@ public class MimeTypes {
 			mimes.load(is);
 		}
 		catch (IOException ioex) {
-			throw new IllegalStateException(ioex.getMessage());
+			throw new IllegalStateException("Can't load properties", ioex);
 		} finally {
 			StreamUtil.close(is);
 		}

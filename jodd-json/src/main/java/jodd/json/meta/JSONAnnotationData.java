@@ -25,7 +25,7 @@
 
 package jodd.json.meta;
 
-import jodd.util.AnnotationData;
+import jodd.util.annotation.AnnotationData;
 
 import java.lang.annotation.Annotation;
 

@@ -25,20 +25,21 @@
 
 package jodd.joy.i18n;
 
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import javax.servlet.jsp.tagext.DynamicAttributes;
-import javax.servlet.jsp.PageContext;
+import jodd.util.StringUtil;
+import jodd.util.net.HtmlEncoder;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.DynamicAttributes;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import jodd.util.HtmlEncoder;
-import jodd.util.StringUtil;
-import static jodd.joy.i18n.LocalizationUtil.findMessage;
 import static jodd.joy.i18n.LocalizationUtil.findDefaultMessage;
+import static jodd.joy.i18n.LocalizationUtil.findMessage;
 
 /**
  * Renders text output. Text is key in the resource bundle. Tag supports variables.
@@ -67,6 +68,7 @@ public class TextTag extends SimpleTagSupport implements DynamicAttributes {
 
 	private final List<String[]> params = new ArrayList<>();
 
+	@Override
 	public void setDynamicAttribute(String uri, String localName, Object value) {
 		params.add(new String[] {localName, StringUtil.toSafeString(value)});
 	}

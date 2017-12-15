@@ -25,7 +25,7 @@
 
 package jodd.madvoc.meta;
 
-import jodd.util.AnnotationData;
+import jodd.util.annotation.AnnotationData;
 
 import java.lang.annotation.Annotation;
 

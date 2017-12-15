@@ -32,7 +32,7 @@ import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.RandomString;
-import jodd.util.URLCoder;
+import jodd.util.net.URLCoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

@@ -31,7 +31,7 @@ import jodd.madvoc.result.RawData;
 import jodd.madvoc.result.RawDownload;
 import jodd.madvoc.result.RawResultData;
 import jodd.util.CharUtil;
-import jodd.util.MimeTypes;
+import jodd.util.net.MimeTypes;
 
 @MadvocAction
 public class RawAction {

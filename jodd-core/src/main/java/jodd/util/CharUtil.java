@@ -348,7 +348,7 @@ public class CharUtil {
 	 *
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
-	protected static boolean isSubDelimiter(int c) {
+	public static boolean isSubDelimiter(int c) {
 		switch (c) {
 			case '!':
 			case '$':
@@ -372,7 +372,7 @@ public class CharUtil {
 	 *
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
-	protected static boolean isReserved(char c) {
+	public static boolean isReserved(char c) {
 		return isGenericDelimiter(c) || isSubDelimiter(c);
 	}
 
@@ -381,7 +381,7 @@ public class CharUtil {
 	 *
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
-	protected static boolean isUnreserved(char c) {
+	public static boolean isUnreserved(char c) {
 		return isAlpha(c) || isDigit(c) || c == '-' || c == '.' || c == '_' || c == '~';
 	}
 
@@ -390,7 +390,7 @@ public class CharUtil {
 	 *
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
-	protected static boolean isPchar(char c) {
+	public static boolean isPchar(char c) {
 		return isUnreserved(c) || isSubDelimiter(c) || c == ':' || c == '@';
 	}
 

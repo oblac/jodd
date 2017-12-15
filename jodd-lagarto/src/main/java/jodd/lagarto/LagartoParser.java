@@ -28,8 +28,8 @@ package jodd.lagarto;
 import jodd.util.ArraysUtil;
 import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
-import jodd.util.HtmlDecoder;
 import jodd.util.StringPool;
+import jodd.util.net.HtmlDecoder;
 
 import static jodd.util.CharSequenceUtil.equalsOne;
 import static jodd.util.CharUtil.isAlpha;
