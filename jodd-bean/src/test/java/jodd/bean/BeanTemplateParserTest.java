@@ -26,42 +26,42 @@
 package jodd.bean;
 
 import jodd.bean.fixtures.Abean;
-import jodd.util.StringTemplateParser;
+import jodd.util.template.ContextTemplateParser;
+import jodd.util.template.MapTemplateParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class BeanTemplateParserTest {
 
-	BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
-
 	@Test
 	void testTemplate() {
+		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 		Abean a = new Abean();
+		ContextTemplateParser ctp = beanTemplateParser.of(a);
 
-		assertEquals("xxxx", beanTemplateParser.parse("xxxx", a));
-		assertEquals("", beanTemplateParser.parse("", a));
-		assertEquals("...abean_value...", beanTemplateParser.parse("...${fooProp}...", a));
-		assertEquals("abean_value", beanTemplateParser.parse("${fooProp}", a));
+		assertEquals("xxxx", ctp.parse("xxxx"));
+		assertEquals("", ctp.parse(""));
+		assertEquals("...abean_value...", ctp.parse("...${fooProp}..."));
+		assertEquals("abean_value", ctp.parse("${fooProp}"));
 
-		assertEquals("...${fooProp}...", beanTemplateParser.parse("...\\${fooProp}...", a));
-		assertEquals("...\\abean_value...", beanTemplateParser.parse("...\\\\${fooProp}...", a));
-		assertEquals("...\\${fooProp}...", beanTemplateParser.parse("...\\\\\\${fooProp}...", a));
-		assertEquals("...\\\\abean_value...", beanTemplateParser.parse("...\\\\\\\\${fooProp}...", a));
-		assertEquals("...\\\\${fooProp}...", beanTemplateParser.parse("...\\\\\\\\\\${fooProp}...", a));
+		assertEquals("...${fooProp}...", ctp.parse("...\\${fooProp}..."));
+		assertEquals("...\\abean_value...", ctp.parse("...\\\\${fooProp}..."));
+		assertEquals("...\\${fooProp}...", ctp.parse("...\\\\\\${fooProp}..."));
+		assertEquals("...\\\\abean_value...", ctp.parse("...\\\\\\\\${fooProp}..."));
+		assertEquals("...\\\\${fooProp}...", ctp.parse("...\\\\\\\\\\${fooProp}..."));
 
-		assertEquals("${fooProp}", beanTemplateParser.parse("\\${fooProp}", a));
-		assertEquals("\\abean_value", beanTemplateParser.parse("\\\\${fooProp}", a));
-		assertEquals("\\${fooProp}", beanTemplateParser.parse("\\\\\\${fooProp}", a));
-		assertEquals("\\\\abean_value", beanTemplateParser.parse("\\\\\\\\${fooProp}", a));
-		assertEquals("\\\\${fooProp}", beanTemplateParser.parse("\\\\\\\\\\${fooProp}", a));
+		assertEquals("${fooProp}", ctp.parse("\\${fooProp}"));
+		assertEquals("\\abean_value", ctp.parse("\\\\${fooProp}"));
+		assertEquals("\\${fooProp}", ctp.parse("\\\\\\${fooProp}"));
+		assertEquals("\\\\abean_value", ctp.parse("\\\\\\\\${fooProp}"));
+		assertEquals("\\\\${fooProp}", ctp.parse("\\\\\\\\\\${fooProp}"));
 
-		assertEquals("abean_valueabean_value", beanTemplateParser.parse("${fooProp}${fooProp}", a));
-		assertEquals("${fooProp}abean_value", beanTemplateParser.parse("\\${fooProp}${fooProp}", a));
+		assertEquals("abean_valueabean_value", ctp.parse("${fooProp}${fooProp}"));
+		assertEquals("${fooProp}abean_value", ctp.parse("\\${fooProp}${fooProp}"));
 	}
 
 	@Test
@@ -71,69 +71,73 @@ class BeanTemplateParserTest {
 		Map<String, Object> ctx = new HashMap<>();
 		ctx.put("string", 173);
 
-		assertEquals("173", beanTemplateParser.parse("$string", ctx));
-		assertEquals("", beanTemplateParser.parse("$string2", ctx));
+		assertEquals("173", beanTemplateParser.of(ctx).parse("$string"));
+		assertEquals("", beanTemplateParser.of(ctx).parse("$string2"));
 	}
 
 	@Test
 	void testMap() {
+		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
-		assertEquals("---value1---", beanTemplateParser.parse("---${key1}---", map));
+		assertEquals("---value1---", beanTemplateParser.of(map).parse("---${key1}---"));
 	}
 
 	@Test
 	void testMissing() {
+		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
-		assertEquals("------", beanTemplateParser.parse("---${key2}---", map));
+		assertEquals("------", beanTemplateParser.of(map).parse("---${key2}---"));
 
 		BeanTemplateParser beanTemplateParser2 = new BeanTemplateParser();
 		beanTemplateParser2.setMissingKeyReplacement("");
 
-		assertEquals("------", beanTemplateParser2.parse("---${key2}---", map));
+		assertEquals("------", beanTemplateParser2.of(map).parse("---${key2}---"));
 
 		beanTemplateParser2.setMissingKeyReplacement("<>");
-		assertEquals("---<>---", beanTemplateParser2.parse("---${key2}---", map));
+		assertEquals("---<>---", beanTemplateParser2.of(map).parse("---${key2}---"));
 	}
 
 	@Test
 	void testInner() {
+		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 		map.put("key2", "value");
 
-		assertEquals("---value---", beanTemplateParser.parse("---${key${key1}}---", map));
+		assertEquals("---value---", beanTemplateParser.of(map).parse("---${key${key1}}---"));
 
-		assertEquals("---value---", beanTemplateParser.parse("---${key${key${key0}}}---", map));
+		assertEquals("---value---", beanTemplateParser.of(map).parse("---${key${key${key0}}}---"));
 	}
 
 	@Test
 	void testReplaceMissingKey() {
-		StringTemplateParser stp = new StringTemplateParser();
+		MapTemplateParser stp = new MapTemplateParser();
 
 		BeanTemplateParser btp = new BeanTemplateParser();
+
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 
-		assertEquals(".1.", btp.parse(".${key0}.", map));
-		assertEquals("..", btp.parse(".${key2}.", map));
+		assertEquals(".1.", btp.of(map).parse(".${key0}."));
+		assertEquals("..", btp.of(map).parse(".${key2}."));
 
-		assertEquals(".1.", stp.parse(".${key0}.", StringTemplateParser.createMapMacroResolver(map)));
-		assertEquals("..", stp.parse(".${key2}.", StringTemplateParser.createMapMacroResolver(map)));
+		assertEquals(".1.", stp.of(map).parse(".${key0}."));
+		assertEquals("..", stp.of(map).parse(".${key2}."));
 
 		btp.setMissingKeyReplacement("x");
-		assertEquals(".x.", btp.parse(".${key2}.", map));
+		assertEquals(".x.", btp.of(map).parse(".${key2}."));
 
 		btp.setReplaceMissingKey(false);
-		assertEquals(".${key2}.", btp.parse(".${key2}.", map));
+		assertEquals(".${key2}.", btp.of(map).parse(".${key2}."));
 
 		btp.setMissingKeyReplacement(null);
-		assertEquals(".${key2}.", btp.parse(".${key2}.", map));
+		assertEquals(".${key2}.", btp.of(map).parse(".${key2}."));
 	}
 
 	@Test
@@ -141,13 +145,14 @@ class BeanTemplateParserTest {
 		Abean a = new Abean();
 		BeanTemplateParser btp = new BeanTemplateParser();
 		btp.setResolveEscapes(false);
+		ContextTemplateParser ctp = btp.of(a);
 
-		assertEquals("...abean_value...", btp.parse("...${fooProp}...", a));
+		assertEquals("...abean_value...", ctp.parse("...${fooProp}..."));
 
-		assertEquals("...\\${fooProp}...", btp.parse("...\\${fooProp}...", a));
-		assertEquals("...\\\\abean_value...", btp.parse("...\\\\${fooProp}...", a));
-		assertEquals("...\\\\\\${fooProp}...", btp.parse("...\\\\\\${fooProp}...", a));
-		assertEquals("...\\\\\\\\abean_value...", btp.parse("...\\\\\\\\${fooProp}...", a));
-		assertEquals("...\\\\\\\\\\${fooProp}...", btp.parse("...\\\\\\\\\\${fooProp}...", a));
+		assertEquals("...\\${fooProp}...", ctp.parse("...\\${fooProp}..."));
+		assertEquals("...\\\\abean_value...", ctp.parse("...\\\\${fooProp}..."));
+		assertEquals("...\\\\\\${fooProp}...", ctp.parse("...\\\\\\${fooProp}..."));
+		assertEquals("...\\\\\\\\abean_value...", ctp.parse("...\\\\\\\\${fooProp}..."));
+		assertEquals("...\\\\\\\\\\${fooProp}...", ctp.parse("...\\\\\\\\\\${fooProp}..."));
 	}
 }

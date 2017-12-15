@@ -23,9 +23,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.util.template;
 
-import java.util.Map;
+import jodd.util.CharUtil;
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
+
+import java.util.function.Function;
 
 /**
  * Parser for string macro templates. On parsing, macro values
@@ -34,13 +38,6 @@ import java.util.Map;
  * even using different macro resolvers.
  */
 public class StringTemplateParser {
-
-	/**
-	 * Static ctor.
-	 */
-	public static StringTemplateParser create() {
-		return new StringTemplateParser();
-	}
 
 	public static final String DEFAULT_MACRO_PREFIX = "$";
 	public static final String DEFAULT_MACRO_START = "${";
@@ -57,22 +54,15 @@ public class StringTemplateParser {
 	protected char escapeChar = '\\';
 	protected boolean parseValues;
 
-	public boolean isReplaceMissingKey() {
-		return replaceMissingKey;
-	}
-
 	/**
 	 * Specifies if missing keys should be resolved at all,
 	 * <code>true</code> by default.
 	 * If <code>false</code> missing keys will be left as it were, i.e.
 	 * they will not be replaced.
 	 */
-	public void setReplaceMissingKey(boolean replaceMissingKey) {
+	public StringTemplateParser setReplaceMissingKey(boolean replaceMissingKey) {
 		this.replaceMissingKey = replaceMissingKey;
-	}
-
-	public String getMissingKeyReplacement() {
-		return missingKeyReplacement;
+		return this;
 	}
 
 	/**
@@ -82,10 +72,6 @@ public class StringTemplateParser {
 	public StringTemplateParser setMissingKeyReplacement(String missingKeyReplacement) {
 		this.missingKeyReplacement = missingKeyReplacement;
 		return this;
-	}
-
-	public boolean isResolveEscapes() {
-		return resolveEscapes;
 	}
 
 	/**
@@ -99,10 +85,6 @@ public class StringTemplateParser {
 		return this;
 	}
 
-	public String getMacroStart() {
-		return macroStart;
-	}
-
 	/**
 	 * Defines macro start string.
 	 */
@@ -111,18 +93,11 @@ public class StringTemplateParser {
 		return this;
 	}
 
-	public String getMacroPrefix() {
-		return macroPrefix;
-	}
-
 	public StringTemplateParser setMacroPrefix(String macroPrefix) {
 		this.macroPrefix = macroPrefix;
 		return this;
 	}
 
-	public String getMacroEnd() {
-		return macroEnd;
-	}
 
 	/**
 	 * Defines macro end string.
@@ -140,20 +115,12 @@ public class StringTemplateParser {
 		return this;
 	}
 
-	public char getEscapeChar() {
-		return escapeChar;
-	}
-
 	/**
 	 * Defines escape character.
 	 */
 	public StringTemplateParser setEscapeChar(char escapeChar) {
 		this.escapeChar = escapeChar;
 		return this;
-	}
-
-	public boolean isParseValues() {
-		return parseValues;
 	}
 
 	/**
@@ -171,7 +138,7 @@ public class StringTemplateParser {
 	/**
 	 * Parses string template and replaces macros with resolved values.
 	 */
-	public String parse(String template, MacroResolver macroResolver) {
+	public String parse(String template, Function<String, String> macroResolver) {
 		StringBuilder result = new StringBuilder(template.length());
 
 		int i = 0;
@@ -297,7 +264,7 @@ public class StringTemplateParser {
 			Object value;
 			if (missingKeyReplacement != null || !replaceMissingKey) {
 				try {
-					value = macroResolver.resolve(name);
+					value = macroResolver.apply(name);
 				} catch (Exception ignore) {
 					value = null;
 				}
@@ -310,7 +277,7 @@ public class StringTemplateParser {
 					}
 				}
 			} else {
-				value = macroResolver.resolve(name);
+				value = macroResolver.apply(name);
 				if (value == null) {
 					value = StringPool.EMPTY;
 				}
@@ -337,38 +304,6 @@ public class StringTemplateParser {
 			}
 		}
 		return result.toString();
-	}
-
-	// ---------------------------------------------------------------- resolver
-
-	/**
-	 * Macro value resolver.
-	 */
-	@FunctionalInterface
-	public interface MacroResolver {
-		/**
-		 * Resolves macro value for macro name founded in
-		 * string template. <code>null</code> values will
-		 * be replaced with empty strings.
-		 */
-		String resolve(String macroName);
-
-	}
-
-	/**
-	 * Creates commonly used {@link MacroResolver} that resolved
-	 * macros in the provided map.
-	 */
-	public static MacroResolver createMapMacroResolver(final Map map) {
-		return macroName -> {
-			Object value = map.get(macroName);
-
-			if (value == null) {
-				return null;
-			}
-
-			return value.toString();
-		};
 	}
 
 }

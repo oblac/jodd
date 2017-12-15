@@ -35,11 +35,11 @@ import jodd.util.StringUtil;
  */
 public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 
-	protected static final String PACKAGE_MACRO = "${:package}";
-	protected static final String CLASS_MACRO = "${:class}";
-	protected static final String METHOD_MACRO = "${:method}";
-	protected static final String EXTENSION_MACRO = "${:ext}";
-	protected static final String HTTPMETHOD_MACRO = "${:http-method}";
+	protected static final String PACKAGE_MACRO = "{:package}";
+	protected static final String CLASS_MACRO = "{:class}";
+	protected static final String METHOD_MACRO = "{:method}";
+	protected static final String EXTENSION_MACRO = "{:ext}";
+	protected static final String HTTPMETHOD_MACRO = "{:http-method}";
 
 	/**
 	 * Replaces action path macros in the path.

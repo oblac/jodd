@@ -23,34 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.bean;
+package jodd.util.template;
 
-import jodd.util.template.ContextTemplateParser;
-import jodd.util.template.StringTemplateParser;
+import java.util.Map;
 
-/**
- * Bean template is a string template with JSP-alike
- * macros for injecting context values.
- * This is a parser for such bean templates.
- * <p>
- * Once set, <code>BeanTemplateParser</code> instance is reusable
- * as it doesn't store any parsing state.
- * <p>
- * Based on {@link StringTemplateParser}.
- */
-public class BeanTemplateParser extends StringTemplateParser {
+public class MapTemplateParser extends StringTemplateParser {
 
 	/**
-	 * Creates bean-backed <code>MacroResolver</code>.
+	 * Creates new working template context of a map.
 	 */
-	public ContextTemplateParser of(final Object context) {
-		return template -> parseWithBean(template, context);
+	public ContextTemplateParser of(Map map) {
+		return template -> parseWithMap(template, map);
 	}
 
-	public String parseWithBean(String template, Object context) {
+	public String parseWithMap(String template, Map map) {
 		return super.parse(template, macroName -> {
-			Object value = BeanUtil.declaredSilent.getProperty(context, macroName);
-
+			Object value = map.get(macroName);
 			if (value == null) {
 				return null;
 			}

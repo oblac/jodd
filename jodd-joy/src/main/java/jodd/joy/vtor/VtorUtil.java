@@ -71,7 +71,7 @@ public class VtorUtil {
 		String key = vc != null ? vc.getClass().getName() : violation.getName();
 		String msg = LocalizationUtil.findMessage(request, key);
 		if (msg != null) {
-			return beanTemplateParser.parse(msg, violation);
+			return beanTemplateParser.parseWithBean(msg, violation);
 		}
 		return null;
 	}

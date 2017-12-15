@@ -46,14 +46,17 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 
 	public static final String NAME = "redirect";
 
-	protected BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
+	protected final BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 	public ServletRedirectResult() {
-		super(NAME);
+		this(NAME);
 	}
 
 	protected ServletRedirectResult(String name) {
 		super(name);
+		beanTemplateParser.setMacroPrefix(null);
+		beanTemplateParser.setMacroStart("{");
+		beanTemplateParser.setMacroEnd("}");
 	}
 
 	@In(scope = ScopeType.CONTEXT)
@@ -79,7 +82,7 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String path = resultPath;
-		path = beanTemplateParser.parse(path, actionRequest.getAction());
+		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
 
 		redirect(request, response, path);
 	}

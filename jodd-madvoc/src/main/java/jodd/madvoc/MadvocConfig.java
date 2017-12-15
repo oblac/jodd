@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static jodd.util.StringPool.COLON;
-import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
+import static jodd.util.StringPool.LEFT_BRACE;
 import static jodd.util.StringPool.RIGHT_BRACE;
 
 /**
@@ -80,7 +80,7 @@ public final class MadvocConfig {
 		preventCaching = true;
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
-		pathMacroSeparators = new String[] {DOLLAR_LEFT_BRACE, COLON, RIGHT_BRACE};
+		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
 		asyncConfig = new AsyncConfig();
 	}

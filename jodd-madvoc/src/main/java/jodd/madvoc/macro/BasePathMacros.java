@@ -31,7 +31,7 @@ import jodd.util.StringUtil;
 /**
  * Common class for <code>PathMacro</code> implementations.
  * Assume that macros are defined in the following way:
- * <code>prefix${name:pattern}suffix</code>.
+ * <code>prefix{name:pattern}suffix</code>.
  * Pattern is optional, and if missing all values are matched.
  */
 public abstract class BasePathMacros implements PathMacros {
@@ -44,6 +44,7 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean init(final String actionPath, String[] separators) {
 		String prefix = separators[0];
 		String split = separators[1];
@@ -104,6 +105,7 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getNames() {
 		return names;
 	}
@@ -111,6 +113,7 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getPatterns() {
 		return patterns;
 	}
@@ -118,6 +121,7 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getMacrosCount() {
 		return macrosCount;
 	}
@@ -125,6 +129,7 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int match(String actionPath) {
 		String[] values = process(actionPath, true);
 
@@ -151,6 +156,7 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] extract(String actionPath) {
 		return process(actionPath, false);
 	}
