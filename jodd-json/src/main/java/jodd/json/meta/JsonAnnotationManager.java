@@ -32,7 +32,7 @@ import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.JoddJson;
 import jodd.util.ArraysUtil;
-import jodd.util.InExRules;
+import jodd.util.inex.InExRules;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

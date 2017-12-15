@@ -25,6 +25,8 @@
 
 package jodd.util;
 
+import jodd.util.concurrent.ThreadFactoryBuilder;
+
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;

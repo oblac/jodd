@@ -28,10 +28,10 @@ package jodd.io.findfile;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.util.Consumers;
-import jodd.util.InExRules;
 import jodd.util.MultiComparator;
 import jodd.util.StringUtil;
 import jodd.util.collection.JoddArrayList;
+import jodd.util.inex.InExRules;
 
 import java.io.File;
 import java.net.URI;
@@ -52,7 +52,7 @@ import java.util.function.Consumer;
  *
  * @see WildcardFindFile
  * @see RegExpFindFile
- * @see jodd.util.InExRules
+ * @see InExRules
  */
 public class FindFile implements Iterable<File> {
 
@@ -458,7 +458,7 @@ public class FindFile implements Iterable<File> {
 	 * rules. Called on each file entry (file or directory) and
 	 * returns <code>true</code> if file passes search criteria.
 	 * File is matched using {@link #getMatchingFilePath(java.io.File) matching file path}.
-	 * @see jodd.util.InExRules
+	 * @see InExRules
 	 */
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);

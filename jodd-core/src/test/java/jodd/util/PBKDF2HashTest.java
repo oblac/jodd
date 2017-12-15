@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.util.crypto.PBKDF2Hash;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

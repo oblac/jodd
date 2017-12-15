@@ -25,7 +25,7 @@
 
 package jodd.io.findfile;
 
-import jodd.util.InExRules;
+import jodd.util.inex.InExRules;
 
 import java.util.regex.Pattern;
 

@@ -30,8 +30,8 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.util.InExRuleMatcher;
-import jodd.util.InExRules;
+import jodd.util.inex.InExRuleMatcher;
+import jodd.util.inex.InExRules;
 
 import java.util.ArrayList;
 import java.util.Map;

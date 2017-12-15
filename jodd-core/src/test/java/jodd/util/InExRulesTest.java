@@ -25,6 +25,8 @@
 
 package jodd.util;
 
+import jodd.util.inex.InExRuleMatcher;
+import jodd.util.inex.InExRules;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

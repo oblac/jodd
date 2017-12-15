@@ -26,7 +26,7 @@
 package jodd.joy.crypt;
 
 import jodd.petite.meta.PetiteBean;
-import jodd.util.BCrypt;
+import jodd.util.crypto.BCrypt;
 
 /**
  * Encodes and validates passwords using {@link BCrypt}.

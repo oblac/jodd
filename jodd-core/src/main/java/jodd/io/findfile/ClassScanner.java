@@ -32,8 +32,8 @@ import jodd.io.ZipUtil;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.Consumers;
-import jodd.util.InExRules;
 import jodd.util.StringUtil;
+import jodd.util.inex.InExRules;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,8 +46,8 @@ import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static jodd.util.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
-import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
+import static jodd.util.inex.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
+import static jodd.util.inex.InExRuleMatcher.WILDCARD_RULE_MATCHER;
 
 
 /**
@@ -145,7 +145,7 @@ public class ClassScanner {
 
 	/**
 	 * Sets included set of names that will be considered during configuration.
-	 * @see jodd.util.InExRules
+	 * @see InExRules
 	 */
 	public ClassScanner includeEntries(String... includedEntries) {
 		for (String includedEntry : includedEntries) {
@@ -179,7 +179,7 @@ public class ClassScanner {
 
 	/**
 	 * Sets excluded names that narrows included set of packages.
-	 * @see jodd.util.InExRules
+	 * @see InExRules
 	 */
 	public ClassScanner excludeEntries(String... excludedEntries) {
 		for (String excludedEntry : excludedEntries) {

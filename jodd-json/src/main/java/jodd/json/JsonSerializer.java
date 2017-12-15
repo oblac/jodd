@@ -26,8 +26,8 @@
 package jodd.json;
 
 import jodd.util.ArraysUtil;
-import jodd.util.InExRules;
 import jodd.util.buffer.FastCharBuffer;
+import jodd.util.inex.InExRules;
 
 import java.util.HashMap;
 import java.util.Map;
