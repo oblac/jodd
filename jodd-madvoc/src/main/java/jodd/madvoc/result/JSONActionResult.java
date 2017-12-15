@@ -23,36 +23,49 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.action.sys;
+package jodd.madvoc.result;
 
-import jodd.madvoc.meta.InOut;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.RestAction;
+import jodd.io.StreamUtil;
+import jodd.json.JsonSerializer;
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.meta.In;
+import jodd.util.net.MimeTypes;
 
-@MadvocAction
-public class UserAction {
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 
-	public static class User {
-		public String id;
-		public String name;
-	}
+public class JSONActionResult extends BaseActionResult {
 
-	@InOut
-	String id;
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
 
-	@RestAction(value = "{id}")
-	public User get() {
-		User user = new User();
-		user.id = id;
-		user.name = "get";
-		return user;
-	}
+	@Override
+	public void render(ActionRequest actionRequest, Object object) throws Exception {
+		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
-	@RestAction(value = "{id}")
-	public User post() {
-		User user = new User();
-		user.id = id;
-		user.name = "post";
-		return user;
+		String encoding = response.getCharacterEncoding();
+
+		if (encoding == null) {
+			encoding = madvocConfig.getEncoding();
+		}
+
+		response.setContentType(MimeTypes.MIME_APPLICATION_JSON);
+		response.setCharacterEncoding(encoding);
+
+		String json = JsonSerializer.create().deep(true).serialize(object);
+
+		byte[] data = json.getBytes(encoding);
+		response.setContentLength(data.length);
+
+		OutputStream out = null;
+		try {
+			out = response.getOutputStream();
+			out.write(data);
+		} finally {
+			StreamUtil.close(out);
+		}
+
 	}
 }

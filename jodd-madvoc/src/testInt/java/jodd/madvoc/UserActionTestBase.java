@@ -40,7 +40,7 @@ public abstract class UserActionTestBase {
 		HttpResponse response = httpBrowser.sendRequest(
 				HttpRequest.get("localhost:8173/sys/user/123"));
 
-		assertEquals("Huh 123.", response.bodyText().trim());
+		assertEquals("{\"id\":\"123\",\"name\":\"get\"}", response.bodyText().trim());
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public abstract class UserActionTestBase {
 		HttpResponse response = httpBrowser.sendRequest(
 				HttpRequest.post("localhost:8173/sys/user/123"));
 
-		assertEquals("Post 123.", response.bodyText().trim());
+		assertEquals("{\"id\":\"123\",\"name\":\"post\"}", response.bodyText().trim());
 	}
 
 }

@@ -4,12 +4,6 @@ This is a list of long-term TODOs and ideas. Some are still half-baked; we have
 them on this list just not to forget the idea. The list is split into modules,
 without any particular order.
 
-## General Tasks
-
-+ add a blog
-+ improve documentation, marketing and SEO
-+ clone myself
-
 > "Every once in a while, I take my head out of the clouds and do a reality check."
 
 Game over?
@@ -18,9 +12,8 @@ Game over?
 
 + Add smart download in `NetUtil`: monitor progress, etc.
   This tool would have some downloading options to tweak download better.
-+ Add efficient text searches. Check various algorithms, like BM etc.
 + Check `FileUtil.move`/`copy dir`/`file` variants to be more performant.
-  Try to see which variant is the fastest one. Noticed a slow execution in sitegenerator
+  See which variant is the fastest one. Noticed a slow execution in sitegenerator.
 + Add `FileNameUtil.calculateRelativePath`.
 
 
@@ -41,7 +34,6 @@ Game over?
 + Add JSON parser generator based on JSON scheme - this should give the fastest
   parser as it is directly related to a scheme. 
 
-
 ## Props-plugin
 
 + Add `+=` operator
@@ -51,7 +43,7 @@ Game over?
 
 ## Madvoc
 
-+ Add Convertes, that convert input text automatically.
++ Add Converters, that convert input text automatically.
   For example, convert `"1,473.00"` into `"1473"`.
 + `MadvocServletFilter` may consumes action path, like load static content.
 + Check `AnnotatedFieldInterceptor`, if it works correctly (just a check).
@@ -100,6 +92,3 @@ Game over?
 + Localization arguments, {0}, {1}...
 + Don't encode text tags in resource bundles
 + `Pager` - refactor to be more user friendly when user has to write custom code
-+ Jspp with tag body
-+ `Jspp.processAll()`. Process all files in target folder, enable debug mode in WebApp.
-+ Do we really need `JSPP`?
