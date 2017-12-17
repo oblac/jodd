@@ -29,7 +29,6 @@ import jodd.madvoc.config.RootPackages;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class RootPackagesTest {
@@ -42,12 +41,13 @@ class RootPackagesTest {
 		rootPackages.addRootPackage("xx.admin.actions", "admin");
 		rootPackages.addRootPackage("xx.cms.actions", "cms");
 
-		assertEquals("", rootPackages.findPackagePathForActionPackage("xx"));
-		assertNull(rootPackages.getPackageActionPath("xx"));
-		assertEquals("/admin", rootPackages.findPackagePathForActionPackage("xx.admin.actions"));
-		assertEquals("/admin/hey", rootPackages.findPackagePathForActionPackage("xx.admin.actions.hey"));
-		assertEquals("/cms", rootPackages.findPackagePathForActionPackage("xx.cms.actions"));
-		assertEquals("/cms/hay", rootPackages.findPackagePathForActionPackage("xx.cms.actions.hay"));
+		for (int i = 0; i < 2; i++) {   // test cache
+			assertEquals("", rootPackages.findPackagePathForActionPackage("xx"));
+			assertEquals("/admin", rootPackages.findPackagePathForActionPackage("xx.admin.actions"));
+			assertEquals("/admin/hey", rootPackages.findPackagePathForActionPackage("xx.admin.actions.hey"));
+			assertEquals("/cms", rootPackages.findPackagePathForActionPackage("xx.cms.actions"));
+			assertEquals("/cms/hay", rootPackages.findPackagePathForActionPackage("xx.cms.actions.hay"));
+		}
 	}
 
 	@Test
