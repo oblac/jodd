@@ -30,63 +30,26 @@ package jodd.madvoc.config;
  */
 public class ActionNames {
 
-	protected String packageName;
-	protected String packageActionPath;
+	private final String packageName;
+	private final String packageActionPath;
 
-	protected String className;
-	protected String classActionPath;
+	private final String className;
+	private final String classActionPath;
 
-	protected String methodName;
-	protected String methodActionPath;
+	private final String methodName;
+	private final String methodActionPath;
 
-	protected String extension;
-	protected String httpMethod;
+	private final String extension;
+	private final String httpMethod;
 
-	// ---------------------------------------------------------------- setters
-
-	/**
-	 * Sets package-related names.
-	 * @param packageName name derived from the package
-	 * @param packageActionPath action path from package (optional, may be <code>null</code>)
-	 */
-	public void setPackageNames(String packageName, String packageActionPath) {
-		this.packageName = packageName;
-		this.packageActionPath = packageActionPath;
-	}
-
-	/**
-	 * Sets class-related names.
-	 * @param className name derived from the class
-	 * @param classActionPath action path from class
-	 */
-	public void setClassNames(String className, String classActionPath) {
-		this.className = className;
-		this.classActionPath = classActionPath;
-	}
-
-	/**
-	 * Sets method-related names.
-	 * @param methodName name derived from the method
-	 * @param methodActionPath action path from method (optional, may be <code>null</code>)
-	 */
-	public void setMethodNames(String methodName, String methodActionPath) {
-		this.methodName = methodName;
-		this.methodActionPath = methodActionPath;
-	}
-
-	/**
-	 * Sets extension.
-	 * @param extension extension (optional, may be <code>null</code>)
-	 */
-	public void setExtension(String extension) {
+	public ActionNames(String[] packageActionNames, String[] classActionNames, String[] methodActionNames, String extension, String httpMethod) {
+		this.packageName = packageActionNames[0];
+		this.packageActionPath = packageActionNames[1];
+		this.className = classActionNames[0];
+		this.classActionPath = classActionNames[1];
+		this.methodName = methodActionNames[0];
+		this.methodActionPath = methodActionNames[1];
 		this.extension = extension;
-	}
-
-	/**
-	 * Sets HTTP method.
-	 * @param httpMethod HTTP method name (may be <code>null</code>)
-	 */
-	public void setHttpMethod(String httpMethod) {
 		this.httpMethod = httpMethod;
 	}
 
