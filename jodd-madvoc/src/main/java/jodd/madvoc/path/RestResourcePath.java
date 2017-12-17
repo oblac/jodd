@@ -47,8 +47,8 @@ public class RestResourcePath extends BaseNamingStrategy {
 	@Override
 	public ActionDefinition buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
 
-		String packageActionPath = actionNames.packageActionPath();
-		String classActionPath = actionNames.classActionPath();
+		final String packageActionPath = actionNames.packageActionPath();
+		final String classActionPath = actionNames.classActionPath();
 		String methodActionPath = actionNames.methodActionPath();
 		String httpMethod = actionNames.httpMethod();
 

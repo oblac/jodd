@@ -47,11 +47,11 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	 * it will not be replaced - so to emphasize the problem.
 	 */
 	protected String replaceActionNameMacros(String path, ActionNames actionNames) {
-		String packageName = actionNames.packageName();
-		String className = actionNames.className();
-		String methodName = actionNames.methodName();
-		String extension = actionNames.extension();
-		String httpMethod = actionNames.httpMethod();
+		final String packageName = actionNames.packageName();
+		final String className = actionNames.className();
+		final String methodName = actionNames.methodName();
+		final String extension = actionNames.extension();
+		final String httpMethod = actionNames.httpMethod();
 
 		if (packageName != null) {
 			path = StringUtil.replace(path, PACKAGE_MACRO, packageName);
@@ -91,12 +91,29 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	}
 
 	/**
-	 * Returns <code>true</code> if path is absolute.
+	 * Returns {@code true} if path is absolute.
 	 */
 	protected boolean isAbsolutePath(String path) {
 		if (path == null) {
 			return false;
 		}
 		return path.startsWith(StringPool.SLASH);
+	}
+
+	/**
+	 * Appends extension to path if set and if missing.
+	 */
+	protected String appendExtensionIfMissing(String path, String extension) {
+		if (extension == null) {
+			return path;
+		}
+
+		final String extensionSuffix = '.' + extension;
+
+		if (path.endsWith(extensionSuffix)) {
+			return path;
+		}
+
+		return path + extensionSuffix;
 	}
 }
