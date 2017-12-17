@@ -41,7 +41,7 @@ public class RootPackages {
 	protected String[] packages;
 	protected String[] mappings;
 
-	protected Map<String, String> packagePaths;
+	protected Map<String, String> packagePaths;     // cache: package -> path
 
 	/**
 	 * Resets all root packages mappings.
@@ -112,30 +112,6 @@ public class RootPackages {
 		addRootPackage(actionClass.getPackage().getName(), mapping);
 	}
 
-	/**
-	 * Returns total count of root packages.
-	 */
-	public int getRootPackagesCount() {
-		if (packages == null) {
-			return 0;
-		}
-		return packages.length;
-	}
-
-	/**
-	 * Returns root package for given index.
-	 */
-	public String getRootPackage(int ndx) {
-		return packages[ndx];
-	}
-
-	/**
-	 * Returns root package mapping for given index.
-	 */
-	public String getRootPackageMapping(int ndx) {
-		return mappings[ndx];
-	}
-
 	// ---------------------------------------------------------------- find
 
 	/**
@@ -179,34 +155,21 @@ public class RootPackages {
 	}
 
 	/**
-	 * Returns package action path. Returns <code>null</code> if package has not been
-	 * already defined.
-	 */
-	public String getPackageActionPath(String actionPackage) {
-		if (packagePaths == null) {
-			return null;
-		}
-		return packagePaths.get(actionPackage);
-	}
-
-	/**
-	 * Registers package action path.
-	 */
-	public void registerPackageActionPath(String actionPackage, String packageActionPath) {
-		if (packagePaths == null) {
-			packagePaths = new HashMap<>();
-		}
-		packagePaths.put(actionPackage, packageActionPath);
-	}
-
-	/**
 	 * Finds mapping for given action class. Returns <code>null</code>
 	 * if no mapping is found. If there is more then one matching root
 	 * package, the closest one will be returned.
 	 */
-	public String findPackagePathForActionPackage(String actionPackage) {
+	public String findPackagePathForActionPackage(final String actionPackage) {
 		if (packages == null) {
 			return null;
+		}
+		if (packagePaths == null) {
+			packagePaths = new HashMap<>();
+		}
+
+		String packagePath = packagePaths.get(actionPackage);
+		if (packagePath != null) {
+			return packagePath;
 		}
 
 		int ndx = -1;
@@ -243,7 +206,11 @@ public class RootPackages {
 
 		packageActionPath = packageActionPath.replace('.', '/');
 
-		return mappings[ndx] + packageActionPath;
+		String result = mappings[ndx] + packageActionPath;
+
+		packagePaths.put(actionPackage, result);
+
+		return result;
 	}
 
 	// ---------------------------------------------------------------- toString
