@@ -41,7 +41,7 @@ public class Annotations<A extends Annotation> {
 		this.annotationClass = annotationClass;
 	}
 
-	public static <T extends Annotation> Annotations of(Class<T> annotationClass) {
+	public static <T extends Annotation> Annotations<T> of(Class<T> annotationClass) {
 		return new Annotations<>(annotationClass);
 	}
 
@@ -54,7 +54,7 @@ public class Annotations<A extends Annotation> {
 		return this;
 	}
 
-	public Annotations onClass(Class type) {
+	public Annotations<A> onClass(Class type) {
 		A a = (A) type.getAnnotation(annotationClass);
 
 		if (a != null) {
@@ -63,19 +63,21 @@ public class Annotations<A extends Annotation> {
 		return this;
 	}
 
-	public Annotations onPackageHierarchyOf(Class type) {
+	public Annotations<A> onPackageHierarchyOf(Class type) {
 		return onPackageHierarchy(type.getPackage());
 	}
 
-	public Annotations onPackageHierarchy(Package pck) {
+	public Annotations<A> onPackageHierarchy(Package pck) {
+		String packageName = pck.getName();
+
 		while (true) {
-			A a = pck.getAnnotation(annotationClass);
+			if (pck != null) {
+				A a = pck.getAnnotation(annotationClass);
 
-			if (a != null) {
-				annotations.add(a);
+				if (a != null) {
+					annotations.add(a);
+				}
 			}
-
-			String packageName = pck.getName();
 
 			int ndx = packageName.lastIndexOf('.');
 
@@ -83,7 +85,9 @@ public class Annotations<A extends Annotation> {
 				break;
 			}
 
-			pck = Package.getPackage(packageName.substring(0, ndx));
+			packageName = packageName.substring(0, ndx);
+
+			pck = Package.getPackage(packageName);
 		}
 
 		return this;
