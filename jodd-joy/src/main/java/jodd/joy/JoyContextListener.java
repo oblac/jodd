@@ -25,14 +25,14 @@
 
 package jodd.joy;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.EnumSet;
+import java.util.Objects;
 
-import static javax.servlet.DispatcherType.FORWARD;
-import static javax.servlet.DispatcherType.INCLUDE;
 import static javax.servlet.DispatcherType.REQUEST;
 
 /**
@@ -46,6 +46,7 @@ public class JoyContextListener implements ServletContextListener {
 
 	protected boolean decoraEnabled = false;
 	protected String context = "/*";
+	private EnumSet<DispatcherType> madvocDispatcherTypes = EnumSet.of(REQUEST);
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -73,6 +74,21 @@ public class JoyContextListener implements ServletContextListener {
 	}
 
 	/**
+	 * Defines Madvoc servlet context.
+	 */
+	protected void setMadvocContext(String context) {
+		Objects.requireNonNull(context);
+		this.context = context;
+	}
+
+	/**
+	 * Defines enum set for the filter.
+	 */
+	protected void runMadvocOn(EnumSet<DispatcherType> dispatcherTypeEnumSet) {
+		this.madvocDispatcherTypes = dispatcherTypeEnumSet;
+	}
+
+	/**
 	 * Configures servlet context.
 	 */
 	protected void configureServletContext(ServletContext servletContext) {
@@ -84,7 +100,7 @@ public class JoyContextListener implements ServletContextListener {
 		}
 
 		FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
-		filter.addMappingForUrlPatterns(EnumSet.of(REQUEST, FORWARD, INCLUDE), true, context);
+		filter.addMappingForUrlPatterns(madvocDispatcherTypes, true, context);
 	}
 
 	@Override
