@@ -96,17 +96,17 @@ public class ActionMethodParser {
 
 		final ActionConfig actionConfig = resolveActionConfig(annotationData);
 
-		final ActionNames actionNames = new ActionNames();		// collector for all action names
+		final String[] packageActionNames = readPackageActionPath(actionClass);
 
-		readPackageActionPath(actionNames, actionClass);
+		final String[] classActionNames = readClassActionPath(actionClass);
 
-		readClassActionPath(actionNames, actionClass);
+		final String[] methodActionNames = readMethodActionPath(actionMethod.getName(), annotationData, actionConfig);
 
-		readMethodActionPath(actionNames, actionMethod.getName(), annotationData, actionConfig);
+		final String extension = readMethodExtension(annotationData, actionConfig);
 
-		readMethodExtension(actionNames, annotationData, actionConfig);
+		final String method = readMethodHttpMethod(annotationData);
 
-		readMethodHttpMethod(actionNames, annotationData);
+		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, extension, method);
 
 		ActionNamingStrategy namingStrategy;
 
@@ -268,46 +268,59 @@ public class ActionMethodParser {
 	 * If annotation is not set on package-level, class package will be used for
 	 * package action path part.
 	 */
-	protected void readPackageActionPath(ActionNames actionNames, Class actionClass) {
-
+	protected String[] readPackageActionPath(Class actionClass) {
 		Package actionPackage = actionClass.getPackage();
-		String actionPackageName = actionPackage.getName();
 
+		final String actionPackageName = actionPackage.getName();
 		final RootPackages rootPackages = madvocConfig.getRootPackages();
 
-		String packagePath = rootPackages.getPackageActionPath(actionPackageName);
+		// 1 - read annotations first
+
+		String packageActionPathFromAnnotation;
+
+		mainloop:
+		while (true) {
+			MadvocAction madvocActionAnnotation = actionPackage.getAnnotation(MadvocAction.class);
+
+			packageActionPathFromAnnotation = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
+
+			if (StringUtil.isEmpty(packageActionPathFromAnnotation)) {
+				packageActionPathFromAnnotation = null;
+			}
+
+			if (packageActionPathFromAnnotation == null) {
+				// next package
+				String newPackage = actionPackage.getName();
+				actionPackage = null;
+
+				while (actionPackage == null) {
+					int ndx = newPackage.lastIndexOf('.');
+					if (ndx == -1) {
+						// end of hierarchy, nothing found
+						break mainloop;
+					}
+					newPackage = newPackage.substring(0, ndx);
+					actionPackage = Package.getPackage(newPackage);
+				}
+			}
+			else {
+				// annotation found, register root
+				rootPackages.addRootPackage(actionPackage.getName(), packageActionPathFromAnnotation);
+				break;
+			}
+		}
+
+		// 2 - read root package
+
+		String packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
 
 		if (packagePath == null) {
-
-			packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
-
-			rootPackages.registerPackageActionPath(actionPackageName, packagePath);
+			return ArraysUtil.array(null, null);
 		}
 
-		// read package-level annotation
-
-		MadvocAction madvocActionAnnotation = actionPackage.getAnnotation(MadvocAction.class);
-
-		String packageActionPath = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
-
-		if (StringUtil.isEmpty(packageActionPath)) {
-			packageActionPath = null;
-		}
-
-		// package-level annotation overrides everything
-		// if not set, resolve value
-		if (packageActionPath == null) {
-			// no package-level annotation
-			if (packagePath == null) {
-				// no root package path, just return
-				return;
-			}
-			packageActionPath = packagePath;
-		}
-
-		actionNames.setPackageNames(
+		return ArraysUtil.array(
 			StringUtil.stripChar(packagePath, '/'),
-			StringUtil.surround(packageActionPath, StringPool.SLASH)
+			StringUtil.surround(packagePath, StringPool.SLASH)
 		);
 	}
 
@@ -316,33 +329,32 @@ public class ActionMethodParser {
 	 * class action path will be read from annotation value. Otherwise, action class path will be built from the
 	 * class name. This is done by removing the package name and the last contained word
 	 * (if there is more then one) from the class name. Such name is finally uncapitalized.
-	 * <p>
-	 * If this method returns <code>null</code> class will be ignored.
 	 */
-	protected void readClassActionPath(ActionNames actionNames, Class actionClass) {
-		// read annotation
+	protected String[] readClassActionPath(Class actionClass) {
+		// read class annotation
 		MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getAnnotation(MadvocAction.class);
+
 		String classActionPath = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
+
 		if (StringUtil.isEmpty(classActionPath)) {
 			classActionPath = null;
 		}
 
-		String name = actionClass.getSimpleName();
-		name = StringUtil.uncapitalize(name);
-		name = MadvocUtil.stripLastCamelWord(name);
+		String actionClassName = actionClass.getSimpleName();
+		actionClassName = StringUtil.uncapitalize(actionClassName);
+		actionClassName = MadvocUtil.stripLastCamelWord(actionClassName);       // removes 'Action' from the class name
 
 		if (classActionPath == null) {
-			classActionPath = name;
+			classActionPath = actionClassName;
 		}
 
-		actionNames.setClassNames(name, classActionPath);
+		return ArraysUtil.array(actionClassName, classActionPath);
 	}
 
 	/**
-	 * Reads action method. Returns <code>null</code> if action method is {@link Action#NONE}
-	 * or if it is equals to default action names.
+	 * Reads action path from the action method.
 	 */
-	protected void readMethodActionPath(ActionNames actionNames, String methodName, ActionAnnotationData annotationData, ActionConfig actionConfig) {
+	protected String[] readMethodActionPath(String methodName, ActionAnnotationData annotationData, ActionConfig actionConfig) {
 		// read annotation
 		String methodActionPath = annotationData != null ? annotationData.value() : null;
 
@@ -350,7 +362,7 @@ public class ActionMethodParser {
 			methodActionPath = methodName;
 		} else {
 			if (methodActionPath.equals(Action.NONE)) {
-				return;
+				return ArraysUtil.array(null, null);
 			}
 		}
 
@@ -362,25 +374,28 @@ public class ActionMethodParser {
 			}
 		}
 
-		actionNames.setMethodNames(methodName, methodActionPath);
+		return ArraysUtil.array(methodName, methodActionPath);
 	}
 
 	/**
 	 * Reads method's extension.
 	 */
-	protected void readMethodExtension(ActionNames actionNames, ActionAnnotationData annotationData, ActionConfig actionConfig) {
+	protected String readMethodExtension(ActionAnnotationData annotationData, ActionConfig actionConfig) {
 		String extension = actionConfig.getExtension();
-		if (annotationData != null) {
-			String annExtension = annotationData.extension();
-			if (annExtension != null) {
-				if (annExtension.equals(Action.NONE)) {
-					extension = null;
-				} else {
-					extension = annExtension;
-				}
+
+		if (annotationData == null) {
+			return extension;
+		}
+
+		String annExtension = annotationData.extension();
+		if (annExtension != null) {
+			if (annExtension.equals(Action.NONE)) {
+				extension = null;
+			} else {
+				extension = annExtension;
 			}
 		}
-		actionNames.setExtension(extension);
+		return extension;
 	}
 
 	/**
@@ -397,13 +412,13 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's http method.
 	 */
-	private void readMethodHttpMethod(ActionNames actionNames, ActionAnnotationData annotationData) {
+	private String readMethodHttpMethod(ActionAnnotationData annotationData) {
 		String method = null;
 		if (annotationData != null) {
 			method = annotationData.method();
 		}
 
-		actionNames.setHttpMethod(method);
+		return method;
 	}
 
 	/**
