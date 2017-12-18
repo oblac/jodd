@@ -47,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static jodd.util.StringUtil.ifNotNull;
+
 /**
  * Manages all Madvoc action and aliases registrations.
  */
@@ -196,9 +198,10 @@ public class ActionsManager {
 	 * exception will be thrown.
 	 */
 	public ActionRuntime registerAction(ActionRuntime actionRuntime) {
-		String actionPath = actionRuntime.actionPath();
+		final String actionPath = actionRuntime.actionPath();
+		final String method = actionRuntime.actionMethod();
 
-		log.debug(() -> "Madvoc action: " + actionRuntime.actionPath() + " => " + actionRuntime.actionString());
+		log.debug(() -> "Madvoc action: " + ifNotNull(method, m -> m + " ") + actionRuntime.actionPath() + " => " + actionRuntime.actionString());
 
 		ActionRuntimeSet set = createActionRuntimeSet(actionRuntime.actionPath());
 

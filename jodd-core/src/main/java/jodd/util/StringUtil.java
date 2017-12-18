@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.function.Function;
 
 import static jodd.util.StringPool.EMPTY;
 
@@ -3051,6 +3052,18 @@ public class StringUtil {
 		}
 
 		return new String(chars);
+	}
+
+	// ---------------------------------------------------------------- functional
+
+	/**
+	 * Executes function on a string if not {@code null}. Otherwise returns an empty string.
+	 */
+	public static String ifNotNull(String input, Function<String, String> stringFunction) {
+		if (input == null) {
+			return StringPool.EMPTY;
+		}
+		return stringFunction.apply(input);
 	}
 
 }
