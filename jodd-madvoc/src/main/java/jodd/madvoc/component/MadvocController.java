@@ -114,12 +114,12 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 		boolean characterEncodingSet = false;
 
 		while (actionPath != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Action path: " + actionPath);
-			}
-
 			// build action path
 			String httpMethod = servletRequest.getMethod().toUpperCase();
+
+			if (log.isDebugEnabled()) {
+				log.debug("Action path: " + httpMethod + " " + actionPath);
+			}
 
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
