@@ -60,7 +60,7 @@ import static jodd.db.oom.DbOomUtil.initialCollectionSize;
  * <li><i>mapped</i> mode - requires explicit mapping definitions.</li>
  * </ul>
  */
-public class DbOomQuery extends DbQuery {
+public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	private static final Logger log = LoggerFactory.getLogger(DbOomQuery.class);
 
