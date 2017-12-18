@@ -328,9 +328,7 @@ public class ActionRequest {
 		try {
 			if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
 				// regular or static class
-				Constructor ctor = type.getDeclaredConstructor(null);
-				ctor.setAccessible(true);
-				return ctor.newInstance();
+				return ClassUtil.newInstance(type);
 			} else {
 				// member class
 				Constructor ctor = type.getDeclaredConstructor(type.getDeclaringClass());
