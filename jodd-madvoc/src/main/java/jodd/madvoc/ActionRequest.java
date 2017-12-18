@@ -30,13 +30,11 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.meta.Out;
-import jodd.madvoc.result.Result;
 import jodd.util.ClassUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
@@ -56,7 +54,6 @@ public class ActionRequest {
 	protected final String actionPath;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
-	protected Result result;
 
 	protected final Target[] targets;
 	protected final ActionWrapper[] executionArray;
@@ -148,13 +145,6 @@ public class ActionRequest {
 	}
 
 	/**
-	 * Returns result object if exist in action, otherwise returns <code>null</code>.
-	 */
-	public Result getResult() {
-		return result;
-	}
-
-	/**
 	 * Returns all injection targets.
 	 */
 	public Target[] getTargets() {
@@ -194,7 +184,6 @@ public class ActionRequest {
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		this.action = action;
-		this.result = findResult();
 		this.targets = makeTargets();
 
 		this.executionIndex = 0;
@@ -251,29 +240,6 @@ public class ActionRequest {
 		};
 
 		return executionArray;
-	}
-
-	/**
-	 * Returns result field value if such exist. If field exists
-	 * and it's value is <code>null</code> it will be created.
-	 */
-	protected Result findResult() {
-		Field resultField = actionRuntime.resultField();
-		if (resultField != null) {
-			try {
-				Result result = (Result) resultField.get(action);
-
-				if (result == null) {
-					result = (Result) ClassUtil.newInstance(resultField.getType());
-					resultField.set(action, result);
-				}
-
-				return result;
-			} catch (Exception ignore) {
-				return null;
-			}
-		}
-		return null;
 	}
 
 	/**

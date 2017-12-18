@@ -34,84 +34,82 @@ import jodd.madvoc.result.ServletRedirectResult;
 @MadvocAction
 public class AlphaAction {
 
-	final Result result = new Result();
-
 	// ---------------------------------------------------------------- forward
 
 	@Action
-	public void view() {
-		result.forwardTo("ok");
+	public Result view() {
+		return Result.forward().to("ok");
 	}
 
 	@Action(alias = "hello")
-	public void hello() {
-		result.forward();
+	public Result hello() {
+		return Result.forward();
 	}
 
 	@Action
-	public void ciao() {
-		result.forwardTo("<hello>");
+	public Result ciao() {
+		return Result.forward().to("<hello>");
 	}
 
 	@Action
-	public void ciao2() {
-		result.forwardTo(AlphaAction.class).hello();
+	public Result ciao2() {
+		return Result.forward().to(AlphaAction.class, AlphaAction::hello);
 	}
 
 	@Action
-	public void ciao3() {
-		result.forwardTo(this).hello();
+	public Result ciao3() {
+		return Result.forward().to(this, AlphaAction::hello);
 	}
 
 	@Action
-	public void hola() {
-		result.forwardTo("hello");
+	public Result hola() {
+		return Result.forward().to("hello");
 	}
 
 	@Action
-	public void holahoopa() {
-		result.forwardTo(this).hola();
+	public Result holahoopa() {
+		return Result.forward().to(this, AlphaAction::hola);
 	}
 
 	@Action
-	public void home() {
-		result.forwardTo(HelloAction.class).world();
+	public Result home() {
+		return Result.forward().to(HelloAction.class, HelloAction::world);
 	}
 
 	@Action
-	public void home2() {
-		result.forwardTo(HelloAction.class).world();
-		result.forwardTo(result, "ok");
+	public Result home2() {
+		Result tempResult = Result.forward().to(HelloAction.class, HelloAction::world);
+		return Result.forward().to(tempResult, "ok");
 	}
 
 	// ---------------------------------------------------------------- redirect
 
 	@Action
-	public void red1() {
-		result.with(ServletRedirectResult.class).value("/alpha.html");
+	public Result red1() {
+		return Result.of(ServletRedirectResult.class).with("/alpha.html");
 	}
 
 	@Action
-	public void red2() {
-		result.redirectTo(HelloAction.class).view();
+	public Result red2() {
+		return Result.redirect().to(HelloAction.class, HelloAction::view);
 	}
 
 	@Action
-	public void world() {
-		result.redirectTo(HelloAction.class).world();
-		result.redirectTo(result, "?name=Mars&data=173");
+	public Result world() {
+		Result temp = Result.redirect().to(HelloAction.class, HelloAction::world);
+		return Result.redirect().to(temp, "?name=Mars&data=173");
 	}
 
 	@Action
-	public void postme() {
-		result.redirectTo(this).hello();
+	public Result postme() {
+		return Result.redirect().to(this, AlphaAction::hello);
 	}
 
 	// ---------------------------------------------------------------- text
 
 	@Action
-	public void txt() {
-		result.text("some text");
+	public Result txt() {
+		return Result.text().with("some text");
 	}
 
 	// ---------------------------------------------------------------- no result!
@@ -126,9 +124,9 @@ public class AlphaAction {
 	int chain;
 
 	@Action
-	public void chain() {
+	public Result chain() {
 		chain++;
-		result.chainTo(this).link();
+		return Result.chain().to(this, AlphaAction::link);
 	}
 
 	@Action

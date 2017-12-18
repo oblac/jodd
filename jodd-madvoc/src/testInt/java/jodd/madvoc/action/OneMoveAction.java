@@ -28,11 +28,10 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.result.Result;
 
 @MadvocAction
 public class OneMoveAction {
-
-	MyResult result;
 
 	@Out
 	String value;
@@ -44,9 +43,9 @@ public class OneMoveAction {
 	}
 
 	@Action
-	public void go() {
+	public Result go() {
 		value = "888";
-		result.moveTo("two");
+		return Result.move().to("two");
 	}
 
 }

@@ -27,39 +27,175 @@ package jodd.madvoc.result;
 
 import jodd.methref.Methref;
 
+import java.util.function.Consumer;
+
 /**
  * Result - cool, neat helper for results that are dealing with the path.
  * It allows to specify any action in an easy way.
  */
 public class Result {
 
-	protected Class<? extends ActionResult> actionResult;
-	protected String resultValue;
+	protected final Class<? extends ActionResult> actionResult;
+	protected Object resultValue;
 	protected Methref methref;
 	protected Class target;
 
-	// ---------------------------------------------------------------- core
+	protected Result(Class<? extends ActionResult> actionResult) {
+		this.actionResult = actionResult;
+	}
+
+	public static ValueResult of(Class<? extends ActionResult> actionResult) {
+		return new ValueResult(actionResult);
+	}
+
+	public static class StageResult extends Result {
+
+		protected StageResult(Class<? extends ActionResult> actionResult) {
+			super(actionResult);
+			resultValue = null;
+			methref = null;
+		}
+
+		/**
+		 * Basic redirection to path.
+		 */
+		public Result to(String path) {
+			resultValue = path;
+			methref = null;
+			return this;
+		}
+
+		/**
+		 * Redirect to specified path.
+		 */
+		public <T> Result to(Class<T> target, Consumer<T> consumer) {
+			consumer.accept(wrapAction(target));
+			return this;
+		}
+
+		@SuppressWarnings("unchecked")
+		public <T> Result to(T target, Consumer<T> consumer) {
+			return to((Class<T>)target.getClass(), consumer);
+		}
+	}
+
+	public static class ValueResult<T> extends Result {
+
+		protected ValueResult(Class<? extends ActionResult> actionResult) {
+			super(actionResult);
+			resultValue = null;
+			methref = null;
+		}
+
+		public Result with(T t) {
+			this.resultValue = t;
+			return this;
+		}
+	}
+
+
+	// ---------------------------------------------------------------- forward
 
 	/**
-	 * Specifies generic result type for rendering.
+	 * Basic forwarding to default result.
 	 */
-	public Result with(Class<? extends ActionResult> actionResult) {
-		this.actionResult = actionResult;
-		return this;
+	public static ForwardResult forward() {
+		return new ForwardResult();
+	}
+
+	public static class ForwardResult extends StageResult {
+
+		protected ForwardResult() {
+			super(ServletDispatcherResult.class);
+			resultValue = null;
+			methref = null;
+		}
+
+		/**
+		 * Appends forward by adding method result value.
+		 */
+		public Result to(Result result, String append) {
+			resultValue = "/<" + result.value() + ">.." + append;
+			methref = null;
+			return this;
+		}
+	}
+
+
+	// ---------------------------------------------------------------- redirect
+
+	public static RedirectResult redirect() {
+		return new RedirectResult();
+	}
+
+	public static class RedirectResult extends StageResult {
+
+		protected RedirectResult() {
+			super(ServletRedirectResult.class);
+			resultValue = null;
+			methref = null;
+		}
+
+		/**
+		 * Appends redirection definition.
+		 */
+		public Result to(Result result, String append) {
+			resultValue = "/<" + result.value() + ">" + append;
+			methref = null;
+			return this;
+		}
+	}
+
+
+	// ---------------------------------------------------------------- chain & move
+
+	public static StageResult chain() {
+		return new StageResult(ChainResult.class);
+	}
+
+	public static StageResult move() {
+		return new StageResult(MoveResult.class);
+	}
+
+
+	// ---------------------------------------------------------------- value
+
+	public static ValueResult<String> url() {
+		return new ValueResult<>(ServletUrlRedirectResult.class);
+	}
+
+	public static ValueResult<?> none() {
+		return new ValueResult<>(NoneResult.class);
+	}
+
+	public static ValueResult<String> text() {
+		return new ValueResult<>(TextResult.class);
+	}
+
+	public static ValueResult<Object> json() {
+		return new ValueResult<>(JSONActionResult.class);
+	}
+
+	// ---------------------------------------------------------------- direct
+
+	/**
+	 * Returns action result type.
+	 */
+	public Class<? extends ActionResult> actionResult() {
+		return actionResult;
 	}
 
 	/**
-	 * Defines raw result value to be rendered.
+	 * Returns action result value.
 	 */
-	public Result value(String resultValue) {
-		this.resultValue = resultValue;
-		return this;
+	public Object resultValue() {
+		return resultValue;
 	}
 
 	/**
 	 * Returns either result value or action method reference.
 	 */
-	public String value() {
+	public Object value() {
 		if (methref != null) {
 			String methodName = methref.ref();
 			return target.getName() + "#" + methodName;
@@ -78,191 +214,6 @@ public class Result {
 		return (T) methref.to();
 	}
 
-	// ---------------------------------------------------------------- forward
 
-	/**
-	 * Basic forwarding to default result.
-	 */
-	public void forward() {
-		actionResult = ServletDispatcherResult.class;
-		resultValue = null;
-		methref = null;
-	}
-
-	/**
-	 * Basic forwarding with provided result.
-	 */
-	public void forwardTo(String path) {
-		actionResult = ServletDispatcherResult.class;
-		resultValue = path;
-		methref = null;
-	}
-
-	/**
-	 * Forward to action method of provided action.
-	 */
-	public <T> T forwardTo(Class<T> target) {
-		actionResult = ServletDispatcherResult.class;
-		return wrapAction(target);
-	}
-
-	/**
-	 * Forward to action method of current action class.
-	 */
-	public <T> T forwardTo(T target) {
-		actionResult = ServletDispatcherResult.class;
-		return (T) wrapAction(target.getClass());
-	}
-
-	/**
-	 * Appends forward by adding method result value.
-	 */
-	public void forwardTo(Result result, String append) {
-		resultValue = "/<" + result.value() + ">.." + append;
-		methref = null;
-	}
-
-	// ---------------------------------------------------------------- redirect
-
-	/**
-	 * Basic redirection to path.
-	 */
-	public void redirectTo(String path) {
-		actionResult = ServletRedirectResult.class;
-		resultValue = path;
-		methref = null;
-	}
-
-	/**
-	 * Redirect to specified path.
-	 */
-	public <T> T redirectTo(Class<T> target) {
-		actionResult = ServletRedirectResult.class;
-		return wrapAction(target);
-	}
-
-	/**
-	 * Redirect to method of this class.
-	 */
-	public <T> T redirectTo(T target) {
-		actionResult = ServletRedirectResult.class;
-		return (T) wrapAction(target.getClass());
-	}
-
-	/**
-	 * Appends redirection definition.
-	 */
-	public void redirectTo(Result result, String append) {
-		resultValue = "/<" + result.value() + ">" + append;
-		methref = null;
-	}
-
-	/**
-	 * Permanent redirection to given path.
-	 */
-	public void urlTo(String path) {
-		actionResult = ServletUrlRedirectResult.class;
-		resultValue = path;
-		methref = null;
-	}
-
-	// ---------------------------------------------------------------- chain
-
-	/**
-	 * Basic chain to path.
-	 */
-	public void chainTo(String path) {
-		actionResult = ChainResult.class;
-		resultValue = path;
-		methref = null;
-	}
-
-	/**
-	 * Chains to specified path.
-	 */
-	public <T> T chainTo(Class<T> target) {
-		actionResult = ChainResult.class;
-		return wrapAction(target);
-	}
-
-	/**
-	 * Chains to method of this class.
-	 */
-	public <T> T chainTo(T target) {
-		actionResult = ChainResult.class;
-		return (T) wrapAction(target.getClass());
-	}
-
-	// ---------------------------------------------------------------- move
-
-	/**
-	 * Basic move to path.
-	 */
-	public void moveTo(String path) {
-		actionResult = MoveResult.class;
-		resultValue = path;
-		methref = null;
-	}
-
-	/**
-	 * Moves to specified path.
-	 */
-	public <T> T moveTo(Class<T> target) {
-		actionResult = MoveResult.class;
-		return wrapAction(target);
-	}
-
-	/**
-	 * Moves to method of this class.
-	 */
-	public <T> T moveTo(T target) {
-		actionResult = MoveResult.class;
-		return (T) wrapAction(target.getClass());
-	}
-
-	// ---------------------------------------------------------------- other results
-
-	/**
-	 * Do nothing.
-	 * @see jodd.madvoc.result.NoneResult
-	 */
-	public void nothing() {
-		actionResult = NoneResult.class;
-		resultValue = null;
-	}
-
-	/**
-	 * Returns text.
-	 * @see jodd.madvoc.result.TextResult
-	 */
-	public void text(String text) {
-		actionResult = TextResult.class;
-		resultValue = text;
-	}
-
-	/**
-	 * Redirects to url.
-	 * @see jodd.madvoc.result.ServletUrlRedirectResult
-	 */
-	public void url(String url) {
-		actionResult = ServletUrlRedirectResult.class;
-		resultValue = url;
-	}
-
-	// ---------------------------------------------------------------- direct
-
-	/**
-	 * Returns action result type.
-	 */
-	public Class<? extends ActionResult> getActionResult() {
-		return actionResult;
-	}
-
-	/**
-	 * Returns action result value.
-	 */
-	public Object getResultValue() {
-		return resultValue;
-	}
 
 }

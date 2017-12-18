@@ -212,21 +212,20 @@ public class ResultsManager {
 		ActionResult actionResult = null;
 
 		// + special class: result
-		if (resultObject == null) {
-			Result result = actionRequest.getResult();
+		if (resultObject != null && resultObject instanceof Result) {
+			Result result = (Result) resultObject;
 
-			if (result != null) {
-				// read Result, if used; if not, values will be null
-				Class<? extends ActionResult> actionResultClass = result.getActionResult();
+			// read Result, if used; if not, values will be null
+			Class<? extends ActionResult> actionResultClass = result.actionResult();
 
-				resultObject = result.getResultValue();
-				if (resultObject == null) {
-					resultObject = result.value();
-				}
+			resultObject = result.resultValue();
 
-				if (actionResultClass != null) {
-					actionResult = lookupAndRegisterIfMissing(actionResultClass);
-				}
+			if (resultObject == null) {
+				resultObject = result.value();
+			}
+
+			if (actionResultClass != null) {
+				actionResult = lookupAndRegisterIfMissing(actionResultClass);
 			}
 		}
 
