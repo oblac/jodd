@@ -129,7 +129,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				return actionPath;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.actionClass().getSimpleName());
+				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.actionString());
 			}
 
 			// set character encoding
