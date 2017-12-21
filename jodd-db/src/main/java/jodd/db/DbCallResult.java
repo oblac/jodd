@@ -249,6 +249,40 @@ public class DbCallResult {
 		}
 	}
 
+	// ---------------------------------------------------------------- long
+
+	public long getLong(int index) {
+		try {
+			return statement.getLong(index);
+		} catch (SQLException sex) {
+			throw newGetParamError(index, sex);
+		}
+	}
+
+	public long getLong(String param) {
+		IntArrayList positions = query.getNamedParameterIndices(param);
+		try {
+			if (positions.size() == 1) {
+				return statement.getLong(positions.get(0));
+			}
+			throw newGetParamError(param);
+		} catch (SQLException sex) {
+			throw newGetParamError(param, sex);
+		}
+	}
+
+	public long[] getAllLong(String param) {
+		IntArrayList positions = query.getNamedParameterIndices(param);
+		long[] result = new long[positions.size()];
+		try {
+			for (int i = 0; i < positions.size(); i++) {
+				result[i] = statement.getLong(positions.get(i));
+			}
+			return result;
+		} catch (SQLException sex) {
+			throw newGetParamError(param, sex);
+		}
+	}
 
 	// ---------------------------------------------------------------- exception
 

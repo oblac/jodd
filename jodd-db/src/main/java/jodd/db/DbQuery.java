@@ -367,6 +367,12 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		return (Q) this;
 	}
 
+	public Q outLong(int index) {
+		return registerOutParameter(index, Types.BIGINT);
+	}
+	public Q outLong(String param) {
+		return registerOutParameter(param, Types.BIGINT);
+	}
 
 	// ---------------------------------------------------------------- byte
 
