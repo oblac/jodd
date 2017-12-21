@@ -349,7 +349,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 
 	public Q setLong(int index, Number value) {
 		if (value == null) {
-			setNull(index, Types.INTEGER);
+			setNull(index, Types.BIGINT);
 		}
 		else {
 			setLong(index, value.longValue());
@@ -359,7 +359,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 
 	public Q setLong(String param, Number value) {
 		if (value == null) {
-			setNull(param, Types.INTEGER);
+			setNull(param, Types.BIGINT);
 		}
 		else {
 			setLong(param, value.longValue());
@@ -367,6 +367,12 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		return (Q) this;
 	}
 
+	public Q outLong(int index) {
+		return registerOutParameter(index, Types.BIGINT);
+	}
+	public Q outLong(String param) {
+		return registerOutParameter(param, Types.BIGINT);
+	}
 
 	// ---------------------------------------------------------------- byte
 
