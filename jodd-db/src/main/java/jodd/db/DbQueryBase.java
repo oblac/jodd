@@ -839,7 +839,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 	/**
 	 * {@link #execute() Executes} the query, iterates result set and
-	 * {@link QueryMapper map} each row.
+	 * {@link QueryMapper maps} each row.
 	 */
 	public <T> List<T> list(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
@@ -864,7 +864,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	}
 
 	/**
-	 * {@link #execute() Executes} the query and maps single result row.
+	 * {@link #execute() Executes} the query and {@link QueryMapper maps} single result row.
 	 */
 	public <T> T find(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
@@ -883,7 +883,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 	/**
 	 * {@link #execute() Executes} the query, iterates all rows and
-	 * maps them.
+	 * {@link QueryMapper maps} them.
 	 */
 	public <T> Set<T> listSet(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
