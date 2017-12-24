@@ -70,6 +70,7 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 			CacheObject<K,V> co = values.next();
 			if (co.isExpired()) {
 				values.remove();
+				onRemove(co.key, co.cachedObject);
 				count++;
 			}
 			if (first == null) {
@@ -79,6 +80,7 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 		if (isFull()) {
 			if (first != null) {
 				cacheMap.remove(first.key);
+				onRemove(first.key, first.cachedObject);
 				count++;
 			}
 		}
