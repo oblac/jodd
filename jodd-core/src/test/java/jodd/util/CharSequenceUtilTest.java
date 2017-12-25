@@ -25,9 +25,12 @@
 
 package jodd.util;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static jodd.util.CharArraySequence.of;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -104,6 +107,154 @@ class CharSequenceUtilTest {
 		assertTrue(CharSequenceUtil.equalsIgnoreCase("", ""));
 		assertFalse(CharSequenceUtil.equalsIgnoreCase("a", "ab"));
 		assertFalse(CharSequenceUtil.equalsIgnoreCase("ab", "a"));
+	}
+
+	@Nested
+	@DisplayName("tests for CharSequenceUtil#findFirstEqual with CharSequence")
+	class FindFirstEqual_CharSequence {
+
+		@Test
+		void no_found() {
+			final int actual = CharSequenceUtil.findFirstEqual("Build with common sense to make things simple, but not simpler.", 0, "Jj" );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void no_found_index_out_of_source() {
+			final int actual = CharSequenceUtil.findFirstEqual("Build with common sense to make things simple, but not simpler.", 65, "Jj" );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void with_found() {
+			final int actual = CharSequenceUtil.findFirstEqual("Jodd makes fun!", 0, "Da" );
+
+			// asserts
+			assertEquals(6, actual);
+		}
+
+		@Test
+		void with_found_non_nill_index() {
+			final int actual = CharSequenceUtil.findFirstEqual("Jodd makes fun!", 5, "Jn" );
+
+			// asserts
+			assertEquals(13, actual);
+		}
+	}
+
+	@Nested
+	@DisplayName("tests for CharSequenceUtil#findFirstEqual with char[]")
+	class FindFirstEqual_CharArray {
+
+		@Test
+		void no_found() {
+			final int actual = CharSequenceUtil.findFirstEqual("Build with common sense to make things simple, but not simpler.".toCharArray(), 0, 'J' );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void no_found_index_out_of_source() {
+			final int actual = CharSequenceUtil.findFirstEqual("Build with common sense to make things simple, but not simpler.".toCharArray(), 65, 'B' );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void with_found() {
+			final int actual = CharSequenceUtil.findFirstEqual("Jodd makes fun!".toCharArray(), 0, 'n' );
+
+			// asserts
+			assertEquals(13, actual);
+		}
+
+		@Test
+		void with_found_non_nill_index() {
+			final int actual = CharSequenceUtil.findFirstEqual("Jodd makes fun!".toCharArray(), 5, 's' );
+
+			// asserts
+			assertEquals(9, actual);
+		}
+	}
+
+	@Nested
+	@DisplayName("tests for CharSequenceUtil#findFirstDiff with CharSequence")
+	class FindFirstDiff_CharSequence {
+
+		@Test
+		void no_found() {
+			final int actual = CharSequenceUtil.findFirstDiff("Build with common sense to make things simple, but not simpler.", 0, "Build with common sense to make things simple, but not simpler." );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void no_found_index_out_of_source() {
+			final int actual = CharSequenceUtil.findFirstDiff("Build with common sense to make things simple, but not simpler.", 65, "Jj" );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void with_found() {
+			final int actual = CharSequenceUtil.findFirstDiff("Jodd makes fun!", 0, "Joddmakes" );
+
+			// asserts
+			assertEquals(4, actual);
+		}
+
+		@Test
+		void with_found_non_nill_index() {
+			final int actual = CharSequenceUtil.findFirstDiff("Jodd makes fun!", 5, "Jodd maK" );
+
+			// asserts
+			assertEquals(7, actual);
+		}
+	}
+
+	@Nested
+	@DisplayName("tests for CharSequenceUtil#findFirstDiff with char[]")
+	class FindFirstDiff_CharArray {
+
+		@Test
+		void no_found() {
+			final int actual = CharSequenceUtil.findFirstDiff("JJJJ".toCharArray(), 0, 'J');
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void no_found_index_out_of_source() {
+			final int actual = CharSequenceUtil.findFirstDiff("Build with common sense to make things simple, but not simpler.".toCharArray(), 65, 'Z' );
+
+			// asserts
+			assertEquals(-1, actual);
+		}
+
+		@Test
+		void with_found() {
+			final int actual = CharSequenceUtil.findFirstDiff("Jodd makes fun!".toCharArray(), 0, 'o' );
+
+			// asserts
+			assertEquals(0, actual);
+		}
+
+		@Test
+		void with_found_non_nill_index() {
+			final int actual = CharSequenceUtil.findFirstDiff("Jodd makes fun!".toCharArray(), 5, 'n' );
+
+			// asserts
+			assertEquals(5, actual);
+		}
 	}
 
 }
