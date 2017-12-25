@@ -163,52 +163,41 @@ class InvReplTest {
 
 	protected InvokeProxetta initProxetta() {
 		return Proxetta.invokeProxetta().withAspects(
-				new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("invvirtual")) {
-							return InvokeReplacer.with(Replacer.class, "rInvVirtual")
-									.passOwnerName(false);
-						} else {
-							return null;
-						}
-					}
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("invvirtual")) {
+					return InvokeReplacer.with(Replacer.class, "rInvVirtual")
+							.passOwnerName(false);
+				} else {
+					return null;
 				}
-				, new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("invstatic")) {
-							return InvokeReplacer.with(Replacer.class, "rInvStatic")
-									.passOwnerName(true)
-									.passMethodName(true)
-									.passMethodSignature(true)
-									.passThis(true)
-									.passTargetClass(true);
-						} else {
-							return null;
-						}
-					}
+			},
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("invstatic")) {
+					return InvokeReplacer.with(Replacer.class, "rInvStatic")
+							.passOwnerName(true)
+							.passMethodName(true)
+							.passMethodSignature(true)
+							.passThis(true)
+							.passTargetClass(true);
+				} else {
+					return null;
 				}
-				, new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("invinterface")) {
-							return InvokeReplacer.with(Replacer.class, "rInvInterface");
-						} else {
-							return null;
-						}
-					}
+			},
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("invinterface")) {
+					return InvokeReplacer.with(Replacer.class, "rInvInterface");
+				} else {
+					return null;
 				}
-				, new InvokeAspect() {
-					@Override
-					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
-						if (invokeInfo.getMethodName().equals("<init>") && invokeInfo.getClassName().equals(Two.class.getCanonicalName())) {
-							return InvokeReplacer.with(Replacer.class, "rInvNew");
-						} else {
-							return null;
-						}
-					}
+			}
+			,
+			invokeInfo -> {
+				if (invokeInfo.getMethodName().equals("<init>") && invokeInfo.getClassName().equals(Two.class.getCanonicalName())) {
+					return InvokeReplacer.with(Replacer.class, "rInvNew");
+				} else {
+					return null;
 				}
+			}
 		);
 	}
 }
