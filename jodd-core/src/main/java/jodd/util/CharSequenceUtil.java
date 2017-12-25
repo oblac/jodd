@@ -121,7 +121,7 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * Finds index of the first character in given array the matches any from the
+	 * Finds index of the first character in given charsequence the matches any from the
 	 * given set of characters.
 	 *
 	 * @return index of matched character or -1
@@ -152,7 +152,7 @@ public class CharSequenceUtil {
 
 
 	/**
-	 * Finds index of the first character in given array the differs from the
+	 * Finds index of the first character in given charsequence the differs from the
 	 * given set of characters.
 	 *
 	 * @return index of matched character or -1
