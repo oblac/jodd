@@ -112,5 +112,7 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 
 	@Override
 	public void stop() {
+		includedEntries.clear();
+		includedJars.clear();
 	}
 }
