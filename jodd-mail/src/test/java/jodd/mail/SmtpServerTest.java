@@ -34,31 +34,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SmtpServerTest {
 
+    private static final String HOST = "some.host.com";
+    private static final int PORT = 587;
+    private static final String FROM = "bounce@jodd.org";
+    private static final String USERNAME = "test";
+    private static final String PASSWORD = "password";
+
     @Test
     void testAddsPropertyToServerSession() {
         Properties overridenProperties = new Properties();
 
-        overridenProperties.setProperty("mail.smtp.from", "bounce@jodd.org");
+        overridenProperties.setProperty(MAIL_SMTP_FROM, FROM);
 
-        SmtpServer smtpServer = SmtpServer.create("some.host.com", 587)
-                .authenticateWith("test", "password")
+        SmtpServer smtpServer = SmtpServer.create(HOST, PORT)
+                .authenticateWith(USERNAME, PASSWORD)
                 .timeout(10)
                 .properties(overridenProperties);
 
-        Properties sessionProperties = smtpServer.createSession().mailSession.getProperties();
-
-        assertEquals("bounce@jodd.org", sessionProperties.getProperty("mail.smtp.from"));
+        assertFrom(smtpServer);
     }
 
     @Test
     void testAddsPropertyToServerSession2() {
-        SmtpSslServer smtpServer = SmtpSslServer.create("some.host.com", 587)
-                .authenticateWith("test", "password")
+        SmtpSslServer smtpServer = SmtpSslServer.create(HOST, PORT)
+                .authenticateWith(USERNAME, PASSWORD)
                 .timeout(10)
-                .property(MAIL_SMTP_FROM, "bounce@jodd.org");
+                .property(MAIL_SMTP_FROM, FROM);
+        assertFrom(smtpServer);
+    }
 
-        Properties sessionProperties = smtpServer.createSession().mailSession.getProperties();
-
-        assertEquals("bounce@jodd.org", sessionProperties.getProperty("mail.smtp.from"));
+    private void assertFrom(MailServer server) {
+        Properties sessionProperties = server.createSession().mailSession.getProperties();
+        assertEquals(FROM, sessionProperties.getProperty(MAIL_SMTP_FROM));
     }
 }
