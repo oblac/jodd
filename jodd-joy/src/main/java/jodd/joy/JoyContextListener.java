@@ -36,10 +36,11 @@ import java.util.Objects;
 import static javax.servlet.DispatcherType.REQUEST;
 
 /**
- * Joy context listener. You can use it in several ways:
+ * Joy starts here. You can register this class it in several ways:
  * <ul>
  *     <li>Add it in the web.xml</li>
  *     <li>Make a subclass and annotate it with @WebListener</li>
+ *     <li>Register it explicitly (using embedded containers)</li>
  * </ul>
  */
 public class JoyContextListener implements ServletContextListener {
@@ -60,7 +61,7 @@ public class JoyContextListener implements ServletContextListener {
 	}
 
 	/**
-	 * Creates {@link JoddJoy}. This is a place where user can configure the app.
+	 * Creates {@link JoddJoy}. This is a place where to configure the app.
 	 */
 	protected JoddJoy createJoy() {
 		return JoddJoy.get();
