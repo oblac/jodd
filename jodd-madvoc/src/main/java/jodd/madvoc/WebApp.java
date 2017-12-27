@@ -169,6 +169,14 @@ public class WebApp {
 		return this;
 	}
 
+	/**
+	 * Defines a route using {@link MadvocApp}.
+	 */
+	public WebApp route(Consumer<MadvocApp> madvocAppConsumer) {
+		madvocAppConsumers.add(madvocAppConsumer);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- lifecycle
 
 	/**
@@ -217,7 +225,7 @@ public class WebApp {
 		//// component configuration
 		componentConfigs.accept(madvocContainer());
 
-		initalized();
+		initialized();
 
 		madvocContainer.fireEvent(MadvocComponentLifecycle.Start.class);
 
@@ -277,7 +285,7 @@ public class WebApp {
 	 * Called when Madvoc is initialized, at the end of the {@link MadvocComponentLifecycle.Init INIT} phase.
 	 * @see MadvocComponentLifecycle
 	 */
-	protected void initalized() {
+	protected void initialized() {
 	}
 
 	/**
