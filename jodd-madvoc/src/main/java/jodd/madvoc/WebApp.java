@@ -140,6 +140,7 @@ public class WebApp {
 	// ---------------------------------------------------------------- main components
 
 	protected final MadvocContainer madvocContainer;
+	protected final Consumers<MadvocContainer> componentConfigs = Consumers.empty();
 
 	public WebApp() {
 		madvocContainer = new MadvocContainer();
@@ -151,6 +152,21 @@ public class WebApp {
 	 */
 	public MadvocContainer madvocContainer() {
 		return madvocContainer;
+	}
+
+	/**
+	 * Configures a component. While the signature is the same as for {@link #registerComponent(Class, Consumer)}
+	 * this method does not register component, just operates on an already registered one.
+	 */
+	public <T> WebApp withRegisteredComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
+		componentConfigs.add(madvocContainer -> {
+			T component = madvocContainer.lookupComponent(madvocComponent);
+			if (component != null) {
+				componentConsumer.accept(component);
+			}
+
+		});
+		return this;
 	}
 
 	// ---------------------------------------------------------------- lifecycle
@@ -197,6 +213,9 @@ public class WebApp {
 
 		//// listeners
 		madvocContainer.fireEvent(MadvocComponentLifecycle.Init.class);
+
+		//// component configuration
+		componentConfigs.accept(madvocContainer());
 
 		initalized();
 
