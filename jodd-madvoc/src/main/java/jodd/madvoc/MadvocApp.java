@@ -30,7 +30,6 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
-import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
@@ -68,32 +67,11 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 	protected ActionMethodParser actionMethodParser;
 
 	@PetiteInject
-	protected ResultsManager resultsManager;
-
-	@PetiteInject
 	protected FiltersManager filtersManager;
 
 	@PetiteInject
 	protected InterceptorsManager interceptorsManager;
 
-	// ---------------------------------------------------------------- results
-
-	/**
-	 * Registers result class.
-	 */
-	public MadvocApp result(Class<? extends ActionResult> resultClass) {
-		resultsManager.register(resultClass);
-		return this;
-	}
-
-	/**
-	 * Registers result and configures it.
-	 */
-	public <R extends ActionResult> MadvocApp result(Class<R> resultClass, Consumer<R> resultConsumer) {
-		R actionResult = (R) resultsManager.register(resultClass);
-		resultConsumer.accept(actionResult);
-		return this;
-	}
 
 	// ---------------------------------------------------------------- wrappers
 
