@@ -28,8 +28,10 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.result.Result;
-import jodd.madvoc.result.ServletRedirectResult;
+import jodd.madvoc.result.Chain;
+import jodd.madvoc.result.Forward;
+import jodd.madvoc.result.Redirect;
+import jodd.madvoc.result.TextResult;
 
 @MadvocAction
 public class AlphaAction {
@@ -37,79 +39,79 @@ public class AlphaAction {
 	// ---------------------------------------------------------------- forward
 
 	@Action
-	public Result view() {
-		return Result.forward().to("ok");
+	public Forward view() {
+		return Forward.to("ok");
 	}
 
 	@Action(alias = "hello")
-	public Result hello() {
-		return Result.forward();
+	public Forward hello() {
+		return Forward.to("");
 	}
 
 	@Action
-	public Result ciao() {
-		return Result.forward().to("<hello>");
+	public Forward ciao() {
+		return Forward.to("<hello>");
 	}
 
 	@Action
-	public Result ciao2() {
-		return Result.forward().to(AlphaAction.class, AlphaAction::hello);
+	public Forward ciao2() {
+		return Forward.to(AlphaAction.class, AlphaAction::hello);
 	}
 
 	@Action
-	public Result ciao3() {
-		return Result.forward().to(this, AlphaAction::hello);
+	public Forward ciao3() {
+		return Forward.to(this, AlphaAction::hello);
 	}
 
 	@Action
-	public Result hola() {
-		return Result.forward().to("hello");
+	public Forward hola() {
+		return Forward.to("hello");
 	}
 
 	@Action
-	public Result holahoopa() {
-		return Result.forward().to(this, AlphaAction::hola);
+	public Forward holahoopa() {
+		return Forward.to(this, AlphaAction::hola);
 	}
 
 	@Action
-	public Result home() {
-		return Result.forward().to(HelloAction.class, HelloAction::world);
+	public Forward home() {
+		return Forward.to(HelloAction.class, HelloAction::world);
 	}
 
 	@Action
-	public Result home2() {
-		Result tempResult = Result.forward().to(HelloAction.class, HelloAction::world);
-		return Result.forward().to(tempResult, "ok");
+	public Forward home2() {
+		Forward tempResult = Forward.to(HelloAction.class, HelloAction::world);
+		return Forward.of(tempResult, "ok");
 	}
 
 	// ---------------------------------------------------------------- redirect
 
 	@Action
-	public Result red1() {
-		return Result.of(ServletRedirectResult.class).with("/alpha.html");
+	public Redirect red1() {
+		return Redirect.to("/alpha.html");
 	}
 
 	@Action
-	public Result red2() {
-		return Result.redirect().to(HelloAction.class, HelloAction::view);
+	public Redirect red2() {
+		return Redirect.to(HelloAction.class, HelloAction::view);
 	}
 
 	@Action
-	public Result world() {
-		Result temp = Result.redirect().to(HelloAction.class, HelloAction::world);
-		return Result.redirect().to(temp, "?name=Mars&data=173");
+	public Redirect world() {
+		Redirect temp = Redirect.to(HelloAction.class, HelloAction::world);
+		return Redirect.of(temp, "?name=Mars&data=173");
 	}
 
 	@Action
-	public Result postme() {
-		return Result.redirect().to(this, AlphaAction::hello);
+	public Redirect postme() {
+		return Redirect.to(this, AlphaAction::hello);
 	}
 
 	// ---------------------------------------------------------------- text
 
 	@Action
-	public Result txt() {
-		return Result.text().with("some text");
+	public TextResult txt() {
+		return TextResult.of("some text");
 	}
 
 	// ---------------------------------------------------------------- no result!
@@ -124,9 +126,9 @@ public class AlphaAction {
 	int chain;
 
 	@Action
-	public Result chain() {
+	public Chain chain() {
 		chain++;
-		return Result.chain().to(this, AlphaAction::link);
+		return Chain.to(this, AlphaAction::link);
 	}
 
 	@Action

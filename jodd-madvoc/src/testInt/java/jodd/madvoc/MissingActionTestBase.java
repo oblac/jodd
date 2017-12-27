@@ -36,7 +36,7 @@ public abstract class MissingActionTestBase {
 	@Test
 	public void testMissingAction() {
 		HttpResponse response = HttpRequest.get("localhost:8173/missing.html?data.miss=123").send();
-		assertEquals(":null", response.bodyText().trim());
+		assertEquals("", response.bodyText().trim());
 	}
 
 }

@@ -31,6 +31,7 @@ import jodd.madvoc.beans.SessionBean;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.result.TextResult;
 import jodd.petite.meta.PetiteInject;
 
 import javax.servlet.http.HttpSession;
@@ -48,12 +49,12 @@ public class ItemAction {
 	HttpSession httpSession;
 
 	@Action
-	public String view() {
-		return "text:" + sessionBean.toString() + " sid:" + httpSession.getId();
+	public TextResult view() {
+		return TextResult.of(sessionBean.toString() + " sid:" + httpSession.getId());
 	}
 
 	@Action
-	public String global() {
-		return "text:" + globalService.toString() + " " + globalService.getSessionBean().toString() + " sid:" + httpSession.getId();
+	public TextResult global() {
+		return TextResult.of(globalService.toString() + " " + globalService.getSessionBean().toString() + " sid:" + httpSession.getId());
 	}
 }

@@ -29,7 +29,6 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.result.TextResult;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +39,7 @@ class ManualRegistrationTest {
 	public static class ManualRegistration extends MadvocApp {
 		@Override
 		public void start() {
-			result(TextResult.class);
+//			result(TextActionResult.class);
 			action()
 					.path("/hello")
 					.mapTo(BooAction.class, "foo1")
@@ -83,7 +82,6 @@ class ManualRegistrationTest {
 		WebApp webApp = WebApp
 			.createWebApp()
 			.start(madvoc -> madvoc
-				.result(TextResult.class)
 				.action()
 					.path("/hello")
 					.mapTo(BooAction.class, "foo1")

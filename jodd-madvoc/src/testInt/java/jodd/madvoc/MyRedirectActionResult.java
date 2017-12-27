@@ -25,11 +25,11 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.result.ServletRedirectResult;
+import jodd.madvoc.result.ServletRedirectActionResult;
 
 /**
  * Replaces default ServletRedirectResult!
  */
-public class MyRedirectResult extends ServletRedirectResult {
+public class MyRedirectActionResult extends ServletRedirectActionResult {
 
 }

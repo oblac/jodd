@@ -32,7 +32,6 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.result.RawData;
 import jodd.util.CharUtil;
-import jodd.util.net.MimeTypes;
 
 @MadvocAction
 public class ComponentAction {
@@ -44,6 +43,6 @@ public class ComponentAction {
 	public RawData view() {
 		String result = myComponent.getString();
 		byte[] bytes = CharUtil.toAsciiByteArray(result.toCharArray());
-		return new RawData(bytes, MimeTypes.MIME_TEXT_HTML);
+		return RawData.of(bytes).asHtml();
 	}
 }

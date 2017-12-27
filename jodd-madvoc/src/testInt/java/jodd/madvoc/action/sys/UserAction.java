@@ -28,6 +28,7 @@ package jodd.madvoc.action.sys;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.result.JsonResult;
 
 @MadvocAction
 public class UserAction {
@@ -49,10 +50,10 @@ public class UserAction {
 	}
 
 	@RestAction(value = "{id}")
-	public User post() {
+	public JsonResult post() {
 		User user = new User();
 		user.id = id;
 		user.name = "post";
-		return user;
+		return JsonResult.of(user);
 	}
 }
