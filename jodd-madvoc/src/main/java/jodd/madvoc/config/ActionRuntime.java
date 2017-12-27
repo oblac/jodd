@@ -25,16 +25,11 @@
 
 package jodd.madvoc.config;
 
-import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.result.Result;
-import jodd.util.ClassUtil;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -49,7 +44,6 @@ public class ActionRuntime {
 	private final String actionPath;
 	private final String actionMethod;
 	private final String resultBasePath;
-	private final Field resultField;
 	private final boolean async;
 
 	// scope data information matrix: [scope-type][target-index]
@@ -91,25 +85,7 @@ public class ActionRuntime {
 		this.filters = filters;
 		this.interceptors = interceptors;
 		this.methodParams = methodParams;
-		this.resultField = findResultField(actionClass);
 		this.actionConfig = actionConfig;
-	}
-
-	// ---------------------------------------------------------------- result
-
-	/**
-	 * Finds result field in the action class.
-	 */
-	protected Field findResultField(Class actionClass) {
-		FieldDescriptor[] fields = ClassIntrospector.get().lookup(actionClass).getAllFieldDescriptors();
-		for (FieldDescriptor fd : fields) {
-			Field field = fd.getField();
-			if (ClassUtil.isTypeOf(field.getType(), Result.class)) {
-				field.setAccessible(true);
-				return field;
-			}
-		}
-		return null;
 	}
 
 	// ---------------------------------------------------------------- getters
@@ -187,10 +163,6 @@ public class ActionRuntime {
 	 */
 	public Class<? extends ActionResult> actionResult() {
 		return actionResult;
-	}
-
-	public Field resultField() {
-		return resultField;
 	}
 
 	/**
