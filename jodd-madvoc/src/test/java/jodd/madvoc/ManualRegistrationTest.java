@@ -39,19 +39,18 @@ class ManualRegistrationTest {
 	public static class ManualRegistration extends MadvocApp {
 		@Override
 		public void start() {
-//			result(TextActionResult.class);
 			action()
-					.path("/hello")
-					.mapTo(BooAction.class, "foo1")
-					.bind();
+				.path("/hello")
+				.mapTo(BooAction.class, "foo1")
+				.bind();
 
 			action()
-					.path("/world")
-					.mapTo(BooAction.class, "foo2")
-					.interceptBy(EchoInterceptor.class)
-					.bind();
+				.path("/world")
+				.mapTo(BooAction.class, "foo2")
+				.interceptBy(EchoInterceptor.class)
+				.bind();
 
-			interceptor(EchoInterceptor.class, i->i.setPrefixIn("====> "));
+			interceptor(EchoInterceptor.class, i -> i.setPrefixIn("====> "));     // additional interceptor configuration
 		}
 	}
 

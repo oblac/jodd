@@ -183,6 +183,7 @@ class ActionRequestRecursionTest {
 
 		Action action = new Action();
 		ActionRuntime actionRuntime = new ActionRuntime(
+				null,
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,

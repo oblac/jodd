@@ -143,6 +143,7 @@ class ServletDispatcherResultTest {
 
 		Object action = new Object();
 		ActionRuntime actionRuntime = new ActionRuntime(
+				null,
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
