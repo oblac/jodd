@@ -30,43 +30,49 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
-import jodd.servlet.ServletUtil;
+import jodd.util.StringPool;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Raw results directly writes byte context to the output.
- * Content type and charset encoding (e.g. set by Madvoc) is ignored
- * and new values should be set here. Output is closed after writing.
+ * Text result returns a result value, i.e. a string.
+ * Useful for JSON responses, when resulting string is built
+ * in the action.
  */
-public class RawResult extends BaseActionResult<RawResultData> {
+public class TextActionResult implements ActionResult<TextResult> {
 
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public void render(ActionRequest actionRequest, RawResultData resultValue) throws IOException {
-		if (resultValue == null) {
-			return;
+	public void render(ActionRequest actionRequest, TextResult resultValue) throws Exception {
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
+
+		String encoding = response.getCharacterEncoding();
+
+		if (encoding == null) {
+			encoding = madvocConfig.getEncoding();
 		}
 
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		response.setContentType(resultValue.contentType());
+		response.setCharacterEncoding(encoding);
 
-		// reset content type and prepare response
-		// since we are using MadvocResponseWrapper, the charset will be reset as well.
-		ServletUtil.prepareResponse(response, resultValue.getDownloadFileName(), resultValue.getMimeType(), resultValue.getContentLength());
+		String text = resultValue.value();
 
-		// write out
-		InputStream contentInputStream = resultValue.getContentInputStream();
-		OutputStream out = response.getOutputStream();
+		if (text == null) {
+			text = StringPool.EMPTY;
+		}
 
-		StreamUtil.copy(contentInputStream, out);
+		final byte[] data = text.getBytes(encoding);
+		response.setContentLength(data.length);
 
-		out.flush();
-
-		StreamUtil.close(contentInputStream);
+		OutputStream out = null;
+		try {
+			out = response.getOutputStream();
+			out.write(data);
+		} finally {
+			StreamUtil.close(out);
+		}
 	}
 }

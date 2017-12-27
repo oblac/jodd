@@ -25,25 +25,39 @@
 
 package jodd.madvoc.result;
 
-import jodd.servlet.DispatcherUtil;
+import jodd.madvoc.meta.RenderWith;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
- * Simply sends permanent redirection to an external location.
+ * Servlet dispatched result.
  */
-public class ServletUrlRedirectResult extends ServletRedirectResult {
+@RenderWith(ServletDispatcherActionResult.class)
+public class Forward extends PathResult {
 
-	public static final String NAME = "url";
-
-	public ServletUrlRedirectResult() {
-		super(NAME);
+	public static Forward to(String target) {
+		return new Forward(target);
 	}
 
-	@Override
-	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
-		DispatcherUtil.redirectPermanent(request, response, path);
+	public static <T> Forward to(Class<T> target, Consumer<T> consumer) {
+		return new Forward(target, consumer);
+	}
+	@SuppressWarnings("unchecked")
+	public static <T> Forward to(T target, Consumer<T> consumer) {
+		return new Forward((Class<T>) target.getClass(), consumer);
+	}
+
+	public static Forward of(Forward result, String append) {
+		return new Forward("/<" + result.path() + ">.." + append);
+	}
+
+	// ---------------------------------------------------------------- ctor
+
+	public <T> Forward(Class<T> target, Consumer<T> consumer) {
+		super(target, consumer);
+	}
+
+	public Forward(String path) {
+		super(path);
 	}
 }

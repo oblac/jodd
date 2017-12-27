@@ -25,70 +25,32 @@
 
 package jodd.madvoc.result;
 
-import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
-import jodd.servlet.DispatcherUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
- * Simply redirects to a page using <code>RequestDispatcher</code>.
- * 
- * @see ServletDispatcherResult
- * @see jodd.madvoc.result.ServletUrlRedirectResult
+ * Process chain results. Chaining is very similar to forwarding, except it is done
+ * by {@link jodd.madvoc.MadvocServletFilter} and not by container. Chaining to next action request
+ * happens after the complete execution of current one: after all interceptors and this result has been
+ * finished.
  */
-public class ServletRedirectResult extends BaseActionResult<String> {
-
-	public static final String NAME = "redirect";
-
-	protected final BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
-
-	public ServletRedirectResult() {
-		this(NAME);
-	}
-
-	protected ServletRedirectResult(String name) {
-		super(name);
-		beanTemplateParser.setMacroPrefix(null);
-		beanTemplateParser.setMacroStart("{");
-		beanTemplateParser.setMacroEnd("}");
-	}
+public class ChainActionResult implements ActionResult<Chain> {
 
 	@In(scope = ScopeType.CONTEXT)
 	protected ResultMapper resultMapper;
 
 	/**
-	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
+	 * Sets the {@link jodd.madvoc.ActionRequest#setNextActionPath(String) next action request} for the chain.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+	public void render(ActionRequest actionRequest, Chain chainResult) {
 		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
 
-		String resultPath;
+		String resultPath = resultMapper.resolveResultPathString(resultBasePath, chainResult.path());
 
-		if (resultValue.startsWith("http://") || resultValue.startsWith("https://")) {
-			resultPath = resultValue;
-		}
-		else {
-			resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
-		}
-
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
-
-		String path = resultPath;
-		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
-
-		redirect(request, response, path);
-	}
-
-	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
-		DispatcherUtil.redirect(request, response, path);
+		actionRequest.setNextActionPath(resultPath);
 	}
 
 }

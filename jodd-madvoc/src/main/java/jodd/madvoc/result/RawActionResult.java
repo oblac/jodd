@@ -25,22 +25,48 @@
 
 package jodd.madvoc.result;
 
+import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.meta.In;
+import jodd.servlet.ServletUtil;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
- * Action result renders the returned value from an action.
- * Result handler is a singletons for the web application. Results
- * may have a result type, a string identification of the type
- * used when actions return string result.
+ * Raw results directly writes byte context to the output.
+ * Content type and charset encoding (e.g. set by Madvoc) is ignored
+ * and new values should be set here. Output is closed after writing.
  */
-@FunctionalInterface
-public interface ActionResult<T> {
+public class RawActionResult implements ActionResult<RawData> {
 
-	/**
-	 * Renders result on given action result value.
-	 * @param actionRequest action request
-	 * @param resultValue action method result, may be <code>null</code>.
-	 */
-	void render(ActionRequest actionRequest, T resultValue) throws Exception;
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
 
+	@Override
+	public void render(ActionRequest actionRequest, RawData resultValue) throws IOException {
+		if (resultValue == null) {
+			return;
+		}
+
+		HttpServletResponse response = actionRequest.getHttpServletResponse();
+
+		// reset content type and prepare response
+		// since we are using MadvocResponseWrapper, the charset will be reset as well.
+		ServletUtil.prepareResponse(response, resultValue.downloadFileName(), resultValue.mimeType(), resultValue.contentLength());
+
+		// write out
+		InputStream contentInputStream = resultValue.contentInputStream();
+		OutputStream out = response.getOutputStream();
+
+		StreamUtil.copy(contentInputStream, out);
+
+		out.flush();
+
+		StreamUtil.close(contentInputStream);
+	}
 }

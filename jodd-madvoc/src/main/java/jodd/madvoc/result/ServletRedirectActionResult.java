@@ -25,60 +25,64 @@
 
 package jodd.madvoc.result;
 
+import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
-import jodd.util.RandomString;
-import jodd.util.net.URLCoder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
- * Process move results.
+ * Simply redirects to a page using <code>RequestDispatcher</code>.
+ * 
+ * @see ServletDispatcherActionResult
+ * @see ServletPermanentRedirectActionResult
  */
-public class MoveResult extends BaseActionResult<String> {
+public class ServletRedirectActionResult implements ActionResult<Redirect> {
 
-	public static final String NAME = "move";
+	protected final BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
-	public MoveResult() {
-		super(NAME);
+	public ServletRedirectActionResult() {
+		beanTemplateParser.setMacroPrefix(null);
+		beanTemplateParser.setMacroStart("{");
+		beanTemplateParser.setMacroEnd("}");
 	}
-
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
 
 	@In(scope = ScopeType.CONTEXT)
 	protected ResultMapper resultMapper;
 
 	/**
-	 * Returns unique id, random long value.
-	 */
-	protected String generateUniqueId() {
-		return RandomString.getInstance().randomAlphaNumeric(32);
-	}
-
-	/**
-	 * Saves action in the session under some id that is added as request parameter.
+	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+	public void render(ActionRequest actionRequest, Redirect redirectResult) throws Exception {
 		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
 
-		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
+		String resultPath;
+		final String resultValue = redirectResult.path();
 
-		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
-		HttpSession session = httpServletRequest.getSession();
+		if (resultValue.startsWith("http://") || resultValue.startsWith("https://")) {
+			resultPath = resultValue;
+		}
+		else {
+			resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
+		}
 
-		String id = generateUniqueId();
-		session.setAttribute(id, actionRequest);
+		HttpServletRequest request = actionRequest.getHttpServletRequest();
+		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String path = resultPath;
-		path = URLCoder.build(path).queryParam(madvocConfig.getAttributeMoveId(), id).toString();
-		DispatcherUtil.redirect(httpServletRequest, actionRequest.getHttpServletResponse(), path);
+		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
+
+		redirect(request, response, path);
+	}
+
+	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+		DispatcherUtil.redirect(request, response, path);
 	}
 
 }

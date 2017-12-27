@@ -28,19 +28,15 @@ package jodd.madvoc.result;
 import jodd.madvoc.ActionRequest;
 
 /**
- * Action result renders the returned value from an action.
- * Result handler is a singletons for the web application. Results
- * may have a result type, a string identification of the type
- * used when actions return string result.
+ * None result processing, for direct outputs.
  */
-@FunctionalInterface
-public interface ActionResult<T> {
+public class NoneActionResult implements ActionResult {
 
 	/**
-	 * Renders result on given action result value.
-	 * @param actionRequest action request
-	 * @param resultValue action method result, may be <code>null</code>.
+	 * Executes result on given action result value.
 	 */
-	void render(ActionRequest actionRequest, T resultValue) throws Exception;
-
+	@Override
+	public void render(ActionRequest actionRequest, Object resultValue) {
+		// none, uses direct output
+	}
 }

@@ -25,51 +25,39 @@
 
 package jodd.madvoc.result;
 
-import java.io.InputStream;
+import jodd.madvoc.meta.RenderWith;
+
+import java.util.function.Consumer;
 
 /**
- * Holder for Raw results.
+ * Redirect result.
  */
-public abstract class RawResultData {
+@RenderWith(ServletRedirectActionResult.class)
+public class Redirect extends PathResult {
 
-	protected final InputStream inputStream;
-	protected final String downloadFileName;
-	protected final String mimeType;
-	protected final int length;
-
-	protected RawResultData(InputStream inputStream, String downloadFileName, String mimeType, int length) {
-		this.inputStream = inputStream;
-		this.downloadFileName = downloadFileName;
-		this.mimeType = mimeType;
-		this.length = length;
+	public static Redirect to(String target) {
+		return new Redirect(target);
 	}
 
-	/**
-	 * Returns content input stream.
-	 */
-	public InputStream getContentInputStream() {
-		return inputStream;
+	public static <T> Redirect to(Class<T> target, Consumer<T> consumer) {
+		return new Redirect(target, consumer);
+	}
+	@SuppressWarnings("unchecked")
+	public static <T> Redirect to(T target, Consumer<T> consumer) {
+		return new Redirect((Class<T>) target.getClass(), consumer);
 	}
 
-	/**
-	 * Returns content type.
-	 */
-	public String getMimeType() {
-		return mimeType;
+	public static Redirect of(Redirect result, String append) {
+		return new Redirect("/<" + result.path() + ">" + append);
 	}
 
-	/**
-	 * Returns download file name.
-	 */
-	public String getDownloadFileName() {
-		return downloadFileName;
+	// ---------------------------------------------------------------- ctor
+
+	public <T> Redirect(Class<T> target, Consumer<T> consumer) {
+		super(target, consumer);
 	}
 
-	/**
-	 * Returns content length.
-	 */
-	public int getContentLength() {
-		return length;
+	public Redirect(String path) {
+		super(path);
 	}
-
 }

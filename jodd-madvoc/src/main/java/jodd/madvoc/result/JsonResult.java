@@ -25,38 +25,66 @@
 
 package jodd.madvoc.result;
 
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.meta.In;
+import jodd.json.JsonSerializer;
+import jodd.madvoc.meta.RenderWith;
+import jodd.util.net.HttpStatus;
 
-/**
- * Process chain results. Chaining is very similar to forwarding, except it is done
- * by {@link jodd.madvoc.MadvocServletFilter} and not by container. Chaining to next action request
- * happens after the complete execution of current one: after all interceptors and this result has been
- * finished.
- */
-public class ChainResult extends BaseActionResult<String> {
+@RenderWith(JsonActionResult.class)
+public class JsonResult {
 
-	public static final String NAME = "chain";
+	private final String body;
+	private int status = 200;
+	private String message = "OK";
 
-	public ChainResult() {
-		super(NAME);
+	public static JsonResult of(String json) {
+		return new JsonResult(json);
 	}
 
-	@In(scope = ScopeType.CONTEXT)
-	protected ResultMapper resultMapper;
+	public static JsonResult of(Object object) {
+		String json = JsonSerializer.create().deep(true).serialize(object);
+		return new JsonResult(json);
+	}
+
+	public JsonResult(String body) {
+		this.body = body;
+	}
+
+	public JsonResult status(int status) {
+		this.status = status;
+		this.message = message;
+		return this;
+	}
+
+	public JsonResult status(HttpStatus httpStatus) {
+		this.status = httpStatus.status();
+		this.message = httpStatus.message();
+		return this;
+	}
+
+	public JsonResult status(int status, String message) {
+		this.status = status;
+		this.message = message;
+		return this;
+	}
 
 	/**
-	 * Sets the {@link jodd.madvoc.ActionRequest#setNextActionPath(String) next action request} for the chain.
+	 * Returns JSON body.
 	 */
-	@Override
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
-
-		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
-
-		actionRequest.setNextActionPath(resultPath);
+	public String value() {
+		return body;
 	}
 
+	/**
+	 * Returns response status.
+	 */
+	public int status() {
+		return status;
+	}
+
+	/**
+	 * Returns response message.
+	 */
+	public String message() {
+		return message;
+	}
 }

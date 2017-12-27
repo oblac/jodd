@@ -34,33 +34,26 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-
 import java.net.MalformedURLException;
+
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 /**
  * Servlet Dispatcher.
  * 
- * @see ServletRedirectResult
+ * @see ServletRedirectActionResult
  */
-public class ServletDispatcherResult extends AbstractTemplateViewResult {
+public class ServletDispatcherActionResult extends AbstractTemplateViewActionResult {
 
-	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherResult.class);
-
-	public static final String NAME = "dispatch";
+	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherActionResult.class);
 
 	protected String[] extensions = new String[] {".jspf", ".jsp"};
-
-	public ServletDispatcherResult() {
-		super(NAME);
-	}
 
 	/**
 	 * Renders the view by dispatching to the target JSP.
 	 */
+	@Override
 	protected void renderView(ActionRequest actionRequest, String target) throws Exception {
-		target = processTarget(actionRequest, target);
-
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
@@ -83,6 +76,7 @@ public class ServletDispatcherResult extends AbstractTemplateViewResult {
 	/**
 	 * Locates target using path with various extensions appended.
 	 */
+	@Override
 	protected String locateTarget(final ActionRequest actionRequest, final String path) {
 		String target;
 
@@ -112,15 +106,6 @@ public class ServletDispatcherResult extends AbstractTemplateViewResult {
 		} catch (MalformedURLException ignore) {
 			return false;
 		}
-	}
-
-	/**
-	 * Optionally processes target and returns modified target location of located JSP file.
-	 * May be used by additional pre-processing of the target file. Called every time
-	 * before final dispatching.
-	 */
-	protected String processTarget(ActionRequest actionRequest, String target) {
-		return target;
 	}
 
 }

@@ -45,14 +45,13 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 /**
  * Base class for dispatching results. May be used as base class for any template-based views.
  */
-public abstract class AbstractTemplateViewResult extends BaseActionResult<String> {
+public abstract class AbstractTemplateViewActionResult<T extends PathResult> implements ActionResult<T> {
 
-	private static final Logger log = LoggerFactory.getLogger(AbstractTemplateViewResult.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractTemplateViewActionResult.class);
 
 	protected HashMap<String, String> targetCache;
 
-	public AbstractTemplateViewResult(String name) {
-		super(name);
+	public AbstractTemplateViewActionResult() {
 		targetCache = new HashMap<>(256);
 	}
 
@@ -65,10 +64,12 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 	 * will be sent back in the http response.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+	public void render(ActionRequest actionRequest, T resultValue) throws Exception {
 		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
 
-		String actionAndResultPath = resultBasePath + (resultValue != null ? ':' + resultValue : StringPool.EMPTY);
+		final String path = resultValue != null ? resultValue.path() : StringPool.EMPTY;
+
+		String actionAndResultPath = resultBasePath + (resultValue != null ? ':' + path : StringPool.EMPTY);
 
 		String target = targetCache.get(actionAndResultPath);
 
@@ -77,7 +78,7 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 				log.debug("new target: " + actionAndResultPath);
 			}
 
-			target = resolveTarget(actionRequest, resultValue);
+			target = resolveTarget(actionRequest, path);
 
 			if (target == null) {
 				targetNotFound(actionRequest, actionAndResultPath);

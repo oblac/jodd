@@ -25,23 +25,32 @@
 
 package jodd.madvoc.result;
 
-import jodd.madvoc.ActionRequest;
+import jodd.madvoc.meta.RenderWith;
+
+import java.util.function.Consumer;
 
 /**
- * None result processing, for direct outputs.
+ * Move result.
  */
-public class NoneResult extends BaseActionResult<String> {
-	
-	public static final String NAME = "none";
-	
-	public NoneResult() {
-		super(NAME);
+@RenderWith(MoveActionResult.class)
+public class Move extends PathResult {
+
+	public static Move to(String target) {
+		return new Move(target);
 	}
 
-	/**
-	 * Executes result on given action result value.
-	 */
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		// none, direct output
+	public static <T> Move to(Class<T> target, Consumer<T> consumer) {
+		return new Move(target, consumer);
 	}
+
+	// ---------------------------------------------------------------- ctor
+
+	public <T> Move(Class<T> target, Consumer<T> consumer) {
+		super(target, consumer);
+	}
+
+	public Move(String path) {
+		super(path);
+	}
+
 }

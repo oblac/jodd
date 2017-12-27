@@ -25,35 +25,49 @@
 
 package jodd.madvoc.result;
 
-import jodd.madvoc.ActionRequest;
-import jodd.util.StringUtil;
+import jodd.methref.Methref;
 
-import javax.servlet.http.HttpServletResponse;
+import java.util.function.Consumer;
 
 /**
- * Sets HTTP status or error code.
+ * Path result.
  */
-public class HttpStatusResult extends BaseActionResult<String> {
+public abstract class PathResult {
 
-	public static final String NAME = "http";
+	private final String path;
+	private final Class target;
+	private final Methref methref;
 
-	public HttpStatusResult() {
-		super(NAME);
+	public PathResult(String path) {
+		this.path = path;
+		this.methref = null;
+		this.target = null;
 	}
 
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		boolean isError = false;
-		if (StringUtil.endsWithChar(resultValue, '!')) {
-			isError = true;
-			resultValue = resultValue.substring(0, resultValue.length() - 1);
-		}
+	public <T> PathResult(Class<T> target, Consumer<T> consumer) {
+		this.path = null;
+		Methref<T> methref = wrapTargetToMethref(target);
+		consumer.accept(methref.to());
+		this.methref = methref;
+		this.target = target;
+	}
 
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
-		if (isError) {
-			response.sendError(Integer.parseInt(resultValue));
-		} else {
-			response.setStatus(Integer.parseInt(resultValue));
-		}
+	/**
+	 * Wraps action class and returns <code>MethRef</code> object
+	 * (proxified target) so user can choose the method.
+	 */
+	protected <T> Methref<T> wrapTargetToMethref(Class<T> target) {
+		return Methref.on(target);
+	}
 
+	/**
+	 * Returns path value;
+	 */
+	public String path() {
+		if (methref != null) {
+			String methodName = methref.ref();
+			return target.getName() + "#" + methodName;
+		}
+		return path;
 	}
 }

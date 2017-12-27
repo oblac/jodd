@@ -25,47 +25,36 @@
 
 package jodd.madvoc.result;
 
-import jodd.io.StreamUtil;
-import jodd.json.JsonSerializer;
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.meta.In;
-import jodd.util.net.MimeTypes;
+import jodd.madvoc.meta.RenderWith;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
+import java.util.function.Consumer;
 
-public class JSONActionResult extends BaseActionResult {
+/**
+ * Chain result.
+ */
+@RenderWith(ChainActionResult.class)
+public class Chain extends PathResult {
 
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
-
-	@Override
-	public void render(ActionRequest actionRequest, Object object) throws Exception {
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
-
-		String encoding = response.getCharacterEncoding();
-
-		if (encoding == null) {
-			encoding = madvocConfig.getEncoding();
-		}
-
-		response.setContentType(MimeTypes.MIME_APPLICATION_JSON);
-		response.setCharacterEncoding(encoding);
-
-		String json = JsonSerializer.create().deep(true).serialize(object);
-
-		byte[] data = json.getBytes(encoding);
-		response.setContentLength(data.length);
-
-		OutputStream out = null;
-		try {
-			out = response.getOutputStream();
-			out.write(data);
-		} finally {
-			StreamUtil.close(out);
-		}
-
+	public static Chain to(String target) {
+		return new Chain(target);
 	}
+
+	public static <T> Chain to(Class<T> target, Consumer<T> consumer) {
+		return new Chain(target, consumer);
+	}
+	@SuppressWarnings("unchecked")
+	public static <T> Chain to(T target, Consumer<T> consumer) {
+		return new Chain((Class<T>) target.getClass(), consumer);
+	}
+
+	// ---------------------------------------------------------------- ctor
+
+	public <T> Chain(Class<T> target, Consumer<T> consumer) {
+		super(target, consumer);
+	}
+
+	public Chain(String path) {
+		super(path);
+	}
+
 }

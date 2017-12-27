@@ -25,51 +25,31 @@
 
 package jodd.madvoc.result;
 
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.RenderWith;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.util.function.Consumer;
 
 /**
- * Download data for raw results.
+ * Permanent redirection.
  */
-@RenderWith(RawResult.class)
-public class RawDownload extends RawResultData {
+@RenderWith(ServletPermanentRedirectActionResult.class)
+public class PermanentRedirect extends PathResult {
 
-	public RawDownload(InputStream inputStream, String downloadFileName, String mimeType, int length) {
-		super(inputStream, downloadFileName, mimeType, length);
+	public static PermanentRedirect to(String target) {
+		return new PermanentRedirect(target);
 	}
 
-	public RawDownload(byte[] bytes, String downloadFileName, String mimeType) {
-		super(new ByteArrayInputStream(bytes), downloadFileName, mimeType, bytes.length);
+	public static <T> PermanentRedirect to(Class<T> target, Consumer<T> consumer) {
+		return new PermanentRedirect(target, consumer);
 	}
 
-	public RawDownload(byte[] bytes, String downloadFileName) {
-		this(bytes, downloadFileName, null);
+	// ---------------------------------------------------------------- ctor
+
+	public <T> PermanentRedirect(Class<T> target, Consumer<T> consumer) {
+		super(target, consumer);
 	}
 
-	public RawDownload(File file, String downloadFileName, String mimeType) {
-		super(createFileInputStream(file), downloadFileName, mimeType, (int) file.length());
+	public PermanentRedirect(String path) {
+		super(path);
 	}
-
-	public RawDownload(File file, String mimeType) {
-		super(createFileInputStream(file), file.getName(), mimeType, (int) file.length());
-	}
-
-	public RawDownload(File file) {
-		this(file, null);
-	}
-
-	private static FileInputStream createFileInputStream(File file) {
-		try {
-			return new FileInputStream(file);
-		} catch (FileNotFoundException fis) {
-			throw new MadvocException(fis);
-		}
-	}
-
 }
