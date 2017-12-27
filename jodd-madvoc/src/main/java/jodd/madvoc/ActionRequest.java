@@ -321,6 +321,11 @@ public class ActionRequest {
 	 * After method invocation, all interceptors will finish, in opposite order. 
 	 */
 	protected Object invokeActionMethod() throws Exception {
+		if (actionRuntime.isActionHandlerDefined()) {
+			actionRuntime.actionHandler().handle(this);
+			return null;
+		}
+
 		Object[] params = extractParametersFromTargets();
 		try {
 			return actionRuntime.actionClassMethod().invoke(action, params);

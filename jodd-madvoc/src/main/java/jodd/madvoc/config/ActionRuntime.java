@@ -26,6 +26,7 @@
 package jodd.madvoc.config;
 
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionHandler;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
@@ -38,6 +39,7 @@ import java.lang.reflect.Method;
 public class ActionRuntime {
 
 	// configuration
+	private final ActionHandler actionHandler;
 	private final Class actionClass;
 	private final Method actionClassMethod;
 	private final Class<? extends ActionResult> actionResult;
@@ -59,6 +61,7 @@ public class ActionRuntime {
 	private final ActionConfig actionConfig;
 
 	public ActionRuntime(
+			ActionHandler actionHandler,
 			Class actionClass,
 			Method actionClassMethod,
 			ActionFilter[] filters,
@@ -71,12 +74,13 @@ public class ActionRuntime {
 			ActionConfig actionConfig
 			)
 	{
+		this.actionHandler = actionHandler;
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionDefinition.actionPath();
 		this.actionMethod = actionDefinition.actionMethod() == null ? null : actionDefinition.actionMethod().toUpperCase();
 		this.resultBasePath = actionDefinition.resultBasePath();
-		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
+		this.hasArguments = actionClassMethod != null && (actionClassMethod.getParameterTypes().length != 0);
 		this.actionResult = actionResult;
 		this.async = async;
 
@@ -89,6 +93,20 @@ public class ActionRuntime {
 	}
 
 	// ---------------------------------------------------------------- getters
+
+	/**
+	 * Returns {@code true} if action handler is defined.
+	 */
+	public boolean isActionHandlerDefined() {
+		return actionHandler != null;
+	}
+
+	/**
+	 * Returns action handler.
+	 */
+	public ActionHandler actionHandler() {
+		return actionHandler;
+	}
 
 	/**
 	 * Returns action class.
@@ -186,6 +204,9 @@ public class ActionRuntime {
 	 * Returns action string in form 'actionClass#actionMethod'.
 	 */
 	public String actionString() {
+		if (actionHandler != null) {
+			return actionHandler.getClass().getName();
+		}
 		String className = actionClass.getName();
 
 		int ndx = className.indexOf("$$");

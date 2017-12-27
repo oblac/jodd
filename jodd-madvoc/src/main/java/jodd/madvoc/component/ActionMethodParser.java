@@ -26,6 +26,7 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionHandler;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
@@ -48,6 +49,7 @@ import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.result.NoneActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
@@ -151,6 +153,7 @@ public class ActionMethodParser {
 		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
 
 		return createActionRuntime(
+				null,
 				actionClass, actionMethod,
 				actionResult,
 				actionFilters, actionInterceptors,
@@ -439,6 +442,7 @@ public class ActionMethodParser {
 	 * Initialize caches.
 	 */
 	public ActionRuntime createActionRuntime(
+			ActionHandler actionHandler,
 			Class actionClass,
 			Method actionClassMethod,
 			Class<? extends ActionResult> actionResult,
@@ -448,7 +452,22 @@ public class ActionMethodParser {
 			boolean async,
 			ActionConfig actionConfig)
 	{
+		if (actionHandler != null) {
 
+			return new ActionRuntime(
+				actionHandler,
+				actionClass,
+				actionClassMethod,
+				filters,
+				interceptors,
+				actionDefinition,
+				NoneActionResult.class,
+				async,
+				null,
+				null,
+				actionConfig);
+
+		}
 		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
@@ -503,6 +522,7 @@ public class ActionMethodParser {
 		}
 
 		return new ActionRuntime(
+				actionHandler,
 				actionClass,
 				actionClassMethod,
 				filters,

@@ -47,7 +47,8 @@ import java.util.function.Consumer;
 public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 
 	/**
-	 * Creates
+	 * Creates new instance of {@link MadvocApp}.
+	 * Created instance is NOT wired with dependencies!
 	 */
 	public static MadvocApp create() {
 		return new MadvocApp() {
@@ -76,7 +77,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 	// ---------------------------------------------------------------- wrappers
 
 	/**
-	 * Defines an interceptor.
+	 * Configures an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends ActionInterceptor> MadvocApp interceptor(Class<T> actionInterceptorClass) {
@@ -85,7 +86,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 	}
 
 	/**
-	 * Defines an interceptor.
+	 * Configures an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends ActionInterceptor> MadvocApp interceptor(Class<T> actionInterceptorClass, Consumer<T> interceptorConsumer) {
@@ -119,23 +120,39 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 		return new ActionBuilder();
 	}
 
+	/**
+	 * Maps a GET path.
+	 */
 	public ActionBuilder get(String path) {
 		return new ActionBuilder().path(path).httpMethod("GET");
 	}
+	/**
+	 * Maps a POST path.
+	 */
 	public ActionBuilder post(String path) {
 		return new ActionBuilder().path(path).httpMethod("POST");
 	}
+	/**
+	 * Maps a PUT path.
+	 */
 	public ActionBuilder put(String path) {
 		return new ActionBuilder().path(path).httpMethod("PUT");
 	}
+	/**
+	 * Maps a DELETE path.
+	 */
 	public ActionBuilder delete(String path) {
 		return new ActionBuilder().path(path).httpMethod("DELETE");
 	}
+	/**
+	 * Maps an OPTION path.
+	 */
 	public ActionBuilder options(String path) {
 		return new ActionBuilder().path(path).httpMethod("OPTIONS");
 	}
 
 	public class ActionBuilder {
+		ActionHandler actionHandler;
 		String method;
 		String actionPath;
 		Class actionClass;
@@ -200,6 +217,11 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 			this.actionClass = actionClass;
 			this.actionClassMethod = null;
 			this.actionMethodString = actionMethodName;
+			return this;
+		}
+
+		public ActionBuilder mapTo(ActionHandler actionHandler) {
+			this.actionHandler = actionHandler;
 			return this;
 		}
 
@@ -309,6 +331,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 
 			ActionRuntime actionRuntime =
 					actionMethodParser.createActionRuntime(
+							actionHandler,
 							actionClass, actionClassMethod,
 							actionResult,
 							actionFilterInstances, actionInterceptorInstances,
