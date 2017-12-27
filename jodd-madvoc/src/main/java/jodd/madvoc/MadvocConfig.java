@@ -36,7 +36,7 @@ import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.PostAction;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPath;
-import jodd.madvoc.result.ServletDispatcherResult;
+import jodd.madvoc.result.MoveActionResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.ArraysUtil;
@@ -64,7 +64,7 @@ public final class MadvocConfig {
 	public MadvocConfig() {
 		actionConfig = new ActionConfig(null);
 		actionConfig.setActionMethodNames("view", "execute");
-		actionConfig.setActionResult(ServletDispatcherResult.class);
+		actionConfig.setActionResult(null);
 		actionConfig.setExtension("html");
 		actionConfig.setFilters();
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
@@ -287,7 +287,7 @@ public final class MadvocConfig {
 	}
 
 	/**
-	 * Sets attribute name for {@link jodd.madvoc.result.MoveResult move results}.
+	 * Sets attribute name for {@link MoveActionResult move results}.
 	 */
 	public void setAttributeMoveId(String attributeMoveId) {
 		this.attributeMoveId = attributeMoveId;

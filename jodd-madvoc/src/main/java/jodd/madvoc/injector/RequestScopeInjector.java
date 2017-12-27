@@ -30,7 +30,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.config.ScopeData;
-import jodd.madvoc.result.MoveResult;
+import jodd.madvoc.result.MoveActionResult;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.upload.FileUpload;
@@ -44,7 +44,7 @@ import java.util.Enumeration;
 
 
 /**
- * Request scope injector. Performs {@link MoveResult moving} as well.
+ * Request scope injector. Performs {@link MoveActionResult moving} as well.
  * Request injector should be independent and therefore more then one
  * instance can be used in the Madvoc application. That's why
  * configuration is being cloned on injector creation.

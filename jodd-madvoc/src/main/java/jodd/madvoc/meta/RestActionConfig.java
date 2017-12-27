@@ -27,7 +27,7 @@ package jodd.madvoc.meta;
 
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.path.RestResourcePath;
-import jodd.madvoc.result.JSONActionResult;
+import jodd.madvoc.result.JsonActionResult;
 
 public class RestActionConfig extends ActionConfig {
 
@@ -36,6 +36,6 @@ public class RestActionConfig extends ActionConfig {
 
 		setNamingStrategy(RestResourcePath.class);
 
-		setActionResult(JSONActionResult.class);
+		setActionResult(JsonActionResult.class);
 	}
 }

@@ -31,7 +31,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.result.BaseActionResult;
+import jodd.madvoc.result.ActionResult;
 import jodd.util.CharUtil;
 import jodd.util.net.MimeTypes;
 import jodd.vtor.Violation;
@@ -44,9 +44,7 @@ import java.util.List;
 /**
  * VTor validation result as JSON string.
  */
-public class VtorJsonResult extends BaseActionResult<String> {
-
-	public static final String NAME = "vtor-json";
+public class VtorJsonActionResult implements ActionResult<String> {
 
 	/**
 	 * Defines response content type of returned json string.
@@ -60,10 +58,6 @@ public class VtorJsonResult extends BaseActionResult<String> {
 	 * iframe posting if possible.
 	 */
 	public static String jsonResponseContentType = MimeTypes.MIME_APPLICATION_JSON;
-
-	public VtorJsonResult() {
-		super(NAME);
-	}
 
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
