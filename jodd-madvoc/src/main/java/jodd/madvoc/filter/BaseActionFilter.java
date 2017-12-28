@@ -26,19 +26,15 @@
 package jodd.madvoc.filter;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.BaseActionWrapper;
 
 /**
  * Base {@link jodd.madvoc.filter.ActionFilter action filter}.
  */
-public abstract class BaseActionFilter extends BaseActionWrapper implements ActionFilter {
+public abstract class BaseActionFilter implements ActionFilter {
 
-	public final Object invoke(ActionRequest actionRequest) throws Exception {
-		if (enabled) {
-			return filter(actionRequest);
-		} else {
-			return actionRequest.invoke();
-		}
+	@Override
+	public final Object apply(ActionRequest actionRequest) throws Exception {
+		return filter(actionRequest);
 	}
 
 	@Override

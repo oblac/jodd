@@ -211,15 +211,12 @@ public class ActionRequest {
 
 		// result is executed AFTER the action AND interceptors
 
-		executionArray[index++] = new BaseActionWrapper() {
-			@Override
-			public Object invoke(ActionRequest actionRequest) throws Exception {
-				Object actionResult = actionRequest.invoke();
+		executionArray[index++] = actionRequest -> {
+			Object actionResult = actionRequest.invoke();
 
-				ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
+			ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
 
-				return actionResult;
-			}
+			return actionResult;
 		};
 
 		// interceptors
@@ -231,12 +228,9 @@ public class ActionRequest {
 
 		// action
 
-		executionArray[index] = new BaseActionWrapper() {
-			@Override
-			public Object invoke(ActionRequest actionRequest) throws Exception {
-				actionResult = invokeActionMethod();
-				return actionResult;
-			}
+		executionArray[index] = actionRequest -> {
+			actionResult = invokeActionMethod();
+			return actionResult;
 		};
 
 		return executionArray;
@@ -313,7 +307,7 @@ public class ActionRequest {
 	 * Invokes all interceptors before and after action invocation.
 	 */
 	public Object invoke() throws Exception {
-		return executionArray[executionIndex++].invoke(this);
+		return executionArray[executionIndex++].apply(this);
 	}
 
 	/**

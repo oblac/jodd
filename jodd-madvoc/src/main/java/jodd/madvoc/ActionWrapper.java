@@ -29,29 +29,14 @@ package jodd.madvoc;
  * Common interface for {@link jodd.madvoc.interceptor.ActionInterceptor}
  * and {@link jodd.madvoc.filter.ActionFilter}.
  */
+@FunctionalInterface
 public interface ActionWrapper {
 
-	/**
-	 * Returns <code>true</code> if wrapper is enabled.
-	 */
-	boolean isEnabled();
+	public default void init() {}
 
 	/**
-	 * Defines if wrapper is enabled.
+	 * Invokes a wrapper.
 	 */
-	void setEnabled(boolean enabled);
-
-	/**
-	 * Initializes wrapper once everything is injected.
-	 */
-	void init();
-
-	/**
-	 * Invokes wrapper using <code>enabled</code> information.
-	 * When wrapper is disabled, control is passed to the next one.
-	 * When wrapper is enabled, it will be invoked before the next
-	 * one (or before the action).
-	 */
-	Object invoke(ActionRequest actionRequest) throws Exception;
+	Object apply(ActionRequest actionRequest) throws Exception;
 
 }
