@@ -26,8 +26,9 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InOut;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
 import jodd.madvoc.result.Chain;
 import jodd.madvoc.result.Forward;
 import jodd.madvoc.result.Redirect;
@@ -122,7 +123,8 @@ public class AlphaAction {
 
 	// ---------------------------------------------------------------- chain
 
-	@InOut
+	@In
+	@Out
 	int chain;
 
 	@Action

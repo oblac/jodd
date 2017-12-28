@@ -28,7 +28,6 @@ package jodd.madvoc.action;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.mutable.MutableInteger;
@@ -94,7 +93,7 @@ public class ArgsAction {
 	@Action
 	public void world(
 			@In @Out("ime") String name,
-			@InOut MutableInteger muti,
+			@In @Out MutableInteger muti,
 			@In("hello") Data2 hello,
 			Hello hello2,
 			@In(scope = ScopeType.SERVLET)HttpServletRequest request,
@@ -112,10 +111,10 @@ public class ArgsAction {
 	}
 
 	@Action
-	public void user(@InOut User user) {
+	public void user(@In @Out User user) {
 	}
 
-	public void zigzag(@InOut int id) {
+	public void zigzag(@In @Out int id) {
 		System.out.println("ArgsAction.zigzag");
 		System.out.println("id = [" + id + "]");
 	}

@@ -25,8 +25,9 @@
 
 package jodd.madvoc.action.sys;
 
-import jodd.madvoc.meta.InOut;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.result.JsonResult;
 
@@ -38,7 +39,8 @@ public class UserAction {
 		public String name;
 	}
 
-	@InOut
+	@In
+	@Out
 	String id;
 
 	@RestAction(value = "{id}")

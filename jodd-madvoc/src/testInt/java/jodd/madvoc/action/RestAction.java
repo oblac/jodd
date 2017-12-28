@@ -26,15 +26,17 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InOut;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
 
 import static jodd.madvoc.meta.Action.NONE;
 
 @MadvocAction("/re/")
 public class RestAction {
 
-	@InOut
+	@In
+	@Out
 	long itemId;
 
 	@Action(value = "view/{itemId}", extension = NONE)

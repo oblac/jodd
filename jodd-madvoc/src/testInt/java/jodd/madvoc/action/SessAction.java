@@ -28,7 +28,6 @@ package jodd.madvoc.action;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 
@@ -78,7 +77,7 @@ public class SessAction {
 	// ---------------------------------------------------------------- 3
 
 	class Three {
-		@InOut(scope = ScopeType.SESSION, value = "sessionName")
+		@In @Out(scope = ScopeType.SESSION, value = "sessionName")
 		String foo;
 	}
 

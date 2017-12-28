@@ -55,7 +55,7 @@ public class MethodParam {
 
 	/**
 	 * Returns parameter Madvoc annotation type, one of
-	 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out} or {@link jodd.madvoc.meta.InOut}.
+	 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out}.
 	 */
 	public Class<? extends Annotation> annotationType() {
 		return annotationType;

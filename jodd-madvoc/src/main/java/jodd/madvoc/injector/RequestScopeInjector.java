@@ -56,7 +56,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 		super(ScopeType.REQUEST, scopeDataResolver);
 		this.encoding = madvocConfig.getEncoding();
 		this.attributeMoveId = madvocConfig.getAttributeMoveId();
-		silent = true;
+		this.silent = true;
 	}
 
 	// ---------------------------------------------------------------- configuration
@@ -74,9 +74,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 	protected boolean encodeGetParams;
 	protected boolean ignoreInvalidUploadFiles = true;
 
-	public boolean isIgnoreEmptyRequestParams() {
-		return ignoreEmptyRequestParams;
-	}
 	/**
 	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
 	 */
@@ -84,9 +81,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
 	}
 
-	public boolean isTreatEmptyParamsAsNull() {
-		return treatEmptyParamsAsNull;
-	}
 	/**
 	 * Specifies if empty parameters will be injected as <code>null</code> value.
 	 */
@@ -94,9 +88,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
 	}
 
-	public boolean isInjectAttributes() {
-		return injectAttributes;
-	}
 	/**
 	 * Specifies if attributes will be injected.
 	 */
@@ -104,9 +95,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 		this.injectAttributes = injectAttributes;
 	}
 
-	public boolean isInjectParameters() {
-		return injectParameters;
-	}
 	/**
 	 * Specifies if parameters will be injected.
 	 */
@@ -114,18 +102,11 @@ public class RequestScopeInjector extends BaseScopeInjector
 		this.injectParameters = injectParameters;
 	}
 
-	public boolean isTrimParams() {
-		return trimParams;
-	}
 	/**
 	 * Specifies if parameters will be trimmed before injection.
 	 */
 	public void setTrimParams(boolean trimParams) {
 		this.trimParams = trimParams;
-	}
-
-	public boolean isEncodeGetParams() {
-		return encodeGetParams;
 	}
 
 	/**
@@ -139,13 +120,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 */
 	public void setEncodeGetParams(boolean encodeGetParams) {
 		this.encodeGetParams = encodeGetParams;
-	}
-
-	/**
-	 * Returns <code>true</code> if invalid and non-existing upload files are ignored.
-	 */
-	public boolean isIgnoreInvalidUploadFiles() {
-		return ignoreInvalidUploadFiles;
 	}
 
 	/**
