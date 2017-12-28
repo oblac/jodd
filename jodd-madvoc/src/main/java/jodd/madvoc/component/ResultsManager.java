@@ -155,6 +155,9 @@ public class ResultsManager {
 	 */
 	public ActionResult lookup(ActionRequest actionRequest, Object resultObject) {
 		// + use result value
+
+		boolean modifiedResultObject = false;
+
 		if (resultObject == null || resultObject instanceof String) {
 			// string results
 
@@ -181,6 +184,7 @@ public class ResultsManager {
 			}
 
 			resultObject = function.apply(resultValue);
+			modifiedResultObject = true;
 		}
 
 		ActionResult actionResultHandler = null;
@@ -205,8 +209,8 @@ public class ResultsManager {
 			}
 		}
 
-		// use annotation configuration
-		if (actionResultHandler == null) {
+		// + use annotation's configuration
+		if (actionResultHandler == null || modifiedResultObject) {
 			ActionConfig actionConfig = actionRequest.getActionRuntime().actionConfig();
 
 			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
