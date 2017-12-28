@@ -50,7 +50,7 @@ public class MyWebApplication extends PetiteWebApp {
 
 	@Override
 	protected void initialized() {
-		route(madvoc -> {
+		router(madvoc -> {
 			madvoc
 				.get("/batman")
 				.mapTo(actionRequest -> {

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManualRegistrationTest {
 
-	public static class ManualRegistration extends MadvocApp {
+	public static class ManualRegistration extends MadvocRouter {
 		@Override
 		public void start() {
 			action()

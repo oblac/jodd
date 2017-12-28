@@ -84,7 +84,7 @@ public class WebApp {
 	private List<Props> propsList = new ArrayList<>();
 	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
-	private Consumers<MadvocApp> madvocAppConsumers = Consumers.empty();
+	private Consumers<MadvocRouter> madvocRouterConsumers = Consumers.empty();
 	private Consumers<MadvocConfig> madvocConfigConsumers = Consumers.empty();
 
 	/**
@@ -170,10 +170,10 @@ public class WebApp {
 	}
 
 	/**
-	 * Defines a route using {@link MadvocApp}.
+	 * Defines a route using {@link MadvocRouter}.
 	 */
-	public WebApp route(Consumer<MadvocApp> madvocAppConsumer) {
-		madvocAppConsumers.add(madvocAppConsumer);
+	public WebApp router(Consumer<MadvocRouter> madvocAppConsumer) {
+		madvocRouterConsumers.add(madvocAppConsumer);
 		return this;
 	}
 
@@ -182,8 +182,8 @@ public class WebApp {
 	/**
 	 * Initializes and starts web application.
 	 */
-	public WebApp start(Consumer<MadvocApp> madvocAppConsumer) {
-		madvocAppConsumers.add(madvocAppConsumer);
+	public WebApp start(Consumer<MadvocRouter> madvocRouterConsumer) {
+		madvocRouterConsumers.add(madvocRouterConsumer);
 		return start();
 	}
 
@@ -229,14 +229,14 @@ public class WebApp {
 
 		madvocContainer.fireEvent(MadvocComponentLifecycle.Start.class);
 
-		if (!madvocAppConsumers.isEmpty()) {
+		if (!madvocRouterConsumers.isEmpty()) {
 
-			MadvocApp madvocApp = MadvocApp.create();
-			madvocContainer.registerComponentInstance(madvocApp);
+			MadvocRouter madvocRouter = MadvocRouter.create();
+			madvocContainer.registerComponentInstance(madvocRouter);
 
-			madvocAppConsumers.accept(madvocApp);
+			madvocRouterConsumers.accept(madvocRouter);
 		}
-		madvocAppConsumers = null;
+		madvocRouterConsumers = null;
 
 		started();
 

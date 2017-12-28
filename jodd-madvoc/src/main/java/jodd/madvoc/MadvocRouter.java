@@ -44,14 +44,14 @@ import java.util.function.Consumer;
 /**
  * Madvoc configurator for manual configuration.
  */
-public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
+public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 
 	/**
-	 * Creates new instance of {@link MadvocApp}.
+	 * Creates new instance of {@link MadvocRouter}.
 	 * Created instance is NOT wired with dependencies!
 	 */
-	public static MadvocApp create() {
-		return new MadvocApp() {
+	public static MadvocRouter create() {
+		return new MadvocRouter() {
 			@Override
 			public void start() {
 			}
@@ -80,7 +80,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 	 * Configures an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionInterceptor> MadvocApp interceptor(Class<T> actionInterceptorClass) {
+	public <T extends ActionInterceptor> MadvocRouter interceptor(Class<T> actionInterceptorClass) {
 		interceptorsManager.resolve(actionInterceptorClass);
 		return this;
 	}
@@ -89,7 +89,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 	 * Configures an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionInterceptor> MadvocApp interceptor(Class<T> actionInterceptorClass, Consumer<T> interceptorConsumer) {
+	public <T extends ActionInterceptor> MadvocRouter interceptor(Class<T> actionInterceptorClass, Consumer<T> interceptorConsumer) {
 		T interceptor = (T) interceptorsManager.resolve(actionInterceptorClass);
 		interceptorConsumer.accept(interceptor);
 		return this;
@@ -99,13 +99,13 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 	 * Returns action filter instance for further configuration.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionFilter> MadvocApp filter(Class<T> actionFilterClass) {
+	public <T extends ActionFilter> MadvocRouter filter(Class<T> actionFilterClass) {
 		filtersManager.resolve(actionFilterClass);
 		return this;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ActionFilter> MadvocApp filter(Class<T> actionFilterClass, Consumer<T> filterConsumer) {
+	public <T extends ActionFilter> MadvocRouter filter(Class<T> actionFilterClass, Consumer<T> filterConsumer) {
 		T filter = (T) filtersManager.resolve(actionFilterClass);
 		filterConsumer.accept(filter);
 		return this;
@@ -310,7 +310,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 		/**
 		 * Binds and finalize action runtime configuration.
 		 */
-		public MadvocApp bind() {
+		public MadvocRouter bind() {
 			final ActionConfig actionConfig = madvocConfig.getActionConfig();
 
 			if (actionMethodString != null) {
@@ -345,7 +345,7 @@ public abstract class MadvocApp implements MadvocComponentLifecycle.Start {
 				actionsManager.registerPathAlias(alias, actionPath);
 			}
 
-			return MadvocApp.this;
+			return MadvocRouter.this;
 		}
 
 		/**
