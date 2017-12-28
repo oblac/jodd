@@ -522,7 +522,7 @@ public class ActionMethodParser {
 		}
 
 		return new ActionRuntime(
-				actionHandler,
+				null,
 				actionClass,
 				actionClassMethod,
 				filters,

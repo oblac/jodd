@@ -69,7 +69,7 @@ public class ActionsManager {
 	protected boolean asyncMode;
 	protected final HashMap<String, ActionRuntimeSet> map;		// map of all action paths w/o macros
 	protected final SortedArrayList<ActionRuntimeSet> list;		// list of all action paths with macros
-	protected final HashMap<String, ActionRuntime> runtimes;		// another map of all action runtimes
+	protected final HashMap<String, ActionRuntime> runtimes;	// another map of all action runtimes
 	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {
