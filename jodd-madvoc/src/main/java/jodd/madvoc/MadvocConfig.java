@@ -33,7 +33,6 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
-import jodd.madvoc.meta.PostAction;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPath;
 import jodd.madvoc.result.MoveActionResult;
@@ -70,7 +69,7 @@ public final class MadvocConfig {
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
 		actionConfig.setNamingStrategy(DefaultActionPath.class);
 
-		setActionAnnotations(Action.class, PostAction.class, RestAction.class);
+		setActionAnnotations(Action.class, RestAction.class);
 
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
