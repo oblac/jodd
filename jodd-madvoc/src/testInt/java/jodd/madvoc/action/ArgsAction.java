@@ -30,6 +30,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.Scope;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,7 +97,7 @@ public class ArgsAction {
 			@In @Out MutableInteger muti,
 			@In("hello") Data2 hello,
 			Hello hello2,
-			@In(scope = ScopeType.SERVLET)HttpServletRequest request,
+			@In @Scope(ScopeType.SERVLET)HttpServletRequest request,
 			@Out User user
 			) {
 

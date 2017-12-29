@@ -25,6 +25,8 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.meta.Scope;
+
 /**
  * Parameters scope for injection ({@link jodd.madvoc.meta.In})
  * and outjection ({@link jodd.madvoc.meta.Out}).
@@ -77,5 +79,12 @@ public enum ScopeType {
 			case 5: return "Cookie";
 			default: return "Undefined";
 		}
+	}
+
+	public static ScopeType defaultOrScopeType(Scope scope) {
+		if (scope == null) {
+			return REQUEST;
+		}
+		return scope.value();
 	}
 }

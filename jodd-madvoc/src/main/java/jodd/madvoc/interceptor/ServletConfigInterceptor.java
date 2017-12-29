@@ -30,6 +30,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
@@ -47,10 +48,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ServletConfigInterceptor extends BaseActionInterceptor {
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected InjectorsManager injectorsManager;
 
 	/**

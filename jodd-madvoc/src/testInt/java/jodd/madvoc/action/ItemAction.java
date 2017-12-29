@@ -31,6 +31,7 @@ import jodd.madvoc.beans.SessionBean;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.TextResult;
 import jodd.petite.meta.PetiteInject;
 
@@ -45,7 +46,7 @@ public class ItemAction {
 	@PetiteInject
 	GlobalService globalService;
 
-	@In(scope = ScopeType.SERVLET)
+	@In @Scope(ScopeType.SERVLET)
 	HttpSession httpSession;
 
 	@Action

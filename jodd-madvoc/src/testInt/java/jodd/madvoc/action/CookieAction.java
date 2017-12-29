@@ -30,6 +30,7 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.NoneActionResult;
 
 import javax.servlet.http.Cookie;
@@ -39,8 +40,8 @@ import static jodd.madvoc.ScopeType.COOKIE;
 @MadvocAction
 public class CookieAction {
 
-	@In(scope = COOKIE)
-	@Out(scope = COOKIE)
+	@In @Scope(COOKIE)
+	@Out
 	Cookie foo;
 
 	@Action("/cookie")

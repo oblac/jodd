@@ -30,6 +30,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,8 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 		beanTemplateParser.setMacroEnd("}");
 	}
 
-	@In(scope = ScopeType.CONTEXT)
+	@In
+	@Scope(ScopeType.CONTEXT)
 	protected ResultMapper resultMapper;
 
 	/**

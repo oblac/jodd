@@ -31,6 +31,7 @@ import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
@@ -41,7 +42,7 @@ import java.lang.reflect.Method;
  */
 public class RestResourcePath extends BaseNamingStrategy {
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
 	@Override

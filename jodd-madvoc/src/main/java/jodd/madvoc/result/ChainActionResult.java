@@ -29,6 +29,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 
 /**
  * Process chain results. Chaining is very similar to forwarding, except it is done
@@ -38,7 +39,7 @@ import jodd.madvoc.meta.In;
  */
 public class ChainActionResult implements ActionResult<Chain> {
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected ResultMapper resultMapper;
 
 	/**

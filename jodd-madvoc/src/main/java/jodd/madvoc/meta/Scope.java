@@ -25,6 +25,8 @@
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.ScopeType;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,16 +34,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks fields and setters where injection should be performed.
+ * The scope for {@link In}/{@link Out}.
  */
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-public @interface In {
-
+public @interface Scope {
 	/**
-	 * Specifies non-default parameter name.
+	 * Specifies parameter scope.
 	 */
-	String value() default "";
+	ScopeType value() default ScopeType.REQUEST;
 
 }

@@ -31,6 +31,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.CharUtil;
 import jodd.util.net.MimeTypes;
@@ -59,7 +60,7 @@ public class VtorJsonActionResult implements ActionResult<String> {
 	 */
 	public static String jsonResponseContentType = MimeTypes.MIME_APPLICATION_JSON;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
 

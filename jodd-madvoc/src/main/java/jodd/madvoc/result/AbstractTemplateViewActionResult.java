@@ -33,6 +33,7 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.config.ResultPath;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -55,7 +56,7 @@ public abstract class AbstractTemplateViewActionResult<T extends PathResult> imp
 		targetCache = new HashMap<>(256);
 	}
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected ResultMapper resultMapper;
 
 	/**

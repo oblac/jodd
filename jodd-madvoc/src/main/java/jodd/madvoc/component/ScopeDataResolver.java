@@ -33,8 +33,11 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.Scope;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,24 +124,38 @@ public class ScopeDataResolver {
 	 * Inspects all method parameters for scope type.
 	 */
 	protected ScopeData inspectMethodParameterScopeData(String name, Class type, Annotation[] annotations, ScopeType scopeType) {
-		ScopeData sd = new ScopeData();
-		int count = 0;
+		In in = null;
+		Out out = null;
+		Scope scope = null;
 
 		for (Annotation annotation : annotations) {
 
 			if (annotation instanceof In) {
-				ScopeData.In scopeDataIn = inspectIn((In) annotation, scopeType, name, type);
-				if (scopeDataIn != null) {
-					count++;
-					sd.in = new ScopeData.In[] {scopeDataIn};
-				}
+				in = (In) annotation;
 			}
 			else if (annotation instanceof Out) {
-				ScopeData.Out scopeDataOut = inspectOut((Out) annotation, scopeType, name, type);
-				if (scopeDataOut != null) {
-					count++;
-					sd.out = new ScopeData.Out[] {scopeDataOut};
-				}
+				out = (Out) annotation;
+			}
+			else if (annotation instanceof Scope) {
+				scope = (Scope) annotation;
+			}
+		}
+
+		ScopeData sd = new ScopeData();
+		int count = 0;
+
+		if (in != null) {
+			ScopeData.In scopeDataIn = inspectIn(in, scope, scopeType, name, type);
+			if (scopeDataIn != null) {
+				count++;
+				sd.in = new ScopeData.In[] {scopeDataIn};
+			}
+		}
+		if (out != null) {
+			ScopeData.Out scopeDataOut = inspectOut(out, scope, scopeType, name, type);
+			if (scopeDataOut != null) {
+				count++;
+				sd.out = new ScopeData.Out[] {scopeDataOut};
 			}
 		}
 
@@ -184,12 +201,12 @@ public class ScopeDataResolver {
 	/**
 	 * Inspects single IN annotation for a property.
 	 */
-	protected ScopeData.In inspectIn(In in, ScopeType scopeType, String propertyName, Class propertyType) {
+	protected ScopeData.In inspectIn(In in, Scope scope, ScopeType matchingScopeType, String propertyName, Class propertyType) {
 		if (in == null) {
 			return null;
 		}
-		ScopeType scope = in.scope();
-		if (scope != scopeType) {
+		ScopeType inScope = ScopeType.defaultOrScopeType(scope);
+		if (inScope != matchingScopeType) {
 			return null;
 		}
 		ScopeData.In ii = new ScopeData.In();
@@ -201,12 +218,12 @@ public class ScopeDataResolver {
 	/**
 	 * Inspects single OUT annotation for a property.
 	 */
-	protected ScopeData.Out inspectOut(Out out, ScopeType scopeType, String propertyName, Class propertyType) {
+	protected ScopeData.Out inspectOut(Out out, Scope scope, ScopeType matchingScopeType, String propertyName, Class propertyType) {
 		if (out == null) {
 			return null;
 		}
-		ScopeType scope = out.scope();
-		if (scope != scopeType) {
+		ScopeType outScope = ScopeType.defaultOrScopeType(scope);
+		if (outScope != matchingScopeType) {
 			return null;
 		}
 		ScopeData.Out oi = new ScopeData.Out();
@@ -230,38 +247,52 @@ public class ScopeDataResolver {
 		for (PropertyDescriptor pd : allProperties) {
 			// collect annotations
 
+			Scope scope = null;
 			In in = null;
-
-			if (pd.getFieldDescriptor() != null) {
-				in = pd.getFieldDescriptor().getField().getAnnotation(In.class);
-			}
-			if (in == null && pd.getWriteMethodDescriptor() != null) {
-				in = pd.getWriteMethodDescriptor().getMethod().getAnnotation(In.class);
-			}
-			if (in == null && pd.getReadMethodDescriptor() != null) {
-				in = pd.getReadMethodDescriptor().getMethod().getAnnotation(In.class);
-			}
-
 			Out out = null;
 
 			if (pd.getFieldDescriptor() != null) {
-				out = pd.getFieldDescriptor().getField().getAnnotation(Out.class);
+				Field field = pd.getFieldDescriptor().getField();
+
+				in = field.getAnnotation(In.class);
+				out = field.getAnnotation(Out.class);
+				scope = field.getAnnotation(Scope.class);
 			}
-			if (out == null && pd.getWriteMethodDescriptor() != null) {
-				out = pd.getWriteMethodDescriptor().getMethod().getAnnotation(Out.class);
+
+			if (pd.getWriteMethodDescriptor() != null) {
+				Method method = pd.getWriteMethodDescriptor().getMethod();
+				if (in == null) {
+					in = method.getAnnotation(In.class);
+				}
+				if (out == null) {
+					out = method.getAnnotation(Out.class);
+				}
+				if (scope == null) {
+					scope = method.getAnnotation(Scope.class);
+				}
 			}
-			if (out == null && pd.getReadMethodDescriptor() != null) {
-				out = pd.getReadMethodDescriptor().getMethod().getAnnotation(Out.class);
+
+			if (pd.getReadMethodDescriptor() != null) {
+				Method method = pd.getReadMethodDescriptor().getMethod();
+				if (in == null) {
+					in = method.getAnnotation(In.class);
+				}
+				if (out == null) {
+					out = method.getAnnotation(Out.class);
+				}
+				if (scope == null) {
+					scope = method.getAnnotation(Scope.class);
+				}
 			}
 
 			// inspect all
 
-			ScopeData.In ii = inspectIn(in, scopeType, pd.getName(), pd.getType());
+			ScopeData.In ii = inspectIn(in, scope, scopeType, pd.getName(), pd.getType());
 			if (ii != null) {
 				listIn.add(ii);
 			}
 
-			ScopeData.Out oi = inspectOut(out, scopeType, pd.getName(), pd.getType());
+			ScopeData.Out oi = inspectOut(out,scope, scopeType, pd.getName(), pd.getType());
 			if (oi != null) {
 				listOut.add(oi);
 			}
