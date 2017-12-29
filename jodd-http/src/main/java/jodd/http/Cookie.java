@@ -25,7 +25,6 @@
 
 package jodd.http;
 
-import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 /**

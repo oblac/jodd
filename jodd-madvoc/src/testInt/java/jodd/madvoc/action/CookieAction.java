@@ -23,50 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.component;
+package jodd.madvoc.action;
 
-import jodd.madvoc.config.ScopeData;
-import jodd.madvoc.injector.Target;
-import jodd.madvoc.injector.Targets;
-import jodd.petite.PetiteContainer;
-import jodd.petite.meta.PetiteInject;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.result.NoneActionResult;
 
-import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 
-/**
- * Context injector for all singleton Madvoc elements, like results and interceptors.
- */
-public class ContextInjectorComponent {
+import static jodd.madvoc.ScopeType.COOKIE;
 
-	@PetiteInject
-	protected PetiteContainer madpc;
+@MadvocAction
+public class CookieAction {
 
-	@PetiteInject
-	protected InjectorsManager injectorsManager;
+	@In(scope = COOKIE)
+	@Out(scope = COOKIE)
+	Cookie foo;
 
-	@PetiteInject
-	protected MadvocController madvocController;
-
-	@PetiteInject
-	protected ScopeDataResolver scopeDataResolver;
-
-	/**
-	 * Inject context into target.
-	 */
-	public void injectContext(Target target) {
-		Class targetType = target.resolveType();
-
-		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(targetType);
-
-		Targets targets = new Targets(target, scopeData);
-		injectorsManager.madvocContextScopeInjector().injectContext(targets, madpc);
-		injectorsManager.madvocParamsInjector().injectContext(targets, madpc);
-
-		ServletContext servletContext = madvocController.getApplicationContext();
-		if (servletContext != null) {
-			injectorsManager.servletContextScopeInjector().injectContext(targets, servletContext);
-			injectorsManager.applicationScopeInjector().injectContext(targets, servletContext);
-		}
+	@Action("/cookie")
+	@RenderWith(NoneActionResult.class)
+	public void cookie() {
+		foo.setValue("new_" + foo.getValue());
 	}
 
 }

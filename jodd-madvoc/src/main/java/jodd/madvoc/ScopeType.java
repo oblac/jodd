@@ -49,7 +49,12 @@ public enum ScopeType {
 	/**
 	 * Servlet-related stuff.
 	 */
-	SERVLET(4);
+	SERVLET(4),
+	/**
+	 * All about cookies.
+	 */
+	COOKIE(5)
+	;
 
 	private int value;
 
@@ -69,6 +74,7 @@ public enum ScopeType {
 			case 2: return "Application";
 			case 3: return "MadvocContext";
 			case 4: return "Servlet";
+			case 5: return "Cookie";
 			default: return "Undefined";
 		}
 	}

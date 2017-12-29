@@ -35,7 +35,9 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Enumeration;
+import java.util.stream.Collectors;
 
 
 /**
@@ -234,6 +236,19 @@ public class RequestScopeInjector implements Injector, Outjector {
 			injectParameters(targets, servletRequest);
 			injectUploadedFiles(targets, servletRequest);
 		}
+
+		try {
+			String body = actionRequest.getHttpServletRequest().getReader().lines().collect(Collectors.joining());
+			if (StringUtil.isNotEmpty(body)) {
+				injectBody(body);
+			}
+
+		} catch (IOException ignore) {
+		}
+	}
+
+	protected void injectBody(String body) {
+
 	}
 
 	// ---------------------------------------------------------------- outject

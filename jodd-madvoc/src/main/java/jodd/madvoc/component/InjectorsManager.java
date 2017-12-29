@@ -28,6 +28,7 @@ package jodd.madvoc.component;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.ApplicationScopeInjector;
+import jodd.madvoc.injector.CookieInjector;
 import jodd.madvoc.injector.MadvocContextScopeInjector;
 import jodd.madvoc.injector.MadvocParamsInjector;
 import jodd.madvoc.injector.RequestScopeInjector;
@@ -57,6 +58,7 @@ public class InjectorsManager {
 	protected MadvocParamsInjector madvocParamsInjector;
 	protected ApplicationScopeInjector applicationScopeInjector;
 	protected ServletContextScopeInjector servletContextScopeInjector;
+	protected CookieInjector cookieInjector;
 
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
@@ -67,35 +69,40 @@ public class InjectorsManager {
 		madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
 		applicationScopeInjector = new ApplicationScopeInjector();
 		servletContextScopeInjector = new ServletContextScopeInjector();
+		cookieInjector = new CookieInjector();
 	}
 
 	// ---------------------------------------------------------------- getter
 
-	public RequestScopeInjector getRequestScopeInjector() {
+	public RequestScopeInjector requestScopeInjector() {
 		return requestScopeInjector;
 	}
 
-	public SessionScopeInjector getSessionScopeInjector() {
+	public SessionScopeInjector sessionScopeInjector() {
 		return sessionScopeInjector;
 	}
 
-	public ActionPathMacroInjector getActionPathMacroInjector() {
+	public ActionPathMacroInjector actionPathMacroInjector() {
 		return actionPathMacroInjector;
 	}
 
-	public MadvocContextScopeInjector getMadvocContextScopeInjector() {
+	public MadvocContextScopeInjector madvocContextScopeInjector() {
 		return madvocContextScopeInjector;
 	}
 
-	public MadvocParamsInjector getMadvocParamsInjector() {
+	public MadvocParamsInjector madvocParamsInjector() {
 		return madvocParamsInjector;
 	}
 
-	public ApplicationScopeInjector getApplicationScopeInjector() {
+	public ApplicationScopeInjector applicationScopeInjector() {
 		return applicationScopeInjector;
 	}
 
-	public ServletContextScopeInjector getServletContextScopeInjector() {
+	public ServletContextScopeInjector servletContextScopeInjector() {
 		return servletContextScopeInjector;
+	}
+
+	public CookieInjector cookieInjector() {
+		return cookieInjector;
 	}
 }

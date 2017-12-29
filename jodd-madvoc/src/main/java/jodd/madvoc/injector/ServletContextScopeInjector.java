@@ -39,7 +39,6 @@ import jodd.util.StringUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -55,7 +54,7 @@ import java.io.IOException;
  * <li>cookies</li>
  * </ul>
  */
-public class ServletContextScopeInjector implements Injector, Outjector, ContextInjector<ServletContext> {
+public class ServletContextScopeInjector implements Injector, ContextInjector<ServletContext> {
 
 	private final static ScopeType SCOPE_TYPE = ScopeType.SERVLET;
 
@@ -67,9 +66,6 @@ public class ServletContextScopeInjector implements Injector, Outjector, Context
 	public static final String REQUEST_BODY = "requestBody";
 	public static final String SESSION_MAP = "sessionMap";
 	public static final String CONTEXT_MAP = "contextMap";
-
-	public static final String COOKIE_NAME = "cookie";
-
 	public static final String CSRF_NAME = "csrfTokenValid";
 
 	/**
@@ -87,7 +83,7 @@ public class ServletContextScopeInjector implements Injector, Outjector, Context
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Class fieldType = in.type;
+			final Class fieldType = in.type;
 			Object value = null;
 
 			// raw servlet types
@@ -146,22 +142,6 @@ public class ServletContextScopeInjector implements Injector, Outjector, Context
 			// csrf
 			if (in.name.equals(CSRF_NAME)) {
 				value = Boolean.valueOf(CsrfShield.checkCsrfToken(servletRequest));
-			} else
-
-			// cookies
-			if (in.name.startsWith(COOKIE_NAME)) {
-				String cookieName = StringUtil.uncapitalize(in.name.substring(COOKIE_NAME.length()));
-				if (fieldType.isArray()) {
-					if (fieldType.getComponentType().equals(Cookie.class)) {
-						if (StringUtil.isEmpty(cookieName)) {
-							value = servletRequest.getCookies();		// get all cookies
-						} else {
-							value = ServletUtil.getAllCookies(servletRequest, cookieName);	// get all cookies by name
-						}
-					}
-				} else {
-					value = ServletUtil.getCookie(servletRequest, cookieName);	// get single cookie
-				}
 			}
 
 			if (value != null) {
@@ -199,22 +179,4 @@ public class ServletContextScopeInjector implements Injector, Outjector, Context
 		});
 	}
 
-	@Override
-	public void outject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
-
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
-
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
-			if (out.name.startsWith(COOKIE_NAME)) {
-				Cookie cookie = (Cookie) target.readTargetProperty(out);
-				if (cookie != null) {
-					servletResponse.addCookie(cookie);
-				}
-			}
-		});
-	}
 }

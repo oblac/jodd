@@ -81,30 +81,31 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 */
 	protected void inject(ActionRequest actionRequest) {
 
-		injectorsManager.getMadvocContextScopeInjector().inject(actionRequest);
+		injectorsManager.madvocContextScopeInjector().inject(actionRequest);
 
 		// no need to inject madvoc params, as this can be slow
 		// and its better to use some single data object instead
 		//madvocContextInjector.injectMadvocParams(target);
 
-		injectorsManager.getServletContextScopeInjector().inject(actionRequest);
-		injectorsManager.getApplicationScopeInjector().inject(actionRequest);
-		injectorsManager.getSessionScopeInjector().inject(actionRequest);
-		injectorsManager.getRequestScopeInjector().inject(actionRequest);
-		injectorsManager.getActionPathMacroInjector().inject(actionRequest);
+		injectorsManager.servletContextScopeInjector().inject(actionRequest);
+		injectorsManager.applicationScopeInjector().inject(actionRequest);
+		injectorsManager.sessionScopeInjector().inject(actionRequest);
+		injectorsManager.requestScopeInjector().inject(actionRequest);
+		injectorsManager.actionPathMacroInjector().inject(actionRequest);
+		injectorsManager.cookieInjector().inject(actionRequest);
 	}
 
 	/**
 	 * Performs outjection.
 	 */
 	protected void outject(ActionRequest actionRequest) {
+		injectorsManager.cookieInjector().outject(actionRequest);
 
-		injectorsManager.getServletContextScopeInjector().outject(actionRequest);
-		injectorsManager.getApplicationScopeInjector().outject(actionRequest);
+		injectorsManager.applicationScopeInjector().outject(actionRequest);
 
-		injectorsManager.getSessionScopeInjector().outject(actionRequest);
+		injectorsManager.sessionScopeInjector().outject(actionRequest);
 
-		injectorsManager.getRequestScopeInjector().outject(actionRequest);
+		injectorsManager.requestScopeInjector().outject(actionRequest);
 	}
 
 }

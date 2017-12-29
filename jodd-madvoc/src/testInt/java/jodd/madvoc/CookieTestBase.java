@@ -23,50 +23,35 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.component;
+package jodd.madvoc;
 
-import jodd.madvoc.config.ScopeData;
-import jodd.madvoc.injector.Target;
-import jodd.madvoc.injector.Targets;
-import jodd.petite.PetiteContainer;
-import jodd.petite.meta.PetiteInject;
+import jodd.http.Cookie;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import javax.servlet.ServletContext;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Context injector for all singleton Madvoc elements, like results and interceptors.
- */
-public class ContextInjectorComponent {
+abstract class CookieTestBase {
 
-	@PetiteInject
-	protected PetiteContainer madpc;
+	@Test
+	public void testCookie() {
+		HttpResponse response;
 
-	@PetiteInject
-	protected InjectorsManager injectorsManager;
+		Cookie cookie = new Cookie("foo", "value");
+		response = HttpRequest.get("localhost:8173/cookie").cookies(cookie).send();
 
-	@PetiteInject
-	protected MadvocController madvocController;
+		Cookie[] cookies = response.cookies();
 
-	@PetiteInject
-	protected ScopeDataResolver scopeDataResolver;
+		for (Cookie c : cookies) {
+			if (c.getName().equals("foo")) {
 
-	/**
-	 * Inject context into target.
-	 */
-	public void injectContext(Target target) {
-		Class targetType = target.resolveType();
-
-		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(targetType);
-
-		Targets targets = new Targets(target, scopeData);
-		injectorsManager.madvocContextScopeInjector().injectContext(targets, madpc);
-		injectorsManager.madvocParamsInjector().injectContext(targets, madpc);
-
-		ServletContext servletContext = madvocController.getApplicationContext();
-		if (servletContext != null) {
-			injectorsManager.servletContextScopeInjector().injectContext(targets, servletContext);
-			injectorsManager.applicationScopeInjector().injectContext(targets, servletContext);
+				assertEquals("new_value", c.getValue());
+				return;
+			}
 		}
+		Assertions.fail("Cookie not found in the repsonse");
 	}
 
 }
