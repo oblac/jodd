@@ -27,7 +27,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.config.ScopeData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,13 +35,8 @@ import java.util.Enumeration;
 /**
  * Servlet session scope injector.
  */
-public class SessionScopeInjector extends BaseScopeInjector implements Injector, Outjector {
+public class SessionScopeInjector implements Injector, Outjector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.SESSION;
-
-	public SessionScopeInjector() {
-		silent = true;
-	}
-
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
@@ -59,13 +53,11 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(attrName);
-					if (name != null) {
-						Object attrValue = session.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue);
-					}
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(attrName);
+				if (name != null) {
+					Object attrValue = session.getAttribute(attrName);
+					target.writeValue(name, attrValue, true);
 				}
 			});
 		}
@@ -81,11 +73,9 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, scopes) -> {
-			for (ScopeData.Out out : scopes) {
-				Object value = target.readTargetProperty(out);
-				session.setAttribute(out.name, value);
-			}
+		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
+			Object value = target.readTargetProperty(out);
+			session.setAttribute(out.name, value);
 		});
 	}
 }

@@ -27,14 +27,13 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.config.ScopeData;
 import jodd.petite.PetiteContainer;
 
 /**
  * Madvoc context injector. Injects beans from Madvocs internal container,
  * i.e. Madvocs components.
  */
-public class MadvocContextScopeInjector extends BaseScopeInjector implements Injector, ContextInjector<PetiteContainer> {
+public class MadvocContextScopeInjector implements Injector, ContextInjector<PetiteContainer> {
 	private final static ScopeType SCOPE_TYPE = ScopeType.CONTEXT;
 	protected final PetiteContainer madpc;
 
@@ -44,13 +43,11 @@ public class MadvocContextScopeInjector extends BaseScopeInjector implements Inj
 
 	@Override
 	public void injectContext(Targets targets, PetiteContainer madpc) {
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-			for (ScopeData.In in : scopes) {
-				Object value = madpc.getBean(in.name);
-				if (value != null) {
-					String property = in.target != null ? in.target : in.name;
-					setTargetProperty(target, property, value);
-				}
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+			Object value = madpc.getBean(in.name);
+			if (value != null) {
+				String property = in.target != null ? in.target : in.name;
+				target.writeValue(property, value, false);
 			}
 		});
 	}
@@ -59,13 +56,11 @@ public class MadvocContextScopeInjector extends BaseScopeInjector implements Inj
 	public void inject(ActionRequest actionRequest) {
 		Targets targets = actionRequest.getTargets();
 
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-			for (ScopeData.In in : scopes) {
-				Object value = madpc.getBean(in.name);
-				if (value != null) {
-					String property = in.target != null ? in.target : in.name;
-					setTargetProperty(target, property, value);
-				}
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+			Object value = madpc.getBean(in.name);
+			if (value != null) {
+				String property = in.target != null ? in.target : in.name;
+				target.writeValue(property, value, false);
 			}
 		});
 	}

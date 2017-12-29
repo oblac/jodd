@@ -29,19 +29,14 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ActionRuntimeSet;
-import jodd.madvoc.config.ScopeData;
 import jodd.util.StringUtil;
 
 /**
  * Injects macro values from action path into the action bean.
  * Path macros are considered to be in {@link jodd.madvoc.ScopeType#REQUEST request scope}.
  */
-public class ActionPathMacroInjector extends BaseScopeInjector implements Injector {
+public class ActionPathMacroInjector implements Injector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
-
-	public ActionPathMacroInjector() {
-		silent = true;
-	}
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
@@ -72,13 +67,11 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 
 			String macroName = names[ndx];
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(macroName);
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(macroName);
 
-					if (name != null) {
-						setTargetProperty(target, name, value);
-					}
+				if (name != null) {
+					target.writeValue(name, value, true);
 				}
 			});
 		}

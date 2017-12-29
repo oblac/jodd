@@ -73,7 +73,7 @@ public class Targets {
 		}
 	}
 
-	public void forEachTargetAndInScopes(ScopeType scopeType, BiConsumer<Target, ScopeData.In[]> biConsumer) {
+	public void forEachTargetAndInScopes(ScopeType scopeType, BiConsumer<Target, ScopeData.In> biConsumer) {
 		final ScopeData[] scopeData = scopes[scopeType.value()];
 		if (scopeData == null) {
 			return;
@@ -86,10 +86,12 @@ public class Targets {
 			if (ins == null) {
 				continue;
 			}
-			biConsumer.accept(targets[i], ins);
+			for (ScopeData.In in : ins) {
+				biConsumer.accept(targets[i], in);
+			}
 		}
 	}
-	public void forEachTargetAndOutScopes(ScopeType scopeType, BiConsumer<Target, ScopeData.Out[]> biConsumer) {
+	public void forEachTargetAndOutScopes(ScopeType scopeType, BiConsumer<Target, ScopeData.Out> biConsumer) {
 		final ScopeData[] scopeData = scopes[scopeType.value()];
 		if (scopeData == null) {
 			return;
@@ -102,7 +104,9 @@ public class Targets {
 			if (outs == null) {
 				continue;
 			}
-			biConsumer.accept(targets[i], outs);
+			for (ScopeData.Out out : outs) {
+				biConsumer.accept(targets[i], out);
+			}
 		}
 	}
 

@@ -28,7 +28,6 @@ package jodd.madvoc.injector;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.config.ScopeData;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.upload.FileUpload;
@@ -45,12 +44,11 @@ import java.util.Enumeration;
  * instance can be used in the Madvoc application. That's why
  * configuration is being cloned on injector creation.
  */
-public class RequestScopeInjector extends BaseScopeInjector implements Injector, Outjector {
+public class RequestScopeInjector implements Injector, Outjector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
 
 	public RequestScopeInjector(MadvocConfig madvocConfig) {
 		this.encoding = madvocConfig.getEncoding();
-		this.silent = true;
 	}
 
 	// ---------------------------------------------------------------- configuration
@@ -132,13 +130,11 @@ public class RequestScopeInjector extends BaseScopeInjector implements Injector,
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(attrName);
-					if (name != null) {
-						Object attrValue = servletRequest.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue);
-					}
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(attrName);
+				if (name != null) {
+					Object attrValue = servletRequest.getAttribute(attrName);
+					target.writeValue(name, attrValue, true);
 				}
 			});
 		}
@@ -157,17 +153,15 @@ public class RequestScopeInjector extends BaseScopeInjector implements Injector,
 				continue;
 			}
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(paramName);
-					if (name != null) {
-						String[] paramValues = servletRequest.getParameterValues(paramName);
-						paramValues = ServletUtil.prepareParameters(
-								paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(paramName);
+				if (name != null) {
+					String[] paramValues = servletRequest.getParameterValues(paramName);
 
-						if (paramValues == null) {
-							continue;
-						}
+					paramValues = ServletUtil.prepareParameters(
+							paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+
+					if (paramValues != null) {
 						if (encode) {
 							for (int j = 0; j < paramValues.length; j++) {
 								String p = paramValues[j];
@@ -177,7 +171,7 @@ public class RequestScopeInjector extends BaseScopeInjector implements Injector,
 							}
 						}
 						Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
-						setTargetProperty(target, name, value);
+						target.writeValue(name, value, true);
 					}
 				}
 			});
@@ -202,25 +196,23 @@ public class RequestScopeInjector extends BaseScopeInjector implements Injector,
 				continue;
 			}
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(paramName);
-					if (name != null) {
-						FileUpload[] paramValues = multipartRequest.getFiles(paramName);
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(paramName);
+				if (name != null) {
+					FileUpload[] paramValues = multipartRequest.getFiles(paramName);
 
-						if (ignoreInvalidUploadFiles) {
-							for (int j = 0; j < paramValues.length; j++) {
-								FileUpload paramValue = paramValues[j];
+					if (ignoreInvalidUploadFiles) {
+						for (int j = 0; j < paramValues.length; j++) {
+							FileUpload paramValue = paramValues[j];
 
-								if ((!paramValue.isValid()) || (!paramValue.isUploaded())) {
-									paramValues[j] = null;
-								}
+							if ((!paramValue.isValid()) || (!paramValue.isUploaded())) {
+								paramValues[j] = null;
 							}
 						}
-
-						Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
-						setTargetProperty(target, name, value);
 					}
+
+					Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
+					target.writeValue(name, value, true);
 				}
 			});
 		}
@@ -255,11 +247,9 @@ public class RequestScopeInjector extends BaseScopeInjector implements Injector,
 
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, scopes) -> {
-			for (ScopeData.Out out : scopes) {
-				Object value = target.readTargetProperty(out);
-				servletRequest.setAttribute(out.name, value);
-			}
+		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
+			Object value = target.readTargetProperty(out);
+			servletRequest.setAttribute(out.name, value);
 		});
 	}
 

@@ -27,7 +27,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.config.ScopeData;
 
 import javax.servlet.ServletContext;
 import java.util.Enumeration;
@@ -35,14 +34,9 @@ import java.util.Enumeration;
 /**
  * Servlet context injector.
  */
-public class ApplicationScopeInjector extends BaseScopeInjector
-		implements Injector, Outjector, ContextInjector<ServletContext> {
+public class ApplicationScopeInjector implements Injector, Outjector, ContextInjector<ServletContext> {
 
 	private final static ScopeType SCOPE_TYPE = ScopeType.APPLICATION;
-
-	public ApplicationScopeInjector() {
-		silent = true;
-	}
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
@@ -57,13 +51,11 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(attrName);
-					if (name != null) {
-						Object attrValue = servletContext.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue);
-					}
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(attrName);
+				if (name != null) {
+					Object attrValue = servletContext.getAttribute(attrName);
+					target.writeValue(name, attrValue, true);
 				}
 			});
 		}
@@ -80,13 +72,11 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
-				for (ScopeData.In in : scopes) {
-					String name = in.matchedPropertyName(attrName);
-					if (name != null) {
-						Object attrValue = servletContext.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue);
-					}
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+				String name = in.matchedPropertyName(attrName);
+				if (name != null) {
+					Object attrValue = servletContext.getAttribute(attrName);
+					target.writeValue(name, attrValue, true);
 				}
 			});
 		}
@@ -101,11 +91,9 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 
 		ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, scopes) -> {
-			for (ScopeData.Out out : scopes) {
-				Object value = target.readTargetProperty(out);
-				context.setAttribute(out.name, value);
-			}
+		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
+			Object value = target.readTargetProperty(out);
+			context.setAttribute(out.name, value);
 		});
 	}
 }
