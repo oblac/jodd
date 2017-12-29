@@ -55,7 +55,12 @@ public enum ScopeType {
 	/**
 	 * All about cookies.
 	 */
-	COOKIE(5)
+	COOKIE(5),
+
+	/**
+	 * Request body.
+	 */
+	BODY(6)
 	;
 
 	private int value;
@@ -77,6 +82,7 @@ public enum ScopeType {
 			case 3: return "MadvocContext";
 			case 4: return "Servlet";
 			case 5: return "Cookie";
+			case 6: return "Body";
 			default: return "Undefined";
 		}
 	}

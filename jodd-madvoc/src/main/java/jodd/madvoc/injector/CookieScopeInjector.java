@@ -27,38 +27,63 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.petite.PetiteContainer;
+import jodd.servlet.ServletUtil;
+import jodd.util.StringUtil;
 
-/**
- * Madvoc context injector. Injects beans from Madvocs internal container,
- * i.e. Madvocs components.
- */
-public class MadvocContextScopeInjector implements Injector, ContextInjector<PetiteContainer> {
-	private final static ScopeType SCOPE_TYPE = ScopeType.CONTEXT;
-	protected final PetiteContainer madpc;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-	public MadvocContextScopeInjector(PetiteContainer madpc) {
-		this.madpc = madpc;
-	}
+public class CookieScopeInjector implements Injector, Outjector {
 
-	@Override
-	public void injectContext(Targets targets, PetiteContainer madpc) {
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Object value = madpc.getBean(in.name);
-			if (value != null) {
-				target.writeValue(in.propertyName(), value, false);
-			}
-		});
-	}
+	private final static ScopeType SCOPE_TYPE = ScopeType.COOKIE;
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
 		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
+			return;
+		}
+
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Object value = madpc.getBean(in.name);
+			Object value = null;
+
+			if (in.type == Cookie.class) {
+				String cookieName = StringUtil.uncapitalize(in.name);
+				value = ServletUtil.getCookie(servletRequest, cookieName);     // get single cookie
+			}
+			else if (in.type.isArray()) {
+				if (in.type.getComponentType().equals(Cookie.class)) {
+					if (StringUtil.isEmpty(in.name)) {
+						value = servletRequest.getCookies();		                    // get all cookies
+					} else {
+						value = ServletUtil.getAllCookies(servletRequest, in.name);     // get all cookies by name
+					}
+				}
+			}
+
 			if (value != null) {
-				target.writeValue(in.propertyName(), value, false);
+				target.writeValue(in.propertyName(), value, true);
+			}
+		});
+	}
+
+
+	@Override
+	public void outject(ActionRequest actionRequest) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
+			return;
+		}
+
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+
+		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
+			Cookie cookie = (Cookie) target.readTargetProperty(out);
+			if (cookie != null) {
+				servletResponse.addCookie(cookie);
 			}
 		});
 	}

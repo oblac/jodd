@@ -69,4 +69,15 @@ public abstract class ArgsTestBase {
 		assertEquals("Hello Frank, you are number 3 or 1.", response.bodyText().trim());
 	}
 
+	@Test
+	public void testArgs3_requestBody() {
+		ArgsAction.User.counter = 0;
+		HttpResponse response;
+		response = HttpRequest.get("localhost:8173/args.user2")
+				.body("{\"id\": 3, \"username\": \"Frank\"}")
+				.send();
+
+		assertEquals("{\"counter\":1,\"id\":3,\"username\":\"Frank!\"}", response.bodyText().trim());
+	}
+
 }

@@ -25,18 +25,17 @@
 
 package jodd.madvoc.injector;
 
+import jodd.json.JsonParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.stream.Collectors;
 
-public class CookieInjector implements Injector, Outjector {
+public class RequestBodyScopeInject implements Injector {
 
-	private final static ScopeType SCOPE_TYPE = ScopeType.COOKIE;
+	private final static ScopeType SCOPE_TYPE = ScopeType.BODY;
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
@@ -45,48 +44,20 @@ public class CookieInjector implements Injector, Outjector {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Object value = null;
-
-			if (in.type == Cookie.class) {
-				String cookieName = StringUtil.uncapitalize(in.name);
-				value = ServletUtil.getCookie(servletRequest, cookieName);     // get single cookie
-			}
-			else if (in.type.isArray()) {
-				if (in.type.getComponentType().equals(Cookie.class)) {
-					if (StringUtil.isEmpty(in.name)) {
-						value = servletRequest.getCookies();		                    // get all cookies
-					} else {
-						value = ServletUtil.getAllCookies(servletRequest, in.name);     // get all cookies by name
-					}
-				}
-			}
-
-			if (value != null) {
-				String property = in.target != null ? in.target : in.name;
-
-				target.writeValue(property, value, true);
-			}
-		});
-	}
-
-
-	@Override
-	public void outject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
+		String body;
+		try {
+			body = actionRequest.getHttpServletRequest().getReader().lines().collect(Collectors.joining());
+		} catch (IOException ignore) {
+			return;
+		}
+		if (StringUtil.isEmpty(body)) {
 			return;
 		}
 
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+			Object value = JsonParser.create().parse(body, in.type);
 
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
-			Cookie cookie = (Cookie) target.readTargetProperty(out);
-			if (cookie != null) {
-				servletResponse.addCookie(cookie);
-			}
+			target.writeValue(in.propertyName(), value, true);
 		});
 	}
 

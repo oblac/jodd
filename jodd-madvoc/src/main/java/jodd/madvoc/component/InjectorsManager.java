@@ -28,9 +28,10 @@ package jodd.madvoc.component;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.ApplicationScopeInjector;
-import jodd.madvoc.injector.CookieInjector;
+import jodd.madvoc.injector.CookieScopeInjector;
 import jodd.madvoc.injector.MadvocContextScopeInjector;
 import jodd.madvoc.injector.MadvocParamsInjector;
+import jodd.madvoc.injector.RequestBodyScopeInject;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.injector.ServletContextScopeInjector;
 import jodd.madvoc.injector.SessionScopeInjector;
@@ -58,7 +59,8 @@ public class InjectorsManager {
 	protected MadvocParamsInjector madvocParamsInjector;
 	protected ApplicationScopeInjector applicationScopeInjector;
 	protected ServletContextScopeInjector servletContextScopeInjector;
-	protected CookieInjector cookieInjector;
+	protected CookieScopeInjector cookieInjector;
+	protected RequestBodyScopeInject requestBodyScopeInject;
 
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
@@ -69,7 +71,8 @@ public class InjectorsManager {
 		madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
 		applicationScopeInjector = new ApplicationScopeInjector();
 		servletContextScopeInjector = new ServletContextScopeInjector();
-		cookieInjector = new CookieInjector();
+		cookieInjector = new CookieScopeInjector();
+		requestBodyScopeInject = new RequestBodyScopeInject();
 	}
 
 	// ---------------------------------------------------------------- getter
@@ -102,7 +105,11 @@ public class InjectorsManager {
 		return servletContextScopeInjector;
 	}
 
-	public CookieInjector cookieInjector() {
+	public CookieScopeInjector cookieInjector() {
 		return cookieInjector;
+	}
+
+	public RequestBodyScopeInject requestBodyScopeInject() {
+		return requestBodyScopeInject;
 	}
 }

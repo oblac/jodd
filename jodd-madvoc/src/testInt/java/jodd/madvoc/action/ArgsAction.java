@@ -30,10 +30,15 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.meta.Scope;
+import jodd.madvoc.result.JsonActionResult;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static jodd.madvoc.ScopeType.BODY;
+import static jodd.madvoc.meta.Action.NONE;
 
 @MadvocAction
 public class ArgsAction {
@@ -113,6 +118,13 @@ public class ArgsAction {
 
 	@Action
 	public void user(@In @Out User user) {
+	}
+
+	@Action(extension = NONE)
+	@RenderWith(JsonActionResult.class)
+	public User user2(@In @Scope(BODY) User user) {
+		user.setUsername(user.getUsername() + "!");
+		return user;
 	}
 
 	public void zigzag(@In @Out int id) {

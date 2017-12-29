@@ -38,6 +38,10 @@ public class ScopeData {
 		public String name;			// property name
 		public String target;		// real property name, if different from 'name'
 
+		public String propertyName() {
+			return target != null ? target : name;
+		}
+
 		/**
 		 * Returns matched property name or <code>null</code> if name is not matched.
 		 * <p>

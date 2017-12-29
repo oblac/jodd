@@ -145,9 +145,7 @@ public class ServletContextScopeInjector implements Injector, ContextInjector<Se
 			}
 
 			if (value != null) {
-				String property = in.target != null ? in.target : in.name;
-
-				target.writeValue(property, value, true);
+				target.writeValue(in.propertyName(), value, true);
 			}
 		});
 	}
@@ -172,9 +170,7 @@ public class ServletContextScopeInjector implements Injector, ContextInjector<Se
 			}
 
 			if (value != null) {
-				String property = in.target != null ? in.target : in.name;
-
-				target.writeValue(property, value, true);
+				target.writeValue(in.propertyName(), value, true);
 			}
 		});
 	}
