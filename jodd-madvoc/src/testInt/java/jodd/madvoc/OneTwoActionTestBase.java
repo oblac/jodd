@@ -46,30 +46,6 @@ public abstract class OneTwoActionTestBase {
 	}
 
 	@Test
-	public void testOneMoveAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/oneMove.html").send();
-		assertEquals("", response.bodyText());
-		assertEquals(302, response.statusCode());
-
-		String redirectLocation = response.location();
-
-		response = HttpRequest.get(redirectLocation).send();
-		assertEquals("value = [777]", response.bodyText());
-	}
-
-	@Test
-	public void testOneMoveGoAction() {
-		HttpResponse response = HttpRequest.get("localhost:8173/oneMove.go.html").send();
-		assertEquals("", response.bodyText());
-		assertEquals(302, response.statusCode());
-
-		String redirectLocation = response.location();
-
-		response = HttpRequest.get(redirectLocation).send();
-		assertEquals("value = [888]", response.bodyText());
-	}
-
-	@Test
 	public void testOneRedirectPermanentAction() {
 		HttpResponse response = HttpRequest.get("localhost:8173/oneRedirect.perm.html").send();
 		assertEquals("", response.bodyText());
