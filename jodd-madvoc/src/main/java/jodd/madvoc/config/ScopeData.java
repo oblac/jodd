@@ -37,6 +37,39 @@ public class ScopeData {
 		public Class type;			// property type
 		public String name;			// property name
 		public String target;		// real property name, if different from 'name'
+
+		/**
+		 * Returns matched property name or <code>null</code> if name is not matched.
+		 * <p>
+		 * Matches if attribute name matches the required field name. If the match is positive,
+		 * injection or outjection is performed on the field.
+		 * <p>
+		 * Parameter name matches field name if param name starts with field name and has
+		 * either '.' or '[' after the field name.
+		 * <p>
+		 * Returns real property name, once when name is matched.
+		 */
+		public String matchedPropertyName(String value) {
+			// match
+			if (!value.startsWith(name)) {
+				return null;
+			}
+			int requiredLen = name.length();
+			if (value.length() >= requiredLen + 1) {
+				char c = value.charAt(requiredLen);
+				if ((c != '.') && (c != '[')) {
+					return null;
+				}
+			}
+
+			// get param
+			if (target == null) {
+				return value;
+			}
+			return target + value.substring(name.length());
+		}
+
+
 	}
 	public static class Out {
 		public Class type;			// property type

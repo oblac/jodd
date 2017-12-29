@@ -27,9 +27,8 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.config.ScopeData;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.map.HttpServletContextMap;
@@ -60,6 +59,8 @@ import java.io.IOException;
 public class ServletContextScopeInjector extends BaseScopeInjector
 		implements Injector, Outjector, ContextInjector<ServletContext> {
 
+	private final static ScopeType SCOPE_TYPE = ScopeType.SERVLET;
+
 	public static final String REQUEST_NAME = "request";
 	public static final String SESSION_NAME = "session";
 	public static final String CONTEXT_NAME = "context";
@@ -73,8 +74,7 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 
 	public static final String CSRF_NAME = "csrfTokenValid";
 
-	public ServletContextScopeInjector(ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.SERVLET, scopeDataResolver);
+	public ServletContextScopeInjector() {
 		silent = true;
 	}
 
@@ -84,26 +84,15 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	@Override
 	@SuppressWarnings({"ConstantConditions"})
 	public void inject(ActionRequest actionRequest) {
-		ScopeData[] injectData = lookupScopeData(actionRequest);
-		if (injectData == null) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
-
-		Target[] targets = actionRequest.getTargets();
 
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		for (int i = 0; i < targets.length; i++) {
-			Target target = targets[i];
-			if (injectData[i] == null) {
-				continue;
-			}
-			ScopeData.In[] scopes = injectData[i].in;
-			if (scopes == null) {
-				continue;
-			}
-
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
 			for (ScopeData.In in : scopes) {
 				Class fieldType = in.type;
 				Object value = null;
@@ -188,70 +177,56 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 					setTargetProperty(target, property, value);
 				}
 			}
-		}
+		});
 	}
 
 	/**
 	 * Injects just context.
 	 */
 	@Override
-	public void injectContext(Target target, ScopeData[] scopeData, ServletContext servletContext) {
-		ScopeData.In[] injectData = lookupInData(scopeData);
-		if (injectData == null) {
-			return;
-		}
+	public void injectContext(Targets targets, ServletContext servletContext) {
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
+			for (ScopeData.In in : scopes) {
+				Class fieldType = in.type;
+				Object value = null;
 
-		for (ScopeData.In in : injectData) {
-			Class fieldType = in.type;
-			Object value = null;
+				if (fieldType.equals(ServletContext.class)) {
+					// raw servlet type
+					value = servletContext;
+				} else if (in.name.equals(CONTEXT_MAP)) {
+					// names
+					value = new HttpServletContextMap(servletContext);
+				} else if (in.name.startsWith(CONTEXT_NAME)) {
+					value = BeanUtil.declared.getProperty(servletContext, StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
+				}
 
-			if (fieldType.equals(ServletContext.class)) {
-				// raw servlet type
-				value = servletContext;
-			} else if (in.name.equals(CONTEXT_MAP)) {
-				// names
-				value = new HttpServletContextMap(servletContext);
-			} else if (in.name.startsWith(CONTEXT_NAME)) {
-				value = BeanUtil.declared.getProperty(servletContext, StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
+				if (value != null) {
+					String property = in.target != null ? in.target : in.name;
+
+					setTargetProperty(target, property, value);
+				}
 			}
-
-			if (value != null) {
-				String property = in.target != null ? in.target : in.name;
-
-				setTargetProperty(target, property, value);
-			}
-		}
+		});
 	}
 
 	@Override
 	public void outject(ActionRequest actionRequest) {
-		ScopeData[] outjectData = lookupScopeData(actionRequest);
-		if (outjectData == null) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		Target[] targets = actionRequest.getTargets();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		for (int i = 0; i < targets.length; i++) {
-			Target target = targets[i];
-			if (outjectData[i] == null) {
-				continue;
-			}
-			ScopeData.Out[] scopes = outjectData[i].out;
-			if (scopes == null) {
-				continue;
-			}
-
+		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, scopes) -> {
 			for (ScopeData.Out out : scopes) {
 				if (out.name.startsWith(COOKIE_NAME)) {
-
-					Cookie cookie = (Cookie) getTargetProperty(target, out);
+					Cookie cookie = (Cookie) target.readTargetProperty(out);
 					if (cookie != null) {
 						servletResponse.addCookie(cookie);
 					}
 				}
 			}
-		}
+		});
 	}
 }

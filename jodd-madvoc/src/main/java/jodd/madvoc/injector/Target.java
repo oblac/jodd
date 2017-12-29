@@ -27,6 +27,7 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.config.ScopeData;
 import jodd.typeconverter.TypeConverterManager;
 
 import java.lang.reflect.Constructor;
@@ -114,6 +115,17 @@ public class Target {
 		}
 
 		return BeanUtil.declared.getProperty(value, propertyName);
+	}
+
+	/**
+	 * Reads target property.
+	 */
+	public Object readTargetProperty(ScopeData.Out out) {
+		if (out.target == null) {
+			return readValue(out.name);
+		} else {
+			return readValue(out.target);
+		}
 	}
 
 	// ---------------------------------------------------------------- write

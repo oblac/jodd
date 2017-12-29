@@ -27,7 +27,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ActionRuntimeSet;
 import jodd.madvoc.config.ScopeData;
@@ -38,9 +37,9 @@ import jodd.util.StringUtil;
  * Path macros are considered to be in {@link jodd.madvoc.ScopeType#REQUEST request scope}.
  */
 public class ActionPathMacroInjector extends BaseScopeInjector implements Injector {
+	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
 
-	public ActionPathMacroInjector(ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.REQUEST, scopeDataResolver);
+	public ActionPathMacroInjector() {
 		silent = true;
 	}
 
@@ -54,14 +53,12 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 			return;
 		}
 
-		ScopeData[] injectData = lookupScopeData(actionRequest);
-		if (injectData == null) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
 		// inject
-
-		Target[] targets = actionRequest.getTargets();
 
 		String[] names = set.actionPathMacros().getNames();
 		String[] values = set.actionPathMacros().extract(actionRequest.getActionPath());
@@ -75,24 +72,15 @@ public class ActionPathMacroInjector extends BaseScopeInjector implements Inject
 
 			String macroName = names[ndx];
 
-			for (int i = 0; i < targets.length; i++) {
-				Target target = targets[i];
-				if (injectData[i] == null) {
-					continue;
-				}
-				ScopeData.In[] scopes = injectData[i].in;
-				if (scopes == null) {
-					continue;
-				}
-
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
 				for (ScopeData.In in : scopes) {
-					String name = getMatchedPropertyName(in, macroName);
+					String name = in.matchedPropertyName(macroName);
 
 					if (name != null) {
 						setTargetProperty(target, name, value);
 					}
 				}
-			}
+			});
 		}
 	}
 }

@@ -89,12 +89,8 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 
 		injectorsManager.getServletContextScopeInjector().inject(actionRequest);
 		injectorsManager.getApplicationScopeInjector().inject(actionRequest);
-
 		injectorsManager.getSessionScopeInjector().inject(actionRequest);
-
-		injectorsManager.getRequestScopeInjector().prepare(actionRequest);		// todo check if needed
 		injectorsManager.getRequestScopeInjector().inject(actionRequest);
-
 		injectorsManager.getActionPathMacroInjector().inject(actionRequest);
 	}
 

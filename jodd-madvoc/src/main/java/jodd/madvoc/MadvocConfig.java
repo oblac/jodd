@@ -35,7 +35,6 @@ import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPath;
-import jodd.madvoc.result.MoveActionResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.ArraysUtil;
@@ -77,7 +76,6 @@ public final class MadvocConfig {
 		rootPackages = new RootPackages();
 		detectDuplicatePathsEnabled = true;
 		preventCaching = true;
-		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
@@ -277,21 +275,6 @@ public final class MadvocConfig {
 		this.resultPathPrefix = resultPathPrefix;
 	}
 
-	// ---------------------------------------------------------------- attributes names
-
-	private String attributeMoveId;
-
-	public String getAttributeMoveId() {
-		return attributeMoveId;
-	}
-
-	/**
-	 * Sets attribute name for {@link MoveActionResult move results}.
-	 */
-	public void setAttributeMoveId(String attributeMoveId) {
-		this.attributeMoveId = attributeMoveId;
-	}
-
 	// ---------------------------------------------------------------- path macro class
 
 	private Class<? extends PathMacros> pathMacroClass;
@@ -388,7 +371,6 @@ public final class MadvocConfig {
 		return "MadvocConfig{" +
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
 				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
-				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +

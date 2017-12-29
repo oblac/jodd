@@ -27,7 +27,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.config.ScopeData;
 
 import javax.servlet.ServletContext;
@@ -39,51 +38,40 @@ import java.util.Enumeration;
 public class ApplicationScopeInjector extends BaseScopeInjector
 		implements Injector, Outjector, ContextInjector<ServletContext> {
 
-	public ApplicationScopeInjector(ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.APPLICATION, scopeDataResolver);
+	private final static ScopeType SCOPE_TYPE = ScopeType.APPLICATION;
+
+	public ApplicationScopeInjector() {
 		silent = true;
 	}
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		Target[] targets = actionRequest.getTargets();
-
-		ScopeData[] injectData = lookupScopeData(actionRequest);
-		if (injectData == null) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
-		ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
+		ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
 		Enumeration attributeNames = servletContext.getAttributeNames();
 
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
-			for (int i = 0; i < targets.length; i++) {
-				Target target = targets[i];
-				if (injectData[i] == null) {
-					continue;
-				}
-				ScopeData.In[] scopes = injectData[i].in;
-				if (scopes == null) {
-					continue;
-				}
-
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
 				for (ScopeData.In in : scopes) {
-					String name = getMatchedPropertyName(in, attrName);
+					String name = in.matchedPropertyName(attrName);
 					if (name != null) {
 						Object attrValue = servletContext.getAttribute(attrName);
 						setTargetProperty(target, name, attrValue);
 					}
 				}
-			}
+			});
 		}
 	}
 
 	@Override
-	public void injectContext(Target target, ScopeData[] scopeData, ServletContext servletContext) {
-		ScopeData.In[] injectData = lookupInData(scopeData);
-		if (injectData == null) {
+	public void injectContext(Targets targets, ServletContext servletContext) {
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
@@ -91,40 +79,33 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
-			for (ScopeData.In in : injectData) {
-				String name = getMatchedPropertyName(in, attrName);
-				if (name != null) {
-					Object attrValue = servletContext.getAttribute(attrName);
-					setTargetProperty(target, name, attrValue);
+
+			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, scopes) -> {
+				for (ScopeData.In in : scopes) {
+					String name = in.matchedPropertyName(attrName);
+					if (name != null) {
+						Object attrValue = servletContext.getAttribute(attrName);
+						setTargetProperty(target, name, attrValue);
+					}
 				}
-			}
+			});
 		}
 	}
 
 	@Override
 	public void outject(ActionRequest actionRequest) {
-		ScopeData[] outjectData = lookupScopeData(actionRequest);
-		if (outjectData == null) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		Target[] targets = actionRequest.getTargets();
 		ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
-		for (int i = 0; i < targets.length; i++) {
-			Target target = targets[i];
-			if (outjectData[i] == null) {
-				continue;
-			}
-			ScopeData.Out[] scopes = outjectData[i].out;
-			if (scopes == null) {
-				continue;
-			}
-
+		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, scopes) -> {
 			for (ScopeData.Out out : scopes) {
-				Object value = getTargetProperty(target, out);
+				Object value = target.readTargetProperty(out);
 				context.setAttribute(out.name, value);
 			}
-		}
+		});
 	}
 }

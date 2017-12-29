@@ -37,7 +37,6 @@ import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Chain;
 import jodd.madvoc.result.Forward;
-import jodd.madvoc.result.Move;
 import jodd.madvoc.result.PermanentRedirect;
 import jodd.madvoc.result.Redirect;
 import jodd.petite.meta.PetiteInject;
@@ -69,7 +68,6 @@ public class ResultsManager {
 		this.allResults = new HashMap<>();
 
 		// defaults
-		registerResultName("move", Move::to);
 		registerResultName("chain", Chain::to);
 		registerResultName("redirect", Redirect::to);
 		registerResultName("url", PermanentRedirect::to);
