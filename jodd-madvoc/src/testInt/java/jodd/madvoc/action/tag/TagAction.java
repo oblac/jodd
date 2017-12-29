@@ -26,7 +26,7 @@
 package jodd.madvoc.action.tag;
 
 import jodd.bean.BeanCopy;
-import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.GET;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.RestAction;
@@ -61,7 +61,8 @@ public class TagAction {
 	}
 
 	// if we want to use 'delete' with @RestAction and GET
-	@RestAction(value = "delete/{id}", method = Action.GET)
+	@RestAction("delete/{id}")
+	@GET
 	public TextResult delete() {
 		tag = loadTagById(id);
 		return TextResult.of("delete-" + tag);

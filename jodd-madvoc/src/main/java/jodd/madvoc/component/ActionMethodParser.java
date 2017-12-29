@@ -43,10 +43,18 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.DELETE;
 import jodd.madvoc.meta.FilteredBy;
+import jodd.madvoc.meta.GET;
+import jodd.madvoc.meta.HEAD;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.OPTIONS;
+import jodd.madvoc.meta.PATCH;
+import jodd.madvoc.meta.POST;
+import jodd.madvoc.meta.PUT;
 import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.TRACE;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.NoneActionResult;
@@ -67,6 +75,18 @@ import java.lang.reflect.Method;
  * Invoked only during registration, so performance is not critical.
  */
 public class ActionMethodParser {
+
+	@SuppressWarnings("unchecked")
+	private static final Class<? extends Annotation>[] METHOD_ANNOTATIONS = new Class[] {
+		DELETE.class,
+		GET.class,
+		HEAD.class,
+		POST.class,
+		PUT.class,
+		OPTIONS.class,
+		TRACE.class,
+		PATCH.class
+	};
 
 	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
@@ -106,7 +126,7 @@ public class ActionMethodParser {
 
 		final String extension = readMethodExtension(annotationData, actionConfig);
 
-		final String method = readMethodHttpMethod(annotationData);
+		final String method = readMethodHttpMethod(actionMethod);
 
 		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, extension, method);
 
@@ -413,15 +433,16 @@ public class ActionMethodParser {
 	}
 
 	/**
-	 * Reads method's http method.
+	 * Reads method's http method or {@code null} if not specified.
 	 */
-	private String readMethodHttpMethod(ActionAnnotationData annotationData) {
-		String method = null;
-		if (annotationData != null) {
-			method = annotationData.method();
+	private String readMethodHttpMethod(Method actionMethod) {
+		for (Class<? extends Annotation> methodAnnotation : METHOD_ANNOTATIONS) {
+			if (actionMethod.getAnnotation(methodAnnotation) != null) {
+				return methodAnnotation.getSimpleName();
+			}
 		}
 
-		return method;
+		return null;
 	}
 
 	/**

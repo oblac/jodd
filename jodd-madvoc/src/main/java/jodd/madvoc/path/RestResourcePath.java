@@ -29,7 +29,6 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
-import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Scope;
 import jodd.util.CharUtil;
@@ -41,6 +40,10 @@ import java.lang.reflect.Method;
  * Naming strategy for REST resources.
  */
 public class RestResourcePath extends BaseNamingStrategy {
+
+	private static final String[] METHOD_NAMES = new String[] {
+		"CONNECT",  "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"
+	} ;
 
 	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
@@ -115,40 +118,10 @@ public class RestResourcePath extends BaseNamingStrategy {
 
 		String name = methodName.substring(0, i).toUpperCase();
 
-		if (name.equals(Action.CONNECT)) {
-			return Action.CONNECT;
-		}
-
-		if (name.equals(Action.DELETE)) {
-			return Action.DELETE;
-		}
-
-		if (name.equals(Action.GET)) {
-			return Action.GET;
-		}
-
-		if (name.equals(Action.HEAD)) {
-			return Action.HEAD;
-		}
-
-		if (name.equals(Action.OPTIONS)) {
-			return Action.OPTIONS;
-		}
-
-		if (name.equals(Action.PATCH)) {
-			return Action.PATCH;
-		}
-
-		if (name.equalsIgnoreCase(Action.POST)) {
-			return Action.POST;
-		}
-
-		if (name.equals(Action.PUT)) {
-			return Action.PUT;
-		}
-
-		if (name.equals(Action.TRACE)) {
-			return Action.TRACE;
+		for (String mn : METHOD_NAMES) {
+			if (mn.equals(name)) {
+				return mn;
+			}
 		}
 
 		return null;

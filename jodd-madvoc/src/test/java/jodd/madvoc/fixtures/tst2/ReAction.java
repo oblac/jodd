@@ -27,6 +27,7 @@ package jodd.madvoc.fixtures.tst2;
 
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.POST;
 
 @MadvocAction("/re/")
 public class ReAction {
@@ -43,7 +44,8 @@ public class ReAction {
 	public void macro2() {
 	}
 
-	@Action(value = "users/{id}/{:method}", extension = Action.NONE, method = "POST")
+	@Action(value = "users/{id}/{:method}", extension = Action.NONE)
+	@POST
 	public void macro3() {
 	}
 
@@ -51,11 +53,10 @@ public class ReAction {
 	@Action("wild{id}cat")
 	public void wild1() {
 	}
-	@Action(value = "wild{id}dog", method = "POST")
+	@Action(value = "wild{id}dog")
+	@POST
 	public void wild2() {
 	}
-
-
 
 	@Action(value = "duplo/{id:^[0-9]+}", extension = Action.NONE)
 //	@Action(value = "duplo/{id}", extension = Action.NO_EXTENSION)

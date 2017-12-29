@@ -38,7 +38,7 @@ class ActionAnnotationTest {
 	public void hello() {
 	}
 
-	@Action(value =  "value", method = "method", alias = "alias", extension = "ext")
+	@Action(value =  "value", alias = "alias", extension = "ext")
 	public void hello2() {
 	}
 
@@ -68,7 +68,6 @@ class ActionAnnotationTest {
 
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);
-		assertNull(annotationData.method);
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello2");
@@ -76,7 +75,6 @@ class ActionAnnotationTest {
 
 		assertEquals("alias", annotationData.alias);
 		assertEquals("ext", annotationData.extension);
-		assertEquals("method", annotationData.method);
 		assertEquals("value", annotationData.value);
 	}
 
@@ -90,7 +88,6 @@ class ActionAnnotationTest {
 
 		assertEquals("ALIAS", annotationData.alias);
 		assertEquals("EXT", annotationData.extension);
-		assertEquals("METHOD", annotationData.method);
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello4");
@@ -98,7 +95,6 @@ class ActionAnnotationTest {
 
 		assertEquals("ALIAS", annotationData.alias);
 		assertEquals("eee", annotationData.extension);
-		assertEquals("METHOD", annotationData.method);
 		assertNull(annotationData.value);
 	}
 
@@ -112,7 +108,6 @@ class ActionAnnotationTest {
 
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);
-		assertEquals("METHOD", annotationData.method);
 		assertEquals("VAL", annotationData.value);
 
 		method = this.getClass().getMethod("hello6");
@@ -120,7 +115,6 @@ class ActionAnnotationTest {
 
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);
-		assertEquals("mmm", annotationData.method);
 		assertEquals("VAL", annotationData.value);
 	}
 }

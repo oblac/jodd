@@ -26,6 +26,7 @@
 package jodd.joy.auth;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.POST;
 
 /**
  * Authentication action, usually extended by login action.
@@ -55,7 +56,8 @@ public abstract class AuthAction {
 	/**
 	 * Login hook.
 	 */
-	@Action(value = LOGIN_ACTION_PATH, method = "POST")
+	@Action(LOGIN_ACTION_PATH)
+	@POST
 	public final void login() {
 	}
 

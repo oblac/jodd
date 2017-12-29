@@ -23,51 +23,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.fixtures.tst;
+package jodd.madvoc.meta;
 
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.DELETE;
-import jodd.madvoc.meta.POST;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class BooAction {
-
-	public void foo() {}
-	public void view() {}
-	public void execute() {}
-
-	@Action("xxx")
-	public void foo1() {}
-
-	@Action(extension = "xxx")
-	public void foo2() {}
-
-	@Action(value = Action.NONE)
-	public void foo3() {}
-
-	@Action("/xxx")
-	public void foo4() {}
-
-	@Action(value = "/xxx", extension = "not used!")
-	@DELETE
-	public void foo41() {}
-
-	@Action(value = "/xxx.{:ext}", alias = "dude")
-	@POST
-	public void foo5() {}
-
-	@Action(value = "q{:method}2")
-	public void foo6() {}
-
-	@Action(value = "/{:method}.{:ext}")
-	public void foo7() {}
-
-	@Action(extension = Action.NONE)
-	public void foo8() {}
-	@Action(value = "/boo.foo81")
-	public void foo81() {}
-	@Action
-	public void foo82() {}
-	@Action(extension = "json")
-	public void foo83() {}
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+public @interface GET {
 
 }
