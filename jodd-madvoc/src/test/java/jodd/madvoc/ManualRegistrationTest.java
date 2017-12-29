@@ -39,12 +39,12 @@ class ManualRegistrationTest {
 	public static class ManualRegistration extends MadvocRouter {
 		@Override
 		public void start() {
-			action()
+			route()
 				.path("/hello")
 				.mapTo(BooAction.class, "foo1")
 				.bind();
 
-			action()
+			route()
 				.path("/world")
 				.mapTo(BooAction.class, "foo2")
 				.interceptBy(EchoInterceptor.class)
@@ -81,11 +81,11 @@ class ManualRegistrationTest {
 		WebApp webApp = WebApp
 			.createWebApp()
 			.start(madvoc -> madvoc
-				.action()
+				.route()
 					.path("/hello")
 					.mapTo(BooAction.class, "foo1")
 					.bind()
-				.action()
+				.route()
 					.path("/world")
 					.mapTo(BooAction.class, "foo2")
 					.interceptBy(EchoInterceptor.class)

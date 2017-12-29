@@ -114,9 +114,9 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 	// ---------------------------------------------------------------- actions
 
 	/**
-	 * Starts with action registration.
+	 * Starts with action registration i.e. route binding.
 	 */
-	public ActionBuilder action() {
+	public ActionBuilder route() {
 		return new ActionBuilder();
 	}
 
