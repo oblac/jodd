@@ -28,7 +28,7 @@ package jodd.madvoc;
 import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
-import jodd.madvoc.macro.WildcardPathMacros;
+import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
@@ -75,7 +75,7 @@ public final class MadvocConfig {
 		rootPackages = new RootPackages();
 		detectDuplicatePathsEnabled = true;
 		preventCaching = true;
-		pathMacroClass = WildcardPathMacros.class;
+		pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
 		asyncConfig = new AsyncConfig();

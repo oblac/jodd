@@ -55,7 +55,7 @@ public class TomcatTestServer {
 		tomcat = new Tomcat();
 		tomcat.setPort(8173);
 		tomcat.setBaseDir(workingDir);
-		tomcat.addWebapp("/", webRoot.getAbsolutePath());
+		tomcat.addWebapp("", webRoot.getAbsolutePath());
 
 		tomcat.start();
 	}
