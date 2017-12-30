@@ -129,13 +129,6 @@ public class ActionsManager {
 	/**
 	 * Registers action with provided action signature.
 	 */
-	public ActionRuntime register(String actionSignature) {
-		return register(actionSignature, null);
-	}
-
-	/**
-	 * Registers action with provided action signature.
-	 */
 	public ActionRuntime register(String actionSignature, ActionDefinition actionDefinition) {
 		int ndx = actionSignature.indexOf('#');
 		if (ndx == -1) {
@@ -152,10 +145,6 @@ public class ActionsManager {
 		return register(actionClass, actionMethodName, actionDefinition);
 	}
 
-	public ActionRuntime register(Class actionClass, Method actionMethod) {
-		return registerAction(actionClass, actionMethod, null);
-	}
-
 	public ActionRuntime register(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
 		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
@@ -163,11 +152,6 @@ public class ActionsManager {
 	/**
 	 * Registers action with provided action class and method name.
 	 */
-	public ActionRuntime register(Class actionClass, String actionMethodName) {
-		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
-		return registerAction(actionClass, actionMethod, null);
-	}
-
 	public ActionRuntime register(Class actionClass, String actionMethodName, ActionDefinition actionDefinition) {
 		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
 		return registerAction(actionClass, actionMethod, actionDefinition);

@@ -305,7 +305,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "macro");
+		actionsManager.register(ReAction.class, "macro", null);
 		ActionRuntime cfg = actionsManager.lookup("/re/user/173/macro.html", "GET");
 
 		assertNotNull(cfg);
@@ -318,7 +318,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 		assertNull(set.actionPathMacros().getPatterns()[0]);
 
 
-		actionsManager.register(ReAction.class, "macro2");
+		actionsManager.register(ReAction.class, "macro2", null);
 		cfg = actionsManager.lookup("/re/user/image/173/png/macro2.html", "GET");
 
 		assertNotNull(cfg);
@@ -330,7 +330,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals("id", set.actionPathMacros().getNames()[0]);
 		assertEquals("fmt", set.actionPathMacros().getNames()[1]);
 
-		actionsManager.register(ReAction.class, "macro3");
+		actionsManager.register(ReAction.class, "macro3", null);
 		cfg = actionsManager.lookup("/re/users/173/macro3", "POST");
 
 		assertNotNull(cfg);
@@ -363,8 +363,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "wild1");
-		actionsManager.register(ReAction.class, "wild2");
+		actionsManager.register(ReAction.class, "wild1", null);
+		actionsManager.register(ReAction.class, "wild2", null);
 
 		ActionRuntime cfg = actionsManager.lookup("/re/ild123cat", "GET");
 		assertNull(cfg);
@@ -408,8 +408,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
-		actionsManager.register(ReAction.class, "duplo1");
-		actionsManager.register(ReAction.class, "duplo2");
+		actionsManager.register(ReAction.class, "duplo1", null);
+		actionsManager.register(ReAction.class, "duplo2", null);
 
 		ActionRuntime cfg = actionsManager.lookup("/re/duplo/123", "GET");
 		assertNotNull(cfg);
@@ -441,8 +441,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "zqq1");
-		actionsManager.register(ReAction.class, "zqq2");
+		actionsManager.register(ReAction.class, "zqq1", null);
+		actionsManager.register(ReAction.class, "zqq2", null);
 
 		ActionRuntime cfg = actionsManager.lookup("/config/dba.delete_multi.do", "GET");
 		assertNotNull(cfg);

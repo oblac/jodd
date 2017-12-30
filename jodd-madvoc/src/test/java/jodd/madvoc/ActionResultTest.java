@@ -171,7 +171,7 @@ class ActionResultTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		actionsManager.register(BooAction.class, "foo5");
+		actionsManager.register(BooAction.class, "foo5", null);
 		actionsManager.registerPathAlias("ok", "xxx.jsp");
 		actionsManager.registerPathAlias("sok", "zzz");
 
@@ -198,7 +198,7 @@ class ActionResultTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		actionsManager.register(BooAction.class, "foo2");
+		actionsManager.register(BooAction.class, "foo2", null);
 		actionsManager.registerPathAlias("/boo.foo2.xxx", "/aliased");
 
 		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
@@ -217,7 +217,7 @@ class ActionResultTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		actionsManager.register(BooAction.class, "foo2");
+		actionsManager.register(BooAction.class, "foo2", null);
 
 		assertEquals("/boo.foo2.xxx", actionsManager.lookup(BooAction.class.getName() + "#foo2").actionPath());
 	}

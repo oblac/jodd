@@ -222,7 +222,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 				continue;
 			}
 
-			webappConfigurations.add(() -> actionsManager.register(actionClass, method));
+			webappConfigurations.add(() -> actionsManager.register(actionClass, method, null));
 		}
 	}
 
