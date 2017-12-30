@@ -51,18 +51,10 @@ public @interface RestAction {
 	 */
 	String value() default "";
 
-	//String extension() default "";
-
 	/**
 	 * Defines alias.
 	 */
 	String alias() default "";
-
-	/**
-	 * Defines action method (such as HTTP request method: GET, POST....).
-	 * Ignore it or use {@link Action#ANY} to ignore the method.
-	 */
-	String method() default "";
 
 	/**
 	 * Defines if action has to be called asynchronously
