@@ -82,16 +82,16 @@ public class JsonActionResult implements ActionResult {
 		try {
 			out = response.getOutputStream();
 			out.write(data);
+
+			if (status < 400) {
+				response.setStatus(status);
+			}
+			else {
+				response.sendError(status, statusMessage);
+			}
+
 		} finally {
 			StreamUtil.close(out);
 		}
-
-		if (status < 400) {
-			response.setStatus(status);
-		}
-		else {
-			response.sendError(status, statusMessage);
-		}
-
 	}
 }
