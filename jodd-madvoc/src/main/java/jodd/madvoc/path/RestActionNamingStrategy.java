@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 /**
  * Naming strategy for REST resources.
  */
-public class RestResourcePath extends BaseNamingStrategy {
+public class RestActionNamingStrategy extends BaseNamingStrategy {
 
 	private static final String[] METHOD_NAMES = new String[] {
 		"CONNECT",  "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"

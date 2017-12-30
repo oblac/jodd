@@ -26,6 +26,8 @@
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.path.RestActionNamingStrategy;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,7 +36,7 @@ import java.lang.annotation.Target;
 
 /**
  * Extension of {@link jodd.madvoc.meta.Action} for REST resources
- * that uses {@link jodd.madvoc.path.RestResourcePath different naming}
+ * that uses {@link RestActionNamingStrategy different naming}
  * convention.
  */
 @Documented

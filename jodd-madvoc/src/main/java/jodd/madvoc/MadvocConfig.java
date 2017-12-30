@@ -34,7 +34,7 @@ import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
-import jodd.madvoc.path.DefaultActionPath;
+import jodd.madvoc.path.DefaultActionPathNamingStrategy;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.ArraysUtil;
@@ -65,7 +65,7 @@ public final class MadvocConfig {
 		actionConfig.setActionResult(null);
 		actionConfig.setFilters();
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
-		actionConfig.setNamingStrategy(DefaultActionPath.class);
+		actionConfig.setNamingStrategy(DefaultActionPathNamingStrategy.class);
 
 		setActionAnnotations(Action.class, RestAction.class);
 

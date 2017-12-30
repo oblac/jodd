@@ -23,23 +23,56 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.filter;
+package jodd.madvoc.path;
 
-import jodd.madvoc.ActionRequest;
+import jodd.madvoc.config.ActionDefinition;
+import jodd.madvoc.config.ActionNames;
+import jodd.util.StringPool;
+
+import java.lang.reflect.Method;
 
 /**
- * Base {@link jodd.madvoc.filter.ActionFilter action filter}.
+ * Default naming strategy.
  */
-public abstract class BaseActionFilter implements ActionFilter {
+public class DefaultActionPathNamingStrategy extends BaseNamingStrategy {
 
 	@Override
-	public final Object apply(ActionRequest actionRequest) throws Exception {
-		return filter(actionRequest);
-	}
+	public ActionDefinition buildActionDef(
+			Class actionClass,
+			Method actionMethod,
+			ActionNames actionNames) {
 
-	@Override
-	public String toString() {
-		return "filter: " + this.getClass();
+		final String packageActionPath = actionNames.packageActionPath();
+		final String classActionPath = actionNames.classActionPath();
+		String methodActionPath = actionNames.methodActionPath();
+		final String httpMethod = actionNames.httpMethod();
+
+		// if method path is an absolute path, use it right away.
+
+		if (isAbsolutePath(methodActionPath)) {
+			return createActionDef(methodActionPath, httpMethod, methodActionPath, actionNames);
+		}
+
+		String actionPath = classActionPath;
+
+		if (methodActionPath != null) {
+			if (!classActionPath.endsWith(StringPool.SLASH)) {
+				actionPath += StringPool.DOT;
+			}
+			actionPath += methodActionPath;
+		}
+
+		if (isAbsolutePath(actionPath)) {
+			return createActionDef(actionPath, httpMethod, actionPath, actionNames);
+		}
+
+		if (packageActionPath != null) {
+			actionPath = packageActionPath + actionPath;
+		} else {
+			actionPath = StringPool.SLASH + actionPath;
+		}
+
+		return createActionDef(actionPath, httpMethod, actionPath, actionNames);
 	}
 
 }

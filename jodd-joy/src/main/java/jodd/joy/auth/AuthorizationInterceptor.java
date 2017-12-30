@@ -28,7 +28,7 @@ package jodd.joy.auth;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
+import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringPool;
 import jodd.util.net.URLCoder;
@@ -45,7 +45,7 @@ import javax.servlet.http.HttpSession;
  * to particular "roles". Principals (i.e. users) who are associated with one or more of
  * these roles will have access to those resources.
  */
-public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
+public abstract class AuthorizationInterceptor implements ActionInterceptor {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationInterceptor.class);
 

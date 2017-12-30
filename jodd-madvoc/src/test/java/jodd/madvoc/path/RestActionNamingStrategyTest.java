@@ -29,11 +29,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RestResourcePathTest {
+class RestActionNamingStrategyTest {
 
 	@Test
 	void testResolve() {
-		RestResourcePath restResourcePath = new RestResourcePath();
+		RestActionNamingStrategy restResourcePath = new RestActionNamingStrategy();
 
 		assertEquals("GET", restResourcePath.resolveHttpMethodFromMethodName("get"));
 		assertEquals("GET", restResourcePath.resolveHttpMethodFromMethodName("getUser"));
