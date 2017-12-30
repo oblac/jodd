@@ -27,8 +27,12 @@ package jodd.madvoc.result;
 
 import jodd.json.JsonSerializer;
 import jodd.madvoc.meta.RenderWith;
+import jodd.util.StringPool;
 import jodd.util.net.HttpStatus;
 
+/**
+ * General JSON result.
+ */
 @RenderWith(JsonActionResult.class)
 public class JsonResult {
 
@@ -36,13 +40,33 @@ public class JsonResult {
 	private int status = 200;
 	private String message = "OK";
 
+	/**
+	 * Creates new JSON result of provided JSON string.
+	 */
 	public static JsonResult of(String json) {
 		return new JsonResult(json);
 	}
 
+	/**
+	 * Creates JSON result from given object. The object will be serialized to JSON.
+	 */
 	public static JsonResult of(Object object) {
 		String json = JsonSerializer.create().deep(true).serialize(object);
 		return new JsonResult(json);
+	}
+
+	/**
+	 * Creates a JSON result with empty body and given status.
+	 */
+	public static JsonResult of(HttpStatus httpStatus) {
+		return empty().status(httpStatus);
+	}
+
+	/**
+	 * Creates a JSON result with empty body.
+	 */
+	public static JsonResult empty() {
+		return new JsonResult(StringPool.EMPTY);
 	}
 
 	public JsonResult(String body) {

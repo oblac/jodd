@@ -25,6 +25,9 @@
 
 package jodd.util.net;
 
+/**
+ * Simple developer-friendly set of HttpStatus codes and messages.
+ */
 public class HttpStatus {
 
 	private final int status;
@@ -63,6 +66,34 @@ public class HttpStatus {
 	 */
 	public String message() {
 		return message;
+	}
+
+	// ----------------------------------------------------------------
+
+	public static class Redirection {
+		private Redirection() { }
+
+		static Redirection instance = new Redirection();
+
+		public HttpStatus multipleChoice300() {
+			return new HttpStatus(300, "The requested resource points to a destination with multiple representations.");
+		}
+
+		public HttpStatus movedPermanently301() {
+			return new HttpStatus(301, "The requested resource has been assigned a new permanent URL.");
+		}
+		public HttpStatus movedTemporarily302() {
+			return new HttpStatus(302, "The requested resource has been temporarily moved to a different URL.");
+		}
+		public HttpStatus notModified304() {
+			return new HttpStatus(304, "The contents of the requested web page have not been modified since the last access.");
+		}
+		public HttpStatus temporaryRedirect307() {
+			return new HttpStatus(307, "The requested URL resides temporarily under a different URL");
+		}
+		public HttpStatus permanentRedirect308() {
+			return new HttpStatus(308, "All future requests should be sent using a different URI.");
+		}
 	}
 
 	// ---------------------------------------------------------------- 400
@@ -262,6 +293,10 @@ public class HttpStatus {
 
 	public static HttpStatus ok() {
 		return new HttpStatus(200, "OK");
+	}
+
+	public static Redirection redirection() {
+		return Redirection.instance;
 	}
 
 	public static HttpStatus400 error400() {
