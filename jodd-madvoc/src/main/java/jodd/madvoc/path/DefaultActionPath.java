@@ -45,7 +45,6 @@ public class DefaultActionPath extends BaseNamingStrategy {
 		final String packageActionPath = actionNames.packageActionPath();
 		final String classActionPath = actionNames.classActionPath();
 		String methodActionPath = actionNames.methodActionPath();
-		final String extension = actionNames.extension();
 		final String httpMethod = actionNames.httpMethod();
 
 		// if method path is an absolute path, use it right away.
@@ -57,15 +56,10 @@ public class DefaultActionPath extends BaseNamingStrategy {
 		String actionPath = classActionPath;
 
 		if (methodActionPath != null) {
-			methodActionPath = appendExtensionIfMissing(methodActionPath, extension);
-
 			if (!classActionPath.endsWith(StringPool.SLASH)) {
 				actionPath += StringPool.DOT;
 			}
 			actionPath += methodActionPath;
-		}
-		else {
-			actionPath = appendExtensionIfMissing(actionPath, extension);
 		}
 
 		if (isAbsolutePath(actionPath)) {

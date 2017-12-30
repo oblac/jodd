@@ -38,7 +38,7 @@ class ActionAnnotationTest {
 	public void hello() {
 	}
 
-	@Action(value =  "value", alias = "alias", extension = "ext")
+	@Action(value =  "value.ext", alias = "alias")
 	public void hello2() {
 	}
 
@@ -67,15 +67,13 @@ class ActionAnnotationTest {
 		ActionAnnotationData<Action> annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertNull(annotationData.alias);
-		assertNull(annotationData.extension);
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello2");
 		annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertEquals("alias", annotationData.alias);
-		assertEquals("ext", annotationData.extension);
-		assertEquals("value", annotationData.value);
+		assertEquals("value.ext", annotationData.value);
 	}
 
 	@Test
@@ -87,14 +85,12 @@ class ActionAnnotationTest {
 		ActionAnnotationData<CustomAction> annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertEquals("ALIAS", annotationData.alias);
-		assertEquals("EXT", annotationData.extension);
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello4");
 		annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertEquals("ALIAS", annotationData.alias);
-		assertEquals("eee", annotationData.extension);
 		assertNull(annotationData.value);
 	}
 
@@ -107,14 +103,12 @@ class ActionAnnotationTest {
 		ActionAnnotationData<MiscAnnotation> annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertNull(annotationData.alias);
-		assertNull(annotationData.extension);
 		assertEquals("VAL", annotationData.value);
 
 		method = this.getClass().getMethod("hello6");
 		annotationData = actionAnnotation.readAnnotatedElement(method);
 
 		assertNull(annotationData.alias);
-		assertNull(annotationData.extension);
 		assertEquals("VAL", annotationData.value);
 	}
 }

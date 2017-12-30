@@ -124,11 +124,9 @@ public class ActionMethodParser {
 
 		final String[] methodActionNames = readMethodActionPath(actionMethod.getName(), annotationData, actionConfig);
 
-		final String extension = readMethodExtension(annotationData, actionConfig);
-
 		final String method = readMethodHttpMethod(actionMethod);
 
-		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, extension, method);
+		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, method);
 
 		ActionNamingStrategy namingStrategy;
 
@@ -398,27 +396,6 @@ public class ActionMethodParser {
 		}
 
 		return ArraysUtil.array(methodName, methodActionPath);
-	}
-
-	/**
-	 * Reads method's extension.
-	 */
-	protected String readMethodExtension(ActionAnnotationData annotationData, ActionConfig actionConfig) {
-		String extension = actionConfig.getExtension();
-
-		if (annotationData == null) {
-			return extension;
-		}
-
-		String annExtension = annotationData.extension();
-		if (annExtension != null) {
-			if (annExtension.equals(Action.NONE)) {
-				extension = null;
-			} else {
-				extension = annExtension;
-			}
-		}
-		return extension;
 	}
 
 	/**

@@ -58,8 +58,6 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ad.value = readString(annotation, "value", null);
 
-		ad.extension = readString(annotation, "extension", null);
-
 		ad.alias = readString(annotation, "alias", null);
 
 		ad.async = readBoolean(annotation, "async", false);

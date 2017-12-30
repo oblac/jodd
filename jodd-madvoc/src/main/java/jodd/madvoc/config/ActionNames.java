@@ -39,17 +39,15 @@ public class ActionNames {
 	private final String methodName;
 	private final String methodActionPath;
 
-	private final String extension;
 	private final String httpMethod;
 
-	public ActionNames(String[] packageActionNames, String[] classActionNames, String[] methodActionNames, String extension, String httpMethod) {
+	public ActionNames(String[] packageActionNames, String[] classActionNames, String[] methodActionNames, String httpMethod) {
 		this.packageName = packageActionNames[0];
 		this.packageActionPath = packageActionNames[1];
 		this.className = classActionNames[0];
 		this.classActionPath = classActionNames[1];
 		this.methodName = methodActionNames[0];
 		this.methodActionPath = methodActionNames[1];
-		this.extension = extension;
 		this.httpMethod = httpMethod;
 	}
 
@@ -77,10 +75,6 @@ public class ActionNames {
 
 	public String methodActionPath() {
 		return methodActionPath;
-	}
-
-	public String extension() {
-		return extension;
 	}
 
 	public String httpMethod() {

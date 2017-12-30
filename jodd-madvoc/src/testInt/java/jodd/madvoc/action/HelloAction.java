@@ -136,7 +136,7 @@ public class HelloAction {
 
 	// since 'hello.jsp' exist, we need to change the class-related
 	// part of action prefix
-	@Action("/nohello.{:method}")
+	@Action("/nohello.{:name}")
 	public void nojsp() {
 	}
 

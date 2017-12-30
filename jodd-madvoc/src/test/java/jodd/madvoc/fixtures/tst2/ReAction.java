@@ -36,15 +36,15 @@ public class ReAction {
 	public void hello() {
 	}
 
-	@Action("user/{id}/{:method}")
+	@Action("user/{id}/{:name}")
 	public void macro() {
 	}
 
-	@Action("user/image/{id}/{fmt}/{:method}")
+	@Action("user/image/{id}/{fmt}/{:name}")
 	public void macro2() {
 	}
 
-	@Action(value = "users/{id}/{:method}", extension = Action.NONE)
+	@Action(value = "users/{id}/{:name}")
 	@POST
 	public void macro3() {
 	}
@@ -58,12 +58,11 @@ public class ReAction {
 	public void wild2() {
 	}
 
-	@Action(value = "duplo/{id:^[0-9]+}", extension = Action.NONE)
-//	@Action(value = "duplo/{id}", extension = Action.NO_EXTENSION)
+	@Action(value = "duplo/{id:^[0-9]+}")
 	public void duplo2() {
 	}
 
-	@Action(value = "duplo/{sid}", extension = Action.NONE)
+	@Action(value = "duplo/{sid}")
 	public void duplo1() {
 	}
 
@@ -72,10 +71,10 @@ public class ReAction {
 
 	String entityName;
 
-	@Action(value = "/{entityName}/dba.delete", extension = "do")
+	@Action(value = "/{entityName}/dba.delete.do")
 	public void zqq1() {}
 
-	@Action(value = "/{entityName}/dba.delete_multi", extension = "do")
+	@Action(value = "/{entityName}/dba.delete_multi.do")
 	public void zqq2() {}
 
 }

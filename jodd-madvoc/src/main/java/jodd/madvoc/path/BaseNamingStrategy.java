@@ -37,9 +37,8 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 
 	protected static final String PACKAGE_MACRO = "{:package}";
 	protected static final String CLASS_MACRO = "{:class}";
-	protected static final String METHOD_MACRO = "{:method}";
-	protected static final String EXTENSION_MACRO = "{:ext}";
-	protected static final String HTTPMETHOD_MACRO = "{:http-method}";
+	protected static final String METHOD_MACRO = "{:name}";
+	protected static final String HTTPMETHOD_MACRO = "{:method}";
 
 	/**
 	 * Replaces action path macros in the path.
@@ -50,7 +49,6 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 		final String packageName = actionNames.packageName();
 		final String className = actionNames.className();
 		final String methodName = actionNames.methodName();
-		final String extension = actionNames.extension();
 		final String httpMethod = actionNames.httpMethod();
 
 		if (packageName != null) {
@@ -61,9 +59,6 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 		}
 		if (methodName != null) {
 			path = StringUtil.replace(path, METHOD_MACRO, methodName);
-		}
-		if (extension != null) {
-			path = StringUtil.replace(path, EXTENSION_MACRO, extension);
 		}
 		if (httpMethod != null) {
 			path = StringUtil.replace(path, HTTPMETHOD_MACRO, httpMethod);
@@ -100,20 +95,4 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 		return path.startsWith(StringPool.SLASH);
 	}
 
-	/**
-	 * Appends extension to path if set and if missing.
-	 */
-	protected String appendExtensionIfMissing(String path, String extension) {
-		if (extension == null) {
-			return path;
-		}
-
-		final String extensionSuffix = '.' + extension;
-
-		if (path.endsWith(extensionSuffix)) {
-			return path;
-		}
-
-		return path + extensionSuffix;
-	}
 }

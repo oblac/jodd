@@ -30,16 +30,13 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 
-import static jodd.madvoc.meta.Action.NONE;
-
 @MadvocAction("/re/")
 public class RestAction {
 
-	@In
-	@Out
+	@In @Out
 	long itemId;
 
-	@Action(value = "view/{itemId}", extension = NONE)
+	@Action(value = "view/{itemId}")
 	public String viewItem() {
 		return "#view";
 	}
@@ -49,7 +46,7 @@ public class RestAction {
 		return "redirect:/re/view/{itemId}";
 	}
 
-	@Action(value = "view3/{itemId:^[0-9]+}", extension = NONE)
+	@Action(value = "view3/{itemId:^[0-9]+}")
 	public String viewItem3() {
 		return "#view";
 	}

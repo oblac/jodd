@@ -38,7 +38,6 @@ import jodd.mutable.MutableInteger;
 import javax.servlet.http.HttpServletRequest;
 
 import static jodd.madvoc.ScopeType.BODY;
-import static jodd.madvoc.meta.Action.NONE;
 
 @MadvocAction
 public class ArgsAction {
@@ -120,7 +119,7 @@ public class ArgsAction {
 	public void user(@In @Out User user) {
 	}
 
-	@Action(extension = NONE)
+	@Action
 	@RenderWith(JsonActionResult.class)
 	public User user2(@In @Scope(BODY) User user) {
 		user.setUsername(user.getUsername() + "!");

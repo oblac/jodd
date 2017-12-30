@@ -63,7 +63,6 @@ public final class MadvocConfig {
 		actionConfig = new ActionConfig(null);
 		actionConfig.setActionMethodNames("view", "execute");
 		actionConfig.setActionResult(null);
-		actionConfig.setExtension("html");
 		actionConfig.setFilters();
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
 		actionConfig.setNamingStrategy(DefaultActionPath.class);

@@ -41,12 +41,12 @@ public class RawResultAction {
 	};
 
 
-	@Action("/{:method}")
+	@Action("/{:name}")
 	public RawData madvocRawImage() {
 		return RawData.of(SMALLEST_GIF).as("gif");
 	}
 
-	@Action("/{:method}")
+	@Action("/{:name}")
 	public TextResult madvocEncoding() {
 		return TextResult.of("this text contents chinese chars 中文");
 	}

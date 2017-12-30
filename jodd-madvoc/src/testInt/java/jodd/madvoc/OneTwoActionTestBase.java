@@ -52,7 +52,7 @@ public abstract class OneTwoActionTestBase {
 		assertEquals(301, response.statusCode());
 
 		String redirectLocation = response.header("location");
-		assertEquals("/two.html?value=444", redirectLocation);
+		assertEquals("/two?value=444", redirectLocation);
 	}
 
 	@Test

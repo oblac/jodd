@@ -26,7 +26,6 @@
 package jodd.madvoc.meta;
 
 import jodd.madvoc.ActionConfig;
-import jodd.madvoc.MadvocConfig;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -61,13 +60,6 @@ public @interface Action {
 	 * will not be part of the created action path.
 	 */
 	String value() default "";
-
-	/**
-	 * Action path extension. If equals to {@link #NONE} extension will be not
-	 * part of created action path. If empty, default extension will be used
-	 * (defined in {@link MadvocConfig}.
-	 */
-	String extension() default "";
 
 	/**
 	 * Defines alias for this action.

@@ -41,7 +41,6 @@ public class ActionConfig {
 	private Class<? extends ActionInterceptor>[] interceptors;
 	private Class<? extends ActionFilter>[] filters;
 	private String[] actionMethodNames;
-	private String extension;
 	private Class<? extends ActionNamingStrategy> namingStrategy;
 
 	public ActionConfig(ActionConfig parentActionConfig) {
@@ -98,19 +97,6 @@ public class ActionConfig {
 
 	public void setActionMethodNames(String... actionMethodNames) {
 		this.actionMethodNames = actionMethodNames;
-	}
-
-	public String getExtension() {
-		if (extension == null) {
-			if (parent != null) {
-				return parent.getExtension();
-			}
-		}
-		return extension;
-	}
-
-	public void setExtension(String extension) {
-		this.extension = extension;
 	}
 
 	public Class<? extends ActionNamingStrategy> getNamingStrategy() {

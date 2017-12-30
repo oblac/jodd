@@ -46,7 +46,7 @@ public class RawAction {
 		return TextResult.of("some raw txt");
 	}
 
-	@Action(extension = Action.NONE)
+	@Action
 	public RawData download() {
 		String fileContent = "file from jodd.org!";
 		return RawData.of(fileContent.getBytes()).downloadableAs("jodd-download.txt");

@@ -31,6 +31,7 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ActionRuntimeSet;
@@ -271,7 +272,21 @@ public class ActionsManager {
 	 * Returns <code>null</code> if action path is not registered.
 	 * <code>method</code> must be in uppercase.
 	 */
-	public ActionRuntime lookup(String actionPath, String method) {
+	public ActionRuntime lookup(String actionPath, final String method) {
+		while (true) {
+			ActionRuntime actionRuntime = _lookup(actionPath, method);
+			if (actionRuntime != null) {
+				return actionRuntime;
+			}
+			int lastNdx = MadvocUtil.lastIndexOfDotAfterSlash(actionPath);
+			if (lastNdx == -1) {
+				return null;
+			}
+			actionPath = actionPath.substring(0, lastNdx);
+		}
+
+	}
+	private ActionRuntime _lookup(String actionPath, String method) {
 
 		// 1st try: the map
 
