@@ -44,18 +44,18 @@ public interface PathMacros {
 	/**
 	 * Returns names of all macros.
 	 */
-	String[] getNames();
+	String[] names();
 
 	/**
 	 * Returns all patterns. Some elements may be <code>null</code>
 	 * if some macro does not define a pattern.
 	 */
-	String[] getPatterns();
+	String[] patterns();
 
 	/**
 	 * Returns macros count.
 	 */
-	int getMacrosCount();
+	int macrosCount();
 
 	/**
 	 * Match provided action path with the path macros,
@@ -66,7 +66,7 @@ public interface PathMacros {
 
 	/**
 	 * Extracts array of macro values for matched action path
-	 * for each {@link #getNames() name}. It is assumed
+	 * for each {@link #names() name}. It is assumed
 	 * that path macro was previously {@link #init(String, String[])} initialized}
 	 * on this action path, i.e. input is not validated.
 	 * <p>

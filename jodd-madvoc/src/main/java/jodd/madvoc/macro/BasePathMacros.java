@@ -106,7 +106,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String[] getNames() {
+	public String[] names() {
 		return names;
 	}
 
@@ -114,7 +114,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String[] getPatterns() {
+	public String[] patterns() {
 		return patterns;
 	}
 
@@ -122,7 +122,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getMacrosCount() {
+	public int macrosCount() {
 		return macrosCount;
 	}
 

@@ -55,7 +55,7 @@ public class ActionPathMacroInjector implements Injector {
 
 		// inject
 
-		String[] names = set.actionPathMacros().getNames();
+		String[] names = set.actionPathMacros().names();
 		String[] values = set.actionPathMacros().extract(actionRequest.getActionPath());
 
 		for (int ndx = 0; ndx < values.length; ndx++) {
