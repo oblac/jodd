@@ -11,6 +11,7 @@
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
 [![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+[![Help Contribute to Open Source](https://www.codetriage.com/oblac/jodd/badges/users.svg)](https://www.codetriage.com/oblac/jodd)
 
 + Official web site (site & documentation): http://jodd.org/
 + GitHub page (5 min overview): http://oblac.github.io/jodd
