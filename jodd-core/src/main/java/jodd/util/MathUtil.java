@@ -25,8 +25,11 @@
 
 package jodd.util;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
- * Various math utilities.
+ * Various math utilities. <br/>
+ * <b>note:</b> Any random values from this class are not cryptographically secure!
  */
 public class MathUtil {
 
@@ -47,7 +50,6 @@ public class MathUtil {
 	/**
 	 * Generates pseudo-random long from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
-	 * Uses {@link Math#random()}.
 	 *
 	 * @param min    lower (inclusive) boundary
 	 * @param max    higher (exclusive) boundary
@@ -56,14 +58,13 @@ public class MathUtil {
 	 */
 
 	public static long randomLong(long min, long max) {
-		return min + (long)(Math.random() * (max - min));
+		return min + (long)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 
 	/**
 	 * Generates pseudo-random integer from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
-	 * Uses {@link Math#random()}. 
 	 *
 	 * @param min    lower (inclusive) boundary
 	 * @param max    higher (exclusive) boundary
@@ -71,7 +72,7 @@ public class MathUtil {
 	 * @return pseudo-random value
 	 */
 	public static int randomInt(int min, int max) {
-		return min + (int)(Math.random() * (max - min));
+		return min + (int)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 	/**
