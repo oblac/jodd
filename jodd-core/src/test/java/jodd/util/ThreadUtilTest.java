@@ -42,7 +42,7 @@ class ThreadUtilTest {
 		ThreadFactory threadFactory = ThreadUtil.daemonThreadFactory("jodd-thread");
 
 		final StringBuilder sb = new StringBuilder();
-		final Runnable runnable = () -> {sb.append("a runnable instace for an jodd junit test");};
+		final Runnable runnable = () -> {sb.append("runnable instance for jodd junit test");};
 
 		Thread t1 = threadFactory.newThread(runnable);
 		Thread t2 = threadFactory.newThread(runnable);
