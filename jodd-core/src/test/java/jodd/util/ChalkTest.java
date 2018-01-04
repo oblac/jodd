@@ -26,6 +26,7 @@
 package jodd.util;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -97,5 +98,23 @@ class ChalkTest {
 		params.add(Arguments.of("bgWhite", text, "\u001B[47mJodd\u001B[49m"));
 
 		return params;
+	}
+
+	@Test
+	void testCombinedOutput() {
+		StringBuilder sb = new StringBuilder();
+
+		Chalk chalk = Chalk.chalk();
+
+		sb.append(chalk.bgCyan().green().on("Jodd"));
+		sb.append(chalk.bgBlue().yellow().on("Makes"));
+		sb.append(chalk.bgRed().black().bold().on("FUN"));
+
+		final String actual = sb.toString();
+		// output on console
+		System.out.println(actual);
+
+		// asserts
+		assertEquals("\u001B[46;32mJodd\u001B[39;49m\u001B[46;32;44;33mMakes\u001B[39;49;39;49m\u001B[46;32;44;33;41;30;1mFUN\u001B[22;39;49;39;49;39;49m", actual);
 	}
 }
