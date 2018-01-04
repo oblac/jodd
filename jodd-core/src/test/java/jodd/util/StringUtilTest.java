@@ -1244,4 +1244,9 @@ class StringUtilTest {
 		assertEquals("\"123'", StringUtil.removeQuotes("\"123'"));
 	}
 
+	@Test
+	void testIfNotNull() {
+		assertEquals(StringPool.EMPTY, StringUtil.ifNotNull(null, str -> str + "It doesn't matter!"));
+		assertEquals("Jodd makes fun!", StringUtil.ifNotNull("Jodd", input -> input + " makes fun!"));
+	}
 }
