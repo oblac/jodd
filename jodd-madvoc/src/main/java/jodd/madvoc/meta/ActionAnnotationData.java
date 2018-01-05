@@ -35,9 +35,7 @@ import java.lang.annotation.Annotation;
 public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A> {
 
 	protected String value;
-	protected String extension;
 	protected String alias;
-	protected String method;
 	protected boolean async;
 
 	protected ActionAnnotationData(A annotation) {
@@ -48,16 +46,8 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 		return value;
 	}
 
-	public String extension() {
-		return extension;
-	}
-
 	public String alias() {
 		return alias;
-	}
-
-	public String method() {
-		return method;
 	}
 
 	public boolean async() {

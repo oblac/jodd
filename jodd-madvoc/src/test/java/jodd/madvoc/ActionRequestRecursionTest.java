@@ -29,9 +29,7 @@ import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.filter.BaseActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -126,7 +124,7 @@ class ActionRequestRecursionTest {
 		public void view() {}
 	}
 
-	class FilterPass extends BaseActionFilter {
+	class FilterPass implements ActionFilter {
 		final int i;
 		public FilterPass(int i) {
 			this.i = i;
@@ -140,15 +138,15 @@ class ActionRequestRecursionTest {
 			return result;
 		}
 	}
-	class FilterStop extends BaseActionFilter {
+	class FilterStop implements ActionFilter {
 		@Override
-		public Object filter(ActionRequest actionRequest) throws Exception {
+		public Object filter(ActionRequest actionRequest) {
 			((MyActionRequest)actionRequest).data += "-X";
 			return "stop";
 		}
 	}
 
-	class InterceptorPass extends BaseActionInterceptor {
+	class InterceptorPass implements ActionInterceptor {
 		final int i;
 		public InterceptorPass(int i) {
 			this.i = i;
@@ -162,7 +160,7 @@ class ActionRequestRecursionTest {
 			return result;
 		}
 	}
-	class InterceptorStop extends BaseActionInterceptor {
+	class InterceptorStop implements ActionInterceptor {
 		@Override
 		public Object intercept(ActionRequest actionRequest) throws Exception {
 			((MyActionRequest)actionRequest).data += "-x";
@@ -183,6 +181,7 @@ class ActionRequestRecursionTest {
 
 		Action action = new Action();
 		ActionRuntime actionRuntime = new ActionRuntime(
+				null,
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,

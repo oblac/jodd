@@ -26,12 +26,12 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.result.BaseActionResult;
+import jodd.madvoc.result.ActionResult;
 import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class BookActionResult extends BaseActionResult<Book> {
+public class BookActionResult implements ActionResult<Book> {
 
 	@Override
 	public void render(ActionRequest actionRequest, Book book) throws Exception {

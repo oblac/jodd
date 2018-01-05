@@ -40,7 +40,7 @@ import java.util.Map;
  * Performs some operation on all annotated properties. Helpful with injection of
  * application context into action objects.
  */
-public abstract class AnnotatedPropertyInterceptor extends BaseActionInterceptor {
+public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor {
 
 	protected final Class<Annotation> annotations;
 

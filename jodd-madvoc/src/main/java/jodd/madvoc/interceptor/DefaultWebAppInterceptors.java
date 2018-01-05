@@ -31,10 +31,10 @@ import jodd.madvoc.MadvocException;
 /**
  * Marker for default interceptors for easy configuration purposes.
  */
-public final class DefaultWebAppInterceptors extends BaseActionInterceptor {
+public final class DefaultWebAppInterceptors implements ActionInterceptor {
 
 	@Override
-	public String intercept(ActionRequest actionRequest) throws Exception {
+	public String intercept(ActionRequest actionRequest) {
 		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}
 }

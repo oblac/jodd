@@ -26,10 +26,11 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
+import jodd.madvoc.interceptor.ActionInterceptor;
 
-public class ExcInterceptor extends BaseActionInterceptor {
+public class ExcInterceptor implements ActionInterceptor {
 
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		try {
 			return actionRequest.invoke();

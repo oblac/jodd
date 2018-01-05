@@ -28,7 +28,7 @@ package jodd.madvoc;
 /**
  * Base action wrapper stack.
  */
-public abstract class BaseActionWrapperStack<T extends ActionWrapper> extends BaseActionWrapper {
+public abstract class BaseActionWrapperStack<T extends ActionWrapper> implements ActionWrapper {
 
 	protected Class<? extends T>[] wrappers;
 
@@ -56,7 +56,8 @@ public abstract class BaseActionWrapperStack<T extends ActionWrapper> extends Ba
 	/**
 	 * Throws an exception, as stack can not be invoked.
 	 */
-	public Object invoke(ActionRequest actionRequest) throws Exception {
+	@Override
+	public Object apply(ActionRequest actionRequest) {
 		throw new MadvocException("Wrapper stack can not be invoked");
 	}
 

@@ -59,8 +59,9 @@ public class ActionInterceptorStack extends BaseActionWrapperStack<ActionInterce
 	/**
 	 * Interceptor is not used since this is just an interceptor container.
 	 */
+	@Override
 	public final Object intercept(ActionRequest actionRequest) throws Exception {
-		return invoke(actionRequest);
+		return apply(actionRequest);
 	}
 
 }

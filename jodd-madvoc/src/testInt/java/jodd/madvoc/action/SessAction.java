@@ -28,9 +28,9 @@ package jodd.madvoc.action;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.Scope;
 
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
@@ -39,7 +39,7 @@ import java.util.Enumeration;
 public class SessAction {
 
 	// need this to keep session id
-	@In(scope = ScopeType.SERVLET)
+	@In @Scope(ScopeType.SERVLET)
 	HttpSession httpSession;
 
 	@Out
@@ -48,7 +48,7 @@ public class SessAction {
 	// ---------------------------------------------------------------- 1
 
 	class One {
-		@Out(scope = ScopeType.SESSION)
+		@Out @Scope(ScopeType.SESSION)
 		String sessionName;
 	}
 
@@ -68,7 +68,7 @@ public class SessAction {
 	 */
 	@Action
 	public void two(
-			@In(scope = ScopeType.SESSION, value="sessionName")
+			@In(value="sessionName") @Scope(ScopeType.SESSION)
 			String sessionName, One one)
 	{
 		one.sessionName = sessionName.toUpperCase();
@@ -78,7 +78,7 @@ public class SessAction {
 	// ---------------------------------------------------------------- 3
 
 	class Three {
-		@InOut(scope = ScopeType.SESSION, value = "sessionName")
+		@In @Out("sessionName") @Scope(ScopeType.SESSION)
 		String foo;
 	}
 

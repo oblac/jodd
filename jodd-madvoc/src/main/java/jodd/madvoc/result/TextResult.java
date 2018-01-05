@@ -25,54 +25,53 @@
 
 package jodd.madvoc.result;
 
-import jodd.io.StreamUtil;
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.RenderWith;
 import jodd.util.net.MimeTypes;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
+import java.util.Objects;
 
 /**
- * Text result returns a result value, i.e. a string.
- * Useful for JSON responses, when resulting string is built
- * in the action.
+ * Text result.
  */
-public class TextResult extends BaseActionResult<String> {
+@RenderWith(TextActionResult.class)
+public class TextResult {
 
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
+	private final String value;
+	private String mimeType = MimeTypes.MIME_TEXT_PLAIN;
 
-	public static final String NAME = "text";
-
-	public TextResult() {
-		super(NAME);
+	public static TextResult of(String value) {
+		return new TextResult(value);
 	}
 
-	@Override
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+	public TextResult(String value) {
+		this.value = value;
+	}
 
-		String encoding = response.getCharacterEncoding();
+	/**
+	 * Sets content type to HTML.
+	 */
+	public TextResult asHtml() {
+		mimeType = MimeTypes.MIME_TEXT_HTML;
+		return this;
+	}
 
-		if (encoding == null) {
-			encoding = madvocConfig.getEncoding();
-		}
+	/**
+	 * Defines custom content type.
+	 */
+	public TextResult as(String contentType) {
+		Objects.requireNonNull(contentType);
+		mimeType = contentType;
+		return this;
+	}
 
-		response.setContentType(MimeTypes.MIME_TEXT_PLAIN);
-		response.setCharacterEncoding(encoding);
+	/**
+	 * Returns text content.
+	 */
+	public String value() {
+		return value;
+	}
 
-		byte[] data = resultValue.getBytes(encoding);
-		response.setContentLength(data.length);
-
-		OutputStream out = null;
-		try {
-			out = response.getOutputStream();
-			out.write(data);
-		} finally {
-			StreamUtil.close(out);
-		}
+	public String contentType() {
+		return mimeType;
 	}
 }

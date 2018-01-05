@@ -27,9 +27,7 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ScopeDataResolver;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.map.HttpServletContextMap;
@@ -41,7 +39,6 @@ import jodd.util.StringUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -57,8 +54,9 @@ import java.io.IOException;
  * <li>cookies</li>
  * </ul>
  */
-public class ServletContextScopeInjector extends BaseScopeInjector
-		implements Injector, Outjector, ContextInjector<ServletContext> {
+public class ServletContextScopeInjector implements Injector, ContextInjector<ServletContext> {
+
+	private final static ScopeType SCOPE_TYPE = ScopeType.SERVLET;
 
 	public static final String REQUEST_NAME = "request";
 	public static final String SESSION_NAME = "session";
@@ -68,15 +66,7 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	public static final String REQUEST_BODY = "requestBody";
 	public static final String SESSION_MAP = "sessionMap";
 	public static final String CONTEXT_MAP = "contextMap";
-
-	public static final String COOKIE_NAME = "cookie";
-
 	public static final String CSRF_NAME = "csrfTokenValid";
-
-	public ServletContextScopeInjector(ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.SERVLET, scopeDataResolver);
-		silent = true;
-	}
 
 	/**
 	 * Injects servlet context scope data.
@@ -84,124 +74,88 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	@Override
 	@SuppressWarnings({"ConstantConditions"})
 	public void inject(ActionRequest actionRequest) {
-		ScopeData[] injectData = lookupScopeData(actionRequest);
-		if (injectData == null) {
+		Targets targets = actionRequest.getTargets();
+		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
-
-		Target[] targets = actionRequest.getTargets();
 
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		for (int i = 0; i < targets.length; i++) {
-			Target target = targets[i];
-			if (injectData[i] == null) {
-				continue;
-			}
-			ScopeData.In[] scopes = injectData[i].in;
-			if (scopes == null) {
-				continue;
-			}
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+			final Class fieldType = in.type;
+			Object value = null;
 
-			for (ScopeData.In in : scopes) {
-				Class fieldType = in.type;
-				Object value = null;
+			// raw servlet types
+			// todo measure ReflectUtil.isSubclass() vs .equals()
+			if (fieldType.equals(HttpServletRequest.class)) {
+				value = servletRequest;
+			} else if (fieldType.equals(ServletRequest.class)) {
+				value = servletRequest;
+			} else if (fieldType.equals(HttpServletResponse.class)) {
+				value = servletResponse;
+			} else if (fieldType.equals(ServletResponse.class)) {
+				value = servletResponse;
+			} else if (fieldType.equals(HttpSession.class)) {
+				value = servletRequest.getSession();
+			} else if (fieldType.equals(ServletContext.class)) {
+				value = servletRequest.getSession().getServletContext();
+			} else
 
-				// raw servlet types
-				// todo measure ReflectUtil.isSubclass() vs .equals()
-				if (fieldType.equals(HttpServletRequest.class)) {
-					value = servletRequest;
-				} else if (fieldType.equals(ServletRequest.class)) {
-					value = servletRequest;
-				} else if (fieldType.equals(HttpServletResponse.class)) {
-					value = servletResponse;
-				} else if (fieldType.equals(ServletResponse.class)) {
-					value = servletResponse;
-				} else if (fieldType.equals(HttpSession.class)) {
-					value = servletRequest.getSession();
-				} else if (fieldType.equals(ServletContext.class)) {
-					value = servletRequest.getSession().getServletContext();
-				} else
-
-				// names
-				if (in.name.equals(REQUEST_MAP)) {
-					value = new HttpServletRequestMap(servletRequest);
-				} else if (in.name.equals(REQUEST_PARAM_MAP)) {
-					value = new HttpServletRequestParamMap(servletRequest);
-				} else if (in.name.equals(REQUEST_BODY)) {
-					try {
-						value = ServletUtil.readRequestBody(servletRequest);
-					} catch (IOException e) {
-						value = e.toString();
-					}
-				} else if (in.name.equals(REQUEST_BODY)) {
-					value = new HttpServletRequestParamMap(servletRequest);
-				} else if (in.name.equals(SESSION_MAP)) {
-					value = new HttpSessionMap(servletRequest);
-				} else if (in.name.equals(CONTEXT_MAP)) {
-					value = new HttpServletContextMap(servletRequest);
-				} else
-
-				// names partial
-				if (in.name.startsWith(REQUEST_NAME)) {
-					String name = StringUtil.uncapitalize(in.name.substring(REQUEST_NAME.length()));
-					if (!name.isEmpty()) {
-						value = BeanUtil.declared.getProperty(servletRequest, name);
-					}
-				} else if (in.name.startsWith(SESSION_NAME)) {
-					String name = StringUtil.uncapitalize(in.name.substring(SESSION_NAME.length()));
-					if (!name.isEmpty()) {
-						value = BeanUtil.declared.getProperty(servletRequest.getSession(), name);
-					}
-				} else if (in.name.startsWith(CONTEXT_NAME)) {
-					String name = StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length()));
-					if (!name.isEmpty()) {
-						value = BeanUtil.declared.getProperty(servletRequest.getSession().getServletContext(), name);
-					}
-				} else
-
-				// csrf
-				if (in.name.equals(CSRF_NAME)) {
-					value = Boolean.valueOf(CsrfShield.checkCsrfToken(servletRequest));
-				} else
-
-				// cookies
-				if (in.name.startsWith(COOKIE_NAME)) {
-					String cookieName = StringUtil.uncapitalize(in.name.substring(COOKIE_NAME.length()));
-					if (fieldType.isArray()) {
-						if (fieldType.getComponentType().equals(Cookie.class)) {
-							if (StringUtil.isEmpty(cookieName)) {
-								value = servletRequest.getCookies();		// get all cookies
-							} else {
-								value = ServletUtil.getAllCookies(servletRequest, cookieName);	// get all cookies by name
-							}
-						}
-					} else {
-						value = ServletUtil.getCookie(servletRequest, cookieName);	// get single cookie
-					}
+			// names
+			if (in.name.equals(REQUEST_MAP)) {
+				value = new HttpServletRequestMap(servletRequest);
+			} else if (in.name.equals(REQUEST_PARAM_MAP)) {
+				value = new HttpServletRequestParamMap(servletRequest);
+			} else if (in.name.equals(REQUEST_BODY)) {
+				try {
+					value = ServletUtil.readRequestBody(servletRequest);
+				} catch (IOException e) {
+					value = e.toString();
 				}
+			} else if (in.name.equals(REQUEST_BODY)) {
+				value = new HttpServletRequestParamMap(servletRequest);
+			} else if (in.name.equals(SESSION_MAP)) {
+				value = new HttpSessionMap(servletRequest);
+			} else if (in.name.equals(CONTEXT_MAP)) {
+				value = new HttpServletContextMap(servletRequest);
+			} else
 
-				if (value != null) {
-					String property = in.target != null ? in.target : in.name;
-
-					setTargetProperty(target, property, value);
+			// names partial
+			if (in.name.startsWith(REQUEST_NAME)) {
+				String name = StringUtil.uncapitalize(in.name.substring(REQUEST_NAME.length()));
+				if (!name.isEmpty()) {
+					value = BeanUtil.declared.getProperty(servletRequest, name);
 				}
+			} else if (in.name.startsWith(SESSION_NAME)) {
+				String name = StringUtil.uncapitalize(in.name.substring(SESSION_NAME.length()));
+				if (!name.isEmpty()) {
+					value = BeanUtil.declared.getProperty(servletRequest.getSession(), name);
+				}
+			} else if (in.name.startsWith(CONTEXT_NAME)) {
+				String name = StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length()));
+				if (!name.isEmpty()) {
+					value = BeanUtil.declared.getProperty(servletRequest.getSession().getServletContext(), name);
+				}
+			} else
+
+			// csrf
+			if (in.name.equals(CSRF_NAME)) {
+				value = Boolean.valueOf(CsrfShield.checkCsrfToken(servletRequest));
 			}
-		}
+
+			if (value != null) {
+				target.writeValue(in.propertyName(), value, true);
+			}
+		});
 	}
 
 	/**
 	 * Injects just context.
 	 */
 	@Override
-	public void injectContext(Target target, ScopeData[] scopeData, ServletContext servletContext) {
-		ScopeData.In[] injectData = lookupInData(scopeData);
-		if (injectData == null) {
-			return;
-		}
-
-		for (ScopeData.In in : injectData) {
+	public void injectContext(Targets targets, ServletContext servletContext) {
+		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
 			Class fieldType = in.type;
 			Object value = null;
 
@@ -216,42 +170,9 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 			}
 
 			if (value != null) {
-				String property = in.target != null ? in.target : in.name;
-
-				setTargetProperty(target, property, value);
+				target.writeValue(in.propertyName(), value, true);
 			}
-		}
+		});
 	}
 
-	@Override
-	public void outject(ActionRequest actionRequest) {
-		ScopeData[] outjectData = lookupScopeData(actionRequest);
-		if (outjectData == null) {
-			return;
-		}
-
-		Target[] targets = actionRequest.getTargets();
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
-
-		for (int i = 0; i < targets.length; i++) {
-			Target target = targets[i];
-			if (outjectData[i] == null) {
-				continue;
-			}
-			ScopeData.Out[] scopes = outjectData[i].out;
-			if (scopes == null) {
-				continue;
-			}
-
-			for (ScopeData.Out out : scopes) {
-				if (out.name.startsWith(COOKIE_NAME)) {
-
-					Cookie cookie = (Cookie) getTargetProperty(target, out);
-					if (cookie != null) {
-						servletResponse.addCookie(cookie);
-					}
-				}
-			}
-		}
-	}
 }

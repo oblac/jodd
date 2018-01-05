@@ -120,5 +120,6 @@ public class JoyProps extends JoyBase {
 
 	@Override
 	public void stop() {
+		props = null;
 	}
 }

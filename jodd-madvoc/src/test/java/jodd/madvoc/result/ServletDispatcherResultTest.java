@@ -56,7 +56,7 @@ class ServletDispatcherResultTest {
 
 		final List<String> targets = new ArrayList<>();
 
-		ServletDispatcherResult sdr = new ServletDispatcherResult() {
+		ServletDispatcherActionResult sdr = new ServletDispatcherActionResult() {
 			@Override
 			protected boolean targetExists(ActionRequest actionRequest, String target) {
 				targets.add(target);
@@ -68,7 +68,7 @@ class ServletDispatcherResultTest {
 		BeanUtil.declared.setProperty(sdr, "resultMapper", resultMapper);
 
 		ActionRequest actionRequest = createActionRequest("/hello.world.html");
-		sdr.render(actionRequest, "ok");
+		sdr.render(actionRequest, Forward.to("ok"));
 
 		assertEquals("[" +
 				"/hello.world.html.ok.jspf, " +
@@ -93,7 +93,7 @@ class ServletDispatcherResultTest {
 		targets.clear();
 
 		actionRequest = createActionRequest("/pak/hello.world.html");
-		sdr.render(actionRequest, "ok");
+		sdr.render(actionRequest, Forward.to("ok"));
 
 		assertEquals("[" +
 				"/pak/hello.world.html.ok.jspf, " +
@@ -143,6 +143,7 @@ class ServletDispatcherResultTest {
 
 		Object action = new Object();
 		ActionRuntime actionRuntime = new ActionRuntime(
+				null,
 				Action.class,
 				ClassUtil.findMethod(Action.class, "view"),
 				null, null,

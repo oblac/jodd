@@ -26,6 +26,8 @@
 package jodd.madvoc.fixtures.tst;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.DELETE;
+import jodd.madvoc.meta.POST;
 
 public class BooAction {
 
@@ -36,7 +38,7 @@ public class BooAction {
 	@Action("xxx")
 	public void foo1() {}
 
-	@Action(extension = "xxx")
+	@Action("{:name}.xxx")
 	public void foo2() {}
 
 	@Action(value = Action.NONE)
@@ -45,25 +47,27 @@ public class BooAction {
 	@Action("/xxx")
 	public void foo4() {}
 
-	@Action(value = "/xxx", extension = "not used!", method = "DELETE")
+	@Action(value = "/xxx")
+	@DELETE
 	public void foo41() {}
 
-	@Action(value = "/xxx.{:ext}", alias = "dude", method = "post")
+	@Action(value = "/xxx.html", alias = "dude")
+	@POST
 	public void foo5() {}
 
-	@Action(value = "q{:method}2")
+	@Action(value = "q{:name}2")
 	public void foo6() {}
 
-	@Action(value = "/{:method}.{:ext}")
+	@Action(value = "/{:name}.html")
 	public void foo7() {}
 
-	@Action(extension = Action.NONE)
+	@Action
 	public void foo8() {}
 	@Action(value = "/boo.foo81")
 	public void foo81() {}
 	@Action
 	public void foo82() {}
-	@Action(extension = "json")
+	@Action("{:name}.json")
 	public void foo83() {}
 
 }

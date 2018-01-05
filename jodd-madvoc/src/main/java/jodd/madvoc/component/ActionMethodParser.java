@@ -26,6 +26,7 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionHandler;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
@@ -42,12 +43,21 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.DELETE;
 import jodd.madvoc.meta.FilteredBy;
+import jodd.madvoc.meta.GET;
+import jodd.madvoc.meta.HEAD;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.OPTIONS;
+import jodd.madvoc.meta.PATCH;
+import jodd.madvoc.meta.POST;
+import jodd.madvoc.meta.PUT;
 import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.TRACE;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.result.NoneActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
@@ -65,6 +75,18 @@ import java.lang.reflect.Method;
  * Invoked only during registration, so performance is not critical.
  */
 public class ActionMethodParser {
+
+	@SuppressWarnings("unchecked")
+	private static final Class<? extends Annotation>[] METHOD_ANNOTATIONS = new Class[] {
+		DELETE.class,
+		GET.class,
+		HEAD.class,
+		POST.class,
+		PUT.class,
+		OPTIONS.class,
+		TRACE.class,
+		PATCH.class
+	};
 
 	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
@@ -102,11 +124,9 @@ public class ActionMethodParser {
 
 		final String[] methodActionNames = readMethodActionPath(actionMethod.getName(), annotationData, actionConfig);
 
-		final String extension = readMethodExtension(annotationData, actionConfig);
+		final String method = readMethodHttpMethod(actionMethod);
 
-		final String method = readMethodHttpMethod(annotationData);
-
-		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, extension, method);
+		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, method);
 
 		ActionNamingStrategy namingStrategy;
 
@@ -151,6 +171,7 @@ public class ActionMethodParser {
 		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
 
 		return createActionRuntime(
+				null,
 				actionClass, actionMethod,
 				actionResult,
 				actionFilters, actionInterceptors,
@@ -378,27 +399,6 @@ public class ActionMethodParser {
 	}
 
 	/**
-	 * Reads method's extension.
-	 */
-	protected String readMethodExtension(ActionAnnotationData annotationData, ActionConfig actionConfig) {
-		String extension = actionConfig.getExtension();
-
-		if (annotationData == null) {
-			return extension;
-		}
-
-		String annExtension = annotationData.extension();
-		if (annExtension != null) {
-			if (annExtension.equals(Action.NONE)) {
-				extension = null;
-			} else {
-				extension = annExtension;
-			}
-		}
-		return extension;
-	}
-
-	/**
 	 * Reads method's alias value.
 	 */
 	protected String parseMethodAlias(ActionAnnotationData annotationData) {
@@ -410,15 +410,16 @@ public class ActionMethodParser {
 	}
 
 	/**
-	 * Reads method's http method.
+	 * Reads method's http method or {@code null} if not specified.
 	 */
-	private String readMethodHttpMethod(ActionAnnotationData annotationData) {
-		String method = null;
-		if (annotationData != null) {
-			method = annotationData.method();
+	private String readMethodHttpMethod(Method actionMethod) {
+		for (Class<? extends Annotation> methodAnnotation : METHOD_ANNOTATIONS) {
+			if (actionMethod.getAnnotation(methodAnnotation) != null) {
+				return methodAnnotation.getSimpleName();
+			}
 		}
 
-		return method;
+		return null;
 	}
 
 	/**
@@ -439,6 +440,7 @@ public class ActionMethodParser {
 	 * Initialize caches.
 	 */
 	public ActionRuntime createActionRuntime(
+			ActionHandler actionHandler,
 			Class actionClass,
 			Method actionClassMethod,
 			Class<? extends ActionResult> actionResult,
@@ -448,7 +450,22 @@ public class ActionMethodParser {
 			boolean async,
 			ActionConfig actionConfig)
 	{
+		if (actionHandler != null) {
 
+			return new ActionRuntime(
+				actionHandler,
+				actionClass,
+				actionClassMethod,
+				filters,
+				interceptors,
+				actionDefinition,
+				NoneActionResult.class,
+				async,
+				null,
+				null,
+				actionConfig);
+
+		}
 		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
@@ -503,6 +520,7 @@ public class ActionMethodParser {
 		}
 
 		return new ActionRuntime(
+				null,
 				actionClass,
 				actionClassMethod,
 				filters,

@@ -77,7 +77,7 @@ public abstract class HelloActionTestBase {
 	public void testHelloNoJspAction() {
 		HttpResponse response = HttpRequest.get("localhost:8173/nohello.nojsp.html").send();
 		assertEquals(404, response.statusCode());
-		assertTrue(response.bodyText().contains("/nohello.nojsp.html"));
+		assertTrue(response.bodyText().contains("/nohello.nojsp"));
 	}
 
 	@Test

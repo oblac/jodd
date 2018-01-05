@@ -32,21 +32,13 @@ import jodd.util.StringUtil;
  * Simple interceptor that measures time and prints out information about invoked actions.
  * User may inherit it and change the way message is printed.
  */
-public class EchoInterceptor extends BaseActionInterceptor {
+public class EchoInterceptor implements ActionInterceptor {
 
 	protected String prefixIn = "-----> ";
 	protected String prefixOut = "<----- ";
 
-	public String getPrefixIn() {
-		return prefixIn;
-	}
-
 	public void setPrefixIn(String prefixIn) {
 		this.prefixIn = prefixIn;
-	}
-
-	public String getPrefixOut() {
-		return prefixOut;
 	}
 
 	public void setPrefixOut(String prefixOut) {

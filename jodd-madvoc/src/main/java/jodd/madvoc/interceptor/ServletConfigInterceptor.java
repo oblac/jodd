@@ -30,6 +30,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
@@ -45,12 +46,12 @@ import javax.servlet.http.HttpServletRequest;
  * <li>performs the outjection.</li>
  * </ul>
  */
-public class ServletConfigInterceptor extends BaseActionInterceptor {
+public class ServletConfigInterceptor implements ActionInterceptor {
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	protected InjectorsManager injectorsManager;
 
 	/**
@@ -81,34 +82,32 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 */
 	protected void inject(ActionRequest actionRequest) {
 
-		injectorsManager.getMadvocContextScopeInjector().inject(actionRequest);
+		injectorsManager.madvocContextScopeInjector().inject(actionRequest);
 
 		// no need to inject madvoc params, as this can be slow
 		// and its better to use some single data object instead
 		//madvocContextInjector.injectMadvocParams(target);
 
-		injectorsManager.getServletContextScopeInjector().inject(actionRequest);
-		injectorsManager.getApplicationScopeInjector().inject(actionRequest);
-
-		injectorsManager.getSessionScopeInjector().inject(actionRequest);
-
-		injectorsManager.getRequestScopeInjector().prepare(actionRequest);		// todo check if needed
-		injectorsManager.getRequestScopeInjector().inject(actionRequest);
-
-		injectorsManager.getActionPathMacroInjector().inject(actionRequest);
+		injectorsManager.servletContextScopeInjector().inject(actionRequest);
+		injectorsManager.applicationScopeInjector().inject(actionRequest);
+		injectorsManager.sessionScopeInjector().inject(actionRequest);
+		injectorsManager.requestScopeInjector().inject(actionRequest);
+		injectorsManager.actionPathMacroInjector().inject(actionRequest);
+		injectorsManager.cookieInjector().inject(actionRequest);
+		injectorsManager.requestBodyScopeInject().inject(actionRequest);
 	}
 
 	/**
 	 * Performs outjection.
 	 */
 	protected void outject(ActionRequest actionRequest) {
+		injectorsManager.cookieInjector().outject(actionRequest);
 
-		injectorsManager.getServletContextScopeInjector().outject(actionRequest);
-		injectorsManager.getApplicationScopeInjector().outject(actionRequest);
+		injectorsManager.applicationScopeInjector().outject(actionRequest);
 
-		injectorsManager.getSessionScopeInjector().outject(actionRequest);
+		injectorsManager.sessionScopeInjector().outject(actionRequest);
 
-		injectorsManager.getRequestScopeInjector().outject(actionRequest);
+		injectorsManager.requestScopeInjector().outject(actionRequest);
 	}
 
 }

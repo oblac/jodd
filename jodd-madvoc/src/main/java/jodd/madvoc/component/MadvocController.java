@@ -146,7 +146,14 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			}
 
 			// create action object
-			Object action = createAction(actionRuntime.actionClass());
+			final Object action;
+
+			if (actionRuntime.isActionHandlerDefined()) {
+				action = actionRuntime.actionHandler();
+			}
+			else {
+				action = createAction(actionRuntime.actionClass());
+			}
 
 			// create action request
 			ActionRequest previousRequest = actionRequest;

@@ -26,16 +26,16 @@
 package jodd.madvoc.meta;
 
 import jodd.madvoc.ActionConfig;
-import jodd.madvoc.path.RestResourcePath;
-import jodd.madvoc.result.JSONActionResult;
+import jodd.madvoc.path.RestActionNamingStrategy;
+import jodd.madvoc.result.JsonActionResult;
 
 public class RestActionConfig extends ActionConfig {
 
 	public RestActionConfig(ActionConfig parentActionConfig) {
 		super(parentActionConfig);
 
-		setNamingStrategy(RestResourcePath.class);
+		setNamingStrategy(RestActionNamingStrategy.class);
 
-		setActionResult(JSONActionResult.class);
+		setActionResult(JsonActionResult.class);
 	}
 }

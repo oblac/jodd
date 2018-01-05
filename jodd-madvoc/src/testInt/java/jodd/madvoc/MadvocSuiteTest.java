@@ -131,8 +131,6 @@ class MadvocSuiteTest {
 	@Nested
 	class AsyncTest extends AsyncTestBase {}
 	@Nested
-	class MoveTest extends MoveTestBase {}
-	@Nested
 	class BookActionTest extends BookActionTestBase {}
 	@Nested
 	class ResultsTest extends ResultsTestBase {}
@@ -142,4 +140,6 @@ class MadvocSuiteTest {
 	class MissingActionTest extends MissingActionTestBase {}
 	@Nested
 	class ComponentTest extends ComponentTestBase {}
+	@Nested
+	class CookieTest extends CookieTestBase {}
 }

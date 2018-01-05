@@ -27,6 +27,7 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.injector.Target;
+import jodd.madvoc.injector.Targets;
 import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;
 
@@ -57,13 +58,15 @@ public class ContextInjectorComponent {
 
 		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(targetType);
 
+		Targets targets = new Targets(target, scopeData);
+		injectorsManager.madvocContextScopeInjector().injectContext(targets, madpc);
+		injectorsManager.madvocParamsInjector().injectContext(targets, madpc);
+
 		ServletContext servletContext = madvocController.getApplicationContext();
-
-		injectorsManager.getMadvocContextScopeInjector().injectContext(target, scopeData, madpc);
-		injectorsManager.getMadvocParamsInjector().injectContext(target, scopeData, madpc);
-
-		injectorsManager.getServletContextScopeInjector().injectContext(target, scopeData, servletContext);
-		injectorsManager.getApplicationScopeInjector().injectContext(target, scopeData, servletContext);
+		if (servletContext != null) {
+			injectorsManager.servletContextScopeInjector().injectContext(targets, servletContext);
+			injectorsManager.applicationScopeInjector().injectContext(targets, servletContext);
+		}
 	}
 
 }

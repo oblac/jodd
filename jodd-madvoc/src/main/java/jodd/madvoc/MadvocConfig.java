@@ -33,10 +33,8 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
-import jodd.madvoc.meta.PostAction;
 import jodd.madvoc.meta.RestAction;
-import jodd.madvoc.path.DefaultActionPath;
-import jodd.madvoc.result.ServletDispatcherResult;
+import jodd.madvoc.path.DefaultActionPathNamingStrategy;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.ArraysUtil;
@@ -64,13 +62,12 @@ public final class MadvocConfig {
 	public MadvocConfig() {
 		actionConfig = new ActionConfig(null);
 		actionConfig.setActionMethodNames("view", "execute");
-		actionConfig.setActionResult(ServletDispatcherResult.class);
-		actionConfig.setExtension("html");
+		actionConfig.setActionResult(null);
 		actionConfig.setFilters();
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
-		actionConfig.setNamingStrategy(DefaultActionPath.class);
+		actionConfig.setNamingStrategy(DefaultActionPathNamingStrategy.class);
 
-		setActionAnnotations(Action.class, PostAction.class, RestAction.class);
+		setActionAnnotations(Action.class, RestAction.class);
 
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
@@ -78,7 +75,6 @@ public final class MadvocConfig {
 		rootPackages = new RootPackages();
 		detectDuplicatePathsEnabled = true;
 		preventCaching = true;
-		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
@@ -278,21 +274,6 @@ public final class MadvocConfig {
 		this.resultPathPrefix = resultPathPrefix;
 	}
 
-	// ---------------------------------------------------------------- attributes names
-
-	private String attributeMoveId;
-
-	public String getAttributeMoveId() {
-		return attributeMoveId;
-	}
-
-	/**
-	 * Sets attribute name for {@link jodd.madvoc.result.MoveResult move results}.
-	 */
-	public void setAttributeMoveId(String attributeMoveId) {
-		this.attributeMoveId = attributeMoveId;
-	}
-
 	// ---------------------------------------------------------------- path macro class
 
 	private Class<? extends PathMacros> pathMacroClass;
@@ -389,7 +370,6 @@ public final class MadvocConfig {
 		return "MadvocConfig{" +
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
 				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
-				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +

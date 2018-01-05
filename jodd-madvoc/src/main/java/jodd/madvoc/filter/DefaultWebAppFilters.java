@@ -26,18 +26,15 @@
 package jodd.madvoc.filter;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 
 /**
  * Marker for default filters for easy configuration.
- * It will be replaced with the result of {@link MadvocConfig#getDefaultFilters()}
- * during action registration.
  */
-public final class DefaultWebAppFilters extends BaseActionFilter {
+public final class DefaultWebAppFilters implements ActionFilter {
 
 	@Override
-	public String filter(ActionRequest actionRequest) throws Exception {
+	public String filter(ActionRequest actionRequest) {
 		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}
 

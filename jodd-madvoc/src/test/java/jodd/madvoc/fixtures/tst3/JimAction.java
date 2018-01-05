@@ -31,7 +31,7 @@ import jodd.madvoc.meta.MadvocAction;
 @MadvocAction("/my-{:package}/{:class}")
 public class JimAction {
 
-	@Action("my-{:method}")
+	@Action("my-{:name}")
 	public void hello() {}
 
 }

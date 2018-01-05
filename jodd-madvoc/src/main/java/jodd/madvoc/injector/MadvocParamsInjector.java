@@ -26,7 +26,6 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.config.ScopeData;
 import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
 
@@ -46,24 +45,25 @@ public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
 	/**
 	 * Injects all matching parameters to target instance.
 	 * Matching parameters are named as given base name.
-	 * @param scopeData scope data is not used!
 	 */
 	@Override
-	public void injectContext(Target target, ScopeData[] scopeData, PetiteContainer madpc) {
-		Class targetType = target.resolveType();
-		String baseName = targetType.getName();
+	public void injectContext(Targets targets, PetiteContainer madpc) {
+		targets.forEachTarget(target -> {
+			Class targetType = target.resolveType();
+			String baseName = targetType.getName();
 
-		ParamManager madvocPetiteParamManager = madpc.paramManager();
+			ParamManager madvocPetiteParamManager = madpc.paramManager();
 
-		String[] params = madvocPetiteParamManager.resolve(baseName, true);
+			String[] params = madvocPetiteParamManager.resolve(baseName, true);
 
-		for (String param : params) {
-			Object value = madvocPetiteParamManager.get(param);
+			for (String param : params) {
+				Object value = madvocPetiteParamManager.get(param);
 
-			String propertyName = param.substring(baseName.length() + 1);
+				String propertyName = param.substring(baseName.length() + 1);
 
-			target.writeValue(propertyName, value, false);
-		}
+				target.writeValue(propertyName, value, false);
+			}
+		});
 	}
 
 }

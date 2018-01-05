@@ -29,7 +29,6 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.fixtures.tst.BooAction;
 import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.result.TextResult;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,22 +36,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManualRegistrationTest {
 
-	public static class ManualRegistration extends MadvocApp {
+	public static class ManualRegistration extends MadvocRouter {
 		@Override
 		public void start() {
-			result(TextResult.class);
-			action()
-					.path("/hello")
-					.mapTo(BooAction.class, "foo1")
-					.bind();
+			route()
+				.path("/hello")
+				.mapTo(BooAction.class, "foo1")
+				.bind();
 
-			action()
-					.path("/world")
-					.mapTo(BooAction.class, "foo2")
-					.interceptBy(EchoInterceptor.class)
-					.bind();
+			route()
+				.path("/world")
+				.mapTo(BooAction.class, "foo2")
+				.interceptBy(EchoInterceptor.class)
+				.bind();
 
-			interceptor(EchoInterceptor.class, i->i.setPrefixIn("====> "));
+			interceptor(EchoInterceptor.class, i -> i.setPrefixIn("====> "));     // additional interceptor configuration
 		}
 	}
 
@@ -83,12 +81,11 @@ class ManualRegistrationTest {
 		WebApp webApp = WebApp
 			.createWebApp()
 			.start(madvoc -> madvoc
-				.result(TextResult.class)
-				.action()
+				.route()
 					.path("/hello")
 					.mapTo(BooAction.class, "foo1")
 					.bind()
-				.action()
+				.route()
 					.path("/world")
 					.mapTo(BooAction.class, "foo2")
 					.interceptBy(EchoInterceptor.class)

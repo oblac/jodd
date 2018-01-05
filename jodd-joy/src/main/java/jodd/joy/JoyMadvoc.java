@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.joy.madvoc.interceptor.DefaultInterceptorStack;
 import jodd.madvoc.AutomagicMadvocConfigurator;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.petite.PetiteWebApp;
@@ -72,7 +73,7 @@ public class JoyMadvoc extends JoyBase {
 		log.info("MADVOC start  ----------");
 
 		webApp = new PetiteWebApp();
-
+		webApp.configure(madvocConfig -> madvocConfig.getActionConfig().setInterceptors(DefaultInterceptorStack.class));
 		webApp.withPetiteContainer(petiteSupplier);
 
 		webApp.bindServletContext(servletContext);
@@ -91,7 +92,7 @@ public class JoyMadvoc extends JoyBase {
 	@Override
 	public void stop() {
 		if (log != null) {
-			log.info("MADVOC stop");
+			log.info("MADVOC stop  ----------");
 		}
 		if (webApp != null) {
 			webApp.shutdown();

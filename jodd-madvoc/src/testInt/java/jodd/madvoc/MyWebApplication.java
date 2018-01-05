@@ -48,4 +48,17 @@ public class MyWebApplication extends PetiteWebApp {
 		madvocContainer.registerComponent(MyRewriter.class);
 	}
 
+	@Override
+	protected void initialized() {
+		router(madvoc -> {
+			madvoc
+				.get("/batman")
+				.mapTo(actionRequest -> {
+					System.out.println("Hello");
+				})
+				.bind();
+
+
+		});
+	}
 }

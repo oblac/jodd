@@ -26,7 +26,6 @@
 package jodd.madvoc.meta;
 
 import jodd.madvoc.ActionConfig;
-import jodd.madvoc.MadvocConfig;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -55,15 +54,6 @@ public @interface Action {
 	// see: http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
 
 	String ANY = "";
-	String GET = "GET";
-	String HEAD = "HEAD";
-	String POST = "POST";
-	String PUT = "PUT";
-	String DELETE = "DELETE";
-	String TRACE = "TRACE";
-	String OPTIONS = "OPTIONS";
-	String CONNECT = "CONNECT";
-	String PATCH = "PATCH";
 
 	/**
 	 * Action path value. If equals to {@link #NONE} action method name
@@ -72,22 +62,9 @@ public @interface Action {
 	String value() default "";
 
 	/**
-	 * Action path extension. If equals to {@link #NONE} extension will be not
-	 * part of created action path. If empty, default extension will be used
-	 * (defined in {@link MadvocConfig}.
-	 */
-	String extension() default "";
-
-	/**
 	 * Defines alias for this action.
 	 */
 	String alias() default "";
-
-	/**
-	 * Defines action method (such as HTTP request method: GET, POST....).
-	 * Ignore it or use {@link #ANY} to ignore the method.
-	 */
-	String method() default "";
 
 	/**
 	 * Defines if action has to be called asynchronously

@@ -84,7 +84,7 @@ public class WebApp {
 	private List<Props> propsList = new ArrayList<>();
 	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
-	private Consumers<MadvocApp> madvocAppConsumers = Consumers.empty();
+	private Consumers<MadvocRouter> madvocRouterConsumers = Consumers.empty();
 	private Consumers<MadvocConfig> madvocConfigConsumers = Consumers.empty();
 
 	/**
@@ -140,6 +140,7 @@ public class WebApp {
 	// ---------------------------------------------------------------- main components
 
 	protected final MadvocContainer madvocContainer;
+	protected final Consumers<MadvocContainer> componentConfigs = Consumers.empty();
 
 	public WebApp() {
 		madvocContainer = new MadvocContainer();
@@ -153,13 +154,36 @@ public class WebApp {
 		return madvocContainer;
 	}
 
+	/**
+	 * Configures a component. While the signature is the same as for {@link #registerComponent(Class, Consumer)}
+	 * this method does not register component, just operates on an already registered one.
+	 */
+	public <T> WebApp withRegisteredComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
+		componentConfigs.add(madvocContainer -> {
+			T component = madvocContainer.lookupComponent(madvocComponent);
+			if (component != null) {
+				componentConsumer.accept(component);
+			}
+
+		});
+		return this;
+	}
+
+	/**
+	 * Defines a route using {@link MadvocRouter}.
+	 */
+	public WebApp router(Consumer<MadvocRouter> madvocAppConsumer) {
+		madvocRouterConsumers.add(madvocAppConsumer);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- lifecycle
 
 	/**
 	 * Initializes and starts web application.
 	 */
-	public WebApp start(Consumer<MadvocApp> madvocAppConsumer) {
-		madvocAppConsumers.add(madvocAppConsumer);
+	public WebApp start(Consumer<MadvocRouter> madvocRouterConsumer) {
+		madvocRouterConsumers.add(madvocRouterConsumer);
 		return start();
 	}
 
@@ -198,18 +222,21 @@ public class WebApp {
 		//// listeners
 		madvocContainer.fireEvent(MadvocComponentLifecycle.Init.class);
 
-		initalized();
+		//// component configuration
+		componentConfigs.accept(madvocContainer());
+
+		initialized();
 
 		madvocContainer.fireEvent(MadvocComponentLifecycle.Start.class);
 
-		if (!madvocAppConsumers.isEmpty()) {
+		if (!madvocRouterConsumers.isEmpty()) {
 
-			MadvocApp madvocApp = MadvocApp.create();
-			madvocContainer.registerComponentInstance(madvocApp);
+			MadvocRouter madvocRouter = MadvocRouter.create();
+			madvocContainer.registerComponentInstance(madvocRouter);
 
-			madvocAppConsumers.accept(madvocApp);
+			madvocRouterConsumers.accept(madvocRouter);
 		}
-		madvocAppConsumers = null;
+		madvocRouterConsumers = null;
 
 		started();
 
@@ -258,7 +285,7 @@ public class WebApp {
 	 * Called when Madvoc is initialized, at the end of the {@link MadvocComponentLifecycle.Init INIT} phase.
 	 * @see MadvocComponentLifecycle
 	 */
-	protected void initalized() {
+	protected void initialized() {
 	}
 
 	/**

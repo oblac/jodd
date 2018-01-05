@@ -27,16 +27,11 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.config.ActionRuntime;
-import jodd.madvoc.config.MethodParam;
-import jodd.madvoc.injector.Target;
-import jodd.madvoc.meta.Out;
-import jodd.util.ClassUtil;
+import jodd.madvoc.injector.Targets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 
 import static jodd.exception.ExceptionUtil.unwrapThrowable;
 import static jodd.exception.ExceptionUtil.wrapToException;
@@ -55,7 +50,7 @@ public class ActionRequest {
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
 
-	protected final Target[] targets;
+	protected final Targets targets;
 	protected final ActionWrapper[] executionArray;
 	protected int executionIndex;
 
@@ -147,7 +142,7 @@ public class ActionRequest {
 	/**
 	 * Returns all injection targets.
 	 */
-	public Target[] getTargets() {
+	public Targets getTargets() {
 		return targets;
 	}
 
@@ -184,7 +179,7 @@ public class ActionRequest {
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		this.action = action;
-		this.targets = makeTargets();
+		this.targets = new Targets(actionRuntime, action);
 
 		this.executionIndex = 0;
 		this.executionArray = createExecutionArray();
@@ -211,15 +206,12 @@ public class ActionRequest {
 
 		// result is executed AFTER the action AND interceptors
 
-		executionArray[index++] = new BaseActionWrapper() {
-			@Override
-			public Object invoke(ActionRequest actionRequest) throws Exception {
-				Object actionResult = actionRequest.invoke();
+		executionArray[index++] = actionRequest -> {
+			Object actionResult = actionRequest.invoke();
 
-				ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
+			ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
 
-				return actionResult;
-			}
+			return actionResult;
 		};
 
 		// interceptors
@@ -231,79 +223,12 @@ public class ActionRequest {
 
 		// action
 
-		executionArray[index] = new BaseActionWrapper() {
-			@Override
-			public Object invoke(ActionRequest actionRequest) throws Exception {
-				actionResult = invokeActionMethod();
-				return actionResult;
-			}
+		executionArray[index] = actionRequest -> {
+			actionResult = invokeActionMethod();
+			return actionResult;
 		};
 
 		return executionArray;
-	}
-
-	/**
-	 * Joins action and parameters into one array of Targets.
-	 */
-	protected Target[] makeTargets() {
-		if (!actionRuntime.hasArguments()) {
-			return new Target[] {new Target(action)};
-		}
-
-		MethodParam[] methodParams = actionRuntime.methodParams();
-		Target[] target = new Target[methodParams.length + 1];
-
-		target[0] = new Target(action);
-
-		for (int i = 0; i < methodParams.length; i++) {
-			MethodParam mp = methodParams[i];
-
-			Class type = mp.type();
-
-			Target t;
-
-			if (mp.annotationType() == null) {
-				// parameter is NOT annotated
-				t = new Target(createActionMethodArgument(type));
-			}
-			else if (mp.annotationType() == Out.class) {
-				// parameter is annotated with *only* OUT annotation
-				// we need to create the output AND to save the type
-				t = new Target(createActionMethodArgument(type), type);
-			}
-			else {
-				// parameter is annotated with any IN annotation
-				t = new Target(type) {
-					@Override
-					protected void createValueInstance() {
-						value = createActionMethodArgument(type);
-					}
-				};
-			}
-
-			target[i + 1] = t;
-		}
-		return target;
-	}
-
-	/**
-	 * Creates action method arguments.
-	 */
-	@SuppressWarnings({"unchecked", "NullArgumentToVariableArgMethod"})
-	protected Object createActionMethodArgument(Class type) {
-		try {
-			if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
-				// regular or static class
-				return ClassUtil.newInstance(type);
-			} else {
-				// member class
-				Constructor ctor = type.getDeclaredConstructor(type.getDeclaringClass());
-				ctor.setAccessible(true);
-				return ctor.newInstance(action);
-			}
-		} catch (Exception ex) {
-			throw new MadvocException(ex);
-		}
 	}
 
 	// ---------------------------------------------------------------- invoke
@@ -313,7 +238,7 @@ public class ActionRequest {
 	 * Invokes all interceptors before and after action invocation.
 	 */
 	public Object invoke() throws Exception {
-		return executionArray[executionIndex++].invoke(this);
+		return executionArray[executionIndex++].apply(this);
 	}
 
 	/**
@@ -321,29 +246,17 @@ public class ActionRequest {
 	 * After method invocation, all interceptors will finish, in opposite order. 
 	 */
 	protected Object invokeActionMethod() throws Exception {
-		Object[] params = extractParametersFromTargets();
+		if (actionRuntime.isActionHandlerDefined()) {
+			actionRuntime.actionHandler().handle(this);
+			return null;
+		}
+
+		Object[] params = targets.extractParametersValues();
 		try {
 			return actionRuntime.actionClassMethod().invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw wrapToException(unwrapThrowable(itex));
 		}
-	}
-
-	/**
-	 * Collects all parameters from target into an array.
-	 */
-	protected Object[] extractParametersFromTargets() {
-		if (targets == null) {
-			return null;
-		}
-
-		Object[] values = new Object[targets.length - 1];
-
-		for (int i = 1; i < targets.length; i++) {
-			values[i - 1] = targets[i].getValue();
-		}
-
-		return values;
 	}
 
 }

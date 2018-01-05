@@ -27,9 +27,7 @@ package jodd.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static jodd.util.ArraysUtil.array;
 import static jodd.util.StringPool.ISO_8859_1;
@@ -918,8 +916,8 @@ class StringUtilTest {
 		String s = StringUtil.join(array("1", "2", "3"), ".");
 		assertEquals("1.2.3", s);
 
-		 s = StringUtil.join(array("1", "2", "3"), '.');
-			assertEquals("1.2.3", s);
+		s = StringUtil.join(array("1", "2", "3"), '.');
+		assertEquals("1.2.3", s);
 
 		s = StringUtil.join(array("1"), '.');
 		assertEquals("1", s);
@@ -934,6 +932,18 @@ class StringUtilTest {
 		assertNull(StringUtil.join(array(null), '.'));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, '.'));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, '.'));
+
+		// Tests for join(Collection collection, char separator)
+		assertNull(StringUtil.join((Collection) null, 'X'));
+		assertEquals(StringPool.EMPTY, StringUtil.join(Collections.emptyList(), 'X'));
+		assertEquals("Jodd", StringUtil.join(Arrays.asList("Jodd"), ','));
+		assertEquals("Jodd-makes-fun", StringUtil.join(Arrays.asList("Jodd", "makes", "fun"), '-'));
+
+		// Tests for join(Collection collection, String separator)
+		assertNull(StringUtil.join((Collection) null, "X"));
+		assertEquals(StringPool.EMPTY, StringUtil.join(Collections.emptyList(), "X"));
+		assertEquals("Jodd", StringUtil.join(Arrays.asList("Jodd"), ","));
+		assertEquals("Jodd makes fun", StringUtil.join(Arrays.asList("Jodd", "makes", "fun"), " "));
 	}
 
 	@Test
@@ -1244,4 +1254,9 @@ class StringUtilTest {
 		assertEquals("\"123'", StringUtil.removeQuotes("\"123'"));
 	}
 
+	@Test
+	void testIfNotNull() {
+		assertEquals(StringPool.EMPTY, StringUtil.ifNotNull(null, str -> str + "It doesn't matter!"));
+		assertEquals("Jodd makes fun!", StringUtil.ifNotNull("Jodd", input -> input + " makes fun!"));
+	}
 }

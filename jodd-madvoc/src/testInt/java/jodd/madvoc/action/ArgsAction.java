@@ -28,12 +28,16 @@ package jodd.madvoc.action;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.Scope;
+import jodd.madvoc.result.JsonActionResult;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static jodd.madvoc.ScopeType.BODY;
 
 @MadvocAction
 public class ArgsAction {
@@ -94,10 +98,10 @@ public class ArgsAction {
 	@Action
 	public void world(
 			@In @Out("ime") String name,
-			@InOut MutableInteger muti,
+			@In @Out MutableInteger muti,
 			@In("hello") Data2 hello,
 			Hello hello2,
-			@In(scope = ScopeType.SERVLET)HttpServletRequest request,
+			@In @Scope(ScopeType.SERVLET)HttpServletRequest request,
 			@Out User user
 			) {
 
@@ -112,10 +116,17 @@ public class ArgsAction {
 	}
 
 	@Action
-	public void user(@InOut User user) {
+	public void user(@In @Out User user) {
 	}
 
-	public void zigzag(@InOut int id) {
+	@Action
+	@RenderWith(JsonActionResult.class)
+	public User user2(@In @Scope(BODY) User user) {
+		user.setUsername(user.getUsername() + "!");
+		return user;
+	}
+
+	public void zigzag(@In @Out int id) {
 		System.out.println("ArgsAction.zigzag");
 		System.out.println("id = [" + id + "]");
 	}

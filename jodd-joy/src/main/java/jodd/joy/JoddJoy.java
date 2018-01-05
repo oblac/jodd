@@ -208,8 +208,8 @@ public class JoddJoy {
 			// cleanup things we will not use
 
 			// todo optimization
-			//joyScanner = null;
-			//joyProps = null;
+			joyScanner.stop();
+			joyProps.stop();
 		}
 		catch (Exception ex) {
 			if (log != null) {
@@ -221,6 +221,8 @@ public class JoddJoy {
 			stop();
 			throw ex;
 		}
+
+		log.info("Joy is up. Enjoy Joy!");
 	}
 
 	/**
@@ -232,6 +234,10 @@ public class JoddJoy {
 			joyPetite.stop();
 		}
 		catch (Exception ignore) {
+		}
+
+		if (log != null) {
+			log.info("Joy is stopped! Bye, bye!");
 		}
 	}
 

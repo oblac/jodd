@@ -26,10 +26,11 @@
 package jodd.madvoc.action.tag;
 
 import jodd.bean.BeanCopy;
-import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.GET;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.result.TextResult;
 
 @MadvocAction("/tag")
 public class TagAction {
@@ -54,36 +55,37 @@ public class TagAction {
 	}
 
 	@RestAction(value = "disable/{id}")
-	public String disable() {
+	public TextResult disable() {
 		tag = loadTagById(id);
-		return "text:disable-" + tag;
+		return TextResult.of("disable-" + tag);
 	}
 
 	// if we want to use 'delete' with @RestAction and GET
-	@RestAction(value = "delete/{id}", method = Action.GET)
-	public String delete() {
+	@RestAction("delete/{id}")
+	@GET
+	public TextResult delete() {
 		tag = loadTagById(id);
-		return "text:delete-" + tag;
+		return TextResult.of("delete-" + tag);
 	}
 
 	@RestAction(value = "{id}")
 	//@RestAction(value = "edit/{id}")
-	public String edit() {
+	public TextResult edit() {
 		Tag oldTag = loadTagById(id);
 
 		apply(tag, oldTag);
 
 		tag = oldTag;
 
-		return "text:edit-" + tag;
+		return TextResult.of("edit-" + tag);
 	}
 
 	@RestAction(value = "{id}")
-	public String save() {
+	public TextResult save() {
 		tag.setTagId(id);
 
 		// save tag
 
-		return "text:save-" + tag;
+		return TextResult.of("save-" + tag);
 	}
 }

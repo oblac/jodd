@@ -25,8 +25,6 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.config.ScopeData;
-
 /**
  * Context injector. Context is injected only during the initialization.
  * @see jodd.madvoc.component.ContextInjectorComponent
@@ -35,10 +33,9 @@ public interface ContextInjector<C> {
 
 	/**
 	 * Injects data from context object into the target.
-	 * @param target injection target
-	 * @param scopeData all scope data for target's type (shared during context initialization)
+	 * @param targets injection targets
 	 * @param contextObject injection source or any key for retrieving context
 	 */
-	public void injectContext(Target target, ScopeData[] scopeData, C contextObject);
+	public void injectContext(Targets targets, C contextObject);
 
 }

@@ -30,20 +30,20 @@ import jodd.madvoc.component.MyComponent;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.RawData;
 import jodd.util.CharUtil;
-import jodd.util.net.MimeTypes;
 
 @MadvocAction
 public class ComponentAction {
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(ScopeType.CONTEXT)
 	MyComponent myComponent;
 
 	@Action
 	public RawData view() {
 		String result = myComponent.getString();
 		byte[] bytes = CharUtil.toAsciiByteArray(result.toCharArray());
-		return new RawData(bytes, MimeTypes.MIME_TEXT_HTML);
+		return RawData.of(bytes).asHtml();
 	}
 }

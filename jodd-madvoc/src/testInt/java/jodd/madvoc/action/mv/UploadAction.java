@@ -26,16 +26,18 @@
 package jodd.madvoc.action.mv;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InOut;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
 import jodd.upload.FileUpload;
 
 @MadvocAction
 public class UploadAction {
 
-	@InOut
+	@In
+	@Out
 	FileUpload[] uploadFiles;
-	@InOut
+	@In @Out
 	String[] uploadFileNames;
 
 	@Action

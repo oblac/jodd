@@ -28,9 +28,9 @@ package jodd.madvoc.action;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.Scope;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +50,7 @@ public class HelloAction {
 
 	// ----------------------------------------------------------------
 
-	@InOut
+	@In @Out
 	private String name;
 	public void setName(String name) {
 		this.name = "planet " + name;
@@ -79,20 +79,16 @@ public class HelloAction {
 
 	// ----------------------------------------------------------------
 
-	@InOut("p")
+	@In("p") @Out("p")
 	Person person;      // Due to create == true, person will be instanced on first access.
 
-	/**
-	 * Action mapped to '/hello.bean.html'
-	 * Result mapped to '/hello.bean.jsp' and aliased in {@link MySimpleConfigurator} to /hi-bean.jsp
-	 */
 	@Action
 	public void bean() {
 	}
 
 	// ----------------------------------------------------------------
 
-	@In(scope = ScopeType.SERVLET)
+	@In @Scope(ScopeType.SERVLET)
 	HttpServletResponse servletResponse;
 
 	/**
@@ -105,21 +101,29 @@ public class HelloAction {
 		return "none:";
 	}
 
-	@In(scope = ScopeType.SERVLET)
+	@In @Scope(ScopeType.SERVLET)
 	Map<String, String> requestParamMap;
 
-	@In(scope = ScopeType.SERVLET)
-	@Out
+	@In @Scope(ScopeType.SERVLET)
 	String requestMethod;
+
+	@Out
+	public String getReqMethod() {
+		return requestMethod;
+	}
 
 	static class ReqReqOut {
 		@Out
 		public String name;
 	}
 
-	@In(scope = ScopeType.SERVLET)
-	@Out
+	@In @Scope(ScopeType.SERVLET)
 	String requestBody;
+
+	@Out
+	public String getReqBody() {
+		return requestBody;
+	}
 
 	@Action
 	public void reqreq(ReqReqOut reqReqOut) {
@@ -132,7 +136,7 @@ public class HelloAction {
 
 	// since 'hello.jsp' exist, we need to change the class-related
 	// part of action prefix
-	@Action("/nohello.{:method}")
+	@Action("/nohello.{:name}")
 	public void nojsp() {
 	}
 

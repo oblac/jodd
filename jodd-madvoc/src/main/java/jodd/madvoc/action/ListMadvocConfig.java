@@ -26,7 +26,6 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
@@ -36,6 +35,7 @@ import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.ActionResult;
 
 import java.util.ArrayList;
@@ -43,26 +43,27 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import static jodd.madvoc.ScopeType.CONTEXT;
+
 /**
  * Helper action that returns sorted list of all registered action runtime configurations,
  * action results and interceptors. It can be extended as an Madvoc action or used independently.
  */
 public class ListMadvocConfig {
 
-	@In(scope = ScopeType.CONTEXT)
-	@Out
+	@In @Scope(CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(CONTEXT)
 	protected ActionsManager actionsManager;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(CONTEXT)
 	protected FiltersManager filtersManager;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(CONTEXT)
 	protected InterceptorsManager interceptorsManager;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In @Scope(CONTEXT)
 	protected ResultsManager resultsManager;
 
 	@Out

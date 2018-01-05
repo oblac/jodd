@@ -25,16 +25,12 @@
 
 package jodd.madvoc.config;
 
-import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionHandler;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.result.Result;
-import jodd.util.ClassUtil;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -43,13 +39,13 @@ import java.lang.reflect.Method;
 public class ActionRuntime {
 
 	// configuration
+	private final ActionHandler actionHandler;
 	private final Class actionClass;
 	private final Method actionClassMethod;
 	private final Class<? extends ActionResult> actionResult;
 	private final String actionPath;
 	private final String actionMethod;
 	private final String resultBasePath;
-	private final Field resultField;
 	private final boolean async;
 
 	// scope data information matrix: [scope-type][target-index]
@@ -65,6 +61,7 @@ public class ActionRuntime {
 	private final ActionConfig actionConfig;
 
 	public ActionRuntime(
+			ActionHandler actionHandler,
 			Class actionClass,
 			Method actionClassMethod,
 			ActionFilter[] filters,
@@ -77,12 +74,13 @@ public class ActionRuntime {
 			ActionConfig actionConfig
 			)
 	{
+		this.actionHandler = actionHandler;
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionDefinition.actionPath();
 		this.actionMethod = actionDefinition.actionMethod() == null ? null : actionDefinition.actionMethod().toUpperCase();
 		this.resultBasePath = actionDefinition.resultBasePath();
-		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
+		this.hasArguments = actionClassMethod != null && (actionClassMethod.getParameterTypes().length != 0);
 		this.actionResult = actionResult;
 		this.async = async;
 
@@ -91,28 +89,24 @@ public class ActionRuntime {
 		this.filters = filters;
 		this.interceptors = interceptors;
 		this.methodParams = methodParams;
-		this.resultField = findResultField(actionClass);
 		this.actionConfig = actionConfig;
 	}
 
-	// ---------------------------------------------------------------- result
+	// ---------------------------------------------------------------- getters
 
 	/**
-	 * Finds result field in the action class.
+	 * Returns {@code true} if action handler is defined.
 	 */
-	protected Field findResultField(Class actionClass) {
-		FieldDescriptor[] fields = ClassIntrospector.get().lookup(actionClass).getAllFieldDescriptors();
-		for (FieldDescriptor fd : fields) {
-			Field field = fd.getField();
-			if (ClassUtil.isTypeOf(field.getType(), Result.class)) {
-				field.setAccessible(true);
-				return field;
-			}
-		}
-		return null;
+	public boolean isActionHandlerDefined() {
+		return actionHandler != null;
 	}
 
-	// ---------------------------------------------------------------- getters
+	/**
+	 * Returns action handler.
+	 */
+	public ActionHandler actionHandler() {
+		return actionHandler;
+	}
 
 	/**
 	 * Returns action class.
@@ -189,10 +183,6 @@ public class ActionRuntime {
 		return actionResult;
 	}
 
-	public Field resultField() {
-		return resultField;
-	}
-
 	/**
 	 * Returns {@code true} if action has arguments.
 	 */
@@ -214,6 +204,9 @@ public class ActionRuntime {
 	 * Returns action string in form 'actionClass#actionMethod'.
 	 */
 	public String actionString() {
+		if (actionHandler != null) {
+			return actionHandler.getClass().getName();
+		}
 		String className = actionClass.getName();
 
 		int ndx = className.indexOf("$$");

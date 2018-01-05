@@ -27,6 +27,7 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,9 +35,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public abstract class SimpleTestBase {
 
 	@Test
-	public void testHelloAction() {
+	void testHelloAction() {
 		HttpResponse response = HttpRequest.get("localhost:8173/hello.html").send();
 		assertEquals("hello", response.bodyText().trim());
+	}
+
+	@Test
+	@Disabled("Disable for now")
+	void testBatman() {
+		HttpResponse response = HttpRequest.get("localhost:8173/batman").send();
+		assertEquals("joker", response.bodyText().trim());
 	}
 
 }

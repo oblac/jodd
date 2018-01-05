@@ -25,12 +25,12 @@
 
 package jodd.joy.auth;
 
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
-import jodd.servlet.CsrfShield;
-import jodd.util.StringUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.servlet.CsrfShield;
+import jodd.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  * authenticates himself by successfully associating his "principal"
  * (often a username) with his "credentials" (often a password).
  */
-public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor {
+public abstract class AuthenticationInterceptor<U> implements ActionInterceptor {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
@@ -66,6 +66,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 	protected boolean recreateCookieOnLogin;
 
 
+	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();

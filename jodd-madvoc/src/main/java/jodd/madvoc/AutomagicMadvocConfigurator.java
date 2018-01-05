@@ -34,15 +34,12 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocContainer;
-import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.MadvocComponent;
-import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -71,13 +68,9 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	protected ActionsManager actionsManager;
 
 	@PetiteInject
-	protected ResultsManager resultsManager;
-
-	@PetiteInject
 	protected MadvocContainer madvocContainer;
 
 	protected String actionClassSuffix;         // default action class suffix, for class path search
-	protected String resultClassSuffix;         // default action result class suffix, for class path search
 	protected long elapsed;
 
 	protected final byte[] madvocComponentAnnotation;
@@ -87,7 +80,6 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 
 	public AutomagicMadvocConfigurator() {
 		actionClassSuffix = "Action";
-		resultClassSuffix = "Result";
 		madvocComponentAnnotation = ClassScanner.bytecodeSignatureOfType(MadvocComponent.class);
 	}
 
@@ -138,12 +130,6 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 					onActionClass(entryName);
 				} catch (Exception ex) {
 					log.debug("Invalid Madvoc action, ignoring: " + entryName);
-				}
-			} else if (entryName.endsWith(resultClassSuffix)) {
-				try {
-					onResultClass(entryName);
-				} catch (Exception ex) {
-					log.debug("Invalid Madvoc result ignoring: " + entryName);
 				}
 			} else if (entryData.isTypeSignatureInUse(madvocComponentAnnotation)) {
 				try {
@@ -237,26 +223,6 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			}
 
 			webappConfigurations.add(() -> actionsManager.register(actionClass, method));
-		}
-	}
-
-	/**
-	 * Loads madvoc result from founded {@link jodd.madvoc.result.ActionResult} instance.
-	 */
-	@SuppressWarnings({"unchecked"})
-	protected void onResultClass(String className) throws ClassNotFoundException {
-		Class resultClass = classScanner.loadClass(className);
-
-		if (resultClass == null) {
-			return;
-		}
-
-		if (!checkClass(resultClass)) {
-			return;
-		}
-
-		if (ClassUtil.isTypeOf(resultClass, ActionResult.class)) {
-			webappConfigurations.add(() -> resultsManager.register(resultClass));
 		}
 	}
 
