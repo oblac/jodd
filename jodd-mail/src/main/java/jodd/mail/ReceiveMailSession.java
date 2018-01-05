@@ -33,281 +33,315 @@ import javax.mail.Session;
 import javax.mail.Store;
 
 /**
- * Encapsulates email receiving session. Prepares and receives message(s).
+ * Encapsulates {@link Email} receiving session. Prepares and receives {@link Email}s.
  * Some methods do not work on POP3 servers.
  */
-public class ReceiveMailSession {
+//TODO: should this implement AutoClosable from MailSession?
+public class ReceiveMailSession extends MailSession<Store> {
 
-	protected static final String DEFAULT_FOLDER = "INBOX";
+  /**
+   * Default folder.
+   */
+  protected static final String DEFAULT_FOLDER = "INBOX";
 
-	protected final Session session;
-	protected final Store store;
+  /**
+   * The current folder.
+   */
+  private Folder folder;
 
-	static {
-		EmailUtil.setupSystemMailProperties();
-	}
+  static {
+    EmailUtil.setupSystemMailProperties();
+  }
 
-	/**
-	 * Creates new mail session.
-	 */
-	public ReceiveMailSession(Session session, Store store) {
-		this.session = session;
-		this.store = store;
-	}
+  /**
+   * Creates new mail session.
+   *
+   * @param session {@link Session}.
+   * @param store   {@link Store}.
+   */
+  public ReceiveMailSession(final Session session, final Store store) {
+    super(session, store);
+  }
 
-	protected Folder folder;
+  @Override
+  public Store getService() {
+    return (Store) service;
+  }
 
+  // ---------------------------------------------------------------- folders
 
-	/**
-	 * Opens session.
-	 */
-	public void open() {
-		try {
-			store.connect();
-		} catch (MessagingException msex) {
-			throw new MailException("Open session error", msex);
-		}
-	}
+  /**
+   * Returns array of all {@link Folder}s as {@link String}s. You can use these names in
+   * {@link #useFolder(String)} method.
+   *
+   * @return array of all {@link Folder}s as {@link String}s.
+   */
+  public String[] getAllFolders() {
+    final Folder[] folders;
+    try {
+      folders = getService().getDefaultFolder().list("*");
+    } catch (final MessagingException msgexc) {
+      throw new MailException("Failed to connect to folder", msgexc);
+    }
+    final String[] folderNames = new String[folders.length];
 
-	// ---------------------------------------------------------------- folders
+    for (int i = 0; i < folders.length; i++) {
+      final Folder folder = folders[i];
+      folderNames[i] = folder.getFullName();
+    }
+    return folderNames;
+  }
 
-	/**
-	 * Returns list of all folders. You can use these names in
-	 * {@link #useFolder(String)} method.
-	 */
-	public String[] getAllFolders() {
-		Folder[] folders;
-		try {
-			folders = store.getDefaultFolder().list( "*" );
-		} catch (MessagingException msex) {
-			throw new MailException("Failed to connect to folder", msex);
-		}
-		String[] folderNames = new String[folders.length];
+  /**
+   * Opens new folder and closes previously opened folder.
+   *
+   * @param folderName Folder to open
+   */
+  public void useFolder(final String folderName) {
+    closeFolderIfOpened();
 
-		for (int i = 0; i < folders.length; i++) {
-			Folder folder = folders[i];
-			folderNames[i] = folder.getFullName();
-		}
-		return folderNames;
-	}
+    try {
+      this.folder = getService().getFolder(folderName);
 
-	/**
-	 * Opens new folder and closes previously opened folder.
-	 */
-	public void useFolder(String folderName) {
-		closeFolderIfOpened();
-		try {
-			folder = store.getFolder(folderName);
-		} catch (MessagingException msex) {
-			throw new MailException("Failed to connect to folder: " + folderName, msex);
-		}
-		try {
-			folder.open(Folder.READ_WRITE);
-		} catch (MessagingException ignore) {
-			try {
-				folder.open(Folder.READ_ONLY);
-			} catch (MessagingException msex) {
-				throw new MailException("Failed to open folder: " + folderName, msex);
-			}
-		}
-	}
+      try {
+        openFolder(Folder.READ_WRITE, folderName);
+      } catch (final MailException ignore) {
+        openFolder(Folder.READ_ONLY, folderName);
+      }
+    } catch (final MessagingException msgexc) {
+      throw new MailException("Failed to connect to folder: " + folderName, msgexc);
+    }
+  }
 
-	/**
-	 * Opens default folder: INBOX.
-	 */
-	public void useDefaultFolder() {
-		closeFolderIfOpened();
-		useFolder(DEFAULT_FOLDER);
-	}
+  // ---------------------------------------------------------------- open
 
-	// ---------------------------------------------------------------- message count
+  private void openFolder(final int mode, final String folderNameForErr) throws MailException {
+    try {
+      folder.open(mode);
+    } catch (final MessagingException msgexc) {
+      throw new MailException("Failed to open folder: " + folderNameForErr, msgexc);
+    }
+  }
 
-	/**
-	 * Returns number of messages.
-	 */
-	public int getMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
-		try {
-			return folder.getMessageCount();
-		} catch (MessagingException mex) {
-			throw new MailException(mex);
-		}
-	}
+  /**
+   * Opens default folder: DEFAULT_FOLDER.
+   */
+  public void useDefaultFolder() {
+    closeFolderIfOpened();
+    useFolder(DEFAULT_FOLDER);
+  }
 
-	/**
-	 * Returns the number of new messages.
-	 */
-	public int getNewMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
-		try {
-			return folder.getNewMessageCount();
-		} catch (MessagingException mex) {
-			throw new MailException(mex);
-		}
-	}
+  // ---------------------------------------------------------------- message count
 
-	/**
-	 * Returns the number of unread messages.
-	 */
-	public int getUnreadMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
-		try {
-			return folder.getUnreadMessageCount();
-		} catch (MessagingException mex) {
-			throw new MailException(mex);
-		}
-	}
+  /**
+   * Returns number of messages.
+   *
+   * @return The number of messages.
+   */
+  public int getMessageCount() {
+    if (folder == null) {
+      useDefaultFolder();
+    }
+    try {
+      return folder.getMessageCount();
+    } catch (final MessagingException msgexc) {
+      throw new MailException(msgexc);
+    }
+  }
 
-	/**
-	 * Returns the number of deleted messages.
-	 */
-	public int getDeletedMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
-		try {
-			return folder.getDeletedMessageCount();
-		} catch (MessagingException mex) {
-			throw new MailException(mex);
-		}
-	}
+  /**
+   * Returns the number of new messages.
+   *
+   * @return The number of new message.
+   */
+  public int getNewMessageCount() {
+    if (folder == null) {
+      useDefaultFolder();
+    }
+    try {
+      return folder.getNewMessageCount();
+    } catch (final MessagingException msgexc) {
+      throw new MailException(msgexc);
+    }
+  }
 
-	// ---------------------------------------------------------------- receive emails
+  /**
+   * Returns the number of unread messages.
+   */
+  public int getUnreadMessageCount() {
+    if (folder == null) {
+      useDefaultFolder();
+    }
+    try {
+      return folder.getUnreadMessageCount();
+    } catch (final MessagingException msgexc) {
+      throw new MailException(msgexc);
+    }
+  }
 
-	/**
-	 * Receives all emails. Messages are not modified. However, servers
-	 * may set SEEN flag anyway, so we force messages to remain
-	 * unseen.
-	 */
-	public ReceivedEmail[] receiveEmail() {
-		return receive(null, null);
-	}
+  /**
+   * Returns the number of deleted messages.
+   *
+   * @return The number of deleted messages.
+   */
+  public int getDeletedMessageCount() {
+    if (folder == null) {
+      useDefaultFolder();
+    }
+    try {
+      return folder.getDeletedMessageCount();
+    } catch (final MessagingException msgexc) {
+      throw new MailException(msgexc);
+    }
+  }
 
-	/**
-	 * Receives all emails that matches given {@link EmailFilter filter}.
-	 * Messages are not modified. However, servers may set SEEN flag anyway,
-	 * so we force messages to remain unseen.
-	 */
-	public ReceivedEmail[] receiveEmail(EmailFilter emailFilter) {
-		return receive(emailFilter, null);
-	}
+  // ---------------------------------------------------------------- receive emails
 
-	/**
-	 * Receives all emails and mark all messages as 'seen' (ie 'read').
-	 */
-	public ReceivedEmail[] receiveEmailAndMarkSeen() {
-		return receiveEmailAndMarkSeen(null);
-	}
+  /**
+   * Receives all emails. Messages are not modified. However, servers
+   * may set SEEN flag anyway, so we force messages to remain
+   * unseen.
+   *
+   * @return array of {@link ReceivedEmail}s.
+   * @see #receive(EmailFilter, Flags)
+   */
+  public ReceivedEmail[] receiveEmail() {
+    return receive(null, null);
+  }
 
-	/**
-	 * Receives all emails that matches given {@link EmailFilter filter}
-	 * and mark them as 'seen' (ie 'read').
-	 */
-	public ReceivedEmail[] receiveEmailAndMarkSeen(EmailFilter emailFilter) {
-		Flags flags = new Flags();
-		flags.add(Flags.Flag.SEEN);
-		return receive(emailFilter, flags);
-	}
+  /**
+   * Receives all emails that matches given {@link EmailFilter}.
+   * Messages are not modified. However, servers may set SEEN flag anyway,
+   * so we force messages to remain unseen.
+   *
+   * @param filter {@link EmailFilter}
+   * @return array of {@link ReceivedEmail}s.
+   * @see #receive(EmailFilter, Flags)
+   */
+  public ReceivedEmail[] receiveEmail(final EmailFilter filter) {
+    return receive(filter, null);
+  }
 
-	/**
-	 * Receives all emails and mark all messages as 'seen' and 'deleted'.
-	 */
-	public ReceivedEmail[] receiveEmailAndDelete() {
-		return receiveEmailAndDelete(null);
-	}
+  /**
+   * Receives all emails and mark all messages as 'seen' (ie 'read').
+   *
+   * @return array of {@link ReceivedEmail}s.
+   * @see #receiveEmailAndMarkSeen(EmailFilter)
+   */
+  public ReceivedEmail[] receiveEmailAndMarkSeen() {
+    return receiveEmailAndMarkSeen(null);
+  }
 
-	/**
-	 * Receives all emails that matches given {@link EmailFilter filter} and
-	 * mark all messages as 'seen' and 'deleted'.
-	 */
-	public ReceivedEmail[] receiveEmailAndDelete(EmailFilter emailFilter) {
-		Flags flags = new Flags();
-		flags.add(Flags.Flag.SEEN);
-		flags.add(Flags.Flag.DELETED);
-		return receive(emailFilter, flags);
-	}
+  /**
+   * Receives all emails that matches given {@link EmailFilter}
+   * and mark them as 'seen' (ie 'read').
+   *
+   * @param filter {@link EmailFilter}
+   * @return array of {@link ReceivedEmail}s.
+   * @see #receive(EmailFilter, Flags)
+   */
+  public ReceivedEmail[] receiveEmailAndMarkSeen(final EmailFilter filter) {
+    final Flags flags = new Flags();
+    flags.add(Flags.Flag.SEEN);
+    return receive(filter, flags);
+  }
 
-	/**
-	 * Receives all emails that matches given {@link EmailFilter filter}
-	 * and set given flags. Both filter and flags to set are optional.
-	 * If flags to set is not provided, it forces 'seen' flag to be unset.
-	 */
-	public ReceivedEmail[] receive(EmailFilter filter, Flags flagsToSet) {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+  /**
+   * Receives all emails and mark all messages as 'seen' and 'deleted'.
+   *
+   * @return array of {@link ReceivedEmail}s.
+   */
+  public ReceivedEmail[] receiveEmailAndDelete() {
+    return receiveEmailAndDelete(null);
+  }
 
-		Message[] messages;
+  /**
+   * Receives all emails that matches given {@link EmailFilter} and
+   * mark all messages as 'seen' and 'deleted'.
+   *
+   * @param filter {@link EmailFilter}
+   * @return array of {@link ReceivedEmail}s.
+   * @see #receive(EmailFilter, Flags) s
+   */
+  public ReceivedEmail[] receiveEmailAndDelete(final EmailFilter filter) {
+    final Flags flags = new Flags();
+    flags.add(Flags.Flag.SEEN);
+    flags.add(Flags.Flag.DELETED);
+    return receive(filter, flags);
+  }
 
-		// todo add FetchProfile option for just headers
+  /**
+   * Receives all emails that match given {@link EmailFilter} and set given {@link Flags}.
+   * Both filter and flags to set are optional. If flags to set is not provided, it forces 'seen'
+   * flag to be unset.
+   *
+   * @param filter     {@link EmailFilter filter}
+   * @param flagsToSet {@link Flags} to filter on
+   * @return array of {@link ReceivedEmail}.
+   */
+  public ReceivedEmail[] receive(final EmailFilter filter, final Flags flagsToSet) {
+    if (folder == null) {
+      useDefaultFolder();
+    }
 
-		try {
-			if (filter == null) {
-				messages = folder.getMessages();
-			} else {
-				messages = folder.search(filter.getSearchTerm());
-			}
+    final Message[] messages;
 
-			if (messages.length == 0) {
-				return ReceivedEmail.EMPTY_ARRAY;
-			}
+    // todo add FetchProfile option for just headers
 
-			// process messages
+    try {
+      if (filter == null) {
+        messages = folder.getMessages();
+      } else {
+        messages = folder.search(filter.getSearchTerm());
+      }
 
-			ReceivedEmail[] emails = new ReceivedEmail[messages.length];
+      if (messages.length == 0) {
+        return ReceivedEmail.EMPTY_ARRAY;
+      }
 
-			for (int i = 0; i < messages.length; i++) {
-				Message msg = messages[i];
+      // process messages
 
-				// we need to parse message BEFORE flags are set!
-				emails[i] = new ReceivedEmail(msg);
+      final ReceivedEmail[] emails = new ReceivedEmail[messages.length];
 
-				if (flagsToSet != null) {
-					emails[i].setFlags(flagsToSet);
-					msg.setFlags(flagsToSet, true);
-				}
+      for (int i = 0; i < messages.length; i++) {
+        final Message msg = messages[i];
 
-				if (flagsToSet == null && !emails[i].isSeen()) {
-					msg.setFlag(Flags.Flag.SEEN, false);
-				}
-			}
+        // we need to parse message BEFORE flags are set!
+        emails[i] = new ReceivedEmail(msg);
 
-			return emails;
-		} catch (MessagingException msex) {
-			throw new MailException("Failed to fetch messages", msex);
-		}
-	}
+        if (flagsToSet != null) {
+          emails[i].setFlags(flagsToSet);
+          msg.setFlags(flagsToSet, true);
+        }
 
-	// ---------------------------------------------------------------- close
+        if (flagsToSet == null && !emails[i].isSeen()) {
+          msg.setFlag(Flags.Flag.SEEN, false);
+        }
+      }
 
-	/**
-	 * Closes folder if opened and expunge deleted messages.
-	 */
-	protected void closeFolderIfOpened() {
-		if (folder != null) {
-			try {
-				folder.close(true);
-			} catch (MessagingException ignore) {
-			}
-		}
-	}
+      return emails;
+    } catch (final MessagingException msgexc) {
+      throw new MailException("Failed to fetch messages", msgexc);
+    }
+  }
 
-	/**
-	 * Closes session.
-	 */
-	public void close() {
-		closeFolderIfOpened();
-		try {
-			store.close();
-		} catch (MessagingException mex) {
-			throw new MailException(mex);
-		}
-	}
+  // ---------------------------------------------------------------- close
 
+  /**
+   * Closes folder if opened and expunge deleted messages.
+   */
+  protected void closeFolderIfOpened() {
+    if (folder != null) {
+      try {
+        folder.close(true);
+      } catch (final MessagingException ignore) {
+      }
+    }
+  }
+
+  @Override
+  public void close() {
+    closeFolderIfOpened();
+    super.close();
+  }
 }
