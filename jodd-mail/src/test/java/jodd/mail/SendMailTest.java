@@ -26,224 +26,249 @@
 package jodd.mail;
 
 import jodd.io.StreamUtil;
-import jodd.mail.att.ByteArrayAttachment;
 import jodd.util.net.MimeTypes;
 import org.junit.jupiter.api.Test;
 
 import javax.activation.DataSource;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static jodd.mail.EmailAttachment.attachment;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SendMailTest {
 
-	@Test
-	void testFromToBccCc() throws MessagingException, IOException {
-		Email email = Email.create()
-				.from("from@example.com")
-				.to("to1@example.com").to("Major Tom", "to2@example.com")
-				.cc("cc1@example.com").cc("Major Tom", "cc2@example.com")
-				.bcc("Major Tom", "bcc1@example.com").bcc("bcc2@example.com");
+  private static final String TO_EXAMPLE_COM = "to@example.com";
+  private static final String FROM_EXAMPLE_COM = "from@example.com";
+  private static final String SUB = "sub";
+  private static final String HELLO = "Hello!";
+  private static final String TO1_EXAMPLE_COM = "to1@example.com";
+  private static final String CC1_EXAMPLE_COM = "cc1@example.com";
+  private static final String BCC2_EXAMPLE_COM = "bcc2@example.com";
 
-		Message message = createMessage(email);
+  private static final String FILE_ZIP = "file.zip";
+  private static final String APPLICATION_ZIP = "application/zip";
+  private static final String IMAGE_PNG = "image/png";
+  private static final byte[] BYTES_1_7 = {1, 2, 3, 4, 5, 6, 7};
+  private static final byte[] BYTES_11_15 = {11, 12, 13, 14, 15};
+  private static final String C_PNG = "c.png";
 
-		assertEquals(1, message.getFrom().length);
-		assertEquals("from@example.com", message.getFrom()[0].toString());
+  @Test
+  void testFromToBccCc() throws MessagingException {
+    final Email email = Email.create()
+        .setFrom(FROM_EXAMPLE_COM)
+        .addTo(TO1_EXAMPLE_COM).addTo("Major Tom", "to2@example.com")
+        .addCc(CC1_EXAMPLE_COM).addCc("Major Carson", "cc2@example.com")
+        .addBcc("Major Ben", "bcc1@example.com").addBcc(BCC2_EXAMPLE_COM);
 
-		assertEquals(6, message.getAllRecipients().length);
+    final Message message = createMessage(email);
 
-		assertEquals(2, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to1@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
-		assertEquals("Major Tom <to2@example.com>", message.getRecipients(Message.RecipientType.TO)[1].toString());
+    assertEquals(1, message.getFrom().length);
+    assertEquals(FROM_EXAMPLE_COM, message.getFrom()[0].toString());
 
-		assertEquals(2, message.getRecipients(Message.RecipientType.CC).length);
-		assertEquals("cc1@example.com", message.getRecipients(Message.RecipientType.CC)[0].toString());
-		assertEquals("Major Tom <cc2@example.com>", message.getRecipients(Message.RecipientType.CC)[1].toString());
+    assertEquals(6, message.getAllRecipients().length);
 
-		assertEquals(2, message.getRecipients(Message.RecipientType.BCC).length);
-		assertEquals("Major Tom <bcc1@example.com>", message.getRecipients(Message.RecipientType.BCC)[0].toString());
-		assertEquals("bcc2@example.com", message.getRecipients(Message.RecipientType.BCC)[1].toString());
-	}
+    assertEquals(2, message.getRecipients(RecipientType.TO).length);
+    assertEquals(TO1_EXAMPLE_COM, message.getRecipients(RecipientType.TO)[0].toString());
+    assertEquals("Major Tom <to2@example.com>", message.getRecipients(RecipientType.TO)[1].toString());
 
-	@Test
-	void testSimpleText() throws MessagingException, IOException {
-		Email email = Email.create()
-				.from("from@example.com")
-				.to("to@example.com")
-				.subject("sub")
-				.addText("Hello!");
+    assertEquals(2, message.getRecipients(RecipientType.CC).length);
+    assertEquals(CC1_EXAMPLE_COM, message.getRecipients(RecipientType.CC)[0].toString());
+    assertEquals("Major Carson <cc2@example.com>", message.getRecipients(RecipientType.CC)[1].toString());
 
-		Message message = createMessage(email);
+    assertEquals(2, message.getRecipients(RecipientType.BCC).length);
+    assertEquals("Major Ben <bcc1@example.com>", message.getRecipients(RecipientType.BCC)[0].toString());
+    assertEquals(BCC2_EXAMPLE_COM, message.getRecipients(RecipientType.BCC)[1].toString());
+  }
 
-		String content = (String) message.getContent();
+  @Test
+  void testSimpleText() throws MessagingException, IOException {
+    final Email email = Email.create()
+        .setFrom(FROM_EXAMPLE_COM)
+        .addTo(TO_EXAMPLE_COM)
+        .setSubject(SUB)
+        .addText(HELLO);
 
-		assertEquals("Hello!", content);
-		assertTrue(message.getDataHandler().getContentType().contains("text/plain"));
-	}
+    final Message message = createMessage(email);
 
-	@Test
-	void testSimpleTextWithCyrilic() throws MessagingException, IOException {
-		Email email = Email.create()
-				.from("Тијана Милановић <t@gmail.com>")
-				.to("Јодд <i@jodd.com>")
-				.subject("Здраво!")
-				.addText("шта радиш?");
+    final String content = (String) message.getContent();
 
-		Message message = createMessage(email);
+    assertEquals(HELLO, content);
+    assertTrue(message.getDataHandler().getContentType().contains("text/plain"));
+  }
 
-		String content = (String) message.getContent();
+  @Test
+  void testSimpleTextWithCyrilic() throws MessagingException, IOException {
+    final Email email = Email.create()
+        .setFrom("Тијана Милановић <t@gmail.com>")
+        .addTo("Јодд <i@jodd.com>")
+        .setSubject("Здраво!")
+        .addText("шта радиш?");
 
-		assertEquals("шта радиш?", content);
-		assertTrue(message.getDataHandler().getContentType().contains("text/plain"));
+    final Message message = createMessage(email);
 
-		assertEquals("=?UTF-8?B?0KLQuNGY0LDQvdCwINCc0LjQu9Cw0L3QvtCy0LjRmw==?= <t@gmail.com>", message.getFrom()[0].toString());
-		assertEquals("=?UTF-8?B?0IjQvtC00LQ=?= <i@jodd.com>", message.getRecipients(Message.RecipientType.TO)[0].toString());
-	}
+    final String content = (String) message.getContent();
 
-	@Test
-	void testTextHtml() throws MessagingException, IOException {
-		Email email = Email.create()
-				.from("from@example.com")
-				.to("to@example.com")
-				.subject("sub")
-				.addText("Hello!")
-				.addHtml("<html><body><h1>Hey!</h1></body></html>");
+    assertEquals("шта радиш?", content);
+    assertTrue(message.getDataHandler().getContentType().contains("text/plain"));
 
-		Message message = createMessage(email);
+    assertEquals("=?UTF-8?B?0KLQuNGY0LDQvdCwINCc0LjQu9Cw0L3QvtCy0LjRmw==?= <t@gmail.com>", message.getFrom()[0].toString());
+    assertEquals("=?UTF-8?B?0IjQvtC00LQ=?= <i@jodd.com>", message.getRecipients(RecipientType.TO)[0].toString());
+  }
 
-		assertEquals(1, message.getFrom().length);
-		assertEquals("from@example.com", message.getFrom()[0].toString());
+  @Test
+  void testTextHtml() throws MessagingException, IOException {
+    final Email email = Email.create()
+        .setFrom(FROM_EXAMPLE_COM)
+        .addTo(TO_EXAMPLE_COM)
+        .setSubject(SUB)
+        .addText(HELLO)
+        .addHtml("<html><body><h1>Hey!</h1></body></html>");
 
-		assertEquals(1, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
+    final Message message = createMessage(email);
 
-		assertEquals("sub", message.getSubject());
+    assertEquals(1, message.getFrom().length);
+    assertEquals(FROM_EXAMPLE_COM, message.getFrom()[0].toString());
 
-		// wrapper
-		MimeMultipart multipart = (MimeMultipart) message.getContent();
-		assertEquals(1, multipart.getCount());
-		assertTrue(multipart.getContentType().contains("multipart/mixed"));
+    assertEquals(1, message.getRecipients(RecipientType.TO).length);
+    assertEquals(TO_EXAMPLE_COM, message.getRecipients(RecipientType.TO)[0].toString());
 
-		// inner content
-		MimeBodyPart mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(0);
-		MimeMultipart mimeMultipart = (MimeMultipart) mimeBodyPart.getContent();
-		assertEquals(2, mimeMultipart.getCount());
-		assertTrue(mimeMultipart.getContentType().contains("multipart/alternative"));
+    assertEquals(SUB, message.getSubject());
 
-		MimeBodyPart bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(0);
-		assertEquals("Hello!", bodyPart.getContent());
-		assertTrue(bodyPart.getDataHandler().getContentType().contains("text/plain"));
+    // wrapper
+    final MimeMultipart multipart = (MimeMultipart) message.getContent();
+    assertEquals(1, multipart.getCount());
+    assertTrue(multipart.getContentType().contains("multipart/mixed"));
 
-		bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(1);
-		assertEquals("<html><body><h1>Hey!</h1></body></html>", bodyPart.getContent());
-		assertTrue(bodyPart.getDataHandler().getContentType().contains("text/html"));
-	}
+    // inner content
+    final MimeBodyPart mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(0);
+    final MimeMultipart mimeMultipart = (MimeMultipart) mimeBodyPart.getContent();
+    assertEquals(2, mimeMultipart.getCount());
+    assertTrue(mimeMultipart.getContentType().contains("multipart/alternative"));
 
-	@Test
-	void testTextHtmlEmbedAttach1() throws MessagingException, IOException {
-		Email email = Email.create()
-				.from("from@example.com")
-				.to("to@example.com")
-				.subject("sub")
-				.addText("Hello!")
-				.addHtml("<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>")
-				.embed(attachment().setName("c.png").bytes(new byte[] {1, 2, 3, 4, 5, 6, 7}))
-				.attach(attachment().setName("file.zip").bytes(new byte[] {11, 12, 13, 14, 15}));
+    MimeBodyPart bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(0);
+    assertEquals(HELLO, bodyPart.getContent());
+    assertTrue(bodyPart.getDataHandler().getContentType().contains(MimeTypes.MIME_TEXT_PLAIN));
 
-		assertEmail(email);
-	}
+    bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(1);
+    assertEquals("<html><body><h1>Hey!</h1></body></html>", bodyPart.getContent());
+    assertTrue(bodyPart.getDataHandler().getContentType().contains(MimeTypes.MIME_TEXT_HTML));
+  }
 
-	@Test
-	void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
-		Email email = new Email();
+  @Test
+  void testTextHtmlEmbedAttach1() throws MessagingException, IOException {
+    final Email email = Email.create()
+        .setFrom(FROM_EXAMPLE_COM)
+        .addTo(TO_EXAMPLE_COM)
+        .setSubject(SUB)
+        .addText(HELLO)
+        .addHtml("<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>")
+        .embedAttachment(EmailAttachment.builder().setName(C_PNG).setContent(BYTES_1_7))
+        .addAttachment(EmailAttachment.builder().setName(FILE_ZIP).setContent(BYTES_11_15));
 
-		email.from("from@example.com");
-		email.to("to@example.com");
-		email.subject("sub");
+    assertEmail(email);
+  }
 
-		EmailMessage testMessage = new EmailMessage("Hello!", MimeTypes.MIME_TEXT_PLAIN);
-		email.addMessage(testMessage);
+  @Test
+  void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
+    final Email email = new Email();
 
-		EmailMessage htmlMessage = new EmailMessage(
-				"<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>", MimeTypes.MIME_TEXT_HTML);
-		email.addMessage(htmlMessage);
+    email.setFrom(FROM_EXAMPLE_COM);
+    email.addTo(TO_EXAMPLE_COM);
+    email.setSubject(SUB);
 
-		EmailAttachment embeddedAttachment = new ByteArrayAttachment(new byte[]{1,2,3,4,5,6,7}, "image/png", "c.png", "c.png", true);
-		embeddedAttachment.setEmbeddedMessage(htmlMessage);
-		email.attach(embeddedAttachment);
+    final EmailMessage testMessage = new EmailMessage(HELLO, MimeTypes.MIME_TEXT_PLAIN);
+    email.addMessage(testMessage);
 
-		EmailAttachment attachment = new ByteArrayAttachment(new byte[]{11,12,13,14,15}, "application/zip", "file.zip", "file.zip", false);
-		email.attach(attachment);
+    final EmailMessage htmlMessage = new EmailMessage(
+        "<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>",
+        MimeTypes.MIME_TEXT_HTML);
+    email.addMessage(htmlMessage);
 
-		assertEmail(email);
-	}
+    final EmailAttachment<ByteArrayDataSource> embeddedAttachment = EmailAttachment.builder()
+        .setContent(BYTES_1_7, IMAGE_PNG)
+        .setName(C_PNG)
+        .setContentId(C_PNG)
+        .setInline(true)
+        .buildByteArrayDataSource();
 
-	// ---------------------------------------------------------------- util
+    embeddedAttachment.setEmbeddedMessage(htmlMessage);
+    email.embedAttachment(embeddedAttachment);
 
-	private void assertEmail(Email email) throws MessagingException, IOException {
-		Message message = createMessage(email);
+    final EmailAttachmentBuilder attachmentBuilder = EmailAttachment.builder()
+        .setContent(BYTES_11_15, APPLICATION_ZIP)
+        .setName(FILE_ZIP)
+        .setContentId(FILE_ZIP);
+    email.addAttachment(attachmentBuilder);
 
-		assertEquals(1, message.getFrom().length);
-		assertEquals("from@example.com", message.getFrom()[0].toString());
+    assertEmail(email);
+  }
 
-		assertEquals(1, message.getRecipients(Message.RecipientType.TO).length);
-		assertEquals("to@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
+  // ---------------------------------------------------------------- util
 
-		assertEquals("sub", message.getSubject());
+  private void assertEmail(final Email email) throws MessagingException, IOException {
+    final Message message = createMessage(email);
 
-		// wrapper
-		MimeMultipart multipart = (MimeMultipart) message.getContent();
-		assertEquals(2, multipart.getCount());
+    assertEquals(1, message.getFrom().length);
+    assertEquals(FROM_EXAMPLE_COM, message.getFrom()[0].toString());
 
-		// inner content #1
-		MimeBodyPart mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(0);
-		MimeMultipart mimeMultipart = (MimeMultipart) mimeBodyPart.getContent();
-		assertEquals(2, mimeMultipart.getCount());
+    assertEquals(1, message.getRecipients(RecipientType.TO).length);
+    assertEquals(TO_EXAMPLE_COM, message.getRecipients(RecipientType.TO)[0].toString());
 
-		MimeBodyPart bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(0);
-		assertEquals("Hello!", bodyPart.getContent());
 
-		// html message
-		bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(1);
-		MimeMultipart htmlMessage = (MimeMultipart) bodyPart.getContent();
-		assertTrue(htmlMessage.getContentType().contains("multipart/related"));
-		assertEquals(2, htmlMessage.getCount());
+    assertEquals(SUB, message.getSubject());
 
-		// html - text
-		MimeBodyPart htmlMimeBodyPart = (MimeBodyPart) htmlMessage.getBodyPart(0);
-		assertEquals("<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>", htmlMimeBodyPart.getContent());
-		assertTrue(htmlMimeBodyPart.getDataHandler().getContentType().contains("text/html"));
+    // wrapper
+    final MimeMultipart multipart = (MimeMultipart) message.getContent();
+    assertEquals(2, multipart.getCount());
 
-		// html - embedded
-		htmlMimeBodyPart = (MimeBodyPart) htmlMessage.getBodyPart(1);
-		DataSource dataSource = htmlMimeBodyPart.getDataHandler().getDataSource();
-		assertEquals("image/png", dataSource.getContentType());
-		assertArrayEquals(new byte[] {1,2,3,4,5,6,7}, read(dataSource));
+    // inner content #1
+    MimeBodyPart mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(0);
+    final MimeMultipart mimeMultipart = (MimeMultipart) mimeBodyPart.getContent();
+    assertEquals(2, mimeMultipart.getCount());
 
-		// inner content #2
-		mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(1);
-		dataSource = mimeBodyPart.getDataHandler().getDataSource();
-		assertEquals("application/zip", dataSource.getContentType());
-		assertArrayEquals(new byte[] {11,12,13,14,15}, read(dataSource));
-	}
+    MimeBodyPart bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(0);
+    assertEquals(HELLO, bodyPart.getContent());
 
-	private Message createMessage(Email email) throws MessagingException {
-		SendMailSession testSendMailSession = new SendMailSession(null, null);
-		return testSendMailSession.createMessage(email, null);
-	}
+    // html message
+    bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(1);
+    final MimeMultipart htmlMessage = (MimeMultipart) bodyPart.getContent();
+    assertTrue(htmlMessage.getContentType().contains("multipart/related"));
+    assertEquals(2, htmlMessage.getCount());
 
-	private byte[] read(DataSource dataSource) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		StreamUtil.copy(dataSource.getInputStream(), baos);
-		return baos.toByteArray();
-	}
+    // html - text
+    MimeBodyPart htmlMimeBodyPart = (MimeBodyPart) htmlMessage.getBodyPart(0);
+    assertEquals("<html><body><h1>Hey!</h1><img src='cid:c.png'></body></html>", htmlMimeBodyPart.getContent());
+    assertTrue(htmlMimeBodyPart.getDataHandler().getContentType().contains(MimeTypes.MIME_TEXT_HTML));
 
+    // html - embedded
+    htmlMimeBodyPart = (MimeBodyPart) htmlMessage.getBodyPart(1);
+    DataSource dataSource = htmlMimeBodyPart.getDataHandler().getDataSource();
+    assertEquals(IMAGE_PNG, dataSource.getContentType());
+    assertArrayEquals(BYTES_1_7, read(dataSource));
+
+    // inner content #2
+    mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(1);
+    dataSource = mimeBodyPart.getDataHandler().getDataSource();
+    assertEquals(APPLICATION_ZIP, dataSource.getContentType());
+    assertArrayEquals(BYTES_11_15, read(dataSource));
+  }
+
+  private Message createMessage(final Email email) throws MessagingException {
+    final SendMailSession testSendMailSession = new SendMailSession(null, null);
+    return testSendMailSession.createMessage(email);
+  }
+
+  private byte[] read(final DataSource dataSource) throws IOException {
+    final ByteArrayOutputStream os = new ByteArrayOutputStream();
+    StreamUtil.copy(dataSource.getInputStream(), os);
+    return os.toByteArray();
+  }
 }
