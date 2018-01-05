@@ -64,12 +64,12 @@ public class MathUtilRandomBenchmark {
 
 	@Benchmark
 	public long randomLong_with_Random() {
-		return long_inclusive + (long)(Math.random() * (long_exclusive - long_inclusive));
+		return long_inclusive + (long) (Math.random() * (long_exclusive - long_inclusive));
 	}
 
 	@Benchmark
 	public long randomInt_with_Random() {
-		return int_inclusive + (int)(Math.random() * (int_exclusive - int_inclusive));
+		return int_inclusive + (int) (Math.random() * (int_exclusive - int_inclusive));
 	}
 
 	// ----------------------------------------------------------------------- Jodd MathUtil with ThreadLocalRandom
