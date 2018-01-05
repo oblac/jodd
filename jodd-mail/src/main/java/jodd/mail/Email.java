@@ -25,353 +25,454 @@
 
 package jodd.mail;
 
-import jodd.util.net.MimeTypes;
+import jodd.util.ArraysUtil;
 
-import javax.mail.internet.InternetAddress;
-import java.util.ArrayList;
+import javax.activation.DataSource;
+import javax.mail.Address;
 import java.util.Date;
-import java.util.List;
+
+import static jodd.mail.EmailAttachmentBuilder.DEPRECATED_MSG;
 
 /**
  * E-mail holds all parts of an email and handle attachments.
  */
-public class Email extends CommonEmail {
+public class Email extends CommonEmail<Email> {
 
-	/**
-	 * Static constructor for fluent interface.
-	 */
-	public static Email create() {
-		return new Email();
-	}
+  @Override
+  Email getThis() {
+    return this;
+  }
 
-	// ---------------------------------------------------------------- from
+  /**
+   * Static constructor for fluent interface.
+   */
+  public static Email create() {
+    return new Email();
+  }
 
-	/**
-	 * Sets the FROM address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email from(String from) {
-		setFrom(new EmailAddress(from));
-		return this;
-	}
-	/**
-	 * Sets the FROM address by providing personal name and address.
-	 */
-	public Email from(String personal, String from) {
-		setFrom(new EmailAddress(personal, from));
-		return this;
-	}
-	/**
-	 * Sets the FROM address from {@link javax.mail.internet.InternetAddress}.
-	 */
-	public Email from(InternetAddress internetAddress) {
-		setFrom(new EmailAddress(internetAddress));
-		return this;
-	}
+  @Override
+  public Email clone() {
+    return create()
 
-	// ---------------------------------------------------------------- to
+        // from / reply-to
+        .setFrom(getFrom())
+        .setReplyTo(getReplyTo())
 
-	/**
-	 * Appends TO address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email to(String to) {
-		addTo(new EmailAddress(to));
-		return this;
-	}
+        // recipients
+        .setTo(getTo())
+        .setCc(getCc())
+        .setBcc(getBcc())
 
-	/**
-	 * Appends TO address by personal name and email address.
-	 */
-	public Email to(String personalName, String to) {
-		addTo(new EmailAddress(personalName, to));
-		return this;
-	}
-	/**
-	 * Appends TO address from <code>InternetAddress</code>.
-	 */
-	public Email to(InternetAddress internetAddress) {
-		addTo(new EmailAddress(internetAddress));
-		return this;
-	}
+        // subject
+        .setSubject(getSubject(), getSubjectEncoding())
 
-	/**
-	 * Sets one or more TO address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email to(String[] tos) {
-		setTo(EmailAddress.createFrom(tos));
-		return this;
-	}
+        // dates
+        .setSentDate(getSentDate())
 
-	/**
-	 * Sets one or more TO addresses.
-	 */
-	public Email to(InternetAddress[] tos) {
-		setTo(EmailAddress.createFrom(tos));
-		return this;
-	}
+        // headers - includes priority
+        .setHeaders(getAllHeaders())
 
-	// ---------------------------------------------------------------- reply to
+        // content / attachments
+        .storeAttachments(getAttachments())
+        .addMessages(getAllMessages());
+  }
 
-	/**
-	 * Appends REPLY-TO address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email replyTo(String replyTo) {
-		addReplyTo(new EmailAddress(replyTo));
-		return this;
-	}
-	/**
-	 * Appends REPLY-TO address.
-	 */
-	public Email replyTo(String personalName, String replyTo) {
-		addReplyTo(new EmailAddress(personalName, replyTo));
-		return this;
-	}
-	/**
-	 * Appends REPLY-TO address.
-	 */
-	public Email replyTo(InternetAddress internetAddress) {
-		addReplyTo(new EmailAddress(internetAddress));
-		return this;
-	}
+  // ---------------------------------------------------------------- date
 
-	/**
-	 * Sets one or more REPLY-TO address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email replyTo(String[] replyTos) {
-		setReplyTo(EmailAddress.createFrom(replyTos));
-		return this;
-	}
-	/**
-	 * Sets one or more REPLY-TO address.
-	 */
-	public Email replyTo(InternetAddress[] replyTos) {
-		setReplyTo(EmailAddress.createFrom(replyTos));
-		return this;
-	}
+  /**
+   * Sets current date as the sent date.
+   *
+   * @return this
+   * @see #setSentDate(Date)
+   */
+  public Email setCurrentSentDate() {
+    return setSentDate(new Date());
+  }
 
-	// ---------------------------------------------------------------- cc
+  // ---------------------------------------------------------------- bcc
 
-	/**
-	 * Appends CC address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email cc(String cc) {
-		addCc(new EmailAddress(cc));
-		return this;
-	}
-	/**
-	 * Appends CC address.
-	 */
-	public Email cc(String personalName, String cc) {
-		addCc(new EmailAddress(personalName, cc));
-		return this;
-	}
-	/**
-	 * Appends CC address.
-	 */
-	public Email cc(InternetAddress internetAddress) {
-		addCc(new EmailAddress(internetAddress));
-		return this;
-	}
+  /**
+   * BCC address.
+   */
+  private EmailAddress[] bcc = EmailAddress.EMPTY_ARRAY;
 
-	/**
-	 * Sets one or more CC address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email cc(String[] ccs) {
-		setCc(EmailAddress.createFrom(ccs));
-		return this;
-	}
-	/**
-	 * Sets one or more CC address.
-	 */
-	public Email cc(InternetAddress[] ccs) {
-		setCc(EmailAddress.createFrom(ccs));
-		return this;
-	}
+  /**
+   * Appends BCC address.
+   *
+   * @param to {@link EmailAddress} to add.
+   * @return this
+   */
+  public Email addBcc(final EmailAddress to) {
+    this.bcc = ArraysUtil.append(this.bcc, to);
+    return getThis();
+  }
 
-	// ---------------------------------------------------------------- bcc
+  /**
+   * Appends BCC address.
+   *
+   * @param bcc Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
+   * @return this
+   * @see #addBcc(EmailAddress)
+   */
+  public Email addBcc(final String bcc) {
+    return addBcc(new EmailAddress(bcc));
+  }
 
-	/**
-	 * Appends BCC address. Address may be specified with personal name
-	 * like this: <code>"Jenny Doe &lt;email@foo.com&gt;</code>.
-	 */
-	public Email bcc(String bcc) {
-		addBcc(new EmailAddress(bcc));
-		return this;
-	}
-	/**
-	 * Appends BCC address.
-	 */
-	public Email bcc(String personal, String bcc) {
-		addBcc(new EmailAddress(personal, bcc));
-		return this;
-	}
-	/**
-	 * Appends BCC address.
-	 */
-	public Email bcc(InternetAddress internetAddress) {
-		addBcc(new EmailAddress(internetAddress));
-		return this;
-	}
+  /**
+   * Appends BCC address.
+   *
+   * @param personalName personal name.
+   * @param bcc          email address.
+   * @return this
+   * @see #addBcc(EmailAddress)
+   */
+  public Email addBcc(final String personalName, final String bcc) {
+    return addBcc(new EmailAddress(personalName, bcc));
+  }
 
-	/**
-	 * Sets one or more BCC addresses.
-	 */
-	public Email bcc(String[] bccs) {
-		setBcc(EmailAddress.createFrom(bccs));
-		return this;
-	}
-	/**
-	 * Sets one or more BCC addresses.
-	 */
-	public Email bcc(InternetAddress[] bccs) {
-		setBcc(EmailAddress.createFrom(bccs));
-		return this;
-	}
+  /**
+   * Appends BCC address.
+   *
+   * @param bcc {@link Address} to add.
+   * @return this
+   * @see #addBcc(EmailAddress)
+   */
+  public Email addBcc(final Address bcc) {
+    return addBcc(new EmailAddress(bcc));
+  }
 
-	// ---------------------------------------------------------------- subject
+  /**
+   * Sets BCC address.
+   *
+   * @param bccs array of {@link String}s to set.
+   * @return this
+   * @see #setBcc(EmailAddress...)
+   */
+  public Email setBcc(final String[] bccs) {
+    return setBcc(EmailAddress.createFrom(bccs));
+  }
 
-	public Email subject(String subject) {
-		setSubject(subject);
-		return this;
-	}
+  /**
+   * Sets BCC address.
+   *
+   * @param bccs array of {@link Address}es to set.
+   * @return this
+   * @see #setBcc(EmailAddress...)
+   */
+  public Email setBcc(final Address[] bccs) {
+    return setBcc(EmailAddress.createFrom(bccs));
+  }
 
-	public Email subject(String subject, String subjectEncoding) {
-		setSubject(subject, subjectEncoding);
-		return this;
-	}
+  /**
+   * Sets one or more BCC addresses.
+   *
+   * @param bccs vararg of {@link EmailAddress}es to set.
+   * @return this
+   */
+  public Email setBcc(final EmailAddress... bccs) {
+    this.bcc = getValueOrEmptyArray(bccs);
+    return getThis();
+  }
 
-	// ---------------------------------------------------------------- message
+  /**
+   * Returns BCC addresses.
+   */
+  public EmailAddress[] getBcc() {
+    return bcc;
+  }
 
-	public Email message(String text, String mimeType, String encoding) {
-		addMessage(text, mimeType, encoding);
-		return this;
-	}
-	public Email message(String text, String mimeType) {
-		addMessage(text, mimeType);
-		return this;
-	}
+  // ---------------------------------------------------------------- deprecated
 
-	/**
-	 * Adds plain message text.
-	 */
-	public Email addText(String text) {
-		messages.add(new EmailMessage(text, MimeTypes.MIME_TEXT_PLAIN));
-		return this;
-	}
-	public Email addText(String text, String encoding) {
-		messages.add(new EmailMessage(text, MimeTypes.MIME_TEXT_PLAIN, encoding));
-		return this;
-	}
+  // ---------------------------------------------------------------- from
 
-	/**
-	 * Adds HTML message.
-	 */
-	public Email addHtml(String message) {
-		messages.add(new EmailMessage(message, MimeTypes.MIME_TEXT_HTML));
-		return this;
-	}
-	public Email addHtml(String message, String encoding) {
-		messages.add(new EmailMessage(message, MimeTypes.MIME_TEXT_HTML, encoding));
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #setFrom(String)}
+   */
+  @Deprecated
+  public Email from(final String from) {
+    return setFrom(from);
+  }
 
-	// ---------------------------------------------------------------- attachments
+  /**
+   * @deprecated Use {@link #setFrom(String, String)}
+   */
+  @Deprecated
+  public Email from(final String personal, final String from) {
+    return setFrom(personal, from);
+  }
 
-	protected ArrayList<EmailAttachment> attachments;
+  /**
+   * @deprecated Use {@link #setFrom(Address)}
+   */
+  @Deprecated
+  public Email from(final Address address) {
+    return setFrom(address);
+  }
 
-	/**
-	 * Returns an array of attachments or <code>null</code> if no attachment enclosed with this email. 
-	 */
-	public List<EmailAttachment> getAttachments() {
-		return attachments;
-	}
+  // ---------------------------------------------------------------- to
 
-	/**
-	 * Adds an attachment.
-	 */
-	public Email attach(EmailAttachment emailAttachment) {
-		if (attachments == null) {
-			attachments = new ArrayList<>();
-		}
-		attachments.add(emailAttachment);
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #addTo(String)}
+   */
+  @Deprecated
+  public Email to(final String to) {
+    return addTo(new EmailAddress(to));
+  }
 
-	/**
-	 * Embed attachment to last message. No header is changed.
-	 * @see #embed(EmailAttachmentBuilder)
-	 */
-	public Email embed(EmailAttachment emailAttachment) {
-		attach(emailAttachment);
+  /**
+   * @deprecated Use {@link #addTo(String, String)}
+   */
+  @Deprecated
+  public Email to(final String personalName, final String to) {
+    return addTo(personalName, to);
+  }
 
-		int size = messages.size();
-		if (size > 0) {
-			emailAttachment.setEmbeddedMessage(messages.get(size - 1));        // get last message
-		}
+  /**
+   * @deprecated Use {@link #addTo(Address)}
+   */
+  @Deprecated
+  public Email to(final Address address) {
+    return addTo(address);
+  }
 
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #setTo(String[])}
+   */
+  @Deprecated
+  public Email to(final String[] tos) {
+    return setTo(tos);
+  }
 
-	public Email attach(EmailAttachmentBuilder emailAttachmentBuilder) {
-		emailAttachmentBuilder.setContentId(null);
+  /**
+   * @deprecated Use {@link #setTo(Address[])}
+   */
+  @Deprecated
+  public Email to(final Address[] tos) {
+    return setTo(tos);
+  }
 
-		attach(emailAttachmentBuilder.create());
+  // ---------------------------------------------------------------- reply to
 
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #addReplyTo(String)}
+   */
+  @Deprecated
+  public Email replyTo(final String replyTo) {
+    return addReplyTo(replyTo);
+  }
 
-	/**
-	 * Attaches the embedded attachment: content disposition will be set to
-	 * {@code inline} and content id will be set if missing from attachments
-	 * file name.
-	 * @see #embed(EmailAttachment)
-	 */
-	public Email embed(EmailAttachmentBuilder emailAttachmentBuilder) {
-		emailAttachmentBuilder.setContentIdFromNameIfMissing();
-		emailAttachmentBuilder.setInline(true);
+  /**
+   * @deprecated Use {@link #addReplyTo(String, String)}
+   */
+  @Deprecated
+  public Email replyTo(final String personalName, final String replyTo) {
+    return addReplyTo(personalName, replyTo);
+  }
 
-		embed(emailAttachmentBuilder.create());
+  /**
+   * @deprecated Use {@link #addReplyTo(Address)}
+   */
+  @Deprecated
+  public Email replyTo(final Address address) {
+    return addReplyTo(address);
+  }
 
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #setReplyTo(String[])}
+   */
+  @Deprecated
+  public Email replyTo(final String[] replyTos) {
+    return setReplyTo(replyTos);
+  }
 
-	// ---------------------------------------------------------------- headers
+  /**
+   * @deprecated Use {@link #setReplyTo(Address[])}
+   */
+  @Deprecated
+  public Email replyTo(final Address[] replyTos) {
+    return setReplyTo(replyTos);
+  }
 
-	public Email header(String name, String value) {
-		setHeader(name, value);
-		return this;
-	}
+  // ---------------------------------------------------------------- cc
 
-	public Email priority(int priority) {
-		super.setPriority(priority);
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #addCc(String)}
+   */
+  @Deprecated
+  public Email cc(final String cc) {
+    return addCc(cc);
+  }
 
-	// ---------------------------------------------------------------- date
+  /**
+   * @deprecated Use {@link #addCc(String, String)}
+   */
+  @Deprecated
+  public Email cc(final String personalName, final String cc) {
+    return addCc(personalName, cc);
+  }
 
-	/**
-	 * Sets current date as e-mails sent date.
-	 */
-	public Email setCurrentSentDate() {
-		sentDate = new Date();
-		return this;
-	}
-	
-	public Email sentOn(Date date) {
-		setSentDate(date);
-		return this;
-	}
+  /**
+   * @deprecated Use {@link #addCc(Address)}
+   */
+  @Deprecated
+  public Email cc(final Address address) {
+    return addCc(address);
+  }
 
-	// ---------------------------------------------------------------- toString
+  /**
+   * @deprecated Use {@link #setCc(String[])}
+   */
+  @Deprecated
+  public Email cc(final String[] ccs) {
+    return setCc(ccs);
+  }
 
-	@Override
-	public String toString() {
-		return "Email{'" + from + "\', subject='" + subject + "\'}";
-	}
+  /**
+   * @deprecated Use {@link #setCc(Address[])}
+   */
+  @Deprecated
+  public Email cc(final Address[] ccs) {
+    return setCc(EmailAddress.createFrom(ccs));
+  }
+
+  // ---------------------------------------------------------------- bcc
+
+  /**
+   * @deprecated Use {@link #addBcc(String)}
+   */
+  @Deprecated
+  public Email bcc(final String bcc) {
+    return addBcc(bcc);
+  }
+
+  /**
+   * @deprecated Use {@link #addBcc(String, String)}
+   */
+  @Deprecated
+  public Email bcc(final String personal, final String bcc) {
+    return addBcc(personal, bcc);
+  }
+
+  /**
+   * @deprecated Use {@link #addBcc(Address)}
+   */
+  @Deprecated
+  public Email bcc(final Address address) {
+    return addBcc(address);
+  }
+
+  /**
+   * @deprecated Use {@link #setBcc(String[])}
+   */
+  @Deprecated
+  public Email bcc(final String[] bccs) {
+    return setBcc(EmailAddress.createFrom(bccs));
+  }
+
+  /**
+   * @deprecated Use {@link #setBcc(Address[])}
+   */
+  @Deprecated
+  public Email bcc(final Address[] bccs) {
+    return setBcc(bccs);
+  }
+
+  // ---------------------------------------------------------------- subject
+
+  /**
+   * @deprecated Use {@link #setSubject(String)}
+   */
+  @Deprecated
+  public Email subject(final String subject) {
+    return setSubject(subject);
+  }
+
+  /**
+   * @deprecated Use {@link #setSubject(String, String)}
+   */
+  @Deprecated
+  public Email subject(final String subject, final String subjectEncoding) {
+    return setSubject(subject, subjectEncoding);
+  }
+
+  // ---------------------------------------------------------------- message
+
+  /**
+   * @deprecated Use {@link #addMessage(String, String, String)}
+   */
+  @Deprecated
+  public Email message(final String text, final String mimeType, final String encoding) {
+    return addMessage(text, mimeType, encoding);
+  }
+
+  /**
+   * @deprecated Use {@link #addMessage(String, String)}
+   */
+  @Deprecated
+  public Email message(final String text, final String mimeType) {
+    return addMessage(text, mimeType);
+  }
+
+  // ---------------------------------------------------------------- attachments
+
+  /**
+   * @deprecated Use {@link #addAttachment(EmailAttachmentBuilder)}
+   */
+  @Deprecated
+  public Email attach(final EmailAttachment<DataSource> emailAttachment) {
+    throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#addAttachment(EmailAttachmentBuilder)"));
+
+  }
+
+  /**
+   * @deprecated Use {@link #addAttachment(EmailAttachmentBuilder)}
+   */
+  @Deprecated
+  public Email attach(final EmailAttachmentBuilder emailAttachmentBuilder) {
+    return addAttachment(emailAttachmentBuilder);
+  }
+
+  /**
+   * @deprecated Use {@link #embedAttachment(EmailAttachmentBuilder)}
+   */
+  @Deprecated
+  public Email embed(final EmailAttachment<DataSource> emailAttachment) {
+    throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#embedAttachment(EmailAttachmentBuilder)"));
+  }
+
+  /**
+   * @deprecated Use {@link #embedAttachment(EmailAttachmentBuilder)}
+   */
+  @Deprecated
+  public Email embed(final EmailAttachmentBuilder emailAttachmentBuilder) {
+    return embedAttachment(emailAttachmentBuilder);
+  }
+
+  // ---------------------------------------------------------------- headers
+
+  /**
+   * @deprecated Use {@link #setHeader(String, String)}
+   */
+  @Deprecated
+  public Email header(final String name, final String value) {
+    return setHeader(name, value);
+  }
+
+  /**
+   * @deprecated Use {@link #setPriority(int)}
+   */
+  @Deprecated
+  public Email priority(final int priority) {
+    return setPriority(priority);
+  }
+
+  // ---------------------------------------------------------------- date
+
+  /**
+   * @deprecated Use {@link #setSentDate(Date)}
+   */
+  @Deprecated
+  public Email sentOn(final Date date) {
+    return setSentDate(date);
+  }
 }
