@@ -113,11 +113,4 @@ public class EMLComposer extends EMLProperties<EMLComposer> {
      */
     private String eml;
   }
-
-  // ---------------------------------------------------------------- deprecated
-
-  @Deprecated
-  protected void initProperties() {
-
-  }
 }
