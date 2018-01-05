@@ -27,344 +27,623 @@ package jodd.io;
 
 import jodd.core.JoddCore;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.Flushable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import javax.activation.DataSource;
+import java.io.*;
 
 /**
  * Optimized byte and character stream utilities.
  */
 public class StreamUtil {
 
-	// ---------------------------------------------------------------- silent close
+  /**
+   * Default encoding
+   */
+  private static final String DEFAULT_ENCODING = JoddCore.get().defaults().getEncoding();
 
-	/**
-	 * Closes silently the closable object. If it is <code>FLushable</code>, it
-	 * will be flushed first. No exception will be thrown if an I/O error occurs.
-	 */
-	public static void close(Closeable closeable) {
-		if (closeable != null) {
-			if (closeable instanceof Flushable) {
-				try {
-					((Flushable)closeable).flush();
-				} catch (IOException ignored) {
-				}
-			}
+  /**
+   * Default IO buffer size
+   */
+  private static final int IO_BUFFER_SIZE = JoddCore.get().defaults().getIoBufferSize();
 
-			try {
-				closeable.close();
-			} catch (IOException ignored) {
-			}
-		}
-	}
+  private static final int ZERO = 0;
+  private static final int NEGATIVE_ONE = -1;
+  private static final int ALL = -103;
 
-	// ---------------------------------------------------------------- copy
+  private StreamUtil() {
+  }
 
-	/**
-	 * Copies input stream to output stream using buffer. Streams don't have
-	 * to be wrapped to buffered, since copying is already optimized.
-	 */
-	public static int copy(InputStream input, OutputStream output) throws IOException {
-		final int ioBufferSize = JoddCore.get().defaults().getIoBufferSize();
-		byte[] buffer = new byte[ioBufferSize];
-		int count = 0;
-		int read;
-		while (true) {
-			read = input.read(buffer, 0, ioBufferSize);
-			if (read == -1) {
-				break;
-			}
-			output.write(buffer, 0, read);
-			count += read;
-		}
-		return count;
-	}
-	/**
-	 * Copies specified number of bytes from input stream to output stream using buffer.
-	 */
-	public static int copy(InputStream input, OutputStream output, int byteCount) throws IOException {
-		final int ioBufferSize = JoddCore.get().defaults().getIoBufferSize();
-		int bufferSize = (byteCount > ioBufferSize) ? ioBufferSize : byteCount;
+  // ---------------------------------------------------------------- silent close
 
-		byte[] buffer = new byte[bufferSize];
-		int count = 0;
-		int read;
-		while (byteCount > 0) {
-			if (byteCount < bufferSize) {
-				read = input.read(buffer, 0, byteCount);
-			} else {
-				read = input.read(buffer, 0, bufferSize);
-			}
-			if (read == -1) {
-				break;
-			}
-			byteCount -= read;
-			count += read;
-			output.write(buffer, 0, read);
-		}
-		return count;
-	}
-
-
-
-
-	/**
-	 * Copies input stream to writer using buffer - using jodds default encoding.
-     *
-     * @see jodd.core.JoddCoreDefaults#encoding
-	 */
-	public static void copy(InputStream input, Writer output) throws IOException {
-		copy(input, output, JoddCore.get().defaults().getEncoding());
-	}
-	/**
-	 * Copies specified number of bytes from input stream to writer using buffer - using jodds default encoding.
-     *
-     * @see jodd.core.JoddCoreDefaults#encoding
-	 */
-	public static void copy(InputStream input, Writer output, int byteCount) throws IOException {
-		copy(input, output, JoddCore.get().defaults().getEncoding(), byteCount);
-	}
-	/**
-	 * Copies input stream to writer using buffer and specified encoding.
-	 */
-	public static void copy(InputStream input, Writer output, String encoding) throws IOException {
-		copy(new InputStreamReader(input, encoding), output);
-	}
-	/**
-	 * Copies specified number of bytes from input stream to writer using buffer and specified encoding.
-	 */
-	public static void copy(InputStream input, Writer output, String encoding, int byteCount) throws IOException {
-		copy(new InputStreamReader(input, encoding), output, byteCount);
-	}
-
-    /**
-	 * Copies reader to writer using buffer.
-	 * Streams don't have to be wrapped to buffered, since copying is already optimized.
-	 */
-	public static int copy(Reader input, Writer output) throws IOException {
-		final int ioBufferSize = JoddCore.get().defaults().getIoBufferSize();
-		char[] buffer = new char[ioBufferSize];
-		int count = 0;
-		int read;
-		while ((read = input.read(buffer, 0, ioBufferSize)) >= 0) {
-			output.write(buffer, 0, read);
-			count += read;
-		}
-		output.flush();
-		return count;
-	}
-	/**
-	 * Copies specified number of characters from reader to writer using buffer.
-	 */
-	public static int copy(Reader input, Writer output, int charCount) throws IOException {
-		final int ioBufferSize = JoddCore.get().defaults().getIoBufferSize();
-		int bufferSize = (charCount > ioBufferSize) ? ioBufferSize : charCount;
-
-		char[] buffer = new char[bufferSize];
-		int count = 0;
-		int read;
-		while (charCount > 0) {
-			if (charCount < bufferSize) {
-				read = input.read(buffer, 0, charCount);
-			} else {
-				read = input.read(buffer, 0, bufferSize);
-			}
-			if (read == -1) {
-				break;
-			}
-			charCount -= read;
-			count += read;
-			output.write(buffer, 0, read);
-		}
-		return count;
-	}
-
-
-
-	/**
-	 * Copies reader to output stream using buffer - using jodd default encoding.
-	 *
-	 * @see jodd.core.JoddCoreDefaults#encoding
-	 */
-	public static void copy(Reader input, OutputStream output) throws IOException {
-		copy(input, output, JoddCore.get().defaults().getEncoding());
-	}
-	/**
-	 * Copies specified number of characters from reader to output stream using buffer - using jodd default encoding.
-     *
-     * @see jodd.core.JoddCoreDefaults#encoding
-	 */
-	public static void copy(Reader input, OutputStream output, int charCount) throws IOException {
-		copy(input, output, JoddCore.get().defaults().getEncoding(), charCount);
-	}
-	/**
-	 * Copies reader to output stream using buffer and specified encoding.
-	 */
-	public static void copy(Reader input, OutputStream output, String encoding) throws IOException {
-        try (Writer out = new OutputStreamWriter(output, encoding)) {
-            copy(input, out);
-            out.flush();
+  /**
+   * Closes silently the closable object. If it is {@link Flushable}, it
+   * will be flushed first. No exception will be thrown if an I/O error occurs.
+   */
+  public static void close(Closeable closeable) {
+    if (closeable != null) {
+      if (closeable instanceof Flushable) {
+        try {
+          ((Flushable) closeable).flush();
+        } catch (IOException ignored) {
         }
-	}
-	/**
-	 * Copies specified number of characters from reader to output stream using buffer and specified encoding.
-	 */
-	public static void copy(Reader input, OutputStream output, String encoding, int charCount) throws IOException {
-        try (Writer out = new OutputStreamWriter(output, encoding)) {
-            copy(input, out, charCount);
-            out.flush();
-        }
-	}
+      }
 
-
-	// ---------------------------------------------------------------- read bytes
-
-	/**
-	 * Reads all available bytes from InputStream as a byte array.
-	 * Uses <code>in.available()</code> to determine the size of input stream.
-	 * This is the fastest method for reading input stream to byte array, but
-	 * depends on stream implementation of <code>available()</code>.
-	 * Buffered internally.
-	 */
-	public static byte[] readAvailableBytes(InputStream in) throws IOException {
-		int l = in.available();
-		byte[] byteArray = new byte[l];
-		int i = 0, j;
-		while ((i < l) && (j = in.read(byteArray, i, l - i)) >= 0) {
-			i +=j;
-		}
-		if (i < l) {
-			throw new IOException("Failed to completely read input stream");
-		}
-		return byteArray;
-	}
-
-	public static byte[] readBytes(InputStream input) throws IOException {
-		FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-		copy(input, output);
-		return output.toByteArray();
-	}
-	public static byte[] readBytes(InputStream input, int byteCount) throws IOException {
-		FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-		copy(input, output, byteCount);
-		return output.toByteArray();
-	}
-
-	public static byte[] readBytes(Reader input) throws IOException {
-		FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-		copy(input, output);
-		return output.toByteArray();
-	}
-	public static byte[] readBytes(Reader input, int byteCount) throws IOException {
-		FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-		copy(input, output, byteCount);
-		return output.toByteArray();
-	}
-	public static byte[] readBytes(Reader input, String encoding) throws IOException {
-		FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-		copy(input, output, encoding);
-		return output.toByteArray();
-	}
-	public static byte[] readBytes(Reader input, String encoding, int byteCount) throws IOException {
-		FastByteArrayOutputStream output = new FastByteArrayOutputStream();
-		copy(input, output, encoding, byteCount);
-		return output.toByteArray();
-	}
-
-	// ---------------------------------------------------------------- read chars
-
-	public static char[] readChars(InputStream input) throws IOException {
-		FastCharArrayWriter output = new FastCharArrayWriter();
-		copy(input, output);
-		return output.toCharArray();
-	}
-	public static char[] readChars(InputStream input, int charCount) throws IOException {
-		FastCharArrayWriter output = new FastCharArrayWriter();
-		copy(input, output, charCount);
-		return output.toCharArray();
-	}
-
-	public static char[] readChars(InputStream input, String encoding) throws IOException {
-        FastCharArrayWriter output = new FastCharArrayWriter();
-        copy(input, output, encoding);
-        return output.toCharArray();
+      try {
+        closeable.close();
+      } catch (IOException ignored) {
+      }
     }
-	public static char[] readChars(InputStream input, String encoding, int charCount) throws IOException {
-        FastCharArrayWriter output = new FastCharArrayWriter();
-        copy(input, output, encoding, charCount);
-        return output.toCharArray();
+  }
+
+  // ---------------------------------------------------------------- copy
+
+  /**
+   * Copies bytes from {@link Reader} to {@link Writer} using buffer.
+   * {@link Reader} and {@link Writer} don't have to be wrapped to buffered, since copying is already optimized.
+   *
+   * @param input  {@link Reader} to read.
+   * @param output {@link Writer} to write to.
+   * @return The total number of characters read.
+   * @throws IOException if there is an error reading or writing.
+   */
+  public static int copy(Reader input, Writer output) throws IOException {
+    int numToRead = getBufferSize();
+    char[] buffer = new char[numToRead];
+
+    int totalRead = ZERO;
+    int read;
+
+    while ((read = input.read(buffer, ZERO, numToRead)) >= ZERO) {
+      output.write(buffer, ZERO, read);
+      totalRead = totalRead + read;
     }
 
-	public static char[] readChars(Reader input) throws IOException {
-		FastCharArrayWriter output = new FastCharArrayWriter();
-		copy(input, output);
-		return output.toCharArray();
-	}
-	public static char[] readChars(Reader input, int charCount) throws IOException {
-		FastCharArrayWriter output = new FastCharArrayWriter();
-		copy(input, output, charCount);
-		return output.toCharArray();
-	}
+    output.flush();
+    return totalRead;
+  }
 
+  /**
+   * Copies bytes from {@link InputStream} to {@link OutputStream} using buffer.
+   * {@link InputStream} and {@link OutputStream} don't have to be wrapped to buffered,
+   * since copying is already optimized.
+   *
+   * @param input  {@link InputStream} to read.
+   * @param output {@link OutputStream} to write to.
+   * @return The total number of bytes read.
+   * @throws IOException if there is an error reading or writing.
+   */
+  public static int copy(InputStream input, OutputStream output) throws IOException {
+    int numToRead = getBufferSize();
+    byte[] buffer = new byte[numToRead];
 
-	// ---------------------------------------------------------------- compare content
+    int totalRead = ZERO;
+    int read;
 
-	/**
-	 * Compares the content of two byte streams.
-	 *
-	 * @return <code>true</code> if the content of the first stream is equal
-	 *         to the content of the second stream.
-	 */
-	public static boolean compare(InputStream input1, InputStream input2) throws IOException {
-        if (!(input1 instanceof BufferedInputStream)) {
-            input1 = new BufferedInputStream(input1);
-        }
-        if (!(input2 instanceof BufferedInputStream)) {
-            input2 = new BufferedInputStream(input2);
-        }
-        int ch = input1.read();
-        while (ch != -1) {
-            int ch2 = input2.read();
-            if (ch != ch2) {
-                return false;
-            }
-            ch = input1.read();
-        }
-        int ch2 = input2.read();
-		return (ch2 == -1);
-	}
-	/**
-	 * Compares the content of two character streams.
-	 *
-	 * @return <code>true</code> if the content of the first stream is equal
-	 *         to the content of the second stream.
-	 */
-	public static boolean compare(Reader input1, Reader input2) throws IOException {
-        if (!(input1 instanceof BufferedReader)) {
-            input1 = new BufferedReader(input1);
-        }
-        if (!(input2 instanceof BufferedReader)) {
-            input2 = new BufferedReader(input2);
-        }
-
-        int ch = input1.read();
-        while (ch != -1) {
-            int ch2 = input2.read();
-            if (ch != ch2) {
-                return false;
-            }
-            ch = input1.read();
-        }
-        int ch2 = input2.read();
-        return (ch2 == -1);
+    while ((read = input.read(buffer, ZERO, numToRead)) >= ZERO) {
+      output.write(buffer, ZERO, read);
+      totalRead = totalRead + read;
     }
 
+    output.flush();
+    return totalRead;
+  }
+
+  /**
+   * Copies specified number of characters from {@link Reader} to {@link Writer} using buffer.
+   * {@link Reader} and {@link Writer} don't have to be wrapped to buffered, since copying is already optimized.
+   *
+   * @param input  {@link Reader} to read.
+   * @param output {@link Writer} to write to.
+   * @param count  The number of characters to read.
+   * @return The total number of characters read.
+   * @throws IOException if there is an error reading or writing.
+   */
+  public static int copy(Reader input, Writer output, int count) throws IOException {
+    if (count == ALL) {
+      return copy(input, output);
+    }
+
+    int numToRead = getBufferSize(count);
+    char[] buffer = new char[numToRead];
+
+    int totalRead = ZERO;
+    int read;
+
+    while (numToRead > ZERO) {
+      read = input.read(buffer, ZERO, getBufferSize(numToRead));
+      if (read == NEGATIVE_ONE) {
+        break;
+      }
+      output.write(buffer, ZERO, read);
+
+      numToRead = numToRead - read;
+      totalRead = totalRead + read;
+    }
+
+    output.flush();
+    return totalRead;
+  }
+
+  /**
+   * Copies specified number of bytes from {@link InputStream} to {@link OutputStream} using buffer.
+   * {@link InputStream} and {@link OutputStream} don't have to be wrapped to buffered, since copying is already optimized.
+   *
+   * @param input  {@link InputStream} to read.
+   * @param output {@link OutputStream} to write to.
+   * @param count  The number of bytes to read.
+   * @return The total number of bytes read.
+   * @throws IOException if there is an error reading or writing.
+   */
+  public static int copy(InputStream input, OutputStream output, int count) throws IOException {
+    if (count == ALL) {
+      return copy(input, output);
+    }
+
+    int numToRead = getBufferSize(count);
+    byte[] buffer = new byte[numToRead];
+
+    int totalRead = ZERO;
+    int read;
+
+    while (numToRead > ZERO) {
+      read = input.read(buffer, ZERO, getBufferSize(numToRead));
+      if (read == NEGATIVE_ONE) {
+        break;
+      }
+      output.write(buffer, ZERO, read);
+
+      numToRead = numToRead - read;
+      totalRead = totalRead + read;
+    }
+
+    output.flush();
+    return totalRead;
+  }
+
+  // ---------------------------------------------------------------- read bytes
+
+  /**
+   * Reads all available bytes from {@link InputStream} as a byte array.
+   * Uses {@link InputStream#available()} to determine the size of input stream.
+   * This is the fastest method for reading {@link InputStream} to byte array, but
+   * depends on {@link InputStream} implementation of {@link InputStream#available()}.
+   *
+   * @param input {@link InputStream} to read.
+   * @return byte[]
+   * @throws IOException if total read is less than {@link InputStream#available()};
+   */
+  public static byte[] readAvailableBytes(InputStream input) throws IOException {
+    int numToRead = input.available();
+    byte[] buffer = new byte[numToRead];
+
+    int totalRead = ZERO;
+    int read;
+
+    while ((totalRead < numToRead) && (read = input.read(buffer, totalRead, numToRead - totalRead)) >= ZERO) {
+      totalRead = totalRead + read;
+    }
+
+    if (totalRead < numToRead) {
+      throw new IOException("Failed to completely read InputStream");
+    }
+
+    return buffer;
+  }
+
+  // ---------------------------------------------------------------- copy to OutputStream
+
+  /**
+   * @see #copy(Reader, OutputStream, String)
+   */
+  public static <T extends OutputStream> T copy(Reader input, T output) throws IOException {
+    return copy(input, output, DEFAULT_ENCODING);
+  }
+
+  /**
+   * @see #copy(Reader, OutputStream, String, int)
+   */
+  public static <T extends OutputStream> T copy(Reader input, T output, int count) throws IOException {
+    return copy(input, output, DEFAULT_ENCODING, count);
+  }
+
+  /**
+   * @see #copy(Reader, OutputStream, String, int)
+   */
+  public static <T extends OutputStream> T copy(Reader input, T output, String encoding) throws IOException {
+    return copy(input, output, encoding, ALL);
+  }
+
+  /**
+   * Copies {@link Reader} to {@link OutputStream} using buffer and specified encoding.
+   *
+   * @see #copy(Reader, Writer, int)
+   */
+  public static <T extends OutputStream> T copy(Reader input, T output, String encoding, int count) throws IOException {
+    try (Writer out = getOutputStreamWriter(output, encoding)) {
+      copy(input, out, count);
+      return output;
+    }
+  }
+
+  /**
+   * Copies data from {@link DataSource} to a new {@link FastByteArrayOutputStream} and returns this.
+   *
+   * @param input {@link DataSource} to copy from.
+   * @return new {@link FastByteArrayOutputStream} with data from input.
+   * @see #copyToOutputStream(InputStream)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(DataSource input) throws IOException {
+    return copyToOutputStream(input.getInputStream());
+  }
+
+  /**
+   * @see #copyToOutputStream(InputStream, int)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(InputStream input) throws IOException {
+    return copyToOutputStream(input, ALL);
+  }
+
+  /**
+   * Copies {@link InputStream} to a new {@link FastByteArrayOutputStream} using buffer and specified encoding.
+   *
+   * @see #copy(InputStream, OutputStream, int)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(InputStream input, int count) throws IOException {
+    try (FastByteArrayOutputStream output = getFastByteArrayOutputStream()) {
+      copy(input, output, count);
+      return output;
+    }
+  }
+
+  /**
+   * @see #copyToOutputStream(Reader, String)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(Reader input) throws IOException {
+    return copyToOutputStream(input, DEFAULT_ENCODING);
+  }
+
+  /**
+   * @see #copyToOutputStream(Reader, String, int)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(Reader input, String encoding) throws IOException {
+    return copyToOutputStream(input, encoding, ALL);
+  }
+
+  /**
+   * @see #copyToOutputStream(Reader, String, int)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(Reader input, int count) throws IOException {
+    return copyToOutputStream(input, DEFAULT_ENCODING, count);
+  }
+
+  /**
+   * Copies {@link Reader} to a new {@link FastByteArrayOutputStream} using buffer and specified encoding.
+   *
+   * @see #copy(Reader, OutputStream, String, int)
+   */
+  public static FastByteArrayOutputStream copyToOutputStream(Reader input, String encoding, int count) throws IOException {
+    try (FastByteArrayOutputStream output = getFastByteArrayOutputStream()) {
+      copy(input, output, encoding, count);
+      return output;
+    }
+  }
+
+  // ---------------------------------------------------------------- copy to Writer
+
+  /**
+   * @see #copy(InputStream, Writer, String)
+   */
+  public static <T extends Writer> T copy(InputStream input, T output) throws IOException {
+    return copy(input, output, DEFAULT_ENCODING);
+  }
+
+  /**
+   * @see #copy(InputStream, Writer, String, int)
+   */
+  public static <T extends Writer> T copy(InputStream input, T output, int count) throws IOException {
+    return copy(input, output, DEFAULT_ENCODING, count);
+  }
+
+  /**
+   * @see #copy(InputStream, Writer, String, int)
+   */
+  public static <T extends Writer> T copy(InputStream input, T output, String encoding) throws IOException {
+    return copy(input, output, encoding, ALL);
+  }
+
+  /**
+   * Copies {@link InputStream} to {@link Writer} using buffer and specified encoding.
+   *
+   * @see #copy(Reader, Writer, int)
+   */
+  public static <T extends Writer> T copy(InputStream input, T output, String encoding, int count) throws IOException {
+    copy(getInputStreamReader(input, encoding), output, count);
+    return output;
+  }
+
+  /**
+   * @see #copy(InputStream, String)
+   */
+  public static FastCharArrayWriter copy(InputStream input) throws IOException {
+    return copy(input, DEFAULT_ENCODING);
+  }
+
+  /**
+   * @see #copy(InputStream, String, int)
+   */
+  public static FastCharArrayWriter copy(InputStream input, int count) throws IOException {
+    return copy(input, DEFAULT_ENCODING, count);
+  }
+
+  /**
+   * @see #copy(InputStream, String, int)
+   */
+  public static FastCharArrayWriter copy(InputStream input, String encoding) throws IOException {
+    return copy(input, encoding, ALL);
+  }
+
+  /**
+   * Copies {@link InputStream} to a new {@link FastCharArrayWriter} using buffer and specified encoding.
+   *
+   * @see #copy(InputStream, Writer, String, int)
+   */
+  public static FastCharArrayWriter copy(InputStream input, String encoding, int count) throws IOException {
+    try (FastCharArrayWriter output = getFastCharArrayWriter()) {
+      copy(input, output, encoding, count);
+      return output;
+    }
+  }
+
+  /**
+   * @see #copy(Reader, int)
+   */
+  public static FastCharArrayWriter copy(Reader input) throws IOException {
+    return copy(input, ALL);
+  }
+
+  /**
+   * Copies {@link Reader} to a new {@link FastCharArrayWriter} using buffer and specified encoding.
+   *
+   * @see #copy(Reader, Writer, int)
+   */
+  public static FastCharArrayWriter copy(Reader input, int count) throws IOException {
+    try (FastCharArrayWriter output = getFastCharArrayWriter()) {
+      copy(input, output, count);
+      return output;
+    }
+  }
+
+  /**
+   * Copies data from {@link DataSource} to a new {@link FastCharArrayWriter} and returns this.
+   *
+   * @param input {@link DataSource} to copy from.
+   * @return new {@link FastCharArrayWriter} with data from input.
+   * @see #copy(InputStream)
+   */
+  public static FastCharArrayWriter copy(DataSource input) throws IOException {
+    return copy(input.getInputStream());
+  }
+
+  // ---------------------------------------------------------------- read bytes
+
+  /**
+   * @see #readBytes(InputStream, int)
+   */
+  public static byte[] readBytes(InputStream input) throws IOException {
+    return readBytes(input, ALL);
+  }
+
+  /**
+   * @see #copyToOutputStream(InputStream, int)
+   */
+  public static byte[] readBytes(InputStream input, int count) throws IOException {
+    return copyToOutputStream(input, count).toByteArray();
+  }
+
+  /**
+   * @see #readBytes(Reader, String)
+   */
+  public static byte[] readBytes(Reader input) throws IOException {
+    return readBytes(input, DEFAULT_ENCODING);
+  }
+
+  /**
+   * @see #readBytes(Reader, String, int)
+   */
+  public static byte[] readBytes(Reader input, int count) throws IOException {
+    return readBytes(input, DEFAULT_ENCODING, count);
+  }
+
+  /**
+   * @see #readBytes(Reader, String, int)
+   */
+  public static byte[] readBytes(Reader input, String encoding) throws IOException {
+    return readBytes(input, encoding, ALL);
+  }
+
+  /**
+   * @see #copyToOutputStream(Reader, String, int)
+   */
+  public static byte[] readBytes(Reader input, String encoding, int count) throws IOException {
+    return copyToOutputStream(input, encoding, count).toByteArray();
+  }
+
+  // ---------------------------------------------------------------- read chars
+
+  /**
+   * @see #readChars(Reader, int)
+   */
+  public static char[] readChars(Reader input) throws IOException {
+    return readChars(input, ALL);
+  }
+
+  /**
+   * @see #copy(Reader, int)
+   */
+  public static char[] readChars(Reader input, int count) throws IOException {
+    return copy(input, count).toCharArray();
+  }
+
+  /**
+   * @see #readChars(InputStream, int)
+   */
+  public static char[] readChars(InputStream input) throws IOException {
+    return readChars(input, ALL);
+  }
+
+  /**
+   * @see #readChars(InputStream, String, int)
+   */
+  public static char[] readChars(InputStream input, String encoding) throws IOException {
+    return readChars(input, encoding, ALL);
+  }
+
+  /**
+   * @see #readChars(InputStream, String, int)
+   */
+  public static char[] readChars(InputStream input, int count) throws IOException {
+    return readChars(input, DEFAULT_ENCODING, count);
+  }
+
+  /**
+   * @see #copy(InputStream, String, int)
+   */
+  public static char[] readChars(InputStream input, String encoding, int count) throws IOException {
+    return copy(input, encoding, count).toCharArray();
+  }
+
+  // ---------------------------------------------------------------- compare content
+
+  /**
+   * Compares the content of two byte streams ({@link InputStream}s).
+   *
+   * @return {@code true} if the content of the first {@link InputStream} is equal
+   * to the content of the second {@link InputStream}.
+   */
+  public static boolean compare(InputStream input1, InputStream input2) throws IOException {
+    if (!(input1 instanceof BufferedInputStream)) {
+      input1 = new BufferedInputStream(input1);
+    }
+    if (!(input2 instanceof BufferedInputStream)) {
+      input2 = new BufferedInputStream(input2);
+    }
+    int ch = input1.read();
+    while (ch != NEGATIVE_ONE) {
+      int ch2 = input2.read();
+      if (ch != ch2) {
+        return false;
+      }
+      ch = input1.read();
+    }
+    int ch2 = input2.read();
+    return (ch2 == NEGATIVE_ONE);
+  }
+
+  /**
+   * Compares the content of two character streams ({@link Reader}s).
+   *
+   * @return {@code true} if the content of the first {@link Reader} is equal
+   * to the content of the second {@link Reader}.
+   */
+  public static boolean compare(Reader input1, Reader input2) throws IOException {
+    if (!(input1 instanceof BufferedReader)) {
+      input1 = new BufferedReader(input1);
+    }
+    if (!(input2 instanceof BufferedReader)) {
+      input2 = new BufferedReader(input2);
+    }
+
+    int ch = input1.read();
+    while (ch != NEGATIVE_ONE) {
+      int ch2 = input2.read();
+      if (ch != ch2) {
+        return false;
+      }
+      ch = input1.read();
+    }
+    int ch2 = input2.read();
+    return (ch2 == NEGATIVE_ONE);
+  }
+
+  // ---------------------------------------------------------------- buffer size
+
+  /**
+   * Returns default IO buffer size.
+   *
+   * @return default IO buffer size.
+   */
+  private static int getBufferSize() {
+    return IO_BUFFER_SIZE;
+  }
+
+  /**
+   * Returns either count or default IO buffer size (whichever is smaller).
+   *
+   * @param count Number of characters or bytes to retrieve.
+   * @return buffer size (either count or default IO buffer size, whichever is smaller).
+   */
+  private static int getBufferSize(int count) {
+    if (count < IO_BUFFER_SIZE) {
+      return count;
+    } else {
+      return IO_BUFFER_SIZE;
+    }
+  }
+
+  // ---------------------------------------------------------------- wrappers
+
+  /**
+   * Returns new {@link FastCharArrayWriter} using default IO buffer size.
+   *
+   * @return new {@link FastCharArrayWriter} using default IO buffer size.
+   */
+  private static FastCharArrayWriter getFastCharArrayWriter() {
+    return new FastCharArrayWriter(IO_BUFFER_SIZE);
+  }
+
+  /**
+   * Returns new {@link FastByteArrayOutputStream} using default IO buffer size.
+   *
+   * @return new {@link FastByteArrayOutputStream} using default IO buffer size.
+   */
+  private static FastByteArrayOutputStream getFastByteArrayOutputStream() {
+    return new FastByteArrayOutputStream(IO_BUFFER_SIZE);
+  }
+
+  /**
+   * @see #getInputStreamReader(InputStream, String)
+   */
+  public static InputStreamReader getInputStreamReader(InputStream input) throws UnsupportedEncodingException {
+    return getInputStreamReader(input, DEFAULT_ENCODING);
+  }
+
+  /**
+   * Returns new {@link InputStreamReader} using specified {@link InputStream} and encoding.
+   *
+   * @param input    {@link InputStream}
+   * @param encoding Encoding as {@link String} to use for {@link InputStreamReader}.
+   * @return new {@link InputStreamReader}
+   * @throws UnsupportedEncodingException if encoding is not valid.
+   */
+  public static InputStreamReader getInputStreamReader(InputStream input, String encoding) throws UnsupportedEncodingException {
+    return new InputStreamReader(input, encoding);
+  }
+
+  /**
+   * @see #getOutputStreamWriter(OutputStream, String)
+   */
+  public static OutputStreamWriter getOutputStreamWriter(OutputStream output) throws UnsupportedEncodingException {
+    return getOutputStreamWriter(output, DEFAULT_ENCODING);
+  }
+
+  /**
+   * Returns new {@link OutputStreamWriter} using specified {@link OutputStream} and encoding.
+   *
+   * @param output   {@link OutputStream}
+   * @param encoding Encoding as {@link String} to use for {@link OutputStreamWriter}.
+   * @return new {@link OutputStreamWriter}
+   * @throws UnsupportedEncodingException if encoding is not valid.
+   */
+  public static OutputStreamWriter getOutputStreamWriter(OutputStream output, String encoding) throws UnsupportedEncodingException {
+    return new OutputStreamWriter(output, encoding);
+  }
 }

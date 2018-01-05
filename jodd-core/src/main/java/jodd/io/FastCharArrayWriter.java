@@ -27,112 +27,113 @@ package jodd.io;
 
 import jodd.util.buffer.FastCharBuffer;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Similar as {@link jodd.io.FastByteArrayOutputStream} but for {@link Writer}.
+ * Similar to {@link FastByteArrayOutputStream} but for {@link Writer}.
  */
 public class FastCharArrayWriter extends Writer {
-	
-	private final FastCharBuffer buffer;
 
-	/**
-	 * Creates a new writer. The buffer capacity is
-	 * initially 1024 bytes, though its size increases if necessary.
-	 */
-	public FastCharArrayWriter() {
-		this(1024);
-	}
+  private final FastCharBuffer buffer;
 
-	/**
-	 * Creates a new char array writer, with a buffer capacity of
-	 * the specified size, in bytes.
-	 *
-	 * @param size the initial size.
-	 * @throws IllegalArgumentException if size is negative.
-	 */
-	public FastCharArrayWriter(int size) {
-		buffer = new FastCharBuffer(size);
-	}
+  /**
+   * Creates a new writer. The buffer capacity is
+   * initially 1024 bytes, though its size increases if necessary.
+   */
+  public FastCharArrayWriter() {
+    this(1024);
+  }
 
-	/**
-	 * @see java.io.Writer#write(char[], int, int)
-	 */
-	@Override
-	public void write(char[] b, int off, int len) {
-		buffer.append(b, off, len);
-	}
+  /**
+   * Creates a new char array {@link Writer}, with a buffer capacity of
+   * the specified size, in bytes.
+   *
+   * @param size the initial size.
+   * @throws IllegalArgumentException if size is negative.
+   */
+  public FastCharArrayWriter(int size) {
+    buffer = new FastCharBuffer(size);
+  }
 
-	/**
-	 * Writes single byte.
-	 */
-	@Override
-	public void write(int b) {
-		buffer.append((char) b);
-	}
+  /**
+   * @see Writer#write(char[], int, int)
+   */
+  @Override
+  public void write(char[] b, int off, int len) {
+    buffer.append(b, off, len);
+  }
 
-	@Override
-	public void write(String s, int off, int len) {
-		write(s.toCharArray(), off, len);
-	}
+  /**
+   * Writes single byte.
+   */
+  @Override
+  public void write(int b) {
+    buffer.append((char) b);
+  }
 
-	/**
-	 * @see java.io.CharArrayWriter#size()
-	 */
-	public int size() {
-		return buffer.size();
-	}
+  @Override
+  public void write(String s, int off, int len) {
+    write(s.toCharArray(), off, len);
+  }
 
-	/**
-	 * Closing a <code>FastCharArrayWriter</code> has no effect. The methods in
-	 * this class can be called after the stream has been closed without
-	 * generating an <code>IOException</code>.
-	 */
-	@Override
-	public void close() {
-		//nop
-	}
+  /**
+   * @see CharArrayWriter#size()
+   */
+  public int size() {
+    return buffer.size();
+  }
 
-	/**
-	 * Flushing a <code>FastCharArrayWriter</code> has no effects.
-	 */
-	@Override
-	public void flush() {
-		//nop
-	}
+  /**
+   * Closing a {@link FastCharArrayWriter} has no effect. The methods in
+   * this class can be called after the stream has been closed without
+   * generating an {@link IOException}.
+   */
+  @Override
+  public void close() {
+    //nop
+  }
 
-	/**
-	 * @see java.io.CharArrayWriter#reset()
-	 */
-	public void reset() {
-		buffer.clear();
-	}
+  /**
+   * Flushing a {@link FastCharArrayWriter} has no effects.
+   */
+  @Override
+  public void flush() {
+    //nop
+  }
 
-	/**
-	 * @see java.io.CharArrayWriter#writeTo(java.io.Writer)
-	 */
-	public void writeTo(Writer out) throws IOException {
-		int index = buffer.index();
-		for (int i = 0; i < index; i++) {
-			char[] buf = buffer.array(i);
-			out.write(buf);
-		}
-		out.write(buffer.array(index), 0, buffer.offset());
-	}
+  /**
+   * @see CharArrayWriter#reset()
+   */
+  public void reset() {
+    buffer.clear();
+  }
 
-	/**
-	 * @see java.io.CharArrayWriter#toCharArray()
-	 */
-	public char[] toCharArray() {
-		return buffer.toArray();
-	}
+  /**
+   * @see CharArrayWriter#writeTo(Writer)
+   */
+  public void writeTo(Writer out) throws IOException {
+    int index = buffer.index();
+    for (int i = 0; i < index; i++) {
+      char[] buf = buffer.array(i);
+      out.write(buf);
+    }
+    out.write(buffer.array(index), 0, buffer.offset());
+  }
 
-	/**
-	 * @see java.io.CharArrayWriter#toString()
-	 */
-	@Override
-	public String toString() {
-		return new String(toCharArray());
-	}
+  /**
+   * @see CharArrayWriter#toCharArray()
+   */
+  public char[] toCharArray() {
+    return buffer.toArray();
+  }
+
+  /**
+   * @see CharArrayWriter#toString()
+   */
+  @Override
+  public String toString() {
+    return new String(toCharArray());
+  }
 }

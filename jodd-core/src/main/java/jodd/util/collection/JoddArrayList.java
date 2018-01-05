@@ -395,13 +395,13 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 
 	/**
 	 * Returns a shallow copy of this <code>ArrayList</code> instance.  (The
-	 * elements themselves are not copied.)
-	 */
-	@Override
-	public Object clone() {
-		try {
-			@SuppressWarnings("unchecked")
-			JoddArrayList<E> v = (JoddArrayList<E>) super.clone();
+   * elements themselves are not copied.)
+   */
+  @Override
+  public JoddArrayList<E> clone() {
+    try {
+      @SuppressWarnings("unchecked")
+      JoddArrayList<E> v = (JoddArrayList<E>) super.clone();
 			v.buffer = (buffer == EMPTY_BUFFER ? buffer : buffer.clone());
 			v.modCount = 0;
 			v.start = start;
