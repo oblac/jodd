@@ -28,113 +28,196 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.junit.jupiter.api.Test;
 
+import javax.activation.DataSource;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EmailGreenTest {
 
-	@Test
-	void testInlineAttachmentAfterSending() {
-		GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
-		greenMail.setUser("green@mail.com", "green", "pwd");
-		greenMail.start();
+  private static final String JODD_USE_ME = "Jodd <jodd@use.me>";
+  private static final String GREEN_MAIL_COM = "green@mail.com";
+  private static final String ZERO = "zero";
+  private static final String ONE = "one";
+  private static final String TWO = "two";
+  private static final String THREE = "three";
+  private static final String LOCALHOST = "localhost";
+  private static final String GREEN = "green";
+  private static final String PWD = "pwd";
+  private static final String CID_1 = "CID1";
+  private static final byte[] BYTES_0_1_0 = {0, 1, 0};
+  private static final byte[] BYTES_1_2_3 = {1, 2, 3};
+  private static final byte[] BYTES_4_5_6 = {4, 5, 6};
+  private static final byte[] BYTES_7_8_9 = {7, 8, 9};
+  private static final byte[] BYTES_10_11_12 = {10, 11, 12};
+  private static final String NO_NAME_STREAM = "<no-name>.octet-stream";
 
-		// make
+  @Test
+  void testInlineAttachmentAfterSending() {
+    final GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
+    greenMail.setUser(GREEN_MAIL_COM, GREEN, PWD);
+    greenMail.start();
 
-		Email email = Email.create()
-			.from("Jodd", "jodd@use.me")
-			.to("green@mail.com")
-			.addText("Hello")
-			.addHtml("Hi!")
-			.attach(EmailAttachment.attachment()
-				.setName("one")
-				.bytes(new byte[]{7,8,9})
-				.setInline(false)
-				.create())
-			.attach(EmailAttachment.attachment()
-				.setName("two")
-				.bytes(new byte[]{4,5,6})
-				.setInline(false)
-				.create())
-			.attach(EmailAttachment.attachment()
-				.setName("three")
-				.bytes(new byte[]{1,2,3})
-				.setContentId("CID1").create())
-			.embed(EmailAttachment.attachment()
-				.bytes(new byte[]{0,1,0}))
-			;
+    // create Email
+    final Email sentEmail = Email.create()
+        .setFrom("Jodd", "jodd@use.me")
+        .addTo(GREEN_MAIL_COM)
+        .addText("Hello")
+        .addHtml("Hi!")
 
-		assertEquals(4, email.getAttachments().size());
+        .addAttachment(EmailAttachment.builder()
+            .setName(ZERO)
+            .setContent(BYTES_7_8_9)
+            .setInline(false))
 
-		// send
+        .addAttachment(EmailAttachment.builder()
+            .setName(ONE)
+            .setContent(BYTES_4_5_6)
+            .setInline(false))
 
-		{
-			SmtpServer smtpServer = new SmtpServer("localhost", 3025);
-			SendMailSession session = smtpServer.createSession();
-			session.open();
-			session.sendMail(email);
-			session.close();
-		}
+        .addAttachment(EmailAttachment.builder()
+            .setName(TWO)
+            .setContent(BYTES_1_2_3)
+            .setContentId(CID_1))
 
-		// receive
-		ReceivedEmail[] receivedEmails;
+        .embedAttachment(EmailAttachment.builder()
+            .setContent(BYTES_0_1_0)
+            .setInline(true))
 
-		{
-			Pop3Server popServer = new Pop3Server("localhost", 3110, "green", "pwd");
-			ReceiveMailSession session = popServer.createSession();
-			session.open();
-			receivedEmails = session.receiveEmail();
-			session.close();
-		}
+        //TODO: should test determine this is inline or not?
+        // https://github.com/oblac/jodd/issues/546
+        .embedAttachment(EmailAttachment.builder()
+            .setContent(BYTES_10_11_12)
+            .setName(THREE)
+            .setContentId(CID_1));
+    // send
+    {
+      final SmtpServer smtpServer = MailServer.builder().host(LOCALHOST).port(3025).buildSmtp();
+      final SendMailSession session = smtpServer.createSession();
+      session.open();
+      session.sendMail(sentEmail);
 
-		assertEquals(1, receivedEmails.length);
-		ReceivedEmail liame = receivedEmails[0];
+      session.close();
+    }
 
-		// asserts
-		assertEquals("Jodd <jodd@use.me>", email.getFrom().toString());
-		assertEquals("Jodd <jodd@use.me>", liame.getFrom().toString());
+    // receive
+    final ReceivedEmail[] receivedEmails;
 
-		assertEquals("green@mail.com", email.getTo()[0].toString());
-		assertEquals("green@mail.com", liame.getTo()[0].toString());
+    {
+      final Pop3Server popServer = MailServer.builder().host(LOCALHOST).port(3110).auth(GREEN, PWD).buildPop3();
+      final ReceiveMailSession session = popServer.createSession();
+      session.open();
+      receivedEmails = session.receiveEmail();
+      session.close();
+    }
 
-		assertEquals(4, email.getAttachments().size());
-		assertEquals("one", email.getAttachments().get(0).getName());
-		assertArrayEquals(new byte[]{7,8,9}, email.getAttachments().get(0).toByteArray());
-		assertEquals("two", email.getAttachments().get(1).getName());
-		assertArrayEquals(new byte[]{4,5,6}, email.getAttachments().get(1).toByteArray());
-		assertEquals("three", email.getAttachments().get(2).getName());
-		assertEquals("CID1", email.getAttachments().get(2).getContentId());
-		assertArrayEquals(new byte[]{1,2,3}, email.getAttachments().get(2).toByteArray());
-		assertTrue(email.getAttachments().get(2).isEmbedded());
-		assertNull(email.getAttachments().get(3).getName());
-		assertArrayEquals(new byte[]{0,1,0}, email.getAttachments().get(3).toByteArray());
-		assertFalse(email.getAttachments().get(3).isEmbedded());
+    assertEquals(1, receivedEmails.length);
+    final ReceivedEmail receivedEmail = receivedEmails[0];
 
-		assertEquals(4, liame.getAttachments().size());
-		int ndx = 1;
-		assertEquals("one", liame.getAttachments().get(ndx).getName());
-		assertArrayEquals(new byte[]{7,8,9}, liame.getAttachments().get(ndx).toByteArray());
+    checkFrom(sentEmail);
+    checkFrom(receivedEmail);
 
-		ndx = 2;
-		assertEquals("two", liame.getAttachments().get(ndx).getName());
-		assertArrayEquals(new byte[]{4,5,6}, liame.getAttachments().get(ndx).toByteArray());
+    checkTo(sentEmail);
+    checkTo(receivedEmail);
 
-		ndx = 3;
-		assertEquals("three", liame.getAttachments().get(ndx).getName());
-		assertEquals("<CID1>", liame.getAttachments().get(ndx).getContentId());
-		assertArrayEquals(new byte[]{1,2,3}, liame.getAttachments().get(ndx).toByteArray());
-		assertTrue(liame.getAttachments().get(ndx).isEmbedded());
+    checkAttachments(sentEmail.getAttachments(), receivedEmail.getAttachments());
 
-		ndx = 0;
-		assertNotNull(liame.getAttachments().get(ndx).getName());
-		assertArrayEquals(new byte[]{0,1,0}, liame.getAttachments().get(ndx).toByteArray());
-		assertFalse(liame.getAttachments().get(ndx).isEmbedded());
+    greenMail.stop();
+  }
 
-		greenMail.stop();
-	}
+  private void checkFrom(final CommonEmail email) {
+    assertEquals(JODD_USE_ME, email.getFrom().toString());
+  }
 
+  private void checkTo(final CommonEmail email) {
+    assertEquals(GREEN_MAIL_COM, email.getTo()[0].toString());
+  }
+
+  private void checkAttachments(final List<EmailAttachment<? extends DataSource>> sentAttachments, final List<EmailAttachment<? extends DataSource>> receivedAttachments) {
+    checkSize(sentAttachments);
+    checkSize(receivedAttachments);
+
+    String name = ZERO;
+    byte[] data = BYTES_7_8_9;
+    checkAttachmentInfo(sentAttachments, 0, receivedAttachments, 2, name, data, false, false);
+
+    name = ONE;
+    data = BYTES_4_5_6;
+    checkAttachmentInfo(sentAttachments, 1, receivedAttachments, 3, name, data, false, false);
+
+    name = TWO;
+    data = BYTES_1_2_3;
+    checkAttachmentInfo(sentAttachments, 2, receivedAttachments, 4, name, data, false, false);
+    //assertEquals(CID_1, sentAttachments.get(ndx).getContentId());
+    //assertEquals("<CID1>", receivedAttachments.get(ndx).getContentId());
+
+    // These are null because used storeAttachment method instead of embedAttachment method.
+    assertNull(sentAttachments.get(2).getContentId());
+    assertNull(receivedAttachments.get(4).getContentId());
+
+    /**/
+    name = null;
+    data = BYTES_0_1_0;
+    checkAttachmentInfo(sentAttachments, 3, receivedAttachments, 0, name, data, true, true);
+
+    name = THREE;
+    data = BYTES_10_11_12;
+    checkAttachmentInfo(sentAttachments, 4, receivedAttachments, 1, name, data, true, false);
+  }
+
+  private void checkSize(final List<EmailAttachment<? extends DataSource>> attachments) {
+    assertEquals(5, attachments.size());
+  }
+
+  private void checkAttachmentInfo(final List<EmailAttachment<? extends DataSource>> sentAttachments, final int sentIndex, final List<EmailAttachment<? extends DataSource>> receivedAttachments, final int receivedIndex, final String name, final byte[] data, final boolean isEmbedded, final boolean isInline) {
+    final EmailAttachment<? extends DataSource> sentAttachment = sentAttachments.get(sentIndex);
+    final EmailAttachment<? extends DataSource> receivedAttachment = receivedAttachments.get(receivedIndex);
+
+    checkName(name, sentAttachment, receivedAttachment);
+    checkData(data, sentAttachment, receivedAttachment);
+    checkEmbedded(isEmbedded, sentAttachment, receivedAttachment);
+    checkInline(isInline, sentAttachment, receivedAttachment);
+  }
+
+  private void checkName(final String name, final EmailAttachment<? extends DataSource> sentAttachment, final EmailAttachment<? extends DataSource> receivedAttachment) {
+    checkName(name, sentAttachment);
+    checkName(name, receivedAttachment);
+  }
+
+  private void checkName(String name, final EmailAttachment<? extends DataSource> attachment) {
+    final String attachmentName = attachment.getName();
+    if (name == null && attachmentName != null && attachmentName.equals(NO_NAME_STREAM)) {
+      name = NO_NAME_STREAM;
+    }
+    assertEquals(name, attachmentName);
+  }
+
+  private void checkData(final byte[] data, final EmailAttachment<? extends DataSource> sentAttachment, final EmailAttachment<? extends DataSource> receivedAttachment) {
+    checkData(data, sentAttachment);
+    checkData(data, receivedAttachment);
+  }
+
+  private void checkData(final byte[] data, final EmailAttachment<? extends DataSource> attachment) {
+    assertArrayEquals(data, attachment.toByteArray());
+  }
+
+  private void checkEmbedded(final boolean isEmbedded, final EmailAttachment<? extends DataSource> sentAttachment, final EmailAttachment<? extends DataSource> receivedAttachment) {
+    checkEmbedded(isEmbedded, sentAttachment);
+    checkEmbedded(isEmbedded, receivedAttachment);
+  }
+
+  private void checkEmbedded(final boolean isEmbedded, final EmailAttachment<? extends DataSource> attachment) {
+    assertEquals(isEmbedded, attachment.isEmbedded());
+  }
+
+  private void checkInline(final boolean isInline, final EmailAttachment<? extends DataSource> sentAttachment, final EmailAttachment<? extends DataSource> receivedAttachment) {
+    checkInline(isInline, sentAttachment);
+    checkInline(isInline, receivedAttachment);
+  }
+
+  private void checkInline(final boolean isInline, final EmailAttachment<? extends DataSource> attachment) {
+    assertEquals(isInline, attachment.isInline());
+  }
 }

@@ -732,6 +732,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
     builder.setContentIdFromNameIfMissing();
 
     //TODO: is this really supposed to always be inline?
+    // https://github.com/oblac/jodd/issues/546
     //content disposition will be set to {@code inline}
     //builder.setInline(true);
 
