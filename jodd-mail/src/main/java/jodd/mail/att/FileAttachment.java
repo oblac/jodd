@@ -27,33 +27,25 @@ package jodd.mail.att;
 
 import jodd.mail.EmailAttachment;
 
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import java.io.File;
 
 /**
- * File {@link EmailAttachment email attachment}.
- * Content type is not set by user, but by <code>javax.mail</code>
- * framework.
+ * @deprecated Use {@link jodd.mail.EmailAttachmentBuilder} instead.
  */
-public class FileAttachment extends EmailAttachment {
+@Deprecated
+public class FileAttachment extends EmailAttachment<FileDataSource> {
 
-	protected final File file;
+  public FileAttachment(final File file, final String name, final String contentId, final boolean isInline) {
+    super(name, contentId, isInline, new FileDataSource(file));
+  }
 
-	public FileAttachment(File file, String name, String contentId, boolean inline) {
-		super(name, contentId, inline);
-		this.file = file;
-	}
-
-	/**
-	 * Returns attached file.
-	 */
-	public File getFile() {
-		return file;
-	}
-
-	@Override
-	public DataSource getDataSource() {
-		return new FileDataSource(file);
-	}
+  /**
+   * Returns attached {@link File}.
+   *
+   * @return attached {@link File}.
+   */
+  public File getFile() {
+    return getDataSource().getFile();
+  }
 }

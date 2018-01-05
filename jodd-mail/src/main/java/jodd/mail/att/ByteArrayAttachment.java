@@ -27,36 +27,15 @@ package jodd.mail.att;
 
 import jodd.mail.EmailAttachment;
 
-import javax.activation.DataSource;
 import javax.mail.util.ByteArrayDataSource;
 
 /**
- * Byte array {@link EmailAttachment email attachment}.
+ * @deprecated Use {@link jodd.mail.EmailAttachmentBuilder} instead.
  */
-public class ByteArrayAttachment extends EmailAttachment {
+@Deprecated
+public class ByteArrayAttachment extends EmailAttachment<ByteArrayDataSource> {
 
-	protected final byte[] content;
-	protected final String contentType;
-
-	public ByteArrayAttachment(byte[] content, String contentType, String name, String contentId, boolean inline) {
-		super(name, contentId, inline);
-		this.content = content;
-		this.contentType = contentType;
-	}
-
-	/**
-	 * Returns <code>ByteArrayDataSource</code>.
-	 */
-	@Override
-	public DataSource getDataSource() {
-		return new ByteArrayDataSource(content, contentType);
-	}
-
-	/**
-	 * Returns content type.
-	 */
-	public String getContentType() {
-		return contentType;
-	}
-
+  public ByteArrayAttachment(final byte[] bytes, final String contentType, final String name, final String contentId, final boolean isInline) {
+    super(name, contentId, isInline, new ByteArrayDataSource(bytes, contentType));
+  }
 }
