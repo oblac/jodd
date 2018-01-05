@@ -26,13 +26,15 @@
 package jodd.mail;
 
 import jodd.datetime.JDateTime;
+import jodd.util.StringPool;
+import jodd.util.net.MimeTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -45,174 +47,177 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EMLParserTest {
 
-	protected String testDataRoot;
+  protected String testDataRoot;
 
-	@BeforeEach
-	void setUp() throws Exception {
-		if (testDataRoot != null) {
-			return;
-		}
-		URL data = EMLParserTest.class.getResource("test");
-		testDataRoot = data.getFile();
-	}
+  @BeforeEach
+  void setUp() {
+    if (testDataRoot != null) {
+      return;
+    }
+    final URL data = EMLParserTest.class.getResource("test");
+    testDataRoot = data.getFile();
+  }
 
-	@Test
-	void testParseEML() throws FileNotFoundException, MessagingException {
-		File emlFile = new File(testDataRoot, "example.eml");
+  @Test
+  void testParseEML() throws FileNotFoundException, MessagingException {
+    final File emlFile = new File(testDataRoot, "example.eml");
 
-		ReceivedEmail email = EMLParser.create().parse(emlFile);
+    ReceivedEmail email = EMLParser.create().parse(emlFile);
 
-		assertEquals("Example <from@example.com>", email.getFrom().toString());
-		assertEquals("to@example.com", email.getTo()[0].toString());
-		assertEquals("test!", email.getSubject());
+    assertEquals("Example <from@example.com>", email.getFrom().toString());
+    assertEquals("to@example.com", email.getTo()[0].toString());
+    assertEquals("test!", email.getSubject());
 
-		// the time is specified in GMT zone
-		JDateTime jdt = new JDateTime(2010, 3, 27, 12, 11, 21, 0);
-		jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
+    // the time is specified in GMT zone
+    JDateTime jdt = new JDateTime(2010, 3, 27, 12, 11, 21, 0);
+    jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
 
-		// compare
-		assertEquals(jdt.convertToDate(), email.getSentDate());
+    // compare
+    assertEquals(jdt.convertToDate(), email.getSentDate());
 
-		Map<String, String> headers = email.getAllHeaders();
-		assertEquals("1.0", headers.get("MIME-Version"));
+    Map<String, String> headers = email.getAllHeaders();
+    assertEquals("1.0", headers.get("MIME-Version"));
 
-		List<EmailMessage> messages = email.getAllMessages();
-		assertEquals(2, messages.size());
+    List<EmailMessage> messages = email.getAllMessages();
+    assertEquals(2, messages.size());
 
-		EmailMessage msg1 = messages.get(0);
-		assertEquals("Test", msg1.getContent().trim());
-		assertEquals("text/plain", msg1.getMimeType());
-		assertEquals("us-ascii", msg1.getEncoding());
+    EmailMessage msg1 = messages.get(0);
+    assertEquals("Test", msg1.getContent().trim());
+    assertEquals(MimeTypes.MIME_TEXT_PLAIN, msg1.getMimeType());
+    assertEquals(StringPool.US_ASCII.toLowerCase(), msg1.getEncoding());
 
-		EmailMessage msg2 = messages.get(1);
-		assertTrue(msg2.getContent().contains("Test<o:p>"));
-		assertEquals("text/html", msg2.getMimeType());
-		assertEquals("us-ascii", msg2.getEncoding());
+    EmailMessage msg2 = messages.get(1);
+    assertTrue(msg2.getContent().contains("Test<o:p>"));
+    assertEquals(MimeTypes.MIME_TEXT_HTML, msg2.getMimeType());
+    assertEquals(StringPool.US_ASCII.toLowerCase(), msg2.getEncoding());
 
-		List<EmailAttachment> attachments = email.getAttachments();
-		assertNull(attachments);
+    List<EmailAttachment<? extends DataSource>> attachments = email.getAttachments();
+    assertNotNull(attachments);
+    assertTrue(attachments.isEmpty());
 
-		List<ReceivedEmail> attachedMessages = email.getAttachedMessages();
-		assertNotNull(attachedMessages);
-		assertEquals(1, attachedMessages.size());
+    List<ReceivedEmail> attachedMessages = email.getAttachedMessages();
+    assertNotNull(attachedMessages);
+    assertEquals(1, attachedMessages.size());
 
-		email = attachedMessages.get(0);
+    email = attachedMessages.get(0);
 
-		// attached message
+    // attached message
 
-		assertEquals("Example <from@example.com>", email.getFrom().toString());
-		assertEquals("to@example.com", email.getTo()[0].toString());
-		assertEquals("test", email.getSubject());
+    assertEquals("Example <from@example.com>", email.getFrom().toString());
+    assertEquals("to@example.com", email.getTo()[0].toString());
+    assertEquals("test", email.getSubject());
 
-		jdt = new JDateTime(2010, 3, 27, 12, 9, 46, 0);
-		jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
-		assertEquals(jdt.convertToDate(), email.getSentDate());
+    jdt = new JDateTime(2010, 3, 27, 12, 9, 46, 0);
+    jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
+    assertEquals(jdt.convertToDate(), email.getSentDate());
 
-		headers = email.getAllHeaders();
-		assertEquals("1.0", headers.get("MIME-Version"));
+    headers = email.getAllHeaders();
+    assertEquals("1.0", headers.get("MIME-Version"));
 
-		messages = email.getAllMessages();
-		assertEquals(2, messages.size());
+    messages = email.getAllMessages();
+    assertEquals(2, messages.size());
 
-		msg1 = messages.get(0);
-		assertEquals("test", msg1.getContent().trim());
-		assertEquals("text/plain", msg1.getMimeType());
-		assertEquals("us-ascii", msg1.getEncoding());
+    msg1 = messages.get(0);
+    assertEquals("test", msg1.getContent().trim());
+    assertEquals(MimeTypes.MIME_TEXT_PLAIN, msg1.getMimeType());
+    assertEquals(StringPool.US_ASCII.toLowerCase(), msg1.getEncoding());
 
-		msg2 = messages.get(1);
-		assertTrue(msg2.getContent().contains("test</TITLE>"));
-		assertEquals("text/html", msg2.getMimeType());
-		assertEquals("us-ascii", msg2.getEncoding());
+    msg2 = messages.get(1);
+    assertTrue(msg2.getContent().contains("test</TITLE>"));
+    assertEquals(MimeTypes.MIME_TEXT_HTML, msg2.getMimeType());
+    assertEquals(StringPool.US_ASCII.toLowerCase(), msg2.getEncoding());
 
-		attachments = email.getAttachments();
-		assertNull(attachments);
+    attachments = email.getAttachments();
+    assertNotNull(attachments);
+    assertTrue(attachments.isEmpty());
 
-		attachedMessages = email.getAttachedMessages();
-		assertNull(attachedMessages);
-	}
+    attachedMessages = email.getAttachedMessages();
+    assertNotNull(attachedMessages);
+    assertTrue(attachedMessages.isEmpty());
+  }
 
-	@Test
-	void testParseEMLCyrilic() throws FileNotFoundException, MessagingException, UnsupportedEncodingException {
-		File emlFile = new File(testDataRoot, "cyrilic.eml");
+  @Test
+  void testParseEMLCyrilic() throws FileNotFoundException, MessagingException {
+    final File emlFile = new File(testDataRoot, "cyrilic.eml");
 
-		ReceivedEmail email = EMLParser.create().parse(emlFile);
+    final ReceivedEmail email = EMLParser.create().parse(emlFile);
 
-		assertEquals("Tijana <tijan@gmail.com>", email.getFrom().toString());
-		assertEquals("testapp1@esolut.ions", email.getTo()[0].toString());
-		assertEquals("testtest", email.getSubject());
+    assertEquals("Tijana <tijan@gmail.com>", email.getFrom().toString());
+    assertEquals("testapp1@esolut.ions", email.getTo()[0].toString());
+    assertEquals("testtest", email.getSubject());
 
-		List<EmailMessage> messages = email.getAllMessages();
+    final List<EmailMessage> messages = email.getAllMessages();
 
-		assertEquals(2, messages.size());
+    assertEquals(2, messages.size());
 
-		assertEquals("text/plain", messages.get(0).getMimeType());
-		assertEquals("", messages.get(0).getContent().trim());
+    assertEquals(MimeTypes.MIME_TEXT_PLAIN, messages.get(0).getMimeType());
+    assertEquals("", messages.get(0).getContent().trim());
 
-		assertEquals("text/html", messages.get(1).getMimeType());
-		assertEquals("<div dir=\"ltr\"><br></div>", messages.get(1).getContent().trim());
+    assertEquals(MimeTypes.MIME_TEXT_HTML, messages.get(1).getMimeType());
+    assertEquals("<div dir=\"ltr\"><br></div>", messages.get(1).getContent().trim());
 
-		List<EmailAttachment> attachments = email.getAttachments();
+    final List<EmailAttachment<? extends DataSource>> attachments = email.getAttachments();
 
-		assertEquals(1, attachments.size());
+    assertEquals(1, attachments.size());
 
-		EmailAttachment att = attachments.get(0);
+    final EmailAttachment att = attachments.get(0);
 
-		assertEquals("Copy of РЕКРЕАТИВНА ЕСТЕТСКА ГИМНАСТИКА-флајер - 4.docx", att.getName());
-	}
+    assertEquals("Copy of РЕКРЕАТИВНА ЕСТЕТСКА ГИМНАСТИКА-флајер - 4.docx", att.getName());
+  }
 
-	@Test
-	void testSimpleEML() throws FileNotFoundException, MessagingException {
-		File emlFile = new File(testDataRoot, "simple.eml");
+  @Test
+  void testSimpleEML() throws FileNotFoundException, MessagingException {
+    final File emlFile = new File(testDataRoot, "simple.eml");
 
-		ReceivedEmail email = EMLParser.create().parse(emlFile);
+    final ReceivedEmail email = EMLParser.create().parse(emlFile);
 
-		assertEquals("sender@emailhost.com", email.getFrom().toString());
-		assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
-		assertEquals("Email subject", email.getSubject());
+    assertEquals("sender@emailhost.com", email.getFrom().toString());
+    assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
+    assertEquals("Email subject", email.getSubject());
 
-		List<EmailMessage> messages = email.getAllMessages();
+    final List<EmailMessage> messages = email.getAllMessages();
 
-		assertEquals(1, messages.size());
+    assertEquals(1, messages.size());
 
-		assertEquals("text/html", messages.get(0).getMimeType());
-		assertEquals("<p><strong>Project Name: Some Project and the body continues...</p>", messages.get(0).getContent().trim());
+    assertEquals(MimeTypes.MIME_TEXT_HTML, messages.get(0).getMimeType());
+    assertEquals("<p><strong>Project Name: Some Project and the body continues...</p>", messages.get(0).getContent().trim());
 
-		List<EmailAttachment> attachments = email.getAttachments();
+    final List<EmailAttachment<? extends DataSource>> attachments = email.getAttachments();
 
-		assertEquals(2, attachments.size());
+    assertEquals(2, attachments.size());
 
-		EmailAttachment att = attachments.get(0);
-		assertEquals("AM22831 Cover Sheet.pdf", att.getName());
+    EmailAttachment att = attachments.get(0);
+    assertEquals("AM22831 Cover Sheet.pdf", att.getName());
 
-		att = attachments.get(1);
-		assertEquals("AM22831 Manufacturing Status.xls", att.getName());
-	}
+    att = attachments.get(1);
+    assertEquals("AM22831 Manufacturing Status.xls", att.getName());
+  }
 
-	@Test
-	void testSimpleNullEML() throws FileNotFoundException, MessagingException {
-		File emlFile = new File(testDataRoot, "simple-null.eml");
+  @Test
+  void testSimpleNullEML() throws FileNotFoundException, MessagingException {
+    final File emlFile = new File(testDataRoot, "simple-null.eml");
 
-		ReceivedEmail email = EMLParser.create().parse(emlFile);
+    final ReceivedEmail email = EMLParser.create().parse(emlFile);
 
-		assertNull(email.getFrom());
-		assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
-		assertEquals("Email subject", email.getSubject());
+    assertNull(email.getFrom());
+    assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
+    assertEquals("Email subject", email.getSubject());
 
-		List<EmailMessage> messages = email.getAllMessages();
+    final List<EmailMessage> messages = email.getAllMessages();
 
-		assertEquals(1, messages.size());
+    assertEquals(1, messages.size());
 
-		assertEquals("text/html", messages.get(0).getMimeType());
-		assertEquals("<p><strong>Project Name: Some Project and the body continues...</p>", messages.get(0).getContent().trim());
+    assertEquals(MimeTypes.MIME_TEXT_HTML, messages.get(0).getMimeType());
+    assertEquals("<p><strong>Project Name: Some Project and the body continues...</p>", messages.get(0).getContent().trim());
 
-		List<EmailAttachment> attachments = email.getAttachments();
+    final List<EmailAttachment<? extends DataSource>> attachments = email.getAttachments();
 
-		assertEquals(2, attachments.size());
+    assertEquals(2, attachments.size());
 
-		EmailAttachment att = attachments.get(0);
-		assertEquals("no-name.pdf", att.getName());
+    EmailAttachment att = attachments.get(0);
+    assertEquals("no-name.pdf", att.getName());
 
-		att = attachments.get(1);
-		assertEquals("no-name.excel", att.getName());
-	}
+    att = attachments.get(1);
+    assertEquals("no-name.excel", att.getName());
+  }
 }
