@@ -25,46 +25,53 @@
 
 package jodd.mail;
 
+import javax.mail.internet.MimeUtility;
+
 /**
  * Default module configuration.
  */
 public class JoddMailDefaults {
 
-	private boolean mailMimeEncodefilename = true;
-	private boolean mailMimeDecodefilename = true;
+  private boolean mailMimeEncodefilename = true;
+  private boolean mailMimeDecodefilename = true;
 
-	/**
-	 * @see #setMailMimeEncodefilename(boolean)
-	 */
-	public boolean isMailMimeEncodefilename() {
-		return mailMimeEncodefilename;
-	}
+  /**
+   * @return {@code true} if mailMimeEncodefilename is {@code true}.
+   * @see #setMailMimeEncodefilename(boolean)
+   */
+  public boolean isMailMimeEncodefilename() {
+    return mailMimeEncodefilename;
+  }
 
-	/**
-	 * If set to "true", the setFileName method uses the MimeUtility method encodeText to
-	 * encode any non-ASCII characters in the filename. Note that this encoding violates
-	 * the MIME specification, but is useful for interoperating with some mail clients
-	 * that use this convention. The default is true.
-	 */
-	public void setMailMimeEncodefilename(boolean mailMimeEncodefilename) {
-		this.mailMimeEncodefilename = mailMimeEncodefilename;
-	}
+  /**
+   * Sets mailMimeEncodefilename variable.
+   *
+   * @param mailMimeEncodefilename If set to {@code true}, the setFileName method uses the
+   *                               {@link MimeUtility#encodeText(String)} to encode any non-ASCII characters in the filename.
+   *                               Note that this encoding violates the MIME specification, but is useful for interoperating
+   *                               with some mail clients that use this convention. The default is {@code true}.
+   */
+  public void setMailMimeEncodefilename(final boolean mailMimeEncodefilename) {
+    this.mailMimeEncodefilename = mailMimeEncodefilename;
+  }
 
-	/**
-	 * @see #setMailMimeDecodefilename(boolean)
-	 */
-	public boolean isMailMimeDecodefilename() {
-		return mailMimeDecodefilename;
-	}
+  /**
+   * @see #setMailMimeDecodefilename(boolean)
+   */
+  public boolean isMailMimeDecodefilename() {
+    return mailMimeDecodefilename;
+  }
 
-	/**
-	 * If set to "true", the getFileName method uses the MimeUtility method decodeText
-	 * to decode any non-ASCII characters in the filename. Note that this decoding
-	 * violates the MIME specification, but is useful for interoperating with some
-	 * mail clients that use this convention. The default is true.
-	 */
-	public void setMailMimeDecodefilename(boolean mailMimeDecodefilename) {
-		this.mailMimeDecodefilename = mailMimeDecodefilename;
-	}
+  /**
+   * Sets mailMimeDecodefilename variable.
+   *
+   * @param mailMimeDecodefilename If set to {@code true}, the getFileName method uses the
+   *                               {@link MimeUtility#decodeText(String)} to decode any non-ASCII characters in the filename.
+   *                               Note that this decoding violates the MIME specification, but is useful for interoperating
+   *                               with some mail clients that use this convention. The default is true.
+   */
+  public void setMailMimeDecodefilename(final boolean mailMimeDecodefilename) {
+    this.mailMimeDecodefilename = mailMimeDecodefilename;
+  }
 
 }

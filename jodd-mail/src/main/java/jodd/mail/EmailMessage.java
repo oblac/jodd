@@ -26,54 +26,78 @@
 package jodd.mail;
 
 import jodd.core.JoddCore;
+import jodd.core.JoddCoreDefaults;
 
 /**
- * Represents e-mail message: string with mime type and encoding.
+ * Represents email message including the mime type and encoding.
  */
 public class EmailMessage {
 
-	private final String content;
-	private final String mimeType;
-	private final String encoding;
+  /**
+   * The content as a {@link String}.
+   */
+  private final String content;
 
-	/**
-	 * Defines email content.
-	 */
-	public EmailMessage(String content, String mimeType, String encoding) {
-		this.content = content;
-		this.mimeType = mimeType;
-		this.encoding = encoding;
-	}
+  /**
+   * The MIME type as a as a {@link String}.
+   */
+  private final String mimeType;
 
-	/**
-	 * Defines UTF-8 email content.
-	 */
-	public EmailMessage(String content, String mimeType) {
-		this.content = content;
-		this.mimeType = mimeType;
-		this.encoding = JoddCore.get().defaults().getEncoding();
-	}
+  /**
+   * The encoding as a {@link String}.
+   */
+  private final String encoding;
 
-	// ---------------------------------------------------------------- getters
+  /**
+   * Defines email content.
+   *
+   * @param content  The content as a {@link String}.
+   * @param mimeType The MIME type as a as a {@link String}.
+   * @param encoding The encoding as a {@link String}.
+   */
+  public EmailMessage(final String content, final String mimeType, final String encoding) {
+    this.content = content;
+    this.mimeType = mimeType;
+    this.encoding = encoding;
+  }
 
-	/**
-	 * Returns message content.
-	 */
-	public String getContent() {
-		return content;
-	}
+  /**
+   * Uses UTF-8 email content by default (as per {@link JoddCoreDefaults#getEncoding()}.
+   *
+   * @param content  The content as a {@link String}.
+   * @param mimeType The MIME type as a as a {@link String}.
+   * @see JoddCoreDefaults#getEncoding()
+   */
+  public EmailMessage(final String content, final String mimeType) {
+    this(content, mimeType, JoddCore.get().defaults().getEncoding());
+  }
 
-	/**
-	 * Returns message mime type.
-	 */
-	public String getMimeType() {
-		return mimeType;
-	}
+  // ---------------------------------------------------------------- getters
 
-	/**
-	 * Returns message encoding.
-	 */
-	public String getEncoding() {
-		return encoding;
-	}
+  /**
+   * Returns message content.
+   *
+   * @return {@link String} containing the message content.
+   */
+  public String getContent() {
+    return content;
+  }
+
+  /**
+   * Returns message mime type.
+   *
+   * @return {@link String} containing the message mime type.
+   */
+  public String getMimeType() {
+    return mimeType;
+  }
+
+  /**
+   * Returns message encoding.
+   *
+   * @return {@link String} containing the message encoding.
+   */
+  public String getEncoding() {
+    return encoding;
+  }
 }
