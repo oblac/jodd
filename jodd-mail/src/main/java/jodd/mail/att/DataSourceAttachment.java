@@ -30,22 +30,12 @@ import jodd.mail.EmailAttachment;
 import javax.activation.DataSource;
 
 /**
- * Generic <code>DataSource</code> adapter for attachments.
+ * @deprecated Use {@link jodd.mail.EmailAttachmentBuilder} instead.
  */
-public class DataSourceAttachment extends EmailAttachment {
+@Deprecated
+public class DataSourceAttachment<T extends DataSource> extends EmailAttachment<T> {
 
-	protected final DataSource dataSource;
-
-	public DataSourceAttachment(DataSource dataSource, String name, String contentId, boolean inline) {
-		super(name, contentId, inline);
-		this.dataSource = dataSource;
-	}
-
-	/**
-	 * Returns wrapped data source.
-	 */
-	@Override
-	public DataSource getDataSource() {
-		return dataSource;
-	}
+  public DataSourceAttachment(final T dataSource, final String name, final String contentId, final boolean isInline) {
+    super(name, contentId, isInline, dataSource);
+  }
 }
