@@ -25,10 +25,10 @@
 
 package jodd.mail;
 
+import jodd.core.JoddCore;
+import jodd.core.JoddCoreDefaults;
 import jodd.io.StreamUtil;
-import jodd.util.StringPool;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -38,137 +38,101 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 
 /**
  * Developer-friendly class for parsing EML files.
  */
-public class EMLParser {
+public class EMLParser extends EMLProperties<EMLParser> {
 
-	public static EMLParser create() {
-		return new EMLParser();
-	}
+  public static EMLParser create() {
+    return new EMLParser();
+  }
 
-	protected Session session;
-	protected Properties properties;
+  @Override
+  EMLParser getThis() {
+    return this;
+  }
 
-	/**
-	 * Assigns custom session. Any property will be ignored.
-	 */
-	public EMLParser session(Session session) {
-		this.session = session;
-		return this;
-	}
+  /**
+   * Parses EML with provided EML content.
+   *
+   * @param emlContent {@link String} with EML content.
+   * @param charset    String with charset.
+   * @return {@link ReceivedEmail}.
+   * @throws UnsupportedEncodingException if the named charset is not supported.
+   * @throws MessagingException           if {@link MimeMessage} cannot be created.
+   * @see #parse(byte[])
+   */
+  public ReceivedEmail parse(final String emlContent, final String charset) throws
+      UnsupportedEncodingException, MessagingException {
+    final byte[] bytes = emlContent.getBytes(charset);
+    return parse(bytes);
+  }
 
-	/**
-	 * Uses default session. Any property will be ignored.
-	 */
-	public EMLParser defaultSession() {
-		this.session = Session.getDefaultInstance(System.getProperties());
-		return this;
-	}
+  /**
+   * Parses EML with provided EML content.
+   *
+   * @param emlContent {@link String} with EML content.
+   * @return {@link ReceivedEmail}.
+   * @throws MessagingException if {@link MimeMessage} cannot be created.
+   * @see #parse(String, String)
+   * @see JoddCoreDefaults#getEncoding()
+   */
+  public ReceivedEmail parse(final String emlContent) throws MessagingException {
+    try {
+      return parse(emlContent, JoddCore.get().defaults().getEncoding());
+    } catch (final UnsupportedEncodingException ignore) {
+      return null;
+    }
+  }
 
-	/**
-	 * Copies properties from given set. If session is already created,
-	 * exception will be thrown.
-	 */
-	public EMLParser set(Properties properties) {
-		initProperties();
+  /**
+   * Parses EML with provided EML content.
+   *
+   * @param content byte[] with EML content.
+   * @return {@link ReceivedEmail}.
+   * @throws MessagingException if {@link MimeMessage} cannot be created.
+   * @see #parse(InputStream)
+   */
+  public ReceivedEmail parse(final byte[] content) throws MessagingException {
+    return parse(new ByteArrayInputStream(content));
+  }
 
-		this.properties.putAll(properties);
+  /**
+   * Starts EML parsing with provided EML {@link File}.
+   *
+   * @param emlFile {@link File} with EML content.
+   * @return {@link ReceivedEmail}.
+   * @throws FileNotFoundException if emlFile cannot be found
+   * @throws MessagingException    if {@link MimeMessage} cannot be created.
+   * @see #parse(InputStream)
+   */
+  public ReceivedEmail parse(final File emlFile) throws FileNotFoundException, MessagingException {
+    final FileInputStream fileInputStream = new FileInputStream(emlFile);
+    try {
+      return parse(fileInputStream);
+    } finally {
+      StreamUtil.close(fileInputStream);
+    }
+  }
 
-		return this;
-	}
+  /**
+   * Parses the EML content. If {@link Session} is not created, default one will be used.
+   *
+   * @param emlContentInputStream {@link InputStream} containing the EML content.
+   * @return {@link ReceivedEmail}.
+   * @throws MessagingException if {@link MimeMessage} cannot be created.
+   */
+  protected ReceivedEmail parse(final InputStream emlContentInputStream) throws MessagingException {
+    if (getSession() == null) {
+      createSession(getProperties());
+    }
 
-	/**
-	 * Sets property for the session. If session is already created, exception
-	 * will be thrown.
-	 */
-	public EMLParser set(String name, String value) {
-		initProperties();
-
-		properties.setProperty(name, value);
-
-		return this;
-	}
-
-	/**
-	 * Parses EML with provided EML content.
-	 */
-	public ReceivedEmail parse(String emlContent, String charset) throws UnsupportedEncodingException, MessagingException {
-		byte[] bytes = emlContent.getBytes(charset);
-		return parse(bytes);
-	}
-
-	/**
-	 * Parses EML with provided EML content.
-	 */
-	public ReceivedEmail parse(String emlContent) throws MessagingException {
-		try {
-			return parse(emlContent, StringPool.UTF_8);
-		}
-		catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
-	}
-
-	/**
-	 * Parses EML with provided EML content.
-	 */
-	public ReceivedEmail parse(byte[] content) throws MessagingException {
-		return parse(new ByteArrayInputStream(content));
-	}
-	/**
-	 * Starts EML parsing with provided EML file.
-	 */
-	public ReceivedEmail parse(File emlFile) throws FileNotFoundException, MessagingException {
-		FileInputStream fileInputStream = new FileInputStream(emlFile);
-		try {
-			return parse(fileInputStream);
-		}
-		finally {
-			StreamUtil.close(fileInputStream);
-		}
-	}
-
-	/**
-	 * Parses the EML content. If session is not created, default one
-	 * will be used.
-	 */
-	protected ReceivedEmail parse(InputStream emlContentInputStream) throws MessagingException {
-		if (session == null) {
-			session = createSession(properties);
-		}
-
-		Message message;
-		try {
-			message = new MimeMessage(session, emlContentInputStream);
-		} finally {
-			StreamUtil.close(emlContentInputStream);
-		}
-
-		return new ReceivedEmail(message);
-	}
-
-	protected void initProperties() {
-		if (session != null) {
-			throw new MailException("Can't set properties after session is assigned");
-		}
-
-		if (properties == null) {
-			properties = new Properties();
-		}
-	}
-
-	/**
-	 * Creates new session with or without custom properties.
-	 */
-	protected Session createSession(Properties properties) {
-		if (properties == null) {
-			properties = System.getProperties();
-		}
-
-		return Session.getInstance(properties);
-	}
-
+    try {
+      final MimeMessage message = new MimeMessage(getSession(), emlContentInputStream);
+      return new ReceivedEmail(message);
+    } finally {
+      StreamUtil.close(emlContentInputStream);
+    }
+  }
 }

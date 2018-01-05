@@ -36,111 +36,91 @@ import static jodd.util.StringPool.TRUE;
 /**
  * Represents simple plain POP server for sending emails.
  */
-public class Pop3Server implements ReceiveMailSessionProvider {
+public class Pop3Server extends MailServer<ReceiveMailSession> {
 
-	protected static final String MAIL_POP3_PORT = "mail.pop3.port";
-	protected static final String MAIL_POP3_HOST = "mail.pop3.host";
-	protected static final String MAIL_POP3_AUTH = "mail.pop3.auth";
+  protected static final String MAIL_POP3_PORT = "mail.pop3.port";
+  protected static final String MAIL_POP3_HOST = "mail.pop3.host";
+  protected static final String MAIL_POP3_AUTH = "mail.pop3.auth";
 
-	protected static final String PROTOCOL_POP3 = "pop3";
+  protected static final String PROTOCOL_POP3 = "pop3";
 
-	protected static final int DEFAULT_POP3_PORT = 110;
+  /**
+   * Default POP3 port
+   */
+  protected static final int DEFAULT_POP3_PORT = 110;
 
-	protected final String host;
-	protected final int port;
-	protected final Authenticator authenticator;
-	protected final Properties sessionProperties;
+  /**
+   * {@inheritDoc}
+   */
+  Pop3Server(final String host, final int port, final Authenticator authenticator) {
+    super(host, port, authenticator);
+  }
 
-	/**
-	 * POP3 server defined with its host and default port.
-	 */
-	public Pop3Server(String host) {
-		this(host, DEFAULT_POP3_PORT, null);
-	}
-	/**
-	 * POP3 server defined with its host and port.
-	 */
-	public Pop3Server(String host, int port) {
-		this(host, port, null);
-	}
+  @Override
+  protected Properties createSessionProperties() {
+    final Properties props = new Properties();
+    props.setProperty(MAIL_POP3_HOST, getHost());
+    props.setProperty(MAIL_POP3_PORT, String.valueOf(getPort()));
+    if (getAuthenticator() != null) {
+      props.setProperty(MAIL_POP3_AUTH, TRUE);
+    }
+    return props;
+  }
 
-	public Pop3Server(String host, Authenticator authenticator) {
-		this(host, DEFAULT_POP3_PORT, authenticator);
-	}
+  /**
+   * Returns email store.
+   *
+   * @return {@link com.sun.mail.pop3.POP3Store}
+   * @throws NoSuchProviderException If a provider for the given protocol is not found.
+   * @see EmailUtil#getStore(Session, String)
+   */
+  protected Store getStore(final Session session) throws NoSuchProviderException {
+    return EmailUtil.getStore(session, PROTOCOL_POP3);
+  }
 
-	public Pop3Server(String host, int port, String username, String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
+  /**
+   * {@inheritDoc}
+   *
+   * @return {@link ReceiveMailSession}
+   * @see EmailUtil#createSession(String, Properties, Authenticator)
+   */
+  @Override
+  public ReceiveMailSession createSession() {
+    return EmailUtil.createSession(PROTOCOL_POP3, getSessionProperties(), getAuthenticator());
+  }
 
-	/**
-	 * SMTP server defined with its host and authentication.
-	 */
-	public Pop3Server(String host, int port, Authenticator authenticator) {
-		this.host = host;
-		this.port = port;
-		this.authenticator = authenticator;
-		sessionProperties = createSessionProperties();
-	}
+  // ---------------------------------------------------------------- deprecated
 
-	/**
-	 * Prepares mail session properties.
-	 */
-	protected Properties createSessionProperties() {
-		Properties props = new Properties();
-		props.setProperty(MAIL_POP3_HOST, host);
-		props.setProperty(MAIL_POP3_PORT, String.valueOf(port));
-		if (authenticator != null) {
-			props.setProperty(MAIL_POP3_AUTH, TRUE);
-		}
-		return props;
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public Pop3Server(final String host) {
+    this(host, DEFAULT_POP3_PORT, null);
+  }
 
-	public Pop3Server setProperty(String name, String value) {
-		sessionProperties.setProperty(name, value);
-		return this;
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public Pop3Server(final String host, final int port) {
+    this(host, port, null);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ReceiveMailSession createSession() {
-		Session session = Session.getInstance(sessionProperties, authenticator);
-		Store store;
-		try {
-			store = getStore(session);
-		} catch (NoSuchProviderException nspex) {
-			throw new MailException("Failed to create POP3 session", nspex);
-		}
-		return new ReceiveMailSession(session, store);
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public Pop3Server(final String host, final Authenticator authenticator) {
+    this(host, DEFAULT_POP3_PORT, authenticator);
+  }
 
-	/**
-	 * Returns email store.
-	 */
-	protected Store getStore(Session session) throws NoSuchProviderException {
-		return session.getStore(PROTOCOL_POP3);
-	}
-
-	// ---------------------------------------------------------------- getters
-
-	/**
-	 * Returns POP host address.
-	 */
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * Returns authenticator.
-	 */
-	public Authenticator getAuthenticator() {
-		return authenticator;
-	}
-
-	/**
-	 * Returns current port.
-	 */
-	public int getPort() {
-		return port;
-	}
+  /**
+   * @deprecated {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
+   */
+  @Deprecated
+  public Pop3Server setProperty(final String name, final String value) {
+    getSessionProperties().setProperty(name, value);
+    return this;
+  }
 }

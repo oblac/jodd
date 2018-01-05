@@ -32,30 +32,35 @@ import jodd.Jodd;
  */
 public class JoddMail {
 
-	private static final JoddMail instance = new JoddMail();
+  private static final JoddMail instance = new JoddMail();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddMail get() {
-		return instance;
-	}
+  /**
+   * Returns the module instance.
+   *
+   * @return {@link JoddMail}.
+   */
+  public static JoddMail get() {
+    return instance;
+  }
 
-	static {
-		Jodd.initModule();
-	}
+  static {
+    Jodd.initModule();
+  }
 
-	public static void init() {}
+  public static void init() {
+  }
 
-	// ---------------------------------------------------------------- instance
+  // ---------------------------------------------------------------- instance
 
-	private JoddMailDefaults defaults = new JoddMailDefaults();
+  private final JoddMailDefaults defaults = new JoddMailDefaults();
 
-	/**
-	 * Returns defaults module configuration.
-	 */
-	public JoddMailDefaults defaults() {
-		return defaults;
-	}
+  /**
+   * Returns defaults module configuration.
+   *
+   * @return {@link JoddMailDefaults}.
+   */
+  public JoddMailDefaults defaults() {
+    return defaults;
+  }
 
 }

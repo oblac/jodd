@@ -28,42 +28,25 @@ package jodd.mail.att;
 import jodd.mail.EmailAttachment;
 import jodd.mail.MailException;
 
-import javax.activation.DataSource;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * <code>InputStream</code> {@link EmailAttachment email attachment}.
+ * @deprecated Use {@link jodd.mail.EmailAttachmentBuilder} instead.
  */
-public class InputStreamAttachment extends EmailAttachment {
+@Deprecated
+public class InputStreamAttachment extends EmailAttachment<ByteArrayDataSource> {
 
-	protected final InputStream inputStream;
-	protected final String contentType;
+  public InputStreamAttachment(final InputStream inputStream, final String contentType, final String name, final String contentId, final boolean inline) {
+    super(name, contentId, inline, getByteArrayDataSource(inputStream, contentType));
+  }
 
-	public InputStreamAttachment(InputStream inputStream, String contentType, String name, String contentId, boolean inline) {
-		super(name, contentId, inline);
-		this.inputStream = inputStream;
-		this.contentType = contentType;
-	}
-
-	/**
-	 * Returns <code>ByteArrayDataSource</code>.
-	 */
-	@Override
-	public DataSource getDataSource() {
-		try {
-			return new ByteArrayDataSource(inputStream, contentType);
-		} catch (IOException ioex) {
-			throw new MailException(ioex);
-		}
-	}
-
-	/**
-	 * Returns content type.
-	 */
-	public String getContentType() {
-		return contentType;
-	}
-
+  private static ByteArrayDataSource getByteArrayDataSource(final InputStream inputStream, final String contentType) throws MailException {
+    try {
+      return new ByteArrayDataSource(inputStream, contentType);
+    } catch (final IOException ioexc) {
+      throw new MailException(ioexc);
+    }
+  }
 }

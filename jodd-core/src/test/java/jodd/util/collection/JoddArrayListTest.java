@@ -53,7 +53,7 @@ class JoddArrayListTest {
 	void testGrowCases1() {
 		JoddArrayList<String> jal0 = new JoddArrayList<>();
 
-		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
+		JoddArrayList<String> jal = jal0.clone();
 		jal.add("1");
 
 		assertEquals(1, jal.size());
@@ -62,7 +62,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.addFirst("1");
 
 		assertEquals(1, jal.size());
@@ -71,14 +71,14 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		try {
 			jal.removeFirst();
 			fail("error");
 		} catch (Exception ignore) {
 		}
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		try {
 			jal.removeLast();
 			fail("error");
@@ -105,7 +105,7 @@ class JoddArrayListTest {
 		assertEquals(2, jal0.start);
 		assertEquals(5, jal0.end);
 
-		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
+		JoddArrayList<String> jal = jal0.clone();
 		jal.add("1");
 
 		assertEquals(4, jal.size());
@@ -114,7 +114,7 @@ class JoddArrayListTest {
 		assertEquals(2, jal.start);
 		assertEquals(6, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.addFirst("1");
 
 		assertEquals(4, jal.size());
@@ -123,7 +123,7 @@ class JoddArrayListTest {
 		assertEquals(1, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeFirst();
 
 		assertEquals(2, jal.size());
@@ -132,7 +132,7 @@ class JoddArrayListTest {
 		assertEquals(3, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeLast();
 
 		assertEquals(2, jal.size());
@@ -161,7 +161,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal0.start);
 		assertEquals(9, jal0.end);
 
-		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
+		JoddArrayList<String> jal = jal0.clone();
 		jal.add("1");
 
 		assertEquals(6, jal.size());
@@ -170,7 +170,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(10, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.addFirst("1");
 
 		assertEquals(6, jal.size());
@@ -179,7 +179,7 @@ class JoddArrayListTest {
 		assertEquals(3, jal.start);
 		assertEquals(9, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeFirst();
 
 		assertEquals(4, jal.size());
@@ -188,7 +188,7 @@ class JoddArrayListTest {
 		assertEquals(5, jal.start);
 		assertEquals(9, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeLast();
 
 		assertEquals(4, jal.size());
@@ -217,7 +217,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal0.start);
 		assertEquals(5, jal0.end);
 
-		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
+		JoddArrayList<String> jal = jal0.clone();
 		jal.add("1");
 
 		assertEquals(2, jal.size());
@@ -226,7 +226,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(6, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.addFirst("1");
 
 		assertEquals(2, jal.size());
@@ -235,7 +235,7 @@ class JoddArrayListTest {
 		assertEquals(3, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeFirst();
 
 		assertEquals(0, jal.size());
@@ -244,7 +244,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(4, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeLast();
 
 		assertEquals(0, jal.size());
@@ -273,7 +273,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal0.start);
 		assertEquals(6, jal0.end);
 
-		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
+		JoddArrayList<String> jal = jal0.clone();
 		jal.add("1");
 
 		assertEquals(3, jal.size());
@@ -282,7 +282,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(7, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.addFirst("1");
 
 		assertEquals(3, jal.size());
@@ -291,7 +291,7 @@ class JoddArrayListTest {
 		assertEquals(3, jal.start);
 		assertEquals(6, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeFirst();
 
 		assertEquals(1, jal.size());
@@ -300,7 +300,7 @@ class JoddArrayListTest {
 		assertEquals(5, jal.start);
 		assertEquals(6, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeLast();
 
 		assertEquals(1, jal.size());
@@ -330,7 +330,7 @@ class JoddArrayListTest {
 		assertEquals(3, jal0.start);
 		assertEquals(5, jal0.end);
 
-		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
+		JoddArrayList<String> jal = jal0.clone();
 		jal.add("1");
 
 		assertEquals(3, jal.size());
@@ -339,7 +339,7 @@ class JoddArrayListTest {
 		assertEquals(3, jal.start);
 		assertEquals(6, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.addFirst("1");
 
 		assertEquals(3, jal.size());
@@ -348,7 +348,7 @@ class JoddArrayListTest {
 		assertEquals(2, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeFirst();
 
 		assertEquals(1, jal.size());
@@ -357,7 +357,7 @@ class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(5, jal.end);
 
-		jal = (JoddArrayList<String>) jal0.clone();
+		jal = jal0.clone();
 		jal.removeLast();
 
 		assertEquals(1, jal.size());
@@ -1099,7 +1099,7 @@ class JoddArrayListTest {
 
 		// list iterator specifics
 
-		ListIterator li = jal.listIterator(3);
+		ListIterator<String> li = jal.listIterator(3);
 
 		assertTrue(li.hasPrevious());
 		assertTrue(li.hasNext());
@@ -1124,7 +1124,7 @@ class JoddArrayListTest {
 		arrayList.add("<30>");
 		arrayList.add("<0>");
 		arrayList.add("<20>");
-		ListIterator li2 = arrayList.listIterator();
+		ListIterator<String> li2 = arrayList.listIterator();
 
 		assertFalse(li.hasPrevious());
 		assertFalse(li2.hasPrevious());
@@ -1184,7 +1184,7 @@ class JoddArrayListTest {
 
 	@Test
 	void testSpecialCase1() {
-		JoddArrayList jal = new JoddArrayList();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		jal.add(0, "0");
 		jal.add(jal.size() - 1, "1");

@@ -25,13 +25,6 @@
 
 package jodd.mail;
 
-/**
- * Create {@link jodd.mail.SendMailSession email seding sessions}.
- */
+@Deprecated
 public interface SendMailSessionProvider {
-
-	/**
-	 * Creates new sending mail session.
-	 */
-	SendMailSession createSession();
 }

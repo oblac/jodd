@@ -31,14 +31,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EMLComposerTest {
 
-	@Test
-	void testWriteSimpleEmail() {
-		Email email = Email.create().from("Joe@example.com").to("Pig@example.com").addText("Hello");
+  private static final String HELLO = "Hello";
 
-		String eml = EMLComposer.create().compose(email);
+  @Test
+  void testWriteSimpleEmail() {
+    final Email email = Email.create().setFrom("Joe@example.com").addTo("Pig@example.com").addText(HELLO);
 
-		assertTrue(eml.contains("From: Joe@example.com\r\n"));
-		assertTrue(eml.contains("To: Pig@example.com\r\n"));
-		assertTrue(eml.contains("Hello"));
-	}
+    final String eml = EMLComposer.create().compose(email);
+
+    assertTrue(eml.contains("From: Joe@example.com\r\n"));
+    assertTrue(eml.contains("To: Pig@example.com\r\n"));
+    assertTrue(eml.contains(HELLO));
+  }
 }

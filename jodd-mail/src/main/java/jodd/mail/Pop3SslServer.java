@@ -28,9 +28,9 @@ package jodd.mail;
 import com.sun.mail.pop3.POP3SSLStore;
 import jodd.util.StringPool;
 
-import javax.mail.NoSuchProviderException;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.URLName;
 import java.util.Properties;
 
@@ -39,42 +39,64 @@ import java.util.Properties;
  */
 public class Pop3SslServer extends Pop3Server {
 
-	protected static final String MAIL_POP3_SOCKET_FACTORY_PORT 	= "mail.pop3.socketFactory.port";
-	protected static final String MAIL_POP3_SOCKET_FACTORY_CLASS 	= "mail.pop3.socketFactory.class";
-	protected static final String MAIL_POP3_SOCKET_FACTORY_FALLBACK = "mail.pop3.socketFactory.fallback";
-	protected static final int DEFAULT_SSL_PORT = 995;
+  protected static final String MAIL_POP3_SOCKET_FACTORY_PORT = "mail.pop3.socketFactory.port";
+  protected static final String MAIL_POP3_SOCKET_FACTORY_CLASS = "mail.pop3.socketFactory.class";
+  protected static final String MAIL_POP3_SOCKET_FACTORY_FALLBACK = "mail.pop3.socketFactory.fallback";
+  protected static final int DEFAULT_SSL_PORT = 995;
 
-	protected final String username;
-	protected final String password;
+  /**
+   * {@inheritDoc}
+   */
+  Pop3SslServer(final String host, final int port, final Authenticator authenticator) {
+    super(host, port, authenticator);
+  }
 
-	public Pop3SslServer(String host, String username, String password) {
-		this(host, DEFAULT_SSL_PORT, username, password);
-	}
+  @Override
+  protected Properties createSessionProperties() {
+    final Properties props = super.getSessionProperties();
+    props.setProperty(MAIL_POP3_SOCKET_FACTORY_PORT, String.valueOf(getPort()));
+    props.setProperty(MAIL_POP3_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
+    props.setProperty(MAIL_POP3_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
+    return props;
+  }
 
-	public Pop3SslServer(String host, int port, String username, String password) {
-		super(host, port, username, password);
-		this.username = username;
-		this.password = password;
-	}
+  /**
+   * Returns email store.
+   *
+   * @param session {@link Session}
+   * @return {@link com.sun.mail.pop3.POP3SSLStore}
+   */
+  @Override
+  protected POP3SSLStore getStore(final Session session) {
+    final PasswordAuthentication pa = ((SimpleAuthenticator) getAuthenticator()).getPasswordAuthentication();
+    final URLName url = new URLName(PROTOCOL_POP3, getHost(), getPort(), "", pa.getUserName(), pa.getPassword());
+    return new POP3SSLStore(session, url);
+  }
 
-	@Override
-	protected Properties createSessionProperties() {
-		Properties props = new Properties();
-		props.setProperty(MAIL_POP3_PORT, String.valueOf(port));
-		props.setProperty(MAIL_POP3_SOCKET_FACTORY_PORT, String.valueOf(port));
-		props.setProperty(MAIL_POP3_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
-		props.setProperty(MAIL_POP3_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
-		return props;
-	}
+  // ---------------------------------------------------------------- deprecated
 
-	public Pop3SslServer setProperty(String name, String value) {
-		super.setProperty(name, value);
-		return this;
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public Pop3SslServer(final String host, final String username, final String password) {
+    this(host, DEFAULT_SSL_PORT, username, password);
+  }
 
-	@Override
-	protected Store getStore(Session session) throws NoSuchProviderException {
-		URLName url = new URLName(PROTOCOL_POP3, host, port, "", username, password);
-		return new POP3SSLStore(session, url);
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public Pop3SslServer(final String host, final int port, final String username, final String password) {
+    this(host, port, new SimpleAuthenticator(username, password));
+  }
+
+  /**
+   * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}
+   */
+  @Deprecated
+  public Pop3SslServer setProperty(final String name, final String value) {
+    getSessionProperties().setProperty(name, value);
+    return this;
+  }
 }

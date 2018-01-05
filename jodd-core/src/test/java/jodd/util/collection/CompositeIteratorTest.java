@@ -71,8 +71,8 @@ class CompositeIteratorTest {
 
 	@Test
 	void testRemoveWithOne() {
-		CompositeIterator compositeIterator = new CompositeIterator();
-		List list = createList(4);
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
+		List<Integer> list = createList(4);
 		compositeIterator.add(list.iterator());
 		int count = list.size();
 		while (compositeIterator.hasNext()) {
@@ -87,8 +87,8 @@ class CompositeIteratorTest {
 
 	@Test
 	void testNextWithTwo() {
-		CompositeIterator compositeIterator = new CompositeIterator();
-		List list = createList(4);
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
+		List<Integer> list = createList(4);
 		int count = list.size();
 		compositeIterator.add(list.iterator());
 		list = createList(4);
@@ -110,7 +110,7 @@ class CompositeIteratorTest {
 		List<Integer> list2 = createList(4);
 		int count = list1.size() + list2.size();
 
-		CompositeIterator compositeIterator = new CompositeIterator();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 
