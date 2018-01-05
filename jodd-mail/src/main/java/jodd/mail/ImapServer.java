@@ -25,6 +25,8 @@
 
 package jodd.mail;
 
+import jodd.util.StringPool;
+
 import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
@@ -34,113 +36,96 @@ import java.util.Properties;
 /**
  * IMAP Server.
  */
-public class ImapServer implements ReceiveMailSessionProvider {
+public class ImapServer extends MailServer<ReceiveMailSession> {
 
-	protected static final String MAIL_IMAP_PORT = "mail.imap.port";
-	protected static final String MAIL_IMAP_HOST = "mail.imap.host";
-	protected static final String MAIL_IMAP_PARTIALFETCH = "mail.imap.partialfetch";
+  protected static final String MAIL_IMAP_PORT = "mail.imap.port";
+  protected static final String MAIL_IMAP_HOST = "mail.imap.host";
+  protected static final String MAIL_IMAP_PARTIALFETCH = "mail.imap.partialfetch";
 
-	protected static final String PROTOCOL_IMAP = "imap";
+  protected static final String PROTOCOL_IMAP = "imap";
 
-	protected static final int DEFAULT_IMAP_PORT = 143;
+  /**
+   * Default IMAP port.
+   */
+  protected static final int DEFAULT_IMAP_PORT = 143;
 
-	protected final String host;
-	protected final int port;
-	protected final Authenticator authenticator;
-	protected final Properties sessionProperties;
+  /**
+   * {@inheritDoc}
+   */
+  ImapServer(final String host, final int port, final Authenticator authenticator) {
+    super(host, port, authenticator);
+  }
 
-	/**
-	 * POP3 server defined with its host and default port.
-	 */
-	public ImapServer(String host) {
-		this(host, DEFAULT_IMAP_PORT, null);
-	}
-	/**
-	 * POP3 server defined with its host and port.
-	 */
-	public ImapServer(String host, int port) {
-		this(host, port, null);
-	}
+  @Override
+  protected Properties createSessionProperties() {
+    final Properties props = new Properties();
+    props.setProperty(MAIL_IMAP_HOST, getHost());
+    props.setProperty(MAIL_IMAP_PORT, String.valueOf(getPort()));
+    props.setProperty(MAIL_IMAP_PARTIALFETCH, StringPool.FALSE);
+    return props;
+  }
 
-	public ImapServer(String host, Authenticator authenticator) {
-		this(host, DEFAULT_IMAP_PORT, authenticator);
-	}
+  /**
+   * Returns email store.
+   *
+   * @return {@link com.sun.mail.imap.IMAPStore}
+   * @throws NoSuchProviderException if a provider for the given protocol is not found.
+   * @see EmailUtil#getStore(Session, String)
+   */
+  protected Store getStore(final Session session) throws NoSuchProviderException {
+    return EmailUtil.getStore(session, PROTOCOL_IMAP);
+  }
 
-	public ImapServer(String host, int port, String username, String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
+  /**
+   * {@inheritDoc}
+   *
+   * @return {@link ReceiveMailSession}
+   */
+  @Override
+  public ReceiveMailSession createSession() {
+    return EmailUtil.createSession(PROTOCOL_IMAP, getSessionProperties(), getAuthenticator());
+  }
 
-	/**
-	 * SMTP server defined with its host and authentication.
-	 */
-	public ImapServer(String host, int port, Authenticator authenticator) {
-		this.host = host;
-		this.port = port;
-		this.authenticator = authenticator;
-		sessionProperties = createSessionProperties();
-	}
+  // ---------------------------------------------------------------- deprecated
 
-	/**
-	 * Prepares mail session properties.
-	 */
-	protected Properties createSessionProperties() {
-		Properties props = new Properties();
-		props.setProperty(MAIL_IMAP_HOST, host);
-		props.setProperty(MAIL_IMAP_PORT, String.valueOf(port));
-		props.setProperty(MAIL_IMAP_PARTIALFETCH, "false");
-		return props;
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public ImapServer(final String host) {
+    this(host, DEFAULT_IMAP_PORT, null);
+  }
 
-	/**
-	 * Sets the session property. May be set only before the session is
-	 * created.
-	 */
-	public ImapServer setProperty(String name, String value) {
-		sessionProperties.setProperty(name, value);
-		return this;
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public ImapServer(final String host, final int port) {
+    this(host, port, null);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ReceiveMailSession createSession() {
-		Session session = Session.getInstance(sessionProperties, authenticator);
-		Store store;
-		try {
-			store = getStore(session);
-		} catch (NoSuchProviderException nspex) {
-			throw new MailException("Failed to create IMAP session", nspex);
-		}
-		return new ReceiveMailSession(session, store);
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public ImapServer(final String host, final Authenticator authenticator) {
+    this(host, DEFAULT_IMAP_PORT, authenticator);
+  }
 
-	/**
-	 * Returns email store.
-	 */
-	protected Store getStore(Session session) throws NoSuchProviderException {
-		return session.getStore(PROTOCOL_IMAP);
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public ImapServer(final String host, final int port, final String username, final String password) {
+    this(host, port, new SimpleAuthenticator(username, password));
+  }
 
-	// ---------------------------------------------------------------- getters
-
-	/**
-	 * Returns POP host address.
-	 */
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * Returns authenticator.
-	 */
-	public Authenticator getAuthenticator() {
-		return authenticator;
-	}
-
-	/**
-	 * Returns current port.
-	 */
-	public int getPort() {
-		return port;
-	}
+  /**
+   * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
+   */
+  @Deprecated
+  public ImapServer setProperty(final String name, final String value) {
+    getSessionProperties().setProperty(name, value);
+    return this;
+  }
 }

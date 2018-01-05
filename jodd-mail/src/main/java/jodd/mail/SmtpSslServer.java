@@ -27,6 +27,7 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 
+import javax.mail.Authenticator;
 import java.util.Properties;
 
 /**
@@ -34,77 +35,116 @@ import java.util.Properties;
  */
 public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
 
-	public static final String MAIL_SMTP_STARTTLS_REQUIRED 		= "mail.smtp.starttls.required";
-	public static final String MAIL_SMTP_STARTTLS_ENABLE 		= "mail.smtp.starttls.enable";
-	public static final String MAIL_SMTP_SOCKET_FACTORY_PORT 	= "mail.smtp.socketFactory.port";
-	public static final String MAIL_SMTP_SOCKET_FACTORY_CLASS 	= "mail.smtp.socketFactory.class";
-	public static final String MAIL_SMTP_SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
+  public static final String MAIL_SMTP_STARTTLS_REQUIRED = "mail.smtp.starttls.required";
+  public static final String MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
+  public static final String MAIL_SMTP_SOCKET_FACTORY_PORT = "mail.smtp.socketFactory.port";
+  public static final String MAIL_SMTP_SOCKET_FACTORY_CLASS = "mail.smtp.socketFactory.class";
+  public static final String MAIL_SMTP_SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 
-	protected static final int DEFAULT_SSL_PORT = 465;
+  /**
+   * Default SMTP SSL port.
+   */
+  protected static final int DEFAULT_SSL_PORT = 465;
 
-	public static SmtpSslServer create(String host) {
-		return new SmtpSslServer(host, DEFAULT_SSL_PORT);
-	}
+  /**
+   * {@inheritDoc}
+   */
+  SmtpSslServer(final String host, final int port, final Authenticator authenticator) {
+    super(host, port, authenticator);
+  }
 
-	public static SmtpSslServer create(String host, int port) {
-		return new SmtpSslServer(host, port);
-	}
+  // ---------------------------------------------------------------- properties
 
-	public SmtpSslServer(String host) {
-		super(host, DEFAULT_SSL_PORT);
-	}
+  /**
+   * Defaults to {@code false}.
+   */
+  protected boolean startTlsRequired = false;
 
-	public SmtpSslServer(String host, int port) {
-		super(host, port);
-	}
+  /**
+   * Defaults to {@code false}. Google requires it to be false
+   */
+  protected boolean plaintextOverTLS = false;
 
-	// ---------------------------------------------------------------- properties
+  /**
+   * Sets <code>mail.smtp.starttls.required</code>.
+   *
+   * If the server doesn't support the STARTTLS command, or the command fails,
+   * the connect method will fail. Defaults to {@code false}.
+   *
+   * @param startTlsRequired If {@code true}, requires the use of the STARTTLS command.
+   * @return this
+   */
+  public SmtpSslServer startTlsRequired(final boolean startTlsRequired) {
+    this.startTlsRequired = startTlsRequired;
+    return this;
+  }
 
-	protected boolean startTlsRequired = false;
-	protected boolean plaintextOverTLS = false;		// google requires it to be false
+  /**
+   * When enabled, <code>MAIL_SMTP_SOCKET_FACTORY_CLASS</code> will be not set,
+   * and Plaintext Authentication over TLS will be enabled.
+   *
+   * @param plaintextOverTLS {@code true} when plain text authentication over TLS should be enabled.
+   * @return this
+   */
+  public SmtpSslServer plaintextOverTLS(final boolean plaintextOverTLS) {
+    this.plaintextOverTLS = plaintextOverTLS;
+    return this;
+  }
 
-	/**
-	 * Sets <code>mail.smtp.starttls.required</code> which according to
-	 * Java Mail API means: If true, requires the use of the STARTTLS command.
-	 * If the server doesn't support the STARTTLS command, or the command fails,
-	 * the connect method will fail. Defaults to <code>false</code>.
-	 */
-	public SmtpSslServer startTlsRequired(boolean startTlsRequired) {
-		this.startTlsRequired = startTlsRequired;
-		return this;
-	}
+  @Override
+  protected Properties createSessionProperties() {
+    final Properties props = super.createSessionProperties();
 
-	/**
-	 * When enabled, SMTP socket factory class will be not set,
-	 * and Plaintext Authentication over TLS will be enabled.
-	 */
-	public SmtpSslServer plaintextOverTLS(boolean plaintextOverTLS) {
-		this.plaintextOverTLS = plaintextOverTLS;
-		return this;
-	}
+    props.setProperty(MAIL_SMTP_STARTTLS_REQUIRED,
+        startTlsRequired ? StringPool.TRUE : StringPool.FALSE);
 
+    props.setProperty(MAIL_SMTP_STARTTLS_ENABLE, StringPool.TRUE);
 
-	@Override
-	protected Properties createSessionProperties() {
-		Properties props = super.createSessionProperties();
+    props.setProperty(MAIL_SMTP_SOCKET_FACTORY_PORT, String.valueOf(getPort()));
 
-		props.setProperty(MAIL_SMTP_STARTTLS_REQUIRED,
-			startTlsRequired ? StringPool.TRUE : StringPool.FALSE);
+    props.setProperty(MAIL_SMTP_PORT, String.valueOf(getPort()));
 
-		props.setProperty(MAIL_SMTP_STARTTLS_ENABLE, StringPool.TRUE);
+    if (!plaintextOverTLS) {
+      props.setProperty(MAIL_SMTP_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
+    }
 
-		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_PORT, String.valueOf(port));
+    props.setProperty(MAIL_SMTP_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
+    props.setProperty(MAIL_HOST, getHost());
 
-		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
+    return props;
+  }
 
-		if (!plaintextOverTLS) {
-			props.setProperty(MAIL_SMTP_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
-		}
+  // ---------------------------------------------------------------- deprecated
 
-		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
-		props.setProperty(MAIL_HOST, host);
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public static SmtpSslServer create(final String host) {
+    return MailServer.builder().host(host).port(DEFAULT_SSL_PORT).buildSmtpSsl();
+  }
 
-		return props;
-	}
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public static SmtpSslServer create(final String host, final int port) {
+    return MailServer.builder().host(host).port(port).buildSmtpSsl();
+  }
 
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public SmtpSslServer(final String host) {
+    super(host, DEFAULT_SSL_PORT, null);
+  }
+
+  /**
+   * @deprecated Use {@link MailServer#builder()}
+   */
+  @Deprecated
+  public SmtpSslServer(final String host, final int port) {
+    super(host, port, null);
+  }
 }
