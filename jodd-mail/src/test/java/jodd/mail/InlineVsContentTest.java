@@ -35,33 +35,36 @@ import static jodd.mail.EmailAttachment.attachment;
 @Disabled("Real email sending required")
 class InlineVsContentTest {
 
-	public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");
+  public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");
+  private static final String HOST = "mail.joddframework.org";
+  private static final String USERNAME = "t";
+  private static final String PASSWORD = "t";
 
-	@Test
-	void testSendEmailWithVariousAttachaments() {
-		SmtpServer smtpServer = SmtpSslServer
-			.create("mail.joddframework.org")
-			.authenticateWith("t", "t");
+  @Test
+  void testSendEmailWithVariousAttachaments() {
+    final SmtpSslServer smtpServer = MailServer.builder()
+        .host(HOST)
+        .auth(USERNAME, PASSWORD).buildSmtpSsl();
 
-		SendMailSession session = smtpServer.createSession();
-		session.open();
+    final SendMailSession session = smtpServer.createSession();
+    session.open();
 
-		Email email = Email.create()
-			.from("info@jodd.org")
-			.to("igor.spasic@gmail.com")
-			.subject("test-gmail")
-			.addText("Hello!")
-			.addHtml(
-				"<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\">"+
-					"<body><h1>Hey!</h1><img src='cid:jodd.png'>" +
-					"<h2>Hay!</h2><img src='cid:jodd2.png'>" +
-					"<h3></h3></body></html>")
+    final Email email = Email.create()
+        .setFrom("info@jodd.org")
+        .addTo("igor.spasic@gmail.com")
+        .setSubject("test-gmail")
+        .addText("Hello!")
+        .addHtml(
+            "<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\">" +
+                "<body><h1>Hey!</h1><img src='cid:jodd.png'>" +
+                "<h2>Hay!</h2><img src='cid:jodd2.png'>" +
+                "<h3></h3></body></html>")
 			.embed(attachment().bytes(new File(PNG)).setInline(false))
 			.embed(attachment().bytes(new File(PNG)).setContentId("jodd2.png").setInline(true))
 			.attach(attachment().file(PNG))
 			;
 
-		session.sendMail(email);
-		session.close();
+    session.sendMail(email);
+    session.close();
 	}
 }
