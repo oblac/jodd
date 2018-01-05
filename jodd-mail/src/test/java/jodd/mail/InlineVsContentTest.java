@@ -30,8 +30,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static jodd.mail.EmailAttachment.attachment;
-
 @Disabled("Real email sending required")
 class InlineVsContentTest {
 
@@ -59,12 +57,11 @@ class InlineVsContentTest {
                 "<body><h1>Hey!</h1><img src='cid:jodd.png'>" +
                 "<h2>Hay!</h2><img src='cid:jodd2.png'>" +
                 "<h3></h3></body></html>")
-			.embed(attachment().bytes(new File(PNG)).setInline(false))
-			.embed(attachment().bytes(new File(PNG)).setContentId("jodd2.png").setInline(true))
-			.attach(attachment().file(PNG))
-			;
+        .embedAttachment(EmailAttachment.builder().setContent(new File(PNG)).setInline(false))
+        .embedAttachment(EmailAttachment.builder().setContent(new File(PNG)).setContentId("jodd2.png").setInline(true))
+        .addAttachment(EmailAttachment.builder().setContent(PNG));
 
     session.sendMail(email);
     session.close();
-	}
+  }
 }
