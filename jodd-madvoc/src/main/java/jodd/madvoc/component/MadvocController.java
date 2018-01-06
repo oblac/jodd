@@ -37,14 +37,9 @@ import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.util.ClassUtil;
 
-import javax.servlet.AsyncContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Madvoc controller invokes actions for action path and renders action results.
@@ -70,27 +65,15 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	@PetiteInject
 	protected ServletContextProvider servletContextProvider;
 
-	protected Executor executor;
+	@PetiteInject
+	protected AsyncActionExecutor asyncActionExecutor;
+
 
 	@Override
 	public void ready() {
 		if (actionsManager.isAsyncModeOn()) {
-			executor = createAsyncExecutor();
+			asyncActionExecutor.start();
 		}
-	}
-
-	/**
-	 * Creates async executor.
-	 */
-	protected Executor createAsyncExecutor() {
-		MadvocConfig.AsyncConfig asyncConfig = madvocConfig.getAsyncConfig();
-
-		return new ThreadPoolExecutor(
-				asyncConfig.getCorePoolSize(),
-				asyncConfig.getMaximumPoolSize(),
-				asyncConfig.getKeepAliveTimeMillis(),
-				TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<>(asyncConfig.getQueueCapacity()));
 	}
 
 	/**
@@ -110,8 +93,6 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 * On first invoke, initializes the action runtime before further proceeding.
 	 */
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-		ActionRequest actionRequest = null;
-
 		boolean characterEncodingSet = false;
 
 		while (actionPath != null) {
@@ -158,7 +139,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				action = createAction(actionRuntime.actionClass());
 			}
 
-			actionRequest = createActionRequest(
+			final ActionRequest actionRequest = createActionRequest(
 				actionPath,
 				actionPathChunks,
 				actionRuntime,
@@ -168,8 +149,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 			// invoke and render
 			if (actionRuntime.async()) {
-				AsyncContext asyncContext = servletRequest.startAsync();
-				executor.execute(new ActionRequestInvoker(asyncContext, actionRequest));
+				asyncActionExecutor.invoke(actionRequest);
 			} else {
 				actionRequest.invoke();
 			}
@@ -177,34 +157,6 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			actionPath = actionRequest.nextActionPath();
 		}
 		return null;
-	}
-
-	/**
-	 * Async request invoker.
-	 */
-	public static class ActionRequestInvoker implements Runnable {
-
-		private final ActionRequest actionRequest;
-		private final AsyncContext asyncContext;
-
-		public ActionRequestInvoker(AsyncContext asyncContext, ActionRequest actionRequest) {
-			this.actionRequest = actionRequest;
-			this.asyncContext = asyncContext;
-		}
-
-		@Override
-		public void run() {
-			try {
-				if (log.isDebugEnabled()) {
-					log.debug("Async call to: " + actionRequest);
-				}
-				actionRequest.invoke();
-			} catch (Exception ex) {
-				log.error("Invoking action path failed: " , ex);
-			} finally {
-				asyncContext.complete();
-			}
-		}
 	}
 
 

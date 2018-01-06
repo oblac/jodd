@@ -43,6 +43,7 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.Async;
 import jodd.madvoc.meta.DELETE;
 import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.GET;
@@ -166,7 +167,7 @@ public class ActionMethodParser {
 
 		detectAndRegisterAlias(annotationData, actionDefinition);
 
-		final boolean async = parseMethodAsyncFlag(annotationData);
+		final boolean async = parseMethodAsyncFlag(actionMethod);
 
 		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
 
@@ -425,12 +426,8 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's async flag.
 	 */
-	private boolean parseMethodAsyncFlag(ActionAnnotationData annotationData) {
-		boolean sync = false;
-		if (annotationData != null) {
-			sync = annotationData.async();
-		}
-		return sync;
+	private boolean parseMethodAsyncFlag(Method actionMethod) {
+		return actionMethod.getAnnotation(Async.class) != null;
 	}
 
 	// ---------------------------------------------------------------- create action runtime
