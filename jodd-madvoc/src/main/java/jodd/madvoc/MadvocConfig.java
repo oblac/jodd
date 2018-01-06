@@ -78,7 +78,6 @@ public final class MadvocConfig {
 		pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
-		asyncConfig = new AsyncConfig();
 	}
 
 	// ---------------------------------------------------------------- action configs
@@ -305,61 +304,6 @@ public final class MadvocConfig {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
-	// ---------------------------------------------------------------- async
-
-	public static class AsyncConfig {
-		private int corePoolSize = 10;
-		private int maximumPoolSize = 25;
-		private long keepAliveTimeMillis = 50000L;
-		private int queueCapacity = 100;
-
-		public int getCorePoolSize() {
-			return corePoolSize;
-		}
-
-		public void setCorePoolSize(int corePoolSize) {
-			this.corePoolSize = corePoolSize;
-		}
-
-		public int getMaximumPoolSize() {
-			return maximumPoolSize;
-		}
-
-		public void setMaximumPoolSize(int maximumPoolSize) {
-			this.maximumPoolSize = maximumPoolSize;
-		}
-
-		public long getKeepAliveTimeMillis() {
-			return keepAliveTimeMillis;
-		}
-
-		public void setKeepAliveTimeMillis(long keepAliveTimeMillis) {
-			this.keepAliveTimeMillis = keepAliveTimeMillis;
-		}
-
-		public int getQueueCapacity() {
-			return queueCapacity;
-		}
-
-		public void setQueueCapacity(int queueCapacity) {
-			this.queueCapacity = queueCapacity;
-		}
-
-		@Override
-		public String toString() {
-			return "AsyncConfig{" + corePoolSize + " of " + maximumPoolSize + " in " + queueCapacity + " for " + keepAliveTimeMillis + "ms}";
-		}
-	}
-
-	protected AsyncConfig asyncConfig;
-
-	/**
-	 * Returns asynchronous configuration.
-	 */
-	public AsyncConfig getAsyncConfig() {
-		return asyncConfig;
-	}
-
 	// ---------------------------------------------------------------- toString
 
 	/**
@@ -376,7 +320,6 @@ public final class MadvocConfig {
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
 				",\n\trootPackages=" + rootPackages +
-				",\n\tasyncConfig='" + asyncConfig + '\'' +
 				"\n}";
 	}
 

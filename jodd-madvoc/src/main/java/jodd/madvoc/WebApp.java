@@ -31,6 +31,7 @@ import jodd.madvoc.component.ActionMethodParamNameResolver;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionPathRewriter;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.AsyncActionExecutor;
 import jodd.madvoc.component.ContextInjectorComponent;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InjectorsManager;
@@ -276,6 +277,7 @@ public class WebApp {
 		madvocContainer.registerComponent(ResultsManager.class);
 		madvocContainer.registerComponent(ResultMapper.class);
 		madvocContainer.registerComponent(ScopeDataResolver.class);
+		madvocContainer.registerComponent(AsyncActionExecutor.class);
 	}
 
 	/**
