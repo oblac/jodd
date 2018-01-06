@@ -68,7 +68,7 @@ public class MathUtilRandomBenchmark {
 	}
 
 	@Benchmark
-	public long randomInt_with_Random() {
+	public int randomInt_with_Random() {
 		return int_inclusive + (int) (Math.random() * (int_exclusive - int_inclusive));
 	}
 
@@ -80,7 +80,7 @@ public class MathUtilRandomBenchmark {
 	}
 
 	@Benchmark
-	public long randomInt_with_ThreadLocalRandom() {
+	public int randomInt_with_ThreadLocalRandom() {
 		return MathUtil.randomInt(int_inclusive, int_exclusive);
 	}
 
