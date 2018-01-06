@@ -30,6 +30,7 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
@@ -123,8 +124,10 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
+			final String[] actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
+
 			// resolve action runtime
-			ActionRuntime actionRuntime = actionsManager.lookup(actionPath, httpMethod);
+			ActionRuntime actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
 			if (actionRuntime == null) {
 				return actionPath;
 			}
@@ -157,7 +160,15 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 			// create action request
 			ActionRequest previousRequest = actionRequest;
-			actionRequest = createActionRequest(actionPath, actionRuntime, action, servletRequest, servletResponse);
+
+			actionRequest = createActionRequest(
+				actionPath,
+				actionPathChunks,
+				actionRuntime,
+				action,
+				servletRequest,
+				servletResponse);
+
 			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
@@ -259,12 +270,13 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 */
 	protected ActionRequest createActionRequest(
 			String actionPath,
+			String[] actionPathChunks,
 			ActionRuntime actionRuntime,
 			Object action,
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) {
 
-		return new ActionRequest(this, actionPath, actionRuntime, action, servletRequest, servletResponse);
+		return new ActionRequest(this, actionPath, actionPathChunks, actionRuntime, action, servletRequest, servletResponse);
 	}
 
 }
