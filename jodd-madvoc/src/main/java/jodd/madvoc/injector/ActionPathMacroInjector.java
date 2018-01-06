@@ -41,7 +41,7 @@ public class ActionPathMacroInjector implements Injector {
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		ActionRuntime actionRuntime = actionRequest.getActionRuntime();
+		ActionRuntime actionRuntime = actionRequest.actionRuntime();
 		RouteChunk routeChunk = actionRuntime.routeChunk();
 
 		if (!routeChunk.hasMacrosOnPath()) {
@@ -49,7 +49,7 @@ public class ActionPathMacroInjector implements Injector {
 			return;
 		}
 
-		final Targets targets = actionRequest.getTargets();
+		final Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}

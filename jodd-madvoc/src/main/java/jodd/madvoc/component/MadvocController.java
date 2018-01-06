@@ -158,9 +158,6 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				action = createAction(actionRuntime.actionClass());
 			}
 
-			// create action request
-			ActionRequest previousRequest = actionRequest;
-
 			actionRequest = createActionRequest(
 				actionPath,
 				actionPathChunks,
@@ -168,8 +165,6 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				action,
 				servletRequest,
 				servletResponse);
-
-			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
 			if (actionRuntime.async()) {
@@ -179,7 +174,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				actionRequest.invoke();
 			}
 
-			actionPath = actionRequest.getNextActionPath();
+			actionPath = actionRequest.nextActionPath();
 		}
 		return null;
 	}
@@ -240,10 +235,10 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 		}
 
 		if (madvocConfig.isPreventCaching()) {
-			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
+			ServletUtil.preventCaching(actionRequest.httpServletResponse());
 		}
 
-		actionResult.render(actionRequest, actionRequest.getActionResult());
+		actionResult.render(actionRequest, actionRequest.actionResult());
 	}
 
 	// ---------------------------------------------------------------- create

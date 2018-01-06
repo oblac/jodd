@@ -190,7 +190,7 @@ public class ResultsManager {
 		// + read @RenderWith value on method
 		if (actionResultHandler == null) {
 
-			ActionRuntime actionRuntime = actionRequest.getActionRuntime();
+			ActionRuntime actionRuntime = actionRequest.actionRuntime();
 
 			Class<? extends ActionResult> actionResultClass = actionRuntime.actionResult();
 			if (actionResultClass != null) {
@@ -209,7 +209,7 @@ public class ResultsManager {
 
 		// + use annotation's configuration
 		if (actionResultHandler == null || modifiedResultObject) {
-			ActionConfig actionConfig = actionRequest.getActionRuntime().actionConfig();
+			ActionConfig actionConfig = actionRequest.actionRuntime().actionConfig();
 
 			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
 			if (actionResultClass != null) {
@@ -222,7 +222,7 @@ public class ResultsManager {
 		}
 
 		// set action result object into action request!
-		actionRequest.setActionResult(resultObject);
+		actionRequest.bindActionResult(resultObject);
 
 		return actionResultHandler;
 	}

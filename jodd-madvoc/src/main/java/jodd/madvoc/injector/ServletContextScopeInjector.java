@@ -74,13 +74,13 @@ public class ServletContextScopeInjector implements Injector, ContextInjector<Se
 	@Override
 	@SuppressWarnings({"ConstantConditions"})
 	public void inject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
+		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
+		HttpServletResponse servletResponse = actionRequest.httpServletResponse();
 
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
 			final Class fieldType = in.type;

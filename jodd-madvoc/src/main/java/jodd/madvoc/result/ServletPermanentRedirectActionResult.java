@@ -58,7 +58,7 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, PermanentRedirect redirectResult) {
-		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
+		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
 
 		String resultPath;
 		final String resultValue = redirectResult.path();
@@ -70,11 +70,11 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 			resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 		}
 
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		HttpServletRequest request = actionRequest.httpServletRequest();
+		HttpServletResponse response = actionRequest.httpServletResponse();
 
 		String path = resultPath;
-		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
+		path = beanTemplateParser.parseWithBean(path, actionRequest.action());
 
 		redirect(request, response, path);
 	}

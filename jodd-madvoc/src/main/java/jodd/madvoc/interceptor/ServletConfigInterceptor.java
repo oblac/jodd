@@ -59,12 +59,12 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 	 */
 	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 
 		// detect multipart request
 		if (ServletUtil.isMultipartRequest(servletRequest)) {
 			servletRequest = new MultipartRequestWrapper(servletRequest, madvocConfig.getFileUploadFactory(), madvocConfig.getEncoding());
-			actionRequest.setHttpServletRequest(servletRequest);
+			actionRequest.bind(servletRequest);
 		}
 
 		// do it

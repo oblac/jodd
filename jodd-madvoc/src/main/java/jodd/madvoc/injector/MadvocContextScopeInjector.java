@@ -53,7 +53,7 @@ public class MadvocContextScopeInjector implements Injector, ContextInjector<Pet
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
+		Targets targets = actionRequest.targets();
 
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
 			Object value = madpc.getBean(in.name);

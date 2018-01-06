@@ -38,10 +38,10 @@ public class I18nInterceptor implements ActionInterceptor {
 
 	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
+		HttpServletRequest request = actionRequest.httpServletRequest();
 
 		// defines request bundle of this http request
-		LocalizationUtil.setRequestBundleName(request, getActionClassName(actionRequest.getAction()));
+		LocalizationUtil.setRequestBundleName(request, getActionClassName(actionRequest.action()));
 
 		return actionRequest.invoke();
 	}

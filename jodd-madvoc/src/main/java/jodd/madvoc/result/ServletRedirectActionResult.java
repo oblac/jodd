@@ -61,7 +61,7 @@ public class ServletRedirectActionResult implements ActionResult<Redirect> {
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, Redirect redirectResult) throws Exception {
-		String resultBasePath = actionRequest.getActionRuntime().resultBasePath();
+		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
 
 		String resultPath;
 		final String resultValue = redirectResult.path();
@@ -73,11 +73,11 @@ public class ServletRedirectActionResult implements ActionResult<Redirect> {
 			resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 		}
 
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		HttpServletRequest request = actionRequest.httpServletRequest();
+		HttpServletResponse response = actionRequest.httpServletResponse();
 
 		String path = resultPath;
-		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
+		path = beanTemplateParser.parseWithBean(path, actionRequest.action());
 
 		redirect(request, response, path);
 	}

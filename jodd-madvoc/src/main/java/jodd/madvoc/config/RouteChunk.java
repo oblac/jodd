@@ -26,9 +26,7 @@
 package jodd.madvoc.config;
 
 import jodd.madvoc.macro.PathMacros;
-
-import java.util.ArrayList;
-import java.util.List;
+import jodd.util.ArraysUtil;
 
 /**
  * Single path chunk.
@@ -36,7 +34,7 @@ import java.util.List;
 public class RouteChunk {
 
 	private final String value;
-	private final List<RouteChunk> children;
+	private RouteChunk[] children;
 	private final PathMacros pathMacros;
 	private final Routes routes;
 	private final RouteChunk parent;
@@ -47,7 +45,6 @@ public class RouteChunk {
 		this.routes = routes;
 		this.parent = parent;
 		this.value = value;
-		this.children = new ArrayList<>();
 		this.pathMacros = routes.buildActionPathMacros(value);
 		if (pathMacros != null) {
 			this.hasMacros = true;
@@ -64,7 +61,12 @@ public class RouteChunk {
 	 */
 	public RouteChunk add(String newValue) {
 		RouteChunk routeChunk = new RouteChunk(routes, this, newValue);
-		children.add(routeChunk);
+		if (children == null) {
+			children = new RouteChunk[] {routeChunk};
+		}
+		else {
+			children = ArraysUtil.append(children, routeChunk);
+		}
 		return routeChunk;
 	}
 
@@ -72,9 +74,11 @@ public class RouteChunk {
 	 * Finds existing chunk or creates a new one if does not exist.
 	 */
 	public RouteChunk findOrCreateChild(String value) {
-		for (RouteChunk child : children) {
-			if (child.get().equals(value)) {
-				return child;
+		if (children != null) {
+			for (RouteChunk child : children) {
+				if (child.get().equals(value)) {
+					return child;
+				}
 			}
 		}
 		return add(value);
@@ -132,9 +136,9 @@ public class RouteChunk {
 	}
 
 	/**
-	 * Returns all the children.
+	 * Returns all the children or {@code null} if no children exist.
 	 */
-	public List<RouteChunk> children() {
+	public RouteChunk[] children() {
 		return children;
 	}
 

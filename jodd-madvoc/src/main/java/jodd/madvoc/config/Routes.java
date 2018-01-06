@@ -32,7 +32,6 @@ import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -118,7 +117,11 @@ public class Routes {
 
 	private ActionRuntime lookupFrom(RouteChunk chunk, String[] path) {
 		// matched, scan children
-		List<RouteChunk> children = chunk.children();
+		RouteChunk[] children = chunk.children();
+
+		if (children == null) {
+			return null;
+		}
 
 		for (RouteChunk child : children) {
 			ActionRuntime matched = match(child, path, 0);
@@ -152,7 +155,11 @@ public class Routes {
 		}
 
 		// matched, scan children
-		List<RouteChunk> children = chunk.children();
+		RouteChunk[] children = chunk.children();
+
+		if (children == null) {
+			return null;
+		}
 
 		for (RouteChunk child : children) {
 			ActionRuntime matched = match(child, path, ndx + 1);

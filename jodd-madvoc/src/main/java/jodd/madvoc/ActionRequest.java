@@ -59,105 +59,90 @@ public class ActionRequest {
 	protected Object actionResult;
 
 	protected String nextActionPath;
-	protected ActionRequest previousActionRequest;
 
 	// ---------------------------------------------------------------- accessors
 
 	/**
 	 * Returns servlet request.
 	 */
-	public HttpServletRequest getHttpServletRequest() {
+	public HttpServletRequest httpServletRequest() {
 		return servletRequest;
 	}
 
 	/**
 	 * Specifies new servlet request, in case of wrapping it.
 	 */
-	public void setHttpServletRequest(HttpServletRequest request) {
+	public void bind(HttpServletRequest request) {
 		this.servletRequest = request;
 	}
 
 	/**
 	 * Returns servlet response.
 	 */
-	public HttpServletResponse getHttpServletResponse() {
+	public HttpServletResponse httpServletResponse() {
 		return servletResponse;
 	}
 
 	/**
 	 * Specifies new servlet response, in case of wrapping it.
 	 */
-	public void setHttpServletResponse(HttpServletResponse response) {
+	public void bind(HttpServletResponse response) {
 		this.servletResponse = response;
 	}
 
 	/**
 	 * Returns {@link ActionRuntime action runtime} configuration.
 	 */
-	public ActionRuntime getActionRuntime() {
+	public ActionRuntime actionRuntime() {
 		return actionRuntime;
 	}
 
 	/**
 	 * Returns action object.
 	 */
-	public Object getAction() {
+	public Object action() {
 		return action;
 	}
 
 	/**
 	 * Returns action path.
 	 */
-	public String getActionPath() {
+	public String actionPath() {
 		return actionPath;
 	}
 
 	/**
 	 * Returns next request string for action chaining.
 	 */
-	public String getNextActionPath() {
+	public String nextActionPath() {
 		return nextActionPath;
 	}
 
 	/**
 	 * Specifies the next action path, that will be chained to current action request.
 	 */
-	public void setNextActionPath(String nextActionPath) {
+	public void nextActionPath(String nextActionPath) {
 		this.nextActionPath = nextActionPath;
-	}
-
-	/**
-	 * Returns previous action request in chain, if there was one.
-	 */
-	public ActionRequest getPreviousActionRequest() {
-		return previousActionRequest;
-	}
-
-	/**
-	 * Sets previous action request in chain.
-	 */
-	public void setPreviousActionRequest(ActionRequest previousActionRequest) {
-		this.previousActionRequest = previousActionRequest;
 	}
 
 	/**
 	 * Returns all injection targets.
 	 */
-	public Targets getTargets() {
+	public Targets targets() {
 		return targets;
 	}
 
 	/**
 	 * Returns action result object.
 	 */
-	public Object getActionResult() {
+	public Object actionResult() {
 		return actionResult;
 	}
 
 	/**
 	 * Sets action result object.
 	 */
-	public void setActionResult(Object actionResult) {
+	public void bindActionResult(Object actionResult) {
 		this.actionResult = actionResult;
 	}
 

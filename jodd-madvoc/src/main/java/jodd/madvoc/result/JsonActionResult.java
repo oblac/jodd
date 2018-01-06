@@ -47,7 +47,7 @@ public class JsonActionResult implements ActionResult {
 
 	@Override
 	public void render(ActionRequest actionRequest, final Object object) throws Exception {
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		HttpServletResponse response = actionRequest.httpServletResponse();
 
 		String encoding = response.getCharacterEncoding();
 

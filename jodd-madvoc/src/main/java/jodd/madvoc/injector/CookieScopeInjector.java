@@ -40,12 +40,12 @@ public class CookieScopeInjector implements Injector, Outjector {
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
+		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
 			Object value = null;
@@ -73,12 +73,12 @@ public class CookieScopeInjector implements Injector, Outjector {
 
 	@Override
 	public void outject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
+		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+		HttpServletResponse servletResponse = actionRequest.httpServletResponse();
 
 		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
 			Cookie cookie = (Cookie) target.readTargetProperty(out);

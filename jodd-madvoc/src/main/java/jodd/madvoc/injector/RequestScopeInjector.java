@@ -220,12 +220,12 @@ public class RequestScopeInjector implements Injector, Outjector {
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
+		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 
 		if (injectAttributes) {
 			injectAttributes(targets, servletRequest);
@@ -240,12 +240,12 @@ public class RequestScopeInjector implements Injector, Outjector {
 
 	@Override
 	public void outject(ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
+		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 
 		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
 			Object value = target.readTargetProperty(out);
