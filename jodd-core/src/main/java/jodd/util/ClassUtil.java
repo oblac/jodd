@@ -26,6 +26,7 @@
 package jodd.util;
 
 import jodd.util.cl.ClassLoaderStrategy;
+import jodd.util.net.URLDecoder;
 
 import java.io.File;
 import java.io.IOException;
@@ -1293,6 +1294,8 @@ public class ClassUtil {
 
 		endIndex += ".jar".length();
 		String f = s.substring(beginIndex, endIndex);
+		// decode URL string - it may contain encoded chars (e.g. whitespaces) which are not supported for file-instances
+		f = URLDecoder.decode(f, "UTF-8");
 		File file = new File(f);
 
 		try {
