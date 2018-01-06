@@ -46,22 +46,9 @@ import java.io.Writer;
  */
 public class StreamUtil {
 
-	/**
-	 * Default encoding
-	 */
-	private static final String DEFAULT_ENCODING = JoddCore.get().defaults().getEncoding();
-
-	/**
-	 * Default IO buffer size
-	 */
-	private static final int IO_BUFFER_SIZE = JoddCore.get().defaults().getIoBufferSize();
-
 	private static final int ZERO = 0;
 	private static final int NEGATIVE_ONE = -1;
-	private static final int ALL = -103;
-
-	private StreamUtil() {
-	}
+	private static final int ALL = -1;
 
 	// ---------------------------------------------------------------- silent close
 
@@ -97,7 +84,7 @@ public class StreamUtil {
 	 * @throws IOException if there is an error reading or writing.
 	 */
 	public static int copy(Reader input, Writer output) throws IOException {
-		int numToRead = getBufferSize();
+		int numToRead = bufferSize();
 		char[] buffer = new char[numToRead];
 
 		int totalRead = ZERO;
@@ -123,7 +110,7 @@ public class StreamUtil {
 	 * @throws IOException if there is an error reading or writing.
 	 */
 	public static int copy(InputStream input, OutputStream output) throws IOException {
-		int numToRead = getBufferSize();
+		int numToRead = bufferSize();
 		byte[] buffer = new byte[numToRead];
 
 		int totalRead = ZERO;
@@ -153,14 +140,14 @@ public class StreamUtil {
 			return copy(input, output);
 		}
 
-		int numToRead = getBufferSize(count);
+		int numToRead = bufferSize(count);
 		char[] buffer = new char[numToRead];
 
 		int totalRead = ZERO;
 		int read;
 
 		while (numToRead > ZERO) {
-			read = input.read(buffer, ZERO, getBufferSize(numToRead));
+			read = input.read(buffer, ZERO, bufferSize(numToRead));
 			if (read == NEGATIVE_ONE) {
 				break;
 			}
@@ -189,14 +176,14 @@ public class StreamUtil {
 			return copy(input, output);
 		}
 
-		int numToRead = getBufferSize(count);
+		int numToRead = bufferSize(count);
 		byte[] buffer = new byte[numToRead];
 
 		int totalRead = ZERO;
 		int read;
 
 		while (numToRead > ZERO) {
-			read = input.read(buffer, ZERO, getBufferSize(numToRead));
+			read = input.read(buffer, ZERO, bufferSize(numToRead));
 			if (read == NEGATIVE_ONE) {
 				break;
 			}
@@ -246,14 +233,14 @@ public class StreamUtil {
 	 * @see #copy(Reader, OutputStream, String)
 	 */
 	public static <T extends OutputStream> T copy(Reader input, T output) throws IOException {
-		return copy(input, output, DEFAULT_ENCODING);
+		return copy(input, output, encoding());
 	}
 
 	/**
 	 * @see #copy(Reader, OutputStream, String, int)
 	 */
 	public static <T extends OutputStream> T copy(Reader input, T output, int count) throws IOException {
-		return copy(input, output, DEFAULT_ENCODING, count);
+		return copy(input, output, encoding(), count);
 	}
 
 	/**
@@ -269,7 +256,7 @@ public class StreamUtil {
 	 * @see #copy(Reader, Writer, int)
 	 */
 	public static <T extends OutputStream> T copy(Reader input, T output, String encoding, int count) throws IOException {
-		try (Writer out = getOutputStreamWriter(output, encoding)) {
+		try (Writer out = outputStreamWriterOf(output, encoding)) {
 			copy(input, out, count);
 			return output;
 		}
@@ -299,7 +286,7 @@ public class StreamUtil {
 	 * @see #copy(InputStream, OutputStream, int)
 	 */
 	public static FastByteArrayOutputStream copyToOutputStream(InputStream input, int count) throws IOException {
-		try (FastByteArrayOutputStream output = getFastByteArrayOutputStream()) {
+		try (FastByteArrayOutputStream output = createFastByteArrayOutputStream()) {
 			copy(input, output, count);
 			return output;
 		}
@@ -309,7 +296,7 @@ public class StreamUtil {
 	 * @see #copyToOutputStream(Reader, String)
 	 */
 	public static FastByteArrayOutputStream copyToOutputStream(Reader input) throws IOException {
-		return copyToOutputStream(input, DEFAULT_ENCODING);
+		return copyToOutputStream(input, encoding());
 	}
 
 	/**
@@ -323,7 +310,7 @@ public class StreamUtil {
 	 * @see #copyToOutputStream(Reader, String, int)
 	 */
 	public static FastByteArrayOutputStream copyToOutputStream(Reader input, int count) throws IOException {
-		return copyToOutputStream(input, DEFAULT_ENCODING, count);
+		return copyToOutputStream(input, encoding(), count);
 	}
 
 	/**
@@ -332,7 +319,7 @@ public class StreamUtil {
 	 * @see #copy(Reader, OutputStream, String, int)
 	 */
 	public static FastByteArrayOutputStream copyToOutputStream(Reader input, String encoding, int count) throws IOException {
-		try (FastByteArrayOutputStream output = getFastByteArrayOutputStream()) {
+		try (FastByteArrayOutputStream output = createFastByteArrayOutputStream()) {
 			copy(input, output, encoding, count);
 			return output;
 		}
@@ -344,14 +331,14 @@ public class StreamUtil {
 	 * @see #copy(InputStream, Writer, String)
 	 */
 	public static <T extends Writer> T copy(InputStream input, T output) throws IOException {
-		return copy(input, output, DEFAULT_ENCODING);
+		return copy(input, output, encoding());
 	}
 
 	/**
 	 * @see #copy(InputStream, Writer, String, int)
 	 */
 	public static <T extends Writer> T copy(InputStream input, T output, int count) throws IOException {
-		return copy(input, output, DEFAULT_ENCODING, count);
+		return copy(input, output, encoding(), count);
 	}
 
 	/**
@@ -367,7 +354,7 @@ public class StreamUtil {
 	 * @see #copy(Reader, Writer, int)
 	 */
 	public static <T extends Writer> T copy(InputStream input, T output, String encoding, int count) throws IOException {
-		copy(getInputStreamReader(input, encoding), output, count);
+		copy(inputStreamReadeOf(input, encoding), output, count);
 		return output;
 	}
 
@@ -375,14 +362,14 @@ public class StreamUtil {
 	 * @see #copy(InputStream, String)
 	 */
 	public static FastCharArrayWriter copy(InputStream input) throws IOException {
-		return copy(input, DEFAULT_ENCODING);
+		return copy(input, encoding());
 	}
 
 	/**
 	 * @see #copy(InputStream, String, int)
 	 */
 	public static FastCharArrayWriter copy(InputStream input, int count) throws IOException {
-		return copy(input, DEFAULT_ENCODING, count);
+		return copy(input, encoding(), count);
 	}
 
 	/**
@@ -398,7 +385,7 @@ public class StreamUtil {
 	 * @see #copy(InputStream, Writer, String, int)
 	 */
 	public static FastCharArrayWriter copy(InputStream input, String encoding, int count) throws IOException {
-		try (FastCharArrayWriter output = getFastCharArrayWriter()) {
+		try (FastCharArrayWriter output = createFastCharArrayWriter()) {
 			copy(input, output, encoding, count);
 			return output;
 		}
@@ -417,7 +404,7 @@ public class StreamUtil {
 	 * @see #copy(Reader, Writer, int)
 	 */
 	public static FastCharArrayWriter copy(Reader input, int count) throws IOException {
-		try (FastCharArrayWriter output = getFastCharArrayWriter()) {
+		try (FastCharArrayWriter output = createFastCharArrayWriter()) {
 			copy(input, output, count);
 			return output;
 		}
@@ -454,14 +441,14 @@ public class StreamUtil {
 	 * @see #readBytes(Reader, String)
 	 */
 	public static byte[] readBytes(Reader input) throws IOException {
-		return readBytes(input, DEFAULT_ENCODING);
+		return readBytes(input, encoding());
 	}
 
 	/**
 	 * @see #readBytes(Reader, String, int)
 	 */
 	public static byte[] readBytes(Reader input, int count) throws IOException {
-		return readBytes(input, DEFAULT_ENCODING, count);
+		return readBytes(input, encoding(), count);
 	}
 
 	/**
@@ -512,7 +499,7 @@ public class StreamUtil {
 	 * @see #readChars(InputStream, String, int)
 	 */
 	public static char[] readChars(InputStream input, int count) throws IOException {
-		return readChars(input, DEFAULT_ENCODING, count);
+		return readChars(input, encoding(), count);
 	}
 
 	/**
@@ -575,15 +562,15 @@ public class StreamUtil {
 		return (ch2 == NEGATIVE_ONE);
 	}
 
-	// ---------------------------------------------------------------- buffer size
+	// ---------------------------------------------------------------- defaults
 
 	/**
 	 * Returns default IO buffer size.
 	 *
 	 * @return default IO buffer size.
 	 */
-	private static int getBufferSize() {
-		return IO_BUFFER_SIZE;
+	private static int bufferSize() {
+		return JoddCore.get().defaults().getIoBufferSize();
 	}
 
 	/**
@@ -592,12 +579,21 @@ public class StreamUtil {
 	 * @param count Number of characters or bytes to retrieve.
 	 * @return buffer size (either count or default IO buffer size, whichever is smaller).
 	 */
-	private static int getBufferSize(int count) {
-		if (count < IO_BUFFER_SIZE) {
+	private static int bufferSize(int count) {
+		final int ioBufferSize = JoddCore.get().defaults().getIoBufferSize();
+		if (count < ioBufferSize) {
 			return count;
 		} else {
-			return IO_BUFFER_SIZE;
+			return ioBufferSize;
 		}
+	}
+
+	/**
+	 * Returns default encoding.
+	 * @return default encoding.
+	 */
+	private static String encoding() {
+		return JoddCore.get().defaults().getEncoding();
 	}
 
 	// ---------------------------------------------------------------- wrappers
@@ -607,8 +603,8 @@ public class StreamUtil {
 	 *
 	 * @return new {@link FastCharArrayWriter} using default IO buffer size.
 	 */
-	private static FastCharArrayWriter getFastCharArrayWriter() {
-		return new FastCharArrayWriter(IO_BUFFER_SIZE);
+	private static FastCharArrayWriter createFastCharArrayWriter() {
+		return new FastCharArrayWriter(bufferSize());
 	}
 
 	/**
@@ -616,15 +612,15 @@ public class StreamUtil {
 	 *
 	 * @return new {@link FastByteArrayOutputStream} using default IO buffer size.
 	 */
-	private static FastByteArrayOutputStream getFastByteArrayOutputStream() {
-		return new FastByteArrayOutputStream(IO_BUFFER_SIZE);
+	private static FastByteArrayOutputStream createFastByteArrayOutputStream() {
+		return new FastByteArrayOutputStream(bufferSize());
 	}
 
 	/**
-	 * @see #getInputStreamReader(InputStream, String)
+	 * @see #inputStreamReadeOf(InputStream, String)
 	 */
-	public static InputStreamReader getInputStreamReader(InputStream input) throws UnsupportedEncodingException {
-		return getInputStreamReader(input, DEFAULT_ENCODING);
+	public static InputStreamReader inputStreamReadeOf(InputStream input) throws UnsupportedEncodingException {
+		return inputStreamReadeOf(input, encoding());
 	}
 
 	/**
@@ -635,15 +631,15 @@ public class StreamUtil {
 	 * @return new {@link InputStreamReader}
 	 * @throws UnsupportedEncodingException if encoding is not valid.
 	 */
-	public static InputStreamReader getInputStreamReader(InputStream input, String encoding) throws UnsupportedEncodingException {
+	public static InputStreamReader inputStreamReadeOf(InputStream input, String encoding) throws UnsupportedEncodingException {
 		return new InputStreamReader(input, encoding);
 	}
 
 	/**
-	 * @see #getOutputStreamWriter(OutputStream, String)
+	 * @see #outputStreamWriterOf(OutputStream, String)
 	 */
-	public static OutputStreamWriter getOutputStreamWriter(OutputStream output) throws UnsupportedEncodingException {
-		return getOutputStreamWriter(output, DEFAULT_ENCODING);
+	public static OutputStreamWriter outputStreamWriterOf(OutputStream output) throws UnsupportedEncodingException {
+		return outputStreamWriterOf(output, encoding());
 	}
 
 	/**
@@ -654,7 +650,7 @@ public class StreamUtil {
 	 * @return new {@link OutputStreamWriter}
 	 * @throws UnsupportedEncodingException if encoding is not valid.
 	 */
-	public static OutputStreamWriter getOutputStreamWriter(OutputStream output, String encoding) throws UnsupportedEncodingException {
+	public static OutputStreamWriter outputStreamWriterOf(OutputStream output, String encoding) throws UnsupportedEncodingException {
 		return new OutputStreamWriter(output, encoding);
 	}
 }

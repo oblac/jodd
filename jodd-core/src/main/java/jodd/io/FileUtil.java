@@ -668,7 +668,7 @@ public class FileUtil {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
-		Writer out = new BufferedWriter(StreamUtil.getOutputStreamWriter(getFileOutputStream(dest, append), encoding));
+		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(getFileOutputStream(dest, append), encoding));
 		try {
 			out.write(data);
 		} finally {
@@ -920,7 +920,7 @@ public class FileUtil {
 
 		InputStream in = getStream(file, encoding);
 		try {
-			BufferedReader br = new BufferedReader(StreamUtil.getInputStreamReader(in, encoding));
+			BufferedReader br = new BufferedReader(StreamUtil.inputStreamReadeOf(in, encoding));
 			String strLine;
 			while ((strLine = br.readLine()) != null) {
 				list.add(strLine);
