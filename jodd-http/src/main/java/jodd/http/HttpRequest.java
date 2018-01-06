@@ -29,6 +29,7 @@ import jodd.util.Base64;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.net.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,15 +48,6 @@ import static jodd.util.StringPool.SPACE;
 public class HttpRequest extends HttpBase<HttpRequest> {
 
 	private static final int DEFAULT_PORT = -1;
-	private static final String METHOD_CONNECT = "CONNECT";
-	private static final String METHOD_GET = "GET";
-	private static final String METHOD_POST = "POST";
-	private static final String METHOD_PUT = "PUT";
-	private static final String METHOD_PATCH = "PATCH";
-	private static final String METHOD_DELETE = "DELETE";
-	private static final String METHOD_HEAD = "HEAD";
-	private static final String METHOD_TRACE = "TRACE";
-	private static final String METHOD_OPTIONS = "OPTIONS";
 
 	protected String protocol = "http";
 	protected String host = "localhost";
@@ -151,20 +143,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (ndx != -1) {
 			String method = destination.substring(0, ndx).toUpperCase();
 
-			switch (method) {
-				case METHOD_CONNECT:
-				case METHOD_DELETE:
-				case METHOD_GET:
-				case METHOD_HEAD:
-				case METHOD_OPTIONS:
-				case METHOD_PATCH:
-				case METHOD_POST:
-				case METHOD_PUT:
-				case METHOD_TRACE:
-					this.method = method;
-					destination = destination.substring(ndx + 1);
-					break;
-				default:
+			try {
+				HttpMethod httpMethod = HttpMethod.valueOf(method);
+				this.method = httpMethod.name();
+				destination = destination.substring(ndx + 1);
+			}
+			catch (IllegalArgumentException ignore) {
+				// unknown http method
 			}
 		}
 
@@ -226,7 +211,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest connect(String destination) {
 		return new HttpRequest()
-				.method(METHOD_CONNECT)
+				.method(HttpMethod.CONNECT)
 				.set(destination);
 	}
 	/**
@@ -234,7 +219,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest get(String destination) {
 		return new HttpRequest()
-				.method(METHOD_GET)
+				.method(HttpMethod.GET)
 				.set(destination);
 	}
 	/**
@@ -242,7 +227,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest post(String destination) {
 		return new HttpRequest()
-				.method(METHOD_POST)
+				.method(HttpMethod.POST)
 				.set(destination);
 	}
 	/**
@@ -250,7 +235,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest put(String destination) {
 		return new HttpRequest()
-				.method(METHOD_PUT)
+				.method(HttpMethod.PUT)
 				.set(destination);
 	}
 	/**
@@ -258,7 +243,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest patch(String destination) {
 		return new HttpRequest()
-				.method(METHOD_PATCH)
+				.method(HttpMethod.PATCH)
 				.set(destination);
 	}
 	/**
@@ -266,7 +251,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest delete(String destination) {
 		return new HttpRequest()
-				.method(METHOD_DELETE)
+				.method(HttpMethod.DELETE)
 				.set(destination);
 	}
 	/**
@@ -274,7 +259,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest head(String destination) {
 		return new HttpRequest()
-				.method(METHOD_HEAD)
+				.method(HttpMethod.HEAD)
 				.set(destination);
 	}
 	/**
@@ -282,7 +267,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest trace(String destination) {
 		return new HttpRequest()
-				.method(METHOD_TRACE)
+				.method(HttpMethod.TRACE)
 				.set(destination);
 	}
 	/**
@@ -290,7 +275,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public static HttpRequest options(String destination) {
 		return new HttpRequest()
-				.method(METHOD_OPTIONS)
+				.method(HttpMethod.OPTIONS)
 				.set(destination);
 	}
 
@@ -309,6 +294,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest method(String method) {
 		this.method = method.toUpperCase();
+		return this;
+	}
+	public HttpRequest method(HttpMethod httpMethod) {
+		this.method = httpMethod.name();
 		return this;
 	}
 

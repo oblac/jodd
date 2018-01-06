@@ -33,6 +33,7 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Scope;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
+import jodd.util.net.HttpMethod;
 
 import java.lang.reflect.Method;
 
@@ -40,10 +41,6 @@ import java.lang.reflect.Method;
  * Naming strategy for REST resources.
  */
 public class RestActionNamingStrategy extends BaseNamingStrategy {
-
-	private static final String[] METHOD_NAMES = new String[] {
-		"CONNECT",  "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"
-	} ;
 
 	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
@@ -118,9 +115,9 @@ public class RestActionNamingStrategy extends BaseNamingStrategy {
 
 		String name = methodName.substring(0, i).toUpperCase();
 
-		for (String mn : METHOD_NAMES) {
-			if (mn.equals(name)) {
-				return mn;
+		for (HttpMethod httpMethod : HttpMethod.values()) {
+			if (httpMethod.equalsName(name)) {
+				return httpMethod.name();
 			}
 		}
 
