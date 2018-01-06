@@ -29,50 +29,50 @@ import jodd.util.StringPool;
 
 public class JoddCoreDefaults {
 
-  private String tempFilePrefix = "jodd-";
-  private String encoding = StringPool.UTF_8;
-  private int ioBufferSize = 16384;
+	private String tempFilePrefix = "jodd-";
+	private String encoding = StringPool.UTF_8;
+	private int ioBufferSize = 16384;
 
-  /**
-   * Returns default prefix for temporary files.
-   */
-  public String getTempFilePrefix() {
-    return tempFilePrefix;
-  }
+	/**
+	 * Returns default prefix for temporary files.
+	 */
+	public String getTempFilePrefix() {
+		return tempFilePrefix;
+	}
 
-  /**
-   * Sets default file prefix.
-   */
-  public void setTempFilePrefix(String tempFilePrefix) {
-    this.tempFilePrefix = tempFilePrefix;
-  }
+	/**
+	 * Sets default file prefix.
+	 */
+	public void setTempFilePrefix(String tempFilePrefix) {
+		this.tempFilePrefix = tempFilePrefix;
+	}
 
-  /**
-   * Returns default encoding used across the Jodd classes. "UTF-8".
-   */
-  public String getEncoding() {
-    return encoding;
-  }
+	/**
+	 * Returns default encoding used across the Jodd classes. "UTF-8".
+	 */
+	public String getEncoding() {
+		return encoding;
+	}
 
-  /**
-   * Sets new encoding that is used across the Jodd library.
-   */
-  public void setEncoding(String encoding) {
-    this.encoding = encoding;
-  }
+	/**
+	 * Sets new encoding that is used across the Jodd library.
+	 */
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
 
-  /**
-   * Returns buffer size for various IO operations.
-   */
-  public int getIoBufferSize() {
-    return ioBufferSize;
-  }
+	/**
+	 * Returns buffer size for various IO operations.
+	 */
+	public int getIoBufferSize() {
+		return ioBufferSize;
+	}
 
-  /**
-   * Sets new buffer size for various IO operations.
-   */
-  public void setIoBufferSize(int ioBufferSize) {
-    this.ioBufferSize = ioBufferSize;
-  }
+	/**
+	 * Sets new buffer size for various IO operations.
+	 */
+	public void setIoBufferSize(int ioBufferSize) {
+		this.ioBufferSize = ioBufferSize;
+	}
 
 }

@@ -25,8 +25,8 @@
 
 package jodd.util.collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import jodd.util.CollectionUtil;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -34,27 +34,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import jodd.util.CollectionUtil;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class CompositeEnumerationTest {
 
 	@Test
 	void testNextWithOne() {
 		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>();
-		
+
 		try {
 			compositeEnumeration.nextElement();
 			fail("error");
 		} catch (NoSuchElementException e) {
 			// ignore
 		}
-		
+
 		List<Integer> list = createList(4);
 		Enumeration<Integer> e = e(list.iterator());
 		compositeEnumeration.add(e);
-		
+
 		try {
 			compositeEnumeration.add(e);
 			fail("error");
@@ -198,7 +197,9 @@ class CompositeEnumerationTest {
 		Enumeration<Integer> it3 = e(list3.iterator());
 
 		it1.nextElement();
-		it2.nextElement(); it2.nextElement(); it2.nextElement();
+		it2.nextElement();
+		it2.nextElement();
+		it2.nextElement();
 		it3.nextElement();
 
 		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>(it1, it2, it3);

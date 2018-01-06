@@ -54,98 +54,98 @@ import java.io.UnsupportedEncodingException;
  */
 public class FastByteArrayOutputStream extends OutputStream {
 
-  private final FastByteBuffer buffer;
+	private final FastByteBuffer buffer;
 
-  /**
-   * Creates a new byte array {@link OutputStream}. The buffer capacity is
-   * initially 1024 bytes, though its size increases if necessary.
-   */
-  public FastByteArrayOutputStream() {
-    this(1024);
-  }
+	/**
+	 * Creates a new byte array {@link OutputStream}. The buffer capacity is
+	 * initially 1024 bytes, though its size increases if necessary.
+	 */
+	public FastByteArrayOutputStream() {
+		this(1024);
+	}
 
-  /**
-   * Creates a new byte array output stream, with a buffer capacity of
-   * the specified size, in bytes.
-   *
-   * @param size the initial size.
-   * @throws IllegalArgumentException if size is negative.
-   */
-  public FastByteArrayOutputStream(int size) {
-    buffer = new FastByteBuffer(size);
-  }
+	/**
+	 * Creates a new byte array output stream, with a buffer capacity of
+	 * the specified size, in bytes.
+	 *
+	 * @param size the initial size.
+	 * @throws IllegalArgumentException if size is negative.
+	 */
+	public FastByteArrayOutputStream(int size) {
+		buffer = new FastByteBuffer(size);
+	}
 
-  /**
-   * @see OutputStream#write(byte[], int, int)
-   */
-  @Override
-  public void write(byte[] b, int off, int len) {
-    buffer.append(b, off, len);
-  }
+	/**
+	 * @see OutputStream#write(byte[], int, int)
+	 */
+	@Override
+	public void write(byte[] b, int off, int len) {
+		buffer.append(b, off, len);
+	}
 
-  /**
-   * Writes single byte.
-   */
-  @Override
-  public void write(int b) {
-    buffer.append((byte) b);
-  }
+	/**
+	 * Writes single byte.
+	 */
+	@Override
+	public void write(int b) {
+		buffer.append((byte) b);
+	}
 
-  /**
-   * @see ByteArrayOutputStream#size()
-   */
-  public int size() {
-    return buffer.size();
-  }
+	/**
+	 * @see ByteArrayOutputStream#size()
+	 */
+	public int size() {
+		return buffer.size();
+	}
 
-  /**
-   * Closing a {@link FastByteArrayOutputStream} has no effect. The methods in
-   * this class can be called after the stream has been closed without
-   * generating an {@link IOException}.
-   */
-  @Override
-  public void close() {
-    //nop
-  }
+	/**
+	 * Closing a {@link FastByteArrayOutputStream} has no effect. The methods in
+	 * this class can be called after the stream has been closed without
+	 * generating an {@link IOException}.
+	 */
+	@Override
+	public void close() {
+		//nop
+	}
 
-  /**
-   * @see ByteArrayOutputStream#reset()
-   */
-  public void reset() {
-    buffer.clear();
-  }
+	/**
+	 * @see ByteArrayOutputStream#reset()
+	 */
+	public void reset() {
+		buffer.clear();
+	}
 
-  /**
-   * @see ByteArrayOutputStream#writeTo(OutputStream)
-   */
-  public void writeTo(OutputStream out) throws IOException {
-    int index = buffer.index();
-    for (int i = 0; i < index; i++) {
-      byte[] buf = buffer.array(i);
-      out.write(buf);
-    }
-    out.write(buffer.array(index), 0, buffer.offset());
-  }
+	/**
+	 * @see ByteArrayOutputStream#writeTo(OutputStream)
+	 */
+	public void writeTo(OutputStream out) throws IOException {
+		int index = buffer.index();
+		for (int i = 0; i < index; i++) {
+			byte[] buf = buffer.array(i);
+			out.write(buf);
+		}
+		out.write(buffer.array(index), 0, buffer.offset());
+	}
 
-  /**
-   * @see ByteArrayOutputStream#toByteArray()
-   */
-  public byte[] toByteArray() {
-    return buffer.toArray();
-  }
+	/**
+	 * @see ByteArrayOutputStream#toByteArray()
+	 */
+	public byte[] toByteArray() {
+		return buffer.toArray();
+	}
 
-  /**
-   * @see ByteArrayOutputStream#toString()
-   */
-  @Override
-  public String toString() {
-    return new String(toByteArray());
-  }
+	/**
+	 * @see ByteArrayOutputStream#toString()
+	 */
+	@Override
+	public String toString() {
+		return new String(toByteArray());
+	}
 
-  /**
-   * @see ByteArrayOutputStream#toString(String)
-   */
-  public String toString(String enc) throws UnsupportedEncodingException {
-    return new String(toByteArray(), enc);
-  }
+	/**
+	 * @see ByteArrayOutputStream#toString(String)
+	 */
+	public String toString(String enc) throws UnsupportedEncodingException {
+		return new String(toByteArray(), enc);
+	}
 }

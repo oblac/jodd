@@ -36,42 +36,42 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PrettyStringBuilderTest {
 
-  @Test
-  void testList() {
-    List<String> l = new ArrayList<>();
-    l.add("One");
-    l.add("Two");
-    assertEquals("(One,Two)", new PrettyStringBuilder().toString(l));
-  }
+	@Test
+	void testList() {
+		List<String> l = new ArrayList<>();
+		l.add("One");
+		l.add("Two");
+		assertEquals("(One,Two)", new PrettyStringBuilder().toString(l));
+	}
 
-  @Test
-  void testMap() {
-    Map<Integer, String> m = new LinkedHashMap<>();
-    m.put(1, "One");
-    m.put(2, "Two");
-    assertEquals("{1:One,2:Two}", new PrettyStringBuilder().toString(m));
-  }
+	@Test
+	void testMap() {
+		Map<Integer, String> m = new LinkedHashMap<>();
+		m.put(1, "One");
+		m.put(2, "Two");
+		assertEquals("{1:One,2:Two}", new PrettyStringBuilder().toString(m));
+	}
 
-  @Test
-  void testArray() {
-    int[] arr = new int[]{1, 2, 3};
-    assertEquals("[1,2,3]", new PrettyStringBuilder().toString(arr));
-  }
+	@Test
+	void testArray() {
+		int[] arr = new int[]{1, 2, 3};
+		assertEquals("[1,2,3]", new PrettyStringBuilder().toString(arr));
+	}
 
-  @Test
-  void testMax() {
-    PrettyStringBuilder psb = new PrettyStringBuilder().maxItemsToShow(3);
-    int[] arr = new int[]{1, 2, 3};
-    assertEquals("[1,2,3]", psb.toString(arr));
-    arr = new int[]{1, 2, 3, 4};
-    assertEquals("[1,2,3,...]", psb.toString(arr));
-  }
+	@Test
+	void testMax() {
+		PrettyStringBuilder psb = new PrettyStringBuilder().maxItemsToShow(3);
+		int[] arr = new int[]{1, 2, 3};
+		assertEquals("[1,2,3]", psb.toString(arr));
+		arr = new int[]{1, 2, 3, 4};
+		assertEquals("[1,2,3,...]", psb.toString(arr));
+	}
 
-  @Test
-  void testDeep() {
-    List l = new ArrayList();
-    l.add("One");
-    l.add(new int[]{1, 2,});
-    assertEquals("(One,[1,2])", new PrettyStringBuilder().toString(l));
-  }
+	@Test
+	void testDeep() {
+		List l = new ArrayList();
+		l.add("One");
+		l.add(new int[]{1, 2,});
+		assertEquals("(One,[1,2])", new PrettyStringBuilder().toString(l));
+	}
 }
