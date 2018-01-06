@@ -26,6 +26,7 @@
 package jodd.io;
 
 import jodd.core.JoddCore;
+import jodd.core.JoddCoreDefaults;
 
 import javax.activation.DataSource;
 import java.io.BufferedInputStream;
@@ -49,6 +50,8 @@ public class StreamUtil {
 	private static final int ZERO = 0;
 	private static final int NEGATIVE_ONE = -1;
 	private static final int ALL = -1;
+
+	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
 
 	// ---------------------------------------------------------------- silent close
 
@@ -570,7 +573,7 @@ public class StreamUtil {
 	 * @return default IO buffer size.
 	 */
 	private static int bufferSize() {
-		return JoddCore.get().defaults().getIoBufferSize();
+		return JODD_CORE_DEFAULTS.getIoBufferSize();
 	}
 
 	/**
@@ -580,7 +583,7 @@ public class StreamUtil {
 	 * @return buffer size (either count or default IO buffer size, whichever is smaller).
 	 */
 	private static int bufferSize(int count) {
-		final int ioBufferSize = JoddCore.get().defaults().getIoBufferSize();
+		final int ioBufferSize = JODD_CORE_DEFAULTS.getIoBufferSize();
 		if (count < ioBufferSize) {
 			return count;
 		} else {
@@ -593,7 +596,7 @@ public class StreamUtil {
 	 * @return default encoding.
 	 */
 	private static String encoding() {
-		return JoddCore.get().defaults().getEncoding();
+		return JODD_CORE_DEFAULTS.getEncoding();
 	}
 
 	// ---------------------------------------------------------------- wrappers

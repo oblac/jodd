@@ -65,21 +65,17 @@ public class FileUtil {
 	private static final String MSG_NOT_A_FILE = "Not a file: ";
 	private static final String MSG_UNABLE_TO_DELETE = "Unable to delete: ";
 
-	private static final JoddCoreDefaults DEFAULTS = JoddCore.get().defaults();
-	private static final String DEFAULT_ENCODING = DEFAULTS.getEncoding();
-	private static final String TEMP_PREFIX = DEFAULTS.getTempFilePrefix();
+	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
 	private static final int ZERO = 0;
 	private static final int NEGATIVE_ONE = -1;
 	private static final String FILE_PROTOCOL = "file";
-
-	private FileUtil() {
-	}
+	private static final String USER_HOME = "~";
 
 	/**
 	 * Simple factory for {@link File} objects but with home resolving.
 	 */
 	public static File file(String fileName) {
-		fileName = StringUtil.replace(fileName, "~", SystemUtil.userHome());
+		fileName = StringUtil.replace(fileName, USER_HOME, SystemUtil.userHome());
 		return new File(fileName);
 	}
 
@@ -150,7 +146,7 @@ public class FileUtil {
 		}
 		String filename = url.getFile().replace('/', File.separatorChar);
 
-		return URLDecoder.decode(filename, DEFAULT_ENCODING);
+		return URLDecoder.decode(filename, encoding());
 	}
 
 	/**
@@ -241,7 +237,7 @@ public class FileUtil {
 	 */
 	public static void touch(File file) throws IOException {
 		if (!file.exists()) {
-			StreamUtil.close(getFileOutputStream(file));
+			StreamUtil.close(fileOutputStreamOf(file));
 		}
 		file.setLastModified(System.currentTimeMillis());
 	}
@@ -264,7 +260,7 @@ public class FileUtil {
 	 */
 	public static void copyFile(File srcFile, File destFile) throws IOException {
 		checkFileCopy(srcFile, destFile);
-		doCopyFile(srcFile, destFile);
+		_copyFile(srcFile, destFile);
 	}
 
 	/**
@@ -274,7 +270,7 @@ public class FileUtil {
 	 * @param destFile Destination {@link File}.
 	 * @throws IOException if cannot copy
 	 */
-	private static void doCopyFile(File srcFile, File destFile) throws IOException {
+	private static void _copyFile(File srcFile, File destFile) throws IOException {
 		if (destFile.exists()) {
 			if (destFile.isDirectory()) {
 				throw new IOException("Destination '" + destFile + "' is a directory");
@@ -285,8 +281,8 @@ public class FileUtil {
 		FileInputStream input = null;
 		FileOutputStream output = null;
 		try {
-			input = getFileInputStream(srcFile);
-			output = getFileOutputStream(destFile);
+			input = fileInputStreamOf(srcFile);
+			output = fileOutputStreamOf(destFile);
 			StreamUtil.copy(input, output);
 		} finally {
 			StreamUtil.close(output);
@@ -332,11 +328,11 @@ public class FileUtil {
 	/**
 	 * Copies directory with specified copy params.
 	 *
-	 * @see #doCopyDirectory(File, File)
+	 * @see #_copyDirectory(File, File)
 	 */
 	public static void copyDir(File srcDir, File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
-		doCopyDirectory(srcDir, destDir);
+		_copyDirectory(srcDir, destDir);
 	}
 
 	/**
@@ -344,7 +340,7 @@ public class FileUtil {
 	 * @param destDir
 	 * @throws IOException
 	 */
-	private static void doCopyDirectory(File srcDir, File destDir) throws IOException {
+	private static void _copyDirectory(File srcDir, File destDir) throws IOException {
 		if (destDir.exists()) {
 			checkIsDirectory(destDir);
 		} else {
@@ -363,9 +359,9 @@ public class FileUtil {
 			try {
 
 				if (file.isDirectory()) {
-					doCopyDirectory(file, destFile);
+					_copyDirectory(file, destFile);
 				} else {
-					doCopyFile(file, destFile);
+					_copyFile(file, destFile);
 				}
 			} catch (IOException ioex) {
 				exception = ioex;
@@ -387,11 +383,11 @@ public class FileUtil {
 	}
 
 	/**
-	 * @see #doMoveFile(File, File)
+	 * @see #_moveFile(File, File)
 	 */
 	public static File moveFile(File srcFile, File destFile) throws IOException {
 		checkFileCopy(srcFile, destFile);
-		doMoveFile(srcFile, destFile);
+		_moveFile(srcFile, destFile);
 		return destFile;
 	}
 
@@ -402,7 +398,7 @@ public class FileUtil {
 	 * @param destFile Destination directory.
 	 * @throws IOException
 	 */
-	private static void doMoveFile(File srcFile, File destFile) throws IOException {
+	private static void _moveFile(File srcFile, File destFile) throws IOException {
 		if (destFile.exists()) {
 			checkIsFile(destFile);
 			destFile.delete();
@@ -410,7 +406,7 @@ public class FileUtil {
 
 		final boolean rename = srcFile.renameTo(destFile);
 		if (!rename) {
-			doCopyFile(srcFile, destFile);
+			_copyFile(srcFile, destFile);
 			srcFile.delete();
 		}
 	}
@@ -446,11 +442,11 @@ public class FileUtil {
 	}
 
 	/**
-	 * @see #doMoveDirectory(File, File)
+	 * @see #_moveDirectory(File, File)
 	 */
 	public static File moveDir(File srcDir, File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
-		doMoveDirectory(srcDir, destDir);
+		_moveDirectory(srcDir, destDir);
 		return destDir;
 	}
 
@@ -461,7 +457,7 @@ public class FileUtil {
 	 * @param destDir Destination directory.
 	 * @throws IOException if there is an error during move.
 	 */
-	private static void doMoveDirectory(File srcDest, File destDir) throws IOException {
+	private static void _moveDirectory(File srcDest, File destDir) throws IOException {
 		if (destDir.exists()) {
 			checkIsDirectory(destDir);
 			destDir = file(destDir, destDir.getName());
@@ -470,7 +466,7 @@ public class FileUtil {
 
 		final boolean rename = srcDest.renameTo(destDir);
 		if (!rename) {
-			doCopyDirectory(srcDest, destDir);
+			_copyDirectory(srcDest, destDir);
 			deleteDir(srcDest);
 		}
 	}
@@ -576,7 +572,7 @@ public class FileUtil {
 		checkExists(file);
 		checkIsFile(file);
 
-		UnicodeInputStream in = getUnicodeInputStream(file);
+		UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
 			return StreamUtil.readChars(in, detectEncoding(in));
 		} finally {
@@ -596,7 +592,7 @@ public class FileUtil {
 		checkExists(file);
 		checkIsFile(file);
 
-		InputStream in = getStream(file, encoding);
+		InputStream in = streamOf(file, encoding);
 		try {
 			return StreamUtil.readChars(in, encoding);
 		} finally {
@@ -608,14 +604,14 @@ public class FileUtil {
 	 * @see #readChars(String, String)
 	 */
 	public static char[] readChars(String fileName) throws IOException {
-		return readChars(fileName, DEFAULT_ENCODING);
+		return readChars(fileName, encoding());
 	}
 
 	/**
 	 * @see #readChars(File, String)
 	 */
 	public static char[] readChars(File file) throws IOException {
-		return readChars(file, DEFAULT_ENCODING);
+		return readChars(file, encoding());
 	}
 
 	/**
@@ -629,7 +625,7 @@ public class FileUtil {
 	 * @see #writeChars(File, char[], String)
 	 */
 	public static void writeChars(File dest, char[] data) throws IOException {
-		writeChars(dest, data, DEFAULT_ENCODING);
+		writeChars(dest, data, encoding());
 	}
 
 	/**
@@ -668,7 +664,7 @@ public class FileUtil {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
-		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(getFileOutputStream(dest, append), encoding));
+		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(fileOutputStreamOf(dest, append), encoding));
 		try {
 			out.write(data);
 		} finally {
@@ -692,11 +688,11 @@ public class FileUtil {
 	 * @param file {@link File} to read.
 	 * @return String in UTF encoding.
 	 * @throws IOException if copy to {@link InputStream} errors.
-	 * @see #getUnicodeInputStream(File)
+	 * @see #unicodeInputStreamOf(File)
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
 	public static String readUTFString(File file) throws IOException {
-		UnicodeInputStream in = getUnicodeInputStream(file);
+		UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
 			return StreamUtil.copy(in, detectEncoding(in)).toString();
 		} finally {
@@ -711,7 +707,7 @@ public class FileUtil {
 	 * @param inputStream {@link InputStream} to read.
 	 * @return String in UTF encoding.
 	 * @throws IOException if copy to {@link InputStream} errors.
-	 * @see #getUnicodeInputStream(File)
+	 * @see #unicodeInputStreamOf(File)
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
 	public static String readUTFString(InputStream inputStream) throws IOException {
@@ -732,13 +728,13 @@ public class FileUtil {
 	 * @param encoding Encoding to use.
 	 * @return String representing {@link File} content.
 	 * @throws IOException if copy to {@link InputStream} errors.
-	 * @see #getStream(File, String)
+	 * @see #streamOf(File, String)
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
 	public static String readString(File file, String encoding) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
-		InputStream in = getStream(file, encoding);
+		InputStream in = streamOf(file, encoding);
 		try {
 			return StreamUtil.copy(in, encoding).toString();
 		} finally {
@@ -750,7 +746,7 @@ public class FileUtil {
 	 * @see #readString(String, String)
 	 */
 	public static String readString(String source) throws IOException {
-		return readString(source, DEFAULT_ENCODING);
+		return readString(source, encoding());
 	}
 
 	/**
@@ -764,14 +760,14 @@ public class FileUtil {
 	 * @see #readString(File, String)
 	 */
 	public static String readString(File source) throws IOException {
-		return readString(source, DEFAULT_ENCODING);
+		return readString(source, encoding());
 	}
 
 	/**
 	 * @see #writeString(File, String, String)
 	 */
 	public static void writeString(String dest, String data) throws IOException {
-		writeString(file(dest), data, DEFAULT_ENCODING);
+		writeString(file(dest), data, encoding());
 	}
 
 	/**
@@ -785,7 +781,7 @@ public class FileUtil {
 	 * @see #writeString(File, String, String)
 	 */
 	public static void writeString(File dest, String data) throws IOException {
-		writeString(dest, data, DEFAULT_ENCODING);
+		writeString(dest, data, encoding());
 	}
 
 	/**
@@ -815,7 +811,7 @@ public class FileUtil {
 	 * @see #appendString(File, String, String)
 	 */
 	public static void appendString(File dest, String data) throws IOException {
-		appendString(dest, data, DEFAULT_ENCODING);
+		appendString(dest, data, encoding());
 	}
 
 	/**
@@ -842,7 +838,7 @@ public class FileUtil {
 		}
 		FileOutputStream out = null;
 		try {
-			out = getFileOutputStream(dest, append);
+			out = fileOutputStreamOf(dest, append);
 			out.write(data.getBytes(encoding));
 		} finally {
 			StreamUtil.close(out);
@@ -863,7 +859,7 @@ public class FileUtil {
 	 * @see #writeStream(FileOutputStream, InputStream)
 	 */
 	public static void writeStream(File dest, InputStream in) throws IOException {
-		writeStream(getFileOutputStream(dest), in);
+		writeStream(fileOutputStreamOf(dest), in);
 	}
 
 	/**
@@ -887,7 +883,7 @@ public class FileUtil {
 	 * @see #readLines(String, String)
 	 */
 	public static String[] readLines(String source) throws IOException {
-		return readLines(source, DEFAULT_ENCODING);
+		return readLines(source, encoding());
 	}
 
 	/**
@@ -901,7 +897,7 @@ public class FileUtil {
 	 * @see #readLines(File, String)
 	 */
 	public static String[] readLines(File source) throws IOException {
-		return readLines(source, DEFAULT_ENCODING);
+		return readLines(source, encoding());
 	}
 
 	/**
@@ -918,7 +914,7 @@ public class FileUtil {
 		checkIsFile(file);
 		List<String> list = new ArrayList<>();
 
-		InputStream in = getStream(file, encoding);
+		InputStream in = streamOf(file, encoding);
 		try {
 			BufferedReader br = new BufferedReader(StreamUtil.inputStreamReadeOf(in, encoding));
 			String strLine;
@@ -1100,8 +1096,8 @@ public class FileUtil {
 		InputStream input1 = null;
 		InputStream input2 = null;
 		try {
-			input1 = getFileInputStream(one);
-			input2 = getFileInputStream(two);
+			input1 = fileInputStreamOf(one);
+			input2 = fileInputStreamOf(two);
 			return StreamUtil.compare(input1, input2);
 		} finally {
 			StreamUtil.close(input1);
@@ -1353,7 +1349,7 @@ public class FileUtil {
 	 * @see #createTempDirectory(String, String)
 	 */
 	public static File createTempDirectory() throws IOException {
-		return createTempDirectory(TEMP_PREFIX, null);
+		return createTempDirectory(tempPrefix(), null);
 	}
 
 	/**
@@ -1379,7 +1375,7 @@ public class FileUtil {
 	 * @see #createTempFile(String, String, File, boolean)
 	 */
 	public static File createTempFile() throws IOException {
-		return createTempFile(TEMP_PREFIX, null, null, true);
+		return createTempFile(tempPrefix(), null, null, true);
 	}
 
 	/**
@@ -1527,7 +1523,7 @@ public class FileUtil {
 	 */
 	public static byte[] digest(final File file, MessageDigest algorithm) throws IOException {
 		algorithm.reset();
-		FileInputStream fis = getFileInputStream(file);
+		FileInputStream fis = fileInputStreamOf(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		DigestInputStream dis = new DigestInputStream(bis, algorithm);
 
@@ -1568,15 +1564,15 @@ public class FileUtil {
 	 * @return new {@link FileInputStream}.
 	 * @throws IOException if something went wrong.
 	 */
-	private static FileInputStream getFileInputStream(File file) throws IOException {
+	private static FileInputStream fileInputStreamOf(File file) throws IOException {
 		return new FileInputStream(file);
 	}
 
 	/**
-	 * @see #getFileOutputStream(File, boolean)
+	 * @see #fileOutputStreamOf(File, boolean)
 	 */
-	private static FileOutputStream getFileOutputStream(File file) throws IOException {
-		return getFileOutputStream(file, false);
+	private static FileOutputStream fileOutputStreamOf(File file) throws IOException {
+		return fileOutputStreamOf(file, false);
 	}
 
 	/**
@@ -1588,20 +1584,20 @@ public class FileUtil {
 	 * @return new {@link FileOutputStream}.
 	 * @throws IOException
 	 */
-	private static FileOutputStream getFileOutputStream(File file, boolean isAppend) throws IOException {
+	private static FileOutputStream fileOutputStreamOf(File file, boolean isAppend) throws IOException {
 		return new FileOutputStream(file, isAppend);
 	}
 
 	/**
-	 * @see #getUnicodeInputStream(InputStream, String)
+	 * @see #unicodeInputStreamOf(InputStream, String)
 	 * @see #checkExists(File)
 	 * @see #checkIsFile(File)
-	 * @see #getFileInputStream(File)
+	 * @see #fileInputStreamOf(File)
 	 */
-	private static UnicodeInputStream getUnicodeInputStream(File file) throws IOException {
+	private static UnicodeInputStream unicodeInputStreamOf(File file) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
-		return getUnicodeInputStream(getFileInputStream(file), null);
+		return unicodeInputStreamOf(fileInputStreamOf(file), null);
 	}
 
 	/**
@@ -1611,7 +1607,7 @@ public class FileUtil {
 	 * @param targetEncoding Encoding to use.
 	 * @return new {@link UnicodeInputStream}.
 	 */
-	private static UnicodeInputStream getUnicodeInputStream(InputStream input, String targetEncoding) {
+	private static UnicodeInputStream unicodeInputStreamOf(InputStream input, String targetEncoding) {
 		return new UnicodeInputStream(input, targetEncoding);
 	}
 
@@ -1620,13 +1616,13 @@ public class FileUtil {
 	 *
 	 * @return either {@link FileInputStream} or {@link UnicodeInputStream}.
 	 * @throws IOException if something went wrong.
-	 * @see #getFileInputStream(File)
-	 * @see #getUnicodeInputStream(InputStream, String)
+	 * @see #fileInputStreamOf(File)
+	 * @see #unicodeInputStreamOf(InputStream, String)
 	 */
-	private static InputStream getStream(File file, String encoding) throws IOException {
-		InputStream in = getFileInputStream(file);
+	private static InputStream streamOf(File file, String encoding) throws IOException {
+		InputStream in = fileInputStreamOf(file);
 		if (encoding.startsWith("UTF")) {
-			in = getUnicodeInputStream(in, encoding);
+			in = unicodeInputStreamOf(in, encoding);
 		}
 		return in;
 	}
@@ -1751,7 +1747,6 @@ public class FileUtil {
 		}
 	}
 
-
 	/**
 	 * Checks that file copy can occur.
 	 *
@@ -1771,5 +1766,23 @@ public class FileUtil {
 		if (destParent != null && !destParent.exists()) {
 			checkCreateDirectory(destParent);
 		}
+	}
+
+	// ---------------------------------------------------------------- configs
+
+	/**
+	 * Returns default encoding.
+	 * @return default encoding.
+	 */
+	private static String encoding() {
+		return JODD_CORE_DEFAULTS.getEncoding();
+	}
+
+	/**
+	 * Returns default prefix for temp files.
+	 * @return default prefix for temp files.
+	 */
+	private static String tempPrefix() {
+		return JODD_CORE_DEFAULTS.getTempFilePrefix();
 	}
 }
