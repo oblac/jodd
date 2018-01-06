@@ -46,7 +46,7 @@ class PrettyStringBuilderTest {
 
 	@Test
 	void testMap() {
-		Map m = new LinkedHashMap();
+		Map<Integer, String> m = new LinkedHashMap<>();
 		m.put(1, "One");
 		m.put(2, "Two");
 		assertEquals("{1:One,2:Two}", new PrettyStringBuilder().toString(m));

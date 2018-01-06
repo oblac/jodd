@@ -26,6 +26,7 @@
 package jodd.io;
 
 import jodd.core.JoddCore;
+import jodd.core.JoddCoreDefaults;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
@@ -41,13 +42,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -65,16 +65,22 @@ public class FileUtil {
 	private static final String MSG_NOT_A_FILE = "Not a file: ";
 	private static final String MSG_UNABLE_TO_DELETE = "Unable to delete: ";
 
+	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
+	private static final int ZERO = 0;
+	private static final int NEGATIVE_ONE = -1;
+	private static final String FILE_PROTOCOL = "file";
+	private static final String USER_HOME = "~";
+
 	/**
-	 * Simple factory for <code>File</code> objects but with home resolving.
+	 * Simple factory for {@link File} objects but with home resolving.
 	 */
 	public static File file(String fileName) {
-		fileName = StringUtil.replace(fileName, "~", SystemUtil.userHome());
+		fileName = StringUtil.replace(fileName, USER_HOME, SystemUtil.userHome());
 		return new File(fileName);
 	}
 
 	/**
-	 * Simple factory for <code>File</code> objects.
+	 * Simple factory for {@link File} objects.
 	 */
 	private static File file(File parent, String fileName) {
 		return new File(parent, fileName);
@@ -83,27 +89,31 @@ public class FileUtil {
 	// ---------------------------------------------------------------- misc shortcuts
 
 	/**
-	 * Checks if two files points to the same file.
+	 * @see #equals(File, File)
 	 */
-	public static boolean equals(String file1, String file2) {
-		return equals(file(file1), file(file2));
+	public static boolean equals(String one, String two) {
+		return equals(file(one), file(two));
 	}
 
 	/**
-	 * Checks if two files points to the same file.
+	 * Checks if two {@link File}s point to the same {@link File}.
+	 *
+	 * @param one {@link File} one.
+	 * @param two {@link File} two.
+	 * @return {@code true} if the {@link File}s match.
 	 */
-	public static boolean equals(File file1, File file2) {
+	public static boolean equals(File one, File two) {
 		try {
-			file1 = file1.getCanonicalFile();
-			file2 = file2.getCanonicalFile();
+			one = one.getCanonicalFile();
+			two = two.getCanonicalFile();
 		} catch (IOException ignore) {
 			return false;
 		}
-		return file1.equals(file2);
+		return one.equals(two);
 	}
 
 	/**
-	 * Converts file URLs to file. Ignores other schemes and returns <code>null</code>.
+	 * Converts {@link File} {@link URL}s to {@link File}. Ignores other schemes and returns {@code null}.
 	 */
 	public static File toFile(URL url) {
 		String fileName = toFileName(url);
@@ -114,24 +124,29 @@ public class FileUtil {
 	}
 
 	/**
-	 * Converts file to URL in a correct way.
-	 * Returns <code>null</code> in case of error.
+	 * Converts {@link File} to {@link URL} in a correct way.
+	 *
+	 * @return {@link URL} or {@code null} in case of error.
+	 * @throws MalformedURLException if {@link File} cannot be converted.
 	 */
 	public static URL toURL(File file) throws MalformedURLException {
 		return file.toURI().toURL();
 	}
 
 	/**
-	 * Converts file URLs to file name. Accepts only URLs with 'file' protocol.
-	 * Otherwise, for other schemes returns <code>null</code>.
+	 * Converts {@link File} {@link URL}s to file name. Accepts only {@link URL}s with 'file' protocol.
+	 * Otherwise, for other schemes returns {@code null}.
+	 *
+	 * @param url {@link URL} to convert
+	 * @return file name
 	 */
 	public static String toFileName(URL url) {
-		if ((url == null) || !(url.getProtocol().equals("file"))) {
+		if ((url == null) || !(url.getProtocol().equals(FILE_PROTOCOL))) {
 			return null;
 		}
 		String filename = url.getFile().replace('/', File.separatorChar);
 
-		return URLDecoder.decode(filename, JoddCore.get().defaults().getEncoding());
+		return URLDecoder.decode(filename, encoding());
 	}
 
 	/**
@@ -139,98 +154,90 @@ public class FileUtil {
 	 */
 	public static File toContainerFile(URL url) {
 		String protocol = url.getProtocol();
-		if (protocol.equals("file")) {
+		if (protocol.equals(FILE_PROTOCOL)) {
 			return toFile(url);
 		}
 
 		String path = url.getPath();
 
 		return new File(URI.create(
-				path.substring(0, path.lastIndexOf("!/"))));
+			path.substring(ZERO, path.lastIndexOf("!/"))));
 	}
 
 	/**
-	 * Returns <code>true</code> if file exists.
+	 * Returns {@code true} if {@link File} exists.
 	 */
 	public static boolean isExistingFile(File file) {
-		if (file == null) {
-			return false;
-		}
-		return file.exists() && file.isFile();
+		return file != null && file.exists() && file.isFile();
 	}
 
 	/**
-	 * Returns <code>true</code> if folder exists.
+	 * Returns {@code true} if directory exists.
 	 */
 	public static boolean isExistingFolder(File folder) {
-		if (folder == null) {
-			return false;
-		}
-		return folder.exists() && folder.isDirectory();
+		return folder != null && folder.exists() && folder.isDirectory();
 	}
 
 	// ---------------------------------------------------------------- mkdirs
 
 	/**
-	 * Creates all folders at once.
-	 * @see #mkdirs(java.io.File)
+	 * @see #mkdirs(File)
 	 */
 	public static void mkdirs(String dirs) throws IOException {
 		mkdirs(file(dirs));
 	}
+
 	/**
-	 * Creates all folders at once.
+	 * Creates all directories at once.
+	 *
+	 * @param dirs Directories to make.
+	 * @throws IOException if cannot create directory.
 	 */
 	public static void mkdirs(File dirs) throws IOException {
 		if (dirs.exists()) {
-			if (!dirs.isDirectory()) {
-				throw new IOException(MSG_NOT_A_DIRECTORY + dirs);
-			}
+			checkIsDirectory(dirs);
 			return;
 		}
-		if (!dirs.mkdirs()) {
-			throw new IOException(MSG_CANT_CREATE + dirs);
-		}
+		checkCreateDirectory(dirs);
 	}
 
 	/**
-	 * Creates single folder.
-	 * @see #mkdir(java.io.File)
+	 * @see #mkdir(File)
 	 */
 	public static void mkdir(String dir) throws IOException {
 		mkdir(file(dir));
 	}
+
 	/**
-	 * Creates single folders.
+	 * Creates single directory.
+	 *
+	 * @throws IOException if cannot create directory.
 	 */
 	public static void mkdir(File dir) throws IOException {
 		if (dir.exists()) {
-			if (!dir.isDirectory()) {
-				throw new IOException(MSG_NOT_A_DIRECTORY + dir);
-			}
+			checkIsDirectory(dir);
 			return;
 		}
-		if (!dir.mkdir()) {
-			throw new IOException(MSG_CANT_CREATE + dir);
-		}
+		checkCreateDirectory(dir);
 	}
 
 	// ---------------------------------------------------------------- touch
 
 	/**
-	 * @see #touch(java.io.File)
+	 * @see #touch(File)
 	 */
 	public static void touch(String file) throws IOException {
 		touch(file(file));
 	}
+
 	/**
-	 * Implements the Unix "touch" utility. It creates a new file
-	 * with size 0 or, if the file exists already, it is opened and
-	 * closed without modifying it, but updating the file date and time.
+	 * Implements the Unix "touch" utility. It creates a new {@link File}
+	 * with size 0 or, if the {@link File} exists already, it is opened and
+	 * closed without modifying it, but updating the {@link File} date and time.
 	 */
 	public static void touch(File file) throws IOException {
 		if (!file.exists()) {
-			StreamUtil.close(new FileOutputStream(file));
+			StreamUtil.close(fileOutputStreamOf(file));
 		}
 		file.setLastModified(System.currentTimeMillis());
 	}
@@ -238,126 +245,106 @@ public class FileUtil {
 	// ---------------------------------------------------------------- copy file to file
 
 	/**
-	 * @see #copyFile(java.io.File, java.io.File)
+	 * @see #copyFile(File, File)
 	 */
-	public static void copyFile(String src, String dest) throws IOException {
-		copyFile(file(src), file(dest));
+	public static void copyFile(String srcFile, String destFile) throws IOException {
+		copyFile(file(srcFile), file(destFile));
 	}
+
 	/**
-	 * Copies a file to another file.
+	 * Copies a {@link File} to another {@link File}.
+	 *
+	 * @param srcFile  Source {@link File}.
+	 * @param destFile Destination {@link File}.
+	 * @throws IOException if cannot copy
 	 */
-	public static void copyFile(File src, File dest) throws IOException {
-		checkFileCopy(src, dest);
-		doCopyFile(src, dest);
-	}
-
-	private static void checkFileCopy(File src, File dest) throws IOException {
-		if (!src.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + src);
-		}
-		if (!src.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + src);
-		}
-		if (equals(src, dest)) {
-			throw new IOException("Files '" + src + "' and '" + dest + "' are equal");
-		}
-
-		File destParent = dest.getParentFile();
-		if (destParent != null && !destParent.exists()) {
-			if (!destParent.mkdirs()) {
-				throw new IOException(MSG_CANT_CREATE + destParent);
-			}
-		}
+	public static void copyFile(File srcFile, File destFile) throws IOException {
+		checkFileCopy(srcFile, destFile);
+		_copyFile(srcFile, destFile);
 	}
 
 	/**
 	 * Internal file copy when most of the pre-checking has passed.
+	 *
+	 * @param srcFile  Source {@link File}.
+	 * @param destFile Destination {@link File}.
+	 * @throws IOException if cannot copy
 	 */
-	private static void doCopyFile(File src, File dest) throws IOException {
-		if (dest.exists()) {
-			if (dest.isDirectory()) {
-				throw new IOException("Destination '" + dest + "' is a directory");
+	private static void _copyFile(File srcFile, File destFile) throws IOException {
+		if (destFile.exists()) {
+			if (destFile.isDirectory()) {
+				throw new IOException("Destination '" + destFile + "' is a directory");
 			}
 		}
 
 		// do copy file
-		FileInputStream input = new FileInputStream(src);
+		FileInputStream input = null;
+		FileOutputStream output = null;
 		try {
-			FileOutputStream output = new FileOutputStream(dest);
-			try {
-				StreamUtil.copy(input, output);
-			} finally {
-				StreamUtil.close(output);
-			}
+			input = fileInputStreamOf(srcFile);
+			output = fileOutputStreamOf(destFile);
+			StreamUtil.copy(input, output);
 		} finally {
+			StreamUtil.close(output);
 			StreamUtil.close(input);
 		}
 
 		// done
 
-		if (src.length() != dest.length()) {
-			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
+		if (srcFile.length() != destFile.length()) {
+			throw new IOException("Copy file failed of '" + srcFile + "' to '" + destFile + "' due to different sizes");
 		}
-		dest.setLastModified(src.lastModified());
+		destFile.setLastModified(srcFile.lastModified());
 	}
 
 	// ---------------------------------------------------------------- copy file to directory
 
 	/**
-	 * @see #copyFileToDir(java.io.File, java.io.File)
+	 * @see #copyFileToDir(File, File)
 	 */
-	public static File copyFileToDir(String src, String destDir) throws IOException {
-		return copyFileToDir(file(src), file(destDir));
-	}
-	/**
-	 * Copies a file to folder with specified copy params and returns copied destination.
-	 */
-	public static File copyFileToDir(File src, File destDir) throws IOException {
-		if (destDir.exists() && !destDir.isDirectory()) {
-			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
-		}
-		File dest = file(destDir, src.getName());
-		copyFile(src, dest);
-		return dest;
+	public static File copyFileToDir(String srcFile, String destDir) throws IOException {
+		return copyFileToDir(file(srcFile), file(destDir));
 	}
 
+	/**
+	 * Copies a {@link File} to directory with specified copy params and returns copied destination.
+	 */
+	public static File copyFileToDir(File srcFile, File destDir) throws IOException {
+		checkExistsAndDirectory(destDir);
+		File destFile = file(destDir, srcFile.getName());
+		copyFile(srcFile, destFile);
+		return destFile;
+	}
 
 	// ---------------------------------------------------------------- copy dir
 
-
+	/**
+	 * @see #copyDir(File, File)
+	 */
 	public static void copyDir(String srcDir, String destDir) throws IOException {
 		copyDir(file(srcDir), file(destDir));
 	}
 
 	/**
 	 * Copies directory with specified copy params.
+	 *
+	 * @see #_copyDirectory(File, File)
 	 */
 	public static void copyDir(File srcDir, File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
-		doCopyDirectory(srcDir, destDir);
+		_copyDirectory(srcDir, destDir);
 	}
 
-	private static void checkDirCopy(File srcDir, File destDir) throws IOException {
-		if (!srcDir.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + srcDir);
-		}
-		if (!srcDir.isDirectory()) {
-			throw new IOException(MSG_NOT_A_DIRECTORY + srcDir);
-		}
-		if (equals(srcDir, destDir)) {
-			throw new IOException("Source '" + srcDir + "' and destination '" + destDir + "' are equal");
-		}
-	}
-
-	private static void doCopyDirectory(File srcDir, File destDir) throws IOException {
+	/**
+	 * @param srcDir
+	 * @param destDir
+	 * @throws IOException
+	 */
+	private static void _copyDirectory(File srcDir, File destDir) throws IOException {
 		if (destDir.exists()) {
-			if (!destDir.isDirectory()) {
-				throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
-			}
+			checkIsDirectory(destDir);
 		} else {
-			if (!destDir.mkdirs()) {
-				throw new IOException(MSG_CANT_CREATE + destDir);
-			}
+			checkCreateDirectory(destDir);
 			destDir.setLastModified(srcDir.lastModified());
 		}
 
@@ -370,10 +357,11 @@ public class FileUtil {
 		for (File file : files) {
 			File destFile = file(destDir, file.getName());
 			try {
+
 				if (file.isDirectory()) {
-					doCopyDirectory(file, destFile);
+					_copyDirectory(file, destFile);
 				} else {
-					doCopyFile(file, destFile);
+					_copyFile(file, destFile);
 				}
 			} catch (IOException ioex) {
 				exception = ioex;
@@ -385,129 +373,164 @@ public class FileUtil {
 		}
 	}
 
-
-
 	// ---------------------------------------------------------------- move file
 
-	public static File moveFile(String src, String dest) throws IOException {
-		return moveFile(file(src), file(dest));
+	/**
+	 * @see #moveFile(File, File)
+	 */
+	public static File moveFile(String srcFile, String destFile) throws IOException {
+		return moveFile(file(srcFile), file(destFile));
 	}
 
-	public static File moveFile(File src, File dest) throws IOException {
-		checkFileCopy(src, dest);
-		doMoveFile(src, dest);
-		return dest;
+	/**
+	 * @see #_moveFile(File, File)
+	 */
+	public static File moveFile(File srcFile, File destFile) throws IOException {
+		checkFileCopy(srcFile, destFile);
+		_moveFile(srcFile, destFile);
+		return destFile;
 	}
 
-	private static void doMoveFile(File src, File dest) throws IOException {
-		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
-			dest.delete();
+	/**
+	 * Moves a {@link File}.
+	 *
+	 * @param srcFile  Source {@link File}.
+	 * @param destFile Destination directory.
+	 * @throws IOException
+	 */
+	private static void _moveFile(File srcFile, File destFile) throws IOException {
+		if (destFile.exists()) {
+			checkIsFile(destFile);
+			destFile.delete();
 		}
 
-		final boolean rename = src.renameTo(dest);
+		final boolean rename = srcFile.renameTo(destFile);
 		if (!rename) {
-			doCopyFile(src, dest);
-			src.delete();
+			_copyFile(srcFile, destFile);
+			srcFile.delete();
 		}
 	}
 
 	// ---------------------------------------------------------------- move file to dir
 
-
-	public static File moveFileToDir(String src, String destDir) throws IOException {
-		return moveFileToDir(file(src), file(destDir));
+	/**
+	 * @see #moveFileToDir(File, File)
+	 */
+	public static File moveFileToDir(String srcFile, String destDir) throws IOException {
+		return moveFileToDir(file(srcFile), file(destDir));
 	}
 
-	public static File moveFileToDir(File src, File destDir) throws IOException {
-		if (destDir.exists() && !destDir.isDirectory()) {
-			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
-		}
-		return moveFile(src, file(destDir, src.getName()));
+	/**
+	 * Moves a file to a directory.
+	 *
+	 * @param srcFile Source {@link File}.
+	 * @param destDir Destination directory.
+	 * @throws IOException if there is an error during move.
+	 */
+	public static File moveFileToDir(File srcFile, File destDir) throws IOException {
+		checkExistsAndDirectory(destDir);
+		return moveFile(srcFile, file(destDir, srcFile.getName()));
 	}
-
 
 	// ---------------------------------------------------------------- move dir
 
+	/**
+	 * @see #moveDir(File, File)
+	 */
 	public static File moveDir(String srcDir, String destDir) throws IOException {
 		return moveDir(file(srcDir), file(destDir));
 	}
+
+	/**
+	 * @see #_moveDirectory(File, File)
+	 */
 	public static File moveDir(File srcDir, File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
-		doMoveDirectory(srcDir, destDir);
+		_moveDirectory(srcDir, destDir);
 		return destDir;
 	}
 
-	private static void doMoveDirectory(File src, File dest) throws IOException {
-		if (dest.exists()) {
-			if (!dest.isDirectory()) {
-				throw new IOException(MSG_NOT_A_DIRECTORY + dest);
-			}
-			dest = file(dest, dest.getName());
-			dest.mkdir();
+	/**
+	 * Moves a directory.
+	 *
+	 * @param srcDest Source directory
+	 * @param destDir Destination directory.
+	 * @throws IOException if there is an error during move.
+	 */
+	private static void _moveDirectory(File srcDest, File destDir) throws IOException {
+		if (destDir.exists()) {
+			checkIsDirectory(destDir);
+			destDir = file(destDir, destDir.getName());
+			destDir.mkdir();
 		}
 
-		final boolean rename = src.renameTo(dest);
+		final boolean rename = srcDest.renameTo(destDir);
 		if (!rename) {
-			doCopyDirectory(src, dest);
-			deleteDir(src);
+			_copyDirectory(srcDest, destDir);
+			deleteDir(srcDest);
 		}
 	}
 
 	// ---------------------------------------------------------------- delete file
 
-	public static void deleteFile(String dest) throws IOException {
-		deleteFile(file(dest));
+	/**
+	 * @see #deleteFile(File)
+	 */
+	public static void deleteFile(String destFile) throws IOException {
+		deleteFile(file(destFile));
 	}
 
-	public static void deleteFile(File dest) throws IOException {
-		if (!dest.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + dest);
-		}
-		if (!dest.delete()) {
-			throw new IOException(MSG_UNABLE_TO_DELETE + dest);
-		}
+	/**
+	 * Deletes a {@link File}.
+	 *
+	 * @param destFile Destination to delete.
+	 * @throws IOException if there was an error deleting.
+	 */
+	public static void deleteFile(File destFile) throws IOException {
+		checkIsFile(destFile);
+		checkDeleteSuccessful(destFile);
 	}
-
 
 	// ---------------------------------------------------------------- delete dir
 
-	public static void deleteDir(String dest) throws IOException {
-		deleteDir(file(dest));
+	/**
+	 * @see #deleteDir(File)
+	 */
+	public static void deleteDir(String destDir) throws IOException {
+		deleteDir(file(destDir));
 	}
+
 	/**
 	 * Deletes a directory.
+	 *
+	 * @param destDir Destination to delete.
+	 * @throws IOException if there was an error deleting.
 	 */
-	public static void deleteDir(File dest) throws IOException {
-		cleanDir(dest);
-		if (!dest.delete()) {
-			throw new IOException(MSG_UNABLE_TO_DELETE + dest);
-		}
+	public static void deleteDir(File destDir) throws IOException {
+		cleanDir(destDir);
+		checkDeleteSuccessful(destDir);
 	}
 
-
-
+	/**
+	 * @see #cleanDir(File)
+	 */
 	public static void cleanDir(String dest) throws IOException {
 		cleanDir(file(dest));
 	}
 
 	/**
 	 * Cleans a directory without deleting it.
+	 *
+	 * @param destDir destination to clean.
+	 * @throws IOException if something went wrong.
 	 */
-	public static void cleanDir(File dest) throws IOException {
-		if (!dest.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + dest);
-		}
+	public static void cleanDir(File destDir) throws IOException {
+		checkExists(destDir);
+		checkIsDirectory(destDir);
 
-		if (!dest.isDirectory()) {
-			throw new IOException(MSG_NOT_A_DIRECTORY + dest);
-		}
-
-		File[] files = dest.listFiles();
+		File[] files = destDir.listFiles();
 		if (files == null) {
-			throw new IOException("Failed to list contents of: " + dest);
+			throw new IOException("Failed to list contents of: " + destDir);
 		}
 
 		IOException exception = null;
@@ -531,102 +554,117 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- read/write chars
 
+	/**
+	 * @see #readUTFChars(File)
+	 */
 	public static char[] readUTFChars(String fileName) throws IOException {
 		return readUTFChars(file(fileName));
 	}
+
 	/**
 	 * Reads UTF file content as char array.
-	 * @see UnicodeInputStream
+	 *
+	 * @param file {@link File} to read.
+	 * @return array of characters.
+	 * @throws IOException if something went wrong.
 	 */
 	public static char[] readUTFChars(File file) throws IOException {
-		if (!file.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + file);
-		}
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
-			len = Integer.MAX_VALUE;
-		}
-		UnicodeInputStream in = null;
+		checkExists(file);
+		checkIsFile(file);
+
+		UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
-			in = new UnicodeInputStream(new FileInputStream(file), null);
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter((int) len);
-			String encoding = in.getDetectedEncoding();
-			if (encoding == null) {
-				encoding = StringPool.UTF_8;
-			}
-			StreamUtil.copy(in, fastCharArrayWriter, encoding);
-			return fastCharArrayWriter.toCharArray();
+			return StreamUtil.readChars(in, detectEncoding(in));
 		} finally {
 			StreamUtil.close(in);
 		}
 	}
 
+	/**
+	 * Reads file content as char array.
+	 *
+	 * @param file     {@link File} to read.
+	 * @param encoding Encoding to use.
+	 * @return array of characters.
+	 * @throws IOException if something went wrong.
+	 */
+	public static char[] readChars(File file, String encoding) throws IOException {
+		checkExists(file);
+		checkIsFile(file);
+
+		InputStream in = streamOf(file, encoding);
+		try {
+			return StreamUtil.readChars(in, encoding);
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
+	/**
+	 * @see #readChars(String, String)
+	 */
 	public static char[] readChars(String fileName) throws IOException {
-		return readChars(file(fileName), JoddCore.get().defaults().getEncoding());
+		return readChars(fileName, encoding());
 	}
 
+	/**
+	 * @see #readChars(File, String)
+	 */
 	public static char[] readChars(File file) throws IOException {
-		return readChars(file, JoddCore.get().defaults().getEncoding());
+		return readChars(file, encoding());
 	}
 
+	/**
+	 * @see #readChars(File, String)
+	 */
 	public static char[] readChars(String fileName, String encoding) throws IOException {
 		return readChars(file(fileName), encoding);
 	}
 
 	/**
-	 * Reads file content as char array.
+	 * @see #writeChars(File, char[], String)
 	 */
-	public static char[] readChars(File file, String encoding) throws IOException {
-		if (!file.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + file);
-		}
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
-			len = Integer.MAX_VALUE;
-		}
-
-		InputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			if (encoding.startsWith("UTF")) {
-				in = new UnicodeInputStream(in, encoding);
-			}
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter((int) len);
-			StreamUtil.copy(in, fastCharArrayWriter, encoding);
-			return fastCharArrayWriter.toCharArray();
-		} finally {
-			StreamUtil.close(in);
-		}
-	}
-
-
 	public static void writeChars(File dest, char[] data) throws IOException {
-		outChars(dest, data, JoddCore.get().defaults().getEncoding(), false);
-	}
-	public static void writeChars(String dest, char[] data) throws IOException {
-		outChars(file(dest), data, JoddCore.get().defaults().getEncoding(), false);
+		writeChars(dest, data, encoding());
 	}
 
+	/**
+	 * @see #writeChars(File, char[])
+	 */
+	public static void writeChars(String dest, char[] data) throws IOException {
+		writeChars(file(dest), data);
+	}
+
+	/**
+	 * @see #writeChars(File, char[], String)
+	 */
+	public static void writeChars(String dest, char[] data, String encoding) throws IOException {
+		writeChars(file(dest), data, encoding);
+	}
+
+	/**
+	 * Write characters. append = false
+	 *
+	 * @see #outChars(File, char[], String, boolean)
+	 */
 	public static void writeChars(File dest, char[] data, String encoding) throws IOException {
 		outChars(dest, data, encoding, false);
 	}
-	public static void writeChars(String dest, char[] data, String encoding) throws IOException {
-		outChars(file(dest), data, encoding, false);
-	}
-	
+
+	/**
+	 * Writes characters to {@link File} destination.
+	 *
+	 * @param dest     destination {@link File}
+	 * @param data     Data as a {@link String}
+	 * @param encoding Encoding as a {@link String}
+	 * @param append   {@code true} if appending; {@code false} if {@link File} should be overwritten.
+	 * @throws IOException if something went wrong.
+	 */
 	protected static void outChars(File dest, char[] data, String encoding, boolean append) throws IOException {
 		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
+			checkIsFile(dest);
 		}
-		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest, append), encoding));
+		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(fileOutputStreamOf(dest, append), encoding));
 		try {
 			out.write(data);
 		} finally {
@@ -634,149 +672,173 @@ public class FileUtil {
 		}
 	}
 
-
 	// ---------------------------------------------------------------- read/write string
 
+	/**
+	 * @see #readUTFString(File)
+	 */
 	public static String readUTFString(String fileName) throws IOException {
 		return readUTFString(file(fileName));
 	}
 
 	/**
-	 * Detects optional BOM and reads UTF string from a file.
+	 * Detects optional BOM and reads UTF {@link String} from a {@link File}.
 	 * If BOM is missing, UTF-8 is assumed.
-	 * @see UnicodeInputStream
+	 *
+	 * @param file {@link File} to read.
+	 * @return String in UTF encoding.
+	 * @throws IOException if copy to {@link InputStream} errors.
+	 * @see #unicodeInputStreamOf(File)
+	 * @see StreamUtil#copy(InputStream, String)
 	 */
 	public static String readUTFString(File file) throws IOException {
-		if (!file.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + file);
-		}
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
-			len = Integer.MAX_VALUE;
-		}
-		UnicodeInputStream in = null;
+		UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
-			in = new UnicodeInputStream(new FileInputStream(file), null);
-			FastCharArrayWriter out = new FastCharArrayWriter((int) len);
-			String encoding = in.getDetectedEncoding();
-			if (encoding == null) {
-				encoding = StringPool.UTF_8;
-			}
-			StreamUtil.copy(in, out, encoding);
-			return out.toString();
+			return StreamUtil.copy(in, detectEncoding(in)).toString();
 		} finally {
 			StreamUtil.close(in);
 		}
 	}
 
 	/**
-	 * Detects optional BOM and reads UTF string from an input stream.
+	 * Detects optional BOM and reads UTF {@link String} from an {@link InputStream}.
 	 * If BOM is missing, UTF-8 is assumed.
+	 *
+	 * @param inputStream {@link InputStream} to read.
+	 * @return String in UTF encoding.
+	 * @throws IOException if copy to {@link InputStream} errors.
+	 * @see #unicodeInputStreamOf(File)
+	 * @see StreamUtil#copy(InputStream, String)
 	 */
 	public static String readUTFString(InputStream inputStream) throws IOException {
 		UnicodeInputStream in = null;
 		try {
 			in = new UnicodeInputStream(inputStream, null);
-			FastCharArrayWriter out = new FastCharArrayWriter();
-			String encoding = in.getDetectedEncoding();
-			if (encoding == null) {
-				encoding = StringPool.UTF_8;
-			}
-			StreamUtil.copy(in, out, encoding);
-			return out.toString();
+			return StreamUtil.copy(in, detectEncoding(in)).toString();
 		} finally {
 			StreamUtil.close(in);
 		}
 	}
 
-
-	public static String readString(String source) throws IOException {
-		return readString(file(source), JoddCore.get().defaults().getEncoding());
+	/**
+	 * Reads {@link File} content as {@link String} encoded in provided encoding.
+	 * For UTF encoded files, detects optional BOM characters.
+	 *
+	 * @param file     {@link File} to read.
+	 * @param encoding Encoding to use.
+	 * @return String representing {@link File} content.
+	 * @throws IOException if copy to {@link InputStream} errors.
+	 * @see #streamOf(File, String)
+	 * @see StreamUtil#copy(InputStream, String)
+	 */
+	public static String readString(File file, String encoding) throws IOException {
+		checkExists(file);
+		checkIsFile(file);
+		InputStream in = streamOf(file, encoding);
+		try {
+			return StreamUtil.copy(in, encoding).toString();
+		} finally {
+			StreamUtil.close(in);
+		}
 	}
 
+	/**
+	 * @see #readString(String, String)
+	 */
+	public static String readString(String source) throws IOException {
+		return readString(source, encoding());
+	}
+
+	/**
+	 * @see #readString(File, String)
+	 */
 	public static String readString(String source, String encoding) throws IOException {
 		return readString(file(source), encoding);
 	}
 
+	/**
+	 * @see #readString(File, String)
+	 */
 	public static String readString(File source) throws IOException {
-		return readString(source, JoddCore.get().defaults().getEncoding());
+		return readString(source, encoding());
 	}
 
 	/**
-	 * Reads file content as string encoded in provided encoding.
-	 * For UTF encoded files, detects optional BOM characters.
+	 * @see #writeString(File, String, String)
 	 */
-	public static String readString(File file, String encoding) throws IOException {
-		if (!file.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + file);
-		}
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
-			len = Integer.MAX_VALUE;
-		}
-		InputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			if (encoding.startsWith("UTF")) {
-				in = new UnicodeInputStream(in, encoding);
-			}
-			FastCharArrayWriter out = new FastCharArrayWriter((int) len);
-			StreamUtil.copy(in, out, encoding);
-			return out.toString();
-		} finally {
-			StreamUtil.close(in);
-		}
-	}
-
-
 	public static void writeString(String dest, String data) throws IOException {
-		outString(file(dest), data, JoddCore.get().defaults().getEncoding(), false);
+		writeString(file(dest), data, encoding());
 	}
 
+	/**
+	 * @see #writeString(File, String, String)
+	 */
 	public static void writeString(String dest, String data, String encoding) throws IOException {
-		outString(file(dest), data, encoding, false);
+		writeString(file(dest), data, encoding);
 	}
 
+	/**
+	 * @see #writeString(File, String, String)
+	 */
 	public static void writeString(File dest, String data) throws IOException {
-		outString(dest, data, JoddCore.get().defaults().getEncoding(), false);
+		writeString(dest, data, encoding());
 	}
 
+	/**
+	 * Writes String. append = false
+	 *
+	 * @see #outString(File, String, String, boolean)
+	 */
 	public static void writeString(File dest, String data, String encoding) throws IOException {
 		outString(dest, data, encoding, false);
 	}
 
-
+	/**
+	 * @see #appendString(File, String)
+	 */
 	public static void appendString(String dest, String data) throws IOException {
-		outString(file(dest), data, JoddCore.get().defaults().getEncoding(), true);
+		appendString(file(dest), data);
 	}
 
+	/**
+	 * @see #appendString(File, String, String)
+	 */
 	public static void appendString(String dest, String data, String encoding) throws IOException {
-		outString(file(dest), data, encoding, true);
+		appendString(file(dest), data, encoding);
 	}
 
+	/**
+	 * @see #appendString(File, String, String)
+	 */
 	public static void appendString(File dest, String data) throws IOException {
-		outString(dest, data, JoddCore.get().defaults().getEncoding(), true);
+		appendString(dest, data, encoding());
 	}
 
+	/**
+	 * Appends String. append = true
+	 *
+	 * @see #outString(File, String, String, boolean)
+	 */
 	public static void appendString(File dest, String data, String encoding) throws IOException {
 		outString(dest, data, encoding, true);
 	}
 
+	/**
+	 * Writes data using encoding to {@link File}.
+	 *
+	 * @param dest     destination {@link File}
+	 * @param data     Data as a {@link String}
+	 * @param encoding Encoding as a {@link String}
+	 * @param append   {@code true} if appending; {@code false} if {@link File} should be overwritten.
+	 * @throws IOException if something went wrong.
+	 */
 	protected static void outString(File dest, String data, String encoding, boolean append) throws IOException {
 		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
+			checkIsFile(dest);
 		}
 		FileOutputStream out = null;
 		try {
-			out = new FileOutputStream(dest, append);
+			out = fileOutputStreamOf(dest, append);
 			out.write(data.getBytes(encoding));
 		} finally {
 			StreamUtil.close(out);
@@ -785,61 +847,78 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- stream
 
-	public static void writeStream(File dest, InputStream in) throws IOException {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(dest);
-			StreamUtil.copy(in, out);
-		} finally {
-			StreamUtil.close(out);
-		}
-	}
 
+	/**
+	 * @see #writeStream(File, InputStream)
+	 */
 	public static void writeStream(String dest, InputStream in) throws IOException {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(dest);
-			StreamUtil.copy(in, out);
-		} finally {
-			StreamUtil.close(out);
-		}
-	}
-
-
-	// ---------------------------------------------------------------- read/write string lines
-
-
-	public static String[] readLines(String source) throws IOException {
-		return readLines(file(source), JoddCore.get().defaults().getEncoding());
-	}
-	public static String[] readLines(String source, String encoding) throws IOException {
-		return readLines(file(source), encoding);
-	}
-	public static String[] readLines(File source) throws IOException {
-		return readLines(source, JoddCore.get().defaults().getEncoding());
+		writeStream(file(dest), in);
 	}
 
 	/**
-	 * Reads lines from source files.
+	 * @see #writeStream(FileOutputStream, InputStream)
+	 */
+	public static void writeStream(File dest, InputStream in) throws IOException {
+		writeStream(fileOutputStreamOf(dest), in);
+	}
+
+	/**
+	 * Write {@link InputStream} in to {@link FileOutputStream}.
+	 *
+	 * @param out {@link FileOutputStream} to write to.
+	 * @param in  {@link InputStream} to read.
+	 * @throws IOException if there is an issue reading/writing.
+	 */
+	public static void writeStream(FileOutputStream out, InputStream in) throws IOException {
+		try {
+			StreamUtil.copy(in, out);
+		} finally {
+			StreamUtil.close(out);
+		}
+	}
+
+	// ---------------------------------------------------------------- read/write string lines
+
+	/**
+	 * @see #readLines(String, String)
+	 */
+	public static String[] readLines(String source) throws IOException {
+		return readLines(source, encoding());
+	}
+
+	/**
+	 * @see #readLines(File, String)
+	 */
+	public static String[] readLines(String source, String encoding) throws IOException {
+		return readLines(file(source), encoding);
+	}
+
+	/**
+	 * @see #readLines(File, String)
+	 */
+	public static String[] readLines(File source) throws IOException {
+		return readLines(source, encoding());
+	}
+
+	/**
+	 * Reads lines from source {@link File} with specified encoding and returns lines as {@link String}s in array.
+	 *
+	 * @param file     {@link File} to read.
+	 * @param encoding Endoing to use.
+	 * @return array of Strings which represents lines in the {@link File}.
+	 * @throws IOException if {@link File} does not exist or is not a {@link File} or there is an issue reading
+	 *                     the {@link File}.
 	 */
 	public static String[] readLines(File file, String encoding) throws IOException {
-		if (!file.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + file);
-		}
+		checkExists(file);
+		checkIsFile(file);
 		List<String> list = new ArrayList<>();
 
-		InputStream in = null;
+		InputStream in = streamOf(file, encoding);
 		try {
-			in = new FileInputStream(file);
-			if (encoding.startsWith("UTF")) {
-				in = new UnicodeInputStream(in, encoding);
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, encoding));
+			BufferedReader br = new BufferedReader(StreamUtil.inputStreamReadeOf(in, encoding));
 			String strLine;
-			while ((strLine = br.readLine()) != null)   {
+			while ((strLine = br.readLine()) != null) {
 				list.add(strLine);
 			}
 		} finally {
@@ -848,35 +927,44 @@ public class FileUtil {
 		return list.toArray(new String[list.size()]);
 	}
 
+	// ---------------------------------------------------------------- read/write byte array
 
-
-	// ---------------------------------------------------------------- read/write bytearray
-
-
+	/**
+	 * @see #readBytes(File)
+	 */
 	public static byte[] readBytes(String file) throws IOException {
 		return readBytes(file(file));
 	}
 
+	/**
+	 * @see #readBytes(File, int)
+	 */
 	public static byte[] readBytes(File file) throws IOException {
-		return readBytes(file, -1);
+		return readBytes(file, NEGATIVE_ONE);
 	}
-	public static byte[] readBytes(File file, int fixedLength) throws IOException {
-		if (!file.exists()) {
-			throw new FileNotFoundException(MSG_NOT_FOUND + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException(MSG_NOT_A_FILE + file);
-		}
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
+
+	/**
+	 * Read file and returns byte array with contents.
+	 *
+	 * @param file  {@link File} to read
+	 * @param count number of bytes to read
+	 * @return byte array from {@link File} contents.
+	 * @throws IOException if not a {@link File} or {@link File} does not exist or file size is
+	 *                     larger than {@link Integer#MAX_VALUE}.
+	 */
+	public static byte[] readBytes(File file, int count) throws IOException {
+		checkExists(file);
+		checkIsFile(file);
+		long numToRead = file.length();
+		if (numToRead >= Integer.MAX_VALUE) {
 			throw new IOException("File is larger then max array size");
 		}
 
-		if (fixedLength > -1 && fixedLength < len) {
-			len = fixedLength;
+		if (count > NEGATIVE_ONE && count < numToRead) {
+			numToRead = count;
 		}
 
-		byte[] bytes = new byte[(int) len];
+		byte[] bytes = new byte[(int) numToRead];
 		RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
 		randomAccessFile.readFully(bytes);
 		randomAccessFile.close();
@@ -884,46 +972,79 @@ public class FileUtil {
 		return bytes;
 	}
 
-
-
+	/**
+	 * @see #writeBytes(File, byte[])
+	 */
 	public static void writeBytes(String dest, byte[] data) throws IOException {
-		outBytes(file(dest), data, 0, data.length, false);
+		writeBytes(file(dest), data);
 	}
 
-	public static void writeBytes(String dest, byte[] data, int off, int len) throws IOException {
-		outBytes(file(dest), data, off, len, false);
-	}
-
+	/**
+	 * @see #writeBytes(File, byte[], int, int)
+	 */
 	public static void writeBytes(File dest, byte[] data) throws IOException {
-		outBytes(dest, data, 0, data.length, false);
+		writeBytes(dest, data, ZERO, data.length);
 	}
 
+	/**
+	 * @see #writeBytes(File, byte[], int, int)
+	 */
+	public static void writeBytes(String dest, byte[] data, int off, int len) throws IOException {
+		writeBytes(file(dest), data, off, len);
+	}
+
+	/**
+	 * Write bytes. append = false
+	 *
+	 * @see #outBytes(File, byte[], int, int, boolean)
+	 */
 	public static void writeBytes(File dest, byte[] data, int off, int len) throws IOException {
 		outBytes(dest, data, off, len, false);
 	}
 
-
+	/**
+	 * @see #appendBytes(File, byte[])
+	 */
 	public static void appendBytes(String dest, byte[] data) throws IOException {
-		outBytes(file(dest), data, 0, data.length, true);
+		appendBytes(file(dest), data);
 	}
 
+	/**
+	 * @see #appendBytes(File, byte[], int, int)
+	 */
 	public static void appendBytes(String dest, byte[] data, int off, int len) throws IOException {
-		outBytes(file(dest), data, off, len, true);
+		appendBytes(file(dest), data, off, len);
 	}
 
+	/**
+	 * @see #appendBytes(File, byte[], int, int)
+	 */
 	public static void appendBytes(File dest, byte[] data) throws IOException {
-		outBytes(dest, data, 0, data.length, true);
+		appendBytes(dest, data, ZERO, data.length);
 	}
 
+	/**
+	 * Appends bytes. append = true
+	 *
+	 * @see #outBytes(File, byte[], int, int, boolean)
+	 */
 	public static void appendBytes(File dest, byte[] data, int off, int len) throws IOException {
 		outBytes(dest, data, off, len, true);
 	}
 
+	/**
+	 * Writes data to {@link File} destination.
+	 *
+	 * @param dest   destination {@link File}
+	 * @param data   Data as a {@link String}
+	 * @param off    the start offset in the data.
+	 * @param len    the number of bytes to write.
+	 * @param append {@code true} if appending; {@code false} if {@link File} should be overwritten.
+	 * @throws IOException if something went wrong.
+	 */
 	protected static void outBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
 		if (dest.exists()) {
-			if (!dest.isFile()) {
-				throw new IOException(MSG_NOT_A_FILE + dest);
-			}
+			checkIsFile(dest);
 		}
 		FileOutputStream out = null;
 		try {
@@ -941,18 +1062,18 @@ public class FileUtil {
 	}
 
 	/**
-	 * Compare the contents of two files to determine if they are equal or
+	 * Compare the contents of two {@link File}s to determine if they are equal or
 	 * not.
 	 * <p>
-	 * This method checks to see if the two files are different lengths
-	 * or if they point to the same file, before resorting to byte-by-byte
+	 * This method checks to see if the two {@link File}s are different lengths
+	 * or if they point to the same {@link File}, before resorting to byte-by-byte
 	 * comparison of the contents.
 	 * <p>
 	 * Code origin: Avalon
 	 */
-	public static boolean compare(File file1, File file2) throws IOException {
-		boolean file1Exists = file1.exists();
-		if (file1Exists != file2.exists()) {
+	public static boolean compare(File one, File two) throws IOException {
+		boolean file1Exists = one.exists();
+		if (file1Exists != two.exists()) {
 			return false;
 		}
 
@@ -960,23 +1081,23 @@ public class FileUtil {
 			return true;
 		}
 
-		if ((!file1.isFile()) || (!file2.isFile())) {
+		if ((!one.isFile()) || (!two.isFile())) {
 			throw new IOException("Only files can be compared");
 		}
 
-		if (file1.length() != file2.length()) {
+		if (one.length() != two.length()) {
 			return false;
 		}
 
-		if (equals(file1, file2)) {
+		if (equals(one, two)) {
 			return true;
 		}
 
 		InputStream input1 = null;
 		InputStream input2 = null;
 		try {
-			input1 = new FileInputStream(file1);
-			input2 = new FileInputStream(file2);
+			input1 = fileInputStreamOf(one);
+			input2 = fileInputStreamOf(two);
 			return StreamUtil.compare(input1, input2);
 		} finally {
 			StreamUtil.close(input1);
@@ -986,72 +1107,85 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- time
 
+	/**
+	 * @see #isOlder(File, File)
+	 */
+	public static boolean isOlder(String file, String reference) {
+		return isOlder(file(file), file(reference));
+	}
+
+	/**
+	 * @see #isNewer(File, File)
+	 */
 	public static boolean isNewer(String file, String reference) {
 		return isNewer(file(file), file(reference));
 	}
 
 	/**
-	 * Test if specified <code>File</code> is newer than the reference <code>File</code>.
+	 * Uses {@link File#lastModified()} for reference.
 	 *
-	 * @param file		the <code>File</code> of which the modification date must be compared
-	 * @param reference	the <code>File</code> of which the modification date is used
-	 * @return <code>true</code> if the <code>File</code> exists and has been modified more
-	 * 			recently than the reference <code>File</code>.
+	 * @see #isNewer(File, long)
 	 */
 	public static boolean isNewer(File file, File reference) {
-		if (!reference.exists()) {
-			throw new IllegalArgumentException("Reference file not found: " + reference);
-		}
+		checkReferenceExists(reference);
 		return isNewer(file, reference.lastModified());
 	}
 
-
-	public static boolean isOlder(String file, String reference) {
-		return isOlder(file(file), file(reference));
-	}
-
+	/**
+	 * Uses {@link File#lastModified()} for reference.
+	 *
+	 * @see #isOlder(File, long)
+	 */
 	public static boolean isOlder(File file, File reference) {
-		if (!reference.exists()) {
-			throw new IllegalArgumentException("Reference file not found: " + reference);
-		}
+		checkReferenceExists(reference);
 		return isOlder(file, reference.lastModified());
 	}
 
 	/**
-	 * Tests if the specified <code>File</code> is newer than the specified time reference.
+	 * Tests if the specified {@link File} is newer than the specified time reference.
 	 *
-	 * @param file			the <code>File</code> of which the modification date must be compared.
-	 * @param timeMillis	the time reference measured in milliseconds since the
-	 * 						epoch (00:00:00 GMT, January 1, 1970)
-	 * @return <code>true</code> if the <code>File</code> exists and has been modified after
-	 *         the given time reference.
+	 * @param file       the {@link File} of which the modification date must be compared.
+	 * @param timeMillis the time reference measured in milliseconds since the
+	 *                   epoch (00:00:00 GMT, January 1, 1970)
+	 * @return {@code true} if the {@link File} exists and has been modified after
+	 * the given time reference.
 	 */
 	public static boolean isNewer(File file, long timeMillis) {
-		if (!file.exists()) {
-			return false;
-		}
-		return file.lastModified() > timeMillis;
+		return file.exists() && file.lastModified() > timeMillis;
 	}
 
+	/**
+	 * @see #isNewer(File, long)
+	 */
 	public static boolean isNewer(String file, long timeMillis) {
 		return isNewer(file(file), timeMillis);
 	}
 
-
+	/**
+	 * Tests if the specified {@link File} is older than the specified time reference.
+	 *
+	 * @param file       the {@link File} of which the modification date must be compared.
+	 * @param timeMillis the time reference measured in milliseconds since the
+	 *                   epoch (00:00:00 GMT, January 1, 1970)
+	 * @return {@code true} if the {@link File} exists and has been modified after
+	 * the given time reference.
+	 */
 	public static boolean isOlder(File file, long timeMillis) {
-		if (!file.exists()) {
-			return false;
-		}
-		return file.lastModified() < timeMillis;
+		return file.exists() && file.lastModified() < timeMillis;
 	}
 
+	/**
+	 * @see #isOlder(File, long)
+	 */
 	public static boolean isOlder(String file, long timeMillis) {
 		return isOlder(file(file), timeMillis);
 	}
 
-
 	// ---------------------------------------------------------------- smart copy
 
+	/**
+	 * @see #copy(File, File)
+	 */
 	public static void copy(String src, String dest) throws IOException {
 		copy(file(src), file(dest));
 	}
@@ -1060,6 +1194,13 @@ public class FileUtil {
 	 * Smart copy. If source is a directory, copy it to destination.
 	 * Otherwise, if destination is directory, copy source file to it.
 	 * Otherwise, try to copy source file to destination file.
+	 *
+	 * @param src  source {@link File}
+	 * @param dest destination {@link File}
+	 * @throws IOException if there is an error copying.
+	 * @see #copyDir(File, File)
+	 * @see #copyFileToDir(File, File)
+	 * @see #copyFile(File, File)
 	 */
 	public static void copy(File src, File dest) throws IOException {
 		if (src.isDirectory()) {
@@ -1075,14 +1216,24 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- smart move
 
+	/**
+	 * @see #move(File, File)
+	 */
 	public static void move(String src, String dest) throws IOException {
 		move(file(src), file(dest));
 	}
 
 	/**
 	 * Smart move. If source is a directory, move it to destination.
-	 * Otherwise, if destination is directory, move source file to it.
-	 * Otherwise, try to move source file to destination file.
+	 * Otherwise, if destination is directory, move source {@link File} to it.
+	 * Otherwise, try to move source {@link File} to destination {@link File}.
+	 *
+	 * @param src  source {@link File}
+	 * @param dest destination {@link File}
+	 * @throws IOException if there is an error moving.
+	 * @see #moveDir(File, File)
+	 * @see #moveFileToDir(File, File)
+	 * @see #moveFile(File, File)
 	 */
 	public static void move(File src, File dest) throws IOException {
 		if (src.isDirectory()) {
@@ -1099,12 +1250,19 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- smart delete
 
+	/**
+	 * @see #delete(File)
+	 */
 	public static void delete(String dest) throws IOException {
 		delete(file(dest));
 	}
 
 	/**
 	 * Smart delete of destination file or directory.
+	 *
+	 * @throws IOException if there is an issue deleting the file/directory.
+	 * @see #deleteFile(File)
+	 * @see #deleteDir(File)
 	 */
 	public static void delete(File dest) throws IOException {
 		if (dest.isDirectory()) {
@@ -1117,11 +1275,11 @@ public class FileUtil {
 	// ---------------------------------------------------------------- misc
 
 	/**
-	 * Check if one file is an ancestor of second one.
+	 * Check if one {@link File} is an ancestor of second one.
 	 *
-	 * @param strict   if <code>false</code> then this method returns <code>true</code> if ancestor
-	 *                 and file are equal
-	 * @return <code>true</code> if ancestor is parent of file; <code>false</code> otherwise
+	 * @param strict if c then this method returns {@code true} if ancestor
+	 *               and {@link File} are equal
+	 * @return {@code true} if ancestor is parent of {@link File}; otherwise, {@code false}
 	 */
 	public static boolean isAncestor(File ancestor, File file, boolean strict) {
 		File parent = strict ? getParentFile(file) : file;
@@ -1138,12 +1296,15 @@ public class FileUtil {
 
 	/**
 	 * Returns parent for the file. The method correctly
-	 * processes "." and ".." in file names. The name
+	 * processes "." and ".." in {@link File} names. The name
 	 * remains relative if was relative before.
-	 * Returns <code>null</code> if the file has no parent.
+	 * Returns {@code null} if the {@link File} has no parent.
+	 *
+	 * @param file {@link File}
+	 * @return {@code null} if the {@link File} has no parent.
 	 */
 	public static File getParentFile(final File file) {
-		int skipCount = 0;
+		int skipCount = ZERO;
 		File parentFile = file;
 		while (true) {
 			parentFile = parentFile.getParentFile();
@@ -1157,7 +1318,7 @@ public class FileUtil {
 				skipCount++;
 				continue;
 			}
-			if (skipCount > 0) {
+			if (skipCount > ZERO) {
 				skipCount--;
 				continue;
 			}
@@ -1165,6 +1326,13 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * Checks if file and its ancestors are acceptable by using {@link FileFilter#accept(File)}.
+	 *
+	 * @param file       {@link File} to check.
+	 * @param fileFilter {@link FileFilter} to use.
+	 * @return if file and its ancestors are acceptable
+	 */
 	public static boolean isFilePathAcceptable(File file, FileFilter fileFilter) {
 		do {
 			if (fileFilter != null && !fileFilter.accept(file)) {
@@ -1177,12 +1345,15 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- temp
 
+	/**
+	 * @see #createTempDirectory(String, String)
+	 */
 	public static File createTempDirectory() throws IOException {
-		return createTempDirectory(JoddCore.get().defaults().getTempFilePrefix(), null, null);
+		return createTempDirectory(tempPrefix(), null);
 	}
 
 	/**
-	 * Creates temporary directory.
+	 * @see #createTempDirectory(String, String, File)
 	 */
 	public static File createTempDirectory(String prefix, String suffix) throws IOException {
 		return createTempDirectory(prefix, suffix, null);
@@ -1190,6 +1361,8 @@ public class FileUtil {
 
 	/**
 	 * Creates temporary directory.
+	 *
+	 * @see #createTempFile(String, String, File)
 	 */
 	public static File createTempDirectory(String prefix, String suffix, File tempDir) throws IOException {
 		File file = createTempFile(prefix, suffix, tempDir);
@@ -1199,17 +1372,27 @@ public class FileUtil {
 	}
 
 	/**
-	 * Simple method that creates temp file.
+	 * @see #createTempFile(String, String, File, boolean)
 	 */
 	public static File createTempFile() throws IOException {
-		return createTempFile(JoddCore.get().defaults().getTempFilePrefix(), null, null, true);
+		return createTempFile(tempPrefix(), null, null, true);
 	}
 
 	/**
-	 * Creates temporary file.
-	 * If <code>create</code> is set to <code>true</code> file will be
-	 * physically created on the file system. Otherwise, it will be created and then
-	 * deleted - trick that will make temp file exist only if they are used.
+	 * Creates temporary {@link File}.
+	 *
+	 * @param prefix  The prefix string to be used in generating the file's
+	 *                name; must be at least three characters long
+	 * @param suffix  The suffix string to be used in generating the file's
+	 *                name; may be {@code null}, in which case the
+	 *                suffix {@code ".tmp"} will be used
+	 * @param tempDir The directory in which the file is to be created, or
+	 *                {@code null} if the default temporary-file
+	 *                directory is to be used
+	 * @param create  If {@code create} is set to {@code true} {@link File} will be
+	 *                physically created on the file system. Otherwise, it will be created and then
+	 *                deleted - trick that will make temp {@link File} exist only if they are used.
+	 * @return File
 	 */
 	public static File createTempFile(String prefix, String suffix, File tempDir, boolean create) throws IOException {
 		File file = createTempFile(prefix, suffix, tempDir);
@@ -1221,15 +1404,24 @@ public class FileUtil {
 	}
 
 	/**
-	 * Creates temporary file. Wraps java method and repeat creation several time
-	 * if something fail.
+	 * Creates temporary {@link File}. Wraps Java method and repeats creation several times
+	 * if something fails.
+	 *
+	 * @param prefix  The prefix string to be used in generating the file's
+	 *                name; must be at least three characters long
+	 * @param suffix  The suffix string to be used in generating the file's
+	 *                name; may be {@code null}, in which case the
+	 *                suffix {@code ".tmp"} will be used
+	 * @param tempDir The directory in which the file is to be created, or
+	 *                {@code null} if the default temporary-file
+	 *                directory is to be used
 	 */
-	public static File createTempFile(String prefix, String suffix, File dir) throws IOException {
-		int exceptionsCount = 0;
+	public static File createTempFile(String prefix, String suffix, File tempDir) throws IOException {
+		int exceptionsCount = ZERO;
 		while (true) {
 			try {
-				return File.createTempFile(prefix, suffix, dir).getCanonicalFile();
-			} catch (IOException ioex) {	// fixes java.io.WinNTFileSystem.createFileExclusively access denied
+				return File.createTempFile(prefix, suffix, tempDir).getCanonicalFile();
+			} catch (IOException ioex) {  // fixes java.io.WinNTFileSystem.createFileExclusively access denied
 				if (++exceptionsCount >= 50) {
 					throw ioex;
 				}
@@ -1241,40 +1433,21 @@ public class FileUtil {
 
 	/**
 	 * Determines whether the specified file is a symbolic link rather than an actual file.
-	 * 
+	 *
 	 * @deprecated {@link java.nio.file.Files#isSymbolicLink(java.nio.file.Path)} provides this functionality natively as of Java 1.7.
 	 */
 	@Deprecated
 	public static boolean isSymlink(final File file) {
-		return java.nio.file.Files.isSymbolicLink(file.toPath());
+		return Files.isSymbolicLink(file.toPath());
 	}
 
 	// ---------------------------------------------------------------- digests
 
 	/**
-	 * Calculates digest for a file using provided algorithm.
-	 */
-	public static byte[] digest(final File file, MessageDigest algorithm) throws IOException {
-		algorithm.reset();
-		FileInputStream fis = new FileInputStream(file);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		DigestInputStream dis = new DigestInputStream(bis, algorithm);
-
-		try {
-			while (dis.read() != -1) {
-			}
-		}
-		finally {
-			StreamUtil.close(dis);
-			StreamUtil.close(bis);
-			StreamUtil.close(fis);
-		}
-
-		return algorithm.digest();
-	}
-
-	/**
-	 * Creates MD5 digest of a file.
+	 * Creates MD5 digest of a {@link File}.
+	 *
+	 * @param file {@link File} to create digest of.
+	 * @return MD5 digest of the {@link File}.
 	 */
 	public static String md5(final File file) throws IOException {
 		return _createDigestOfFileWithAlgorithm(file, "MD5");
@@ -1282,6 +1455,9 @@ public class FileUtil {
 
 	/**
 	 * Creates SHA-1 digest of a file.
+	 *
+	 * @param file {@link File} to create digest of.
+	 * @return SHA-1 digest of the {@link File}.
 	 */
 	public static String sha1(final File file) throws IOException {
 		return _createDigestOfFileWithAlgorithm(file, "SHA-1");
@@ -1289,6 +1465,9 @@ public class FileUtil {
 
 	/**
 	 * Creates SHA-256 digest of a file.
+	 *
+	 * @param file {@link File} to create digest of.
+	 * @return SHA-256 digest of the {@link File}.
 	 */
 	public static String sha256(final File file) throws IOException {
 		return _createDigestOfFileWithAlgorithm(file, "SHA-256");
@@ -1296,6 +1475,9 @@ public class FileUtil {
 
 	/**
 	 * Creates SHA-384 digest of a file.
+	 *
+	 * @param file {@link File} to create digest of.
+	 * @return SHA-384 digest of the {@link File}.
 	 */
 	public static String sha384(final File file) throws IOException {
 		return _createDigestOfFileWithAlgorithm(file, "SHA-384");
@@ -1303,11 +1485,22 @@ public class FileUtil {
 
 	/**
 	 * Creates SHA-512 digest of a file.
+	 *
+	 * @param file {@link File} to create digest of.
+	 * @return SHA-512 digest of the {@link File}.
 	 */
 	public static String sha512(final File file) throws IOException {
 		return _createDigestOfFileWithAlgorithm(file, "SHA-512");
 	}
 
+	/**
+	 * Create a digest (as String) of a {@link File}.
+	 *
+	 * @param file      {@link File} to create digest of.
+	 * @param algorithm Algorithm to use for {@link MessageDigest#getInstance(String)}.
+	 * @return digest of the {@link File}.
+	 * @throws IOException if there is an error creating digest.
+	 */
 	private static String _createDigestOfFileWithAlgorithm(final File file, final String algorithm) throws IOException {
 		MessageDigest messageDigest = null;
 		try {
@@ -1321,7 +1514,36 @@ public class FileUtil {
 	}
 
 	/**
+	 * Calculates digest for a {@link File} using provided algorithm.
+	 *
+	 * @param file      {@link File} to create digest of.
+	 * @param algorithm Algorithm to use from {@link MessageDigest#getInstance(String)}.
+	 * @return digest for the {@link File}.
+	 * @throws IOException if something went wrong.
+	 */
+	public static byte[] digest(final File file, MessageDigest algorithm) throws IOException {
+		algorithm.reset();
+		FileInputStream fis = fileInputStreamOf(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		DigestInputStream dis = new DigestInputStream(bis, algorithm);
+
+		try {
+			while (dis.read() != NEGATIVE_ONE) {
+			}
+		} finally {
+			StreamUtil.close(dis);
+			StreamUtil.close(bis);
+			StreamUtil.close(fis);
+		}
+
+		return algorithm.digest();
+	}
+
+	/**
 	 * Checks the start of the file for ASCII control characters
+	 *
+	 * @param file {@link File}
+	 * @return true if the the start of the {@link File} is ASCII control characters.
 	 */
 	public static boolean isBinary(final File file) throws IOException {
 		byte[] bytes = readBytes(file, 128);
@@ -1333,5 +1555,234 @@ public class FileUtil {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns new {@link FileInputStream}.
+	 *
+	 * @param file {@link File}
+	 * @return new {@link FileInputStream}.
+	 * @throws IOException if something went wrong.
+	 */
+	private static FileInputStream fileInputStreamOf(File file) throws IOException {
+		return new FileInputStream(file);
+	}
+
+	/**
+	 * @see #fileOutputStreamOf(File, boolean)
+	 */
+	private static FileOutputStream fileOutputStreamOf(File file) throws IOException {
+		return fileOutputStreamOf(file, false);
+	}
+
+	/**
+	 * Returns new {@link FileOutputStream}.
+	 *
+	 * @param file     {@link File}
+	 * @param isAppend if {@code true}, then bytes will be written
+	 *                 to the end of the file rather than the beginning
+	 * @return new {@link FileOutputStream}.
+	 * @throws IOException
+	 */
+	private static FileOutputStream fileOutputStreamOf(File file, boolean isAppend) throws IOException {
+		return new FileOutputStream(file, isAppend);
+	}
+
+	/**
+	 * @see #unicodeInputStreamOf(InputStream, String)
+	 * @see #checkExists(File)
+	 * @see #checkIsFile(File)
+	 * @see #fileInputStreamOf(File)
+	 */
+	private static UnicodeInputStream unicodeInputStreamOf(File file) throws IOException {
+		checkExists(file);
+		checkIsFile(file);
+		return unicodeInputStreamOf(fileInputStreamOf(file), null);
+	}
+
+	/**
+	 * Returns new {@link UnicodeInputStream} using {@link InputStream} and targetEncoding.
+	 *
+	 * @param input          {@link InputStream}
+	 * @param targetEncoding Encoding to use.
+	 * @return new {@link UnicodeInputStream}.
+	 */
+	private static UnicodeInputStream unicodeInputStreamOf(InputStream input, String targetEncoding) {
+		return new UnicodeInputStream(input, targetEncoding);
+	}
+
+	/**
+	 * Returns either new {@link FileInputStream} or new {@link UnicodeInputStream}.
+	 *
+	 * @return either {@link FileInputStream} or {@link UnicodeInputStream}.
+	 * @throws IOException if something went wrong.
+	 * @see #fileInputStreamOf(File)
+	 * @see #unicodeInputStreamOf(InputStream, String)
+	 */
+	private static InputStream streamOf(File file, String encoding) throws IOException {
+		InputStream in = fileInputStreamOf(file);
+		if (encoding.startsWith("UTF")) {
+			in = unicodeInputStreamOf(in, encoding);
+		}
+		return in;
+	}
+
+	/**
+	 * Detect encoding on {@link UnicodeInputStream} by using {@link UnicodeInputStream#getDetectedEncoding()}.
+	 *
+	 * @param in {@link UnicodeInputStream}
+	 * @return UTF encoding as a String. If encoding could not be detected, defaults to {@link StringPool#UTF_8}.
+	 * @see UnicodeInputStream#getDetectedEncoding()
+	 */
+	private static String detectEncoding(UnicodeInputStream in) {
+		String encoding = in.getDetectedEncoding();
+		if (encoding == null) {
+			encoding = StringPool.UTF_8;
+		}
+		return encoding;
+	}
+
+	/**
+	 * Checks if {@link File} exists. Throws IOException if not.
+	 *
+	 * @param file {@link File}
+	 * @throws FileNotFoundException if file does not exist.
+	 */
+	private static void checkExists(File file) throws FileNotFoundException {
+		if (!file.exists()) {
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
+		}
+	}
+
+	/**
+	 * Checks if {@link File} exists. Throws IllegalArgumentException if not.
+	 *
+	 * @param file {@link File}
+	 * @throws IllegalArgumentException if file does not exist.
+	 */
+	private static void checkReferenceExists(File file) throws IllegalArgumentException {
+		try {
+			checkExists(file);
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException("Reference file not found: " + file);
+		}
+	}
+
+	/**
+	 * Checks if {@link File} is a file. Throws IOException if not.
+	 *
+	 * @param file {@link File}
+	 * @throws IOException if {@link File} is not a file.
+	 */
+	private static void checkIsFile(File file) throws IOException {
+		if (!file.isFile()) {
+			throw new IOException(MSG_NOT_A_FILE + file);
+		}
+	}
+
+	/**
+	 * Checks if {@link File} is a directory. Throws IOException if not.
+	 *
+	 * @param dir Directory
+	 * @throws IOException if {@link File} is not a directory.
+	 */
+	private static void checkIsDirectory(File dir) throws IOException {
+		if (!dir.isDirectory()) {
+			throw new IOException(MSG_NOT_A_DIRECTORY + dir);
+		}
+	}
+
+	/**
+	 * Checks if directory exists. Throws IOException if it does not.
+	 *
+	 * @param dir Directory
+	 * @throws IOException if directory does not exist.
+	 * @see #checkIsDirectory(File)
+	 */
+	private static void checkExistsAndDirectory(File dir) throws IOException {
+		if (dir.exists()) {
+			checkIsDirectory(dir);
+		}
+	}
+
+	/**
+	 * Checks if directory can be created. Throws IOException if it cannot.
+	 * <p>
+	 * This actually creates directory (and its ancestors) (as per {@link File#mkdirs()} }).
+	 *
+	 * @param dir Directory
+	 * @throws IOException if directory cannot be created.
+	 */
+	private static void checkCreateDirectory(File dir) throws IOException {
+		if (!dir.mkdirs()) {
+			throw new IOException(MSG_CANT_CREATE + dir);
+		}
+	}
+
+	/**
+	 * Checks if directory can be deleted. Throws IOException if it cannot.
+	 * This actually deletes directory (as per {@link File#delete()}).
+	 *
+	 * @param dir Directory
+	 * @throws IOException if directory cannot be created.
+	 */
+	private static void checkDeleteSuccessful(File dir) throws IOException {
+		if (!dir.delete()) {
+			throw new IOException(MSG_UNABLE_TO_DELETE + dir);
+		}
+	}
+
+	/**
+	 * Checks that srcDir exists, that it is a directory and if srcDir and destDir are not equal.
+	 *
+	 * @param srcDir  Source directory
+	 * @param destDir Destination directory
+	 * @throws IOException if any of the above conditions are not true.
+	 */
+	private static void checkDirCopy(File srcDir, File destDir) throws IOException {
+		checkExists(srcDir);
+		checkIsDirectory(srcDir);
+		if (equals(srcDir, destDir)) {
+			throw new IOException("Source '" + srcDir + "' and destination '" + destDir + "' are equal");
+		}
+	}
+
+	/**
+	 * Checks that file copy can occur.
+	 *
+	 * @param srcFile  Source {@link File}
+	 * @param destFile Destination {@link File}
+	 * @throws IOException if srcFile does not exist or is not a file or
+	 *                     srcFile and destFile are equal or cannot create ancestor directories.
+	 */
+	private static void checkFileCopy(File srcFile, File destFile) throws IOException {
+		checkExists(srcFile);
+		checkIsFile(srcFile);
+		if (equals(srcFile, destFile)) {
+			throw new IOException("Files '" + srcFile + "' and '" + destFile + "' are equal");
+		}
+
+		File destParent = destFile.getParentFile();
+		if (destParent != null && !destParent.exists()) {
+			checkCreateDirectory(destParent);
+		}
+	}
+
+	// ---------------------------------------------------------------- configs
+
+	/**
+	 * Returns default encoding.
+	 * @return default encoding.
+	 */
+	private static String encoding() {
+		return JODD_CORE_DEFAULTS.getEncoding();
+	}
+
+	/**
+	 * Returns default prefix for temp files.
+	 * @return default prefix for temp files.
+	 */
+	private static String tempPrefix() {
+		return JODD_CORE_DEFAULTS.getTempFilePrefix();
 	}
 }

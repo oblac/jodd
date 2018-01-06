@@ -48,7 +48,7 @@ public class JoddCoreDefaults {
 	}
 
 	/**
-	 * Returns default encoding used across the Jodd classes. "UTf-8".
+	 * Returns default encoding used across the Jodd classes. "UTF-8".
 	 */
 	public String getEncoding() {
 		return encoding;

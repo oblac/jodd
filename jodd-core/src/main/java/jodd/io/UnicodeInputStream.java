@@ -66,7 +66,7 @@ public class UnicodeInputStream extends InputStream {
 	}
 
 	/**
-	 * Returns detected UTF encoding or <code>null</code> if no UTF encoding has been detected (i.e. no BOM).
+	 * Returns detected UTF encoding or {@code null} if no UTF encoding has been detected (i.e. no BOM).
 	 * If stream is not read yet, it will be {@link #init() initalized} first.
 	 */
 	public String getDetectedEncoding() {
