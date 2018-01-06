@@ -27,7 +27,12 @@ package jodd.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 import static jodd.util.ArraysUtil.array;
 import static jodd.util.StringPool.ISO_8859_1;
@@ -698,6 +703,7 @@ class StringUtilTest {
 		assertEquals("qwe", StringUtil.cutSurrounding("qwe", "pre", "suf"));
 
 		assertEquals("qwe", StringUtil.cutSurrounding("preqwepre", "pre"));
+		assertEquals("", StringUtil.cutSurrounding("/", "/"));
 	}
 
 
