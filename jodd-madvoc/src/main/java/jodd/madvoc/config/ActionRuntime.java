@@ -55,7 +55,7 @@ public class ActionRuntime {
 	private final boolean hasArguments;
 
 	// run-time data
-	protected ActionRuntimeSet actionRuntimeSet;
+	private RouteChunk routeChunk;
 	private final ActionFilter[] filters;
 	private final ActionInterceptor[] interceptors;
 	private final ActionConfig actionConfig;
@@ -164,10 +164,6 @@ public class ActionRuntime {
 		return async;
 	}
 
-	public ActionRuntimeSet actionRuntimeSet() {
-		return actionRuntimeSet;
-	}
-
 	/**
 	 * Returns method parameters information, or <code>null</code> if method has no params.
 	 */
@@ -196,6 +192,22 @@ public class ActionRuntime {
 
 	public ActionConfig actionConfig() {
 		return actionConfig;
+	}
+
+	// ---------------------------------------------------------------- bind
+
+	/**
+	 * Binds a route chunk to this configuration.
+	 */
+	public void bind(RouteChunk routeChunk) {
+		this.routeChunk = routeChunk;
+	}
+
+	/**
+	 * Returns route chunk associated with this configuration.
+	 */
+	public RouteChunk routeChunk() {
+		return routeChunk;
 	}
 
 	// ---------------------------------------------------------------- to string
