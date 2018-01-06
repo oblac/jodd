@@ -38,6 +38,8 @@ import jodd.util.fixtures.testdata.C;
 import jodd.util.fixtures.testdata.JavaBean;
 import jodd.util.fixtures.testdata2.D;
 import jodd.util.fixtures.testdata2.E;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -52,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarFile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -822,5 +825,36 @@ class ClassUtilTest {
 		assertEquals(0, subclasses.length);
 		subclasses = ClassUtil.resolveAllSuperclasses(Integer[].class);
 		assertEquals(0, subclasses.length);
+	}
+
+	@Nested
+	class JarFileOf {
+
+		@Test
+		void checkClassFromExternalJar() {
+			JarFile actual = ClassUtil.jarFileOf(StringUtils.class);
+
+			// asserts
+			assertNotNull(actual);
+			assertTrue(actual.getName().contains("commons-lang3"));
+		}
+
+		@Test
+		void checkWithClassFromThisModule() {
+			JarFile actual = ClassUtil.jarFileOf(Chalk.class);
+
+			// asserts
+			assertNull(actual);
+		}
+
+		@Test
+		void checkWithClassFromJRE() {
+			JarFile actual = ClassUtil.jarFileOf(Object.class);
+
+			// asserts
+			assertNotNull(actual);
+			assertTrue(actual.getName().contains("rt.jar"));
+		}
+
 	}
 }
