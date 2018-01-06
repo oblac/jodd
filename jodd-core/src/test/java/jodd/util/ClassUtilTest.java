@@ -835,14 +835,18 @@ class ClassUtilTest {
 
 		@Test
 		void noNullValueIncluded() {
-			final Class[] actual = ClassUtil.getClasses(new Object(), new Base32(), File.class);
+			final Class[] actual = ClassUtil.getClasses(new Object(), new Base32(), File.class, 3, 23L, 44.55F, 11.11D);
 
 			// asserts
 			assertNotNull(actual);
-			assertEquals(3, actual.length);
+			assertEquals(7, actual.length);
 			assertEquals(Object.class, actual[0]);
 			assertEquals(Base32.class, actual[1]);
 			assertEquals(Class.class, actual[2]);
+			assertEquals(Integer.class, actual[3]);
+			assertEquals(Long.class, actual[4]);
+			assertEquals(Float.class, actual[5]);
+			assertEquals(Double.class, actual[6]);
 		}
 
 		@Test
