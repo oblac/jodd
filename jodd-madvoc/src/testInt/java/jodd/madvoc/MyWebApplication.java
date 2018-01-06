@@ -45,6 +45,7 @@ public class MyWebApplication extends PetiteWebApp {
 	protected void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
+		madvocContainer.registerComponent(MyAsync.class);
 		madvocContainer.registerComponent(MyRewriter.class);
 	}
 

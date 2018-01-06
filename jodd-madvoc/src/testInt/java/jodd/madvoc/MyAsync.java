@@ -23,23 +23,23 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.action;
+package jodd.madvoc;
 
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.Async;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.Out;
+import jodd.madvoc.component.AsyncActionExecutor;
 
-@MadvocAction
-public class AsyncAction {
+public class MyAsync extends AsyncActionExecutor {
 
-	@Out
-	String task;
+	private int foo;
 
-	@Async
-	@Action
-	public void view() {
-		task = "TASK";
+	public void setFoo(int foo) {
+		this.foo = foo;
 	}
 
+	@Override
+	public void start() {
+		if (foo != 3) {
+			throw new RuntimeException("madvoc.props not readed.");
+		}
+		super.start();
+	}
 }
