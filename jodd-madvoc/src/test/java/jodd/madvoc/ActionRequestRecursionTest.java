@@ -111,7 +111,7 @@ class ActionRequestRecursionTest {
 	class MyActionRequest extends ActionRequest {
 		public String data = "";
 		public MyActionRequest(MadvocController madvocController, String actionPath, ActionRuntime config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-			super(madvocController, actionPath, config, action, servletRequest, servletResponse);
+			super(madvocController, actionPath, MadvocUtil.splitPathToChunks(actionPath), config, action, servletRequest, servletResponse);
 		}
 		@Override
 		protected Object invokeActionMethod() throws Exception {

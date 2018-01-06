@@ -28,6 +28,7 @@ package jodd.madvoc.result;
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
@@ -150,7 +151,7 @@ class ServletDispatcherResultTest {
 				new ActionDefinition(actionPath, "GET"),
 				null, false, null, null, madvocConfig.getActionConfig());
 
-		return new ActionRequest(madvocController, actionRuntime.actionPath(), actionRuntime, action, servletRequest, servletResponse);
+		return new ActionRequest(madvocController, actionRuntime.actionPath(), MadvocUtil.splitPathToChunks(actionRuntime.actionPath()), actionRuntime, action, servletRequest, servletResponse);
 	}
 
 	class Action {

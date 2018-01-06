@@ -28,7 +28,7 @@ package jodd.madvoc;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionRuntime;
-import jodd.madvoc.config.ActionRuntimeSet;
+import jodd.madvoc.config.RouteChunk;
 import jodd.madvoc.fixtures.tst.Boo1Action;
 import jodd.madvoc.fixtures.tst.Boo2Action;
 import jodd.madvoc.fixtures.tst.Boo3Action;
@@ -305,50 +305,58 @@ class ActionMethodParserTest extends MadvocTestCase {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "macro", null);
-		ActionRuntime cfg = actionsManager.lookup("/re/user/173/macro.html", "GET");
+		actionsManager.registerAction(ReAction.class, "macro", null);
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/173/macro.html"));
 
 		assertNotNull(cfg);
-		ActionRuntimeSet set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/user/{id}/macro", cfg.actionPath());
-		assertEquals(4, set.deep());
-		assertEquals(1, set.actionPathMacros().macrosCount());
-		assertEquals("id", set.actionPathMacros().names()[0]);
-		assertNull(set.actionPathMacros().patterns()[0]);
+
+		RouteChunk chunk = cfg.routeChunk();
+		assertNull(chunk.pathMacros());
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+		assertNull(chunk.pathMacros().patterns()[0]);
 
 
-		actionsManager.register(ReAction.class, "macro2", null);
-		cfg = actionsManager.lookup("/re/user/image/173/png/macro2.html", "GET");
+		actionsManager.registerAction(ReAction.class, "macro2", null);
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/image/173/png/macro2.html"));
 
 		assertNotNull(cfg);
-		set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/user/image/{id}/{fmt}/macro2", cfg.actionPath());
-		assertEquals(6, set.deep());
-		assertEquals(2, set.actionPathMacros().macrosCount());
-		assertEquals("id", set.actionPathMacros().names()[0]);
-		assertEquals("fmt", set.actionPathMacros().names()[1]);
+		chunk = cfg.routeChunk();
+		assertNull(chunk.pathMacros());
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("fmt", chunk.pathMacros().names()[0]);
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+		chunk = cfg.routeChunk();
+		assertNull(chunk.pathMacros());
 
-		actionsManager.register(ReAction.class, "macro3", null);
-		cfg = actionsManager.lookup("/re/users/173/macro3", "POST");
+		actionsManager.registerAction(ReAction.class, "macro3", null);
+		cfg = actionsManager.lookup("POST", MadvocUtil.splitPathToChunks("/re/users/173/macro3"));
 
 		assertNotNull(cfg);
-		set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/users/{id}/macro3", cfg.actionPath());
 		assertEquals("POST", cfg.actionMethod());
-		assertEquals(4, set.deep());
-		assertEquals(1, set.actionPathMacros().macrosCount());
-		assertEquals("id", set.actionPathMacros().names()[0]);
+		chunk = cfg.routeChunk();
+		assertNull(chunk.pathMacros());
+		chunk = chunk.parent();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
 
-		cfg = actionsManager.lookup("/re/user/index.html", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/index.html"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/user/index/reindex/macro.html", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/index/reindex/macro.html"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/users/173/macro3", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/users/173/macro3"));
 		assertNull(cfg);
 
 		assertEquals(3, actionsManager.getActionsCount());
@@ -363,36 +371,35 @@ class ActionMethodParserTest extends MadvocTestCase {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "wild1", null);
-		actionsManager.register(ReAction.class, "wild2", null);
+		actionsManager.registerAction(ReAction.class, "wild1", null);
+		actionsManager.registerAction(ReAction.class, "wild2", null);
 
-		ActionRuntime cfg = actionsManager.lookup("/re/ild123cat", "GET");
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/ild123cat"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/wild123ca", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/wild123ca"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/wild123cat.html", "GET");
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/wild123cat.html"));
 		assertNotNull(cfg);
-		ActionRuntimeSet set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/wild{id}cat", cfg.actionPath());
-		assertEquals(2, set.deep());
-		assertEquals(1, set.actionPathMacros().macrosCount());
-		assertEquals("id", set.actionPathMacros().names()[0]);
 
-		cfg = actionsManager.lookup("/re/wild123dog.html", "GET");
+		RouteChunk chunk = cfg.routeChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/wild123dog.html"));
 		assertNull(cfg);
 
-		cfg = actionsManager.lookup("/re/wild123dog.html", "POST");
+		cfg = actionsManager.lookup("POST", MadvocUtil.splitPathToChunks("/re/wild123dog.html"));
 		assertNotNull(cfg);
-		set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/wild{id}dog", cfg.actionPath());
 		assertEquals("POST", cfg.actionMethod());
-		assertEquals(2, set.deep());
-		assertEquals(1, set.actionPathMacros().macrosCount());
-		assertEquals("id", set.actionPathMacros().names()[0]);
+		chunk = cfg.routeChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
@@ -408,26 +415,25 @@ class ActionMethodParserTest extends MadvocTestCase {
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
-		actionsManager.register(ReAction.class, "duplo1", null);
-		actionsManager.register(ReAction.class, "duplo2", null);
+		actionsManager.registerAction(ReAction.class, "duplo2", null);
+		actionsManager.registerAction(ReAction.class, "duplo1", null);
 
-		ActionRuntime cfg = actionsManager.lookup("/re/duplo/123", "GET");
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/duplo/123"));
 		assertNotNull(cfg);
-		ActionRuntimeSet set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/duplo/{id:^[0-9]+}", cfg.actionPath());
-		assertEquals(3, set.deep());
-		assertEquals(1, set.actionPathMacros().macrosCount());
-		assertEquals("id", set.actionPathMacros().names()[0]);
 
-		cfg = actionsManager.lookup("/re/duplo/aaa", "GET");
+		RouteChunk chunk = cfg.routeChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("id", chunk.pathMacros().names()[0]);
+
+		cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/duplo/aaa"));
 		assertNotNull(cfg);
-		set = cfg.actionRuntimeSet();
 		assertEquals(ReAction.class, cfg.actionClass());
 		assertEquals("/re/duplo/{sid}", cfg.actionPath());
-		assertEquals(3, set.deep());
-		assertEquals(1, set.actionPathMacros().macrosCount());
-		assertEquals("sid", set.actionPathMacros().names()[0]);
+		chunk = cfg.routeChunk();
+		assertEquals(1, chunk.pathMacros().macrosCount());
+		assertEquals("sid", chunk.pathMacros().names()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
@@ -441,10 +447,10 @@ class ActionMethodParserTest extends MadvocTestCase {
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
-		actionsManager.register(ReAction.class, "zqq1", null);
-		actionsManager.register(ReAction.class, "zqq2", null);
+		actionsManager.registerAction(ReAction.class, "zqq1", null);
+		actionsManager.registerAction(ReAction.class, "zqq2", null);
 
-		ActionRuntime cfg = actionsManager.lookup("/config/dba.delete_multi.do", "GET");
+		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/config/dba.delete_multi.do"));
 		assertNotNull(cfg);
 
 		assertEquals("/{entityName}/dba.delete_multi.do", cfg.actionPath());
