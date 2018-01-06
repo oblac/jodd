@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.test.DisabledOnJava;
 import jodd.util.fixtures.subclass.IBase;
 import jodd.util.fixtures.subclass.IExtra;
 import jodd.util.fixtures.subclass.IOne;
@@ -968,6 +969,7 @@ class ClassUtilTest {
 		}
 
 		@Test
+		@DisabledOnJava(value = 9, description = "rt.jar does not exists in Java 9 anymore")
 		void checkWithClassFromJRE() {
 			final JarFile actual = ClassUtil.jarFileOf(Object.class);
 
