@@ -39,6 +39,7 @@ import jodd.util.fixtures.testdata.JavaBean;
 import jodd.util.fixtures.testdata2.D;
 import jodd.util.fixtures.testdata2.E;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -946,11 +947,12 @@ class ClassUtilTest {
 
 
 	@Nested
+	@DisplayName("tests for method jarFileOf")
 	class JarFileOf {
 
 		@Test
 		void checkClassFromExternalJar() {
-			JarFile actual = ClassUtil.jarFileOf(StringUtils.class);
+			final JarFile actual = ClassUtil.jarFileOf(StringUtils.class);
 
 			// asserts
 			assertNotNull(actual);
@@ -959,7 +961,7 @@ class ClassUtilTest {
 
 		@Test
 		void checkWithClassFromThisModule() {
-			JarFile actual = ClassUtil.jarFileOf(Chalk.class);
+			final JarFile actual = ClassUtil.jarFileOf(Chalk.class);
 
 			// asserts
 			assertNull(actual);
@@ -967,7 +969,7 @@ class ClassUtilTest {
 
 		@Test
 		void checkWithClassFromJRE() {
-			JarFile actual = ClassUtil.jarFileOf(Object.class);
+			final JarFile actual = ClassUtil.jarFileOf(Object.class);
 
 			// asserts
 			assertNotNull(actual);
