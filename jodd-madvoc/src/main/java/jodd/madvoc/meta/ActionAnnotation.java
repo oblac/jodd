@@ -60,8 +60,6 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ad.alias = readString(annotation, "alias", null);
 
-		ad.async = readBoolean(annotation, "async", false);
-
 		return ad;
 	}
 

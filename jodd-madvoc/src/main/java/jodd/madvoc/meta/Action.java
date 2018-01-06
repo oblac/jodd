@@ -62,10 +62,4 @@ public @interface Action {
 	 */
 	String alias() default "";
 
-	/**
-	 * Defines if action has to be called asynchronously
-	 * using Servlets 3.0 API.
-	 */
-	boolean async() default false;
-
 }

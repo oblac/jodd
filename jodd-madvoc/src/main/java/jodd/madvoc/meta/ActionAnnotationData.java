@@ -36,7 +36,6 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 
 	protected String value;
 	protected String alias;
-	protected boolean async;
 
 	protected ActionAnnotationData(A annotation) {
 		super(annotation);
@@ -48,10 +47,6 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 
 	public String alias() {
 		return alias;
-	}
-
-	public boolean async() {
-		return async;
 	}
 
 }
