@@ -29,7 +29,6 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionMethodParamNameResolver;
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ActionPathMacroManager;
 import jodd.madvoc.component.ActionPathRewriter;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.ContextInjectorComponent;
@@ -214,8 +213,7 @@ public class WebApp {
 		madvocComponents.forEach(
 			madvocComponent -> madvocContainer.registerComponent(madvocComponent.type(), madvocComponent.consumer()));
 		madvocComponents = null;
-		madvocComponentInstances.forEach(
-			madvocComponent -> madvocContainer.registerComponentInstance(madvocComponent));
+		madvocComponentInstances.forEach(madvocContainer::registerComponentInstance);
 		madvocComponentInstances = null;
 
 
@@ -269,7 +267,6 @@ public class WebApp {
 		madvocContainer.registerComponent(ActionMethodParamNameResolver.class);
 		madvocContainer.registerComponent(ActionMethodParser.class);
 		madvocContainer.registerComponent(ActionPathRewriter.class);
-		madvocContainer.registerComponent(ActionPathMacroManager.class);
 		madvocContainer.registerComponent(ActionsManager.class);
 		madvocContainer.registerComponent(ContextInjectorComponent.class);
 		madvocContainer.registerComponent(InjectorsManager.class);

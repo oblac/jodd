@@ -47,6 +47,7 @@ public class ActionRequest {
 	protected final MadvocController madvocController;
 	protected final ActionRuntime actionRuntime;
 	protected final String actionPath;
+	protected final String[] actionPathChunks;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
 
@@ -160,14 +161,23 @@ public class ActionRequest {
 		this.actionResult = actionResult;
 	}
 
+	/**
+	 * Returns chunks of action path. Action path is split on {@code /}. For example,
+	 * the path {@code "/hello/world"} would return 2 chunks: {@code hello} and {@code world}.
+	 */
+	public String[] actionPathChunks() {
+		return actionPathChunks;
+	}
+
 	// ---------------------------------------------------------------- ctor
 
 	/**
 	 * Creates new action request and initializes it.
 	 */
 	public ActionRequest(
-		MadvocController madvocController,
+			MadvocController madvocController,
 			String actionPath,
+			String[] actionPathChunks,
 			ActionRuntime actionRuntime,
 			Object action,
 			HttpServletRequest servletRequest,
@@ -175,6 +185,7 @@ public class ActionRequest {
 
 		this.madvocController = madvocController;
 		this.actionPath = actionPath;
+		this.actionPathChunks = actionPathChunks;
 		this.actionRuntime = actionRuntime;
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;

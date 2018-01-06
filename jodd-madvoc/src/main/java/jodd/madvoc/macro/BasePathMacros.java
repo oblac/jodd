@@ -64,7 +64,6 @@ public abstract class BasePathMacros implements PathMacros {
 		int i = 0;
 
 		while (true) {
-
 			int[] ndx = StringUtil.indexOfRegion(actionPath, prefix, suffix, offset);
 
 			if (ndx == null) {

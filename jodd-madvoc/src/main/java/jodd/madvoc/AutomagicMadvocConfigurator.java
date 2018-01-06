@@ -34,6 +34,7 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocContainer;
+import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
@@ -222,7 +223,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 				continue;
 			}
 
-			webappConfigurations.add(() -> actionsManager.register(actionClass, method, null));
+			webappConfigurations.add(() -> actionsManager.registerAction((Class) actionClass, method, (ActionDefinition) null));
 		}
 	}
 

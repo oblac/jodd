@@ -28,7 +28,8 @@ package jodd.madvoc.injector;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionRuntime;
-import jodd.madvoc.config.ActionRuntimeSet;
+import jodd.madvoc.config.RouteChunk;
+import jodd.madvoc.macro.PathMacros;
 import jodd.util.StringUtil;
 
 /**
@@ -40,23 +41,39 @@ public class ActionPathMacroInjector implements Injector {
 
 	@Override
 	public void inject(ActionRequest actionRequest) {
-		ActionRuntime config = actionRequest.getActionRuntime();
-		ActionRuntimeSet set = config.actionRuntimeSet();
+		ActionRuntime actionRuntime = actionRequest.getActionRuntime();
+		RouteChunk routeChunk = actionRuntime.routeChunk();
 
-		if (set.actionPathMacros() == null) {
+		if (!routeChunk.hasMacrosOnPath()) {
 			// no action path macros at all, just exit
 			return;
 		}
 
-		Targets targets = actionRequest.getTargets();
+		final Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
 		// inject
+		final String[] actionPath = actionRequest.actionPathChunks();
 
-		String[] names = set.actionPathMacros().names();
-		String[] values = set.actionPathMacros().extract(actionRequest.getActionPath());
+		int ndx = actionPath.length - 1;
+
+		RouteChunk chunk = routeChunk;
+		while (chunk.parent() != null) {
+			PathMacros pathMacros = chunk.pathMacros();
+
+			if (pathMacros != null) {
+				injectMacros(actionPath[ndx], pathMacros, targets);
+			}
+			ndx--;
+			chunk = chunk.parent();
+		}
+	}
+
+	private void injectMacros(String actionPath, PathMacros pathMacros, final Targets targets) {
+		String[] names = pathMacros.names();
+		String[] values = pathMacros.extract(actionPath);
 
 		for (int ndx = 0; ndx < values.length; ndx++) {
 			String value = values[ndx];

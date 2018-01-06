@@ -55,7 +55,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	 * target action class.
 	 */
 	@Override
-	protected synchronized ActionRuntime registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+	public synchronized ActionRuntime registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
 		if (proxettaProvider == null) {
 			return super.registerAction(actionClass, actionMethod, actionDefinition);
 		}

@@ -26,12 +26,18 @@
 package jodd.madvoc;
 
 import jodd.util.CharUtil;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 /**
  * Few madvoc utilities.
  */
 public class MadvocUtil {
+
+	public static String[] splitPathToChunks(String actionPath) {
+		String path = StringUtil.cutSurrounding(actionPath, StringPool.SLASH);
+		return StringUtil.splitc(path, '/');
+	}
 
 	/**
 	 * Locates last dot after the last slash or just slash.

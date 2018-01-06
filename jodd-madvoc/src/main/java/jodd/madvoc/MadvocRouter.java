@@ -339,7 +339,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 							actionConfig
 							);
 
-			actionsManager.registerAction(actionRuntime);
+			actionsManager.registerActionRuntime(actionRuntime);
 
 			if (alias != null) {
 				actionsManager.registerPathAlias(alias, actionPath);
