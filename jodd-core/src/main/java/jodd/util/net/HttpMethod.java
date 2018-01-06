@@ -27,6 +27,7 @@ package jodd.util.net;
 
 /**
  * Http request methods.
+ * See: http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
  */
 public enum HttpMethod {
 	CONNECT,

@@ -51,10 +51,6 @@ public @interface Action {
 	 */
 	String NONE = StringPool.HASH;
 
-	// see: http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
-
-	String ANY = "";
-
 	/**
 	 * Action path value. If equals to {@link #NONE} action method name
 	 * will not be part of the created action path.
