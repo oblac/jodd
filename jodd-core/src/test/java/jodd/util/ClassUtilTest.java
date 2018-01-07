@@ -38,6 +38,8 @@ import jodd.util.fixtures.testdata.C;
 import jodd.util.fixtures.testdata.JavaBean;
 import jodd.util.fixtures.testdata2.D;
 import jodd.util.fixtures.testdata2.E;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -822,5 +824,41 @@ class ClassUtilTest {
 		assertEquals(0, subclasses.length);
 		subclasses = ClassUtil.resolveAllSuperclasses(Integer[].class);
 		assertEquals(0, subclasses.length);
+	}
+
+	@Nested
+	@DisplayName("tests for ClassUtil#isUserDefinedMethod")
+	class IsUserDefinedMethod {
+
+		@Test
+		void notUserDefinedMethod() throws Exception {
+			final Method method = Object.class.getMethod("hashCode");
+
+			final boolean actual = ClassUtil.isUserDefinedMethod(method);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void userDefinedMethod() throws Exception {
+			final Method method = StringBand.class.getMethod("toString");
+
+			final boolean actual = ClassUtil.isUserDefinedMethod(method);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+		@Test
+		void customObjectButMethodFromObject() throws Exception {
+			final Method method = StringBand.class.getMethod("hashCode");
+
+			final boolean actual = ClassUtil.isUserDefinedMethod(method);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
 	}
 }
