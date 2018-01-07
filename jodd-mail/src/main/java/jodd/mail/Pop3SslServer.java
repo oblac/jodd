@@ -73,31 +73,4 @@ public class Pop3SslServer extends Pop3Server {
 		return new POP3SSLStore(session, url);
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public Pop3SslServer(final String host, final String username, final String password) {
-		this(host, DEFAULT_SSL_PORT, username, password);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public Pop3SslServer(final String host, final int port, final String username, final String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
-
-	/**
-	 * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}
-	 */
-	@Override
-	@Deprecated
-	public Pop3SslServer setProperty(final String name, final String value) {
-		getSessionProperties().setProperty(name, value);
-		return this;
-	}
 }

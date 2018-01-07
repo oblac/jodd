@@ -86,46 +86,4 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 		return EmailUtil.createSession(PROTOCOL_IMAP, getSessionProperties(), getAuthenticator());
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public ImapServer(final String host) {
-		this(host, DEFAULT_IMAP_PORT, null);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public ImapServer(final String host, final int port) {
-		this(host, port, null);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public ImapServer(final String host, final Authenticator authenticator) {
-		this(host, DEFAULT_IMAP_PORT, authenticator);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public ImapServer(final String host, final int port, final String username, final String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
-
-	/**
-	 * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
-	 */
-	@Deprecated
-	public ImapServer setProperty(final String name, final String value) {
-		getSessionProperties().setProperty(name, value);
-		return this;
-	}
 }

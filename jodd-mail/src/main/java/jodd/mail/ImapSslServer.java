@@ -77,31 +77,4 @@ public class ImapSslServer extends ImapServer {
 		return new IMAPSSLStore(session, url);
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public ImapSslServer(final String host, final String username, final String password) {
-		this(host, DEFAULT_SSL_PORT, username, password);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public ImapSslServer(final String host, final int port, final String username, final String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
-
-	/**
-	 * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
-	 */
-	@Override
-    @Deprecated
-	public ImapSslServer setProperty(final String name, final String value) {
-		getSessionProperties().setProperty(name, value);
-		return this;
-	}
 }

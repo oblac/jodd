@@ -57,7 +57,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * Clones the object with all its necessary data.
 	 *
 	 * @return new object of type T
-	 * @since 4.0
+	 *
 	 */
 	@Override
 	public abstract T clone();
@@ -361,7 +361,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @return this
 	 * @see #setCc(EmailAddress...)
 	 */
-	public T setCc(final String[] ccs) {
+	public T setCc(final String... ccs) {
 		return setCc(EmailAddress.createFrom(ccs));
 	}
 
@@ -372,7 +372,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @return this
 	 * @see #setCc(EmailAddress...)
 	 */
-	public T setCc(final Address[] ccs) {
+	public T setCc(final Address... ccs) {
 		return setCc(EmailAddress.createFrom(ccs));
 	}
 
@@ -605,7 +605,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param headersToSet Headers to set.
 	 * @return this
 	 * @see #setHeader(String, String)
-	 * @since 4.0
+	 *
 	 */
 	public T setHeaders(final Enumeration<Header> headersToSet) {
 		while (headersToSet.hasMoreElements()) {
@@ -667,7 +667,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param attachments {@link List} of {@link EmailAttachment}s to add.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	T storeAttachments(final List<EmailAttachment<? extends DataSource>> attachments) {
 		this.attachments.addAll(attachments);
@@ -679,7 +679,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param attachment {@link EmailAttachment} to add.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	T storeAttachment(final EmailAttachment<? extends DataSource> attachment) {
 		this.attachments.add(attachment);
@@ -691,7 +691,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param attachments {@link List} of {@link EmailAttachment}s to add.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	public T addAttachments(final List<EmailAttachment<? extends DataSource>> attachments) {
 		for (final EmailAttachment<?> attachment : attachments) {
@@ -705,7 +705,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param attachment {@link EmailAttachment} to add.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	public T addAttachment(final EmailAttachment<? extends DataSource> attachment) {
 		attachment.setContentId(null);
@@ -714,7 +714,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 
 	/**
 	 * @see #addAttachment(EmailAttachment)
-	 * @since 4.0
+	 *
 	 */
 	public T addAttachment(final EmailAttachmentBuilder builder) {
 		return addAttachment(builder.buildByteArrayDataSource());
@@ -726,7 +726,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param builder {@link EmailAttachmentBuilder}
 	 * @return this
 	 * @see #embedAttachment(EmailAttachment)
-	 * @since 4.0
+	 *
 	 */
 	public T embedAttachment(final EmailAttachmentBuilder builder) {
 		builder.setContentIdFromNameIfMissing();
@@ -745,7 +745,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param attachment {@link EmailAttachment}
 	 * @return this
 	 * @see #storeAttachment(EmailAttachment)
-	 * @since 4.0
+	 *
 	 */
 	public T embedAttachment(final EmailAttachment<? extends DataSource> attachment) {
 		storeAttachment(attachment);
@@ -774,7 +774,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param date - Email's sent date. If {@code null}, then date will be set during the process of sending.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	public T setSentDate(final Date date) {
 		sentDate = date;

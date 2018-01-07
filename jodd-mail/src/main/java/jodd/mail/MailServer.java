@@ -30,35 +30,35 @@ import javax.mail.Session;
 import java.util.Properties;
 
 /**
- * @since 4.0
+ *
  */
 public abstract class MailServer<MailSessionImpl extends MailSession> {
 
 	/**
 	 * The host.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	private final String host;
 
 	/**
 	 * The port.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	private final int port;
 
 	/**
 	 * The {@link Authenticator}.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	private final Authenticator authenticator;
 
 	/**
 	 * The {@link MailSession} {@link Properties}.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	private final Properties sessionProperties;
 
@@ -68,7 +68,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @param host          The host to use.
 	 * @param port          The port to use.
 	 * @param authenticator The {@link Authenticator} to use.
-	 * @since 4.0
+	 *
 	 */
 	MailServer(final String host, final int port, final Authenticator authenticator) {
 		if (host == null) {
@@ -88,7 +88,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @return {@link MailSession} or an implementing class such as {@link ReceiveMailSession}
 	 * or {@link SendMailSession}. The {@link Session} properties must be set <b>before</b>
 	 * the {@link Session} is created.
-	 * @since 4.0
+	 *
 	 */
 	public abstract MailSessionImpl createSession();
 
@@ -105,7 +105,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns the host.
 	 *
 	 * @return The host.
-	 * @since 4.0
+	 *
 	 */
 	public String getHost() {
 		return host;
@@ -115,7 +115,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns the {@link Authenticator}.
 	 *
 	 * @return The current {@link Authenticator}.
-	 * @since 4.0
+	 *
 	 */
 	public Authenticator getAuthenticator() {
 		return authenticator;
@@ -125,7 +125,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns current port.
 	 *
 	 * @return The current port.
-	 * @since 4.0
+	 *
 	 */
 	public int getPort() {
 		return port;
@@ -135,7 +135,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns {@link MailSession} {@link Properties}.
 	 *
 	 * @return The {@link MailSession} {@link Properties}.
-	 * @since 4.0
+	 *
 	 */
 	public Properties getSessionProperties() {
 		return sessionProperties;
@@ -156,7 +156,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @see Pop3SslServer
 	 * @see SmtpServer
 	 * @see SmtpSslServer
-	 * @since 4.0
+	 *
 	 */
 	static class Builder {
 		private String host = null;
@@ -168,7 +168,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 *
 		 * @param host The host to set.
 		 * @return this
-		 * @since 4.0
+		 *
 		 */
 		public Builder host(final String host) {
 			if (host == null) {
@@ -184,7 +184,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 *
 		 * @param port The port to set.
 		 * @return this
-		 * @since 4.0
+		 *
 		 */
 		public Builder port(final int port) {
 			this.port = port;
@@ -197,7 +197,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * @param username The username to use.
 		 * @param password The password to use.
 		 * @return this
-		 * @since 4.0
+		 *
 		 */
 		public Builder auth(final String username, final String password) {
 			if (username == null) {
@@ -214,7 +214,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 *
 		 * @param authenticator {@link Authenticator} to set.
 		 * @return this
-		 * @since 4.0
+		 *
 		 */
 		public Builder auth(final Authenticator authenticator) {
 			if (authenticator == null) {
@@ -229,7 +229,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * Create a {@link ImapServer} from current data.
 		 *
 		 * @return {@link ImapServer} from current data.
-		 * @since 4.0
+		 *
 		 */
 		public ImapServer buildImap() {
 			if (port == 0) {
@@ -242,7 +242,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * Create a {@link ImapSslServer} from current data.
 		 *
 		 * @return {@link ImapSslServer} from current data.
-		 * @since 4.0
+		 *
 		 */
 		public ImapSslServer buildImapSsl() {
 			if (port == 0) {
@@ -256,7 +256,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * Create a {@link Pop3Server} from current data.
 		 *
 		 * @return {@link Pop3Server} from current data.
-		 * @since 4.0
+		 *
 		 */
 		public Pop3Server buildPop3() {
 			if (port == 0) {
@@ -270,7 +270,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * Create a {@link Pop3SslServer} from current data.
 		 *
 		 * @return {@link Pop3SslServer} from current data.
-		 * @since 4.0
+		 *
 		 */
 		public Pop3SslServer buildPop3Ssl() {
 			if (port == 0) {
@@ -284,7 +284,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * Create a {@link SmtpServer} from current data.
 		 *
 		 * @return {@link SmtpServer} from current data.
-		 * @since 4.0
+		 *
 		 */
 		public SmtpServer buildSmtp() {
 			if (port == 0) {
@@ -298,7 +298,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * Create a {@link SmtpSslServer} from current data.
 		 *
 		 * @return {@link SmtpSslServer} from current data.
-		 * @since 4.0
+		 *
 		 */
 		public SmtpSslServer buildSmtpSsl() {
 			if (port == 0) {

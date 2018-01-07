@@ -114,37 +114,4 @@ public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
 		return props;
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public static SmtpSslServer create(final String host) {
-		return MailServer.builder().host(host).port(DEFAULT_SSL_PORT).buildSmtpSsl();
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public static SmtpSslServer create(final String host, final int port) {
-		return MailServer.builder().host(host).port(port).buildSmtpSsl();
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public SmtpSslServer(final String host) {
-		super(host, DEFAULT_SSL_PORT, null);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public SmtpSslServer(final String host, final int port) {
-		super(host, port, null);
-	}
 }

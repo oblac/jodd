@@ -33,8 +33,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import static jodd.mail.EmailAttachmentBuilder.DEPRECATED_MSG;
-
 /**
  * Email attachment.
  */
@@ -71,7 +69,7 @@ public class EmailAttachment<T extends DataSource> {
 	 * Returns new/empty {@link EmailAttachmentBuilder}.
 	 *
 	 * @return {@link EmailAttachmentBuilder}.
-	 * @since 4.0
+	 *
 	 */
 	public static EmailAttachmentBuilder builder() {
 		return new EmailAttachmentBuilder();
@@ -81,7 +79,7 @@ public class EmailAttachment<T extends DataSource> {
 	 * Returns {@link EmailAttachmentBuilder} with data.
 	 *
 	 * @return {@link EmailAttachmentBuilder}.
-	 * @since 4.0
+	 *
 	 */
 	private EmailAttachmentBuilder toBuilder() {
 		return new EmailAttachmentBuilder()
@@ -181,7 +179,7 @@ public class EmailAttachment<T extends DataSource> {
 	 *
 	 * @param isInline {@code true} for inline.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	EmailAttachment<T> setInline(final boolean isInline) {
 		this.isInline = isInline;
@@ -193,7 +191,7 @@ public class EmailAttachment<T extends DataSource> {
 	 *
 	 * @param contentId content ID of {@link EmailAttachment}.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	EmailAttachment<T> setContentId(final String contentId) {
 		this.contentId = contentId;
@@ -301,21 +299,4 @@ public class EmailAttachment<T extends DataSource> {
 		EmailUtil.copyStream(getDataSource(), out);
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link #builder()} instead.
-	 */
-	@Deprecated
-	public static EmailAttachmentBuilder attachment() {
-		return builder();
-	}
-
-	/**
-	 * @deprecated Use {@link #builder()} instead.
-	 */
-	@Deprecated
-	protected EmailAttachment(final String name, final String contentId, final boolean isInline) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#builder()"));
-	}
 }

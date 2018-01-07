@@ -29,7 +29,6 @@ import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import java.util.Map;
 import java.util.Properties;
 
 import static jodd.util.StringPool.TRUE;
@@ -84,38 +83,6 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	}
 
 	// ---------------------------------------------------------------- builder
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public T authenticateWith(final String username, final String password) {
-		final MailServer.Builder builder = MailServer.builder().host(getHost()).port(getPort()).auth(username, password);
-		final MailServer server;
-		if (getClass().equals(SmtpServer.class)) {
-			server = builder.buildSmtp();
-		} else {
-			server = builder.buildSmtpSsl();
-		}
-		return (T) server;
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer.Builder}
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public T authenticateWith(final Authenticator authenticator) {
-		final MailServer.Builder builder = MailServer.builder().host(getHost()).port(getPort()).auth(authenticator);
-		final MailServer server;
-		if (getClass().equals(SmtpServer.class)) {
-			server = builder.buildSmtp();
-		} else {
-			server = builder.buildSmtpSsl();
-		}
-		return (T) server;
-	}
 
 	/**
 	 * Defines timeout value in milliseconds for all mail-related operations.
@@ -214,59 +181,4 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 		return session.getTransport(PROTOCOL_SMTP);
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public static SmtpServer create(final String host) {
-		return MailServer.builder().host(host).buildSmtp();
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public static SmtpServer create(final String host, final int port) {
-		return MailServer.builder().host(host).port(port).buildSmtp();
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public SmtpServer(final String host) {
-		this(host, DEFAULT_SMTP_PORT, null);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public SmtpServer(final String host, final int port) {
-		this(host, port, null);
-	}
-
-	/**
-	 * @deprecated Use {@link #getSessionProperties()} with {@link Properties#putAll(Map)}.
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public T properties(final Properties properties) {
-		if (properties != null) {
-			getSessionProperties().putAll(properties);
-		}
-		return (T) this;
-	}
-
-	/**
-	 * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public T property(final String name, final String value) {
-		getSessionProperties().setProperty(name, value);
-		return (T) this;
-	}
 }

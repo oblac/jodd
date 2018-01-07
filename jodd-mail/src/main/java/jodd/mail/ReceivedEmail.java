@@ -44,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static jodd.mail.EmailAttachmentBuilder.DEPRECATED_MSG;
-
 /**
  * Received email.
  */
@@ -62,7 +60,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Static constructor for fluent interface.
 	 *
 	 * @return new {@link ReceivedEmail}.
-	 * @since 4.0
+	 *
 	 */
 	public static ReceivedEmail create() {
 		return new ReceivedEmail();
@@ -104,7 +102,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	/**
 	 * Creates an empty {@link ReceivedEmail}.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	private ReceivedEmail() {
 	}
@@ -196,7 +194,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param mp {@link Multipart}
 	 * @throws MessagingException if there is a failure.
 	 * @throws IOException        if there is an issue with the {@link Multipart}.
-	 * @since 4.0
+	 *
 	 */
 	private void processMultipart(final Multipart mp) throws MessagingException, IOException {
 		final int count = mp.getCount();
@@ -214,7 +212,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @throws MessagingException           if there is a failure.
 	 * @throws UnsupportedEncodingException if the named charset is not supported.
 	 * @see #addMessage(String, String, String)
-	 * @since 4.0
+	 *
 	 */
 	private void addStringContent(final Part part, final String content) throws MessagingException, UnsupportedEncodingException {
 		final String contentType = part.getContentType();
@@ -369,7 +367,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param date The received {@link Date} to set.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	public ReceivedEmail setReceivedDate(final Date date) {
 		receivedDate = date;
@@ -380,7 +378,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Returns email's received {@link Date}.
 	 *
 	 * @return The email's received {@link Date}.
-	 * @since 4.0
+	 *
 	 */
 	public Date getReceivedDate() {
 		return receivedDate;
@@ -395,7 +393,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param content Content as {@link InputStream}.
 	 * @return this
 	 * @see #addAttachment(EmailAttachment)
-	 * @since 4.0
+	 *
 	 */
 	private ReceivedEmail addAttachment(final Part part, final InputStream content) throws MessagingException, IOException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
@@ -410,7 +408,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param content Content as byte array.
 	 * @return this
 	 * @see #addAttachment(EmailAttachment)
-	 * @since 4.0
+	 *
 	 */
 	private ReceivedEmail addAttachment(final Part part, final byte[] content) throws MessagingException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
@@ -426,7 +424,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param part {@link Part}.
 	 * @return this
 	 * @see #addAttachment(EmailAttachment)
-	 * @since 4.0
+	 *
 	 */
 	private static EmailAttachmentBuilder addAttachmentInfo(final Part part) throws MessagingException {
 
@@ -452,7 +450,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Adds attached {@link ReceivedEmail}s.
 	 *
 	 * @param emails {@link List} of {@link ReceivedEmail}s to attach.
-	 * @since 4.0
+	 *
 	 */
 	public ReceivedEmail addAttachedMessages(final List<ReceivedEmail> emails) {
 		attachedMessages.addAll(emails);
@@ -464,7 +462,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param email {@link ReceivedEmail} to attach.
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	public ReceivedEmail addAttachedMessage(final ReceivedEmail email) {
 		attachedMessages.add(email);
@@ -481,61 +479,4 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 		return attachedMessages;
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link #addAttachedMessage(ReceivedEmail)} instead.
-	 */
-	@Deprecated
-	public void addAttachmentMessage(final ReceivedEmail email) {
-		addAttachedMessage(email);
-	}
-
-	/**
-	 * @deprecated Use {@link #isDraft()}
-	 */
-	@Deprecated
-	public boolean isDraf() {
-		return isDraft();
-	}
-
-	/**
-	 * @deprecated Use {@link #getReceivedDate()} instead.
-	 */
-	@Deprecated
-	protected Date getReceiveDate() {
-		return getReceivedDate();
-	}
-
-	/**
-	 * @deprecated Use {@link #setReceivedDate(Date)} instead.
-	 */
-	@Deprecated
-	protected void setReceiveDate(final Date date) {
-		setReceivedDate(date);
-	}
-
-	/**
-	 * @deprecated Use {@link Message#getReceivedDate()} instead.
-	 */
-	@Deprecated
-	protected Date parseReceiveDate(final Message msg) throws MessagingException {
-		return msg.getReceivedDate();
-	}
-
-	/**
-	 * @deprecated Use {@link Message#getSentDate()} instead.
-	 */
-	@Deprecated
-	protected Date parseSendDate(final Message msg) throws MessagingException {
-		return msg.getSentDate();
-	}
-
-	/**
-	 * @deprecated Use {@link #addAttachment(EmailAttachmentBuilder)}
-	 */
-	@Deprecated
-	public void addAttachment(final String fileName, final String mimeType, final String contentId, final boolean isInline, final byte[] content) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#addAttachment(EmailAttachmentBuilder)"));
-	}
 }

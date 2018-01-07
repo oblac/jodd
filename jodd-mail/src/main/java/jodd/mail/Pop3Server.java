@@ -89,38 +89,4 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 		return EmailUtil.createSession(PROTOCOL_POP3, getSessionProperties(), getAuthenticator());
 	}
 
-	// ---------------------------------------------------------------- deprecated
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public Pop3Server(final String host) {
-		this(host, DEFAULT_POP3_PORT, null);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public Pop3Server(final String host, final int port) {
-		this(host, port, null);
-	}
-
-	/**
-	 * @deprecated Use {@link MailServer#builder()}
-	 */
-	@Deprecated
-	public Pop3Server(final String host, final Authenticator authenticator) {
-		this(host, DEFAULT_POP3_PORT, authenticator);
-	}
-
-	/**
-	 * @deprecated {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
-	 */
-	@Deprecated
-	public Pop3Server setProperty(final String name, final String value) {
-		getSessionProperties().setProperty(name, value);
-		return this;
-	}
 }

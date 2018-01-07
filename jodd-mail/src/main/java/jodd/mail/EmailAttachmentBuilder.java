@@ -132,7 +132,7 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @param dataSource {@link DataSource}
 	 * @return this
-	 * @since 4.0
+	 *
 	 */
 	public <T extends DataSource> EmailAttachmentBuilder setContent(final T dataSource) {
 		this.dataSource = dataSource;
@@ -148,7 +148,7 @@ public class EmailAttachmentBuilder {
 	 * @return this
 	 * @throws IOException if {@link ByteArrayDataSource} cannot be created from {@link InputStream}
 	 * @see #setContent(DataSource)
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachmentBuilder setContent(final InputStream inputStream, final String contentType)
 		throws IOException {
@@ -162,7 +162,7 @@ public class EmailAttachmentBuilder {
 	 * @param contentType content type from {@link EmailAttachment}.
 	 * @return this
 	 * @see #setContent(DataSource)
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachmentBuilder setContent(final byte[] bytes, final String contentType) {
 		return setContent(new ByteArrayDataSource(bytes, resolveContentType(contentType)));
@@ -172,7 +172,7 @@ public class EmailAttachmentBuilder {
 	 * Uses {@code null} contentType.
 	 *
 	 * @see #setContent(byte[], String)
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachmentBuilder setContent(final byte[] bytes) {
 		return setContent(bytes, null);
@@ -184,7 +184,7 @@ public class EmailAttachmentBuilder {
 	 * @param file {@link File}
 	 * @return this
 	 * @see #setContent(DataSource)
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachmentBuilder setContent(final File file) {
 		return setContent(new FileDataSource(file));
@@ -194,7 +194,7 @@ public class EmailAttachmentBuilder {
 	 * @param fileName String representing file name.
 	 * @return this
 	 * @see #setContent(File)
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachmentBuilder setContent(final String fileName) {
 		return setContent(new File(fileName));
@@ -207,7 +207,7 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @return {@link EmailAttachment}.
 	 * @throws MailException if issue with {@link DataSource}.
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachment<ByteArrayDataSource> buildByteArrayDataSource() throws MailException {
 		try {
@@ -229,7 +229,7 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @return {@link EmailAttachment}.
 	 * @throws MailException if issue with {@link DataSource}.
-	 * @since 4.0
+	 *
 	 */
 	public EmailAttachment<FileDataSource> buildFileDataSource() throws MailException {
 		try {
@@ -284,7 +284,7 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @param contentType Content type if we know it. {@code null} is fine to use.
 	 * @return content type
-	 * @since 4.0
+	 *
 	 */
 	protected String resolveContentType(final String contentType) {
 		if (contentType != null) {
@@ -298,139 +298,4 @@ public class EmailAttachmentBuilder {
 		return MimeTypes.getMimeType(extension);
 	}
 
-	// ---------------------------------------------------------------- Old deprecated stuff
-
-	static final String DEPRECATED_MSG = "Method is deprecated. Use %s instead.";
-
-	// ---------------------------------------------------------------- content/data
-
-	/**
-	 * @deprecated Use {@link #setContent(File)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder bytes(final File file) {
-		return setContent(file);
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(File)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder file(final File file) {
-		return setContent(file);
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(String)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder file(final String fileName) {
-		return setContent(fileName);
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(byte[], String)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder bytes(final byte[] bytes) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#setContent(byte[], String)"));
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(InputStream, String)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder bytes(final InputStream inputStream) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#setContent(InputStream, String)"));
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(InputStream, String)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder stream(final InputStream inputStream) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#setContent(InputStream, File)"));
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(File)} instead.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder stream(final File file) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#setContent(File)"));
-	}
-
-	// ---------------------------------------------------------------- factory/builder
-
-	/**
-	 * @deprecated Use {@link #buildByteArrayDataSource()} or {@link #buildFileDataSource()} instead.
-	 */
-	@Deprecated
-	public EmailAttachment create() throws MailException {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#buildByteArrayDataSource() or #buildFileDataSource()"));
-	}
-
-	/**
-	 * @deprecated Use {@link #buildByteArrayDataSource()} or {@link #buildFileDataSource()} instead.
-	 */
-	@Deprecated
-	protected jodd.mail.att.DataSourceAttachment createDataSourceAttachment() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#buildByteArrayDataSource() or #buildFileDataSource()"));
-	}
-
-	/**
-	 * @deprecated Use {@link #buildByteArrayDataSource()} instead.
-	 */
-	@Deprecated
-	protected jodd.mail.att.ByteArrayAttachment createByteArrayAttachment() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#buildByteArrayDataSource()"));
-	}
-
-	/**
-	 * @deprecated Use {@link #buildByteArrayDataSource()} or {@link #buildFileDataSource()} instead.
-	 */
-	@Deprecated
-	protected jodd.mail.att.InputStreamAttachment createInputStreamAttachment() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#buildByteArrayDataSource()"));
-	}
-
-	/**
-	 * @deprecated Use {@link #buildFileDataSource()} instead.
-	 */
-	@Deprecated
-	protected jodd.mail.att.FileAttachment createFileAttachment() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#buildFileDataSource()"));
-	}
-
-	/**
-	 * @deprecated Use {@link #buildFileDataSource()} instead.
-	 */
-	@Deprecated
-	protected jodd.mail.att.FileAttachment buildFileAttachment() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#buildFileDataSource()"));
-	}
-
-	/**
-	 * @deprecated Use {@link #setContent(InputStream, String)} or {@link #setContent(byte[], String)}.
-	 */
-	@Deprecated
-	public EmailAttachmentBuilder setContentType(final String contentType) {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#setContent(InputStream, String) or #setContent(byte[], String)"));
-	}
-
-	/**
-	 * @deprecated Use {@link #resolveContentType(String)}}.
-	 */
-	@Deprecated
-	protected String resolveContentType() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "#resolveContentType(String)"));
-	}
-
-	/**
-	 * @deprecated No need to use.
-	 */
-	@Deprecated
-	protected void checkIfSourceSpecified() {
-		throw new UnsupportedOperationException(String.format(DEPRECATED_MSG, "nothing"));
-	}
 }

@@ -32,20 +32,17 @@ import javax.mail.Store;
 import javax.mail.Transport;
 
 /**
- * @since 4.0
+ *
  */
 abstract class MailSession<T extends Service> implements AutoCloseable {
 
-	@Deprecated
-	final Session mailSession;
-
 	/**
-	 * @since 4.0
+	 *
 	 */
 	private final Session session;
 
 	/**
-	 * @since 4.0
+	 *
 	 */
 	final Service service;
 
@@ -54,18 +51,17 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 *
 	 * @param session {@link Session}.
 	 * @param service {@link Service} such as {@link Store} or {@link Transport}.
-	 * @since 4.0
+	 *
 	 */
 	MailSession(final Session session, final Service service) {
 		this.session = session;
-		mailSession = session;
 		this.service = service;
 	}
 
 	/**
 	 * Opens session.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	public void open() {
 		try {
@@ -78,7 +74,7 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	/**
 	 * Closes session.
 	 *
-	 * @since 4.0
+	 *
 	 */
 	@Override
 	public void close() {
@@ -93,7 +89,7 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * Returns {@code true} if mail session is still connected.
 	 *
 	 * @return {@code true} if mail session is still connected.
-	 * @since 4.0
+	 *
 	 */
 	public boolean isConnected() {
 		return service.isConnected();
@@ -103,7 +99,7 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * Returns the {@link Session}.
 	 *
 	 * @return the {@link Session}.
-	 * @since 4.0
+	 *
 	 */
 	public Session getSession() {
 		return session;
@@ -113,7 +109,7 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * Returns the {@link Service}.
 	 *
 	 * @return the {@link Service}.
-	 * @since 4.0
+	 *
 	 */
 	public abstract T getService();
 }
