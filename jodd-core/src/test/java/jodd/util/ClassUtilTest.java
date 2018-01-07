@@ -47,7 +47,14 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -819,6 +826,44 @@ class ClassUtilTest {
 		subclasses = ClassUtil.resolveAllSuperclasses(Integer[].class);
 		assertEquals(0, subclasses.length);
 	}
+
+
+	@Nested
+	@DisplayName("tests for ClassUtil#isUserDefinedMethod")
+	class IsUserDefinedMethod {
+
+		@Test
+		void notUserDefinedMethod() throws Exception {
+			final Method method = Object.class.getMethod("hashCode");
+
+			final boolean actual = ClassUtil.isUserDefinedMethod(method);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void userDefinedMethod() throws Exception {
+			final Method method = StringBand.class.getMethod("toString");
+
+			final boolean actual = ClassUtil.isUserDefinedMethod(method);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+		@Test
+		void customObjectButMethodFromObject() throws Exception {
+			final Method method = StringBand.class.getMethod("hashCode");
+
+			final boolean actual = ClassUtil.isUserDefinedMethod(method);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+	}
+
 
 	@Nested
 	@DisplayName("ClassUtil#getClasses")
