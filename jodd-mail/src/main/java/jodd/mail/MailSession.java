@@ -37,12 +37,10 @@ import javax.mail.Transport;
 abstract class MailSession<T extends Service> implements AutoCloseable {
 
 	/**
-	 *
 	 */
 	private final Session session;
 
 	/**
-	 *
 	 */
 	final Service service;
 
@@ -51,7 +49,6 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 *
 	 * @param session {@link Session}.
 	 * @param service {@link Service} such as {@link Store} or {@link Transport}.
-	 *
 	 */
 	MailSession(final Session session, final Service service) {
 		this.session = session;
@@ -60,8 +57,6 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 
 	/**
 	 * Opens session.
-	 *
-	 *
 	 */
 	public void open() {
 		try {
@@ -73,8 +68,6 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 
 	/**
 	 * Closes session.
-	 *
-	 *
 	 */
 	@Override
 	public void close() {
@@ -89,7 +82,6 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * Returns {@code true} if mail session is still connected.
 	 *
 	 * @return {@code true} if mail session is still connected.
-	 *
 	 */
 	public boolean isConnected() {
 		return service.isConnected();
@@ -99,7 +91,6 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * Returns the {@link Session}.
 	 *
 	 * @return the {@link Session}.
-	 *
 	 */
 	public Session getSession() {
 		return session;
@@ -109,7 +100,6 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * Returns the {@link Service}.
 	 *
 	 * @return the {@link Service}.
-	 *
 	 */
 	public abstract T getService();
 }

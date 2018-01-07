@@ -36,29 +36,21 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 
 	/**
 	 * The host.
-	 *
-	 *
 	 */
 	private final String host;
 
 	/**
 	 * The port.
-	 *
-	 *
 	 */
 	private final int port;
 
 	/**
 	 * The {@link Authenticator}.
-	 *
-	 *
 	 */
 	private final Authenticator authenticator;
 
 	/**
 	 * The {@link MailSession} {@link Properties}.
-	 *
-	 *
 	 */
 	private final Properties sessionProperties;
 
@@ -68,7 +60,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @param host          The host to use.
 	 * @param port          The port to use.
 	 * @param authenticator The {@link Authenticator} to use.
-	 *
 	 */
 	MailServer(final String host, final int port, final Authenticator authenticator) {
 		if (host == null) {
@@ -88,7 +79,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @return {@link MailSession} or an implementing class such as {@link ReceiveMailSession}
 	 * or {@link SendMailSession}. The {@link Session} properties must be set <b>before</b>
 	 * the {@link Session} is created.
-	 *
 	 */
 	public abstract MailSessionImpl createSession();
 
@@ -105,7 +95,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns the host.
 	 *
 	 * @return The host.
-	 *
 	 */
 	public String getHost() {
 		return host;
@@ -115,7 +104,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns the {@link Authenticator}.
 	 *
 	 * @return The current {@link Authenticator}.
-	 *
 	 */
 	public Authenticator getAuthenticator() {
 		return authenticator;
@@ -125,7 +113,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns current port.
 	 *
 	 * @return The current port.
-	 *
 	 */
 	public int getPort() {
 		return port;
@@ -135,7 +122,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * Returns {@link MailSession} {@link Properties}.
 	 *
 	 * @return The {@link MailSession} {@link Properties}.
-	 *
 	 */
 	public Properties getSessionProperties() {
 		return sessionProperties;
@@ -156,7 +142,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @see Pop3SslServer
 	 * @see SmtpServer
 	 * @see SmtpSslServer
-	 *
 	 */
 	static class Builder {
 		private String host = null;

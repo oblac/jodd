@@ -60,7 +60,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Static constructor for fluent interface.
 	 *
 	 * @return new {@link ReceivedEmail}.
-	 *
 	 */
 	public static ReceivedEmail create() {
 		return new ReceivedEmail();
@@ -101,8 +100,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 
 	/**
 	 * Creates an empty {@link ReceivedEmail}.
-	 *
-	 *
 	 */
 	private ReceivedEmail() {
 	}
@@ -194,7 +191,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param mp {@link Multipart}
 	 * @throws MessagingException if there is a failure.
 	 * @throws IOException        if there is an issue with the {@link Multipart}.
-	 *
 	 */
 	private void processMultipart(final Multipart mp) throws MessagingException, IOException {
 		final int count = mp.getCount();
@@ -212,7 +208,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @throws MessagingException           if there is a failure.
 	 * @throws UnsupportedEncodingException if the named charset is not supported.
 	 * @see #addMessage(String, String, String)
-	 *
 	 */
 	private void addStringContent(final Part part, final String content) throws MessagingException, UnsupportedEncodingException {
 		final String contentType = part.getContentType();
@@ -367,7 +362,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param date The received {@link Date} to set.
 	 * @return this
-	 *
 	 */
 	public ReceivedEmail setReceivedDate(final Date date) {
 		receivedDate = date;
@@ -378,7 +372,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Returns email's received {@link Date}.
 	 *
 	 * @return The email's received {@link Date}.
-	 *
 	 */
 	public Date getReceivedDate() {
 		return receivedDate;
@@ -393,7 +386,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param content Content as {@link InputStream}.
 	 * @return this
 	 * @see #addAttachment(EmailAttachment)
-	 *
 	 */
 	private ReceivedEmail addAttachment(final Part part, final InputStream content) throws MessagingException, IOException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
@@ -408,7 +400,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param content Content as byte array.
 	 * @return this
 	 * @see #addAttachment(EmailAttachment)
-	 *
 	 */
 	private ReceivedEmail addAttachment(final Part part, final byte[] content) throws MessagingException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
@@ -424,7 +415,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param part {@link Part}.
 	 * @return this
 	 * @see #addAttachment(EmailAttachment)
-	 *
 	 */
 	private static EmailAttachmentBuilder addAttachmentInfo(final Part part) throws MessagingException {
 
@@ -450,7 +440,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Adds attached {@link ReceivedEmail}s.
 	 *
 	 * @param emails {@link List} of {@link ReceivedEmail}s to attach.
-	 *
 	 */
 	public ReceivedEmail addAttachedMessages(final List<ReceivedEmail> emails) {
 		attachedMessages.addAll(emails);
@@ -462,7 +451,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param email {@link ReceivedEmail} to attach.
 	 * @return this
-	 *
 	 */
 	public ReceivedEmail addAttachedMessage(final ReceivedEmail email) {
 		attachedMessages.add(email);

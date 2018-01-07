@@ -117,7 +117,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link Email} with data
 	 * @param msgToSet      {@link MimeMessage} to set data into.
 	 * @throws MessagingException if there is a failure
-	 *
 	 */
 	private void setSubject(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		if (emailWithData.getSubjectEncoding() != null) {
@@ -133,7 +132,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link Email} with data
 	 * @param msgToSet      {@link MimeMessage} to set data into.
 	 * @throws MessagingException if there is a failure
-	 *
 	 */
 	private void setSentDate(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		Date date = emailWithData.getSentDate();
@@ -149,7 +147,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link Email} with data
 	 * @param msgToSet      {@link MimeMessage} to set data into.
 	 * @throws MessagingException if there is a failure
-	 *
 	 */
 	private void setHeaders(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		final Map<String, String> headers = emailWithData.getAllHeaders();
@@ -166,7 +163,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link Email} with data
 	 * @param msgToSet      {@link MimeMessage} to set data into.
 	 * @throws MessagingException if there is a failure
-	 *
 	 */
 	private void setPeople(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		msgToSet.setFrom(emailWithData.getFrom().toInternetAddress());
@@ -180,7 +176,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link Email} with data
 	 * @param msgToSet      {@link MimeMessage} to set data into.
 	 * @throws MessagingException if there is a failure.
-	 *
 	 */
 	private void setRecipients(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		// TO
@@ -208,7 +203,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link Email} with data
 	 * @param msgToSet      {@link MimeMessage} to set data into.
 	 * @throws MessagingException if there is a failure.
-	 *
 	 */
 	private void addBodyData(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		final List<EmailMessage> messages = emailWithData.getAllMessages();
@@ -245,7 +239,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param msgMultipart {@link MimeMultipart} to add to the new {@link MimeBodyPart}.
 	 * @return new {@link MimeBodyPart} with content set as msgMultipart.
 	 * @throws MessagingException if there is a failure.
-	 *
 	 */
 	private MimeBodyPart getBaseBodyPart(final MimeMultipart msgMultipart) throws MessagingException {
 		final MimeBodyPart bodyPart = new MimeBodyPart();
@@ -258,7 +251,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param attachments  {@link List} of {@link EmailAttachment}s.
 	 * @return new {@link MimeBodyPart} with data from emailMessage and attachments.
 	 * @throws MessagingException if there is a failure.
-	 *
 	 */
 	private MimeBodyPart getBodyPart(final EmailMessage emailMessage, final List<EmailAttachment<? extends DataSource>> attachments) throws MessagingException {
 
@@ -296,7 +288,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param emailWithData {@link EmailMessage} with data.
 	 * @param partToSet     {@link Part} to set data into.
 	 * @throws MessagingException if there is a failure.
-	 *
 	 */
 	private void setContent(final EmailMessage emailWithData, final Part partToSet) throws MessagingException {
 		partToSet.setContent(emailWithData.getContent(), emailWithData.getMimeType() + CHARSET + emailWithData.getEncoding());
@@ -364,7 +355,6 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @param attachments {@link List} of {@link EmailAttachment}s to add to multipart. This can be {@code null}.
 	 * @param multipart   {@link MimeMultipart} to set data into.
 	 * @throws MessagingException if there is a failure.
-	 *
 	 */
 	private void addAnyAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final MimeMultipart multipart) throws MessagingException {
 		for (final EmailAttachment<? extends DataSource> attachment : attachments) {

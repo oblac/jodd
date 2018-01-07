@@ -132,7 +132,6 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @param dataSource {@link DataSource}
 	 * @return this
-	 *
 	 */
 	public <T extends DataSource> EmailAttachmentBuilder setContent(final T dataSource) {
 		this.dataSource = dataSource;
@@ -148,7 +147,6 @@ public class EmailAttachmentBuilder {
 	 * @return this
 	 * @throws IOException if {@link ByteArrayDataSource} cannot be created from {@link InputStream}
 	 * @see #setContent(DataSource)
-	 *
 	 */
 	public EmailAttachmentBuilder setContent(final InputStream inputStream, final String contentType)
 		throws IOException {
@@ -162,7 +160,6 @@ public class EmailAttachmentBuilder {
 	 * @param contentType content type from {@link EmailAttachment}.
 	 * @return this
 	 * @see #setContent(DataSource)
-	 *
 	 */
 	public EmailAttachmentBuilder setContent(final byte[] bytes, final String contentType) {
 		return setContent(new ByteArrayDataSource(bytes, resolveContentType(contentType)));
@@ -172,7 +169,6 @@ public class EmailAttachmentBuilder {
 	 * Uses {@code null} contentType.
 	 *
 	 * @see #setContent(byte[], String)
-	 *
 	 */
 	public EmailAttachmentBuilder setContent(final byte[] bytes) {
 		return setContent(bytes, null);
@@ -184,7 +180,6 @@ public class EmailAttachmentBuilder {
 	 * @param file {@link File}
 	 * @return this
 	 * @see #setContent(DataSource)
-	 *
 	 */
 	public EmailAttachmentBuilder setContent(final File file) {
 		return setContent(new FileDataSource(file));
@@ -194,7 +189,6 @@ public class EmailAttachmentBuilder {
 	 * @param fileName String representing file name.
 	 * @return this
 	 * @see #setContent(File)
-	 *
 	 */
 	public EmailAttachmentBuilder setContent(final String fileName) {
 		return setContent(new File(fileName));
@@ -207,7 +201,6 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @return {@link EmailAttachment}.
 	 * @throws MailException if issue with {@link DataSource}.
-	 *
 	 */
 	public EmailAttachment<ByteArrayDataSource> buildByteArrayDataSource() throws MailException {
 		try {
@@ -229,7 +222,6 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @return {@link EmailAttachment}.
 	 * @throws MailException if issue with {@link DataSource}.
-	 *
 	 */
 	public EmailAttachment<FileDataSource> buildFileDataSource() throws MailException {
 		try {
@@ -284,7 +276,6 @@ public class EmailAttachmentBuilder {
 	 *
 	 * @param contentType Content type if we know it. {@code null} is fine to use.
 	 * @return content type
-	 *
 	 */
 	protected String resolveContentType(final String contentType) {
 		if (contentType != null) {

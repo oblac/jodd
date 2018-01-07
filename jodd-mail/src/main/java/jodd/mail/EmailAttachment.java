@@ -69,7 +69,6 @@ public class EmailAttachment<T extends DataSource> {
 	 * Returns new/empty {@link EmailAttachmentBuilder}.
 	 *
 	 * @return {@link EmailAttachmentBuilder}.
-	 *
 	 */
 	public static EmailAttachmentBuilder builder() {
 		return new EmailAttachmentBuilder();
@@ -79,7 +78,6 @@ public class EmailAttachment<T extends DataSource> {
 	 * Returns {@link EmailAttachmentBuilder} with data.
 	 *
 	 * @return {@link EmailAttachmentBuilder}.
-	 *
 	 */
 	private EmailAttachmentBuilder toBuilder() {
 		return new EmailAttachmentBuilder()
@@ -179,7 +177,6 @@ public class EmailAttachment<T extends DataSource> {
 	 *
 	 * @param isInline {@code true} for inline.
 	 * @return this
-	 *
 	 */
 	EmailAttachment<T> setInline(final boolean isInline) {
 		this.isInline = isInline;
@@ -191,7 +188,6 @@ public class EmailAttachment<T extends DataSource> {
 	 *
 	 * @param contentId content ID of {@link EmailAttachment}.
 	 * @return this
-	 *
 	 */
 	EmailAttachment<T> setContentId(final String contentId) {
 		this.contentId = contentId;

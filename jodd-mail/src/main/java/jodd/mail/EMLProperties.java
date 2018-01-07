@@ -30,14 +30,11 @@ import java.util.Properties;
 abstract class EMLProperties<T extends EMLProperties<T>> {
 
 	/***
-	 *
 	 */
 	abstract T getThis();
 
 	/**
 	 * {@link Properties}.
-	 *
-	 *
 	 */
 	private Session session;
 
@@ -45,7 +42,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 * Returns the {@link Session}.
 	 *
 	 * @return the {@link Session}.
-	 *
 	 */
 	Session getSession() {
 		return session;
@@ -53,8 +49,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 
 	/**
 	 * Custom {@link Properties}.
-	 *
-	 *
 	 */
 	private final Properties properties = new Properties();
 
@@ -62,7 +56,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 * Returns the {@link Properties}.
 	 *
 	 * @return the {@link Properties}.
-	 *
 	 */
 	Properties getProperties() {
 		return properties;
@@ -73,7 +66,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 *
 	 * @param properties Custom properties to be used during {@link Session} creation. It is acceptable is this value is {@code null}.
 	 * @return {@link Session} with any custom {@link Properties}
-	 *
 	 */
 	protected Session createSession(Properties properties) {
 		if (properties == null) {
@@ -90,7 +82,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 * @param properties {@link Properties} to set.
 	 * @return this
 	 * @throws MailException if the {@link Properties} has already been set.
-	 *
 	 */
 	public T set(final Properties properties) throws MailException {
 		checkSessionNotSet();
@@ -106,7 +97,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 * @param value Property value to set.
 	 * @return this
 	 * @throws MailException if the {@link Properties} has already been set.
-	 *
 	 */
 	public T set(final String name, final String value) {
 		checkSessionNotSet();
@@ -119,7 +109,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 *
 	 * @param session {@link Session}
 	 * @return this
-	 *
 	 */
 	public T session(final Session session) {
 		this.session = session;
@@ -131,7 +120,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 *
 	 * @return this
 	 * @see System#getProperties()
-	 *
 	 */
 	public T defaultSession() {
 		this.session = Session.getDefaultInstance(System.getProperties());
@@ -142,7 +130,6 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 * Ensures that {@link Session} has not yet been set.
 	 *
 	 * @throws MailException if {@link Session} has already been set.
-	 *
 	 */
 	private void checkSessionNotSet() throws MailException {
 		if (session != null) {
