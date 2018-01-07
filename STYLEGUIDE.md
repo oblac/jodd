@@ -5,12 +5,19 @@ Please follow this style guide and naming conventions when sending your submissi
 ## Code :coffee:
 
 + Use **TABS** and not spaces for indentation. We just had to choose one. 
-+ Interfaces may contain static factories (see `Value.of()`) for known implementations.
-+ _The common sense_ is assumed. We do not handle all possible mis-usages of the API. For example, we will not check for `null` and then throw custom exception when it is obvious that methods should accept non-null value.
++ Interfaces may contain static factories for known implementations. Examples:
+```
+	Value.of(123);      // creates a value
+	List.arrayList();   // creates new array list
+	Component.get();    // returns default singleton implementation
+```
+
++ _The common sense_ is assumed! We do not have extra code to prevent mis-usages of the API.
++ Check for `null` using `Objects.requireNonNull()`, but only where it is really needed. Again, if code itself throws NPE, no need for additional checks.
 + `*Util` classes do not have `private` constructor (_common sense principle_).
-+ `null` usage should be generally avoided for the public methods.
++ Returning `null` should be generally avoided for the public methods.
 + Only beans have accessors (`getFoo()` and `setFoo()` methods). Method should not be named with e.g. `get` if it is not a bean.
-+ Util methods that return new instance should be named e.g. `createFooBar()` if there is no argument or `fooBarOf(argument)` if there is an argument provided.
++ Util static methods that return new instance should be named e.g. `createFooBar()` if there is no argument or `fooBarOf(argument)` if there is an argument provided; but _never_ `getFooBar()`. Getters should never create a new instance of anything.
 
 ## Test :hearts:
 
