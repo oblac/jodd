@@ -862,7 +862,7 @@ class ClassUtilTest {
 
 	@Nested
 	@DisplayName("tests for ClassUtil#isObjectMethod")
-	class IsUserDefinedMethod {
+	class IsObjectMethod {
 
 		@Test
 		void methodFromObject() throws Exception {
