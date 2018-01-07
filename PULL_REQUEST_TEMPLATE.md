@@ -1,6 +1,5 @@
-# Jodd :heart: Pull Requests
 
-First and foremost, we are very grateful for your time and efforts for making this pull request. **You are awesome!**
+First and foremost, we are very grateful for your time and efforts for making this pull request. **You are awesome!** Now you can delete this line :)
 
 ## PR Checklist
 
@@ -22,7 +21,7 @@ What kind of change does this PR introduce?
 [ ] Code style update (formatting, local variables)
 [ ] Refactoring (no functional changes, no api changes)
 [ ] Build related changes
-[ ] CI related changes
+[ ] Test/CI related changes
 [ ] Documentation content changes
 [ ] infrastructure changes
 [ ] Other... Please describe:

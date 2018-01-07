@@ -19,6 +19,11 @@ Please follow this style guide and naming conventions when sending your submissi
 + Only beans have accessors (`getFoo()` and `setFoo()` methods). Method should not be named with e.g. `get` if it is not a bean.
 + Util static methods that return new instance should be named e.g. `createFooBar()` if there is no argument or `fooBarOf(argument)` if there is an argument provided; but _never_ `getFooBar()`. Getters should never create a new instance of anything.
 
+### About deprecation and @Since tag
+
+For now, we are _not_ able to maintain deprecated methods and the use of `@Since` tag versions. We simply don't have enough resources for that atm, sorry. It's better not to have it, but to have it all wrong. 
+
+
 ## Test :hearts:
 
 + Test classes ends with `*Test`, e.g. `StringUtilTest`.
