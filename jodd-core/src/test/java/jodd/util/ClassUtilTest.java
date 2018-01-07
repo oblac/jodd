@@ -905,4 +905,40 @@ class ClassUtilTest {
 
 	}
 
+	@Nested
+	@DisplayName("tests for ClassUtil#isObjectMethod")
+	class IsObjectMethod {
+
+		@Test
+		void methodFromObject() throws Exception {
+			final Method method = Object.class.getMethod("hashCode");
+
+			final boolean actual = ClassUtil.isObjectMethod(method);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+		@Test
+		void userDefinedMethod() throws Exception {
+			final Method method = StringBand.class.getMethod("toString");
+
+			final boolean actual = ClassUtil.isObjectMethod(method);
+
+			// asserts
+			assertEquals(false, actual);
+		}
+
+		@Test
+		void customObjectButMethodFromObject() throws Exception {
+			final Method method = StringBand.class.getMethod("hashCode");
+
+			final boolean actual = ClassUtil.isObjectMethod(method);
+
+			// asserts
+			assertEquals(true, actual);
+		}
+
+	}
+
 }
