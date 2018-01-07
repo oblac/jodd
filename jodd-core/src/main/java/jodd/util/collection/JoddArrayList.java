@@ -398,7 +398,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * elements themselves are not copied.)
 	 */
 	@Override
-	public Object clone() {
+	public JoddArrayList<E> clone() {
 		try {
 			@SuppressWarnings("unchecked")
 			JoddArrayList<E> v = (JoddArrayList<E>) super.clone();
@@ -413,7 +413,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 			v.maxFreeSpaceBeforeNormalize = maxFreeSpaceBeforeNormalize;
 			return v;
 		} catch (CloneNotSupportedException ignore) {
-			throw new InternalError();	// this shouldn't happen, since we are Cloneable
+			throw new InternalError();    // this shouldn't happen, since we are Cloneable
 		}
 	}
 
@@ -907,10 +907,12 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 		int lastRet = -1; // index of last element returned; -1 if no such
 		int expectedModCount = modCount;
 
+		@Override
 		public boolean hasNext() {
 			return cursor != size;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public E next() {
 			checkForComodification();
@@ -924,6 +926,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 			return (E) buffer[start + i];
 		}
 
+		@Override
 		public void remove() {
 			if (lastRet < 0) {
 				throw new IllegalStateException();
@@ -956,18 +959,22 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 			cursor = index;
 		}
 
+		@Override
 		public boolean hasPrevious() {
 			return cursor != 0;
 		}
 
+		@Override
 		public int nextIndex() {
 			return cursor;
 		}
 
+		@Override
 		public int previousIndex() {
 			return cursor - 1;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public E previous() {
 			checkForComodification();
@@ -983,6 +990,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 			return (E) buffer[start + i];
 		}
 
+		@Override
 		public void set(E e) {
 			if (lastRet < 0) {
 				throw new IllegalStateException();
@@ -996,6 +1004,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 			}
 		}
 
+		@Override
 		public void add(E e) {
 			checkForComodification();
 

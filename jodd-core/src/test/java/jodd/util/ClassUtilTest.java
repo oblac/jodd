@@ -826,6 +826,7 @@ class ClassUtilTest {
 		assertEquals(0, subclasses.length);
 	}
 
+
 	@Nested
 	@DisplayName("tests for ClassUtil#isUserDefinedMethod")
 	class IsUserDefinedMethod {
@@ -861,4 +862,46 @@ class ClassUtilTest {
 		}
 
 	}
+
+
+	@Nested
+	@DisplayName("ClassUtil#getClasses")
+	class GetClasses {
+
+		@Test
+		void emptyArgument() {
+			final Class[] actual = ClassUtil.getClasses(new Object[0]);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(0, actual.length);
+		}
+
+		@Test
+		void noNullValueIncluded() {
+			final Class[] actual = ClassUtil.getClasses(new Object(), new Base32(), File.class, 3, 23L, 44.55F, 11.11D);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(7, actual.length);
+			assertEquals(Object.class, actual[0]);
+			assertEquals(Base32.class, actual[1]);
+			assertEquals(Class.class, actual[2]);
+			assertEquals(Integer.class, actual[3]);
+			assertEquals(Long.class, actual[4]);
+			assertEquals(Float.class, actual[5]);
+			assertEquals(Double.class, actual[6]);
+		}
+
+		@Test
+		void onlyNullValuesIncluded() {
+			final Class[] actual = ClassUtil.getClasses(null, null, null, null);
+
+			// asserts
+			assertNotNull(actual);
+			assertEquals(4, actual.length);
+		}
+
+	}
+
 }

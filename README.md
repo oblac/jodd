@@ -8,15 +8,15 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ce3a0ae3667441fbbd261f6c9e043b0)](https://www.codacy.com/app/igo_rs/jodd)
 [![Snapshot](https://api.bintray.com/packages/oblac/jodd/org.jodd%3Ajodd-core/images/download.svg)](https://bintray.com/oblac/jodd)
 [![JitPack](https://jitpack.io/v/oblac/jodd.svg)](https://jitpack.io/#oblac/jodd)
-[![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
-[![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](http://jodd.org/license.html)
+[![Stack Overflow](https://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](https://stackoverflow.com/questions/tagged/jodd)
+[![BSD License](https://img.shields.io/github/license/oblac/jodd.svg)](https://jodd.org/license.html)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 [![Help Contribute to Open Source](https://www.codetriage.com/oblac/jodd/badges/users.svg)](https://www.codetriage.com/oblac/jodd)
 
-+ Official web site (site & documentation): http://jodd.org/
-+ GitHub page (5 min overview): http://oblac.github.io/jodd
-+ Jodd micro-frameworks (30 min overview): http://joddframework.org
-+ One-page love: http://jodd.org/about
++ Official web site (site & documentation): https://jodd.org
++ GitHub page (5 min overview): https://oblac.github.io/jodd
++ Jodd micro-frameworks (30 min overview): https://joddframework.org
++ One-page love: https://jodd.org/about
 + Talk with us at [gitter](https://gitter.im/oblac/jodd)!
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
