@@ -33,71 +33,71 @@ import jodd.core.JoddCoreDefaults;
  */
 public class EmailMessage {
 
-  /**
-   * The content as a {@link String}.
-   */
-  private final String content;
+	/**
+	 * The content as a {@link String}.
+	 */
+	private final String content;
 
-  /**
-   * The MIME type as a as a {@link String}.
-   */
-  private final String mimeType;
+	/**
+	 * The MIME type as a as a {@link String}.
+	 */
+	private final String mimeType;
 
-  /**
-   * The encoding as a {@link String}.
-   */
-  private final String encoding;
+	/**
+	 * The encoding as a {@link String}.
+	 */
+	private final String encoding;
 
-  /**
-   * Defines email content.
-   *
-   * @param content  The content as a {@link String}.
-   * @param mimeType The MIME type as a as a {@link String}.
-   * @param encoding The encoding as a {@link String}.
-   */
-  public EmailMessage(final String content, final String mimeType, final String encoding) {
-    this.content = content;
-    this.mimeType = mimeType;
-    this.encoding = encoding;
-  }
+	/**
+	 * Defines email content.
+	 *
+	 * @param content  The content as a {@link String}.
+	 * @param mimeType The MIME type as a as a {@link String}.
+	 * @param encoding The encoding as a {@link String}.
+	 */
+	public EmailMessage(final String content, final String mimeType, final String encoding) {
+		this.content = content;
+		this.mimeType = mimeType;
+		this.encoding = encoding;
+	}
 
-  /**
-   * Uses UTF-8 email content by default (as per {@link JoddCoreDefaults#getEncoding()}.
-   *
-   * @param content  The content as a {@link String}.
-   * @param mimeType The MIME type as a as a {@link String}.
-   * @see JoddCoreDefaults#getEncoding()
-   */
-  public EmailMessage(final String content, final String mimeType) {
-    this(content, mimeType, JoddCore.get().defaults().getEncoding());
-  }
+	/**
+	 * Uses UTF-8 email content by default (as per {@link JoddCoreDefaults#getEncoding()}.
+	 *
+	 * @param content  The content as a {@link String}.
+	 * @param mimeType The MIME type as a as a {@link String}.
+	 * @see JoddCoreDefaults#getEncoding()
+	 */
+	public EmailMessage(final String content, final String mimeType) {
+		this(content, mimeType, JoddCore.get().defaults().getEncoding());
+	}
 
-  // ---------------------------------------------------------------- getters
+	// ---------------------------------------------------------------- getters
 
-  /**
-   * Returns message content.
-   *
-   * @return {@link String} containing the message content.
-   */
-  public String getContent() {
-    return content;
-  }
+	/**
+	 * Returns message content.
+	 *
+	 * @return {@link String} containing the message content.
+	 */
+	public String getContent() {
+		return content;
+	}
 
-  /**
-   * Returns message mime type.
-   *
-   * @return {@link String} containing the message mime type.
-   */
-  public String getMimeType() {
-    return mimeType;
-  }
+	/**
+	 * Returns message mime type.
+	 *
+	 * @return {@link String} containing the message mime type.
+	 */
+	public String getMimeType() {
+		return mimeType;
+	}
 
-  /**
-   * Returns message encoding.
-   *
-   * @return {@link String} containing the message encoding.
-   */
-  public String getEncoding() {
-    return encoding;
-  }
+	/**
+	 * Returns message encoding.
+	 *
+	 * @return {@link String} containing the message encoding.
+	 */
+	public String getEncoding() {
+		return encoding;
+	}
 }

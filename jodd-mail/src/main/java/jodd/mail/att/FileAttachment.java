@@ -36,16 +36,16 @@ import java.io.File;
 @Deprecated
 public class FileAttachment extends EmailAttachment<FileDataSource> {
 
-  public FileAttachment(final File file, final String name, final String contentId, final boolean isInline) {
-    super(name, contentId, isInline, new FileDataSource(file));
-  }
+	public FileAttachment(final File file, final String name, final String contentId, final boolean isInline) {
+		super(name, contentId, isInline, new FileDataSource(file));
+	}
 
-  /**
-   * Returns attached {@link File}.
-   *
-   * @return attached {@link File}.
-   */
-  public File getFile() {
-    return getDataSource().getFile();
-  }
+	/**
+	 * Returns attached {@link File}.
+	 *
+	 * @return attached {@link File}.
+	 */
+	public File getFile() {
+		return getDataSource().getFile();
+	}
 }

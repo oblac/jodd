@@ -38,15 +38,15 @@ import java.io.InputStream;
 @Deprecated
 public class InputStreamAttachment extends EmailAttachment<ByteArrayDataSource> {
 
-  public InputStreamAttachment(final InputStream inputStream, final String contentType, final String name, final String contentId, final boolean inline) {
-    super(name, contentId, inline, getByteArrayDataSource(inputStream, contentType));
-  }
+	public InputStreamAttachment(final InputStream inputStream, final String contentType, final String name, final String contentId, final boolean inline) {
+		super(name, contentId, inline, getByteArrayDataSource(inputStream, contentType));
+	}
 
-  private static ByteArrayDataSource getByteArrayDataSource(final InputStream inputStream, final String contentType) throws MailException {
-    try {
-      return new ByteArrayDataSource(inputStream, contentType);
-    } catch (final IOException ioexc) {
-      throw new MailException(ioexc);
-    }
-  }
+	private static ByteArrayDataSource getByteArrayDataSource(final InputStream inputStream, final String contentType) throws MailException {
+		try {
+			return new ByteArrayDataSource(inputStream, contentType);
+		} catch (final IOException ioexc) {
+			throw new MailException(ioexc);
+		}
+	}
 }

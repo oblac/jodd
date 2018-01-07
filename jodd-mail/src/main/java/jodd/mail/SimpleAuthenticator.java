@@ -33,28 +33,28 @@ import javax.mail.PasswordAuthentication;
  */
 public class SimpleAuthenticator extends Authenticator {
 
-  private final String username;
-  private final String password;
+	private final String username;
+	private final String password;
 
-  /**
-   * Creates new SimpleAuthenticator for given username and password.
-   *
-   * @param username Username
-   * @param password Password
-   */
-  public SimpleAuthenticator(final String username, final String password) {
-    this.username = username;
-    this.password = password;
-  }
+	/**
+	 * Creates new SimpleAuthenticator for given username and password.
+	 *
+	 * @param username Username
+	 * @param password Password
+	 */
+	public SimpleAuthenticator(final String username, final String password) {
+		this.username = username;
+		this.password = password;
+	}
 
-  /**
-   * Return new {@link PasswordAuthentication} for given username and password.
-   *
-   * @return {@link PasswordAuthentication}
-   */
-  @Override
-  public PasswordAuthentication getPasswordAuthentication() {
-    return new PasswordAuthentication(username, password);
-  }
+	/**
+	 * Return new {@link PasswordAuthentication} for given username and password.
+	 *
+	 * @return {@link PasswordAuthentication}
+	 */
+	@Override
+	public PasswordAuthentication getPasswordAuthentication() {
+		return new PasswordAuthentication(username, password);
+	}
 }
 

@@ -37,80 +37,80 @@ import java.io.OutputStream;
 
 public class EMLComposer extends EMLProperties<EMLComposer> {
 
-  public static EMLComposer create() {
-    return new EMLComposer();
-  }
+	public static EMLComposer create() {
+		return new EMLComposer();
+	}
 
-  @Override
-  EMLComposer getThis() {
-    return this;
-  }
+	@Override
+	EMLComposer getThis() {
+		return this;
+	}
 
-  /**
-   * Creates EML string from given {@link Email}.
-   *
-   * @param email {@link Email} from which to create EML {@link String}.
-   * @return {@link String} with EML content.
-   */
-  public String compose(final Email email) {
-    if (getSession() == null) {
-      createSession(getProperties());
-    }
+	/**
+	 * Creates EML string from given {@link Email}.
+	 *
+	 * @param email {@link Email} from which to create EML {@link String}.
+	 * @return {@link String} with EML content.
+	 */
+	public String compose(final Email email) {
+		if (getSession() == null) {
+			createSession(getProperties());
+		}
 
-    final OutputStreamTransport ost = new OutputStreamTransport(getSession());
+		final OutputStreamTransport ost = new OutputStreamTransport(getSession());
 
-    final SendMailSession sendMailSession = new SendMailSession(getSession(), ost);
+		final SendMailSession sendMailSession = new SendMailSession(getSession(), ost);
 
-    sendMailSession.sendMail(email);
+		sendMailSession.sendMail(email);
 
-    return ost.getEml();
-  }
+		return ost.getEml();
+	}
 
-  /**
-   * Special transport that writes message into the {@link OutputStream}.
-   */
-  private static class OutputStreamTransport extends Transport {
+	/**
+	 * Special transport that writes message into the {@link OutputStream}.
+	 */
+	private static class OutputStreamTransport extends Transport {
 
-    /**
-     * Creates a new {@link OutputStreamTransport}.
-     *
-     * @param session {@link Session}.
-     */
-    public OutputStreamTransport(final Session session) {
-      super(session, new URLName("JODD_MAIL_2_EML", null, -1, null, null, null));
-    }
+		/**
+		 * Creates a new {@link OutputStreamTransport}.
+		 *
+		 * @param session {@link Session}.
+		 */
+		public OutputStreamTransport(final Session session) {
+			super(session, new URLName("JODD_MAIL_2_EML", null, -1, null, null, null));
+		}
 
-    /**
-     * Sends a message.
-     *
-     * @param msg       {@link Message} to send.
-     * @param addresses array of {@link Address}es to send to.
-     */
-    @Override
-    public void sendMessage(final Message msg, final Address[] addresses) {
-      final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		/**
+		 * Sends a message.
+		 *
+		 * @param msg       {@link Message} to send.
+		 * @param addresses array of {@link Address}es to send to.
+		 */
+		@Override
+		public void sendMessage(final Message msg, final Address[] addresses) {
+			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-      try {
-        msg.writeTo(outputStream);
-      } catch (IOException | MessagingException e) {
-        throw new MailException(e);
-      }
+			try {
+				msg.writeTo(outputStream);
+			} catch (IOException | MessagingException e) {
+				throw new MailException(e);
+			}
 
-      eml = outputStream.toString();
-    }
+			eml = outputStream.toString();
+		}
 
-    /**
-     * Returns the EML content.
-     *
-     * @return EML content.
-     */
-    public String getEml() {
-      return eml;
-    }
+		/**
+		 * Returns the EML content.
+		 *
+		 * @return EML content.
+		 */
+		public String getEml() {
+			return eml;
+		}
 
-    /**
-     * String with EML content.
-     */
-    private String eml;
-  }
+		/**
+		 * String with EML content.
+		 */
+		private String eml;
+	}
 }

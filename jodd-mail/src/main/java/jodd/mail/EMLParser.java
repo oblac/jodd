@@ -44,95 +44,95 @@ import java.io.UnsupportedEncodingException;
  */
 public class EMLParser extends EMLProperties<EMLParser> {
 
-  public static EMLParser create() {
-    return new EMLParser();
-  }
+	public static EMLParser create() {
+		return new EMLParser();
+	}
 
-  @Override
-  EMLParser getThis() {
-    return this;
-  }
+	@Override
+	EMLParser getThis() {
+		return this;
+	}
 
-  /**
-   * Parses EML with provided EML content.
-   *
-   * @param emlContent {@link String} with EML content.
-   * @param charset    String with charset.
-   * @return {@link ReceivedEmail}.
-   * @throws UnsupportedEncodingException if the named charset is not supported.
-   * @throws MessagingException           if {@link MimeMessage} cannot be created.
-   * @see #parse(byte[])
-   */
-  public ReceivedEmail parse(final String emlContent, final String charset) throws
-      UnsupportedEncodingException, MessagingException {
-    final byte[] bytes = emlContent.getBytes(charset);
-    return parse(bytes);
-  }
+	/**
+	 * Parses EML with provided EML content.
+	 *
+	 * @param emlContent {@link String} with EML content.
+	 * @param charset    String with charset.
+	 * @return {@link ReceivedEmail}.
+	 * @throws UnsupportedEncodingException if the named charset is not supported.
+	 * @throws MessagingException           if {@link MimeMessage} cannot be created.
+	 * @see #parse(byte[])
+	 */
+	public ReceivedEmail parse(final String emlContent, final String charset) throws
+		UnsupportedEncodingException, MessagingException {
+		final byte[] bytes = emlContent.getBytes(charset);
+		return parse(bytes);
+	}
 
-  /**
-   * Parses EML with provided EML content.
-   *
-   * @param emlContent {@link String} with EML content.
-   * @return {@link ReceivedEmail}.
-   * @throws MessagingException if {@link MimeMessage} cannot be created.
-   * @see #parse(String, String)
-   * @see JoddCoreDefaults#getEncoding()
-   */
-  public ReceivedEmail parse(final String emlContent) throws MessagingException {
-    try {
-      return parse(emlContent, JoddCore.get().defaults().getEncoding());
-    } catch (final UnsupportedEncodingException ignore) {
-      return null;
-    }
-  }
+	/**
+	 * Parses EML with provided EML content.
+	 *
+	 * @param emlContent {@link String} with EML content.
+	 * @return {@link ReceivedEmail}.
+	 * @throws MessagingException if {@link MimeMessage} cannot be created.
+	 * @see #parse(String, String)
+	 * @see JoddCoreDefaults#getEncoding()
+	 */
+	public ReceivedEmail parse(final String emlContent) throws MessagingException {
+		try {
+			return parse(emlContent, JoddCore.get().defaults().getEncoding());
+		} catch (final UnsupportedEncodingException ignore) {
+			return null;
+		}
+	}
 
-  /**
-   * Parses EML with provided EML content.
-   *
-   * @param content byte[] with EML content.
-   * @return {@link ReceivedEmail}.
-   * @throws MessagingException if {@link MimeMessage} cannot be created.
-   * @see #parse(InputStream)
-   */
-  public ReceivedEmail parse(final byte[] content) throws MessagingException {
-    return parse(new ByteArrayInputStream(content));
-  }
+	/**
+	 * Parses EML with provided EML content.
+	 *
+	 * @param content byte[] with EML content.
+	 * @return {@link ReceivedEmail}.
+	 * @throws MessagingException if {@link MimeMessage} cannot be created.
+	 * @see #parse(InputStream)
+	 */
+	public ReceivedEmail parse(final byte[] content) throws MessagingException {
+		return parse(new ByteArrayInputStream(content));
+	}
 
-  /**
-   * Starts EML parsing with provided EML {@link File}.
-   *
-   * @param emlFile {@link File} with EML content.
-   * @return {@link ReceivedEmail}.
-   * @throws FileNotFoundException if emlFile cannot be found
-   * @throws MessagingException    if {@link MimeMessage} cannot be created.
-   * @see #parse(InputStream)
-   */
-  public ReceivedEmail parse(final File emlFile) throws FileNotFoundException, MessagingException {
-    final FileInputStream fileInputStream = new FileInputStream(emlFile);
-    try {
-      return parse(fileInputStream);
-    } finally {
-      StreamUtil.close(fileInputStream);
-    }
-  }
+	/**
+	 * Starts EML parsing with provided EML {@link File}.
+	 *
+	 * @param emlFile {@link File} with EML content.
+	 * @return {@link ReceivedEmail}.
+	 * @throws FileNotFoundException if emlFile cannot be found
+	 * @throws MessagingException    if {@link MimeMessage} cannot be created.
+	 * @see #parse(InputStream)
+	 */
+	public ReceivedEmail parse(final File emlFile) throws FileNotFoundException, MessagingException {
+		final FileInputStream fileInputStream = new FileInputStream(emlFile);
+		try {
+			return parse(fileInputStream);
+		} finally {
+			StreamUtil.close(fileInputStream);
+		}
+	}
 
-  /**
-   * Parses the EML content. If {@link Session} is not created, default one will be used.
-   *
-   * @param emlContentInputStream {@link InputStream} containing the EML content.
-   * @return {@link ReceivedEmail}.
-   * @throws MessagingException if {@link MimeMessage} cannot be created.
-   */
-  protected ReceivedEmail parse(final InputStream emlContentInputStream) throws MessagingException {
-    if (getSession() == null) {
-      createSession(getProperties());
-    }
+	/**
+	 * Parses the EML content. If {@link Session} is not created, default one will be used.
+	 *
+	 * @param emlContentInputStream {@link InputStream} containing the EML content.
+	 * @return {@link ReceivedEmail}.
+	 * @throws MessagingException if {@link MimeMessage} cannot be created.
+	 */
+	protected ReceivedEmail parse(final InputStream emlContentInputStream) throws MessagingException {
+		if (getSession() == null) {
+			createSession(getProperties());
+		}
 
-    try {
-      final MimeMessage message = new MimeMessage(getSession(), emlContentInputStream);
-      return new ReceivedEmail(message);
-    } finally {
-      StreamUtil.close(emlContentInputStream);
-    }
-  }
+		try {
+			final MimeMessage message = new MimeMessage(getSession(), emlContentInputStream);
+			return new ReceivedEmail(message);
+		} finally {
+			StreamUtil.close(emlContentInputStream);
+		}
+	}
 }

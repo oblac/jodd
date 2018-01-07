@@ -49,335 +49,335 @@ import java.util.Map;
  */
 public class SendMailSession extends MailSession<Transport> {
 
-  private static final String ALTERNATIVE = "alternative";
-  private static final String RELATED = "related";
-  private static final String CHARSET = ";charset=";
-  private static final String INLINE = "inline";
+	private static final String ALTERNATIVE = "alternative";
+	private static final String RELATED = "related";
+	private static final String CHARSET = ";charset=";
+	private static final String INLINE = "inline";
 
-  static {
-    EmailUtil.setupSystemMailProperties();
-  }
+	static {
+		EmailUtil.setupSystemMailProperties();
+	}
 
-  /**
-   * Creates new mail session.
-   *
-   * @param session   {@link Session}
-   * @param transport {@link Transport}
-   */
-  public SendMailSession(final Session session, final Transport transport) {
-    super(session, transport);
-  }
+	/**
+	 * Creates new mail session.
+	 *
+	 * @param session   {@link Session}
+	 * @param transport {@link Transport}
+	 */
+	public SendMailSession(final Session session, final Transport transport) {
+		super(session, transport);
+	}
 
-  @Override
-  public Transport getService() {
-    return (Transport) service;
-  }
+	@Override
+	public Transport getService() {
+		return (Transport) service;
+	}
 
-  /**
-   * Prepares message and sends it. Returns Message ID of sent email.
-   *
-   * @param email {@link Email} to send.
-   * @return String representing message ID.
-   */
-  public String sendMail(final Email email) {
-    try {
-      final MimeMessage msg = createMessage(email);
-      getService().sendMessage(msg, msg.getAllRecipients());
-      return msg.getMessageID();
-    } catch (final MessagingException msgexc) {
-      throw new MailException("Failed to send email: " + email, msgexc);
-    }
-  }
+	/**
+	 * Prepares message and sends it. Returns Message ID of sent email.
+	 *
+	 * @param email {@link Email} to send.
+	 * @return String representing message ID.
+	 */
+	public String sendMail(final Email email) {
+		try {
+			final MimeMessage msg = createMessage(email);
+			getService().sendMessage(msg, msg.getAllRecipients());
+			return msg.getMessageID();
+		} catch (final MessagingException msgexc) {
+			throw new MailException("Failed to send email: " + email, msgexc);
+		}
+	}
 
-  // ---------------------------------------------------------------- adapter
+	// ---------------------------------------------------------------- adapter
 
-  /**
-   * Creates new {@link MimeMessage} from an {@link Email}.
-   *
-   * @param email {@link Email} to be created as a {@link MimeMessage}.
-   * @return {@link MimeMessage} created from an {@link Email}.
-   * @throws MessagingException if there is a failure
-   */
-  protected MimeMessage createMessage(final Email email) throws MessagingException {
-    final Email clone = email.clone();
+	/**
+	 * Creates new {@link MimeMessage} from an {@link Email}.
+	 *
+	 * @param email {@link Email} to be created as a {@link MimeMessage}.
+	 * @return {@link MimeMessage} created from an {@link Email}.
+	 * @throws MessagingException if there is a failure
+	 */
+	protected MimeMessage createMessage(final Email email) throws MessagingException {
+		final Email clone = email.clone();
 
-    final MimeMessage newMsg = new MimeMessage(getSession());
+		final MimeMessage newMsg = new MimeMessage(getSession());
 
-    setPeople(clone, newMsg);
-    setSubject(clone, newMsg);
-    setSentDate(clone, newMsg);
-    setHeaders(clone, newMsg);
-    addBodyData(clone, newMsg);
-    return newMsg;
-  }
+		setPeople(clone, newMsg);
+		setSubject(clone, newMsg);
+		setSentDate(clone, newMsg);
+		setHeaders(clone, newMsg);
+		addBodyData(clone, newMsg);
+		return newMsg;
+	}
 
-  /**
-   * Sets subject in msgToSet from subject in emailWithData.
-   *
-   * @param emailWithData {@link Email} with data
-   * @param msgToSet      {@link MimeMessage} to set data into.
-   * @throws MessagingException if there is a failure
-   * @since 4.0
-   */
-  private void setSubject(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-    if (emailWithData.getSubjectEncoding() != null) {
-      msgToSet.setSubject(emailWithData.getSubject(), emailWithData.getSubjectEncoding());
-    } else {
-      msgToSet.setSubject(emailWithData.getSubject());
-    }
-  }
+	/**
+	 * Sets subject in msgToSet from subject in emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 * @since 4.0
+	 */
+	private void setSubject(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		if (emailWithData.getSubjectEncoding() != null) {
+			msgToSet.setSubject(emailWithData.getSubject(), emailWithData.getSubjectEncoding());
+		} else {
+			msgToSet.setSubject(emailWithData.getSubject());
+		}
+	}
 
-  /**
-   * Sets sent date in msgToSet with sent date from emailWithData.
-   *
-   * @param emailWithData {@link Email} with data
-   * @param msgToSet      {@link MimeMessage} to set data into.
-   * @throws MessagingException if there is a failure
-   * @since 4.0
-   */
-  private void setSentDate(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-    Date date = emailWithData.getSentDate();
-    if (date == null) {
-      date = new Date();
-    }
-    msgToSet.setSentDate(date);
-  }
+	/**
+	 * Sets sent date in msgToSet with sent date from emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 * @since 4.0
+	 */
+	private void setSentDate(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		Date date = emailWithData.getSentDate();
+		if (date == null) {
+			date = new Date();
+		}
+		msgToSet.setSentDate(date);
+	}
 
-  /**
-   * Sets headers in msgToSet with headers from emailWithData.
-   *
-   * @param emailWithData {@link Email} with data
-   * @param msgToSet      {@link MimeMessage} to set data into.
-   * @throws MessagingException if there is a failure
-   * @since 4.0
-   */
-  private void setHeaders(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-    final Map<String, String> headers = emailWithData.getAllHeaders();
-    if (headers != null) {
-      for (final Map.Entry<String, String> entry : headers.entrySet()) {
-        msgToSet.setHeader(entry.getKey(), entry.getValue());
-      }
-    }
-  }
+	/**
+	 * Sets headers in msgToSet with headers from emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 * @since 4.0
+	 */
+	private void setHeaders(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		final Map<String, String> headers = emailWithData.getAllHeaders();
+		if (headers != null) {
+			for (final Map.Entry<String, String> entry : headers.entrySet()) {
+				msgToSet.setHeader(entry.getKey(), entry.getValue());
+			}
+		}
+	}
 
-  /**
-   * Sets FROM, REPLY-TO and recipients.
-   *
-   * @param emailWithData {@link Email} with data
-   * @param msgToSet      {@link MimeMessage} to set data into.
-   * @throws MessagingException if there is a failure
-   * @since 4.0
-   */
-  private void setPeople(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-    msgToSet.setFrom(emailWithData.getFrom().toInternetAddress());
-    msgToSet.setReplyTo(EmailAddress.convert(emailWithData.getReplyTo()));
-    setRecipients(emailWithData, msgToSet);
-  }
+	/**
+	 * Sets FROM, REPLY-TO and recipients.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure
+	 * @since 4.0
+	 */
+	private void setPeople(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		msgToSet.setFrom(emailWithData.getFrom().toInternetAddress());
+		msgToSet.setReplyTo(EmailAddress.convert(emailWithData.getReplyTo()));
+		setRecipients(emailWithData, msgToSet);
+	}
 
-  /**
-   * Sets TO, CC and BCC in msgToSet with TO, CC and BCC from emailWithData.
-   *
-   * @param emailWithData {@link Email} with data
-   * @param msgToSet      {@link MimeMessage} to set data into.
-   * @throws MessagingException if there is a failure.
-   * @since 4.0
-   */
-  private void setRecipients(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-    // TO
-    final InternetAddress[] to = EmailAddress.convert(emailWithData.getTo());
-    if (to.length > 0) {
-      msgToSet.setRecipients(RecipientType.TO, to);
-    }
+	/**
+	 * Sets TO, CC and BCC in msgToSet with TO, CC and BCC from emailWithData.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 * @since 4.0
+	 */
+	private void setRecipients(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		// TO
+		final InternetAddress[] to = EmailAddress.convert(emailWithData.getTo());
+		if (to.length > 0) {
+			msgToSet.setRecipients(RecipientType.TO, to);
+		}
 
-    // CC
-    final InternetAddress[] cc = EmailAddress.convert(emailWithData.getCc());
-    if (cc.length > 0) {
-      msgToSet.setRecipients(RecipientType.CC, cc);
-    }
+		// CC
+		final InternetAddress[] cc = EmailAddress.convert(emailWithData.getCc());
+		if (cc.length > 0) {
+			msgToSet.setRecipients(RecipientType.CC, cc);
+		}
 
-    // BCC
-    final InternetAddress[] bcc = EmailAddress.convert(emailWithData.getBcc());
-    if (bcc.length > 0) {
-      msgToSet.setRecipients(RecipientType.BCC, bcc);
-    }
-  }
+		// BCC
+		final InternetAddress[] bcc = EmailAddress.convert(emailWithData.getBcc());
+		if (bcc.length > 0) {
+			msgToSet.setRecipients(RecipientType.BCC, bcc);
+		}
+	}
 
-  /**
-   * Adds message data and attachments.
-   *
-   * @param emailWithData {@link Email} with data
-   * @param msgToSet      {@link MimeMessage} to set data into.
-   * @throws MessagingException if there is a failure.
-   * @since 4.0
-   */
-  private void addBodyData(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-    final List<EmailMessage> messages = emailWithData.getAllMessages();
+	/**
+	 * Adds message data and attachments.
+	 *
+	 * @param emailWithData {@link Email} with data
+	 * @param msgToSet      {@link MimeMessage} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 * @since 4.0
+	 */
+	private void addBodyData(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
+		final List<EmailMessage> messages = emailWithData.getAllMessages();
 
-    final int totalMessages = messages.size();
+		final int totalMessages = messages.size();
 
-    // Need to use new list since filterEmbeddedAttachments(List) removes attachments from the source List
-    final List<EmailAttachment<? extends DataSource>> attachments = new ArrayList<>(emailWithData.getAttachments());
+		// Need to use new list since filterEmbeddedAttachments(List) removes attachments from the source List
+		final List<EmailAttachment<? extends DataSource>> attachments = new ArrayList<>(emailWithData.getAttachments());
 
-    if (attachments.isEmpty() && totalMessages == 1) {
-      // special case: no attachments and just one content
-      setContent(messages.get(0), msgToSet);
+		if (attachments.isEmpty() && totalMessages == 1) {
+			// special case: no attachments and just one content
+			setContent(messages.get(0), msgToSet);
 
-    } else {
-      final MimeMultipart multipart = new MimeMultipart();
+		} else {
+			final MimeMultipart multipart = new MimeMultipart();
 
-      if (totalMessages > 1) {
-        final MimeMultipart msgMultipart = new MimeMultipart(ALTERNATIVE);
-        multipart.addBodyPart(getBaseBodyPart(msgMultipart));
-        for (final EmailMessage emailMessage : messages) {
-          msgMultipart.addBodyPart(getBodyPart(emailMessage, attachments));
-        }
-      }
+			if (totalMessages > 1) {
+				final MimeMultipart msgMultipart = new MimeMultipart(ALTERNATIVE);
+				multipart.addBodyPart(getBaseBodyPart(msgMultipart));
+				for (final EmailMessage emailMessage : messages) {
+					msgMultipart.addBodyPart(getBodyPart(emailMessage, attachments));
+				}
+			}
 
-      addAnyAttachments(attachments, multipart);
+			addAnyAttachments(attachments, multipart);
 
-      msgToSet.setContent(multipart);
-    }
-  }
+			msgToSet.setContent(multipart);
+		}
+	}
 
-  /**
-   * Returns new {@link MimeBodyPart} with content set as msgMultipart.
-   *
-   * @param msgMultipart {@link MimeMultipart} to add to the new {@link MimeBodyPart}.
-   * @return new {@link MimeBodyPart} with content set as msgMultipart.
-   * @throws MessagingException if there is a failure.
-   * @since 4.0
-   */
-  private MimeBodyPart getBaseBodyPart(final MimeMultipart msgMultipart) throws MessagingException {
-    final MimeBodyPart bodyPart = new MimeBodyPart();
-    bodyPart.setContent(msgMultipart);
-    return bodyPart;
-  }
+	/**
+	 * Returns new {@link MimeBodyPart} with content set as msgMultipart.
+	 *
+	 * @param msgMultipart {@link MimeMultipart} to add to the new {@link MimeBodyPart}.
+	 * @return new {@link MimeBodyPart} with content set as msgMultipart.
+	 * @throws MessagingException if there is a failure.
+	 * @since 4.0
+	 */
+	private MimeBodyPart getBaseBodyPart(final MimeMultipart msgMultipart) throws MessagingException {
+		final MimeBodyPart bodyPart = new MimeBodyPart();
+		bodyPart.setContent(msgMultipart);
+		return bodyPart;
+	}
 
-  /**
-   * @param emailMessage {@link EmailMessage} with data.
-   * @param attachments  {@link List} of {@link EmailAttachment}s.
-   * @return new {@link MimeBodyPart} with data from emailMessage and attachments.
-   * @throws MessagingException if there is a failure.
-   * @since 4.0
-   */
-  private MimeBodyPart getBodyPart(final EmailMessage emailMessage, final List<EmailAttachment<? extends DataSource>> attachments) throws MessagingException {
+	/**
+	 * @param emailMessage {@link EmailMessage} with data.
+	 * @param attachments  {@link List} of {@link EmailAttachment}s.
+	 * @return new {@link MimeBodyPart} with data from emailMessage and attachments.
+	 * @throws MessagingException if there is a failure.
+	 * @since 4.0
+	 */
+	private MimeBodyPart getBodyPart(final EmailMessage emailMessage, final List<EmailAttachment<? extends DataSource>> attachments) throws MessagingException {
 
-    final MimeBodyPart bodyPart = new MimeBodyPart();
+		final MimeBodyPart bodyPart = new MimeBodyPart();
 
-    // detect embedded attachments
-    final List<EmailAttachment<? extends DataSource>> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
+		// detect embedded attachments
+		final List<EmailAttachment<? extends DataSource>> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
 
-    if (embeddedAttachments.isEmpty()) {
-      // no embedded attachments, just add message
-      setContent(emailMessage, bodyPart);
-    } else {
-      attachments.removeAll(embeddedAttachments);
+		if (embeddedAttachments.isEmpty()) {
+			// no embedded attachments, just add message
+			setContent(emailMessage, bodyPart);
+		} else {
+			attachments.removeAll(embeddedAttachments);
 
-      // embedded attachments detected, join them as related
-      final MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
+			// embedded attachments detected, join them as related
+			final MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
 
-      final MimeBodyPart messageData = new MimeBodyPart();
+			final MimeBodyPart messageData = new MimeBodyPart();
 
-      setContent(emailMessage, messageData);
+			setContent(emailMessage, messageData);
 
-      relatedMultipart.addBodyPart(messageData);
+			relatedMultipart.addBodyPart(messageData);
 
-      addAnyAttachments(embeddedAttachments, relatedMultipart);
+			addAnyAttachments(embeddedAttachments, relatedMultipart);
 
-      bodyPart.setContent(relatedMultipart);
-    }
+			bodyPart.setContent(relatedMultipart);
+		}
 
-    return bodyPart;
-  }
+		return bodyPart;
+	}
 
-  /**
-   * Sets emailWithData content into msgToSet.
-   *
-   * @param emailWithData {@link EmailMessage} with data.
-   * @param partToSet     {@link Part} to set data into.
-   * @throws MessagingException if there is a failure.
-   * @since 4.0
-   */
-  private void setContent(final EmailMessage emailWithData, final Part partToSet) throws MessagingException {
-    partToSet.setContent(emailWithData.getContent(), emailWithData.getMimeType() + CHARSET + emailWithData.getEncoding());
-  }
+	/**
+	 * Sets emailWithData content into msgToSet.
+	 *
+	 * @param emailWithData {@link EmailMessage} with data.
+	 * @param partToSet     {@link Part} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 * @since 4.0
+	 */
+	private void setContent(final EmailMessage emailWithData, final Part partToSet) throws MessagingException {
+		partToSet.setContent(emailWithData.getContent(), emailWithData.getMimeType() + CHARSET + emailWithData.getEncoding());
+	}
 
-  /**
-   * Creates attachment body part. Handles regular and inline attachments.
-   *
-   * @param attachment Body part {@link EmailAttachment}.
-   * @return {@link MimeBodyPart} which represents body part attachment.
-   * @throws MessagingException if there is a failure.
-   */
-  protected MimeBodyPart createAttachmentBodyPart(final EmailAttachment<? extends DataSource> attachment) throws MessagingException {
-    final MimeBodyPart part = new MimeBodyPart();
+	/**
+	 * Creates attachment body part. Handles regular and inline attachments.
+	 *
+	 * @param attachment Body part {@link EmailAttachment}.
+	 * @return {@link MimeBodyPart} which represents body part attachment.
+	 * @throws MessagingException if there is a failure.
+	 */
+	protected MimeBodyPart createAttachmentBodyPart(final EmailAttachment<? extends DataSource> attachment) throws MessagingException {
+		final MimeBodyPart part = new MimeBodyPart();
 
-    final String attachmentName = attachment.getEncodedName();
-    if (attachmentName != null) {
-      part.setFileName(attachmentName);
-    }
+		final String attachmentName = attachment.getEncodedName();
+		if (attachmentName != null) {
+			part.setFileName(attachmentName);
+		}
 
-    part.setDataHandler(new DataHandler(attachment.getDataSource()));
+		part.setDataHandler(new DataHandler(attachment.getDataSource()));
 
-    if (attachment.getContentId() != null) {
-      part.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
-    }
-    if (attachment.isInline()) {
-      part.setDisposition(INLINE);
-    }
+		if (attachment.getContentId() != null) {
+			part.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
+		}
+		if (attachment.isInline()) {
+			part.setDisposition(INLINE);
+		}
 
-    return part;
-  }
+		return part;
+	}
 
-  /**
-   * Filters out the {@link List} of embedded {@link EmailAttachment}s for given {@link EmailMessage}.
-   * This will remove the embedded attachments from the {@link List} and return them in a new {@link List}.
-   *
-   * @param attachments  {@link List} of attachments to search for in emailMessage.
-   * @param emailMessage {@link EmailMessage} to see if attachment is embedded into.
-   * @return {@link List} of embedded {@link EmailAttachment}s; otherwise, returns empty {@link List}.
-   */
-  protected List<EmailAttachment<? extends DataSource>> filterEmbeddedAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final EmailMessage emailMessage) {
-    final List<EmailAttachment<? extends DataSource>> embeddedAttachments = new ArrayList<>();
+	/**
+	 * Filters out the {@link List} of embedded {@link EmailAttachment}s for given {@link EmailMessage}.
+	 * This will remove the embedded attachments from the {@link List} and return them in a new {@link List}.
+	 *
+	 * @param attachments  {@link List} of attachments to search for in emailMessage.
+	 * @param emailMessage {@link EmailMessage} to see if attachment is embedded into.
+	 * @return {@link List} of embedded {@link EmailAttachment}s; otherwise, returns empty {@link List}.
+	 */
+	protected List<EmailAttachment<? extends DataSource>> filterEmbeddedAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final EmailMessage emailMessage) {
+		final List<EmailAttachment<? extends DataSource>> embeddedAttachments = new ArrayList<>();
 
-    if (attachments == null || attachments.isEmpty() || emailMessage == null) {
-      return embeddedAttachments;
-    }
+		if (attachments == null || attachments.isEmpty() || emailMessage == null) {
+			return embeddedAttachments;
+		}
 
-    final Iterator<EmailAttachment<? extends DataSource>> iterator = attachments.iterator();
+		final Iterator<EmailAttachment<? extends DataSource>> iterator = attachments.iterator();
 
-    while (iterator.hasNext()) {
-      final EmailAttachment<? extends DataSource> emailAttachment = iterator.next();
+		while (iterator.hasNext()) {
+			final EmailAttachment<? extends DataSource> emailAttachment = iterator.next();
 
-      if (emailAttachment.isEmbeddedInto(emailMessage)) {
-        embeddedAttachments.add(emailAttachment);
-        iterator.remove();
-      }
-    }
+			if (emailAttachment.isEmbeddedInto(emailMessage)) {
+				embeddedAttachments.add(emailAttachment);
+				iterator.remove();
+			}
+		}
 
-    return embeddedAttachments;
-  }
+		return embeddedAttachments;
+	}
 
-  /**
-   * Adds {@link List} of {@link EmailAttachment}s to multipart.
-   *
-   * @param attachments {@link List} of {@link EmailAttachment}s to add to multipart. This can be {@code null}.
-   * @param multipart   {@link MimeMultipart} to set data into.
-   * @throws MessagingException if there is a failure.
-   * @since 4.0
-   */
-  private void addAnyAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final MimeMultipart multipart) throws MessagingException {
-    for (final EmailAttachment<? extends DataSource> attachment : attachments) {
-      final MimeBodyPart bodyPart = createAttachmentBodyPart(attachment);
-      multipart.addBodyPart(bodyPart);
-    }
-  }
+	/**
+	 * Adds {@link List} of {@link EmailAttachment}s to multipart.
+	 *
+	 * @param attachments {@link List} of {@link EmailAttachment}s to add to multipart. This can be {@code null}.
+	 * @param multipart   {@link MimeMultipart} to set data into.
+	 * @throws MessagingException if there is a failure.
+	 * @since 4.0
+	 */
+	private void addAnyAttachments(final List<EmailAttachment<? extends DataSource>> attachments, final MimeMultipart multipart) throws MessagingException {
+		for (final EmailAttachment<? extends DataSource> attachment : attachments) {
+			final MimeBodyPart bodyPart = createAttachmentBodyPart(attachment);
+			multipart.addBodyPart(bodyPart);
+		}
+	}
 
-  /**
-   * @deprecated Use {@link #createMessage(Email)}
-   */
-  @Deprecated
-  protected MimeMessage createMessage(final Email email, final Session session) throws MessagingException {
-    return createMessage(email);
-  }
+	/**
+	 * @deprecated Use {@link #createMessage(Email)}
+	 */
+	@Deprecated
+	protected MimeMessage createMessage(final Email email, final Session session) throws MessagingException {
+		return createMessage(email);
+	}
 }

@@ -55,224 +55,224 @@ import java.util.Properties;
  */
 public class EmailUtil {
 
-  protected static final String ATTR_CHARSET = "charset=";
-  static final String NO_NAME = "no-name";
+	protected static final String ATTR_CHARSET = "charset=";
+	static final String NO_NAME = "no-name";
 
-  /**
-   * Extracts MIME type from content type.
-   *
-   * @param contentType MIME type.
-   * @return MIME type for the given content type.
-   */
-  //TODO: should this always return lowercase or always uppercase?
-  public static String extractMimeType(final String contentType) {
-    final int ndx = contentType.indexOf(';');
-    final String mime;
-    if (ndx != -1) {
-      mime = contentType.substring(0, ndx);
-    } else {
-      mime = contentType;
-    }
-    return mime;
-  }
+	/**
+	 * Extracts MIME type from content type.
+	 *
+	 * @param contentType MIME type.
+	 * @return MIME type for the given content type.
+	 */
+	//TODO: should this always return lowercase or always uppercase?
+	public static String extractMimeType(final String contentType) {
+		final int ndx = contentType.indexOf(';');
+		final String mime;
+		if (ndx != -1) {
+			mime = contentType.substring(0, ndx);
+		} else {
+			mime = contentType;
+		}
+		return mime;
+	}
 
-  /**
-   * Extracts encoding from a given content type.
-   *
-   * @param contentType content type.
-   * @return Encoding from the content type. May return {@code null} if encoding is not specified in content type.
-   */
-  //TODO: should this always return lowercase or always uppercase?
-  public static String extractEncoding(final String contentType) {
-    int ndx = contentType.indexOf(';');
-    final String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
-    String encoding = null;
+	/**
+	 * Extracts encoding from a given content type.
+	 *
+	 * @param contentType content type.
+	 * @return Encoding from the content type. May return {@code null} if encoding is not specified in content type.
+	 */
+	//TODO: should this always return lowercase or always uppercase?
+	public static String extractEncoding(final String contentType) {
+		int ndx = contentType.indexOf(';');
+		final String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
+		String encoding = null;
 
-    ndx = charset.indexOf(ATTR_CHARSET);
-    if (ndx != -1) {
-      ndx += ATTR_CHARSET.length();
-      final int len = charset.length();
+		ndx = charset.indexOf(ATTR_CHARSET);
+		if (ndx != -1) {
+			ndx += ATTR_CHARSET.length();
+			final int len = charset.length();
 
-      if (charset.charAt(ndx) == '"') {
-        ndx++;
-      }
-      final int start = ndx;
+			if (charset.charAt(ndx) == '"') {
+				ndx++;
+			}
+			final int start = ndx;
 
-      while (ndx < len) {
-        final char c = charset.charAt(ndx);
-        if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
-          break;
-        }
-        ndx++;
-      }
-      encoding = charset.substring(start, ndx);
-    }
-    return encoding;
-  }
+			while (ndx < len) {
+				final char c = charset.charAt(ndx);
+				if ((c == '"') || (CharUtil.isWhitespace(c)) || (c == ';')) {
+					break;
+				}
+				ndx++;
+			}
+			encoding = charset.substring(start, ndx);
+		}
+		return encoding;
+	}
 
-  /**
-   * Extracts encoding from a given content type.
-   *
-   * @param contentType     content type.
-   * @param defaultEncoding Default encoding to be used if extract returns {@code null}.
-   *                        If defaultEncoding is {@code null}, {@link JoddCoreDefaults#getEncoding()} will be used.
-   * @return Encoding from the content type.
-   * @see #extractEncoding(String)
-   * @see JoddCoreDefaults#getEncoding()
-   */
-  public static String extractEncoding(final String contentType, String defaultEncoding) {
-    String encoding = extractEncoding(contentType);
+	/**
+	 * Extracts encoding from a given content type.
+	 *
+	 * @param contentType     content type.
+	 * @param defaultEncoding Default encoding to be used if extract returns {@code null}.
+	 *                        If defaultEncoding is {@code null}, {@link JoddCoreDefaults#getEncoding()} will be used.
+	 * @return Encoding from the content type.
+	 * @see #extractEncoding(String)
+	 * @see JoddCoreDefaults#getEncoding()
+	 */
+	public static String extractEncoding(final String contentType, String defaultEncoding) {
+		String encoding = extractEncoding(contentType);
 
-    if (encoding == null) {
-      if (defaultEncoding == null) {
-        defaultEncoding = JoddCore.get().defaults().getEncoding();
-      }
-      encoding = defaultEncoding;
-    }
-    return encoding;
-  }
+		if (encoding == null) {
+			if (defaultEncoding == null) {
+				defaultEncoding = JoddCore.get().defaults().getEncoding();
+			}
+			encoding = defaultEncoding;
+		}
+		return encoding;
+	}
 
-  /**
-   * Correctly resolves file name from the message part.
-   * Thanx to: Flavio Pompermaier
-   *
-   * @param part {@link Part} to decode file name from.
-   * @return String containing file name.
-   */
-  public static String resolveFileName(final Part part) throws MessagingException {
-    if (!(part instanceof MimeBodyPart)) {
-      return part.getFileName();
-    }
+	/**
+	 * Correctly resolves file name from the message part.
+	 * Thanx to: Flavio Pompermaier
+	 *
+	 * @param part {@link Part} to decode file name from.
+	 * @return String containing file name.
+	 */
+	public static String resolveFileName(final Part part) throws MessagingException {
+		if (!(part instanceof MimeBodyPart)) {
+			return part.getFileName();
+		}
 
-    final String contentType = part.getContentType();
-    String ret;
+		final String contentType = part.getContentType();
+		String ret;
 
-    try {
-      ret = MimeUtility.decodeText(part.getFileName());
-    } catch (final Exception ex) {
-      // String[] contentId = part.getHeader("Content-ID");
-      // if (contentId != null && contentId.length > 0) {
-      final String contentId = ((MimeBodyPart) part).getContentID();
-      if (contentId != null) {
-        ret = contentId + getContentTypeForFileName(contentType);
-      } else {
-        ret = getDefaultFileName(contentType);
-      }
-    }
+		try {
+			ret = MimeUtility.decodeText(part.getFileName());
+		} catch (final Exception ex) {
+			// String[] contentId = part.getHeader("Content-ID");
+			// if (contentId != null && contentId.length > 0) {
+			final String contentId = ((MimeBodyPart) part).getContentID();
+			if (contentId != null) {
+				ret = contentId + getContentTypeForFileName(contentType);
+			} else {
+				ret = getDefaultFileName(contentType);
+			}
+		}
 
-    return ret;
-  }
+		return ret;
+	}
 
-  private static String getContentTypeForFileName(final String contentType) {
-    return StringPool.DOT + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
-  }
+	private static String getContentTypeForFileName(final String contentType) {
+		return StringPool.DOT + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
+	}
 
-  static String getDefaultFileName(final String contentType) {
-    return NO_NAME + getContentTypeForFileName(contentType);
-  }
+	static String getDefaultFileName(final String contentType) {
+		return NO_NAME + getContentTypeForFileName(contentType);
+	}
 
-  /**
-   * Setups the system email properties.
-   */
-  public static void setupSystemMailProperties() {
-    final JoddMailDefaults defaults = JoddMail.get().defaults();
-    System.setProperty("mail.mime.encodefilename", Boolean.valueOf(defaults.isMailMimeEncodefilename()).toString());
-    System.setProperty("mail.mime.decodefilename", Boolean.valueOf(defaults.isMailMimeDecodefilename()).toString());
-  }
+	/**
+	 * Setups the system email properties.
+	 */
+	public static void setupSystemMailProperties() {
+		final JoddMailDefaults defaults = JoddMail.get().defaults();
+		System.setProperty("mail.mime.encodefilename", Boolean.valueOf(defaults.isMailMimeEncodefilename()).toString());
+		System.setProperty("mail.mime.decodefilename", Boolean.valueOf(defaults.isMailMimeDecodefilename()).toString());
+	}
 
-  /**
-   * @param protocol          Protocol such as {@link ImapServer#PROTOCOL_IMAP} or {@link Pop3Server#PROTOCOL_POP3}.
-   * @param sessionProperties Session properties to use.
-   * @param authenticator     Authenticator which contains necessary authentication for server.
-   * @return {@link ReceiveMailSession}.
-   */
-  public static ReceiveMailSession createSession(final String protocol, final Properties sessionProperties, final Authenticator authenticator) {
-    final Session session = Session.getInstance(sessionProperties, authenticator);
-    final Store store;
-    try {
-      store = getStore(session, protocol);
-    } catch (final NoSuchProviderException nspex) {
-      final String errMsg = String.format("Failed to create %s session", protocol);
-      throw new MailException(errMsg, nspex);
-    }
-    return new ReceiveMailSession(session, store);
-  }
+	/**
+	 * @param protocol          Protocol such as {@link ImapServer#PROTOCOL_IMAP} or {@link Pop3Server#PROTOCOL_POP3}.
+	 * @param sessionProperties Session properties to use.
+	 * @param authenticator     Authenticator which contains necessary authentication for server.
+	 * @return {@link ReceiveMailSession}.
+	 */
+	public static ReceiveMailSession createSession(final String protocol, final Properties sessionProperties, final Authenticator authenticator) {
+		final Session session = Session.getInstance(sessionProperties, authenticator);
+		final Store store;
+		try {
+			store = getStore(session, protocol);
+		} catch (final NoSuchProviderException nspex) {
+			final String errMsg = String.format("Failed to create %s session", protocol);
+			throw new MailException(errMsg, nspex);
+		}
+		return new ReceiveMailSession(session, store);
+	}
 
-  /**
-   * Returns email store.
-   *
-   * @param session  Current session.
-   * @param protocol Protocol such as {@link ImapServer#PROTOCOL_IMAP} or {@link Pop3Server#PROTOCOL_POP3}.
-   * @return {@link Store}
-   * @throws NoSuchProviderException If a provider for the given protocol is not found.
-   */
-  public static Store getStore(final Session session, final String protocol) throws NoSuchProviderException {
-    return session.getStore(protocol);
-  }
+	/**
+	 * Returns email store.
+	 *
+	 * @param session  Current session.
+	 * @param protocol Protocol such as {@link ImapServer#PROTOCOL_IMAP} or {@link Pop3Server#PROTOCOL_POP3}.
+	 * @return {@link Store}
+	 * @throws NoSuchProviderException If a provider for the given protocol is not found.
+	 */
+	public static Store getStore(final Session session, final String protocol) throws NoSuchProviderException {
+		return session.getStore(protocol);
+	}
 
-  /**
-   * Parses the received date from the {@link Message}.
-   *
-   * @param msg The {@link Message} to parse date from.
-   * @return {@link Date} the {@link Message} was received.
-   * @throws MessagingException if there is a failure.
-   * @see Message#getReceivedDate()
-   */
-  public static Date parseReceiveDate(final Message msg) throws MessagingException {
-    return msg.getReceivedDate();
-  }
+	/**
+	 * Parses the received date from the {@link Message}.
+	 *
+	 * @param msg The {@link Message} to parse date from.
+	 * @return {@link Date} the {@link Message} was received.
+	 * @throws MessagingException if there is a failure.
+	 * @see Message#getReceivedDate()
+	 */
+	public static Date parseReceiveDate(final Message msg) throws MessagingException {
+		return msg.getReceivedDate();
+	}
 
-  /**
-   * Copies data from {@link InputStream} to {@link OutputStream} out, closes the {@link InputStream} and returns output.
-   *
-   * @param input  {@link InputStream} to copy from.
-   * @param output {@link OutputStream} to copy to.
-   * @return {@link OutputStream} out with data.
-   * @throws MailException in place of {@link IOException}.
-   * @see StreamUtil#copy(InputStream, OutputStream)
-   */
-  public static OutputStream copyStream(final InputStream input, final OutputStream output) throws MailException {
-    try {
-      StreamUtil.copy(input, output);
-    } catch (final IOException ioex) {
-      throw new MailException(ioex);
-    } finally {
-      StreamUtil.close(input);
-    }
-    return output;
-  }
+	/**
+	 * Copies data from {@link InputStream} to {@link OutputStream} out, closes the {@link InputStream} and returns output.
+	 *
+	 * @param input  {@link InputStream} to copy from.
+	 * @param output {@link OutputStream} to copy to.
+	 * @return {@link OutputStream} out with data.
+	 * @throws MailException in place of {@link IOException}.
+	 * @see StreamUtil#copy(InputStream, OutputStream)
+	 */
+	public static OutputStream copyStream(final InputStream input, final OutputStream output) throws MailException {
+		try {
+			StreamUtil.copy(input, output);
+		} catch (final IOException ioex) {
+			throw new MailException(ioex);
+		} finally {
+			StreamUtil.close(input);
+		}
+		return output;
+	}
 
-  /**
-   * Copies data from {@link DataSource} to {@link OutputStream}, closes the {@link InputStream} and returns output.
-   *
-   * @param input  {@link DataSource} to copy from.
-   * @param output {@link OutputStream} to copy to.
-   * @return new {@link FastByteArrayOutputStream} with data from input.
-   * @see #copyStream(InputStream, OutputStream)
-   */
-  public static OutputStream copyStream(final DataSource input, final OutputStream output) throws MailException {
-    try {
-      copyStream(input.getInputStream(), output);
-      return output;
-    } catch (final IOException ioex) {
-      throw new MailException(ioex);
-    }
-  }
+	/**
+	 * Copies data from {@link DataSource} to {@link OutputStream}, closes the {@link InputStream} and returns output.
+	 *
+	 * @param input  {@link DataSource} to copy from.
+	 * @param output {@link OutputStream} to copy to.
+	 * @return new {@link FastByteArrayOutputStream} with data from input.
+	 * @see #copyStream(InputStream, OutputStream)
+	 */
+	public static OutputStream copyStream(final DataSource input, final OutputStream output) throws MailException {
+		try {
+			copyStream(input.getInputStream(), output);
+			return output;
+		} catch (final IOException ioex) {
+			throw new MailException(ioex);
+		}
+	}
 
-  /**
-   * Copies data from {@link DataSource} to {@link File}, closes the {@link DataSource} and returns output.
-   *
-   * @param input  {@link DataSource} to copy from.
-   * @param output {@link OutputStream} to copy to.
-   * @return new {@link FastByteArrayOutputStream} with data from input.
-   * @see #copyStream(InputStream, OutputStream)
-   */
-  public static File copyStream(final DataSource input, final File output) throws MailException {
-    try {
-      copyStream(input.getInputStream(), new FileOutputStream(output));
-      return output;
-    } catch (final IOException ioex) {
-      throw new MailException(ioex);
-    }
-  }
+	/**
+	 * Copies data from {@link DataSource} to {@link File}, closes the {@link DataSource} and returns output.
+	 *
+	 * @param input  {@link DataSource} to copy from.
+	 * @param output {@link OutputStream} to copy to.
+	 * @return new {@link FastByteArrayOutputStream} with data from input.
+	 * @see #copyStream(InputStream, OutputStream)
+	 */
+	public static File copyStream(final DataSource input, final File output) throws MailException {
+		try {
+			copyStream(input.getInputStream(), new FileOutputStream(output));
+			return output;
+		} catch (final IOException ioex) {
+			throw new MailException(ioex);
+		}
+	}
 }

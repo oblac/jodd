@@ -39,234 +39,234 @@ import static jodd.util.StringPool.TRUE;
  */
 public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSession> {
 
-  public static final String MAIL_HOST = "mail.host";
-  public static final String MAIL_SMTP_HOST = "mail.smtp.host";
-  public static final String MAIL_SMTP_PORT = "mail.smtp.port";
-  public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
-  public static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
-  public static final String MAIL_SMTP_FROM = "mail.smtp.from";
+	public static final String MAIL_HOST = "mail.host";
+	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
+	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
+	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+	public static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
+	public static final String MAIL_SMTP_FROM = "mail.smtp.from";
 
-  public static final String MAIL_SMTP_CONNECTIONTIMEOUT = "mail.smtp.connectiontimeout";
-  public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
-  public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
-  public static final String MAIL_DEBUG = "mail.debug";
-  public static final String MAIL_MIME_ADDRESS_STRICT = "mail.mime.address.strict";
+	public static final String MAIL_SMTP_CONNECTIONTIMEOUT = "mail.smtp.connectiontimeout";
+	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
+	public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
+	public static final String MAIL_DEBUG = "mail.debug";
+	public static final String MAIL_MIME_ADDRESS_STRICT = "mail.mime.address.strict";
 
-  protected static final String PROTOCOL_SMTP = "smtp";
+	protected static final String PROTOCOL_SMTP = "smtp";
 
-  /**
-   * Default SMTP port
-   */
-  protected static final int DEFAULT_SMTP_PORT = 25;
+	/**
+	 * Default SMTP port
+	 */
+	protected static final int DEFAULT_SMTP_PORT = 25;
 
-  /**
-   * Whether debug mode is enabled.
-   */
-  protected boolean debug = false;
+	/**
+	 * Whether debug mode is enabled.
+	 */
+	protected boolean debug = false;
 
-  /**
-   * Whether strict address checking is turned on.
-   */
-  protected boolean strictAddress = true;
+	/**
+	 * Whether strict address checking is turned on.
+	 */
+	protected boolean strictAddress = true;
 
-  /**
-   * Connection timeout.
-   */
-  private int timeout = 0;
+	/**
+	 * Connection timeout.
+	 */
+	private int timeout = 0;
 
-  // ---------------------------------------------------------------- create
+	// ---------------------------------------------------------------- create
 
-  /**
-   * {@inheritDoc}
-   */
-  SmtpServer(final String host, final int port, final Authenticator authenticator) {
-    super(host, port, authenticator);
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	SmtpServer(final String host, final int port, final Authenticator authenticator) {
+		super(host, port, authenticator);
+	}
 
-  // ---------------------------------------------------------------- builder
+	// ---------------------------------------------------------------- builder
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  @SuppressWarnings("unchecked")
-  public T authenticateWith(final String username, final String password) {
-    final MailServer.Builder builder = MailServer.builder().host(getHost()).port(getPort()).auth(username, password);
-    final MailServer server;
-    if (getClass().equals(SmtpServer.class)) {
-      server = builder.buildSmtp();
-    } else {
-      server = builder.buildSmtpSsl();
-    }
-    return (T) server;
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public T authenticateWith(final String username, final String password) {
+		final MailServer.Builder builder = MailServer.builder().host(getHost()).port(getPort()).auth(username, password);
+		final MailServer server;
+		if (getClass().equals(SmtpServer.class)) {
+			server = builder.buildSmtp();
+		} else {
+			server = builder.buildSmtpSsl();
+		}
+		return (T) server;
+	}
 
-  /**
-   * @deprecated Use {@link MailServer.Builder}
-   */
-  @Deprecated
-  @SuppressWarnings("unchecked")
-  public T authenticateWith(final Authenticator authenticator) {
-    final MailServer.Builder builder = MailServer.builder().host(getHost()).port(getPort()).auth(authenticator);
-    final MailServer server;
-    if (getClass().equals(SmtpServer.class)) {
-      server = builder.buildSmtp();
-    } else {
-      server = builder.buildSmtpSsl();
-    }
-    return (T) server;
-  }
+	/**
+	 * @deprecated Use {@link MailServer.Builder}
+	 */
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public T authenticateWith(final Authenticator authenticator) {
+		final MailServer.Builder builder = MailServer.builder().host(getHost()).port(getPort()).auth(authenticator);
+		final MailServer server;
+		if (getClass().equals(SmtpServer.class)) {
+			server = builder.buildSmtp();
+		} else {
+			server = builder.buildSmtpSsl();
+		}
+		return (T) server;
+	}
 
-  /**
-   * Defines timeout value in milliseconds for all mail-related operations.
-   *
-   * @param timeout timeout value in milliseconds.
-   * @return this
-   */
-  @SuppressWarnings("unchecked")
-  public T timeout(final int timeout) {
-    this.timeout = timeout;
-    return (T) this;
-  }
+	/**
+	 * Defines timeout value in milliseconds for all mail-related operations.
+	 *
+	 * @param timeout timeout value in milliseconds.
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	public T timeout(final int timeout) {
+		this.timeout = timeout;
+		return (T) this;
+	}
 
-  /**
-   * Enable or disable debug mode.
-   *
-   * @param debug {@code true} to turn on debugging. By default, this is {@code false}.
-   * @return this
-   */
-  @SuppressWarnings("unchecked")
-  public T debug(final boolean debug) {
-    this.debug = debug;
-    return (T) this;
-  }
+	/**
+	 * Enable or disable debug mode.
+	 *
+	 * @param debug {@code true} to turn on debugging. By default, this is {@code false}.
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	public T debug(final boolean debug) {
+		this.debug = debug;
+		return (T) this;
+	}
 
-  /**
-   * Disables the strict address.
-   *
-   * @param strictAddress {@code true} if strict address checking should be be turned on. By default, this is {@code true}.
-   * @return this
-   */
-  @SuppressWarnings("unchecked")
-  public T strictAddress(final boolean strictAddress) {
-    this.strictAddress = strictAddress;
-    return (T) this;
-  }
+	/**
+	 * Disables the strict address.
+	 *
+	 * @param strictAddress {@code true} if strict address checking should be be turned on. By default, this is {@code true}.
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	public T strictAddress(final boolean strictAddress) {
+		this.strictAddress = strictAddress;
+		return (T) this;
+	}
 
-  // ---------------------------------------------------------------- properties
+	// ---------------------------------------------------------------- properties
 
-  @Override
-  protected Properties createSessionProperties() {
-    final Properties props = new Properties();
+	@Override
+	protected Properties createSessionProperties() {
+		final Properties props = new Properties();
 
-    props.setProperty(MAIL_TRANSPORT_PROTOCOL, PROTOCOL_SMTP);
-    props.setProperty(MAIL_HOST, getHost());
-    props.setProperty(MAIL_SMTP_HOST, getHost());
-    props.setProperty(MAIL_SMTP_PORT, String.valueOf(getPort()));
+		props.setProperty(MAIL_TRANSPORT_PROTOCOL, PROTOCOL_SMTP);
+		props.setProperty(MAIL_HOST, getHost());
+		props.setProperty(MAIL_SMTP_HOST, getHost());
+		props.setProperty(MAIL_SMTP_PORT, String.valueOf(getPort()));
 
-    if (getAuthenticator() != null) {
-      props.setProperty(MAIL_SMTP_AUTH, TRUE);
-    }
+		if (getAuthenticator() != null) {
+			props.setProperty(MAIL_SMTP_AUTH, TRUE);
+		}
 
-    if (timeout > 0) {
-      final String timeoutValue = String.valueOf(timeout);
-      props.put(MAIL_SMTP_CONNECTIONTIMEOUT, timeoutValue);
-      props.put(MAIL_SMTP_TIMEOUT, timeoutValue);
-      props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
-    }
+		if (timeout > 0) {
+			final String timeoutValue = String.valueOf(timeout);
+			props.put(MAIL_SMTP_CONNECTIONTIMEOUT, timeoutValue);
+			props.put(MAIL_SMTP_TIMEOUT, timeoutValue);
+			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
+		}
 
-    if (debug) {
-      props.put(MAIL_DEBUG, "true");
-    }
+		if (debug) {
+			props.put(MAIL_DEBUG, "true");
+		}
 
-    if (!strictAddress) {
-      props.put(MAIL_MIME_ADDRESS_STRICT, "false");
-    }
+		if (!strictAddress) {
+			props.put(MAIL_MIME_ADDRESS_STRICT, "false");
+		}
 
-    return props;
-  }
+		return props;
+	}
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return {@link SendMailSession}
-   */
-  @Override
-  public SendMailSession createSession() {
-    final Session session = Session.getInstance(getSessionProperties(), getAuthenticator());
-    final Transport mailTransport;
-    try {
-      mailTransport = getTransport(session);
-    } catch (final NoSuchProviderException nspex) {
-      throw new MailException(nspex);
-    }
-    return new SendMailSession(session, mailTransport);
-  }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return {@link SendMailSession}
+	 */
+	@Override
+	public SendMailSession createSession() {
+		final Session session = Session.getInstance(getSessionProperties(), getAuthenticator());
+		final Transport mailTransport;
+		try {
+			mailTransport = getTransport(session);
+		} catch (final NoSuchProviderException nspex) {
+			throw new MailException(nspex);
+		}
+		return new SendMailSession(session, mailTransport);
+	}
 
-  /**
-   * Get the {@link Transport} for {@link Session}.
-   *
-   * @param session The {@link SendMailSession}.
-   * @return SMTP {@link Transport}.
-   * @throws NoSuchProviderException If provider for the given protocol is not found.
-   */
-  protected Transport getTransport(final Session session) throws NoSuchProviderException {
-    return session.getTransport(PROTOCOL_SMTP);
-  }
+	/**
+	 * Get the {@link Transport} for {@link Session}.
+	 *
+	 * @param session The {@link SendMailSession}.
+	 * @return SMTP {@link Transport}.
+	 * @throws NoSuchProviderException If provider for the given protocol is not found.
+	 */
+	protected Transport getTransport(final Session session) throws NoSuchProviderException {
+		return session.getTransport(PROTOCOL_SMTP);
+	}
 
-  // ---------------------------------------------------------------- deprecated
+	// ---------------------------------------------------------------- deprecated
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public static SmtpServer create(final String host) {
-    return MailServer.builder().host(host).buildSmtp();
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public static SmtpServer create(final String host) {
+		return MailServer.builder().host(host).buildSmtp();
+	}
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public static SmtpServer create(final String host, final int port) {
-    return MailServer.builder().host(host).port(port).buildSmtp();
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public static SmtpServer create(final String host, final int port) {
+		return MailServer.builder().host(host).port(port).buildSmtp();
+	}
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public SmtpServer(final String host) {
-    this(host, DEFAULT_SMTP_PORT, null);
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public SmtpServer(final String host) {
+		this(host, DEFAULT_SMTP_PORT, null);
+	}
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public SmtpServer(final String host, final int port) {
-    this(host, port, null);
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public SmtpServer(final String host, final int port) {
+		this(host, port, null);
+	}
 
-  /**
-   * @deprecated Use {@link #getSessionProperties()} with {@link Properties#putAll(Map)}.
-   */
-  @SuppressWarnings("unchecked")
-  @Deprecated
-  public T properties(final Properties properties) {
-    if (properties != null) {
-      getSessionProperties().putAll(properties);
-    }
-    return (T) this;
-  }
+	/**
+	 * @deprecated Use {@link #getSessionProperties()} with {@link Properties#putAll(Map)}.
+	 */
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public T properties(final Properties properties) {
+		if (properties != null) {
+			getSessionProperties().putAll(properties);
+		}
+		return (T) this;
+	}
 
-  /**
-   * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
-   */
-  @SuppressWarnings("unchecked")
-  @Deprecated
-  public T property(final String name, final String value) {
-    getSessionProperties().setProperty(name, value);
-    return (T) this;
-  }
+	/**
+	 * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
+	 */
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public T property(final String name, final String value) {
+		getSessionProperties().setProperty(name, value);
+		return (T) this;
+	}
 }

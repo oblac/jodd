@@ -36,84 +36,84 @@ import javax.mail.Transport;
  */
 abstract class MailSession<T extends Service> implements AutoCloseable {
 
-  @Deprecated
-  final Session mailSession;
+	@Deprecated
+	final Session mailSession;
 
-  /**
-   * @since 4.0
-   */
-  private final Session session;
+	/**
+	 * @since 4.0
+	 */
+	private final Session session;
 
-  /**
-   * @since 4.0
-   */
-  final Service service;
+	/**
+	 * @since 4.0
+	 */
+	final Service service;
 
-  /**
-   * Creates new mail session.
-   *
-   * @param session {@link Session}.
-   * @param service {@link Service} such as {@link Store} or {@link Transport}.
-   * @since 4.0
-   */
-  MailSession(final Session session, final Service service) {
-    this.session = session;
-    mailSession = session;
-    this.service = service;
-  }
+	/**
+	 * Creates new mail session.
+	 *
+	 * @param session {@link Session}.
+	 * @param service {@link Service} such as {@link Store} or {@link Transport}.
+	 * @since 4.0
+	 */
+	MailSession(final Session session, final Service service) {
+		this.session = session;
+		mailSession = session;
+		this.service = service;
+	}
 
-  /**
-   * Opens session.
-   *
-   * @since 4.0
-   */
-  public void open() {
-    try {
-      service.connect();
-    } catch (final MessagingException msex) {
-      throw new MailException("Open session error", msex);
-    }
-  }
+	/**
+	 * Opens session.
+	 *
+	 * @since 4.0
+	 */
+	public void open() {
+		try {
+			service.connect();
+		} catch (final MessagingException msex) {
+			throw new MailException("Open session error", msex);
+		}
+	}
 
-  /**
-   * Closes session.
-   *
-   * @since 4.0
-   */
-  @Override
-  public void close() {
-    try {
-      service.close();
-    } catch (final MessagingException mex) {
-      throw new MailException("Failed to close session", mex);
-    }
-  }
+	/**
+	 * Closes session.
+	 *
+	 * @since 4.0
+	 */
+	@Override
+	public void close() {
+		try {
+			service.close();
+		} catch (final MessagingException mex) {
+			throw new MailException("Failed to close session", mex);
+		}
+	}
 
-  /**
-   * Returns {@code true} if mail session is still connected.
-   *
-   * @return {@code true} if mail session is still connected.
-   * @since 4.0
-   */
-  public boolean isConnected() {
-    return service.isConnected();
-  }
+	/**
+	 * Returns {@code true} if mail session is still connected.
+	 *
+	 * @return {@code true} if mail session is still connected.
+	 * @since 4.0
+	 */
+	public boolean isConnected() {
+		return service.isConnected();
+	}
 
-  /**
-   * Returns the {@link Session}.
-   *
-   * @return the {@link Session}.
-   * @since 4.0
-   */
-  public Session getSession() {
-    return session;
-  }
+	/**
+	 * Returns the {@link Session}.
+	 *
+	 * @return the {@link Session}.
+	 * @since 4.0
+	 */
+	public Session getSession() {
+		return session;
+	}
 
-  /**
-   * Returns the {@link Service}.
-   *
-   * @return the {@link Service}.
-   * @since 4.0
-   */
-  public abstract T getService();
+	/**
+	 * Returns the {@link Service}.
+	 *
+	 * @return the {@link Service}.
+	 * @since 4.0
+	 */
+	public abstract T getService();
 }

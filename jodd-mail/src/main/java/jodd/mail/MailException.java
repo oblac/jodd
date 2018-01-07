@@ -32,31 +32,31 @@ import jodd.exception.UncheckedException;
  */
 public class MailException extends UncheckedException {
 
-  /**
-   * Creates a {@link MailException}.
-   *
-   * @param message Error message.
-   */
-  public MailException(final String message) {
-    super(message);
-  }
+	/**
+	 * Creates a {@link MailException}.
+	 *
+	 * @param message Error message.
+	 */
+	public MailException(final String message) {
+		super(message);
+	}
 
-  /**
-   * Creates a {@link MailException}.
-   *
-   * @param message Error message.
-   * @param t       {@link Throwable} which occurred.
-   */
-  public MailException(final String message, final Throwable t) {
-    super(message, t);
-  }
+	/**
+	 * Creates a {@link MailException}.
+	 *
+	 * @param message Error message.
+	 * @param t       {@link Throwable} which occurred.
+	 */
+	public MailException(final String message, final Throwable t) {
+		super(message, t);
+	}
 
-  /**
-   * Creates a {@link MailException}.
-   *
-   * @param t {@link Throwable} which occurred.
-   */
-  public MailException(final Throwable t) {
-    super(t);
-  }
+	/**
+	 * Creates a {@link MailException}.
+	 *
+	 * @param t {@link Throwable} which occurred.
+	 */
+	public MailException(final Throwable t) {
+		super(t);
+	}
 }

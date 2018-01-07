@@ -35,7 +35,7 @@ import javax.mail.util.ByteArrayDataSource;
 @Deprecated
 public class ByteArrayAttachment extends EmailAttachment<ByteArrayDataSource> {
 
-  public ByteArrayAttachment(final byte[] bytes, final String contentType, final String name, final String contentId, final boolean isInline) {
-    super(name, contentId, isInline, new ByteArrayDataSource(bytes, contentType));
-  }
+	public ByteArrayAttachment(final byte[] bytes, final String contentType, final String name, final String contentId, final boolean isInline) {
+		super(name, contentId, isInline, new ByteArrayDataSource(bytes, contentType));
+	}
 }

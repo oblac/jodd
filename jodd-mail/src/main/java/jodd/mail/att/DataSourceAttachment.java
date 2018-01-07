@@ -35,7 +35,7 @@ import javax.activation.DataSource;
 @Deprecated
 public class DataSourceAttachment<T extends DataSource> extends EmailAttachment<T> {
 
-  public DataSourceAttachment(final T dataSource, final String name, final String contentId, final boolean isInline) {
-    super(name, contentId, isInline, dataSource);
-  }
+	public DataSourceAttachment(final T dataSource, final String name, final String contentId, final boolean isInline) {
+		super(name, contentId, isInline, dataSource);
+	}
 }

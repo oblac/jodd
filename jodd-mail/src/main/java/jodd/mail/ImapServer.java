@@ -38,94 +38,94 @@ import java.util.Properties;
  */
 public class ImapServer extends MailServer<ReceiveMailSession> {
 
-  protected static final String MAIL_IMAP_PORT = "mail.imap.port";
-  protected static final String MAIL_IMAP_HOST = "mail.imap.host";
-  protected static final String MAIL_IMAP_PARTIALFETCH = "mail.imap.partialfetch";
+	protected static final String MAIL_IMAP_PORT = "mail.imap.port";
+	protected static final String MAIL_IMAP_HOST = "mail.imap.host";
+	protected static final String MAIL_IMAP_PARTIALFETCH = "mail.imap.partialfetch";
 
-  protected static final String PROTOCOL_IMAP = "imap";
+	protected static final String PROTOCOL_IMAP = "imap";
 
-  /**
-   * Default IMAP port.
-   */
-  protected static final int DEFAULT_IMAP_PORT = 143;
+	/**
+	 * Default IMAP port.
+	 */
+	protected static final int DEFAULT_IMAP_PORT = 143;
 
-  /**
-   * {@inheritDoc}
-   */
-  ImapServer(final String host, final int port, final Authenticator authenticator) {
-    super(host, port, authenticator);
-  }
+	/**
+	 * {@inheritDoc}
+	 */
+	ImapServer(final String host, final int port, final Authenticator authenticator) {
+		super(host, port, authenticator);
+	}
 
-  @Override
-  protected Properties createSessionProperties() {
-    final Properties props = new Properties();
-    props.setProperty(MAIL_IMAP_HOST, getHost());
-    props.setProperty(MAIL_IMAP_PORT, String.valueOf(getPort()));
-    props.setProperty(MAIL_IMAP_PARTIALFETCH, StringPool.FALSE);
-    return props;
-  }
+	@Override
+	protected Properties createSessionProperties() {
+		final Properties props = new Properties();
+		props.setProperty(MAIL_IMAP_HOST, getHost());
+		props.setProperty(MAIL_IMAP_PORT, String.valueOf(getPort()));
+		props.setProperty(MAIL_IMAP_PARTIALFETCH, StringPool.FALSE);
+		return props;
+	}
 
-  /**
-   * Returns email store.
-   *
-   * @return {@link com.sun.mail.imap.IMAPStore}
-   * @throws NoSuchProviderException if a provider for the given protocol is not found.
-   * @see EmailUtil#getStore(Session, String)
-   */
-  protected Store getStore(final Session session) throws NoSuchProviderException {
-    return EmailUtil.getStore(session, PROTOCOL_IMAP);
-  }
+	/**
+	 * Returns email store.
+	 *
+	 * @return {@link com.sun.mail.imap.IMAPStore}
+	 * @throws NoSuchProviderException if a provider for the given protocol is not found.
+	 * @see EmailUtil#getStore(Session, String)
+	 */
+	protected Store getStore(final Session session) throws NoSuchProviderException {
+		return EmailUtil.getStore(session, PROTOCOL_IMAP);
+	}
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return {@link ReceiveMailSession}
-   */
-  @Override
-  public ReceiveMailSession createSession() {
-    return EmailUtil.createSession(PROTOCOL_IMAP, getSessionProperties(), getAuthenticator());
-  }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return {@link ReceiveMailSession}
+	 */
+	@Override
+	public ReceiveMailSession createSession() {
+		return EmailUtil.createSession(PROTOCOL_IMAP, getSessionProperties(), getAuthenticator());
+	}
 
-  // ---------------------------------------------------------------- deprecated
+	// ---------------------------------------------------------------- deprecated
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public ImapServer(final String host) {
-    this(host, DEFAULT_IMAP_PORT, null);
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public ImapServer(final String host) {
+		this(host, DEFAULT_IMAP_PORT, null);
+	}
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public ImapServer(final String host, final int port) {
-    this(host, port, null);
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public ImapServer(final String host, final int port) {
+		this(host, port, null);
+	}
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public ImapServer(final String host, final Authenticator authenticator) {
-    this(host, DEFAULT_IMAP_PORT, authenticator);
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public ImapServer(final String host, final Authenticator authenticator) {
+		this(host, DEFAULT_IMAP_PORT, authenticator);
+	}
 
-  /**
-   * @deprecated Use {@link MailServer#builder()}
-   */
-  @Deprecated
-  public ImapServer(final String host, final int port, final String username, final String password) {
-    this(host, port, new SimpleAuthenticator(username, password));
-  }
+	/**
+	 * @deprecated Use {@link MailServer#builder()}
+	 */
+	@Deprecated
+	public ImapServer(final String host, final int port, final String username, final String password) {
+		this(host, port, new SimpleAuthenticator(username, password));
+	}
 
-  /**
-   * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
-   */
-  @Deprecated
-  public ImapServer setProperty(final String name, final String value) {
-    getSessionProperties().setProperty(name, value);
-    return this;
-  }
+	/**
+	 * @deprecated Use {@link #getSessionProperties()} and {@link Properties#setProperty(String, String)}.
+	 */
+	@Deprecated
+	public ImapServer setProperty(final String name, final String value) {
+		getSessionProperties().setProperty(name, value);
+		return this;
+	}
 }
