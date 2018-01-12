@@ -26,6 +26,7 @@
 package jodd.util.crypt;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * SipHash computes 64-bit message authentication code from a variable-length
@@ -41,7 +42,7 @@ import java.util.Random;
  */
 public class SipHash {
 
-	private static Random rnd = new Random();
+	private static Random rnd = ThreadLocalRandom.current();
 
 	public static long hashCode(byte[] data) {
 		long k0 = rnd.nextLong();
