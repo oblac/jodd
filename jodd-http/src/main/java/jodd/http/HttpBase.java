@@ -56,7 +56,6 @@ import static jodd.util.StringPool.CRLF;
 /**
  * Base class for {@link HttpRequest} and {@link HttpResponse}.
  */
-@SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
 
     public static final String HEADER_ACCEPT = "Accept";
@@ -79,6 +78,11 @@ public abstract class HttpBase<T> {
 	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
 
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	// ---------------------------------------------------------------- properties
 
 	/**
@@ -93,9 +97,9 @@ public abstract class HttpBase<T> {
 	 */
 	public T httpVersion(String httpVersion) {
 		this.httpVersion = httpVersion;
-		return (T) this;
+		return _this();
 	}
-	
+
 	/**
 	 * Returns whether header keys should be strict or not, when they are
 	 * modified by changing them to PascalCase.
@@ -111,7 +115,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T capitalizeHeaderKeys(boolean capitalizeHeaderKeys) {
 		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- headers
@@ -169,7 +173,7 @@ public abstract class HttpBase<T> {
 
 		_header(name, value, overwrite);
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -192,7 +196,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T header(String name, int value) {
 		_header(name, String.valueOf(value), false);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -201,7 +205,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T header(String name, long millis) {
 		_header(name, TimeUtil.formatHttpDate(millis), false);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -233,7 +237,7 @@ public abstract class HttpBase<T> {
 	public T charset(String charset) {
 		this.charset = null;
 		contentType(null, charset);
-		return (T) this;
+		return _this();
 	}
 
 
@@ -255,7 +259,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T mediaType(String mediaType) {
 		contentType(mediaType, null);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -273,7 +277,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T contentType(String contentType) {
 		header(HEADER_CONTENT_TYPE, contentType, true);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -302,7 +306,7 @@ public abstract class HttpBase<T> {
 		}
 
 		_header(HEADER_CONTENT_TYPE, contentType, true);
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- keep-alive
@@ -317,7 +321,7 @@ public abstract class HttpBase<T> {
 		} else {
 			header(HEADER_CONNECTION, HEADER_CLOSE, true);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -354,7 +358,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T contentLength(int value) {
 		_header(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -376,7 +380,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T accept(String encodings) {
 		header(HEADER_ACCEPT, encodings, true);
-		return (T) this;
+		return _this();
 	}
 	
 	/**
@@ -391,7 +395,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T acceptEncoding(String encodings) {
 		header(HEADER_ACCEPT_ENCODING, encodings, true);
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- form
@@ -445,7 +449,7 @@ public abstract class HttpBase<T> {
 		value = wrapFormValue(value);
 		((HttpMultiMap<Object>)form).add(name, value);
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -462,7 +466,7 @@ public abstract class HttpBase<T> {
 			((HttpMultiMap<Object>)form).add(name, value);
 		}
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -478,7 +482,7 @@ public abstract class HttpBase<T> {
 
 			form(name, parameters[i + 1]);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -490,7 +494,7 @@ public abstract class HttpBase<T> {
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
 			form(entry.getKey(), entry.getValue());
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -512,7 +516,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T formEncoding(String encoding) {
 		this.formEncoding = encoding;
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- body
@@ -565,7 +569,7 @@ public abstract class HttpBase<T> {
 		this.body = body;
 		this.form = null;
 		contentLength(body.length());
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -577,7 +581,7 @@ public abstract class HttpBase<T> {
 		body = StringUtil.convertCharset(body, charset, StringPool.ISO_8859_1);
 		contentType(mediaType, charset);
 		body(body);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -744,6 +748,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns string representation of this request or response.
 	 */
+	@Override
 	public String toString() {
 		return toString(true);
 	}

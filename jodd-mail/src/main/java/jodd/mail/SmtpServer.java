@@ -75,6 +75,11 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 
 	// ---------------------------------------------------------------- create
 
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -90,10 +95,9 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	 * @param timeout timeout value in milliseconds.
 	 * @return this
 	 */
-	@SuppressWarnings("unchecked")
 	public T timeout(final int timeout) {
 		this.timeout = timeout;
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -102,11 +106,11 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	 * @param debug {@code true} to turn on debugging. By default, this is {@code false}.
 	 * @return this
 	 */
-	@SuppressWarnings("unchecked")
 	public T debugMode(final boolean debug) {
 		this.debug = debug;
-		return (T) this;
+		return _this();
 	}
+
 
 	/**
 	 * Disables the strict address.
@@ -114,10 +118,9 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	 * @param strictAddress {@code true} if strict address checking should be be turned on. By default, this is {@code true}.
 	 * @return this
 	 */
-	@SuppressWarnings("unchecked")
 	public T strictAddress(final boolean strictAddress) {
 		this.strictAddress = strictAddress;
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- properties

@@ -31,12 +31,17 @@ package jodd.bean;
  */
 public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	/**
 	 * Excludes all properties, i.e. enables blacklist mode.
 	 */
 	public T excludeAll() {
 		blacklist = false;
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -46,7 +51,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 		for (String ex : excludes) {
 			rules.exclude(ex);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -54,7 +59,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	 */
 	public T exclude(String exclude) {
 		rules.exclude(exclude);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -64,7 +69,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 		for (String in : includes) {
 			rules.include(in);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -72,7 +77,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	 */
 	public T include(String include) {
 		rules.include(include);
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -86,7 +91,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 
 		include(properties);
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -95,7 +100,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	public T ignoreNulls(boolean ignoreNulls) {
 		this.ignoreNullValues = ignoreNulls;
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -104,7 +109,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	 */
 	public T declared(boolean declared) {
 		this.declared = declared;
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -112,7 +117,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	 */
 	public T includeFields(boolean includeFields) {
 		this.includeFields = includeFields;
-		return (T) this;
+		return _this();
 	}
 
 }

@@ -59,6 +59,11 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 		this.proxetta = proxetta;
 	}
 
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	// ---------------------------------------------------------------- IN
 
 	/**
@@ -86,7 +91,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 */
 	public T setTargetProxyClassName(String targetProxyClassName) {
 		this.requestedProxyClassName = targetProxyClassName;
-		return (T)this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- IN targets
@@ -101,7 +106,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 		targetClass = null;
 		targetClassName = null;
 
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -123,7 +128,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to get stream class name: " + targetName, ioex);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -144,7 +149,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 			StreamUtil.close(targetInputStream);
 			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
 		}
-		return (T) this;
+		return _this();
 	}
 
 	/**

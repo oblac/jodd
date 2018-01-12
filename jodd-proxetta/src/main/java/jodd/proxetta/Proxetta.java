@@ -59,7 +59,6 @@ import java.util.List;
  * </ul>
  * @see ProxettaFactory
  */
-@SuppressWarnings("unchecked")
 public abstract class Proxetta<T extends Proxetta, A> {
 
 	/**
@@ -83,6 +82,12 @@ public abstract class Proxetta<T extends Proxetta, A> {
 		return new InvokeProxetta();
 	}
 
+
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	// ---------------------------------------------------------------- properties
 
 	protected boolean forced;
@@ -99,12 +104,12 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 */
 	public T withAspect(A proxyAspect) {
 		proxyAspectList.add(proxyAspect);
-		return (T) this;
+		return _this();
 	}
 
 	public T withAspects(A... aspects) {
 		Collections.addAll(proxyAspectList, aspects);
-		return (T) this;
+		return _this();
 	}
 
 	public A[] getAspects(A[] array) {
@@ -118,7 +123,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 */
 	public T setForced(boolean forced) {
 		this.forced = forced;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isForced() {
@@ -132,7 +137,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 */
 	public T setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
-		return (T) this;
+		return _this();
 	}
 
 	/**
@@ -153,7 +158,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 */
 	public T setVariableClassName(boolean variableClassName) {
 		this.variableClassName = variableClassName;
-		return (T) this;
+		return _this();
 	}
 
 	public boolean isVariableClassName() {
@@ -168,7 +173,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 */
 	public T setClassNameSuffix(String suffix) {
 		this.classNameSuffix = suffix;
-		return (T) this;
+		return _this();
 	}
 
 	public String getClassNameSuffix() {
@@ -181,12 +186,12 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 */
 	public T setDebugFolder(String debugFolder) {
 		this.debugFolder = new File(debugFolder);
-		return (T) this;
+		return _this();
 	}
 
 	public T setDebugFolder(File debugFolder) {
 		this.debugFolder = debugFolder;
-		return (T) this;
+		return _this();
 	}
 
 	/**

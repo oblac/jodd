@@ -29,8 +29,7 @@ package jodd.util;
  * Chalk allows you to color output going to console.
  * @see Chalk256
  */
-@SuppressWarnings("unchecked")
-public class Chalk<T extends Chalk> {
+public class Chalk<T extends Chalk<T>> {
 
 	protected static final String RESET = "0";
 
@@ -81,47 +80,52 @@ public class Chalk<T extends Chalk> {
 		return new Chalk();
 	}
 
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+
 	// ---------------------------------------------------------------- style
 
 	public T bold() {
 		startSequence(BOLD);
 		endSequence(UNBOLD);
-		return (T) this;
+		return _this();
 	}
 
 	public T italic() {
 		startSequence(ITALIC);
 		endSequence(UNITALIC);
-		return (T) this;
+		return _this();
 	}
 
 	public T dim() {
 		startSequence(DIM);
 		endSequence(UNDIM);
-		return (T) this;
+		return _this();
 	}
 
 	public T underline() {
 		startSequence(UNDERLINE);
 		endSequence(UNUNDERLINE);
-		return (T) this;
+		return _this();
 	}
 
 	public T inverse() {
 		startSequence(INVERSE);
 		endSequence(UNINVERSE);
-		return (T) this;
+		return _this();
 	}
 
 	public T hidden() {
 		startSequence(HIDDEN);
 		endSequence(UNHIDDEN);
-		return (T) this;
+		return _this();
 	}
 	public T strikeThrough() {
 		startSequence(STRIKETHROUGH);
 		endSequence(UNSTRIKETHROUGH);
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- colors
@@ -129,47 +133,47 @@ public class Chalk<T extends Chalk> {
 	public T black() {
 		startSequence(BLACK);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T red() {
 		startSequence(RED);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T green() {
 		startSequence(GREEN);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T yellow() {
 		startSequence(YELLOW);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T blue() {
 		startSequence(BLUE);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T magenta() {
 		startSequence(MAGENTA);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T cyan() {
 		startSequence(CYAN);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T white() {
 		startSequence(WHITE);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T gray() {
 		startSequence(GRAY);
 		endSequence(COLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T grey() {
 		return gray();
@@ -180,42 +184,42 @@ public class Chalk<T extends Chalk> {
 	public T bgBlack() {
 		startSequence(BGBLACK);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgRed() {
 		startSequence(BGRED);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgGreen() {
 		startSequence(BGGREEN);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgYellow() {
 		startSequence(BGYELLOW);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgBlue() {
 		startSequence(BGBLUE);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgMagenta() {
 		startSequence(BGMAGENTA);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgCyan() {
 		startSequence(BGCYAN);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 	public T bgWhite() {
 		startSequence(BGWHITE);
 		endSequence(BGCOLOR_RESET);
-		return (T) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- internal
