@@ -70,24 +70,8 @@ public class EmailAttachment<T extends DataSource> {
 	 *
 	 * @return {@link EmailAttachmentBuilder}.
 	 */
-	public static EmailAttachmentBuilder builder() {
+	public static EmailAttachmentBuilder with() {
 		return new EmailAttachmentBuilder();
-	}
-
-	/**
-	 * Returns {@link EmailAttachmentBuilder} with data.
-	 *
-	 * @return {@link EmailAttachmentBuilder}.
-	 */
-	private EmailAttachmentBuilder toBuilder() {
-		return new EmailAttachmentBuilder()
-			.setName(name)
-			.setInline(isInline)
-			.setContentId(contentId)
-			.setContent(dataSource)
-			.setEmbeddedMessage(targetMessage);
-
-		//TODO: this is still private because it may lose data (size is not carried over)
 	}
 
 	/**
@@ -178,7 +162,7 @@ public class EmailAttachment<T extends DataSource> {
 	 * @param isInline {@code true} for inline.
 	 * @return this
 	 */
-	EmailAttachment<T> setInline(final boolean isInline) {
+	protected EmailAttachment<T> setInline(final boolean isInline) {
 		this.isInline = isInline;
 		return this;
 	}
@@ -189,7 +173,7 @@ public class EmailAttachment<T extends DataSource> {
 	 * @param contentId content ID of {@link EmailAttachment}.
 	 * @return this
 	 */
-	EmailAttachment<T> setContentId(final String contentId) {
+	protected EmailAttachment<T> setContentId(final String contentId) {
 		this.contentId = contentId;
 		return this;
 	}
@@ -254,7 +238,7 @@ public class EmailAttachment<T extends DataSource> {
 	 * @param size the size of the attachment.
 	 * @return this
 	 */
-	EmailAttachment<T> setSize(final int size) {
+	protected EmailAttachment<T> setSize(final int size) {
 		this.size = size;
 		return this;
 	}

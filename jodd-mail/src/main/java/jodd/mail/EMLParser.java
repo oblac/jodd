@@ -48,11 +48,6 @@ public class EMLParser extends EMLProperties<EMLParser> {
 		return new EMLParser();
 	}
 
-	@Override
-	EMLParser getThis() {
-		return this;
-	}
-
 	/**
 	 * Parses EML with provided EML content.
 	 *
@@ -64,7 +59,8 @@ public class EMLParser extends EMLProperties<EMLParser> {
 	 * @see #parse(byte[])
 	 */
 	public ReceivedEmail parse(final String emlContent, final String charset) throws
-		UnsupportedEncodingException, MessagingException {
+			UnsupportedEncodingException, MessagingException {
+
 		final byte[] bytes = emlContent.getBytes(charset);
 		return parse(bytes);
 	}

@@ -37,34 +37,34 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class EmailUtilTest {
 
-  protected String testDataRoot;
+	protected String testDataRoot;
 
-  @BeforeEach
-  void setUp() {
-    if (testDataRoot != null) {
-      return;
-    }
-    final URL data = EmailUtilTest.class.getResource("test");
-    testDataRoot = data.getFile();
-  }
+	@BeforeEach
+	void setUp() {
+		if (testDataRoot != null) {
+			return;
+		}
+		final URL data = EmailUtilTest.class.getResource("test");
+		testDataRoot = data.getFile();
+	}
 
-  @Test
-  void testExtractContentType() {
-    String contentType = "multipart/mixed;";
-    assertEquals("multipart/mixed", EmailUtil.extractMimeType(contentType));
-    assertNull(EmailUtil.extractEncoding(contentType));
+	@Test
+	void testExtractContentType() {
+		String contentType = "multipart/mixed;";
+		assertEquals("multipart/mixed", EmailUtil.extractMimeType(contentType));
+		assertNull(EmailUtil.extractEncoding(contentType));
 
-    contentType = "multipart/mixed; boundary=-----";
-    assertEquals("multipart/mixed", EmailUtil.extractMimeType(contentType));
-    assertNull(EmailUtil.extractEncoding(contentType));
+		contentType = "multipart/mixed; boundary=-----";
+		assertEquals("multipart/mixed", EmailUtil.extractMimeType(contentType));
+		assertNull(EmailUtil.extractEncoding(contentType));
 
-    contentType = "text/html;\n\tcharset=\"us-ascii\"";
-    assertEquals(MimeTypes.MIME_TEXT_HTML, EmailUtil.extractMimeType(contentType));
-    assertEquals(StringPool.US_ASCII.toLowerCase(), EmailUtil.extractEncoding(contentType));
+		contentType = "text/html;\n\tcharset=\"us-ascii\"";
+		assertEquals(MimeTypes.MIME_TEXT_HTML, EmailUtil.extractMimeType(contentType));
+		assertEquals(StringPool.US_ASCII.toLowerCase(), EmailUtil.extractEncoding(contentType));
 
-    contentType = "TEXT/PLAIN; charset=US-ASCII; name=example.eml";
-    assertEquals(MimeTypes.MIME_TEXT_PLAIN.toUpperCase(), EmailUtil.extractMimeType(contentType));
-    assertEquals(StringPool.US_ASCII, EmailUtil.extractEncoding(contentType));
-  }
+		contentType = "TEXT/PLAIN; charset=US-ASCII; name=example.eml";
+		assertEquals(MimeTypes.MIME_TEXT_PLAIN.toUpperCase(), EmailUtil.extractMimeType(contentType));
+		assertEquals(StringPool.US_ASCII, EmailUtil.extractEncoding(contentType));
+	}
 
 }

@@ -52,8 +52,8 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	ImapServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port, authenticator);
+	public ImapServer(final String host, final int port, final Authenticator authenticator) {
+		super(host, port == -1 ? DEFAULT_IMAP_PORT : port, authenticator);
 	}
 
 	@Override
@@ -70,10 +70,9 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 	 *
 	 * @return {@link com.sun.mail.imap.IMAPStore}
 	 * @throws NoSuchProviderException if a provider for the given protocol is not found.
-	 * @see EmailUtil#getStore(Session, String)
 	 */
 	protected Store getStore(final Session session) throws NoSuchProviderException {
-		return EmailUtil.getStore(session, PROTOCOL_IMAP);
+		return session.getStore(PROTOCOL_IMAP);
 	}
 
 	/**

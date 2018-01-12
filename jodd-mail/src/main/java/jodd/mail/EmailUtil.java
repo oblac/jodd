@@ -34,7 +34,6 @@ import jodd.util.StringPool;
 
 import javax.activation.DataSource;
 import javax.mail.Authenticator;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
@@ -47,7 +46,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -154,21 +152,21 @@ public class EmailUtil {
 			// if (contentId != null && contentId.length > 0) {
 			final String contentId = ((MimeBodyPart) part).getContentID();
 			if (contentId != null) {
-				ret = contentId + getContentTypeForFileName(contentType);
+				ret = contentId + contentTypeForFileName(contentType);
 			} else {
-				ret = getDefaultFileName(contentType);
+				ret = defaultFileName(contentType);
 			}
 		}
 
 		return ret;
 	}
 
-	private static String getContentTypeForFileName(final String contentType) {
+	private static String contentTypeForFileName(final String contentType) {
 		return StringPool.DOT + contentType.substring(contentType.lastIndexOf("/") + 1, contentType.length());
 	}
 
-	static String getDefaultFileName(final String contentType) {
-		return NO_NAME + getContentTypeForFileName(contentType);
+	private static String defaultFileName(final String contentType) {
+		return NO_NAME + contentTypeForFileName(contentType);
 	}
 
 	/**
@@ -190,36 +188,12 @@ public class EmailUtil {
 		final Session session = Session.getInstance(sessionProperties, authenticator);
 		final Store store;
 		try {
-			store = getStore(session, protocol);
+			store = session.getStore(protocol);
 		} catch (final NoSuchProviderException nspex) {
 			final String errMsg = String.format("Failed to create %s session", protocol);
 			throw new MailException(errMsg, nspex);
 		}
 		return new ReceiveMailSession(session, store);
-	}
-
-	/**
-	 * Returns email store.
-	 *
-	 * @param session  Current session.
-	 * @param protocol Protocol such as {@link ImapServer#PROTOCOL_IMAP} or {@link Pop3Server#PROTOCOL_POP3}.
-	 * @return {@link Store}
-	 * @throws NoSuchProviderException If a provider for the given protocol is not found.
-	 */
-	public static Store getStore(final Session session, final String protocol) throws NoSuchProviderException {
-		return session.getStore(protocol);
-	}
-
-	/**
-	 * Parses the received date from the {@link Message}.
-	 *
-	 * @param msg The {@link Message} to parse date from.
-	 * @return {@link Date} the {@link Message} was received.
-	 * @throws MessagingException if there is a failure.
-	 * @see Message#getReceivedDate()
-	 */
-	public static Date parseReceiveDate(final Message msg) throws MessagingException {
-		return msg.getReceivedDate();
 	}
 
 	/**

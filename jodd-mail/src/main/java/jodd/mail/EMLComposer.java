@@ -41,11 +41,6 @@ public class EMLComposer extends EMLProperties<EMLComposer> {
 		return new EMLComposer();
 	}
 
-	@Override
-	EMLComposer getThis() {
-		return this;
-	}
-
 	/**
 	 * Creates EML string from given {@link Email}.
 	 *

@@ -43,7 +43,10 @@ import java.util.Map;
  */
 public abstract class CommonEmail<T extends CommonEmail<T>> {
 
-	abstract T getThis();
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
 
 	public static final String X_PRIORITY = "X-Priority";
 
@@ -54,7 +57,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	public static final int PRIORITY_LOWEST = 5;
 
 	/**
-	 * Clones the object with all its necessary data.
+	 * Clones the email with all its necessary data.
 	 *
 	 * @return new object of type T
 	 */
@@ -74,9 +77,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param from {@link EmailAddress}.
 	 * @return this
 	 */
-	public T setFrom(final EmailAddress from) {
+	public T from(final EmailAddress from) {
 		this.from = from;
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -84,10 +87,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param from {@link Address}
 	 * @return this
-	 * @see #setFrom(EmailAddress)
+	 * @see #from(EmailAddress)
 	 */
-	public T setFrom(final Address from) {
-		return setFrom(new EmailAddress(from));
+	public T from(final Address from) {
+		return from(EmailAddress.of(from));
 	}
 
 	/**
@@ -95,10 +98,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param from Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
 	 * @return this
-	 * @see #setFrom(EmailAddress)
+	 * @see #from(EmailAddress)
 	 */
-	public T setFrom(final String from) {
-		return setFrom(new EmailAddress(from));
+	public T from(final String from) {
+		return from(EmailAddress.of(from));
 	}
 
 	/**
@@ -107,16 +110,16 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param personalName personal name.
 	 * @param from         email address.
 	 * @return this
-	 * @see #setFrom(EmailAddress)
+	 * @see #from(EmailAddress)
 	 */
-	public T setFrom(final String personalName, final String from) {
-		return setFrom(new EmailAddress(personalName, from));
+	public T from(final String personalName, final String from) {
+		return from(new EmailAddress(personalName, from));
 	}
 
 	/**
 	 * Returns FROM {@link EmailAddress}.
 	 */
-	public EmailAddress getFrom() {
+	public EmailAddress from() {
 		return from;
 	}
 
@@ -133,9 +136,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param to {@link EmailAddress} to add.
 	 * @return this
 	 */
-	public T addTo(final EmailAddress to) {
+	public T to(final EmailAddress to) {
 		this.to = ArraysUtil.append(this.to, to);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -143,10 +146,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param to Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
 	 * @return this
-	 * @see #addTo(EmailAddress)
+	 * @see #to(EmailAddress)
 	 */
-	public T addTo(final String to) {
-		return addTo(new EmailAddress(to));
+	public T to(final String to) {
+		return to(EmailAddress.of(to));
 	}
 
 	/**
@@ -155,10 +158,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param personalName personal name.
 	 * @param to           email address.
 	 * @return this
-	 * @see #addTo(EmailAddress)
+	 * @see #to(EmailAddress)
 	 */
-	public T addTo(final String personalName, final String to) {
-		return addTo(new EmailAddress(personalName, to));
+	public T to(final String personalName, final String to) {
+		return to(new EmailAddress(personalName, to));
 	}
 
 	/**
@@ -166,50 +169,58 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param to {@link Address} to add.
 	 * @return this
-	 * @see #addTo(EmailAddress)
+	 * @see #to(EmailAddress)
 	 */
-	public T addTo(final Address to) {
-		return addTo(new EmailAddress(to));
+	public T to(final Address to) {
+		return to(EmailAddress.of(to));
 	}
 
 	/**
-	 * Sets one or more TO address.
+	 * Appends one or more TO address.
 	 *
 	 * @param tos Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
 	 * @return this
-	 * @see #setTo(EmailAddress...)
+	 * @see #to(EmailAddress...)
 	 */
-	public T setTo(final String[] tos) {
-		return setTo(EmailAddress.createFrom(tos));
+	public T to(final String... tos) {
+		return to(EmailAddress.of(tos));
 	}
 
 	/**
-	 * Sets one or more TO addresses.
+	 * Appends one or more TO addresses.
 	 *
 	 * @param tos array of {@link Address}s to set.
 	 * @return this
-	 * @see #setTo(EmailAddress...)
+	 * @see #to(EmailAddress...)
 	 */
-	public T setTo(final Address[] tos) {
-		return setTo(EmailAddress.createFrom(tos));
+	public T to(final Address... tos) {
+		return to(EmailAddress.of(tos));
 	}
 
 	/**
-	 * Sets TO addresses.
+	 * Appends TO addresses.
 	 *
 	 * @param tos vararg of {@link EmailAddress}es to set.
 	 * @return this
 	 */
-	public T setTo(final EmailAddress... tos) {
-		this.to = getValueOrEmptyArray(tos);
-		return getThis();
+	public T to(final EmailAddress... tos) {
+		this.to = valueOrEmptyArray(tos);
+		return _this();
 	}
 
 	/**
 	 * Returns TO addresses.
 	 */
-	public EmailAddress[] getTo() {
+	public EmailAddress[] to() {
 		return to;
+	}
+
+	/**
+	 * Resets TO addresses.
+	 */
+	public T resetTo() {
+		this.to = EmailAddress.EMPTY_ARRAY;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- reply-to
@@ -219,12 +230,12 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	/**
 	 * Appends REPLY-TO address.
 	 *
-	 * @param to {@link EmailAddress} to add.
+	 * @param replyTo {@link EmailAddress} to add.
 	 * @return this
 	 */
-	public T addReplyTo(final EmailAddress to) {
-		this.replyTo = ArraysUtil.append(this.replyTo, to);
-		return getThis();
+	public T replyTo(final EmailAddress replyTo) {
+		this.replyTo = ArraysUtil.append(this.replyTo, replyTo);
+		return _this();
 	}
 
 	/**
@@ -232,10 +243,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param replyTo Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
 	 * @return this
-	 * @see #addReplyTo(EmailAddress)
+	 * @see #replyTo(EmailAddress)
 	 */
-	public T addReplyTo(final String replyTo) {
-		return addReplyTo(new EmailAddress(replyTo));
+	public T replyTo(final String replyTo) {
+		return replyTo(EmailAddress.of(replyTo));
 	}
 
 	/**
@@ -244,10 +255,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param personalName personal name.
 	 * @param replyTo      email address.
 	 * @return this
-	 * @see #addReplyTo(EmailAddress)
+	 * @see #replyTo(EmailAddress)
 	 */
-	public T addReplyTo(final String personalName, final String replyTo) {
-		return addReplyTo(new EmailAddress(personalName, replyTo));
+	public T replyTo(final String personalName, final String replyTo) {
+		return replyTo(new EmailAddress(personalName, replyTo));
 	}
 
 	/**
@@ -255,50 +266,58 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param replyTo {@link Address} to add.
 	 * @return this
-	 * @see #addReplyTo(EmailAddress)
+	 * @see #replyTo(EmailAddress)
 	 */
-	public T addReplyTo(final Address replyTo) {
-		return addReplyTo(new EmailAddress(replyTo));
+	public T replyTo(final Address replyTo) {
+		return replyTo(EmailAddress.of(replyTo));
 	}
 
 	/**
-	 * Sets one or more REPLY-TO address.
+	 * Appends one or more REPLY-TO address.
 	 *
 	 * @param replyTos array of {@link EmailAddress}es to set.
 	 * @return this
-	 * @see #setReplyTo(EmailAddress...)
+	 * @see #replyTo(EmailAddress...)
 	 */
-	public T setReplyTo(final String[] replyTos) {
-		return setReplyTo(EmailAddress.createFrom(replyTos));
+	public T replyTo(final String... replyTos) {
+		return replyTo(EmailAddress.of(replyTos));
 	}
 
 	/**
-	 * Sets one or more REPLY-TO address.
+	 * Appeds one or more REPLY-TO address.
 	 *
 	 * @param replyTos array of {@link Address}es to set.
 	 * @return this
-	 * @see #setReplyTo(EmailAddress...)
+	 * @see #replyTo(EmailAddress...)
 	 */
-	public T setReplyTo(final Address[] replyTos) {
-		return setReplyTo(EmailAddress.createFrom(replyTos));
+	public T replyTo(final Address... replyTos) {
+		return replyTo(EmailAddress.of(replyTos));
 	}
 
 	/**
-	 * Sets REPLY-TO addresses.
+	 * Appends REPLY-TO addresses.
 	 *
 	 * @param replyTo vararg of {@link EmailAddress}es to set.
 	 * @return this
 	 */
-	public T setReplyTo(final EmailAddress... replyTo) {
-		this.replyTo = getValueOrEmptyArray(replyTo);
-		return getThis();
+	public T replyTo(final EmailAddress... replyTo) {
+		this.replyTo = ArraysUtil.join(this.replyTo, valueOrEmptyArray(replyTo));
+		return _this();
 	}
 
 	/**
 	 * Returns REPLY-TO addresses.
 	 */
-	public EmailAddress[] getReplyTo() {
+	public EmailAddress[] replyTo() {
 		return replyTo;
+	}
+
+	/**
+	 * Resets all REPLY-To addresses.
+	 */
+	public T resetReplyTo() {
+		this.replyTo = EmailAddress.EMPTY_ARRAY;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- cc
@@ -314,9 +333,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param to {@link EmailAddress} to add.
 	 * @return this
 	 */
-	public T addCc(final EmailAddress to) {
+	public T cc(final EmailAddress to) {
 		this.cc = ArraysUtil.append(this.cc, to);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -324,10 +343,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param cc Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
 	 * @return this
-	 * @see #addCc(EmailAddress)
+	 * @see #cc(EmailAddress)
 	 */
-	public T addCc(final String cc) {
-		return addCc(new EmailAddress(cc));
+	public T cc(final String cc) {
+		return cc(EmailAddress.of(cc));
 	}
 
 	/**
@@ -336,10 +355,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param personalName personal name.
 	 * @param cc           email address.
 	 * @return this
-	 * @see #addCc(EmailAddress)
+	 * @see #cc(EmailAddress)
 	 */
-	public T addCc(final String personalName, final String cc) {
-		return addCc(new EmailAddress(personalName, cc));
+	public T cc(final String personalName, final String cc) {
+		return cc(new EmailAddress(personalName, cc));
 	}
 
 	/**
@@ -347,10 +366,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param cc {@link Address} to add.
 	 * @return this
-	 * @see #addCc(EmailAddress)
+	 * @see #cc(EmailAddress)
 	 */
-	public T addCc(final Address cc) {
-		return addCc(new EmailAddress(cc));
+	public T cc(final Address cc) {
+		return cc(EmailAddress.of(cc));
 	}
 
 	/**
@@ -358,10 +377,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param ccs array of {@link String}s to set.
 	 * @return this
-	 * @see #setCc(EmailAddress...)
+	 * @see #cc(EmailAddress...)
 	 */
-	public T setCc(final String... ccs) {
-		return setCc(EmailAddress.createFrom(ccs));
+	public T cc(final String... ccs) {
+		return cc(EmailAddress.of(ccs));
 	}
 
 	/**
@@ -369,28 +388,36 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param ccs array of {@link Address}s to set.
 	 * @return this
-	 * @see #setCc(EmailAddress...)
+	 * @see #cc(EmailAddress...)
 	 */
-	public T setCc(final Address... ccs) {
-		return setCc(EmailAddress.createFrom(ccs));
+	public T cc(final Address... ccs) {
+		return cc(EmailAddress.of(ccs));
 	}
 
 	/**
-	 * Sets CC addresses.
+	 * Appends CC addresses.
 	 *
 	 * @param ccs vararg of {@link EmailAddress}es to set.
 	 * @return this
 	 */
-	public T setCc(final EmailAddress... ccs) {
-		this.cc = getValueOrEmptyArray(ccs);
-		return getThis();
+	public T cc(final EmailAddress... ccs) {
+		this.cc = ArraysUtil.join(this.cc, valueOrEmptyArray(ccs));
+		return _this();
 	}
 
 	/**
 	 * Returns CC addresses.
 	 */
-	public EmailAddress[] getCc() {
+	public EmailAddress[] cc() {
 		return cc;
+	}
+
+	/**
+	 * Resets all CC addresses.
+	 */
+	public T resetCc() {
+		this.cc = EmailAddress.EMPTY_ARRAY;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- subject
@@ -411,9 +438,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param subject The message subject to set.
 	 * @return this
 	 */
-	public T setSubject(final String subject) {
+	public T subject(final String subject) {
 		this.subject = subject;
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -427,10 +454,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param encoding The encoding for the message subject.
 	 * @return this
 	 */
-	public T setSubject(final String subject, final String encoding) {
-		setSubject(subject);
+	public T subject(final String subject, final String encoding) {
+		subject(subject);
 		this.subjectEncoding = encoding;
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -438,7 +465,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @return message subject.
 	 */
-	public String getSubject() {
+	public String subject() {
 		return this.subject;
 	}
 
@@ -447,7 +474,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @return the message subject encoding.
 	 */
-	public String getSubjectEncoding() {
+	public String subjectEncoding() {
 		return this.subjectEncoding;
 	}
 
@@ -461,7 +488,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	/**
 	 * Returns all messages.
 	 */
-	public List<EmailMessage> getAllMessages() {
+	public List<EmailMessage> messages() {
 		return messages;
 	}
 
@@ -471,9 +498,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param msgsToAdd {@link List} of {@link EmailMessage}s to add.
 	 * @return this
 	 */
-	public T addMessages(final List<EmailMessage> msgsToAdd) {
+	public T message(final List<EmailMessage> msgsToAdd) {
 		messages.addAll(msgsToAdd);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -482,9 +509,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param msgToAdd {@link EmailMessage} to add.
 	 * @return this
 	 */
-	public T addMessage(final EmailMessage msgToAdd) {
+	public T message(final EmailMessage msgToAdd) {
 		messages.add(msgToAdd);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -494,10 +521,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param mimeType The MIME type as a {@link String}.
 	 * @param encoding The encoding as a {@link String}.
 	 * @return this
-	 * @see #addMessage(EmailMessage)
+	 * @see #message(EmailMessage)
 	 */
-	public T addMessage(final String text, final String mimeType, final String encoding) {
-		return addMessage(new EmailMessage(text, mimeType, encoding));
+	public T message(final String text, final String mimeType, final String encoding) {
+		return message(new EmailMessage(text, mimeType, encoding));
 	}
 
 	/**
@@ -506,10 +533,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param text     The text to add as a {@link String}.
 	 * @param mimeType The MIME type as a {@link String}.
 	 * @return this
-	 * @see #addMessage(EmailMessage)
+	 * @see #message(EmailMessage)
 	 */
-	public T addMessage(final String text, final String mimeType) {
-		return addMessage(new EmailMessage(text, mimeType));
+	public T message(final String text, final String mimeType) {
+		return message(new EmailMessage(text, mimeType));
 	}
 
 	/**
@@ -517,10 +544,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param text The text to add as a {@link String}.
 	 * @return this
-	 * @see #addMessage(String, String)
+	 * @see #message(String, String)
 	 */
-	public T addText(final String text) {
-		return addMessage(text, MimeTypes.MIME_TEXT_PLAIN);
+	public T textMessage(final String text) {
+		return message(text, MimeTypes.MIME_TEXT_PLAIN);
 	}
 
 	/**
@@ -529,10 +556,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param text     The text to add as a {@link String}.
 	 * @param encoding The encoding as a {@link String}.
 	 * @return this
-	 * @see #addMessage(EmailMessage)
+	 * @see #message(EmailMessage)
 	 */
-	public T addText(final String text, final String encoding) {
-		return addMessage(new EmailMessage(text, MimeTypes.MIME_TEXT_PLAIN, encoding));
+	public T textMessage(final String text, final String encoding) {
+		return message(new EmailMessage(text, MimeTypes.MIME_TEXT_PLAIN, encoding));
 	}
 
 	/**
@@ -540,10 +567,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param html The HTML to add as a {@link String}.
 	 * @return this
-	 * @see #addMessage(EmailMessage)
+	 * @see #message(EmailMessage)
 	 */
-	public T addHtml(final String html) {
-		return addMessage(new EmailMessage(html, MimeTypes.MIME_TEXT_HTML));
+	public T htmlMessage(final String html) {
+		return message(new EmailMessage(html, MimeTypes.MIME_TEXT_HTML));
 	}
 
 	/**
@@ -552,10 +579,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param html     The HTML to add as a {@link String}.
 	 * @param encoding The encoding as a {@link String}.
 	 * @return this
-	 * @see #addMessage(EmailMessage)
+	 * @see #message(EmailMessage)
 	 */
-	public T addHtml(final String html, final String encoding) {
-		return addMessage(new EmailMessage(html, MimeTypes.MIME_TEXT_HTML, encoding));
+	public T htmlMessage(final String html, final String encoding) {
+		return message(new EmailMessage(html, MimeTypes.MIME_TEXT_HTML, encoding));
 	}
 
 	// ---------------------------------------------------------------- headers
@@ -570,7 +597,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @return all headers in a {@link HashMap}
 	 */
-	protected Map<String, String> getAllHeaders() {
+	protected Map<String, String> headers() {
 		return headers;
 	}
 
@@ -581,9 +608,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param value The value of the header.
 	 * @return this
 	 */
-	public T setHeader(final String name, final String value) {
+	public T header(final String name, final String value) {
 		headers.put(name, value);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -592,9 +619,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param headersToSet Headers to set.
 	 * @return this
 	 */
-	public T setHeaders(final Map<String, String> headersToSet) {
+	public T headers(final Map<String, String> headersToSet) {
 		headers.putAll(headersToSet);
-		return getThis();
+		return _this();
 	}
 
 
@@ -603,14 +630,14 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param headersToSet Headers to set.
 	 * @return this
-	 * @see #setHeader(String, String)
+	 * @see #header(String, String)
 	 */
-	public T setHeaders(final Enumeration<Header> headersToSet) {
+	public T headers(final Enumeration<Header> headersToSet) {
 		while (headersToSet.hasMoreElements()) {
 			final Header header = headersToSet.nextElement();
-			setHeader(header.getName(), header.getValue());
+			header(header.getName(), header.getValue());
 		}
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -619,7 +646,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param name The name of the header.
 	 * @return The value of the header.
 	 */
-	public String getHeader(final String name) {
+	public String header(final String name) {
 		return headers.get(name);
 	}
 
@@ -629,17 +656,17 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param priority - Values of 1 through 5 are acceptable, with 1 being the highest priority, 3 = normal
 	 *                 and 5 = lowest priority.
 	 */
-	public T setPriority(final int priority) {
-		setHeader(X_PRIORITY, String.valueOf(priority));
-		return getThis();
+	public T priority(final int priority) {
+		header(X_PRIORITY, String.valueOf(priority));
+		return _this();
 	}
 
 	/**
 	 * Returns emails priority (1 - 5) or <code>-1</code> if priority not available.
 	 *
-	 * @see #setPriority(int)
+	 * @see #priority(int)
 	 */
-	public int getPriority() {
+	public int priority() {
 		try {
 			return Integer.parseInt(headers.get(X_PRIORITY));
 		} catch (final NumberFormatException ignore) {
@@ -656,7 +683,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @return List of {@link EmailAttachment}s. Returns empty list if no attachment is available.
 	 */
-	public List<EmailAttachment<? extends DataSource>> getAttachments() {
+	public List<EmailAttachment<? extends DataSource>> attachments() {
 		return attachments;
 	}
 
@@ -666,9 +693,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param attachments {@link List} of {@link EmailAttachment}s to add.
 	 * @return this
 	 */
-	T storeAttachments(final List<EmailAttachment<? extends DataSource>> attachments) {
+	protected T storeAttachments(final List<EmailAttachment<? extends DataSource>> attachments) {
 		this.attachments.addAll(attachments);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -677,9 +704,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param attachment {@link EmailAttachment} to add.
 	 * @return this
 	 */
-	T storeAttachment(final EmailAttachment<? extends DataSource> attachment) {
+	protected T storeAttachment(final EmailAttachment<? extends DataSource> attachment) {
 		this.attachments.add(attachment);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -688,11 +715,11 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param attachments {@link List} of {@link EmailAttachment}s to add.
 	 * @return this
 	 */
-	public T addAttachments(final List<EmailAttachment<? extends DataSource>> attachments) {
+	public T attachments(final List<EmailAttachment<? extends DataSource>> attachments) {
 		for (final EmailAttachment<?> attachment : attachments) {
-			addAttachment(attachment);
+			attachment(attachment);
 		}
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -701,16 +728,16 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param attachment {@link EmailAttachment} to add.
 	 * @return this
 	 */
-	public T addAttachment(final EmailAttachment<? extends DataSource> attachment) {
+	public T attachment(final EmailAttachment<? extends DataSource> attachment) {
 		attachment.setContentId(null);
 		return storeAttachment(attachment);
 	}
 
 	/**
-	 * @see #addAttachment(EmailAttachment)
+	 * @see #attachment(EmailAttachment)
 	 */
-	public T addAttachment(final EmailAttachmentBuilder builder) {
-		return addAttachment(builder.buildByteArrayDataSource());
+	public T attachment(final EmailAttachmentBuilder builder) {
+		return attachment(builder.buildByteArrayDataSource());
 	}
 
 	/**
@@ -718,17 +745,17 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @param builder {@link EmailAttachmentBuilder}
 	 * @return this
-	 * @see #embedAttachment(EmailAttachment)
+	 * @see #embeddedAttachment(EmailAttachment)
 	 */
-	public T embedAttachment(final EmailAttachmentBuilder builder) {
+	public T embeddedAttachment(final EmailAttachmentBuilder builder) {
 		builder.setContentIdFromNameIfMissing();
 
-		//TODO: is this really supposed to always be inline?
 		// https://github.com/oblac/jodd/issues/546
-		//content disposition will be set to {@code inline}
-		//builder.setInline(true);
+		// https://github.com/oblac/jodd/issues/404#issuecomment-297011351
+		// content disposition will be set to "inline"
+		builder.inline(true);
 
-		return embedAttachment(builder.buildByteArrayDataSource());
+		return embeddedAttachment(builder.buildByteArrayDataSource());
 	}
 
 	/**
@@ -738,10 +765,10 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @return this
 	 * @see #storeAttachment(EmailAttachment)
 	 */
-	public T embedAttachment(final EmailAttachment<? extends DataSource> attachment) {
+	public T embeddedAttachment(final EmailAttachment<? extends DataSource> attachment) {
 		storeAttachment(attachment);
 
-		final List<EmailMessage> messages = getAllMessages();
+		final List<EmailMessage> messages = messages();
 		final int size = messages.size();
 		if (size > 1) {
 			// Add to last message
@@ -750,7 +777,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 			attachment.setEmbeddedMessage(lastMessage);
 		}
 
-		return getThis();
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- date
@@ -766,9 +793,9 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 * @param date - Email's sent date. If {@code null}, then date will be set during the process of sending.
 	 * @return this
 	 */
-	public T setSentDate(final Date date) {
+	public T sentDate(final Date date) {
 		sentDate = date;
-		return getThis();
+		return _this();
 	}
 
 
@@ -778,7 +805,7 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 	 *
 	 * @return email's sent date or {@code null} if it will be set later.
 	 */
-	public Date getSentDate() {
+	public Date sentDate() {
 		return sentDate;
 	}
 
@@ -786,12 +813,12 @@ public abstract class CommonEmail<T extends CommonEmail<T>> {
 
 	@Override
 	public String toString() {
-		return "Email{'" + getFrom() + "\', subject='" + getSubject() + "\'}";
+		return "Email{'" + from() + "\', subject='" + subject() + "\'}";
 	}
 
 	// ---------------------------------------------------------------- helper
 
-	EmailAddress[] getValueOrEmptyArray(EmailAddress[] arr) {
+	protected EmailAddress[] valueOrEmptyArray(EmailAddress[] arr) {
 		if (arr == null) {
 			arr = EmailAddress.EMPTY_ARRAY;
 		}

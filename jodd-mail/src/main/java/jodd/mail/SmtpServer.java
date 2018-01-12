@@ -78,8 +78,8 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	/**
 	 * {@inheritDoc}
 	 */
-	SmtpServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port, authenticator);
+	public SmtpServer(final String host, final int port, final Authenticator authenticator) {
+		super(host, port == -1 ? DEFAULT_SMTP_PORT : port, authenticator);
 	}
 
 	// ---------------------------------------------------------------- builder
@@ -103,7 +103,7 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public T debug(final boolean debug) {
+	public T debugMode(final boolean debug) {
 		this.debug = debug;
 		return (T) this;
 	}

@@ -119,10 +119,10 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @throws MessagingException if there is a failure
 	 */
 	private void setSubject(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-		if (emailWithData.getSubjectEncoding() != null) {
-			msgToSet.setSubject(emailWithData.getSubject(), emailWithData.getSubjectEncoding());
+		if (emailWithData.subjectEncoding() != null) {
+			msgToSet.setSubject(emailWithData.subject(), emailWithData.subjectEncoding());
 		} else {
-			msgToSet.setSubject(emailWithData.getSubject());
+			msgToSet.setSubject(emailWithData.subject());
 		}
 	}
 
@@ -134,7 +134,7 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @throws MessagingException if there is a failure
 	 */
 	private void setSentDate(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-		Date date = emailWithData.getSentDate();
+		Date date = emailWithData.sentDate();
 		if (date == null) {
 			date = new Date();
 		}
@@ -149,7 +149,7 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @throws MessagingException if there is a failure
 	 */
 	private void setHeaders(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-		final Map<String, String> headers = emailWithData.getAllHeaders();
+		final Map<String, String> headers = emailWithData.headers();
 		if (headers != null) {
 			for (final Map.Entry<String, String> entry : headers.entrySet()) {
 				msgToSet.setHeader(entry.getKey(), entry.getValue());
@@ -165,8 +165,8 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @throws MessagingException if there is a failure
 	 */
 	private void setPeople(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-		msgToSet.setFrom(emailWithData.getFrom().toInternetAddress());
-		msgToSet.setReplyTo(EmailAddress.convert(emailWithData.getReplyTo()));
+		msgToSet.setFrom(emailWithData.from().toInternetAddress());
+		msgToSet.setReplyTo(EmailAddress.convert(emailWithData.replyTo()));
 		setRecipients(emailWithData, msgToSet);
 	}
 
@@ -179,19 +179,19 @@ public class SendMailSession extends MailSession<Transport> {
 	 */
 	private void setRecipients(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
 		// TO
-		final InternetAddress[] to = EmailAddress.convert(emailWithData.getTo());
+		final InternetAddress[] to = EmailAddress.convert(emailWithData.to());
 		if (to.length > 0) {
 			msgToSet.setRecipients(RecipientType.TO, to);
 		}
 
 		// CC
-		final InternetAddress[] cc = EmailAddress.convert(emailWithData.getCc());
+		final InternetAddress[] cc = EmailAddress.convert(emailWithData.cc());
 		if (cc.length > 0) {
 			msgToSet.setRecipients(RecipientType.CC, cc);
 		}
 
 		// BCC
-		final InternetAddress[] bcc = EmailAddress.convert(emailWithData.getBcc());
+		final InternetAddress[] bcc = EmailAddress.convert(emailWithData.bcc());
 		if (bcc.length > 0) {
 			msgToSet.setRecipients(RecipientType.BCC, bcc);
 		}
@@ -205,12 +205,12 @@ public class SendMailSession extends MailSession<Transport> {
 	 * @throws MessagingException if there is a failure.
 	 */
 	private void addBodyData(final Email emailWithData, final MimeMessage msgToSet) throws MessagingException {
-		final List<EmailMessage> messages = emailWithData.getAllMessages();
+		final List<EmailMessage> messages = emailWithData.messages();
 
 		final int totalMessages = messages.size();
 
 		// Need to use new list since filterEmbeddedAttachments(List) removes attachments from the source List
-		final List<EmailAttachment<? extends DataSource>> attachments = new ArrayList<>(emailWithData.getAttachments());
+		final List<EmailAttachment<? extends DataSource>> attachments = new ArrayList<>(emailWithData.attachments());
 
 		if (attachments.isEmpty() && totalMessages == 1) {
 			// special case: no attachments and just one content

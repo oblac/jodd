@@ -44,142 +44,142 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EmailFilterTest {
 
-  private static final String FROM = "from";
-  private static final String TO = "to";
-  private static final String SUBJECT = "subject";
-  private static final String FROM_2 = "from2";
+	private static final String FROM = "from";
+	private static final String TO = "to";
+	private static final String SUBJECT = "subject";
+	private static final String FROM_2 = "from2";
 
-  @Test
-  void testAnd1() {
-    final EmailFilter emailFilter =
-        filter()
-            .from(FROM);
+	@Test
+	void testAnd1() {
+		final EmailFilter emailFilter =
+			filter()
+				.from(FROM);
 
-    final SearchTerm expected = new FromStringTerm(FROM);
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		final SearchTerm expected = new FromStringTerm(FROM);
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
-  @Test
-  void testAnd2() {
-    final EmailFilter emailFilter =
-        filter()
-            .from(FROM)
-            .to(TO);
+	@Test
+	void testAnd2() {
+		final EmailFilter emailFilter =
+			filter()
+				.from(FROM)
+				.to(TO);
 
-    final SearchTerm expected =
-        new AndTerm(
-            new FromStringTerm(FROM),
-            new RecipientStringTerm(Message.RecipientType.TO, TO)
-        );
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		final SearchTerm expected =
+			new AndTerm(
+				new FromStringTerm(FROM),
+				new RecipientStringTerm(Message.RecipientType.TO, TO)
+			);
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
-  @Test
-  void testOr2() {
-    final EmailFilter emailFilter =
-        filter().or(
-            filter().from(FROM),
-            filter().to(TO)
+	@Test
+	void testOr2() {
+		final EmailFilter emailFilter =
+			filter().or(
+				filter().from(FROM),
+				filter().to(TO)
 
-        );
+			);
 
-    final SearchTerm expected =
-        new OrTerm(
-            new FromStringTerm(FROM),
-            new RecipientStringTerm(Message.RecipientType.TO, TO)
-        );
+		final SearchTerm expected =
+			new OrTerm(
+				new FromStringTerm(FROM),
+				new RecipientStringTerm(Message.RecipientType.TO, TO)
+			);
 
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
-  @Test
-  void testOr2Alt() {
-    final EmailFilter emailFilter =
-        filter().or()
-            .from(FROM)
-            .to(TO);
+	@Test
+	void testOr2Alt() {
+		final EmailFilter emailFilter =
+			filter().or()
+				.from(FROM)
+				.to(TO);
 
-    final SearchTerm expected =
-        new OrTerm(
-            new FromStringTerm(FROM),
-            new RecipientStringTerm(Message.RecipientType.TO, TO)
-        );
+		final SearchTerm expected =
+			new OrTerm(
+				new FromStringTerm(FROM),
+				new RecipientStringTerm(Message.RecipientType.TO, TO)
+			);
 
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
-  @Test
-  void testAndOrNot() {
-    final EmailFilter emailFilter =
-        filter()
-            .from(FROM)
-            .to(TO)
-            .or()
-            .not()
-            .subject(SUBJECT)
-            .from(FROM_2);
+	@Test
+	void testAndOrNot() {
+		final EmailFilter emailFilter =
+			filter()
+				.from(FROM)
+				.to(TO)
+				.or()
+				.not()
+				.subject(SUBJECT)
+				.from(FROM_2);
 
-    final SearchTerm expected =
-        new OrTerm(
-            new OrTerm(
-                new AndTerm(
-                    new FromStringTerm(FROM),
-                    new RecipientStringTerm(Message.RecipientType.TO, TO)
-                ),
-                new NotTerm(
-                    new SubjectTerm(SUBJECT)
-                )
-            ),
-            new FromStringTerm(FROM_2)
-        );
+		final SearchTerm expected =
+			new OrTerm(
+				new OrTerm(
+					new AndTerm(
+						new FromStringTerm(FROM),
+						new RecipientStringTerm(Message.RecipientType.TO, TO)
+					),
+					new NotTerm(
+						new SubjectTerm(SUBJECT)
+					)
+				),
+				new FromStringTerm(FROM_2)
+			);
 
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
-  @Test
-  void testAndOrNotAlt() {
-    final EmailFilter emailFilter =
-        filter()
-            .or(
-                filter().and(
-                    filter().from(FROM),
-                    filter().to(TO)
-                ),
-                filter().not(filter().subject(SUBJECT)),
-                filter().from(FROM_2)
-            );
+	@Test
+	void testAndOrNotAlt() {
+		final EmailFilter emailFilter =
+			filter()
+				.or(
+					filter().and(
+						filter().from(FROM),
+						filter().to(TO)
+					),
+					filter().not(filter().subject(SUBJECT)),
+					filter().from(FROM_2)
+				);
 
-    final SearchTerm expected =
-        new OrTerm(
-            new SearchTerm[]{
-                new AndTerm(
-                    new FromStringTerm(FROM),
-                    new RecipientStringTerm(Message.RecipientType.TO, TO)
-                ),
-                new NotTerm(
-                    new SubjectTerm(SUBJECT)
-                ),
-                new FromStringTerm(FROM_2)
-            }
-        );
+		final SearchTerm expected =
+			new OrTerm(
+				new SearchTerm[]{
+					new AndTerm(
+						new FromStringTerm(FROM),
+						new RecipientStringTerm(Message.RecipientType.TO, TO)
+					),
+					new NotTerm(
+						new SubjectTerm(SUBJECT)
+					),
+					new FromStringTerm(FROM_2)
+				}
+			);
 
 
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
-  @Test
-  void testReceivedDate() {
-    final EmailFilter emailFilter = EmailFilter.filter()
-        .receivedDate(EmailFilter.Operator.EQ, 1000)
-        .sentDate(EmailFilter.Operator.GT, 2000);
+	@Test
+	void testReceivedDate() {
+		final EmailFilter emailFilter = EmailFilter.filter()
+			.receivedDate(EmailFilter.Operator.EQ, 1000)
+			.sentDate(EmailFilter.Operator.GT, 2000);
 
-    final SearchTerm expected =
-        new AndTerm(
-            new ReceivedDateTerm(3, new Date(1000)),
-            new SentDateTerm(5, new Date(2000))
-        );
+		final SearchTerm expected =
+			new AndTerm(
+				new ReceivedDateTerm(3, new Date(1000)),
+				new SentDateTerm(5, new Date(2000))
+			);
 
-    assertEquals(expected, emailFilter.searchTerm);
-  }
+		assertEquals(expected, emailFilter.searchTerm);
+	}
 
 }

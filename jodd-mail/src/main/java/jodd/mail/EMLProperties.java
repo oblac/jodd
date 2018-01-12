@@ -29,9 +29,10 @@ import java.util.Properties;
 
 abstract class EMLProperties<T extends EMLProperties<T>> {
 
-	/***
-	 */
-	abstract T getThis();
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
 
 	/**
 	 * {@link Properties}.
@@ -43,7 +44,7 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 *
 	 * @return the {@link Session}.
 	 */
-	Session getSession() {
+	protected Session getSession() {
 		return session;
 	}
 
@@ -57,7 +58,7 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 *
 	 * @return the {@link Properties}.
 	 */
-	Properties getProperties() {
+	protected Properties getProperties() {
 		return properties;
 	}
 
@@ -72,7 +73,8 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 			properties = System.getProperties();
 		}
 
-		session(Session.getInstance(properties));
+		this.session = Session.getInstance(properties);
+
 		return session;
 	}
 
@@ -86,7 +88,7 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	public T set(final Properties properties) throws MailException {
 		checkSessionNotSet();
 		this.properties.putAll(properties);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -101,18 +103,7 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	public T set(final String name, final String value) {
 		checkSessionNotSet();
 		properties.setProperty(name, value);
-		return getThis();
-	}
-
-	/**
-	 * Assigns custom {@link Session}. Any property will be ignored.
-	 *
-	 * @param session {@link Session}
-	 * @return this
-	 */
-	public T session(final Session session) {
-		this.session = session;
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -121,9 +112,9 @@ abstract class EMLProperties<T extends EMLProperties<T>> {
 	 * @return this
 	 * @see System#getProperties()
 	 */
-	public T defaultSession() {
+	public T useDefaultSession() {
 		this.session = Session.getDefaultInstance(System.getProperties());
-		return getThis();
+		return _this();
 	}
 
 	/**

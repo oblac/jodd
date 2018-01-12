@@ -47,8 +47,8 @@ public class Pop3SslServer extends Pop3Server {
 	/**
 	 * {@inheritDoc}
 	 */
-	Pop3SslServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port, authenticator);
+	public Pop3SslServer(final String host, final int port, final Authenticator authenticator) {
+		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator);
 	}
 
 	@Override
@@ -68,8 +68,25 @@ public class Pop3SslServer extends Pop3Server {
 	 */
 	@Override
 	protected POP3SSLStore getStore(final Session session) {
-		final PasswordAuthentication pa = ((SimpleAuthenticator) getAuthenticator()).getPasswordAuthentication();
-		final URLName url = new URLName(PROTOCOL_POP3, getHost(), getPort(), "", pa.getUserName(), pa.getPassword());
+		final SimpleAuthenticator simpleAuthenticator = (SimpleAuthenticator) getAuthenticator();
+		final URLName url;
+
+		if (simpleAuthenticator == null) {
+			url = new URLName(
+				PROTOCOL_POP3,
+				getHost(), getPort(),
+				StringPool.EMPTY,
+				null, null);
+		}
+		else {
+			final PasswordAuthentication pa = simpleAuthenticator.getPasswordAuthentication();
+			url = new URLName(
+				PROTOCOL_POP3,
+				getHost(), getPort(),
+				StringPool.EMPTY,
+				pa.getUserName(), pa.getPassword());
+		}
+
 		return new POP3SSLStore(session, url);
 	}
 

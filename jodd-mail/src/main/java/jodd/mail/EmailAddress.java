@@ -64,6 +64,13 @@ public class EmailAddress {
 	}
 
 	/**
+	 * @see #EmailAddress(String, String)
+	 */
+	public static EmailAddress of(String personalName, String email) {
+		return new EmailAddress(personalName, email);
+	}
+
+	/**
 	 * Creates new address by specifying one of the following:
 	 * <ul>
 	 * <li>{@code "foo@bar.com" - only email address.}</li>
@@ -73,24 +80,21 @@ public class EmailAddress {
 	 *
 	 * @param address {@link String} containing address to convert.
 	 */
-	public EmailAddress(String address) {
+	public static EmailAddress of(String address) {
 		address = address.trim();
 
 		if (!StringUtil.endsWithChar(address, '>')) {
-			this.email = address;
-			this.personalName = null;
-			return;
+			return new EmailAddress(null, address);
 		}
 
 		final int ndx = address.lastIndexOf('<');
 		if (ndx == -1) {
-			this.email = address;
-			this.personalName = null;
-			return;
+			return new EmailAddress(null, address);
 		}
 
-		this.email = address.substring(ndx + 1, address.length() - 1);
-		this.personalName = address.substring(0, ndx).trim();
+		String email = address.substring(ndx + 1, address.length() - 1);
+		String personalName = address.substring(0, ndx).trim();
+		return new EmailAddress(personalName, email);
 	}
 
 	/**
@@ -98,8 +102,8 @@ public class EmailAddress {
 	 *
 	 * @param internetAddress {@link InternetAddress} to convert
 	 */
-	public EmailAddress(final InternetAddress internetAddress) {
-		this(internetAddress.getPersonal(), internetAddress.getAddress());
+	public static EmailAddress of(final InternetAddress internetAddress) {
+		return new EmailAddress(internetAddress.getPersonal(), internetAddress.getAddress());
 	}
 
 	/**
@@ -107,8 +111,8 @@ public class EmailAddress {
 	 *
 	 * @param address {@link Address} to convert.
 	 */
-	public EmailAddress(final Address address) {
-		this(address.toString());
+	public static EmailAddress of(final Address address) {
+		return of(address.toString());
 	}
 
 	// ---------------------------------------------------------------- getters
@@ -136,6 +140,7 @@ public class EmailAddress {
 	 *
 	 * @return String representation of this.
 	 */
+	@Override
 	public String toString() {
 		if (this.personalName == null) {
 			return this.email;
@@ -166,7 +171,7 @@ public class EmailAddress {
 	 * @param addresses array of {@link Address}es to convert.
 	 * @return an array of {@link EmailAddress}.
 	 */
-	public static EmailAddress[] createFrom(final Address... addresses) {
+	public static EmailAddress[] of(final Address... addresses) {
 		if (addresses == null) {
 			return EmailAddress.EMPTY_ARRAY;
 		}
@@ -177,7 +182,7 @@ public class EmailAddress {
 		final EmailAddress[] res = new EmailAddress[addresses.length];
 
 		for (int i = 0; i < addresses.length; i++) {
-			res[i] = new EmailAddress(addresses[i]);
+			res[i] = EmailAddress.of(addresses[i]);
 		}
 
 		return res;
@@ -189,7 +194,7 @@ public class EmailAddress {
 	 * @param addresses array of {@link String}s to convert.
 	 * @return an array of {@link EmailAddress}.
 	 */
-	public static EmailAddress[] createFrom(final String... addresses) {
+	public static EmailAddress[] of(final String... addresses) {
 		if (addresses == null) {
 			return EmailAddress.EMPTY_ARRAY;
 		}
@@ -200,7 +205,7 @@ public class EmailAddress {
 		final EmailAddress[] res = new EmailAddress[addresses.length];
 
 		for (int i = 0; i < addresses.length; i++) {
-			res[i] = new EmailAddress(addresses[i]);
+			res[i] = EmailAddress.of(addresses[i]);
 		}
 
 		return res;

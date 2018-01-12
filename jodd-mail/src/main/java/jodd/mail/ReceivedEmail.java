@@ -51,11 +51,6 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 
 	public static final ReceivedEmail[] EMPTY_ARRAY = new ReceivedEmail[0];
 
-	@Override
-	ReceivedEmail getThis() {
-		return this;
-	}
-
 	/**
 	 * Static constructor for fluent interface.
 	 *
@@ -69,33 +64,33 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	public ReceivedEmail clone() {
 		return create()
 			// flags
-			.setFlags(getFlags())
+			.flags(flags())
 
 			// message number
-			.setMessageNumber(getMessageNumber())
+			.messageNumber(messageNumber())
 
 			// from / reply-to
-			.setFrom(getFrom())
-			.setReplyTo(getReplyTo())
+			.from(from())
+			.replyTo(replyTo())
 
 			// recipients
-			.setTo(getTo())
-			.setCc(getCc())
+			.to(to())
+			.cc(cc())
 
 			// subject
-			.setSubject(getSubject(), getSubjectEncoding())
+			.subject(subject(), subjectEncoding())
 
 			// dates
-			.setReceivedDate(getReceivedDate())
-			.setSentDate(getSentDate())
+			.receivedDate(receivedDate())
+			.sentDate(sentDate())
 
 			// headers - includes priority
-			.setHeaders(getAllHeaders())
+			.headers(headers())
 
 			// content / attachments
-			.addMessages(getAllMessages())
-			.storeAttachments(getAttachments())
-			.addAttachedMessages(getAttachedMessages());
+			.message(messages())
+			.storeAttachments(attachments())
+			.attachedMessages(attachedMessages());
 	}
 
 	/**
@@ -126,35 +121,35 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 */
 	protected void parseMessage(final Message msg) throws MessagingException, IOException {
 		// flags
-		setFlags(msg.getFlags());
+		flags(msg.getFlags());
 
 		// message number
-		setMessageNumber(msg.getMessageNumber());
+		messageNumber(msg.getMessageNumber());
 
 		// single from
 		final Address[] addresses = msg.getFrom();
 
 		if (addresses != null && addresses.length > 0) {
-			setFrom(addresses[0]);
+			from(addresses[0]);
 		}
 
 		// reply-to
-		setReplyTo(msg.getReplyTo());
+		replyTo(msg.getReplyTo());
 
 		// recipients
-		setTo(msg.getRecipients(Message.RecipientType.TO));
-		setCc(msg.getRecipients(Message.RecipientType.CC));
+		to(msg.getRecipients(Message.RecipientType.TO));
+		cc(msg.getRecipients(Message.RecipientType.CC));
 		// no BCC because this will always be empty
 
 		// subject
-		setSubject(msg.getSubject());
+		subject(msg.getSubject());
 
 		// dates
-		setReceivedDate(msg.getReceivedDate());
-		setSentDate(msg.getSentDate());
+		receivedDate(msg.getReceivedDate());
+		sentDate(msg.getSentDate());
 
 		// headers
-		setHeaders(msg.getAllHeaders());
+		headers(msg.getAllHeaders());
 
 		// content
 		processPart(msg);
@@ -179,7 +174,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 			addAttachment(part, (InputStream) content);
 		} else if (content instanceof MimeMessage) {
 			final MimeMessage mimeMessage = (MimeMessage) content;
-			addAttachedMessage(new ReceivedEmail(mimeMessage));
+			attachedMessage(new ReceivedEmail(mimeMessage));
 		} else {
 			addAttachment(part, part.getInputStream());
 		}
@@ -207,7 +202,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param content Content as {@link String}
 	 * @throws MessagingException           if there is a failure.
 	 * @throws UnsupportedEncodingException if the named charset is not supported.
-	 * @see #addMessage(String, String, String)
+	 * @see #message(String, String, String)
 	 */
 	private void addStringContent(final Part part, final String content) throws MessagingException, UnsupportedEncodingException {
 		final String contentType = part.getContentType();
@@ -219,7 +214,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 			addAttachment(part, content.getBytes(encoding));
 		} else {
 			final String mimeType = EmailUtil.extractMimeType(contentType);
-			addMessage(content, mimeType, encoding);
+			message(content, mimeType, encoding);
 		}
 	}
 
@@ -265,7 +260,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	/**
 	 * @return {@link Flags}
 	 */
-	public Flags getFlags() {
+	public Flags flags() {
 		return flags;
 	}
 
@@ -274,7 +269,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param flags {@link Flags} to set.
 	 */
-	public ReceivedEmail setFlags(final Flags flags) {
+	public ReceivedEmail flags(final Flags flags) {
 		this.flags = flags;
 		return this;
 	}
@@ -340,7 +335,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @return message number
 	 */
-	public int getMessageNumber() {
+	public int messageNumber() {
 		return messageNumber;
 	}
 
@@ -350,7 +345,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param messageNumber The message number to set.
 	 * @return this
 	 */
-	public ReceivedEmail setMessageNumber(final int messageNumber) {
+	public ReceivedEmail messageNumber(final int messageNumber) {
 		this.messageNumber = messageNumber;
 		return this;
 	}
@@ -363,7 +358,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param date The received {@link Date} to set.
 	 * @return this
 	 */
-	public ReceivedEmail setReceivedDate(final Date date) {
+	public ReceivedEmail receivedDate(final Date date) {
 		receivedDate = date;
 		return this;
 	}
@@ -373,7 +368,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @return The email's received {@link Date}.
 	 */
-	public Date getReceivedDate() {
+	public Date receivedDate() {
 		return receivedDate;
 	}
 
@@ -385,11 +380,11 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param part    {@link Part}.
 	 * @param content Content as {@link InputStream}.
 	 * @return this
-	 * @see #addAttachment(EmailAttachment)
+	 * @see #attachment(EmailAttachment)
 	 */
 	private ReceivedEmail addAttachment(final Part part, final InputStream content) throws MessagingException, IOException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
-		builder.setContent(content, part.getContentType());
+		builder.content(content, part.getContentType());
 		return storeAttachment(builder.buildByteArrayDataSource());
 	}
 
@@ -399,11 +394,11 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param part    {@link Part}.
 	 * @param content Content as byte array.
 	 * @return this
-	 * @see #addAttachment(EmailAttachment)
+	 * @see #attachment(EmailAttachment)
 	 */
 	private ReceivedEmail addAttachment(final Part part, final byte[] content) throws MessagingException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
-		builder.setContent(content, part.getContentType());
+		builder.content(content, part.getContentType());
 		final EmailAttachment<ByteArrayDataSource> attachment = builder.buildByteArrayDataSource();
 		attachment.setSize(content.length);
 		return storeAttachment(attachment);
@@ -414,7 +409,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param part {@link Part}.
 	 * @return this
-	 * @see #addAttachment(EmailAttachment)
+	 * @see #attachment(EmailAttachment)
 	 */
 	private static EmailAttachmentBuilder addAttachmentInfo(final Part part) throws MessagingException {
 
@@ -423,10 +418,9 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 		final boolean isInline = parseInline(part);
 
 		return new EmailAttachmentBuilder()
-			.setName(fileName)
-			.setContentId(contentId)
-			.setInline(isInline)
-			;
+			.name(fileName)
+			.contentId(contentId)
+			.inline(isInline);
 	}
 
 	// ---------------------------------------------------------------- inner messages
@@ -441,7 +435,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @param emails {@link List} of {@link ReceivedEmail}s to attach.
 	 */
-	public ReceivedEmail addAttachedMessages(final List<ReceivedEmail> emails) {
+	public ReceivedEmail attachedMessages(final List<ReceivedEmail> emails) {
 		attachedMessages.addAll(emails);
 		return this;
 	}
@@ -452,7 +446,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param email {@link ReceivedEmail} to attach.
 	 * @return this
 	 */
-	public ReceivedEmail addAttachedMessage(final ReceivedEmail email) {
+	public ReceivedEmail attachedMessage(final ReceivedEmail email) {
 		attachedMessages.add(email);
 		return this;
 	}
@@ -463,7 +457,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 *
 	 * @return {@link List} of {@link ReceivedEmail}s.
 	 */
-	public List<ReceivedEmail> getAttachedMessages() {
+	public List<ReceivedEmail> attachedMessages() {
 		return attachedMessages;
 	}
 

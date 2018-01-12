@@ -34,58 +34,58 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class EmailAddressTest {
 
-  private static final String ADMIN_JODD_COM = "admin@jodd.com";
-  private static final String JENNY_DOE = "Jenny Doe";
-  private static final String JENNY_DOE_SPACE = JENNY_DOE + " ";
-  private static final String JENNY_DOE_ADMIN_JODD_COM = "Jenny Doe <admin@jodd.com>";
+	private static final String ADMIN_JODD_COM = "admin@jodd.com";
+	private static final String JENNY_DOE = "Jenny Doe";
+	private static final String JENNY_DOE_SPACE = JENNY_DOE + " ";
+	private static final String JENNY_DOE_ADMIN_JODD_COM = "Jenny Doe <admin@jodd.com>";
 
-  @Test
-  void testMailFromString() {
-    EmailAddress mailAddress = new EmailAddress(ADMIN_JODD_COM);
-    assertNull(mailAddress.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
-    assertEquals(ADMIN_JODD_COM, mailAddress.toString());
+	@Test
+	void testMailFromString() {
+		EmailAddress mailAddress = EmailAddress.of(ADMIN_JODD_COM);
+		assertNull(mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		assertEquals(ADMIN_JODD_COM, mailAddress.toString());
 
-    mailAddress = new EmailAddress(JENNY_DOE_ADMIN_JODD_COM);
-    assertEquals(JENNY_DOE, mailAddress.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
-    assertEquals(JENNY_DOE_ADMIN_JODD_COM, mailAddress.toString());
+		mailAddress = EmailAddress.of(JENNY_DOE_ADMIN_JODD_COM);
+		assertEquals(JENNY_DOE, mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		assertEquals(JENNY_DOE_ADMIN_JODD_COM, mailAddress.toString());
 
-    mailAddress = new EmailAddress(JENNY_DOE_SPACE, ADMIN_JODD_COM);
-    assertEquals(JENNY_DOE_SPACE, mailAddress.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
-    assertEquals("Jenny Doe  <admin@jodd.com>", mailAddress.toString());
-  }
+		mailAddress = EmailAddress.of(JENNY_DOE_SPACE, ADMIN_JODD_COM);
+		assertEquals(JENNY_DOE_SPACE, mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		assertEquals("Jenny Doe  <admin@jodd.com>", mailAddress.toString());
+	}
 
-  @Test
-  void testMailFromEmailAddress() {
-    EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress(ADMIN_JODD_COM);
-    assertNull(mailAddress.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+	@Test
+	void testMailFromEmailAddress() {
+		EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress(ADMIN_JODD_COM);
+		assertNull(mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
 
-    mailAddress = new RFC2822AddressParser().parseToEmailAddress(JENNY_DOE_ADMIN_JODD_COM);
-    assertEquals(JENNY_DOE, mailAddress.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
+		mailAddress = new RFC2822AddressParser().parseToEmailAddress(JENNY_DOE_ADMIN_JODD_COM);
+		assertEquals(JENNY_DOE, mailAddress.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress.getEmail());
 
-    final EmailAddress mailAddress2 = new RFC2822AddressParser().parseToEmailAddress(mailAddress.toString());
-    assertEquals(JENNY_DOE, mailAddress2.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress2.getEmail());
-  }
+		final EmailAddress mailAddress2 = new RFC2822AddressParser().parseToEmailAddress(mailAddress.toString());
+		assertEquals(JENNY_DOE, mailAddress2.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress2.getEmail());
+	}
 
-  @Test
-  void testMailFromInternetAddress() throws AddressException {
-    final EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress(JENNY_DOE_ADMIN_JODD_COM);
-    final EmailAddress mailAddress2 = new EmailAddress(mailAddress.toInternetAddress());
+	@Test
+	void testMailFromInternetAddress() throws AddressException {
+		final EmailAddress mailAddress = new RFC2822AddressParser().parseToEmailAddress(JENNY_DOE_ADMIN_JODD_COM);
+		final EmailAddress mailAddress2 = EmailAddress.of(mailAddress.toInternetAddress());
 
-    assertEquals(JENNY_DOE, mailAddress2.getPersonalName());
-    assertEquals(ADMIN_JODD_COM, mailAddress2.getEmail());
-  }
+		assertEquals(JENNY_DOE, mailAddress2.getPersonalName());
+		assertEquals(ADMIN_JODD_COM, mailAddress2.getEmail());
+	}
 
-  @Test
-  void testIssue211() {
-    final String testAddress = "Some One<someone@yahoo.com>";
-    final EmailAddress addr = new EmailAddress(testAddress);
+	@Test
+	void testIssue211() {
+		final String testAddress = "Some One<someone@yahoo.com>";
+		final EmailAddress addr = EmailAddress.of(testAddress);
 
-    assertEquals("Some One <someone@yahoo.com>", addr.toString());
-  }
+		assertEquals("Some One <someone@yahoo.com>", addr.toString());
+	}
 }

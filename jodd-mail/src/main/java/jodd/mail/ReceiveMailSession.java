@@ -36,7 +36,6 @@ import javax.mail.Store;
  * Encapsulates {@link Email} receiving session. Prepares and receives {@link Email}s.
  * Some methods do not work on POP3 servers.
  */
-//TODO: should this implement AutoClosable from MailSession?
 public class ReceiveMailSession extends MailSession<Store> {
 
 	/**
@@ -310,7 +309,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 				emails[i] = new ReceivedEmail(msg);
 
 				if (flagsToSet != null) {
-					emails[i].setFlags(flagsToSet);
+					emails[i].flags(flagsToSet);
 					msg.setFlags(flagsToSet, true);
 				}
 

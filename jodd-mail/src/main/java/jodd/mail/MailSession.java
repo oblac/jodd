@@ -36,13 +36,8 @@ import javax.mail.Transport;
  */
 abstract class MailSession<T extends Service> implements AutoCloseable {
 
-	/**
-	 */
 	private final Session session;
-
-	/**
-	 */
-	final Service service;
+	protected final Service service;
 
 	/**
 	 * Creates new mail session.
@@ -50,7 +45,7 @@ abstract class MailSession<T extends Service> implements AutoCloseable {
 	 * @param session {@link Session}.
 	 * @param service {@link Service} such as {@link Store} or {@link Transport}.
 	 */
-	MailSession(final Session session, final Service service) {
+	protected MailSession(final Session session, final Service service) {
 		this.session = session;
 		this.service = service;
 	}

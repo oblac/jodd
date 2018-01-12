@@ -48,7 +48,7 @@ public class EmailAttachmentBuilder {
 	/**
 	 * Only allow instantiation from {@link EmailAttachment} class
 	 */
-	EmailAttachmentBuilder() {
+	protected EmailAttachmentBuilder() {
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -86,7 +86,7 @@ public class EmailAttachmentBuilder {
 	 * @param name File name to set.
 	 * @return this
 	 */
-	public EmailAttachmentBuilder setName(final String name) {
+	public EmailAttachmentBuilder name(final String name) {
 		if (name != null && !name.trim().isEmpty()) {
 			this.name = name;
 		}
@@ -99,7 +99,7 @@ public class EmailAttachmentBuilder {
 	 * @param contentId content ID of {@link EmailAttachment}.
 	 * @return this
 	 */
-	public EmailAttachmentBuilder setContentId(final String contentId) {
+	public EmailAttachmentBuilder contentId(final String contentId) {
 		this.contentId = contentId;
 		return this;
 	}
@@ -110,7 +110,7 @@ public class EmailAttachmentBuilder {
 	 * @param isInline {@code true} for inline.
 	 * @return this
 	 */
-	public EmailAttachmentBuilder setInline(final boolean isInline) {
+	public EmailAttachmentBuilder inline(final boolean isInline) {
 		this.isInline = isInline;
 		return this;
 	}
@@ -121,7 +121,7 @@ public class EmailAttachmentBuilder {
 	 * @param targetMessage Target {@link EmailMessage}.
 	 * @return this
 	 */
-	public EmailAttachmentBuilder setEmbeddedMessage(final EmailMessage targetMessage) {
+	public EmailAttachmentBuilder embeddedMessage(final EmailMessage targetMessage) {
 		this.targetMessage = targetMessage;
 		return this;
 	}
@@ -133,65 +133,65 @@ public class EmailAttachmentBuilder {
 	 * @param dataSource {@link DataSource}
 	 * @return this
 	 */
-	public <T extends DataSource> EmailAttachmentBuilder setContent(final T dataSource) {
+	public <T extends DataSource> EmailAttachmentBuilder content(final T dataSource) {
 		this.dataSource = dataSource;
-		setName(dataSource.getName());
+		name(dataSource.getName());
 		return this;
 	}
 
 	/**
-	 * Creates new {@link ByteArrayDataSource} and then calls {@link #setContent(DataSource)}.
+	 * Creates new {@link ByteArrayDataSource} and then calls {@link #content(DataSource)}.
 	 *
 	 * @param inputStream {@link InputStream}
 	 * @param contentType content type from {@link EmailAttachment}.
 	 * @return this
 	 * @throws IOException if {@link ByteArrayDataSource} cannot be created from {@link InputStream}
-	 * @see #setContent(DataSource)
+	 * @see #content(DataSource)
 	 */
-	public EmailAttachmentBuilder setContent(final InputStream inputStream, final String contentType)
+	public EmailAttachmentBuilder content(final InputStream inputStream, final String contentType)
 		throws IOException {
-		return setContent(new ByteArrayDataSource(inputStream, resolveContentType(contentType)));
+		return content(new ByteArrayDataSource(inputStream, resolveContentType(contentType)));
 	}
 
 	/**
-	 * Creates new {@link ByteArrayDataSource} and then calls {@link #setContent(DataSource)}.
+	 * Creates new {@link ByteArrayDataSource} and then calls {@link #content(DataSource)}.
 	 *
 	 * @param bytes       array of bytes
 	 * @param contentType content type from {@link EmailAttachment}.
 	 * @return this
-	 * @see #setContent(DataSource)
+	 * @see #content(DataSource)
 	 */
-	public EmailAttachmentBuilder setContent(final byte[] bytes, final String contentType) {
-		return setContent(new ByteArrayDataSource(bytes, resolveContentType(contentType)));
+	public EmailAttachmentBuilder content(final byte[] bytes, final String contentType) {
+		return content(new ByteArrayDataSource(bytes, resolveContentType(contentType)));
 	}
 
 	/**
 	 * Uses {@code null} contentType.
 	 *
-	 * @see #setContent(byte[], String)
+	 * @see #content(byte[], String)
 	 */
-	public EmailAttachmentBuilder setContent(final byte[] bytes) {
-		return setContent(bytes, null);
+	public EmailAttachmentBuilder content(final byte[] bytes) {
+		return content(bytes, null);
 	}
 
 	/**
-	 * Creates new {@link FileDataSource} and then calls {@link #setContent(DataSource)}
+	 * Creates new {@link FileDataSource} and then calls {@link #content(DataSource)}
 	 *
 	 * @param file {@link File}
 	 * @return this
-	 * @see #setContent(DataSource)
+	 * @see #content(DataSource)
 	 */
-	public EmailAttachmentBuilder setContent(final File file) {
-		return setContent(new FileDataSource(file));
+	public EmailAttachmentBuilder content(final File file) {
+		return content(new FileDataSource(file));
 	}
 
 	/**
 	 * @param fileName String representing file name.
 	 * @return this
-	 * @see #setContent(File)
+	 * @see #content(File)
 	 */
-	public EmailAttachmentBuilder setContent(final String fileName) {
-		return setContent(new File(fileName));
+	public EmailAttachmentBuilder content(final String fileName) {
+		return content(new File(fileName));
 	}
 
 	// ---------------------------------------------------------------- factory/builder
@@ -243,11 +243,11 @@ public class EmailAttachmentBuilder {
 	/**
 	 * Check to ensure {@link DataSource} ds is valid.
 	 *
-	 * @throws IllegalStateException if DataSource is {@code null}.
+	 * @throws MailException if DataSource is {@code null}.
 	 */
 	private void checkDataSource() {
 		if (dataSource == null) {
-			throw new IllegalStateException("dataSource must be valid. It can be set using #setContent(DataSource)");
+			throw new MailException("dataSource must be valid. It can be set using #content().");
 		}
 	}
 
@@ -257,15 +257,14 @@ public class EmailAttachmentBuilder {
 	 * Set content ID if it is missing.
 	 *
 	 * @return this
-	 * @see #setContentId(String)
+	 * @see #contentId(String)
 	 */
 	protected EmailAttachmentBuilder setContentIdFromNameIfMissing() {
-
 		if (contentId == null) {
 			if (name != null) {
-				setContentId(FileNameUtil.getName(name));
+				contentId(FileNameUtil.getName(name));
 			} else {
-				setContentId(NO_NAME);
+				contentId(NO_NAME);
 			}
 		}
 		return this;

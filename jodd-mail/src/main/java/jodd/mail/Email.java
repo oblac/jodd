@@ -35,11 +35,6 @@ import java.util.Date;
  */
 public class Email extends CommonEmail<Email> {
 
-	@Override
-	Email getThis() {
-		return this;
-	}
-
 	/**
 	 * Static constructor for fluent interface.
 	 */
@@ -52,26 +47,26 @@ public class Email extends CommonEmail<Email> {
 		return create()
 
 			// from / reply-to
-			.setFrom(getFrom())
-			.setReplyTo(getReplyTo())
+			.from(from())
+			.replyTo(replyTo())
 
 			// recipients
-			.setTo(getTo())
-			.setCc(getCc())
-			.setBcc(getBcc())
+			.to(to())
+			.cc(cc())
+			.bcc(bcc())
 
 			// subject
-			.setSubject(getSubject(), getSubjectEncoding())
+			.subject(subject(), subjectEncoding())
 
 			// dates
-			.setSentDate(getSentDate())
+			.sentDate(sentDate())
 
 			// headers - includes priority
-			.setHeaders(getAllHeaders())
+			.headers(headers())
 
 			// content / attachments
-			.storeAttachments(getAttachments())
-			.addMessages(getAllMessages());
+			.storeAttachments(attachments())
+			.message(messages());
 	}
 
 	// ---------------------------------------------------------------- date
@@ -80,10 +75,10 @@ public class Email extends CommonEmail<Email> {
 	 * Sets current date as the sent date.
 	 *
 	 * @return this
-	 * @see #setSentDate(Date)
+	 * @see #sentDate(Date)
 	 */
-	public Email setCurrentSentDate() {
-		return setSentDate(new Date());
+	public Email currentSentDate() {
+		return sentDate(new Date());
 	}
 
 	// ---------------------------------------------------------------- bcc
@@ -99,9 +94,9 @@ public class Email extends CommonEmail<Email> {
 	 * @param to {@link EmailAddress} to add.
 	 * @return this
 	 */
-	public Email addBcc(final EmailAddress to) {
+	public Email bcc(final EmailAddress to) {
 		this.bcc = ArraysUtil.append(this.bcc, to);
-		return getThis();
+		return _this();
 	}
 
 	/**
@@ -109,10 +104,10 @@ public class Email extends CommonEmail<Email> {
 	 *
 	 * @param bcc Address may be specified with personal name like this: {@code Jenny Doe <email@foo.com>}.
 	 * @return this
-	 * @see #addBcc(EmailAddress)
+	 * @see #bcc(EmailAddress)
 	 */
-	public Email addBcc(final String bcc) {
-		return addBcc(new EmailAddress(bcc));
+	public Email bcc(final String bcc) {
+		return bcc(EmailAddress.of(bcc));
 	}
 
 	/**
@@ -121,10 +116,10 @@ public class Email extends CommonEmail<Email> {
 	 * @param personalName personal name.
 	 * @param bcc          email address.
 	 * @return this
-	 * @see #addBcc(EmailAddress)
+	 * @see #bcc(EmailAddress)
 	 */
-	public Email addBcc(final String personalName, final String bcc) {
-		return addBcc(new EmailAddress(personalName, bcc));
+	public Email bcc(final String personalName, final String bcc) {
+		return bcc(new EmailAddress(personalName, bcc));
 	}
 
 	/**
@@ -132,50 +127,59 @@ public class Email extends CommonEmail<Email> {
 	 *
 	 * @param bcc {@link Address} to add.
 	 * @return this
-	 * @see #addBcc(EmailAddress)
+	 * @see #bcc(EmailAddress)
 	 */
-	public Email addBcc(final Address bcc) {
-		return addBcc(new EmailAddress(bcc));
+	public Email bcc(final Address bcc) {
+		return bcc(EmailAddress.of(bcc));
 	}
 
 	/**
-	 * Sets BCC address.
+	 * Appends BCC address.
 	 *
 	 * @param bccs array of {@link String}s to set.
 	 * @return this
-	 * @see #setBcc(EmailAddress...)
+	 * @see #bcc(EmailAddress...)
 	 */
-	public Email setBcc(final String[] bccs) {
-		return setBcc(EmailAddress.createFrom(bccs));
+	public Email bcc(final String... bccs) {
+		return bcc(EmailAddress.of(bccs));
 	}
 
 	/**
-	 * Sets BCC address.
+	 * Appends BCC address.
 	 *
 	 * @param bccs array of {@link Address}es to set.
 	 * @return this
-	 * @see #setBcc(EmailAddress...)
+	 * @see #bcc(EmailAddress...)
 	 */
-	public Email setBcc(final Address[] bccs) {
-		return setBcc(EmailAddress.createFrom(bccs));
+	public Email bcc(final Address... bccs) {
+		return bcc(EmailAddress.of(bccs));
 	}
 
 	/**
-	 * Sets one or more BCC addresses.
+	 * Appends one or more BCC addresses.
 	 *
 	 * @param bccs vararg of {@link EmailAddress}es to set.
 	 * @return this
 	 */
-	public Email setBcc(final EmailAddress... bccs) {
-		this.bcc = getValueOrEmptyArray(bccs);
-		return getThis();
+	public Email bcc(final EmailAddress... bccs) {
+		this.bcc = ArraysUtil.join(this.bcc, valueOrEmptyArray(bccs));
+		return _this();
 	}
 
 	/**
 	 * Returns BCC addresses.
 	 */
-	public EmailAddress[] getBcc() {
+	public EmailAddress[] bcc() {
 		return bcc;
 	}
+
+	/**
+	 * Resets BCC addresses.
+	 */
+	public Email resetBcc() {
+		this.bcc = EmailAddress.EMPTY_ARRAY;
+		return _this();
+	}
+
 
 }

@@ -33,35 +33,38 @@ import java.io.File;
 @Disabled("Real email sending required")
 class InlineVsContentTest {
 
-  public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");
-  private static final String HOST = "mail.joddframework.org";
-  private static final String USERNAME = "t";
-  private static final String PASSWORD = "t";
+	public static final String PNG = FileNameUtil.resolveHome("~/prj/oblac/jodd-site/content/jodd.png");
+	private static final String HOST = "mail.joddframework.org";
+	private static final String USERNAME = "t";
+	private static final String PASSWORD = "t";
 
-  @Test
-  void testSendEmailWithVariousAttachaments() {
-    final SmtpSslServer smtpServer = MailServer.builder()
-        .host(HOST)
-        .auth(USERNAME, PASSWORD).buildSmtpSsl();
+	@Test
+	void testSendEmailWithVariousAttachaments() {
+		final SmtpServer smtpServer =
+			MailServer.create()
+				.host(HOST)
+				.auth(USERNAME, PASSWORD)
+				.ssl(true)
+				.buildSmtpMailServer();
 
-    final SendMailSession session = smtpServer.createSession();
-    session.open();
+		final SendMailSession session = smtpServer.createSession();
+		session.open();
 
-    final Email email = Email.create()
-        .setFrom("info@jodd.org")
-        .addTo("igor.spasic@gmail.com")
-        .setSubject("test-gmail")
-        .addText("Hello!")
-        .addHtml(
-            "<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\">" +
-                "<body><h1>Hey!</h1><img src='cid:jodd.png'>" +
-                "<h2>Hay!</h2><img src='cid:jodd2.png'>" +
-                "<h3></h3></body></html>")
-        .embedAttachment(EmailAttachment.builder().setContent(new File(PNG)).setInline(false))
-        .embedAttachment(EmailAttachment.builder().setContent(new File(PNG)).setContentId("jodd2.png").setInline(true))
-        .addAttachment(EmailAttachment.builder().setContent(PNG));
+		final Email email = Email.create()
+			.from("info@jodd.org")
+			.to("igor.spasic@gmail.com")
+			.subject("test-gmail")
+			.textMessage("Hello!")
+			.htmlMessage(
+				"<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\">" +
+					"<body><h1>Hey!</h1><img src='cid:jodd.png'>" +
+					"<h2>Hay!</h2><img src='cid:jodd2.png'>" +
+					"<h3></h3></body></html>")
+			.embeddedAttachment(EmailAttachment.with().content(new File(PNG)).inline(false))
+			.embeddedAttachment(EmailAttachment.with().content(new File(PNG)).contentId("jodd2.png").inline(true))
+			.attachment(EmailAttachment.with().content(PNG));
 
-    session.sendMail(email);
-    session.close();
-  }
+		session.sendMail(email);
+		session.close();
+	}
 }

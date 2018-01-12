@@ -52,8 +52,8 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	Pop3Server(final String host, final int port, final Authenticator authenticator) {
-		super(host, port, authenticator);
+	public Pop3Server(final String host, final int port, final Authenticator authenticator) {
+		super(host, port == -1 ? DEFAULT_POP3_PORT : port, authenticator);
 	}
 
 	@Override
@@ -72,10 +72,9 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 	 *
 	 * @return {@link com.sun.mail.pop3.POP3Store}
 	 * @throws NoSuchProviderException If a provider for the given protocol is not found.
-	 * @see EmailUtil#getStore(Session, String)
 	 */
 	protected Store getStore(final Session session) throws NoSuchProviderException {
-		return EmailUtil.getStore(session, PROTOCOL_POP3);
+		return session.getStore(PROTOCOL_POP3);
 	}
 
 	/**

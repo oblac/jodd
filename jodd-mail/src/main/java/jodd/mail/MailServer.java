@@ -27,11 +27,9 @@ package jodd.mail;
 
 import javax.mail.Authenticator;
 import javax.mail.Session;
+import java.util.Objects;
 import java.util.Properties;
 
-/**
- *
- */
 public abstract class MailServer<MailSessionImpl extends MailSession> {
 
 	/**
@@ -61,15 +59,13 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @param port          The port to use.
 	 * @param authenticator The {@link Authenticator} to use.
 	 */
-	MailServer(final String host, final int port, final Authenticator authenticator) {
-		if (host == null) {
-			throw new IllegalArgumentException("Host cannot be null");
-		}
+	protected MailServer(final String host, final int port, final Authenticator authenticator) {
+		Objects.requireNonNull(host, "Host cannot be null");
 
 		this.host = host;
 		this.port = port;
 		this.authenticator = authenticator;
-		sessionProperties = createSessionProperties();
+		this.sessionProperties = createSessionProperties();
 	}
 
 
@@ -127,7 +123,10 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		return sessionProperties;
 	}
 
-	public static Builder builder() {
+	/**
+	 * Returns new mail server builder.
+	 */
+	public static Builder create() {
 		return new Builder();
 	}
 
@@ -145,7 +144,8 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 */
 	static class Builder {
 		private String host = null;
-		private int port = 0;
+		private int port = -1;
+		private boolean ssl = false;
 		private Authenticator authenticator;
 
 		/**
@@ -156,10 +156,6 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 *
 		 */
 		public Builder host(final String host) {
-			if (host == null) {
-				throw new IllegalArgumentException("Host cannot be null");
-			}
-
 			this.host = host;
 			return this;
 		}
@@ -177,20 +173,27 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		}
 
 		/**
+		 * Sets the SSL implementation of the Mail server.
+		 *
+		 * @param ssl SSL flag
+		 * @return this
+		 */
+		public Builder ssl(final boolean ssl) {
+			this.ssl = ssl;
+			return this;
+		}
+
+		/**
 		 * Sets authenticator as {@link SimpleAuthenticator} using username and password.
 		 *
 		 * @param username The username to use.
 		 * @param password The password to use.
 		 * @return this
-		 *
 		 */
 		public Builder auth(final String username, final String password) {
-			if (username == null) {
-				throw new IllegalArgumentException("Username cannot be null");
-			}
-			if (password == null) {
-				throw new IllegalArgumentException("Password cannot be null");
-			}
+			Objects.requireNonNull(username, "Username cannot be null");
+			Objects.requireNonNull(password, "Password cannot be null");
+
 			return auth(new SimpleAuthenticator(username, password));
 		}
 
@@ -199,42 +202,24 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 *
 		 * @param authenticator {@link Authenticator} to set.
 		 * @return this
-		 *
 		 */
 		public Builder auth(final Authenticator authenticator) {
-			if (authenticator == null) {
-				throw new IllegalArgumentException("Authenticator cannot be null");
-			}
-
 			this.authenticator = authenticator;
 			return this;
 		}
+
+		// ---------------------------------------------------------------- build
 
 		/**
 		 * Create a {@link ImapServer} from current data.
 		 *
 		 * @return {@link ImapServer} from current data.
-		 *
 		 */
-		public ImapServer buildImap() {
-			if (port == 0) {
-				port = ImapServer.DEFAULT_IMAP_PORT;
+		public ImapServer buildImapMailServer() {
+			if (ssl) {
+				return new ImapSslServer(host, port, authenticator);
 			}
 			return new ImapServer(host, port, authenticator);
-		}
-
-		/**
-		 * Create a {@link ImapSslServer} from current data.
-		 *
-		 * @return {@link ImapSslServer} from current data.
-		 *
-		 */
-		public ImapSslServer buildImapSsl() {
-			if (port == 0) {
-				port = ImapSslServer.DEFAULT_SSL_PORT;
-			}
-
-			return new ImapSslServer(host, port, authenticator);
 		}
 
 		/**
@@ -243,26 +228,11 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * @return {@link Pop3Server} from current data.
 		 *
 		 */
-		public Pop3Server buildPop3() {
-			if (port == 0) {
-				port = Pop3Server.DEFAULT_POP3_PORT;
+		public Pop3Server buildPop3MailServer() {
+			if (ssl) {
+				return new Pop3SslServer(host, port, authenticator);
 			}
-
 			return new Pop3Server(host, port, authenticator);
-		}
-
-		/**
-		 * Create a {@link Pop3SslServer} from current data.
-		 *
-		 * @return {@link Pop3SslServer} from current data.
-		 *
-		 */
-		public Pop3SslServer buildPop3Ssl() {
-			if (port == 0) {
-				port = Pop3SslServer.DEFAULT_SSL_PORT;
-			}
-
-			return new Pop3SslServer(host, port, authenticator);
 		}
 
 		/**
@@ -271,26 +241,11 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 * @return {@link SmtpServer} from current data.
 		 *
 		 */
-		public SmtpServer buildSmtp() {
-			if (port == 0) {
-				port = SmtpServer.DEFAULT_SMTP_PORT;
+		public SmtpServer buildSmtpMailServer() {
+			if (ssl) {
+				return new SmtpSslServer(host, port, authenticator);
 			}
-
 			return new SmtpServer(host, port, authenticator);
-		}
-
-		/**
-		 * Create a {@link SmtpSslServer} from current data.
-		 *
-		 * @return {@link SmtpSslServer} from current data.
-		 *
-		 */
-		public SmtpSslServer buildSmtpSsl() {
-			if (port == 0) {
-				port = SmtpSslServer.DEFAULT_SSL_PORT;
-			}
-
-			return new SmtpSslServer(host, port, authenticator);
 		}
 	}
 }

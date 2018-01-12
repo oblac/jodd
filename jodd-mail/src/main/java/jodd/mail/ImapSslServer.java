@@ -51,8 +51,8 @@ public class ImapSslServer extends ImapServer {
 	/**
 	 * {@inheritDoc}
 	 */
-	ImapSslServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port, authenticator);
+	public ImapSslServer(final String host, final int port, final Authenticator authenticator) {
+		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator);
 	}
 
 	@Override
@@ -72,8 +72,25 @@ public class ImapSslServer extends ImapServer {
 	 */
 	@Override
 	protected IMAPSSLStore getStore(final Session session) {
-		final PasswordAuthentication pa = ((SimpleAuthenticator) getAuthenticator()).getPasswordAuthentication();
-		final URLName url = new URLName(PROTOCOL_IMAP, getHost(), getPort(), "", pa.getUserName(), pa.getPassword());
+		SimpleAuthenticator simpleAuthenticator = (SimpleAuthenticator) getAuthenticator();
+
+		final URLName url;
+
+		if (simpleAuthenticator == null) {
+			url = new URLName(
+				PROTOCOL_IMAP,
+				getHost(), getPort(),
+				StringPool.EMPTY, null, null);
+		}
+		else {
+			final PasswordAuthentication pa = simpleAuthenticator.getPasswordAuthentication();
+			url = new URLName(
+				PROTOCOL_IMAP,
+				getHost(), getPort(),
+				StringPool.EMPTY,
+				pa.getUserName(), pa.getPassword());
+		}
+
 		return new IMAPSSLStore(session, url);
 	}
 
