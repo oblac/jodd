@@ -26,6 +26,7 @@
 package jodd.util;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Class that generates random strings.
@@ -50,7 +51,7 @@ public class RandomString {
 	 * Creates new random string.
 	 */
 	public RandomString() {
-		this(new Random());
+		this(ThreadLocalRandom.current());
 	}
 
 	/**
