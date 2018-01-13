@@ -355,17 +355,34 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	private String resolveBytecodeName(String typeName) {
-		int ndx = typeName.indexOf('<');
-		if (ndx != -1) {
-			int ndx2 = typeName.indexOf('>', ndx);
-			ndx2++;
+		int ndx = 0;
+		int genericsStartNdx = -1;
+		int bracketCount = 0;
 
-			// it might be a nested generics, so skip all '>'
-			while (ndx2 < typeName.length() && typeName.charAt(ndx2) == '>') {
-				ndx2++;
+		while (ndx < typeName.length()) {
+			final char c = typeName.charAt(ndx);
+
+			if (c == '<') {
+				if (bracketCount == 0) {
+					genericsStartNdx = ndx;
+				}
+				bracketCount++;
+				ndx++;
+				continue;
 			}
 
-			typeName = typeName.substring(0, ndx) + typeName.substring(ndx2);
+			if (c == '>') {
+				bracketCount--;
+				if (bracketCount == 0) {
+					break;
+				}
+			}
+
+			ndx++;
+		}
+
+		if (genericsStartNdx != -1) {
+			typeName = typeName.substring(0, genericsStartNdx) + typeName.substring(ndx + 1);
 		}
 
 		if (isGenericType(typeName)) {

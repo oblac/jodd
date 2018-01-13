@@ -392,6 +392,40 @@ class MethodSignatureVisitorTest {
 		assertEquals("Ljava/util/List;", msv.getReturnType().getRawName());
 	}
 
+	// ---------------------------------------------------------------- 12
+
+	public static class Tupel<A, B> {
+		A a; B b;
+	}
+
+	public static class M12 {
+		public Map<Map<Set<Integer>, Long>, Byte> macka(Tupel<List<Integer>, Integer> in1) {return null;}
+	}
+
+	@Test
+	void testMethodSignature12() throws IOException {
+		MethodInfo msv = getMethodSignatureForSingleMethod(M12.class);
+
+		assertEquals(1, msv.getArgumentsCount());
+		assertEquals(CLASS_NAME + "$Tupel<java.util.List<java.lang.Integer>, java.lang.Integer>", msv.getArgument(1).getType());
+		assertEquals(L_CLASS_SIGNATURE + "$Tupel;", msv.getArgument(1).getName());
+		assertEquals(L_CLASS_SIGNATURE + "$Tupel;", msv.getArgument(1).getRawName());
+		assertEquals('L', msv.getArgument(1).getOpcode());
+
+		assertEquals(CLASS_SIGNATURE + "$M12", msv.getClassname());
+		assertEquals("macka#(" + L_CLASS_SIGNATURE + "$Tupel;)Ljava/util/Map;", msv.getCleanSignature());
+		assertEquals("(" + CLASS_NAME + "$Tupel<java.util.List<java.lang.Integer>, java.lang.Integer>)java.util.Map<java.util.Map<java.util.Set<java.lang.Integer>, java.lang.Long>, java.lang.Byte>", msv.getDeclaration());
+		assertEquals(CLASS_SIGNATURE + "$M12", msv.getDeclaredClassName());
+		assertEquals("(" + L_CLASS_SIGNATURE + "$Tupel;)Ljava/util/Map;", msv.getDescription());
+		assertNull(msv.getExceptions());
+		assertEquals("macka", msv.getMethodName());
+
+		assertEquals('L', msv.getReturnType().getOpcode());
+		assertEquals("java.util.Map<java.util.Map<java.util.Set<java.lang.Integer>, java.lang.Long>, java.lang.Byte>", msv.getReturnType().getType());
+		assertEquals("Ljava/util/Map;", msv.getReturnType().getName());
+		assertEquals("Ljava/util/Map;", msv.getReturnType().getRawName());
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private MethodInfo getMethodSignatureForSingleMethod(Class klass) throws IOException {
