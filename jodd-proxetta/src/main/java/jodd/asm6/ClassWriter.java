@@ -759,8 +759,8 @@ public class ClassWriter extends ClassVisitor {
     }
 
     @Override
-    public final AnnotationVisitor visitTypeAnnotation(int typeRef,
-            TypePath typePath, final String desc, final boolean visible) {
+    public final AnnotationVisitor visitTypeAnnotation(final int typeRef,
+                                                       final TypePath typePath, final String desc, final boolean visible) {
         ByteVector bv = new ByteVector();
         // write target_type and target_info
         AnnotationWriter.putTarget(typeRef, typePath, bv);

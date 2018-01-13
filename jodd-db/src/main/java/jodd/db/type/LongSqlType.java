@@ -25,9 +25,9 @@
 
 package jodd.db.type;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 public class LongSqlType extends NullAwareSqlType<Long> {
 
@@ -35,7 +35,7 @@ public class LongSqlType extends NullAwareSqlType<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Long get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Long get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Long.valueOf(rs.getLong(index));
 	}
 
@@ -43,7 +43,7 @@ public class LongSqlType extends NullAwareSqlType<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Long value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Long value, final int dbSqlType) throws SQLException {
 		st.setLong(index, value.longValue());
 	}
 

@@ -39,7 +39,7 @@ import java.util.TimeZone;
  */
 public class TimeZoneConverter implements TypeConverter<TimeZone> {
 
-	public TimeZone convert(Object value) {
+	public TimeZone convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

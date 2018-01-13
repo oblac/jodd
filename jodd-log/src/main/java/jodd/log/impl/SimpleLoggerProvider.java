@@ -57,7 +57,7 @@ public class SimpleLoggerProvider implements LoggerProvider<SimpleLogger> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SimpleLogger createLogger(String name) {
+	public SimpleLogger createLogger(final String name) {
 		return loggers.computeIfAbsent(name, simpleLoggerFunction);
 	}
 

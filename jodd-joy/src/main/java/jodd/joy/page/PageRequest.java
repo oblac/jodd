@@ -56,7 +56,7 @@ public class PageRequest {
 	 * Specifies requested page number.
 	 * Page numbers are 1-based.
 	 */
-	public void setPage(int page) {
+	public void setPage(final int page) {
 		this.page = page;
 	}
 
@@ -71,7 +71,7 @@ public class PageRequest {
 	/**
 	 * Specifies page size, i.e. number of elements per page.
 	 */
-	public void setSize(int size) {
+	public void setSize(final int size) {
 		this.size = size;
 	}
 
@@ -93,7 +93,7 @@ public class PageRequest {
 	 * Returns sort index.
 	 * @see #getSort()
 	 */
-	public void setSort(int sort) {
+	public void setSort(final int sort) {
 		this.sort = sort;
 	}
 
@@ -107,7 +107,7 @@ public class PageRequest {
 	/**
 	 * Returns pager id.
 	 */
-	public void setPagerId(String pagerId) {
+	public void setPagerId(final String pagerId) {
 		this.pagerId = pagerId;
 	}
 

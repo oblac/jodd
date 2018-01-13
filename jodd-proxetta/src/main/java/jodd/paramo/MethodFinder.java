@@ -67,7 +67,7 @@ final class MethodFinder extends EmptyClassVisitor {
 	private final Class[] parameterTypes;
 	private ParamExtractor paramExtractor;
 
-	MethodFinder(Class declaringClass, String methodName, Class[] parameterTypes) {
+	MethodFinder(final Class declaringClass, final String methodName, final Class[] parameterTypes) {
 		this.declaringClass = declaringClass;
 		this.methodName = methodName;
 		this.parameterTypes = parameterTypes;
@@ -75,7 +75,7 @@ final class MethodFinder extends EmptyClassVisitor {
 	}
 
 	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 		if (paramExtractor != null) {
 			return null;				// method already found, skip all further methods
 		}
@@ -109,7 +109,7 @@ final class MethodFinder extends EmptyClassVisitor {
 	/**
 	 * Returns <code>true</code> if type name equals param type.
 	 */
-	boolean isEqualTypeName(Type argumentType, Class paramType) {
+	boolean isEqualTypeName(final Type argumentType, final Class paramType) {
 		String s = argumentType.getClassName();
 		if (s.endsWith(ARRAY)) {		// arrays detected
 			String prefix = s.substring(0, s.length() - 2);

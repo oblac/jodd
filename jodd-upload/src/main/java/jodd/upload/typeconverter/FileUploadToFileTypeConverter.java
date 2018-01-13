@@ -39,7 +39,8 @@ import java.io.InputStream;
  */
 public class FileUploadToFileTypeConverter implements TypeConverter<File> {
 
-	public File convert(Object value) {
+	@Override
+	public File convert(final Object value) {
 		if (value instanceof FileUpload) {
 			FileUpload fileUpload = (FileUpload) value;
 

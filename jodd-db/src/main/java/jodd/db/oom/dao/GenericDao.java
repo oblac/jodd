@@ -59,7 +59,7 @@ public class GenericDao {
 	/**
 	 * Specifies how primary keys are generated.
 	 */
-	public void setKeysGeneratedByDatabase(boolean keysGeneratedByDatabase) {
+	public void setKeysGeneratedByDatabase(final boolean keysGeneratedByDatabase) {
 		this.keysGeneratedByDatabase = keysGeneratedByDatabase;
 	}
 
@@ -68,7 +68,7 @@ public class GenericDao {
 	/**
 	 * Returns <code>true</code> if entity is persistent.
 	 */
-	protected <E> boolean isPersistent(DbEntityDescriptor<E> ded, E entity) {
+	protected <E> boolean isPersistent(final DbEntityDescriptor<E> ded, final E entity) {
 		Object key = ded.getIdValue(entity);
 
 		if (key == null) {
@@ -87,14 +87,14 @@ public class GenericDao {
 	/**
 	 * Sets new ID value for entity.
 	 */
-	protected <E> void setEntityId(DbEntityDescriptor<E> ded, E entity, long newValue) {
+	protected <E> void setEntityId(final DbEntityDescriptor<E> ded, final E entity, final long newValue) {
 		ded.setIdValue(entity, Long.valueOf(newValue));
 	}
 
 	/**
 	 * Generates next id for given type.
 	 */
-	protected long generateNextId(DbEntityDescriptor ded) {
+	protected long generateNextId(final DbEntityDescriptor ded) {
 		throw new UnsupportedOperationException("Use Joy");
 	}
 
@@ -102,7 +102,7 @@ public class GenericDao {
 	 * Saves or updates entity. If ID is not <code>null</code>, entity will be updated.
 	 * Otherwise, entity will be inserted into the database.
 	 */
-	public <E> E store(E entity) {
+	public <E> E store(final E entity) {
 		DbEntityManager dboom = DbEntityManager.get();
 		Class type = entity.getClass();
 		DbEntityDescriptor ded = dboom.lookupType(type);
@@ -134,7 +134,7 @@ public class GenericDao {
 	/**
 	 * Simply inserts object into the database.
 	 */
-	public void save(Object entity) {
+	public void save(final Object entity) {
 		DbQuery q = query(insert(entity));
 		q.autoClose().executeUpdate();
 	}
@@ -143,7 +143,7 @@ public class GenericDao {
 	 * Inserts bunch of objects into the database.
 	 * @see #save(Object)
 	 */
-	public void saveAll(Collection entities) {
+	public void saveAll(final Collection entities) {
 		for (Object entity: entities) {
 			save(entity);
 		}
@@ -154,7 +154,7 @@ public class GenericDao {
 	/**
 	 * Updates single entity.
 	 */
-	public void update(Object entity) {
+	public void update(final Object entity) {
 		query(DbEntitySql.updateAll(entity)).autoClose().executeUpdate();
 	}
 
@@ -162,7 +162,7 @@ public class GenericDao {
 	 * Updates all entities.
 	 * @see #update(Object)
 	 */
-	public void updateAll(Collection entities) {
+	public void updateAll(final Collection entities) {
 		for (Object entity : entities) {
 			update(entity);
 		}
@@ -171,7 +171,7 @@ public class GenericDao {
 	/**
 	 * Updates single property in database and in the bean.
 	 */
-	public <E> E updateProperty(E entity, String name, Object newValue) {
+	public <E> E updateProperty(final E entity, final String name, final Object newValue) {
 		query(DbEntitySql.updateColumn(entity, name, newValue)).autoClose().executeUpdate();
 		BeanUtil.declared.setProperty(entity, name, newValue);
 		return entity;
@@ -180,7 +180,7 @@ public class GenericDao {
 	/**
 	 * Updates property in the database by storing the current property value.
 	 */
-	public <E> E updateProperty(E entity, String name) {
+	public <E> E updateProperty(final E entity, final String name) {
 		Object value = BeanUtil.declared.getProperty(entity, name);
 		query(DbEntitySql.updateColumn(entity, name, value)).autoClose().executeUpdate();
 		return entity;
@@ -191,14 +191,14 @@ public class GenericDao {
 	/**
 	 * Finds single entity by its id.
 	 */
-	public <E> E findById(Class<E> entityType, long id) {
+	public <E> E findById(final Class<E> entityType, final long id) {
 		return query(DbEntitySql.findById(entityType, id)).autoClose().find(entityType);
 	}
 
 	/**
 	 * Finds single entity by matching property.
 	 */
-	public <E> E findOneByProperty(Class<E> entityType, String name, Object value) {
+	public <E> E findOneByProperty(final Class<E> entityType, final String name, final Object value) {
 		return query(findByColumn(entityType, name, value)).autoClose().find(entityType);
 	}
 
@@ -206,7 +206,7 @@ public class GenericDao {
 	 * Finds one entity for given criteria.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E findOne(Object criteria) {
+	public <E> E findOne(final Object criteria) {
 		return (E) query(DbEntitySql.find(criteria)).autoClose().find(criteria.getClass());
 	}
 
@@ -214,14 +214,14 @@ public class GenericDao {
 	 * Finds list of entities matching given criteria.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> List<E> find(Object criteria) {
+	public <E> List<E> find(final Object criteria) {
 		return query(DbEntitySql.find(criteria)).autoClose().list(criteria.getClass());
 	}
 
 	/**
 	 * Finds list of entities matching given criteria.
 	 */
-	public <E> List<E> find(Class<E> entityType, Object criteria) {
+	public <E> List<E> find(final Class<E> entityType, final Object criteria) {
 		return query(DbEntitySql.find(entityType, criteria)).autoClose().list(entityType);
 	}
 
@@ -230,14 +230,14 @@ public class GenericDao {
 	/**
 	 * Deleted single entity by its id.
 	 */
-	public void deleteById(Class entityType, long id) {
+	public void deleteById(final Class entityType, final long id) {
 		query(DbEntitySql.deleteById(entityType, id)).autoClose().executeUpdate();
 	}
 
 	/**
 	 * Delete single object by its id. Resets ID value.
 	 */
-	public void deleteById(Object entity) {
+	public void deleteById(final Object entity) {
 		if (entity != null) {
 			int result = query(DbEntitySql.deleteById(entity)).autoClose().executeUpdate();
 
@@ -255,7 +255,7 @@ public class GenericDao {
 	/**
 	 * Deletes all objects by their id.
 	 */
-	public void deleteAllById(Collection objects) {
+	public void deleteAllById(final Collection objects) {
 		for (Object entity : objects) {
 			deleteById(entity);
 		}
@@ -266,7 +266,7 @@ public class GenericDao {
 	/**
 	 * Counts number of all entities.
 	 */
-	public long count(Class entityType) {
+	public long count(final Class entityType) {
 		return query(DbEntitySql.count(entityType)).autoClose().executeCount();
 	}
 
@@ -276,14 +276,14 @@ public class GenericDao {
 	/**
 	 * Increases a property.
 	 */
-	public void increaseProperty(Class entityType, long id, String name, Number delta) {
+	public void increaseProperty(final Class entityType, final long id, final String name, final Number delta) {
 		query(DbEntitySql.increaseColumn(entityType, id, name, delta, true)).autoClose().executeUpdate();
 	}
 
 	/**
 	 * Decreases a property.
 	 */
-	public void decreaseProperty(Class entityType, long id, String name, Number delta) {
+	public void decreaseProperty(final Class entityType, final long id, final String name, final Number delta) {
 		query(DbEntitySql.increaseColumn(entityType, id, name, delta, false)).autoClose().executeUpdate();
 	}
 
@@ -292,7 +292,7 @@ public class GenericDao {
 	/**
 	 * Finds related entity.
 	 */
-	public <E> List<E> findRelated(Class<E> target, Object source) {
+	public <E> List<E> findRelated(final Class<E> target, final Object source) {
 		return query(DbEntitySql.findForeign(target, source)).autoClose().list(target);
 	}
 
@@ -301,7 +301,7 @@ public class GenericDao {
 	/**
 	 * List all entities.
 	 */
-	public <E> List<E> listAll(Class<E> target) {
+	public <E> List<E> listAll(final Class<E> target) {
 		return query(DbEntitySql.from(target)).autoClose().list(target);
 	}
 

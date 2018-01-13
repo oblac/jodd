@@ -37,12 +37,12 @@ public class MutableShortConverter implements TypeConverter<MutableShort> {
 	protected final TypeConverter<Short> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableShortConverter(TypeConverterManager typeConverterManager) {
+	public MutableShortConverter(final TypeConverterManager typeConverterManager) {
 		typeConverter = typeConverterManager.lookup(Short.class);
 	}
 
 	@Override
-	public MutableShort convert(Object value) {
+	public MutableShort convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

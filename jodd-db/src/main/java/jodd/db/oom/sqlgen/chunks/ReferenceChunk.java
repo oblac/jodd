@@ -43,18 +43,18 @@ public class ReferenceChunk extends SqlChunk {
 	protected final String columnRef;
 	protected final boolean onlyId;
 
-	public ReferenceChunk(String tableRef, String columnRef) {
+	public ReferenceChunk(final String tableRef, final String columnRef) {
 		this(tableRef, columnRef, false);
 	}
 
-	public ReferenceChunk(String tableRef, String columnRef, boolean onlyId) {
+	public ReferenceChunk(final String tableRef, final String columnRef, final boolean onlyId) {
 		super(CHUNK_REFERENCE);
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
 		this.onlyId = onlyId;
 	}
 
-	public ReferenceChunk(String reference) {
+	public ReferenceChunk(final String reference) {
 		super(CHUNK_REFERENCE);
 
 		int dotNdx = reference.indexOf('.');
@@ -82,7 +82,7 @@ public class ReferenceChunk extends SqlChunk {
 	// ---------------------------------------------------------------- process
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 
 		DbEntityDescriptor ded;
 

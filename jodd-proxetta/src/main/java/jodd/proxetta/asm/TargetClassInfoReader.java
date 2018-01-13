@@ -66,7 +66,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected final Set<String> allMethodSignatures;
 	protected final ClassLoader classLoader;
 
-	public TargetClassInfoReader(ClassLoader classLoader) {
+	public TargetClassInfoReader(final ClassLoader classLoader) {
 		this.methodSignatures = new HashMap<>();
 		this.superClassReaders = new ArrayList<>();
 		this.allMethodSignatures = new HashSet<>();
@@ -80,7 +80,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 * Returns method signature for some method. If signature is not found, returns <code>null</code>.
 	 * Founded signatures means that those method can be proxyfied.
 	 */
-	public MethodSignatureVisitor lookupMethodSignatureVisitor(int access, String name, String desc, String className) {
+	public MethodSignatureVisitor lookupMethodSignatureVisitor(final int access, final String name, final String desc, final String className) {
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, className);
 		return methodSignatures.get(key);
 	}
@@ -140,7 +140,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 
 	@Override
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
 		int lastSlash = name.lastIndexOf('/');
 		this.thisReference = name;
 		this.superName = superName;
@@ -160,7 +160,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 
 	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		AnnotationReader ar = new AnnotationReader(desc, visible);
 		if (classAnnotations == null) {
 			classAnnotations = new ArrayList<>();
@@ -173,7 +173,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 * Stores method signature for target method.
 	 */
 	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 		if ((access & AsmUtil.ACC_FINAL) != 0) {
 			return null;	// skip finals
 		}
@@ -280,7 +280,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	/**
 	 * Creates method signature from method name.
 	 */
-	protected MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String signature, String[] exceptions, String classname) {
+	protected MethodSignatureVisitor createMethodSignature(final int access, final String methodName, final String description, final String signature, final String[] exceptions, final String classname) {
 		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, exceptions, signature, this);
 		new SignatureReader(signature != null ? signature : description).accept(v);
 		return v;
@@ -299,20 +299,20 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 		final MethodSignatureVisitor msign;
 
-		MethodAnnotationReader(MethodSignatureVisitor msign) {
+		MethodAnnotationReader(final MethodSignatureVisitor msign) {
 			this.msign = msign;
 			this.methodParamsAnns = new ArrayList[msign.getAllArgumentsSize()];
 		}
 
 		@Override
-		public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 			AnnotationReader ar = new AnnotationReader(desc, visible);
 			methodAnns.add(ar);
 			return ar;
 		}
 
 		@Override
-		public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+		public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
 			AnnotationReader ar = new AnnotationReader(desc, visible);
 			if (methodParamsAnns[parameter] == null) {
 				methodParamsAnns[parameter] = new ArrayList<>();
@@ -349,7 +349,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		String declaredClassName;
 
 		@Override
-		public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+		public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
 			nextSupername = superName;
 			declaredClassName = name;
 
@@ -363,7 +363,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		}
 
 		@Override
-		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+		public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 			if (name.equals(INIT) || name.equals(CLINIT)) {
 				return null;
 			}

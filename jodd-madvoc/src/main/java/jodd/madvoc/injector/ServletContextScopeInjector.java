@@ -73,7 +73,7 @@ public class ServletContextScopeInjector implements Injector, ContextInjector<Se
 	 */
 	@Override
 	@SuppressWarnings({"ConstantConditions"})
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
@@ -154,7 +154,7 @@ public class ServletContextScopeInjector implements Injector, ContextInjector<Se
 	 * Injects just context.
 	 */
 	@Override
-	public void injectContext(Targets targets, ServletContext servletContext) {
+	public void injectContext(final Targets targets, final ServletContext servletContext) {
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
 			Class fieldType = in.type;
 			Object value = null;

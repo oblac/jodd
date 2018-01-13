@@ -55,7 +55,7 @@ public class FastFloatBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastFloatBuffer(int size) {
+	public FastFloatBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastFloatBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastFloatBuffer {
 	/**
 	 * Appends <code>float</code> array to buffer.
 	 */
-	public FastFloatBuffer append(float[] array, int off, int len) {
+	public FastFloatBuffer append(final float[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastFloatBuffer {
 	/**
 	 * Appends <code>float</code> array to buffer.
 	 */
-	public FastFloatBuffer append(float[] array) {
+	public FastFloatBuffer append(final float[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>float</code> to buffer.
 	 */
-	public FastFloatBuffer append(float element) {
+	public FastFloatBuffer append(final float element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastFloatBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastFloatBuffer append(FastFloatBuffer buff) {
+	public FastFloatBuffer append(final FastFloatBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastFloatBuffer {
 	 * Returns <code>float</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public float[] array(int index) {
+	public float[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastFloatBuffer {
     /**
      * Creates <code>float</code> subarray from buffered content.
      */
-	public float[] toArray(int start, int len) {
+	public float[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		float[] array = new float[len];

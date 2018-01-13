@@ -87,7 +87,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	protected final WorkData wd;
 	protected final List<ProxyAspectData> aspectList;
 
-	public ProxettaMethodBuilder(MethodSignatureVisitor msign, WorkData wd, List<ProxyAspectData> aspectList) {
+	public ProxettaMethodBuilder(final MethodSignatureVisitor msign, final WorkData wd, final List<ProxyAspectData> aspectList) {
 		this.msign = msign;
 		this.wd = wd;
 		this.aspectList = aspectList;
@@ -100,7 +100,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 * Copies target method annotations.
 	 */
 	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		AnnotationVisitor destAnn = methodVisitor.visitAnnotation(desc, visible); // [A4]
 		return new AnnotationVisitorAdapter(destAnn);
 	}
@@ -112,7 +112,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
 		AnnotationVisitor destAnn = methodVisitor.visitParameterAnnotation(parameter, desc, visible);
 		return new AnnotationVisitorAdapter(destAnn);
 	}
@@ -160,7 +160,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 * Continues the creation of the very first method in calling chain that simply delegates invocation to the first proxy method.
 	 * This method mirrors the target method.
 	 */
-	protected void createFirstChainDelegate_Continue(TargetMethodData tmd) {
+	protected void createFirstChainDelegate_Continue(final TargetMethodData tmd) {
 		methodVisitor.visitCode();
 
 		if (tmd.msign.isStatic) {
@@ -211,7 +211,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		aspectData.getAdviceClassReader().accept(new EmptyClassVisitor() {
 
 			@Override
-			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+			public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 
 				if (!name.equals(JoddProxetta.get().defaults().getExecuteMethodName())) {
 					return null;
@@ -220,7 +220,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 				return new HistoryMethodAdapter(mv) {
 
 					@Override
-					public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+					public void visitFieldInsn(final int opcode, String owner, String name, final String desc) {
 						if (owner.equals(aspectData.adviceReference)) {
 							owner = wd.thisReference;              // [F5]
 							name = adviceFieldName(name, aspectData.aspectIndex);
@@ -230,7 +230,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 
 					@Override
-					public void visitVarInsn(int opcode, int var) {
+					public void visitVarInsn(final int opcode, int var) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
 
 						if (proxyInfoRequested) {
@@ -244,13 +244,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					}
 
 					@Override
-					public void visitIincInsn(int var, int increment) {
+					public void visitIincInsn(int var, final int increment) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
 						super.visitIincInsn(var, increment);  // [F1]
 					}
 
 					@Override
-					public void visitInsn(int opcode) {
+					public void visitInsn(final int opcode) {
 						if (opcode == ARETURN) {
 							visitReturn(mv, td.msign, true);
 							return;
@@ -265,7 +265,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 					@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 					@Override
-					public void visitMethodInsn(int opcode, String string, String mname, String mdesc, boolean isInterface) {
+					public void visitMethodInsn(final int opcode, String string, String mname, final String mdesc, final boolean isInterface) {
 						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE) || (opcode == INVOKESPECIAL)) {
 							if (string.equals(aspectData.adviceReference)) {
 								string = wd.thisReference;

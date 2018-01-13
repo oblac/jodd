@@ -49,7 +49,7 @@ public class FastByteArrayServletOutputStream extends ServletOutputStream {
 	}
 
 	@Override
-	public void setWriteListener(WriteListener writeListener) {
+	public void setWriteListener(final WriteListener writeListener) {
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class FastByteArrayServletOutputStream extends ServletOutputStream {
 	 * Writes to wrapped buffer.
 	 */
 	@Override
-	public void write(int i) throws IOException {
+	public void write(final int i) throws IOException {
 		wrapped.write(i);
 	}
 

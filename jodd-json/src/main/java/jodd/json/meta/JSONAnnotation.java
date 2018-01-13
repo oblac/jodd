@@ -35,7 +35,7 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A, JSONAnnotationData<A>> {
 
-	public JSONAnnotation(Class<A> annotationClass) {
+	public JSONAnnotation(final Class<A> annotationClass) {
 		super(annotationClass, JSON.class);
 	}
 
@@ -43,7 +43,7 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 	 * Need to override to make java compiler happy.
 	 */
 	@Override
-	public JSONAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
+	public JSONAnnotationData<A> readAnnotatedElement(final AnnotatedElement annotatedElement) {
 		return super.readAnnotatedElement(annotatedElement);
 	}
 
@@ -51,7 +51,7 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected JSONAnnotationData<A> createAnnotationData(A annotation) {
+	protected JSONAnnotationData<A> createAnnotationData(final A annotation) {
 		JSONAnnotationData<A> jad = new JSONAnnotationData<>(annotation);
 
 		jad.name = readString(annotation, "name", null);

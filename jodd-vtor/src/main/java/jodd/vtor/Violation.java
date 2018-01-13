@@ -36,7 +36,7 @@ public class Violation {
 	private final Check check;
 	private final ValidationConstraint constraint;
 
-	public Violation(String name, Object validatedObject, Object invalidValue) {
+	public Violation(final String name, final Object validatedObject, final Object invalidValue) {
 		this(name, validatedObject, invalidValue, null);
 	}
 
@@ -47,7 +47,7 @@ public class Violation {
 	 * @param invalidValue invalid value that is cause of violation
 	 * @param check {@link Check check} that made validation. 
 	 */
-	public Violation(String name, Object validatedObject, Object invalidValue, Check check) {
+	public Violation(final String name, final Object validatedObject, final Object invalidValue, final Check check) {
 		this.name = name;
 		this.validatedObject = validatedObject;
 		this.invalidValue = invalidValue;

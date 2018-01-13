@@ -48,7 +48,7 @@ public class SetInjectionPoint<T> {
 
 	public final Class targetClass;
 
-	public SetInjectionPoint(PropertyDescriptor propertyDescriptor) {
+	public SetInjectionPoint(final PropertyDescriptor propertyDescriptor) {
 		Objects.requireNonNull(propertyDescriptor);
 
 		this.propertyDescriptor = propertyDescriptor;
@@ -76,7 +76,7 @@ public class SetInjectionPoint<T> {
 	}
 
 	@SuppressWarnings({"unchecked"})
-	protected Class<T> resolveSetType(PropertyDescriptor propertyDescriptor) {
+	protected Class<T> resolveSetType(final PropertyDescriptor propertyDescriptor) {
 		Class<T> type = (Class<T>) propertyDescriptor.getType();
 
 		if (ClassUtil.isTypeOf(type, Collection.class)) {
@@ -89,7 +89,7 @@ public class SetInjectionPoint<T> {
 	 * Creates target set for injection. For now it creates <code>HashSet</code>,
 	 * but custom implementation can change this setting.
 	 */
-	public Collection<T> createSet(int length) {
+	public Collection<T> createSet(final int length) {
 		return new HashSet<>(length);
 	}
 }

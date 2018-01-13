@@ -100,14 +100,14 @@ public class URLCoder {
 
 		UNRESERVED {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isUnreserved(c);
 			}
 		},
 
 		SCHEME {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isAlpha(c) || isDigit(c) || c == '+' || c == '-' || c == '.';
 			}
 		},
@@ -119,43 +119,43 @@ public class URLCoder {
 //		},
 		USER_INFO {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isUnreserved(c) || isSubDelimiter(c) || c == ':';
 			}
 		},
 		HOST {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isUnreserved(c) || isSubDelimiter(c);
 			}
 		},
 		PORT {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isDigit(c);
 			}
 		},
 		PATH {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isPchar(c) || c == '/';
 			}
 		},
 		PATH_SEGMENT {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isPchar(c);
 			}
 		},
 		QUERY {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isPchar(c) || c == '/' || c == '?';
 			}
 		},
 		QUERY_PARAM {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				if (c == '=' || c == '+' || c == '&' || c == ';') {
 					return false;
 				}
@@ -164,7 +164,7 @@ public class URLCoder {
 		},
 		FRAGMENT {
 			@Override
-			public boolean isValid(char c) {
+			public boolean isValid(final char c) {
 				return isPchar(c) || c == '/' || c == '?';
 			}
 		};
@@ -184,7 +184,7 @@ public class URLCoder {
 	/**
 	 * Encodes single URI component.
 	 */
-	private static String encodeUriComponent(String source, String encoding, URIPart uriPart) {
+	private static String encodeUriComponent(final String source, final String encoding, final URIPart uriPart) {
 		if (source == null) {
 			return null;
 		}
@@ -206,7 +206,7 @@ public class URLCoder {
 	/**
 	 * Encodes byte array using allowed characters from {@link URIPart}.
 	 */
-	private static byte[] encodeBytes(byte[] source, URIPart uriPart) {
+	private static byte[] encodeBytes(final byte[] source, final URIPart uriPart) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(source.length);
 		for (byte b : source) {
 			if (b < 0) {
@@ -230,20 +230,20 @@ public class URLCoder {
 	/**
 	 * Encodes string using default RFCP rules.
 	 */
-	public static String encode(String string, String encoding) {
+	public static String encode(final String string, final String encoding) {
 		return encodeUriComponent(string, encoding, URIPart.UNRESERVED);
 	}
-	public static String encode(String string) {
+	public static String encode(final String string) {
 		return encodeUriComponent(string, JoddCore.get().defaults().getEncoding(), URIPart.UNRESERVED);
 	}
 
 	/**
 	 * Encodes the given URI scheme with the given encoding.
 	 */
-	public static String encodeScheme(String scheme, String encoding) {
+	public static String encodeScheme(final String scheme, final String encoding) {
 		return encodeUriComponent(scheme, encoding, URIPart.SCHEME);
 	}
-	public static String encodeScheme(String scheme) {
+	public static String encodeScheme(final String scheme) {
 		return encodeUriComponent(scheme, JoddCore.get().defaults().getEncoding(), URIPart.SCHEME);
 	}
 
@@ -262,80 +262,80 @@ public class URLCoder {
 	/**
 	 * Encodes the given URI user info with the given encoding.
 	 */
-	public static String encodeUserInfo(String userInfo, String encoding) {
+	public static String encodeUserInfo(final String userInfo, final String encoding) {
 		return encodeUriComponent(userInfo, encoding, URIPart.USER_INFO);
 	}
-	public static String encodeUserInfo(String userInfo) {
+	public static String encodeUserInfo(final String userInfo) {
 		return encodeUriComponent(userInfo, JoddCore.get().defaults().getEncoding(), URIPart.USER_INFO);
 	}
 
 	/**
 	 * Encodes the given URI host with the given encoding.
 	 */
-	public static String encodeHost(String host, String encoding) {
+	public static String encodeHost(final String host, final String encoding) {
 		return encodeUriComponent(host, encoding, URIPart.HOST);
 	}
-	public static String encodeHost(String host) {
+	public static String encodeHost(final String host) {
 		return encodeUriComponent(host, JoddCore.get().defaults().getEncoding(), URIPart.HOST);
 	}
 
 	/**
 	 * Encodes the given URI port with the given encoding.
 	 */
-	public static String encodePort(String port, String encoding) {
+	public static String encodePort(final String port, final String encoding) {
 		return encodeUriComponent(port, encoding, URIPart.PORT);
 	}
-	public static String encodePort(String port) {
+	public static String encodePort(final String port) {
 		return encodeUriComponent(port, JoddCore.get().defaults().getEncoding(), URIPart.PORT);
 	}
 
 	/**
 	 * Encodes the given URI path with the given encoding.
 	 */
-	public static String encodePath(String path, String encoding) {
+	public static String encodePath(final String path, final String encoding) {
 		return encodeUriComponent(path, encoding, URIPart.PATH);
 	}
-	public static String encodePath(String path) {
+	public static String encodePath(final String path) {
 		return encodeUriComponent(path, JoddCore.get().defaults().getEncoding(), URIPart.PATH);
 	}
 
 	/**
 	 * Encodes the given URI path segment with the given encoding.
 	 */
-	public static String encodePathSegment(String segment, String encoding) {
+	public static String encodePathSegment(final String segment, final String encoding) {
 		return encodeUriComponent(segment, encoding, URIPart.PATH_SEGMENT);
 	}
-	public static String encodePathSegment(String segment) {
+	public static String encodePathSegment(final String segment) {
 		return encodeUriComponent(segment, JoddCore.get().defaults().getEncoding(), URIPart.PATH_SEGMENT);
 	}
 
 	/**
 	 * Encodes the given URI query with the given encoding.
 	 */
-	public static String encodeQuery(String query, String encoding) {
+	public static String encodeQuery(final String query, final String encoding) {
 		return encodeUriComponent(query, encoding, URIPart.QUERY);
 	}
-	public static String encodeQuery(String query) {
+	public static String encodeQuery(final String query) {
 		return encodeUriComponent(query, JoddCore.get().defaults().getEncoding(), URIPart.QUERY);
 	}
 
 	/**
 	 * Encodes the given URI query parameter with the given encoding.
 	 */
-	public static String encodeQueryParam(String queryParam, String encoding) {
+	public static String encodeQueryParam(final String queryParam, final String encoding) {
 		return encodeUriComponent(queryParam, encoding, URIPart.QUERY_PARAM);
 	}
-	public static String encodeQueryParam(String queryParam) {
+	public static String encodeQueryParam(final String queryParam) {
 		return encodeUriComponent(queryParam, JoddCore.get().defaults().getEncoding(), URIPart.QUERY_PARAM);
 	}
 
 	/**
 	 * Encodes the given URI fragment with the given encoding.
 	 */
-	public static String encodeFragment(String fragment, String encoding) {
+	public static String encodeFragment(final String fragment, final String encoding) {
 		return encodeUriComponent(fragment, encoding, URIPart.FRAGMENT);
 	}
-	public static String encodeFragment(String fragment) {
+	public static String encodeFragment(final String fragment) {
 		return encodeUriComponent(fragment, JoddCore.get().defaults().getEncoding(), URIPart.FRAGMENT);
 	}
 
@@ -345,7 +345,7 @@ public class URLCoder {
 	/**
 	 * @see #encodeUri(String, String)
 	 */
-	public static String encodeUri(String uri) {
+	public static String encodeUri(final String uri) {
 		return encodeUri(uri, JoddCore.get().defaults().getEncoding());
 	}
 	/**
@@ -355,7 +355,7 @@ public class URLCoder {
 	 * characters in query parameter names and query parameter values because they cannot
 	 * be parsed in a reliable way.
 	 */
-	public static String encodeUri(String uri, String encoding) {
+	public static String encodeUri(final String uri, final String encoding) {
 		Matcher m = URI_PATTERN.matcher(uri);
 		if (m.matches()) {
 			String scheme = m.group(2);
@@ -375,7 +375,7 @@ public class URLCoder {
 	/**
 	 * @see #encodeHttpUrl(String, String)
 	 */
-	public static String encodeHttpUrl(String httpUrl) {
+	public static String encodeHttpUrl(final String httpUrl) {
 		return encodeHttpUrl(httpUrl, JoddCore.get().defaults().getEncoding());
 	}
 	/**
@@ -387,7 +387,7 @@ public class URLCoder {
 	 * characters in query parameter names and query parameter values because they cannot
 	 * be parsed in a reliable way.
 	 */
-	public static String encodeHttpUrl(String httpUrl, String encoding) {
+	public static String encodeHttpUrl(final String httpUrl, final String encoding) {
 		Matcher m = HTTP_URL_PATTERN.matcher(httpUrl);
 		if (m.matches()) {
 			String scheme = m.group(1);
@@ -404,9 +404,9 @@ public class URLCoder {
 	}
 
 	private static String encodeUriComponents(
-			String scheme, String authority, String userInfo,
-			String host, String port, String path, String query,
-			String fragment, String encoding) {
+		final String scheme, final String authority, final String userInfo,
+		final String host, final String port, final String path, final String query,
+		final String fragment, final String encoding) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -452,7 +452,7 @@ public class URLCoder {
 	 * Provided path is parsed and {@link #encodeUri(String) encoded}.
 	 * @see #build(String, boolean)
 	 */
-	public static Builder build(String path) {
+	public static Builder build(final String path) {
 		return build(path, true);
 	}
 
@@ -465,7 +465,7 @@ public class URLCoder {
 	 * The purpose of builder is to help with query parameters. All other URI parts
 	 * should be set previously or after the URL is built.
 	 */
-	public static Builder build(String path, boolean encodePath) {
+	public static Builder build(final String path, final boolean encodePath) {
 		return new Builder(path, encodePath, JoddCore.get().defaults().getEncoding());
 	}
 
@@ -474,7 +474,7 @@ public class URLCoder {
 		protected final String encoding;
 		protected boolean hasParams;
 
-		public Builder(String path,  boolean encodePath, String encoding) {
+		public Builder(final String path, final boolean encodePath, final String encoding) {
 			this.encoding = encoding;
 			url = new StringBuilder();
 			if (encodePath) {
@@ -488,7 +488,7 @@ public class URLCoder {
 		/**
 		 * Appends new query parameter to the url.
 		 */
-		public Builder queryParam(String name, String value) {
+		public Builder queryParam(final String name, final String value) {
 			url.append(hasParams ? '&' : '?');
 			hasParams = true;
 

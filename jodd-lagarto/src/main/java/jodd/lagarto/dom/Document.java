@@ -45,7 +45,7 @@ public class Document extends Node {
 	/**
 	 * Document constructor with all relevant flags.
 	 */
-	public Document(LagartoDomBuilderConfig config) {
+	public Document(final LagartoDomBuilderConfig config) {
 		super(null, NodeType.DOCUMENT, null);
 		this.config = config;
 		this.elapsedTime = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class Document extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.document(this);
 	}
 
@@ -76,7 +76,7 @@ public class Document extends Node {
 	 * Add new error message to the {@link #getErrors() errors list}.
 	 * If errors are not collected error, message is ignored.
 	 */
-	public void addError(String message) {
+	public void addError(final String message) {
 		if (config.collectErrors) {
 			if (errors == null) {
 				errors = new ArrayList<>();
@@ -100,7 +100,7 @@ public class Document extends Node {
 	 * Document node does not have attributes.
 	 */
 	@Override
-	public void setAttribute(String name, String value) {
+	public void setAttribute(final String name, final String value) {
 	}
 
 	// ---------------------------------------------------------------- getter

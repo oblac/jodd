@@ -80,7 +80,7 @@ class Handler {
      *            the end of the range to be removed. Maybe null.
      * @return the exception handler list with the start-end range removed.
      */
-    static Handler remove(Handler h, Label start, Label end) {
+    static Handler remove(Handler h, final Label start, final Label end) {
         if (h == null) {
             return null;
         } else {

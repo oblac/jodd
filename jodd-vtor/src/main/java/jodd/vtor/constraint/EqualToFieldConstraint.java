@@ -37,7 +37,7 @@ public class EqualToFieldConstraint implements ValidationConstraint<EqualToField
 	public EqualToFieldConstraint() {
 	}
 
-	public EqualToFieldConstraint(String fieldName) {
+	public EqualToFieldConstraint(final String fieldName) {
 		this.fieldName = fieldName;
 	}
 
@@ -49,23 +49,25 @@ public class EqualToFieldConstraint implements ValidationConstraint<EqualToField
 		return fieldName;
 	}
 
-	public void setFieldName(String fieldName) {
+	public void setFieldName(final String fieldName) {
 		this.fieldName = fieldName;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(EqualToField annotation) {
+	@Override
+	public void configure(final EqualToField annotation) {
 		this.fieldName = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(vcc.getTarget(), value, fieldName);
 	}
 
-	public static boolean validate(Object target, Object value, String fieldName) {
+	public static boolean validate(final Object target, final Object value, final String fieldName) {
 		if (value == null) {
 			return true;
 		}

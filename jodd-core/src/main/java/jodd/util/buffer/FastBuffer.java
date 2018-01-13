@@ -62,7 +62,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastBuffer(int size) {
+	public FastBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -73,7 +73,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -95,7 +95,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	/**
 	 * Appends <code>E</code> array to buffer.
 	 */
-	public FastBuffer<E> append(E[] array, int off, int len) {
+	public FastBuffer<E> append(final E[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -136,14 +136,14 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	/**
 	 * Appends <code>E</code> array to buffer.
 	 */
-	public FastBuffer<E> append(E[] array) {
+	public FastBuffer<E> append(final E[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>E</code> to buffer.
 	 */
-	public FastBuffer<E> append(E element) {
+	public FastBuffer<E> append(final E element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -158,7 +158,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastBuffer<E> append(FastBuffer<E> buff) {
+	public FastBuffer<E> append(final FastBuffer<E> buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -202,7 +202,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Returns <code>E</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public E[] array(int index) {
+	public E[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -242,7 +242,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
     /**
      * Creates <code>E</code> subarray from buffered content.
      */
-	public E[] toArray(int start, int len) {
+	public E[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		E[] array = (E[]) new Object[len];
@@ -295,7 +295,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	/**
 	 * Adds element to buffer.
 	 */
-	public void add(E element) {
+	public void add(final E element) {
 		append(element);
 	}
 

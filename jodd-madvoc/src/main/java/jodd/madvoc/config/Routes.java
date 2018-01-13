@@ -44,7 +44,7 @@ public class Routes {
 	private RouteChunk anyMethodChunk;
 	private Supplier<MadvocConfig> madvocConfigSupplier;
 
-	public Routes(Supplier<MadvocConfig> madvocConfigSupplier) {
+	public Routes(final Supplier<MadvocConfig> madvocConfigSupplier) {
 		this.root = new RouteChunk(this, null, StringPool.EMPTY);
 		this.madvocConfigSupplier = madvocConfigSupplier;
 	}
@@ -91,7 +91,7 @@ public class Routes {
 		}
 	}
 
-	private ActionRuntime _lookup(String method, String[] pathChunks) {
+	private ActionRuntime _lookup(String method, final String[] pathChunks) {
 
 		// 1 - match method
 		if (method != null) {
@@ -115,7 +115,7 @@ public class Routes {
 		return null;
 	}
 
-	private ActionRuntime lookupFrom(RouteChunk chunk, String[] path) {
+	private ActionRuntime lookupFrom(final RouteChunk chunk, final String[] path) {
 		// matched, scan children
 		RouteChunk[] children = chunk.children();
 
@@ -134,7 +134,7 @@ public class Routes {
 		return null;
 	}
 
-	private ActionRuntime match(RouteChunk chunk, String[] path, int ndx) {
+	private ActionRuntime match(final RouteChunk chunk, final String[] path, final int ndx) {
 		final int maxDeep = path.length - 1;
 		if (ndx > maxDeep) {
 			// too deep, don't go any further
@@ -180,7 +180,7 @@ public class Routes {
 	 * no action path contains no macros, or instance of the <code>PathMacro</code>
 	 * implementations.
 	 */
-	public PathMacros buildActionPathMacros(String actionPath) {
+	public PathMacros buildActionPathMacros(final String actionPath) {
 		if (actionPath.isEmpty()) {
 			return null;
 		}

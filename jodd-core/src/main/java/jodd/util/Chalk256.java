@@ -49,17 +49,17 @@ public class Chalk256 extends Chalk<Chalk256> {
 
 	// ---------------------------------------------------------------- fg codes
 
-	public Chalk256 standard(int index) {
+	public Chalk256 standard(final int index) {
 		startSequence(FG_CODES[index(index, 0, 8)]);
 		endSequence(RESET);
 		return _this();
 	}
-	public Chalk256 bright(int index) {
+	public Chalk256 bright(final int index) {
 		startSequence(FG_CODES[index(index, 8, 16)]);
 		endSequence(RESET);
 		return _this();
 	}
-	public Chalk256 rgb(int index) {
+	public Chalk256 rgb(final int index) {
 		startSequence(FG_CODES[index(index, 16, 232)]);
 		endSequence(RESET);
 		return _this();
@@ -68,29 +68,29 @@ public class Chalk256 extends Chalk<Chalk256> {
 	/**
 	 * Colors with red-green-blue value, in the range 0 to 6.
 	 */
-	public Chalk256 rgb(int r, int b, int g) {
+	public Chalk256 rgb(final int r, final int b, final int g) {
 		startSequence(FG_CODES[index(36*r + 6*g + b,16, 232)]);
 		endSequence(RESET);
 		return _this();
 	}
-	public Chalk256 grayscale(int index) {
+	public Chalk256 grayscale(final int index) {
 		startSequence(FG_CODES[index(index, 232, 256)]);
 		endSequence(RESET);
 		return _this();
 	}
 	// ---------------------------------------------------------------- bg codes
 
-	public Chalk256 bgStandard(int index) {
+	public Chalk256 bgStandard(final int index) {
 		startSequence(BG_CODES[index(index, 0, 8)]);
 		endSequence(RESET);
 		return _this();
 	}
-	public Chalk256 bgBright(int index) {
+	public Chalk256 bgBright(final int index) {
 		startSequence(BG_CODES[index(index, 8, 16)]);
 		endSequence(RESET);
 		return _this();
 	}
-	public Chalk256 bgRgb(int index) {
+	public Chalk256 bgRgb(final int index) {
 		startSequence(BG_CODES[index(index, 16, 232)]);
 		endSequence(RESET);
 		return _this();
@@ -99,12 +99,12 @@ public class Chalk256 extends Chalk<Chalk256> {
 	/**
 	 * Colors with red-green-blue value, in the range 0 to 6.
 	 */
-	public Chalk256 bgRgb(int r, int b, int g) {
+	public Chalk256 bgRgb(final int r, final int b, final int g) {
 		startSequence(BG_CODES[index(36*r + 6*g + b,16, 232)]);
 		endSequence(RESET);
 		return _this();
 	}
-	public Chalk256 bgGrayscale(int index) {
+	public Chalk256 bgGrayscale(final int index) {
 		startSequence(BG_CODES[index(index, 232, 256)]);
 		endSequence(RESET);
 		return _this();
@@ -112,7 +112,7 @@ public class Chalk256 extends Chalk<Chalk256> {
 
 	// ---------------------------------------------------------------- bgcolors
 
-	private int index(int index, int from, int to) {
+	private int index(int index, final int from, final int to) {
 		index += from;
 		if ((index < from) || (index >= to)) {
 			throw new IllegalArgumentException("Color index not in range: [0, " + (to - from) + "]");

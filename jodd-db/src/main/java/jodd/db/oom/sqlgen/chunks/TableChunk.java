@@ -43,7 +43,7 @@ public class TableChunk extends SqlChunk {
 	protected final String tableAlias;
 	protected final String tableReference;
 
-	public TableChunk(Object entity) {
+	public TableChunk(final Object entity) {
 		super(CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
@@ -51,7 +51,7 @@ public class TableChunk extends SqlChunk {
 		this.tableReference = null;
 	}
 
-	public TableChunk(Object entity, String alias) {
+	public TableChunk(final Object entity, final String alias) {
 		super(CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
@@ -59,7 +59,7 @@ public class TableChunk extends SqlChunk {
 		this.tableReference = null;
 	}
 
-	public TableChunk(Object entity, String alias, String tableReference) {
+	public TableChunk(final Object entity, final String alias, final String tableReference) {
 		super(CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
@@ -67,11 +67,11 @@ public class TableChunk extends SqlChunk {
 		this.tableReference = tableReference;
 	}
 
-	public TableChunk(String entityName, String alias) {
+	public TableChunk(final String entityName, final String alias) {
 		this(null, entityName, alias, null);
 	}
 
-	protected TableChunk(Class entity, String entityName, String tableAlias, String tableReference) {
+	protected TableChunk(final Class entity, final String entityName, final String tableAlias, final String tableReference) {
 		super(CHUNK_TABLE);
 		this.entity = entity;
 		this.entityName = entityName;
@@ -103,7 +103,7 @@ public class TableChunk extends SqlChunk {
 	 * Resolves and registers table references.
 	 */
 	@Override
-	public void init(TemplateData templateData) {
+	public void init(final TemplateData templateData) {
 		super.init(templateData);
 		if (entity != null) {
 			ded = lookupType(entity);
@@ -130,7 +130,7 @@ public class TableChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		separateByCommaOrSpace(out);
 		out.append(ded.getTableName());
 		if (tableAlias != null) {

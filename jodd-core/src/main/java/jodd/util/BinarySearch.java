@@ -42,7 +42,7 @@ public abstract class BinarySearch<E> {
 		return new BinarySearch<T>() {
 			@Override
 			@SuppressWarnings( {"unchecked"})
-			protected int compare(int index, T element) {
+			protected int compare(final int index, final T element) {
 				return list.get(index).compareTo(element);
 			}
 
@@ -60,7 +60,7 @@ public abstract class BinarySearch<E> {
 		return new BinarySearch<T>() {
 			@Override
 			@SuppressWarnings( {"unchecked"})
-			protected int compare(int index, T element) {
+			protected int compare(final int index, final T element) {
 				return comparator.compare(list.get(index), element);
 			}
 
@@ -78,7 +78,7 @@ public abstract class BinarySearch<E> {
 		return new BinarySearch<T>() {
 			@Override
 			@SuppressWarnings( {"unchecked"})
-			protected int compare(int index, T element) {
+			protected int compare(final int index, final T element) {
 				return array[index].compareTo(element);
 			}
 
@@ -96,7 +96,7 @@ public abstract class BinarySearch<E> {
 		return new BinarySearch<T>() {
 			@Override
 			@SuppressWarnings( {"unchecked"})
-			protected int compare(int index, T element) {
+			protected int compare(final int index, final T element) {
 				return comparator.compare(array[index], element);
 			}
 
@@ -124,7 +124,7 @@ public abstract class BinarySearch<E> {
 	/**
 	 * Finds index of given element or negative value if element is not found.
 	 */
-	public int find(E element) {
+	public int find(final E element) {
 		return find(element, 0, getLastIndex());
 	}
 
@@ -132,7 +132,7 @@ public abstract class BinarySearch<E> {
 	 * Finds index of given element in inclusive index range. Returns negative
 	 * value if element is not found.
 	 */
-	public int find(E element, int low, int high) {
+	public int find(final E element, int low, int high) {
 		while (low <= high) {
 			int mid = (low + high) >>> 1;
 			int delta = compare(mid, element);
@@ -154,7 +154,7 @@ public abstract class BinarySearch<E> {
 	/**
 	 * Finds very first index of given element or negative value if element is not found.
 	 */
-	public int findFirst(E o) {
+	public int findFirst(final E o) {
 		return findFirst(o, 0, getLastIndex());
 	}
 
@@ -162,7 +162,7 @@ public abstract class BinarySearch<E> {
 	 * Finds very first index of given element in inclusive index range. Returns negative
 	 * value if element is not found.
 	 */
-	public int findFirst(E o, int low, int high) {
+	public int findFirst(final E o, int low, int high) {
 
 		int ndx = -1;
 		while (low <= high) {
@@ -191,7 +191,7 @@ public abstract class BinarySearch<E> {
 	/**
 	 * Finds very last index of given element or negative value if element is not found.
 	 */
-	public int findLast(E o) {
+	public int findLast(final E o) {
 		return findLast(o, 0, getLastIndex());
 	}
 
@@ -199,7 +199,7 @@ public abstract class BinarySearch<E> {
 	 * Finds very last index of given element in inclusive index range. Returns negative
 	 * value if element is not found.
 	 */
-	public int findLast(E o, int low, int high) {
+	public int findLast(final E o, int low, int high) {
 		int ndx = -1;
 		while (low <= high) {
 			int mid = (low + high) >>> 1;

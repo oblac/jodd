@@ -43,14 +43,14 @@ public class JsonResult {
 	/**
 	 * Creates new JSON result of provided JSON string.
 	 */
-	public static JsonResult of(String json) {
+	public static JsonResult of(final String json) {
 		return new JsonResult(json);
 	}
 
 	/**
 	 * Creates JSON result from given object. The object will be serialized to JSON.
 	 */
-	public static JsonResult of(Object object) {
+	public static JsonResult of(final Object object) {
 		String json = JsonSerializer.create().deep(true).serialize(object);
 		return new JsonResult(json);
 	}
@@ -58,7 +58,7 @@ public class JsonResult {
 	/**
 	 * Creates a JSON result with empty body and given status.
 	 */
-	public static JsonResult of(HttpStatus httpStatus) {
+	public static JsonResult of(final HttpStatus httpStatus) {
 		return empty().status(httpStatus);
 	}
 
@@ -69,23 +69,23 @@ public class JsonResult {
 		return new JsonResult(StringPool.EMPTY);
 	}
 
-	public JsonResult(String body) {
+	public JsonResult(final String body) {
 		this.body = body;
 	}
 
-	public JsonResult status(int status) {
+	public JsonResult status(final int status) {
 		this.status = status;
 		this.message = message;
 		return this;
 	}
 
-	public JsonResult status(HttpStatus httpStatus) {
+	public JsonResult status(final HttpStatus httpStatus) {
 		this.status = httpStatus.status();
 		this.message = httpStatus.message();
 		return this;
 	}
 
-	public JsonResult status(int status, String message) {
+	public JsonResult status(final int status, final String message) {
 		this.status = status;
 		this.message = message;
 		return this;

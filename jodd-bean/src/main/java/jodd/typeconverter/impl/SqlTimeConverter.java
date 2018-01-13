@@ -50,7 +50,8 @@ import java.util.Date;
  */
 public class SqlTimeConverter implements TypeConverter<Time> {
 
-	public Time convert(Object value) {
+	@Override
+	public Time convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

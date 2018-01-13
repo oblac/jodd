@@ -36,7 +36,7 @@ public class XmlDeclaration extends Node {
 	protected String encoding;
 	protected String standalone;
 
-	public XmlDeclaration(Document ownerDocument, CharSequence version, CharSequence encoding, CharSequence standalone) {
+	public XmlDeclaration(final Document ownerDocument, final CharSequence version, final CharSequence encoding, final CharSequence standalone) {
 		super(ownerDocument, NodeType.XML_DECLARATION, "xml");
 
 		this.version = Util.toString(version);
@@ -62,7 +62,7 @@ public class XmlDeclaration extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.xmlDeclaration(this);
 	}
 }

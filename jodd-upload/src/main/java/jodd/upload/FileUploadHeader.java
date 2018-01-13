@@ -47,7 +47,7 @@ public class FileUploadHeader {
 	String contentDisposition;
 
 
-	FileUploadHeader(String dataHeader) {
+	FileUploadHeader(final String dataHeader) {
 		this.dataHeader = dataHeader;
 		isFile = dataHeader.indexOf("filename") > 0;
 		formFieldName = getDataFieldValue(dataHeader, "name");
@@ -82,7 +82,7 @@ public class FileUploadHeader {
 	/**
 	 * Gets value of data field or <code>null</code> if field not found.
 	 */
-	private String getDataFieldValue(String dataHeader, String fieldName) {
+	private String getDataFieldValue(final String dataHeader, final String fieldName) {
 		String value = null;
 		String token = String.valueOf((new StringBuffer(String.valueOf(fieldName))).append('=').append('"'));
 		int pos = dataHeader.indexOf(token);
@@ -101,7 +101,7 @@ public class FileUploadHeader {
 	 * @param dataHeader data header string
 	 * @return content type or an empty string if no content type defined
 	 */
-	private String getContentType(String dataHeader) {
+	private String getContentType(final String dataHeader) {
 		String token = "Content-Type:";
 		int start = dataHeader.indexOf(token);
 		if (start == -1) {
@@ -111,13 +111,13 @@ public class FileUploadHeader {
 		return dataHeader.substring(start);
 	}
 
-	private String getContentDisposition(String dataHeader) {
+	private String getContentDisposition(final String dataHeader) {
 		int start = dataHeader.indexOf(':') + 1;
 		int end = dataHeader.indexOf(';');
 		return dataHeader.substring(start, end);
 	}
 
-	private String getMimeType(String ContentType) {
+	private String getMimeType(final String ContentType) {
 		int pos = ContentType.indexOf('/');
 		if (pos == -1) {
 			return ContentType;
@@ -125,7 +125,7 @@ public class FileUploadHeader {
 		return ContentType.substring(1, pos);
 	}
 
-	private String getMimeSubtype(String ContentType) {
+	private String getMimeSubtype(final String ContentType) {
 		int start = ContentType.indexOf('/');
 		if (start == -1) {
 			return ContentType;

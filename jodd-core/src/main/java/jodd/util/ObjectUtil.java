@@ -51,7 +51,7 @@ public class ObjectUtil {
 	 * Clone an object by invoking it's <code>clone()</code> method, even if it is not overridden.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T clone(T source) throws CloneNotSupportedException {
+	public static <T> T clone(final T source) throws CloneNotSupportedException {
 		if (source == null) {
 			return null;
 		}
@@ -68,7 +68,7 @@ public class ObjectUtil {
 	/**
 	 * Create object copy using serialization mechanism.
 	 */
-	public static <T extends Serializable> T cloneViaSerialization(T obj) throws IOException, ClassNotFoundException {
+	public static <T extends Serializable> T cloneViaSerialization(final T obj) throws IOException, ClassNotFoundException {
 		FastByteArrayOutputStream bos = new FastByteArrayOutputStream();
 		ObjectOutputStream out = null;
 		ObjectInputStream in = null;
@@ -97,14 +97,14 @@ public class ObjectUtil {
 	/**
 	 * @see #writeObject(java.io.File, Object)
 	 */
-	public static void writeObject(String dest, Object object) throws IOException {
+	public static void writeObject(final String dest, final Object object) throws IOException {
 		writeObject(new File(dest), object);
 	}
 
 	/**
 	 * Writes serializable object to a file. Existing file will be overwritten.
 	 */
-	public static void writeObject(File dest, Object object) throws IOException {
+	public static void writeObject(final File dest, final Object object) throws IOException {
 		FileOutputStream fos = null;
 		BufferedOutputStream bos = null;
 		ObjectOutputStream oos = null;
@@ -125,14 +125,14 @@ public class ObjectUtil {
 	/**
 	 * @see #readObject(java.io.File)
 	 */
-	public static Object readObject(String source) throws IOException, ClassNotFoundException {
+	public static Object readObject(final String source) throws IOException, ClassNotFoundException {
 		return readObject(new File(source));
 	}
 
 	/**
 	 * Reads serialized object from the file.
 	 */
-	public static Object readObject(File source) throws IOException, ClassNotFoundException {
+	public static Object readObject(final File source) throws IOException, ClassNotFoundException {
 		Object result = null;
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -157,7 +157,7 @@ public class ObjectUtil {
 	/**
 	 * Serialize an object to byte array.
 	 */
-	public static byte[] objectToByteArray(Object obj) throws IOException {
+	public static byte[] objectToByteArray(final Object obj) throws IOException {
 		FastByteArrayOutputStream bos = new FastByteArrayOutputStream();
 		ObjectOutputStream oos = null;
 
@@ -173,7 +173,7 @@ public class ObjectUtil {
 	/**
 	 * De-serialize an object from byte array.
 	 */
-	public static Object byteArrayToObject(byte[] data) throws IOException, ClassNotFoundException {
+	public static Object byteArrayToObject(final byte[] data) throws IOException, ClassNotFoundException {
 		Object retObj = null;
 		ByteArrayInputStream bais = new ByteArrayInputStream(data);
 		ObjectInputStream ois = null;

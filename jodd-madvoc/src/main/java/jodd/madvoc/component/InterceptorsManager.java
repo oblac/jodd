@@ -39,7 +39,7 @@ import java.util.Set;
 public class InterceptorsManager extends WrapperManager<ActionInterceptor> {
 
 	@Override
-	protected ActionInterceptor[] createArray(int len) {
+	protected ActionInterceptor[] createArray(final int len) {
 		return new ActionInterceptor[len];
 	}
 
@@ -49,7 +49,7 @@ public class InterceptorsManager extends WrapperManager<ActionInterceptor> {
 	}
 
 	@Override
-	protected Class<? extends ActionInterceptor>[] getDefaultWrappers(ActionConfig actionConfig) {
+	protected Class<? extends ActionInterceptor>[] getDefaultWrappers(final ActionConfig actionConfig) {
 		return actionConfig.getInterceptors();
 	}
 

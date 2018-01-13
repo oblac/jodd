@@ -57,7 +57,7 @@ public class ResultMapper {
 	/**
 	 * Lookups value as an alias and, if not found, as a default alias.
 	 */
-	protected String lookupAlias(String alias) {
+	protected String lookupAlias(final String alias) {
 		String value = actionsManager.lookupPathAlias(alias);
 		if (value == null) {
 			ActionRuntime cfg = actionsManager.lookup(alias);
@@ -71,7 +71,7 @@ public class ResultMapper {
 	/**
 	 * Returns resolved alias result value or passed on, if alias doesn't exist.
 	 */
-	protected String resolveAlias(String value) {
+	protected String resolveAlias(final String value) {
 		StringBuilder result = new StringBuilder(value.length());
 		int i = 0;
 		int len = value.length();
@@ -202,7 +202,7 @@ public class ResultMapper {
 	 * and when only full string matters. Additional alias resolving
 	 * on full path is done.
 	 */
-	public String resolveResultPathString(String path, String value) {
+	public String resolveResultPathString(final String path, final String value) {
 		ResultPath resultPath = resolveResultPath(path, value);
 		String result = resultPath.pathValue();
 

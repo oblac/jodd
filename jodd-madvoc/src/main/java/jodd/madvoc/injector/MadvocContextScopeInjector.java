@@ -37,12 +37,12 @@ public class MadvocContextScopeInjector implements Injector, ContextInjector<Pet
 	private final static ScopeType SCOPE_TYPE = ScopeType.CONTEXT;
 	protected final PetiteContainer madpc;
 
-	public MadvocContextScopeInjector(PetiteContainer madpc) {
+	public MadvocContextScopeInjector(final PetiteContainer madpc) {
 		this.madpc = madpc;
 	}
 
 	@Override
-	public void injectContext(Targets targets, PetiteContainer madpc) {
+	public void injectContext(final Targets targets, final PetiteContainer madpc) {
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
 			Object value = madpc.getBean(in.name);
 			if (value != null) {
@@ -52,7 +52,7 @@ public class MadvocContextScopeInjector implements Injector, ContextInjector<Pet
 	}
 
 	@Override
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 
 		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {

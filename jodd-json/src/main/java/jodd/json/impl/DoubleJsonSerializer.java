@@ -31,7 +31,7 @@ import jodd.json.TypeJsonSerializer;
 public class DoubleJsonSerializer implements TypeJsonSerializer<Double> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, Double value) {
+	public boolean serialize(final JsonContext jsonContext, final Double value) {
 		if (value.isNaN()) {
 			jsonContext.writeString("NaN");
 			return true;

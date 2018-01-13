@@ -108,7 +108,7 @@ public class TypeConverterManager {
 
 	// ---------------------------------------------------------------- methods
 
-	public TypeConverterManager(Converter converter) {
+	public TypeConverterManager(final Converter converter) {
 		this.converter = converter;
 		registerDefaults();
 	}
@@ -170,49 +170,49 @@ public class TypeConverterManager {
 		// we don't really need these, but converters will be cached and not created every time
 		register(Integer[].class, new ArrayConverter<Integer>(this, Integer.class) {
 			@Override
-			protected Integer[] createArray(int length) {
+			protected Integer[] createArray(final int length) {
 				return new Integer[length];
 			}
 		});
 		register(Long[].class, new ArrayConverter<Long>(this, Long.class) {
 			@Override
-			protected Long[] createArray(int length) {
+			protected Long[] createArray(final int length) {
 				return new Long[length];
 			}
 		});
 		register(Byte[].class, new ArrayConverter<Byte>(this, Byte.class) {
 			@Override
-			protected Byte[] createArray(int length) {
+			protected Byte[] createArray(final int length) {
 				return new Byte[length];
 			}
 		});
 		register(Short[].class, new ArrayConverter<Short>(this, Short.class) {
 			@Override
-			protected Short[] createArray(int length) {
+			protected Short[] createArray(final int length) {
 				return new Short[length];
 			}
 		});
 		register(Float[].class, new ArrayConverter<Float>(this, Float.class) {
 			@Override
-			protected Float[] createArray(int length) {
+			protected Float[] createArray(final int length) {
 				return new Float[length];
 			}
 		});
 		register(Double[].class, new ArrayConverter<Double>(this, Double.class) {
 			@Override
-			protected Double[] createArray(int length) {
+			protected Double[] createArray(final int length) {
 				return new Double[length];
 			}
 		});
 		register(Boolean[].class, new ArrayConverter<Boolean>(this, Boolean.class) {
 			@Override
-			protected Boolean[] createArray(int length) {
+			protected Boolean[] createArray(final int length) {
 				return new Boolean[length];
 			}
 		});
 		register(Character[].class, new ArrayConverter<Character>(this, Character.class) {
 			@Override
-			protected Character[] createArray(int length) {
+			protected Character[] createArray(final int length) {
 				return new Character[length];
 			}
 		});
@@ -256,7 +256,7 @@ public class TypeConverterManager {
 	 * @param type		class that converter is for
 	 * @param typeConverter	converter for provided class
 	 */
-	public void register(Class type, TypeConverter typeConverter) {
+	public void register(final Class type, final TypeConverter typeConverter) {
 		converter.register(type, typeConverter);
 		converters.put(type, typeConverter);
 	}
@@ -264,7 +264,7 @@ public class TypeConverterManager {
 	/**
 	 * Un-registers converter for given type.
 	 */
-	public void unregister(Class type) {
+	public void unregister(final Class type) {
 		converter.register(type, null);
 		converters.remove(type);
 	}
@@ -277,7 +277,7 @@ public class TypeConverterManager {
 	 *
 	 * @return founded converter or <code>null</code>
 	 */
-	public TypeConverter lookup(Class type) {
+	public TypeConverter lookup(final Class type) {
 		return converters.get(type);
 	}
 
@@ -292,7 +292,7 @@ public class TypeConverterManager {
 	 * instead for somewhat faster approach (no lookup).
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <T> T convertType(Object value, Class<T> destinationType) {
+	public <T> T convertType(final Object value, final Class<T> destinationType) {
 		if (destinationType == Object.class) {
 			// no conversion :)
 			return (T) value;
@@ -350,7 +350,7 @@ public class TypeConverterManager {
 	 * when component type is known.
 	 */
 	@SuppressWarnings("unchecked")
-	public <C extends Collection<T>, T> C convertToCollection(Object value, Class<? extends Collection> destinationType, Class<T> componentType) {
+	public <C extends Collection<T>, T> C convertToCollection(final Object value, final Class<? extends Collection> destinationType, final Class<T> componentType) {
 		if (value == null) {
 			return null;
 		}

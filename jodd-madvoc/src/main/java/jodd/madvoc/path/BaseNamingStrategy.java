@@ -45,7 +45,7 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	 * If one of the provided paths is <code>null</code>
 	 * it will not be replaced - so to emphasize the problem.
 	 */
-	protected String replaceActionNameMacros(String path, ActionNames actionNames) {
+	protected String replaceActionNameMacros(String path, final ActionNames actionNames) {
 		final String packageName = actionNames.packageName();
 		final String className = actionNames.className();
 		final String methodName = actionNames.methodName();
@@ -71,7 +71,7 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	 * Single point of {@link ActionDefinition} creation.
 	 * Also performs the replacement of action path macros!
 	 */
-	protected ActionDefinition createActionDef(String path, String httpMethod, String resultBasePath, ActionNames actionNames) {
+	protected ActionDefinition createActionDef(String path, String httpMethod, String resultBasePath, final ActionNames actionNames) {
 		path = replaceActionNameMacros(path, actionNames);
 
 		if (httpMethod != null) {
@@ -88,7 +88,7 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	/**
 	 * Returns {@code true} if path is absolute.
 	 */
-	protected boolean isAbsolutePath(String path) {
+	protected boolean isAbsolutePath(final String path) {
 		if (path == null) {
 			return false;
 		}

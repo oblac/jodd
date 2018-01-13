@@ -34,7 +34,7 @@ import jodd.json.TypeJsonSerializer;
 public class FloatArrayJsonSerializer implements TypeJsonSerializer<float[]> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, float[] array) {
+	public boolean serialize(final JsonContext jsonContext, final float[] array) {
 		jsonContext.writeOpenArray();
 
 		for (int i = 0; i < array.length; i++) {

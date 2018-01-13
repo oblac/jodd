@@ -55,7 +55,7 @@ public enum Combinator {
 	GENERAL_SIBLING("~");
 
 
-	Combinator(String sign) {
+	Combinator(final String sign) {
 		this.sign = sign;
 	}
 

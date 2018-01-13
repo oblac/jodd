@@ -66,7 +66,7 @@ public class EmailAddress {
 	/**
 	 * @see #EmailAddress(String, String)
 	 */
-	public static EmailAddress of(String personalName, String email) {
+	public static EmailAddress of(final String personalName, final String email) {
 		return new EmailAddress(personalName, email);
 	}
 

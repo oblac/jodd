@@ -36,7 +36,7 @@ public class HsqlDbPager extends DbPager {
 	 * Appends ORDER BY keyword.
 	 */
 	@Override
-	protected String buildOrderSql(String sql, String column, boolean ascending) {
+	protected String buildOrderSql(String sql, final String column, final boolean ascending) {
 		sql += " order by " + column;
 		if (!ascending) {
 			sql += " desc";
@@ -48,7 +48,7 @@ public class HsqlDbPager extends DbPager {
 	 * Builds page sql using LIMIT keyword after the SELECT.
 	 */
 	@Override
-	protected String buildPageSql(String sql, int from, int pageSize) {
+	protected String buildPageSql(String sql, final int from, final int pageSize) {
 		sql = removeSelect(sql);
 		return "select LIMIT " + from + ' ' + pageSize + sql;
 	}

@@ -60,7 +60,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * Sets response status code.
 	 */
-	public HttpResponse statusCode(int statusCode) {
+	public HttpResponse statusCode(final int statusCode) {
 		this.statusCode = statusCode;
 		return this;
 	}
@@ -75,7 +75,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * Sets response status phrase.
 	 */
-	public HttpResponse statusPhrase(String statusPhrase) {
+	public HttpResponse statusPhrase(final String statusPhrase) {
 		this.statusPhrase = statusPhrase;
 		return this;
 	}
@@ -166,7 +166,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * Creates response {@link jodd.http.Buffer buffer}.
 	 */
 	@Override
-	protected Buffer buffer(boolean fullResponse) {
+	protected Buffer buffer(final boolean fullResponse) {
 		// form
 
 		Buffer formBuffer = formBuffer();
@@ -193,7 +193,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * Reads response input stream and returns {@link HttpResponse response}.
 	 * Supports both streamed and chunked response.
 	 */
-	public static HttpResponse readFrom(InputStream in) {
+	public static HttpResponse readFrom(final InputStream in) {
 		InputStreamReader inputStreamReader;
 		try {
 			inputStreamReader = new InputStreamReader(in, StringPool.ISO_8859_1);
@@ -257,7 +257,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * Binds {@link jodd.http.HttpRequest} to this response.
 	 */
-	void assignHttpRequest(HttpRequest httpRequest) {
+	void assignHttpRequest(final HttpRequest httpRequest) {
 		this.httpRequest = httpRequest;
 	}
 

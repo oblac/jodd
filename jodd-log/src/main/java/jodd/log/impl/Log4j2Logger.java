@@ -42,7 +42,7 @@ public class Log4j2Logger implements Logger {
 	final org.apache.logging.log4j.Logger logger;
 	private final AbstractLogger abstractLogger;
 
-	public Log4j2Logger(org.apache.logging.log4j.Logger logger) {
+	public Log4j2Logger(final org.apache.logging.log4j.Logger logger) {
 		this.logger = logger;
 		if (logger instanceof AbstractLogger) {
 			abstractLogger = (AbstractLogger) logger;
@@ -55,7 +55,7 @@ public class Log4j2Logger implements Logger {
 	/**
 	 * Converts Jodd logging level to JDK.
 	 */
-	private org.apache.logging.log4j.Level jodd2log4j2(Logger.Level level) {
+	private org.apache.logging.log4j.Level jodd2log4j2(final Logger.Level level) {
 		switch (level) {
 			case TRACE: return org.apache.logging.log4j.Level.TRACE;
 			case DEBUG: return org.apache.logging.log4j.Level.DEBUG;
@@ -73,12 +73,12 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public boolean isEnabled(Logger.Level level) {
+	public boolean isEnabled(final Logger.Level level) {
 		return logger.isEnabled(jodd2log4j2(level));
 	}
 
 	@Override
-	public void log(Logger.Level level, String message) {
+	public void log(final Logger.Level level, final String message) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, jodd2log4j2(level), null, message);
 		}
@@ -87,7 +87,7 @@ public class Log4j2Logger implements Logger {
 		}
 	}
 	@Override
-	public void log(Logger.Level level, String message, Throwable throwable) {
+	public void log(final Logger.Level level, final String message, final Throwable throwable) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, jodd2log4j2(level), null, message, throwable);
 		}
@@ -97,7 +97,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void setLevel(Logger.Level level) {
+	public void setLevel(final Logger.Level level) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -107,7 +107,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void trace(String message) {
+	public void trace(final String message) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.TRACE, null, message);
 		}
@@ -122,7 +122,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void debug(String message) {
+	public void debug(final String message) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.DEBUG, null, message);
 		}
@@ -137,7 +137,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void info(String message) {
+	public void info(final String message) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.INFO, null, message);
 		}
@@ -152,7 +152,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void warn(String message) {
+	public void warn(final String message) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.WARN, null, message);
 		}
@@ -162,7 +162,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void warn(String message, Throwable throwable) {
+	public void warn(final String message, final Throwable throwable) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.WARN, null, message, throwable);
 		}
@@ -177,7 +177,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.ERROR, null, message);
 		}
@@ -187,7 +187,7 @@ public class Log4j2Logger implements Logger {
 	}
 
 	@Override
-	public void error(String message, Throwable throwable) {
+	public void error(final String message, final Throwable throwable) {
 		if (abstractLogger != null) {
 			abstractLogger.logIfEnabled(FQCN, org.apache.logging.log4j.Level.ERROR, null, message, throwable);
 		}

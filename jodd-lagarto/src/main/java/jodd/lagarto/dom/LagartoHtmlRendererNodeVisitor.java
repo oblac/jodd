@@ -37,12 +37,12 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 
 	protected final Appendable appendable;
 
-	public LagartoHtmlRendererNodeVisitor(Appendable appendable) {
+	public LagartoHtmlRendererNodeVisitor(final Appendable appendable) {
 		this.appendable = appendable;
 	}
 
 	@Override
-	public void cdata(CData cdata) {
+	public void cdata(final CData cdata) {
 		String nodeValue = cdata.getNodeValue();
 		try {
 			TagWriterUtil.writeCData(appendable, nodeValue);
@@ -52,7 +52,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void comment(Comment comment) {
+	public void comment(final Comment comment) {
 		String nodeValue = comment.getNodeValue();
 
 		try {
@@ -63,12 +63,12 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void document(Document document) {
+	public void document(final Document document) {
 		document.visitChildren(this);
 	}
 
 	@Override
-	public void documentType(DocumentType documentType) {
+	public void documentType(final DocumentType documentType) {
 		try {
 			TagWriterUtil.writeDoctype(appendable,
 					documentType.nodeValue,
@@ -80,7 +80,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void text(Text text) {
+	public void text(final Text text) {
 		String nodeValue = text.getTextValue();
 
 		try {
@@ -91,7 +91,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void xmlDeclaration(XmlDeclaration xmlDeclaration) {
+	public void xmlDeclaration(final XmlDeclaration xmlDeclaration) {
 		try {
 			TagWriterUtil.writeXml(appendable,
 					xmlDeclaration.getVersion(), xmlDeclaration.getEncoding(), xmlDeclaration.getStandalone());
@@ -137,7 +137,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	/**
 	 * Sets {@link Case case} of tag names.
 	 */
-	public void setTagCase(Case tagCase) {
+	public void setTagCase(final Case tagCase) {
 		this.tagCase = tagCase;
 	}
 
@@ -148,7 +148,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	/**
 	 * Sets {@link Case case} of attribute names.
 	 */
-	public void setAttributeCase(Case attributeCase) {
+	public void setAttributeCase(final Case attributeCase) {
 		this.attributeCase = attributeCase;
 	}
 
@@ -167,7 +167,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	/**
 	 * Renders node name.
 	 */
-	protected String resolveNodeName(Node node) {
+	protected String resolveNodeName(final Node node) {
 		switch (tagCase) {
 			case DEFAULT: return node.getNodeName();
 			case RAW: return node.getNodeRawName();
@@ -180,7 +180,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	/**
 	 * Renders attribute name.
 	 */
-	protected String resolveAttributeName(Node node, Attribute attribute) {
+	protected String resolveAttributeName(final Node node, final Attribute attribute) {
 		switch (attributeCase) {
 			case DEFAULT: return attribute.getName();
 			case RAW: return attribute.getRawName();
@@ -193,7 +193,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	/**
 	 * Renders attribute.
 	 */
-	protected void renderAttribute(Node node, Attribute attribute, Appendable appendable) throws IOException {
+	protected void renderAttribute(final Node node, final Attribute attribute, final Appendable appendable) throws IOException {
 		String name = resolveAttributeName(node, attribute);
 		String value = attribute.getValue();
 
@@ -207,7 +207,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 	}
 
 	@Override
-	public void element(Element element) {
+	public void element(final Element element) {
 		try {
 			_element(element);
 		} catch (IOException ioex) {
@@ -215,7 +215,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		}
 	}
 
-	protected void _element(Element element) throws IOException {
+	protected void _element(final Element element) throws IOException {
 		String nodeName = resolveNodeName(element);
 
 		appendable.append('<');
@@ -253,7 +253,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		appendable.append('>');
 	}
 
-	protected void elementBody(Element element) throws IOException {
+	protected void elementBody(final Element element) throws IOException {
 		int childCount = element.getChildNodesCount();
 
 		if (element.isRawTag()) {

@@ -39,7 +39,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 
 	protected final DecoraTag[] decoraTags;
 
-	public PageRegionExtractor(DecoraTag[] decoraTags) {
+	public PageRegionExtractor(final DecoraTag[] decoraTags) {
 		this.decoraTags = decoraTags;
 	}
 
@@ -52,7 +52,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 		public final CharSequence name;
 		public int innerCount;
 
-		public RegionMarker(CharSequence name) {
+		public RegionMarker(final CharSequence name) {
 			this.name = name;
 			this.innerCount = 0;
 		}
@@ -65,7 +65,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 
 		// detect region end and extract content
 		if (tag.getType() == TagType.END) {

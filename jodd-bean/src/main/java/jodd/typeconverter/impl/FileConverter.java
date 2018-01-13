@@ -52,7 +52,7 @@ public class FileConverter implements TypeConverter<File> {
 	protected TypeConverter<File>[] addonFileConverters;
 
 	@SuppressWarnings("unchecked")
-	public void registerAddonConverter(TypeConverter<File> fileTypeConverter) {
+	public void registerAddonConverter(final TypeConverter<File> fileTypeConverter) {
 		if (addonFileConverters == null) {
 			addonFileConverters = new TypeConverter[0];
 		}
@@ -60,7 +60,7 @@ public class FileConverter implements TypeConverter<File> {
 		addonFileConverters = ArraysUtil.append(addonFileConverters, fileTypeConverter);
 	}
 
-	public File convert(Object value) {
+	public File convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

@@ -33,7 +33,7 @@ public class MinLengthConstraint implements ValidationConstraint<MinLength> {
 	public MinLengthConstraint() {
 	}
 
-	public MinLengthConstraint(int min) {
+	public MinLengthConstraint(final int min) {
 		this.min = min;
 	}
 
@@ -45,23 +45,25 @@ public class MinLengthConstraint implements ValidationConstraint<MinLength> {
 		return min;
 	}
 
-	public void setMin(int min) {
+	public void setMin(final int min) {
 		this.min = min;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(MinLength annotation) {
+	@Override
+	public void configure(final MinLength annotation) {
 		this.min = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, min);
 	}
 
-	public static boolean validate(Object value, int min) {
+	public static boolean validate(final Object value, final int min) {
 		if (value == null) {
 			return true;
 		}

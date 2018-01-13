@@ -34,10 +34,10 @@ import jodd.vtor.ValidationConstraintContext;
  */
 public class EmailConstraint implements ValidationConstraint<Email> {
 
-	public void configure(Email annotation) {
+	public void configure(final Email annotation) {
 	}
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		if (value == null) {
 			return true;
 		}

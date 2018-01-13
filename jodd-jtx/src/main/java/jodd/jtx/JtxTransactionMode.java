@@ -64,7 +64,7 @@ public class JtxTransactionMode {
 	/**
 	 * Specifies new propagation behaviour.
 s	 */
-	public void setPropagationBehaviour(JtxPropagationBehavior propagation) {
+	public void setPropagationBehaviour(final JtxPropagationBehavior propagation) {
 		this.propagationBehavior = propagation;
 	}
 
@@ -148,7 +148,7 @@ s	 */
 		return isolationLevel;
 	}
 
-	public void setIsolationLevel(JtxIsolationLevel isolation) {
+	public void setIsolationLevel(final JtxIsolationLevel isolation) {
 		this.isolationLevel = isolation;
 	}
 
@@ -186,11 +186,11 @@ s	 */
 		return readOnlyMode;
 	}
 
-	public void setReadOnly(boolean readOnly) {
+	public void setReadOnly(final boolean readOnly) {
 		this.readOnlyMode = readOnly;
 	}
 
-	public JtxTransactionMode readOnly(boolean readOnly) {
+	public JtxTransactionMode readOnly(final boolean readOnly) {
 		this.readOnlyMode = readOnly;
 		return this;
 	}
@@ -211,14 +211,14 @@ s	 */
 	/**
 	 * Sets transaction timeout in seconds.
 	 */
-	public void setTransactionTimeout(int timeout) {
+	public void setTransactionTimeout(final int timeout) {
 		if (timeout < DEFAULT_TIMEOUT) {
 			throw new JtxException("Invalid TX timeout: " + timeout);
 		}
 		this.timeout = timeout;
 	}
 
-	public JtxTransactionMode transactionTimeout(int timeout) {
+	public JtxTransactionMode transactionTimeout(final int timeout) {
 		setTransactionTimeout(timeout);
 		return this;
 	}
@@ -226,7 +226,7 @@ s	 */
 	// ---------------------------------------------------------------- equals & hashCode
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		if (this == object) {
 			return true;
 		}

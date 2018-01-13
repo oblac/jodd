@@ -77,7 +77,7 @@ final class ProxyAspectData {
 	boolean ready;              // is advice ready for manipulation?
 	int maxLocalVarOffset;      // first next local var offset
 
-	ProxyAspectData(WorkData wd, ProxyAspect aspect, int aspectIndex) {
+	ProxyAspectData(final WorkData wd, final ProxyAspect aspect, final int aspectIndex) {
 		this.aspect = aspect;
 		this.advice = aspect.advice();
 		this.pointcut = aspect.pointcut();
@@ -90,7 +90,7 @@ final class ProxyAspectData {
 	/**
 	 * Delegates to aspects pointcut.
 	 */
-	boolean apply(MethodInfo msign) {
+	boolean apply(final MethodInfo msign) {
 		return pointcut.apply(msign);
 	}
 
@@ -102,7 +102,7 @@ final class ProxyAspectData {
 	/**
 	 * Creates advice's class reader.
 	 */
-	private ClassReader createAdviceClassReader(Class<? extends ProxyAdvice> advice) {
+	private ClassReader createAdviceClassReader(final Class<? extends ProxyAdvice> advice) {
 		InputStream inputStream = null;
 		try {
 			inputStream = ClassLoaderUtil.getClassAsStream(advice);
@@ -117,7 +117,7 @@ final class ProxyAspectData {
 	/**
 	 * Returns class reader for advice.
 	 */
-	private ClassReader getCachedAdviceClassReader(Class<? extends ProxyAdvice> advice) {
+	private ClassReader getCachedAdviceClassReader(final Class<? extends ProxyAdvice> advice) {
 		if (adviceClassReaderCache == null) {
 			adviceClassReaderCache = new HashMap<>();
 		}
@@ -153,7 +153,7 @@ final class ProxyAspectData {
 			 * Stores advice reference.
 			 */
 			@Override
-			public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+			public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
 				adviceReference = name;
 				super.visit(version, access, name, signature, superName, interfaces);
 			}
@@ -162,7 +162,7 @@ final class ProxyAspectData {
 			 * Prevents advice to have inner classes.
 			 */
 			@Override
-			public void visitInnerClass(String name, String outerName, String innerName, int access) {
+			public void visitInnerClass(final String name, final String outerName, final String innerName, final int access) {
 				if (outerName.equals(adviceReference)) {
 					throw new ProxettaException("Proxetta doesn't allow inner classes in/for advice: " + advice.getName());
 				}
@@ -173,7 +173,7 @@ final class ProxyAspectData {
 			 * Clones advices fields to destination.
 			 */
 			@Override
-			public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+			public FieldVisitor visitField(final int access, final String name, final String desc, final String signature, final Object value) {
 				wd.dest.visitField(access, adviceFieldName(name, aspectIndex), desc, signature, value);     // [A5]
 				return super.visitField(access, name, desc, signature, value);
 			}
@@ -182,7 +182,7 @@ final class ProxyAspectData {
 			 * Copies advices methods to destination.
 			 */
 			@Override
-			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+			public MethodVisitor visitMethod(int access, String name, final String desc, final String signature, final String[] exceptions) {
 				if (name.equals(CLINIT)) {              // [A6]
 					if (!desc.equals(DESC_VOID)) {
 						throw new ProxettaException("Invalid static initialization block description for advice: " + advice.getName());
@@ -193,15 +193,15 @@ final class ProxyAspectData {
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 
 						@Override
-						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+						public void visitLocalVariable(final String name, final String desc, final String signature, final Label start, final Label end, final int index) {
 						}
 
 						@Override
-						public void visitLineNumber(int line, Label start) {
+						public void visitLineNumber(final int line, final Label start) {
 						}
 
 						@Override
-						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
+						public void visitMethodInsn(final int opcode, String owner, String name, final String desc, final boolean isInterface) {
 							if (opcode == INVOKESTATIC) {
 								if (owner.equals(adviceReference)) {
 									owner = wd.thisReference;
@@ -212,7 +212,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitFieldInsn(int opcode, String owner, String name, String desc) { // [F6]
+						public void visitFieldInsn(final int opcode, String owner, String name, final String desc) { // [F6]
 							if (owner.equals(adviceReference)) {
 								owner = wd.thisReference;              // [F5]
 								name = adviceFieldName(name, aspectIndex);
@@ -232,17 +232,17 @@ final class ProxyAspectData {
 					wd.addAdviceInitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 						@Override
-						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+						public void visitLocalVariable(final String name, final String desc, final String signature, final Label start, final Label end, final int index) {
 						}
 
 						@Override
-						public void visitLineNumber(int line, Label start) {
+						public void visitLineNumber(final int line, final Label start) {
 						}
 
 						int state; // used to detect and to ignore the first super call()
 
 						@Override
-						public void visitVarInsn(int opcode, int var) {                      // [F7]
+						public void visitVarInsn(final int opcode, final int var) {                      // [F7]
 							if ((state == 0) && (opcode == ALOAD) && (var == 0)) {
 								state++;
 								return;
@@ -251,7 +251,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
+						public void visitMethodInsn(final int opcode, String owner, String name, final String desc, final boolean isInterface) {
 							if ((state == 1) && (opcode == INVOKESPECIAL)) {
 							    state++;
 								return;
@@ -273,7 +273,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitFieldInsn(int opcode, String owner, String name, String desc) { // [F7]
+						public void visitFieldInsn(final int opcode, String owner, String name, final String desc) { // [F7]
 							if (owner.equals(adviceReference)) {
 								owner = wd.thisReference;              // [F5]
 								name = adviceFieldName(name, aspectIndex);
@@ -290,15 +290,15 @@ final class ProxyAspectData {
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 
 						@Override
-						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+						public void visitLocalVariable(final String name, final String desc, final String signature, final Label start, final Label end, final int index) {
 						}
 
 						@Override
-						public void visitLineNumber(int line, Label start) {
+						public void visitLineNumber(final int line, final Label start) {
 						}
 
 						@Override
-						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
+						public void visitMethodInsn(final int opcode, String owner, String name, final String desc, final boolean isInterface) {
 							if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE)) {
 								if (owner.equals(adviceReference)) {
 									owner = wd.thisReference;
@@ -316,7 +316,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitFieldInsn(int opcode, String owner, String name, String desc) {        // replace field references
+						public void visitFieldInsn(final int opcode, String owner, String name, final String desc) {        // replace field references
 							if (owner.equals(adviceReference)) {
 								owner = wd.thisReference;
 								name = adviceFieldName(name, aspectIndex);
@@ -330,7 +330,7 @@ final class ProxyAspectData {
 				//return new MethodAdapter(new EmptyMethodVisitor()) {		// toask may we replace this with the following code?
 				return new EmptyMethodVisitor() {
 					@Override
-					public void visitVarInsn(int opcode, int var) {
+					public void visitVarInsn(final int opcode, final int var) {
 						if (isStoreOpcode(opcode)) {
 							if (var > maxLocalVarOffset) {
 								maxLocalVarOffset = var;          // find max local var offset

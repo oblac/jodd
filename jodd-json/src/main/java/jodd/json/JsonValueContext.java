@@ -34,14 +34,14 @@ public class JsonValueContext {
 	protected String propertyName;
 	protected int index;
 
-	public JsonValueContext(Object value) {
+	public JsonValueContext(final Object value) {
 		this.value = value;
 	}
 
 	/**
 	 * Reuses this instance for better performances.
 	 */
-	public void reuse(Object value) {
+	public void reuse(final Object value) {
 		this.value = value;
 		this.propertyName = null;
 		this.index = 0;
@@ -79,7 +79,7 @@ public class JsonValueContext {
 	/**
 	 * Stores current property name.
 	 */
-	public void setPropertyName(String propertyName) {
+	public void setPropertyName(final String propertyName) {
 		this.propertyName = propertyName;
 	}
 

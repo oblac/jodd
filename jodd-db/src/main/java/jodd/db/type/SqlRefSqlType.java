@@ -25,10 +25,10 @@
 
 package jodd.db.type;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SqlRefSqlType extends SqlType<Ref> {
 
@@ -36,7 +36,7 @@ public class SqlRefSqlType extends SqlType<Ref> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Ref get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Ref get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getRef(index);
 	}
 
@@ -44,7 +44,7 @@ public class SqlRefSqlType extends SqlType<Ref> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Ref value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Ref value, final int dbSqlType) throws SQLException {
 		st.setRef(index, value);
 	}
 }

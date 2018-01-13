@@ -82,7 +82,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Returns all bean property names.
 	 */
-	protected String[] getAllBeanPropertyNames(Class type, boolean declared) {
+	protected String[] getAllBeanPropertyNames(final Class type, final boolean declared) {
 		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
@@ -113,7 +113,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Returns an array of bean properties. If bean is a <code>Map</code>,
 	 * all its keys will be returned.
 	 */
-	protected String[] resolveProperties(Object bean, boolean declared) {
+	protected String[] resolveProperties(final Object bean, final boolean declared) {
 		String[] properties;
 
 		if (bean instanceof Map) {
@@ -179,7 +179,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Compares property name to the rules.
 	 */
 	@Override
-	public boolean accept(String propertyName, String rule, boolean include) {
+	public boolean accept(final String propertyName, final String rule, final boolean include) {
 		return propertyName.equals(rule);
 	}
 }

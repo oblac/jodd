@@ -56,7 +56,7 @@ public final class ProxyTarget {
 	 * Works correctly with <code>null</code> argument values. 
 	 * @see #createArgumentsClassArray()
 	 */
-	public static Class argumentType(int index) {
+	public static Class argumentType(final int index) {
 		throw new ProxettaException();
 	}
 
@@ -64,14 +64,14 @@ public final class ProxyTarget {
 	 * Inserts value of method argument specified by 1-based index.
 	 * @see #createArgumentsArray()
 	 */
-	public static Object argument(int index) {
+	public static Object argument(final int index) {
 		throw new ProxettaException();
 	}
 
 	/**
 	 * Assigns new value for an argument specified by 1-based index.
 	 */
-	public static void setArgument(Object value, int index) {
+	public static void setArgument(final Object value, final int index) {
 		throw new ProxettaException();
 	}
 
@@ -118,7 +118,7 @@ public final class ProxyTarget {
 	 * be either primitive or an object. Also, must be used when returning <code>null</code>
 	 * for primitives.
 	 */
-	public static Object returnValue(Object value) {
+	public static Object returnValue(final Object value) {
 		throw new ProxettaException();
 	}
 
@@ -167,14 +167,14 @@ public final class ProxyTarget {
 	 * Inserts targets method annotation value. Inserts <code>null</code>
 	 * if annotation or element is missing.
 	 */
-	public static Object targetMethodAnnotation(String annotationClassName, String element) {
+	public static Object targetMethodAnnotation(final String annotationClassName, final String element) {
 		throw new ProxettaException();
 	}
 	/**
 	 * Inserts targets class annotation value. Inserts <code>null</code>
 	 * if annotation or element is missing.
 	 */
-	public static Object targetClassAnnotation(String annotationClassName, String element) {
+	public static Object targetClassAnnotation(final String annotationClassName, final String element) {
 		throw new ProxettaException();
 	}
 

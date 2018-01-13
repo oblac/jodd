@@ -106,7 +106,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * @param cacheEntities flag if entities should be cached
 	 * @param dbOomQuery query that created this mapper.
 	 */
-	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomQuery dbOomQuery) {
+	public DefaultResultSetMapper(final ResultSet resultSet, final Map<String, ColumnData> columnAliases, final boolean cacheEntities, final DbOomQuery dbOomQuery) {
 		super(resultSet);
 		this.dbOomQuery = dbOomQuery;
 		this.cacheEntities = cacheEntities;
@@ -239,7 +239,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * Resolves {@link jodd.db.oom.DbEntityDescriptor} for all given types,
 	 * so not to repeat every time.
 	 */
-	protected DbEntityDescriptor[] resolveDbEntityDescriptors(Class[] types) {
+	protected DbEntityDescriptor[] resolveDbEntityDescriptors(final Class[] types) {
 		if (cachedDbEntityDescriptors == null) {
 			DbEntityDescriptor[] descs = new DbEntityDescriptor[types.length];
 			for (int i = 0; i < types.length; i++) {
@@ -259,7 +259,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * Type name will be <code>null</code> for simple names, i.e. for all those
 	 * types that returns <code>null</code> when used by {@link DbEntityManager#lookupType(Class)}.
 	 */
-	protected String[] resolveTypesTableNames(Class[] types) {
+	protected String[] resolveTypesTableNames(final Class[] types) {
 		if (types != cachedUsedTypes) {
 			cachedTypesTableNames = createTypesTableNames(types);
 			cachedUsedTypes = types;			
@@ -270,7 +270,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	/**
 	 * Resolved mapped type names for each type.
 	 */
-	protected String[][] resolveMappedTypesTableNames(Class[] types) {
+	protected String[][] resolveMappedTypesTableNames(final Class[] types) {
 		if (cachedMappedNames == null) {
 			String[][] names = new String[types.length][];
 			for (int i = 0; i < types.length; i++) {
@@ -293,7 +293,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	/**
 	 * Creates table names for given types.
 	 */
-	protected String[] createTypesTableNames(Class[] types) {
+	protected String[] createTypesTableNames(final Class[] types) {
 		String[] names = new String[types.length];
 		for (int i = 0; i < types.length; i++) {
 			if (types[i] == null) {
@@ -320,7 +320,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * the same column, it caches column values.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected Object readColumnValue(int colNdx, Class destinationType, Class<? extends SqlType> sqlTypeClass, int columnDbSqlType) {
+	protected Object readColumnValue(final int colNdx, final Class destinationType, final Class<? extends SqlType> sqlTypeClass, final int columnDbSqlType) {
 		if (colNdx != cachedColumnNdx) {
 			try {
 				SqlType sqlType;
@@ -347,7 +347,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object[] parseObjects(Class... types) {
+	public Object[] parseObjects(final Class... types) {
 		resultColumns.clear();
 
 		int totalTypes = types.length;
@@ -476,7 +476,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	/**
 	 * Caches returned entities. Replaces new instances with existing ones.
 	 */
-	protected void cacheResultSetEntities(Object[] result) {
+	protected void cacheResultSetEntities(final Object[] result) {
 		if (entitiesCache == null) {
 			entitiesCache = new HashMap<>();
 		}

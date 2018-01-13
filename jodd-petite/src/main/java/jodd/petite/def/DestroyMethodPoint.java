@@ -37,7 +37,7 @@ public class DestroyMethodPoint {
 
 	public final Method method;
 
-	public DestroyMethodPoint(Method method) {
+	public DestroyMethodPoint(final Method method) {
 		Objects.requireNonNull(method);
 
 		this.method = method;

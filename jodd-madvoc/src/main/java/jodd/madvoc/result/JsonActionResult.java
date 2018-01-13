@@ -46,7 +46,7 @@ public class JsonActionResult implements ActionResult {
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public void render(ActionRequest actionRequest, final Object object) throws Exception {
+	public void render(final ActionRequest actionRequest, final Object object) throws Exception {
 		HttpServletResponse response = actionRequest.httpServletResponse();
 
 		String encoding = response.getCharacterEncoding();

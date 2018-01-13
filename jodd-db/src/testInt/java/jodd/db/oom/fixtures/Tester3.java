@@ -48,7 +48,7 @@ public class Tester3 {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -56,7 +56,7 @@ public class Tester3 {
 		return name;
 	}
 
-	public void setName(Status name) {
+	public void setName(final Status name) {
 		this.name = name;
 	}
 
@@ -64,7 +64,7 @@ public class Tester3 {
 		return value;
 	}
 
-	public void setValue(Integer value) {
+	public void setValue(final Integer value) {
 		this.value = value;
 	}
 }

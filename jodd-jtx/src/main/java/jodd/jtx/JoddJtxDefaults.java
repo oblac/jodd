@@ -44,7 +44,7 @@ public class JoddJtxDefaults {
 	/**
 	 * Defines default JTX annotations.
 	 */
-	public void setTxAnnotations(Class<? extends Annotation>... txAnnotations) {
+	public void setTxAnnotations(final Class<? extends Annotation>... txAnnotations) {
 		this.txAnnotations = txAnnotations;
 	}
 }

@@ -53,7 +53,7 @@ public class DelegateAdviceUtil {
 	/**
 	 * Applies advice on given target class and returns proxy instance.
 	 */
-	public static <T> T applyAdvice(Class<T> targetClass) {
+	public static <T> T applyAdvice(final Class<T> targetClass) {
 		Class adviceClass = advicesMap.get(targetClass);
 
 		if (adviceClass == null) {
@@ -82,7 +82,7 @@ public class DelegateAdviceUtil {
 	/**
 	 * Injects target into proxy.
 	 */
-	public static void injectTargetIntoProxy(Object proxy, Object target) {
+	public static void injectTargetIntoProxy(final Object proxy, final Object target) {
 		Class proxyClass = proxy.getClass();
 
 		try {

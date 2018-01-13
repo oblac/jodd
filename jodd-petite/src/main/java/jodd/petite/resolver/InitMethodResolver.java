@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class InitMethodResolver {
 
-	public InitMethodPoint[] resolve(Object bean) {
+	public InitMethodPoint[] resolve(final Object bean) {
 		Class<?> type = bean.getClass();
 
 		// lookup methods

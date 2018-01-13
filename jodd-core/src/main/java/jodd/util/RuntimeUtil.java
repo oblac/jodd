@@ -76,7 +76,7 @@ public class RuntimeUtil {
 	 * Returns location of the class. If class is not in a jar, it's classpath
 	 * is returned; otherwise the jar location.
 	 */
-	public static String classLocation(Class clazz) {
+	public static String classLocation(final Class clazz) {
 		return clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
 	}
 
@@ -94,7 +94,7 @@ public class RuntimeUtil {
 		private final int exitCode;
 		private final String output;
 
-		protected ProcessResult(int existCode, String output) {
+		protected ProcessResult(final int existCode, final String output) {
 			this.exitCode = existCode;
 			this.output = output;
 		}
@@ -117,7 +117,7 @@ public class RuntimeUtil {
 	/**
 	 * Executes a process and returns the process output and exit code.
 	 */
-	public static ProcessResult run(Process process) throws IOException, InterruptedException {
+	public static ProcessResult run(final Process process) throws IOException, InterruptedException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, OUTPUT_PREFIX);

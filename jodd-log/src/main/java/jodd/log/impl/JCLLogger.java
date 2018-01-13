@@ -39,7 +39,7 @@ public class JCLLogger implements Logger {
 
 	final Log logger;
 
-	public JCLLogger(Log log) {
+	public JCLLogger(final Log log) {
 		this.logger = log;
 	}
 
@@ -49,7 +49,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public boolean isEnabled(Level level) {
+	public boolean isEnabled(final Level level) {
 		switch (level) {
 			case TRACE: return logger.isTraceEnabled();
 			case DEBUG: return logger.isDebugEnabled();
@@ -63,7 +63,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void log(Level level, String message) {
+	public void log(final Level level, final String message) {
 		switch (level) {
 			case TRACE: logger.trace(message); break;
 			case DEBUG: logger.debug(message); break;
@@ -74,7 +74,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void log(Level level, String message, Throwable throwable) {
+	public void log(final Level level, final String message, final Throwable throwable) {
 		switch (level) {
 			case TRACE: logger.trace(message, throwable); break;
 			case DEBUG: logger.debug(message, throwable); break;
@@ -85,7 +85,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void setLevel(Level level) {
+	public void setLevel(final Level level) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -95,7 +95,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void trace(String message) {
+	public void trace(final String message) {
 		logger.trace(message);
 	}
 
@@ -105,7 +105,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void debug(String message) {
+	public void debug(final String message) {
 		logger.debug(message);
 	}
 
@@ -115,7 +115,7 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void info(String message) {
+	public void info(final String message) {
 		logger.info(message);
 	}
 
@@ -125,12 +125,12 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void warn(String message) {
+	public void warn(final String message) {
 		logger.warn(message);
 	}
 
 	@Override
-	public void warn(String message, Throwable throwable) {
+	public void warn(final String message, final Throwable throwable) {
 		logger.warn(message, throwable);
 	}
 
@@ -140,12 +140,12 @@ public class JCLLogger implements Logger {
 	}
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 		logger.error(message);
 	}
 
 	@Override
-	public void error(String message, Throwable throwable) {
+	public void error(final String message, final Throwable throwable) {
 		logger.error(message, throwable);
 	}
 }

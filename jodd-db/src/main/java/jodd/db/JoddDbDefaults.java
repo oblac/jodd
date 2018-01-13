@@ -41,7 +41,7 @@ public class JoddDbDefaults {
 	/**
 	 * Enables debug mode.
 	 */
-	public void setDebug(boolean debug) {
+	public void setDebug(final boolean debug) {
 		this.debug = debug;
 	}
 
@@ -53,7 +53,7 @@ public class JoddDbDefaults {
 		return transactionMode;
 	}
 
-	public void setTransactionMode(DbTransactionMode transactionMode) {
+	public void setTransactionMode(final DbTransactionMode transactionMode) {
 		this.transactionMode = transactionMode;
 	}
 
@@ -65,7 +65,7 @@ public class JoddDbDefaults {
 		return queryConfig;
 	}
 
-	public void setQueryConfig(DbQueryConfig queryConfig) {
+	public void setQueryConfig(final DbQueryConfig queryConfig) {
 		this.queryConfig = queryConfig;
 	}
 
@@ -78,7 +78,7 @@ public class JoddDbDefaults {
 		return dbOomConfig;
 	}
 
-	public void setDbOomConfig(DbOomConfig dbOomConfig) {
+	public void setDbOomConfig(final DbOomConfig dbOomConfig) {
 		this.dbOomConfig = dbOomConfig;
 	}
 
@@ -93,7 +93,7 @@ public class JoddDbDefaults {
 		return sqlGenConfig;
 	}
 
-	public void setSqlGenConfig(SqlGenConfig sqlGenConfig) {
+	public void setSqlGenConfig(final SqlGenConfig sqlGenConfig) {
 		this.sqlGenConfig = sqlGenConfig;
 	}
 }

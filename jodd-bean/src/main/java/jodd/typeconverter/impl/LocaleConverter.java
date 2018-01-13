@@ -40,7 +40,8 @@ import java.util.Locale;
  */
 public class LocaleConverter implements TypeConverter<Locale> {
 
-	public Locale convert(Object value) {
+	@Override
+	public Locale convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

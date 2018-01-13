@@ -211,14 +211,14 @@ public interface MethodInfo {
 	/**
 	 * Match method name to provided {@link jodd.util.Wildcard} pattern.
 	 */
-	default boolean matchMethodName(String wildcard) {
+	default boolean matchMethodName(final String wildcard) {
 		return Wildcard.match(getMethodName(), wildcard);
 	}
 
 	/**
 	 * Match class name to provided {@link jodd.util.Wildcard} pattern.
 	 */
-	default boolean matchClassName(String wildcard) {
+	default boolean matchClassName(final String wildcard) {
 		return Wildcard.match(getClassname(), wildcard);
 	}
 
@@ -227,7 +227,7 @@ public interface MethodInfo {
 	/**
 	 * Returns <code>true</code> if method is annotated with one of provided annotation.
 	 */
-	default boolean hasAnnotation(Class<? extends Annotation>... an) {
+	default boolean hasAnnotation(final Class<? extends Annotation>... an) {
 		AnnotationInfo[] anns = getAnnotations();
 		if (anns == null) {
 			return false;
@@ -247,7 +247,7 @@ public interface MethodInfo {
 	/**
 	 * Returns <code>true</code> if method is annotated with provided annotation.
 	 */
-	default AnnotationInfo getAnnotation(Class<? extends Annotation> an) {
+	default AnnotationInfo getAnnotation(final Class<? extends Annotation> an) {
 		AnnotationInfo[] anns = getAnnotations();
 		if (anns == null) {
 			return null;

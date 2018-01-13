@@ -45,7 +45,7 @@ public class HtmlFosterRules {
 	/**
 	 * Returns <code>true</code> if provided element is one of the table-related elements.
 	 */
-	protected boolean isOneOfTableElements(Element element) {
+	protected boolean isOneOfTableElements(final Element element) {
 		String elementName = element.getNodeName().toLowerCase();
 
 		return StringUtil.equalsOne(elementName, TABLE_ELEMENTS) != -1;
@@ -54,7 +54,7 @@ public class HtmlFosterRules {
 	/**
 	 * Returns <code>true</code> if given node is a table element.
 	 */
-	protected boolean isTableElement(Node node) {
+	protected boolean isTableElement(final Node node) {
 		if (node.getNodeType() != Node.NodeType.ELEMENT) {
 			return false;
 		}
@@ -66,7 +66,7 @@ public class HtmlFosterRules {
 	/**
 	 * Returns <code>true</code> if parent node is one of the table elements.
 	 */
-	protected boolean isParentNodeOneOfFosterTableElements(Node parentNode) {
+	protected boolean isParentNodeOneOfFosterTableElements(final Node parentNode) {
 		if (parentNode == null) {
 			return false;
 		}
@@ -81,7 +81,7 @@ public class HtmlFosterRules {
 	/**
 	 * Finds the last table in stack of open elements.
 	 */
-	protected Element findLastTable(Node node) {
+	protected Element findLastTable(final Node node) {
 		Node tableNode = node;
 
 		while (tableNode != null) {
@@ -107,7 +107,7 @@ public class HtmlFosterRules {
 	/**
 	 * Fixes foster elements.
 	 */
-	public void fixFosterElements(Document document) {
+	public void fixFosterElements(final Document document) {
 		findFosterNodes(document);
 		fixElements();
 		fixText();
@@ -118,7 +118,7 @@ public class HtmlFosterRules {
 	 * DOM tree of the parent element. Otherwise, returns <code>false</code>
 	 * meaning that parent will scan its childs again.
 	 */
-	protected boolean findFosterNodes(Node node) {
+	protected boolean findFosterNodes(final Node node) {
 		boolean isTable = false;
 
 		if (!lastTables.isEmpty()) {

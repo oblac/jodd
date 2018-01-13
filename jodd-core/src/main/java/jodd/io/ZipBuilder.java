@@ -43,10 +43,10 @@ public class ZipBuilder {
 	private final File targetZipFile;
 	private final ByteArrayOutputStream targetBaos;
 
-	public static ZipBuilder createZipFile(File zipFile) throws IOException {
+	public static ZipBuilder createZipFile(final File zipFile) throws IOException {
 		return new ZipBuilder(zipFile);
 	}
-	public static ZipBuilder createZipFile(String zipFile) throws IOException {
+	public static ZipBuilder createZipFile(final String zipFile) throws IOException {
 		return new ZipBuilder(new File(zipFile));
 	}
 
@@ -56,7 +56,7 @@ public class ZipBuilder {
 
 	// ---------------------------------------------------------------- ctors
 
-	protected ZipBuilder(File zipFile) throws IOException {
+	protected ZipBuilder(final File zipFile) throws IOException {
 		if (!FileUtil.isExistingFile(zipFile)) {
 			FileUtil.touch(zipFile);
 		}
@@ -96,7 +96,7 @@ public class ZipBuilder {
 
 	// ---------------------------------------------------------------- add file to zip
 
-	public AddFileToZip add(File source) {
+	public AddFileToZip add(final File source) {
 		return new AddFileToZip(source);
 	}
 
@@ -106,14 +106,14 @@ public class ZipBuilder {
 		private String comment;
 		private boolean recursive = true;
 
-		private AddFileToZip(File file) {
+		private AddFileToZip(final File file) {
 			this.file = file;
 		}
 
 		/**
 		 * Defines optional entry path.
 		 */
-		public AddFileToZip path(String path) {
+		public AddFileToZip path(final String path) {
 			this.path = path;
 			return this;
 		}
@@ -121,7 +121,7 @@ public class ZipBuilder {
 		/**
 		 * Defines optional comment.
 		 */
-		public AddFileToZip comment(String comment) {
+		public AddFileToZip comment(final String comment) {
 			this.comment = comment;
 			return this;
 		}
@@ -145,7 +145,7 @@ public class ZipBuilder {
 
 	// ---------------------------------------------------------------- add content
 
-	public AddContentToZip add(String content) {
+	public AddContentToZip add(final String content) {
 		try {
 			return new AddContentToZip(content.getBytes(StringPool.UTF_8));
 		}
@@ -154,7 +154,7 @@ public class ZipBuilder {
 		}
 	}
 
-	public AddContentToZip add(byte[] content) {
+	public AddContentToZip add(final byte[] content) {
 		return new AddContentToZip(content);
 	}
 
@@ -163,14 +163,14 @@ public class ZipBuilder {
 		private String path;
 		private String comment;
 
-		private AddContentToZip(byte[] content) {
+		private AddContentToZip(final byte[] content) {
 			this.bytes = content;
 		}
 
 		/**
 		 * Defines optional entry path.
 		 */
-		public AddContentToZip path(String path) {
+		public AddContentToZip path(final String path) {
 			this.path = path;
 			return this;
 		}
@@ -178,7 +178,7 @@ public class ZipBuilder {
 		/**
 		 * Defines optional comment.
 		 */
-		public AddContentToZip comment(String comment) {
+		public AddContentToZip comment(final String comment) {
 			this.comment = comment;
 			return this;
 		}
@@ -194,7 +194,7 @@ public class ZipBuilder {
 
 	// ---------------------------------------------------------------- folder
 
-	public ZipBuilder addFolder(String folderName) throws IOException {
+	public ZipBuilder addFolder(final String folderName) throws IOException {
 		ZipUtil.addFolderToZip(zos, folderName, null);
 		return this;
 	}

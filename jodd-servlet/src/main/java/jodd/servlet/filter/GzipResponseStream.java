@@ -39,7 +39,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	/**
 	 * Constructs a servlet output stream associated with the specified Response.
 	 */
-	public GzipResponseStream(HttpServletResponse response) throws IOException {
+	public GzipResponseStream(final HttpServletResponse response) throws IOException {
 		super();
 		closed = false;
 		this.response = response;
@@ -91,7 +91,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	/**
 	 * Sets the compressionThreshold number and create buffer for this size.
 	 */
-	protected void setBuffer(int threshold) {
+	protected void setBuffer(final int threshold) {
 		compressionThreshold = threshold;
 		buffer = new byte[compressionThreshold];
 	}
@@ -102,7 +102,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	}
 
 	@Override
-	public void setWriteListener(WriteListener writeListener) {
+	public void setWriteListener(final WriteListener writeListener) {
 		output.setWriteListener(writeListener);
 	}
 
@@ -157,7 +157,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	 * Writes the specified byte to our output stream.
 	 */
 	@Override
-	public void write(int b) throws IOException {
+	public void write(final int b) throws IOException {
 
 		if (closed) {
 			throw new IOException("Cannot write to a closed output stream");
@@ -174,7 +174,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	 * output stream.
 	 */
 	@Override
-	public void write(byte[] b) throws IOException {
+	public void write(final byte[] b) throws IOException {
 		write(b, 0, b.length);
 	}
 
@@ -188,7 +188,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	 * @param len    number of bytes to be written
 	 */
 	@Override
-	public void write(byte[] b, int off, int len) throws IOException {
+	public void write(final byte[] b, final int off, final int len) throws IOException {
 
 		if (closed) {
 			throw new IOException("Cannot write to a closed output stream");
@@ -223,7 +223,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	 * Writes byte array to gzip output stream. Creates new <code>GZIPOutputStream</code>
 	 * if not created yet. Also sets the "Content-Encoding" header.
 	 */
-	public void writeToGZip(byte[] b, int off, int len) throws IOException {
+	public void writeToGZip(final byte[] b, final int off, final int len) throws IOException {
 		if (gzipstream == null) {
 			gzipstream = new GZIPOutputStream(output);
 			response.setHeader("Content-Encoding", "gzip");

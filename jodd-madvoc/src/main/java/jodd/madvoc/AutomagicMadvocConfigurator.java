@@ -84,7 +84,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 		madvocComponentAnnotation = ClassScanner.bytecodeSignatureOfType(MadvocComponent.class);
 	}
 
-	public AutomagicMadvocConfigurator withScanner(Consumer<ClassScanner> scannerConsumer) {
+	public AutomagicMadvocConfigurator withScanner(final Consumer<ClassScanner> scannerConsumer) {
 		scannerConsumer.accept(classScanner);
 		return this;
 	}
@@ -123,7 +123,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	 */
 	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
 		@Override
-		public void accept(ClassScanner.EntryData entryData) {
+		public void accept(final ClassScanner.EntryData entryData) {
 			String entryName = entryData.name();
 
 			if (entryName.endsWith(actionClassSuffix)) {
@@ -150,7 +150,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	 * ignored. Sometimes, checking may fail due to e.g. <code>NoClassDefFoundError</code>;
 	 * we should continue searching anyway.
 	 */
-	public boolean checkClass(Class clazz) {
+	public boolean checkClass(final Class clazz) {
 		try {
 			if (clazz.isAnonymousClass()) {
 				return false;
@@ -187,7 +187,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")
-	protected void onActionClass(String className) throws ClassNotFoundException {
+	protected void onActionClass(final String className) throws ClassNotFoundException {
 		Class<?> actionClass = classScanner.loadClass(className);
 
 		if (actionClass == null) {
@@ -230,7 +230,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	/**
 	 * Registers new Madvoc component.
 	 */
-	protected void onMadvocComponentClass(String className) throws ClassNotFoundException {
+	protected void onMadvocComponentClass(final String className) throws ClassNotFoundException {
 		Class componentClass = classScanner.loadClass(className);
 
 		if (componentClass == null) {

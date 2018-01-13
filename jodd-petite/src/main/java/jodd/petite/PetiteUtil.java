@@ -40,7 +40,7 @@ public class PetiteUtil {
 	 * constructor with a {@link PetiteContainer}. If that files, uses default
 	 * constructor to builds an instance.
 	 */
-	public static <T> T newInstance(Class<T> type, PetiteContainer petiteContainer) throws Exception {
+	public static <T> T newInstance(final Class<T> type, final PetiteContainer petiteContainer) throws Exception {
 		T t = null;
 
 		// first try ctor(PetiteContainer)
@@ -63,7 +63,7 @@ public class PetiteUtil {
 	 * Calls destroy methods on given BeanData. Destroy methods are called
 	 * without any order.
 	 */
-	public static void callDestroyMethods(BeanData beanData) {
+	public static void callDestroyMethods(final BeanData beanData) {
 		DestroyMethodPoint[] dmp = beanData.definition().destroyMethodPoints();
 		for (DestroyMethodPoint destroyMethodPoint : dmp) {
 			try {

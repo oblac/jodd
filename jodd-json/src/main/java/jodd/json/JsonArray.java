@@ -51,7 +51,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Creates an instance from a List. The List is not copied.
 	 */
-	public JsonArray(List list) {
+	public JsonArray(final List list) {
 		this.list = list;
 	}
 
@@ -60,7 +60,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the string at position {@code pos} in the array.
 	 */
-	public String getString(int pos) {
+	public String getString(final int pos) {
 		CharSequence cs = (CharSequence) list.get(pos);
 		return cs == null ? null : cs.toString();
 	}
@@ -68,7 +68,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the integer at position {@code pos} in the array.
 	 */
-	public Integer getInteger(int pos) {
+	public Integer getInteger(final int pos) {
 		Number number = (Number) list.get(pos);
 
 		if (number == null) {
@@ -84,7 +84,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the long at position {@code pos} in the array.
 	 */
-	public Long getLong(int pos) {
+	public Long getLong(final int pos) {
 		Number number = (Number) list.get(pos);
 		if (number == null) {
 			return null;
@@ -99,7 +99,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the double at position {@code pos} in the array.
 	 */
-	public Double getDouble(int pos) {
+	public Double getDouble(final int pos) {
 		Number number = (Number) list.get(pos);
 		if (number == null) {
 			return null;
@@ -114,7 +114,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the Float at position {@code pos} in the array.
 	 */
-	public Float getFloat(int pos) {
+	public Float getFloat(final int pos) {
 		Number number = (Number) list.get(pos);
 		if (number == null) {
 			return null;
@@ -129,14 +129,14 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the boolean at position {@code pos} in the array.
 	 */
-	public Boolean getBoolean(int pos) {
+	public Boolean getBoolean(final int pos) {
 		return (Boolean) list.get(pos);
 	}
 
 	/**
 	 * Retruns the JsonObject at position {@code pos} in the array.
 	 */
-	public JsonObject getJsonObject(int pos) {
+	public JsonObject getJsonObject(final int pos) {
 		Object val = list.get(pos);
 		if (val instanceof Map) {
 			val = new JsonObject((Map) val);
@@ -147,7 +147,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the JsonArray at position {@code pos} in the array.
 	 */
-	public JsonArray getJsonArray(int pos) {
+	public JsonArray getJsonArray(final int pos) {
 		Object val = list.get(pos);
 		if (val instanceof List) {
 			val = new JsonArray((List) val);
@@ -161,7 +161,7 @@ public class JsonArray implements Iterable<Object> {
 	 * JSON itself has no notion of a binary, so this method assumes there is a String value and
 	 * it contains a Base64 encoded binary, which it decodes if found and returns.
 	 */
-	public byte[] getBinary(int pos) {
+	public byte[] getBinary(final int pos) {
 		String val = (String) list.get(pos);
 		if (val == null) {
 			return null;
@@ -172,7 +172,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns the object value at position {@code pos} in the array.
 	 */
-	public Object getValue(int pos) {
+	public Object getValue(final int pos) {
 		Object val = list.get(pos);
 
 		if (val instanceof Map) {
@@ -187,7 +187,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns {@code true} if there is a {@code null} value at given index.
 	 */
-	public boolean hasNull(int pos) {
+	public boolean hasNull(final int pos) {
 		return list.get(pos) == null;
 	}
 
@@ -199,7 +199,7 @@ public class JsonArray implements Iterable<Object> {
 	 * JSON has no concept of encoding Enums, so the Enum will be converted to a String using the {@link java.lang.Enum#name}
 	 * method and the value added as a String.
 	 */
-	public JsonArray add(Enum value) {
+	public JsonArray add(final Enum value) {
 		if (value == null) {
 			list.add(null);
 		} else {
@@ -211,7 +211,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a {@code CharSequence} to the JSON array.
 	 */
-	public JsonArray add(CharSequence value) {
+	public JsonArray add(final CharSequence value) {
 		list.add(value.toString());
 		return this;
 	}
@@ -219,7 +219,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a string to the JSON array.
 	 */
-	public JsonArray add(String value) {
+	public JsonArray add(final String value) {
 		list.add(value);
 		return this;
 	}
@@ -227,7 +227,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds an integer to the JSON array.
 	 */
-	public JsonArray add(Integer value) {
+	public JsonArray add(final Integer value) {
 		list.add(value);
 		return this;
 	}
@@ -235,7 +235,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a long to the JSON array.
 	 */
-	public JsonArray add(Long value) {
+	public JsonArray add(final Long value) {
 		list.add(value);
 		return this;
 	}
@@ -243,7 +243,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a double to the JSON array.
 	 */
-	public JsonArray add(Double value) {
+	public JsonArray add(final Double value) {
 		list.add(value);
 		return this;
 	}
@@ -251,7 +251,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a float to the JSON array.
 	 */
-	public JsonArray add(Float value) {
+	public JsonArray add(final Float value) {
 		list.add(value);
 		return this;
 	}
@@ -259,7 +259,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a boolean to the JSON array.
 	 */
-	public JsonArray add(Boolean value) {
+	public JsonArray add(final Boolean value) {
 		list.add(value);
 		return this;
 	}
@@ -275,7 +275,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds a JSON object to the JSON array.
 	 */
-	public JsonArray add(JsonObject value) {
+	public JsonArray add(final JsonObject value) {
 		list.add(value);
 		return this;
 	}
@@ -283,7 +283,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Adds another JSON array to the JSON array.
 	 */
-	public JsonArray add(JsonArray value) {
+	public JsonArray add(final JsonArray value) {
 		list.add(value);
 		return this;
 	}
@@ -293,7 +293,7 @@ public class JsonArray implements Iterable<Object> {
 	 * <p>
 	 * JSON has no notion of binary so the binary will be base64 encoded to a String, and the String added.
 	 */
-	public JsonArray add(byte[] value) {
+	public JsonArray add(final byte[] value) {
 		list.add(Base64.getEncoder().encodeToString(value));
 		return this;
 	}
@@ -313,7 +313,7 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Appends all of the elements in the specified array to the end of this JSON array.
 	 */
-	public JsonArray addAll(JsonArray array) {
+	public JsonArray addAll(final JsonArray array) {
 		Objects.requireNonNull(array);
 		list.addAll(array.list);
 		return this;
@@ -324,21 +324,21 @@ public class JsonArray implements Iterable<Object> {
 	/**
 	 * Returns {@code true} if given value exist.
 	 */
-	public boolean contains(Object value) {
+	public boolean contains(final Object value) {
 		return list.contains(value);
 	}
 
 	/**
 	 * Removes the specified value from the JSON array.
 	 */
-	public boolean remove(Object value) {
+	public boolean remove(final Object value) {
 		return list.remove(value);
 	}
 
 	/**
 	 * Removes the value at the specified position in the JSON array.
 	 */
-	public Object remove(int pos) {
+	public Object remove(final int pos) {
 		Object removed = list.remove(pos);
 		if (removed instanceof Map) {
 			return new JsonObject((Map) removed);
@@ -401,7 +401,7 @@ public class JsonArray implements Iterable<Object> {
 	// ---------------------------------------------------------------- equals/hash
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -411,7 +411,7 @@ public class JsonArray implements Iterable<Object> {
 		return arrayEquals(list, o);
 	}
 
-	static boolean arrayEquals(List<?> l1, Object o2) {
+	static boolean arrayEquals(final List<?> l1, final Object o2) {
 		List<?> l2;
 		if (o2 instanceof JsonArray) {
 			l2 = ((JsonArray) o2).list;
@@ -446,7 +446,7 @@ public class JsonArray implements Iterable<Object> {
 
 		final Iterator<Object> listIter;
 
-		Iter(Iterator<Object> listIter) {
+		Iter(final Iterator<Object> listIter) {
 			this.listIter = listIter;
 		}
 

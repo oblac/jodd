@@ -47,7 +47,7 @@ public class ThreadLocalScope implements Scope {
 	};
 
 	@Override
-	public Object lookup(String name) {
+	public Object lookup(final String name) {
 		Map<String, BeanData> threadLocalMap = context.get();
 		BeanData beanData = threadLocalMap.get(name);
 		if (beanData == null) {
@@ -57,14 +57,14 @@ public class ThreadLocalScope implements Scope {
 	}
 
 	@Override
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		BeanData beanData = new BeanData(beanDefinition, bean);
 		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.put(beanDefinition.name(), beanData);
 	}
 
 	@Override
-	public void remove(String name) {
+	public void remove(final String name) {
 		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.remove(name);
 	}
@@ -74,7 +74,7 @@ public class ThreadLocalScope implements Scope {
 	 * thread-local scoped bean.
 	 */
 	@Override
-	public boolean accept(Scope referenceScope) {
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
 		if (refScopeType == ProtoScope.class) {

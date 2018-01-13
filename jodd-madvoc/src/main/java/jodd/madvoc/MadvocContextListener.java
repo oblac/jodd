@@ -42,7 +42,7 @@ public class MadvocContextListener implements ServletContextListener {
 	 * by context init parameters.
 	 */
 	@Override
-	public void contextInitialized(ServletContextEvent servletContextEvent) {
+	public void contextInitialized(final ServletContextEvent servletContextEvent) {
 		ServletContext servletContext = servletContextEvent.getServletContext();
 
 		madvoc = new Madvoc();
@@ -56,7 +56,7 @@ public class MadvocContextListener implements ServletContextListener {
 	 * Stops Madvoc.
 	 */
 	@Override
-	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+	public void contextDestroyed(final ServletContextEvent servletContextEvent) {
 		madvoc.stopWebApplication();
 	}
 

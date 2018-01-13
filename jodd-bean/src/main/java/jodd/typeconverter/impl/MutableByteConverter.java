@@ -37,12 +37,12 @@ public class MutableByteConverter implements TypeConverter<MutableByte> {
 	protected final TypeConverter<Byte> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableByteConverter(TypeConverterManager typeConverterManager) {
+	public MutableByteConverter(final TypeConverterManager typeConverterManager) {
 		typeConverter = typeConverterManager.lookup(Byte.class);
 	}
 
 	@Override
-	public MutableByte convert(Object value) {
+	public MutableByte convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

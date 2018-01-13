@@ -40,7 +40,7 @@ public class ConnectionPoolDataSourceConnectionProvider implements ConnectionPro
 
 	private ConnectionPoolDataSource cpds;
 
-	public ConnectionPoolDataSourceConnectionProvider(ConnectionPoolDataSource cpds) {
+	public ConnectionPoolDataSourceConnectionProvider(final ConnectionPoolDataSource cpds) {
 		this.cpds = cpds;
 	}
 
@@ -73,7 +73,7 @@ public class ConnectionPoolDataSourceConnectionProvider implements ConnectionPro
 	}
 
 	@Override
-	public void closeConnection(Connection connection) {
+	public void closeConnection(final Connection connection) {
 		try {
 			if (connection != null) {
 				connection.close();

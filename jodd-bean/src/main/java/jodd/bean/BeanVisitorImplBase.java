@@ -47,7 +47,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	/**
 	 * Defines excluded property names.
 	 */
-	public T exclude(String... excludes) {
+	public T exclude(final String... excludes) {
 		for (String ex : excludes) {
 			rules.exclude(ex);
 		}
@@ -57,7 +57,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	/**
 	 * Exclude a property.
 	 */
-	public T exclude(String exclude) {
+	public T exclude(final String exclude) {
 		rules.exclude(exclude);
 		return _this();
 	}
@@ -65,7 +65,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	/**
 	 * Defines included property names.
 	 */
-	public T include(String... includes) {
+	public T include(final String... includes) {
 		for (String in : includes) {
 			rules.include(in);
 		}
@@ -75,7 +75,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	/**
 	 * Include a property.
 	 */
-	public T include(String include) {
+	public T include(final String include) {
 		rules.include(include);
 		return _this();
 	}
@@ -84,7 +84,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	 * Defines included property names as public properties
 	 * of given template class. Sets to black list mode.
 	 */
-	public T includeAs(Class template) {
+	public T includeAs(final Class template) {
 		blacklist = false;
 
 		String[] properties = getAllBeanPropertyNames(template, false);
@@ -97,7 +97,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	/**
 	 * Defines if <code>null</code> values should be ignored.
 	 */
-	public T ignoreNulls(boolean ignoreNulls) {
+	public T ignoreNulls(final boolean ignoreNulls) {
 		this.ignoreNullValues = ignoreNulls;
 
 		return _this();
@@ -107,7 +107,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	 * Defines if all properties should be copied (when set to <code>true</code>)
 	 * or only public (when set to <code>false</code>, default).
 	 */
-	public T declared(boolean declared) {
+	public T declared(final boolean declared) {
 		this.declared = declared;
 		return _this();
 	}
@@ -115,7 +115,7 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	/**
 	 * Defines if fields without getters should be copied too.
 	 */
-	public T includeFields(boolean includeFields) {
+	public T includeFields(final boolean includeFields) {
 		this.includeFields = includeFields;
 		return _this();
 	}

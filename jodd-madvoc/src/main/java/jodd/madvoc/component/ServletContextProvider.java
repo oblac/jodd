@@ -35,7 +35,7 @@ public class ServletContextProvider implements Supplier<ServletContext> {
 
 	private final ServletContext servletContext;
 
-	public ServletContextProvider(ServletContext servletContext) {
+	public ServletContextProvider(final ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
 

@@ -40,7 +40,7 @@ public class Check {
 	/**
 	 * Creates new check for provided constraint inside current context. 
 	 */
-	public Check(String name, ValidationConstraint constraint) {
+	public Check(final String name, final ValidationConstraint constraint) {
 		this.name = name;
 		this.constraint = constraint;
 	}
@@ -65,7 +65,7 @@ public class Check {
 		return severity;
 	}
 
-	public void setSeverity(int severity) {
+	public void setSeverity(final int severity) {
 		this.severity = severity;
 	}
 
@@ -73,7 +73,7 @@ public class Check {
 		return profiles;
 	}
 
-	public void setProfiles(String... profiles) {
+	public void setProfiles(final String... profiles) {
 		this.profiles = profiles;
 	}
 
@@ -81,7 +81,7 @@ public class Check {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 }

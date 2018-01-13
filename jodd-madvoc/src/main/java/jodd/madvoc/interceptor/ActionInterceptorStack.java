@@ -38,14 +38,14 @@ public class ActionInterceptorStack extends BaseActionWrapperStack<ActionInterce
 	public ActionInterceptorStack() {
 	}
 
-	public ActionInterceptorStack(Class<? extends ActionInterceptor>... interceptorClasses) {
+	public ActionInterceptorStack(final Class<? extends ActionInterceptor>... interceptorClasses) {
 		super(interceptorClasses);
 	}
 
 	/**
 	 * Sets interceptor classes.
 	 */
-	public void setInterceptors(Class<? extends ActionInterceptor>... interceptors) {
+	public void setInterceptors(final Class<? extends ActionInterceptor>... interceptors) {
 		this.wrappers = interceptors;
 	}
 
@@ -60,7 +60,7 @@ public class ActionInterceptorStack extends BaseActionWrapperStack<ActionInterce
 	 * Interceptor is not used since this is just an interceptor container.
 	 */
 	@Override
-	public final Object intercept(ActionRequest actionRequest) throws Exception {
+	public final Object intercept(final ActionRequest actionRequest) throws Exception {
 		return apply(actionRequest);
 	}
 

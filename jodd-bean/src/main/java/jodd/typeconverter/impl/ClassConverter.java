@@ -41,7 +41,8 @@ import jodd.util.StringUtil;
  */
 public class ClassConverter implements TypeConverter<Class> {
 
-	public Class convert(Object value) {
+	@Override
+	public Class convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

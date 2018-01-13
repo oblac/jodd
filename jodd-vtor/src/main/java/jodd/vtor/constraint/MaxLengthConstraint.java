@@ -33,7 +33,7 @@ public class MaxLengthConstraint implements ValidationConstraint<MaxLength> {
 	public MaxLengthConstraint() {
 	}
 
-	public MaxLengthConstraint(int max) {
+	public MaxLengthConstraint(final int max) {
 		this.max = max;
 	}
 
@@ -45,23 +45,23 @@ public class MaxLengthConstraint implements ValidationConstraint<MaxLength> {
 		return max;
 	}
 
-	public void setMax(int max) {
+	public void setMax(final int max) {
 		this.max = max;
 	}
 	
 	// ---------------------------------------------------------------- configure
 
-	public void configure(MaxLength annotation) {
+	public void configure(final MaxLength annotation) {
 		this.max = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, max);
 	}
 
-	public static boolean validate(Object value, int max) {
+	public static boolean validate(final Object value, final int max) {
 		if (value == null) {
 			return true;
 		}

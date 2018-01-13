@@ -56,7 +56,7 @@ public abstract class UserAuthManagerBean<U extends UserAuth> {
 	/**
 	 * Checks users email and password by finding matching user.
 	 */
-	public final U findUser(String username, String rawPassword) {
+	public final U findUser(final String username, final String rawPassword) {
 		U userAuth = findUserAuthByUsername(username);
 		if (userAuth == null) {
 			return null;
@@ -70,7 +70,7 @@ public abstract class UserAuthManagerBean<U extends UserAuth> {
 	/**
 	 * Finds an user for given userId and hashed password.
 	 */
-	public final U findUser(long userId, String hashedPassword) {
+	public final U findUser(final long userId, final String hashedPassword) {
 		U userAuth = findUserAuthById(userId);
 		if (userAuth == null) {
 			return null;

@@ -44,7 +44,7 @@ public class DbOomConfig {
 	 * Separator should contains of characters that are not used in table names, such as:
 	 * '$' or '__'.
 	 */
-	public void setColumnAliasSeparator(String separator) {
+	public void setColumnAliasSeparator(final String separator) {
 		this.columnAliasSeparator = separator;
 	}
 
@@ -62,7 +62,7 @@ public class DbOomConfig {
 	 * When cached, more memory is consumed during the existence of
 	 * {@link jodd.db.oom.mapper.ResultSetMapper}.
 	 */
-	public void setCacheEntitiesInResultSet(boolean cacheEntitiesInResultSet) {
+	public void setCacheEntitiesInResultSet(final boolean cacheEntitiesInResultSet) {
 		this.cacheEntitiesInResultSet = cacheEntitiesInResultSet;
 	}
 
@@ -82,7 +82,7 @@ public class DbOomConfig {
 	 * It make sense to enable it only if {@link #setCacheEntitiesInResultSet(boolean) cache} is set.
 	 * Therefore, enabling smart mode will also enable caching.
 	 */
-	public void setEntityAwareMode(boolean entityAwareMode) {
+	public void setEntityAwareMode(final boolean entityAwareMode) {
 		if (entityAwareMode) {
 			this.cacheEntitiesInResultSet = true;
 		}
@@ -100,7 +100,7 @@ public class DbOomConfig {
 	/**
 	 * Specifies default column alias type.
 	 */
-	public void setDefaultColumnAliasType(ColumnAliasType defaultColumnAliasType) {
+	public void setDefaultColumnAliasType(final ColumnAliasType defaultColumnAliasType) {
 		this.defaultColumnAliasType = defaultColumnAliasType;
 	}
 
@@ -114,7 +114,7 @@ public class DbOomConfig {
 		return schemaName;
 	}
 
-	public void setSchemaName(String schemaName) {
+	public void setSchemaName(final String schemaName) {
 		this.schemaName = schemaName;
 	}
 
@@ -128,7 +128,7 @@ public class DbOomConfig {
 	/**
 	 * Sets new table name strategy.
 	 */
-	public void setTableNames(TableNamingStrategy tableNames) {
+	public void setTableNames(final TableNamingStrategy tableNames) {
 		this.tableNames = tableNames;
 	}
 
@@ -142,7 +142,7 @@ public class DbOomConfig {
 	/**
 	 * Sets new column name strategy,
 	 */
-	public void setColumnNames(ColumnNamingStrategy columnNames) {
+	public void setColumnNames(final ColumnNamingStrategy columnNames) {
 		this.columnNames = columnNames;
 	}
 

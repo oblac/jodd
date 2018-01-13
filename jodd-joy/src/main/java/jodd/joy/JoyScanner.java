@@ -57,17 +57,17 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	 */
 	private boolean ignoreExceptions;
 
-	public JoyScanner setIncludedEntries(String... includedEntries) {
+	public JoyScanner setIncludedEntries(final String... includedEntries) {
 		Collections.addAll(this.includedEntries, includedEntries);
 		return this;
 	}
 
-	public JoyScanner setIncludedJars(String... includedJars) {
+	public JoyScanner setIncludedJars(final String... includedJars) {
 		Collections.addAll(this.includedJars, includedJars);
 		return this;
 	}
 
-	public JoyScanner setIgnoreExceptions(boolean ignoreExceptions) {
+	public JoyScanner setIgnoreExceptions(final boolean ignoreExceptions) {
 		this.ignoreExceptions = ignoreExceptions;
 		return this;
 	}
@@ -94,7 +94,7 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	 * but exclude all entries.
 	 */
 	@Override
-	public void accept(ClassScanner classScanner) {
+	public void accept(final ClassScanner classScanner) {
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
 			classScanner.excludeAllEntries(false);
 			classScanner.excludeEntries("ch.qos.logback.*");

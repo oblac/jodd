@@ -54,7 +54,7 @@ public class CachingIntrospector implements ClassIntrospector {
 	 * <b>accessible</b> or <b>supported</b> fields, methods or
 	 * constructors.
 	 */
-	public CachingIntrospector(boolean scanAccessible, boolean enhancedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
+	public CachingIntrospector(final boolean scanAccessible, final boolean enhancedProperties, final boolean includeFieldsAsProperties, final String[] propertyFieldPrefix) {
 		this.cache = new HashMap<>();
 		this.scanAccessible = scanAccessible;
 		this.enhancedProperties = enhancedProperties;
@@ -66,7 +66,7 @@ public class CachingIntrospector implements ClassIntrospector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ClassDescriptor lookup(Class type) {
+	public ClassDescriptor lookup(final Class type) {
 		ClassDescriptor cd = cache.get(type);
 		if (cd != null) {
 			cd.increaseUsageCount();
@@ -81,7 +81,7 @@ public class CachingIntrospector implements ClassIntrospector {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ClassDescriptor register(Class type) {
+	public ClassDescriptor register(final Class type) {
 		ClassDescriptor cd = describeClass(type);
 		cache.put(type, cd);
 		return cd;
@@ -91,7 +91,7 @@ public class CachingIntrospector implements ClassIntrospector {
 	 * Describes a class by creating a new instance of {@link ClassDescriptor}
 	 * that examines all accessible methods and fields.
 	 */
-	protected ClassDescriptor describeClass(Class type) {
+	protected ClassDescriptor describeClass(final Class type) {
 		return new ClassDescriptor(type, scanAccessible, enhancedProperties, includeFieldsAsProperties, propertyFieldPrefix);
 	}
 

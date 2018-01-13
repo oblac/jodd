@@ -151,7 +151,7 @@ public class Jodd {
 	/**
 	 * Returns {@code true} if module is loaded.
 	 */
-	public static boolean isModuleLoaded(JoddModule module) {
+	public static boolean isModuleLoaded(final JoddModule module) {
 		return module.moduleClass != null;
 	}
 
@@ -167,7 +167,7 @@ public class Jodd {
 	 * Must be called only from the module's class, since it resolves the module from the
 	 * calling hierarchy.
 	 */
-	public static void initModule(Runnable initRunnable) {
+	public static void initModule(final Runnable initRunnable) {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
 		for (StackTraceElement stackTraceElement : stackTrace) {
@@ -189,7 +189,7 @@ public class Jodd {
 		throw new RuntimeException("Only Jodd module can be initialized!");
 	}
 
-	private static String resolveClassName(JoddModule joddModule) {
+	private static String resolveClassName(final JoddModule joddModule) {
 		String moduleName = joddModule.name();
 
 		String packageName = moduleName.toLowerCase();

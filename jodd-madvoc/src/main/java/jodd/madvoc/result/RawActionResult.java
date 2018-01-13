@@ -49,7 +49,7 @@ public class RawActionResult implements ActionResult<RawData> {
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public void render(ActionRequest actionRequest, RawData resultValue) throws IOException {
+	public void render(final ActionRequest actionRequest, final RawData resultValue) throws IOException {
 		if (resultValue == null) {
 			return;
 		}

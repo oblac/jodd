@@ -36,7 +36,7 @@ public class EqualToDeclaredFieldConstraint implements ValidationConstraint<Equa
 	public EqualToDeclaredFieldConstraint() {
 	}
 
-	public EqualToDeclaredFieldConstraint(String fieldName) {
+	public EqualToDeclaredFieldConstraint(final String fieldName) {
 		this.fieldName = fieldName;
 	}
 
@@ -48,23 +48,23 @@ public class EqualToDeclaredFieldConstraint implements ValidationConstraint<Equa
 		return fieldName;
 	}
 
-	public void setFieldName(String fieldName) {
+	public void setFieldName(final String fieldName) {
 		this.fieldName = fieldName;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(EqualToDeclaredField annotation) {
+	public void configure(final EqualToDeclaredField annotation) {
 		this.fieldName = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(vcc.getTarget(), value, fieldName);
 	}
 
-	public static boolean validate(Object target, Object value, String fieldName) {
+	public static boolean validate(final Object target, final Object value, final String fieldName) {
 		if (value == null) {
 			return true;
 		}

@@ -102,7 +102,7 @@ public class HtmlDecoder {
 	/**
 	 * Decodes HTML text. Assumes that all character references are properly closed with semi-colon.
 	 */
-	public static String decode(String html) {
+	public static String decode(final String html) {
 
 		int ndx = html.indexOf('&');
 		if (ndx == -1) {
@@ -179,7 +179,7 @@ mainloop:
 
 		BinarySearchBase binarySearch = new BinarySearchBase() {
 			@Override
-			protected int compare(int index) {
+			protected int compare(final int index) {
 				char[] name = ENTITY_NAMES[index];
 
 				if (ptr.offset >= name.length) {
@@ -234,7 +234,7 @@ mainloop:
 	/**
 	 * Returns replacement chars for given character reference.
 	 */
-	public static char[] lookup(String name) {
+	public static char[] lookup(final String name) {
 		return ENTITY_MAP.get(name);
 	}
 

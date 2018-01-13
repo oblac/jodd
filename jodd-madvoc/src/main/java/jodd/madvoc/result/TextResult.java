@@ -39,11 +39,11 @@ public class TextResult {
 	private final String value;
 	private String mimeType = MimeTypes.MIME_TEXT_PLAIN;
 
-	public static TextResult of(String value) {
+	public static TextResult of(final String value) {
 		return new TextResult(value);
 	}
 
-	public TextResult(String value) {
+	public TextResult(final String value) {
 		this.value = value;
 	}
 
@@ -58,7 +58,7 @@ public class TextResult {
 	/**
 	 * Defines custom content type.
 	 */
-	public TextResult as(String contentType) {
+	public TextResult as(final String contentType) {
 		Objects.requireNonNull(contentType);
 		mimeType = contentType;
 		return this;

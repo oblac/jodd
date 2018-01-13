@@ -44,7 +44,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	/**
 	 * Constructs a new <code>SortedArrayList</code>.
 	 */
-	public SortedArrayList(Comparator<E> c) {
+	public SortedArrayList(final Comparator<E> c) {
 		comparator = c;
 	}
 
@@ -60,7 +60,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * Constructs a new <code>SortedArrayList</code> expecting
 	 * elements are comparable.
 	 */
-	public SortedArrayList(Collection<? extends E> c) {
+	public SortedArrayList(final Collection<? extends E> c) {
 		comparator = null;
 		addAll(c);
 	}
@@ -83,7 +83,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * added at the list end, but in sorted manner.
 	 */
 	@Override
-	public boolean add(E o) {
+	public boolean add(final E o) {
 		int idx = 0;
 		if (!isEmpty()) {
 			idx = findInsertionPoint(o);
@@ -96,7 +96,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * Add all of the elements in the given collection to this list.
 	 */
 	@Override
-	public boolean addAll(Collection<? extends E> c) {
+	public boolean addAll(final Collection<? extends E> c) {
 		Iterator<? extends E> i = c.iterator();
 		boolean changed = false;
 		while (i.hasNext()) {
@@ -111,7 +111,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	/**
 	 * Finds the index at which object should be inserted.
 	 */
-	public int findInsertionPoint(E o) {
+	public int findInsertionPoint(final E o) {
 		return findInsertionPoint(o, 0, size() - 1);
 	}
 
@@ -121,7 +121,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * @throws UnsupportedOperationException This method not supported.
 	 */
 	@Override
-	public void add(int index, E element) {
+	public void add(final int index, final E element) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -129,7 +129,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * @throws UnsupportedOperationException This method not supported.
 	 */
 	@Override
-	public E set(int index, E element) {
+	public E set(final int index, final E element) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -137,7 +137,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * @throws UnsupportedOperationException This method not supported.
 	 */
 	@Override
-	public boolean addAll(int index, Collection<? extends E> c) {
+	public boolean addAll(final int index, final Collection<? extends E> c) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -149,7 +149,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * collection.
 	 */
 	@SuppressWarnings( {"unchecked"})
-	protected int compare(E k1, E k2) {
+	protected int compare(final E k1, final E k2) {
 		if (comparator == null) {
 			return ((Comparable) k1).compareTo(k2);
 		}
@@ -160,7 +160,7 @@ public class SortedArrayList<E> extends ArrayList<E> {
 	 * Conducts a binary search to find the index where Object
 	 * should be inserted.
 	 */
-	protected int findInsertionPoint(E o, int low, int high) {
+	protected int findInsertionPoint(final E o, int low, int high) {
 
 		while (low <= high) {
 			int mid = (low + high) >>> 1;

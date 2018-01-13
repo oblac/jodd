@@ -35,29 +35,29 @@ import java.util.function.Consumer;
 @RenderWith(ServletRedirectActionResult.class)
 public class Redirect extends PathResult {
 
-	public static Redirect to(String target) {
+	public static Redirect to(final String target) {
 		return new Redirect(target);
 	}
 
-	public static <T> Redirect to(Class<T> target, Consumer<T> consumer) {
+	public static <T> Redirect to(final Class<T> target, final Consumer<T> consumer) {
 		return new Redirect(target, consumer);
 	}
 	@SuppressWarnings("unchecked")
-	public static <T> Redirect to(T target, Consumer<T> consumer) {
+	public static <T> Redirect to(final T target, final Consumer<T> consumer) {
 		return new Redirect((Class<T>) target.getClass(), consumer);
 	}
 
-	public static Redirect of(Redirect result, String append) {
+	public static Redirect of(final Redirect result, final String append) {
 		return new Redirect("/<" + result.path() + ">" + append);
 	}
 
 	// ---------------------------------------------------------------- ctor
 
-	public <T> Redirect(Class<T> target, Consumer<T> consumer) {
+	public <T> Redirect(final Class<T> target, final Consumer<T> consumer) {
 		super(target, consumer);
 	}
 
-	public Redirect(String path) {
+	public Redirect(final String path) {
 		super(path);
 	}
 }

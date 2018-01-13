@@ -54,7 +54,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#argumentsCount()}.
 	 */
-	public static void argumentsCount(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void argumentsCount(final MethodVisitor mv, final MethodInfo methodInfo) {
 		int argsCount = methodInfo.getArgumentsCount();
 		pushInt(mv, argsCount);
 	}
@@ -62,7 +62,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#argumentType(int)}.
 	 */
-	public static void argumentType(MethodVisitor mv, MethodInfo methodInfo, int argIndex) {
+	public static void argumentType(final MethodVisitor mv, final MethodInfo methodInfo, final int argIndex) {
 		checkArgumentIndex(methodInfo, argIndex);
 		mv.visitInsn(POP);
 		loadMethodArgumentClass(mv, methodInfo, argIndex);
@@ -71,7 +71,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#argument(int)}.
 	 */
-	public static void argument(MethodVisitor mv, MethodInfo methodInfo, int argIndex) {
+	public static void argument(final MethodVisitor mv, final MethodInfo methodInfo, final int argIndex) {
 		checkArgumentIndex(methodInfo, argIndex);
 		mv.visitInsn(POP);
 		loadMethodArgumentAsObject(mv, methodInfo, argIndex);
@@ -80,7 +80,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#createArgumentsArray()}.
 	 */
-	public static void createArgumentsArray(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void createArgumentsArray(final MethodVisitor mv, final MethodInfo methodInfo) {
 		int argsCount = methodInfo.getArgumentsCount();
 		pushInt(mv, argsCount);
 		mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT);
@@ -95,7 +95,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#createArgumentsClassArray()}.
 	 */
-	public static void createArgumentsClassArray(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void createArgumentsClassArray(final MethodVisitor mv, final MethodInfo methodInfo) {
 		int argsCount = methodInfo.getArgumentsCount();
 		pushInt(mv, argsCount);
 		mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_CLASS);
@@ -110,35 +110,35 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#returnType()}.
 	 */
-	public static void returnType(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void returnType(final MethodVisitor mv, final MethodInfo methodInfo) {
 		ProxettaAsmUtil.loadClass(mv, methodInfo.getReturnType().getOpcode(), methodInfo.getReturnType().getName());
 	}
 
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetMethodName()}.
 	 */
-	public static void targetMethodName(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void targetMethodName(final MethodVisitor mv, final MethodInfo methodInfo) {
 		mv.visitLdcInsn(methodInfo.getMethodName());
 	}
 
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetMethodSignature()}.
 	 */
-	public static void targetMethodSignature(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void targetMethodSignature(final MethodVisitor mv, final MethodInfo methodInfo) {
 		mv.visitLdcInsn(methodInfo.getSignature());
 	}
 
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetMethodDescription()}.
 	 */
-	public static void targetMethodDescription(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void targetMethodDescription(final MethodVisitor mv, final MethodInfo methodInfo) {
 		mv.visitLdcInsn(methodInfo.getDescription());
 	}
 
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetClass()}.
 	 */
-	public static void targetClass(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void targetClass(final MethodVisitor mv, final MethodInfo methodInfo) {
 		ClassInfo classInfo = methodInfo.getClassInfo();
 		mv.visitLdcInsn(Type.getType('L' + classInfo.getReference() + ';'));
 	}
@@ -146,7 +146,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#info()}.
 	 */
-	public static void info(MethodVisitor mv, MethodInfo methodInfo, int argsOff) {
+	public static void info(final MethodVisitor mv, final MethodInfo methodInfo, final int argsOff) {
 		mv.visitTypeInsn(Opcodes.NEW, PROXY_TARGET_INFO);
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, PROXY_TARGET_INFO, "<init>", "()V", false);
@@ -203,7 +203,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(String, String)}.
 	 */
-	public static void targetMethodAnnotation(MethodVisitor mv, MethodInfo methodInfo, String[] args) {
+	public static void targetMethodAnnotation(final MethodVisitor mv, final MethodInfo methodInfo, final String[] args) {
 		AnnotationInfo[] anns = methodInfo.getAnnotations();
 
 		if (anns != null) {
@@ -214,7 +214,7 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetClassAnnotation(String, String)}.
 	 */
-	public static void targetClassAnnotation(MethodVisitor mv, ClassInfo classInfo, String[] args) {
+	public static void targetClassAnnotation(final MethodVisitor mv, final ClassInfo classInfo, final String[] args) {
 		AnnotationInfo[] anns = classInfo.getAnnotations();
 
 		if (anns != null) {
@@ -224,7 +224,7 @@ public class ProxyTargetReplacement {
 		}
 	}
 
-	private static void targetAnnotation(MethodVisitor mv, AnnotationInfo[] anns, String[] args) {
+	private static void targetAnnotation(final MethodVisitor mv, final AnnotationInfo[] anns, final String[] args) {
 		for (AnnotationInfo ann : anns) {
 			String annotationSignature = ann.getAnnotationSignature();
 			Method annotationMethod = null;

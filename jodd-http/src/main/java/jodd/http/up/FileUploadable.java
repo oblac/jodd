@@ -43,22 +43,24 @@ public class FileUploadable implements Uploadable<File> {
 	protected final String fileName;
 	protected final String mimeType;
 
-	public FileUploadable(File file) {
+	public FileUploadable(final File file) {
 		this.file = file;
 		this.fileName = FileNameUtil.getName(file.getName());
 		this.mimeType = null;
 	}
 
-	public FileUploadable(File file, String fileName, String mimeType) {
+	public FileUploadable(final File file, final String fileName, final String mimeType) {
 		this.file = file;
 		this.fileName = fileName;
 		this.mimeType = mimeType;
 	}
 
+	@Override
 	public File getContent() {
 		return file;
 	}
 
+	@Override
 	public byte[] getBytes() {
 		try {
 			return FileUtil.readBytes(file);
@@ -67,18 +69,22 @@ public class FileUploadable implements Uploadable<File> {
 		}
 	}
 
+	@Override
 	public String getFileName() {
 		return fileName;
 	}
 
+	@Override
 	public String getMimeType() {
 		return mimeType;
 	}
 
+	@Override
 	public int getSize() {
 		return (int) file.length();
 	}
 
+	@Override
 	public InputStream openInputStream() throws IOException {
 		return new FileInputStream(file);
 	}

@@ -30,22 +30,22 @@ package jodd.mutable;
  */
 public final class MutableFloat extends Number implements Comparable<MutableFloat>, Cloneable {
 
-	public static MutableFloat of(float value) {
+	public static MutableFloat of(final float value) {
 		return new MutableFloat(value);
 	}
 
 	public MutableFloat() {
 	}
 
-	public MutableFloat(float value) {
+	public MutableFloat(final float value) {
 		this.value = value;
 	}
 
-	public MutableFloat(String value) {
+	public MutableFloat(final String value) {
 		this.value = Float.parseFloat(value);
 	}
 
-	public MutableFloat(Number number) {
+	public MutableFloat(final Number number) {
 		this.value = number.floatValue();
 	}
 
@@ -66,14 +66,14 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	/**
 	 * Sets mutable value.
 	 */
-	public void set(float value) {
+	public void set(final float value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void set(Number value) {
+	public void set(final Number value) {
 		this.value = value.floatValue();
 	}
 
@@ -103,7 +103,7 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Float)this.value).getClass() == obj.getClass() ) {
 				return Float.floatToIntBits(value) == Float.floatToIntBits(((Float) obj).floatValue());
@@ -169,7 +169,7 @@ public final class MutableFloat extends Number implements Comparable<MutableFloa
 	 * Compares value of two same instances.
 	 */
 	@Override
-	public int compareTo(MutableFloat other) {
+	public int compareTo(final MutableFloat other) {
 		return Float.compare(value, other.value);
 	}
 

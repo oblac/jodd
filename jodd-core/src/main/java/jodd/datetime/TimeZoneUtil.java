@@ -35,7 +35,7 @@ public class TimeZoneUtil {
 	/**
 	 * Returns raw offset difference in milliseconds.
 	 */
-	public static int getRawOffsetDifference(TimeZone from, TimeZone to) {
+	public static int getRawOffsetDifference(final TimeZone from, final TimeZone to) {
 		int offsetBefore = from.getRawOffset();
 		int offsetAfter = to.getRawOffset();
 		return offsetAfter - offsetBefore;
@@ -44,7 +44,7 @@ public class TimeZoneUtil {
 	/**
 	 * Returns offset difference  in milliseconds for given time.
 	 */
-	public static int getOffsetDifference(long now, TimeZone from, TimeZone to) {
+	public static int getOffsetDifference(final long now, final TimeZone from, final TimeZone to) {
 		int offsetBefore = from.getOffset(now);
 		int offsetAfter = to.getOffset(now);
 		return offsetAfter - offsetBefore;
@@ -53,7 +53,7 @@ public class TimeZoneUtil {
 	/**
 	 * Get offset difference in milliseconds for given jdatetime.
 	 */
-	public static int getOffset(JDateTime jdt, TimeZone tz) {
+	public static int getOffset(final JDateTime jdt, final TimeZone tz) {
 		return tz.getOffset(
 				jdt.getEra(),
 				jdt.getYear(),
@@ -64,7 +64,7 @@ public class TimeZoneUtil {
 		);
 	}
 
-	public static int getOffsetDifference(JDateTime jdt, TimeZone from, TimeZone to) {
+	public static int getOffsetDifference(final JDateTime jdt, final TimeZone from, final TimeZone to) {
 		int offsetBefore = getOffset(jdt, from);
 		int offsetAfter = getOffset(jdt, to);
 		return offsetAfter - offsetBefore;

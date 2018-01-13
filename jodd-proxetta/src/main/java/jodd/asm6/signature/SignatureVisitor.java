@@ -97,7 +97,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the name of the formal parameter.
      */
-    public void visitFormalTypeParameter(String name) {
+    public void visitFormalTypeParameter(final String name) {
     }
 
     /**
@@ -171,7 +171,7 @@ public abstract class SignatureVisitor {
      *            the descriptor of the primitive type, or 'V' for <tt>void</tt>
      *            .
      */
-    public void visitBaseType(char descriptor) {
+    public void visitBaseType(final char descriptor) {
     }
 
     /**
@@ -180,7 +180,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the name of the type variable.
      */
-    public void visitTypeVariable(String name) {
+    public void visitTypeVariable(final String name) {
     }
 
     /**
@@ -200,7 +200,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the internal name of the class or interface.
      */
-    public void visitClassType(String name) {
+    public void visitClassType(final String name) {
     }
 
     /**
@@ -209,7 +209,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the local name of the inner class in its enclosing class.
      */
-    public void visitInnerClassType(String name) {
+    public void visitInnerClassType(final String name) {
     }
 
     /**
@@ -226,7 +226,7 @@ public abstract class SignatureVisitor {
      *            '+', '-' or '='.
      * @return a non null visitor to visit the signature of the type argument.
      */
-    public SignatureVisitor visitTypeArgument(char wildcard) {
+    public SignatureVisitor visitTypeArgument(final char wildcard) {
         return this;
     }
 

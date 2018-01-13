@@ -36,7 +36,7 @@ public class LogEchoInterceptor extends EchoInterceptor {
 	private static final Logger log = LoggerFactory.getLogger(LogEchoInterceptor.class);
 
 	@Override
-	protected void out(String message) {
+	protected void out(final String message) {
 		log.debug(message);
 	}
 }

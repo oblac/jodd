@@ -43,7 +43,7 @@ public enum HttpMethod {
 	/**
 	 * Returns {@code true} if method name is equal to provided one.
 	 */
-	public boolean equalsName(String name) {
+	public boolean equalsName(final String name) {
 		return name().equalsIgnoreCase(name);
 	}
 }

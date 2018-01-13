@@ -70,14 +70,14 @@ public class LagartoParser extends Scanner {
 	/**
 	 * Creates parser on char array.
 	 */
-	public LagartoParser(char[] charArray) {
+	public LagartoParser(final char[] charArray) {
 		initialize(CharArraySequence.of(charArray));
 	}
 
 	/**
 	 * Creates parser on a String.
 	 */
-	public LagartoParser(CharSequence string) {
+	public LagartoParser(final CharSequence string) {
 		initialize(string);
 	}
 
@@ -85,7 +85,7 @@ public class LagartoParser extends Scanner {
 	 * Initializes parser.
 	 */
 	@Override
-	protected void initialize(CharSequence input) {
+	protected void initialize(final CharSequence input) {
 		super.initialize(input);
 		this.tag = new ParsedTag();
 		this.doctype = new ParsedDoctype();
@@ -108,7 +108,7 @@ public class LagartoParser extends Scanner {
 	/**
 	 * Sets parser configuration.
 	 */
-	public void setConfig(LagartoParserConfig config) {
+	public void setConfig(final LagartoParserConfig config) {
 		this.config = config;
 	}
 
@@ -119,7 +119,7 @@ public class LagartoParser extends Scanner {
 	/**
 	 * Parses content and callback provided {@link TagVisitor}.
 	 */
-	public void parse(TagVisitor visitor) {
+	public void parse(final TagVisitor visitor) {
 		tag.init(config.caseSensitive);
 
 		this.parsingTime = System.currentTimeMillis();
@@ -183,7 +183,7 @@ public class LagartoParser extends Scanner {
 		}
 	};
 
-	protected void consumeCharacterReference(char allowedChar) {
+	protected void consumeCharacterReference(final char allowedChar) {
 		ndx++;
 
 		if (isEOF()) {
@@ -291,7 +291,7 @@ public class LagartoParser extends Scanner {
 		}
 	}
 
-	private void _consumeNumber(int unconsumeNdx) {
+	private void _consumeNumber(final int unconsumeNdx) {
 		ndx++;
 
 		if (isEOF()) {
@@ -2842,7 +2842,7 @@ public class LagartoParser extends Scanner {
 		}
 	}
 
-	private void ensureCapacity(int growth) {
+	private void ensureCapacity(final int growth) {
 		int desiredLen = textLen + growth;
 		if (desiredLen > text.length) {
 			text = ArraysUtil.resize(text, Math.max(textLen << 1, desiredLen));
@@ -2852,7 +2852,7 @@ public class LagartoParser extends Scanner {
 	/**
 	 * Emits characters into the local text buffer.
 	 */
-	protected void textEmitChar(char c) {
+	protected void textEmitChar(final char c) {
 		ensureCapacity();
 		text[textLen++] = c;
 	}
@@ -2864,14 +2864,14 @@ public class LagartoParser extends Scanner {
 		textLen = 0;
 	}
 
-	protected void textEmitChars(int from, int to) {
+	protected void textEmitChars(int from, final int to) {
 		ensureCapacity(to - from);
 		while (from < to) {
 			text[textLen++] = input.charAt(from++);
 		}
 	}
 
-	protected void textEmitChars(char[] buffer) {
+	protected void textEmitChars(final char[] buffer) {
 		ensureCapacity(buffer.length);
 		for (char aBuffer : buffer) {
 			text[textLen++] = aBuffer;
@@ -2899,7 +2899,7 @@ public class LagartoParser extends Scanner {
 		_addAttribute(charSequence(attrStartNdx, attrEndNdx), textWrap().toString());
 	}
 
-	private void _addAttribute(CharSequence attrName, CharSequence attrValue) {
+	private void _addAttribute(final CharSequence attrName, final CharSequence attrValue) {
 		if (tag.getType() == TagType.END) {
 			_error("Ignored end tag attribute");
 		} else {
@@ -2968,7 +2968,7 @@ public class LagartoParser extends Scanner {
 	/**
 	 * Emits a comment. Also checks for conditional comments!
 	 */
-	protected void emitComment(int from, int to) {
+	protected void emitComment(final int from, final int to) {
 		if (config.enableConditionalComments) {
 			// CC: downlevel-hidden starting
 			if (match(CC_IF, from)) {
@@ -3016,7 +3016,7 @@ public class LagartoParser extends Scanner {
 		textLen = 0;
 	}
 
-	protected void emitScript(int from, int to) {
+	protected void emitScript(final int from, final int to) {
 		tag.increaseDeepLevel();
 
 		tag.setRawTag(true);
@@ -3039,7 +3039,7 @@ public class LagartoParser extends Scanner {
 		xmlDeclaration.reset();
 	}
 
-	protected void emitCData(CharSequence charSequence) {
+	protected void emitCData(final CharSequence charSequence) {
 		visitor.cdata(charSequence);
 	}
 
@@ -3078,7 +3078,7 @@ public class LagartoParser extends Scanner {
 
 	// ---------------------------------------------------------------- util
 
-	private boolean isAppropriateTagName(CharSequence lowerCaseNameToMatch, int from, int to) {
+	private boolean isAppropriateTagName(final CharSequence lowerCaseNameToMatch, final int from, final int to) {
 		int len = to - from;
 
 		if (len != lowerCaseNameToMatch.length()) {

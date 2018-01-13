@@ -60,7 +60,7 @@ public class StringTemplateParser {
 	 * If <code>false</code> missing keys will be left as it were, i.e.
 	 * they will not be replaced.
 	 */
-	public StringTemplateParser setReplaceMissingKey(boolean replaceMissingKey) {
+	public StringTemplateParser setReplaceMissingKey(final boolean replaceMissingKey) {
 		this.replaceMissingKey = replaceMissingKey;
 		return this;
 	}
@@ -69,7 +69,7 @@ public class StringTemplateParser {
 	 * Specifies replacement for missing keys. If <code>null</code>
 	 * exception will be thrown.
 	 */
-	public StringTemplateParser setMissingKeyReplacement(String missingKeyReplacement) {
+	public StringTemplateParser setMissingKeyReplacement(final String missingKeyReplacement) {
 		this.missingKeyReplacement = missingKeyReplacement;
 		return this;
 	}
@@ -80,7 +80,7 @@ public class StringTemplateParser {
 	 * this may be set to <code>false</code> so escaped values
 	 * remains.
 	 */
-	public StringTemplateParser setResolveEscapes(boolean resolveEscapes) {
+	public StringTemplateParser setResolveEscapes(final boolean resolveEscapes) {
 		this.resolveEscapes = resolveEscapes;
 		return this;
 	}
@@ -88,12 +88,12 @@ public class StringTemplateParser {
 	/**
 	 * Defines macro start string.
 	 */
-	public StringTemplateParser setMacroStart(String macroStart) {
+	public StringTemplateParser setMacroStart(final String macroStart) {
 		this.macroStart = macroStart;
 		return this;
 	}
 
-	public StringTemplateParser setMacroPrefix(String macroPrefix) {
+	public StringTemplateParser setMacroPrefix(final String macroPrefix) {
 		this.macroPrefix = macroPrefix;
 		return this;
 	}
@@ -102,7 +102,7 @@ public class StringTemplateParser {
 	/**
 	 * Defines macro end string.
 	 */
-	public StringTemplateParser setMacroEnd(String macroEnd) {
+	public StringTemplateParser setMacroEnd(final String macroEnd) {
 		this.macroEnd = macroEnd;
 		return this;
 	}
@@ -118,7 +118,7 @@ public class StringTemplateParser {
 	/**
 	 * Defines escape character.
 	 */
-	public StringTemplateParser setEscapeChar(char escapeChar) {
+	public StringTemplateParser setEscapeChar(final char escapeChar) {
 		this.escapeChar = escapeChar;
 		return this;
 	}
@@ -127,7 +127,7 @@ public class StringTemplateParser {
 	 * Defines if macro values has to be parsed, too.
 	 * By default, macro values are returned as they are.
 	 */
-	public StringTemplateParser setParseValues(boolean parseValues) {
+	public StringTemplateParser setParseValues(final boolean parseValues) {
 		this.parseValues = parseValues;
 		return this;
 	}
@@ -138,7 +138,7 @@ public class StringTemplateParser {
 	/**
 	 * Parses string template and replaces macros with resolved values.
 	 */
-	public String parse(String template, Function<String, String> macroResolver) {
+	public String parse(String template, final Function<String, String> macroResolver) {
 		StringBuilder result = new StringBuilder(template.length());
 
 		int i = 0;

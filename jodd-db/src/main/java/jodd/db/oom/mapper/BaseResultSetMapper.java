@@ -37,13 +37,14 @@ public abstract class BaseResultSetMapper implements ResultSetMapper {
 
 	protected final ResultSet resultSet;
 
-	protected BaseResultSetMapper(ResultSet resultSet) {
+	protected BaseResultSetMapper(final ResultSet resultSet) {
 		this.resultSet = resultSet;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean next() {
 		try {
 			return resultSet.next();
@@ -55,6 +56,7 @@ public abstract class BaseResultSetMapper implements ResultSetMapper {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() {
 		try {
 			resultSet.close();
@@ -66,6 +68,7 @@ public abstract class BaseResultSetMapper implements ResultSetMapper {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ResultSet getResultSet() {
 		return resultSet;
 	}
@@ -74,7 +77,8 @@ public abstract class BaseResultSetMapper implements ResultSetMapper {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object parseOneObject(Class... types) {
+	@Override
+	public Object parseOneObject(final Class... types) {
 		return parseObjects(types)[0];
 	}
 

@@ -41,7 +41,7 @@ import java.math.BigInteger;
  */
 public class BigIntegerConverter implements TypeConverter<BigInteger> {
 
-	public BigInteger convert(Object value) {
+	public BigInteger convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

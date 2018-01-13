@@ -83,7 +83,7 @@ public class CssSelector implements NodeFilter {
 
 	// ---------------------------------------------------------------- init
 
-	void setPrevCssSelector(CssSelector prevCssSelector) {
+	void setPrevCssSelector(final CssSelector prevCssSelector) {
 		this.prevCssSelector = prevCssSelector;
 		prevCssSelector.nextCssSelector = this;
 	}
@@ -101,7 +101,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Returns selector for given index.
 	 */
-	public Selector getSelector(int index) {
+	public Selector getSelector(final int index) {
 		return selectors.get(index);
 	}
 
@@ -117,7 +117,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Sets combinator.
 	 */
-	public void setCombinator(Combinator combinator) {
+	public void setCombinator(final Combinator combinator) {
 		this.combinator = combinator;
 	}
 
@@ -147,11 +147,11 @@ public class CssSelector implements NodeFilter {
 
 	// ---------------------------------------------------------------- pseudo class
 
-	public void addPseudoClassSelector(String pseudoClass) {
+	public void addPseudoClassSelector(final String pseudoClass) {
 		selectors.add(new PseudoClassSelector(pseudoClass));
 	}
 
-	public void addPseudoFunctionSelector(String pseudoFunction, String expression) {
+	public void addPseudoFunctionSelector(final String pseudoFunction, final String expression) {
 		selectors.add(new PseudoFunctionSelector(pseudoFunction, expression));
 	}
 
@@ -221,7 +221,8 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Accepts single node.
 	 */
-	public boolean accept(Node node) {
+	@Override
+	public boolean accept(final Node node) {
 		// match element name with node name
 		if (!matchElement(node)) {
 			return false;
@@ -257,7 +258,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Matches element to css selector. All non-element types are ignored.
 	 */
-	protected boolean matchElement(Node node) {
+	protected boolean matchElement(final Node node) {
 		if (node.getNodeType() != Node.NodeType.ELEMENT) {
 			return false;
 		}
@@ -272,7 +273,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Accepts node within current results.
 	 */
-	public boolean accept(List<Node> currentResults, Node node, int index) {
+	public boolean accept(final List<Node> currentResults, final Node node, final int index) {
 		// match attributes
 		int totalSelectors = selectorsCount();
 		for (int i = 0; i < totalSelectors; i++) {
@@ -302,7 +303,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Unescapes CSS string by removing all backslash characters from it.
 	 */
-	protected String unescape(String value) {
+	protected String unescape(final String value) {
 		if (value.indexOf('\\') == -1) {
 			return value;
 		}

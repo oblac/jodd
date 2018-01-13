@@ -46,7 +46,7 @@ public class SetResolver {
 	/**
 	 * Resolves all collections for given type.
 	 */
-	public SetInjectionPoint[] resolve(Class type, boolean autowire) {
+	public SetInjectionPoint[] resolve(final Class type, final boolean autowire) {
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<SetInjectionPoint> list = new ArrayList<>();
 

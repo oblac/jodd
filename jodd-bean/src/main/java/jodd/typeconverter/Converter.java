@@ -93,7 +93,7 @@ public class Converter {
 	 */
 	protected TypeConverter[] typeConverters = new TypeConverter[commonTypes.length];
 
-	public void register(Class type, TypeConverter typeConverter) {
+	public void register(final Class type, final TypeConverter typeConverter) {
 		for (int i = 0; i < commonTypes.length; i++) {
 			Class commonType = commonTypes[i];
 			if (type == commonType) {
@@ -108,7 +108,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Boolean</code>.
 	 */
-	public Boolean toBoolean(Object value) {
+	public Boolean toBoolean(final Object value) {
 		return (Boolean) typeConverters[0].convert(value);
 	}
 
@@ -116,7 +116,7 @@ public class Converter {
 	 * Converts value to <code>Boolean</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Boolean toBoolean(Object value, Boolean defaultValue) {
+	public Boolean toBoolean(final Object value, final Boolean defaultValue) {
 		Boolean result = (Boolean) typeConverters[0].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -128,7 +128,7 @@ public class Converter {
 	 * Converts value to <code>boolean</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public boolean toBooleanValue(Object value, boolean defaultValue) {
+	public boolean toBooleanValue(final Object value, final boolean defaultValue) {
 		Boolean result = (Boolean) typeConverters[1].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -139,7 +139,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>boolean</code> with common default value.
 	 */
-	public boolean toBooleanValue(Object value) {
+	public boolean toBooleanValue(final Object value) {
 		return toBooleanValue(value, false);
 	}
 
@@ -147,7 +147,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Integer</code>.
 	 */
-	public Integer toInteger(Object value) {
+	public Integer toInteger(final Object value) {
 		return (Integer) typeConverters[2].convert(value);
 	}
 
@@ -155,7 +155,7 @@ public class Converter {
 	 * Converts value to <code>Integer</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Integer toInteger(Object value, Integer defaultValue) {
+	public Integer toInteger(final Object value, final Integer defaultValue) {
 		Integer result = (Integer) typeConverters[2].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -167,7 +167,7 @@ public class Converter {
 	 * Converts value to <code>int</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public int toIntValue(Object value, int defaultValue) {
+	public int toIntValue(final Object value, final int defaultValue) {
 		Integer result = (Integer) typeConverters[3].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -178,7 +178,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>int</code> with common default value.
 	 */
-	public int toIntValue(Object value) {
+	public int toIntValue(final Object value) {
 		return toIntValue(value, 0);
 	}
 
@@ -186,7 +186,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Long</code>.
 	 */
-	public Long toLong(Object value) {
+	public Long toLong(final Object value) {
 		return (Long) typeConverters[4].convert(value);
 	}
 
@@ -194,7 +194,7 @@ public class Converter {
 	 * Converts value to <code>Long</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Long toLong(Object value, Long defaultValue) {
+	public Long toLong(final Object value, final Long defaultValue) {
 		Long result = (Long) typeConverters[4].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -206,7 +206,7 @@ public class Converter {
 	 * Converts value to <code>long</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public long toLongValue(Object value, long defaultValue) {
+	public long toLongValue(final Object value, final long defaultValue) {
 		Long result = (Long) typeConverters[5].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -217,7 +217,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>long</code> with common default value.
 	 */
-	public long toLongValue(Object value) {
+	public long toLongValue(final Object value) {
 		return toLongValue(value, 0);
 	}
 
@@ -225,7 +225,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Float</code>.
 	 */
-	public Float toFloat(Object value) {
+	public Float toFloat(final Object value) {
 		return (Float) typeConverters[6].convert(value);
 	}
 
@@ -233,7 +233,7 @@ public class Converter {
 	 * Converts value to <code>Float</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Float toFloat(Object value, Float defaultValue) {
+	public Float toFloat(final Object value, final Float defaultValue) {
 		Float result = (Float) typeConverters[6].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -245,7 +245,7 @@ public class Converter {
 	 * Converts value to <code>float</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public float toFloatValue(Object value, float defaultValue) {
+	public float toFloatValue(final Object value, final float defaultValue) {
 		Float result = (Float) typeConverters[7].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -256,7 +256,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>float</code> with common default value.
 	 */
-	public float toFloatValue(Object value) {
+	public float toFloatValue(final Object value) {
 		return toFloatValue(value, 0);
 	}
 
@@ -264,7 +264,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Double</code>.
 	 */
-	public Double toDouble(Object value) {
+	public Double toDouble(final Object value) {
 		return (Double) typeConverters[8].convert(value);
 	}
 
@@ -272,7 +272,7 @@ public class Converter {
 	 * Converts value to <code>Double</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Double toDouble(Object value, Double defaultValue) {
+	public Double toDouble(final Object value, final Double defaultValue) {
 		Double result = (Double) typeConverters[8].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -284,7 +284,7 @@ public class Converter {
 	 * Converts value to <code>double</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public double toDoubleValue(Object value, double defaultValue) {
+	public double toDoubleValue(final Object value, final double defaultValue) {
 		Double result = (Double) typeConverters[9].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -295,7 +295,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>double</code> with common default value.
 	 */
-	public double toDoubleValue(Object value) {
+	public double toDoubleValue(final Object value) {
 		return toDoubleValue(value, 0);
 	}
 
@@ -303,7 +303,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Short</code>.
 	 */
-	public Short toShort(Object value) {
+	public Short toShort(final Object value) {
 		return (Short) typeConverters[10].convert(value);
 	}
 
@@ -311,7 +311,7 @@ public class Converter {
 	 * Converts value to <code>Short</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Short toShort(Object value, Short defaultValue) {
+	public Short toShort(final Object value, final Short defaultValue) {
 		Short result = (Short) typeConverters[10].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -323,7 +323,7 @@ public class Converter {
 	 * Converts value to <code>short</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public short toShortValue(Object value, short defaultValue) {
+	public short toShortValue(final Object value, final short defaultValue) {
 		Short result = (Short) typeConverters[11].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -334,7 +334,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>short</code> with common default value.
 	 */
-	public short toShortValue(Object value) {
+	public short toShortValue(final Object value) {
 		return toShortValue(value, (short) 0);
 	}
 
@@ -342,7 +342,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Character</code>.
 	 */
-	public Character toCharacter(Object value) {
+	public Character toCharacter(final Object value) {
 		return (Character) typeConverters[12].convert(value);
 	}
 
@@ -350,7 +350,7 @@ public class Converter {
 	 * Converts value to <code>Character</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Character toCharacter(Object value, Character defaultValue) {
+	public Character toCharacter(final Object value, final Character defaultValue) {
 		Character result = (Character) typeConverters[12].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -362,7 +362,7 @@ public class Converter {
 	 * Converts value to <code>char</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public char toCharValue(Object value, char defaultValue) {
+	public char toCharValue(final Object value, final char defaultValue) {
 		Character result = (Character) typeConverters[13].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -373,7 +373,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>char</code> with common default value.
 	 */
-	public char toCharValue(Object value) {
+	public char toCharValue(final Object value) {
 		return toCharValue(value, (char) 0);
 	}
 
@@ -381,7 +381,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Byte</code>.
 	 */
-	public Byte toByte(Object value) {
+	public Byte toByte(final Object value) {
 		return (Byte) typeConverters[14].convert(value);
 	}
 
@@ -389,7 +389,7 @@ public class Converter {
 	 * Converts value to <code>Byte</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Byte toByte(Object value, Byte defaultValue) {
+	public Byte toByte(final Object value, final Byte defaultValue) {
 		Byte result = (Byte) typeConverters[14].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -401,7 +401,7 @@ public class Converter {
 	 * Converts value to <code>byte</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public byte toByteValue(Object value, byte defaultValue) {
+	public byte toByteValue(final Object value, final byte defaultValue) {
 		Byte result = (Byte) typeConverters[15].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -412,63 +412,63 @@ public class Converter {
 	/**
 	 * Converts value to <code>byte</code> with common default value.
 	 */
-	public byte toByteValue(Object value) {
+	public byte toByteValue(final Object value) {
 		return toByteValue(value, (byte) 0);
 	}
 
 	/**
 	 * Converts value to <code>boolean[]</code>.
 	 */
-	public boolean[] toBooleanArray(Object value) {
+	public boolean[] toBooleanArray(final Object value) {
 		return (boolean[]) typeConverters[16].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>int[]</code>.
 	 */
-	public int[] toIntegerArray(Object value) {
+	public int[] toIntegerArray(final Object value) {
 		return (int[]) typeConverters[17].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>long[]</code>.
 	 */
-	public long[] toLongArray(Object value) {
+	public long[] toLongArray(final Object value) {
 		return (long[]) typeConverters[18].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>float[]</code>.
 	 */
-	public float[] toFloatArray(Object value) {
+	public float[] toFloatArray(final Object value) {
 		return (float[]) typeConverters[19].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>double[]</code>.
 	 */
-	public double[] toDoubleArray(Object value) {
+	public double[] toDoubleArray(final Object value) {
 		return (double[]) typeConverters[20].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>short[]</code>.
 	 */
-	public short[] toShortArray(Object value) {
+	public short[] toShortArray(final Object value) {
 		return (short[]) typeConverters[21].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>char[]</code>.
 	 */
-	public char[] toCharacterArray(Object value) {
+	public char[] toCharacterArray(final Object value) {
 		return (char[]) typeConverters[22].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>String</code>.
 	 */
-	public String toString(Object value) {
+	public String toString(final Object value) {
 		return (String) typeConverters[23].convert(value);
 	}
 
@@ -476,7 +476,7 @@ public class Converter {
 	 * Converts value to <code>String</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public String toString(Object value, String defaultValue) {
+	public String toString(final Object value, final String defaultValue) {
 		String result = (String) typeConverters[23].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -487,28 +487,28 @@ public class Converter {
 	/**
 	 * Converts value to <code>String[]</code>.
 	 */
-	public String[] toStringArray(Object value) {
+	public String[] toStringArray(final Object value) {
 		return (String[]) typeConverters[24].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>Class</code>.
 	 */
-	public Class toClass(Object value) {
+	public Class toClass(final Object value) {
 		return (Class) typeConverters[25].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>Class[]</code>.
 	 */
-	public Class[] toClassArray(Object value) {
+	public Class[] toClassArray(final Object value) {
 		return (Class[]) typeConverters[26].convert(value);
 	}
 
 	/**
 	 * Converts value to <code>JDateTime</code>.
 	 */
-	public JDateTime toJDateTime(Object value) {
+	public JDateTime toJDateTime(final Object value) {
 		return (JDateTime) typeConverters[27].convert(value);
 	}
 
@@ -516,7 +516,7 @@ public class Converter {
 	 * Converts value to <code>JDateTime</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public JDateTime toJDateTime(Object value, JDateTime defaultValue) {
+	public JDateTime toJDateTime(final Object value, final JDateTime defaultValue) {
 		JDateTime result = (JDateTime) typeConverters[27].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -527,7 +527,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Date</code>.
 	 */
-	public Date toDate(Object value) {
+	public Date toDate(final Object value) {
 		return (Date) typeConverters[28].convert(value);
 	}
 
@@ -535,7 +535,7 @@ public class Converter {
 	 * Converts value to <code>Date</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Date toDate(Object value, Date defaultValue) {
+	public Date toDate(final Object value, final Date defaultValue) {
 		Date result = (Date) typeConverters[28].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -546,7 +546,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>Calendar</code>.
 	 */
-	public Calendar toCalendar(Object value) {
+	public Calendar toCalendar(final Object value) {
 		return (Calendar) typeConverters[29].convert(value);
 	}
 
@@ -554,7 +554,7 @@ public class Converter {
 	 * Converts value to <code>Calendar</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public Calendar toCalendar(Object value, Calendar defaultValue) {
+	public Calendar toCalendar(final Object value, final Calendar defaultValue) {
 		Calendar result = (Calendar) typeConverters[29].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -565,7 +565,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>BigInteger</code>.
 	 */
-	public BigInteger toBigInteger(Object value) {
+	public BigInteger toBigInteger(final Object value) {
 		return (BigInteger) typeConverters[30].convert(value);
 	}
 
@@ -573,7 +573,7 @@ public class Converter {
 	 * Converts value to <code>BigInteger</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public BigInteger toBigInteger(Object value, BigInteger defaultValue) {
+	public BigInteger toBigInteger(final Object value, final BigInteger defaultValue) {
 		BigInteger result = (BigInteger) typeConverters[30].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -584,7 +584,7 @@ public class Converter {
 	/**
 	 * Converts value to <code>BigDecimal</code>.
 	 */
-	public BigDecimal toBigDecimal(Object value) {
+	public BigDecimal toBigDecimal(final Object value) {
 		return (BigDecimal) typeConverters[31].convert(value);
 	}
 
@@ -592,7 +592,7 @@ public class Converter {
 	 * Converts value to <code>BigDecimal</code>. Returns default value
 	 * when conversion result is <code>null</code>
 	 */
-	public BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
+	public BigDecimal toBigDecimal(final Object value, final BigDecimal defaultValue) {
 		BigDecimal result = (BigDecimal) typeConverters[31].convert(value);
 		if (result == null) {
 			return defaultValue;

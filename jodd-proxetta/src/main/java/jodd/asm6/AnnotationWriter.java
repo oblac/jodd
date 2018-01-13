@@ -329,7 +329,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param out
      *            where the type reference and type path must be put.
      */
-    static void putTarget(int typeRef, TypePath typePath, ByteVector out) {
+    static void putTarget(final int typeRef, final TypePath typePath, final ByteVector out) {
         switch (typeRef >>> 24) {
         case 0x00: // CLASS_TYPE_PARAMETER
         case 0x01: // METHOD_TYPE_PARAMETER

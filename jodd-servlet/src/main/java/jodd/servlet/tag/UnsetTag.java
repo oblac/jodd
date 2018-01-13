@@ -41,13 +41,13 @@ public class UnsetTag extends SimpleTagSupport {
 	private static final String SCOPE_REQUEST = "request";
 	private static final String SCOPE_PAGE = "page";
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
 	protected String scope;
 
-	public void setScope(String scope) {
+	public void setScope(final String scope) {
 		this.scope = scope;
 	}
 

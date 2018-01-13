@@ -48,11 +48,11 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 
 	protected Buffer buffer;
 
-	public BufferResponseWrapper(HttpServletResponse originalResponse) {
+	public BufferResponseWrapper(final HttpServletResponse originalResponse) {
 		this(originalResponse, new LastModifiedData());
 	}
 
-	public BufferResponseWrapper(HttpServletResponse originalResponse, LastModifiedData lastModifiedData) {
+	public BufferResponseWrapper(final HttpServletResponse originalResponse, final LastModifiedData lastModifiedData) {
 		super(originalResponse);
 		this.lastModifiedData = lastModifiedData;
 		lastModifiedData.startNewResponse();
@@ -239,7 +239,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * on how the content was buffered. It is assumed that provided content is a modified
 	 * wrapped content.
 	 */
-	public void writeContentToResponse(char[] content) throws IOException {
+	public void writeContentToResponse(final char[] content) throws IOException {
 		if (buffer == null) {
 			return;
 		}
@@ -312,7 +312,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * @param mimeType extracted mime-type, e.g. "text/html"
 	 * @param encoding extracted encoding, e.g. "utf-8" (may be <code>null</code>)
 	 */
-	protected boolean bufferContentType(String contentType, String mimeType, String encoding) {
+	protected boolean bufferContentType(final String contentType, final String mimeType, final String encoding) {
 		return true;
 	}
 
@@ -320,7 +320,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Sets the content type and enables or disables buffering.
 	 */
 	@Override
-	public void setContentType(String type) {
+	public void setContentType(final String type) {
 		super.setContentType(type);
 
 		contentTypeResolver = new ContentTypeHeaderResolver(type);
@@ -348,7 +348,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Prevents content-length being set if buffering enabled.
 	 */
 	@Override
-	public void setContentLength(int contentLength) {
+	public void setContentLength(final int contentLength) {
 		if (buffer == null) {
 			super.setContentLength(contentLength);
 		}
@@ -358,7 +358,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Prevents setting content-length if buffering enabled.
 	 */
 	@Override
-	public void setHeader(String name, String value) {
+	public void setHeader(final String name, final String value) {
 		String lowerName = name.toLowerCase();
 		if (lowerName.equals(CONTENT_TYPE)) {
 			setContentType(value);
@@ -371,7 +371,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Prevents setting content-length if buffering enabled.
 	 */
 	@Override
-	public void addHeader(String name, String value) {
+	public void addHeader(final String name, final String value) {
 		String lowerName = name.toLowerCase();
 
 		if (lowerName.equals(CONTENT_TYPE)) {
@@ -385,7 +385,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Prevents setting content-length if buffering enabled.
 	 */
 	@Override
-	public void setIntHeader(String name, int value) {
+	public void setIntHeader(final String name, final int value) {
 		if (buffer == null || !name.equalsIgnoreCase(CONTENT_LENGTH)) {
 			super.setIntHeader(name, value);
 		}
@@ -395,7 +395,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Prevents setting content-length if buffering enabled.
 	 */
 	@Override
-	public void addIntHeader(String name, int value) {
+	public void addIntHeader(final String name, final int value) {
 		if (buffer == null || !name.equalsIgnoreCase(CONTENT_LENGTH)) {
 			super.addIntHeader(name, value);
 		}
@@ -404,7 +404,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	// ---------------------------------------------------------------- date headers
 
 	@Override
-	public void setDateHeader(String name, long value) {
+	public void setDateHeader(final String name, final long value) {
 		if (name.equalsIgnoreCase(LAST_MODIFIED)) {
 			lastModifiedData.updateLastModified(value);
 		} else {
@@ -413,7 +413,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	@Override
-	public void addDateHeader(String name, long value) {
+	public void addDateHeader(final String name, final long value) {
 		if (name.equalsIgnoreCase(LAST_MODIFIED)) {
 			lastModifiedData.updateLastModified(value);
 		} else {
@@ -424,36 +424,36 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	// ---------------------------------------------------------------- status
 
 	@Override
-	public void setStatus(int statusCode) {
+	public void setStatus(final int statusCode) {
 		stopBufferingForStatusCode(statusCode);
 		super.setStatus(statusCode);
 	}
 
 	@Override
-	public void setStatus(int statusCode, String reason) {
+	public void setStatus(final int statusCode, final String reason) {
 		stopBufferingForStatusCode(statusCode);
 		super.setStatus(statusCode);
 	}
 
 	@Override
-	public void sendError(int statusCode) throws IOException {
+	public void sendError(final int statusCode) throws IOException {
 		stopBufferingForStatusCode(statusCode);
 		super.sendError(statusCode);
 	}
 
 	@Override
-	public void sendError(int statusCode, String reason) throws IOException {
+	public void sendError(final int statusCode, final String reason) throws IOException {
 		stopBufferingForStatusCode(statusCode);
 		super.sendError(statusCode, reason);
 	}
 
 	@Override
-	public void sendRedirect(String location) throws IOException {
+	public void sendRedirect(final String location) throws IOException {
 		stopBufferingForStatusCode(HttpServletResponse.SC_TEMPORARY_REDIRECT);
 		super.sendRedirect(location);
 	}
 
-	protected void stopBufferingForStatusCode(int statusCode) {
+	protected void stopBufferingForStatusCode(final int statusCode) {
 		if (!bufferStatusCode(statusCode)) {
 			disableBuffering();
 		}
@@ -463,7 +463,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 * Determines if buffering should be used for some HTTP status code.
 	 * By default returns <code>true</code> only for status code <b>200</b>.
 	 */
-	protected boolean bufferStatusCode(int statusCode) {
+	protected boolean bufferStatusCode(final int statusCode) {
 		return statusCode == 200;
 	}
 
@@ -472,7 +472,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	/**
 	 * Appends string to the buffer.
 	 */
-	public void print(String string) throws IOException {
+	public void print(final String string) throws IOException {
 		if (isBufferStreamBased()) {
 			String encoding = getContentTypeEncoding();
 			byte[] bytes;

@@ -25,8 +25,8 @@
 
 package jodd.cache;
 
-import java.util.LinkedHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  * FIFO (first in first out) cache.
@@ -42,14 +42,14 @@ import java.util.Iterator;
  */
 public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 
-	public FIFOCache(int cacheSize) {
+	public FIFOCache(final int cacheSize) {
 		this(cacheSize, 0);
 	}
 
 	/**
 	 * Creates a new LRU cache.
 	 */
-	public FIFOCache(int cacheSize, long timeout) {
+	public FIFOCache(final int cacheSize, final long timeout) {
 		this.cacheSize = cacheSize;
 		this.timeout = timeout;
 		cacheMap = new LinkedHashMap<>(cacheSize + 1, 1.0f, false);

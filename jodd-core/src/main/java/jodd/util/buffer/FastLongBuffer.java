@@ -55,7 +55,7 @@ public class FastLongBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastLongBuffer(int size) {
+	public FastLongBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastLongBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastLongBuffer {
 	/**
 	 * Appends <code>long</code> array to buffer.
 	 */
-	public FastLongBuffer append(long[] array, int off, int len) {
+	public FastLongBuffer append(final long[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastLongBuffer {
 	/**
 	 * Appends <code>long</code> array to buffer.
 	 */
-	public FastLongBuffer append(long[] array) {
+	public FastLongBuffer append(final long[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>long</code> to buffer.
 	 */
-	public FastLongBuffer append(long element) {
+	public FastLongBuffer append(final long element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastLongBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastLongBuffer append(FastLongBuffer buff) {
+	public FastLongBuffer append(final FastLongBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastLongBuffer {
 	 * Returns <code>long</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public long[] array(int index) {
+	public long[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastLongBuffer {
     /**
      * Creates <code>long</code> subarray from buffered content.
      */
-	public long[] toArray(int start, int len) {
+	public long[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		long[] array = new long[len];

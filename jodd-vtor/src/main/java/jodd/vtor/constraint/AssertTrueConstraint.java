@@ -34,17 +34,17 @@ public class AssertTrueConstraint implements ValidationConstraint<AssertTrue>  {
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(AssertTrue annotation) {
+	public void configure(final AssertTrue annotation) {
 	}
 
 	// ---------------------------------------------------------------- valid
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value);
 	}
 
-	public static boolean validate(Object value) {
+	public static boolean validate(final Object value) {
 		return Converter.get().toBooleanValue(value, true);
 	}
 

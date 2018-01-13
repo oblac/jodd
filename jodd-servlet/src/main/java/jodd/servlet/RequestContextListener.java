@@ -37,13 +37,13 @@ public class RequestContextListener implements ServletRequestListener {
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new InheritableThreadLocal<>();
 
 	@Override
-	public void requestInitialized(ServletRequestEvent requestEvent) {
+	public void requestInitialized(final ServletRequestEvent requestEvent) {
 		HttpServletRequest request = (HttpServletRequest) requestEvent.getServletRequest();
 		requestHolder.set(request);
 	}
 
 	@Override
-	public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
+	public void requestDestroyed(final ServletRequestEvent servletRequestEvent) {
 		requestHolder.remove();
 	}
 

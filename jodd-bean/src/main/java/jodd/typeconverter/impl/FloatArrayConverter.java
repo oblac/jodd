@@ -40,12 +40,12 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public FloatArrayConverter(TypeConverterManager typeConverterManager) {
+	public FloatArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public float[] convert(Object value) {
+	public float[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected float convertType(Object value) {
+	protected float convertType(final Object value) {
 		return typeConverterManager.convertType(value, float.class).floatValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected float[] convertToSingleElementArray(Object value) {
+	protected float[] convertToSingleElementArray(final Object value) {
 		return new float[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected float[] convertValueToArray(Object value) {
+	protected float[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			float[] target = new float[list.size()];
@@ -138,7 +138,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected float[] convertArrayToArray(Object value) {
+	protected float[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == float.class) {
@@ -168,7 +168,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected float[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected float[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		float[] result = null;
 
 		if (primitiveComponentType == float[].class) {

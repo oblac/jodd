@@ -500,7 +500,7 @@ class MethodWriter extends MethodVisitor {
     // ------------------------------------------------------------------------
 
     @Override
-    public void visitParameter(String name, int access) {
+    public void visitParameter(final String name, final int access) {
         if (methodParameters == null) {
             methodParameters = new ByteVector();
         }
@@ -1298,7 +1298,7 @@ class MethodWriter extends MethodVisitor {
 
     @Override
     public AnnotationVisitor visitInsnAnnotation(int typeRef,
-            TypePath typePath, String desc, boolean visible) {
+                                                 final TypePath typePath, final String desc, final boolean visible) {
         ByteVector bv = new ByteVector();
         // write target_type and target_info
         typeRef = (typeRef & 0xFF0000FF) | (lastCodeOffset << 8);
@@ -1336,8 +1336,8 @@ class MethodWriter extends MethodVisitor {
     }
 
     @Override
-    public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
-            TypePath typePath, String desc, boolean visible) {
+    public AnnotationVisitor visitTryCatchAnnotation(final int typeRef,
+                                                     final TypePath typePath, final String desc, final boolean visible) {
         ByteVector bv = new ByteVector();
         // write target_type and target_info
         AnnotationWriter.putTarget(typeRef, typePath, bv);
@@ -1388,9 +1388,9 @@ class MethodWriter extends MethodVisitor {
     }
 
     @Override
-    public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
-            TypePath typePath, Label[] start, Label[] end, int[] index,
-            String desc, boolean visible) {
+    public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
+                                                          final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
+                                                          final String desc, final boolean visible) {
         ByteVector bv = new ByteVector();
         // write target_type and target_info
         bv.putByte(typeRef >>> 24).putShort(start.length);

@@ -42,7 +42,7 @@ public class ProviderDefinition {
 	public final String beanName;
 	public final Method method;
 
-	public ProviderDefinition(String name, String beanName, Method method) {
+	public ProviderDefinition(final String name, final String beanName, final Method method) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(beanName);
 		Objects.requireNonNull(method);
@@ -52,7 +52,7 @@ public class ProviderDefinition {
 		this.method = method;
 	}
 
-	public ProviderDefinition(String name, Method staticMethod) {
+	public ProviderDefinition(final String name, final Method staticMethod) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(staticMethod);
 

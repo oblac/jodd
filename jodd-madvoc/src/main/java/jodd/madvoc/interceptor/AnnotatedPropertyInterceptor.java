@@ -44,12 +44,12 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 
 	protected final Class<Annotation> annotations;
 
-	protected AnnotatedPropertyInterceptor(Class<Annotation> annotations) {
+	protected AnnotatedPropertyInterceptor(final Class<Annotation> annotations) {
 		this.annotations = annotations;
 	}
 
 	@Override
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		Object action = actionRequest.action();
 		Class actionType = action.getClass();
 
@@ -76,7 +76,7 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 	 * Lookups for annotated properties. Caches all annotated properties on the first
 	 * action class scan. 
 	 */
-	protected PropertyDescriptor[] lookupAnnotatedProperties(Class type) {
+	protected PropertyDescriptor[] lookupAnnotatedProperties(final Class type) {
 		PropertyDescriptor[] properties = annotatedProperties.get(type);
 
 		if (properties != null) {

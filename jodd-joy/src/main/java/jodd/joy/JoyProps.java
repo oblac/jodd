@@ -39,7 +39,7 @@ public class JoyProps extends JoyBase {
 
 	protected Props props;
 
-	public JoyProps(Supplier<String> nameSupplier) {
+	public JoyProps(final Supplier<String> nameSupplier) {
 		this.nameSupplier = nameSupplier;
 		this.config = new Config();
 	}
@@ -56,12 +56,12 @@ public class JoyProps extends JoyBase {
 		private String propsNamePattern;
 		private List<String> propsProfiles = new ArrayList<>();
 
-		public Config setPropsNamePattern(String namePattern) {
+		public Config setPropsNamePattern(final String namePattern) {
 			this.propsNamePattern = namePattern;
 			return this;
 		}
 
-		public Config addPropsProfiles(String... profiles) {
+		public Config addPropsProfiles(final String... profiles) {
 			Collections.addAll(propsProfiles, profiles);
 			return this;
 		}

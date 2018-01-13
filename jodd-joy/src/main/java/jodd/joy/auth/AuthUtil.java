@@ -47,7 +47,7 @@ public class AuthUtil {
 	 * Returns new session object from the request attributes,
 	 * usually created during user registration.
 	 */
-	public static Object getNewUserSession(HttpServletRequest servletRequest) {
+	public static Object getNewUserSession(final HttpServletRequest servletRequest) {
 		Object newUserSession = servletRequest.getAttribute(AUTH_SESSION_NAME);
 		servletRequest.removeAttribute(AUTH_SESSION_NAME);
 		return newUserSession;
@@ -56,7 +56,7 @@ public class AuthUtil {
 	/**
 	 * Returns user session or <code>null</code> if there is no authenticated user.
 	 */
-	public static Object getUserSession(HttpSession httpSession) {
+	public static Object getUserSession(final HttpSession httpSession) {
 		if (httpSession == null) {
 			return null;
 		}
@@ -66,14 +66,14 @@ public class AuthUtil {
 	/**
 	 * @see #getUserSession(javax.servlet.http.HttpSession)
 	 */
-	public static Object getUserSession(HttpServletRequest servletRequest) {
+	public static Object getUserSession(final HttpServletRequest servletRequest) {
 		return getUserSession(servletRequest.getSession(false));
 	}
 
 	/**
 	 * Closes user session.
 	 */
-	public static void closeUserSession(HttpSession httpSession) {
+	public static void closeUserSession(final HttpSession httpSession) {
 		if (httpSession != null) {
 			httpSession.removeAttribute(AUTH_SESSION_NAME);
 		}
@@ -82,21 +82,21 @@ public class AuthUtil {
 	/**
 	 * @see #closeUserSession(javax.servlet.http.HttpSession)
 	 */
-	public static void closeUserSession(HttpServletRequest servletRequest) {
+	public static void closeUserSession(final HttpServletRequest servletRequest) {
 		closeUserSession(servletRequest.getSession(false));
 	}
 
 	/**
 	 * Starts user session by storing user session object into http session.
 	 */
-	public static void startUserSession(HttpSession httpSession, Object userSession) {
+	public static void startUserSession(final HttpSession httpSession, final Object userSession) {
 		httpSession.setAttribute(AUTH_SESSION_NAME, userSession);
 	}
 
 	/**
 	 * @see #startUserSession(javax.servlet.http.HttpServletRequest, Object)
 	 */
-	public static void startUserSession(HttpServletRequest servletRequest, Object userSession) {
+	public static void startUserSession(final HttpServletRequest servletRequest, final Object userSession) {
 		HttpSession session = servletRequest.getSession(true);
 
 		session.setAttribute(AUTH_SESSION_NAME, userSession);
@@ -116,7 +116,7 @@ public class AuthUtil {
 	 * Returns <code>null</code> if cookie does not exist.
 	 * Throws an exception if cookie data is invalid or corrupted.
 	 */
-	public static String[] readAuthCookie(HttpServletRequest request) throws Exception {
+	public static String[] readAuthCookie(final HttpServletRequest request) throws Exception {
 		Cookie cookie = ServletUtil.getCookie(request, AUTH_COOKIE_NAME);
 		if (cookie == null) {
 			return null;
@@ -132,7 +132,7 @@ public class AuthUtil {
 	/**
 	 * Stores string array into the cookie.
 	 */
-	public static void storeAuthCookie(HttpServletResponse response, int cookieMaxAge, String... values) {
+	public static void storeAuthCookie(final HttpServletResponse response, final int cookieMaxAge, final String... values) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
 			if (i > 0) {
@@ -153,7 +153,7 @@ public class AuthUtil {
 	/**
 	 * Removes auth cookie.
 	 */
-	public static void removeAuthCookie(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	public static void removeAuthCookie(final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) {
 		Cookie cookie = ServletUtil.getCookie(servletRequest, AUTH_COOKIE_NAME);
 		if (cookie == null) {
 			return;

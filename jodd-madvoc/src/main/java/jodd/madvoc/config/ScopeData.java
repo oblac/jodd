@@ -53,7 +53,7 @@ public class ScopeData {
 		 * <p>
 		 * Returns real property name, once when name is matched.
 		 */
-		public String matchedPropertyName(String value) {
+		public String matchedPropertyName(final String value) {
 			// match
 			if (!value.startsWith(name)) {
 				return null;

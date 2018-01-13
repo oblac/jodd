@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class PetiteException extends UncheckedException {
 
-	public PetiteException(Throwable t) {
+	public PetiteException(final Throwable t) {
 		super(t);
 	}
 
-	public PetiteException(String message) {
+	public PetiteException(final String message) {
 		super(message);
 	}
 
-	public PetiteException(String message, Throwable t) {
+	public PetiteException(final String message, final Throwable t) {
 		super(message, t);
 	}
 

@@ -44,22 +44,22 @@ public class HttpServletRequestMap extends StringKeyedMapAdapter {
 	/**
 	 * Create a new map wrapping the attributes of given request.
 	 */
-	public HttpServletRequestMap(HttpServletRequest request) {
+	public HttpServletRequestMap(final HttpServletRequest request) {
 		this.request = request;
 	}
 
 	@Override
-	protected Object getAttribute(String key) {
+	protected Object getAttribute(final String key) {
 		return request.getAttribute(key);
 	}
 
 	@Override
-	protected void setAttribute(String key, Object value) {
+	protected void setAttribute(final String key, final Object value) {
 		request.setAttribute(key, value);
 	}
 
 	@Override
-	protected void removeAttribute(String key) {
+	protected void removeAttribute(final String key) {
 		request.removeAttribute(key);
 	}
 

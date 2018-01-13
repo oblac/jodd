@@ -57,7 +57,7 @@ public class ValidationContext {
 	/**
 	 * Adds validation checks.
 	 */
-	public void add(Check check) {
+	public void add(final Check check) {
 		String name = check.getName();
 		List<Check> list = map.get(name);
 		if (list == null) {
@@ -70,7 +70,7 @@ public class ValidationContext {
 	/**
 	 * Adds all checks from provided list.
 	 */
-	public void addAll(List<Check> checkList) {
+	public void addAll(final List<Check> checkList) {
 		for (Check check : checkList) {
 			add(check);
 		}
@@ -85,7 +85,7 @@ public class ValidationContext {
 	 * Resolve validation context for provided target class.
 	 * @see #addClassChecks(Class)
 	 */
-	public static ValidationContext resolveFor(Class<?> target) {
+	public static ValidationContext resolveFor(final Class<?> target) {
 		ValidationContext vc = new ValidationContext();
 		vc.addClassChecks(target);
 		return vc;
@@ -95,7 +95,7 @@ public class ValidationContext {
 	 * Parses class annotations and adds all checks.
 	 * @see #resolveFor(Class)
 	 */
-	public void addClassChecks(Class target) {
+	public void addClassChecks(final Class target) {
 		List<Check> list = cache.get(target);
 		if (list == null) {
 			list = new ArrayList<>();
@@ -114,7 +114,7 @@ public class ValidationContext {
 	/**
 	 * Process all annotations of provided properties.
 	 */
-	protected void collectPropertyAnnotationChecks(List<Check> annChecks, PropertyDescriptor propertyDescriptor) {
+	protected void collectPropertyAnnotationChecks(final List<Check> annChecks, final PropertyDescriptor propertyDescriptor) {
 		FieldDescriptor fd = propertyDescriptor.getFieldDescriptor();
 
 		if (fd != null) {
@@ -139,7 +139,7 @@ public class ValidationContext {
 	 * Collect annotations for some target.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected void collectAnnotationChecks(List<Check> annChecks, Class targetType, String targetName, Annotation[] annotations) {
+	protected void collectAnnotationChecks(final List<Check> annChecks, final Class targetType, final String targetName, final Annotation[] annotations) {
 		for (Annotation annotation : annotations) {
 			Constraint c = annotation.annotationType().getAnnotation(Constraint.class);
 			Class<? extends ValidationConstraint> constraintClass;
@@ -180,7 +180,7 @@ public class ValidationContext {
 	 * <li>otherwise, use constructor with ValidationContext parameter.</li>
 	 * </ul>
 	 */
-	protected <V extends ValidationConstraint> V newConstraint(Class<V> constraint, Class targetType) throws Exception {
+	protected <V extends ValidationConstraint> V newConstraint(final Class<V> constraint, final Class targetType) throws Exception {
 		Constructor<V> ctor;
 		try {
 			ctor = constraint.getConstructor();
@@ -196,7 +196,7 @@ public class ValidationContext {
 	/**
 	 * Copies default properties from annotation to the check.
 	 */
-	protected void copyDefaultCheckProperties(Check destCheck, Annotation annotation) {
+	protected void copyDefaultCheckProperties(final Check destCheck, final Annotation annotation) {
 		Integer severity = (Integer) ClassUtil.readAnnotationValue(annotation, ANN_SEVERITY);
 		destCheck.setSeverity(severity.intValue());
 

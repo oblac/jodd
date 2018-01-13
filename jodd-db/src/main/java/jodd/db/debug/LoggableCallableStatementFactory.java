@@ -35,12 +35,12 @@ public class LoggableCallableStatementFactory extends BaseLoggableFactory<Callab
 		super(CallableStatement.class);
 	}
 
-	public CallableStatement prepareCall(Connection connection, String sql, int type, int concurrencyType, int holdability) throws SQLException {
+	public CallableStatement prepareCall(final Connection connection, final String sql, final int type, final int concurrencyType, final int holdability) throws SQLException {
 		CallableStatement callableStatement = connection.prepareCall(sql, type, concurrencyType, holdability);
 		return wrap(callableStatement, sql);
 	}
 
-	public CallableStatement prepareCall(Connection connection, String sql, int type, int concurrencyType) throws SQLException {
+	public CallableStatement prepareCall(final Connection connection, final String sql, final int type, final int concurrencyType) throws SQLException {
 		CallableStatement callableStatement = connection.prepareCall(sql, type, concurrencyType);
 		return wrap(callableStatement, sql);
 	}

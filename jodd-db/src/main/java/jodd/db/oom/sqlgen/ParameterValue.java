@@ -34,7 +34,7 @@ public class ParameterValue {
 	protected final Object value;
 	protected final DbEntityColumnDescriptor dec;
 
-	public ParameterValue(Object value, DbEntityColumnDescriptor dec) {
+	public ParameterValue(final Object value, final DbEntityColumnDescriptor dec) {
 		this.value = value;
 		this.dec = dec;
 	}

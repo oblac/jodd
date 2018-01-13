@@ -34,7 +34,7 @@ import java.util.Map;
 public class JsonObjectSerializer extends KeyValueJsonSerializer<JsonObject> {
 
 	@Override
-	public void serializeValue(JsonContext jsonContext, JsonObject jsonObject) {
+	public void serializeValue(final JsonContext jsonContext, final JsonObject jsonObject) {
 		jsonContext.writeOpenObject();
 
 		int count = 0;

@@ -34,7 +34,7 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 	public RangeConstraint() {
 	}
 
-	public RangeConstraint(double min, double max) {
+	public RangeConstraint(final double min, final double max) {
 		this.min = min;
 		this.max = max;
 	}
@@ -48,7 +48,7 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 		return min;
 	}
 
-	public void setMin(double min) {
+	public void setMin(final double min) {
 		this.min = min;
 	}
 
@@ -56,14 +56,14 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 		return max;
 	}
 
-	public void setMax(double max) {
+	public void setMax(final double max) {
 		this.max = max;
 	}
 
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(Range annotation) {
+	public void configure(final Range annotation) {
 		this.min = annotation.min();
 		this.max = annotation.max();
 	}
@@ -71,11 +71,11 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 	// ---------------------------------------------------------------- valid
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, min, max);
 	}
 
-	public static boolean validate(Object value, double min, double max) {
+	public static boolean validate(final Object value, final double min, final double max) {
 		if (value == null) {
 			return true;
 		}

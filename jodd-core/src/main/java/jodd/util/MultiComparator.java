@@ -35,7 +35,7 @@ import java.util.List;
 public class MultiComparator<T> implements Comparator<T>, Serializable {
 	protected final List<Comparator<T>> comparators;
 
-	public MultiComparator(List<Comparator<T>> comparators) {
+	public MultiComparator(final List<Comparator<T>> comparators) {
 		this.comparators = comparators;
 	}
 
@@ -43,7 +43,8 @@ public class MultiComparator<T> implements Comparator<T>, Serializable {
 	 * Compares two objects starting with first comparator; if they are equals
 	 * proceeds to the next comparator and so on.
 	 */
-	public int compare(T o1, T o2) {
+	@Override
+	public int compare(final T o1, final T o2) {
 		for (Comparator<T> comparator : comparators) {
 			int result = comparator.compare(o1, o2);
 			if (result != 0) {

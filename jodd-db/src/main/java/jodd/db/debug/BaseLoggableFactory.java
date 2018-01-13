@@ -51,7 +51,7 @@ public abstract class BaseLoggableFactory<T> {
 	 * Returns {@link WrapperProxetta} used for building loggable prepared statements.
 	 * Initializes proxetta when called for the first time.
 	 */
-	protected BaseLoggableFactory(Class<T> targetClass) {
+	protected BaseLoggableFactory(final Class<T> targetClass) {
 		this.targetClass = targetClass;
 		this.proxetta = Proxetta.wrapperProxetta().withAspect(ProxyAspect.of(LoggableAdvice.class, methodInfo -> {
 			int argumentsCount = methodInfo.getArgumentsCount();
@@ -72,7 +72,7 @@ public abstract class BaseLoggableFactory<T> {
 	 * Wraps prepared statement.
 	 */
 	@SuppressWarnings("unchecked")
-	protected T wrap(T preparedStatement, String sql) {
+	protected T wrap(final T preparedStatement, final String sql) {
 		if (wrappedStatement == null) {
 			builder = proxetta.proxy();
 
@@ -119,7 +119,7 @@ public abstract class BaseLoggableFactory<T> {
 	/**
 	 * Returns the query string from loggable wrapped statement.
 	 */
-	public String getQueryString(T statement) {
+	public String getQueryString(final T statement) {
 		try {
 			return (String) getQueryStringMethod.invoke(statement);
 		} catch (Exception ex) {

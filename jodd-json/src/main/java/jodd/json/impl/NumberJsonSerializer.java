@@ -31,7 +31,7 @@ import jodd.json.TypeJsonSerializer;
 public class NumberJsonSerializer implements TypeJsonSerializer<Number> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, Number value) {
+	public boolean serialize(final JsonContext jsonContext, final Number value) {
 		jsonContext.write(value.toString());
 		return true;
 	}

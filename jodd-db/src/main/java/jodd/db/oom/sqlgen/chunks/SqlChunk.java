@@ -55,7 +55,7 @@ public abstract class SqlChunk {
 	public static final int CHUNK_UPDATE = 6;
 
 
-	protected SqlChunk(int chunkType) {
+	protected SqlChunk(final int chunkType) {
 		this.chunkType = chunkType;
 	}
 
@@ -83,7 +83,7 @@ public abstract class SqlChunk {
 	 * Appends chunk to previous one and maintains the double-linked list of the previous chunk.
 	 * Current surrounding connections of this chunk will be cut-off.
 	 */
-	public void insertChunkAfter(SqlChunk previous) {
+	public void insertChunkAfter(final SqlChunk previous) {
 		SqlChunk next = previous.nextChunk;
 		previous.nextChunk = this;
 		this.previousChunk = previous;
@@ -96,7 +96,7 @@ public abstract class SqlChunk {
 	/**
 	 * Returns <code>true</code> if previous chunk is of provided type.
 	 */
-	public boolean isPreviousChunkOfType(int type) {
+	public boolean isPreviousChunkOfType(final int type) {
 		if (previousChunk == null) {
 			return false;
 		}
@@ -139,7 +139,7 @@ public abstract class SqlChunk {
 	 * Initializes chunk. Assigns {@link jodd.db.oom.sqlgen.TemplateData} to chunk.
 	 * If chunk needs some pre-processing, they should be done here.
 	 */
-	public void init(TemplateData templateData) {
+	public void init(final TemplateData templateData) {
 		this.templateData = templateData;
 	}
 
@@ -154,7 +154,7 @@ public abstract class SqlChunk {
 	/**
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
-	protected DbEntityDescriptor lookupName(String entityName) {
+	protected DbEntityDescriptor lookupName(final String entityName) {
 		DbEntityDescriptor ded = DbEntityManager.get().lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
@@ -165,7 +165,7 @@ public abstract class SqlChunk {
 	/**
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
-	protected DbEntityDescriptor lookupType(Class entity) {
+	protected DbEntityDescriptor lookupType(final Class entity) {
 		DbEntityDescriptor ded = DbEntityManager.get().lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity: " + entity.getName());
@@ -176,14 +176,14 @@ public abstract class SqlChunk {
 	/**
 	 * Lookups for table reference and throws an exception if table reference not found.
 	 */
-	protected DbEntityDescriptor lookupTableRef(String tableRef) {
+	protected DbEntityDescriptor lookupTableRef(final String tableRef) {
 		return lookupTableRef(tableRef, true);
 	}
 
 	/**
 	 * Lookups for table reference and optionally throws an exception if table reference not found.
 	 */
-	protected DbEntityDescriptor lookupTableRef(String tableRef, boolean throwExceptionIfNotFound) {
+	protected DbEntityDescriptor lookupTableRef(final String tableRef, final boolean throwExceptionIfNotFound) {
 		DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
 		if (ded == null) {
 			if (throwExceptionIfNotFound) {
@@ -196,7 +196,7 @@ public abstract class SqlChunk {
 	/**
 	 * Finds a table that contains given column.
 	 */
-	protected DbEntityDescriptor findColumnRef(String columnRef) {
+	protected DbEntityDescriptor findColumnRef(final String columnRef) {
 		DbEntityDescriptor ded = templateData.findTableDescriptorByColumnRef(columnRef);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid column reference: " + columnRef);
@@ -209,7 +209,7 @@ public abstract class SqlChunk {
 	/**
 	 * Resolves table name or alias that will be used in the query.
 	 */
-	protected String resolveTable(String tableRef, DbEntityDescriptor ded) {
+	protected String resolveTable(final String tableRef, final DbEntityDescriptor ded) {
 		String tableAlias = templateData.getTableAlias(tableRef);
 		if (tableAlias != null) {
 			return tableAlias;
@@ -220,7 +220,7 @@ public abstract class SqlChunk {
 	/**
 	 * Defines parameter with name and its value.
 	 */
-	protected void defineParameter(StringBuilder query, String name, Object value, DbEntityColumnDescriptor dec) {
+	protected void defineParameter(final StringBuilder query, String name, final Object value, final DbEntityColumnDescriptor dec) {
 		if (name == null) {
 			name = templateData.getNextParameterName();
 		}
@@ -231,7 +231,7 @@ public abstract class SqlChunk {
 	/**
 	 * Resolves object to a class.
 	 */
-	protected static Class resolveClass(Object object) {
+	protected static Class resolveClass(final Object object) {
 		Class type = object.getClass();
 		return type == Class.class ? (Class) object : type;
 	}
@@ -241,7 +241,7 @@ public abstract class SqlChunk {
 	/**
 	 * Appends missing space if the output doesn't end with whitespace.
 	 */
-	protected void appendMissingSpace(StringBuilder out) {
+	protected void appendMissingSpace(final StringBuilder out) {
 		int len = out.length();
 		if (len == 0) {
 			return;
@@ -255,7 +255,7 @@ public abstract class SqlChunk {
 	/**
 	 * Separates from previous chunk by comma if is of the same type.
 	 */
-	protected void separateByCommaOrSpace(StringBuilder out) {
+	protected void separateByCommaOrSpace(final StringBuilder out) {
 		if (isPreviousChunkOfSameType()) {
 			out.append(',').append(' ');
 		} else {

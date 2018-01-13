@@ -35,7 +35,7 @@ public class HasSubstringConstraint implements ValidationConstraint<HasSubstring
 	public HasSubstringConstraint() {
 	}
 
-	public HasSubstringConstraint(String substring, boolean ignoreCase) {
+	public HasSubstringConstraint(final String substring, final boolean ignoreCase) {
 		this.substring = substring;
 		this.ignoreCase = ignoreCase;
 	}
@@ -49,7 +49,7 @@ public class HasSubstringConstraint implements ValidationConstraint<HasSubstring
 		return substring;
 	}
 
-	public void setSubstring(String substring) {
+	public void setSubstring(final String substring) {
 		this.substring = substring;                                          
 	}
 
@@ -57,24 +57,26 @@ public class HasSubstringConstraint implements ValidationConstraint<HasSubstring
 		return ignoreCase;
 	}
 
-	public void setIgnoreCase(boolean ignoreCase) {
+	public void setIgnoreCase(final boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 	}
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(HasSubstring annotation) {
+	@Override
+	public void configure(final HasSubstring annotation) {
 		this.substring = annotation.value();
 		this.ignoreCase = annotation.ignoreCase();
 	}
 
 	// ---------------------------------------------------------------- valid
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, substring, ignoreCase);
 	}
 
-	public static boolean validate(Object value, String substring, boolean ignoreCase) {
+	public static boolean validate(final Object value, final String substring, final boolean ignoreCase) {
 		if (value == null) {
 			return true;
 		}

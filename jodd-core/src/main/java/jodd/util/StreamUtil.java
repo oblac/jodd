@@ -34,14 +34,14 @@ public class StreamUtil {
 	/**
 	 * Converts interable to a stream.
 	 */
-	public static <T> Stream<T> toStream(Iterable<T> iterable) {
+	public static <T> Stream<T> toStream(final Iterable<T> iterable) {
 		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 
 	/**
 	 * Converts iterator to a stream.
 	 */
-	public static <T> Stream<T> toStream(Iterator<T> iterator) {
+	public static <T> Stream<T> toStream(final Iterator<T> iterator) {
 		return toStream(() -> iterator);
 	}
 }

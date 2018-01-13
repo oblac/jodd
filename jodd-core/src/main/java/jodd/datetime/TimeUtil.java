@@ -50,7 +50,7 @@ public class TimeUtil {
 	 *
 	 * @return day of year in range: [1-366]
 	 */
-	public static int dayOfYear(int year, int month, int day) {
+	public static int dayOfYear(final int year, final int month, final int day) {
 		int day_of_year;
 		if (isLeapYear(year)) {
 			day_of_year = ((275 * month) / 9) - ((month + 9) / 12) + day - 30;
@@ -66,7 +66,7 @@ public class TimeUtil {
 	 *
 	 * @return <code>true</code> if the year is a leap year
 	 */
-	public static boolean isLeapYear(int y) {
+	public static boolean isLeapYear(final int y) {
 		boolean result = false;
 	
 		if (((y % 4) == 0) &&			// must be divisible by 4...
@@ -86,11 +86,11 @@ public class TimeUtil {
 	 *
 	 * @return length of the specified month in days
 	 */
-	public static int getMonthLength(int year, int month) {
+	public static int getMonthLength(final int year, final int month) {
 		return getMonthLength(year, month, isLeapYear(year));
 	}
 
-	static int getMonthLength(int year, int month, boolean leap) {
+	static int getMonthLength(final int year, final int month, final boolean leap) {
 		if ((month < 1) || (month > 12)) {
 			throw new IllegalArgumentException("Invalid month: " + month);
 		}
@@ -111,7 +111,7 @@ public class TimeUtil {
 	 *
 	 * @return <code>true</code> if date is valid, otherwise <code>false</code>
 	 */
-	public static boolean isValidDate(int year, int month, int day) {
+	public static boolean isValidDate(final int year, final int month, final int day) {
 		if ((month < 1) || (month > 12)) {
 			return false;
 		}
@@ -132,7 +132,7 @@ public class TimeUtil {
 	 *
 	 * @return <code>true</code> if time is valid, otherwise <code>false</code>
 	 */
-	public static boolean isValidTime(int hour, int minute, int second, int millisecond) {
+	public static boolean isValidTime(final int hour, final int minute, final int second, final int millisecond) {
 		if ((hour < 0) || (hour >= 24)) {
 			return false;
 		}
@@ -161,7 +161,7 @@ public class TimeUtil {
 	 *
 	 * @return <code>true</code> if date and time are valid, otherwise <code>false</code>
 	 */
-	public static boolean isValidDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public static boolean isValidDateTime(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 		return (isValidDate(year, month, day) && isValidTime(hour, minute, second, millisecond));
 	}
 
@@ -172,7 +172,7 @@ public class TimeUtil {
 	 *
 	 * @return <code>true</code> if date and time are valid, otherwise <code>false</code>
 	 */
-	public static boolean isValidDateTime(DateTimeStamp dts) {
+	public static boolean isValidDateTime(final DateTimeStamp dts) {
 		return (isValidDate(dts.year, dts.month, dts.day) && isValidTime(dts.hour, dts.minute, dts.second, dts.millisecond));
 	}
 
@@ -184,7 +184,7 @@ public class TimeUtil {
 	 *
 	 * @return Julian Date stamp
 	 */
-	public static JulianDateStamp toJulianDate(DateTimeStamp time) {
+	public static JulianDateStamp toJulianDate(final DateTimeStamp time) {
 		return toJulianDate(time.year, time.month, time.day, time.hour, time.minute, time.second, time.millisecond);
 	}
 
@@ -208,7 +208,7 @@ public class TimeUtil {
 	 *
 	 * @return julian time stamp
 	 */
-	public static JulianDateStamp toJulianDate(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public static JulianDateStamp toJulianDate(int year, int month, int day, final int hour, final int minute, final int second, final int millisecond) {
 
 		// month range fix
 		if ((month > 12) || (month < -12)) {
@@ -269,7 +269,7 @@ public class TimeUtil {
 	 *
 	 * @return time stamp
 	 */
-	public static DateTimeStamp fromJulianDate(double JD) {
+	public static DateTimeStamp fromJulianDate(final double JD) {
 		return fromJulianDate(new JulianDateStamp(JD));
 	}
 
@@ -283,7 +283,7 @@ public class TimeUtil {
 	 *
 	 * @return time stamp
 	 */
-	public static DateTimeStamp fromJulianDate(JulianDateStamp jds) {
+	public static DateTimeStamp fromJulianDate(final JulianDateStamp jds) {
 		DateTimeStamp time = new DateTimeStamp();
 		int year, month, day;
 		double frac;
@@ -350,14 +350,14 @@ public class TimeUtil {
 	/**
 	 * Returns Calendar month from provided JDateTime month.
 	 */
-	public static int toCalendarMonth(int month) {
+	public static int toCalendarMonth(final int month) {
 		return month - 1;
 	}
 
 	/**
 	 * Returns Calendar day-of-week from provided JDateTime.
 	 */
-	public static int toCalendarDayOfWeek(int dayOfWeek) {
+	public static int toCalendarDayOfWeek(final int dayOfWeek) {
 		return (dayOfWeek % 7) + 1;
 	}
 
@@ -370,7 +370,7 @@ public class TimeUtil {
 	 * Formats time to HTTP date/time format. Note that number of milliseconds
 	 * is lost.
 	 */
-	public static String formatHttpDate(long millis) {
+	public static String formatHttpDate(final long millis) {
 		Date date = new Date(millis);
 		return HTTP_DATE_FORMAT.format(date);
 	}
@@ -379,7 +379,7 @@ public class TimeUtil {
 	 * Parses the HTTP date/time format. Returns <code>-1</code> if given string
 	 * is invalid.
 	 */
-	public static long parseHttpTime(String time) {
+	public static long parseHttpTime(final String time) {
 		if (time == null) {
 			return -1;
 		}

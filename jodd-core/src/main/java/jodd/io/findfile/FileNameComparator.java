@@ -35,7 +35,7 @@ public class FileNameComparator implements Comparator<File>, Serializable {
 	protected final int order;
 	protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true, true);
 
-	public FileNameComparator(boolean ascending) {
+	public FileNameComparator(final boolean ascending) {
 		if (ascending) {
 			order = 1;
 		} else {
@@ -44,7 +44,7 @@ public class FileNameComparator implements Comparator<File>, Serializable {
 	}
 
 	@Override
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		int result = naturalOrderComparator.compare(file1.getName(), file2.getName());
 		if (result == 0) {
 			return result;

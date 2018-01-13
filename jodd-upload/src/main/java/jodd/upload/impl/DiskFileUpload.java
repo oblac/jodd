@@ -25,18 +25,18 @@
 
 package jodd.upload.impl;
 
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartRequestInputStream;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.upload.FileUpload;
+import jodd.upload.MultipartRequestInputStream;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -46,7 +46,7 @@ public class DiskFileUpload extends FileUpload {
 
 	protected final File destFolder;
 
-	DiskFileUpload(MultipartRequestInputStream input, File destinationFolder, int maxFileSize) {
+	DiskFileUpload(final MultipartRequestInputStream input, final File destinationFolder, final int maxFileSize) {
 		super(input, maxFileSize);
 		this.destFolder = destinationFolder;
 	}

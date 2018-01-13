@@ -52,7 +52,7 @@ public class PetiteWebApp extends WebApp {
 	/**
 	 * Supplies a Petite container to be used.
 	 */
-	public PetiteWebApp withPetiteContainer(Supplier<PetiteContainer> petiteContainerSupplier) {
+	public PetiteWebApp withPetiteContainer(final Supplier<PetiteContainer> petiteContainerSupplier) {
 		Objects.requireNonNull(petiteContainerSupplier);
 		this.petiteContainerSupplier = petiteContainerSupplier;
 		return this;

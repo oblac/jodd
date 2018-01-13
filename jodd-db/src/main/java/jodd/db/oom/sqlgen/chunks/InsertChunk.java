@@ -41,15 +41,15 @@ public class InsertChunk extends SqlChunk {
 	protected final Class entityType;
 	protected final Object data;
 
-	public InsertChunk(String entityName, Object data) {
+	public InsertChunk(final String entityName, final Object data) {
 		this(entityName, null, data);
 	}
 
-	public InsertChunk(Class entityType, Object data) {
+	public InsertChunk(final Class entityType, final Object data) {
 		this(null, entityType, data);
 	}
 
-	protected InsertChunk(String entityName, Class entityType, Object data) {
+	protected InsertChunk(final String entityName, final Class entityType, final Object data) {
 		super(CHUNK_INSERT);
 		this.entityName = entityName;
 		this.entityType = entityType;
@@ -57,7 +57,7 @@ public class InsertChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		DbEntityDescriptor ded = entityName != null ? lookupName(entityName) : lookupType(entityType);
 		StringBuilder col = new StringBuilder();
 		StringBuilder val = new StringBuilder();

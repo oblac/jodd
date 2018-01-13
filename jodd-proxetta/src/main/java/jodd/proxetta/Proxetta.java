@@ -102,17 +102,17 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	/**
 	 * Adds an aspect.
 	 */
-	public T withAspect(A proxyAspect) {
+	public T withAspect(final A proxyAspect) {
 		proxyAspectList.add(proxyAspect);
 		return _this();
 	}
 
-	public T withAspects(A... aspects) {
+	public T withAspects(final A... aspects) {
 		Collections.addAll(proxyAspectList, aspects);
 		return _this();
 	}
 
-	public A[] getAspects(A[] array) {
+	public A[] getAspects(final A[] array) {
 		return proxyAspectList.toArray(array);
 	}
 
@@ -121,7 +121,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 * matching pointcuts. If <code>false</code>, new proxy class will be created only if there is at least one
 	 * matching pointcut - otherwise, original class will be returned.
 	 */
-	public T setForced(boolean forced) {
+	public T setForced(final boolean forced) {
 		this.forced = forced;
 		return _this();
 	}
@@ -135,7 +135,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 * Specifies classloaders for loading created classes.
 	 * If classloader not specified, default one will be used.
 	 */
-	public T setClassLoader(ClassLoader classLoader) {
+	public T setClassLoader(final ClassLoader classLoader) {
 		this.classLoader = classLoader;
 		return _this();
 	}
@@ -156,7 +156,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 * <p>
 	 * This prevents "<code>java.lang.LinkageError: duplicate class definition</code>" errors.
 	 */
-	public T setVariableClassName(boolean variableClassName) {
+	public T setVariableClassName(final boolean variableClassName) {
 		this.variableClassName = variableClassName;
 		return _this();
 	}
@@ -171,7 +171,7 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 * Warning: when class name suffix is not used, full classname has to be
 	 * specified that differs from target class name.
 	 */
-	public T setClassNameSuffix(String suffix) {
+	public T setClassNameSuffix(final String suffix) {
 		this.classNameSuffix = suffix;
 		return _this();
 	}
@@ -184,12 +184,12 @@ public abstract class Proxetta<T extends Proxetta, A> {
 	 * Specifies the debug folder where all created classes will be
 	 * written to, for debugging purposes.
 	 */
-	public T setDebugFolder(String debugFolder) {
+	public T setDebugFolder(final String debugFolder) {
 		this.debugFolder = new File(debugFolder);
 		return _this();
 	}
 
-	public T setDebugFolder(File debugFolder) {
+	public T setDebugFolder(final File debugFolder) {
 		this.debugFolder = debugFolder;
 		return _this();
 	}

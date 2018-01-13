@@ -38,12 +38,12 @@ public class Db2DbServer implements DbServer {
 		this.version = "(N/A)";
 	}
 
-	public Db2DbServer(String version) {
+	public Db2DbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 	}
 
 	@Override

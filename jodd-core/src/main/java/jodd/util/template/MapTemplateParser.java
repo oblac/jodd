@@ -32,11 +32,11 @@ public class MapTemplateParser extends StringTemplateParser {
 	/**
 	 * Creates new working template context of a map.
 	 */
-	public ContextTemplateParser of(Map map) {
+	public ContextTemplateParser of(final Map map) {
 		return template -> parseWithMap(template, map);
 	}
 
-	public String parseWithMap(String template, Map map) {
+	public String parseWithMap(final String template, final Map map) {
 		return super.parse(template, macroName -> {
 			Object value = map.get(macroName);
 			if (value == null) {

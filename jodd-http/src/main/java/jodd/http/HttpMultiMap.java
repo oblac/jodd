@@ -61,7 +61,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return new HttpMultiMap<>(true);
 	}
 
-	protected HttpMultiMap(boolean caseSensitive) {
+	protected HttpMultiMap(final boolean caseSensitive) {
 		head.before = head.after = head;
 		this.caseSensitive = caseSensitive;
 	}
@@ -69,7 +69,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Calculates hash value of the input string.
 	 */
-	private int hash(String name) {
+	private int hash(final String name) {
 		int h = 0;
 		for (int i = name.length() - 1; i >= 0; i--) {
 			char c = name.charAt(i);
@@ -93,14 +93,14 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Calculates bucket index from the hash.
 	 */
-	private static int index(int hash) {
+	private static int index(final int hash) {
 		return hash & BUCKET_SIZE;
 	}
 
 	/**
 	 * Returns <code>true</code> if two names are the same.
 	 */
-	private boolean eq(String name1, String name2) {
+	private boolean eq(final String name1, final String name2) {
 		int nameLen = name1.length();
 		if (nameLen != name2.length()) {
 			return false;
@@ -152,7 +152,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Returns <code>true</code> if name exist.
 	 */
-	public boolean contains(String name) {
+	public boolean contains(final String name) {
 		return getEntry(name) != null;
 	}
 
@@ -163,6 +163,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return head == head.after;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, V> entry : this) {
@@ -173,7 +174,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 
 	// ---------------------------------------------------------------- set/add
 
-	private HttpMultiMap<V> _set(Iterable<Map.Entry<String, V>> map) {
+	private HttpMultiMap<V> _set(final Iterable<Map.Entry<String, V>> map) {
 		clear();
 		for (Map.Entry<String, V> entry : map) {
 			add(entry.getKey(), entry.getValue());
@@ -181,11 +182,11 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return this;
 	}
 
-	public HttpMultiMap<V> setAll(HttpMultiMap<V> multiMap) {
+	public HttpMultiMap<V> setAll(final HttpMultiMap<V> multiMap) {
 		return _set(multiMap);
 	}
 
-	public HttpMultiMap<V> setAll(Map<String, V> map) {
+	public HttpMultiMap<V> setAll(final Map<String, V> map) {
 		return _set(map.entrySet());
 	}
 
@@ -216,7 +217,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return this;
 	}
 
-	public HttpMultiMap<V> addAll(String name, Iterable<V> values) {
+	public HttpMultiMap<V> addAll(final String name, final Iterable<V> values) {
 		int h = hash(name);
 		int i = index(h);
 		for (V value : values) {
@@ -225,14 +226,14 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return this;
 	}
 
-	public HttpMultiMap<V> addAll(HttpMultiMap<V> map) {
+	public HttpMultiMap<V> addAll(final HttpMultiMap<V> map) {
 		for (Map.Entry<String, V> entry : map.entries()) {
 			add(entry.getKey(), entry.getValue());
 		}
 		return this;
 	}
 
-	public HttpMultiMap<V> addAll(Map<String, V> map) {
+	public HttpMultiMap<V> addAll(final Map<String, V> map) {
 		for (Map.Entry<String, V> entry : map.entrySet()) {
 			add(entry.getKey(), entry.getValue());
 		}
@@ -259,7 +260,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return this;
 	}
 
-	private void _remove(final int hash, final int index, String name) {
+	private void _remove(final int hash, final int index, final String name) {
 		MapEntry<V> e = entries[index];
 		if (e == null) {
 			return;
@@ -355,6 +356,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Returns iterator of all entries.
 	 */
+	@Override
 	public Iterator<Map.Entry<String, V>> iterator() {
 		final MapEntry[] e = {head.after};
 
@@ -415,7 +417,7 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		MapEntry<V> next;
 		MapEntry<V> before, after;
 
-		private MapEntry(int hash, String key, V value) {
+		private MapEntry(final int hash, final String key, final V value) {
 			this.hash = hash;
 			this.key = key;
 			this.value = value;
@@ -426,27 +428,31 @@ public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 			after.before = before;
 		}
 
-		void addBefore(MapEntry<V> e) {
+		void addBefore(final MapEntry<V> e) {
 			after = e;
 			before = e.before;
 			before.after = this;
 			after.before = this;
 		}
 
+		@Override
 		public String getKey() {
 			return key;
 		}
 
+		@Override
 		public V getValue() {
 			return value;
 		}
 
-		public V setValue(V value) {
+		@Override
+		public V setValue(final V value) {
 			V oldValue = this.value;
 			this.value = value;
 			return oldValue;
 		}
 
+		@Override
 		public String toString() {
 			return getKey() + ": " + getValue();
 		}

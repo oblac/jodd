@@ -30,22 +30,22 @@ package jodd.mutable;
  */
 public final class MutableInteger extends Number implements Comparable<MutableInteger>, Cloneable {
 
-	public static MutableInteger of(int value) {
+	public static MutableInteger of(final int value) {
 		return new MutableInteger(value);
 	}
 
 	public MutableInteger() {
 	}
 
-	public MutableInteger(int value) {
+	public MutableInteger(final int value) {
 		this.value = value;
 	}
 
-	public MutableInteger(String value) {
+	public MutableInteger(final String value) {
 		this.value = Integer.parseInt(value);
 	}
 
-	public MutableInteger(Number number) {
+	public MutableInteger(final Number number) {
 		this.value = number.intValue();
 	}
 
@@ -66,14 +66,14 @@ public final class MutableInteger extends Number implements Comparable<MutableIn
 	/**
 	 * Sets mutable value.
 	 */
-	public void set(int value) {
+	public void set(final int value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void set(Number value) {
+	public void set(final Number value) {
 		this.value = value.intValue();
 	}
 
@@ -103,7 +103,7 @@ public final class MutableInteger extends Number implements Comparable<MutableIn
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Integer)this.value).getClass() == obj.getClass() ) {
 				return value == ((Integer) obj).intValue();
@@ -155,7 +155,7 @@ public final class MutableInteger extends Number implements Comparable<MutableIn
 	 * Compares value of two same instances.
 	 */
 	@Override
-	public int compareTo(MutableInteger other) {
+	public int compareTo(final MutableInteger other) {
 		return value < other.value ? -1 : (value == other.value ? 0 : 1);
 	}
 

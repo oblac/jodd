@@ -44,7 +44,7 @@ public class HtmlVoidRules {
 	/**
 	 * Returns <code>true</code> if tag name is a void tag.
 	 */
-	public boolean isVoidTag(CharSequence tagName) {
+	public boolean isVoidTag(final CharSequence tagName) {
 		for (String html5VoidTag : HTML5_VOID_TAGS) {
 			if (CharSequenceUtil.equalsToLowercase(tagName, html5VoidTag)) {
 				return true;

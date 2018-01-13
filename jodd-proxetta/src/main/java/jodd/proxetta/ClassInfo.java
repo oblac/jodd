@@ -74,7 +74,7 @@ public interface ClassInfo {
 	/**
 	 * Finds annotation in class info. Returns <code>null</code> if annotation doesn't exist.
 	 */
-	default AnnotationInfo getAnnotation(Class<? extends Annotation> an) {
+	default AnnotationInfo getAnnotation(final Class<? extends Annotation> an) {
 		AnnotationInfo[] anns = getAnnotations();
 		if (anns == null) {
 			return null;
@@ -91,7 +91,7 @@ public interface ClassInfo {
 	/**
 	 * Returns <code>true</code> if class is annotated with one of provided annotation.
 	 */
-	default boolean hasAnnotation(Class<? extends Annotation>... an) {
+	default boolean hasAnnotation(final Class<? extends Annotation>... an) {
 		AnnotationInfo[] anns = getAnnotations();
 		if (anns == null) {
 			return false;

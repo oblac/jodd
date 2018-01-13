@@ -38,7 +38,7 @@ final class TargetMethodData {
 	final String methodName;
 	final ProxyAspectData[] proxyData;            // list of ***only*** applied proxies for the target
 
-	TargetMethodData(MethodSignatureVisitor msign, List<ProxyAspectData> aspectList) {
+	TargetMethodData(final MethodSignatureVisitor msign, final List<ProxyAspectData> aspectList) {
 		this.msign = msign;
 		this.methodName = msign.getMethodName();
 		this.proxyData = aspectList.toArray(new ProxyAspectData[aspectList.size()]);
@@ -51,7 +51,7 @@ final class TargetMethodData {
 	/**
 	 * Selects current proxy.
 	 */
-	void selectCurrentProxy(int currentIndex) {
+	void selectCurrentProxy(final int currentIndex) {
 		this.currentIndex = currentIndex;
 	}
 
@@ -61,7 +61,7 @@ final class TargetMethodData {
 
 	// ---------------------------------------------------------------- method names
 
-	private String methodName(int index) {
+	private String methodName(final int index) {
 		return methodName + JoddProxetta.get().defaults().getMethodDivider() + proxyData[index].aspectIndex;
 	}
 

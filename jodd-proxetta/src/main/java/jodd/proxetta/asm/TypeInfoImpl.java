@@ -48,7 +48,7 @@ public class TypeInfoImpl implements TypeInfo {
 	 */
 	protected AnnotationInfo[] annotations = NO_ANNOTATIONS;
 
-	public TypeInfoImpl(char opcode, String type, String name, String rawName) {
+	public TypeInfoImpl(final char opcode, final String type, final String name, final String rawName) {
 		this.opcode = opcode;
 		this.type = type;
 		this.name = name;

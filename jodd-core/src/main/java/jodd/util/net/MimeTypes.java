@@ -108,7 +108,7 @@ public class MimeTypes {
 	/**
 	 * Registers MIME type for provided extension. Existing extension type will be overridden.
 	 */
-	public static void registerMimeType(String ext, String mimeType) {
+	public static void registerMimeType(final String ext, final String mimeType) {
 		MIME_TYPE_MAP.put(ext, mimeType);
 	}
 
@@ -116,7 +116,7 @@ public class MimeTypes {
 	 * Returns the corresponding MIME type to the given extension.
 	 * If no MIME type was found it returns <code>application/octet-stream</code> type.
 	 */
-	public static String getMimeType(String ext) {
+	public static String getMimeType(final String ext) {
 		String mimeType = lookupMimeType(ext);
 		if (mimeType == null) {
 			mimeType = MIME_APPLICATION_OCTET_STREAM;
@@ -127,7 +127,7 @@ public class MimeTypes {
 	/**
 	 * Simply returns MIME type or <code>null</code> if no type is found.
 	 */
-	public static String lookupMimeType(String ext) {
+	public static String lookupMimeType(final String ext) {
 		return MIME_TYPE_MAP.get(ext.toLowerCase());
 	}
 
@@ -137,7 +137,7 @@ public class MimeTypes {
 	 * @param mimeType list of mime types, separated by comma
 	 * @param useWildcard if set, mime types are wildcard patterns
 	 */
-	public static String[] findExtensionsByMimeTypes(String mimeType, boolean useWildcard) {
+	public static String[] findExtensionsByMimeTypes(String mimeType, final boolean useWildcard) {
 		ArrayList<String> extensions = new ArrayList<>();
 
 		mimeType = mimeType.toLowerCase();

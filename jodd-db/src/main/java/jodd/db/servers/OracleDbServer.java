@@ -34,12 +34,12 @@ public class OracleDbServer implements DbServer {
 
 	private final String version;
 
-	public OracleDbServer(String version) {
+	public OracleDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 	}
 
 	@Override

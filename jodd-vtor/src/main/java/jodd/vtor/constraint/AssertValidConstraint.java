@@ -36,13 +36,14 @@ public class AssertValidConstraint implements ValidationConstraint<AssertValid> 
 
 	protected final ValidationContext targetValidationContext;
 
-	public AssertValidConstraint(ValidationContext targetValidationContext) {
+	public AssertValidConstraint(final ValidationContext targetValidationContext) {
 		this.targetValidationContext = targetValidationContext;
 	}
 
 	// ---------------------------------------------------------------- config
 
-	public void configure(AssertValid annotation) {
+	@Override
+	public void configure(final AssertValid annotation) {
 	}
 
 	// ---------------------------------------------------------------- valid
@@ -51,7 +52,8 @@ public class AssertValidConstraint implements ValidationConstraint<AssertValid> 
 	 * Invokes validation on inner context. Always returns <code>true</code> since
 	 * inner context violations will be appended to provided validator.
 	 */
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		if (value == null) {
 			return true;
 		}

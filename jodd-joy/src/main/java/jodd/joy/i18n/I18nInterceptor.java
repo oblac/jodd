@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 public class I18nInterceptor implements ActionInterceptor {
 
 	@Override
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		HttpServletRequest request = actionRequest.httpServletRequest();
 
 		// defines request bundle of this http request
@@ -49,7 +49,7 @@ public class I18nInterceptor implements ActionInterceptor {
 	/**
 	 * Returns correct action class name. Detects Proxetta classes.
 	 */
-	protected String getActionClassName(Object action) {
+	protected String getActionClassName(final Object action) {
 		Class clazz = action.getClass();
 
 		clazz = ProxettaUtil.getTargetClass(clazz);

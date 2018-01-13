@@ -44,7 +44,7 @@ public class UpdateSetChunk extends SqlChunk {
 	protected final String tableRef;
 	protected final int includeColumns;
 
-	public UpdateSetChunk(String tableRef, Object data, int includeColumns) {
+	public UpdateSetChunk(final String tableRef, final Object data, final int includeColumns) {
 		super(CHUNK_UPDATE);
 		this.tableRef = tableRef;
 		this.data = data;
@@ -52,7 +52,7 @@ public class UpdateSetChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		if (isPreviousChunkOfType(CHUNK_TABLE)) {
 			appendMissingSpace(out);
 		}

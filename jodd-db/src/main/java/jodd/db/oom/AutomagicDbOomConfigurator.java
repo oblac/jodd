@@ -45,7 +45,7 @@ public class AutomagicDbOomConfigurator {
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;
 
-	public AutomagicDbOomConfigurator(boolean registerAsEntities) {
+	public AutomagicDbOomConfigurator(final boolean registerAsEntities) {
 		dbTableAnnotationBytes = ClassScanner.bytecodeSignatureOfType(DbTable.class);
 		this.registerAsEntities = registerAsEntities;
 	}
@@ -64,7 +64,7 @@ public class AutomagicDbOomConfigurator {
 		return elapsed;
 	}
 
-	public AutomagicDbOomConfigurator withScanner(Consumer<ClassScanner> scannerConsumer) {
+	public AutomagicDbOomConfigurator withScanner(final Consumer<ClassScanner> scannerConsumer) {
 		scannerConsumer.accept(classScanner);
 		return this;
 	}
@@ -73,7 +73,7 @@ public class AutomagicDbOomConfigurator {
 	 * Configures {@link DbEntityManager} with specified class path.
 	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager)
 	 */
-	public void configure(DbEntityManager dbEntityManager, File[] classpath) {
+	public void configure(final DbEntityManager dbEntityManager, final File[] classpath) {
 		this.dbEntityManager = dbEntityManager;
 
 		classScanner.smartModeEntries();
@@ -95,7 +95,7 @@ public class AutomagicDbOomConfigurator {
 	 * Configures {@link DbEntityManager} with default class path.
 	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager, java.io.File[])
 	 */
-	public void configure(DbEntityManager dbEntityManager) {
+	public void configure(final DbEntityManager dbEntityManager) {
 		configure(dbEntityManager, ClassLoaderUtil.getDefaultClasspath());
 	}
 
@@ -106,7 +106,7 @@ public class AutomagicDbOomConfigurator {
 	 */
 	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
 	@Override
-	public void accept(ClassScanner.EntryData entryData) {
+	public void accept(final ClassScanner.EntryData entryData) {
 		String entryName = entryData.name();
 		if (!entryData.isTypeSignatureInUse(dbTableAnnotationBytes)) {
 			return;

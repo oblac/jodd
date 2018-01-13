@@ -40,12 +40,12 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public IntegerArrayConverter(TypeConverterManager typeConverterManager) {
+	public IntegerArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public int[] convert(Object value) {
+	public int[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected int convertType(Object value) {
+	protected int convertType(final Object value) {
 		return typeConverterManager.convertType(value, int.class).intValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected int[] convertToSingleElementArray(Object value) {
+	protected int[] convertToSingleElementArray(final Object value) {
 		return new int[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
 	 */
-	protected int[] convertValueToArray(Object value) {
+	protected int[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			int[] target = new int[list.size()];
@@ -130,7 +130,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected int[] convertArrayToArray(Object value) {
+	protected int[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == int.class) {
@@ -160,7 +160,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected int[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected int[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		int[] result = null;
 
 		if (primitiveComponentType == int[].class) {

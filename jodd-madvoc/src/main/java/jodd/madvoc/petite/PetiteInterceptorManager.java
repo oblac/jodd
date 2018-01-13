@@ -27,8 +27,8 @@ package jodd.madvoc.petite;
 
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.petite.meta.PetiteInject;
 import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInject;
 
 /**
  * Petite-aware interceptors manager.
@@ -42,7 +42,7 @@ public class PetiteInterceptorManager extends InterceptorsManager {
 	 * Acquires interceptor from Petite container.
 	 */
 	@Override
-	protected <R extends ActionInterceptor> R createWrapper(Class<R> wrapperClass) {
+	protected <R extends ActionInterceptor> R createWrapper(final Class<R> wrapperClass) {
 		return petiteContainer.createBean(wrapperClass);
 	}
 }

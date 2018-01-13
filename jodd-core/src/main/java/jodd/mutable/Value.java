@@ -36,7 +36,7 @@ public interface Value<T> extends Supplier<T> {
 	/**
 	 * Creates default value wrapper.
 	 */
-	public static <R> Value<R> of(R value) {
+	public static <R> Value<R> of(final R value) {
 		return new ValueImpl<>(value);
 	}
 

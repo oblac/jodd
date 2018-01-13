@@ -36,7 +36,7 @@ public class Ctors {
 	protected final CtorDescriptor[] allCtors;
 	protected CtorDescriptor defaultCtor;
 
-	public Ctors(ClassDescriptor classDescriptor) {
+	public Ctors(final ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
 		this.allCtors = inspectConstructors();
 	}
@@ -67,7 +67,7 @@ public class Ctors {
 	/**
 	 * Creates new {@link CtorDescriptor}.
 	 */
-	protected CtorDescriptor createCtorDescriptor(Constructor ctor) {
+	protected CtorDescriptor createCtorDescriptor(final Constructor ctor) {
 		return new CtorDescriptor(classDescriptor, ctor);
 	}
 
@@ -83,7 +83,7 @@ public class Ctors {
 	/**
 	 * Finds constructor description that matches given argument types.
 	 */
-	public CtorDescriptor getCtorDescriptor(Class... args) {
+	public CtorDescriptor getCtorDescriptor(final Class... args) {
 		ctors:
 		for (CtorDescriptor ctorDescriptor : allCtors) {
 			Class[] arg = ctorDescriptor.getParameters();

@@ -39,7 +39,7 @@ public class ApplicationScopeInjector implements Injector, Outjector, ContextInj
 	private final static ScopeType SCOPE_TYPE = ScopeType.APPLICATION;
 
 	@Override
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
@@ -62,7 +62,7 @@ public class ApplicationScopeInjector implements Injector, Outjector, ContextInj
 	}
 
 	@Override
-	public void injectContext(Targets targets, ServletContext servletContext) {
+	public void injectContext(final Targets targets, final ServletContext servletContext) {
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
@@ -83,7 +83,7 @@ public class ApplicationScopeInjector implements Injector, Outjector, ContextInj
 	}
 
 	@Override
-	public void outject(ActionRequest actionRequest) {
+	public void outject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;

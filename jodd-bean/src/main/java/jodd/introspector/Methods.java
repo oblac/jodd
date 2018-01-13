@@ -47,7 +47,7 @@ public class Methods {
 	// cache
 	private MethodDescriptor[] allMethods;
 
-	public Methods(ClassDescriptor classDescriptor) {
+	public Methods(final ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
 		this.methodsMap = inspectMethods();
 	}
@@ -85,7 +85,7 @@ public class Methods {
 	/**
 	 * Creates new {@code MethodDescriptor}.
 	 */
-	protected MethodDescriptor createMethodDescriptor(Method method) {
+	protected MethodDescriptor createMethodDescriptor(final Method method) {
 		return new MethodDescriptor(classDescriptor, method);
 	}
 
@@ -96,7 +96,7 @@ public class Methods {
 	 * Returns a method that matches given name and parameter types.
 	 * Returns <code>null</code> if method is not found.
 	 */
-	public MethodDescriptor getMethodDescriptor(String name, Class[] paramTypes) {
+	public MethodDescriptor getMethodDescriptor(final String name, final Class[] paramTypes) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
@@ -116,7 +116,7 @@ public class Methods {
 	 * Returns <code>null</code> if no method exist in this collection by given name.
 	 * @see #getMethodDescriptor(String, Class[])
 	 */
-	public MethodDescriptor getMethodDescriptor(String name) {
+	public MethodDescriptor getMethodDescriptor(final String name) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
@@ -130,7 +130,7 @@ public class Methods {
 	/**
 	 * Returns all methods for given name. Returns <code>null</code> if method not found.
 	 */
-	public MethodDescriptor[] getAllMethodDescriptors(String name) {
+	public MethodDescriptor[] getAllMethodDescriptors(final String name) {
 		return methodsMap.get(name);
 	}
 
@@ -148,7 +148,8 @@ public class Methods {
 			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
 
 			Arrays.sort(allMethods, new Comparator<MethodDescriptor>() {
-				public int compare(MethodDescriptor md1, MethodDescriptor md2) {
+				@Override
+				public int compare(final MethodDescriptor md1, final MethodDescriptor md2) {
 					return md1.getMethod().getName().compareTo(md2.getMethod().getName());
 				}
 			});

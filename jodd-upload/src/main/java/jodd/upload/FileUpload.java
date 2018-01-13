@@ -39,7 +39,7 @@ public abstract class FileUpload {
 	protected final int maxFileSize;
 	protected final FileUploadHeader header;
 
-	protected FileUpload(MultipartRequestInputStream input, int maxFileSize) {
+	protected FileUpload(final MultipartRequestInputStream input, final int maxFileSize) {
 		this.input = input;
 		this.header = input.lastHeader;
 		this.maxFileSize = maxFileSize;

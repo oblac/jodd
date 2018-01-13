@@ -543,8 +543,8 @@ class Frame {
      * @param stack
      *            the operand stack types (same format as the "local" array).
      */
-    final void set(ClassWriter cw, final int nLocal, final Object[] local,
-            final int nStack, final Object[] stack) {
+    final void set(final ClassWriter cw, final int nLocal, final Object[] local,
+                   final int nStack, final Object[] stack) {
         int i = convert(cw, nLocal, local, inputLocals);
         while (i < local.length) {
             inputLocals[i++] = TOP;
@@ -584,8 +584,8 @@ class Frame {
      *            where to store the converted types.
      * @return the number of output elements.
      */
-    private static int convert(ClassWriter cw, int nInput, Object[] input,
-            int[] output) {
+    private static int convert(final ClassWriter cw, final int nInput, final Object[] input,
+                               final int[] output) {
         int i = 0;
         for (int j = 0; j < nInput; ++j) {
             if (input[j] instanceof Integer) {

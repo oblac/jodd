@@ -71,7 +71,7 @@ public class JStopWatch {
 	/**
 	 * Starts the named stopwatch.
 	 */
-	public JStopWatch(String name) {
+	public JStopWatch(final String name) {
 		this.name = name;
 		start();
 	}
@@ -174,7 +174,7 @@ public class JStopWatch {
 		return lap(System.currentTimeMillis());
 	}
 
-	protected long lap(long lap) {
+	protected long lap(final long lap) {
 		if (!running) {
 			return 0;
 		}
@@ -205,7 +205,7 @@ public class JStopWatch {
 	 * Returns lap times for 1-based lap index.
 	 * Returns <code>null</code> if laps are not used or if index is invalid.
 	 */
-	public long[] getLapTimes(int index) {
+	public long[] getLapTimes(final int index) {
 		if (laps == null) {
 			return null;
 		}

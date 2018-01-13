@@ -40,7 +40,7 @@ public class MurmurHash3 {
 		public final long val1;
 		public final long val2;
 
-		public HashValue(long val1, long val2) {
+		public HashValue(final long val1, final long val2) {
 			this.val1 = val1;
 			this.val2 = val2;
 		}
@@ -62,7 +62,7 @@ public class MurmurHash3 {
 	/**
 	 * Gets a long from a byte buffer in little endian byte order.
 	 */
-	public static long getLongLittleEndian(byte[] buf, int offset) {
+	public static long getLongLittleEndian(final byte[] buf, final int offset) {
 		return ((long) buf[offset + 7] << 56)   // no mask needed
 			| ((buf[offset + 6] & 0xffL) << 48)
 			| ((buf[offset + 5] & 0xffL) << 40)
@@ -73,7 +73,7 @@ public class MurmurHash3 {
 			| ((buf[offset] & 0xffL));        // no shift needed
 	}
 
-	public static HashValue murmurhash3_x64_128(String str, int seed) {
+	public static HashValue murmurhash3_x64_128(final String str, final int seed) {
 		try {
 			byte[] bytes = str.getBytes("UTF-8");
 			return murmurhash3_x64_128(bytes, 0, bytes.length, seed);
@@ -86,7 +86,7 @@ public class MurmurHash3 {
 	/**
 	 * Returns the MurmurHash3_x64_128 hash.
 	 */
-	public static HashValue murmurhash3_x64_128(byte[] key, int offset, int len, int seed) {
+	public static HashValue murmurhash3_x64_128(final byte[] key, final int offset, final int len, final int seed) {
 		// The original algorithm does have a 32 bit unsigned seed.
 		// We have to mask to match the behavior of the unsigned types and prevent sign extension.
 		long h1 = seed & 0x00000000FFFFFFFFL;

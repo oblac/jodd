@@ -66,26 +66,26 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	// ---------------------------------------------------------------- default ctors
 
-	public DbOomQuery(Connection conn, String sqlString) {
+	public DbOomQuery(final Connection conn, final String sqlString) {
 		super(conn, sqlString);
 	}
-	public static DbOomQuery query(Connection conn, String sqlString) {
+	public static DbOomQuery query(final Connection conn, final String sqlString) {
 		return new DbOomQuery(conn, sqlString);
 	}
 
 
-	public DbOomQuery(DbSession session, String sqlString) {
+	public DbOomQuery(final DbSession session, final String sqlString) {
 		super(session, sqlString);
 	}
-	public static DbOomQuery query(DbSession session, String sqlString) {
+	public static DbOomQuery query(final DbSession session, final String sqlString) {
 		return new DbOomQuery(session, sqlString);
 	}
 
 
-	public DbOomQuery(String sqlString) {
+	public DbOomQuery(final String sqlString) {
 		super(sqlString);
 	}
-	public static DbOomQuery query(String sqlString) {
+	public static DbOomQuery query(final String sqlString) {
 		return new DbOomQuery(sqlString);
 	}
 
@@ -93,27 +93,27 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	protected DbSqlGenerator sqlgen;
 
-	public DbOomQuery(Connection conn, DbSqlGenerator sqlgen) {
+	public DbOomQuery(final Connection conn, final DbSqlGenerator sqlgen) {
 		super(conn, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
 	}
-	public static DbOomQuery query(Connection conn, DbSqlGenerator sqlgen) {
+	public static DbOomQuery query(final Connection conn, final DbSqlGenerator sqlgen) {
 		return new DbOomQuery(conn, sqlgen);
 	}
 
-	public DbOomQuery(DbSession session, DbSqlGenerator sqlgen) {
+	public DbOomQuery(final DbSession session, final DbSqlGenerator sqlgen) {
 		super(session, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
 	}
-	public static DbOomQuery query(DbSession session, DbSqlGenerator sqlgen) {
+	public static DbOomQuery query(final DbSession session, final DbSqlGenerator sqlgen) {
 		return new DbOomQuery(session, sqlgen);
 	}
 
-	public DbOomQuery(DbSqlGenerator sqlgen) {
+	public DbOomQuery(final DbSqlGenerator sqlgen) {
 		super(sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
 	}
-	public static DbOomQuery query(DbSqlGenerator sqlgen) {
+	public static DbOomQuery query(final DbSqlGenerator sqlgen) {
 		return new DbOomQuery(sqlgen);
 	}
 
@@ -158,7 +158,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	/**
 	 * Resolves column db sql type and populates it in column descriptor if missing.
 	 */
-	protected void resolveColumnDbSqlType(Connection connection, DbEntityColumnDescriptor dec) {
+	protected void resolveColumnDbSqlType(final Connection connection, final DbEntityColumnDescriptor dec) {
 		if (dec.dbSqlType != SqlType.DB_SQLTYPE_UNKNOWN) {
 			return;
 		}
@@ -196,7 +196,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 * Specifies hints for the query. Provided string is
 	 * split on ',' separator.
 	 */
-	public DbOomQuery withHints(String hint) {
+	public DbOomQuery withHints(final String hint) {
 		this.hints = StringUtil.splitc(hint, ',');
 		return this;
 	}
@@ -204,7 +204,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	/**
 	 * Specifies multiple hints for the query.
 	 */
-	public DbOomQuery withHints(String... hints) {
+	public DbOomQuery withHints(final String... hints) {
 		this.hints = hints;
 		return this;
 	}
@@ -226,7 +226,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 * Defines if entities should be cached in {@link ResultSetMapper}.
 	 * Overrides default value in {@link DbEntityManager}.
 	 */
-	public DbOomQuery cacheEntities(boolean cacheEntities) {
+	public DbOomQuery cacheEntities(final boolean cacheEntities) {
 		this.cacheEntities = cacheEntities;
 		return this;
 	}
@@ -243,7 +243,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	/**
 	 * Factory for result sets mapper.
 	 */
-	protected ResultSetMapper createResultSetMapper(ResultSet resultSet) {
+	protected ResultSetMapper createResultSetMapper(final ResultSet resultSet) {
 		Map<String, ColumnData> columnAliases = sqlgen != null ? sqlgen.getColumnData() : null;
 
 		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
@@ -256,7 +256,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	/**
 	 * Defines entity-aware mode for entities tracking in result collection.
 	 */
-	public DbOomQuery entityAwareMode(boolean entityAware) {
+	public DbOomQuery entityAwareMode(final boolean entityAware) {
 		if (entityAware) {
 			this.cacheEntities = true;
 		}
@@ -266,28 +266,28 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	// ---------------------------------------------------------------- iterator
 
-	public <T> Iterator<T> iterate(Class... types) {
+	public <T> Iterator<T> iterate(final Class... types) {
 		return iterate(types, autoClose);
 	}
 	public <T> Iterator<T> iterate() {
 		return iterate(null, autoClose);
 	}
-	protected <T> Iterator<T> iterate(Class[] types, boolean close) {
+	protected <T> Iterator<T> iterate(final Class[] types, final boolean close) {
 		return new DbListIterator<>(this, types, close);
 	}
 
 	// ---------------------------------------------------------------- list
 
-	public <T> List<T> list(Class... types) {
+	public <T> List<T> list(final Class... types) {
 		return list(types, -1, autoClose);
 	}
 	public <T> List<T> list() {
 		return list(null, -1, autoClose);
 	}
-	public <T> List<T> list(int max, Class... types) {
+	public <T> List<T> list(final int max, final Class... types) {
 		return list(types, max, autoClose);
 	}
-	public <T> List<T> list(int max) {
+	public <T> List<T> list(final int max) {
 		return list(null, max, autoClose);
 	}
 	/**
@@ -298,7 +298,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 * @return list of mapped entities or array of entities
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected <T> List<T> list(Class[] types, int max, boolean close) {
+	protected <T> List<T> list(Class[] types, final int max, final boolean close) {
 		List<T> result = new ArrayList<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
@@ -346,20 +346,20 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	// ---------------------------------------------------------------- set
 
-	public <T> Set<T> listSet(Class... types) {
+	public <T> Set<T> listSet(final Class... types) {
 		return listSet(types, -1, autoClose);
 	}
 	public <T> Set<T> listSet() {
 		return listSet(null, -1, autoClose);
 	}
-	public <T> Set<T> listSet(int max, Class... types) {
+	public <T> Set<T> listSet(final int max, final Class... types) {
 		return listSet(types, max, autoClose);
 	}
-	public <T> Set<T> listSet(int max) {
+	public <T> Set<T> listSet(final int max) {
 		return listSet(null, max, autoClose);
 	}
 	@SuppressWarnings({"unchecked"})
-	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
+	protected <T> Set<T> listSet(Class[] types, final int max, final boolean close) {
 		Set<T> result = new LinkedHashSet<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
@@ -407,13 +407,13 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	// ---------------------------------------------------------------- find
 
-	public <T> T find(Class... types) {
+	public <T> T find(final Class... types) {
 		return find(types, autoClose, null);
 	}
 	public <T> T find() {
 		return find(null, autoClose, null);
 	}
-	protected <T> T find(Class[] types, boolean close, ResultSet resultSet) {
+	protected <T> T find(final Class[] types, final boolean close, ResultSet resultSet) {
 		if (resultSet == null) {
 			resultSet = execute();
 		}
@@ -436,14 +436,14 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	/**
 	 * Finds generated key column of given type.
 	 */
-	public <T> T findGeneratedKey(Class<T> type) {
+	public <T> T findGeneratedKey(final Class<T> type) {
 		return find(new Class[] {type}, false, getGeneratedColumns());
 	}
 
 	/**
 	 * Finds generated columns.
 	 */
-	public Object findGeneratedColumns(Class... types) {
+	public Object findGeneratedColumns(final Class... types) {
 		return find(types, false, getGeneratedColumns());
 	}
 
@@ -461,7 +461,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	/**
 	 * Closes results set or whole query.
 	 */
-	protected void close(ResultSetMapper rsm, boolean closeQuery) {
+	protected void close(final ResultSetMapper rsm, final boolean closeQuery) {
 		if (closeQuery) {
 			close();
 		} else {

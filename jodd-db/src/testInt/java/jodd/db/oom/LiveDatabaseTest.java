@@ -249,7 +249,7 @@ class LiveDatabaseTest extends DbBaseTest {
 
 	// ---------------------------------------------------------------- util
 
-	protected void assertDb(DbSession dbSession, String expected) {
+	protected void assertDb(final DbSession dbSession, final String expected) {
 		DbOomQuery query = new DbOomQuery(dbSession, "select * from TESTER order by ID");
 		List<Tester> testerList = query.list(Tester.class);
 

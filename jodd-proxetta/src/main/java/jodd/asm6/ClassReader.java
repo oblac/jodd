@@ -443,7 +443,7 @@ public class ClassReader {
      * @throws IOException
      *             if a problem occurs during reading.
      */
-    private static byte[] readClass(final InputStream is, boolean close)
+    private static byte[] readClass(final InputStream is, final boolean close)
             throws IOException {
         if (is == null) {
             throw new IOException("Class not found");
@@ -1755,7 +1755,7 @@ public class ClassReader {
      * @return the start offset of each type annotation in the parsed table.
      */
     private int[] readTypeAnnotations(final MethodVisitor mv,
-            final Context context, int u, boolean visible) {
+                                      final Context context, int u, final boolean visible) {
         char[] c = context.buffer;
         int[] offsets = new int[readUnsignedShort(u)];
         u += 2;
@@ -2211,8 +2211,8 @@ public class ClassReader {
      *            where the parsed stack map frame must be stored.
      * @return the offset of the first byte following the parsed frame.
      */
-    private int readFrame(int stackMap, boolean zip, boolean unzip,
-            Context frame) {
+    private int readFrame(int stackMap, final boolean zip, final boolean unzip,
+                          final Context frame) {
         char[] c = frame.buffer;
         Label[] labels = frame.labels;
         int tag;
@@ -2351,7 +2351,7 @@ public class ClassReader {
      *            new one. Otherwise it must store the new label in this array.
      * @return a non null Label, which must be equal to labels[offset].
      */
-    protected Label readLabel(int offset, Label[] labels) {
+    protected Label readLabel(final int offset, final Label[] labels) {
         if (labels[offset] == null) {
             labels[offset] = new Label();
         }
@@ -2369,7 +2369,7 @@ public class ClassReader {
      *            the already created labels, indexed by their offset.
      * @return a Label without the Label.DEBUG flag set.
      */
-    private Label createLabel(int offset, Label[] labels) {
+    private Label createLabel(final int offset, final Label[] labels) {
       Label label = readLabel(offset, labels);
       label.status &= ~Label.DEBUG;
       return label;
@@ -2385,7 +2385,7 @@ public class ClassReader {
      * @param labels
      *            the already created labels, indexed by their offset.
      */
-    private void createDebugLabel(int offset, Label[] labels) {
+    private void createDebugLabel(final int offset, final Label[] labels) {
         if (labels[offset] == null) {
             readLabel(offset, labels).status |= Label.DEBUG;
         }

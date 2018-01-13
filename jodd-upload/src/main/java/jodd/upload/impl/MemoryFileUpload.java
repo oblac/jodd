@@ -29,16 +29,16 @@ import jodd.io.FastByteArrayOutputStream;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartRequestInputStream;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ByteArrayInputStream;
 
 /**
  * {@link FileUpload} that stores uploaded files in memory byte array.
  */
 public class MemoryFileUpload extends FileUpload {
 
-	MemoryFileUpload(MultipartRequestInputStream input, int maxFileSize) {
+	MemoryFileUpload(final MultipartRequestInputStream input, final int maxFileSize) {
 		super(input, maxFileSize);
 	}
 

@@ -73,7 +73,7 @@ public class JoddCore {
 	/**
 	 * Defines classloader strategy implementation.
 	 */
-	public JoddCore classLoaderStrategy(ClassLoaderStrategy classLoaderStrategy) {
+	public JoddCore classLoaderStrategy(final ClassLoaderStrategy classLoaderStrategy) {
 		Objects.requireNonNull(classLoaderStrategy);
 		this.classLoaderStrategy = classLoaderStrategy;
 		return this;

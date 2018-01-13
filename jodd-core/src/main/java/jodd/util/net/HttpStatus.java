@@ -33,11 +33,11 @@ public class HttpStatus {
 	private final int status;
 	protected String message;
 
-	public HttpStatus(int status, String message) {
+	public HttpStatus(final int status, final String message) {
 		this.status = status;
 		this.message = message;
 	}
-	public HttpStatus(int status) {
+	public HttpStatus(final int status) {
 		this.status = status;
 	}
 
@@ -287,7 +287,7 @@ public class HttpStatus {
 
 	// ---------------------------------------------------------------- static
 
-	public static HttpStatus of(int status, String message) {
+	public static HttpStatus of(final int status, final String message) {
 		return new HttpStatus(status, message);
 	}
 

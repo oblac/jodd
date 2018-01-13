@@ -39,7 +39,7 @@ public class PropertyInjectionPoint {
 	public final PropertyDescriptor propertyDescriptor;
 	public final BeanReferences references;
 
-	public PropertyInjectionPoint(PropertyDescriptor propertyDescriptor, BeanReferences references) {
+	public PropertyInjectionPoint(final PropertyDescriptor propertyDescriptor, final BeanReferences references) {
 		Objects.requireNonNull(propertyDescriptor);
 		Objects.requireNonNull(references);
 

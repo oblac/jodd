@@ -56,7 +56,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 		this(false, true);
 	}
 
-	public NaturalOrderComparator(boolean ignoreCase, boolean ignoreAccents) {
+	public NaturalOrderComparator(final boolean ignoreCase, final boolean ignoreAccents) {
 		this.ignoreCase = ignoreCase;
 		this.ignoreAccents = ignoreAccents;
 	}
@@ -66,7 +66,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 	 * The longest run of digits wins. That aside, the greatest
 	 * value wins.
 	 */
-	protected int compareDigits(String str1, int ndx1, String str2, int ndx2) {
+	protected int compareDigits(final String str1, int ndx1, final String str2, int ndx2) {
 		int bias = 0;
 
 		while (true) {
@@ -103,7 +103,8 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 		}
 	}
 
-	public int compare(T o1, T o2) {
+	@Override
+	public int compare(final T o1, final T o2) {
 		String str1 = o1.toString();
 		String str2 = o2.toString();
 
@@ -249,7 +250,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 	/**
 	 * Fixes accent char.
 	 */
-	private char fixAccent(char c) {
+	private char fixAccent(final char c) {
 		for (int i = 0; i < ACCENT_CHARS.length; i+=2) {
 			char accentChar = ACCENT_CHARS[i];
 			if (accentChar == c) {
@@ -262,7 +263,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 	/**
 	 * Safe {@code charAt} that returns 0 when ndx is out of boundaries.
 	 */
-	private static char charAt(String string, int ndx) {
+	private static char charAt(final String string, final int ndx) {
 		if (ndx >= string.length()) {
 			return 0;
 		}

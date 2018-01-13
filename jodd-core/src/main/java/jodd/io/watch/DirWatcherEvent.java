@@ -41,7 +41,7 @@ public class DirWatcherEvent {
 		MODIFIED
 	}
 
-	DirWatcherEvent(Type type, File target) {
+	DirWatcherEvent(final Type type, final File target) {
 		this.type = type;
 		this.target = target;
 		this.timestamp = System.currentTimeMillis();

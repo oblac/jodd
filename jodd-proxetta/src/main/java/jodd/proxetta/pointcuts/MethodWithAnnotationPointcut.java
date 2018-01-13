@@ -35,7 +35,7 @@ import java.lang.annotation.Annotation;
  */
 public class MethodWithAnnotationPointcut implements ProxyPointcut {
 
-	public static MethodWithAnnotationPointcut of(Class<? extends Annotation>... annotationClasses) {
+	public static MethodWithAnnotationPointcut of(final Class<? extends Annotation>... annotationClasses) {
 		return new MethodWithAnnotationPointcut(annotationClasses);
 	}
 
@@ -44,7 +44,7 @@ public class MethodWithAnnotationPointcut implements ProxyPointcut {
 	/**
 	 * Defines set of annotations we are looking for.
 	 */
-	public MethodWithAnnotationPointcut(Class<? extends Annotation>... annotationClasses) {
+	public MethodWithAnnotationPointcut(final Class<? extends Annotation>... annotationClasses) {
 		this.annotationClasses = annotationClasses;
 	}
 
@@ -52,7 +52,7 @@ public class MethodWithAnnotationPointcut implements ProxyPointcut {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean apply(MethodInfo methodInfo) {
+	public boolean apply(final MethodInfo methodInfo) {
 		return methodInfo.hasAnnotation(annotationClasses);
 	}
 }

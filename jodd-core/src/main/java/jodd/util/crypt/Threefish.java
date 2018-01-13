@@ -416,7 +416,7 @@ public class Threefish extends BlockCipher {
 	/**
 	 * Initializes cipher in a simple way.
 	 */
-	public void init(String keyMessage, long tweak1, long tweak2) {
+	public void init(final String keyMessage, final long tweak1, final long tweak2) {
 		long[] tweak = new long[] {tweak1, tweak2};
 		byte[] key = new byte[blockSize / Byte.SIZE];
 		byte[] keyData = getBytes(keyMessage);
@@ -428,7 +428,7 @@ public class Threefish extends BlockCipher {
 	 * Encrypts a block.
 	 */
 	@Override
-	public byte[] encryptBlock(byte[] content, int offset) {
+	public byte[] encryptBlock(final byte[] content, final int offset) {
 		
 		long[] contentBlock = bytesToLongs(content, offset, blockSizeInBytes);
 		
@@ -440,7 +440,7 @@ public class Threefish extends BlockCipher {
 	}
 
 	@Override
-	public byte[] decryptBlock(byte[] encryptedContent, int offset) {
+	public byte[] decryptBlock(final byte[] encryptedContent, final int offset) {
 		long[] encryptedBlock = bytesToLongs(encryptedContent, offset, blockSizeInBytes);
 
 		long[] decryptedBlock= new long[encryptedBlock.length];
@@ -453,14 +453,14 @@ public class Threefish extends BlockCipher {
 	/**
 	 * Encrypts a string.
 	 */
-	public byte[] encryptString(String plain) {
+	public byte[] encryptString(final String plain) {
 		return encrypt(getBytes(plain));
 	}
 
 	/**
 	 * Decrypts a string.
 	 */
-	public String decryptString(byte[] encrypted) {
+	public String decryptString(final byte[] encrypted) {
 		try {
 			return new String(decrypt(encrypted), StringPool.UTF_8);
 		} catch (UnsupportedEncodingException ignore) {
@@ -470,7 +470,7 @@ public class Threefish extends BlockCipher {
 
 	// ---------------------------------------------------------------- util
 	
-	protected byte[] getBytes(String string) {
+	protected byte[] getBytes(final String string) {
 		try {
 			return string.getBytes(StringPool.UTF_8);
 		} catch (UnsupportedEncodingException ignore) {
@@ -478,13 +478,13 @@ public class Threefish extends BlockCipher {
 		}
 	}
 
-	protected static long[] bytesToLongs(byte[] ba) {
+	protected static long[] bytesToLongs(final byte[] ba) {
 		return bytesToLongs(ba, 0, ba.length);
 	}
 	/**
 	 * Converts segment of byte array into long array.
 	 */
-	protected static long[] bytesToLongs(byte[] ba, int offset, int size) {
+	protected static long[] bytesToLongs(final byte[] ba, final int offset, final int size) {
 		long[] result = new long[size >> 3];
 		int i8 = offset;
 		for (int i = 0; i < result.length; i++) {
@@ -494,7 +494,7 @@ public class Threefish extends BlockCipher {
 		return result;
 	}
 
-	protected static byte[] longsToBytes(long[] la) {
+	protected static byte[] longsToBytes(final long[] la) {
 		byte[] result = new byte[la.length << 3];
 		int i8 = 0;
 		for (long l : la) {

@@ -45,7 +45,7 @@ public class DbMetaUtil {
 	 * type is not annotated, table name will be set to wildcard pattern '*'
 	 * (to match all tables).
 	 */
-	public static String resolveTableName(Class<?> type, TableNamingStrategy tableNamingStrategy) {
+	public static String resolveTableName(final Class<?> type, final TableNamingStrategy tableNamingStrategy) {
 		String tableName = null;
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
@@ -64,7 +64,7 @@ public class DbMetaUtil {
 	/**
 	 * Resolves schema name from a type. Uses default schema name if not specified.
 	 */
-	public static String resolveSchemaName(Class<?> type, String defaultSchemaName) {
+	public static String resolveSchemaName(final Class<?> type, final String defaultSchemaName) {
 		String schemaName = null;
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
@@ -79,7 +79,7 @@ public class DbMetaUtil {
 	/**
 	 * Returns <code>true</code> if class is annotated with <code>DbTable</code> annotation.
 	 */
-	public static boolean resolveIsAnnotated(Class<?> type) {
+	public static boolean resolveIsAnnotated(final Class<?> type) {
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		return dbTable != null;
 	}
@@ -90,10 +90,10 @@ public class DbMetaUtil {
 	 * if entity is annotated. Otherwise, column name is generated from the property name.
 	 */
 	public static DbEntityColumnDescriptor resolveColumnDescriptors(
-			DbEntityDescriptor dbEntityDescriptor,
-			PropertyDescriptor property,
-			boolean isAnnotated,
-			ColumnNamingStrategy columnNamingStrategy) {
+		final DbEntityDescriptor dbEntityDescriptor,
+		final PropertyDescriptor property,
+		final boolean isAnnotated,
+		final ColumnNamingStrategy columnNamingStrategy) {
 
 		String columnName = null;
 		boolean isId = false;
@@ -158,7 +158,7 @@ public class DbMetaUtil {
 	/**
 	 * Resolves mapped types from {@link jodd.db.oom.meta.DbMapTo} annotation.
 	 */
-	public static Class[] resolveMappedTypes(Class type) {
+	public static Class[] resolveMappedTypes(final Class type) {
 		DbMapTo dbMapTo = (DbMapTo) type.getAnnotation(DbMapTo.class);
 		if (dbMapTo == null) {
 			return null;

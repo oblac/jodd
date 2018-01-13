@@ -40,7 +40,7 @@ public class SocketHttpConnection implements HttpConnection {
 
 	protected final Socket socket;
 
-	public SocketHttpConnection(Socket socket) {
+	public SocketHttpConnection(final Socket socket) {
 		this.socket = socket;
 	}
 
@@ -70,7 +70,7 @@ public class SocketHttpConnection implements HttpConnection {
 	}
 
 	@Override
-	public void setTimeout(int milliseconds) {
+	public void setTimeout(final int milliseconds) {
 		this.timeout = milliseconds;
 	}
 

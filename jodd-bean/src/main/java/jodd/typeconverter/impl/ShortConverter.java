@@ -41,7 +41,8 @@ import jodd.util.StringUtil;
  */
 public class ShortConverter implements TypeConverter<Short> {
 
-	public Short convert(Object value) {
+	@Override
+	public Short convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

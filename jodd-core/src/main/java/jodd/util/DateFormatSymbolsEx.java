@@ -25,8 +25,8 @@
 
 package jodd.util;
 
-import java.util.Locale;
 import java.text.DateFormatSymbols;
+import java.util.Locale;
 
 /**
  * Simple holder for <code>DateFormatSymbols</code> that doesn't create new array on each call.
@@ -44,7 +44,7 @@ public class DateFormatSymbolsEx {
 	protected final String[] eras;
 	protected final String[] ampms;
 
-	public DateFormatSymbolsEx(Locale locale) {
+	public DateFormatSymbolsEx(final Locale locale) {
 		DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
 
 		months = dateFormatSymbols.getMonths();
@@ -60,28 +60,28 @@ public class DateFormatSymbolsEx {
 	/**
 	 * Returns month string.
 	 */
-	public String getMonth(int i) {
+	public String getMonth(final int i) {
 		return this.months[i];
 	}
 
 	/**
 	 * Returns short months.
 	 */
-	public String getShortMonth(int i) {
+	public String getShortMonth(final int i) {
 		return this.shortMonths[i];
 	}
 
 	/**
 	 * Returns weekday.
 	 */
-	public String getWeekday(int i) {
+	public String getWeekday(final int i) {
 		return this.weekdays[i];
 	}
 
 	/**
 	 * Returns short weekday.
 	 */
-	public String getShortWeekday(int i) {
+	public String getShortWeekday(final int i) {
 		return this.shortWeekdays[i];
 	}
 

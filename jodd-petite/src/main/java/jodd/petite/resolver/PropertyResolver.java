@@ -43,14 +43,14 @@ public class PropertyResolver {
 
 	protected final ReferencesResolver referencesResolver;
 
-	public PropertyResolver(ReferencesResolver referencesResolver) {
+	public PropertyResolver(final ReferencesResolver referencesResolver) {
 		this.referencesResolver = referencesResolver;
 	}
 
 	/**
 	 * Resolves all properties for given type.
 	 */
-	public PropertyInjectionPoint[] resolve(Class type, boolean autowire) {
+	public PropertyInjectionPoint[] resolve(final Class type, final boolean autowire) {
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<PropertyInjectionPoint> list = new ArrayList<>();

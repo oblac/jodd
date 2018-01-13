@@ -25,8 +25,8 @@
 
 package jodd.datetime.format;
 
-import jodd.datetime.JDateTime;
 import jodd.datetime.DateTimeStamp;
+import jodd.datetime.JDateTime;
 
 /**
  * Immutable format-formatter pair.
@@ -36,7 +36,7 @@ public class JdtFormat {
 	protected final String format;
 	protected final JdtFormatter formatter;
 
-	public JdtFormat(JdtFormatter formatter, String format) {
+	public JdtFormat(final JdtFormatter formatter, final String format) {
 		this.format = format;
 		this.formatter = formatter;
 	}
@@ -59,14 +59,14 @@ public class JdtFormat {
 	/**
 	 * Delegates for {@link jodd.datetime.format.JdtFormatter#convert(jodd.datetime.JDateTime, String)}. 
 	 */
-	public String convert(JDateTime jdt) {
+	public String convert(final JDateTime jdt) {
 		return formatter.convert(jdt, format);
 	}
 
 	/**
 	 * Delegates for {@link jodd.datetime.format.JdtFormatter#parse(String, String)}.
 	 */
-	public DateTimeStamp parse(String value) {
+	public DateTimeStamp parse(final String value) {
 		return formatter.parse(value, format);
 	}
 }

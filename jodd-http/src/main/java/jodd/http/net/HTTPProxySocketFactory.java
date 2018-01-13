@@ -47,27 +47,27 @@ public class HTTPProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
 
-	public HTTPProxySocketFactory(ProxyInfo proxy) {
+	public HTTPProxySocketFactory(final ProxyInfo proxy) {
 		this.proxy = proxy;
 	}
 
-	public Socket createSocket(String host, int port) throws IOException {
+	public Socket createSocket(final String host, final int port) throws IOException {
 		return createHttpProxySocket(host, port);
 	}
 
-	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) throws IOException {
 		return createHttpProxySocket(host, port);
 	}
 
-	public Socket createSocket(InetAddress host, int port) throws IOException {
+	public Socket createSocket(final InetAddress host, final int port) throws IOException {
 		return createHttpProxySocket(host.getHostAddress(), port);
 	}
 
-	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) throws IOException {
 		return createHttpProxySocket(address.getHostAddress(), port);
 	}
 
-	private Socket createHttpProxySocket(String host, int port) {
+	private Socket createHttpProxySocket(final String host, final int port) {
 		Socket socket = null;
 		String proxyAddress = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();
@@ -152,7 +152,7 @@ public class HTTPProxySocketFactory extends SocketFactory {
 	/**
 	 * Closes socket silently.
 	 */
-	private void closeSocket(Socket socket) {
+	private void closeSocket(final Socket socket) {
 		try {
 			if (socket != null) {
 				socket.close();

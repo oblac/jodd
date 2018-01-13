@@ -95,7 +95,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets the HTTP version string. Must be formed like "HTTP/1.1".
 	 */
-	public T httpVersion(String httpVersion) {
+	public T httpVersion(final String httpVersion) {
 		this.httpVersion = httpVersion;
 		return _this();
 	}
@@ -113,7 +113,7 @@ public abstract class HttpBase<T> {
 	 * Sets headers behavior.
 	 * @see JoddHttpDefaults#capitalizeHeaderKeys
 	 */
-	public T capitalizeHeaderKeys(boolean capitalizeHeaderKeys) {
+	public T capitalizeHeaderKeys(final boolean capitalizeHeaderKeys) {
 		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
 		return _this();
 	}
@@ -126,21 +126,21 @@ public abstract class HttpBase<T> {
 	 * the first value will be returned. Returns <code>null</code>
 	 * if header doesn't exist.
 	 */
-	public String header(String name) {
+	public String header(final String name) {
 		return headers.getHeader(name);
 	}
 
 	/**
 	 * Returns all values for given header name.
 	 */
-	public List<String> headers(String name) {
+	public List<String> headers(final String name) {
 		return headers.getAll(name);
 	}
 
 	/**
 	 * Removes all header parameters for given name.
 	 */
-	public void removeHeader(String name) {
+	public void removeHeader(final String name) {
 		headers.remove(name.trim());
 	}
 
@@ -153,7 +153,7 @@ public abstract class HttpBase<T> {
 	 * {@link #mediaType() media type} and {@link #charset() charset}
 	 * values.
 	 */
-	public T header(String name, String value) {
+	public T header(final String name, final String value) {
 		return header(name, value, false);
 	}
 
@@ -161,7 +161,7 @@ public abstract class HttpBase<T> {
 	 * Adds or sets header parameter.
 	 * @see #header(String, String)
 	 */
-	public T header(String name, String value, boolean overwrite) {
+	public T header(final String name, String value, final boolean overwrite) {
 		String key = name.trim();
 
 		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
@@ -179,7 +179,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Internal direct header setting.
 	 */
-	protected void _header(String name, String value, boolean overwrite) {
+	protected void _header(String name, String value, final boolean overwrite) {
 		name = name.trim();
 		value = value.trim();
 
@@ -194,7 +194,7 @@ public abstract class HttpBase<T> {
 	 * Adds <code>int</code> value as header parameter,
 	 * @see #header(String, String)
 	 */
-	public T header(String name, int value) {
+	public T header(final String name, final int value) {
 		_header(name, String.valueOf(value), false);
 		return _this();
 	}
@@ -203,7 +203,7 @@ public abstract class HttpBase<T> {
 	 * Adds date value as header parameter.
 	 * @see #header(String, String)
 	 */
-	public T header(String name, long millis) {
+	public T header(final String name, final long millis) {
 		_header(name, TimeUtil.formatHttpDate(millis), false);
 		return _this();
 	}
@@ -234,7 +234,7 @@ public abstract class HttpBase<T> {
 	 * <code>null</code> will remove the charset information from
 	 * the header.
 	 */
-	public T charset(String charset) {
+	public T charset(final String charset) {
 		this.charset = null;
 		contentType(null, charset);
 		return _this();
@@ -257,7 +257,7 @@ public abstract class HttpBase<T> {
 	 * Setting this value to <code>null</code> will
 	 * not have any effects.
 	 */
-	public T mediaType(String mediaType) {
+	public T mediaType(final String mediaType) {
 		contentType(mediaType, null);
 		return _this();
 	}
@@ -275,7 +275,7 @@ public abstract class HttpBase<T> {
 	 * Sets full "Content-Type" header. Both {@link #mediaType() media type}
 	 * and {@link #charset() charset} are overridden.
 	 */
-	public T contentType(String contentType) {
+	public T contentType(final String contentType) {
 		header(HEADER_CONTENT_TYPE, contentType, true);
 		return _this();
 	}
@@ -315,7 +315,7 @@ public abstract class HttpBase<T> {
 	 * Defines "Connection" header as "Keep-Alive" or "Close".
 	 * Existing value is overwritten.
 	 */
-	public T connectionKeepAlive(boolean keepAlive) {
+	public T connectionKeepAlive(final boolean keepAlive) {
 		if (keepAlive) {
 			header(HEADER_CONNECTION, HEADER_KEEP_ALIVE, true);
 		} else {
@@ -356,7 +356,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets the full "Content-Length" header.
 	 */
-	public T contentLength(int value) {
+	public T contentLength(final int value) {
 		_header(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
 		return _this();
 	}
@@ -378,7 +378,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets "Accept" header.
 	 */
-	public T accept(String encodings) {
+	public T accept(final String encodings) {
 		header(HEADER_ACCEPT, encodings, true);
 		return _this();
 	}
@@ -393,7 +393,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets "Accept-Encoding" header.
 	 */
-	public T acceptEncoding(String encodings) {
+	public T acceptEncoding(final String encodings) {
 		header(HEADER_ACCEPT_ENCODING, encodings, true);
 		return _this();
 	}
@@ -414,7 +414,7 @@ public abstract class HttpBase<T> {
 	 * Detects invalid types and throws an exception. So all uploadable values
 	 * are of the same type.
 	 */
-	protected Object wrapFormValue(Object value) {
+	protected Object wrapFormValue(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -443,7 +443,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Adds the form parameter. Existing parameter will not be overwritten.
 	 */
-	public T form(String name, Object value) {
+	public T form(final String name, Object value) {
 		initForm();
 
 		value = wrapFormValue(value);
@@ -455,7 +455,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets form parameter. Optionally overwrite existing one.
 	 */
-	public T form(String name, Object value, boolean overwrite) {
+	public T form(final String name, Object value, final boolean overwrite) {
 		initForm();
 
 		value = wrapFormValue(value);
@@ -472,7 +472,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets many form parameters at once.
 	 */
-	public T form(String name, Object value, Object... parameters) {
+	public T form(String name, final Object value, final Object... parameters) {
 		initForm();
 
 		form(name, value);
@@ -488,7 +488,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets many form parameters at once.
 	 */
-	public T form(Map<String, Object> formMap) {
+	public T form(final Map<String, Object> formMap) {
 		initForm();
 
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
@@ -514,7 +514,7 @@ public abstract class HttpBase<T> {
 	 * copied from {@link JoddHttpDefaults#formEncoding}.
 	 * It is overridden by {@link #charset() charset} value.
 	 */
-	public T formEncoding(String encoding) {
+	public T formEncoding(final String encoding) {
 		this.formEncoding = encoding;
 		return _this();
 	}
@@ -565,7 +565,7 @@ public abstract class HttpBase<T> {
 	 * Also sets "Content-Length" parameter. However, "Content-Type" is not set
 	 * and it is expected from user to set this one.
 	 */
-	public T body(String body) {
+	public T body(final String body) {
 		this.body = body;
 		this.form = null;
 		contentLength(body.length());
@@ -577,7 +577,7 @@ public abstract class HttpBase<T> {
 	 * Body string will be converted to {@link #body(String) raw body string}
 	 * and "Content-Type" header will be set.
 	 */
-	public T bodyText(String body, String mediaType, String charset) {
+	public T bodyText(String body, final String mediaType, final String charset) {
 		body = StringUtil.convertCharset(body, charset, StringPool.ISO_8859_1);
 		contentType(mediaType, charset);
 		body(body);
@@ -588,7 +588,7 @@ public abstract class HttpBase<T> {
 	 * Defines {@link #bodyText(String, String, String) body text content}
 	 * that will be encoded in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
 	 */
-	public T bodyText(String body, String mediaType) {
+	public T bodyText(final String body, final String mediaType) {
 		return bodyText(body, mediaType, JoddHttp.get().defaults().getBodyEncoding());
 	}
 	/**
@@ -596,7 +596,7 @@ public abstract class HttpBase<T> {
 	 * that will be encoded as {@link JoddHttpDefaults#bodyMediaType default body media type}
 	 * in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
 	 */
-	public T bodyText(String body) {
+	public T bodyText(final String body) {
 		return bodyText(body, JoddHttp.get().defaults().getBodyMediaType(), JoddHttp.get().defaults().getBodyEncoding());
 	}
 
@@ -605,7 +605,7 @@ public abstract class HttpBase<T> {
 	 * Also sets "Content-Length" and "Content-Type" parameter.
 	 * @see #body(String)
 	 */
-	public T body(byte[] content, String contentType) {
+	public T body(final byte[] content, final String contentType) {
 		String body = null;
 		try {
 			body = new String(content, StringPool.ISO_8859_1);
@@ -757,7 +757,7 @@ public abstract class HttpBase<T> {
 	 * Returns full request/response, or just headers.
 	 * Useful for debugging.
 	 */
-	public String toString(boolean fullResponse) {
+	public String toString(final boolean fullResponse) {
 		Buffer buffer = buffer(fullResponse);
 
 		StringWriter stringWriter = new StringWriter();
@@ -796,7 +796,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected abstract Buffer buffer(boolean full);
 
-	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
+	protected void populateHeaderAndBody(final Buffer target, final Buffer formBuffer, final boolean fullRequest) {
 		for (String name : headers.names()) {
 			List<String> values = headers.getAll(name);
 
@@ -835,7 +835,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sends request or response to output stream.
 	 */
-	public void sendTo(OutputStream out) throws IOException {
+	public void sendTo(final OutputStream out) throws IOException {
 		Buffer buffer = buffer(true);
 
 		if (httpProgressListener == null) {
@@ -853,7 +853,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Parses headers.
 	 */
-	protected void readHeaders(BufferedReader reader) {
+	protected void readHeaders(final BufferedReader reader) {
 		while (true) {
 			String line;
 			try {
@@ -878,7 +878,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Parses body.
 	 */
-	protected void readBody(BufferedReader reader) {
+	protected void readBody(final BufferedReader reader) {
 		String bodyString = null;
 
 		// first determine if chunked encoding is specified

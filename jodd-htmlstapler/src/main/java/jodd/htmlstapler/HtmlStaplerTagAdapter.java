@@ -44,7 +44,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	protected boolean insideConditionalComment;
 
-	public HtmlStaplerTagAdapter(HtmlStaplerBundlesManager bundlesManager, String servletPath, TagVisitor target) {
+	public HtmlStaplerTagAdapter(final HtmlStaplerBundlesManager bundlesManager, final String servletPath, final TagVisitor target) {
 		super(target);
 
 		this.bundlesManager = bundlesManager;
@@ -58,7 +58,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 	// ---------------------------------------------------------------- javascripts
 
 	@Override
-	public void script(Tag tag, CharSequence body) {
+	public void script(final Tag tag, final CharSequence body) {
 		if (!insideConditionalComment) {
 			String src = Util.toString(tag.getAttributeValue("src"));
 
@@ -84,7 +84,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 	private static final CharSequence T_LINK = CharArraySequence.of('l', 'i', 'n', 'k');
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (!insideConditionalComment) {
 			if (tag.nameEquals(T_LINK)) {
 				CharSequence type = tag.getAttributeValue("type");
@@ -114,7 +114,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 
 	@Override
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+	public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
 		insideConditionalComment = isStartingTag;
 		super.condComment(expression, isStartingTag, isHidden, isHiddenEndTag);
 	}

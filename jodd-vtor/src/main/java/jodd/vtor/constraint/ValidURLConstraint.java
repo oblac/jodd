@@ -38,16 +38,18 @@ public class ValidURLConstraint implements ValidationConstraint<ValidURL> {
 
 	// ---------------------------------------------------------------- configure
 
-	public void configure(ValidURL annotation) {
+	@Override
+	public void configure(final ValidURL annotation) {
 	}
 
 	// ---------------------------------------------------------------- validate
 
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	@Override
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value);
 	}
 
-	public static boolean validate(Object value) {
+	public static boolean validate(final Object value) {
 		if (value == null) {
 			return true;
 		}

@@ -61,7 +61,7 @@ public class IteratorStatus {
 	public IteratorStatus() {
 		this.modulus = 2;
 	}
-	public IteratorStatus(int modulus) {
+	public IteratorStatus(final int modulus) {
 		this.modulus = modulus;
 	}
 
@@ -96,7 +96,7 @@ public class IteratorStatus {
 	/**
 	 * Calculates modulus of current count.
 	 */
-	public int modulus(int operand) {
+	public int modulus(final int operand) {
 		return count % operand;
 	}
 
@@ -127,7 +127,7 @@ public class IteratorStatus {
 	/**
 	 * Performs the iterations to the next item and specifies if this is the last iteration.
 	 */
-	protected void next(boolean isLast) {
+	protected void next(final boolean isLast) {
 		count++;
 		last = isLast;
 	}

@@ -152,7 +152,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitMainClass(String mainClass) {
+    public void visitMainClass(final String mainClass) {
         if (this.mainClass == 0) { // protect against several calls to visitMainClass
             cw.newUTF8("ModuleMainClass");
             attributeCount++;
@@ -162,7 +162,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitPackage(String packaze) {
+    public void visitPackage(final String packaze) {
         if (packages == null) { 
             // protect against several calls to visitPackage
             cw.newUTF8("ModulePackages");
@@ -176,7 +176,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitRequire(String module, int access, String version) {
+    public void visitRequire(final String module, final int access, final String version) {
         if (requires == null) {
             requires = new ByteVector();
         }
@@ -188,7 +188,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitExport(String packaze, int access, String... modules) {
+    public void visitExport(final String packaze, final int access, final String... modules) {
         if (exports == null) {
             exports = new ByteVector();
         }
@@ -207,7 +207,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitOpen(String packaze, int access, String... modules) {
+    public void visitOpen(final String packaze, final int access, final String... modules) {
         if (opens == null) {
             opens = new ByteVector();
         }
@@ -226,7 +226,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitUse(String service) {
+    public void visitUse(final String service) {
         if (uses == null) {
             uses = new ByteVector();
         }
@@ -236,7 +236,7 @@ final class ModuleWriter extends ModuleVisitor {
     }
     
     @Override
-    public void visitProvide(String service, String... providers) {
+    public void visitProvide(final String service, final String... providers) {
         if (provides == null) {
             provides = new ByteVector();
         }
@@ -254,7 +254,7 @@ final class ModuleWriter extends ModuleVisitor {
         // empty
     }
 
-    void putAttributes(ByteVector out) {
+    void putAttributes(final ByteVector out) {
         if (mainClass != 0) {
             out.putShort(cw.newUTF8("ModuleMainClass")).putInt(2).putShort(mainClass);
         }
@@ -266,7 +266,7 @@ final class ModuleWriter extends ModuleVisitor {
         }
     }
 
-    void put(ByteVector out) {
+    void put(final ByteVector out) {
         out.putInt(size);
         out.putShort(name).putShort(access).putShort(version);
         out.putShort(requireCount);

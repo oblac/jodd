@@ -67,7 +67,7 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 
 
 	@Override
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.httpServletResponse();
 		HttpSession session = servletRequest.getSession();
@@ -173,7 +173,7 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 	 * @param userSession created session object
 	 * @param isNew if <code>true</code> indicated the session is new (i.e. user is either registered or signed in), if <code>false</code> means that session is continued (i.e. user is signed in via cookie).
 	 */
-	protected void startAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse, U userSession, boolean isNew) {
+	protected void startAuthSession(final HttpServletRequest servletRequest, final HttpServletResponse servletResponse, final U userSession, final boolean isNew) {
 		AuthUtil.startUserSession(servletRequest, userSession);
 		if (!useCookie) {
 			return;
@@ -190,7 +190,7 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 	 * Closes auth session by removing auth session object from the http session
 	 * and clearing the auth cookie.
 	 */
-	protected void closeAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	protected void closeAuthSession(final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) {
 		AuthUtil.closeUserSession(servletRequest);
 		AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 	}
@@ -201,21 +201,21 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 	/**
 	 * Detects login path.
 	 */
-	protected boolean isLoginAction(String actionPath) {
+	protected boolean isLoginAction(final String actionPath) {
 		return actionPath.equals(AuthAction.LOGIN_ACTION_PATH);
 	}
 
 	/**
 	 * Detects logout path.
 	 */
-	protected boolean isLogoutAction(String actionPath) {
+	protected boolean isLogoutAction(final String actionPath) {
 		return actionPath.equals(AuthAction.LOGOUT_ACTION_PATH);
 	}
 
 	/**
 	 * Detects registration path.
 	 */
-	protected boolean isRegisterAction(String actionPath) {
+	protected boolean isRegisterAction(final String actionPath) {
 		return actionPath.equals(AuthAction.REGISTER_ACTION_PATH);
 	}
 
@@ -251,7 +251,7 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 	/**
 	 * Prepares result for login failed page.
 	 */
-	protected Object resultLoginFailed(int reason) {
+	protected Object resultLoginFailed(final int reason) {
 		return "redirect:" + AuthAction.ALIAS_LOGIN + "?err=" + reason;
 	}
 
@@ -266,7 +266,7 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 	 * Tires to login user with form data. Returns session object, otherwise returns <code>null</code>.
 	 * By default, calls {@link #loginUsernamePassword(String, String)}.
 	 */
-	protected U loginViaRequest(HttpServletRequest servletRequest) {
+	protected U loginViaRequest(final HttpServletRequest servletRequest) {
 		String username = servletRequest.getParameter(AuthAction.LOGIN_USERNAME);
 		String password = servletRequest.getParameter(AuthAction.LOGIN_PASSWORD);
 

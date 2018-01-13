@@ -45,7 +45,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	protected final Class[] rawParameterTypes;
 	protected final Class[] rawParameterComponentTypes;
 
-	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
+	public MethodDescriptor(final ClassDescriptor classDescriptor, final Method method) {
 		super(classDescriptor, ClassUtil.isPublic(method));
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
@@ -80,6 +80,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	/**
 	 * Returns method name.
 	 */
+	@Override
 	public String getName() {
 		return method.getName();
 	}
@@ -141,30 +142,37 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 
 	// ---------------------------------------------------------------- getter/setter
 
-	public Object invokeGetter(Object target) throws InvocationTargetException, IllegalAccessException {
+	@Override
+	public Object invokeGetter(final Object target) throws InvocationTargetException, IllegalAccessException {
 		return method.invoke(target, null);
 	}
 
+	@Override
 	public Class getGetterRawType() {
 		return getRawReturnType();
 	}
 
+	@Override
 	public Class getGetterRawComponentType() {
 		return getRawReturnComponentType();
 	}
 
+	@Override
 	public Class getGetterRawKeyComponentType() {
 		return getRawReturnKeyComponentType();
 	}
 
-	public void invokeSetter(Object target, Object argument) throws IllegalAccessException, InvocationTargetException {
+	@Override
+	public void invokeSetter(final Object target, final Object argument) throws IllegalAccessException, InvocationTargetException {
 		method.invoke(target, argument);
 	}
 
+	@Override
 	public Class getSetterRawType() {
 		return getRawParameterTypes()[0];
 	}
 
+	@Override
 	public Class getSetterRawComponentType() {
 		Class[] ts = getRawParameterComponentTypes();
 		if (ts == null) {

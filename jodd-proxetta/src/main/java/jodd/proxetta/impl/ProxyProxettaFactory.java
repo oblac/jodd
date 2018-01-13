@@ -39,22 +39,22 @@ import java.io.InputStream;
  */
 public class ProxyProxettaFactory extends ProxettaFactory<ProxyProxettaFactory, ProxyProxetta> {
 
-	public ProxyProxettaFactory(ProxyProxetta proxyProxetta) {
+	public ProxyProxettaFactory(final ProxyProxetta proxyProxetta) {
 		super(proxyProxetta);
 	}
 
 	@Override
-	public ProxyProxettaFactory setTarget(InputStream target) {
+	public ProxyProxettaFactory setTarget(final InputStream target) {
 		return super.setTarget(target);
 	}
 
 	@Override
-	public ProxyProxettaFactory setTarget(String targetName) {
+	public ProxyProxettaFactory setTarget(final String targetName) {
 		return super.setTarget(targetName);
 	}
 
 	@Override
-	public ProxyProxettaFactory setTarget(Class target) {
+	public ProxyProxettaFactory setTarget(final Class target) {
 		return super.setTarget(target);
 	}
 
@@ -62,7 +62,7 @@ public class ProxyProxettaFactory extends ProxettaFactory<ProxyProxettaFactory, 
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WorkData process(ClassReader cr, TargetClassInfoReader targetClassInfoReader) {
+	protected WorkData process(final ClassReader cr, final TargetClassInfoReader targetClassInfoReader) {
 
 		ProxettaClassBuilder pcb = new ProxettaClassBuilder(
 				destClassWriter,

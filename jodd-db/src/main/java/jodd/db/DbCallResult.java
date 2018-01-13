@@ -33,14 +33,14 @@ public class DbCallResult {
 	private final DbQueryParser query;
 	private final CallableStatement statement;
 
-	DbCallResult(DbQueryParser parser, CallableStatement callableStatement) {
+	DbCallResult(final DbQueryParser parser, final CallableStatement callableStatement) {
 		this.query = parser;
 		this.statement = callableStatement;
 	}
 
 	// ---------------------------------------------------------------- integer
 
-	public int getInteger(int index) {
+	public int getInteger(final int index) {
 		try {
 			return statement.getInt(index);
 		} catch (SQLException sex) {
@@ -48,7 +48,7 @@ public class DbCallResult {
 		}
 	}
 
-	public int getInteger(String param) {
+	public int getInteger(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -60,7 +60,7 @@ public class DbCallResult {
 		}
 	}
 
-	public int[] getAllInteger(String param) {
+	public int[] getAllInteger(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		int[] result = new int[positions.size()];
 		try {
@@ -75,7 +75,7 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- boolean
 
-	public boolean getBoolean(int index) {
+	public boolean getBoolean(final int index) {
 		try {
 			return statement.getBoolean(index);
 		} catch (SQLException sex) {
@@ -83,7 +83,7 @@ public class DbCallResult {
 		}
 	}
 
-	public boolean getBoolean(String param) {
+	public boolean getBoolean(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -95,7 +95,7 @@ public class DbCallResult {
 		}
 	}
 
-	public boolean[] getAllBoolean(String param) {
+	public boolean[] getAllBoolean(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		boolean[] result = new boolean[positions.size()];
 		try {
@@ -110,7 +110,7 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- byte
 
-	public byte getByte(int index) {
+	public byte getByte(final int index) {
 		try {
 			return statement.getByte(index);
 		} catch (SQLException sex) {
@@ -118,7 +118,7 @@ public class DbCallResult {
 		}
 	}
 
-	public byte getByte(String param) {
+	public byte getByte(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -130,7 +130,7 @@ public class DbCallResult {
 		}
 	}
 
-	public byte[] getAllByte(String param) {
+	public byte[] getAllByte(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		byte[] result = new byte[positions.size()];
 		try {
@@ -145,7 +145,7 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- doublw
 
-	public double getDouble(int index) {
+	public double getDouble(final int index) {
 		try {
 			return statement.getDouble(index);
 		} catch (SQLException sex) {
@@ -153,7 +153,7 @@ public class DbCallResult {
 		}
 	}
 
-	public double getDouble(String param) {
+	public double getDouble(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -165,7 +165,7 @@ public class DbCallResult {
 		}
 	}
 
-	public double[] getAllDouble(String param) {
+	public double[] getAllDouble(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		double[] result = new double[positions.size()];
 		try {
@@ -180,7 +180,7 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- float
 
-	public float getFloat(int index) {
+	public float getFloat(final int index) {
 		try {
 			return statement.getFloat(index);
 		} catch (SQLException sex) {
@@ -188,7 +188,7 @@ public class DbCallResult {
 		}
 	}
 
-	public float getFloat(String param) {
+	public float getFloat(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -200,7 +200,7 @@ public class DbCallResult {
 		}
 	}
 
-	public float[] getAllFloat(String param) {
+	public float[] getAllFloat(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		float[] result = new float[positions.size()];
 		try {
@@ -216,7 +216,7 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- string
 
-	public String getString(int index) {
+	public String getString(final int index) {
 		try {
 			return statement.getString(index);
 		} catch (SQLException sex) {
@@ -224,7 +224,7 @@ public class DbCallResult {
 		}
 	}
 
-	public String getString(String param) {
+	public String getString(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -236,7 +236,7 @@ public class DbCallResult {
 		}
 	}
 
-	public String[] getAllString(String param) {
+	public String[] getAllString(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		String[] result = new String[positions.size()];
 		try {
@@ -251,7 +251,7 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- long
 
-	public long getLong(int index) {
+	public long getLong(final int index) {
 		try {
 			return statement.getLong(index);
 		} catch (SQLException sex) {
@@ -259,7 +259,7 @@ public class DbCallResult {
 		}
 	}
 
-	public long getLong(String param) {
+	public long getLong(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
@@ -271,7 +271,7 @@ public class DbCallResult {
 		}
 	}
 
-	public long[] getAllLong(String param) {
+	public long[] getAllLong(final String param) {
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		long[] result = new long[positions.size()];
 		try {
@@ -286,13 +286,13 @@ public class DbCallResult {
 
 	// ---------------------------------------------------------------- exception
 
-	private DbSqlException newGetParamError(int index, Exception ex) {
+	private DbSqlException newGetParamError(final int index, final Exception ex) {
 		return new DbSqlException("Invalid SQL parameter with index: " + index, ex);
 	}
-	private DbSqlException newGetParamError(String param, Exception ex) {
+	private DbSqlException newGetParamError(final String param, final Exception ex) {
 		return new DbSqlException("Invalid SQL parameter with name: " + param, ex);
 	}
-	private DbSqlException newGetParamError(String param) {
+	private DbSqlException newGetParamError(final String param) {
 		return new DbSqlException("Invalid number of parameter with name: " + param);
 	}
 

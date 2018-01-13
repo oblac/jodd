@@ -35,7 +35,7 @@ import jodd.json.TypeJsonSerializer;
 public class JDateTimeSerializer implements TypeJsonSerializer<JDateTime> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, JDateTime value) {
+	public boolean serialize(final JsonContext jsonContext, final JDateTime value) {
 		jsonContext.write(String.valueOf(value.getTimeInMillis()));
 		return true;
 	}

@@ -43,14 +43,14 @@ public class MethodResolver {
 
 	protected final ReferencesResolver referencesResolver;
 
-	public MethodResolver(ReferencesResolver referencesResolver) {
+	public MethodResolver(final ReferencesResolver referencesResolver) {
 		this.referencesResolver = referencesResolver;
 	}
 
 	/**
 	 * Resolve method injection points in given class.
 	 */
-	public MethodInjectionPoint[] resolve(Class type) {
+	public MethodInjectionPoint[] resolve(final Class type) {
 		// lookup methods
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<MethodInjectionPoint> list = new ArrayList<>();

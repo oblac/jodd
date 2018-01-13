@@ -43,7 +43,7 @@ import java.util.function.Consumer;
  */
 public class BeanDefinition<T> {
 
-	public BeanDefinition(String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> beanInitConsumer) {
+	public BeanDefinition(final String name, final Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> beanInitConsumer) {
 		this.name = name;
 		this.type = type;
 		this.scope = scope;
@@ -173,7 +173,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Delegates to {@link jodd.petite.scope.Scope#register(jodd.petite.BeanDefinition, Object)}.
 	 */
-	protected void scopeRegister(Object object) {
+	protected void scopeRegister(final Object object) {
 		if (scope != null) {
 			scope.register(this, object);
 		}
@@ -191,7 +191,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Adds property injection point.
 	 */
-	protected void addPropertyInjectionPoint(PropertyInjectionPoint pip) {
+	protected void addPropertyInjectionPoint(final PropertyInjectionPoint pip) {
 		if (properties == null) {
 			properties = new PropertyInjectionPoint[1];
 			properties[0] = pip;
@@ -203,7 +203,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Adds set injection point.
 	 */
-	protected void addSetInjectionPoint(SetInjectionPoint sip) {
+	protected void addSetInjectionPoint(final SetInjectionPoint sip) {
 		if (sets == null) {
 			sets = new SetInjectionPoint[1];
 			sets[0] = sip;
@@ -215,7 +215,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Adds method injection point.
 	 */
-	protected void addMethodInjectionPoint(MethodInjectionPoint mip) {
+	protected void addMethodInjectionPoint(final MethodInjectionPoint mip) {
 		if (methods == null) {
 			methods = new MethodInjectionPoint[1];
 			methods[0] = mip;
@@ -227,7 +227,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Adds init methods.
 	 */
-	protected void addInitMethodPoints(InitMethodPoint[] methods) {
+	protected void addInitMethodPoints(final InitMethodPoint[] methods) {
 		if (initMethods == null) {
 			initMethods = methods;
 		} else {
@@ -238,7 +238,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Adds destroy methods.
 	 */
-	protected void addDestroyMethodPoints(DestroyMethodPoint[] methods) {
+	protected void addDestroyMethodPoints(final DestroyMethodPoint[] methods) {
 		if (destroyMethods == null) {
 			destroyMethods = methods;
 		} else {

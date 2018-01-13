@@ -49,15 +49,15 @@ public class RawData {
 	protected String downloadFileName;
 	protected String mimeType = MimeTypes.MIME_APPLICATION_OCTET_STREAM;
 
-	public static RawData of(byte[] bytes) {
+	public static RawData of(final byte[] bytes) {
 		return new RawData(new ByteArrayInputStream(bytes), bytes.length);
 	}
 
-	public static RawData of(File file) {
+	public static RawData of(final File file) {
 		return new RawData(createFileInputStream(file), (int) file.length()).downloadableAs(file.getName());
 	}
 
-	public RawData(InputStream inputStream, int length) {
+	public RawData(final InputStream inputStream, final int length) {
 		this.inputStream = inputStream;
 		this.length = length;
 	}
@@ -65,7 +65,7 @@ public class RawData {
 	/**
 	 * Defines mime type by providing real mime type or just extension!
 	 */
-	public RawData as(String mimeOrExtension) {
+	public RawData as(final String mimeOrExtension) {
 		if (mimeOrExtension.contains(StringPool.SLASH)) {
 			this.mimeType = mimeOrExtension;
 		}
@@ -87,7 +87,7 @@ public class RawData {
 	/**
 	 * Defines download file name and mime type from the name extension.
 	 */
-	public RawData downloadableAs(String downloadFileName) {
+	public RawData downloadableAs(final String downloadFileName) {
 		this.downloadFileName = downloadFileName;
 		this.mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(downloadFileName));
 		return this;
@@ -112,7 +112,7 @@ public class RawData {
 		return length;
 	}
 
-	private static FileInputStream createFileInputStream(File file) {
+	private static FileInputStream createFileInputStream(final File file) {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException fis) {

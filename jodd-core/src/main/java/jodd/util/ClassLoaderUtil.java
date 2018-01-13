@@ -98,7 +98,7 @@ public class ClassLoaderUtil {
 	 * Defines a class from byte array into the system class loader.
 	 * @see #defineClass(String, byte[], ClassLoader)
 	 */
-	public static Class defineClass(String className, byte[] classData) {
+	public static Class defineClass(final String className, final byte[] classData) {
 		return defineClass(className, classData, getDefaultClassLoader());
 	}
 
@@ -109,7 +109,7 @@ public class ClassLoaderUtil {
 	 * @param classData bytecode data
 	 * @param classLoader classloader that will load class
 	 */
-	public static Class defineClass(String className, byte[] classData, ClassLoader classLoader) {
+	public static Class defineClass(final String className, final byte[] classData, final ClassLoader classLoader) {
 		try {
 			Method defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
 			defineClassMethod.setAccessible(true);
@@ -126,7 +126,7 @@ public class ClassLoaderUtil {
 	/**
 	 * Returns classpath item manifest or <code>null</code> if not found.
 	 */
-	public static Manifest getClasspathItemManifest(File classpathItem) {
+	public static Manifest getClasspathItemManifest(final File classpathItem) {
 		Manifest manifest = null;
 
 		if (classpathItem.isFile()) {
@@ -172,7 +172,7 @@ public class ClassLoaderUtil {
 	 * Returns base folder for classpath item. If item is a (jar) file,
 	 * its parent is returned. If item is a directory, its name is returned.
 	 */
-	public static String getClasspathItemBaseDir(File classpathItem) {
+	public static String getClasspathItemBaseDir(final File classpathItem) {
 		String base;
 		if (classpathItem.isFile()) {
 			base = classpathItem.getParent();
@@ -227,7 +227,7 @@ public class ClassLoaderUtil {
 		return classpaths.toArray(result);
 	}
 
-	private static void addInnerClasspathItems(Set<File> classpaths, File item) {
+	private static void addInnerClasspathItems(final Set<File> classpaths, final File item) {
 
 		Manifest manifest = getClasspathItemManifest(item);
 		if (manifest == null) {
@@ -302,7 +302,7 @@ public class ClassLoaderUtil {
 	 * Retrieves given resource as URL.
 	 * @see #getResourceUrl(String, ClassLoader)
 	 */
-	public static URL getResourceUrl(String resourceName) {
+	public static URL getResourceUrl(final String resourceName) {
 		return getResourceUrl(resourceName, null);
 	}
 
@@ -317,7 +317,7 @@ public class ClassLoaderUtil {
 	 * <li>if <code>callingClass</code> is provided: {@link Class#getClassLoader() callingClass.getClassLoader()}</li>
 	 * </ul>
 	 */
-	public static URL getResourceUrl(String resourceName, ClassLoader classLoader) {
+	public static URL getResourceUrl(String resourceName, final ClassLoader classLoader) {
 
 		if (resourceName.startsWith("/")) {
 			resourceName = resourceName.substring(1);
@@ -362,7 +362,7 @@ public class ClassLoaderUtil {
 	 * Opens a resource of the specified name for reading.
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
-	public static InputStream getResourceAsStream(String resourceName) throws IOException {
+	public static InputStream getResourceAsStream(final String resourceName) throws IOException {
 		return getResourceAsStream(resourceName, null);
 	}
 
@@ -370,7 +370,7 @@ public class ClassLoaderUtil {
 	 * Opens a resource of the specified name for reading.
 	 * @see #getResourceUrl(String, ClassLoader)
 	 */
-	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass) throws IOException {
+	public static InputStream getResourceAsStream(final String resourceName, final ClassLoader callingClass) throws IOException {
 		URL url = getResourceUrl(resourceName, callingClass);
 		if (url != null) {
 			return url.openStream();
@@ -382,7 +382,7 @@ public class ClassLoaderUtil {
 	 * Opens a resource of the specified name for reading. Controls caching,
 	 * that is important when the same jar is reloaded using custom classloader.
 	 */
-	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass, boolean useCache) throws IOException {
+	public static InputStream getResourceAsStream(final String resourceName, final ClassLoader callingClass, final boolean useCache) throws IOException {
 		URL url = getResourceUrl(resourceName, callingClass);
 		if (url != null) {
 			URLConnection urlConnection = url.openConnection();
@@ -396,7 +396,7 @@ public class ClassLoaderUtil {
 	 * Opens a class of the specified name for reading using class classloader.
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
-	public static InputStream getClassAsStream(Class clazz) throws IOException {
+	public static InputStream getClassAsStream(final Class clazz) throws IOException {
 		return getResourceAsStream(ClassUtil.convertClassNameToFileName(clazz), clazz.getClassLoader());
 	}
 
@@ -405,14 +405,14 @@ public class ClassLoaderUtil {
 	 * for loading class.
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
-	public static InputStream getClassAsStream(String className) throws IOException {
+	public static InputStream getClassAsStream(final String className) throws IOException {
 		return getResourceAsStream(ClassUtil.convertClassNameToFileName(className));
 	}
 
 	/**
 	 * Opens a class of the specified name for reading using provided class loader.
 	 */
-	public static InputStream getClassAsStream(String className, ClassLoader classLoader) throws IOException {
+	public static InputStream getClassAsStream(final String className, final ClassLoader classLoader) throws IOException {
 		return getResourceAsStream(ClassUtil.convertClassNameToFileName(className), classLoader);
 	}
 
@@ -422,7 +422,7 @@ public class ClassLoaderUtil {
 	 * Loads a class using default class loader strategy.
 	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
-	public static Class loadClass(String className) throws ClassNotFoundException {
+	public static Class loadClass(final String className) throws ClassNotFoundException {
 		return ClassLoaderStrategy.get().loadClass(className, null);
 	}
 	
@@ -430,7 +430,7 @@ public class ClassLoaderUtil {
 	 * Loads a class using default class loader strategy.
 	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
-	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+	public static Class loadClass(final String className, final ClassLoader classLoader) throws ClassNotFoundException {
 		return ClassLoaderStrategy.get().loadClass(className, classLoader);
 	}
 

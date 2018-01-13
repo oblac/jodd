@@ -35,15 +35,15 @@ public class ClassConsumer<T> implements Consumer<T> {
 	private final Class<T> type;
 	private final Consumer<T> consumer;
 
-	public static <R> ClassConsumer<R> of(Class<R> type) {
+	public static <R> ClassConsumer<R> of(final Class<R> type) {
 		return new ClassConsumer<>(type, null);
 	}
 
-	public static <R> ClassConsumer<R> of(Class<R> type, Consumer<R> consumer) {
+	public static <R> ClassConsumer<R> of(final Class<R> type, final Consumer<R> consumer) {
 		return new ClassConsumer<>(type, consumer);
 	}
 
-	public ClassConsumer(Class<T> type, Consumer<T> consumer) {
+	public ClassConsumer(final Class<T> type, final Consumer<T> consumer) {
 		this.type = type;
 		this.consumer = consumer;
 	}
@@ -57,7 +57,7 @@ public class ClassConsumer<T> implements Consumer<T> {
 	}
 
 	@Override
-	public void accept(T instance) {
+	public void accept(final T instance) {
 		if (consumer != null) {
 			consumer.accept(instance);
 		}

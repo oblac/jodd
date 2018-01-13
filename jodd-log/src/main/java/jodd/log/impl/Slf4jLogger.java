@@ -42,7 +42,7 @@ public class Slf4jLogger implements Logger {
 	final org.slf4j.Logger logger;
 	private final LocationAwareLogger locationAwareLogger;
 
-	public Slf4jLogger(org.slf4j.Logger logger) {
+	public Slf4jLogger(final org.slf4j.Logger logger) {
 		this.logger = logger;
 		if (logger instanceof LocationAwareLogger) {
 			locationAwareLogger = (LocationAwareLogger) logger;
@@ -58,7 +58,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public boolean isEnabled(Level level) {
+	public boolean isEnabled(final Level level) {
 		switch (level) {
 			case TRACE: return logger.isTraceEnabled();
 			case DEBUG: return logger.isDebugEnabled();
@@ -71,7 +71,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void log(Level level, String message) {
+	public void log(final Level level, final String message) {
 		switch (level) {
 			case TRACE: trace(message); break;
 			case DEBUG: debug(message); break;
@@ -82,7 +82,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void log(Level level, String message, Throwable throwable) {
+	public void log(final Level level, final String message, final Throwable throwable) {
 		switch (level) {
 			case TRACE: trace(message); break;
 			case DEBUG: debug(message); break;
@@ -93,7 +93,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void setLevel(Level level) {
+	public void setLevel(final Level level) {
 		if (logger instanceof ch.qos.logback.classic.Logger) {
 			ch.qos.logback.classic.Level l = null;
 
@@ -119,7 +119,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void trace(String message) {
+	public void trace(final String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.TRACE_INT, message, null, null);
@@ -135,7 +135,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void debug(String message) {
+	public void debug(final String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.DEBUG_INT, message, null, null);
@@ -151,7 +151,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void info(String message) {
+	public void info(final String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.INFO_INT, message, null, null);
@@ -167,7 +167,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void warn(String message) {
+	public void warn(final String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.WARN_INT, message, null, null);
@@ -178,7 +178,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void warn(String message, Throwable throwable) {
+	public void warn(final String message, final Throwable throwable) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.WARN_INT, message, null, throwable);
@@ -194,7 +194,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.ERROR_INT, message, null, null);
@@ -205,7 +205,7 @@ public class Slf4jLogger implements Logger {
 	}
 
 	@Override
-	public void error(String message, Throwable throwable) {
+	public void error(final String message, final Throwable throwable) {
 		if (locationAwareLogger != null) {
 			locationAwareLogger.log(
 				null, FQCN, LocationAwareLogger.ERROR_INT, message, null, throwable);

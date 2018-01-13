@@ -35,7 +35,7 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader<A, ActionAnnotationData<A>> {
 
-	public ActionAnnotation(Class<A> annotationClass) {
+	public ActionAnnotation(final Class<A> annotationClass) {
 		super(annotationClass, Action.class);
 	}
 
@@ -43,7 +43,7 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 	 * Need to override to make java compiler happy.
 	 */
 	@Override
-	public ActionAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
+	public ActionAnnotationData<A> readAnnotatedElement(final AnnotatedElement annotatedElement) {
 		return super.readAnnotatedElement(annotatedElement);
 	}
 
@@ -52,7 +52,7 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected ActionAnnotationData<A> createAnnotationData(A annotation) {
+	protected ActionAnnotationData<A> createAnnotationData(final A annotation) {
 
 		ActionAnnotationData<A> ad = new ActionAnnotationData<>(annotation);
 

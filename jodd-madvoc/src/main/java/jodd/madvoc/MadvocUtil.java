@@ -34,7 +34,7 @@ import jodd.util.StringUtil;
  */
 public class MadvocUtil {
 
-	public static String[] splitPathToChunks(String actionPath) {
+	public static String[] splitPathToChunks(final String actionPath) {
 		String path = StringUtil.cutSurrounding(actionPath, StringPool.SLASH);
 		return StringUtil.splitc(path, '/');
 	}
@@ -42,7 +42,7 @@ public class MadvocUtil {
 	/**
 	 * Locates last dot after the last slash or just slash.
 	 */
-	public static int lastIndexOfSlashDot(String str) {
+	public static int lastIndexOfSlashDot(final String str) {
 		int slashNdx = str.lastIndexOf('/');
 		int dotNdx = StringUtil.lastIndexOf(str, '.', str.length(), slashNdx);
 		if (dotNdx == -1) {
@@ -62,7 +62,7 @@ public class MadvocUtil {
 	/**
 	 * Locates last index of dot after the optional last slash.
 	 */
-	public static int lastIndexOfDotAfterSlash(String str) {
+	public static int lastIndexOfDotAfterSlash(final String str) {
 		int slashNdx = str.lastIndexOf('/');
 		slashNdx++;
 		return StringUtil.lastIndexOf(str, '.', str.length(), slashNdx);
@@ -71,7 +71,7 @@ public class MadvocUtil {
 	/**
 	 * Locates first dot after the last slash.
 	 */
-	public static int indexOfDotAfterSlash(String str) {
+	public static int indexOfDotAfterSlash(final String str) {
 		int slashNdx = str.lastIndexOf('/');
 		if (slashNdx == -1) {
 			slashNdx = 0;
@@ -102,7 +102,7 @@ public class MadvocUtil {
 	/**
 	 * Splits action path to chunks.
 	 */
-	public static String[] splitActionPath(String actionPath) {
+	public static String[] splitActionPath(final String actionPath) {
 		return StringUtil.splitc(actionPath.substring(1), '/');
 	}
 }

@@ -38,7 +38,7 @@ public class MethodInjectionPoint {
 	public final Method method;
 	public final BeanReferences[] references;
 
-	public MethodInjectionPoint(Method method, BeanReferences[] references) {
+	public MethodInjectionPoint(final Method method, final BeanReferences[] references) {
 		Objects.requireNonNull(method);
 		Objects.requireNonNull(references);
 

@@ -47,7 +47,7 @@ public final class LoggerFactory {
 	/**
 	 * Sets {@link LoggerProvider} instance used for creating new {@link Logger}s.
 	 */
-	public static void setLoggerProvider(LoggerProvider loggerProvider) {
+	public static void setLoggerProvider(final LoggerProvider loggerProvider) {
 		LoggerFactory.loggerProvider = loggerProvider::createLogger;
 		if (loggers != null) {
 			loggers.clear();
@@ -58,7 +58,7 @@ public final class LoggerFactory {
 	 * Returns logger for given class by simply using the class name.
 	 * @see #getLogger(String)
 	 */
-	public static Logger getLogger(Class clazz) {
+	public static Logger getLogger(final Class clazz) {
 		return getLogger(clazz.getName());
 	}
 
@@ -80,7 +80,7 @@ public final class LoggerFactory {
 	 * Returns logger for given name. Repeated calls to this method with the
 	 * same argument should return the very same instance of the logger.
 	 */
-	public static Logger getLogger(String name) {
+	public static Logger getLogger(final String name) {
 		if (loggers == null) {
 			return loggerProvider.apply(name);
 		}

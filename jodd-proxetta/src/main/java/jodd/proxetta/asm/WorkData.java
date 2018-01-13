@@ -40,7 +40,7 @@ public final class WorkData {
 
 	final ClassVisitor dest;
 
-	WorkData(ClassVisitor dest) {
+	WorkData(final ClassVisitor dest) {
 		this.dest = dest;
 	}
 
@@ -68,7 +68,7 @@ public final class WorkData {
 	/**
 	 * Work data initialization.
 	 */
-	public void init(String name, String superName, String suffix, String reqProxyClassName) {
+	public void init(String name, final String superName, final String suffix, final String reqProxyClassName) {
 		int lastSlash = name.lastIndexOf('/');
 		this.targetPackage = lastSlash == -1 ? StringPool.EMPTY : name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
@@ -103,7 +103,7 @@ public final class WorkData {
 	/**
 	 * Saves used static initialization blocks (clinit) of advices.
 	 */
-	void addAdviceClinitMethod(String name) {
+	void addAdviceClinitMethod(final String name) {
 		if (adviceClinits == null) {
 			adviceClinits = new ArrayList<>();
 		}
@@ -117,7 +117,7 @@ public final class WorkData {
 	/**
 	 * Saves used constructors of advices.
 	 */
-	void addAdviceInitMethod(String name) {
+	void addAdviceInitMethod(final String name) {
 		if (adviceInits == null) {
 			adviceInits = new ArrayList<>();
 		}

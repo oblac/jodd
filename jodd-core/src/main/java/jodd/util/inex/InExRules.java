@@ -76,7 +76,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	/**
 	 * Creates instance that uses provided matcher.
 	 */
-	public InExRules(InExRuleMatcher<V, R> inExRuleMatcher) {
+	public InExRules(final InExRuleMatcher<V, R> inExRuleMatcher) {
 		this.inExRuleMatcher = inExRuleMatcher;
 	}
 
@@ -121,7 +121,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 		public final R value;
 		public final boolean include;
 
-		public Rule(R value, boolean include) {
+		public Rule(final R value, final boolean include) {
 			this.value = value;
 			this.include = include;
 		}
@@ -132,7 +132,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(final Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -163,7 +163,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	/**
 	 * Returns rule's value on given index.
 	 */
-	public R getRule(int index) {
+	public R getRule(final int index) {
 		return rules.get(index).value;
 	}
 
@@ -230,21 +230,21 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	/**
 	 * Adds include rule.
 	 */
-	public void include(D rule) {
+	public void include(final D rule) {
 		addRule(rule, true);
 	}
 
 	/**
 	 * Adds exclude rule.
 	 */
-	public void exclude(D rule) {
+	public void exclude(final D rule) {
 		addRule(rule, false);
 	}
 
 	/**
 	 * Adds a rule. Duplicates are not allowed and will be ignored.
 	 */
-	protected void addRule(D ruleDefinition, boolean include) {
+	protected void addRule(final D ruleDefinition, final boolean include) {
 		if (rules == null) {
 			rules = new ArrayList<>();
 		}
@@ -264,20 +264,20 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 		rules.add(newRule);
 	}
 
-	protected R makeRule(D rule) {
+	protected R makeRule(final D rule) {
 		return (R) rule;
 	}
 
 	/**
 	 * Matches value against the set of rules using current white/black list mode.
 	 */
-	public boolean match(V value) {
+	public boolean match(final V value) {
 		return match(value, blacklist);
 	}
 	/**
 	 * Matches value against the set of rules using provided white/black list mode.
 	 */
-	public boolean match(V value, boolean blacklist) {
+	public boolean match(final V value, final boolean blacklist) {
 		if (rules == null) {
 			return blacklist;
 		}
@@ -300,7 +300,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	 * Applies rules on given flag using current black/white list mode.
 	 * @see #apply(Object, boolean, boolean)
 	 */
-	public boolean apply(V value, boolean flag) {
+	public boolean apply(final V value, final boolean flag) {
 		return apply(value, blacklist, flag);
 	}
 
@@ -310,7 +310,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	 * chain several rules and have the rule engine change the flag
 	 * only when a rule is matched.
 	 */
-	public boolean apply(V value, final boolean blacklist, boolean flag) {
+	public boolean apply(final V value, final boolean blacklist, boolean flag) {
 		if (rules == null) {
 			return flag;
 		}
@@ -330,7 +330,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	/**
 	 * Process includes rules.
 	 */
-	protected boolean processIncludes(V value, boolean include) {
+	protected boolean processIncludes(final V value, boolean include) {
 		if (includesCount > 0) {
 			if (!include) {
 				for (Rule<R> rule : rules) {
@@ -351,7 +351,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	/**
 	 * Process excludes rules.
 	 */
-	protected boolean processExcludes(V value, boolean include) {
+	protected boolean processExcludes(final V value, boolean include) {
 		if (excludesCount > 0) {
 			if (include) {
 				for (Rule<R> rule : rules) {
@@ -374,7 +374,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	 * against the rule.
 	 */
 	@Override
-	public boolean accept(V value, R rule, boolean include) {
+	public boolean accept(final V value, final R rule, final boolean include) {
 		return value.equals(rule);
 	}
 

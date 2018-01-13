@@ -105,7 +105,7 @@ public class LoggableAdvice implements ProxyAdvice {
 	 * @param position position (starting at 1) of the parameter to save
 	 * @param obj java.lang.Object the parameter value to save
 	 */
-	private void saveQueryParamValue(int position, Object obj) {
+	private void saveQueryParamValue(final int position, final Object obj) {
 		String strValue;
 		if (obj instanceof String || obj instanceof Date) {
 			strValue = "'" + obj + '\'';        // if we have a String or Date , include '' in the saved value

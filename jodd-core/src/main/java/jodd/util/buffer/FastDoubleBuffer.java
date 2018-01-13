@@ -55,7 +55,7 @@ public class FastDoubleBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastDoubleBuffer(int size) {
+	public FastDoubleBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastDoubleBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastDoubleBuffer {
 	/**
 	 * Appends <code>double</code> array to buffer.
 	 */
-	public FastDoubleBuffer append(double[] array, int off, int len) {
+	public FastDoubleBuffer append(final double[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastDoubleBuffer {
 	/**
 	 * Appends <code>double</code> array to buffer.
 	 */
-	public FastDoubleBuffer append(double[] array) {
+	public FastDoubleBuffer append(final double[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>double</code> to buffer.
 	 */
-	public FastDoubleBuffer append(double element) {
+	public FastDoubleBuffer append(final double element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastDoubleBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastDoubleBuffer append(FastDoubleBuffer buff) {
+	public FastDoubleBuffer append(final FastDoubleBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastDoubleBuffer {
 	 * Returns <code>double</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public double[] array(int index) {
+	public double[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastDoubleBuffer {
     /**
      * Creates <code>double</code> subarray from buffered content.
      */
-	public double[] toArray(int start, int len) {
+	public double[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		double[] array = new double[len];

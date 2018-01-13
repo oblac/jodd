@@ -38,7 +38,7 @@ public enum WiringMode {
 
 	private final int value;
 
-	WiringMode(int value) {
+	WiringMode(final int value) {
 		this.value = value;
 	}
 

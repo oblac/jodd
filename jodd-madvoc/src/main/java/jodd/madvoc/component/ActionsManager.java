@@ -106,7 +106,7 @@ public class ActionsManager {
 	/**
 	 * Resolves action method for given action class ane method name.
 	 */
-	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
+	public Method resolveActionMethod(final Class<?> actionClass, final String methodName) {
 		MethodDescriptor methodDescriptor = ClassIntrospector.get().lookup(actionClass).getMethodDescriptor(methodName, false);
 		if (methodDescriptor == null) {
 			throw new MadvocException("Public method not found: " + actionClass.getSimpleName() + "#" + methodName);
@@ -118,7 +118,7 @@ public class ActionsManager {
 	 * Registers action with provided action class and method name.
 	 * @see #registerAction(Class, Method, ActionDefinition)
 	 */
-	public ActionRuntime registerAction(Class actionClass, String actionMethodName, ActionDefinition actionDefinition) {
+	public ActionRuntime registerAction(final Class actionClass, final String actionMethodName, final ActionDefinition actionDefinition) {
 		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
 		return registerAction(actionClass, actionMethod, actionDefinition);
 	}
@@ -133,7 +133,7 @@ public class ActionsManager {
 	 * Returns created {@link ActionRuntime}.
 	 * @see #registerActionRuntime(ActionRuntime)
 	 */
-	public ActionRuntime registerAction(Class actionClass, Method actionMethod, ActionDefinition actionDefinition) {
+	public ActionRuntime registerAction(final Class actionClass, final Method actionMethod, final ActionDefinition actionDefinition) {
 		ActionRuntime actionRuntime = actionMethodParser.parse(actionClass, actionMethod, actionDefinition);
 		if (actionRuntime == null) {
 			return null;
@@ -146,7 +146,7 @@ public class ActionsManager {
 	 * Optionally, if action path with the same name already exist,
 	 * exception will be thrown.
 	 */
-	public ActionRuntime registerActionRuntime(ActionRuntime actionRuntime) {
+	public ActionRuntime registerActionRuntime(final ActionRuntime actionRuntime) {
 		final String actionPath = actionRuntime.actionPath();
 		final String method = actionRuntime.actionMethod();
 
@@ -188,7 +188,7 @@ public class ActionsManager {
 	 * The action string has the following format: <code>className#methodName</code>.
 	 * @see ActionRuntime#actionString()
 	 */
-	public ActionRuntime lookup(String actionString) {
+	public ActionRuntime lookup(final String actionString) {
 		return runtimes.get(actionString);
 	}
 
@@ -197,14 +197,14 @@ public class ActionsManager {
 	/**
 	 * Registers new path alias.
 	 */
-	public void registerPathAlias(String alias, String path) {
+	public void registerPathAlias(final String alias, final String path) {
 		pathAliases.put(alias, path);
 	}
 
 	/**
 	 * Returns path alias.
 	 */
-	public String lookupPathAlias(String alias) {
+	public String lookupPathAlias(final String alias) {
 		return pathAliases.get(alias);
 	}
 

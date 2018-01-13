@@ -56,7 +56,7 @@ public class PetiteConfig {
 	/**
 	 * Enables alternative bean names.
 	 */
-	public PetiteConfig setUseAltBeanNames(boolean useAltBeanNames) {
+	public PetiteConfig setUseAltBeanNames(final boolean useAltBeanNames) {
 		this.useAltBeanNames = useAltBeanNames;
 		return this;
 	}
@@ -73,7 +73,7 @@ public class PetiteConfig {
 	/**
 	 * Specifies default wiring mode.
 	 */
-	public PetiteConfig setDefaultWiringMode(WiringMode defaultWiringMode) {
+	public PetiteConfig setDefaultWiringMode(final WiringMode defaultWiringMode) {
 		if ((defaultWiringMode == null) || (defaultWiringMode == WiringMode.DEFAULT)) {
 			throw new PetiteException("Invalid default wiring mode: " + defaultWiringMode);
 		}
@@ -103,7 +103,7 @@ public class PetiteConfig {
 	/**
 	 * Specifies if an exception should be thrown if two beans with same exception are registered with this container.
 	 */
-	public PetiteConfig setDetectDuplicatedBeanNames(boolean detectDuplicatedBeanNames) {
+	public PetiteConfig setDetectDuplicatedBeanNames(final boolean detectDuplicatedBeanNames) {
 		this.detectDuplicatedBeanNames = detectDuplicatedBeanNames;
 		return this;
 	}
@@ -120,7 +120,7 @@ public class PetiteConfig {
 	/**
 	 * Defines if reference parameters should be resolved.
 	 */
-	public PetiteConfig setResolveReferenceParameters(boolean resolveReferenceParameters) {
+	public PetiteConfig setResolveReferenceParameters(final boolean resolveReferenceParameters) {
 		this.resolveReferenceParameters = resolveReferenceParameters;
 		return this;
 	}
@@ -136,7 +136,7 @@ public class PetiteConfig {
 	/**
 	 * Specifies if type names should be full or short.
 	 */
-	public PetiteConfig setUseFullTypeNames(boolean useFullTypeNames) {
+	public PetiteConfig setUseFullTypeNames(final boolean useFullTypeNames) {
 		this.useFullTypeNames = useFullTypeNames;
 		return this;
 	}
@@ -153,7 +153,7 @@ public class PetiteConfig {
 	 * Specifies references for bean name lookup, when name
 	 * is not specified, in given order.
 	 */
-	public PetiteConfig setLookupReferences(PetiteReferenceType... lookupReferences) {
+	public PetiteConfig setLookupReferences(final PetiteReferenceType... lookupReferences) {
 		this.lookupReferences = lookupReferences;
 		return this;
 	}
@@ -170,7 +170,7 @@ public class PetiteConfig {
 	 * Specifies if <b>Paramo</b> tool should be used to resolve
 	 * method and ctor argument names.
 	 */
-	public void setUseParamo(boolean useParamo) {
+	public void setUseParamo(final boolean useParamo) {
 		this.useParamo = useParamo;
 	}
 
@@ -186,7 +186,7 @@ public class PetiteConfig {
 	/**
 	 * Defines if scoped proxies should be wired.
 	 */
-	public PetiteConfig setWireScopedProxy(boolean wireScopedProxy) {
+	public PetiteConfig setWireScopedProxy(final boolean wireScopedProxy) {
 		this.wireScopedProxy = wireScopedProxy;
 		return this;
 	}
@@ -201,7 +201,7 @@ public class PetiteConfig {
 	 * will throw an exception on mixed scopes. If {@link #wireScopedProxy} is set
 	 * enabling this flag will just issue a warn message in the log.
 	 */
-	public PetiteConfig setDetectMixedScopes(boolean detectMixedScopes) {
+	public PetiteConfig setDetectMixedScopes(final boolean detectMixedScopes) {
 		this.detectMixedScopes = detectMixedScopes;
 		return this;
 	}

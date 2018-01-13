@@ -95,7 +95,7 @@ public abstract class AnnotationVisitor {
      *            {@link #visitArray visitArray} and visiting each array element
      *            in turn, but is more convenient).
      */
-    public void visit(String name, Object value) {
+    public void visit(final String name, final Object value) {
         if (av != null) {
             av.visit(name, value);
         }
@@ -111,7 +111,7 @@ public abstract class AnnotationVisitor {
      * @param value
      *            the actual enumeration value.
      */
-    public void visitEnum(String name, String desc, String value) {
+    public void visitEnum(final String name, final String desc, final String value) {
         if (av != null) {
             av.visitEnum(name, desc, value);
         }
@@ -130,7 +130,7 @@ public abstract class AnnotationVisitor {
      *         visited before calling other methods on this annotation
      *         visitor</i>.
      */
-    public AnnotationVisitor visitAnnotation(String name, String desc) {
+    public AnnotationVisitor visitAnnotation(final String name, final String desc) {
         if (av != null) {
             return av.visitAnnotation(name, desc);
         }
@@ -151,7 +151,7 @@ public abstract class AnnotationVisitor {
      *         visitor are ignored. <i>All the array values must be visited
      *         before calling other methods on this annotation visitor</i>.
      */
-    public AnnotationVisitor visitArray(String name) {
+    public AnnotationVisitor visitArray(final String name) {
         if (av != null) {
             return av.visitArray(name);
         }

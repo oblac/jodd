@@ -39,22 +39,22 @@ import java.io.InputStream;
  */
 public class InvokeProxettaFactory extends ProxettaFactory<InvokeProxettaFactory, InvokeProxetta> {
 
-	public InvokeProxettaFactory(InvokeProxetta invokeProxetta) {
+	public InvokeProxettaFactory(final InvokeProxetta invokeProxetta) {
 		super(invokeProxetta);
 	}
 
 	@Override
-	public InvokeProxettaFactory setTarget(InputStream target) {
+	public InvokeProxettaFactory setTarget(final InputStream target) {
 		return super.setTarget(target);
 	}
 
 	@Override
-	public InvokeProxettaFactory setTarget(String targetName) {
+	public InvokeProxettaFactory setTarget(final String targetName) {
 		return super.setTarget(targetName);
 	}
 
 	@Override
-	public InvokeProxettaFactory setTarget(Class target) {
+	public InvokeProxettaFactory setTarget(final Class target) {
 		return super.setTarget(target);
 	}
 
@@ -62,7 +62,7 @@ public class InvokeProxettaFactory extends ProxettaFactory<InvokeProxettaFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WorkData process(ClassReader cr, TargetClassInfoReader targetClassInfoReader) {
+	protected WorkData process(final ClassReader cr, final TargetClassInfoReader targetClassInfoReader) {
 
 		InvokeClassBuilder icb = new InvokeClassBuilder(
 				destClassWriter,

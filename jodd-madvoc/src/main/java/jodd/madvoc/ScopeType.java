@@ -65,7 +65,7 @@ public enum ScopeType {
 
 	private int value;
 
-	ScopeType(int value) {
+	ScopeType(final int value) {
 		this.value = value;
 	}
 
@@ -87,7 +87,7 @@ public enum ScopeType {
 		}
 	}
 
-	public static ScopeType defaultOrScopeType(Scope scope) {
+	public static ScopeType defaultOrScopeType(final Scope scope) {
 		if (scope == null) {
 			return REQUEST;
 		}

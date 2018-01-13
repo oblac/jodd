@@ -35,46 +35,57 @@ import java.util.Map;
 public class NoCache<K, V> implements Cache<K, V> {
 
 
+	@Override
 	public int limit() {
 		return 0;
 	}
 
+	@Override
 	public long timeout() {
 		return 0;
 	}
 
-	public void put(K key, V object) {
+	@Override
+	public void put(final K key, final V object) {
 		// ignore
 	}
 
-	public void put(K key, V object, long timeout) {
+	@Override
+	public void put(final K key, final V object, final long timeout) {
 		// ignore
 	}
 
-	public V get(K key) {
+	@Override
+	public V get(final K key) {
 		return null;
 	}
 
+	@Override
 	public int prune() {
 		return 0;
 	}
 
+	@Override
 	public boolean isFull() {
 		return true;
 	}
 
-	public void remove(K key) {
+	@Override
+	public void remove(final K key) {
 		// ignore
 	}
 
+	@Override
 	public void clear() {
 		// ignore
 	}
 
+	@Override
 	public int size() {
 		return 0;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return true;
 	}

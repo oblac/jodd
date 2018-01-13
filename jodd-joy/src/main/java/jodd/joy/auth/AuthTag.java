@@ -43,7 +43,7 @@ public class AuthTag extends SimpleTagSupport {
 	/**
 	 * Defines if body should be invoked if user is authenticated.
 	 */
-	public void setAuth(boolean auth) {
+	public void setAuth(final boolean auth) {
 		this.auth = auth;
 	}
 

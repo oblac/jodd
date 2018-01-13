@@ -35,25 +35,25 @@ import java.util.function.Consumer;
 @RenderWith(ChainActionResult.class)
 public class Chain extends PathResult {
 
-	public static Chain to(String target) {
+	public static Chain to(final String target) {
 		return new Chain(target);
 	}
 
-	public static <T> Chain to(Class<T> target, Consumer<T> consumer) {
+	public static <T> Chain to(final Class<T> target, final Consumer<T> consumer) {
 		return new Chain(target, consumer);
 	}
 	@SuppressWarnings("unchecked")
-	public static <T> Chain to(T target, Consumer<T> consumer) {
+	public static <T> Chain to(final T target, final Consumer<T> consumer) {
 		return new Chain((Class<T>) target.getClass(), consumer);
 	}
 
 	// ---------------------------------------------------------------- ctor
 
-	public <T> Chain(Class<T> target, Consumer<T> consumer) {
+	public <T> Chain(final Class<T> target, final Consumer<T> consumer) {
 		super(target, consumer);
 	}
 
-	public Chain(String path) {
+	public Chain(final String path) {
 		super(path);
 	}
 

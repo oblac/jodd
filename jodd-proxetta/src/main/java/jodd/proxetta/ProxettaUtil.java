@@ -38,7 +38,7 @@ public class ProxettaUtil {
 	 * Returns target class if proxetta applied on given class.
 	 * If not, returns given class as result.
 	 */
-	public static Class getTargetClass(Class proxy) {
+	public static Class getTargetClass(final Class proxy) {
 		String name = proxy.getName();
 
 		if (name.endsWith(JoddProxetta.get().defaults().getProxyClassNameSuffix())) {
@@ -57,7 +57,7 @@ public class ProxettaUtil {
 	 * Injects some target instance into {@link jodd.proxetta.impl.WrapperProxetta wrapper} proxy
 	 * in given {@link WrapperProxettaFactory#setTargetFieldName(String) target field name}.
 	 */
-	public static void injectTargetIntoWrapper(Object target, Object wrapper, String targetFieldName) {
+	public static void injectTargetIntoWrapper(final Object target, final Object wrapper, final String targetFieldName) {
 		try {
 			Field field = wrapper.getClass().getField(targetFieldName);
 			field.setAccessible(true);
@@ -71,14 +71,14 @@ public class ProxettaUtil {
 	 * Injects target instance into proxy using default target field name.
 	 * @see #injectTargetIntoWrapper(Object, Object, String)
 	 */
-	public static void injectTargetIntoWrapper(Object target, Object wrapper) {
+	public static void injectTargetIntoWrapper(final Object target, final Object wrapper) {
 		injectTargetIntoWrapper(target, wrapper, JoddProxetta.get().defaults().getWrapperTargetFieldName());
 	}
 
 	/**
 	 * Returns wrapper target type.
 	 */
-	public static Class getTargetWrapperType(Class wrapperClass) {
+	public static Class getTargetWrapperType(final Class wrapperClass) {
 		Field field;
 		try {
 			field = wrapperClass.getField(JoddProxetta.get().defaults().getWrapperTargetFieldName());

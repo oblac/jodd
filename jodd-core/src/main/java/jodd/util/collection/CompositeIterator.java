@@ -24,10 +24,10 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.util.collection;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.ArrayList;
 
 /**
  * Iterator that combines multiple iterators.
@@ -46,7 +46,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	/**
 	 * Creates new composite iterator with provided iterators.
 	 */
-	public CompositeIterator(Iterator<T>... iterators) {
+	public CompositeIterator(final Iterator<T>... iterators) {
 		for (Iterator<T> iterator : iterators) {
 			add(iterator);
 		}
@@ -55,7 +55,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	/**
 	 * Adds an iterator to this composite.
 	 */
-	public void add(Iterator<T> iterator) {
+	public void add(final Iterator<T> iterator) {
 		if (allIterators.contains(iterator)) {
 			throw new IllegalArgumentException("Duplicate iterator");
 		}
@@ -69,6 +69,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	/**
 	 * Returns <code>true</code> if next element is available.
 	 */
+	@Override
 	public boolean hasNext() {
 		if (currentIterator == -1) {
 			currentIterator = 0;
@@ -86,6 +87,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public T next() {
 		if (!hasNext()) {
 			throw new NoSuchElementException();
@@ -97,6 +99,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void remove() {
 		if (currentIterator == -1) {
 			throw new IllegalStateException("next() has not yet been called");

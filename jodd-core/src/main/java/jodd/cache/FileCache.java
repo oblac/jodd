@@ -47,7 +47,7 @@ public abstract class FileCache {
 	 * @param maxFileSize max available file size in bytes, may be 0
 	 * @param timeout timeout, may be 0
 	 */
-	protected FileCache(int maxSize, int maxFileSize, long timeout) {
+	protected FileCache(final int maxSize, final int maxFileSize, final long timeout) {
 		this.maxSize = maxSize;
 		this.maxFileSize = maxFileSize;
 		this.timeout = timeout;
@@ -112,7 +112,7 @@ public abstract class FileCache {
 	 * Returns cached file bytes. If file is not cached it will be
 	 * read and put in the cache (if all the rules are satisfied).
 	 */
-	public byte[] getFileBytes(File file) throws IOException {
+	public byte[] getFileBytes(final File file) throws IOException {
 		byte[] bytes = cache.get(file);
 		if (bytes != null) {
 			return bytes;

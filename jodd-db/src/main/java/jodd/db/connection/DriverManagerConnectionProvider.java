@@ -45,39 +45,39 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 	private Integer isolation;
 	private Boolean autoCommit;
 
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 
-	public void setDriverClass(String driverClass) {
+	public void setDriverClass(final String driverClass) {
 		this.driverClass = driverClass;
 	}
 
-	public void setIsolation(Integer isolation) {
+	public void setIsolation(final Integer isolation) {
 		this.isolation = isolation;
 	}
 
-	public void setAutoCommit(Boolean autoCommit) {
+	public void setAutoCommit(final Boolean autoCommit) {
 		this.autoCommit = autoCommit;
 	}
 
 	// ---------------------------------------------------------------- ctors
 
-	public DriverManagerConnectionProvider(String driverClass, String url, String username, String password) {
+	public DriverManagerConnectionProvider(final String driverClass, final String url, final String username, final String password) {
 		this.driverClass = driverClass;
 		this.password = password;
 		this.username = username;
 		this.url = url;
 	}
-	public DriverManagerConnectionProvider(String driverClass, String url) {
+	public DriverManagerConnectionProvider(final String driverClass, final String url) {
 		this.driverClass = driverClass;
 		this.url = url;
 	}
@@ -116,7 +116,7 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 	}
 
 	@Override
-	public void closeConnection(Connection connection) {
+	public void closeConnection(final Connection connection) {
 		try {
 			connection.close();
 		} catch (SQLException sex) {

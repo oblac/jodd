@@ -43,7 +43,7 @@ public class HashCode {
 	/**
 	 * Smears hash code.
 	 */
-	public static int smear(int hashCode) {
+	public static int smear(final int hashCode) {
 		return 0x1b873593 * Integer.rotateLeft(hashCode * 0xcc9e2d51, 15);
 	}
 
@@ -64,11 +64,11 @@ public class HashCode {
 	/**
 	 * Creates new HashCode calculator with custom seed and prime number.
 	 */
-	public static HashCode create(int seed, int prime) {
+	public static HashCode create(final int seed, final int prime) {
 		return new HashCode(seed, prime);
 	}
 
-	public HashCode(int seed, int prime) {
+	public HashCode(final int seed, final int prime) {
 		this.prime = prime;
 		this.hashcode = seed;
 	}
@@ -85,7 +85,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for booleans.
 	 */
-	public HashCode hash(boolean aBoolean) {
+	public HashCode hash(final boolean aBoolean) {
 		hashcode = (prime * hashcode) + (aBoolean ? 1231 : 1237);
 		return this;
 	}
@@ -93,7 +93,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for boolean array.
 	 */
-	public HashCode hash(boolean[] booleanArray) {
+	public HashCode hash(final boolean[] booleanArray) {
 		if (booleanArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -109,7 +109,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for chars.
 	 */
-	public HashCode hash(char aChar) {
+	public HashCode hash(final char aChar) {
 		hashcode = (prime * hashcode) + (int) aChar;
 		return this;
 	}
@@ -117,7 +117,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for char array.
 	 */
-	public HashCode hash(char[] charArray) {
+	public HashCode hash(final char[] charArray) {
 		if (charArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -133,7 +133,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for ints.
 	 */
-	public HashCode hash(int anInt) {
+	public HashCode hash(final int anInt) {
 		hashcode = (prime * hashcode) + anInt;
 		return this;
 	}
@@ -141,7 +141,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for int array.
 	 */
-	public HashCode hash(int[] intArray) {
+	public HashCode hash(final int[] intArray) {
 		if (intArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -155,7 +155,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for short array.
 	 */
-	public HashCode hash(short[] shortArray) {
+	public HashCode hash(final short[] shortArray) {
 		if (shortArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -169,7 +169,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for byte array.
 	 */
-	public HashCode hash(byte[] byteArray) {
+	public HashCode hash(final byte[] byteArray) {
 		if (byteArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -185,7 +185,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for longs.
 	 */
-	public HashCode hash(long aLong) {
+	public HashCode hash(final long aLong) {
 		hashcode = (prime * hashcode) + (int) (aLong ^ (aLong >>> 32));
 		return this;
 	}
@@ -193,7 +193,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for long array.
 	 */
-	public HashCode hash(long[] longArray) {
+	public HashCode hash(final long[] longArray) {
 		if (longArray != null) {
 			for (long aLong : longArray) {
 				hash(aLong);
@@ -207,7 +207,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for floats.
 	 */
-	public HashCode hash(float aFloat) {
+	public HashCode hash(final float aFloat) {
 		hash(Float.floatToIntBits(aFloat));
 		return this;
 	}
@@ -215,7 +215,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for float array.
 	 */
-	public HashCode hash(float[] floatArray) {
+	public HashCode hash(final float[] floatArray) {
 		if (floatArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -231,7 +231,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for doubles.
 	 */
-	public HashCode hash(double aDouble) {
+	public HashCode hash(final double aDouble) {
 		hash(Double.doubleToLongBits(aDouble));
 		return this;
 	}
@@ -239,7 +239,7 @@ public class HashCode {
 	/**
 	 * Calculates hash code for double array.
 	 */
-	public HashCode hash(double[] doubleArray) {
+	public HashCode hash(final double[] doubleArray) {
 		if (doubleArray == null) {
 			hashcode = hashNull(hashcode);
 			return this;
@@ -258,7 +258,7 @@ public class HashCode {
 	 * If <code>aObject</code> is an array, then each element may be a primitive
 	 * or a possibly-null object.
 	 */
-	public HashCode hash(Object aObject) {
+	public HashCode hash(final Object aObject) {
 		hashcode = hashValue(hashcode, aObject);
 		return this;
 	}
@@ -268,14 +268,14 @@ public class HashCode {
 	/**
 	 * Returns hash for null value.
 	 */
-	private int hashNull(int seed) {
+	private int hashNull(final int seed) {
 		return prime * seed;
 	}
 
 	/**
 	 * Creates hash of a value.
 	 */
-	private int hashValue(int seed, Object object) {
+	private int hashValue(final int seed, final Object object) {
 		if (object == null) {
 			return hashNull(seed);
 		}

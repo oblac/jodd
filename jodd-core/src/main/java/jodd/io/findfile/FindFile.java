@@ -97,7 +97,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Activates recursive search.
 	 */
-	public FindFile recursive(boolean recursive) {
+	public FindFile recursive(final boolean recursive) {
 		this.recursive = recursive;
 		return this;
 	}
@@ -105,7 +105,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Include directories in search.
 	 */
-	public FindFile includeDirs(boolean includeDirs) {
+	public FindFile includeDirs(final boolean includeDirs) {
 		this.includeDirs = includeDirs;
 		return this;
 	}
@@ -113,7 +113,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Include files in search.
 	 */
-	public FindFile includeFiles(boolean includeFiles) {
+	public FindFile includeFiles(final boolean includeFiles) {
 		this.includeFiles = includeFiles;
 		return this;
 	}
@@ -129,7 +129,7 @@ public class FindFile implements Iterable<File> {
 	 * not natural, but memory consumption is optimal.
 	 * @see #recursive(boolean)
 	 */
-	public FindFile walking(boolean walking) {
+	public FindFile walking(final boolean walking) {
 		this.walking = walking;
 		return this;
 	}
@@ -137,7 +137,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Set {@link Match matching type}.
 	 */
-	public FindFile matchType(Match match) {
+	public FindFile matchType(final Match match) {
 		this.matchType = match;
 		return this;
 	}
@@ -162,7 +162,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Registers file consumer
 	 */
-	public FindFile onFile(Consumer<File> fileConsumer) {
+	public FindFile onFile(final Consumer<File> fileConsumer) {
 		if (consumers == null) {
 			consumers = Consumers.of(fileConsumer);
 		}
@@ -177,7 +177,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies single search path.
 	 */
-	public FindFile searchPath(File searchPath) {
+	public FindFile searchPath(final File searchPath) {
 		addPath(searchPath);
 		return this;
 	}
@@ -185,7 +185,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies a set of search paths.
 	 */
-	public FindFile searchPath(File... searchPath) {
+	public FindFile searchPath(final File... searchPath) {
 		for (File file : searchPath) {
 			addPath(file);
 		}
@@ -197,7 +197,7 @@ public class FindFile implements Iterable<File> {
 	 * {@link File#pathSeparator} than string will be tokenized
 	 * and each part will be added separately as a search path. 
 	 */
-	public FindFile searchPath(String searchPath) {
+	public FindFile searchPath(final String searchPath) {
 		if (searchPath.indexOf(File.pathSeparatorChar) != -1) {
 			String[] paths = StringUtil.split(searchPath, File.pathSeparator);
 			for (String path : paths) {
@@ -213,7 +213,7 @@ public class FindFile implements Iterable<File> {
 	 * Specifies search paths.
 	 * @see #searchPath(String) 
 	 */
-	public FindFile searchPaths(String... searchPaths) {
+	public FindFile searchPaths(final String... searchPaths) {
 		for (String searchPath : searchPaths) {
 			searchPath(searchPath);
 		}
@@ -223,7 +223,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path. Throws an exception if URI is invalid.
 	 */
-	public FindFile searchPath(URI searchPath) {
+	public FindFile searchPath(final URI searchPath) {
 		File file;
 		try {
 			file = new File(searchPath);
@@ -239,7 +239,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPaths(URI... searchPath) {
+	public FindFile searchPaths(final URI... searchPath) {
 		for (URI uri : searchPath) {
 			searchPath(uri);
 		}
@@ -249,7 +249,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path. Throws an exception if URL is invalid.
 	 */
-	public FindFile searchPath(URL searchPath) {
+	public FindFile searchPath(final URL searchPath) {
 		File file = FileUtil.toFile(searchPath);
 		if (file == null) {
 			throw new FindFileException("URL error: " + searchPath);
@@ -261,7 +261,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPaths(URL... searchPath) {
+	public FindFile searchPaths(final URL... searchPath) {
 		for (URL url : searchPath) {
 			searchPath(url);
 		}
@@ -280,7 +280,7 @@ public class FindFile implements Iterable<File> {
 		protected final String[] fileNames;
 		protected final File[] files;
 
-		public FilesIterator(File folder) {
+		public FilesIterator(final File folder) {
 			this.folder = folder;
 			if (sortComparators != null) {
 				this.files = folder.listFiles();
@@ -296,7 +296,7 @@ public class FindFile implements Iterable<File> {
 			}
 		}
 
-		public FilesIterator(String[] fileNames) {
+		public FilesIterator(final String[] fileNames) {
 			this.folder = null;
 			if (sortComparators != null) {
 				int fileNamesLength = fileNames.length;
@@ -404,7 +404,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Defines include pattern.
 	 */
-	public FindFile include(String pattern) {
+	public FindFile include(final String pattern) {
 		rules.include(pattern);
 		return this;
 	}
@@ -412,7 +412,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Defines include patterns.
 	 */
-	public FindFile include(String... patterns) {
+	public FindFile include(final String... patterns) {
 		for (String pattern : patterns) {
 			rules.include(pattern);
 		}
@@ -438,7 +438,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Defines exclude pattern.
 	 */
-	public FindFile exclude(String pattern) {
+	public FindFile exclude(final String pattern) {
 		rules.exclude(pattern);
 		return this;
 	}
@@ -446,7 +446,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Defines exclude patterns.
 	 */
-	public FindFile exclude(String... patterns) {
+	public FindFile exclude(final String... patterns) {
 		for (String pattern : patterns) {
 			rules.exclude(pattern);
 		}
@@ -460,7 +460,7 @@ public class FindFile implements Iterable<File> {
 	 * File is matched using {@link #getMatchingFilePath(java.io.File) matching file path}.
 	 * @see InExRules
 	 */
-	protected boolean acceptFile(File file) {
+	protected boolean acceptFile(final File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
 		if (rules.match(matchingFilePath)) {
@@ -476,7 +476,7 @@ public class FindFile implements Iterable<File> {
 	 * Resolves file path depending on {@link Match matching type}
 	 * Returned path is formatted in unix style.
 	 */
-	protected String getMatchingFilePath(File file) {
+	protected String getMatchingFilePath(final File file) {
 
 		String path = null;
 
@@ -521,7 +521,7 @@ public class FindFile implements Iterable<File> {
 	 * Non existing files are ignored.
 	 * If path is a folder, it will be scanned for all files.
 	 */
-	protected void addPath(File path) {
+	protected void addPath(final File path) {
 		if (!path.exists()) {
 			return;
 		}
@@ -705,7 +705,7 @@ public class FindFile implements Iterable<File> {
 
 	protected List<Comparator<File>> sortComparators;
 
-	protected void addComparator(Comparator<File> comparator) {
+	protected void addComparator(final Comparator<File> comparator) {
 		if (sortComparators == null) {
 			sortComparators = new ArrayList<>(4);
 		}
@@ -723,7 +723,7 @@ public class FindFile implements Iterable<File> {
 	/**
 	 * Adds generic sorting.
 	 */
-	public FindFile sortWith(Comparator<File> fileComparator) {
+	public FindFile sortWith(final Comparator<File> fileComparator) {
 		addComparator(fileComparator);
 		return this;
 	}

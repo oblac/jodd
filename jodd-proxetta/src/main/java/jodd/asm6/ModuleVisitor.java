@@ -87,7 +87,7 @@ public abstract class ModuleVisitor {
      * 
      * @param mainClass the internal name of the main class of the current module.
      */
-    public void visitMainClass(String mainClass) {
+    public void visitMainClass(final String mainClass) {
         if (mv != null) {
             mv.visitMainClass(mainClass);
         }
@@ -98,7 +98,7 @@ public abstract class ModuleVisitor {
      * 
      * @param packaze the qualified name of a package.
      */
-    public void visitPackage(String packaze) {
+    public void visitPackage(final String packaze) {
         if (mv != null) {
             mv.visitPackage(packaze);
         }
@@ -113,7 +113,7 @@ public abstract class ModuleVisitor {
      *        and ACC_MANDATED.
      * @param version the module version at compile time or null.
      */
-    public void visitRequire(String module, int access, String version) {
+    public void visitRequire(final String module, final int access, final String version) {
         if (mv != null) {
             mv.visitRequire(module, access, version);
         }
@@ -130,7 +130,7 @@ public abstract class ModuleVisitor {
      *        the public classes of the exported package or
      *        <tt>null</tt>.
      */
-    public void visitExport(String packaze, int access, String... modules) {
+    public void visitExport(final String packaze, final int access, final String... modules) {
         if (mv != null) {
             mv.visitExport(packaze, access, modules);
         }
@@ -147,7 +147,7 @@ public abstract class ModuleVisitor {
      *        reflection to the classes of the open package or
      *        <tt>null</tt>.
      */
-    public void visitOpen(String packaze, int access, String... modules) {
+    public void visitOpen(final String packaze, final int access, final String... modules) {
         if (mv != null) {
             mv.visitOpen(packaze, access, modules);
         }
@@ -159,7 +159,7 @@ public abstract class ModuleVisitor {
      * 
      * @param service the internal name of the service.
      */
-    public void visitUse(String service) {
+    public void visitUse(final String service) {
         if (mv != null) {
             mv.visitUse(service);
         }
@@ -172,7 +172,7 @@ public abstract class ModuleVisitor {
      * @param providers the internal names of the implementations
      *        of the service (there is at least one provider).
      */
-    public void visitProvide(String service, String... providers) {
+    public void visitProvide(final String service, final String... providers) {
         if (mv != null) {
             mv.visitProvide(service, providers);
         }

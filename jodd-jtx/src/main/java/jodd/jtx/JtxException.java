@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class JtxException extends UncheckedException {
 
-	public JtxException(Throwable t) {
+	public JtxException(final Throwable t) {
 		super(t);
 	}
 
-	public JtxException(String message) {
+	public JtxException(final String message) {
 		super(message);
 	}
 
-	public JtxException(String message, Throwable t) {
+	public JtxException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

@@ -32,11 +32,11 @@ import jodd.exception.UncheckedException;
  */
 public class LagartoException extends UncheckedException {
 
-	public LagartoException(Throwable t) {
+	public LagartoException(final Throwable t) {
 		super("Parsing error.", t);
 	}
 
-	public LagartoException(String message) {
+	public LagartoException(final String message) {
 		super(message);
 	}
 

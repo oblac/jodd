@@ -44,12 +44,12 @@ public class RegExpFindFile extends FindFile {
 		return new InExRules<String, String, Pattern>() {
 
 			@Override
-			protected Pattern makeRule(String rule) {
+			protected Pattern makeRule(final String rule) {
 				return Pattern.compile(rule);
 			}
 
 			@Override
-			public boolean accept(String path, Pattern pattern, boolean include) {
+			public boolean accept(final String path, final Pattern pattern, final boolean include) {
 				return pattern.matcher(path).matches();
 			}
 		};

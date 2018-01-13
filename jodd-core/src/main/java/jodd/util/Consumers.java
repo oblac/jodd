@@ -38,10 +38,10 @@ public class Consumers<T> implements Consumer<T> {
 	private final List<Consumer<T>> consumerList = new ArrayList<>();
 	private boolean parallel = false;
 
-	public Consumers(Consumer<T>... consumers) {
+	public Consumers(final Consumer<T>... consumers) {
 		Collections.addAll(consumerList, consumers);
 	}
-	public Consumers(Iterable<Consumers<T>> consumers) {
+	public Consumers(final Iterable<Consumers<T>> consumers) {
 		consumers.forEach(consumerList::add);
 	}
 
@@ -53,19 +53,19 @@ public class Consumers<T> implements Consumer<T> {
 	/**
 	 * Creates an aggregate from given consumers.
 	 */
-	public static <R> Consumers<R> of(Consumer<R>... consumers) {
+	public static <R> Consumers<R> of(final Consumer<R>... consumers) {
 		return new Consumers<>(consumers);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <R> Consumers<R> of(Iterable<Consumer<R>> consumers) {
+	public static <R> Consumers<R> of(final Iterable<Consumer<R>> consumers) {
 		return new Consumers(consumers);
 	}
 
 	/**
 	 * Registers an additional consumer.
 	 */
-	public Consumers<T> add(Consumer<T> consumer) {
+	public Consumers<T> add(final Consumer<T> consumer) {
 		consumerList.add(consumer);
 		return this;
 	}
@@ -73,7 +73,7 @@ public class Consumers<T> implements Consumer<T> {
 	/**
 	 * Registers additional consumers.
 	 */
-	public Consumers<T> addAll(Consumer<T>... consumers) {
+	public Consumers<T> addAll(final Consumer<T>... consumers) {
 		Collections.addAll(consumerList, consumers);
 		return this;
 	}
@@ -81,7 +81,7 @@ public class Consumers<T> implements Consumer<T> {
 	/**
 	 * Defines if consumer acceptance should be parallel.
 	 */
-	public Consumers<T> parallel(boolean parallel) {
+	public Consumers<T> parallel(final boolean parallel) {
 		this.parallel = parallel;
 		return this;
 	}
@@ -91,7 +91,7 @@ public class Consumers<T> implements Consumer<T> {
 	 * If {@link #parallel(boolean)} flag is set, consumption is going to be parallel.
 	 */
 	@Override
-	public void accept(T t) {
+	public void accept(final T t) {
 		if (parallel) {
 			consumerList.parallelStream().forEach(consumer -> consumer.accept(t));
 		}
@@ -115,7 +115,7 @@ public class Consumers<T> implements Consumer<T> {
 	/**
 	 * Removes a consumer.
 	 */
-	public Consumers<T> remove(Consumer<T> consumer) {
+	public Consumers<T> remove(final Consumer<T> consumer) {
 		consumerList.remove(consumer);
 		return this;
 	}

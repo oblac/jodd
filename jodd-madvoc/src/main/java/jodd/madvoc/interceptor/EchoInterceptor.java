@@ -37,11 +37,11 @@ public class EchoInterceptor implements ActionInterceptor {
 	protected String prefixIn = "-----> ";
 	protected String prefixOut = "<----- ";
 
-	public void setPrefixIn(String prefixIn) {
+	public void setPrefixIn(final String prefixIn) {
 		this.prefixIn = prefixIn;
 	}
 
-	public void setPrefixOut(String prefixOut) {
+	public void setPrefixOut(final String prefixOut) {
 		this.prefixOut = prefixOut;
 	}
 
@@ -51,7 +51,7 @@ public class EchoInterceptor implements ActionInterceptor {
 	 * Measure action invocation time.
 	 */
 	@Override
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		printBefore(actionRequest);
 		long startTime = System.currentTimeMillis();
 		Object result = null;
@@ -74,7 +74,7 @@ public class EchoInterceptor implements ActionInterceptor {
 	 * Prints out the message. User can override this method and modify the way
 	 * the message is printed.
 	 */
-	protected void printBefore(ActionRequest request) {
+	protected void printBefore(final ActionRequest request) {
 		StringBuilder message = new StringBuilder(prefixIn);
 
 		message.append(request.actionPath()).append("   [").append(request.actionRuntime().actionString()).append(']');
@@ -85,7 +85,7 @@ public class EchoInterceptor implements ActionInterceptor {
 	 * Prints out the message. User can override this method and modify the way
 	 * the message is printed.
 	 */
-	protected void printAfter(ActionRequest request, long executionTime, Object result) {
+	protected void printAfter(final ActionRequest request, final long executionTime, final Object result) {
 		StringBuilder message = new StringBuilder(prefixOut);
 
 		String resultString = StringUtil.toSafeString(result);
@@ -102,7 +102,7 @@ public class EchoInterceptor implements ActionInterceptor {
 	/**
 	 * Outputs info message. By default, it outputs it to console.
 	 */
-	protected void out(String message) {
+	protected void out(final String message) {
 		System.out.println(message);
 	}
 

@@ -37,7 +37,7 @@ public class Element extends Node {
 	protected final boolean selfClosed;
 	protected final boolean rawTag;
 
-	public Element(Document ownerNode, Tag tag, boolean voidElement, boolean selfClosed) {
+	public Element(final Document ownerNode, final Tag tag, final boolean voidElement, final boolean selfClosed) {
 		super(ownerNode, NodeType.ELEMENT, Util.toString(tag.getName()));
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
@@ -53,11 +53,11 @@ public class Element extends Node {
 
 	// ---------------------------------------------------------------- clone
 
-	public Element(Document ownerDocument, String name) {
+	public Element(final Document ownerDocument, final String name) {
 		this(ownerDocument, name, false, false, false);
 	}
 
-	public Element(Document ownerDocument, String name, boolean voidElement, boolean selfClosed, boolean rawTag) {
+	public Element(final Document ownerDocument, final String name, final boolean voidElement, final boolean selfClosed, final boolean rawTag) {
 		super(ownerDocument, NodeType.ELEMENT, name);
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
@@ -93,7 +93,7 @@ public class Element extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.element(this);
 	}
 

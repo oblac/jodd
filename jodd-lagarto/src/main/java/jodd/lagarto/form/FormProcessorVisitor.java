@@ -60,13 +60,13 @@ public class FormProcessorVisitor extends TagWriter {
 
 	private final FormFieldResolver resolver;
 
-	public FormProcessorVisitor(Appendable appendable, FormFieldResolver resolver) {
+	public FormProcessorVisitor(final Appendable appendable, final FormFieldResolver resolver) {
 		super(appendable);
 		this.resolver = resolver;
 	}
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (tag.getType().isStartingTag()) {
 			if (tag.matchTagName(INPUT)) {
 				processInputStartTag(tag);
@@ -101,7 +101,7 @@ public class FormProcessorVisitor extends TagWriter {
 	}
 
 	@Override
-	public void text(CharSequence text) {
+	public void text(final CharSequence text) {
 		if (inTextArea) {
 			return;
 		}
@@ -110,7 +110,7 @@ public class FormProcessorVisitor extends TagWriter {
 
 	// ---------------------------------------------------------------- input
 
-	private void processInputStartTag(Tag tag) {
+	private void processInputStartTag(final Tag tag) {
 		// INPUT
 		CharSequence tagType = tag.getAttributeValue(TYPE);
 		if (tagType == null) {
@@ -181,7 +181,7 @@ public class FormProcessorVisitor extends TagWriter {
 	/**
 	 * Converts value to a string.
 	 */
-	protected String valueToString(String name, Object valueObject) {
+	protected String valueToString(final String name, final Object valueObject) {
 		if (!valueObject.getClass().isArray()) {
 			return valueObject.toString();
 		}
@@ -215,7 +215,7 @@ public class FormProcessorVisitor extends TagWriter {
 	private boolean inSelect;
 	private String currentSelectName;
 
-	private void processSelectOpenTag(Tag tag) {
+	private void processSelectOpenTag(final Tag tag) {
 		CharSequence name = tag.getAttributeValue(NAME);
 
 		if (name == null) {
@@ -231,7 +231,7 @@ public class FormProcessorVisitor extends TagWriter {
 		currentSelectName = null;
 	}
 
-	private void processOptionOpenTag(Tag tag) {
+	private void processOptionOpenTag(final Tag tag) {
 		CharSequence tagValue = tag.getAttributeValue(VALUE);
 		if (tagValue == null) {
 			return;
@@ -263,7 +263,7 @@ public class FormProcessorVisitor extends TagWriter {
 	private String textAreaValue;
 	private boolean inTextArea;
 
-	private void processTextareaStartTag(Tag tag) {
+	private void processTextareaStartTag(final Tag tag) {
 		inTextArea = true;
 
 		CharSequence name = tag.getAttributeValue(NAME);

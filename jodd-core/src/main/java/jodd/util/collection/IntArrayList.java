@@ -46,7 +46,7 @@ public class IntArrayList {
 	/**
 	 * Constructs an empty list with the specified initial capacity.
 	 */
-	public IntArrayList(int initialCapacity) {
+	public IntArrayList(final int initialCapacity) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException("Invalid capacity: " + initialCapacity);
 		}
@@ -58,7 +58,7 @@ public class IntArrayList {
 	 * Constructs a list containing the elements of the specified array.
 	 * The list instance has an initial capacity of 110% the size of the specified array.
 	 */
-	public IntArrayList(int[] data) {
+	public IntArrayList(final int[] data) {
 		array = new int[(int) (data.length * 1.1) + 1];
 		size = data.length;
 		System.arraycopy(data, 0, array, 0, size);
@@ -80,7 +80,7 @@ public class IntArrayList {
 	/**
 	 * Returns the element at the specified position in this list.
 	 */
-	public int get(int index) {
+	public int get(final int index) {
 		checkRange(index);
 		return array[index];
 	}
@@ -103,7 +103,7 @@ public class IntArrayList {
 	 *                                       supported
 	 * @throws IndexOutOfBoundsException	 if the specified index is out of range
 	 */
-	public int remove(int index) {
+	public int remove(final int index) {
 		checkRange(index);
 		int oldval = array[index];
 		int numtomove = size - index - 1;
@@ -117,7 +117,7 @@ public class IntArrayList {
 	 * Removes from this list all of the elements whose index is between fromIndex,
 	 * inclusive and toIndex, exclusive. Shifts any succeeding elements to the left (reduces their index).
 	 */
-	public void removeRange(int fromIndex, int toIndex) {
+	public void removeRange(final int fromIndex, final int toIndex) {
 		checkRange(fromIndex);
 		checkRange(toIndex);
 		if (fromIndex >= toIndex) {
@@ -137,7 +137,7 @@ public class IntArrayList {
 	 * @param element the value to be stored at the specified position
 	 * @return the value previously stored at the specified position
 	 */
-	public int set(int index, int element) {
+	public int set(final int index, final int element) {
 		checkRange(index);
 		int oldval = array[index];
 		array[index] = element;
@@ -147,7 +147,7 @@ public class IntArrayList {
 	/**
 	 * Appends the specified element to the end of this list.
 	 */
-	public void add(int element) {
+	public void add(final int element) {
 		ensureCapacity(size + 1);
 		array[size++] = element;
 	}
@@ -160,7 +160,7 @@ public class IntArrayList {
 	 * @param index   the index at which to insert the element
 	 * @param element the value to insert
 	 */
-	public void add(int index, int element) {
+	public void add(final int index, final int element) {
 		checkRangeIncludingEndpoint(index);
 		ensureCapacity(size + 1);
 		int numtomove = size - index;
@@ -172,7 +172,7 @@ public class IntArrayList {
 	/**
 	 * Appends all of the elements in the specified array to the end of this list.
 	 */
-	public void addAll(int[] data) {
+	public void addAll(final int[] data) {
 		int dataLen = data.length;
 		if (dataLen == 0) {
 			return;
@@ -186,7 +186,7 @@ public class IntArrayList {
 	/**
 	 * Appends all of the elements in the specified array at the specified position in this list.
 	 */
-	public void addAll(int index, int[] data) {
+	public void addAll(final int index, final int[] data) {
 		int dataLen = data.length;
 		if (dataLen == 0) {
 			return;
@@ -211,7 +211,7 @@ public class IntArrayList {
 	/**
 	 * Returns true if this list contains the specified element.
 	 */
-	public boolean contains(int data) {
+	public boolean contains(final int data) {
 		for (int i = 0; i < size; i++) {
 			if (array[i] == data) {
 				return true;
@@ -224,7 +224,7 @@ public class IntArrayList {
 	/**
 	 * Searches for the first occurrence of the given argument.
 	 */
-	public int indexOf(int data) {
+	public int indexOf(final int data) {
 		for (int i = 0; i < size; i++) {
 			if (array[i] == data) {
 				return i;
@@ -236,7 +236,7 @@ public class IntArrayList {
 	/**
 	 * Returns the index of the last occurrence of the specified object in this list.
 	 */
-	public int lastIndexOf(int data) {
+	public int lastIndexOf(final int data) {
 		for (int i = size - 1; i >= 0; i--) {
 			if (array[i] == data) {
 				return i;
@@ -261,7 +261,7 @@ public class IntArrayList {
 	 * to ensure that it can hold at least the number of elements specified by
 	 * the minimum capacity argument.
 	 */
-	public void ensureCapacity(int mincap) {
+	public void ensureCapacity(final int mincap) {
 		if (mincap > array.length) {
 			int newcap = ((array.length * 3) >> 1) + 1;
 			int[] olddata = array;
@@ -284,13 +284,13 @@ public class IntArrayList {
 
 	// ---------------------------------------------------------------- checks
 
-	private void checkRange(int index) {
+	private void checkRange(final int index) {
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
 	}
 
-	private void checkRangeIncludingEndpoint(int index) {
+	private void checkRangeIncludingEndpoint(final int index) {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}

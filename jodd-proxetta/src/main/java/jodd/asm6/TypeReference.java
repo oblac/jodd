@@ -186,7 +186,7 @@ public class TypeReference {
      *            visit method related to type annotations, like
      *            visitTypeAnnotation.
      */
-    public TypeReference(int typeRef) {
+    public TypeReference(final int typeRef) {
         this.value = typeRef;
     }
 
@@ -203,7 +203,7 @@ public class TypeReference {
      *            {@link #METHOD_REFERENCE METHOD_REFERENCE}.
      * @return a type reference of the given sort.
      */
-    public static TypeReference newTypeReference(int sort) {
+    public static TypeReference newTypeReference(final int sort) {
         return new TypeReference(sort << 24);
     }
 
@@ -217,8 +217,8 @@ public class TypeReference {
      *            the type parameter index.
      * @return a reference to the given generic class or method type parameter.
      */
-    public static TypeReference newTypeParameterReference(int sort,
-            int paramIndex) {
+    public static TypeReference newTypeParameterReference(final int sort,
+                                                          final int paramIndex) {
         return new TypeReference((sort << 24) | (paramIndex << 16));
     }
 
@@ -236,8 +236,8 @@ public class TypeReference {
      * @return a reference to the given generic class or method type parameter
      *         bound.
      */
-    public static TypeReference newTypeParameterBoundReference(int sort,
-            int paramIndex, int boundIndex) {
+    public static TypeReference newTypeParameterBoundReference(final int sort,
+                                                               final int paramIndex, final int boundIndex) {
         return new TypeReference((sort << 24) | (paramIndex << 16)
                 | (boundIndex << 8));
     }
@@ -264,7 +264,7 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given method formal parameter.
      */
-    public static TypeReference newFormalParameterReference(int paramIndex) {
+    public static TypeReference newFormalParameterReference(final int paramIndex) {
         return new TypeReference((METHOD_FORMAL_PARAMETER << 24)
                 | (paramIndex << 16));
     }
@@ -278,7 +278,7 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given exception.
      */
-    public static TypeReference newExceptionReference(int exceptionIndex) {
+    public static TypeReference newExceptionReference(final int exceptionIndex) {
         return new TypeReference((THROWS << 24) | (exceptionIndex << 8));
     }
 
@@ -292,7 +292,7 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given exception.
      */
-    public static TypeReference newTryCatchReference(int tryCatchBlockIndex) {
+    public static TypeReference newTryCatchReference(final int tryCatchBlockIndex) {
         return new TypeReference((EXCEPTION_PARAMETER << 24)
                 | (tryCatchBlockIndex << 8));
     }
@@ -316,7 +316,7 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given type argument.
      */
-    public static TypeReference newTypeArgumentReference(int sort, int argIndex) {
+    public static TypeReference newTypeArgumentReference(final int sort, final int argIndex) {
         return new TypeReference((sort << 24) | argIndex);
     }
 

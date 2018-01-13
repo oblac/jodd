@@ -165,7 +165,7 @@ class LiveMapperDbTest extends DbBaseTest {
 		return tester2;
 	}
 
-	protected void loadEntry(Tester2 tester2) {
+	protected void loadEntry(final Tester2 tester2) {
 		DbSession session = new DbSession();
 
 		DbOomQuery dbOomQuery = DbOomQuery.query(session, DbEntitySql.findById(Tester2.class, tester2.id));

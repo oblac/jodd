@@ -48,7 +48,8 @@ import java.util.Date;
  */
 public class DateConverter implements TypeConverter<Date> {
 
-	public Date convert(Object value) {
+	@Override
+	public Date convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

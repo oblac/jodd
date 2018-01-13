@@ -32,7 +32,7 @@ import java.util.Comparator;
 public class FolderFirstComparator implements Comparator<File>, Serializable {
 	protected final int order;
 
-	public FolderFirstComparator(boolean foldersFirst) {
+	public FolderFirstComparator(final boolean foldersFirst) {
 		if (foldersFirst) {
 			order = 1;
 		} else {
@@ -41,7 +41,7 @@ public class FolderFirstComparator implements Comparator<File>, Serializable {
 	}
 
 	@Override
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		if (file1.isFile() && file2.isDirectory()) {
 			return order;
 		}

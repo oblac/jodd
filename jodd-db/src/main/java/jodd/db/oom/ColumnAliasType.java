@@ -44,7 +44,7 @@ public enum ColumnAliasType {
 
 	int value;
 
-	ColumnAliasType(int aliasType) {
+	ColumnAliasType(final int aliasType) {
 		this.value = aliasType;
 	}
 }

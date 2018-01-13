@@ -32,23 +32,23 @@ import jodd.exception.UncheckedException;
  */
 public class DbSqlException extends UncheckedException {
 
-	public DbSqlException(Throwable t) {
+	public DbSqlException(final Throwable t) {
 		super(t);
 	}
 
-	public DbSqlException(String message) {
+	public DbSqlException(final String message) {
 		super(message);
 	}
 
-	public DbSqlException(DbQueryBase dbQuery, String message) {
+	public DbSqlException(final DbQueryBase dbQuery, final String message) {
 		super(message + "\nQuery: " + dbQuery.getQueryString());
 	}
 
-	public DbSqlException(String message, Throwable t) {
+	public DbSqlException(final String message, final Throwable t) {
 		super(message, t);
 	}
 
-	public DbSqlException(DbQueryBase dbQuery, String message, Throwable t) {
+	public DbSqlException(final DbQueryBase dbQuery, final String message, final Throwable t) {
 		super(message + "\nQuery: " + dbQuery.getQueryString(), t);
 	}
 

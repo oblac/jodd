@@ -25,18 +25,18 @@
 
 package jodd.joy.i18n;
 
-import jodd.util.ResourceBundleMessageResolver;
-import jodd.util.LocaleUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.LocaleUtil;
+import jodd.util.ResourceBundleMessageResolver;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Central localization messages manager.
@@ -51,7 +51,7 @@ public class LocalizationUtil {
 	 */
 	public static final ResourceBundleMessageResolver MESSAGE_RESOLVER = new ResourceBundleMessageResolver() {
 		@Override
-		public ResourceBundle getBundle(String bundleName, Locale locale, ClassLoader classLoader) {
+		public ResourceBundle getBundle(final String bundleName, final Locale locale, final ClassLoader classLoader) {
 			if (!isCacheResourceBundles()) {
 				//ResourceBundle.clearCache(classLoader);
 				clearResourceBundleCache();
@@ -75,7 +75,7 @@ public class LocalizationUtil {
 	/**
 	 * Sets bundle name for provided servlet request.
 	 */
-	public static void setRequestBundleName(ServletRequest request, String bundleName) {
+	public static void setRequestBundleName(final ServletRequest request, final String bundleName) {
 		if (log.isDebugEnabled()) {
 			log.debug("Bundle name for this request: " + bundleName);
 		}
@@ -85,7 +85,7 @@ public class LocalizationUtil {
 	/**
 	 * Saves locale to HTTP session.
 	 */
-	public static void setSessionLocale(HttpSession session, String localeCode) {
+	public static void setSessionLocale(final HttpSession session, final String localeCode) {
 		if (log.isDebugEnabled()) {
 			log.debug("Locale stored to session: " + localeCode);
 		}
@@ -96,39 +96,39 @@ public class LocalizationUtil {
 	/**
 	 * Returns current locale from session.
 s	 */
-	public static Locale getSessionLocale(HttpSession session) {
+	public static Locale getSessionLocale(final HttpSession session) {
 		Locale locale = (Locale) session.getAttribute(SESSION_LOCALE_ATTR);
 		return locale == null ? MESSAGE_RESOLVER.getFallbackLocale() : locale;
 	}
 
 	// ---------------------------------------------------------------- delegates
 
-	public static String findMessage(HttpServletRequest request, String key) {
+	public static String findMessage(final HttpServletRequest request, final String key) {
 		String bundleName = (String) request.getAttribute(REQUEST_BUNDLE_NAME_ATTR);
 		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
-	public static String findMessage(String bundleName, HttpServletRequest request, String key) {
+	public static String findMessage(final String bundleName, final HttpServletRequest request, final String key) {
 		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
-	public static String findMessage(HttpServletRequest request, Locale locale, String key) {
+	public static String findMessage(final HttpServletRequest request, final Locale locale, final String key) {
 		String bundleName = (String) request.getAttribute(REQUEST_BUNDLE_NAME_ATTR);
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
-	public static String findDefaultMessage(HttpServletRequest request, String key) {
+	public static String findDefaultMessage(final HttpServletRequest request, final String key) {
 		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
 		return MESSAGE_RESOLVER.findDefaultMessage(locale, key);
 	}
 
-	public String findMessage(String bundleName, Locale locale, String key) {
+	public String findMessage(final String bundleName, final Locale locale, final String key) {
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
-	public static String findDefaultMessage(Locale locale, String key) {
+	public static String findDefaultMessage(final Locale locale, final String key) {
 		return MESSAGE_RESOLVER.findDefaultMessage(locale, key);
 	}
 
@@ -167,7 +167,7 @@ s	 */
 		}
 	}
 
-	private static void clearMap(Class mapClass, Object map, String fieldName) throws Exception {
+	private static void clearMap(final Class mapClass, final Object map, final String fieldName) throws Exception {
 		Field field = mapClass.getDeclaredField(fieldName);
 		field.setAccessible(true);
 		Object cache = field.get(map);

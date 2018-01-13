@@ -61,7 +61,7 @@ public class Base64 {
 	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
 	 * @param lineSeparator optional CRLF after 76 chars, unless EOF.
 	 */
-	public static char[] encodeToChar(byte[] arr, boolean lineSeparator) {
+	public static char[] encodeToChar(final byte[] arr, final boolean lineSeparator) {
 		int len = arr != null ? arr.length : 0;
 		if (len == 0) {
 			return new char[0];
@@ -102,7 +102,7 @@ public class Base64 {
 	/**
 	 * Decodes a BASE64 encoded char array.
 	 */
-	public static byte[] decode(char[] arr) {
+	public static byte[] decode(final char[] arr) {
 		int length = arr.length;
 		if (length == 0) {
 			return new byte[0];
@@ -144,7 +144,7 @@ public class Base64 {
 
 	// ---------------------------------------------------------------- byte
 
-	public static byte[] encodeToByte(String s) {
+	public static byte[] encodeToByte(final String s) {
 		try {
 			return encodeToByte(s.getBytes(JoddCore.get().defaults().getEncoding()), false);
 		} catch (UnsupportedEncodingException ignore) {
@@ -152,7 +152,7 @@ public class Base64 {
 		}
 	}
 
-	public static byte[] encodeToByte(String s, boolean lineSep) {
+	public static byte[] encodeToByte(final String s, final boolean lineSep) {
 		try {
 			return encodeToByte(s.getBytes(JoddCore.get().defaults().getEncoding()), lineSep);
 		} catch (UnsupportedEncodingException ignore) {
@@ -160,7 +160,7 @@ public class Base64 {
 		}
 	}
 
-	public static byte[] encodeToByte(byte[] arr) {
+	public static byte[] encodeToByte(final byte[] arr) {
 		return encodeToByte(arr, false);
 	}
 
@@ -168,7 +168,7 @@ public class Base64 {
 	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
 	 * @param lineSep optional CRLF after 76 chars, unless EOF.
 	 */
-	public static byte[] encodeToByte(byte[] arr, boolean lineSep) {
+	public static byte[] encodeToByte(final byte[] arr, final boolean lineSep) {
 		int len = arr != null ? arr.length : 0;
 		if (len == 0) {
 			return new byte[0];
@@ -206,7 +206,7 @@ public class Base64 {
 		return dest;
 	}
 
-	public static String decodeToString(byte[] arr) {
+	public static String decodeToString(final byte[] arr) {
 		try {
 			return new String(decode(arr), JoddCore.get().defaults().getEncoding());
 		} catch (UnsupportedEncodingException ignore) {
@@ -217,7 +217,7 @@ public class Base64 {
 	/**
 	 * Decodes BASE64 encoded byte array.
 	 */
-	public static byte[] decode(byte[] arr) {
+	public static byte[] decode(final byte[] arr) {
 		int length = arr.length;
 		if (length == 0) {
 			return new byte[0];
@@ -259,7 +259,7 @@ public class Base64 {
 
 	// ---------------------------------------------------------------- string
 
-	public static String encodeToString(String s) {
+	public static String encodeToString(final String s) {
 		try {
 			return new String(encodeToChar(s.getBytes(JoddCore.get().defaults().getEncoding()), false));
 		} catch (UnsupportedEncodingException ignore) {
@@ -267,7 +267,7 @@ public class Base64 {
 		}
 	}
 
-	public static String encodeToString(String s, boolean lineSep) {
+	public static String encodeToString(final String s, final boolean lineSep) {
 		try {
 			return new String(encodeToChar(s.getBytes(JoddCore.get().defaults().getEncoding()), lineSep));
 		} catch (UnsupportedEncodingException ignore) {
@@ -275,18 +275,18 @@ public class Base64 {
 		}
 	}
 
-	public static String encodeToString(byte[] arr) {
+	public static String encodeToString(final byte[] arr) {
 		return new String(encodeToChar(arr, false));
 	}
 
 	/**
 	 * Encodes a raw byte array into a BASE64 <code>String</code>.
 	 */
-	public static String encodeToString(byte[] arr, boolean lineSep) {
+	public static String encodeToString(final byte[] arr, final boolean lineSep) {
 		return new String(encodeToChar(arr, lineSep));
 	}
 
-	public static String decodeToString(String s) {
+	public static String decodeToString(final String s) {
 		try {
 			return new String(decode(s), JoddCore.get().defaults().getEncoding());
 		} catch (UnsupportedEncodingException ignore) {
@@ -297,7 +297,7 @@ public class Base64 {
 	/**
 	 * Decodes a BASE64 encoded string.
 	 */
-	public static byte[] decode(String s) {
+	public static byte[] decode(final String s) {
 		int length = s.length();
 		if (length == 0) {
 			return new byte[0];

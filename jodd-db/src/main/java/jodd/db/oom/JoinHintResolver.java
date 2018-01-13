@@ -49,7 +49,7 @@ public class JoinHintResolver {
 		return JoddDb.get().hintResolver();
 	}
 
-	public Object[] join(Object[] data, String hints) {
+	public Object[] join(final Object[] data, final String hints) {
 		if (hints == null) {
 			return data;
 		}
@@ -59,7 +59,7 @@ public class JoinHintResolver {
 	/**
 	 * Joins entity array using provided string hints.
 	 */
-	public Object[] join(Object[] data, String[] hints) {
+	public Object[] join(final Object[] data, final String[] hints) {
 		if (hints == null) {
 			return data;
 		}
@@ -167,7 +167,7 @@ public class JoinHintResolver {
 		return result;
 	}
 
-	protected Object resolveValueInSpecialCase(Object value, String name) {
+	protected Object resolveValueInSpecialCase(Object value, final String name) {
 		String[] elements = StringUtil.splitc(name, '.');
 
 		for (String element : elements) {

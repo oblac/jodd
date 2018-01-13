@@ -40,7 +40,7 @@ final class ParamExtractor extends EmptyMethodVisitor {
 	private int currentParam;
 	boolean debugInfoPresent;
 
-	ParamExtractor(int ignoreCount, int paramCount) {
+	ParamExtractor(final int ignoreCount, final int paramCount) {
 		this.ignoreCount = ignoreCount;
 		this.paramCount = paramCount;
 		this.methodParameters = new MethodParameter[paramCount];
@@ -49,7 +49,7 @@ final class ParamExtractor extends EmptyMethodVisitor {
 	}
 
 	@Override
-	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+	public void visitLocalVariable(final String name, final String desc, String signature, final Label start, final Label end, final int index) {
 		if ((index >= ignoreCount) && (index < (ignoreCount + paramCount))) {
 			if (!name.equals("arg" + currentParam)) {
 				debugInfoPresent = true;

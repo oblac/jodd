@@ -43,7 +43,7 @@ public class ActionConfig {
 	private String[] actionMethodNames;
 	private Class<? extends ActionNamingStrategy> namingStrategy;
 
-	public ActionConfig(ActionConfig parentActionConfig) {
+	public ActionConfig(final ActionConfig parentActionConfig) {
 		this.parent = parentActionConfig;
 	}
 
@@ -56,7 +56,7 @@ public class ActionConfig {
 		return actionResult;
 	}
 
-	public void setActionResult(Class<? extends ActionResult> actionResult) {
+	public void setActionResult(final Class<? extends ActionResult> actionResult) {
 		this.actionResult = actionResult;
 	}
 
@@ -69,7 +69,7 @@ public class ActionConfig {
 		return interceptors;
 	}
 
-	public void setInterceptors(Class<? extends ActionInterceptor>... interceptors) {
+	public void setInterceptors(final Class<? extends ActionInterceptor>... interceptors) {
 		this.interceptors = interceptors;
 	}
 
@@ -82,7 +82,7 @@ public class ActionConfig {
 		return filters;
 	}
 
-	public void setFilters(Class<? extends ActionFilter>... filters) {
+	public void setFilters(final Class<? extends ActionFilter>... filters) {
 		this.filters = filters;
 	}
 
@@ -95,7 +95,7 @@ public class ActionConfig {
 		return actionMethodNames;
 	}
 
-	public void setActionMethodNames(String... actionMethodNames) {
+	public void setActionMethodNames(final String... actionMethodNames) {
 		this.actionMethodNames = actionMethodNames;
 	}
 
@@ -108,7 +108,7 @@ public class ActionConfig {
 		return namingStrategy;
 	}
 
-	public void setNamingStrategy(Class<? extends ActionNamingStrategy> namingStrategy) {
+	public void setNamingStrategy(final Class<? extends ActionNamingStrategy> namingStrategy) {
 		this.namingStrategy = namingStrategy;
 	}
 }

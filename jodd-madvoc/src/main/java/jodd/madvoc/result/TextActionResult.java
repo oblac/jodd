@@ -47,7 +47,7 @@ public class TextActionResult implements ActionResult<TextResult> {
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public void render(ActionRequest actionRequest, TextResult resultValue) throws Exception {
+	public void render(final ActionRequest actionRequest, final TextResult resultValue) throws Exception {
 		final HttpServletResponse response = actionRequest.httpServletResponse();
 
 		String encoding = response.getCharacterEncoding();

@@ -35,29 +35,29 @@ import java.util.function.Consumer;
 @RenderWith(ServletDispatcherActionResult.class)
 public class Forward extends PathResult {
 
-	public static Forward to(String target) {
+	public static Forward to(final String target) {
 		return new Forward(target);
 	}
 
-	public static <T> Forward to(Class<T> target, Consumer<T> consumer) {
+	public static <T> Forward to(final Class<T> target, final Consumer<T> consumer) {
 		return new Forward(target, consumer);
 	}
 	@SuppressWarnings("unchecked")
-	public static <T> Forward to(T target, Consumer<T> consumer) {
+	public static <T> Forward to(final T target, final Consumer<T> consumer) {
 		return new Forward((Class<T>) target.getClass(), consumer);
 	}
 
-	public static Forward of(Forward result, String append) {
+	public static Forward of(final Forward result, final String append) {
 		return new Forward("/<" + result.path() + ">.." + append);
 	}
 
 	// ---------------------------------------------------------------- ctor
 
-	public <T> Forward(Class<T> target, Consumer<T> consumer) {
+	public <T> Forward(final Class<T> target, final Consumer<T> consumer) {
 		super(target, consumer);
 	}
 
-	public Forward(String path) {
+	public Forward(final String path) {
 		super(path);
 	}
 }

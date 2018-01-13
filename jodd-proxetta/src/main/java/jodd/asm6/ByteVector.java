@@ -255,7 +255,7 @@ public class ByteVector {
      *            already encoded characters.
      * @return this byte vector.
      */
-    ByteVector encodeUTF8(final String s, int i, int maxByteLength) {
+    ByteVector encodeUTF8(final String s, final int i, final int maxByteLength) {
         int charLength = s.length();
         int byteLength = i;
         char c;

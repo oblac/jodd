@@ -32,7 +32,7 @@ import jodd.json.TypeJsonSerializer;
 public class JsonArraySerializer implements TypeJsonSerializer<JsonArray> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, JsonArray jsonArray) {
+	public boolean serialize(final JsonContext jsonContext, final JsonArray jsonArray) {
 		jsonContext.writeOpenArray();
 
 		int length = jsonArray.size();

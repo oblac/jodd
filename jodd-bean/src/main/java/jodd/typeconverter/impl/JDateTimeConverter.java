@@ -50,7 +50,8 @@ import java.util.Date;
  */
 public class JDateTimeConverter implements TypeConverter<JDateTime> {
 
-	public JDateTime convert(Object value) {
+	@Override
+	public JDateTime convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

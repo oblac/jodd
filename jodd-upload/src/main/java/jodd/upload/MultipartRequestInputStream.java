@@ -28,8 +28,8 @@ package jodd.upload;
 import jodd.io.FastByteArrayOutputStream;
 
 import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -39,7 +39,7 @@ import java.io.OutputStream;
  */
 public class MultipartRequestInputStream extends BufferedInputStream {
 
-	public MultipartRequestInputStream(InputStream in) {
+	public MultipartRequestInputStream(final InputStream in) {
 		super(in);
 	}
 
@@ -57,7 +57,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	/**
 	 * Skips specified number of bytes.
 	 */
-	public void skipBytes(int i) throws IOException {
+	public void skipBytes(final int i) throws IOException {
 		long len = super.skip(i);
 		if (len != i) {
 			throw new IOException("Failed to skip data in HTTP request");
@@ -106,7 +106,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * Reads data header from the input stream. When there is no more
 	 * headers (i.e. end of stream reached), returns <code>null</code>
 	 */
-	public FileUploadHeader readDataHeader(String encoding) throws IOException {
+	public FileUploadHeader readDataHeader(final String encoding) throws IOException {
 		String dataHeader = readDataHeaderString(encoding);
 		if (dataHeader != null) {
 			lastHeader = new FileUploadHeader(dataHeader);
@@ -117,7 +117,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	}
 
 
-	protected String readDataHeaderString(String encoding) throws IOException {
+	protected String readDataHeaderString(final String encoding) throws IOException {
 		FastByteArrayOutputStream data = new FastByteArrayOutputStream();
 		byte b;
 		while (true) {
@@ -156,7 +156,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * reached. Returns number of copied bytes. It will throw an exception
 	 * for any irregular behaviour.
 	 */
-	public int copyAll(OutputStream out) throws IOException {
+	public int copyAll(final OutputStream out) throws IOException {
 		int count = 0;
 		while (true) {
 			byte b = readByte();
@@ -173,7 +173,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * Copies max or less number of bytes to output stream. Useful for determining
 	 * if uploaded file is larger then expected.
 	 */
-	public int copyMax(OutputStream out, int maxBytes) throws IOException {
+	public int copyMax(final OutputStream out, final int maxBytes) throws IOException {
 		int count = 0;
 		while (true) {
 			byte b = readByte();

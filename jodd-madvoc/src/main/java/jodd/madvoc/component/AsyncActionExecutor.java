@@ -52,19 +52,19 @@ public class AsyncActionExecutor {
 	private long keepAliveTimeMillis = 5000L;
 	private int queueCapacity = 100;
 
-	public void setCorePoolSize(int corePoolSize) {
+	public void setCorePoolSize(final int corePoolSize) {
 		this.corePoolSize = corePoolSize;
 	}
 
-	public void setMaximumPoolSize(int maximumPoolSize) {
+	public void setMaximumPoolSize(final int maximumPoolSize) {
 		this.maximumPoolSize = maximumPoolSize;
 	}
 
-	public void setKeepAliveTimeMillis(long keepAliveTimeMillis) {
+	public void setKeepAliveTimeMillis(final long keepAliveTimeMillis) {
 		this.keepAliveTimeMillis = keepAliveTimeMillis;
 	}
 
-	public void setQueueCapacity(int queueCapacity) {
+	public void setQueueCapacity(final int queueCapacity) {
 		this.queueCapacity = queueCapacity;
 	}
 
@@ -80,7 +80,7 @@ public class AsyncActionExecutor {
 	/**
 	 * Invokes an action asynchronously by submitting it to the thread pool.
 	 */
-	public void invoke(ActionRequest actionRequest) {
+	public void invoke(final ActionRequest actionRequest) {
 		if (executorService == null) {
 			throw new MadvocException("No action is marked as async!");
 		}

@@ -39,7 +39,7 @@ public class SimpleLogger implements Logger {
 	private Level level;
 	private final SimpleLoggerProvider slf;
 
-	public SimpleLogger(SimpleLoggerProvider simpleLoggerProvider, String name, Level defaultLevel) {
+	public SimpleLogger(final SimpleLoggerProvider simpleLoggerProvider, final String name, final Level defaultLevel) {
 		this.name = name;
 		this.slf = simpleLoggerProvider;
 		this.level = defaultLevel;
@@ -51,22 +51,22 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
-	public boolean isEnabled(Level level) {
+	public boolean isEnabled(final Level level) {
 		return level.isEnabledFor(this.level);
 	}
 
 	@Override
-	public void log(Level level, String message) {
+	public void log(final Level level, final String message) {
 		print(level, message, null);
 	}
 
 	@Override
-	public void log(Level level, String message, Throwable throwable) {
+	public void log(final Level level, final String message, final Throwable throwable) {
 		print(level, message, throwable);
 	}
 
 	@Override
-	public void setLevel(Level level) {
+	public void setLevel(final Level level) {
 		this.level = level;
 	}
 
@@ -76,7 +76,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
-	public void trace(String message) {
+	public void trace(final String message) {
 		print(Level.TRACE, message, null);
 	}
 
@@ -86,7 +86,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
-	public void debug(String message) {
+	public void debug(final String message) {
 		print(Level.DEBUG, message, null);
 	}
 
@@ -96,7 +96,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
-	public void info(String message) {
+	public void info(final String message) {
 		print(Level.INFO, message, null);
 	}
 
@@ -106,12 +106,12 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
-	public void warn(String message) {
+	public void warn(final String message) {
 		print(Level.WARN, message, null);
 	}
 
 	@Override
-	public void warn(String message, Throwable throwable) {
+	public void warn(final String message, final Throwable throwable) {
 		print(Level.WARN, message, throwable);
 	}
 
@@ -121,19 +121,19 @@ public class SimpleLogger implements Logger {
 	}
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 		print(Level.ERROR, message, null);
 	}
 
 	@Override
-	public void error(String message, Throwable throwable) {
+	public void error(final String message, final Throwable throwable) {
 		print(Level.ERROR, message, throwable);
 	}
 
 	/**
 	 * Prints error message if level is enabled.
 	 */
-	protected void print(Level level, String message, Throwable throwable) {
+	protected void print(final Level level, final String message, final Throwable throwable) {
 		if (!isEnabled(level)) {
 			return;
 		}
@@ -180,7 +180,7 @@ public class SimpleLogger implements Logger {
 	/**
 	 * Returns shorten class name.
 	 */
-	protected String shortenClassName(String className) {
+	protected String shortenClassName(final String className) {
 		int lastDotIndex = className.lastIndexOf('.');
 		if (lastDotIndex == -1) {
 			return className;

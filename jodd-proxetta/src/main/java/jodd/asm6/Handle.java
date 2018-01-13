@@ -95,7 +95,7 @@ public final class Handle {
      *             by {@link #Handle(int, String, String, String, boolean)}.
      */
     @Deprecated
-    public Handle(int tag, String owner, String name, String desc) {
+    public Handle(final int tag, final String owner, final String name, final String desc) {
         this(tag, owner, name, desc, tag == Opcodes.H_INVOKEINTERFACE);
     }
 
@@ -122,7 +122,7 @@ public final class Handle {
      * @param itf
      *            true if the owner is an interface.
      */
-    public Handle(int tag, String owner, String name, String desc, boolean itf) {
+    public Handle(final int tag, final String owner, final String name, final String desc, final boolean itf) {
         this.tag = tag;
         this.owner = owner;
         this.name = name;
@@ -185,7 +185,7 @@ public final class Handle {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == this) {
             return true;
         }

@@ -36,7 +36,7 @@ public class MySqlPager extends DbPager {
 	 * Appends ORDER BY keyword.
 	 */
 	@Override
-	protected String buildOrderSql(String sql, String column, boolean ascending) {
+	protected String buildOrderSql(String sql, final String column, final boolean ascending) {
 		sql += " order by " + column;
 		if (!ascending) {
 			sql += " desc";
@@ -49,7 +49,7 @@ public class MySqlPager extends DbPager {
 	 * Uses SQL_CALC_FOUND_ROWS for {@link #buildCountSql(String)}.
 	 */
 	@Override
-	protected String buildPageSql(String sql, int from, int pageSize) {
+	protected String buildPageSql(String sql, final int from, final int pageSize) {
 		sql = removeSelect(sql);
 		return "select SQL_CALC_FOUND_ROWS " + sql + " limit " + from + ", " + pageSize;
 	}
@@ -58,7 +58,7 @@ public class MySqlPager extends DbPager {
 	 * Returns FOUND_ROWS() sql to determine total count of founded rows.
 	 */
 	@Override
-	protected String buildCountSql(String sql) {
+	protected String buildCountSql(final String sql) {
 		return "SELECT FOUND_ROWS()";
 	}
 

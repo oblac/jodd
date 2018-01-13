@@ -37,15 +37,15 @@ public class Annotations<A extends Annotation> {
 	private final Class<A> annotationClass;
 	private final List<A> annotations = new ArrayList<>();
 
-	public Annotations(Class<A> annotationClass) {
+	public Annotations(final Class<A> annotationClass) {
 		this.annotationClass = annotationClass;
 	}
 
-	public static <T extends Annotation> Annotations<T> of(Class<T> annotationClass) {
+	public static <T extends Annotation> Annotations<T> of(final Class<T> annotationClass) {
 		return new Annotations<>(annotationClass);
 	}
 
-	public Annotations onMethod(Method method) {
+	public Annotations onMethod(final Method method) {
 		A a = method.getAnnotation(annotationClass);
 
 		if (a != null) {
@@ -54,7 +54,7 @@ public class Annotations<A extends Annotation> {
 		return this;
 	}
 
-	public Annotations<A> onClass(Class type) {
+	public Annotations<A> onClass(final Class type) {
 		A a = (A) type.getAnnotation(annotationClass);
 
 		if (a != null) {
@@ -63,7 +63,7 @@ public class Annotations<A extends Annotation> {
 		return this;
 	}
 
-	public Annotations<A> onPackageHierarchyOf(Class type) {
+	public Annotations<A> onPackageHierarchyOf(final Class type) {
 		return onPackageHierarchy(type.getPackage());
 	}
 

@@ -66,12 +66,12 @@ public class MadvocContainer {
 	 *
 	 * @see #registerComponentInstance(Object)
 	 */
-	public void registerComponent(Class component) {
+	public void registerComponent(final Class component) {
 		String name = resolveBaseComponentName(component);
 		registerComponent(name, component);
 	}
 
-	public <T> void registerComponent(Class<T> component, Consumer<T> consumer) {
+	public <T> void registerComponent(final Class<T> component, final Consumer<T> consumer) {
 		String name = resolveBaseComponentName(component);
 		registerComponent(name, component, consumer);
 	}
@@ -79,7 +79,7 @@ public class MadvocContainer {
 	/**
 	 * Registers Madvoc component with given name.
 	 */
-	public void registerComponent(String name, Class component) {
+	public void registerComponent(final String name, final Class component) {
 		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
 
 		madpc.removeBean(name);
@@ -89,7 +89,7 @@ public class MadvocContainer {
 	/**
 	 * Registers Madvoc component with given name.
 	 */
-	public <T> void registerComponent(String name, Class<T> component, Consumer<T> consumer) {
+	public <T> void registerComponent(final String name, final Class<T> component, final Consumer<T> consumer) {
 		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + component.getName());
 
 		madpc.removeBean(name);
@@ -102,7 +102,7 @@ public class MadvocContainer {
 	 *
 	 * @see #registerComponentInstance(String, Object)
 	 */
-	public void registerComponentInstance(Object componentInstance) {
+	public void registerComponentInstance(final Object componentInstance) {
 		Class component = componentInstance.getClass();
 		String name = resolveBaseComponentName(component);
 		registerComponentInstance(name, componentInstance);
@@ -114,7 +114,7 @@ public class MadvocContainer {
 	 * are registered, replaced or configuration is update; therefore DO NOT
 	 * USE injection, unless you are absolutely sure it works.
 	 */
-	public void registerComponentInstance(String name, Object componentInstance) {
+	public void registerComponentInstance(final String name, final Object componentInstance) {
 		log.debug(() -> "Madvoc WebApp component: [" + name + "] --> " + componentInstance.getClass().getName());
 
 		madpc.removeBean(name);
@@ -129,7 +129,7 @@ public class MadvocContainer {
 	 * must collect first the list of components that matches the type
 	 * and then to execute.
 	 */
-	public void fireEvent(Class listenerType) {
+	public void fireEvent(final Class listenerType) {
 		final Set<String> existing = new HashSet<>();
 
 		while (true) {
@@ -159,7 +159,7 @@ public class MadvocContainer {
 	 * Returns registered component or {@code null} if component is not registered.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <T> T lookupComponent(Class<T> component) {
+	public <T> T lookupComponent(final Class<T> component) {
 		String name = resolveBaseComponentName(component);
 		return (T) madpc.getBean(name);
 	}
@@ -167,7 +167,7 @@ public class MadvocContainer {
 	/**
 	 * Returns existing component. Throws an exception if component is not registered.
 	 */
-	public <T> T requestComponent(Class<T> component) {
+	public <T> T requestComponent(final Class<T> component) {
 		T existingComponent = lookupComponent(component);
 		if (existingComponent == null) {
 			throw new MadvocException("Madvoc component not found: " + component.getName());
@@ -178,7 +178,7 @@ public class MadvocContainer {
 	/**
 	 * Returns existing component. Throws an exception if component is not registered.
 	 */
-	public <T> T requestComponent(String componentName) {
+	public <T> T requestComponent(final String componentName) {
 		T existingComponent = (T) lookupComponent(componentName);
 		if (existingComponent == null) {
 			throw new MadvocException("Madvoc component not found: " + componentName);
@@ -189,7 +189,7 @@ public class MadvocContainer {
 	/**
 	 * Returns registered component or {@code null} if component does not exist.
 	 */
-	public Object lookupComponent(String componentName) {
+	public Object lookupComponent(final String componentName) {
 		return madpc.getBean(componentName);
 	}
 
@@ -217,7 +217,7 @@ public class MadvocContainer {
 
 	// ---------------------------------------------------------------- params
 
-	public void defineParams(Props props) {
+	public void defineParams(final Props props) {
 		log.debug("Defining Madvoc parameters");
 
 		madpc.defineParameters(props);

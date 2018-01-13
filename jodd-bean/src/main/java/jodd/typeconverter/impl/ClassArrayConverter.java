@@ -50,17 +50,17 @@ import jodd.util.StringUtil;
  */
 public class ClassArrayConverter extends ArrayConverter<Class> {
 
-	public ClassArrayConverter(TypeConverterManager typeConverterManager) {
+	public ClassArrayConverter(final TypeConverterManager typeConverterManager) {
 		super(typeConverterManager, Class.class);
 	}
 
 	@Override
-	protected Class[] createArray(int length) {
+	protected Class[] createArray(final int length) {
 		return new Class[length];
 	}
 
 	@Override
-	protected String[] convertStringToArray(String value) {
+	protected String[] convertStringToArray(final String value) {
 		String[] strings = StringUtil.splitc(value, NUMBER_DELIMITERS);
 
 		int count = 0;

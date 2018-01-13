@@ -57,7 +57,7 @@ public class AdaptiveFileUpload extends FileUpload {
 	protected final String[] fileExtensions;
 	protected final boolean allowFileExtensions;
 
-	AdaptiveFileUpload(MultipartRequestInputStream input, int memoryThreshold, File uploadPath, int maxFileSize, boolean breakOnError, String[] extensions, boolean allowed) {
+	AdaptiveFileUpload(final MultipartRequestInputStream input, final int memoryThreshold, final File uploadPath, final int maxFileSize, final boolean breakOnError, final String[] extensions, final boolean allowed) {
 		super(input, maxFileSize);
 		this.memoryThreshold = memoryThreshold;
 		this.uploadPath = uploadPath;
@@ -209,7 +209,7 @@ public class AdaptiveFileUpload extends FileUpload {
 	/**
 	 * Writes file uploaded item.
 	 */
-	public File write(String destination) throws IOException {
+	public File write(final String destination) throws IOException {
 		return write(new File(destination));
 	}
 

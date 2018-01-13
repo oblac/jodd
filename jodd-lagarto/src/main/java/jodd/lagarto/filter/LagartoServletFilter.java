@@ -26,10 +26,10 @@
 package jodd.lagarto.filter;
 
 import jodd.io.FileNameUtil;
-import jodd.servlet.DispatcherUtil;
-import jodd.servlet.wrapper.BufferResponseWrapper;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.servlet.DispatcherUtil;
+import jodd.servlet.wrapper.BufferResponseWrapper;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -50,9 +50,11 @@ public abstract class LagartoServletFilter implements Filter {
 
 	private static final Logger log = LoggerFactory.getLogger(LagartoServletFilter.class);
 
-	public void init(FilterConfig filterConfig) throws ServletException {
+	@Override
+	public void init(final FilterConfig filterConfig) throws ServletException {
 	}
 
+	@Override
 	public void destroy() {
 	}
 
@@ -62,7 +64,8 @@ public abstract class LagartoServletFilter implements Filter {
 	 * to optionally consumes path, then {@link #acceptActionPath(javax.servlet.http.HttpServletRequest, String)} to
 	 * check if path is accepted for processing.
 	 */
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+	@Override
+	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String actionPath = DispatcherUtil.getServletPath(request);
@@ -106,9 +109,9 @@ public abstract class LagartoServletFilter implements Filter {
 	 * By default, it returns <code>false</code>.
 	 */
 	protected boolean processActionPath(
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse,
-			String actionPath) throws IOException {
+		final HttpServletRequest servletRequest,
+		final HttpServletResponse servletResponse,
+		final String actionPath) throws IOException {
 
 		return false;
 	}
@@ -117,7 +120,7 @@ public abstract class LagartoServletFilter implements Filter {
 	 * Accepts action path for further parsing. By default, only <code>*.htm(l)</code>
 	 * requests are passed through and those without any extension.
 	 */
-	protected boolean acceptActionPath(HttpServletRequest request, String actionPath) {
+	protected boolean acceptActionPath(final HttpServletRequest request, final String actionPath) {
 		String extension = FileNameUtil.getExtension(actionPath);
 		if (extension.length() == 0) {
 			return true;

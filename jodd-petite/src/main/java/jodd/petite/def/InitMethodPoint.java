@@ -41,7 +41,7 @@ public class InitMethodPoint implements Comparable {
 	public final int order;
 	public final InitMethodInvocationStrategy invocationStrategy;
 
-	public InitMethodPoint(Method method, int order, InitMethodInvocationStrategy invocationStrategy) {
+	public InitMethodPoint(final Method method, final int order, final InitMethodInvocationStrategy invocationStrategy) {
 		Objects.requireNonNull(method);
 		Objects.requireNonNull(invocationStrategy);
 
@@ -51,7 +51,7 @@ public class InitMethodPoint implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object other) {
+	public int compareTo(final Object other) {
 		InitMethodPoint that = (InitMethodPoint) other;
 		return Integer.compare(this.order, that.order);
 	}

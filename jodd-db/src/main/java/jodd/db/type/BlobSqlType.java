@@ -36,7 +36,7 @@ public class BlobSqlType extends SqlType<Blob> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Blob get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Blob get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return rs.getBlob(index);
 	}
 
@@ -44,7 +44,7 @@ public class BlobSqlType extends SqlType<Blob> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Blob value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Blob value, final int dbSqlType) throws SQLException {
 		st.setBlob(index, value);
 	}
 

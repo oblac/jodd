@@ -36,7 +36,7 @@ public class NoneActionResult implements ActionResult {
 	 * Executes result on given action result value.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, Object resultValue) {
+	public void render(final ActionRequest actionRequest, final Object resultValue) {
 		// none, uses direct output
 	}
 }

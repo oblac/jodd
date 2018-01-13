@@ -34,7 +34,7 @@ public class MaxConstraint implements ValidationConstraint<Max> {
 	public MaxConstraint() {
 	}
 
-	public MaxConstraint(double max) {
+	public MaxConstraint(final double max) {
 		this.max = max;
 	}
 
@@ -46,25 +46,25 @@ public class MaxConstraint implements ValidationConstraint<Max> {
 		return max;
 	}
 
-	public void setMax(double max) {
+	public void setMax(final double max) {
 		this.max = max;
 	}
 
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(Max annotation) {
+	public void configure(final Max annotation) {
 		this.max = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, max);
 	}
 
-	public static boolean validate(Object value, double max) {
+	public static boolean validate(final Object value, final double max) {
 		if (value == null) {
 			return true;
 		}

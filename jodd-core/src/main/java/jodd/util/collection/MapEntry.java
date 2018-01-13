@@ -33,15 +33,15 @@ import java.util.Map;
  */
 public class MapEntry<K, V> implements Map.Entry<K, V> {
 
-	public static <T, R> MapEntry<T, R> create(T key, R value) {
+	public static <T, R> MapEntry<T, R> create(final T key, final R value) {
 		return new MapEntry<>(key, value);
 	}
 
-	public static <T, R> MapEntry<T, R> createUnmodifiable(T key, R value) {
+	public static <T, R> MapEntry<T, R> createUnmodifiable(final T key, final R value) {
 		return new UnmodifiableMapEntry<>(key, value);
 	}
 
-	public MapEntry(K key, V value) {
+	public MapEntry(final K key, final V value) {
 		this.key = key;
 		this.value = value;
 	}
@@ -62,12 +62,12 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
 	}
 
 	@Override
-	public V setValue(V value) {
+	public V setValue(final V value) {
 		this.value = value;
 		return this.value;
 	}
 
-	public K setKey(K key) {
+	public K setKey(final K key) {
 		this.key = key;
 		return this.key;
 	}
@@ -75,7 +75,7 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
 	// ---------------------------------------------------------------- hash/equals
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null) {
 			return false;
 		}

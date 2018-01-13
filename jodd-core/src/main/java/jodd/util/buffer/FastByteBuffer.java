@@ -55,7 +55,7 @@ public class FastByteBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastByteBuffer(int size) {
+	public FastByteBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastByteBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastByteBuffer {
 	/**
 	 * Appends <code>byte</code> array to buffer.
 	 */
-	public FastByteBuffer append(byte[] array, int off, int len) {
+	public FastByteBuffer append(final byte[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastByteBuffer {
 	/**
 	 * Appends <code>byte</code> array to buffer.
 	 */
-	public FastByteBuffer append(byte[] array) {
+	public FastByteBuffer append(final byte[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>byte</code> to buffer.
 	 */
-	public FastByteBuffer append(byte element) {
+	public FastByteBuffer append(final byte element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastByteBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastByteBuffer append(FastByteBuffer buff) {
+	public FastByteBuffer append(final FastByteBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastByteBuffer {
 	 * Returns <code>byte</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public byte[] array(int index) {
+	public byte[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastByteBuffer {
     /**
      * Creates <code>byte</code> subarray from buffered content.
      */
-	public byte[] toArray(int start, int len) {
+	public byte[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		byte[] array = new byte[len];

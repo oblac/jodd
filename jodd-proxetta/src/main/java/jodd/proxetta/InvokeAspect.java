@@ -36,7 +36,7 @@ public interface InvokeAspect {
 	 * Determines if some method should be scanned for pointcuts.
 	 * Returns <code>true</code> if method should be scanned.
 	 */
-	default boolean apply(MethodInfo methodInfo) {
+	default boolean apply(final MethodInfo methodInfo) {
 		return true;
 	}
 

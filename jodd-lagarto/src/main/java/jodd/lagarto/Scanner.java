@@ -42,7 +42,7 @@ class Scanner {
 	/**
 	 * Initializes scanner.
 	 */
-	protected void initialize(CharSequence input) {
+	protected void initialize(final CharSequence input) {
 		this.input = input;
 		this.ndx = -1;
 		this.total = input.length();
@@ -54,7 +54,7 @@ class Scanner {
 	 * Finds a character in some range and returns its index.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	protected final int find(char target, int from, int end) {
+	protected final int find(final char target, int from, final int end) {
 		while (from < end) {
 			if (input.charAt(from) == target) {
 				break;
@@ -69,7 +69,7 @@ class Scanner {
 	 * Finds character buffer in some range and returns its index.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	protected final int find(CharSequence target, int from, int end) {
+	protected final int find(final CharSequence target, int from, final int end) {
 		while (from < end) {
 			if (match(target, from)) {
 				break;
@@ -85,7 +85,7 @@ class Scanner {
 	/**
 	 * Matches char buffer with content on given location.
 	 */
-	protected final boolean match(CharSequence target, int ndx) {
+	protected final boolean match(final CharSequence target, final int ndx) {
 		if (ndx + target.length() >= total) {
 			return false;
 		}
@@ -104,7 +104,7 @@ class Scanner {
 	/**
 	 * Matches char buffer with content at current location case-sensitive.
 	 */
-	public final boolean match(CharSequence target) {
+	public final boolean match(final CharSequence target) {
 		return match(target, ndx);
 	}
 
@@ -112,7 +112,7 @@ class Scanner {
 	 * Matches char buffer given in uppercase with content at current location, that will
 	 * be converted to upper case to make case-insensitive matching.
 	 */
-	public final boolean matchUpperCase(CharSequence uppercaseTarget) {
+	public final boolean matchUpperCase(final CharSequence uppercaseTarget) {
 		if (ndx + uppercaseTarget.length() > total) {
 			return false;
 		}
@@ -135,7 +135,7 @@ class Scanner {
 	/**
 	 * Creates char sub-sequence from the input.
 	 */
-	protected final CharSequence charSequence(int from, int to) {
+	protected final CharSequence charSequence(final int from, final int to) {
 		if (from == to) {
 			return CharArraySequence.EMPTY;
 		}
@@ -158,7 +158,7 @@ class Scanner {
 	/**
 	 * Calculates {@link Position current position}: offset, line and column.
 	 */
-	protected Position position(int position) {
+	protected Position position(final int position) {
 		int line;
 		int offset;
 		int lastNewLineOffset;
@@ -200,18 +200,19 @@ class Scanner {
 		private final int line;
 		private final int column;
 
-		public Position(int offset, int line, int column) {
+		public Position(final int offset, final int line, final int column) {
 			this.offset = offset;
 			this.line = line;
 			this.column = column;
 		}
 
-		public Position(int offset) {
+		public Position(final int offset) {
 			this.offset = offset;
 			this.line = -1;
 			this.column = -1;
 		}
 
+		@Override
 		public String toString() {
 			if (offset == -1) {
 				return "[" + line + ':' + column + ']';

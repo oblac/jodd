@@ -25,21 +25,21 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.oom.ColumnData;
+import jodd.db.DbSession;
 import jodd.db.oom.ColumnAliasType;
-import jodd.db.oom.DbSqlGenerator;
+import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbOomQuery;
+import jodd.db.oom.DbSqlGenerator;
 import jodd.db.oom.sqlgen.chunks.ColumnValueChunk;
-import jodd.db.oom.sqlgen.chunks.SqlChunk;
-import jodd.db.oom.sqlgen.chunks.RawSqlChunk;
-import jodd.db.oom.sqlgen.chunks.TableChunk;
 import jodd.db.oom.sqlgen.chunks.ColumnsSelectChunk;
 import jodd.db.oom.sqlgen.chunks.InsertChunk;
-import jodd.db.oom.sqlgen.chunks.ReferenceChunk;
-import jodd.db.oom.sqlgen.chunks.ValueChunk;
-import jodd.db.oom.sqlgen.chunks.UpdateSetChunk;
 import jodd.db.oom.sqlgen.chunks.MatchChunk;
-import jodd.db.DbSession;
+import jodd.db.oom.sqlgen.chunks.RawSqlChunk;
+import jodd.db.oom.sqlgen.chunks.ReferenceChunk;
+import jodd.db.oom.sqlgen.chunks.SqlChunk;
+import jodd.db.oom.sqlgen.chunks.TableChunk;
+import jodd.db.oom.sqlgen.chunks.UpdateSetChunk;
+import jodd.db.oom.sqlgen.chunks.ValueChunk;
 import jodd.util.StringPool;
 
 import java.util.Map;
@@ -70,7 +70,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		super();
 	}
 
-	public DbSqlBuilder(String template) {
+	public DbSqlBuilder(final String template) {
 		super();
 		append(template);
 	}
@@ -82,7 +82,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Template constructor.
 	 */
-	public static DbSqlBuilder sql(String template) {
+	public static DbSqlBuilder sql(final String template) {
 		return new DbSqlBuilder().append(template);
 	}
 
@@ -120,7 +120,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Specifies column alias type. May be <code>null</code> when column aliases are not used.
 	 */
-	public DbSqlBuilder aliasColumnsAs(ColumnAliasType aliasesType) {
+	public DbSqlBuilder aliasColumnsAs(final ColumnAliasType aliasesType) {
 		this.columnAliasType = aliasesType;
 		return this;
 	}
@@ -128,7 +128,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Defines object reference and an object.
 	 */
-	public DbSqlBuilder use(String name, Object value) {
+	public DbSqlBuilder use(final String name, final Object value) {
 		setObjectReference(name, value);
 		return this;
 	}
@@ -144,7 +144,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Appends chunk to the list. Chunks <b>must</b> be added using this method.
 	 */
-	public DbSqlBuilder addChunk(SqlChunk chunk) {
+	public DbSqlBuilder addChunk(final SqlChunk chunk) {
 		if (lastChunk == null) {
 			lastChunk = firstChunk = chunk;
 		} else {
@@ -160,7 +160,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Parses provided text into the list of chunks and appends them to the list.
 	 */
-	public DbSqlBuilder append(String text) {
+	public DbSqlBuilder append(final String text) {
 		templateParser.parse(this, text);
 		return this;
 	}
@@ -168,7 +168,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Simply adds text without parsing to the query.
 	 */
-	public DbSqlBuilder appendRaw(String text) {
+	public DbSqlBuilder appendRaw(final String text) {
 		addChunk(new RawSqlChunk(text));
 		return this;
 	}
@@ -176,7 +176,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * User-friendly {@link #append(String)}.
 	 */
-	public DbSqlBuilder $(String text) {
+	public DbSqlBuilder $(final String text) {
 		return append(text);
 	}
 
@@ -187,7 +187,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return appendRaw(StringPool.SPACE);
 	}
 
-	public DbSqlBuilder $(SqlChunk chunk) {
+	public DbSqlBuilder $(final SqlChunk chunk) {
 		return addChunk(chunk);
 	}
 
@@ -198,6 +198,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String generateQuery() {
 		reset();
 
@@ -229,10 +230,12 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Map<String, ColumnData> getColumnData() {
 		return columnData;
 	}
 
+	@Override
 	public Map<String, ParameterValue> getQueryParameters() {
 		return parameters;
 	}
@@ -240,6 +243,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getJoinHints() {
 		if (hints == null) {
 			return null;
@@ -249,56 +253,56 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
 	// ---------------------------------------------------------------- table
 
-	public DbSqlBuilder table(String entityName) {
+	public DbSqlBuilder table(final String entityName) {
 		return addChunk(new TableChunk(entityName));
 	}
 
-	public DbSqlBuilder table(String entityName, String alias) {
+	public DbSqlBuilder table(final String entityName, final String alias) {
 		return addChunk(new TableChunk(entityName, alias));
 	}
 
-	public DbSqlBuilder table(Object entity, String alias) {
+	public DbSqlBuilder table(final Object entity, final String alias) {
 		return addChunk(new TableChunk(entity, alias));
 	}
 
-	public DbSqlBuilder table(Object entity, String alias, String tableReference) {
+	public DbSqlBuilder table(final Object entity, final String alias, final String tableReference) {
 		return addChunk(new TableChunk(entity, alias, tableReference));
 	}
 
-	public DbSqlBuilder table(Object entity) {
+	public DbSqlBuilder table(final Object entity) {
 		return addChunk(new TableChunk(entity));
 	}
 
 	// ---------------------------------------------------------------- columns
 
-	public DbSqlBuilder column(String reference) {
+	public DbSqlBuilder column(final String reference) {
 		return addChunk(new ColumnsSelectChunk(reference));
 	}
 
-	public DbSqlBuilder column(String tableRef, String columnRef) {
+	public DbSqlBuilder column(final String tableRef, final String columnRef) {
 		return addChunk(new ColumnsSelectChunk(tableRef, columnRef));
 	}
 
-	public DbSqlBuilder columnsAll(String tableRef) {
+	public DbSqlBuilder columnsAll(final String tableRef) {
 		return addChunk(new ColumnsSelectChunk(tableRef, true));
 	}
 
-	public DbSqlBuilder columnsIds(String tableRef) {
+	public DbSqlBuilder columnsIds(final String tableRef) {
 		return addChunk(new ColumnsSelectChunk(tableRef, false));
 	}
 
 
 	// ---------------------------------------------------------------- reference
 
-	public DbSqlBuilder ref(String columnRef) {
+	public DbSqlBuilder ref(final String columnRef) {
 		return addChunk(new ReferenceChunk(columnRef));
 	}
 
-	public DbSqlBuilder ref(String tableRef, String columnRef) {
+	public DbSqlBuilder ref(final String tableRef, final String columnRef) {
 		return addChunk(new ReferenceChunk(tableRef, columnRef, false));
 	}
 
-	public DbSqlBuilder refId(String tableRef) {
+	public DbSqlBuilder refId(final String tableRef) {
 		return addChunk(new ReferenceChunk(tableRef, null, true));
 	}
 
@@ -308,88 +312,88 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Creates condition part of the query only for existing columns.
 	 */
-	public DbSqlBuilder match(String tableRef, Object value) {
+	public DbSqlBuilder match(final String tableRef, final Object value) {
 		return addChunk(new MatchChunk(tableRef, value, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
-	public DbSqlBuilder match(String tableRef, String objectRef) {
+	public DbSqlBuilder match(final String tableRef, final String objectRef) {
 		return addChunk(new MatchChunk(tableRef, objectRef, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
 	/**
 	 * Creates condition part of the query for id columns
 	 */
-	public DbSqlBuilder matchIds(String tableRef, Object value) {
+	public DbSqlBuilder matchIds(final String tableRef, final Object value) {
 		return addChunk(new MatchChunk(tableRef, value, SqlChunk.COLS_ONLY_IDS));
 	}
 
-	public DbSqlBuilder matchIds(String tableRef, String objectRef) {
+	public DbSqlBuilder matchIds(final String tableRef, final String objectRef) {
 		return addChunk(new MatchChunk(tableRef, objectRef, SqlChunk.COLS_ONLY_IDS));
 	}
 
 	/**
 	 * Creates condition part of the query for all columns, including the null values.
 	 */
-	public DbSqlBuilder matchAll(String tableRef, Object value) {
+	public DbSqlBuilder matchAll(final String tableRef, final Object value) {
 		return addChunk(new MatchChunk(tableRef, value, SqlChunk.COLS_ALL));
 	}
 
-	public DbSqlBuilder matchAll(String tableRef, String objectRef) {
+	public DbSqlBuilder matchAll(final String tableRef, final String objectRef) {
 		return addChunk(new MatchChunk(tableRef, objectRef, SqlChunk.COLS_ALL));
 	}
 
-	public DbSqlBuilder match(String expression) {
+	public DbSqlBuilder match(final String expression) {
 		return addChunk(new MatchChunk(expression));
 	}
 
 
 	// ---------------------------------------------------------------- values
 
-	public DbSqlBuilder value(String name, Object value) {
+	public DbSqlBuilder value(final String name, final Object value) {
 		return addChunk(new ValueChunk(name, value));
 	}
 
-	public DbSqlBuilder value(Object value) {
+	public DbSqlBuilder value(final Object value) {
 		return addChunk(new ValueChunk(null, value));
 	}
 
-	public DbSqlBuilder valueRef(String objectReference) {
+	public DbSqlBuilder valueRef(final String objectReference) {
 		return addChunk(new ValueChunk(objectReference));
 	}
 
-	public DbSqlBuilder columnValue(String name, Object value) {
+	public DbSqlBuilder columnValue(final String name, final Object value) {
 		return addChunk(new ColumnValueChunk(name, value));
 	}
 
-	public DbSqlBuilder columnValue(Object value) {
+	public DbSqlBuilder columnValue(final Object value) {
 		return addChunk(new ColumnValueChunk(null, value));
 	}
 
-	public DbSqlBuilder columnValueRef(String objectReference) {
+	public DbSqlBuilder columnValueRef(final String objectReference) {
 		return addChunk(new ColumnValueChunk(objectReference));
 	}
 
 	// ---------------------------------------------------------------- insert
 
-	public DbSqlBuilder insert(String entityName, Object values) {
+	public DbSqlBuilder insert(final String entityName, final Object values) {
 		return addChunk(new InsertChunk(entityName, values));
 	}
 
-	public DbSqlBuilder insert(Class entity, Object values) {
+	public DbSqlBuilder insert(final Class entity, final Object values) {
 		return addChunk(new InsertChunk(entity, values));
 	}
 
-	public DbSqlBuilder insert(Object values) {
+	public DbSqlBuilder insert(final Object values) {
 		return addChunk(new InsertChunk(values.getClass(), values));
 	}
 
 	// ---------------------------------------------------------------- update set
 
-	public DbSqlBuilder set(String tableRef, Object values) {
+	public DbSqlBuilder set(final String tableRef, final Object values) {
 		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
-	public DbSqlBuilder setAll(String tableRef, Object values) {
+	public DbSqlBuilder setAll(final String tableRef, final Object values) {
 		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ALL));
 	}
 
@@ -403,7 +407,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return new DbOomQuery(this);
 	}
 
-	public DbOomQuery query(DbSession session) {
+	public DbOomQuery query(final DbSession session) {
 		return new DbOomQuery(session, this);
 	}
 

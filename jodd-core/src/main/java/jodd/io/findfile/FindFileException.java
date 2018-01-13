@@ -32,11 +32,11 @@ import jodd.exception.UncheckedException;
  */
 public class FindFileException extends UncheckedException {
 
-	public FindFileException(String message) {
+	public FindFileException(final String message) {
 		super(message);
 	}
 
-	public FindFileException(String message, Throwable t) {
+	public FindFileException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

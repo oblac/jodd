@@ -196,7 +196,7 @@ public class Props implements Cloneable {
 	/**
 	 * Ignore missing macros by replacing them with an empty string.
 	 */
-	public Props setIgnoreMissingMacros(boolean ignoreMissingMacros) {
+	public Props setIgnoreMissingMacros(final boolean ignoreMissingMacros) {
 		data.ignoreMissingMacros = ignoreMissingMacros;
 		return this;
 	}
@@ -475,7 +475,7 @@ public class Props implements Cloneable {
 	 * will not have the prefix.
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> innerMap(String prefix) {
+	public Map<String, Object> innerMap(final String prefix) {
 		initialize();
 		return data.extract(null, activeProfiles, null, prefix);
 	}
@@ -483,14 +483,14 @@ public class Props implements Cloneable {
 	/**
 	 * Adds child map to the props on given prefix.
 	 */
-	public void addInnerMap(String prefix, Map<?, ?> map) {
+	public void addInnerMap(final String prefix, final Map<?, ?> map) {
 		addInnerMap(prefix, map, null);
 	}
 
 	/**
 	 * Adds child map to the props on given prefix.
 	 */
-	public void addInnerMap(String prefix, Map<?, ?> map, String profile) {
+	public void addInnerMap(String prefix, final Map<?, ?> map, final String profile) {
 		if (!StringUtil.endsWithChar(prefix, '.')) {
 			prefix += StringPool.DOT;
 		}
@@ -570,7 +570,7 @@ public class Props implements Cloneable {
 	 * Returns all the profiles that define certain prop's key name.
 	 * Key name is given as a wildcard, or it can be matched fully.
 	 */
-	public String[] getProfilesFor(String propKeyNameWildcard) {
+	public String[] getProfilesFor(final String propKeyNameWildcard) {
 		HashSet<String> profiles = new HashSet<>();
 
 		profile:

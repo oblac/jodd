@@ -41,14 +41,14 @@ public interface ProxyPointcut {
 	/**
 	 * Performs AND operation on this and the next proxy.
 	 */
-	default ProxyPointcut and(ProxyPointcut otherProxyPointcut) {
+	default ProxyPointcut and(final ProxyPointcut otherProxyPointcut) {
 		return (t) -> apply(t) && otherProxyPointcut.apply(t);
 	}
 
 	/**
 	 * Performs OR operation on this and the next proxy.
 	 */
-	default ProxyPointcut or(ProxyPointcut other) {
+	default ProxyPointcut or(final ProxyPointcut other) {
 		return (t) -> apply(t) || other.apply(t);
 	}
 

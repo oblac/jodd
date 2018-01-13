@@ -35,7 +35,7 @@ public class TimeAfterConstraint implements ValidationConstraint<TimeAfter> {
 	public TimeAfterConstraint() {
 	}
 
-	public TimeAfterConstraint(JDateTime time) {
+	public TimeAfterConstraint(final JDateTime time) {
 		this.time = time;
 	}
 
@@ -47,26 +47,26 @@ public class TimeAfterConstraint implements ValidationConstraint<TimeAfter> {
 		return time;
 	}
 
-	public void setTime(JDateTime time) {
+	public void setTime(final JDateTime time) {
 		this.time = time;
 	}
 
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(TimeAfter annotation) {
+	public void configure(final TimeAfter annotation) {
 		time = new JDateTime(annotation.value());
 	}
 
 	// ---------------------------------------------------------------- validate
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, time);
 	}
 
 
-	public static boolean validate(Object value, JDateTime then) {
+	public static boolean validate(final Object value, final JDateTime then) {
 		if (value == null) {
 			return true;
 		}

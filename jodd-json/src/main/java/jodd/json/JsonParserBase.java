@@ -49,7 +49,7 @@ public abstract class JsonParserBase {
 	/**
 	 * Creates new instance of {@link jodd.json.MapToBean}.
 	 */
-	protected MapToBean createMapToBean(String classMetadataName) {
+	protected MapToBean createMapToBean(final String classMetadataName) {
 		return new MapToBean(this, classMetadataName);
 	}
 
@@ -61,7 +61,7 @@ public abstract class JsonParserBase {
 	 * Later, the collection will be converted into the target type.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Collection<Object> newArrayInstance(Class targetType) {
+	protected Collection<Object> newArrayInstance(final Class targetType) {
 		if (targetType == null ||
 			targetType == List.class ||
 			targetType == Collection.class ||
@@ -84,7 +84,7 @@ public abstract class JsonParserBase {
 	/**
 	 * Creates new object or a <code>HashMap</code> if type is not specified.
 	 */
-	protected Object newObjectInstance(Class targetType) {
+	protected Object newObjectInstance(final Class targetType) {
 		if (targetType == null ||
 			targetType == Map.class) {
 
@@ -108,7 +108,7 @@ public abstract class JsonParserBase {
 	/**
 	 * Injects value into the targets property.
 	 */
-	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, Object value) {
+	protected void injectValueIntoObject(final Object target, final PropertyDescriptor pd, final Object value) {
 		Object convertedValue = value;
 
 		if (value != null) {
@@ -130,7 +130,7 @@ public abstract class JsonParserBase {
 	/**
 	 * Converts type of the given value.
 	 */
-	protected Object convertType(Object value, Class targetType) {
+	protected Object convertType(final Object value, final Class targetType) {
 		Class valueClass = value.getClass();
 
 		if (valueClass == targetType) {

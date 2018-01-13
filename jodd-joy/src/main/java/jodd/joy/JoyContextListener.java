@@ -50,7 +50,7 @@ public class JoyContextListener implements ServletContextListener {
 	private EnumSet<DispatcherType> madvocDispatcherTypes = EnumSet.of(REQUEST);
 
 	@Override
-	public void contextInitialized(ServletContextEvent sce) {
+	public void contextInitialized(final ServletContextEvent sce) {
 		ServletContext servletContext = sce.getServletContext();
 
 		JoddJoy joy = createJoy();
@@ -77,7 +77,7 @@ public class JoyContextListener implements ServletContextListener {
 	/**
 	 * Defines Madvoc servlet context.
 	 */
-	protected void setMadvocContext(String context) {
+	protected void setMadvocContext(final String context) {
 		Objects.requireNonNull(context);
 		this.context = context;
 	}
@@ -85,14 +85,14 @@ public class JoyContextListener implements ServletContextListener {
 	/**
 	 * Defines enum set for the filter.
 	 */
-	protected void runMadvocOn(EnumSet<DispatcherType> dispatcherTypeEnumSet) {
+	protected void runMadvocOn(final EnumSet<DispatcherType> dispatcherTypeEnumSet) {
 		this.madvocDispatcherTypes = dispatcherTypeEnumSet;
 	}
 
 	/**
 	 * Configures servlet context.
 	 */
-	protected void configureServletContext(ServletContext servletContext) {
+	protected void configureServletContext(final ServletContext servletContext) {
 		servletContext.addListener(jodd.servlet.RequestContextListener.class);
 
 		if (decoraEnabled) {
@@ -105,7 +105,7 @@ public class JoyContextListener implements ServletContextListener {
 	}
 
 	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
+	public void contextDestroyed(final ServletContextEvent sce) {
 		JoddJoy.get().stop();
 	}
 }

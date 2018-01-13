@@ -54,7 +54,7 @@ public class ThreadFactoryBuilder {
 	 * Sets the printf-compatible naming format for threads.
 	 * Use {@code %d} to replace it with the thread number.
 	 */
-	public ThreadFactoryBuilder setNameFormat(String nameFormat) {
+	public ThreadFactoryBuilder setNameFormat(final String nameFormat) {
 		this.nameFormat = nameFormat;
 		return this;
 	}
@@ -62,7 +62,7 @@ public class ThreadFactoryBuilder {
 	/**
 	 * Sets if new threads will be daemon.
 	 */
-	public ThreadFactoryBuilder setDaemon(boolean daemon) {
+	public ThreadFactoryBuilder setDaemon(final boolean daemon) {
 		this.daemonThread = daemon;
 		return this;
 	}
@@ -70,7 +70,7 @@ public class ThreadFactoryBuilder {
 	/**
 	 * Sets the threads priority.
 	 */
-	public ThreadFactoryBuilder setPriority(int priority) {
+	public ThreadFactoryBuilder setPriority(final int priority) {
 		this.priority = priority;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class ThreadFactoryBuilder {
 	 * Sets the {@code UncaughtExceptionHandler} for new threads created.
 	 */
 	public ThreadFactoryBuilder setUncaughtExceptionHandler(
-			Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
+		final Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
 
 		this.uncaughtExceptionHandler = Objects.requireNonNull(uncaughtExceptionHandler);
 		return this;
@@ -89,7 +89,7 @@ public class ThreadFactoryBuilder {
 	 * Sets the backing {@code ThreadFactory} for new threads. Threads
 	 * will be created by invoking {@code newThread(Runnable} on this backing factory.
 	 */
-	public ThreadFactoryBuilder setBackingThreadFactory(ThreadFactory backingThreadFactory) {
+	public ThreadFactoryBuilder setBackingThreadFactory(final ThreadFactory backingThreadFactory) {
 		this.backingThreadFactory = Objects.requireNonNull(backingThreadFactory);
 		return this;
 	}
@@ -103,7 +103,7 @@ public class ThreadFactoryBuilder {
 		return build(this);
 	}
 
-	private static ThreadFactory build(ThreadFactoryBuilder builder) {
+	private static ThreadFactory build(final ThreadFactoryBuilder builder) {
 		final String nameFormat = builder.nameFormat;
 		final Boolean daemon = builder.daemonThread;
 		final Integer priority = builder.priority;

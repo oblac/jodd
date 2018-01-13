@@ -107,8 +107,8 @@ public abstract class ClassVisitor {
      *            {@link Type#getInternalName() getInternalName}). May be
      *            <tt>null</tt>.
      */
-    public void visit(int version, int access, String name, String signature,
-            String superName, String[] interfaces) {
+    public void visit(final int version, final int access, final String name, final String signature,
+                      final String superName, final String[] interfaces) {
         if (cv != null) {
             cv.visit(version, access, name, signature, superName, interfaces);
         }
@@ -125,7 +125,7 @@ public abstract class ClassVisitor {
      *            between source and compiled elements of the class. May be
      *            <tt>null</tt>.
      */
-    public void visitSource(String source, String debug) {
+    public void visitSource(final String source, final String debug) {
         if (cv != null) {
             cv.visitSource(source, debug);
         }
@@ -143,7 +143,7 @@ public abstract class ClassVisitor {
      * @return a visitor to visit the module values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this module.
      */
-    public ModuleVisitor visitModule(String name, int access, String version) {
+    public ModuleVisitor visitModule(final String name, final int access, final String version) {
         if (api < Opcodes.ASM6) {
             throw new RuntimeException();
         }
@@ -168,7 +168,7 @@ public abstract class ClassVisitor {
      *            <tt>null</tt> if the class is not enclosed in a method of its
      *            enclosing class.
      */
-    public void visitOuterClass(String owner, String name, String desc) {
+    public void visitOuterClass(final String owner, final String name, final String desc) {
         if (cv != null) {
             cv.visitOuterClass(owner, name, desc);
         }
@@ -184,7 +184,7 @@ public abstract class ClassVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
-    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+    public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
         if (cv != null) {
             return cv.visitAnnotation(desc, visible);
         }
@@ -213,8 +213,8 @@ public abstract class ClassVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
-    public AnnotationVisitor visitTypeAnnotation(int typeRef,
-            TypePath typePath, String desc, boolean visible) {
+    public AnnotationVisitor visitTypeAnnotation(final int typeRef,
+                                                 final TypePath typePath, final String desc, final boolean visible) {
         if (api < Opcodes.ASM5) {
             throw new RuntimeException();
         }
@@ -230,7 +230,7 @@ public abstract class ClassVisitor {
      * @param attr
      *            an attribute.
      */
-    public void visitAttribute(Attribute attr) {
+    public void visitAttribute(final Attribute attr) {
         if (cv != null) {
             cv.visitAttribute(attr);
         }
@@ -254,8 +254,8 @@ public abstract class ClassVisitor {
      *            the access flags of the inner class as originally declared in
      *            the enclosing class.
      */
-    public void visitInnerClass(String name, String outerName,
-            String innerName, int access) {
+    public void visitInnerClass(final String name, final String outerName,
+                                final String innerName, final int access) {
         if (cv != null) {
             cv.visitInnerClass(name, outerName, innerName, access);
         }
@@ -288,8 +288,8 @@ public abstract class ClassVisitor {
      *         <tt>null</tt> if this class visitor is not interested in visiting
      *         these annotations and attributes.
      */
-    public FieldVisitor visitField(int access, String name, String desc,
-            String signature, Object value) {
+    public FieldVisitor visitField(final int access, final String name, final String desc,
+                                   final String signature, final Object value) {
         if (cv != null) {
             return cv.visitField(access, name, desc, signature, value);
         }
@@ -321,8 +321,8 @@ public abstract class ClassVisitor {
      *         if this class visitor is not interested in visiting the code of
      *         this method.
      */
-    public MethodVisitor visitMethod(int access, String name, String desc,
-            String signature, String[] exceptions) {
+    public MethodVisitor visitMethod(final int access, final String name, final String desc,
+                                     final String signature, final String[] exceptions) {
         if (cv != null) {
             return cv.visitMethod(access, name, desc, signature, exceptions);
         }

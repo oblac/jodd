@@ -45,7 +45,7 @@ public class InvokeInfo {
 	private final String signature;
 	private final String[] arguments;
 
-	public InvokeInfo(String owner, String methodName, String description) {
+	public InvokeInfo(final String owner, final String methodName, final String description) {
 		this.owner = owner;
 		this.className = owner.replace('/', '.');
 		this.methodName = methodName;

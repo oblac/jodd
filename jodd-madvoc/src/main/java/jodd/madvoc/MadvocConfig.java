@@ -94,7 +94,7 @@ public final class MadvocConfig {
 	/**
 	 * Sets default action configuration.
 	 */
-	public void setActionConfig(ActionConfig actionConfig) {
+	public void setActionConfig(final ActionConfig actionConfig) {
 		Objects.requireNonNull(actionConfig);
 		this.actionConfig = actionConfig;
 	}
@@ -105,7 +105,7 @@ public final class MadvocConfig {
 	private Class<? extends Annotation>[] actionAnnotations = ClassUtil.emptyClassArray();
 	private ActionAnnotation<?>[] actionAnnotationInstances = new ActionAnnotation[0];
 
-	public void setActionAnnotations(Class<? extends Annotation>... annotationsClasses) {
+	public void setActionAnnotations(final Class<? extends Annotation>... annotationsClasses) {
 
 		for (Class<? extends Annotation> annotation : annotationsClasses) {
 			ActionConfiguredBy actionConfiguredBy = annotation.getAnnotation(ActionConfiguredBy.class);
@@ -148,10 +148,10 @@ public final class MadvocConfig {
 	 * Lookups action config for given annotation. If annotations is not registered, returns default
 	 * action configuration.
 	 */
-	public ActionConfig lookupActionConfig(Class<? extends Annotation> annotationType) {
+	public ActionConfig lookupActionConfig(final Class<? extends Annotation> annotationType) {
 		return annotations.getOrDefault(annotationType, actionConfig);
 	}
-	public ActionConfig lookupActionConfig(ActionAnnotationData actionAnnotationData) {
+	public ActionConfig lookupActionConfig(final ActionAnnotationData actionAnnotationData) {
 		if (actionAnnotationData == null) {
 			return actionConfig;
 		}
@@ -173,7 +173,7 @@ public final class MadvocConfig {
 	/**
 	 * Sets web application character encoding. If set to <code>null</code> encoding will be not applied.
 	 */
-	public void setEncoding(String encoding) {
+	public void setEncoding(final String encoding) {
 		Objects.requireNonNull(encoding);
 		this.encoding = encoding;
 	}
@@ -188,7 +188,7 @@ public final class MadvocConfig {
 	/**
 	 * Defines is character encoding has to be set by Madvoc into the request and response.
 	 */
-	public void setApplyCharacterEncoding(boolean applyCharacterEncoding) {
+	public void setApplyCharacterEncoding(final boolean applyCharacterEncoding) {
 		this.applyCharacterEncoding = applyCharacterEncoding;
 	}
 
@@ -206,7 +206,7 @@ public final class MadvocConfig {
 	/**
 	 * Specifies file upload factory.
 	 */
-	public void setFileUploadFactory(FileUploadFactory fileUploadFactory) {
+	public void setFileUploadFactory(final FileUploadFactory fileUploadFactory) {
 		this.fileUploadFactory = fileUploadFactory;
 	}
 
@@ -234,7 +234,7 @@ public final class MadvocConfig {
 	 * Defines if duplicate paths should be detected and if an exception should
 	 * be thrown on duplication.
 	 */
-	public void setDetectDuplicatePathsEnabled(boolean detectDuplicatePathsEnabled) {
+	public void setDetectDuplicatePathsEnabled(final boolean detectDuplicatePathsEnabled) {
 		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
 	}
 
@@ -249,7 +249,7 @@ public final class MadvocConfig {
 	/**
 	 * Specifies if Madvoc should add response params to prevent browser caching.
 	 */
-	public void setPreventCaching(boolean preventCaching) {
+	public void setPreventCaching(final boolean preventCaching) {
 		this.preventCaching = preventCaching;
 	}
 
@@ -269,7 +269,7 @@ public final class MadvocConfig {
 	 * Defines result path prefix that will be added to all result paths.
 	 * If set to <code>null</code> will be ignored.
 	 */
-	public void setResultPathPrefix(String resultPathPrefix) {
+	public void setResultPathPrefix(final String resultPathPrefix) {
 		this.resultPathPrefix = resultPathPrefix;
 	}
 
@@ -288,7 +288,7 @@ public final class MadvocConfig {
 	/**
 	 * Sets implementation for path macros.
 	 */
-	public void setPathMacroClass(Class<? extends PathMacros> pathMacroClass) {
+	public void setPathMacroClass(final Class<? extends PathMacros> pathMacroClass) {
 		this.pathMacroClass = pathMacroClass;
 	}
 
@@ -300,7 +300,7 @@ public final class MadvocConfig {
 	/**
 	 * Sets path macro separators.
 	 */
-	public void setPathMacroSeparators(String... pathMacroSeparators) {
+	public void setPathMacroSeparators(final String... pathMacroSeparators) {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
@@ -323,7 +323,7 @@ public final class MadvocConfig {
 				"\n}";
 	}
 
-	private static String toString(Class[] classes) {
+	private static String toString(final Class[] classes) {
 		StringBuilder s = new StringBuilder();
 		for (Class clazz : classes) {
 			s.append("\n\t\t").append(clazz.getName());

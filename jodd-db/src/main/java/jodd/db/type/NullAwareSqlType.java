@@ -40,7 +40,7 @@ public abstract class NullAwareSqlType<T> extends SqlType<T> {
 	 * a null reading or it is a real value.
 	 */
 	@Override
-	public <E> E readValue(ResultSet rs, int index, Class<E> destinationType, int dbSqlType) throws SQLException {
+	public <E> E readValue(final ResultSet rs, final int index, final Class<E> destinationType, final int dbSqlType) throws SQLException {
 		T t = get(rs, index, dbSqlType);
 		if ((t == null) || (rs.wasNull())) {
 			return null;
@@ -52,7 +52,7 @@ public abstract class NullAwareSqlType<T> extends SqlType<T> {
 	 * Detects <code>null</code> before storing the value into the database.
 	 */
 	@Override
-	public void storeValue(PreparedStatement st, int index, Object value, int dbSqlType) throws SQLException {
+	public void storeValue(final PreparedStatement st, final int index, final Object value, final int dbSqlType) throws SQLException {
 		if (value == null) {
 			st.setNull(index, dbSqlType);
 			return;

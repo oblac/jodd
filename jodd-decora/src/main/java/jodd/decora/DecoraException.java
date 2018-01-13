@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class DecoraException extends UncheckedException {
 
-	public DecoraException(Throwable t) {
+	public DecoraException(final Throwable t) {
 		super(t);
 	}
 
-	public DecoraException(String message) {
+	public DecoraException(final String message) {
 		super(message);
 	}
 
-	public DecoraException(String message, Throwable t) {
+	public DecoraException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

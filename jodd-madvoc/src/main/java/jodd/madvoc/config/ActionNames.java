@@ -41,7 +41,7 @@ public class ActionNames {
 
 	private final String httpMethod;
 
-	public ActionNames(String[] packageActionNames, String[] classActionNames, String[] methodActionNames, String httpMethod) {
+	public ActionNames(final String[] packageActionNames, final String[] classActionNames, final String[] methodActionNames, final String httpMethod) {
 		this.packageName = packageActionNames[0];
 		this.packageActionPath = packageActionNames[1];
 		this.className = classActionNames[0];

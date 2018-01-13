@@ -35,21 +35,21 @@ import java.util.function.Consumer;
 @RenderWith(ServletPermanentRedirectActionResult.class)
 public class PermanentRedirect extends PathResult {
 
-	public static PermanentRedirect to(String target) {
+	public static PermanentRedirect to(final String target) {
 		return new PermanentRedirect(target);
 	}
 
-	public static <T> PermanentRedirect to(Class<T> target, Consumer<T> consumer) {
+	public static <T> PermanentRedirect to(final Class<T> target, final Consumer<T> consumer) {
 		return new PermanentRedirect(target, consumer);
 	}
 
 	// ---------------------------------------------------------------- ctor
 
-	public <T> PermanentRedirect(Class<T> target, Consumer<T> consumer) {
+	public <T> PermanentRedirect(final Class<T> target, final Consumer<T> consumer) {
 		super(target, consumer);
 	}
 
-	public PermanentRedirect(String path) {
+	public PermanentRedirect(final String path) {
 		super(path);
 	}
 }

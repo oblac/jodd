@@ -89,7 +89,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	/**
 	 * Registers pseudo class.
 	 */
-	public static void registerPseudoClass(Class<? extends PseudoClass> pseudoClassType) {
+	public static void registerPseudoClass(final Class<? extends PseudoClass> pseudoClassType) {
 		PseudoClass pseudoClass;
 		try {
 			pseudoClass = ClassUtil.newInstance(pseudoClassType);
@@ -102,7 +102,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	/**
 	 * Lookups pseudo class for given pseudo class name.
 	 */
-	public static PseudoClass lookupPseudoClass(String pseudoClassName) {
+	public static PseudoClass lookupPseudoClass(final String pseudoClassName) {
 		PseudoClass pseudoClass = PSEUDO_CLASS_MAP.get(pseudoClassName);
 		if (pseudoClass == null) {
 			throw new CSSellyException("Unsupported pseudo class: " + pseudoClassName);
@@ -114,7 +114,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 
 	protected final PseudoClass pseudoClass;
 
-	public PseudoClassSelector(String pseudoClassName) {
+	public PseudoClassSelector(final String pseudoClassName) {
 		super(Type.PSEUDO_CLASS);
 		this.pseudoClass = lookupPseudoClass(pseudoClassName.trim());
 	}
@@ -130,7 +130,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	 * Matches node to this selector.
 	 */
 	@Override
-	public boolean accept(Node node) {
+	public boolean accept(final Node node) {
 		return pseudoClass.match(node);
 	}
 
@@ -138,7 +138,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter, NodeLis
 	 * Accepts node within selected results. Invoked after results are matched.
 	 */
 	@Override
-	public boolean accept(List<Node> currentResults, Node node, int index) {
+	public boolean accept(final List<Node> currentResults, final Node node, final int index) {
 		return pseudoClass.match(currentResults, node, index);
 	}
 

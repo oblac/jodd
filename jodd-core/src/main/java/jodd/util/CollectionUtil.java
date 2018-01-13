@@ -45,10 +45,12 @@ public class CollectionUtil {
 	 */
 	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
 		return new Enumeration<E>() {
+			@Override
 			public boolean hasMoreElements() {
 				return iter.hasNext();
 			}
 
+			@Override
 			public E nextElement() {
 				return iter.next();
 			}
@@ -60,10 +62,12 @@ public class CollectionUtil {
 	 */
 	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
 		return new Iterator<E>() {
+			@Override
 			public boolean hasNext() {
 				return e.hasMoreElements();
 			}
 
+			@Override
 			public E next() {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
@@ -71,6 +75,7 @@ public class CollectionUtil {
 				return e.nextElement();
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -91,14 +96,14 @@ public class CollectionUtil {
 	/**
 	 * Wraps an iterator as a stream.
 	 */
-	public static <T> Stream<T> asStream(Iterator<T> sourceIterator) {
+	public static <T> Stream<T> asStream(final Iterator<T> sourceIterator) {
 		return asStream(sourceIterator, false);
 	}
 
 	/**
 	 * Wraps an iterator as a stream.
 	 */
-	public static <T> Stream<T> asStream(Iterator<T> sourceIterator, boolean parallel) {
+	public static <T> Stream<T> asStream(final Iterator<T> sourceIterator, final boolean parallel) {
 		Iterable<T> iterable = () -> sourceIterator;
 		return StreamSupport.stream(iterable.spliterator(), parallel);
 	}

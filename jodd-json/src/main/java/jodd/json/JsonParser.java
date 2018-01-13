@@ -116,7 +116,7 @@ public class JsonParser extends JsonParserBase {
 	 *     <li>strings can be unquoted, but may not contain escapes</li>
 	 * </ul>
 	 */
-	public JsonParser looseMode(boolean looseMode) {
+	public JsonParser looseMode(final boolean looseMode) {
 		this.looseMode = looseMode;
 		return this;
 	}
@@ -128,7 +128,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Maps a class to JSONs root.
 	 */
-	public JsonParser map(Class target) {
+	public JsonParser map(final Class target) {
 		rootType = target;
 		return this;
 	}
@@ -138,7 +138,7 @@ public class JsonParser extends JsonParserBase {
 	 * to the path to specify component type (if not specified by
 	 * generics).
 	 */
-	public JsonParser map(String path, Class target) {
+	public JsonParser map(final String path, final Class target) {
 		if (path == null) {
 			rootType = target;
 			return this;
@@ -153,7 +153,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Replaces type with mapped type for current path.
 	 */
-	protected Class replaceWithMappedTypeForPath(Class target) {
+	protected Class replaceWithMappedTypeForPath(final Class target) {
 		if (mappings == null) {
 			return target;
 		}
@@ -192,7 +192,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Defines {@link jodd.json.ValueConverter} to use on given path.
 	 */
-	public JsonParser withValueConverter(String path, ValueConverter valueConverter) {
+	public JsonParser withValueConverter(final String path, final ValueConverter valueConverter) {
 		if (convs == null) {
 			convs = new HashMap<>();
 		}
@@ -217,12 +217,12 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Sets local class meta-data name.
 	 */
-	public JsonParser setClassMetadataName(String name) {
+	public JsonParser setClassMetadataName(final String name) {
 		classMetadataName = name;
 		return this;
 	}
 
-	public JsonParser withClassMetadata(boolean useMetadata) {
+	public JsonParser withClassMetadata(final boolean useMetadata) {
 		if (useMetadata) {
 			classMetadataName = DEFAULT_CLASS_METADATA_NAME;
 		}
@@ -239,7 +239,7 @@ public class JsonParser extends JsonParserBase {
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T parse(String input, Class<T> targetType) {
+	public <T> T parse(final String input, final Class<T> targetType) {
 		rootType = targetType;
 		return _parse(input);
 	}
@@ -247,21 +247,21 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Parses input JSON to {@link JsonObject}, special case of {@link #parse(String, Class)}.
 	 */
-	public JsonObject parseAsJsonObject(String input) {
+	public JsonObject parseAsJsonObject(final String input) {
 		return new JsonObject(parse(input));
 	}
 
 	/**
 	 * Parses input JSON to {@link JsonArray}, special case of parsing.
 	 */
-	public JsonArray parseAsJsonArray(String input) {
+	public JsonArray parseAsJsonArray(final String input) {
 		return new JsonArray(parse(input));
 	}
 
 	/**
 	 * Parses input JSON to a list with specified component type.
 	 */
-	public <T> List<T> parseAsList(String string, Class<T> componentType) {
+	public <T> List<T> parseAsList(final String string, final Class<T> componentType) {
 		return new JsonParser()
 			.map(JsonParser.VALUES, componentType)
 			.parse(string);
@@ -271,7 +271,7 @@ public class JsonParser extends JsonParserBase {
 	 * Parses input JSON to a list with specified key and value types.
 	 */
 	public <K, V> Map<K, V> parseAsMap(
-		String string, Class<K> keyType, Class<V> valueType) {
+		final String string, final Class<K> keyType, final Class<V> valueType) {
 
 		return new JsonParser()
 			.map(JsonParser.KEYS, keyType)
@@ -282,7 +282,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Parses input JSON string.
 	 */
-	public <T> T parse(String input) {
+	public <T> T parse(final String input) {
 		return _parse(input);
 	}
 
@@ -290,7 +290,7 @@ public class JsonParser extends JsonParserBase {
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T parse(char[] input, Class<T> targetType) {
+	public <T> T parse(final char[] input, final Class<T> targetType) {
 		rootType = targetType;
 		return _parse(CharArraySequence.of(input));
 	}
@@ -298,12 +298,12 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Parses input JSON char array.
 	 */
-	public <T> T parse(char[] input) {
+	public <T> T parse(final char[] input) {
 		return _parse(CharArraySequence.of(input));
 	}
 
 
-	private <T> T _parse(CharSequence input) {
+	private <T> T _parse(final CharSequence input) {
 		this.input = input;
 		this.total = input.length();
 
@@ -348,7 +348,7 @@ public class JsonParser extends JsonParserBase {
 	 * @param targetType target type to convert, may be <code>null</code>
 	 * @param componentType component type for maps and arrays, may be <code>null</code>
 	 */
-	protected Object parseValue(Class targetType, Class keyType, Class componentType) {
+	protected Object parseValue(final Class targetType, final Class keyType, final Class componentType) {
 		ValueConverter valueConverter;
 
 		char c = input.charAt(ndx);
@@ -722,7 +722,7 @@ public class JsonParser extends JsonParserBase {
 		return Long.valueOf(longNumber);
 	}
 
-	private static boolean isGreaterThenLong(BigInteger bigInteger) {
+	private static boolean isGreaterThenLong(final BigInteger bigInteger) {
 		if (bigInteger.compareTo(MAX_LONG) > 0) {
 			return true;
 		}
@@ -975,7 +975,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Consumes char at current position. If char is different, throws the exception.
 	 */
-	protected void consume(char c) {
+	protected void consume(final char c) {
 		if (input.charAt(ndx) != c) {
 			syntaxError("Invalid char: expected " + c);
 		}
@@ -988,7 +988,7 @@ public class JsonParser extends JsonParserBase {
 	 * If char is different, return <code>0</code>.
 	 * If matched, returns matched char.
 	 */
-	protected char consumeOneOf(char c1, char c2) {
+	protected char consumeOneOf(final char c1, final char c2) {
 		char c = input.charAt(ndx);
 
 		if ((c != c1) && (c != c2)) {
@@ -1026,7 +1026,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Matches char buffer with content on given location.
 	 */
-	protected final boolean match(char[] target) {
+	protected final boolean match(final char[] target) {
 		for (char c : target) {
 			if (input.charAt(ndx) != c) {
 				return false;
@@ -1043,7 +1043,7 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Throws {@link jodd.json.JsonException} indicating a syntax error.
 	 */
-	protected void syntaxError(String message) {
+	protected void syntaxError(final String message) {
 		String left = "...";
 		String right = "...";
 		int offset = 10;

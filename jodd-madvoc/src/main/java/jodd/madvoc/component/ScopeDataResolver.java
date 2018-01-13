@@ -54,7 +54,7 @@ public class ScopeDataResolver {
 	 * Resolve scope data in given type for all scope types.
 	 * Returns <code>null</code> if no scope data exist.
 	 */
-	public ScopeData[] resolveScopeData(Class type) {
+	public ScopeData[] resolveScopeData(final Class type) {
 		final ScopeType[] allScopeTypes = ScopeType.values();
 
 		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
@@ -80,7 +80,7 @@ public class ScopeDataResolver {
 	 * Resolves scope data in given annotations for all scope types.
 	 * Returns <code>null</code> if no scope data exist.
 	 */
-	public ScopeData[] resolveScopeData(String name, Class type, Annotation[] annotations) {
+	public ScopeData[] resolveScopeData(final String name, final Class type, final Annotation[] annotations) {
 		final ScopeType[] allScopeTypes = ScopeType.values();
 
 		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
@@ -105,7 +105,7 @@ public class ScopeDataResolver {
 	/**
 	 * Scans annotation and returns type of Madvoc annotations.
 	 */
-	public Class<? extends Annotation> detectAnnotationType(Annotation[] annotations) {
+	public Class<? extends Annotation> detectAnnotationType(final Annotation[] annotations) {
 		for (Annotation annotation : annotations) {
 			if (annotation instanceof In) {
 				return annotation.annotationType();
@@ -123,7 +123,7 @@ public class ScopeDataResolver {
 	/**
 	 * Inspects all method parameters for scope type.
 	 */
-	protected ScopeData inspectMethodParameterScopeData(String name, Class type, Annotation[] annotations, ScopeType scopeType) {
+	protected ScopeData inspectMethodParameterScopeData(final String name, final Class type, final Annotation[] annotations, final ScopeType scopeType) {
 		In in = null;
 		Out out = null;
 		Scope scope = null;
@@ -171,7 +171,7 @@ public class ScopeDataResolver {
 	/**
 	 * Saves value and property name.
 	 */
-	protected void saveNameTarget(ScopeData.In ii, String value, String propertyName) {
+	protected void saveNameTarget(final ScopeData.In ii, String value, final String propertyName) {
 		value = value.trim();
 		if (value.length() > 0) {
 			ii.name = value;
@@ -186,7 +186,7 @@ public class ScopeDataResolver {
 	/**
 	 * Saves value and property name.
 	 */
-	protected void saveNameTarget(ScopeData.Out oi, String value, String propertyName) {
+	protected void saveNameTarget(final ScopeData.Out oi, String value, final String propertyName) {
 		value = value.trim();
 		if (value.length() > 0) {
 			oi.name = value;
@@ -201,7 +201,7 @@ public class ScopeDataResolver {
 	/**
 	 * Inspects single IN annotation for a property.
 	 */
-	protected ScopeData.In inspectIn(In in, Scope scope, ScopeType matchingScopeType, String propertyName, Class propertyType) {
+	protected ScopeData.In inspectIn(final In in, final Scope scope, final ScopeType matchingScopeType, final String propertyName, final Class propertyType) {
 		if (in == null) {
 			return null;
 		}
@@ -218,7 +218,7 @@ public class ScopeDataResolver {
 	/**
 	 * Inspects single OUT annotation for a property.
 	 */
-	protected ScopeData.Out inspectOut(Out out, Scope scope, ScopeType matchingScopeType, String propertyName, Class propertyType) {
+	protected ScopeData.Out inspectOut(final Out out, final Scope scope, final ScopeType matchingScopeType, final String propertyName, final Class propertyType) {
 		if (out == null) {
 			return null;
 		}
@@ -236,7 +236,7 @@ public class ScopeDataResolver {
 	 * Inspect action for all In/Out annotations.
 	 * Returns <code>null</code> if there are no In and Out data.
 	 */
-	protected ScopeData inspectClassScopeData(Class actionClass, ScopeType scopeType) {
+	protected ScopeData inspectClassScopeData(final Class actionClass, final ScopeType scopeType) {
 		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();

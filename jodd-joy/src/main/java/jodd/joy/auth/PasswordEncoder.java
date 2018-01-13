@@ -40,14 +40,14 @@ public class PasswordEncoder {
 		return saltRounds;
 	}
 
-	public void setSaltRounds(int saltRounds) {
+	public void setSaltRounds(final int saltRounds) {
 		this.saltRounds = saltRounds;
 	}
 
 	/**
 	 * Encodes raw passwords using default salt.
 	 */
-	public String encodePassword(String rawPassword) {
+	public String encodePassword(final String rawPassword) {
 		if (rawPassword == null) {
 			return null;
 		}
@@ -57,14 +57,14 @@ public class PasswordEncoder {
 	/**
 	 * Validates if provided password is equal to encoded password.
 	 */
-	public boolean isPasswordValid(String encodedPassword, String rawPassword) {
+	public boolean isPasswordValid(final String encodedPassword, final String rawPassword) {
 		return BCrypt.checkpw(rawPassword, encodedPassword);
 	}
 
 	/**
 	 * Encodes passwords.
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		PasswordEncoder passwordEncoder = new PasswordEncoder();
 		if (args.length >= 1) {
 			System.out.println(passwordEncoder.encodePassword(args[0]));

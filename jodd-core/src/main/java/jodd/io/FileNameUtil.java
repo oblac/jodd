@@ -120,13 +120,13 @@ public class FileNameUtil {
 	/**
 	 * Checks if the character is a separator.
 	 */
-	private static boolean isSeparator(char ch) {
+	private static boolean isSeparator(final char ch) {
 		return (ch == UNIX_SEPARATOR) || (ch == WINDOWS_SEPARATOR);
 	}
 
 	// ---------------------------------------------------------------- normalization
 
-	public static String normalize(String filename) {
+	public static String normalize(final String filename) {
 		return doNormalize(filename, SYSTEM_SEPARATOR, true);
 	}
 
@@ -170,12 +170,12 @@ public class FileNameUtil {
 	 * @param filename  the filename to normalize, null returns null
 	 * @return the normalized filename, or null if invalid
 	 */
-	public static String normalize(String filename, boolean unixSeparator) {
+	public static String normalize(final String filename, final boolean unixSeparator) {
 		char separator = (unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR);
 		return doNormalize(filename, separator, true);
 	}
 
-	public static String normalizeNoEndSeparator(String filename) {
+	public static String normalizeNoEndSeparator(final String filename) {
 		return doNormalize(filename, SYSTEM_SEPARATOR, false);
 	}
 
@@ -220,7 +220,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to normalize, null returns null
 	 * @return the normalized filename, or null if invalid
 	 */
-	public static String normalizeNoEndSeparator(String filename, boolean unixSeparator) {
+	public static String normalizeNoEndSeparator(final String filename, final boolean unixSeparator) {
 		char separator = (unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR);
 		return doNormalize(filename, separator, false);
 	}
@@ -233,7 +233,7 @@ public class FileNameUtil {
 	 * @param keepSeparator <code>true</code> to keep the final separator
 	 * @return normalized filename
 	 */
-	private static String doNormalize(String filename, char separator, boolean keepSeparator) {
+	private static String doNormalize(final String filename, final char separator, final boolean keepSeparator) {
 		if (filename == null) {
 			return null;
 		}
@@ -367,14 +367,14 @@ public class FileNameUtil {
 	 * @param fullFilenameToAdd  the filename (or path) to attach to the base
 	 * @return the concatenated path, or null if invalid
 	 */
-	public static String concat(String basePath, String fullFilenameToAdd) {
+	public static String concat(final String basePath, final String fullFilenameToAdd) {
 		return doConcat(basePath, fullFilenameToAdd, SYSTEM_SEPARATOR);
 	}
-	public static String concat(String basePath, String fullFilenameToAdd, boolean unixSeparator) {
+	public static String concat(final String basePath, final String fullFilenameToAdd, final boolean unixSeparator) {
 		char separator = (unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR);
 		return doConcat(basePath, fullFilenameToAdd, separator);
 	}
-	public static String doConcat(String basePath, String fullFilenameToAdd, char separator) {
+	public static String doConcat(final String basePath, final String fullFilenameToAdd, final char separator) {
 		int prefix = getPrefixLength(fullFilenameToAdd);
 		if (prefix < 0) {
 			return null;
@@ -405,7 +405,7 @@ public class FileNameUtil {
 	 * @param path  the path to be changed, null ignored
 	 * @return the updated path
 	 */
-	public static String separatorsToUnix(String path) {
+	public static String separatorsToUnix(final String path) {
 		if (path == null || path.indexOf(WINDOWS_SEPARATOR) == -1) {
 			return path;
 		}
@@ -418,7 +418,7 @@ public class FileNameUtil {
 	 * @param path  the path to be changed, null ignored
 	 * @return the updated path
 	 */
-	public static String separatorsToWindows(String path) {
+	public static String separatorsToWindows(final String path) {
 		if (path == null || path.indexOf(UNIX_SEPARATOR) == -1) {
 			return path;
 		}
@@ -431,7 +431,7 @@ public class FileNameUtil {
 	 * @param path  the path to be changed, null ignored
 	 * @return the updated path
 	 */
-	public static String separatorsToSystem(String path) {
+	public static String separatorsToSystem(final String path) {
 		if (path == null) {
 			return null;
 		}
@@ -474,7 +474,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to find the prefix in, null returns -1
 	 * @return the length of the prefix, -1 if invalid or null
 	 */
-	public static int getPrefixLength(String filename) {
+	public static int getPrefixLength(final String filename) {
 		if (filename == null) {
 			return -1;
 		}
@@ -539,7 +539,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to find the last path separator in, null returns -1
 	 * @return the index of the last separator character, or -1 if there is no such character
 	 */
-	public static int indexOfLastSeparator(String filename) {
+	public static int indexOfLastSeparator(final String filename) {
 		if (filename == null) {
 			return -1;
 		}
@@ -561,7 +561,7 @@ public class FileNameUtil {
 	 * @return the index of the last separator character, or -1 if there
 	 * is no such character
 	 */
-	public static int indexOfExtension(String filename) {
+	public static int indexOfExtension(final String filename) {
 		if (filename == null) {
 			return -1;
 		}
@@ -573,7 +573,7 @@ public class FileNameUtil {
 	/**
 	 * Returns <code>true</code> if file has extension.
 	 */
-	public static boolean hasExtension(String filename) {
+	public static boolean hasExtension(final String filename) {
 		return indexOfExtension(filename) != -1;
 	}
 
@@ -608,7 +608,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the prefix of the file, null if invalid
 	 */
-	public static String getPrefix(String filename) {
+	public static String getPrefix(final String filename) {
 		if (filename == null) {
 			return null;
 		}
@@ -644,7 +644,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the path of the file, an empty string if none exists, null if invalid
 	 */
-	public static String getPath(String filename) {
+	public static String getPath(final String filename) {
 		return doGetPath(filename, 1);
 	}
 
@@ -671,7 +671,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the path of the file, an empty string if none exists, null if invalid
 	 */
-	public static String getPathNoEndSeparator(String filename) {
+	public static String getPathNoEndSeparator(final String filename) {
 		return doGetPath(filename, 0);
 	}
 
@@ -682,7 +682,7 @@ public class FileNameUtil {
 	 * @param separatorAdd  0 to omit the end separator, 1 to return it
 	 * @return the path
 	 */
-	private static String doGetPath(String filename, int separatorAdd) {
+	private static String doGetPath(final String filename, final int separatorAdd) {
 		if (filename == null) {
 			return null;
 		}
@@ -723,7 +723,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the path of the file, an empty string if none exists, null if invalid
 	 */
-	public static String getFullPath(String filename) {
+	public static String getFullPath(final String filename) {
 		return doGetFullPath(filename, true);
 	}
 
@@ -753,7 +753,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the path of the file, an empty string if none exists, null if invalid
 	 */
-	public static String getFullPathNoEndSeparator(String filename) {
+	public static String getFullPathNoEndSeparator(final String filename) {
 		return doGetFullPath(filename, false);
 	}
 
@@ -764,7 +764,7 @@ public class FileNameUtil {
 	 * @param includeSeparator  true to include the end separator
 	 * @return the path
 	 */
-	private static String doGetFullPath(String filename, boolean includeSeparator) {
+	private static String doGetFullPath(final String filename, final boolean includeSeparator) {
 		if (filename == null) {
 			return null;
 		}
@@ -807,7 +807,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the name of the file without the path, or an empty string if none exists
 	 */
-	public static String getName(String filename) {
+	public static String getName(final String filename) {
 		if (filename == null) {
 			return null;
 		}
@@ -832,7 +832,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the name of the file without the path, or an empty string if none exists
 	 */
-	public static String getBaseName(String filename) {
+	public static String getBaseName(final String filename) {
 		return removeExtension(getName(filename));
 	}
 
@@ -853,7 +853,7 @@ public class FileNameUtil {
 	 * @param filename the filename to retrieve the extension of.
 	 * @return the extension of the file or an empty string if none exists.
 	 */
-	public static String getExtension(String filename) {
+	public static String getExtension(final String filename) {
 		if (filename == null) {
 			return null;
 		}
@@ -884,7 +884,7 @@ public class FileNameUtil {
 	 * @param filename  the filename to query, null returns null
 	 * @return the filename minus the extension
 	 */
-	public static String removeExtension(String filename) {
+	public static String removeExtension(final String filename) {
 		if (filename == null) {
 			return null;
 		}
@@ -901,14 +901,14 @@ public class FileNameUtil {
 	/**
 	 * Checks whether two filenames are equal exactly.
 	 */
-	public static boolean equals(String filename1, String filename2) {
+	public static boolean equals(final String filename1, final String filename2) {
 		return equals(filename1, filename2, false);
 	}
 
 	/**
 	 * Checks whether two filenames are equal using the case rules of the system.
 	 */
-	public static boolean equalsOnSystem(String filename1, String filename2) {
+	public static boolean equalsOnSystem(final String filename1, final String filename2) {
 		return equals(filename1, filename2, true);
 	}
 
@@ -921,7 +921,7 @@ public class FileNameUtil {
 	 * @param system  whether to use the system (windows or unix)
 	 * @return true if the filenames are equal, null equals null
 	 */
-	private static boolean equals(String filename1, String filename2, boolean system) {
+	private static boolean equals(final String filename1, final String filename2, final boolean system) {
 		//noinspection StringEquality
 		if (filename1 == filename2) {
 			return true;
@@ -942,7 +942,7 @@ public class FileNameUtil {
 	 * Splits filename into a array of four Strings containing prefix, path, basename and extension.
 	 * Path will contain ending separator.
 	 */
-	public static String[] split(String filename) {
+	public static String[] split(final String filename) {
 		String prefix = getPrefix(filename);
 		if (prefix == null) {
 			prefix = StringPool.EMPTY;
@@ -981,7 +981,7 @@ public class FileNameUtil {
 	/**
 	 * Resolve <code>~</code> in the path.
 	 */
-	public static String resolveHome(String path) {
+	public static String resolveHome(final String path) {
 		if (path.length() == 1) {
 			if (path.charAt(0) == '~') {
 				return SystemUtil.userHome();
@@ -999,7 +999,7 @@ public class FileNameUtil {
 	/**
 	 * Calculates relative path of target path on base path.
 	 */
-	public static String relativePath(String targetPath, String basePath) {
+	public static String relativePath(final String targetPath, final String basePath) {
 		return new File(basePath).toPath().relativize(new File(targetPath).toPath()).toString();
 	}
 

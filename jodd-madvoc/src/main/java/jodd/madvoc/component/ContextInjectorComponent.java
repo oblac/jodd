@@ -53,7 +53,7 @@ public class ContextInjectorComponent {
 	/**
 	 * Inject context into target.
 	 */
-	public void injectContext(Target target) {
+	public void injectContext(final Target target) {
 		Class targetType = target.resolveType();
 
 		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(targetType);

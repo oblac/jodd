@@ -41,7 +41,7 @@ import jodd.introspector.Setter;
  */
 class BeanProperty {
 
-	BeanProperty(BeanUtilBean beanUtilBean, Object bean, String propertyName) {
+	BeanProperty(final BeanUtilBean beanUtilBean, final Object bean, final String propertyName) {
 		this.introspector = beanUtilBean.getIntrospector();
 		setName(propertyName);
 		setBean(bean);
@@ -64,7 +64,7 @@ class BeanProperty {
 	/**
 	 * Sets current property name.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 		this.updateProperty = true;
 	}
@@ -72,7 +72,7 @@ class BeanProperty {
 	/**
 	 * Sets new bean instance.
 	 */
-	public void setBean(Object bean) {
+	public void setBean(final Object bean) {
 		this.bean = bean;
 		this.cd = (bean == null ? null : introspector.lookup(bean.getClass()));
 		this.first = false;
@@ -105,7 +105,7 @@ class BeanProperty {
 	/**
 	 * Returns getter.
 	 */
-	public Getter getGetter(boolean declared) {
+	public Getter getGetter(final boolean declared) {
 		loadPropertyDescriptor();
 		return propertyDescriptor != null ? propertyDescriptor.getGetter(declared) : null;
 	}
@@ -113,7 +113,7 @@ class BeanProperty {
 	/**
 	 * Returns setter.
 	 */
-	public Setter getSetter(boolean declared) {
+	public Setter getSetter(final boolean declared) {
 		loadPropertyDescriptor();
 		return propertyDescriptor != null ? propertyDescriptor.getSetter(declared) : null;
 	}

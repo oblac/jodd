@@ -28,8 +28,8 @@ package jodd.db.type;
 import jodd.datetime.JDateTime;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
@@ -39,7 +39,7 @@ import java.sql.Types;
 public class JDateTimeSqlType extends SqlType<JDateTime> {
 
 	@Override
-	public void set(PreparedStatement st, int index, JDateTime value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final JDateTime value, final int dbSqlType) throws SQLException {
 		if (value == null) {
 			st.setNull(index, dbSqlType);
 			return;
@@ -52,7 +52,7 @@ public class JDateTimeSqlType extends SqlType<JDateTime> {
 	}
 
 	@Override
-	public JDateTime get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public JDateTime get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		if (dbSqlType == Types.TIMESTAMP) {
 			Timestamp timestamp = rs.getTimestamp(index);
 			if (timestamp == null) {

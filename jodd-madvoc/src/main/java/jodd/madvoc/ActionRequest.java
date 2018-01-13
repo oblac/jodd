@@ -72,7 +72,7 @@ public class ActionRequest {
 	/**
 	 * Specifies new servlet request, in case of wrapping it.
 	 */
-	public void bind(HttpServletRequest request) {
+	public void bind(final HttpServletRequest request) {
 		this.servletRequest = request;
 	}
 
@@ -86,7 +86,7 @@ public class ActionRequest {
 	/**
 	 * Specifies new servlet response, in case of wrapping it.
 	 */
-	public void bind(HttpServletResponse response) {
+	public void bind(final HttpServletResponse response) {
 		this.servletResponse = response;
 	}
 
@@ -121,7 +121,7 @@ public class ActionRequest {
 	/**
 	 * Specifies the next action path, that will be chained to current action request.
 	 */
-	public void nextActionPath(String nextActionPath) {
+	public void nextActionPath(final String nextActionPath) {
 		this.nextActionPath = nextActionPath;
 	}
 
@@ -142,7 +142,7 @@ public class ActionRequest {
 	/**
 	 * Sets action result object.
 	 */
-	public void bindActionResult(Object actionResult) {
+	public void bindActionResult(final Object actionResult) {
 		this.actionResult = actionResult;
 	}
 
@@ -160,13 +160,13 @@ public class ActionRequest {
 	 * Creates new action request and initializes it.
 	 */
 	public ActionRequest(
-			MadvocController madvocController,
-			String actionPath,
-			String[] actionPathChunks,
-			ActionRuntime actionRuntime,
-			Object action,
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) {
+		final MadvocController madvocController,
+		final String actionPath,
+		final String[] actionPathChunks,
+		final ActionRuntime actionRuntime,
+		final Object action,
+		final HttpServletRequest servletRequest,
+		final HttpServletResponse servletResponse) {
 
 		this.madvocController = madvocController;
 		this.actionPath = actionPath;

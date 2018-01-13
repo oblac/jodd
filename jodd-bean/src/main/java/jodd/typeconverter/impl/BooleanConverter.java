@@ -43,7 +43,7 @@ import static jodd.util.StringPool.*;
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 
-	public Boolean convert(Object value) {
+	public Boolean convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

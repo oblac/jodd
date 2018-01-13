@@ -52,14 +52,14 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	protected final String targetFieldName;
 
 	public ProxettaWrapperClassBuilder(
-			Class targetClassOrInterface,
-			Class targetInterface,
-			String targetFieldName,
-			ClassVisitor dest,
-			ProxyAspect[] aspects,
-			String suffix,
-			String reqProxyClassName,
-			TargetClassInfoReader targetClassInfoReader) {
+		final Class targetClassOrInterface,
+		final Class targetInterface,
+		final String targetFieldName,
+		final ClassVisitor dest,
+		final ProxyAspect[] aspects,
+		final String suffix,
+		final String reqProxyClassName,
+		final TargetClassInfoReader targetClassInfoReader) {
 
 		super(dest, aspects, suffix, reqProxyClassName, targetClassInfoReader);
 		this.targetClassOrInterface = targetClassOrInterface;
@@ -71,7 +71,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+	public void visit(final int version, int access, final String name, final String signature, final String superName, String[] interfaces) {
 
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
@@ -138,7 +138,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 		MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
 		if (msign == null) {
 			return null;
@@ -157,7 +157,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	}
 
 	@Override
-	protected ProxettaMethodBuilder applyProxy(MethodSignatureVisitor msign) {
+	protected ProxettaMethodBuilder applyProxy(final MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = matchMethodPointcuts(msign);
 
 		if (aspectList == null) {
@@ -174,7 +174,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	/**
 	 * Creates simple method wrapper without proxy.
 	 */
-	protected void createSimpleMethodWrapper(MethodSignatureVisitor msign) {
+	protected void createSimpleMethodWrapper(final MethodSignatureVisitor msign) {
 
 		int access = msign.getAccessFlags();
 

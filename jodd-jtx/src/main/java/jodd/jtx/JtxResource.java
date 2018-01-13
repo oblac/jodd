@@ -36,7 +36,7 @@ final class JtxResource<E> {
 	final JtxResourceManager<E> resourceManager;
 	private final E resource;
 
-	JtxResource(JtxTransaction transaction, JtxResourceManager<E> resourceManager, E resource) {
+	JtxResource(final JtxTransaction transaction, final JtxResourceManager<E> resourceManager, final E resource) {
 		this.transaction = transaction;
 		this.resourceManager = resourceManager;
 		this.resource = resource;
@@ -45,7 +45,7 @@ final class JtxResource<E> {
 	/**
 	 * Returns <code>true</code> if resource is of provided resource type.
 	 */
-	public boolean isSameTypeAsResource(Class type) {
+	public boolean isSameTypeAsResource(final Class type) {
 		return ClassUtil.isTypeOf(type, resource.getClass());
 	}
 

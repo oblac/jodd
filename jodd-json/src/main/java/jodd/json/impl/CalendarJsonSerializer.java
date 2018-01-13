@@ -27,7 +27,6 @@ package jodd.json.impl;
 
 import jodd.json.JsonContext;
 import jodd.json.TypeJsonSerializer;
-import jodd.json.meta.JSON;
 
 import java.util.Calendar;
 
@@ -37,7 +36,7 @@ import java.util.Calendar;
 public class CalendarJsonSerializer implements TypeJsonSerializer<Calendar> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, Calendar calendar) {
+	public boolean serialize(final JsonContext jsonContext, final Calendar calendar) {
 		jsonContext.write(Long.toString(calendar.getTimeInMillis()));
 		return true;
 	}

@@ -43,7 +43,7 @@ public class JoddCoreDefaults {
 	/**
 	 * Sets default file prefix.
 	 */
-	public void setTempFilePrefix(String tempFilePrefix) {
+	public void setTempFilePrefix(final String tempFilePrefix) {
 		this.tempFilePrefix = tempFilePrefix;
 	}
 
@@ -57,7 +57,7 @@ public class JoddCoreDefaults {
 	/**
 	 * Sets new encoding that is used across the Jodd library.
 	 */
-	public void setEncoding(String encoding) {
+	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
 	}
 
@@ -71,7 +71,7 @@ public class JoddCoreDefaults {
 	/**
 	 * Sets new buffer size for various IO operations.
 	 */
-	public void setIoBufferSize(int ioBufferSize) {
+	public void setIoBufferSize(final int ioBufferSize) {
 		this.ioBufferSize = ioBufferSize;
 	}
 

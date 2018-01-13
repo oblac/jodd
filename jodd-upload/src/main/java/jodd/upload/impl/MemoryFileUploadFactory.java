@@ -43,7 +43,7 @@ public class MemoryFileUploadFactory implements FileUploadFactory {
 	/**
 	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
 	 */
-	public MemoryFileUploadFactory setMaxFileSize(int maxFileSize) {
+	public MemoryFileUploadFactory setMaxFileSize(final int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 		return this;
 	}
@@ -51,7 +51,7 @@ public class MemoryFileUploadFactory implements FileUploadFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public FileUpload create(MultipartRequestInputStream input) {
+	public FileUpload create(final MultipartRequestInputStream input) {
 		return new MemoryFileUpload(input, maxFileSize);
 	}
 

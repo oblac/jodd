@@ -47,7 +47,7 @@ public class ParamManager {
 	/**
 	 * Adds a parameter.
 	 */
-	public void put(String name, Object value) {
+	public void put(final String name, final Object value) {
 		params.put(name, value);
 	}
 
@@ -55,7 +55,7 @@ public class ParamManager {
 	 * Returns parameter for given name or <code>null</code>
 	 * if not found.
 	 */
-	public Object get(String name) {
+	public Object get(final String name) {
 		return params.get(name);
 	}
 
@@ -63,7 +63,7 @@ public class ParamManager {
 	 * Returns an array of param keys that belongs to provided bean.
 	 * Optionally resolves the value of returned parameters.
 	 */
-	public String[] resolve(String beanName, boolean resolveReferenceParams) {
+	public String[] resolve(String beanName, final boolean resolveReferenceParams) {
 		beanName = beanName + '.';
 
 		List<String> list = new ArrayList<>();

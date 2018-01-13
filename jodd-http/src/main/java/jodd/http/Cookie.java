@@ -59,7 +59,7 @@ public class Cookie {
 	 * <p>
 	 * The value can be anything the server chooses to send.
 	 */
-	public Cookie(String name, String value) {
+	public Cookie(final String name, final String value) {
 		setName(name);
 		setValue(value);
 	}
@@ -125,7 +125,7 @@ public class Cookie {
 	/**
 	 * Sets the cookie name and checks for validity.
 	 */
-	private void setName(String name) {
+	private void setName(final String name) {
 		if (name.contains(";") || name.contains(",") || name.startsWith("$")) {
 			throw new IllegalArgumentException("Invalid cookie name:" + name);
 		}
@@ -152,7 +152,7 @@ public class Cookie {
 	 * The comment is useful if the browser presents the cookie
 	 * to the user.
 	 */
-	public Cookie setComment(String purpose) {
+	public Cookie setComment(final String purpose) {
 		comment = purpose;
 		return this;
 	}
@@ -177,7 +177,7 @@ public class Cookie {
 	 * to the server that sent them.
 	 */
 
-	public Cookie setDomain(String pattern) {
+	public Cookie setDomain(final String pattern) {
 		domain = pattern.toLowerCase();    // IE allegedly needs this
 		return this;
 	}
@@ -206,7 +206,7 @@ public class Cookie {
 	 * to be deleted.
 	 */
 
-	public Cookie setMaxAge(int expiry) {
+	public Cookie setMaxAge(final int expiry) {
 		maxAge = Integer.valueOf(expiry);
 		return this;
 	}
@@ -233,7 +233,7 @@ public class Cookie {
 	 * <p>Consult RFC 2109 (available on the Internet) for more
 	 * information on setting path names for cookies.
 	 */
-	public Cookie setPath(String uri) {
+	public Cookie setPath(final String uri) {
 		path = uri;
 		return this;
 	}
@@ -251,7 +251,7 @@ public class Cookie {
 	 * Indicates to the browser whether the cookie should only be sent
 	 * using a secure protocol, such as HTTPS or SSL.
 	 */
-	public Cookie setSecure(boolean flag) {
+	public Cookie setSecure(final boolean flag) {
 		secure = flag;
 		return this;
 	}
@@ -275,7 +275,7 @@ public class Cookie {
 	 * Assigns a new value to a cookie after the cookie is created.
 	 * If you use a binary value, you may want to use BASE64 encoding.
 	 */
-	public Cookie setValue(String newValue) {
+	public Cookie setValue(final String newValue) {
 		value = newValue;
 		return this;
 	}
@@ -296,7 +296,7 @@ public class Cookie {
 	 * with. Version 0 complies with the original Netscape cookie
 	 * specification. Version 1 complies with RFC 2109.
 	 */
-	public Cookie setVersion(int version) {
+	public Cookie setVersion(final int version) {
 		this.version = Integer.valueOf(version);
 		return this;
 	}
@@ -305,7 +305,7 @@ public class Cookie {
 		return httpOnly;
 	}
 
-	public Cookie setHttpOnly(boolean httpOnly) {
+	public Cookie setHttpOnly(final boolean httpOnly) {
 		this.httpOnly = httpOnly;
 		return this;
 	}
@@ -314,11 +314,12 @@ public class Cookie {
 		return expires;
 	}
 
-	public Cookie setExpires(String expires) {
+	public Cookie setExpires(final String expires) {
 		this.expires = expires;
 		return this;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder cookie = new StringBuilder();
 

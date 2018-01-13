@@ -36,14 +36,14 @@ public class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> impl
 	public ActionFilterStack() {
 	}
 
-	public ActionFilterStack(Class<? extends ActionFilter>... filterClasses) {
+	public ActionFilterStack(final Class<? extends ActionFilter>... filterClasses) {
 		super(filterClasses);
 	}
 
 	/**
 	 * Sets filter classes.
 	 */
-	public void setFilters(Class<? extends ActionFilter>... filters) {
+	public void setFilters(final Class<? extends ActionFilter>... filters) {
 		this.wrappers = filters;
 	}
 
@@ -59,7 +59,7 @@ public class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> impl
 	 * Filter is not used since this is just an filter container.
 	 */
 	@Override
-	public final Object filter(ActionRequest actionRequest) throws Exception {
+	public final Object filter(final ActionRequest actionRequest) throws Exception {
 		return apply(actionRequest);
 	}
 

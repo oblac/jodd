@@ -35,7 +35,7 @@ public abstract class Aspect implements InvocationHandler {
 
 	private Object target;
 
-	public Aspect(Object target) {
+	public Aspect(final Object target) {
 		this.target = target;
 	}
 
@@ -64,7 +64,7 @@ public abstract class Aspect implements InvocationHandler {
 	public abstract boolean afterException(Object target, Method method, Object[] args, Throwable throwable);
 
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 		Object result = null;
 
 		if (before(target, method, args)) {

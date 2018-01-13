@@ -41,7 +41,7 @@ public class SingletonScope implements Scope {
 	protected Map<String, BeanData> instances = new HashMap<>();
 
 	@Override
-	public Object lookup(String name) {
+	public Object lookup(final String name) {
 		BeanData beanData = instances.get(name);
 		if (beanData == null) {
 			return null;
@@ -50,13 +50,13 @@ public class SingletonScope implements Scope {
 	}
 
 	@Override
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		BeanData beanData = new BeanData(beanDefinition, bean);
 		instances.put(beanDefinition.name(), beanData);
 	}
 
 	@Override
-	public void remove(String name) {
+	public void remove(final String name) {
 		instances.remove(name);
 	}
 
@@ -64,7 +64,7 @@ public class SingletonScope implements Scope {
 	 * Allows only singleton scoped beans to be injected into the target singleton bean.
 	 */
 	@Override
-	public boolean accept(Scope referenceScope) {
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
 		if (refScopeType == ProtoScope.class) {

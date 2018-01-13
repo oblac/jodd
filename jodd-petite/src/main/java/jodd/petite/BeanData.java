@@ -34,7 +34,7 @@ public class BeanData {
 	private final BeanDefinition beanDefinition;
 	private final Object bean;
 
-	public BeanData(BeanDefinition beanDefinition, Object bean) {
+	public BeanData(final BeanDefinition beanDefinition, final Object bean) {
 		this.beanDefinition = beanDefinition;
 		this.bean = bean;
 	}

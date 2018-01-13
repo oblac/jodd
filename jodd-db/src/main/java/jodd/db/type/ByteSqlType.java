@@ -35,7 +35,7 @@ public class ByteSqlType extends NullAwareSqlType<Byte> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Byte get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Byte get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Byte.valueOf(rs.getByte(index));
 	}
 
@@ -43,7 +43,7 @@ public class ByteSqlType extends NullAwareSqlType<Byte> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Byte value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Byte value, final int dbSqlType) throws SQLException {
 		st.setByte(index, value.byteValue());
 	}
 }

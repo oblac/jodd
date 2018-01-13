@@ -46,7 +46,7 @@ public class Fields {
 	/**
 	 * Creates new fields collection.
 	 */
-	public Fields(ClassDescriptor classDescriptor) {
+	public Fields(final ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
 		this.fieldsMap = inspectFields();
 	}
@@ -78,7 +78,7 @@ public class Fields {
 	/**
 	 * Creates new {@code FieldDescriptor}.
 	 */
-	protected FieldDescriptor createFieldDescriptor(Field field) {
+	protected FieldDescriptor createFieldDescriptor(final Field field) {
 		return new FieldDescriptor(classDescriptor, field);
 	}
 
@@ -89,7 +89,7 @@ public class Fields {
 	 * Returns {@link FieldDescriptor field descriptor} for given field name
 	 * or <code>null</code> if field does not exist.
 	 */
-	public FieldDescriptor getFieldDescriptor(String name) {
+	public FieldDescriptor getFieldDescriptor(final String name) {
 		return fieldsMap.get(name);
 	}
 
@@ -108,7 +108,7 @@ public class Fields {
 			}
 
 			Arrays.sort(allFields, new Comparator<FieldDescriptor>() {
-				public int compare(FieldDescriptor fd1, FieldDescriptor fd2) {
+				public int compare(final FieldDescriptor fd1, final FieldDescriptor fd2) {
 					return fd1.getField().getName().compareTo(fd2.getField().getName());
 				}
 			});

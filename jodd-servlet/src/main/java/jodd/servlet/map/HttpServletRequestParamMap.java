@@ -45,12 +45,12 @@ public class HttpServletRequestParamMap extends StringKeyedMapAdapter {
 	/**
 	 * Create a new map wrapping the attributes of given request.
 	 */
-	public HttpServletRequestParamMap(HttpServletRequest request) {
+	public HttpServletRequestParamMap(final HttpServletRequest request) {
 		this.request = request;
 	}
 
 	@Override
-	protected Object getAttribute(String key) {
+	protected Object getAttribute(final String key) {
 		String[] values = request.getParameterValues(key);
 		if (values == null) {
 			return null;
@@ -62,12 +62,12 @@ public class HttpServletRequestParamMap extends StringKeyedMapAdapter {
 	}
 
 	@Override
-	protected void setAttribute(String key, Object value) {
+	protected void setAttribute(final String key, final Object value) {
 		throw new UnsupportedOperationException("Read-only map");
 	}
 
 	@Override
-	protected void removeAttribute(String key) {
+	protected void removeAttribute(final String key) {
 		throw new UnsupportedOperationException("Read-only map");
 	}
 

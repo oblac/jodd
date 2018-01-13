@@ -73,7 +73,7 @@ public class WebApp {
 	 * May return <code>null</code> indicating <code>WebApp</code>
 	 * is not yet initialized.
 	 */
-	public static WebApp get(ServletContext servletContext) {
+	public static WebApp get(final ServletContext servletContext) {
 		return (WebApp) servletContext.getAttribute(WEBAPP_ATTR);
 	}
 
@@ -90,7 +90,7 @@ public class WebApp {
 	/**
 	 * Defines params to load.
 	 */
-	public WebApp withParams(Props props) {
+	public WebApp withParams(final Props props) {
 		propsList.add(props);
 		return this;
 	}
@@ -98,7 +98,7 @@ public class WebApp {
 	/**
 	 * Defines servlet context. Must be called in the web environment.
 	 */
-	public WebApp bindServletContext(ServletContext servletContext) {
+	public WebApp bindServletContext(final ServletContext servletContext) {
 		this.servletContext = servletContext;
 		this.servletContext.setAttribute(WEBAPP_ATTR, this);
 		return this;
@@ -107,13 +107,13 @@ public class WebApp {
 	/**
 	 * Registers additional Madvoc components after the registration of default components.
 	 */
-	public WebApp registerComponent(Class<?> madvocComponent) {
+	public WebApp registerComponent(final Class<?> madvocComponent) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponents.add(ClassConsumer.of(madvocComponent));
 		return this;
 	}
 
-	public <T> WebApp registerComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
+	public <T> WebApp registerComponent(final Class<T> madvocComponent, final Consumer<T> componentConsumer) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponents.add(ClassConsumer.of(madvocComponent, componentConsumer));
 		return this;
@@ -123,7 +123,7 @@ public class WebApp {
 	 * Registers Madvoc component <i>instance</i>. Use with caution, as injection of
 	 * components registered after this will fail.
 	 */
-	public WebApp registerComponent(Object madvocComponent) {
+	public WebApp registerComponent(final Object madvocComponent) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponentInstances.add(madvocComponent);
 		return this;
@@ -132,7 +132,7 @@ public class WebApp {
 	/**
 	 * Configures the {@link MadvocConfig}.
 	 */
-	public WebApp configure(Consumer<MadvocConfig> madvocConfigConsumer) {
+	public WebApp configure(final Consumer<MadvocConfig> madvocConfigConsumer) {
 		madvocConfigConsumers.add(madvocConfigConsumer);
 		return this;
 	}
@@ -158,7 +158,7 @@ public class WebApp {
 	 * Configures a component. While the signature is the same as for {@link #registerComponent(Class, Consumer)}
 	 * this method does not register component, just operates on an already registered one.
 	 */
-	public <T> WebApp withRegisteredComponent(Class<T> madvocComponent, Consumer<T> componentConsumer) {
+	public <T> WebApp withRegisteredComponent(final Class<T> madvocComponent, final Consumer<T> componentConsumer) {
 		componentConfigs.add(madvocContainer -> {
 			T component = madvocContainer.lookupComponent(madvocComponent);
 			if (component != null) {
@@ -172,7 +172,7 @@ public class WebApp {
 	/**
 	 * Defines a route using {@link MadvocRouter}.
 	 */
-	public WebApp router(Consumer<MadvocRouter> madvocAppConsumer) {
+	public WebApp router(final Consumer<MadvocRouter> madvocAppConsumer) {
 		madvocRouterConsumers.add(madvocAppConsumer);
 		return this;
 	}
@@ -182,7 +182,7 @@ public class WebApp {
 	/**
 	 * Initializes and starts web application.
 	 */
-	public WebApp start(Consumer<MadvocRouter> madvocRouterConsumer) {
+	public WebApp start(final Consumer<MadvocRouter> madvocRouterConsumer) {
 		madvocRouterConsumers.add(madvocRouterConsumer);
 		return start();
 	}
@@ -250,7 +250,7 @@ public class WebApp {
 	 * Hook for manual Madvoc configuration. No component is registered yet. You can use
 	 * only {@link MadvocConfig} and {@link MadvocContainer}.
 	 */
-	protected void configureMadvoc(MadvocConfig madvocConfig) {
+	protected void configureMadvoc(final MadvocConfig madvocConfig) {
 	}
 
 	/**

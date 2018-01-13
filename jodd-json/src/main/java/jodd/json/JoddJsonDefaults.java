@@ -52,7 +52,7 @@ public class JoddJsonDefaults {
 	/**
 	 * Defines new custom JSON annotation for marking the JSON properties that are going to be serialized.
 	 */
-	public void setJsonAnnotation(Class<? extends Annotation> jsonAnnotation) {
+	public void setJsonAnnotation(final Class<? extends Annotation> jsonAnnotation) {
 		this.jsonAnnotation = jsonAnnotation;
 	}
 
@@ -70,7 +70,7 @@ public class JoddJsonDefaults {
 	 * {@link jodd.json.JsonParser} will also consider this flag to build
 	 * correct object type. If <code>null</code>, class information is not used.
 	 */
-	public void setClassMetadataName(String classMetadataName) {
+	public void setClassMetadataName(final String classMetadataName) {
 		this.classMetadataName = classMetadataName;
 	}
 
@@ -83,7 +83,7 @@ public class JoddJsonDefaults {
 	 * If set to <code>true</code>, objects will be serialized
 	 * deep, so all collections and arrays will get serialized.
 	 */
-	public void setDeepSerialization(boolean deepSerialization) {
+	public void setDeepSerialization(final boolean deepSerialization) {
 		this.deepSerialization = deepSerialization;
 	}
 
@@ -98,7 +98,7 @@ public class JoddJsonDefaults {
 	 * Defines if parser will use extended paths information
 	 * and path matching.
 	 */
-	public void setUseAltPathsByParser(boolean useAltPathsByParser) {
+	public void setUseAltPathsByParser(final boolean useAltPathsByParser) {
 		this.useAltPathsByParser = useAltPathsByParser;
 	}
 
@@ -112,7 +112,7 @@ public class JoddJsonDefaults {
 	/**
 	 * Defines list of excluded types for serialization.
 	 */
-	public void setExcludedTypes(Class... excludedTypes) {
+	public void setExcludedTypes(final Class... excludedTypes) {
 		this.excludedTypes = excludedTypes;
 	}
 
@@ -127,7 +127,7 @@ public class JoddJsonDefaults {
 	 * Defines a list of excluded types names for serialization. Type name
 	 * can contain wildcards (<code>*</code> and <code>?</code>).
 	 */
-	public void setExcludedTypeNames(String... excludedTypeNames) {
+	public void setExcludedTypeNames(final String... excludedTypeNames) {
 		this.excludedTypeNames = excludedTypeNames;
 	}
 
@@ -141,7 +141,7 @@ public class JoddJsonDefaults {
 	/**
 	 * When set searches for first annotated class or interface and use it's data.
 	 */
-	public void setSerializationSubclassAware(boolean serializationSubclassAware) {
+	public void setSerializationSubclassAware(final boolean serializationSubclassAware) {
 		this.serializationSubclassAware = serializationSubclassAware;
 	}
 
@@ -161,7 +161,7 @@ public class JoddJsonDefaults {
 	 * This flag controls the behavior of strict encoding. By default, the
 	 * strict encoding is set to {@code false}.
 	 */
-	public void setStrictStringEncoding(boolean strictStringEncoding) {
+	public void setStrictStringEncoding(final boolean strictStringEncoding) {
 		this.strictStringEncoding = strictStringEncoding;
 	}
 }

@@ -38,7 +38,7 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class TransactionAnnotation<A extends Annotation> extends AnnotationDataReader<A, TransactionAnnotationData<A>> {
 
-	public TransactionAnnotation(Class<A> annotationClass) {
+	public TransactionAnnotation(final Class<A> annotationClass) {
 		super(annotationClass, Transaction.class);
 	}
 
@@ -46,7 +46,7 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 	 * Need to override to make java compiler happy.
 	 */
 	@Override
-	public TransactionAnnotationData<A> readAnnotatedElement(AnnotatedElement annotatedElement) {
+	public TransactionAnnotationData<A> readAnnotatedElement(final AnnotatedElement annotatedElement) {
 		return super.readAnnotatedElement(annotatedElement);
 	}
 
@@ -54,7 +54,7 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TransactionAnnotationData<A> createAnnotationData(A annotation) {
+	protected TransactionAnnotationData<A> createAnnotationData(final A annotation) {
 
 		TransactionAnnotationData<A> td = new TransactionAnnotationData<>(annotation);
 

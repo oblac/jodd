@@ -40,7 +40,7 @@ public class AllRealMethodsPointcut implements ProxyPointcut {
 	}
 
 	@Override
-	public boolean apply(MethodInfo methodInfo) {
+	public boolean apply(final MethodInfo methodInfo) {
 
 		if (methodInfo.hasReturnValue()
 				&& (methodInfo.matchMethodName("get*") || (methodInfo.matchMethodName("is*")))

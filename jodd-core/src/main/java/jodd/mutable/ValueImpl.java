@@ -32,7 +32,7 @@ class ValueImpl<T> implements Value<T> {
 
 	private T value;
 
-	ValueImpl(T v) {
+	ValueImpl(final T v) {
 		this.value = v;
 	}
 
@@ -42,7 +42,7 @@ class ValueImpl<T> implements Value<T> {
 	}
 
 	@Override
-	public void set(T value) {
+	public void set(final T value) {
 		this.value = value;
 	}
 

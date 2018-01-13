@@ -69,7 +69,7 @@ public class JoddBean {
 	/**
 	 * Changes the {@link ClassIntrospector} implementation.
 	 */
-	public JoddBean classIntrospector(ClassIntrospector introspector) {
+	public JoddBean classIntrospector(final ClassIntrospector introspector) {
 		Objects.requireNonNull(introspector);
 		this.classIntrospector = introspector;
 		return this;
@@ -85,7 +85,7 @@ public class JoddBean {
 	/**
 	 * Defines the {@link TypeConverterManager} implementation.
 	 */
-	public JoddBean typeConverterManager(TypeConverterManager typeConverterManager) {
+	public JoddBean typeConverterManager(final TypeConverterManager typeConverterManager) {
 		Objects.requireNonNull(typeConverterManager);
 		this.typeConverterManager = typeConverterManager;
 		return this;
@@ -101,7 +101,7 @@ public class JoddBean {
 	/**
 	 * Defines the {@link Converter}.
 	 */
-	public JoddBean converter(Converter converter) {
+	public JoddBean converter(final Converter converter) {
 		Objects.requireNonNull(converter);
 		this.converter = converter;
 		return this;

@@ -50,7 +50,8 @@ import java.util.Date;
  */
 public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 
-	public Timestamp convert(Object value) {
+	@Override
+	public Timestamp convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

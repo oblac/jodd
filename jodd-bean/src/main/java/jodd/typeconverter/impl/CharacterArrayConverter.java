@@ -40,12 +40,12 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public CharacterArrayConverter(TypeConverterManager typeConverterManager) {
+	public CharacterArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public char[] convert(Object value) {
+	public char[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected char convertType(Object value) {
+	protected char convertType(final Object value) {
 		return typeConverterManager.convertType(value, char.class).charValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected char[] convertToSingleElementArray(Object value) {
+	protected char[] convertToSingleElementArray(final Object value) {
 		return new char[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected char[] convertValueToArray(Object value) {
+	protected char[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			char[] target = new char[list.size()];
@@ -146,7 +146,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected char[] convertArrayToArray(Object value) {
+	protected char[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == char.class) {
@@ -176,7 +176,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected char[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected char[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		char[] result = null;
 
 		if (primitiveComponentType == char[].class) {

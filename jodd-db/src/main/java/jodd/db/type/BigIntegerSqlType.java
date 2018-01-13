@@ -35,7 +35,7 @@ public class BigIntegerSqlType extends SqlType<BigInteger> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BigInteger get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public BigInteger get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return BigInteger.valueOf(rs.getLong(index));
 	}
 
@@ -43,7 +43,7 @@ public class BigIntegerSqlType extends SqlType<BigInteger> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, BigInteger value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final BigInteger value, final int dbSqlType) throws SQLException {
 		st.setLong(index, value.longValue());
 	}
 

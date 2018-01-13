@@ -60,7 +60,7 @@ public class ServletRedirectActionResult implements ActionResult<Redirect> {
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, Redirect redirectResult) throws Exception {
+	public void render(final ActionRequest actionRequest, final Redirect redirectResult) throws Exception {
 		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
 
 		String resultPath;
@@ -82,7 +82,7 @@ public class ServletRedirectActionResult implements ActionResult<Redirect> {
 		redirect(request, response, path);
 	}
 
-	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+	protected void redirect(final HttpServletRequest request, final HttpServletResponse response, final String path) throws IOException {
 		DispatcherUtil.redirect(request, response, path);
 	}
 

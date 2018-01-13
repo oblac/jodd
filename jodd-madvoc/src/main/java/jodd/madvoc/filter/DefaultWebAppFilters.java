@@ -34,7 +34,7 @@ import jodd.madvoc.MadvocException;
 public final class DefaultWebAppFilters implements ActionFilter {
 
 	@Override
-	public String filter(ActionRequest actionRequest) {
+	public String filter(final ActionRequest actionRequest) {
 		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}
 

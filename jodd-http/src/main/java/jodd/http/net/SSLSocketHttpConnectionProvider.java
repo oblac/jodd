@@ -36,11 +36,11 @@ public class SSLSocketHttpConnectionProvider extends SocketHttpConnectionProvide
 
 	private final SSLSocketFactory socketFactory;
 
-	public SSLSocketHttpConnectionProvider(SSLSocketFactory sslSocketFactory) {
+	public SSLSocketHttpConnectionProvider(final SSLSocketFactory sslSocketFactory) {
 		this.socketFactory = sslSocketFactory;
 	}
 
-	public SSLSocketHttpConnectionProvider(SSLContext sslContext) {
+	public SSLSocketHttpConnectionProvider(final SSLContext sslContext) {
 		this.socketFactory = sslContext.getSocketFactory();
 	}
 

@@ -80,7 +80,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 	 * Configures an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionInterceptor> MadvocRouter interceptor(Class<T> actionInterceptorClass) {
+	public <T extends ActionInterceptor> MadvocRouter interceptor(final Class<T> actionInterceptorClass) {
 		interceptorsManager.resolve(actionInterceptorClass);
 		return this;
 	}
@@ -89,7 +89,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 	 * Configures an interceptor.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionInterceptor> MadvocRouter interceptor(Class<T> actionInterceptorClass, Consumer<T> interceptorConsumer) {
+	public <T extends ActionInterceptor> MadvocRouter interceptor(final Class<T> actionInterceptorClass, final Consumer<T> interceptorConsumer) {
 		T interceptor = (T) interceptorsManager.resolve(actionInterceptorClass);
 		interceptorConsumer.accept(interceptor);
 		return this;
@@ -99,13 +99,13 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 	 * Returns action filter instance for further configuration.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ActionFilter> MadvocRouter filter(Class<T> actionFilterClass) {
+	public <T extends ActionFilter> MadvocRouter filter(final Class<T> actionFilterClass) {
 		filtersManager.resolve(actionFilterClass);
 		return this;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ActionFilter> MadvocRouter filter(Class<T> actionFilterClass, Consumer<T> filterConsumer) {
+	public <T extends ActionFilter> MadvocRouter filter(final Class<T> actionFilterClass, final Consumer<T> filterConsumer) {
 		T filter = (T) filtersManager.resolve(actionFilterClass);
 		filterConsumer.accept(filter);
 		return this;
@@ -123,31 +123,31 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 	/**
 	 * Maps a GET path.
 	 */
-	public ActionBuilder get(String path) {
+	public ActionBuilder get(final String path) {
 		return new ActionBuilder().path(path).httpMethod("GET");
 	}
 	/**
 	 * Maps a POST path.
 	 */
-	public ActionBuilder post(String path) {
+	public ActionBuilder post(final String path) {
 		return new ActionBuilder().path(path).httpMethod("POST");
 	}
 	/**
 	 * Maps a PUT path.
 	 */
-	public ActionBuilder put(String path) {
+	public ActionBuilder put(final String path) {
 		return new ActionBuilder().path(path).httpMethod("PUT");
 	}
 	/**
 	 * Maps a DELETE path.
 	 */
-	public ActionBuilder delete(String path) {
+	public ActionBuilder delete(final String path) {
 		return new ActionBuilder().path(path).httpMethod("DELETE");
 	}
 	/**
 	 * Maps an OPTION path.
 	 */
-	public ActionBuilder options(String path) {
+	public ActionBuilder options(final String path) {
 		return new ActionBuilder().path(path).httpMethod("OPTIONS");
 	}
 
@@ -168,7 +168,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines action path.
 		 */
-		public ActionBuilder path(String path) {
+		public ActionBuilder path(final String path) {
 			this.actionPath = path;
 			return this;
 		}
@@ -176,7 +176,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines HTTP method.
 		 */
-		public ActionBuilder httpMethod(String method) {
+		public ActionBuilder httpMethod(final String method) {
 			this.method = method;
 			return this;
 		}
@@ -185,7 +185,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		 * Defines HTTP method name and action path.
 		 * @see #path(String)
 		 */
-		public ActionBuilder path(String method, String path) {
+		public ActionBuilder path(final String method, final String path) {
 			this.method = method;
 			return path(path);
 		}
@@ -193,7 +193,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines action class and method to map.
 		 */
-		public ActionBuilder mapTo(Class actionClass, Method actionMethod) {
+		public ActionBuilder mapTo(final Class actionClass, final Method actionMethod) {
 			this.actionClass = actionClass;
 			this.actionClassMethod = actionMethod;
 			this.actionMethodString = null;
@@ -203,7 +203,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines action method. It must be declared in action class.
 		 */
-		public ActionBuilder mapTo(Method actionMethod) {
+		public ActionBuilder mapTo(final Method actionMethod) {
 			this.actionClass = actionMethod.getDeclaringClass();
 			this.actionClassMethod = actionMethod;
 			this.actionMethodString = null;
@@ -213,14 +213,14 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines action class and method to map.
 		 */
-		public ActionBuilder mapTo(Class actionClass, String actionMethodName) {
+		public ActionBuilder mapTo(final Class actionClass, final String actionMethodName) {
 			this.actionClass = actionClass;
 			this.actionClassMethod = null;
 			this.actionMethodString = actionMethodName;
 			return this;
 		}
 
-		public ActionBuilder mapTo(ActionHandler actionHandler) {
+		public ActionBuilder mapTo(final ActionHandler actionHandler) {
 			this.actionHandler = actionHandler;
 			return this;
 		}
@@ -228,7 +228,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Appends list of interceptors to the list of action interceptors.
 		 */
-		public ActionBuilder interceptBy(Class<? extends ActionInterceptor>... interceptors) {
+		public ActionBuilder interceptBy(final Class<? extends ActionInterceptor>... interceptors) {
 			if (actionInterceptors == null) {
 				actionInterceptors = interceptors;
 			}
@@ -240,7 +240,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Appends single interceptor to the list of action interceptors.
 		 */
-		public ActionBuilder interceptBy(Class<? extends ActionInterceptor> interceptor) {
+		public ActionBuilder interceptBy(final Class<? extends ActionInterceptor> interceptor) {
 			if (actionInterceptors == null) {
 				actionInterceptors = new Class[]{interceptor};
 			}
@@ -253,7 +253,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Appends list of filter to the list of action filters.
 		 */
-		public ActionBuilder filterBy(Class<? extends ActionFilter>... filters) {
+		public ActionBuilder filterBy(final Class<? extends ActionFilter>... filters) {
 			if (actionFilters == null) {
 				actionFilters = filters;
 			}
@@ -265,7 +265,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Appends single filter to the list of action filters.
 		 */
-		public ActionBuilder filterBy(Class<? extends ActionFilter> filter) {
+		public ActionBuilder filterBy(final Class<? extends ActionFilter> filter) {
 			if (actionFilters == null) {
 				actionFilters = new Class[]{filter};
 			}
@@ -278,7 +278,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines path alias.
 		 */
-		public ActionBuilder alias(String aliasPath) {
+		public ActionBuilder alias(final String aliasPath) {
 			this.alias = aliasPath;
 			return this;
 		}
@@ -286,7 +286,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines action result for this action.
 		 */
-		public ActionBuilder renderWith(Class<? extends ActionResult> actionResult) {
+		public ActionBuilder renderWith(final Class<? extends ActionResult> actionResult) {
 			this.actionResult = actionResult;
 			return this;
 		}
@@ -294,7 +294,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines async execution flag.
 		 */
-		public ActionBuilder async(boolean async) {
+		public ActionBuilder async(final boolean async) {
 			this.async = async;
 			return this;
 		}
@@ -302,7 +302,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		/**
 		 * Defines result base path.
 		 */
-		public ActionBuilder resultBase(String resultBasePath) {
+		public ActionBuilder resultBase(final String resultBasePath) {
 			this.resultBasePath = resultBasePath;
 			return this;
 		}

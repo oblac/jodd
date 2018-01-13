@@ -42,7 +42,7 @@ public class JavaBridge {
 	 * @param classLoader classloader in which to find urls
 	 * @return list of urls or {@code null} if not found
 	 */
-	public static URL[] getURLs(ClassLoader classLoader) {
+	public static URL[] getURLs(final ClassLoader classLoader) {
 		if (classLoader instanceof URLClassLoader) {
 			URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
 			return urlClassLoader.getURLs();

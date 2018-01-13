@@ -69,7 +69,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Creates new Petite container using {@link PetiteContainer provided configuration}.
 	 */
-	public PetiteContainer(PetiteConfig config) {
+	public PetiteContainer(final PetiteConfig config) {
 		super(config);
 
 		scopedProxyManager = new ScopedProxyManager();
@@ -84,7 +84,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Creates new bean instance and performs constructor injection.
 	 */
-	protected Object newBeanInstance(BeanDefinition def) {
+	protected Object newBeanInstance(final BeanDefinition def) {
 		if (def.ctor == null) {
 			def.ctor = petiteResolvers.resolveCtorInjectionPoint(def.type);
 		}
@@ -122,7 +122,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * @param bean target bean
 	 * @param def bean definition
 	 */
-	protected void wireBean(Object bean, BeanDefinition def) {
+	protected void wireBean(final Object bean, final BeanDefinition def) {
 		if (def.wiringMode == WiringMode.NONE) {
 			return;
 		}
@@ -133,7 +133,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Wires properties.
 	 */
-	protected void wireProperties(Object bean, BeanDefinition def) {
+	protected void wireProperties(final Object bean, final BeanDefinition def) {
 		if (def.properties == null) {
 			def.properties = petiteResolvers.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
@@ -209,7 +209,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Wires methods.
 	 */
-	protected void wireMethods(Object bean, BeanDefinition def) {
+	protected void wireMethods(final Object bean, final BeanDefinition def) {
 		if (def.methods == null) {
 			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
 		}
@@ -252,7 +252,7 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
-	protected void resolveInitAndDestroyMethods(Object bean, BeanDefinition def) {
+	protected void resolveInitAndDestroyMethods(final Object bean, final BeanDefinition def) {
 		if (def.initMethods == null) {
 			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
 		}
@@ -264,7 +264,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Invokes all init methods, if they exist. Also resolves destroy methods.
 	 */
-	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
+	protected void invokeInitMethods(final Object bean, final BeanDefinition def, final InitMethodInvocationStrategy invocationStrategy) {
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if (invocationStrategy != initMethod.invocationStrategy) {
 				continue;
@@ -280,7 +280,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Injects all parameters.
 	 */
-	protected void injectParams(Object bean, BeanDefinition def) {
+	protected void injectParams(final Object bean, final BeanDefinition def) {
 		if (def.name == null) {
 			return;
 		}
@@ -300,7 +300,7 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
-	protected <T> void invokeConsumerIfRegistered(T bean, BeanDefinition<T> def) {
+	protected <T> void invokeConsumerIfRegistered(final T bean, final BeanDefinition<T> def) {
 		if (def.consumer() == null) {
 			return;
 		}
@@ -313,7 +313,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Returns Petite bean instance. Bean name will be resolved from provided type.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <T> T getBean(Class<T> type) {
+	public <T> T getBean(final Class<T> type) {
 		String name = resolveBeanName(type);
 		return (T) getBean(name);
 	}
@@ -322,7 +322,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Returns Petite bean instance named as one of the provided names.
 	 * Returns {@code null} if bean is not found.
 	 */
-	protected Object getBean(BeanReferences beanReferences) {
+	protected Object getBean(final BeanReferences beanReferences) {
 		final int total = beanReferences.size();
 
 		for (int i = 0; i < total; i++) {
@@ -346,7 +346,7 @@ public class PetiteContainer extends PetiteBeans {
 	 *
 	 * @see PetiteContainer#createBean(Class)
 	 */
-	public <T> T getBean(String name) {
+	public <T> T getBean(final String name) {
 
 		// Lookup for registered bean definition.
 		BeanDefinition def = lookupBeanDefinition(name);
@@ -378,7 +378,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires bean, injects parameters and invokes init methods.
 	 * Such a loooong name :)
 	 */
-	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean) {
+	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(final BeanDefinition def, final Object bean) {
 		resolveInitAndDestroyMethods(bean, def);
 		def.scopeRegister(bean);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
@@ -395,7 +395,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires provided bean with the container using default wiring mode.
 	 * Bean is <b>not</b> registered withing container.
 	 */
-	public void wire(Object bean) {
+	public void wire(final Object bean) {
 		wire(bean, null);
 	}
 
@@ -403,7 +403,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires provided bean with the container and optionally invokes init methods.
 	 * Bean is <b>not</b> registered withing container.
 	 */
-	public void wire(Object bean, WiringMode wiringMode) {
+	public void wire(final Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
 		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
@@ -415,7 +415,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Creates and wires a bean within the container using default wiring mode and default init methods flag.
 	 * Bean is <b>not</b> registered.
 	 */
-	public <E> E createBean(Class<E> type) {
+	public <E> E createBean(final Class<E> type) {
 		return createBean(type, null);
 	}
 
@@ -424,7 +424,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * <b>not</b> registered.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E createBean(Class<E> type, WiringMode wiringMode) {
+	public <E> E createBean(final Class<E> type, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode, null);
 		Object bean = newBeanInstance(def);
@@ -437,7 +437,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Invokes provider to get a bean.
 	 */
-	protected Object invokeProvider(ProviderDefinition provider) {
+	protected Object invokeProvider(final ProviderDefinition provider) {
 		if (provider.method != null) {
 
 			Object bean;
@@ -466,14 +466,14 @@ public class PetiteContainer extends PetiteBeans {
 	 * Adds object instance to the container as singleton bean using default
 	 * wiring mode and default init method flag.
 	 */
-	public void addBean(String name, Object bean) {
+	public void addBean(final String name, final Object bean) {
 		addBean(name, bean, null);
 	}
 
 	/**
 	 * Adds object instance to the container as singleton bean.
 	 */
-	public void addBean(String name, Object bean, WiringMode wiringMode) {
+	public void addBean(final String name, final Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false, null);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
@@ -484,7 +484,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Adds self instance to the container so internal beans may fetch
 	 * container for further usage. No wiring is used and no init methods are invoked.
 	 */
-	public void addSelf(String name) {
+	public void addSelf(final String name) {
 		addBean(name, this, WiringMode.NONE);
 	}
 
@@ -501,7 +501,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Sets petite bean property.
 	 */
-	public void setBeanProperty(String name, Object value) {
+	public void setBeanProperty(final String name, final Object value) {
 		Object bean = null;
 		int ndx = name.length();
 
@@ -533,7 +533,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Returns petite bean property value.
 	 */
-	public Object getBeanProperty(String name) {
+	public Object getBeanProperty(final String name) {
 		int ndx = name.indexOf('.');
 		if (ndx == -1) {
 			throw new PetiteException("Only bean name is specified, missing property name: " + name);

@@ -38,7 +38,7 @@ public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
 
 	protected final MadvocConfig madvocConfig;
 
-	public MadvocParamsInjector(MadvocConfig madvocConfig) {
+	public MadvocParamsInjector(final MadvocConfig madvocConfig) {
 		this.madvocConfig = madvocConfig;
 	}
 
@@ -47,7 +47,7 @@ public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
 	 * Matching parameters are named as given base name.
 	 */
 	@Override
-	public void injectContext(Targets targets, PetiteContainer madpc) {
+	public void injectContext(final Targets targets, final PetiteContainer madpc) {
 		targets.forEachTarget(target -> {
 			Class targetType = target.resolveType();
 			String baseName = targetType.getName();

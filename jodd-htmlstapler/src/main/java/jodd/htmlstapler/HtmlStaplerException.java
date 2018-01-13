@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class HtmlStaplerException extends UncheckedException {
 
-	public HtmlStaplerException(Throwable t) {
+	public HtmlStaplerException(final Throwable t) {
 		super(t);
 	}
 
-	public HtmlStaplerException(String message) {
+	public HtmlStaplerException(final String message) {
 		super(message);
 	}
 
-	public HtmlStaplerException(String message, Throwable t) {
+	public HtmlStaplerException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

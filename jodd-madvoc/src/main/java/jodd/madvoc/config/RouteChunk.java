@@ -41,7 +41,7 @@ public class RouteChunk {
 	private final boolean hasMacros;
 	private ActionRuntime actionRuntime;
 
-	protected RouteChunk(Routes routes, RouteChunk parent, String value) {
+	protected RouteChunk(final Routes routes, final RouteChunk parent, final String value) {
 		this.routes = routes;
 		this.parent = parent;
 		this.value = value;
@@ -59,7 +59,7 @@ public class RouteChunk {
 	/**
 	 * Adds a new child to the tree.
 	 */
-	public RouteChunk add(String newValue) {
+	public RouteChunk add(final String newValue) {
 		RouteChunk routeChunk = new RouteChunk(routes, this, newValue);
 		if (children == null) {
 			children = new RouteChunk[] {routeChunk};
@@ -73,7 +73,7 @@ public class RouteChunk {
 	/**
 	 * Finds existing chunk or creates a new one if does not exist.
 	 */
-	public RouteChunk findOrCreateChild(String value) {
+	public RouteChunk findOrCreateChild(final String value) {
 		if (children != null) {
 			for (RouteChunk child : children) {
 				if (child.get().equals(value)) {
@@ -87,7 +87,7 @@ public class RouteChunk {
 	/**
 	 * Binds chunk to an action runtime.
 	 */
-	public void bind(ActionRuntime actionRuntime) {
+	public void bind(final ActionRuntime actionRuntime) {
 		this.actionRuntime = actionRuntime;
 		this.actionRuntime.bind(this);
 	}
@@ -147,7 +147,7 @@ public class RouteChunk {
 	/**
 	 * Returns {@code true} if path chunk value matches the input.
 	 */
-	public boolean match(String value) {
+	public boolean match(final String value) {
 		if (pathMacros == null) {
 			return this.value.equals(value);
 		}

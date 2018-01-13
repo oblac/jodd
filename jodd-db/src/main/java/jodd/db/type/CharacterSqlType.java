@@ -40,7 +40,7 @@ public class CharacterSqlType extends NullAwareSqlType<Character> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Character get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Character get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		if (TypesUtil.isIntegerType(dbSqlType)) {
 			return Character.valueOf((char) rs.getInt(index));
 		}
@@ -58,7 +58,7 @@ public class CharacterSqlType extends NullAwareSqlType<Character> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Character value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Character value, final int dbSqlType) throws SQLException {
 		if (TypesUtil.isIntegerType(dbSqlType)) {
 			st.setInt(index, value.charValue());
 			return;

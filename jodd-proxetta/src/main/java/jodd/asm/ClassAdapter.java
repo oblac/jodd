@@ -35,7 +35,7 @@ import jodd.asm6.Opcodes;
  */
 public abstract class ClassAdapter extends ClassVisitor {
 
-	protected ClassAdapter(ClassVisitor cv) {
+	protected ClassAdapter(final ClassVisitor cv) {
 		super(Opcodes.ASM6, cv);
 	}
 }

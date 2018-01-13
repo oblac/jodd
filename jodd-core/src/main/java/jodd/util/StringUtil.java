@@ -48,7 +48,7 @@ public class StringUtil {
 	 * @param sub    string pattern to be replaced
 	 * @param with   string that should go where the pattern was
 	 */
-	public static String replace(String s, String sub, String with) {
+	public static String replace(final String s, final String sub, final String with) {
 		if (sub.isEmpty()) {
 			return s;
 		}
@@ -77,7 +77,7 @@ public class StringUtil {
 	 * @param sub    character to replace
 	 * @param with   character to replace with
 	 */
-	public static String replaceChar(String s, char sub, char with) {
+	public static String replaceChar(final String s, final char sub, final char with) {
 		int startIndex = s.indexOf(sub);
 		if (startIndex == -1) {
 			return s;
@@ -98,7 +98,7 @@ public class StringUtil {
 	 * @param sub    characters to replace
 	 * @param with   characters to replace with
 	 */
-	public static String replaceChars(String s, char[] sub, char[] with) {
+	public static String replaceChars(final String s, final char[] sub, final char[] with) {
 		char[] str = s.toCharArray();
 		for (int i = 0; i < str.length; i++) {
 			char c = str[i];
@@ -119,7 +119,7 @@ public class StringUtil {
 	 * @param sub    substring to replace
 	 * @param with   substring to replace with
 	 */
-	public static String replaceFirst(String s, String sub, String with) {
+	public static String replaceFirst(final String s, final String sub, final String with) {
 		int i = s.indexOf(sub);
 		if (i == -1) {
 			return s;
@@ -134,7 +134,7 @@ public class StringUtil {
 	 * @param sub    char to replace
 	 * @param with   char to replace with
 	 */
-	public static String replaceFirst(String s, char sub, char with) {
+	public static String replaceFirst(final String s, final char sub, final char with) {
 		int index = s.indexOf(sub);
 		if (index == -1) {
 			return s;
@@ -151,7 +151,7 @@ public class StringUtil {
 	 * @param sub    substring to replace
 	 * @param with   substring to replace with
 	 */
-	public static String replaceLast(String s, String sub, String with) {
+	public static String replaceLast(final String s, final String sub, final String with) {
 		int i = s.lastIndexOf(sub);
 		if (i == -1) {
 			return s;
@@ -166,7 +166,7 @@ public class StringUtil {
 	 * @param sub    char to replace
 	 * @param with   char to replace with
 	 */
-	public static String replaceLast(String s, char sub, char with) {
+	public static String replaceLast(final String s, final char sub, final char with) {
 		int index = s.lastIndexOf(sub);
 		if (index == -1) {
 			return s;
@@ -184,7 +184,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param sub    substring to remove
 	 */
-	public static String remove(String s, String sub) {
+	public static String remove(final String s, final String sub) {
 		int c = 0;
 		int sublen = sub.length();
 		if (sublen == 0) {
@@ -211,7 +211,7 @@ public class StringUtil {
 	 * @param src    source string
 	 * @param chars  string containing characters to remove
 	 */
-	public static String removeChars(String src, String chars) {
+	public static String removeChars(final String src, final String chars) {
 		int i = src.length();
 		StringBuilder sb = new StringBuilder(i);
 		for (int j = 0; j < i; j++) {
@@ -230,7 +230,7 @@ public class StringUtil {
 	 * @param src    string
 	 * @param chars  characters to remove
 	 */
-	public static String removeChars(String src, char... chars) {
+	public static String removeChars(final String src, final char... chars) {
 		int i = src.length();
 		StringBuilder sb = new StringBuilder(i);
 		mainloop:
@@ -252,7 +252,7 @@ public class StringUtil {
 	 * @param string    source string
 	 * @param ch  character to remove
 	 */
-	public static String remove(String string, char ch) {
+	public static String remove(final String string, final char ch) {
 		int stringLen = string.length();
 		char[] result = new char[stringLen];
 		int offset = 0;
@@ -286,14 +286,14 @@ public class StringUtil {
 	 *
 	 * @return <code>true</code> if strings are equal, otherwise <code>false</code>
 	 */
-	public static boolean equals(String s1, String s2) {
+	public static boolean equals(final String s1, final String s2) {
 		return Util.equals(s1, s2);
 	}
 
 	/**
 	 * Determines if a string is empty (<code>null</code> or zero-length).
 	 */
-	public static boolean isEmpty(CharSequence string) {
+	public static boolean isEmpty(final CharSequence string) {
 		return ((string == null) || (string.length() == 0));
 	}
 
@@ -301,7 +301,7 @@ public class StringUtil {
 	 * Determines if string array contains empty strings.
 	 * @see #isEmpty(CharSequence)
 	 */
-	public static boolean isAllEmpty(String... strings) {
+	public static boolean isAllEmpty(final String... strings) {
 		for (String string : strings) {
 			if (!isEmpty(string)) {
 				return false;
@@ -313,21 +313,21 @@ public class StringUtil {
 	/**
 	 * Determines if a string is blank (<code>null</code> or {@link #containsOnlyWhitespaces(CharSequence)}).
 	 */
-	public static boolean isBlank(CharSequence string) {
+	public static boolean isBlank(final CharSequence string) {
 		return ((string == null) || containsOnlyWhitespaces(string));
 	}
 
 	/**
 	 * Determines if string is not blank.
 	 */
-	public static boolean isNotBlank(String string) {
+	public static boolean isNotBlank(final String string) {
 		return ((string != null) && !containsOnlyWhitespaces(string));
 	}
 
 	/**
 	 * Determines if string array contains just blank strings.
 	 */
-	public static boolean isAllBlank(String... strings) {
+	public static boolean isAllBlank(final String... strings) {
 		for (String string : strings) {
 			if (!isBlank(string)) {
 				return false;
@@ -340,7 +340,7 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if string contains only white spaces.
 	 */
-	public static boolean containsOnlyWhitespaces(CharSequence string) {
+	public static boolean containsOnlyWhitespaces(final CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
@@ -354,7 +354,7 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if string contains only digits.
 	 */
-	public static boolean containsOnlyDigits(CharSequence string) {
+	public static boolean containsOnlyDigits(final CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
@@ -369,7 +369,7 @@ public class StringUtil {
 	 * Returns <code>true</code> if string {@link #containsOnlyDigits(CharSequence) contains only digits}
 	 * or signs plus or minus.
 	 */
-	public static boolean containsOnlyDigitsAndSigns(CharSequence string) {
+	public static boolean containsOnlyDigitsAndSigns(final CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
@@ -384,14 +384,14 @@ public class StringUtil {
 	/**
 	 * Determines if a string is not empty.
 	 */
-	public static boolean isNotEmpty(CharSequence string) {
+	public static boolean isNotEmpty(final CharSequence string) {
 		return string != null && string.length() > 0;
 	}
 
 	/**
 	 * Converts safely an object to a string.
 	 */
-	public static String toString(Object value) {
+	public static String toString(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -402,7 +402,7 @@ public class StringUtil {
 	 * Converts safely an object to a string. If object is <code>null</code> an empty
 	 * string is returned.
 	 */
-	public static String toSafeString(Object value) {
+	public static String toSafeString(final Object value) {
 		if (value == null) {
 			return EMPTY;
 		}
@@ -413,7 +413,7 @@ public class StringUtil {
 	/**
 	 * Converts object into pretty string. All arrays are iterated.
 	 */
-	public static String toPrettyString(Object value) {
+	public static String toPrettyString(final Object value) {
 		if (value == null) {
 			return StringPool.NULL;
 		}
@@ -491,7 +491,7 @@ public class StringUtil {
 	 * of input array is converted to a string. If input is not an array,
 	 * the result will still be an array with one element.
 	 */
-	public static String[] toStringArray(Object value) {
+	public static String[] toStringArray(final Object value) {
 		if (value == null) {
 			return new String[0];
 		}
@@ -543,7 +543,7 @@ public class StringUtil {
 	 * @param str   string to capitalize, may be null
 	 * @see #uncapitalize(String)
 	 */
-	public static String capitalize(String str) {
+	public static String capitalize(final String str) {
 		return changeFirstCharacterCase(true, str);
 	}
 
@@ -555,14 +555,14 @@ public class StringUtil {
 	 * @return the uncapitalized String, <code>null</code> if null
 	 * @see #capitalize(String) 
 	 */
-	public static String uncapitalize(String str) {
+	public static String uncapitalize(final String str) {
 		return changeFirstCharacterCase(false, str);
 	}
 
 	/**
 	 * Internal method for changing the first character case.
 	 */
-	private static String changeFirstCharacterCase(boolean capitalize, String string) {
+	private static String changeFirstCharacterCase(final boolean capitalize, final String string) {
 		int strLen = string.length();
 		if (strLen == 0) {
 			return string;
@@ -601,7 +601,7 @@ public class StringUtil {
 	 * @param name The string to be decapitalized.
 	 * @return The decapitalized version of the string.
 	 */
-	public static String decapitalize(String name) {
+	public static String decapitalize(final String name) {
 		if (name.length() == 0) {
 			return name;
 		}
@@ -625,7 +625,7 @@ public class StringUtil {
 	/**
 	 * Makes a title-cased string from given input.
 	 */
-	public static String title(String string) {
+	public static String title(final String string) {
 		char[] chars = string.toCharArray();
 		
 		boolean wasWhitespace = true;
@@ -655,7 +655,7 @@ public class StringUtil {
 	/**
 	 * Sets the maximum length of the string. Longer strings will be simply truncated.
 	 */
-	public static String truncate(String string, int length) {
+	public static String truncate(String string, final int length) {
 		if (string.length() > length) {
 			string = string.substring(0, length);
 		}
@@ -674,7 +674,7 @@ public class StringUtil {
 	 * and <code>toIndex</code> is 0, it will return last characters of the string.
 	 * Also, this method will never throw an exception if index is out of range.
 	 */
-	public static String substring(String string, int fromIndex, int toIndex) {
+	public static String substring(final String string, int fromIndex, int toIndex) {
 		int len = string.length();
 
 		if (fromIndex < 0) {
@@ -707,7 +707,7 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if substring exist at given offset in a string.
 	 */
-	public static boolean isSubstringAt(String string, String substring, int offset) {
+	public static boolean isSubstringAt(final String string, final String substring, final int offset) {
 		int len = substring.length();
 
 		int max = offset + len;
@@ -743,7 +743,7 @@ public class StringUtil {
 	 *
 	 * @return array of split strings
 	 */
-	public static String[] split(String src, String delimiter) {
+	public static String[] split(final String src, final String delimiter) {
 		int maxparts = (src.length() / delimiter.length()) + 2;		// one more for the last
 		int[] positions = new int[maxparts];
 		int dellen = delimiter.length();
@@ -777,7 +777,7 @@ public class StringUtil {
 	 *
 	 * @return array of tokens
 	 */
-	public static String[] splitc(String src, String d) {
+	public static String[] splitc(final String src, final String d) {
 		if ((d.length() == 0) || (src.length() == 0)) {
 			return new String[] {src};
 		}
@@ -793,7 +793,7 @@ public class StringUtil {
 	 *
 	 * @return array of tokens
 	 */
-	public static String[] splitc(String src, char[] delimiters) {
+	public static String[] splitc(final String src, final char[] delimiters) {
 		if ((delimiters.length == 0) || (src.length() == 0) ) {
 			return new String[] {src};
 		}
@@ -851,7 +851,7 @@ public class StringUtil {
 	 *
 	 * @return array of tokens
 	 */
-	public static String[] splitc(String src, char delimiter) {
+	public static String[] splitc(final String src, final char delimiter) {
 		if (src.length() == 0) {
 			return new String[] {EMPTY};
 		}
@@ -903,7 +903,7 @@ public class StringUtil {
 	/**
 	 * Compress multiple occurrences of given char into one appearance.
 	 */
-	public static String compressChars(String s, char c) {
+	public static String compressChars(final String s, final char c) {
 		int len = s.length();
 		StringBuilder sb = new StringBuilder(len);
 		boolean wasChar = false;
@@ -939,7 +939,7 @@ public class StringUtil {
 	 * @param endIndex		ending index
 	 * @return index of founded substring or -1 if substring not found
 	 */
-	public static int indexOf(String src, String sub, int startIndex, int endIndex) {
+	public static int indexOf(final String src, final String sub, int startIndex, int endIndex) {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
@@ -975,7 +975,7 @@ public class StringUtil {
 	/**
 	 * Finds the first occurrence of a character in the given source but within limited range (start, end].
 	 */
-	public static int indexOf(String src, char c, int startIndex, int endIndex) {
+	public static int indexOf(final String src, final char c, int startIndex, int endIndex) {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
@@ -994,7 +994,7 @@ public class StringUtil {
 	/**
 	 * Finds the first occurrence of a character in the given source but within limited range (start, end].
 	 */
-	public static int indexOfIgnoreCase(String src, char c, int startIndex, int endIndex) {
+	public static int indexOfIgnoreCase(final String src, char c, int startIndex, int endIndex) {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
@@ -1022,7 +1022,7 @@ public class StringUtil {
 	 * @return index of founded substring or -1 if substring is not found
 	 * @see #indexOfIgnoreCase(String, String, int)
 	 */
-	public static int indexOfIgnoreCase(String src, String subS) {
+	public static int indexOfIgnoreCase(final String src, final String subS) {
 		return indexOfIgnoreCase(src, subS, 0, src.length());
 	}
 
@@ -1039,7 +1039,7 @@ public class StringUtil {
 	 *
 	 * @return index of founded substring or -1 if substring is not found
 	 */
-	public static int indexOfIgnoreCase(String src, String subS, int startIndex) {
+	public static int indexOfIgnoreCase(final String src, final String subS, final int startIndex) {
 		return indexOfIgnoreCase(src, subS, startIndex, src.length());
 	}
 	/**
@@ -1053,7 +1053,7 @@ public class StringUtil {
 	 * @return index of founded substring or -1 if substring is not found
 	 * @see #indexOfIgnoreCase(String, String, int)
 	 */
-	public static int indexOfIgnoreCase(String src, String sub, int startIndex, int endIndex) {
+	public static int indexOfIgnoreCase(final String src, String sub, int startIndex, int endIndex) {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
@@ -1100,7 +1100,7 @@ public class StringUtil {
 	 * @see #indexOfIgnoreCase(String, String, int)
 	 * @see #lastIndexOfIgnoreCase(String, String, int)
 	 */
-	public static int lastIndexOfIgnoreCase(String s, String subS) {
+	public static int lastIndexOfIgnoreCase(final String s, final String subS) {
 		return lastIndexOfIgnoreCase(s, subS, s.length(), 0);
 	}
 
@@ -1115,7 +1115,7 @@ public class StringUtil {
 	 * @return last index of founded substring or -1 if substring is not found
 	 * @see #indexOfIgnoreCase(String, String, int)
 	 */
-	public static int lastIndexOfIgnoreCase(String src, String subS, int startIndex) {
+	public static int lastIndexOfIgnoreCase(final String src, final String subS, final int startIndex) {
 		return lastIndexOfIgnoreCase(src, subS, startIndex, 0);
 	}
 	/**
@@ -1128,7 +1128,7 @@ public class StringUtil {
 	 * @param endIndex		end index
 	 * @return last index of founded substring or -1 if substring is not found
 	 */
-	public static int lastIndexOfIgnoreCase(String src, String sub, int startIndex, int endIndex) {
+	public static int lastIndexOfIgnoreCase(final String src, String sub, int startIndex, int endIndex) {
 		int sublen = sub.length();
 		int srclen = src.length();
 		if (sublen == 0) {
@@ -1175,7 +1175,7 @@ public class StringUtil {
 	 * @param endIndex		end index
 	 * @return last index of founded substring or -1 if substring is not found
 	 */
-	public static int lastIndexOf(String src, String sub, int startIndex, int endIndex) {
+	public static int lastIndexOf(final String src, final String sub, int startIndex, int endIndex) {
 		int sublen = sub.length();
 		int srclen = src.length();
 		if (sublen == 0) {
@@ -1213,7 +1213,7 @@ public class StringUtil {
 	/**
 	 * Finds last index of a character in the given source string in specified range [end, start]
 	 */
-	public static int lastIndexOf(String src, char c, int startIndex, int endIndex) {
+	public static int lastIndexOf(final String src, final char c, int startIndex, int endIndex) {
 		int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
@@ -1235,7 +1235,7 @@ public class StringUtil {
 	/**
 	 * Finds last index of a character in the given source string in specified range [end, start]
 	 */
-	public static int lastIndexOfIgnoreCase(String src, char c, int startIndex, int endIndex) {
+	public static int lastIndexOfIgnoreCase(final String src, char c, int startIndex, int endIndex) {
 		int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
@@ -1255,21 +1255,21 @@ public class StringUtil {
 		return -1;
 	}
 
-	public static int lastIndexOfWhitespace(String src) {
+	public static int lastIndexOfWhitespace(final String src) {
 		return lastIndexOfWhitespace(src, src.length(), 0);
 	}
 
 	/**
 	 * Returns last index of a whitespace.
 	 */
-	public static int lastIndexOfWhitespace(String src, int startIndex) {
+	public static int lastIndexOfWhitespace(final String src, final int startIndex) {
 		return lastIndexOfWhitespace(src, startIndex, 0);
 	}
 
 	/**
 	 * Returns last index of a whitespace.
 	 */
-	public static int lastIndexOfWhitespace(String src, int startIndex, int endIndex) {
+	public static int lastIndexOfWhitespace(final String src, int startIndex, int endIndex) {
 		int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
@@ -1289,13 +1289,13 @@ public class StringUtil {
 	}
 
 
-	public static int lastIndexOfNonWhitespace(String src) {
+	public static int lastIndexOfNonWhitespace(final String src) {
 		return lastIndexOfNonWhitespace(src, src.length(), 0);
 	}
-	public static int lastIndexOfNonWhitespace(String src, int startIndex) {
+	public static int lastIndexOfNonWhitespace(final String src, final int startIndex) {
 		return lastIndexOfNonWhitespace(src, startIndex, 0);
 	}
-	public static int lastIndexOfNonWhitespace(String src, int startIndex, int endIndex) {
+	public static int lastIndexOfNonWhitespace(final String src, int startIndex, int endIndex) {
 		int total = src.length() - 1;
 		if (total < 0) {
 			return -1;
@@ -1326,7 +1326,7 @@ public class StringUtil {
 	 *         a prefix of the character sequence represented by this string;
 	 *         <code>false</code> otherwise.
 	 */
-	public static boolean startsWithIgnoreCase(String src, String subS) {
+	public static boolean startsWithIgnoreCase(final String src, final String subS) {
 		return startsWithIgnoreCase(src, subS, 0);
 	}
 
@@ -1342,7 +1342,7 @@ public class StringUtil {
 	 *         a prefix of the character sequence represented by this string;
 	 *         <code>false</code> otherwise.
 	 */
-	public static boolean startsWithIgnoreCase(String src, String subS, int startIndex) {
+	public static boolean startsWithIgnoreCase(final String src, final String subS, final int startIndex) {
 		String sub = subS.toLowerCase();
 		int sublen = sub.length();
 		if (startIndex + sublen > src.length()) {
@@ -1370,7 +1370,7 @@ public class StringUtil {
 	 *         a suffix of the character sequence represented by this object;
 	 *         <code>false</code> otherwise.
 	 */
-	public static boolean endsWithIgnoreCase(String src, String subS) {
+	public static boolean endsWithIgnoreCase(final String src, final String subS) {
 		String sub = subS.toLowerCase();
 		int sublen = sub.length();
 		int j = 0;
@@ -1391,7 +1391,7 @@ public class StringUtil {
 	/**
 	 * Returns if string starts with given character.
 	 */
-	public static boolean startsWithChar(String s, char c) {
+	public static boolean startsWithChar(final String s, final char c) {
 		if (s.length() == 0) {
 			return false;
 		}
@@ -1401,7 +1401,7 @@ public class StringUtil {
 	/**
 	 * Returns if string ends with provided character.
 	 */
-	public static boolean endsWithChar(String s, char c) {
+	public static boolean endsWithChar(final String s, final char c) {
 		if (s.length() == 0) {
 			return false;
 		}
@@ -1418,10 +1418,10 @@ public class StringUtil {
 	 * @param sub		substring to count
 	 * @return			number of substring occurrences
 	 */
-	public static int count(String source, String sub) {
+	public static int count(final String source, final String sub) {
 		return count(source, sub, 0);
 	}
-	public static int count(String source, String sub, int start) {
+	public static int count(final String source, final String sub, final int start) {
 		int count = 0;
 		int j = start;
 		int sublen = sub.length();
@@ -1439,10 +1439,10 @@ public class StringUtil {
 		return count;
 	}
 
-	public static int count(String source, char c) {
+	public static int count(final String source, final char c) {
 		return count(source, c, 0);
 	}
-	public static int count(String source, char c, int start) {
+	public static int count(final String source, final char c, final int start) {
 		int count = 0;
 		int j = start;
 		while (true) {
@@ -1465,7 +1465,7 @@ public class StringUtil {
 	 * @param sub		substring to count
 	 * @return			number of substring occurrences
 	 */
-	public static int countIgnoreCase(String source, String sub) {
+	public static int countIgnoreCase(final String source, final String sub) {
 		int count = 0;
 		int j = 0;
 		int sublen = sub.length();
@@ -1494,7 +1494,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOf(String s, String... arr) {
+	public static int[] indexOf(final String s, final String... arr) {
 		return indexOf(s, arr, 0);
 	}
 	/**
@@ -1507,7 +1507,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param offset  starting position
 	 */
-	public static int[] indexOf(String s, String[] arr, int offset) {
+	public static int[] indexOf(final String s, final String[] arr, final int offset) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1532,7 +1532,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] indexOfIgnoreCase(String s, String... arr) {
+	public static int[] indexOfIgnoreCase(final String s, final String... arr) {
 		return indexOfIgnoreCase(s, arr, 0);
 	}
 	/**
@@ -1545,7 +1545,7 @@ public class StringUtil {
 	 * @param arr    string array
 	 * @param start  starting position
 	 */
-	public static int[] indexOfIgnoreCase(String s, String[] arr, int start) {
+	public static int[] indexOfIgnoreCase(final String s, final String[] arr, final int start) {
 		int arrLen = arr.length;
 		int index = Integer.MAX_VALUE;
 		int last = -1;
@@ -1570,7 +1570,7 @@ public class StringUtil {
 	 * @param s      source string
 	 * @param arr    string array
 	 */
-	public static int[] lastIndexOf(String s, String... arr) {
+	public static int[] lastIndexOf(final String s, final String... arr) {
 		return lastIndexOf(s, arr, s.length());
 	}
 	/**
@@ -1583,7 +1583,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOf(String s, String[] arr, int fromIndex) {
+	public static int[] lastIndexOf(final String s, final String[] arr, final int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1610,7 +1610,7 @@ public class StringUtil {
 	 *
 	 * @return int[2]
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String... arr) {
+	public static int[] lastIndexOfIgnoreCase(final String s, final String... arr) {
 		return lastIndexOfIgnoreCase(s, arr, s.length());
 	}
 	/**
@@ -1623,7 +1623,7 @@ public class StringUtil {
 	 * @param arr       string array
 	 * @param fromIndex starting position
 	 */
-	public static int[] lastIndexOfIgnoreCase(String s, String[] arr, int fromIndex) {
+	public static int[] lastIndexOfIgnoreCase(final String s, final String[] arr, final int fromIndex) {
 		int arrLen = arr.length;
 		int index = -1;
 		int last = -1;
@@ -1647,7 +1647,7 @@ public class StringUtil {
 	 *
 	 * @return <code>true</code> if all array elements matches
 	 */
-	public static boolean equals(String[] as, String[] as1) {
+	public static boolean equals(final String[] as, final String[] as1) {
 	    if (as.length != as1.length) {
 	        return false;
 	    }
@@ -1666,7 +1666,7 @@ public class StringUtil {
 	 *
 	 * @return true if all array elements matches
 	 */
-	public static boolean equalsIgnoreCase(String[] as, String[] as1) {
+	public static boolean equalsIgnoreCase(final String[] as, final String[] as1) {
 		if (as.length != as1.length) {
 			return false;
 		}
@@ -1688,7 +1688,7 @@ public class StringUtil {
 	 *
 	 * @return string with all occurrences of substrings replaced
 	 */
-	public static String replace(String s, String[] sub, String[] with) {
+	public static String replace(final String s, final String[] sub, final String[] with) {
 		if ((sub.length != with.length) || (sub.length == 0)) {
 			return s;
 		}
@@ -1717,7 +1717,7 @@ public class StringUtil {
 	 *
 	 * @return string with all occurrences of substrings replaced
 	 */
-	public static String replaceIgnoreCase(String s, String[] sub, String[] with) {
+	public static String replaceIgnoreCase(final String s, final String[] sub, final String[] with) {
 		if ((sub.length != with.length) || (sub.length == 0)) {
 			return s;
 		}
@@ -1745,7 +1745,7 @@ public class StringUtil {
 	 * If at least one equal string is found, returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int equalsOne(String src, String... dest) {
+	public static int equalsOne(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			if (src.equals(dest[i])) {
 				return i;
@@ -1758,7 +1758,7 @@ public class StringUtil {
 	 * If at least one equal string is found, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int equalsOneIgnoreCase(String src, String... dest) {
+	public static int equalsOneIgnoreCase(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			if (src.equalsIgnoreCase(dest[i])) {
 				return i;
@@ -1772,7 +1772,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int startsWithOne(String src, String... dest) {
+	public static int startsWithOne(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1790,7 +1790,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int startsWithOneIgnoreCase(String src, String... dest) {
+	public static int startsWithOneIgnoreCase(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1809,7 +1809,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int endsWithOne(String src, String... dest) {
+	public static int endsWithOne(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1827,7 +1827,7 @@ public class StringUtil {
 	 * If at least one string is matched, it returns its index.
 	 * Otherwise, <code>-1</code> is returned.
 	 */
-	public static int endsWithOneIgnoreCase(String src, String... dest) {
+	public static int endsWithOneIgnoreCase(final String src, final String... dest) {
 		for (int i = 0; i < dest.length; i++) {
 			String m = dest[i];
 			if (m == null) {
@@ -1847,7 +1847,7 @@ public class StringUtil {
 	/**
 	 * @see #indexOfChars(String, String, int)
 	 */
-	public static int indexOfChars(String string, String chars) {
+	public static int indexOfChars(final String string, final String chars) {
 		return indexOfChars(string, chars, 0);
 	}
 
@@ -1855,7 +1855,7 @@ public class StringUtil {
 	 * Returns the very first index of any char from provided string, starting from specified index offset.
 	 * Returns index of founded char, or <code>-1</code> if nothing found.
 	 */
-	public static int indexOfChars(String string, String chars, int startindex) {
+	public static int indexOfChars(final String string, final String chars, int startindex) {
 		int stringLen = string.length();
 		int charsLen = chars.length();
 		if (startindex < 0) {
@@ -1872,7 +1872,7 @@ public class StringUtil {
 		return -1;
 	}
 
-	public static int indexOfChars(String string, char[] chars) {
+	public static int indexOfChars(final String string, final char[] chars) {
 		return indexOfChars(string, chars, 0);
 	}
 
@@ -1880,7 +1880,7 @@ public class StringUtil {
 	 * Returns the very first index of any char from provided string, starting from specified index offset.
 	 * Returns index of founded char, or <code>-1</code> if nothing found.
 	 */
-	public static int indexOfChars(String string, char[] chars, int startindex) {
+	public static int indexOfChars(final String string, final char[] chars, final int startindex) {
 		int stringLen = string.length();
 		int charsLen = chars.length;
 		for (int i = startindex; i < stringLen; i++) {
@@ -1897,18 +1897,18 @@ public class StringUtil {
 	/**
 	 * Returns first index of a whitespace character.
 	 */
-	public static int indexOfWhitespace(String string) {
+	public static int indexOfWhitespace(final String string) {
 		return indexOfWhitespace(string, 0, string.length());
 	}
 
-	public static int indexOfWhitespace(String string, int startindex) {
+	public static int indexOfWhitespace(final String string, final int startindex) {
 		return indexOfWhitespace(string, startindex, string.length());
 	}
 
 	/**
 	 * Returns first index of a whitespace character, starting from specified index offset.
 	 */
-	public static int indexOfWhitespace(String string, int startindex, int endindex) {
+	public static int indexOfWhitespace(final String string, final int startindex, final int endindex) {
 		for (int i = startindex; i < endindex; i++) {
 			if (CharUtil.isWhitespace(string.charAt(i))) {
 				return i;
@@ -1917,13 +1917,13 @@ public class StringUtil {
 		return -1;
 	}
 
-	public static int indexOfNonWhitespace(String string) {
+	public static int indexOfNonWhitespace(final String string) {
 		return indexOfNonWhitespace(string, 0, string.length());
 	}
-	public static int indexOfNonWhitespace(String string, int startindex) {
+	public static int indexOfNonWhitespace(final String string, final int startindex) {
 		return indexOfNonWhitespace(string, startindex, string.length());
 	}
-	public static int indexOfNonWhitespace(String string, int startindex, int endindex) {
+	public static int indexOfNonWhitespace(final String string, final int startindex, final int endindex) {
 		for (int i = startindex; i < endindex; i++) {
 			if (!CharUtil.isWhitespace(string.charAt(i))) {
 				return i;
@@ -1938,7 +1938,7 @@ public class StringUtil {
 	/**
 	 * Strips leading char if string starts with one.
 	 */
-	public static String stripLeadingChar(String string, char c) {
+	public static String stripLeadingChar(final String string, final char c) {
 		if (string.length() > 0) {
 			if (string.charAt(0) == c) {
 				return string.substring(1);
@@ -1950,7 +1950,7 @@ public class StringUtil {
 	/**
 	 * Strips trailing char if string ends with one.
 	 */
-	public static String stripTrailingChar(String string, char c) {
+	public static String stripTrailingChar(final String string, final char c) {
 		if (string.length() > 0) {
 			if (string.charAt(string.length() - 1) == c) {
 				return string.substring(0, string.length() - 1);
@@ -1962,7 +1962,7 @@ public class StringUtil {
 	/**
 	 * Strips leading and trailing char from given string.
 	 */
-	public static String stripChar(String string, char c) {
+	public static String stripChar(final String string, final char c) {
 		if (string.length() == 0) {
 			return string;
 		}
@@ -1988,7 +1988,7 @@ public class StringUtil {
 	 * Strips everything up to the first appearance of given char.
 	 * Character IS included in the returned string.
 	 */
-	public static String stripToChar(String string, char c) {
+	public static String stripToChar(final String string, final char c) {
 		int ndx = string.indexOf(c);
 
 		if (ndx == -1) {
@@ -2002,7 +2002,7 @@ public class StringUtil {
 	 * Strips everything from the first appearance of given char.
 	 * Character IS NOT included in the returned string.
 	 */
-	public static String stripFromChar(String string, char c) {
+	public static String stripFromChar(final String string, final char c) {
 		int ndx = string.indexOf(c);
 
 		if (ndx == -1) {
@@ -2016,7 +2016,7 @@ public class StringUtil {
 	/**
 	 * Trims array of strings. <code>null</code> array elements are ignored.
 	 */
-	public static void trimAll(String... strings) {
+	public static void trimAll(final String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -2030,7 +2030,7 @@ public class StringUtil {
 	 * <code>null</code> elements of the array are ignored.
 	 * @see #trimDown(String)
 	 */
-	public static void trimDownAll(String... strings) {
+	public static void trimDownAll(final String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -2054,7 +2054,7 @@ public class StringUtil {
 	/**
 	 * Crops string by setting empty strings to <code>null</code>.
 	 */
-	public static String crop(String string) {
+	public static String crop(final String string) {
 		if (string.length() == 0) {
 			return null;
 		}
@@ -2064,7 +2064,7 @@ public class StringUtil {
 	/**
 	 * Crops all elements of string array.
 	 */
-	public static void cropAll(String... strings) {
+	public static void cropAll(final String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -2077,7 +2077,7 @@ public class StringUtil {
 	/**
 	 * Trim whitespaces from the left.
 	 */
-	public static String trimLeft(String src) {
+	public static String trimLeft(final String src) {
 		int len = src.length();
 		int st = 0;
 		while ((st < len) && (CharUtil.isWhitespace(src.charAt(st)))) {
@@ -2089,7 +2089,7 @@ public class StringUtil {
 	/**
 	 * Trim whitespaces from the right.
 	 */
-	public static String trimRight(String src) {
+	public static String trimRight(final String src) {
 		int len = src.length();
 		int count = len;
 		while ((len > 0) && (CharUtil.isWhitespace(src.charAt(len - 1)))) {
@@ -2104,7 +2104,7 @@ public class StringUtil {
 	/**
 	 * @see #indexOfRegion(String, String, String, int)
 	 */
-	public static int[] indexOfRegion(String string, String leftBoundary, String rightBoundary) {
+	public static int[] indexOfRegion(final String string, final String leftBoundary, final String rightBoundary) {
 		return indexOfRegion(string, leftBoundary, rightBoundary, 0);
 	}
 
@@ -2113,7 +2113,7 @@ public class StringUtil {
 	 * Returns indexes of the first region without escaping character.
 	 * @see #indexOfRegion(String, String, String, char, int)
 	 */
-	public static int[] indexOfRegion(String string, String leftBoundary, String rightBoundary, int offset) {
+	public static int[] indexOfRegion(final String string, final String leftBoundary, final String rightBoundary, final int offset) {
 		int ndx = offset;
 		int[] res = new int[4];
 		ndx = string.indexOf(leftBoundary, ndx);
@@ -2137,7 +2137,7 @@ public class StringUtil {
 	/**
 	 * @see #indexOfRegion(String, String, String, char, int)
 	 */
-	public static int[] indexOfRegion(String string, String leftBoundary, String rightBoundary, char escape) {
+	public static int[] indexOfRegion(final String string, final String leftBoundary, final String rightBoundary, final char escape) {
 		return indexOfRegion(string, leftBoundary, rightBoundary, escape, 0);
 	}
 
@@ -2156,7 +2156,7 @@ public class StringUtil {
 	 * decreased to include one escape character. 
 	 * If region is not founded, <code>null</code> is returned. 
 	 */
-	public static int[] indexOfRegion(String string, String leftBoundary, String rightBoundary, char escape, int offset) {
+	public static int[] indexOfRegion(final String string, final String leftBoundary, final String rightBoundary, final char escape, final int offset) {
 		int ndx = offset;
 		int[] res = new int[4];
 		while (true) {
@@ -2209,7 +2209,7 @@ public class StringUtil {
 	/**
 	 * Joins an array of objects into one string without separators.
 	 */
-	public static String join(Object[] array) {
+	public static String join(final Object[] array) {
 		if (array == null) {
 			return null;
 		}
@@ -2233,7 +2233,7 @@ public class StringUtil {
 	/**
 	 * Joins an array of objects into one string with separator.
 	 */
-	public static String join(Object[] array, char separator) {
+	public static String join(final Object[] array, final char separator) {
 		if (array == null) {
 			return null;
 		}
@@ -2263,7 +2263,7 @@ public class StringUtil {
 	/**
 	 * Joins an collection of objects into one string with separator.
 	 */
-	public static String join(Collection collection, char separator) {
+	public static String join(final Collection collection, final char separator) {
 		if (collection == null) {
 			return null;
 		}
@@ -2287,7 +2287,7 @@ public class StringUtil {
 		return sb.toString();
 	}
 
-	public static String join(Collection collection, String separator) {
+	public static String join(final Collection collection, final String separator) {
 		if (collection == null) {
 			return null;
 		}
@@ -2314,7 +2314,7 @@ public class StringUtil {
 	/**
 	 * Joins an array of objects into one string with separator.
 	 */
-	public static String join(Object[] array, String separator) {
+	public static String join(final Object[] array, final String separator) {
 		if (array == null) {
 			return null;
 		}
@@ -2349,7 +2349,7 @@ public class StringUtil {
 	/**
 	 * Converts string charset. If charset names are the same, the same string is returned.
 	 */
-	public static String convertCharset(String source, String srcCharsetName, String newCharsetName) {
+	public static String convertCharset(final String source, final String srcCharsetName, final String newCharsetName) {
 		if (srcCharsetName.equals(newCharsetName)) {
 			return source;
 		}
@@ -2363,7 +2363,7 @@ public class StringUtil {
 	/**
 	 * Escapes a string using java rules.
 	 */
-	public static String escapeJava(String string) {
+	public static String escapeJava(final String string) {
 		int strLen = string.length();
 		StringBuilder sb = new StringBuilder(strLen);
 
@@ -2396,7 +2396,7 @@ public class StringUtil {
 	/**
 	 * Unescapes a string using java rules.
 	 */
-	public static String unescapeJava(String str) {
+	public static String unescapeJava(final String str) {
 		char[] chars = str.toCharArray();
 
 		StringBuilder sb = new StringBuilder(str.length());
@@ -2433,7 +2433,7 @@ public class StringUtil {
 	/**
 	 * Safely compares provided char with char on given location.
 	 */
-	public static boolean isCharAtEqual(String string, int index, char charToCompare) {
+	public static boolean isCharAtEqual(final String string, final int index, final char charToCompare) {
 		if ((index < 0) || (index >= string.length())) {
 			return false;
 		}
@@ -2446,14 +2446,14 @@ public class StringUtil {
 	/**
 	 * @see #surround(String, String, String)
 	 */
-	public static String surround(String string, String fix) {
+	public static String surround(final String string, final String fix) {
 		return surround(string, fix, fix);
 	}
 
 	/**
 	 * Surrounds the string with provided prefix and suffix if such missing from string.
 	 */
-	public static String surround(String string, String prefix, String suffix) {
+	public static String surround(String string, final String prefix, final String suffix) {
 		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
@@ -2466,7 +2466,7 @@ public class StringUtil {
 	/**
 	 * Inserts prefix if doesn't exist.
 	 */
-	public static String prefix(String string, String prefix) {
+	public static String prefix(String string, final String prefix) {
 		if (!string.startsWith(prefix)) {
 			string = prefix + string;
 		}
@@ -2476,7 +2476,7 @@ public class StringUtil {
 	/**
 	 * Appends suffix if doesn't exist.
 	 */
-	public static String suffix(String string, String suffix) {
+	public static String suffix(String string, final String suffix) {
 		if (!string.endsWith(suffix)) {
 			string += suffix;
 		}
@@ -2488,7 +2488,7 @@ public class StringUtil {
 	/**
 	 * Cuts the string from beginning to the first index of provided substring.
 	 */
-	public static String cutToIndexOf(String string, String substring) {
+	public static String cutToIndexOf(String string, final String substring) {
 		int i = string.indexOf(substring);
 		if (i != -1) {
 			string = string.substring(0, i);
@@ -2498,7 +2498,7 @@ public class StringUtil {
 	/**
 	 * Cuts the string from beginning to the first index of provided char.
 	 */
-	public static String cutToIndexOf(String string, char c) {
+	public static String cutToIndexOf(String string, final char c) {
 		int i = string.indexOf(c);
 		if (i != -1) {
 			string = string.substring(0, i);
@@ -2509,7 +2509,7 @@ public class StringUtil {
 	/**
 	 * Cuts the string from the first index of provided substring to the end.
 	 */
-	public static String cutFromIndexOf(String string, String substring) {
+	public static String cutFromIndexOf(String string, final String substring) {
 		int i = string.indexOf(substring);
 		if (i != -1) {
 			string = string.substring(i);
@@ -2519,7 +2519,7 @@ public class StringUtil {
 	/**
 	 * Cuts the string from the first index of provided char to the end.
 	 */
-	public static String cutFromIndexOf(String string, char c) {
+	public static String cutFromIndexOf(String string, final char c) {
 		int i = string.indexOf(c);
 		if (i != -1) {
 			string = string.substring(i);
@@ -2530,7 +2530,7 @@ public class StringUtil {
 	/**
 	 * Cuts prefix if exists.
 	 */
-	public static String cutPrefix(String string, String prefix) {
+	public static String cutPrefix(String string, final String prefix) {
 		if (string.startsWith(prefix)) {
 			string = string.substring(prefix.length());
 		}
@@ -2540,7 +2540,7 @@ public class StringUtil {
 	/**
 	 * Cuts sufix if exists.
 	 */
-	public static String cutSuffix(String string, String suffix) {
+	public static String cutSuffix(String string, final String suffix) {
 		if (string.endsWith(suffix)) {
 			string = string.substring(0, string.length() - suffix.length());
 		}
@@ -2550,14 +2550,14 @@ public class StringUtil {
 	/**
 	 * @see #cutSurrounding(String, String, String)
 	 */
-	public static String cutSurrounding(String string, String fix) {
+	public static String cutSurrounding(final String string, final String fix) {
 		return cutSurrounding(string, fix, fix);
 	}
 
 	/**
 	 * Removes surrounding prefix and suffixes.
 	 */
-	public static String cutSurrounding(String string, String prefix, String suffix) {
+	public static String cutSurrounding(final String string, final String prefix, final String suffix) {
 		int start = 0;
 		int end = string.length();
 
@@ -2580,7 +2580,7 @@ public class StringUtil {
 	 * is missing, nothing will be cut and <code>null</code> is returned.
 	 * If indexes of left or right strings are wrong, empty string is returned.
 	 */
-	public static String cutBetween(String string, String left, String right) {
+	public static String cutBetween(final String string, final String left, final String right) {
 		int leftNdx = string.indexOf(left);
 		if (leftNdx == -1) {
 			return null;
@@ -2607,7 +2607,7 @@ public class StringUtil {
 	 * Returns <code>true</code> if character at provided index position is escaped
 	 * by escape character.
 	 */
-	public static boolean isCharAtEscaped(String src, int ndx, char escapeChar) {
+	public static boolean isCharAtEscaped(final String src, int ndx, final char escapeChar) {
 		if (ndx == 0) {
 			return false;
 		}
@@ -2615,11 +2615,11 @@ public class StringUtil {
 		return src.charAt(ndx) == escapeChar;
 	}
 
-	public static int indexOfUnescapedChar(String src, char sub, char escapeChar) {
+	public static int indexOfUnescapedChar(final String src, final char sub, final char escapeChar) {
 		return indexOfUnescapedChar(src, sub, escapeChar, 0);
 	}
 
-	public static int indexOfUnescapedChar(String src, char sub, char escapeChar, int startIndex) {
+	public static int indexOfUnescapedChar(final String src, final char sub, final char escapeChar, int startIndex) {
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
@@ -2644,14 +2644,14 @@ public class StringUtil {
 
 	// ---------------------------------------------------------------- insert
 
-	public static String insert(String src, String insert) {
+	public static String insert(final String src, final String insert) {
 		return insert(src, insert, 0);
 	}
 
 	/**
 	 * Inserts a string on provided offset.
 	 */
-	public static String insert(String src, String insert, int offset) {
+	public static String insert(final String src, final String insert, int offset) {
 		if (offset < 0) {
 			offset = 0;
 		}
@@ -2668,7 +2668,7 @@ public class StringUtil {
 	/**
 	 * Creates a new string that contains the provided string a number of times.
 	 */
-	public static String repeat(String source, int count) {
+	public static String repeat(final String source, int count) {
 		StringBand result = new StringBand(count);
 		while (count > 0) {
 			result.append(source);
@@ -2677,7 +2677,7 @@ public class StringUtil {
 		return result.toString();
 	}
 
-	public static String repeat(char c, int count) {
+	public static String repeat(final char c, final int count) {
 		char[] result = new char[count];
 		for (int i = 0; i < count; i++) {
 			result[i] = c;
@@ -2688,7 +2688,7 @@ public class StringUtil {
 	/**
 	 * Reverse a string.
 	 */
-	public static String reverse(String s) {
+	public static String reverse(final String s) {
 		StringBuilder result = new StringBuilder(s.length());
 		for (int i = s.length() -1; i >= 0; i--) {
 			result.append(s.charAt(i));
@@ -2699,7 +2699,7 @@ public class StringUtil {
 	/**
 	 * Returns max common prefix of two strings.
 	 */
-	public static String maxCommonPrefix(String one, String two) {
+	public static String maxCommonPrefix(final String one, final String two) {
         final int minLength = Math.min(one.length(), two.length());
 
         final StringBuilder sb = new StringBuilder(minLength);
@@ -2740,7 +2740,7 @@ public class StringUtil {
 	 * This applies only to the first character of the CamelCase name.
 	 * </ul>
 	 */
-	public static String fromCamelCase(String input, char separator) {
+	public static String fromCamelCase(final String input, final char separator) {
 		int length = input.length();
 		StringBuilder result = new StringBuilder(length * 2);
 		int resultLength = 0;
@@ -2768,7 +2768,7 @@ public class StringUtil {
 	/**
 	 * Converts separated string value to CamelCase.
 	 */
-	public static String toCamelCase(String input, boolean firstCharUppercase, char separator) {
+	public static String toCamelCase(final String input, final boolean firstCharUppercase, final char separator) {
 		int length = input.length();
 		StringBuilder sb = new StringBuilder(length);
 		boolean upperCase = firstCharUppercase;
@@ -2793,7 +2793,7 @@ public class StringUtil {
 	 * Finds common prefix for several strings. Returns an empty string if
 	 * arguments do not have a common prefix.
 	 */
-	public static String findCommonPrefix(String... strings) {
+	public static String findCommonPrefix(final String... strings) {
 		StringBuilder prefix = new StringBuilder();
 		int index = 0;
 		char c = 0;
@@ -2828,7 +2828,7 @@ public class StringUtil {
 	/**
 	 * Shorten string to given length.
 	 */
-	public static String shorten(String s, int length, String suffix) {
+	public static String shorten(String s, int length, final String suffix) {
 		length -= suffix.length();
 
 		if (s.length() > length) {
@@ -2850,7 +2850,7 @@ public class StringUtil {
 	/**
 	 * Formats provided string as paragraph.
 	 */
-	public static String formatParagraph(String src, int len, boolean breakOnWhitespace) {
+	public static String formatParagraph(final String src, final int len, final boolean breakOnWhitespace) {
 		StringBuilder str = new StringBuilder();
 		int total = src.length();
 		int from = 0;
@@ -2880,7 +2880,7 @@ public class StringUtil {
 	 * This is not a simple tab to spaces replacement, since the resulting
 	 * indentation remains the same.
 	 */
-	public static String convertTabsToSpaces(String line, int tabWidth) {
+	public static String convertTabsToSpaces(final String line, final int tabWidth) {
 		int tab_index, tab_size;
 		int last_tab_index = 0;
 		int added_chars = 0;
@@ -2920,7 +2920,7 @@ public class StringUtil {
 	 * @return the string, converted to lower case, or <code>null</code> if the
 	 *         string is <code>null</code>
 	 */
-	public static String toLowerCase(String s) {
+	public static String toLowerCase(final String s) {
 		return toLowerCase(s, null);
 	}
 
@@ -2934,7 +2934,7 @@ public class StringUtil {
 	 * @return the string, converted to lower case, or <code>null</code> if the
 	 *         string is <code>null</code>
 	 */
-	public static String toLowerCase(String s, Locale locale) {
+	public static String toLowerCase(final String s, Locale locale) {
 		if (s == null) {
 			return null;
 		}
@@ -2978,7 +2978,7 @@ public class StringUtil {
 	 * @return the string, converted to upper case, or <code>null</code> if the
 	 *         string is <code>null</code>
 	 */
-	public static String toUpperCase(String s) {
+	public static String toUpperCase(final String s) {
 		return toUpperCase(s, null);
 	}
 
@@ -2991,7 +2991,7 @@ public class StringUtil {
 	 * @return the string, converted to upper case, or <code>null</code> if the
 	 *         string is <code>null</code>
 	 */
-	public static String toUpperCase(String s, Locale locale) {
+	public static String toUpperCase(final String s, Locale locale) {
 		if (s == null) {
 			return null;
 		}
@@ -3032,7 +3032,7 @@ public class StringUtil {
 	/**
 	 * Removes starting and ending single or double quotes.
 	 */
-	public static String removeQuotes(String string) {
+	public static String removeQuotes(final String string) {
 		if (
 			(startsWithChar(string, '\'') && endsWithChar(string, '\'')) ||
 			(startsWithChar(string, '"') && endsWithChar(string, '"'))
@@ -3047,7 +3047,7 @@ public class StringUtil {
 	/**
 	 * Converts bytes to hex string.
 	 */
-	public static String toHexString(byte[] bytes) {
+	public static String toHexString(final byte[] bytes) {
 		char[] chars = new char[bytes.length * 2];
 
 		int i = 0;
@@ -3064,7 +3064,7 @@ public class StringUtil {
 	/**
 	 * Executes function on a string if not {@code null}. Otherwise returns an empty string.
 	 */
-	public static String ifNotNull(String input, Function<String, String> stringFunction) {
+	public static String ifNotNull(final String input, final Function<String, String> stringFunction) {
 		if (input == null) {
 			return StringPool.EMPTY;
 		}

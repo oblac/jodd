@@ -65,7 +65,7 @@ public class VtorJsonActionResult implements ActionResult<String> {
 
 
 	@Override
-	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+	public void render(final ActionRequest actionRequest, final String resultValue) throws Exception {
 		HttpServletRequest request = actionRequest.httpServletRequest();
 		HttpServletResponse response = actionRequest.httpServletResponse();
 

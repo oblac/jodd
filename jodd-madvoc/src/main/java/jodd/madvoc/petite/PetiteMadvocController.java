@@ -26,8 +26,8 @@
 package jodd.madvoc.petite;
 
 import jodd.madvoc.component.MadvocController;
-import jodd.petite.meta.PetiteInject;
 import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInject;
 
 /**
  * Petite-aware Madvoc controller.
@@ -42,7 +42,7 @@ public class PetiteMadvocController extends MadvocController {
 	 */
 	@Override
 	@SuppressWarnings({"unchecked"})
-	protected Object createAction(Class actionClass) {
+	protected Object createAction(final Class actionClass) {
 		return petiteContainer.createBean(actionClass);
 	}
 

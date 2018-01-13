@@ -107,7 +107,7 @@ public class AsmUtil {
 	 *
 	 * @see #typedescToSignature(String, jodd.mutable.MutableInteger)
 	 */
-	public static String typedesc2ClassName(String desc) {
+	public static String typedesc2ClassName(final String desc) {
 		String className = desc;
 		switch (desc.charAt(0)) {
 			case 'B':
@@ -139,7 +139,7 @@ public class AsmUtil {
 	/**
 	 * Converts type reference to java-name.
 	 */
-	public static String typeref2Name(String desc) {
+	public static String typeref2Name(final String desc) {
 		if (desc.charAt(0) != TYPE_REFERENCE) {
 			throw new IllegalArgumentException(INVALID_TYPE_DESCRIPTION + desc);
 		}
@@ -153,7 +153,7 @@ public class AsmUtil {
 	 * Returns type-name to type char.
 	 * Arrays are not supported.
 	 */
-	public static char typeNameToOpcode(String typeName) {
+	public static char typeNameToOpcode(final String typeName) {
 		switch (typeName) {
 			case "byte" : return 'B';
 			case "char": return 'C';
@@ -172,7 +172,7 @@ public class AsmUtil {
 	 * Returns java-like signature of a bytecode-like description.
 	 * @see #typedescToSignature(String, jodd.mutable.MutableInteger)
 	 */
-	public static String typedescToSignature(String desc) {
+	public static String typedescToSignature(final String desc) {
 		return typedescToSignature(desc, new MutableInteger());
 	}
 
@@ -207,7 +207,7 @@ public class AsmUtil {
 	 * This method converts this string into a Java type declaration such as
 	 * <code>String[]</code>.
 	 */
-	public static String typedescToSignature(String desc, MutableInteger from) {
+	public static String typedescToSignature(final String desc, final MutableInteger from) {
 		int fromIndex = from.get();
 		from.value++;	// default usage for most cases
 
@@ -259,21 +259,21 @@ public class AsmUtil {
 	/**
 	 * Converts java-class name ("foo.Bar") to bytecode-signature ("foo/bar").
 	 */
-	public static String typeToSignature(String className) {
+	public static String typeToSignature(final String className) {
 		return className.replace('.', '/');
 	}
 
 	/**
 	 * Converts java-class name ("foo.Bar") to bytecode-name ("foo/bar").
 	 */
-	public static String typeToSignature(Class type) {
+	public static String typeToSignature(final Class type) {
 		return typeToSignature(type.getName());
 	}
 
 	/**
 	 * Converts type to byteccode type ref.
 	 */
-	public static String typeToTyperef(Class type) {
+	public static String typeToTyperef(final Class type) {
 		if (!type.isArray()) {
 			if (!type.isPrimitive()) {
 				return 'L' + typeToSignature(type) + ';';
@@ -315,7 +315,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Integer</code> object to an <code>int</code>.
 	 */
-	public static void intValue(MethodVisitor mv) {
+	public static void intValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_INTEGER);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_INTEGER, "intValue", "()I", false);
 	}
@@ -323,7 +323,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Long</code> object to a <code>long</code>.
 	 */
-	public static void longValue(MethodVisitor mv) {
+	public static void longValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_LONG);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_LONG, "longValue", "()J", false);
 	}
@@ -331,7 +331,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Float</code> object to a <code>float</code>.
 	 */
-	public static void floatValue(MethodVisitor mv) {
+	public static void floatValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_FLOAT);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_FLOAT, "floatValue", "()F", false);
 	}
@@ -339,7 +339,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Double</code> object to a <code>double</code>.
 	 */
-	public static void doubleValue(MethodVisitor mv) {
+	public static void doubleValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_DOUBLE);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_DOUBLE, "doubleValue", "()D", false);
 	}
@@ -347,7 +347,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Byte</code> object to a <code>byte</code>.
 	 */
-	public static void byteValue(MethodVisitor mv) {
+	public static void byteValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_BYTE);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_BYTE, "byteValue", "()B", false);
 	}
@@ -355,7 +355,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Short</code> object to a <code>short</code>.
 	 */
-	public static void shortValue(MethodVisitor mv) {
+	public static void shortValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_SHORT);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_SHORT, "shortValue", "()S", false);
 	}
@@ -363,7 +363,7 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Boolean</code> object to a <code>boolean</code>.
 	 */
-	public static void booleanValue(MethodVisitor mv) {
+	public static void booleanValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_BOOLEAN);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_BOOLEAN, "booleanValue", "()Z", false);
 	}
@@ -371,40 +371,40 @@ public class AsmUtil {
 	/**
 	 * Converts <code>Character</code> object to a <code>char</code>.
 	 */
-	public static void charValue(MethodVisitor mv) {
+	public static void charValue(final MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_CHARACTER);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "()C", false);
 	}
 
-	public static void valueOfInteger(MethodVisitor mv) {
+	public static void valueOfInteger(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_INTEGER, "valueOf", "(I)Ljava/lang/Integer;", false);
 	}
 
-	public static void valueOfLong(MethodVisitor mv) {
+	public static void valueOfLong(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_LONG, "valueOf", "(J)Ljava/lang/Long;", false);
 	}
 
-	public static void valueOfFloat(MethodVisitor mv) {
+	public static void valueOfFloat(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_FLOAT, "valueOf", "(F)Ljava/lang/Float;", false);
 	}
 
-	public static void valueOfDouble(MethodVisitor mv) {
+	public static void valueOfDouble(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_DOUBLE, "valueOf", "(D)Ljava/lang/Double;", false);
 	}
 
-	public static void valueOfByte(MethodVisitor mv) {
+	public static void valueOfByte(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_BYTE, "valueOf", "(B)Ljava/lang/Byte;", false);
 	}
 
-	public static void valueOfShort(MethodVisitor mv) {
+	public static void valueOfShort(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_SHORT, "valueOf", "(S)Ljava/lang/Short;", false);
 	}
 
-	public static void valueOfBoolean(MethodVisitor mv) {
+	public static void valueOfBoolean(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_BOOLEAN, "valueOf", "(Z)Ljava/lang/Boolean;", false);
 	}
 
-	public static void valueOfCharacter(MethodVisitor mv) {
+	public static void valueOfCharacter(final MethodVisitor mv) {
 		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_CHARACTER, "valueOf", "(C)Ljava/lang/Character;", false);
 	}
 

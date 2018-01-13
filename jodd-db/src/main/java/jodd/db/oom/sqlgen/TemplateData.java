@@ -89,7 +89,7 @@ public abstract class TemplateData {
 	/**
 	 * Saves object reference.
 	 */
-	public void setObjectReference(String name, Object object) {
+	public void setObjectReference(final String name, final Object object) {
 		if (objectRefs == null) {
 			objectRefs = new HashMap<>();
 		}
@@ -99,7 +99,7 @@ public abstract class TemplateData {
 	/**
 	 * Returns object reference.
 	 */
-	public Object getObjectReference(String name) {
+	public Object getObjectReference(final String name) {
 		if (objectRefs == null) {
 			return null;
 		}
@@ -109,7 +109,7 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for object reference and throws an exception if reference doesn't exist.
 	 */
-	public Object lookupObject(String ref) {
+	public Object lookupObject(final String ref) {
 		Object value = getObjectReference(ref);
 		if (value == null) {
 			throw new DbSqlBuilderException("Invalid object reference: " + ref);
@@ -123,7 +123,7 @@ public abstract class TemplateData {
 		final String alias;
 		final DbEntityDescriptor desc;
 
-		private TableRefData(DbEntityDescriptor desc, String alias) {
+		private TableRefData(final DbEntityDescriptor desc, final String alias) {
 			this.alias = alias;
 			this.desc = desc;
 		}
@@ -134,7 +134,7 @@ public abstract class TemplateData {
 	/**
 	 * Returns entity descriptor for provided table reference.
 	 */
-	public DbEntityDescriptor getTableDescriptor(String tableRef) {
+	public DbEntityDescriptor getTableDescriptor(final String tableRef) {
 		if (tableRefs == null) {
 			return null;
 		}
@@ -145,7 +145,7 @@ public abstract class TemplateData {
 	/**
 	 * Finds entity descriptor of a table that contains provided column reference.
 	 */
-	public DbEntityDescriptor findTableDescriptorByColumnRef(String columnRef) {
+	public DbEntityDescriptor findTableDescriptorByColumnRef(final String columnRef) {
 		for (Map.Entry<String, TableRefData> entry : tableRefs.entrySet()) {
 			DbEntityDescriptor ded = entry.getValue().desc;
 
@@ -159,7 +159,7 @@ public abstract class TemplateData {
 	/**
 	 * Returns table alias for provided table reference.
 	 */
-	public String getTableAlias(String tableRef) {
+	public String getTableAlias(final String tableRef) {
 		if (tableRefs == null) {
 			return null;
 		}
@@ -170,7 +170,7 @@ public abstract class TemplateData {
 	/**
 	 * Registers table reference for provided entity.
 	 */
-	public void registerTableReference(String tableReference, DbEntityDescriptor ded, String tableAlias) {
+	public void registerTableReference(final String tableReference, final DbEntityDescriptor ded, final String tableAlias) {
 		if (tableRefs == null) {
 			tableRefs = new HashMap<>();
 		}
@@ -206,14 +206,14 @@ public abstract class TemplateData {
 	}
 
 
-	public void registerColumnDataForTableRef(String tableRef, String tableName) {
+	public void registerColumnDataForTableRef(final String tableRef, final String tableName) {
 		if (columnData == null) {
 			columnData = new NamedValuesHashMap<>();
 		}
 		columnData.put(tableRef, new ColumnData(tableName));
 	}
 
-	public String registerColumnDataForColumnCode(String tableName, String column) {
+	public String registerColumnDataForColumnCode(final String tableName, final String column) {
 		if (columnData == null) {
 			columnData = new NamedValuesHashMap<>();
 		}
@@ -239,7 +239,7 @@ public abstract class TemplateData {
 	/**
 	 * Adds query parameter.
 	 */
-	public void addParameter(String name, Object value, DbEntityColumnDescriptor dec) {
+	public void addParameter(final String name, final Object value, final DbEntityColumnDescriptor dec) {
 		if (parameters == null) {
 			parameters = new HashMap<>();
 		}
@@ -253,7 +253,7 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
-	protected DbEntityDescriptor lookupName(String entityName) {
+	protected DbEntityDescriptor lookupName(final String entityName) {
 		DbEntityDescriptor ded = DbEntityManager.get().lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
@@ -264,7 +264,7 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
-	protected DbEntityDescriptor lookupType(Class entity) {
+	protected DbEntityDescriptor lookupType(final Class entity) {
 		DbEntityDescriptor ded = DbEntityManager.get().lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
@@ -275,7 +275,7 @@ public abstract class TemplateData {
 	/**
 	 * Lookups for table reference and throws an exception if table reference not found.
 	 */
-	protected DbEntityDescriptor lookupTableRef(String tableRef) {
+	protected DbEntityDescriptor lookupTableRef(final String tableRef) {
 		DbEntityDescriptor ded = getTableDescriptor(tableRef);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Table reference not used in this query: " + tableRef);
@@ -288,7 +288,7 @@ public abstract class TemplateData {
 	/**
 	 * Defines parameter with name and its value.
 	 */
-	protected void defineParameter(StringBuilder query, String name, Object value) {
+	protected void defineParameter(final StringBuilder query, String name, final Object value) {
 		if (name == null) {
 			name = getNextParameterName();
 		}
@@ -306,7 +306,7 @@ public abstract class TemplateData {
 	/**
 	 * Registers a hint.
 	 */
-	public void registerHint(String hint) {
+	public void registerHint(final String hint) {
 		if (hints == null) {
 			hints = new ArrayList<>(hintCount);
 		}

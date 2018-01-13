@@ -30,22 +30,22 @@ package jodd.mutable;
  */
 public final class MutableByte extends Number implements Comparable<MutableByte>, Cloneable {
 
-	public static MutableByte of(byte value) {
+	public static MutableByte of(final byte value) {
 		return new MutableByte(value);
 	}
 
 	public MutableByte() {
 	}
 
-	public MutableByte(byte value) {
+	public MutableByte(final byte value) {
 		this.value = value;
 	}
 
-	public MutableByte(String value) {
+	public MutableByte(final String value) {
 		this.value = Byte.parseByte(value);
 	}
 
-	public MutableByte(Number number) {
+	public MutableByte(final Number number) {
 		this.value = number.byteValue();
 	}
 
@@ -66,14 +66,14 @@ public final class MutableByte extends Number implements Comparable<MutableByte>
 	/**
 	 * Sets mutable value.
 	 */
-	public void set(byte value) {
+	public void set(final byte value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void set(Number value) {
+	public void set(final Number value) {
 		this.value = value.byteValue();
 	}
 
@@ -103,7 +103,7 @@ public final class MutableByte extends Number implements Comparable<MutableByte>
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Byte)this.value).getClass() == obj.getClass() ) {
 				return value == ((Byte) obj).byteValue();
@@ -155,7 +155,7 @@ public final class MutableByte extends Number implements Comparable<MutableByte>
 	 * Compares value of two same instances.
 	 */
 	@Override
-	public int compareTo(MutableByte other) {
+	public int compareTo(final MutableByte other) {
 		return value < other.value ? -1 : (value == other.value ? 0 : 1);
 	}
 

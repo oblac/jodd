@@ -70,7 +70,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	protected Strategy staplerStrategy = Strategy.RESOURCES_ONLY;
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig filterConfig) throws ServletException {
 		super.init(filterConfig);
 
 		bundlesManager = createBundleManager(filterConfig.getServletContext(), staplerStrategy);
@@ -109,7 +109,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	/**
 	 * Reads filter config parameters and set into destination target.
 	 */
-	protected void readFilterConfigParameters(FilterConfig filterConfig, Object target, String... parameters) {
+	protected void readFilterConfigParameters(final FilterConfig filterConfig, final Object target, final String... parameters) {
 		for (String parameter : parameters) {
 			String value = filterConfig.getInitParameter(parameter);
 
@@ -122,7 +122,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	/**
 	 * Creates {@link HtmlStaplerBundlesManager} instance.
 	 */
-	protected HtmlStaplerBundlesManager createBundleManager(ServletContext servletContext, Strategy strategy) {
+	protected HtmlStaplerBundlesManager createBundleManager(final ServletContext servletContext, final Strategy strategy) {
 		String webRoot = servletContext.getRealPath(StringPool.EMPTY);
 
 		String contextPath = ServletUtil.getContextPath(servletContext);
@@ -138,7 +138,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
 		return new LagartoParsingProcessor() {
 			@Override
-			protected char[] parse(TagWriter rootTagWriter, HttpServletRequest request) {
+			protected char[] parse(final TagWriter rootTagWriter, final HttpServletRequest request) {
 
 				TagVisitor visitor = rootTagWriter;
 
@@ -170,7 +170,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	}
 
 	@Override
-	protected boolean processActionPath(HttpServletRequest servletRequest, HttpServletResponse servletResponse, String actionPath) throws IOException {
+	protected boolean processActionPath(final HttpServletRequest servletRequest, final HttpServletResponse servletResponse, final String actionPath) throws IOException {
 
 		String bundlePath = '/' + bundlesManager.getStaplerPath() + '/';
 
@@ -217,7 +217,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	/**
 	 * Outputs bundle file to the response.
 	 */
-	protected void sendBundleFile(HttpServletResponse resp, File bundleFile) throws IOException {
+	protected void sendBundleFile(final HttpServletResponse resp, final File bundleFile) throws IOException {
 		OutputStream out = resp.getOutputStream();
 		FileInputStream fileInputStream = new FileInputStream(bundleFile);
 		try {

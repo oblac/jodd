@@ -36,7 +36,7 @@ public abstract class BlockCipher {
 	
 	protected final int blockSizeInBytes;
 
-	protected BlockCipher(int blockSize) {
+	protected BlockCipher(final int blockSize) {
 		this.blockSizeInBytes = blockSize >> 3;
 	}
 
@@ -54,7 +54,7 @@ public abstract class BlockCipher {
 	/**
 	 * Encrypts complete content, block by block.
 	 */
-	public byte[] encrypt(byte[] content) {
+	public byte[] encrypt(final byte[] content) {
 		FastByteBuffer fbb = new FastByteBuffer();
 
 		int length = content.length + 1;
@@ -93,7 +93,7 @@ public abstract class BlockCipher {
 	/**
 	 * Decrypts the whole content, block by block.
 	 */
-	public byte[] decrypt(byte[] encryptedContent) {
+	public byte[] decrypt(final byte[] encryptedContent) {
 		FastByteBuffer fbb = new FastByteBuffer();
 
 		int length = encryptedContent.length;

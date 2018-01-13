@@ -38,7 +38,7 @@ public class JSONAnnotationData<A extends Annotation> extends AnnotationData<A> 
 	protected boolean included;
 	protected boolean strict;
 
-	protected JSONAnnotationData(A annotation) {
+	protected JSONAnnotationData(final A annotation) {
 		super(annotation);
 	}
 

@@ -63,7 +63,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	/**
 	 * Registers pseudo function.
 	 */
-	public static void registerPseudoFunction(Class<? extends PseudoFunction> pseudoFunctionType) {
+	public static void registerPseudoFunction(final Class<? extends PseudoFunction> pseudoFunctionType) {
 		PseudoFunction pseudoFunction;
 		try {
 			pseudoFunction = ClassUtil.newInstance(pseudoFunctionType);
@@ -76,7 +76,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	/**
 	 * Lookups pseudo function for given pseudo function name.
 	 */
-	public static PseudoFunction<?> lookupPseudoFunction(String pseudoFunctionName) {
+	public static PseudoFunction<?> lookupPseudoFunction(final String pseudoFunctionName) {
 		PseudoFunction pseudoFunction = PSEUDO_FUNCTION_MAP.get(pseudoFunctionName);
 		if (pseudoFunction == null) {
 			throw new CSSellyException("Unsupported pseudo function: " + pseudoFunctionName);
@@ -95,7 +95,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	 * Creates pseudo function selector for given function and expression.
 	 */
 	@SuppressWarnings("unchecked")
-	public PseudoFunctionSelector(String functionName, String expression) {
+	public PseudoFunctionSelector(final String functionName, final String expression) {
 		super(Type.PSEUDO_FUNCTION);
 		this.pseudoFunction = (PseudoFunction<E>) lookupPseudoFunction(functionName.trim());
 		this.expression = expression;
@@ -127,7 +127,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	 * Matches nodes with this pseudo function selector.
 	 */
 	@Override
-	public boolean accept(Node node) {
+	public boolean accept(final Node node) {
 		return pseudoFunction.match(node, parsedExpression);
 	}
 
@@ -135,7 +135,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	 * Accepts node within selected results. Invoked after results are matched.
 	 */
 	@Override
-	public boolean accept(List<Node> currentResults, Node node, int index) {
+	public boolean accept(final List<Node> currentResults, final Node node, final int index) {
 		return pseudoFunction.match(currentResults, node, index, parsedExpression);
 	}
 

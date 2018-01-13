@@ -73,7 +73,7 @@ public class FormTag extends BodyTagSupport {
 		return EVAL_PAGE;
 	}
 
-	protected String populateForm(String formHtml, FormFieldResolver resolver) {
+	protected String populateForm(final String formHtml, final FormFieldResolver resolver) {
 		LagartoParser lagartoParser = new LagartoParser(formHtml);
 		StringBuilder result = new StringBuilder();
 

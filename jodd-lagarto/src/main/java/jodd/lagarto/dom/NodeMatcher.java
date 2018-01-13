@@ -35,16 +35,16 @@ public class NodeMatcher {
 
 	protected final Node rootNode;
 
-	public NodeMatcher(Node rootNode) {
+	public NodeMatcher(final Node rootNode) {
 		this.rootNode = rootNode;
 	}
 
-	public boolean match(String query) {
+	public boolean match(final String query) {
 		Collection<List<CssSelector>> selectorsCollection = CSSelly.parse(query);
 		return match(selectorsCollection);
 	}
 
-	public boolean match(Collection<List<CssSelector>> selectorsCollection) {
+	public boolean match(final Collection<List<CssSelector>> selectorsCollection) {
 		for (List<CssSelector> selectors : selectorsCollection) {
 			// iterate all selectors
 			for (CssSelector cssSelector : selectors) {

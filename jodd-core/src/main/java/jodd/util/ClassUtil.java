@@ -87,18 +87,18 @@ public class ClassUtil {
 	 * @param methodName Full name of the method.
 	 * @return null if method not found
 	 */
-	public static Method findMethod(Class c, String methodName) {
+	public static Method findMethod(final Class c, final String methodName) {
 		return findDeclaredMethod(c, methodName, true);
 	}
 
 	/**
 	 * @see #findMethod(Class, String)
 	 */
-	public static Method findDeclaredMethod(Class c, String methodName) {
+	public static Method findDeclaredMethod(final Class c, final String methodName) {
 		return findDeclaredMethod(c, methodName, false);
 	}
 
-	private static Method findDeclaredMethod(Class c, String methodName, boolean publicOnly) {
+	private static Method findDeclaredMethod(final Class c, final String methodName, final boolean publicOnly) {
 		if ((methodName == null) || (c == null)) {
 			return null;
 		}
@@ -116,7 +116,7 @@ public class ClassUtil {
 	/**
 	 * Finds constructor with given parameter types. First matched ctor is returned.
 	 */
-	public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... parameterTypes) {
+	public static <T> Constructor<T> findConstructor(final Class<T> clazz, final Class<?>... parameterTypes) {
 		final Constructor<?>[] constructors = clazz.getConstructors();
 
 		Class<?>[] pts;
@@ -134,7 +134,7 @@ public class ClassUtil {
 	/**
 	 * Returns {@code true} if all types are assignable from the other array of types.
 	 */
-	public static boolean isAllAssignableFrom(Class<?>[] typesTarget, Class<?>[] typesFrom) {
+	public static boolean isAllAssignableFrom(final Class<?>[] typesTarget, final Class<?>[] typesFrom) {
 		if (typesTarget.length == typesFrom.length) {
 			for (int i = 0; i < typesTarget.length; i++) {
 				if (!typesTarget[i].isAssignableFrom(typesFrom[i])) {
@@ -153,7 +153,7 @@ public class ClassUtil {
 	 * Returns classes from array of objects. It accepts {@code null}
 	 * values.
 	 */
-	public static Class[] getClasses(Object... objects) {
+	public static Class[] getClasses(final Object... objects) {
 		if (objects.length == 0) {
 			return EMPTY_CLASS_ARRAY;
 		}
@@ -172,7 +172,7 @@ public class ClassUtil {
 	 * Safe version of <code>isAssignableFrom</code> method that
 	 * returns <code>false</code> if one of the arguments is <code>null</code>.
 	 */
-	public static boolean isTypeOf(Class<?> lookupClass, Class<?> targetClass) {
+	public static boolean isTypeOf(final Class<?> lookupClass, final Class<?> targetClass) {
 		if (targetClass == null || lookupClass == null) {
 			return false;
 		}
@@ -183,7 +183,7 @@ public class ClassUtil {
 	 * Safe version of <code>isInstance</code>, returns <code>false</code>
 	 * if any of the arguments is <code>null</code>.
 	 */
-	public static boolean isInstanceOf(Object object, Class target) {
+	public static boolean isInstanceOf(final Object object, final Class target) {
 		if (object == null || target == null) {
 			return false;
 		}
@@ -195,14 +195,14 @@ public class ClassUtil {
 	 * Direct interfaces are prior the interfaces of subclasses in
 	 * the returned array.
 	 */
-	public static Class[] resolveAllInterfaces(Class type) {
+	public static Class[] resolveAllInterfaces(final Class type) {
 		Set<Class> bag = new LinkedHashSet<>();
 		_resolveAllInterfaces(type, bag);
 
 		return bag.toArray(new Class[bag.size()]);
 	}
 
-	private static void _resolveAllInterfaces(Class type, Set<Class> bag) {
+	private static void _resolveAllInterfaces(final Class type, final Set<Class> bag) {
 		// add types interfaces
 		Class[] interfaces = type.getInterfaces();
 		Collections.addAll(bag, interfaces);
@@ -252,7 +252,7 @@ public class ClassUtil {
 	 * Returns array of all methods that are accessible from given class.
 	 * @see #getAccessibleMethods(Class, Class)
 	 */
-	public static Method[] getAccessibleMethods(Class clazz) {
+	public static Method[] getAccessibleMethods(final Class clazz) {
 		return getAccessibleMethods(clazz, Object.class);
 	}
 
@@ -260,7 +260,7 @@ public class ClassUtil {
 	 * Returns array of all methods that are accessible from given class, upto limit
 	 * (usually <code>Object.class</code>). Abstract methods are ignored.
 	 */
-	public static Method[] getAccessibleMethods(Class clazz, Class limit) {
+	public static Method[] getAccessibleMethods(Class clazz, final Class limit) {
 		Package topPackage = clazz.getPackage();
 		List<Method> methodList = new ArrayList<>();
 		int topPackageHash = topPackage == null ? 0 : topPackage.hashCode();
@@ -313,7 +313,7 @@ public class ClassUtil {
 		return methods;
 	}
 
-	private static void addMethodIfNotExist(List<Method> allMethods, Method newMethod) {
+	private static void addMethodIfNotExist(final List<Method> allMethods, final Method newMethod) {
 		for (Method m : allMethods) {
 			if (compareSignatures(m, newMethod)) {
 				return;
@@ -325,11 +325,11 @@ public class ClassUtil {
 	// ---------------------------------------------------------------- accessible fields
 
 
-	public static Field[] getAccessibleFields(Class clazz) {
+	public static Field[] getAccessibleFields(final Class clazz) {
 		return getAccessibleFields(clazz, Object.class);
 	}
 
-	public static Field[] getAccessibleFields(Class clazz, Class limit) {
+	public static Field[] getAccessibleFields(Class clazz, final Class limit) {
 		Package topPackage = clazz.getPackage();
 		List<Field> fieldList = new ArrayList<>();
 		int topPackageHash = topPackage == null ? 0 : topPackage.hashCode();
@@ -373,7 +373,7 @@ public class ClassUtil {
 		return fields;
 	}
 
-	private static void addFieldIfNotExist(List<Field> allFields, Field newField) {
+	private static void addFieldIfNotExist(final List<Field> allFields, final Field newField) {
 		for (Field f : allFields) {
 			if (compareSignatures(f, newField)) {
 				return;
@@ -386,7 +386,7 @@ public class ClassUtil {
 	// ---------------------------------------------------------------- supported methods
 
 
-	public static Method[] getSupportedMethods(Class clazz) {
+	public static Method[] getSupportedMethods(final Class clazz) {
 		return getSupportedMethods(clazz, Object.class);
 	}
 
@@ -397,7 +397,7 @@ public class ClassUtil {
 	 * them methods defined by <code>java.lang.Object</code>. If limit is <code>null</code> then all
 	 * methods are returned.
 	 */
-	public static Method[] getSupportedMethods(Class clazz, Class limit) {
+	public static Method[] getSupportedMethods(final Class clazz, final Class limit) {
 		ArrayList<Method> supportedMethods = new ArrayList<>();
 		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
 			Method[] methods = c.getDeclaredMethods();
@@ -418,11 +418,11 @@ public class ClassUtil {
 	}
 
 
-	public static Field[] getSupportedFields(Class clazz) {
+	public static Field[] getSupportedFields(final Class clazz) {
 		return getSupportedFields(clazz, Object.class);
 	}
 
-	public static Field[] getSupportedFields(Class clazz, Class limit) {
+	public static Field[] getSupportedFields(final Class clazz, final Class limit) {
 		ArrayList<Field> supportedFields = new ArrayList<>();
 		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
 			Field[] fields = c.getDeclaredFields();
@@ -448,7 +448,7 @@ public class ClassUtil {
 	/**
 	 * Compares method declarations: signature and return types.
 	 */
-	public static boolean compareDeclarations(Method first, Method second) {
+	public static boolean compareDeclarations(final Method first, final Method second) {
 		if (first.getReturnType() != second.getReturnType()) {
 			return false;
 		}
@@ -458,7 +458,7 @@ public class ClassUtil {
 	/**
 	 * Compares method signatures: names and parameters.
 	 */
-	public static boolean compareSignatures(Method first, Method second) {
+	public static boolean compareSignatures(final Method first, final Method second) {
 		if (!first.getName().equals(second.getName())) {
 			return false;
 		}
@@ -468,21 +468,21 @@ public class ClassUtil {
 	/**
 	 * Compares constructor signatures: names and parameters.
 	 */
-	public static boolean compareSignatures(Constructor first, Constructor second) {
+	public static boolean compareSignatures(final Constructor first, final Constructor second) {
 		if (!first.getName().equals(second.getName())) {
 			return false;
 		}
 		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
 	}
 
-	public static boolean compareSignatures(Field first, Field second) {
+	public static boolean compareSignatures(final Field first, final Field second) {
 		return first.getName().equals(second.getName());
 	}
 
 	/**
 	 * Compares classes, usually method or ctor parameters.
 	 */
-	public static boolean compareParameters(Class[] first, Class[] second) {
+	public static boolean compareParameters(final Class[] first, final Class[] second) {
 		if (first.length != second.length) {
 			return false;
 		}
@@ -500,7 +500,7 @@ public class ClassUtil {
 	 * Suppress access check against a reflection object. SecurityException is silently ignored.
 	 * Checks first if the object is already accessible.
 	 */
-	public static void forceAccess(AccessibleObject accObject) {
+	public static void forceAccess(final AccessibleObject accObject) {
 		try {
 			if (System.getSecurityManager() == null)
 				accObject.setAccessible(true);
@@ -520,14 +520,14 @@ public class ClassUtil {
 	/**
 	 * Returns <code>true</code> if class member is public.
 	 */
-	public static boolean isPublic(Member member) {
+	public static boolean isPublic(final Member member) {
 		return Modifier.isPublic(member.getModifiers());
 	}
 
 	/**
 	 * Returns <code>true</code> if class member is public and if its declaring class is also public.
 	 */
-	public static boolean isPublicPublic(Member member) {
+	public static boolean isPublicPublic(final Member member) {
 		if (Modifier.isPublic(member.getModifiers())) {
 			if (Modifier.isPublic(member.getDeclaringClass().getModifiers())) {
 				return true;
@@ -539,7 +539,7 @@ public class ClassUtil {
 	/**
 	 * Returns <code>true</code> if class is public.
 	 */
-	public static boolean isPublic(Class c) {
+	public static boolean isPublic(final Class c) {
 		return Modifier.isPublic(c.getModifiers());
 	}
 
@@ -550,7 +550,7 @@ public class ClassUtil {
 	 * Creates new instance of given class with given optional arguments.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(Class<T> clazz, Object... params) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	public static <T> T newInstance(final Class<T> clazz, final Object... params) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		if (params.length == 0) {
 			return newInstance(clazz);
 		}
@@ -575,7 +575,7 @@ public class ClassUtil {
 	 * is faster then using a <code>HashMap</code>.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(Class<T> type) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+	public static <T> T newInstance(final Class<T> type) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 		if (type.isPrimitive()) {
 			if (type == int.class) {
 				return (T) Integer.valueOf(0);
@@ -670,14 +670,14 @@ public class ClassUtil {
 	/**
 	 * Returns <code>true</code> if the first member is accessible from second one.
 	 */
-	public static boolean isAssignableFrom(Member member1, Member member2) {
+	public static boolean isAssignableFrom(final Member member1, final Member member2) {
 		return member1.getDeclaringClass().isAssignableFrom(member2.getDeclaringClass());
 	}
 
 	/**
 	 * Returns all superclasses.
 	 */
-	public static Class[] getSuperclasses(Class type) {
+	public static Class[] getSuperclasses(final Class type) {
 		int i = 0;
 		for (Class x = type.getSuperclass(); x != null; x = x.getSuperclass()) {
 			i++;
@@ -709,7 +709,7 @@ public class ClassUtil {
 	/**
 	 * Returns <code>true</code> if method is a bean property.
 	 */
-	public static boolean isBeanProperty(Method method) {
+	public static boolean isBeanProperty(final Method method) {
 		if (isObjectMethod(method)) {
 			return false;
 		}
@@ -735,11 +735,11 @@ public class ClassUtil {
 	/**
 	 * Returns <code>true</code> if method is bean getter.
 	 */
-	public static boolean isBeanPropertyGetter(Method method) {
+	public static boolean isBeanPropertyGetter(final Method method) {
 		return getBeanPropertyGetterPrefixLength(method) != 0;
 	}
 
-	private static int getBeanPropertyGetterPrefixLength(Method method) {
+	private static int getBeanPropertyGetterPrefixLength(final Method method) {
 		if (isObjectMethod(method)) {
 			return 0;
 		}
@@ -762,7 +762,7 @@ public class ClassUtil {
 	 * Returns property name from a getter method.
 	 * Returns <code>null</code> if method is not a real getter.
 	 */
-	public static String getBeanPropertyGetterName(Method method) {
+	public static String getBeanPropertyGetterName(final Method method) {
 		int prefixLength = getBeanPropertyGetterPrefixLength(method);
 		if (prefixLength == 0) {
 			return null;
@@ -774,11 +774,11 @@ public class ClassUtil {
 	/**
 	 * Returns <code>true</code> if method is bean setter.
 	 */
-	public static boolean isBeanPropertySetter(Method method) {
+	public static boolean isBeanPropertySetter(final Method method) {
 		return getBeanPropertySetterPrefixLength(method) != 0;
 	}
 
-	private static int getBeanPropertySetterPrefixLength(Method method) {
+	private static int getBeanPropertySetterPrefixLength(final Method method) {
 		if (isObjectMethod(method)) {
 			return 0;
 		}
@@ -795,7 +795,7 @@ public class ClassUtil {
 	/**
 	 * Returns beans property setter name or <code>null</code> if method is not a real setter.
 	 */
-	public static String getBeanPropertySetterName(Method method) {
+	public static String getBeanPropertySetterName(final Method method) {
 		int prefixLength = getBeanPropertySetterPrefixLength(method);
 		if (prefixLength == 0) {
 			return null;
@@ -814,7 +814,7 @@ public class ClassUtil {
 	 *
 	 * @see #getComponentTypes(java.lang.reflect.Type)
 	 */
-	public static Class getComponentType(Type type, int index) {
+	public static Class getComponentType(final Type type, final int index) {
 		return getComponentType(type, null, index);
 	}
 
@@ -828,7 +828,7 @@ public class ClassUtil {
 	 *
 	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
 	 */
-	public static Class getComponentType(Type type, Class implClass, int index) {
+	public static Class getComponentType(final Type type, final Class implClass, int index) {
 		Class[] componentTypes = getComponentTypes(type, implClass);
 		if (componentTypes == null) {
 			return null;
@@ -848,7 +848,7 @@ public class ClassUtil {
 	/**
 	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
 	 */
-	public static Class[] getComponentTypes(Type type) {
+	public static Class[] getComponentTypes(final Type type) {
 		return getComponentTypes(type, null);
 	}
 
@@ -864,7 +864,7 @@ public class ClassUtil {
 	 * <li>&lt;T extends MyClass&gt; T[]</li>
 	 * </ul>
 	 */
-	public static Class[] getComponentTypes(Type type, Class implClass) {
+	public static Class[] getComponentTypes(final Type type, final Class implClass) {
 		if (type instanceof Class) {
 			Class clazz = (Class) type;
 			if (clazz.isArray()) {
@@ -905,7 +905,7 @@ public class ClassUtil {
 	 *
 	 * @see #getComponentTypes(java.lang.reflect.Type)
 	 */
-	public static Class[] getGenericSupertypes(Class type) {
+	public static Class[] getGenericSupertypes(final Class type) {
 		return getComponentTypes(type.getGenericSuperclass());
 	}
 
@@ -914,7 +914,7 @@ public class ClassUtil {
 	 *
 	 * @see #getComponentType(java.lang.reflect.Type, int)
 	 */
-	public static Class getGenericSupertype(Class type, int index) {
+	public static Class getGenericSupertype(final Class type, final int index) {
 		return getComponentType(type.getGenericSuperclass(), index);
 	}
 
@@ -927,7 +927,7 @@ public class ClassUtil {
 	 * @return the closest class representing the given <code>type</code>
 	 * @see #getRawType(java.lang.reflect.Type, Class)
 	 */
-	public static Class getRawType(Type type) {
+	public static Class getRawType(final Type type) {
 		return getRawType(type, null);
 	}
 
@@ -936,7 +936,7 @@ public class ClassUtil {
 	 * and it makes difference.
 	 * @see #resolveVariable(java.lang.reflect.TypeVariable, Class)
 	 */
-	public static Class<?> getRawType(Type type, Class implClass) {
+	public static Class<?> getRawType(final Type type, final Class implClass) {
 		if (type instanceof Class) {
 			return (Class) type;
 		}
@@ -986,7 +986,7 @@ public class ClassUtil {
 	/**
 	 * Resolves <code>TypeVariable</code> with given implementation class.
 	 */
-	public static Type resolveVariable(TypeVariable variable, final Class implClass) {
+	public static Type resolveVariable(final TypeVariable variable, final Class implClass) {
 		final Class rawType = getRawType(implClass, null);
 
 		int index = ArraysUtil.indexOf(rawType.getTypeParameters(), variable);
@@ -1048,13 +1048,13 @@ public class ClassUtil {
 	 * <li><code>java.lang.reflect.GenericArrayType</code> - type for generic array (e.g. <code>T[]</code>, <code>T</code> - array type)</li>
 	 * </ul>
 	 */
-	public static String typeToString(Type type) {
+	public static String typeToString(final Type type) {
 		StringBuilder sb = new StringBuilder();
 		typeToString(sb, type, new HashSet<Type>());
 		return sb.toString();
 	}
 
-	private static void typeToString(StringBuilder sb, Type type, Set<Type> visited) {
+	private static void typeToString(final StringBuilder sb, final Type type, final Set<Type> visited) {
 		if (type instanceof ParameterizedType) {
 			ParameterizedType parameterizedType = (ParameterizedType) type;
 			final Class<?> rawType = (Class<?>) parameterizedType.getRawType();
@@ -1126,7 +1126,7 @@ public class ClassUtil {
 	 * Reads annotation value. Returns <code>null</code> on error
 	 * (e.g. when value name not found).
 	 */
-	public static Object readAnnotationValue(Annotation annotation, String name) {
+	public static Object readAnnotationValue(final Annotation annotation, final String name) {
 		try {
 			Method method  = annotation.annotationType().getDeclaredMethod(name);
 			return method.invoke(annotation);
@@ -1138,7 +1138,7 @@ public class ClassUtil {
 	// ---------------------------------------------------------------- caller
 
 	private static class ReflectUtilSecurityManager extends SecurityManager {
-		public Class getCallerClass(int callStackDepth) {
+		public Class getCallerClass(final int callStackDepth) {
 			return getClassContext()[callStackDepth + 1];
 		}
 	}
@@ -1248,7 +1248,7 @@ public class ClassUtil {
 	 * the given object instance; or null if such immediate subclass cannot be
 	 * uniquely identified for the given object instance.
 	 */
-	public static Class<?> childClassOf(Class<?> parentClass, Object instance) {
+	public static Class<?> childClassOf(final Class<?> parentClass, final Object instance) {
 
 		if (instance == null || instance == Object.class) {
 			return null;
@@ -1277,7 +1277,7 @@ public class ClassUtil {
 	 * Returns the jar file from which the given class is loaded; or null
 	 * if no such jar file can be located.
 	 */
-	public static JarFile jarFileOf(Class<?> klass) {
+	public static JarFile jarFileOf(final Class<?> klass) {
 		URL url = klass.getResource(
 			"/" + klass.getName().replace('.', '/') + ".class");
 
@@ -1321,7 +1321,7 @@ public class ClassUtil {
 	/**
 	 * Resolves class file name from class name by replacing dot's with '/' separator.
 	 */
-	public static String convertClassNameToFileName(String className) {
+	public static String convertClassNameToFileName(final String className) {
 		return className.replace('.', '/') + ".class";
 	}
 

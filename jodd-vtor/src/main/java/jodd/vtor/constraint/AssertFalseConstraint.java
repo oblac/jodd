@@ -34,17 +34,17 @@ public class AssertFalseConstraint implements ValidationConstraint<AssertFalse> 
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(AssertFalse annotation) {
+	public void configure(final AssertFalse annotation) {
 	}
 
 	// ---------------------------------------------------------------- valid
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value);
 	}
 
-	public static boolean validate(Object value) {
+	public static boolean validate(final Object value) {
 		return !Converter.get().toBooleanValue(value, false);
 	}
 

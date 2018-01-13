@@ -33,7 +33,7 @@ public class MethodParam {
 	private final String name;
 	private final Class<? extends Annotation> annotationType;
 
-	public MethodParam(Class type, String name, Class<? extends Annotation> annotationType) {
+	public MethodParam(final Class type, final String name, final Class<? extends Annotation> annotationType) {
 		this.type = type;
 		this.name = name;
 		this.annotationType = annotationType;

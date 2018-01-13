@@ -47,7 +47,7 @@ public class PBKDF2Hash {
 	public PBKDF2Hash() {
 		this(24, 24, 1000);
 	}
-	public PBKDF2Hash(int saltBytes, int hashBytes, int iterations) {
+	public PBKDF2Hash(final int saltBytes, final int hashBytes, final int iterations) {
 		this.saltBytes = saltBytes;
 		this.hashBytes = hashBytes;
 		this.pbkdf2Iterations = iterations;
@@ -59,7 +59,7 @@ public class PBKDF2Hash {
 	 * @param password the password to hash
 	 * @return a salted PBKDF2 hash of the password
 	 */
-	public String createHash(String password) {
+	public String createHash(final String password) {
 		return createHash(password.toCharArray());
 	}
 
@@ -69,7 +69,7 @@ public class PBKDF2Hash {
 	 * @param password the password to hash
 	 * @return a salted PBKDF2 hash of the password
 	 */
-	public String createHash(char[] password) {
+	public String createHash(final char[] password) {
 
 		// Generate a random salt
 		SecureRandom random = new SecureRandom();
@@ -90,7 +90,7 @@ public class PBKDF2Hash {
 	 * @param goodHash the hash of the valid password
 	 * @return true if the password is correct, false if not
 	 */
-	public boolean validatePassword(String password, String goodHash) {
+	public boolean validatePassword(final String password, final String goodHash) {
 		return validatePassword(password.toCharArray(), goodHash);
 	}
 
@@ -101,7 +101,7 @@ public class PBKDF2Hash {
 	 * @param goodHash the hash of the valid password
 	 * @return true if the password is correct, false if not
 	 */
-	public boolean validatePassword(char[] password, String goodHash) {
+	public boolean validatePassword(final char[] password, final String goodHash) {
 		// Decode the hash into its parameters
 		String[] params = goodHash.split(":");
 		int iterations = Integer.parseInt(params[ITERATION_INDEX]);
@@ -124,7 +124,7 @@ public class PBKDF2Hash {
 	 * @param b the second byte array
 	 * @return true if both byte arrays are the same, false if not
 	 */
-	private static boolean slowEquals(byte[] a, byte[] b) {
+	private static boolean slowEquals(final byte[] a, final byte[] b) {
 		int diff = a.length ^ b.length;
 		for (int i = 0; i < a.length && i < b.length; i++) {
 			diff |= a[i] ^ b[i];
@@ -141,7 +141,7 @@ public class PBKDF2Hash {
 	 * @param bytes the length of the hash to compute in bytes
 	 * @return the PBDKF2 hash of the password
 	 */
-	private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes) {
+	private static byte[] pbkdf2(final char[] password, final byte[] salt, final int iterations, final int bytes) {
 		PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
 		SecretKeyFactory skf = null;
 		try {
@@ -162,7 +162,7 @@ public class PBKDF2Hash {
 	 * @param hex the hex string
 	 * @return the hex string decoded into a byte array
 	 */
-	private static byte[] fromHex(String hex) {
+	private static byte[] fromHex(final String hex) {
 		byte[] binary = new byte[hex.length() / 2];
 		for (int i = 0; i < binary.length; i++) {
 			binary[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
@@ -176,7 +176,7 @@ public class PBKDF2Hash {
 	 * @param array the byte array to convert
 	 * @return a length*2 character string encoding the byte array
 	 */
-	private static String toHex(byte[] array) {
+	private static String toHex(final byte[] array) {
 		BigInteger bi = new BigInteger(1, array);
 		String hex = bi.toString(16);
 		int paddingLength = (array.length * 2) - hex.length();

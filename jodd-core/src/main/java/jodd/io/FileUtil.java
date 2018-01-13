@@ -82,7 +82,7 @@ public class FileUtil {
 	/**
 	 * Simple factory for {@link File} objects.
 	 */
-	private static File file(File parent, String fileName) {
+	private static File file(final File parent, final String fileName) {
 		return new File(parent, fileName);
 	}
 
@@ -91,7 +91,7 @@ public class FileUtil {
 	/**
 	 * @see #equals(File, File)
 	 */
-	public static boolean equals(String one, String two) {
+	public static boolean equals(final String one, final String two) {
 		return equals(file(one), file(two));
 	}
 
@@ -115,7 +115,7 @@ public class FileUtil {
 	/**
 	 * Converts {@link File} {@link URL}s to {@link File}. Ignores other schemes and returns {@code null}.
 	 */
-	public static File toFile(URL url) {
+	public static File toFile(final URL url) {
 		String fileName = toFileName(url);
 		if (fileName == null) {
 			return null;
@@ -129,7 +129,7 @@ public class FileUtil {
 	 * @return {@link URL} or {@code null} in case of error.
 	 * @throws MalformedURLException if {@link File} cannot be converted.
 	 */
-	public static URL toURL(File file) throws MalformedURLException {
+	public static URL toURL(final File file) throws MalformedURLException {
 		return file.toURI().toURL();
 	}
 
@@ -140,7 +140,7 @@ public class FileUtil {
 	 * @param url {@link URL} to convert
 	 * @return file name
 	 */
-	public static String toFileName(URL url) {
+	public static String toFileName(final URL url) {
 		if ((url == null) || !(url.getProtocol().equals(FILE_PROTOCOL))) {
 			return null;
 		}
@@ -152,7 +152,7 @@ public class FileUtil {
 	/**
 	 * Returns a file of either a folder or a containing archive.
 	 */
-	public static File toContainerFile(URL url) {
+	public static File toContainerFile(final URL url) {
 		String protocol = url.getProtocol();
 		if (protocol.equals(FILE_PROTOCOL)) {
 			return toFile(url);
@@ -167,14 +167,14 @@ public class FileUtil {
 	/**
 	 * Returns {@code true} if {@link File} exists.
 	 */
-	public static boolean isExistingFile(File file) {
+	public static boolean isExistingFile(final File file) {
 		return file != null && file.exists() && file.isFile();
 	}
 
 	/**
 	 * Returns {@code true} if directory exists.
 	 */
-	public static boolean isExistingFolder(File folder) {
+	public static boolean isExistingFolder(final File folder) {
 		return folder != null && folder.exists() && folder.isDirectory();
 	}
 
@@ -183,7 +183,7 @@ public class FileUtil {
 	/**
 	 * @see #mkdirs(File)
 	 */
-	public static void mkdirs(String dirs) throws IOException {
+	public static void mkdirs(final String dirs) throws IOException {
 		mkdirs(file(dirs));
 	}
 
@@ -193,7 +193,7 @@ public class FileUtil {
 	 * @param dirs Directories to make.
 	 * @throws IOException if cannot create directory.
 	 */
-	public static void mkdirs(File dirs) throws IOException {
+	public static void mkdirs(final File dirs) throws IOException {
 		if (dirs.exists()) {
 			checkIsDirectory(dirs);
 			return;
@@ -204,7 +204,7 @@ public class FileUtil {
 	/**
 	 * @see #mkdir(File)
 	 */
-	public static void mkdir(String dir) throws IOException {
+	public static void mkdir(final String dir) throws IOException {
 		mkdir(file(dir));
 	}
 
@@ -213,7 +213,7 @@ public class FileUtil {
 	 *
 	 * @throws IOException if cannot create directory.
 	 */
-	public static void mkdir(File dir) throws IOException {
+	public static void mkdir(final File dir) throws IOException {
 		if (dir.exists()) {
 			checkIsDirectory(dir);
 			return;
@@ -226,7 +226,7 @@ public class FileUtil {
 	/**
 	 * @see #touch(File)
 	 */
-	public static void touch(String file) throws IOException {
+	public static void touch(final String file) throws IOException {
 		touch(file(file));
 	}
 
@@ -235,7 +235,7 @@ public class FileUtil {
 	 * with size 0 or, if the {@link File} exists already, it is opened and
 	 * closed without modifying it, but updating the {@link File} date and time.
 	 */
-	public static void touch(File file) throws IOException {
+	public static void touch(final File file) throws IOException {
 		if (!file.exists()) {
 			StreamUtil.close(fileOutputStreamOf(file));
 		}
@@ -247,7 +247,7 @@ public class FileUtil {
 	/**
 	 * @see #copyFile(File, File)
 	 */
-	public static void copyFile(String srcFile, String destFile) throws IOException {
+	public static void copyFile(final String srcFile, final String destFile) throws IOException {
 		copyFile(file(srcFile), file(destFile));
 	}
 
@@ -258,7 +258,7 @@ public class FileUtil {
 	 * @param destFile Destination {@link File}.
 	 * @throws IOException if cannot copy
 	 */
-	public static void copyFile(File srcFile, File destFile) throws IOException {
+	public static void copyFile(final File srcFile, final File destFile) throws IOException {
 		checkFileCopy(srcFile, destFile);
 		_copyFile(srcFile, destFile);
 	}
@@ -270,7 +270,7 @@ public class FileUtil {
 	 * @param destFile Destination {@link File}.
 	 * @throws IOException if cannot copy
 	 */
-	private static void _copyFile(File srcFile, File destFile) throws IOException {
+	private static void _copyFile(final File srcFile, final File destFile) throws IOException {
 		if (destFile.exists()) {
 			if (destFile.isDirectory()) {
 				throw new IOException("Destination '" + destFile + "' is a directory");
@@ -302,14 +302,14 @@ public class FileUtil {
 	/**
 	 * @see #copyFileToDir(File, File)
 	 */
-	public static File copyFileToDir(String srcFile, String destDir) throws IOException {
+	public static File copyFileToDir(final String srcFile, final String destDir) throws IOException {
 		return copyFileToDir(file(srcFile), file(destDir));
 	}
 
 	/**
 	 * Copies a {@link File} to directory with specified copy params and returns copied destination.
 	 */
-	public static File copyFileToDir(File srcFile, File destDir) throws IOException {
+	public static File copyFileToDir(final File srcFile, final File destDir) throws IOException {
 		checkExistsAndDirectory(destDir);
 		File destFile = file(destDir, srcFile.getName());
 		copyFile(srcFile, destFile);
@@ -321,7 +321,7 @@ public class FileUtil {
 	/**
 	 * @see #copyDir(File, File)
 	 */
-	public static void copyDir(String srcDir, String destDir) throws IOException {
+	public static void copyDir(final String srcDir, final String destDir) throws IOException {
 		copyDir(file(srcDir), file(destDir));
 	}
 
@@ -330,7 +330,7 @@ public class FileUtil {
 	 *
 	 * @see #_copyDirectory(File, File)
 	 */
-	public static void copyDir(File srcDir, File destDir) throws IOException {
+	public static void copyDir(final File srcDir, final File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
 		_copyDirectory(srcDir, destDir);
 	}
@@ -340,7 +340,7 @@ public class FileUtil {
 	 * @param destDir
 	 * @throws IOException
 	 */
-	private static void _copyDirectory(File srcDir, File destDir) throws IOException {
+	private static void _copyDirectory(final File srcDir, final File destDir) throws IOException {
 		if (destDir.exists()) {
 			checkIsDirectory(destDir);
 		} else {
@@ -378,14 +378,14 @@ public class FileUtil {
 	/**
 	 * @see #moveFile(File, File)
 	 */
-	public static File moveFile(String srcFile, String destFile) throws IOException {
+	public static File moveFile(final String srcFile, final String destFile) throws IOException {
 		return moveFile(file(srcFile), file(destFile));
 	}
 
 	/**
 	 * @see #_moveFile(File, File)
 	 */
-	public static File moveFile(File srcFile, File destFile) throws IOException {
+	public static File moveFile(final File srcFile, final File destFile) throws IOException {
 		checkFileCopy(srcFile, destFile);
 		_moveFile(srcFile, destFile);
 		return destFile;
@@ -398,7 +398,7 @@ public class FileUtil {
 	 * @param destFile Destination directory.
 	 * @throws IOException
 	 */
-	private static void _moveFile(File srcFile, File destFile) throws IOException {
+	private static void _moveFile(final File srcFile, final File destFile) throws IOException {
 		if (destFile.exists()) {
 			checkIsFile(destFile);
 			destFile.delete();
@@ -416,7 +416,7 @@ public class FileUtil {
 	/**
 	 * @see #moveFileToDir(File, File)
 	 */
-	public static File moveFileToDir(String srcFile, String destDir) throws IOException {
+	public static File moveFileToDir(final String srcFile, final String destDir) throws IOException {
 		return moveFileToDir(file(srcFile), file(destDir));
 	}
 
@@ -427,7 +427,7 @@ public class FileUtil {
 	 * @param destDir Destination directory.
 	 * @throws IOException if there is an error during move.
 	 */
-	public static File moveFileToDir(File srcFile, File destDir) throws IOException {
+	public static File moveFileToDir(final File srcFile, final File destDir) throws IOException {
 		checkExistsAndDirectory(destDir);
 		return moveFile(srcFile, file(destDir, srcFile.getName()));
 	}
@@ -437,14 +437,14 @@ public class FileUtil {
 	/**
 	 * @see #moveDir(File, File)
 	 */
-	public static File moveDir(String srcDir, String destDir) throws IOException {
+	public static File moveDir(final String srcDir, final String destDir) throws IOException {
 		return moveDir(file(srcDir), file(destDir));
 	}
 
 	/**
 	 * @see #_moveDirectory(File, File)
 	 */
-	public static File moveDir(File srcDir, File destDir) throws IOException {
+	public static File moveDir(final File srcDir, final File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
 		_moveDirectory(srcDir, destDir);
 		return destDir;
@@ -457,7 +457,7 @@ public class FileUtil {
 	 * @param destDir Destination directory.
 	 * @throws IOException if there is an error during move.
 	 */
-	private static void _moveDirectory(File srcDest, File destDir) throws IOException {
+	private static void _moveDirectory(final File srcDest, File destDir) throws IOException {
 		if (destDir.exists()) {
 			checkIsDirectory(destDir);
 			destDir = file(destDir, destDir.getName());
@@ -476,7 +476,7 @@ public class FileUtil {
 	/**
 	 * @see #deleteFile(File)
 	 */
-	public static void deleteFile(String destFile) throws IOException {
+	public static void deleteFile(final String destFile) throws IOException {
 		deleteFile(file(destFile));
 	}
 
@@ -486,7 +486,7 @@ public class FileUtil {
 	 * @param destFile Destination to delete.
 	 * @throws IOException if there was an error deleting.
 	 */
-	public static void deleteFile(File destFile) throws IOException {
+	public static void deleteFile(final File destFile) throws IOException {
 		checkIsFile(destFile);
 		checkDeleteSuccessful(destFile);
 	}
@@ -496,7 +496,7 @@ public class FileUtil {
 	/**
 	 * @see #deleteDir(File)
 	 */
-	public static void deleteDir(String destDir) throws IOException {
+	public static void deleteDir(final String destDir) throws IOException {
 		deleteDir(file(destDir));
 	}
 
@@ -506,7 +506,7 @@ public class FileUtil {
 	 * @param destDir Destination to delete.
 	 * @throws IOException if there was an error deleting.
 	 */
-	public static void deleteDir(File destDir) throws IOException {
+	public static void deleteDir(final File destDir) throws IOException {
 		cleanDir(destDir);
 		checkDeleteSuccessful(destDir);
 	}
@@ -514,7 +514,7 @@ public class FileUtil {
 	/**
 	 * @see #cleanDir(File)
 	 */
-	public static void cleanDir(String dest) throws IOException {
+	public static void cleanDir(final String dest) throws IOException {
 		cleanDir(file(dest));
 	}
 
@@ -524,7 +524,7 @@ public class FileUtil {
 	 * @param destDir destination to clean.
 	 * @throws IOException if something went wrong.
 	 */
-	public static void cleanDir(File destDir) throws IOException {
+	public static void cleanDir(final File destDir) throws IOException {
 		checkExists(destDir);
 		checkIsDirectory(destDir);
 
@@ -557,7 +557,7 @@ public class FileUtil {
 	/**
 	 * @see #readUTFChars(File)
 	 */
-	public static char[] readUTFChars(String fileName) throws IOException {
+	public static char[] readUTFChars(final String fileName) throws IOException {
 		return readUTFChars(file(fileName));
 	}
 
@@ -568,7 +568,7 @@ public class FileUtil {
 	 * @return array of characters.
 	 * @throws IOException if something went wrong.
 	 */
-	public static char[] readUTFChars(File file) throws IOException {
+	public static char[] readUTFChars(final File file) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
 
@@ -588,7 +588,7 @@ public class FileUtil {
 	 * @return array of characters.
 	 * @throws IOException if something went wrong.
 	 */
-	public static char[] readChars(File file, String encoding) throws IOException {
+	public static char[] readChars(final File file, final String encoding) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
 
@@ -603,42 +603,42 @@ public class FileUtil {
 	/**
 	 * @see #readChars(String, String)
 	 */
-	public static char[] readChars(String fileName) throws IOException {
+	public static char[] readChars(final String fileName) throws IOException {
 		return readChars(fileName, encoding());
 	}
 
 	/**
 	 * @see #readChars(File, String)
 	 */
-	public static char[] readChars(File file) throws IOException {
+	public static char[] readChars(final File file) throws IOException {
 		return readChars(file, encoding());
 	}
 
 	/**
 	 * @see #readChars(File, String)
 	 */
-	public static char[] readChars(String fileName, String encoding) throws IOException {
+	public static char[] readChars(final String fileName, final String encoding) throws IOException {
 		return readChars(file(fileName), encoding);
 	}
 
 	/**
 	 * @see #writeChars(File, char[], String)
 	 */
-	public static void writeChars(File dest, char[] data) throws IOException {
+	public static void writeChars(final File dest, final char[] data) throws IOException {
 		writeChars(dest, data, encoding());
 	}
 
 	/**
 	 * @see #writeChars(File, char[])
 	 */
-	public static void writeChars(String dest, char[] data) throws IOException {
+	public static void writeChars(final String dest, final char[] data) throws IOException {
 		writeChars(file(dest), data);
 	}
 
 	/**
 	 * @see #writeChars(File, char[], String)
 	 */
-	public static void writeChars(String dest, char[] data, String encoding) throws IOException {
+	public static void writeChars(final String dest, final char[] data, final String encoding) throws IOException {
 		writeChars(file(dest), data, encoding);
 	}
 
@@ -647,7 +647,7 @@ public class FileUtil {
 	 *
 	 * @see #outChars(File, char[], String, boolean)
 	 */
-	public static void writeChars(File dest, char[] data, String encoding) throws IOException {
+	public static void writeChars(final File dest, final char[] data, final String encoding) throws IOException {
 		outChars(dest, data, encoding, false);
 	}
 
@@ -660,7 +660,7 @@ public class FileUtil {
 	 * @param append   {@code true} if appending; {@code false} if {@link File} should be overwritten.
 	 * @throws IOException if something went wrong.
 	 */
-	protected static void outChars(File dest, char[] data, String encoding, boolean append) throws IOException {
+	protected static void outChars(final File dest, final char[] data, final String encoding, final boolean append) throws IOException {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
@@ -677,7 +677,7 @@ public class FileUtil {
 	/**
 	 * @see #readUTFString(File)
 	 */
-	public static String readUTFString(String fileName) throws IOException {
+	public static String readUTFString(final String fileName) throws IOException {
 		return readUTFString(file(fileName));
 	}
 
@@ -691,7 +691,7 @@ public class FileUtil {
 	 * @see #unicodeInputStreamOf(File)
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
-	public static String readUTFString(File file) throws IOException {
+	public static String readUTFString(final File file) throws IOException {
 		UnicodeInputStream in = unicodeInputStreamOf(file);
 		try {
 			return StreamUtil.copy(in, detectEncoding(in)).toString();
@@ -710,7 +710,7 @@ public class FileUtil {
 	 * @see #unicodeInputStreamOf(File)
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
-	public static String readUTFString(InputStream inputStream) throws IOException {
+	public static String readUTFString(final InputStream inputStream) throws IOException {
 		UnicodeInputStream in = null;
 		try {
 			in = new UnicodeInputStream(inputStream, null);
@@ -731,7 +731,7 @@ public class FileUtil {
 	 * @see #streamOf(File, String)
 	 * @see StreamUtil#copy(InputStream, String)
 	 */
-	public static String readString(File file, String encoding) throws IOException {
+	public static String readString(final File file, final String encoding) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
 		InputStream in = streamOf(file, encoding);
@@ -745,42 +745,42 @@ public class FileUtil {
 	/**
 	 * @see #readString(String, String)
 	 */
-	public static String readString(String source) throws IOException {
+	public static String readString(final String source) throws IOException {
 		return readString(source, encoding());
 	}
 
 	/**
 	 * @see #readString(File, String)
 	 */
-	public static String readString(String source, String encoding) throws IOException {
+	public static String readString(final String source, final String encoding) throws IOException {
 		return readString(file(source), encoding);
 	}
 
 	/**
 	 * @see #readString(File, String)
 	 */
-	public static String readString(File source) throws IOException {
+	public static String readString(final File source) throws IOException {
 		return readString(source, encoding());
 	}
 
 	/**
 	 * @see #writeString(File, String, String)
 	 */
-	public static void writeString(String dest, String data) throws IOException {
+	public static void writeString(final String dest, final String data) throws IOException {
 		writeString(file(dest), data, encoding());
 	}
 
 	/**
 	 * @see #writeString(File, String, String)
 	 */
-	public static void writeString(String dest, String data, String encoding) throws IOException {
+	public static void writeString(final String dest, final String data, final String encoding) throws IOException {
 		writeString(file(dest), data, encoding);
 	}
 
 	/**
 	 * @see #writeString(File, String, String)
 	 */
-	public static void writeString(File dest, String data) throws IOException {
+	public static void writeString(final File dest, final String data) throws IOException {
 		writeString(dest, data, encoding());
 	}
 
@@ -789,28 +789,28 @@ public class FileUtil {
 	 *
 	 * @see #outString(File, String, String, boolean)
 	 */
-	public static void writeString(File dest, String data, String encoding) throws IOException {
+	public static void writeString(final File dest, final String data, final String encoding) throws IOException {
 		outString(dest, data, encoding, false);
 	}
 
 	/**
 	 * @see #appendString(File, String)
 	 */
-	public static void appendString(String dest, String data) throws IOException {
+	public static void appendString(final String dest, final String data) throws IOException {
 		appendString(file(dest), data);
 	}
 
 	/**
 	 * @see #appendString(File, String, String)
 	 */
-	public static void appendString(String dest, String data, String encoding) throws IOException {
+	public static void appendString(final String dest, final String data, final String encoding) throws IOException {
 		appendString(file(dest), data, encoding);
 	}
 
 	/**
 	 * @see #appendString(File, String, String)
 	 */
-	public static void appendString(File dest, String data) throws IOException {
+	public static void appendString(final File dest, final String data) throws IOException {
 		appendString(dest, data, encoding());
 	}
 
@@ -819,7 +819,7 @@ public class FileUtil {
 	 *
 	 * @see #outString(File, String, String, boolean)
 	 */
-	public static void appendString(File dest, String data, String encoding) throws IOException {
+	public static void appendString(final File dest, final String data, final String encoding) throws IOException {
 		outString(dest, data, encoding, true);
 	}
 
@@ -832,7 +832,7 @@ public class FileUtil {
 	 * @param append   {@code true} if appending; {@code false} if {@link File} should be overwritten.
 	 * @throws IOException if something went wrong.
 	 */
-	protected static void outString(File dest, String data, String encoding, boolean append) throws IOException {
+	protected static void outString(final File dest, final String data, final String encoding, final boolean append) throws IOException {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
@@ -851,14 +851,14 @@ public class FileUtil {
 	/**
 	 * @see #writeStream(File, InputStream)
 	 */
-	public static void writeStream(String dest, InputStream in) throws IOException {
+	public static void writeStream(final String dest, final InputStream in) throws IOException {
 		writeStream(file(dest), in);
 	}
 
 	/**
 	 * @see #writeStream(FileOutputStream, InputStream)
 	 */
-	public static void writeStream(File dest, InputStream in) throws IOException {
+	public static void writeStream(final File dest, final InputStream in) throws IOException {
 		writeStream(fileOutputStreamOf(dest), in);
 	}
 
@@ -869,7 +869,7 @@ public class FileUtil {
 	 * @param in  {@link InputStream} to read.
 	 * @throws IOException if there is an issue reading/writing.
 	 */
-	public static void writeStream(FileOutputStream out, InputStream in) throws IOException {
+	public static void writeStream(final FileOutputStream out, final InputStream in) throws IOException {
 		try {
 			StreamUtil.copy(in, out);
 		} finally {
@@ -882,21 +882,21 @@ public class FileUtil {
 	/**
 	 * @see #readLines(String, String)
 	 */
-	public static String[] readLines(String source) throws IOException {
+	public static String[] readLines(final String source) throws IOException {
 		return readLines(source, encoding());
 	}
 
 	/**
 	 * @see #readLines(File, String)
 	 */
-	public static String[] readLines(String source, String encoding) throws IOException {
+	public static String[] readLines(final String source, final String encoding) throws IOException {
 		return readLines(file(source), encoding);
 	}
 
 	/**
 	 * @see #readLines(File, String)
 	 */
-	public static String[] readLines(File source) throws IOException {
+	public static String[] readLines(final File source) throws IOException {
 		return readLines(source, encoding());
 	}
 
@@ -909,7 +909,7 @@ public class FileUtil {
 	 * @throws IOException if {@link File} does not exist or is not a {@link File} or there is an issue reading
 	 *                     the {@link File}.
 	 */
-	public static String[] readLines(File file, String encoding) throws IOException {
+	public static String[] readLines(final File file, final String encoding) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
 		List<String> list = new ArrayList<>();
@@ -932,14 +932,14 @@ public class FileUtil {
 	/**
 	 * @see #readBytes(File)
 	 */
-	public static byte[] readBytes(String file) throws IOException {
+	public static byte[] readBytes(final String file) throws IOException {
 		return readBytes(file(file));
 	}
 
 	/**
 	 * @see #readBytes(File, int)
 	 */
-	public static byte[] readBytes(File file) throws IOException {
+	public static byte[] readBytes(final File file) throws IOException {
 		return readBytes(file, NEGATIVE_ONE);
 	}
 
@@ -952,7 +952,7 @@ public class FileUtil {
 	 * @throws IOException if not a {@link File} or {@link File} does not exist or file size is
 	 *                     larger than {@link Integer#MAX_VALUE}.
 	 */
-	public static byte[] readBytes(File file, int count) throws IOException {
+	public static byte[] readBytes(final File file, final int count) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
 		long numToRead = file.length();
@@ -975,21 +975,21 @@ public class FileUtil {
 	/**
 	 * @see #writeBytes(File, byte[])
 	 */
-	public static void writeBytes(String dest, byte[] data) throws IOException {
+	public static void writeBytes(final String dest, final byte[] data) throws IOException {
 		writeBytes(file(dest), data);
 	}
 
 	/**
 	 * @see #writeBytes(File, byte[], int, int)
 	 */
-	public static void writeBytes(File dest, byte[] data) throws IOException {
+	public static void writeBytes(final File dest, final byte[] data) throws IOException {
 		writeBytes(dest, data, ZERO, data.length);
 	}
 
 	/**
 	 * @see #writeBytes(File, byte[], int, int)
 	 */
-	public static void writeBytes(String dest, byte[] data, int off, int len) throws IOException {
+	public static void writeBytes(final String dest, final byte[] data, final int off, final int len) throws IOException {
 		writeBytes(file(dest), data, off, len);
 	}
 
@@ -998,28 +998,28 @@ public class FileUtil {
 	 *
 	 * @see #outBytes(File, byte[], int, int, boolean)
 	 */
-	public static void writeBytes(File dest, byte[] data, int off, int len) throws IOException {
+	public static void writeBytes(final File dest, final byte[] data, final int off, final int len) throws IOException {
 		outBytes(dest, data, off, len, false);
 	}
 
 	/**
 	 * @see #appendBytes(File, byte[])
 	 */
-	public static void appendBytes(String dest, byte[] data) throws IOException {
+	public static void appendBytes(final String dest, final byte[] data) throws IOException {
 		appendBytes(file(dest), data);
 	}
 
 	/**
 	 * @see #appendBytes(File, byte[], int, int)
 	 */
-	public static void appendBytes(String dest, byte[] data, int off, int len) throws IOException {
+	public static void appendBytes(final String dest, final byte[] data, final int off, final int len) throws IOException {
 		appendBytes(file(dest), data, off, len);
 	}
 
 	/**
 	 * @see #appendBytes(File, byte[], int, int)
 	 */
-	public static void appendBytes(File dest, byte[] data) throws IOException {
+	public static void appendBytes(final File dest, final byte[] data) throws IOException {
 		appendBytes(dest, data, ZERO, data.length);
 	}
 
@@ -1028,7 +1028,7 @@ public class FileUtil {
 	 *
 	 * @see #outBytes(File, byte[], int, int, boolean)
 	 */
-	public static void appendBytes(File dest, byte[] data, int off, int len) throws IOException {
+	public static void appendBytes(final File dest, final byte[] data, final int off, final int len) throws IOException {
 		outBytes(dest, data, off, len, true);
 	}
 
@@ -1042,7 +1042,7 @@ public class FileUtil {
 	 * @param append {@code true} if appending; {@code false} if {@link File} should be overwritten.
 	 * @throws IOException if something went wrong.
 	 */
-	protected static void outBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
+	protected static void outBytes(final File dest, final byte[] data, final int off, final int len, final boolean append) throws IOException {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
@@ -1057,7 +1057,7 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- equals content
 
-	public static boolean compare(String file1, String file2) throws IOException {
+	public static boolean compare(final String file1, final String file2) throws IOException {
 		return compare(file(file1), file(file2));
 	}
 
@@ -1071,7 +1071,7 @@ public class FileUtil {
 	 * <p>
 	 * Code origin: Avalon
 	 */
-	public static boolean compare(File one, File two) throws IOException {
+	public static boolean compare(final File one, final File two) throws IOException {
 		boolean file1Exists = one.exists();
 		if (file1Exists != two.exists()) {
 			return false;
@@ -1110,14 +1110,14 @@ public class FileUtil {
 	/**
 	 * @see #isOlder(File, File)
 	 */
-	public static boolean isOlder(String file, String reference) {
+	public static boolean isOlder(final String file, final String reference) {
 		return isOlder(file(file), file(reference));
 	}
 
 	/**
 	 * @see #isNewer(File, File)
 	 */
-	public static boolean isNewer(String file, String reference) {
+	public static boolean isNewer(final String file, final String reference) {
 		return isNewer(file(file), file(reference));
 	}
 
@@ -1126,7 +1126,7 @@ public class FileUtil {
 	 *
 	 * @see #isNewer(File, long)
 	 */
-	public static boolean isNewer(File file, File reference) {
+	public static boolean isNewer(final File file, final File reference) {
 		checkReferenceExists(reference);
 		return isNewer(file, reference.lastModified());
 	}
@@ -1136,7 +1136,7 @@ public class FileUtil {
 	 *
 	 * @see #isOlder(File, long)
 	 */
-	public static boolean isOlder(File file, File reference) {
+	public static boolean isOlder(final File file, final File reference) {
 		checkReferenceExists(reference);
 		return isOlder(file, reference.lastModified());
 	}
@@ -1150,14 +1150,14 @@ public class FileUtil {
 	 * @return {@code true} if the {@link File} exists and has been modified after
 	 * the given time reference.
 	 */
-	public static boolean isNewer(File file, long timeMillis) {
+	public static boolean isNewer(final File file, final long timeMillis) {
 		return file.exists() && file.lastModified() > timeMillis;
 	}
 
 	/**
 	 * @see #isNewer(File, long)
 	 */
-	public static boolean isNewer(String file, long timeMillis) {
+	public static boolean isNewer(final String file, final long timeMillis) {
 		return isNewer(file(file), timeMillis);
 	}
 
@@ -1170,14 +1170,14 @@ public class FileUtil {
 	 * @return {@code true} if the {@link File} exists and has been modified after
 	 * the given time reference.
 	 */
-	public static boolean isOlder(File file, long timeMillis) {
+	public static boolean isOlder(final File file, final long timeMillis) {
 		return file.exists() && file.lastModified() < timeMillis;
 	}
 
 	/**
 	 * @see #isOlder(File, long)
 	 */
-	public static boolean isOlder(String file, long timeMillis) {
+	public static boolean isOlder(final String file, final long timeMillis) {
 		return isOlder(file(file), timeMillis);
 	}
 
@@ -1186,7 +1186,7 @@ public class FileUtil {
 	/**
 	 * @see #copy(File, File)
 	 */
-	public static void copy(String src, String dest) throws IOException {
+	public static void copy(final String src, final String dest) throws IOException {
 		copy(file(src), file(dest));
 	}
 
@@ -1202,7 +1202,7 @@ public class FileUtil {
 	 * @see #copyFileToDir(File, File)
 	 * @see #copyFile(File, File)
 	 */
-	public static void copy(File src, File dest) throws IOException {
+	public static void copy(final File src, final File dest) throws IOException {
 		if (src.isDirectory()) {
 			copyDir(src, dest);
 			return;
@@ -1219,7 +1219,7 @@ public class FileUtil {
 	/**
 	 * @see #move(File, File)
 	 */
-	public static void move(String src, String dest) throws IOException {
+	public static void move(final String src, final String dest) throws IOException {
 		move(file(src), file(dest));
 	}
 
@@ -1235,7 +1235,7 @@ public class FileUtil {
 	 * @see #moveFileToDir(File, File)
 	 * @see #moveFile(File, File)
 	 */
-	public static void move(File src, File dest) throws IOException {
+	public static void move(final File src, final File dest) throws IOException {
 		if (src.isDirectory()) {
 			moveDir(src, dest);
 			return;
@@ -1253,7 +1253,7 @@ public class FileUtil {
 	/**
 	 * @see #delete(File)
 	 */
-	public static void delete(String dest) throws IOException {
+	public static void delete(final String dest) throws IOException {
 		delete(file(dest));
 	}
 
@@ -1264,7 +1264,7 @@ public class FileUtil {
 	 * @see #deleteFile(File)
 	 * @see #deleteDir(File)
 	 */
-	public static void delete(File dest) throws IOException {
+	public static void delete(final File dest) throws IOException {
 		if (dest.isDirectory()) {
 			deleteDir(dest);
 			return;
@@ -1281,7 +1281,7 @@ public class FileUtil {
 	 *               and {@link File} are equal
 	 * @return {@code true} if ancestor is parent of {@link File}; otherwise, {@code false}
 	 */
-	public static boolean isAncestor(File ancestor, File file, boolean strict) {
+	public static boolean isAncestor(final File ancestor, final File file, final boolean strict) {
 		File parent = strict ? getParentFile(file) : file;
 		while (true) {
 			if (parent == null) {
@@ -1333,7 +1333,7 @@ public class FileUtil {
 	 * @param fileFilter {@link FileFilter} to use.
 	 * @return if file and its ancestors are acceptable
 	 */
-	public static boolean isFilePathAcceptable(File file, FileFilter fileFilter) {
+	public static boolean isFilePathAcceptable(File file, final FileFilter fileFilter) {
 		do {
 			if (fileFilter != null && !fileFilter.accept(file)) {
 				return false;
@@ -1355,7 +1355,7 @@ public class FileUtil {
 	/**
 	 * @see #createTempDirectory(String, String, File)
 	 */
-	public static File createTempDirectory(String prefix, String suffix) throws IOException {
+	public static File createTempDirectory(final String prefix, final String suffix) throws IOException {
 		return createTempDirectory(prefix, suffix, null);
 	}
 
@@ -1364,7 +1364,7 @@ public class FileUtil {
 	 *
 	 * @see #createTempFile(String, String, File)
 	 */
-	public static File createTempDirectory(String prefix, String suffix, File tempDir) throws IOException {
+	public static File createTempDirectory(final String prefix, final String suffix, final File tempDir) throws IOException {
 		File file = createTempFile(prefix, suffix, tempDir);
 		file.delete();
 		file.mkdir();
@@ -1394,7 +1394,7 @@ public class FileUtil {
 	 *                deleted - trick that will make temp {@link File} exist only if they are used.
 	 * @return File
 	 */
-	public static File createTempFile(String prefix, String suffix, File tempDir, boolean create) throws IOException {
+	public static File createTempFile(final String prefix, final String suffix, final File tempDir, final boolean create) throws IOException {
 		File file = createTempFile(prefix, suffix, tempDir);
 		file.delete();
 		if (create) {
@@ -1416,7 +1416,7 @@ public class FileUtil {
 	 *                {@code null} if the default temporary-file
 	 *                directory is to be used
 	 */
-	public static File createTempFile(String prefix, String suffix, File tempDir) throws IOException {
+	public static File createTempFile(final String prefix, final String suffix, final File tempDir) throws IOException {
 		int exceptionsCount = ZERO;
 		while (true) {
 			try {
@@ -1521,7 +1521,7 @@ public class FileUtil {
 	 * @return digest for the {@link File}.
 	 * @throws IOException if something went wrong.
 	 */
-	public static byte[] digest(final File file, MessageDigest algorithm) throws IOException {
+	public static byte[] digest(final File file, final MessageDigest algorithm) throws IOException {
 		algorithm.reset();
 		FileInputStream fis = fileInputStreamOf(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);
@@ -1564,14 +1564,14 @@ public class FileUtil {
 	 * @return new {@link FileInputStream}.
 	 * @throws IOException if something went wrong.
 	 */
-	private static FileInputStream fileInputStreamOf(File file) throws IOException {
+	private static FileInputStream fileInputStreamOf(final File file) throws IOException {
 		return new FileInputStream(file);
 	}
 
 	/**
 	 * @see #fileOutputStreamOf(File, boolean)
 	 */
-	private static FileOutputStream fileOutputStreamOf(File file) throws IOException {
+	private static FileOutputStream fileOutputStreamOf(final File file) throws IOException {
 		return fileOutputStreamOf(file, false);
 	}
 
@@ -1584,7 +1584,7 @@ public class FileUtil {
 	 * @return new {@link FileOutputStream}.
 	 * @throws IOException
 	 */
-	private static FileOutputStream fileOutputStreamOf(File file, boolean isAppend) throws IOException {
+	private static FileOutputStream fileOutputStreamOf(final File file, final boolean isAppend) throws IOException {
 		return new FileOutputStream(file, isAppend);
 	}
 
@@ -1594,7 +1594,7 @@ public class FileUtil {
 	 * @see #checkIsFile(File)
 	 * @see #fileInputStreamOf(File)
 	 */
-	private static UnicodeInputStream unicodeInputStreamOf(File file) throws IOException {
+	private static UnicodeInputStream unicodeInputStreamOf(final File file) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
 		return unicodeInputStreamOf(fileInputStreamOf(file), null);
@@ -1607,7 +1607,7 @@ public class FileUtil {
 	 * @param targetEncoding Encoding to use.
 	 * @return new {@link UnicodeInputStream}.
 	 */
-	private static UnicodeInputStream unicodeInputStreamOf(InputStream input, String targetEncoding) {
+	private static UnicodeInputStream unicodeInputStreamOf(final InputStream input, final String targetEncoding) {
 		return new UnicodeInputStream(input, targetEncoding);
 	}
 
@@ -1619,7 +1619,7 @@ public class FileUtil {
 	 * @see #fileInputStreamOf(File)
 	 * @see #unicodeInputStreamOf(InputStream, String)
 	 */
-	private static InputStream streamOf(File file, String encoding) throws IOException {
+	private static InputStream streamOf(final File file, final String encoding) throws IOException {
 		InputStream in = fileInputStreamOf(file);
 		if (encoding.startsWith("UTF")) {
 			in = unicodeInputStreamOf(in, encoding);
@@ -1634,7 +1634,7 @@ public class FileUtil {
 	 * @return UTF encoding as a String. If encoding could not be detected, defaults to {@link StringPool#UTF_8}.
 	 * @see UnicodeInputStream#getDetectedEncoding()
 	 */
-	private static String detectEncoding(UnicodeInputStream in) {
+	private static String detectEncoding(final UnicodeInputStream in) {
 		String encoding = in.getDetectedEncoding();
 		if (encoding == null) {
 			encoding = StringPool.UTF_8;
@@ -1648,7 +1648,7 @@ public class FileUtil {
 	 * @param file {@link File}
 	 * @throws FileNotFoundException if file does not exist.
 	 */
-	private static void checkExists(File file) throws FileNotFoundException {
+	private static void checkExists(final File file) throws FileNotFoundException {
 		if (!file.exists()) {
 			throw new FileNotFoundException(MSG_NOT_FOUND + file);
 		}
@@ -1660,7 +1660,7 @@ public class FileUtil {
 	 * @param file {@link File}
 	 * @throws IllegalArgumentException if file does not exist.
 	 */
-	private static void checkReferenceExists(File file) throws IllegalArgumentException {
+	private static void checkReferenceExists(final File file) throws IllegalArgumentException {
 		try {
 			checkExists(file);
 		} catch (FileNotFoundException e) {
@@ -1674,7 +1674,7 @@ public class FileUtil {
 	 * @param file {@link File}
 	 * @throws IOException if {@link File} is not a file.
 	 */
-	private static void checkIsFile(File file) throws IOException {
+	private static void checkIsFile(final File file) throws IOException {
 		if (!file.isFile()) {
 			throw new IOException(MSG_NOT_A_FILE + file);
 		}
@@ -1686,7 +1686,7 @@ public class FileUtil {
 	 * @param dir Directory
 	 * @throws IOException if {@link File} is not a directory.
 	 */
-	private static void checkIsDirectory(File dir) throws IOException {
+	private static void checkIsDirectory(final File dir) throws IOException {
 		if (!dir.isDirectory()) {
 			throw new IOException(MSG_NOT_A_DIRECTORY + dir);
 		}
@@ -1699,7 +1699,7 @@ public class FileUtil {
 	 * @throws IOException if directory does not exist.
 	 * @see #checkIsDirectory(File)
 	 */
-	private static void checkExistsAndDirectory(File dir) throws IOException {
+	private static void checkExistsAndDirectory(final File dir) throws IOException {
 		if (dir.exists()) {
 			checkIsDirectory(dir);
 		}
@@ -1713,7 +1713,7 @@ public class FileUtil {
 	 * @param dir Directory
 	 * @throws IOException if directory cannot be created.
 	 */
-	private static void checkCreateDirectory(File dir) throws IOException {
+	private static void checkCreateDirectory(final File dir) throws IOException {
 		if (!dir.mkdirs()) {
 			throw new IOException(MSG_CANT_CREATE + dir);
 		}
@@ -1726,7 +1726,7 @@ public class FileUtil {
 	 * @param dir Directory
 	 * @throws IOException if directory cannot be created.
 	 */
-	private static void checkDeleteSuccessful(File dir) throws IOException {
+	private static void checkDeleteSuccessful(final File dir) throws IOException {
 		if (!dir.delete()) {
 			throw new IOException(MSG_UNABLE_TO_DELETE + dir);
 		}
@@ -1739,7 +1739,7 @@ public class FileUtil {
 	 * @param destDir Destination directory
 	 * @throws IOException if any of the above conditions are not true.
 	 */
-	private static void checkDirCopy(File srcDir, File destDir) throws IOException {
+	private static void checkDirCopy(final File srcDir, final File destDir) throws IOException {
 		checkExists(srcDir);
 		checkIsDirectory(srcDir);
 		if (equals(srcDir, destDir)) {
@@ -1755,7 +1755,7 @@ public class FileUtil {
 	 * @throws IOException if srcFile does not exist or is not a file or
 	 *                     srcFile and destFile are equal or cannot create ancestor directories.
 	 */
-	private static void checkFileCopy(File srcFile, File destFile) throws IOException {
+	private static void checkFileCopy(final File srcFile, final File destFile) throws IOException {
 		checkExists(srcFile);
 		checkIsFile(srcFile);
 		if (equals(srcFile, destFile)) {

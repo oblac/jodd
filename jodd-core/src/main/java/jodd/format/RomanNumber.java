@@ -36,7 +36,7 @@ public class RomanNumber {
 	/**
 	 * Converts to Roman number.
 	 */
-	public static String convertToRoman(int value) {
+	public static String convertToRoman(final int value) {
 		if (value <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -54,7 +54,7 @@ public class RomanNumber {
 	/**
 	 * Converts to Arabic numbers.
 	 */
-	public static int convertToArabic(String roman) {
+	public static int convertToArabic(final String roman) {
 		int start = 0, value = 0;
 		for (int i = 0; i < LETTERS.length; i++) {
 			while (roman.startsWith(LETTERS[i], start)) {
@@ -68,7 +68,7 @@ public class RomanNumber {
 	/**
 	 * Checks if some string is valid roman number.
 	 */
-	public static boolean isValidRomanNumber(String roman) {
+	public static boolean isValidRomanNumber(final String roman) {
 		try {
 			return roman.equals(convertToRoman(convertToArabic(roman)));
 		} catch (IllegalArgumentException ignore) {

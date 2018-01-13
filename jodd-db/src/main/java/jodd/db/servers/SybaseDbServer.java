@@ -34,12 +34,12 @@ public class SybaseDbServer implements DbServer {
 
 	private final String version;
 
-	public SybaseDbServer(String version) {
+	public SybaseDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 	}
 
 	@Override

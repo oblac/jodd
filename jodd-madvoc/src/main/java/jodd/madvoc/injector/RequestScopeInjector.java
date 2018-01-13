@@ -47,7 +47,7 @@ import java.util.Enumeration;
 public class RequestScopeInjector implements Injector, Outjector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
 
-	public RequestScopeInjector(MadvocConfig madvocConfig) {
+	public RequestScopeInjector(final MadvocConfig madvocConfig) {
 		this.encoding = madvocConfig.getEncoding();
 	}
 
@@ -68,35 +68,35 @@ public class RequestScopeInjector implements Injector, Outjector {
 	/**
 	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
 	 */
-	public void setIgnoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
+	public void setIgnoreEmptyRequestParams(final boolean ignoreEmptyRequestParams) {
 		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
 	}
 
 	/**
 	 * Specifies if empty parameters will be injected as <code>null</code> value.
 	 */
-	public void setTreatEmptyParamsAsNull(boolean treatEmptyParamsAsNull) {
+	public void setTreatEmptyParamsAsNull(final boolean treatEmptyParamsAsNull) {
 		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
 	}
 
 	/**
 	 * Specifies if attributes will be injected.
 	 */
-	public void setInjectAttributes(boolean injectAttributes) {
+	public void setInjectAttributes(final boolean injectAttributes) {
 		this.injectAttributes = injectAttributes;
 	}
 
 	/**
 	 * Specifies if parameters will be injected.
 	 */
-	public void setInjectParameters(boolean injectParameters) {
+	public void setInjectParameters(final boolean injectParameters) {
 		this.injectParameters = injectParameters;
 	}
 
 	/**
 	 * Specifies if parameters will be trimmed before injection.
 	 */
-	public void setTrimParams(boolean trimParams) {
+	public void setTrimParams(final boolean trimParams) {
 		this.trimParams = trimParams;
 	}
 
@@ -109,14 +109,14 @@ public class RequestScopeInjector implements Injector, Outjector {
 	 * can be included in the sun-web.xml file.
 	 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
 	 */
-	public void setEncodeGetParams(boolean encodeGetParams) {
+	public void setEncodeGetParams(final boolean encodeGetParams) {
 		this.encodeGetParams = encodeGetParams;
 	}
 
 	/**
 	 * Specifies if invalid and non-existing upload files should be <code>null</code>.
 	 */
-	public void setIgnoreInvalidUploadFiles(boolean ignoreInvalidUploadFiles) {
+	public void setIgnoreInvalidUploadFiles(final boolean ignoreInvalidUploadFiles) {
 		this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
 	}
 
@@ -125,7 +125,7 @@ public class RequestScopeInjector implements Injector, Outjector {
 	/**
 	 * Injects request attributes.
 	 */
-	protected void injectAttributes(Targets targets, HttpServletRequest servletRequest) {
+	protected void injectAttributes(final Targets targets, final HttpServletRequest servletRequest) {
 		Enumeration attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
@@ -143,7 +143,7 @@ public class RequestScopeInjector implements Injector, Outjector {
 	/**
 	 * Inject request parameters.
 	 */
-	protected void injectParameters(Targets targets, HttpServletRequest servletRequest) {
+	protected void injectParameters(final Targets targets, final HttpServletRequest servletRequest) {
 		boolean encode = encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
 
@@ -181,7 +181,7 @@ public class RequestScopeInjector implements Injector, Outjector {
 	/**
 	 * Inject uploaded files from multipart request parameters.
 	 */
-	protected void injectUploadedFiles(Targets targets, HttpServletRequest servletRequest) {
+	protected void injectUploadedFiles(final Targets targets, final HttpServletRequest servletRequest) {
 		if (!(servletRequest instanceof MultipartRequestWrapper)) {
 			return;
 		}
@@ -219,7 +219,7 @@ public class RequestScopeInjector implements Injector, Outjector {
 	}
 
 	@Override
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
@@ -239,7 +239,7 @@ public class RequestScopeInjector implements Injector, Outjector {
 	// ---------------------------------------------------------------- outject
 
 	@Override
-	public void outject(ActionRequest actionRequest) {
+	public void outject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;

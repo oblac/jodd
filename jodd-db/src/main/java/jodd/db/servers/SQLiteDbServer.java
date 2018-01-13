@@ -35,12 +35,12 @@ public class SQLiteDbServer implements DbServer {
 
 	private final String version;
 
-	public SQLiteDbServer(String version) {
+	public SQLiteDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 		JoddDb.get().defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
 	}
 

@@ -33,14 +33,14 @@ public class ProxyAspect {
 	protected final Class<? extends ProxyAdvice> advice;
 	protected final ProxyPointcut pointcut;
 
-	public static ProxyAspect of(Class<? extends ProxyAdvice> advice, ProxyPointcut pointcut) {
+	public static ProxyAspect of(final Class<? extends ProxyAdvice> advice, final ProxyPointcut pointcut) {
 		return new ProxyAspect(advice, pointcut);
 	}
 
 	/**
 	 * Creates aspect defined with provided advice and pointcut.
 	 */
-	public ProxyAspect(Class<? extends ProxyAdvice> advice, ProxyPointcut pointcut) {
+	public ProxyAspect(final Class<? extends ProxyAdvice> advice, final ProxyPointcut pointcut) {
 		this.advice = advice;
 		this.pointcut = pointcut;
 	}

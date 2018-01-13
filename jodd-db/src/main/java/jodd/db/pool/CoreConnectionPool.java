@@ -68,7 +68,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Specifies driver class name.
 	 */
-	public void setDriver(String driver) {
+	public void setDriver(final String driver) {
 		this.driver = driver;
 	}
 
@@ -79,7 +79,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Specifies JDBC url.
 	 */
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
@@ -90,7 +90,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Specifies db username.
 	 */
-	public void setUser(String user) {
+	public void setUser(final String user) {
 		this.user = user;
 	}
 
@@ -101,7 +101,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Specifies db password.
 	 */
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 
@@ -112,7 +112,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Sets max number of connections.
 	 */
-	public void setMaxConnections(int maxConnections) {
+	public void setMaxConnections(final int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
@@ -123,7 +123,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Sets minimum number of open connections.
 	 */
-	public void setMinConnections(int minConnections) {
+	public void setMinConnections(final int minConnections) {
 		this.minConnections = minConnections;
 	}
 
@@ -136,7 +136,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * is available. If wait for busy is <code>false</code>
 	 * exception will be thrown when max connection is reached.
 	 */
-	public void setWaitIfBusy(boolean waitIfBusy) {
+	public void setWaitIfBusy(final boolean waitIfBusy) {
 		this.waitIfBusy = waitIfBusy;
 	}
 
@@ -148,7 +148,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * Specifies number of milliseconds from connection creation
 	 * when connection is considered as opened and valid.
 	 */
-	public void setValidationTimeout(long validationTimeout) {
+	public void setValidationTimeout(final long validationTimeout) {
 		this.validationTimeout = validationTimeout;
 	}
 
@@ -161,7 +161,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * If set to <code>null</code> validation will be performed
 	 * by invoking <code>Connection#isClosed</code> method.
 	 */
-	public void setValidationQuery(String validationQuery) {
+	public void setValidationQuery(final String validationQuery) {
 		this.validationQuery = validationQuery;
 	}
 
@@ -179,7 +179,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	/**
 	 * Specifies if connections should be validated before returned.
 	 */
-	public void setValidateConnection(boolean validateConnection) {
+	public void setValidateConnection(final boolean validateConnection) {
 		this.validateConnection = validateConnection;
 	}
 
@@ -287,7 +287,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * that if connection is not used for a while it becomes inactive,
 	 * although not technically closed.
 	 */
-	private boolean isConnectionValid(ConnectionData connectionData, long now) {
+	private boolean isConnectionValid(final ConnectionData connectionData, final long now) {
 		if (!validateConnection) {
 			return true;
 		}
@@ -337,6 +337,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		connectThread.start();
 	}
 
+	@Override
 	public void run() {
 		try {
 			Connection connection = DriverManager.getConnection(url, user, password);
@@ -351,7 +352,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	}
 
 	@Override
-	public synchronized void closeConnection(Connection connection) {
+	public synchronized void closeConnection(final Connection connection) {
 		ConnectionData connectionData = new ConnectionData(connection);
 		busyConnections.remove(connectionData);
 		availableConnections.add(connectionData);
@@ -379,7 +380,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		busyConnections = new ArrayList<>(maxConnections);
 	}
 
-	private void closeConnections(ArrayList<ConnectionData> connections) {
+	private void closeConnections(final ArrayList<ConnectionData> connections) {
 		try {
 			for (ConnectionData connectionData : connections) {
 				Connection connection = connectionData.connection;
@@ -401,13 +402,13 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		final Connection connection;
 		long lastUsed;
 
-		ConnectionData(Connection connection) {
+		ConnectionData(final Connection connection) {
 			this.connection = connection;
 			this.lastUsed = System.currentTimeMillis();
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(final Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -441,7 +442,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		final int availableCount;
 		final int busyCount;
 
-		SizeSnapshot(int availableCount, int busyCount) {
+		SizeSnapshot(final int availableCount, final int busyCount) {
 			this.totalCount = availableCount + busyCount;
 			this.availableCount = availableCount;
 			this.busyCount = busyCount;

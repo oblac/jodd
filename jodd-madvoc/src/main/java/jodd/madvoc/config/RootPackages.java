@@ -55,14 +55,14 @@ public class RootPackages {
 	/**
 	 * Adds root package with no additional mapping.
 	 */
-	public void addRootPackage(String rootPackage) {
+	public void addRootPackage(final String rootPackage) {
 		addRootPackage(rootPackage, StringPool.EMPTY);
 	}
 
 	/**
 	 * Sets root package to package of given class.
 	 */
-	public void addRootPackageOf(Class actionClass) {
+	public void addRootPackageOf(final Class actionClass) {
 		addRootPackageOf(actionClass, StringPool.EMPTY);
 	}
 
@@ -70,7 +70,7 @@ public class RootPackages {
 	 * Adds root package and its path mapping. Duplicate root packages
 	 * are ignored, if mapping path is equals, otherwise exception is thrown.
 	 */
-	public void addRootPackage(String rootPackage, String mapping) {
+	public void addRootPackage(final String rootPackage, String mapping) {
 		if (packages == null) {
 			packages = new String[0];
 		}
@@ -108,7 +108,7 @@ public class RootPackages {
 	/**
 	 * Sets root package to package of given class.
 	 */
-	public void addRootPackageOf(Class actionClass, String mapping) {
+	public void addRootPackageOf(final Class actionClass, final String mapping) {
 		addRootPackage(actionClass.getPackage().getName(), mapping);
 	}
 
@@ -117,7 +117,7 @@ public class RootPackages {
 	/**
 	 * Finds closest root package for the given action path.
 	 */
-	public String findRootPackageForActionPath(String actionPath) {
+	public String findRootPackageForActionPath(final String actionPath) {
 		if (mappings == null) {
 			return null;
 		}
@@ -215,6 +215,7 @@ public class RootPackages {
 
 	// ---------------------------------------------------------------- toString
 
+	@Override
 	public String toString() {
 		if (packages == null) {
 			return "null";

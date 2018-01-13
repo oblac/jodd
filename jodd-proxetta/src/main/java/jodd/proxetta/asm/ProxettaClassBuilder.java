@@ -70,7 +70,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * @param reqProxyClassName		requested proxy class name, may be <code>null</code>s
 	 * @param targetClassInfoReader	target info reader, already invoked.
 	 */
-	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, String suffix, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
+	public ProxettaClassBuilder(final ClassVisitor dest, final ProxyAspect[] aspects, final String suffix, final String reqProxyClassName, final TargetClassInfoReader targetClassInfoReader) {
 		this.wd = new WorkData(dest);
 		this.aspects = aspects;
 		this.suffix = suffix;
@@ -93,7 +93,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * adding a suffix and, optionally, a number. Destination extends the target.
 	 */
 	@Override
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+	public void visit(final int version, int access, final String name, final String signature, final String superName, final String[] interfaces) {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// change access of destination
@@ -118,7 +118,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * For each method, {@link ProxettaMethodBuilder} determines if method matches pointcut. If so, method will be proxified.
 	 */
 	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 		MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
 		if (msign == null) {
 			return null;
@@ -141,7 +141,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Ignores fields. Fields are not copied to the destination.
 	 */
 	@Override
-	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+	public FieldVisitor visitField(final int access, final String name, final String desc, final String signature, final Object value) {
 		return null;
 	}
 
@@ -152,7 +152,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Copies all destination type annotations to the target.
 	 */
 	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		AnnotationVisitor destAnn = wd.dest.visitAnnotation(desc, visible); // [A3]
 		return new AnnotationVisitorAdapter(destAnn);
 	}
@@ -226,12 +226,12 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 				String declaredClassName;
 
 				@Override
-				public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+				public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
 					declaredClassName = name;
 				}
 
 				@Override
-				public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+				public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 					if (name.equals(INIT) || name.equals(CLINIT)) {
 						return null;
 					}
@@ -252,7 +252,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
      * Visits the source of the class (not used).
      */
     @Override
-	public void visitSource(String source, String debug) {
+	public void visitSource(final String source, final String debug) {
 		// not used
 	}
 
@@ -260,7 +260,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
      * Visits the enclosing class of the class (not used).
 	 */
 	@Override
-	public void visitOuterClass(String owner, String name, String desc) {
+	public void visitOuterClass(final String owner, final String name, final String desc) {
 		// not used
 	}
 
@@ -268,7 +268,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
      * Visits a non standard attribute of the class (not used).
      */
 	@Override
-	public void visitAttribute(Attribute attr) {
+	public void visitAttribute(final Attribute attr) {
 		// not used
 	}
 
@@ -276,7 +276,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
      * Visits information about an inner class (not used).
 	 */
 	@Override
-	public void visitInnerClass(String name, String outerName, String innerName, int access) {
+	public void visitInnerClass(final String name, final String outerName, final String innerName, final int access) {
 		// not used
 	}
 
@@ -287,7 +287,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Check if proxy should be applied on method and return proxy method builder if so.
 	 * Otherwise, returns <code>null</code>.
 	 */
-	protected ProxettaMethodBuilder applyProxy(MethodSignatureVisitor msign) {
+	protected ProxettaMethodBuilder applyProxy(final MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = matchMethodPointcuts(msign);
 
 		if (aspectList == null) {
@@ -307,7 +307,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	/**
 	 * Matches pointcuts on method. If no pointcut found, returns <code>null</code>.
 	 */
-	protected List<ProxyAspectData> matchMethodPointcuts(MethodSignatureVisitor msign) {
+	protected List<ProxyAspectData> matchMethodPointcuts(final MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = null;
 		for (ProxyAspectData aspectData : wd.proxyAspects) {
 			if (aspectData.apply(msign)) {

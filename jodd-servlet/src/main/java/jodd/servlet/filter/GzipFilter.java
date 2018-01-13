@@ -88,7 +88,7 @@ public class GzipFilter implements Filter {
 	 * If browser does not support gzip, invokes resource normally.
 	 */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws ServletException, IOException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
@@ -122,7 +122,7 @@ public class GzipFilter implements Filter {
 	 * Filter initialization.
 	 */
 	@Override
-	public void init(FilterConfig config) throws ServletException {
+	public void init(final FilterConfig config) throws ServletException {
 
 		try {
 			wildcards = Converter.get().toBooleanValue(config.getInitParameter("wildcards"), false);
@@ -189,7 +189,7 @@ public class GzipFilter implements Filter {
 	/**
 	 * Determine if request is eligible for GZipping.
 	 */
-	protected boolean isGzipEligible(HttpServletRequest request) {
+	protected boolean isGzipEligible(final HttpServletRequest request) {
 		// request parameter name
 
 		if (requestParameterName.length() != 0) {

@@ -65,7 +65,7 @@ public abstract class AbstractTemplateViewActionResult<T extends PathResult> imp
 	 * will be sent back in the http response.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, T resultValue) throws Exception {
+	public void render(final ActionRequest actionRequest, final T resultValue) throws Exception {
 		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
 
 		final String path = resultValue != null ? resultValue.path() : StringPool.EMPTY;
@@ -101,7 +101,7 @@ public abstract class AbstractTemplateViewActionResult<T extends PathResult> imp
 	/**
 	 * Locates the target file from action path and the result value.
 	 */
-	protected String resolveTarget(ActionRequest actionRequest, String resultValue) {
+	protected String resolveTarget(final ActionRequest actionRequest, final String resultValue) {
 		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
 
 		ResultPath resultPath = resultMapper.resolveResultPath(resultBasePath, resultValue);
@@ -181,7 +181,7 @@ public abstract class AbstractTemplateViewActionResult<T extends PathResult> imp
 	/**
 	 * Called when target not found. By default sends 404 to the response.
 	 */
-	protected void targetNotFound(ActionRequest actionRequest, String actionAndResultPath) throws IOException {
+	protected void targetNotFound(final ActionRequest actionRequest, final String actionAndResultPath) throws IOException {
 		HttpServletResponse response = actionRequest.httpServletResponse();
 		response.sendError(SC_NOT_FOUND, "Result not found: " + actionAndResultPath);
 	}

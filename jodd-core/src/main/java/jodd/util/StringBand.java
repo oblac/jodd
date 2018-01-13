@@ -54,21 +54,21 @@ public class StringBand {
 	 * Capacity refers to internal string array (i.e. number of
 	 * joins) and not the total string size.
 	 */
-	public StringBand(int initialCapacity) {
+	public StringBand(final int initialCapacity) {
 		array = new String[initialCapacity];
 	}
 
 	/**
 	 * Creates <code>StringBand</code> with provided content.
 	 */
-	public StringBand(String s) {
+	public StringBand(final String s) {
 		this();
 		array[0] = s;
 		index = 1;
 		length = s.length();
 	}
 
-	public StringBand(Object o) {
+	public StringBand(final Object o) {
 		this(String.valueOf(o));
 	}
 
@@ -77,42 +77,42 @@ public class StringBand {
 	/**
 	 * Appends boolean value.
 	 */
-	public StringBand append(boolean b) {
+	public StringBand append(final boolean b) {
 		return append(b ? StringPool.TRUE : StringPool.FALSE);
 	}
 
 	/**
 	 * Appends double value.
 	 */
-	public StringBand append(double d) {
+	public StringBand append(final double d) {
 		return append(Double.toString(d));
 	}
 
 	/**
 	 * Appends float value.
 	 */
-	public StringBand append(float f) {
+	public StringBand append(final float f) {
 		return append(Float.toString(f));
 	}
 
 	/**
 	 * Appends int value.
 	 */
-	public StringBand append(int i) {
+	public StringBand append(final int i) {
 		return append(Integer.toString(i));
 	}
 
 	/**
 	 * Appends long value.
 	 */
-	public StringBand append(long l) {
+	public StringBand append(final long l) {
 		return append(Long.toString(l));
 	}
 
 	/**
 	 * Appends short value.
 	 */
-	public StringBand append(short s) {
+	public StringBand append(final short s) {
 		return append(Short.toString(s));
 	}
 
@@ -120,14 +120,14 @@ public class StringBand {
 	 * Appends a character. This is <b>not</b> efficient
 	 * as in <code>StringBuilder</code>, since new string is created.
 	 */
-	public StringBand append(char c) {
+	public StringBand append(final char c) {
 		return append(String.valueOf(c));
 	}
 
 	/**
 	 * Appends byte value.
 	 */
-	public StringBand append(byte b) {
+	public StringBand append(final byte b) {
 		return append(Byte.toString(b));
 	}
 
@@ -136,7 +136,7 @@ public class StringBand {
 	 * If <code>null</code>, the <code>'null'</code> string
 	 * will be appended.
 	 */
-	public StringBand append(Object obj) {
+	public StringBand append(final Object obj) {
 		return append(String.valueOf(obj));
 	}
 
@@ -184,7 +184,7 @@ public class StringBand {
 	/**
 	 * Specifies the new index.
 	 */
-	public void setIndex(int newIndex) {
+	public void setIndex(final int newIndex) {
 		if (newIndex < 0) {
 			throw new ArrayIndexOutOfBoundsException(newIndex);
 		}
@@ -216,7 +216,7 @@ public class StringBand {
 	 * This method is <b>not</b> fast as it calculates
 	 * the right string array element and the offset!
 	 */
-	public char charAt(int pos) {
+	public char charAt(final int pos) {
 		int len = 0;
 		for (int i = 0; i < index; i++) {
 			int newlen = len + array[i].length();
@@ -231,7 +231,7 @@ public class StringBand {
 	/**
 	 * Returns string at given position.
 	 */
-	public String stringAt(int index) {
+	public String stringAt(final int index) {
 		if (index >= this.index) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -241,6 +241,7 @@ public class StringBand {
 	/**
 	 * Joins together all strings into one.
 	 */
+	@Override
 	public String toString() {
 
 		// special cases

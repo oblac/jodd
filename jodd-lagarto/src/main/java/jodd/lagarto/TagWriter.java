@@ -36,11 +36,11 @@ public class TagWriter implements TagVisitor {
 
 	protected Appendable appendable;
 
-	public TagWriter(Appendable appendable) {
+	public TagWriter(final Appendable appendable) {
 		this.appendable = appendable;
 	}
 
-	public void setOutput(Appendable out) {
+	public void setOutput(final Appendable out) {
 		this.appendable = out;
 	}
 
@@ -59,7 +59,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		try {
 			tag.writeTo(appendable);
 		} catch (IOException ioex) {
@@ -68,7 +68,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void script(Tag tag, CharSequence body) {
+	public void script(final Tag tag, final CharSequence body) {
 		try {
 			tag.writeTo(appendable);
 			if (body != null) {
@@ -81,7 +81,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void comment(CharSequence comment) {
+	public void comment(final CharSequence comment) {
 		try {
 			TagWriterUtil.writeComment(appendable, comment);
 		} catch (IOException ioex) {
@@ -90,7 +90,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void text(CharSequence text) {
+	public void text(final CharSequence text) {
 		try {
 			appendable.append(HtmlEncoder.text(text));
 		} catch (IOException ioex) {
@@ -99,7 +99,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void cdata(CharSequence cdata) {
+	public void cdata(final CharSequence cdata) {
 		try {
 			TagWriterUtil.writeCData(appendable, cdata);
 		} catch (IOException ioex) {
@@ -108,7 +108,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+	public void xml(final CharSequence version, final CharSequence encoding, final CharSequence standalone) {
 		try {
 			TagWriterUtil.writeXml(appendable, version, encoding, standalone);
 		} catch (IOException ioex) {
@@ -117,7 +117,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void doctype(Doctype doctype) {
+	public void doctype(final Doctype doctype) {
 		try {
 			TagWriterUtil.writeDoctype(
 					appendable,
@@ -130,7 +130,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+	public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
 		try {
 			TagWriterUtil.writeConditionalComment(appendable, expression, isStartingTag, isHidden, isHiddenEndTag);
 		} catch (IOException ioex) {
@@ -139,7 +139,7 @@ public class TagWriter implements TagVisitor {
 	}
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 	}
 
 }

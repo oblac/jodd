@@ -37,7 +37,7 @@ public class SqlGenConfig {
 		return updateAcceptsTableAlias;
 	}
 
-	public void setUpdateAcceptsTableAlias(boolean updateAcceptsTableAlias) {
+	public void setUpdateAcceptsTableAlias(final boolean updateAcceptsTableAlias) {
 		this.updateAcceptsTableAlias = updateAcceptsTableAlias;
 	}
 
@@ -48,7 +48,7 @@ public class SqlGenConfig {
 		return updateablePrimaryKey;
 	}
 
-	public void setUpdateablePrimaryKey(boolean updateablePrimaryKey) {
+	public void setUpdateablePrimaryKey(final boolean updateablePrimaryKey) {
 		this.updateablePrimaryKey = updateablePrimaryKey;
 	}
 

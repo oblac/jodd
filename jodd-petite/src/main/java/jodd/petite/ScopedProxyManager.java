@@ -73,7 +73,7 @@ public class ScopedProxyManager {
 	 * Returns scoped proxy bean if injection scopes are mixed on some injection point.
 	 * May return <code>null</code> if mixing scopes is not detected.
 	 */
-	public Object lookupValue(PetiteContainer petiteContainer, BeanDefinition targetBeanDefinition, BeanDefinition refBeanDefinition) {
+	public Object lookupValue(final PetiteContainer petiteContainer, final BeanDefinition targetBeanDefinition, final BeanDefinition refBeanDefinition) {
 		Scope targetScope = targetBeanDefinition.scope;
 		Scope refBeanScope = refBeanDefinition.scope;
 
@@ -120,7 +120,7 @@ public class ScopedProxyManager {
 	/**
 	 * Creates mixed scope message.
 	 */
-	protected String createMixingMessage(BeanDefinition targetBeanDefinition, BeanDefinition refBeanDefinition) {
+	protected String createMixingMessage(final BeanDefinition targetBeanDefinition, final BeanDefinition refBeanDefinition) {
 		return "Scopes mixing detected: " +
 				refBeanDefinition.name + "@" + refBeanDefinition.scope.getClass().getSimpleName() + " -> " +
 				targetBeanDefinition.name + "@" + targetBeanDefinition.scope.getClass().getSimpleName();
@@ -130,7 +130,7 @@ public class ScopedProxyManager {
 	/**
 	 * Creates scoped proxy bean for given bean definition.
 	 */
-	protected Object createScopedProxyBean(PetiteContainer petiteContainer, BeanDefinition refBeanDefinition) {
+	protected Object createScopedProxyBean(final PetiteContainer petiteContainer, final BeanDefinition refBeanDefinition) {
 
 		Class beanType = refBeanDefinition.type;
 

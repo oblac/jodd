@@ -28,8 +28,8 @@ package jodd.servlet.map;
 import jodd.util.CollectionUtil;
 import jodd.util.collection.StringKeyedMapAdapter;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Iterator;
 
 /**
@@ -39,26 +39,26 @@ public class HttpSessionMap extends StringKeyedMapAdapter {
 
 	private final HttpSession session;
 
-	public HttpSessionMap(HttpSession session) {
+	public HttpSessionMap(final HttpSession session) {
 		this.session = session;
 	}
 
-	public HttpSessionMap(HttpServletRequest request) {
+	public HttpSessionMap(final HttpServletRequest request) {
 		this(request.getSession());
 	}
 
 	@Override
-	protected Object getAttribute(String key) {
+	protected Object getAttribute(final String key) {
 		return session.getAttribute(key);
 	}
 
 	@Override
-	protected void setAttribute(String key, Object value) {
+	protected void setAttribute(final String key, final Object value) {
 		session.setAttribute(key, value);
 	}
 
 	@Override
-	protected void removeAttribute(String key) {
+	protected void removeAttribute(final String key) {
 		session.removeAttribute(key);
 	}
 

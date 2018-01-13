@@ -65,7 +65,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	/**
 	 * Converts String array of patterns to char arrays. 
 	 */
-	protected void preparePatterns(String[] spat) {
+	protected void preparePatterns(final String[] spat) {
 		patterns = new char[spat.length][];
 		for (int i = 0; i < spat.length; i++) {
 			patterns[i] = spat[i].toCharArray();
@@ -81,7 +81,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 *
 	 * @return  0-based index of founded pattern, or <code>-1</code> if pattern not found
 	 */
-	protected int findPattern(char[] input, int i) {
+	protected int findPattern(final char[] input, final int i) {
 		int lastn = -1;
 		int maxLen = 0;
 
@@ -114,7 +114,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 * Checks if given char is a starting char of a pattern.
 	 * Returns char with zero value if next char is actually a pattern.
 	 */
-	protected char detectSeparatorInPattern(char c) {
+	protected char detectSeparatorInPattern(final char c) {
 		for (char[] curr : patterns) {
 			if (curr[0] == c) {
 				return 0;
@@ -138,7 +138,8 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 * {@inheritDoc}
 	 * @see JdtFormatter#convert(JDateTime, String)
 	 */
-	public String convert(JDateTime jdt, String format) {
+	@Override
+	public String convert(final JDateTime jdt, final String format) {
 		char[] fmtc = format.toCharArray();
 		int fmtc_len = fmtc.length;
 		StringBuilder result = new StringBuilder(fmtc_len);
@@ -196,7 +197,8 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 * {@inheritDoc}
 	 * @see JdtFormatter#parse(String, String)
 	 */
-	public DateTimeStamp parse(String value, String format) {
+	@Override
+	public DateTimeStamp parse(final String value, final String format) {
 		char[] valueChars = value.toCharArray();
 		char[] formatChars = format.toCharArray();
 
@@ -277,7 +279,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	/**
 	 * Prints values 00 - 99.
 	 */
-	protected String print2(int value) {
+	protected String print2(final int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("Value must be positive: " + value);
 		}
@@ -293,7 +295,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	/**
 	 * Prints values 00 - 999.
 	 */
-	protected String print3(int value) {
+	protected String print3(final int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("Value must be positive: " + value);
 		}

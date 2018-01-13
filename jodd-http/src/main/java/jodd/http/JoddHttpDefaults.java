@@ -48,7 +48,7 @@ public class JoddHttpDefaults {
 	/**
 	 * Sets default HTTP query parameters encoding (UTF-8).
 	 */
-	public void setQueryEncoding(String queryEncoding) {
+	public void setQueryEncoding(final String queryEncoding) {
 		this.queryEncoding = queryEncoding;
 	}
 
@@ -62,7 +62,7 @@ public class JoddHttpDefaults {
 	/**
 	 * Sets default form encoding (UTF-8).
 	 */
-	public void setFormEncoding(String formEncoding) {
+	public void setFormEncoding(final String formEncoding) {
 		this.formEncoding = formEncoding;
 	}
 
@@ -76,7 +76,7 @@ public class JoddHttpDefaults {
 	/**
 	 * Sets default body media type (text/html).
 	 */
-	public void setBodyMediaType(String bodyMediaType) {
+	public void setBodyMediaType(final String bodyMediaType) {
 		this.bodyMediaType = bodyMediaType;
 	}
 
@@ -90,7 +90,7 @@ public class JoddHttpDefaults {
 	/**
 	 * Sets default body encoding (UTF-8).
 	 */
-	public void setBodyEncoding(String bodyEncoding) {
+	public void setBodyEncoding(final String bodyEncoding) {
 		this.bodyEncoding = bodyEncoding;
 	}
 
@@ -105,7 +105,7 @@ public class JoddHttpDefaults {
 	 * CSV of default enabled secured protocols. By default the value is
 	 * read from system property <code>https.protocols</code>.
 	 */
-	public void setSecureEnabledProtocols(String secureEnabledProtocols) {
+	public void setSecureEnabledProtocols(final String secureEnabledProtocols) {
 		this.secureEnabledProtocols = secureEnabledProtocols;
 	}
 
@@ -118,7 +118,7 @@ public class JoddHttpDefaults {
 	/**
 	 * Sets default user agent value.
 	 */
-	public void setUserAgent(String userAgent) {
+	public void setUserAgent(final String userAgent) {
 		this.userAgent = userAgent;
 	}
 
@@ -134,7 +134,7 @@ public class JoddHttpDefaults {
 	 * When disabled, header keys are used as they are passed.
 	 * When flag is enabled, header keys will be capitalized.
 	 */
-	public void setCapitalizeHeaderKeys(boolean capitalizeHeaderKeys) {
+	public void setCapitalizeHeaderKeys(final boolean capitalizeHeaderKeys) {
 		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
 	}
 }

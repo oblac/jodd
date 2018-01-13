@@ -25,10 +25,10 @@
 
 package jodd.util;
 
-import java.util.Locale;
-import java.util.HashMap;
-import java.util.Map;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Locale utilities.
@@ -39,7 +39,7 @@ public class LocaleUtil {
 	 * Holds all per-Locale data.
 	 */
 	static class LocaleData {
-		LocaleData(Locale locale) {
+		LocaleData(final Locale locale) {
 			this.locale = locale;
 		}
 		final Locale locale;
@@ -55,7 +55,7 @@ public class LocaleUtil {
 	/**
 	 * Lookups for locale data and creates new if it doesn't exist.
 	 */
-	protected static LocaleData lookupLocaleData(String code) {
+	protected static LocaleData lookupLocaleData(final String code) {
 		LocaleData localeData = locales.get(code);
 		if (localeData == null) {
 			String[] data = decodeLocaleCode(code);
@@ -65,7 +65,7 @@ public class LocaleUtil {
 		return localeData;
 	}
 
-	protected static LocaleData lookupLocaleData(Locale locale) {
+	protected static LocaleData lookupLocaleData(final Locale locale) {
 		return lookupLocaleData(resolveLocaleCode(locale));
 	}
 
@@ -75,7 +75,7 @@ public class LocaleUtil {
 	/**
 	 * Returns Locale from cache.
 	 */
-	public static Locale getLocale(String language, String country, String variant) {
+	public static Locale getLocale(final String language, final String country, final String variant) {
 		LocaleData localeData = lookupLocaleData(resolveLocaleCode(language, country, variant));
 		return localeData.locale;
 	}
@@ -83,7 +83,7 @@ public class LocaleUtil {
 	/**
 	 * Returns Locale from cache.
 	 */
-	public static Locale getLocale(String language, String country) {
+	public static Locale getLocale(final String language, final String country) {
 		return getLocale(language, country, null);
 	}
 
@@ -91,7 +91,7 @@ public class LocaleUtil {
 	 * Returns Locale from cache where Locale may be specified also using language code.
 	 * Converts a locale string like "en", "en_US" or "en_US_win" to <b>new</b> Java locale object.
 	 */
-	public static Locale getLocale(String languageCode) {
+	public static Locale getLocale(final String languageCode) {
 		LocaleData localeData = lookupLocaleData(languageCode);
 		return localeData.locale;
 	}
@@ -101,7 +101,7 @@ public class LocaleUtil {
 	/**
 	 * Transforms locale data to locale code. <code>null</code> values are allowed.
 	 */
-	public static String resolveLocaleCode(String lang, String country, String variant) {
+	public static String resolveLocaleCode(final String lang, final String country, final String variant) {
 		StringBuilder code = new StringBuilder(lang);
 		if (!StringUtil.isEmpty(country)) {
 			code.append('_').append(country);
@@ -115,14 +115,14 @@ public class LocaleUtil {
 	/**
 	 * Resolves locale code from locale.
 	 */
-	public static String resolveLocaleCode(Locale locale) {
+	public static String resolveLocaleCode(final Locale locale) {
 		return resolveLocaleCode(locale.getLanguage(), locale.getCountry(), locale.getVariant());
 	}
 
 	/**
 	 * Decodes locale code in string array that can be used for <code>Locale</code> constructor.
 	 */
-	public static String[] decodeLocaleCode(String localeCode) {
+	public static String[] decodeLocaleCode(final String localeCode) {
 		String[] result = new String[3];
 		String[] data = StringUtil.splitc(localeCode, '_');
 		result[0] = data[0];
@@ -141,7 +141,7 @@ public class LocaleUtil {
 	/**
 	 * Returns cached <code>DateFormatSymbols</code> instance for specified locale.
 	 */
-	public static DateFormatSymbolsEx getDateFormatSymbols(Locale locale) {
+	public static DateFormatSymbolsEx getDateFormatSymbols(final Locale locale) {
 		LocaleData localeData = lookupLocaleData(locale);
 		DateFormatSymbolsEx dfs = localeData.dateFormatSymbols;
 
@@ -156,7 +156,7 @@ public class LocaleUtil {
 	/**
 	 * Returns cached <code>NumberFormat</code> instance for specified locale.
 	 */
-	public static NumberFormat getNumberFormat(Locale locale) {
+	public static NumberFormat getNumberFormat(final Locale locale) {
 		LocaleData localeData = lookupLocaleData(locale);
 		NumberFormat nf = localeData.numberFormat;
 		if (nf == null) {

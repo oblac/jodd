@@ -55,7 +55,7 @@ public class BundleAction {
 	/**
 	 * Creates new bundle action.
 	 */
-	public BundleAction(HtmlStaplerBundlesManager bundlesManager, String servletPath, String bundleContentType) {
+	public BundleAction(final HtmlStaplerBundlesManager bundlesManager, final String servletPath, final String bundleContentType) {
 		this.bundlesManager = bundlesManager;
 		this.bundleContentType = bundleContentType;
 		this.strategy = bundlesManager.getStrategy();
@@ -91,7 +91,7 @@ public class BundleAction {
 	 * By default, ignores resource links that contains "jodd.unstaple"
 	 * (usually set as dummy parameter name).
 	 */
-	public boolean acceptLink(String src) {
+	public boolean acceptLink(final String src) {
 		if (src == null) {
 			return false;
 		}
@@ -103,7 +103,7 @@ public class BundleAction {
 	 * of the same type. Otherwise, returns <code>null</code> indicating
 	 * that collection is going on and the original link should be removed.
 	 */
-	public String processLink(String src) {
+	public String processLink(final String src) {
 		if (newAction) {
 			if (bundleId == null) {
 				bundleId = bundlesManager.registerNewBundleId();
@@ -143,7 +143,7 @@ public class BundleAction {
 	 * Replaces bundle marker with calculated bundle id.
 	 * Used for <code>RESOURCE_ONLY</code> strategy.
 	 */
-	public char[] replaceBundleId(char[] content) {
+	public char[] replaceBundleId(final char[] content) {
 		if (strategy == ACTION_MANAGED || bundleId == null) {
 			return content;
 		}

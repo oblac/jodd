@@ -39,7 +39,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Creates field-only property descriptor.
 	 */
-	public PropertyDescriptor(ClassDescriptor classDescriptor, String propertyName, FieldDescriptor fieldDescriptor) {
+	public PropertyDescriptor(final ClassDescriptor classDescriptor, final String propertyName, final FieldDescriptor fieldDescriptor) {
 		super(classDescriptor, false);
 		this.name = propertyName;
 		this.readMethodDescriptor = null;
@@ -50,7 +50,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Creates property descriptor.
 	 */
-	public PropertyDescriptor(ClassDescriptor classDescriptor, String propertyName, MethodDescriptor readMethod, MethodDescriptor writeMethod) {
+	public PropertyDescriptor(final ClassDescriptor classDescriptor, final String propertyName, final MethodDescriptor readMethod, final MethodDescriptor writeMethod) {
 		super(classDescriptor,
 				((readMethod == null) || readMethod.isPublic()) & (writeMethod == null || writeMethod.isPublic())
 		);
@@ -86,7 +86,7 @@ public class PropertyDescriptor extends Descriptor {
 	 * Locates property field. Field is being searched also in all
 	 * superclasses of current class.
 	 */
-	protected FieldDescriptor findField(String fieldName) {
+	protected FieldDescriptor findField(final String fieldName) {
 		FieldDescriptor fieldDescriptor = classDescriptor.getFieldDescriptor(fieldName, true);
 
 		if (fieldDescriptor != null) {
@@ -199,7 +199,7 @@ public class PropertyDescriptor extends Descriptor {
 	 * Returns {@link Getter}. May return <code>null</code>
 	 * if no matched getter is found.
 	 */
-	public Getter getGetter(boolean declared) {
+	public Getter getGetter(final boolean declared) {
 		if (getters == null) {
 			getters = new Getter[] {
 					createGetter(false),
@@ -213,7 +213,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Creates a {@link Getter}.
 	 */
-	protected Getter createGetter(boolean declared) {
+	protected Getter createGetter(final boolean declared) {
 		if (readMethodDescriptor != null) {
 			if (readMethodDescriptor.matchDeclared(declared)) {
 				return readMethodDescriptor;
@@ -232,7 +232,7 @@ public class PropertyDescriptor extends Descriptor {
 	 * Returns {@link Setter}. May return <code>null</code>
 	 * if no matched setter is found.
 	 */
-	public Setter getSetter(boolean declared) {
+	public Setter getSetter(final boolean declared) {
 		if (setters == null) {
 			setters = new Setter[] {
 					createSetter(false),
@@ -246,7 +246,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Creates a {@link Setter}.
 	 */
-	protected Setter createSetter(boolean declared) {
+	protected Setter createSetter(final boolean declared) {
 		if (writeMethodDescriptor != null) {
 			if (writeMethodDescriptor.matchDeclared(declared)) {
 				return writeMethodDescriptor;
@@ -265,7 +265,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Resolves key type for given property descriptor.
 	 */
-	public Class resolveKeyType(boolean declared) {
+	public Class resolveKeyType(final boolean declared) {
 		Class keyType = null;
 
 		Getter getter = getGetter(declared);
@@ -288,7 +288,7 @@ public class PropertyDescriptor extends Descriptor {
 	/**
 	 * Resolves component type for given property descriptor.
 	 */
-	public Class resolveComponentType(boolean declared) {
+	public Class resolveComponentType(final boolean declared) {
 		Class componentType = null;
 
 		Getter getter = getGetter(declared);

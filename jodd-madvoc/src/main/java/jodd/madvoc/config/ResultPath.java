@@ -37,7 +37,7 @@ public class ResultPath {
 	protected final String path;
 	protected final String value;
 
-	public ResultPath(String path, String value) {
+	public ResultPath(final String path, final String value) {
 		this.path = path;
 		this.value = value;
 	}

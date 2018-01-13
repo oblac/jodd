@@ -59,7 +59,7 @@ public class HttpBrowser {
 	/**
 	 * Defines that persistent HTTP connection should be used.
 	 */
-	public HttpBrowser setKeepAlive(boolean keepAlive) {
+	public HttpBrowser setKeepAlive(final boolean keepAlive) {
 		this.keepAlive = keepAlive;
 		return this;
 	}
@@ -67,7 +67,7 @@ public class HttpBrowser {
 	/**
 	 * Defines if transport exceptions should be thrown.
 	 */
-	public HttpBrowser setCatchTransportExceptions(boolean catchTransportExceptions) {
+	public HttpBrowser setCatchTransportExceptions(final boolean catchTransportExceptions) {
 		this.catchTransportExceptions = catchTransportExceptions;
 		return this;
 	}
@@ -75,7 +75,7 @@ public class HttpBrowser {
 	/**
 	 * Defines proxy for a browser.
 	 */
-	public HttpBrowser setProxyInfo(ProxyInfo proxyInfo) {
+	public HttpBrowser setProxyInfo(final ProxyInfo proxyInfo) {
 		httpConnectionProvider.useProxy(proxyInfo);
 		return this;
 	}
@@ -84,7 +84,7 @@ public class HttpBrowser {
 	 * Defines {@link jodd.http.HttpConnectionProvider} for this browser session.
 	 * Resets the previous proxy definition, if set.
 	 */
-	public HttpBrowser setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+	public HttpBrowser setHttpConnectionProvider(final HttpConnectionProvider httpConnectionProvider) {
 		this.httpConnectionProvider = httpConnectionProvider;
 		return this;
 	}
@@ -92,7 +92,7 @@ public class HttpBrowser {
 	/**
 	 * Adds default header to all requests.
 	 */
-	public HttpBrowser setDefaultHeader(String name, String value) {
+	public HttpBrowser setDefaultHeader(final String name, final String value) {
 		defaultHeaders.addHeader(name, value);
 		return this;
 	}
@@ -214,7 +214,7 @@ public class HttpBrowser {
 	/**
 	 * Opens connection and sends a response.
 	 */
-	protected HttpResponse _sendRequest(HttpRequest httpRequest, HttpResponse previouseResponse) {
+	protected HttpResponse _sendRequest(final HttpRequest httpRequest, final HttpResponse previouseResponse) {
 		if (!keepAlive) {
 			httpRequest.open(httpConnectionProvider);
 		} else {
@@ -233,7 +233,7 @@ public class HttpBrowser {
 	 * Add default headers to the request. If request already has a header set,
 	 * default header will be ignored.
 	 */
-	protected void addDefaultHeaders(HttpRequest httpRequest) {
+	protected void addDefaultHeaders(final HttpRequest httpRequest) {
 		for (Map.Entry<String, String> entry : defaultHeaders.entries()) {
 			String name = entry.getKey();
 
@@ -273,7 +273,7 @@ public class HttpBrowser {
 	/**
 	 * Reads cookies from response and adds to cookies list.
 	 */
-	protected void readCookies(HttpResponse httpResponse) {
+	protected void readCookies(final HttpResponse httpResponse) {
 		Cookie[] newCookies = httpResponse.cookies();
 
 		for (Cookie cookie : newCookies) {
@@ -284,7 +284,7 @@ public class HttpBrowser {
 	/**
 	 * Add cookies to the request.
 	 */
-	protected void addCookies(HttpRequest httpRequest) {
+	protected void addCookies(final HttpRequest httpRequest) {
 		// prepare all cookies
 		List<Cookie> cookiesList = new ArrayList<>();
 

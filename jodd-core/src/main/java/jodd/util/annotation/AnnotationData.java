@@ -34,7 +34,7 @@ public abstract class AnnotationData<N extends Annotation> {
 
 	protected final N annotation;
 
-	protected AnnotationData(N annotation) {
+	protected AnnotationData(final N annotation) {
 		this.annotation = annotation;
 	}
 

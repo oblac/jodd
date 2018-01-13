@@ -47,7 +47,7 @@ public class BeanTemplateParser extends StringTemplateParser {
 		return template -> parseWithBean(template, context);
 	}
 
-	public String parseWithBean(String template, Object context) {
+	public String parseWithBean(final String template, final Object context) {
 		return super.parse(template, macroName -> {
 			Object value = BeanUtil.declaredSilent.getProperty(context, macroName);
 

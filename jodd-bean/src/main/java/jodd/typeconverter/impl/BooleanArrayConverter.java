@@ -40,12 +40,12 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public BooleanArrayConverter(TypeConverterManager typeConverterManager) {
+	public BooleanArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public boolean[] convert(Object value) {
+	public boolean[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected boolean convertType(Object value) {
+	protected boolean convertType(final Object value) {
 		return typeConverterManager.convertType(value, boolean.class).booleanValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected boolean[] convertToSingleElementArray(Object value) {
+	protected boolean[] convertToSingleElementArray(final Object value) {
 		return new boolean[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected boolean[] convertValueToArray(Object value) {
+	protected boolean[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			boolean[] target = new boolean[list.size()];
@@ -136,7 +136,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected boolean[] convertArrayToArray(Object value) {
+	protected boolean[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == boolean.class) {
@@ -166,7 +166,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected boolean[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected boolean[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		boolean[] result = null;
 
 		if (primitiveComponentType == boolean[].class) {

@@ -48,7 +48,7 @@ public class JsonContext extends JsonWriter {
 	protected final Path path;
 	protected final boolean excludeNulls;
 
-	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable, boolean excludeNulls, boolean strictStringEncoding) {
+	public JsonContext(final JsonSerializer jsonSerializer, final Appendable appendable, final boolean excludeNulls, final boolean strictStringEncoding) {
 		super(appendable, strictStringEncoding);
 		this.jsonSerializer = jsonSerializer;
 		this.bag = new ArrayList<>();
@@ -78,7 +78,7 @@ public class JsonContext extends JsonWriter {
 	 * Returns <code>true</code> if object has been already processed during the serialization.
 	 * Used to prevent circular dependencies. Objects are matched by identity.
 	 */
-	public boolean pushValue(Object value) {
+	public boolean pushValue(final Object value) {
 		for (int i = 0; i < bagSize; i++) {
 			JsonValueContext valueContext = bag.get(i);
 			if (valueContext.getValue() == value) {
@@ -133,7 +133,7 @@ public class JsonContext extends JsonWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void pushName(String name, boolean withComma) {
+	public void pushName(final String name, final boolean withComma) {
 		JsonValueContext valueContext = peekValueContext();
 
 		if (valueContext != null) {
@@ -163,7 +163,7 @@ public class JsonContext extends JsonWriter {
 	 * Serializes the object using {@link jodd.json.TypeJsonSerializer type serializer}.
 	 * Returns <code>true</code> if object was written, otherwise returns <code>false</code>.
 	 */
-	public boolean serialize(Object object) {
+	public boolean serialize(final Object object) {
 		if (object == null) {
 			write(NULL);
 
@@ -200,7 +200,7 @@ public class JsonContext extends JsonWriter {
 	/**
 	 * Matches property types that are ignored by default.
 	 */
-	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean excludeMaps, boolean include) {
+	public boolean matchIgnoredPropertyTypes(final Class propertyType, final boolean excludeMaps, final boolean include) {
 		if (!include) {
 			return false;
 		}
@@ -268,7 +268,7 @@ public class JsonContext extends JsonWriter {
 	 * Matched current path to queries. If match is found, provided include
 	 * value may be changed.
 	 */
-	public boolean matchPathToQueries(boolean include) {
+	public boolean matchPathToQueries(final boolean include) {
 		return jsonSerializer.rules.apply(path, include);
 	}
 

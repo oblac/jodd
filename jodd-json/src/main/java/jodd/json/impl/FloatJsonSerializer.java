@@ -31,7 +31,7 @@ import jodd.json.TypeJsonSerializer;
 public class FloatJsonSerializer  implements TypeJsonSerializer<Float> {
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, Float value) {
+	public boolean serialize(final JsonContext jsonContext, final Float value) {
 		if (value.isNaN()) {
 			jsonContext.writeString("NaN");
 			return true;

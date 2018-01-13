@@ -49,15 +49,15 @@ public class StreamGobbler extends Thread {
 	protected final Object lock = new Object();
 	protected boolean end = false;
 
-	public StreamGobbler(InputStream is) {
+	public StreamGobbler(final InputStream is) {
 		this(is, null, null);
 	}
 
-	public StreamGobbler(InputStream is, OutputStream output) {
+	public StreamGobbler(final InputStream is, final OutputStream output) {
 		this(is, output, null);
 	}
 
-	public StreamGobbler(InputStream is, OutputStream output, String prefix) {
+	public StreamGobbler(final InputStream is, final OutputStream output, final String prefix) {
 		this.is = is;
 		this.prefix = prefix;
 		this.out = output;

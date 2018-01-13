@@ -55,7 +55,7 @@ public class FastIntBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastIntBuffer(int size) {
+	public FastIntBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastIntBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastIntBuffer {
 	/**
 	 * Appends <code>int</code> array to buffer.
 	 */
-	public FastIntBuffer append(int[] array, int off, int len) {
+	public FastIntBuffer append(final int[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastIntBuffer {
 	/**
 	 * Appends <code>int</code> array to buffer.
 	 */
-	public FastIntBuffer append(int[] array) {
+	public FastIntBuffer append(final int[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>int</code> to buffer.
 	 */
-	public FastIntBuffer append(int element) {
+	public FastIntBuffer append(final int element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastIntBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastIntBuffer append(FastIntBuffer buff) {
+	public FastIntBuffer append(final FastIntBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastIntBuffer {
 	 * Returns <code>int</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public int[] array(int index) {
+	public int[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastIntBuffer {
     /**
      * Creates <code>int</code> subarray from buffered content.
      */
-	public int[] toArray(int start, int len) {
+	public int[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		int[] array = new int[len];

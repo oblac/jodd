@@ -49,12 +49,12 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	 * Creates new BeanCopy process between the source and the destination.
 	 * Both source and destination can be a POJO object or a <code>Map</code>.
 	 */
-	public BeanCopy(Object source, Object destination) {
+	public BeanCopy(final Object source, final Object destination) {
 		this.source = source;
 		this.destination = destination;
 	}
 
-	private BeanCopy(Object source) {
+	private BeanCopy(final Object source) {
 		this.source = source;
 	}
 
@@ -62,21 +62,21 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	 * Simple static factory for <code>BeanCopy</code>.
 	 * @see #BeanCopy(Object, Object)
 	 */
-	public static BeanCopy beans(Object source, Object destination) {
+	public static BeanCopy beans(final Object source, final Object destination) {
 		return new BeanCopy(source, destination);
 	}
 
 	/**
 	 * Creates <code>BeanCopy</code> with given POJO bean as a source.
 	 */
-	public static BeanCopy fromBean(Object source) {
+	public static BeanCopy fromBean(final Object source) {
 		return new BeanCopy(source);
 	}
 
 	/**
 	 * Creates <code>BeanCopy</code> with given <code>Map</code> as a source.
 	 */
-	public static BeanCopy fromMap(Map source) {
+	public static BeanCopy fromMap(final Map source) {
 		BeanCopy beanCopy = new BeanCopy(source);
 
 		beanCopy.isSourceMap = true;
@@ -87,7 +87,7 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	/**
 	 * Defines source, detects a map.
 	 */
-	public static BeanCopy from(Object source) {
+	public static BeanCopy from(final Object source) {
 		BeanCopy beanCopy = new BeanCopy(source);
 
 		beanCopy.isSourceMap = source instanceof Map;
@@ -100,7 +100,7 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	/**
 	 * Defines destination bean.
 	 */
-	public BeanCopy toBean(Object destination) {
+	public BeanCopy toBean(final Object destination) {
 		this.destination = destination;
 		return this;
 	}
@@ -108,7 +108,7 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	/**
 	 * Defines destination map.
 	 */
-	public BeanCopy toMap(Map destination) {
+	public BeanCopy toMap(final Map destination) {
 		this.destination = destination;
 
 		isTargetMap = true;
@@ -119,7 +119,7 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	/**
 	 * Defines destination, detects a map.
 	 */
-	public BeanCopy to(Object destination) {
+	public BeanCopy to(final Object destination) {
 		this.destination = destination;
 
 		this.isTargetMap = destination instanceof Map;
@@ -133,7 +133,8 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	 * Defines if all properties should be copied (when set to <code>true</code>)
 	 * or only public (when set to <code>false</code>, default).
 	 */
-	public BeanCopy declared(boolean declared) {
+	@Override
+	public BeanCopy declared(final boolean declared) {
 		this.declared = declared;
 		this.declaredTarget = declared;
 		return this;
@@ -142,13 +143,13 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	/**
 	 * Fine-tuning of the declared behaviour.
 	 */
-	public BeanCopy declared(boolean declaredSource, boolean declaredTarget) {
+	public BeanCopy declared(final boolean declaredSource, final boolean declaredTarget) {
 		this.declared = declaredSource;
 		this.declaredTarget = declaredTarget;
 		return this;
 	}
 
-	public BeanCopy forced(boolean forced) {
+	public BeanCopy forced(final boolean forced) {
 		this.forced = forced;
 		return this;
 	}
@@ -174,7 +175,7 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	 * destination does not have some of the sources properties.
 	 */
 	@Override
-	protected boolean visitProperty(String name, Object value) {
+	protected boolean visitProperty(String name, final Object value) {
 		if (isTargetMap) {
 			name = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
 		}

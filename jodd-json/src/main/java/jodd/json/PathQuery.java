@@ -47,12 +47,13 @@ public class PathQuery {
 	protected final boolean wildcard;
 	protected final boolean included;
 
-	public PathQuery(String expression, boolean included) {
+	public PathQuery(final String expression, final boolean included) {
 		this.expression = StringUtil.splitc(expression, '.');
 		wildcard = expression.indexOf('*') >= 0;
 		this.included = included;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
@@ -70,7 +71,7 @@ public class PathQuery {
 	/**
 	 * Returns <code>true</code> if path matches the query.
 	 */
-	public boolean matches(Path path) {
+	public boolean matches(final Path path) {
 		int exprNdx = 0;
 		int pathNdx = 0;
 
@@ -122,7 +123,7 @@ public class PathQuery {
 
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}

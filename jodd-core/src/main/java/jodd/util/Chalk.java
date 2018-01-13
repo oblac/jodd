@@ -224,7 +224,7 @@ public class Chalk<T extends Chalk<T>> {
 
 	// ---------------------------------------------------------------- internal
 
-	protected void startSequence(String value) {
+	protected void startSequence(final String value) {
 		if (prefix == null) {
 			prefix = new StringBuilder();
 			prefix.append("\u001B[");
@@ -236,7 +236,7 @@ public class Chalk<T extends Chalk<T>> {
 		prefix.append(value);
 	}
 
-	protected void endSequence(String value) {
+	protected void endSequence(final String value) {
 		if (suffix == null) {
 			suffix = new StringBuilder();
 			suffix
@@ -253,7 +253,7 @@ public class Chalk<T extends Chalk<T>> {
 	/**
 	 * Returns chalked string.
 	 */
-	public String on(String string) {
+	public String on(final String string) {
 		StringBuilder sb = new StringBuilder();
 
 		if (prefix != null) {
@@ -272,14 +272,14 @@ public class Chalk<T extends Chalk<T>> {
 	/**
 	 * Prints chalked string to system output.
 	 */
-	public void print(String string) {
+	public void print(final String string) {
 		System.out.print(on(string));
 	}
 
 	/**
 	 * Prints chalked string to system output.
 	 */
-	public void println(String string) {
+	public void println(final String string) {
 		System.out.println(on(string));
 	}
 

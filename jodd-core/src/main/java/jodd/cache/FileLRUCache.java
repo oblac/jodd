@@ -35,11 +35,11 @@ public class FileLRUCache extends FileCache {
 	 * Creates file LRU cache with specified size. Sets
 	 * {@link #maxFileSize max available file size} to half of this value.
 	 */
-	public FileLRUCache(int maxSize) {
+	public FileLRUCache(final int maxSize) {
 		this(maxSize, maxSize / 2, 0);
 	}
 
-	public FileLRUCache(int maxSize, int maxFileSize) {
+	public FileLRUCache(final int maxSize, final int maxFileSize) {
 		this(maxSize, maxFileSize, 0);
 	}
 
@@ -49,7 +49,7 @@ public class FileLRUCache extends FileCache {
 	 * @param maxFileSize max available file size in bytes, may be 0
 	 * @param timeout timeout, may be 0
 	 */
-	public FileLRUCache(int maxSize, int maxFileSize, long timeout) {
+	public FileLRUCache(final int maxSize, final int maxFileSize, final long timeout) {
 		super(maxSize, maxFileSize, timeout);
 	}
 
@@ -62,12 +62,12 @@ public class FileLRUCache extends FileCache {
 			}
 
 			@Override
-			protected boolean isReallyFull(File file) {
+			protected boolean isReallyFull(final File file) {
 				return isFull();
 			}
 
 			@Override
-			protected void onRemove(File key, byte[] cachedObject) {
+			protected void onRemove(final File key, final byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}
 		};

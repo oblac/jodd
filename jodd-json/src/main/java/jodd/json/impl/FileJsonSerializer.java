@@ -54,7 +54,7 @@ public class FileJsonSerializer implements TypeJsonSerializer<File> {
 		CONTENT
 	}
 
-	public FileJsonSerializer(Type serializationType) {
+	public FileJsonSerializer(final Type serializationType) {
 		this.serializationType = serializationType;
 	}
 
@@ -62,7 +62,7 @@ public class FileJsonSerializer implements TypeJsonSerializer<File> {
 
 
 	@Override
-	public boolean serialize(JsonContext jsonContext, File file) {
+	public boolean serialize(final JsonContext jsonContext, final File file) {
 		switch (serializationType) {
 			case PATH:
 				jsonContext.writeString(file.getAbsolutePath());

@@ -60,28 +60,28 @@ public class AnnotationTxAdviceManager {
 
 	// ---------------------------------------------------------------- ctors
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager) {
+	public AnnotationTxAdviceManager(final JtxTransactionManager jtxManager) {
 		this(new LeanJtxWorker(jtxManager));
 	}
 	
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker) {
+	public AnnotationTxAdviceManager(final LeanJtxWorker jtxWorker) {
 		this(jtxWorker, JTXCTX_PATTERN_CLASS + '#' + JTXCTX_PATTERN_METHOD, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String scopePattern) {
+	public AnnotationTxAdviceManager(final JtxTransactionManager jtxManager, final String scopePattern) {
 		this(new LeanJtxWorker(jtxManager), scopePattern);
 	}
 
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String scopePattern) {
+	public AnnotationTxAdviceManager(final LeanJtxWorker jtxWorker, final String scopePattern) {
 		this(jtxWorker, scopePattern, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String scopePattern, JtxTransactionMode defaultTxMode) {
+	public AnnotationTxAdviceManager(final JtxTransactionManager jtxManager, final String scopePattern, final JtxTransactionMode defaultTxMode) {
 		this(new LeanJtxWorker(jtxManager), scopePattern, defaultTxMode);
 	}
 
 	@SuppressWarnings( {"unchecked"})
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String scopePattern, JtxTransactionMode defaultTxMode) {
+	public AnnotationTxAdviceManager(final LeanJtxWorker jtxWorker, final String scopePattern, final JtxTransactionMode defaultTxMode) {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.scopePattern = scopePattern;
@@ -107,7 +107,7 @@ public class AnnotationTxAdviceManager {
 	/**
 	 * Resolves tx scope from scope pattern.
 	 */
-	public String resolveScope(Class type, String methodName) {
+	public String resolveScope(final Class type, final String methodName) {
 		if (scopePattern == null) {
 			return null;
 		}
@@ -124,7 +124,7 @@ public class AnnotationTxAdviceManager {
 	 * @param methodArgTypes types of arguments, used to find the method
 	 * @param unique unique method fingerprint that contains return and arguments type information
 	 */
-	public synchronized JtxTransactionMode getTxMode(Class type, String methodName, Class[] methodArgTypes, String unique) {
+	public synchronized JtxTransactionMode getTxMode(final Class type, final String methodName, final Class[] methodArgTypes, final String unique) {
 		String signature = type.getName() + '#' + methodName + '%' + unique;
 		JtxTransactionMode txMode = txmap.get(signature);
 		if (txMode == null) {
@@ -159,7 +159,7 @@ public class AnnotationTxAdviceManager {
 	 * Registers tx annotations.
 	 */
 	@SuppressWarnings( {"unchecked"})
-	public void registerAnnotations(Class<? extends Annotation>... txAnnotations) {
+	public void registerAnnotations(final Class<? extends Annotation>... txAnnotations) {
 		this.annotations = txAnnotations;
 
 		this.annotationInstances = new TransactionAnnotation<?>[annotations.length];
@@ -173,7 +173,7 @@ public class AnnotationTxAdviceManager {
 	/**
 	 * Finds TX annotation.
 	 */
-	protected TransactionAnnotationData getTransactionAnnotation(Method method) {
+	protected TransactionAnnotationData getTransactionAnnotation(final Method method) {
 		for (TransactionAnnotation annotationInstance : annotationInstances) {
 			TransactionAnnotationData tad = annotationInstance.readAnnotatedElement(method);
 			if (tad != null) {

@@ -50,7 +50,7 @@ public class JoyMadvoc extends JoyBase {
 	private ServletContext servletContext;
 	private PetiteWebApp webApp;
 
-	public JoyMadvoc(Supplier<PetiteContainer> petiteSupplier, Supplier<ProxyProxetta> proxettaSupplier, Supplier<Props> propsSupplier, Supplier<JoyScanner> scannerSupplier) {
+	public JoyMadvoc(final Supplier<PetiteContainer> petiteSupplier, final Supplier<ProxyProxetta> proxettaSupplier, final Supplier<Props> propsSupplier, final Supplier<JoyScanner> scannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.petiteSupplier = petiteSupplier;
 		this.scannerSupplier = scannerSupplier;
@@ -58,11 +58,11 @@ public class JoyMadvoc extends JoyBase {
 		this.webAppConsumers = Consumers.empty();
 	}
 
-	public void setServletContext(ServletContext servletContext) {
+	public void setServletContext(final ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
 
-	public void add(Consumer<WebApp> webAppConsumer) {
+	public void add(final Consumer<WebApp> webAppConsumer) {
 		this.webAppConsumers.add(webAppConsumer);
 	}
 

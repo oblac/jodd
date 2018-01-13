@@ -34,14 +34,14 @@ public class Tuple<T> {
 
 	private T[] members;
 
-	public Tuple(T... members) {
+	public Tuple(final T... members) {
 		this.members = members;
 	}
 
 	/**
 	 * Creates new tuple.
 	 */
-	public static <V> Tuple<V> of(V... members) {
+	public static <V> Tuple<V> of(final V... members) {
 		return new Tuple<>(members);
 	}
 
@@ -49,7 +49,7 @@ public class Tuple<T> {
 	 * Returns object from tuple.
 	 */
 	@SuppressWarnings("unchecked")
-	public T get(int index){
+	public T get(final int index){
 		return members[index];
 	}
 

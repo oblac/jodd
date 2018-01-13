@@ -34,7 +34,7 @@ import jodd.madvoc.ActionWrapper;
 public interface ActionFilter extends ActionWrapper {
 
 	@Override
-	default Object apply(ActionRequest actionRequest) throws Exception {
+	default Object apply(final ActionRequest actionRequest) throws Exception {
 		return filter(actionRequest);
 	}
 

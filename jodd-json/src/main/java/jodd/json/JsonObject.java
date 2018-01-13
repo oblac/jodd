@@ -54,7 +54,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Create an instance from a Map. The Map is not copied.
 	 */
-	public JsonObject(Map<String, Object> map) {
+	public JsonObject(final Map<String, Object> map) {
 		this.map = map;
 	}
 
@@ -63,7 +63,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns the string value with the specified key.
 	 */
-	public String getString(String key) {
+	public String getString(final String key) {
 		CharSequence cs = (CharSequence) map.get(key);
 		return cs == null ? null : cs.toString();
 	}
@@ -71,7 +71,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * returns the integer value with the specified key.
 	 */
-	public Integer getInteger(String key) {
+	public Integer getInteger(final String key) {
 		Number number = (Number) map.get(key);
 
 		if (number == null) {
@@ -86,7 +86,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns the long value with the specified key.
 	 */
-	public Long getLong(String key) {
+	public Long getLong(final String key) {
 		Number number = (Number) map.get(key);
 
 		if (number == null) {
@@ -101,7 +101,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns the double value with the specified key.
 	 */
-	public Double getDouble(String key) {
+	public Double getDouble(final String key) {
 		Number number = (Number) map.get(key);
 
 		if (number == null) {
@@ -116,7 +116,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns the float value with the specified key.
 	 */
-	public Float getFloat(String key) {
+	public Float getFloat(final String key) {
 		Number number = (Number) map.get(key);
 
 		if (number == null) {
@@ -131,14 +131,14 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns the boolean value with the specified key.
 	 */
-	public Boolean getBoolean(String key) {
+	public Boolean getBoolean(final String key) {
 		return (Boolean) map.get(key);
 	}
 
 	/**
 	 * Returns the {@code JsonObject} value with the specified key.
 	 */
-	public JsonObject getJsonObject(String key) {
+	public JsonObject getJsonObject(final String key) {
 		Object val = map.get(key);
 
 		if (val instanceof Map) {
@@ -150,7 +150,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns the {@link JsonArray} value with the specified key
 	 */
-	public JsonArray getJsonArray(String key) {
+	public JsonArray getJsonArray(final String key) {
 		Object val = map.get(key);
 
 		if (val instanceof List) {
@@ -165,7 +165,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * JSON itself has no notion of a binary. This extension complies to the RFC-7493.
 	 * THe byte array is Base64 encoded binary.
 	 */
-	public byte[] getBinary(String key) {
+	public byte[] getBinary(final String key) {
 		String encoded = (String) map.get(key);
 		return encoded == null ? null : Base64.getDecoder().decode(encoded);
 	}
@@ -174,7 +174,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * Returns the value with the specified key, as an object.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getValue(String key) {
+	public <T> T getValue(final String key) {
 		T val = (T) map.get(key);
 
 		if (val instanceof Map) {
@@ -191,7 +191,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getString(String)} but specifies a default value to return if there is no entry.
 	 */
-	public String getString(String key, String def) {
+	public String getString(final String key, final String def) {
 		String val = getString(key);
 
 		if (val == null) {
@@ -207,7 +207,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getInteger(String)} but specifies a default value to return if there is no entry.
 	 */
-	public Integer getInteger(String key, Integer def) {
+	public Integer getInteger(final String key, final Integer def) {
 		Integer val = getInteger(key);
 
 		if (val == null) {
@@ -223,7 +223,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getLong(String)} but specifies a default value to return if there is no entry.
 	 */
-	public Long getLong(String key, Long def) {
+	public Long getLong(final String key, final Long def) {
 		Long val = getLong(key);
 
 		if (val == null) {
@@ -239,7 +239,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getDouble(String)} but specifies a default value to return if there is no entry.
 	 */
-	public Double getDouble(String key, Double def) {
+	public Double getDouble(final String key, final Double def) {
 		Double val = getDouble(key);
 
 		if (val == null) {
@@ -255,7 +255,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getFloat(String)} but specifies a default value to return if there is no entry.
 	 */
-	public Float getFloat(String key, Float def) {
+	public Float getFloat(final String key, final Float def) {
 		Float val = getFloat(key);
 
 		if (val == null) {
@@ -271,7 +271,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getBoolean(String)} but specifies a default value to return if there is no entry.
 	 */
-	public Boolean getBoolean(String key, Boolean def) {
+	public Boolean getBoolean(final String key, final Boolean def) {
 		Boolean val = getBoolean(key);
 
 		if (val == null) {
@@ -287,7 +287,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getJsonObject(String)} but specifies a default value to return if there is no entry.
 	 */
-	public JsonObject getJsonObject(String key, JsonObject def) {
+	public JsonObject getJsonObject(final String key, final JsonObject def) {
 		JsonObject val = getJsonObject(key);
 
 		if (val == null) {
@@ -303,7 +303,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getJsonArray(String)} but specifies a default value to return if there is no entry.
 	 */
-	public JsonArray getJsonArray(String key, JsonArray def) {
+	public JsonArray getJsonArray(final String key, final JsonArray def) {
 		JsonArray val = getJsonArray(key);
 
 		if (val == null) {
@@ -320,7 +320,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getBinary(String)} but specifies a default value to return if there is no entry.
 	 */
-	public byte[] getBinary(String key, byte[] def) {
+	public byte[] getBinary(final String key, final byte[] def) {
 		byte[] val = getBinary(key);
 
 		if (val == null) {
@@ -337,7 +337,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Like {@link #getValue(String)} but specifies a default value to return if there is no entry.
 	 */
-	public <T> T getValue(String key, T def) {
+	public <T> T getValue(final String key, final T def) {
 		T val = getValue(key);
 
 		if (val == null) {
@@ -355,7 +355,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Returns {@code true} if the JSON object contain the specified key.
 	 */
-	public boolean containsKey(String key) {
+	public boolean containsKey(final String key) {
 		return map.containsKey(key);
 	}
 
@@ -374,7 +374,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * JSON has no concept of encoding Enums, so the Enum will be converted to a String using the {@code java.lang.Enum#name}
 	 * method and the value put as a String.
 	 */
-	public JsonObject put(String key, Enum value) {
+	public JsonObject put(final String key, final Enum value) {
 		Objects.requireNonNull(key);
 		map.put(key, value == null ? null : value.name());
 		return this;
@@ -383,7 +383,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts an {@code CharSequence} into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, CharSequence value) {
+	public JsonObject put(final String key, final CharSequence value) {
 		Objects.requireNonNull(key);
 		map.put(key, value == null ? null : value.toString());
 		return this;
@@ -392,7 +392,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a string into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, String value) {
+	public JsonObject put(final String key, final String value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -401,7 +401,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts an integer into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, Integer value) {
+	public JsonObject put(final String key, final Integer value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -410,7 +410,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a long into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, Long value) {
+	public JsonObject put(final String key, final Long value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -419,7 +419,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a double into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, Double value) {
+	public JsonObject put(final String key, final Double value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -428,7 +428,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a float into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, Float value) {
+	public JsonObject put(final String key, final Float value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -437,7 +437,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a boolean into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, Boolean value) {
+	public JsonObject put(final String key, final Boolean value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -446,7 +446,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a {@code null} value into the JSON object with the specified key.
 	 */
-	public JsonObject putNull(String key) {
+	public JsonObject putNull(final String key) {
 		Objects.requireNonNull(key);
 		map.put(key, null);
 		return this;
@@ -455,7 +455,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts another JSON object into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, JsonObject value) {
+	public JsonObject put(final String key, final JsonObject value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -464,7 +464,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts a {@link JsonArray} into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, JsonArray value) {
+	public JsonObject put(final String key, final JsonArray value) {
 		Objects.requireNonNull(key);
 		map.put(key, value);
 		return this;
@@ -476,7 +476,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * Follows JSON extension RFC7493, where binary will first be Base64
 	 * encoded before being put as a String.
 	 */
-	public JsonObject put(String key, byte[] value) {
+	public JsonObject put(final String key, final byte[] value) {
 		Objects.requireNonNull(key);
 		map.put(key, value == null ? null : Base64.getEncoder().encodeToString(value));
 		return this;
@@ -485,7 +485,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Puts an object into the JSON object with the specified key.
 	 */
-	public JsonObject put(String key, Object value) {
+	public JsonObject put(final String key, Object value) {
 		Objects.requireNonNull(key);
 
 		value = resolveValue(value);
@@ -542,7 +542,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	/**
 	 * Removes an entry from this object.
 	 */
-	public Object remove(String key) {
+	public Object remove(final String key) {
 		return map.remove(key);
 	}
 
@@ -554,7 +554,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * This is the equivalent of putting all the entries of the other JSON object into this object. This is not a deep
 	 * merge, entries containing (sub) JSON objects will be replaced entirely.
 	 */
-	public JsonObject mergeIn(JsonObject other) {
+	public JsonObject mergeIn(final JsonObject other) {
 		return mergeIn(other, 1);
 	}
 
@@ -563,7 +563,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * A deep merge (recursive) matches (sub) JSON objects in the existing tree and replaces all
 	 * matching entries. JsonArrays are treated like any other entry, i.e. replaced entirely.
 	 */
-	public JsonObject mergeInDeep(JsonObject other) {
+	public JsonObject mergeInDeep(final JsonObject other) {
 		return mergeIn(other, Integer.MAX_VALUE);
 	}
 
@@ -573,7 +573,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	 * if depth is greater than the depth of one of the objects, a full deep merge is performed.
 	 */
 	@SuppressWarnings("unchecked")
-	public JsonObject mergeIn(JsonObject other, int depth) {
+	public JsonObject mergeIn(final JsonObject other, final int depth) {
 		if (depth < 1) {
 			return this;
 		}
@@ -656,7 +656,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 	// ---------------------------------------------------------------- equals/hash
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -666,7 +666,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 		return objectEquals(map, o);
 	}
 
-	static boolean objectEquals(Map<?, ?> m1, Object o2) {
+	static boolean objectEquals(final Map<?, ?> m1, final Object o2) {
 		Map<?, ?> m2;
 		if (o2 instanceof JsonObject) {
 			m2 = ((JsonObject) o2).map;
@@ -693,7 +693,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 		return true;
 	}
 
-	static boolean elementEquals(Object o1, Object o2) {
+	static boolean elementEquals(final Object o1, final Object o2) {
 		if (o1 == o2) {
 			return true;
 		}
@@ -735,7 +735,7 @@ public class JsonObject implements Iterable<Map.Entry<String, Object>> {
 
 		final Iterator<Map.Entry<String, Object>> mapIterator;
 
-		Iter(Iterator<Map.Entry<String, Object>> mapIterator) {
+		Iter(final Iterator<Map.Entry<String, Object>> mapIterator) {
 			this.mapIterator = mapIterator;
 		}
 

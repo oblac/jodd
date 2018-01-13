@@ -25,8 +25,8 @@
 
 package jodd.jtx.worker;
 
-import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransaction;
+import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -42,7 +42,7 @@ public class LeanJtxWorker {
 
 	protected final JtxTransactionManager txManager;
 
-	public LeanJtxWorker(JtxTransactionManager txManager) {
+	public LeanJtxWorker(final JtxTransactionManager txManager) {
 		this.txManager = txManager;
 	}
 
@@ -68,7 +68,7 @@ public class LeanJtxWorker {
 	 *
 	 * @see jodd.jtx.JtxTransactionManager#requestTransaction(jodd.jtx.JtxTransactionMode)
 	 */
-	public JtxTransaction maybeRequestTransaction(JtxTransactionMode txMode, Object scope) {
+	public JtxTransaction maybeRequestTransaction(final JtxTransactionMode txMode, final Object scope) {
 		if (txMode == null) {
 			return null;
 		}
@@ -86,7 +86,7 @@ public class LeanJtxWorker {
 	 * Returns <code>true</code> if transaction was actually committed or <code>false</code>
 	 * if transaction was not created on this level. 
 	 */
-	public boolean maybeCommitTransaction(JtxTransaction tx) {
+	public boolean maybeCommitTransaction(final JtxTransaction tx) {
 		if (tx == null) {
 			return false;
 		}
@@ -101,7 +101,7 @@ public class LeanJtxWorker {
 	 * If not, current transaction is marked for rollback.
 	 * Returns <code>true</code> if transaction was actually roll backed.
 	 */
-	public boolean markOrRollbackTransaction(JtxTransaction tx, Throwable cause) {
+	public boolean markOrRollbackTransaction(JtxTransaction tx, final Throwable cause) {
 		if (tx == null) {
 			tx = getCurrentTransaction();
 			if (tx == null) {

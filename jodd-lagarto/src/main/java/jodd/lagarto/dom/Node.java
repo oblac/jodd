@@ -73,7 +73,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Creates new node.
 	 */
-	protected Node(Document document, NodeType nodeType, String nodeName) {
+	protected Node(final Document document, final NodeType nodeType, final String nodeName) {
 		this.ownerDocument = document;
 		this.nodeRawName = nodeName;
 		if (nodeName != null) {
@@ -90,7 +90,7 @@ public abstract class Node implements Cloneable {
 	 * Copies all non-final values to the empty cloned object.
 	 * Cache-related values are not copied.
 	 */
-	protected <T extends Node> T cloneTo(T dest) {
+	protected <T extends Node> T cloneTo(final T dest) {
 //		dest.nodeValue = nodeValue;		// already  in clone implementations!
 		dest.parentNode = parentNode;
 
@@ -152,7 +152,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Sets node value.
 	 */
-	public void setNodeValue(String value) {
+	public void setNodeValue(final String value) {
 		this.nodeValue = value;
 	}
 
@@ -183,7 +183,7 @@ public abstract class Node implements Cloneable {
 	 * Appends child node. Don't use this node in the loop,
 	 * since it might be slow due to {@link #reindexChildren()}.
 	 */
-	public void addChild(Node node) {
+	public void addChild(final Node node) {
 		node.detachFromParent();
 		node.parentNode = this;
 		initChildNodes(node);
@@ -195,7 +195,7 @@ public abstract class Node implements Cloneable {
 	 * Appends several child nodes at once.
 	 * Reindex is done only once, after all children are added.
 	 */
-	public void addChild(Node... nodes) {
+	public void addChild(final Node... nodes) {
 		if (nodes.length == 0) {
 			return;	// nothing to add
 		}
@@ -211,7 +211,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Inserts node at given index.
 	 */
-	public void insertChild(Node node, int index) {
+	public void insertChild(final Node node, final int index) {
 		node.detachFromParent();
 		node.parentNode = this;
 		try {
@@ -227,7 +227,7 @@ public abstract class Node implements Cloneable {
 	 * Inserts several nodes at ones. Reindex is done onl once,
 	 * after all children are added.
 	 */
-	public void insertChild(Node[] nodes, int index) {
+	public void insertChild(final Node[] nodes, int index) {
 		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
@@ -245,7 +245,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Inserts node before provided node.
 	 */
-	public void insertBefore(Node newChild, Node refChild) {
+	public void insertBefore(final Node newChild, final Node refChild) {
 		int siblingIndex = refChild.getSiblingIndex();
 		refChild.parentNode.insertChild(newChild, siblingIndex);
 	}
@@ -253,7 +253,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Inserts several child nodes before provided node.
 	 */
-	public void insertBefore(Node[] newChilds, Node refChild) {
+	public void insertBefore(final Node[] newChilds, final Node refChild) {
 		if (newChilds.length == 0) {
 			return;
 		}
@@ -264,7 +264,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Inserts node after provided node.
 	 */
-	public void insertAfter(Node newChild, Node refChild) {
+	public void insertAfter(final Node newChild, final Node refChild) {
 		int siblingIndex = refChild.getSiblingIndex() + 1;
 		if (siblingIndex == refChild.parentNode.getChildNodesCount()) {
 			refChild.parentNode.addChild(newChild);
@@ -276,7 +276,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Inserts several child nodes after referent node.
 	 */
-	public void insertAfter(Node[] newChilds, Node refChild) {
+	public void insertAfter(final Node[] newChilds, final Node refChild) {
 		if (newChilds.length == 0) {
 			return;
 		}
@@ -293,7 +293,7 @@ public abstract class Node implements Cloneable {
 	 * Removes child node at given index.
 	 * Returns removed node or <code>null</code> if index is invalid.
 	 */
-	public Node removeChild(int index) {
+	public Node removeChild(final int index) {
 		if (childNodes == null) {
 			return null;
 		}
@@ -311,7 +311,7 @@ public abstract class Node implements Cloneable {
 	 * Removes child node. It works only with direct children, i.e.
 	 * if provided child node is not a child nothing happens.
 	 */
-	public void removeChild(Node childNode) {
+	public void removeChild(final Node childNode) {
 		if (childNode.getParentNode() != this) {
 			return;
 		}
@@ -367,7 +367,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Returns attribute at given index or <code>null</code> if index not found.
 	 */
-	public Attribute getAttribute(int index) {
+	public Attribute getAttribute(final int index) {
 		if (attributes == null) {
 			return null;
 		}
@@ -401,7 +401,7 @@ public abstract class Node implements Cloneable {
 	 * attribute doesn't exist or when attribute exist but doesn't
 	 * specify a value.
 	 */
-	public String getAttribute(String name) {
+	public String getAttribute(final String name) {
 		Attribute attribute = getAttributeInstance(name);
 		if (attribute == null) {
 			return null;
@@ -445,7 +445,7 @@ public abstract class Node implements Cloneable {
 		return -1;
 	}
 
-	public boolean removeAttribute(String name) {
+	public boolean removeAttribute(final String name) {
 		int index = indexOfAttributeInstance(name);
 		if (index == -1) {
 			return false;
@@ -457,7 +457,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Sets attribute value. Value may be <code>null</code>.
 	 */
-	public void setAttribute(String name, String value) {
+	public void setAttribute(String name, final String value) {
 		initAttributes();
 
 		String rawAttributeName = name;
@@ -479,14 +479,14 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Sets attribute that doesn't need a value.
 	 */
-	public void setAttribute(String name) {
+	public void setAttribute(final String name) {
 		setAttribute(name, null);
 	}
 
 	/**
 	 * Returns <code>true</code> if attribute containing some word.
 	 */
-	public boolean isAttributeContaining(String name, String word) {
+	public boolean isAttributeContaining(final String name, final String word) {
 		Attribute attr = getAttributeInstance(name);
 		if (attr == null) {
 			return false;
@@ -526,7 +526,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Returns number of child <b>elements</b> with given name.
 	 */
-	public int getChildElementsCount(String elementName) {
+	public int getChildElementsCount(final String elementName) {
 		Node lastChild = getLastChildElement(elementName);
 		return lastChild.siblingNameIndex + 1;
 	}
@@ -556,7 +556,7 @@ public abstract class Node implements Cloneable {
 	 * Returns a child node at given index or <code>null</code>
 	 * if child doesn't exist for that index.
 	 */
-	public Node getChild(int index) {
+	public Node getChild(final int index) {
 		if (childNodes == null) {
 			return null;
 		}
@@ -570,7 +570,7 @@ public abstract class Node implements Cloneable {
 	 * Returns a child node with given hierarchy.
 	 * Just a shortcut for successive calls of {@link #getChild(int)}.
 	 */
-	public Node getChild(int... indexes) {
+	public Node getChild(final int... indexes) {
 		Node node = this;
 		for (int index : indexes) {
 			node = node.getChild(index);
@@ -582,7 +582,7 @@ public abstract class Node implements Cloneable {
 	 * Returns a child element node at given index.
 	 * If index is out of bounds, <code>null</code> is returned.
 	 */
-	public Element getChildElement(int index) {
+	public Element getChildElement(final int index) {
 		initChildElementNodes();
 		if ((index < 0) || (index >= childElementNodes.length)) {
 			return null;
@@ -621,7 +621,7 @@ public abstract class Node implements Cloneable {
 	 * Returns first child <b>element</b> with given name or
 	 * <code>null</code> if no such children exist.
 	 */
-	public Element getFirstChildElement(String elementName) {
+	public Element getFirstChildElement(final String elementName) {
 		if (childNodes == null) {
 			return null;
 		}
@@ -666,7 +666,7 @@ public abstract class Node implements Cloneable {
 	 * Returns last child <b>element</b> with given name or
 	 * <code>null</code> if no such child node exist.
 	 */
-	public Element getLastChildElement(String elementName) {
+	public Element getLastChildElement(final String elementName) {
 		if (childNodes == null) {
 			return null;
 		}
@@ -787,7 +787,7 @@ public abstract class Node implements Cloneable {
 	 * Optimized variant of {@link #reindexChildren()} for addition.
 	 * Only added children are optimized.
 	 */
-	protected void reindexChildrenOnAdd(int addedCount) {
+	protected void reindexChildrenOnAdd(final int addedCount) {
 		int childNodesSize = childNodes.size();
 		int previousSize = childNodes.size() - addedCount;
 
@@ -855,7 +855,7 @@ public abstract class Node implements Cloneable {
 	 * Initializes child nodes list when needed.
 	 * Also fix owner document for new node, if needed.
 	 */
-	protected void initChildNodes(Node newNode) {
+	protected void initChildNodes(final Node newNode) {
 		if (childNodes == null) {
 			childNodes = new ArrayList<>();
 		}
@@ -869,7 +869,7 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Changes owner document for given node and all its children.
 	 */
-	protected void changeOwnerDocument(Node node, Document ownerDocument) {
+	protected void changeOwnerDocument(final Node node, final Document ownerDocument) {
 		node.ownerDocument = ownerDocument;
 
 		int childCount = node.getChildNodesCount();
@@ -1030,7 +1030,7 @@ public abstract class Node implements Cloneable {
 	 * This way we can reuse the <code>Appendable</code> instance
 	 * during the creation of text content and have better performances.
 	 */
-	public void appendTextContent(Appendable appendable) {
+	public void appendTextContent(final Appendable appendable) {
 		if (nodeValue != null) {
 			if ((nodeType == NodeType.TEXT) || (nodeType == NodeType.CDATA)) {
 				try {
@@ -1087,14 +1087,14 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Visits the DOM tree.
 	 */
-	public void visit(NodeVisitor nodeVisitor) {
+	public void visit(final NodeVisitor nodeVisitor) {
 		visitNode(nodeVisitor);
 	}
 
 	/**
 	 * Visits children nodes.
 	 */
-	protected void visitChildren(NodeVisitor nodeVisitor) {
+	protected void visitChildren(final NodeVisitor nodeVisitor) {
 		if (childNodes != null) {
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node childNode = childNodes.get(i);

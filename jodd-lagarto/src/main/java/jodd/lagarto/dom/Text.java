@@ -38,7 +38,7 @@ public class Text extends Node {
 
 	protected String encodedText;
 
-	public Text(Document ownerDocument, String text) {
+	public Text(final Document ownerDocument, final String text) {
 		super(ownerDocument, NodeType.TEXT, null);
 		this.nodeValue = text;
 		this.encodedText = null;
@@ -65,7 +65,7 @@ public class Text extends Node {
 	 * Sets the plain text as node value.
 	 */
 	@Override
-	public void setNodeValue(String value) {
+	public void setNodeValue(final String value) {
 		encodedText = null;
 		super.setNodeValue(value);
 	}
@@ -73,7 +73,7 @@ public class Text extends Node {
 	/**
 	 * Sets HTML text, but decodes it first.
 	 */
-	public void setTextValue(String text) {
+	public void setTextValue(final String text) {
 		encodedText = text;
 		nodeValue = HtmlDecoder.decode(text);
 	}
@@ -89,7 +89,7 @@ public class Text extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.text(this);
 	}
 }

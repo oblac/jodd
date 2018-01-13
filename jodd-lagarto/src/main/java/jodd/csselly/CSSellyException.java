@@ -32,15 +32,15 @@ import jodd.lagarto.LagartoException;
  */
 public class CSSellyException extends LagartoException {
 
-	public CSSellyException(Throwable t) {
+	public CSSellyException(final Throwable t) {
 		super(t);
 	}
 
-	public CSSellyException(String message) {
+	public CSSellyException(final String message) {
 		super(message);
 	}
 
-	public CSSellyException(String message, int state, int line, int column) {
+	public CSSellyException(final String message, final int state, final int line, final int column) {
 		super(message + " (state: " + state + (line != -1 ? " error at: " + line + ':' + column : "" + ')'));
 	}
 }

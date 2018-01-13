@@ -50,19 +50,19 @@ import java.util.Iterator;
  */
 public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 
-	public LRUCache(int cacheSize) {
+	public LRUCache(final int cacheSize) {
 		this(cacheSize, 0);
 	}
 
 	/**
 	 * Creates a new LRU cache.
 	 */
-	public LRUCache(int cacheSize, long timeout) {
+	public LRUCache(final int cacheSize, final long timeout) {
 		this.cacheSize = cacheSize;
 		this.timeout = timeout;
 		cacheMap = new LinkedHashMap<K, CacheObject<K,V>>(cacheSize + 1, 1.0f, true) {
 			@Override
-			protected boolean removeEldestEntry(Map.Entry eldest) {
+			protected boolean removeEldestEntry(final Map.Entry eldest) {
 				return LRUCache.this.removeEldestEntry(size());
 			}
 		};
@@ -71,7 +71,7 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 	/**
 	 * Removes the eldest entry if current cache size exceed cache size.
 	 */
-	protected boolean removeEldestEntry(int currentSize) {
+	protected boolean removeEldestEntry(final int currentSize) {
 		if (cacheSize == 0) {
 			return false;
 		}

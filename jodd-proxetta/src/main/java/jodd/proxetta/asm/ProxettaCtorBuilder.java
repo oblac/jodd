@@ -45,20 +45,20 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 	protected final MethodVisitor methodVisitor;
 	protected final WorkData wd;
 
-	public ProxettaCtorBuilder(MethodVisitor methodVisitor, MethodSignatureVisitor msign, WorkData wd) {
+	public ProxettaCtorBuilder(final MethodVisitor methodVisitor, final MethodSignatureVisitor msign, final WorkData wd) {
 		this.methodVisitor = methodVisitor;
 		this.msign = msign;
 		this.wd = wd;
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		methodVisitor.visitAnnotation(desc, visible);
 		return null;
 	}
 
 	@Override
-	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
 		methodVisitor.visitParameterAnnotation(parameter, desc, visible);
 		return null;
 	}

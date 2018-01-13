@@ -93,7 +93,7 @@ public class HttpTunnel {
 	 * to handle the connection. May be used to return custom
 	 * handlers.
 	 */
-	protected Runnable onSocketConnection(Socket socket) {
+	protected Runnable onSocketConnection(final Socket socket) {
 		return new HttpTunnelConnection(socket);
 	}
 
@@ -116,10 +116,11 @@ public class HttpTunnel {
 
 		protected final Socket socket;
 
-		public HttpTunnelConnection(Socket socket) {
+		public HttpTunnelConnection(final Socket socket) {
 			this.socket = socket;
 		}
 
+		@Override
 		public void run() {
 			try {
 				tunnel();
@@ -132,7 +133,7 @@ public class HttpTunnel {
 		 * Invoked after income connection is parsed. Nothing is
 		 * changed in the request, except the target host and port.
 		 */
-		protected void onRequest(HttpRequest request) {
+		protected void onRequest(final HttpRequest request) {
 		}
 
 		/**
@@ -144,7 +145,7 @@ public class HttpTunnel {
 		 * <li>Content-Length is added/update to body size.</li>
 		 * </ul>
 		 */
-		protected void onResponse(HttpResponse response) {
+		protected void onResponse(final HttpResponse response) {
 		}
 
 		/**

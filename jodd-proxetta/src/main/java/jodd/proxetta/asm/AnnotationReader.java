@@ -50,7 +50,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 	protected final boolean visible;
 	protected final Map<String, Object> elements;
 
-	public AnnotationReader(String desc, boolean visible) {
+	public AnnotationReader(final String desc, final boolean visible) {
 		this.desc = desc;
 		this.visible = visible;
 		this.elements = new HashMap<>();
@@ -75,7 +75,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 	}
 
 	@Override
-	public Object getElement(String name) {
+	public Object getElement(final String name) {
 		return elements.get(name);
 	}
 
@@ -88,17 +88,17 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 
 
 	@Override
-	public void visit(String name, Object value) {
+	public void visit(final String name, final Object value) {
 		elements.put(name, value);
 	}
 
 	@Override
-	public void visitEnum(String name, String desc, String value) {
+	public void visitEnum(final String name, final String desc, final String value) {
 		elements.put(name, new String[]{desc, value});		
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(String name, String desc) {
+	public AnnotationVisitor visitAnnotation(final String name, final String desc) {
 		AnnotationReader nestedAnnotation = new AnnotationReader(desc, true);
 		elements.put(name, nestedAnnotation);
 		return nestedAnnotation;
@@ -110,7 +110,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 		return new EmptyAnnotationVisitor() {
 
 			@Override
-			public void visit(String name, Object value) {
+			public void visit(final String name, final Object value) {
 				array.add(value);
 			}
 

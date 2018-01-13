@@ -37,12 +37,12 @@ public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 	protected final TypeConverter<Double> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableDoubleConverter(TypeConverterManager typeConverterManager) {
+	public MutableDoubleConverter(final TypeConverterManager typeConverterManager) {
 		typeConverter = typeConverterManager.lookup(Double.class);
 	}
 
 	@Override
-	public MutableDouble convert(Object value) {
+	public MutableDouble convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

@@ -40,7 +40,7 @@ public class SystemUtil {
 	/**
 	 * Get system property. If key is not available, returns the default value.
 	 */
-	public static String get(final String key, String def) {
+	public static String get(final String key, final String def) {
 		if (key.isEmpty()) {
 			throw new IllegalArgumentException("key must not be empty.");
 		}
@@ -349,7 +349,7 @@ public class SystemUtil {
 	 * with provided JDK version.
 	 * @param version java version multiplied by 10, e.g. <code>1.5</code> is <code>15</code>
 	 */
-	public static boolean isAtLeastJavaVersion(int version) {
+	public static boolean isAtLeastJavaVersion(final int version) {
 		return javaVersionNumber >= version;
 	}
 
@@ -357,7 +357,7 @@ public class SystemUtil {
 	 * Checks if the currently running JVM is equal to provided version.
 	 * @param version java version, multiplied by 10, e.g. <code>1.5</code> is <code>15</code>.
 	 */
-	public static boolean isJavaVersion(int version) {
+	public static boolean isJavaVersion(final int version) {
 		return javaVersionNumber == version;
 	}
 
@@ -438,7 +438,7 @@ public class SystemUtil {
 	/**
 	 * Sets HTTP proxy settings.
 	 */
-	public static void setHttpProxy(String host, String port, String username, String password) {
+	public static void setHttpProxy(final String host, final String port, final String username, final String password) {
 		System.getProperties().put(HTTP_PROXY_HOST, host);
 		System.getProperties().put(HTTP_PROXY_PORT, port);
 		System.getProperties().put(HTTP_PROXY_USER, username);
@@ -448,7 +448,7 @@ public class SystemUtil {
 	/**
 	 * Sets HTTP proxy settings.
 	 */
-	public static void setHttpProxy(String host, String port) {
+	public static void setHttpProxy(final String host, final String port) {
 		System.getProperties().put(HTTP_PROXY_HOST, host);
 		System.getProperties().put(HTTP_PROXY_PORT, port);
 	}

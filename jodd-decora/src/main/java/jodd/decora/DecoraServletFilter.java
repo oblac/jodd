@@ -80,7 +80,7 @@ public class DecoraServletFilter implements Filter {
 	 * Initializes Decora filter. Loads manager and parser from init parameters.
 	 */
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig filterConfig) throws ServletException {
 		String decoraManagerClass = filterConfig.getInitParameter(PARAM_DECORA_MANAGER);
 
 		if (decoraManagerClass != null) {
@@ -118,12 +118,12 @@ public class DecoraServletFilter implements Filter {
 	/**
 	 * Creates HTTP request wrapper. By default returns {@link DecoraRequestWrapper}.
 	 */
-	protected HttpServletRequest wrapRequest(HttpServletRequest request) {
+	protected HttpServletRequest wrapRequest(final HttpServletRequest request) {
 		return new DecoraRequestWrapper(request);
 	}
 
 	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+	public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
 		final HttpServletRequest request = (HttpServletRequest) servletRequest;
 		final HttpServletResponse response = (HttpServletResponse) servletResponse;

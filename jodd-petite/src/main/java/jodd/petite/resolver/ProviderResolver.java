@@ -46,7 +46,7 @@ public class ProviderResolver {
 	/**
 	 * Resolves all providers in the class
 	 */
-	public ProviderDefinition[] resolve(BeanDefinition beanDefinition) {
+	public ProviderDefinition[] resolve(final BeanDefinition beanDefinition) {
 		Class type = beanDefinition.type();
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);

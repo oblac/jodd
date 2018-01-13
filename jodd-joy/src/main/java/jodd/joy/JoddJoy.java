@@ -81,7 +81,7 @@ public class JoddJoy {
 	/**
 	 * Default name used for various components.
 	 */
-	public JoddJoy setAppName(String name) {
+	public JoddJoy setAppName(final String name) {
 		Objects.requireNonNull(name);
 		this.name = name;
 		return this;
@@ -91,7 +91,7 @@ public class JoddJoy {
 
 	private Supplier<LoggerProvider> loggerProviderSupplier;
 
-	public JoddJoy withLoggerProvider(Supplier<LoggerProvider> loggerProviderSupplier) {
+	public JoddJoy withLoggerProvider(final Supplier<LoggerProvider> loggerProviderSupplier) {
 		this.loggerProviderSupplier = loggerProviderSupplier;
 		return this;
 	}
@@ -104,7 +104,7 @@ public class JoddJoy {
 
 	private final JoyProps joyProps = new JoyProps(() -> name);
 
-	public JoddJoy withProps(Consumer<JoyProps.Config> propsConsumer) {
+	public JoddJoy withProps(final Consumer<JoyProps.Config> propsConsumer) {
 		propsConsumer.accept(joyProps.config);
 		return this;
 	}
@@ -113,7 +113,7 @@ public class JoddJoy {
 
 	private final JoyScanner joyScanner = new JoyScanner();
 
-	public JoddJoy withScanner(Consumer<JoyScanner> scannerConsumer) {
+	public JoddJoy withScanner(final Consumer<JoyScanner> scannerConsumer) {
 		scannerConsumer.accept(joyScanner);
 		return this;
 	}
@@ -122,7 +122,7 @@ public class JoddJoy {
 
 	private final JoyProxetta joyProxetta = new JoyProxetta();
 
-	public JoddJoy withProxetta(Consumer<JoyProxetta.Config> proxettaConsumer) {
+	public JoddJoy withProxetta(final Consumer<JoyProxetta.Config> proxettaConsumer) {
 		proxettaConsumer.accept(joyProxetta.config);
 		return this;
 	}
@@ -136,7 +136,7 @@ public class JoddJoy {
 			() -> joyScanner
 		);
 
-	public JoddJoy withPetite(Consumer<JoyPetite.Config> petiteConsumer) {
+	public JoddJoy withPetite(final Consumer<JoyPetite.Config> petiteConsumer) {
 		petiteConsumer.accept(joyPetite.config);
 		return this;
 	}
@@ -148,7 +148,7 @@ public class JoddJoy {
 			joyPetite::petiteContainer,
 			() -> joyScanner);
 
-	public JoddJoy withDb(Consumer<JoyDb.Config> dbConsumer) {
+	public JoddJoy withDb(final Consumer<JoyDb.Config> dbConsumer) {
 		dbConsumer.accept(joyDb.config());
 		return this;
 	}
@@ -163,7 +163,7 @@ public class JoddJoy {
 			() -> joyScanner
 		);
 
-	public JoddJoy withWebApp(Consumer<WebApp> webAppConsumer) {
+	public JoddJoy withWebApp(final Consumer<WebApp> webAppConsumer) {
 		joyMadvoc.add(webAppConsumer);
 		return this;
 	}
@@ -175,7 +175,7 @@ public class JoddJoy {
 	/**
 	 * Starts the Joy.
 	 */
-	public void start(ServletContext servletContext) {
+	public void start(final ServletContext servletContext) {
 		LoggerProvider loggerProvider = null;
 
 		if (loggerProviderSupplier != null) {

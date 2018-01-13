@@ -38,9 +38,9 @@ public class DefaultActionPathNamingStrategy extends BaseNamingStrategy {
 
 	@Override
 	public ActionDefinition buildActionDef(
-			Class actionClass,
-			Method actionMethod,
-			ActionNames actionNames) {
+		final Class actionClass,
+		final Method actionMethod,
+		final ActionNames actionNames) {
 
 		final String packageActionPath = actionNames.packageActionPath();
 		final String classActionPath = actionNames.classActionPath();

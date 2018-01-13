@@ -55,7 +55,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Creates new builder.
 	 */
-	protected ProxettaFactory(P proxetta) {
+	protected ProxettaFactory(final P proxetta) {
 		this.proxetta = proxetta;
 	}
 
@@ -89,7 +89,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Sets requested proxy class name.
 	 */
-	public T setTargetProxyClassName(String targetProxyClassName) {
+	public T setTargetProxyClassName(final String targetProxyClassName) {
 		this.requestedProxyClassName = targetProxyClassName;
 		return _this();
 	}
@@ -99,7 +99,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Defines class input stream as a target.
 	 */
-	protected T setTarget(InputStream target) {
+	protected T setTarget(final InputStream target) {
 		checkTarget();
 
 		targetInputStream = target;
@@ -113,7 +113,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Defines class name as a target.
 	 * Class will not be loaded by classloader!
 	 */
-	protected T setTarget(String targetName) {
+	protected T setTarget(final String targetName) {
 		checkTarget();
 
 		try {
@@ -134,7 +134,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Defines class as a target.
 	 */
-	protected T setTarget(Class target) {
+	protected T setTarget(final Class target) {
 		checkTarget();
 
 		try {
@@ -327,7 +327,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Writes created class content to output folder for debugging purposes.
 	 */
-	protected void dumpClassInDebugFolder(byte[] bytes) {
+	protected void dumpClassInDebugFolder(final byte[] bytes) {
 		File debugFolder = proxetta.getDebugFolder();
 		if (debugFolder == null) {
 			return;

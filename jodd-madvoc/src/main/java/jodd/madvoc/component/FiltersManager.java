@@ -38,7 +38,7 @@ import java.util.Set;
 public class FiltersManager extends WrapperManager<ActionFilter> {
 
 	@Override
-	protected ActionFilter[] createArray(int len) {
+	protected ActionFilter[] createArray(final int len) {
 		return new ActionFilter[len];
 	}
 
@@ -48,7 +48,7 @@ public class FiltersManager extends WrapperManager<ActionFilter> {
 	}
 
 	@Override
-	protected Class<? extends ActionFilter>[] getDefaultWrappers(ActionConfig actionConfig) {
+	protected Class<? extends ActionFilter>[] getDefaultWrappers(final ActionConfig actionConfig) {
 		return actionConfig.getFilters();
 	}
 

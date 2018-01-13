@@ -92,7 +92,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 * the action path string is returned (it might be different than original one, provided in arguments).
 	 * On first invoke, initializes the action runtime before further proceeding.
 	 */
-	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
+	public String invoke(String actionPath, final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) throws Exception {
 		boolean characterEncodingSet = false;
 
 		while (actionPath != null) {
@@ -179,7 +179,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object)
 	 */
 	@SuppressWarnings("unchecked")
-	public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
+	public void render(final ActionRequest actionRequest, final Object resultObject) throws Exception {
 		ActionResult actionResult = resultsManager.lookup(actionRequest, resultObject);
 
 		if (actionResult == null) {
@@ -198,7 +198,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	/**
 	 * Creates new action object from {@link ActionRuntime} using default constructor.
 	 */
-	protected Object createAction(Class actionClass) {
+	protected Object createAction(final Class actionClass) {
 		try {
 			return ClassUtil.newInstance(actionClass);
 		} catch (Exception ex) {
@@ -216,12 +216,12 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 * @return action request
 	 */
 	protected ActionRequest createActionRequest(
-			String actionPath,
-			String[] actionPathChunks,
-			ActionRuntime actionRuntime,
-			Object action,
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) {
+		final String actionPath,
+		final String[] actionPathChunks,
+		final ActionRuntime actionRuntime,
+		final Object action,
+		final HttpServletRequest servletRequest,
+		final HttpServletResponse servletResponse) {
 
 		return new ActionRequest(this, actionPath, actionPathChunks, actionRuntime, action, servletRequest, servletResponse);
 	}

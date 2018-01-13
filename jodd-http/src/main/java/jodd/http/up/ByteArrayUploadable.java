@@ -38,13 +38,13 @@ public class ByteArrayUploadable implements Uploadable<byte[]> {
 	protected final String fileName;
 	protected final String mimeType;
 
-	public ByteArrayUploadable(byte[] byteArray, String fileName) {
+	public ByteArrayUploadable(final byte[] byteArray, final String fileName) {
 		this.byteArray = byteArray;
 		this.fileName = fileName;
 		this.mimeType = null;
 	}
 
-	public ByteArrayUploadable(byte[] byteArray, String fileName, String mimeType) {
+	public ByteArrayUploadable(final byte[] byteArray, final String fileName, final String mimeType) {
 		this.byteArray = byteArray;
 		this.fileName = fileName;
 		this.mimeType = mimeType;

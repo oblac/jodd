@@ -36,7 +36,7 @@ public class CtorInjectionPoint {
 	public final Constructor constructor;
 	public final BeanReferences[] references;
 
-	public CtorInjectionPoint(Constructor constructor, BeanReferences[] references) {
+	public CtorInjectionPoint(final Constructor constructor, final BeanReferences[] references) {
 		Objects.requireNonNull(constructor);
 		Objects.requireNonNull(references);
 

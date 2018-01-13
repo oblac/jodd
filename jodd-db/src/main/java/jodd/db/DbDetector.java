@@ -55,7 +55,7 @@ public class DbDetector {
 	/**
 	 * Detects database and configure DbOom engine.
 	 */
-	public static DbServer detectDatabaseAndConfigureDbOom(ConnectionProvider cp) {
+	public static DbServer detectDatabaseAndConfigureDbOom(final ConnectionProvider cp) {
 		cp.init();
 
 		Connection connection = cp.getConnection();
@@ -72,7 +72,7 @@ public class DbDetector {
 	/**
 	 * Detects database and returns {@link DbServer}.
 	 */
-	public static DbServer detectDatabase(Connection connection) {
+	public static DbServer detectDatabase(final Connection connection) {
 		final String dbName;
 		final int dbMajorVersion;
 		final String version;

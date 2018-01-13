@@ -36,14 +36,14 @@ public class CharBufferReader extends Reader {
 
 	private final CharBuffer charBuffer;
 
-	public CharBufferReader(CharBuffer charBuffer) {
+	public CharBufferReader(final CharBuffer charBuffer) {
 		 // duplicate so to allow to move independently,
 		 // but share the same underlying data.
 		this.charBuffer = charBuffer.duplicate();
 	}
 
 	@Override
-	public int read(char[] chars, int offset, int length) throws IOException {
+	public int read(final char[] chars, final int offset, final int length) throws IOException {
 		int read = Math.min(charBuffer.remaining(), length);
 		charBuffer.get(chars, offset, read);
 		return read;

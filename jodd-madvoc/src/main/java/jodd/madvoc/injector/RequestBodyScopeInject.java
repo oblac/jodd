@@ -38,7 +38,7 @@ public class RequestBodyScopeInject implements Injector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.BODY;
 
 	@Override
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;

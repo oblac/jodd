@@ -56,7 +56,7 @@ public class MadvocServletFilter implements Filter {
 	 * Filter initialization.
 	 */
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig filterConfig) throws ServletException {
 		ServletContext servletContext = filterConfig.getServletContext();
 
 		madvoc = Madvoc.get(servletContext);
@@ -96,7 +96,7 @@ public class MadvocServletFilter implements Filter {
 	 * Builds {@link ActionRequest} and invokes it. If action result is a chain, it repeats the process.
 	 */
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
@@ -126,7 +126,7 @@ public class MadvocServletFilter implements Filter {
 	 * otherwise returns {@code false} so to be consumed by filter chain.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected boolean processUnhandledPath(String actionPath, ServletRequest request, ServletResponse response) throws IOException, ServletException {
+	protected boolean processUnhandledPath(final String actionPath, final ServletRequest request, final ServletResponse response) throws IOException, ServletException {
 		return false;
 	}
 

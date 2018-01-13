@@ -33,7 +33,7 @@ import jodd.json.JsonContext;
 public class IterableJsonSerializer extends ValueJsonSerializer<Iterable> {
 
 	@Override
-	public void serializeValue(JsonContext jsonContext, Iterable iterable) {
+	public void serializeValue(final JsonContext jsonContext, final Iterable iterable) {
 		jsonContext.writeOpenArray();
 
 		int count = 0;

@@ -166,7 +166,7 @@ public class DbSession implements AutoCloseable {
 	/**
 	 * Attaches a new {@link DbQuery}. May be invoked both inside and outside of transaction.
 	 */
-	protected void attachQuery(DbQueryBase query) {
+	protected void attachQuery(final DbQueryBase query) {
 		checkOpenSession();
 		openConnectionForQuery();
 		queries.add(query);
@@ -175,7 +175,7 @@ public class DbSession implements AutoCloseable {
 	/**
 	 * Detach used {@link DbQuery}. Usually invoked by {@link jodd.db.DbQuery#close()}.
 	 */
-	protected void detachQuery(DbQueryBase query) {
+	protected void detachQuery(final DbQueryBase query) {
 		queries.remove(query);
 	}
 
@@ -244,7 +244,7 @@ public class DbSession implements AutoCloseable {
 	/**
 	 * Starts a transaction.
 	 */
-	public void beginTransaction(DbTransactionMode mode) {
+	public void beginTransaction(final DbTransactionMode mode) {
 		log.debug("Beginning transaction");
 
 		checkClosedTx();

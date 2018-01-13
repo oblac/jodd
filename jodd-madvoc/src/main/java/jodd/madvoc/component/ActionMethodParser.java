@@ -184,14 +184,14 @@ public class ActionMethodParser {
 	/**
 	 * Resolves action config.
 	 */
-	protected ActionConfig resolveActionConfig(ActionAnnotationData annotationData) {
+	protected ActionConfig resolveActionConfig(final ActionAnnotationData annotationData) {
 		return madvocConfig.lookupActionConfig(annotationData);
 	}
 
 	/**
 	 * Detects {@link jodd.madvoc.meta.ActionAnnotationData}.
 	 */
-	protected ActionAnnotationData detectActionAnnotationData(Method actionMethod) {
+	protected ActionAnnotationData detectActionAnnotationData(final Method actionMethod) {
 		ActionAnnotationData annotationData = null;
 		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
 			annotationData = actionAnnotation.readAnnotatedElement(actionMethod);
@@ -205,7 +205,7 @@ public class ActionMethodParser {
 	/**
 	 * Detects if alias is defined in annotation and registers it if so.
 	 */
-	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionDefinition actionDefinition) {
+	protected void detectAndRegisterAlias(final ActionAnnotationData annotationData, final ActionDefinition actionDefinition) {
 		final String alias = parseMethodAlias(annotationData);
 
 		if (alias != null) {
@@ -214,7 +214,7 @@ public class ActionMethodParser {
 		}
 	}
 
-	protected Class<? extends ActionResult> parseActionResult(Method actionMethod) {
+	protected Class<? extends ActionResult> parseActionResult(final Method actionMethod) {
 		RenderWith renderWith = actionMethod.getAnnotation(RenderWith.class);
 
 		if (renderWith != null) {
@@ -236,7 +236,7 @@ public class ActionMethodParser {
 		return interceptorsManager.resolveAll(actionConfig, interceptorClasses);
 	}
 
-	protected ActionFilter[] parseActionFilters(Class<?> actionClass, Method actionMethod, ActionConfig actionConfig) {
+	protected ActionFilter[] parseActionFilters(final Class<?> actionClass, final Method actionMethod, final ActionConfig actionConfig) {
 		Class<? extends ActionFilter>[] filterClasses = readActionFilters(actionMethod);
 		if (filterClasses == null) {
 			filterClasses = readActionFilters(actionClass);
@@ -253,7 +253,7 @@ public class ActionMethodParser {
 	/**
 	 * Reads class or method annotation for action interceptors.
 	 */
-	protected Class<? extends ActionInterceptor>[] readActionInterceptors(AnnotatedElement actionClassOrMethod) {
+	protected Class<? extends ActionInterceptor>[] readActionInterceptors(final AnnotatedElement actionClassOrMethod) {
 		Class<? extends ActionInterceptor>[] result = null;
 		InterceptedBy interceptedBy = actionClassOrMethod.getAnnotation(InterceptedBy.class);
 		if (interceptedBy != null) {
@@ -270,7 +270,7 @@ public class ActionMethodParser {
 	/**
 	 * Reads class or method annotation for action filters.
 	 */
-	protected Class<? extends ActionFilter>[] readActionFilters(AnnotatedElement actionClassOrMethod) {
+	protected Class<? extends ActionFilter>[] readActionFilters(final AnnotatedElement actionClassOrMethod) {
 		Class<? extends ActionFilter>[] result = null;
 		FilteredBy filteredBy = actionClassOrMethod.getAnnotation(FilteredBy.class);
 		if (filteredBy != null) {
@@ -290,7 +290,7 @@ public class ActionMethodParser {
 	 * If annotation is not set on package-level, class package will be used for
 	 * package action path part.
 	 */
-	protected String[] readPackageActionPath(Class actionClass) {
+	protected String[] readPackageActionPath(final Class actionClass) {
 		Package actionPackage = actionClass.getPackage();
 
 		final String actionPackageName = actionPackage.getName();
@@ -352,7 +352,7 @@ public class ActionMethodParser {
 	 * class name. This is done by removing the package name and the last contained word
 	 * (if there is more then one) from the class name. Such name is finally uncapitalized.
 	 */
-	protected String[] readClassActionPath(Class actionClass) {
+	protected String[] readClassActionPath(final Class actionClass) {
 		// read class annotation
 		MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getAnnotation(MadvocAction.class);
 
@@ -376,7 +376,7 @@ public class ActionMethodParser {
 	/**
 	 * Reads action path from the action method.
 	 */
-	protected String[] readMethodActionPath(String methodName, ActionAnnotationData annotationData, ActionConfig actionConfig) {
+	protected String[] readMethodActionPath(final String methodName, final ActionAnnotationData annotationData, final ActionConfig actionConfig) {
 		// read annotation
 		String methodActionPath = annotationData != null ? annotationData.value() : null;
 
@@ -402,7 +402,7 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's alias value.
 	 */
-	protected String parseMethodAlias(ActionAnnotationData annotationData) {
+	protected String parseMethodAlias(final ActionAnnotationData annotationData) {
 		String alias = null;
 		if (annotationData != null) {
 			alias = annotationData.alias();
@@ -413,7 +413,7 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's http method or {@code null} if not specified.
 	 */
-	private String readMethodHttpMethod(Method actionMethod) {
+	private String readMethodHttpMethod(final Method actionMethod) {
 		for (Class<? extends Annotation> methodAnnotation : METHOD_ANNOTATIONS) {
 			if (actionMethod.getAnnotation(methodAnnotation) != null) {
 				return methodAnnotation.getSimpleName();
@@ -426,7 +426,7 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's async flag.
 	 */
-	private boolean parseMethodAsyncFlag(Method actionMethod) {
+	private boolean parseMethodAsyncFlag(final Method actionMethod) {
 		return actionMethod.getAnnotation(Async.class) != null;
 	}
 
@@ -437,15 +437,15 @@ public class ActionMethodParser {
 	 * Initialize caches.
 	 */
 	public ActionRuntime createActionRuntime(
-			ActionHandler actionHandler,
-			Class actionClass,
-			Method actionClassMethod,
-			Class<? extends ActionResult> actionResult,
-			ActionFilter[] filters,
-			ActionInterceptor[] interceptors,
-			ActionDefinition actionDefinition,
-			boolean async,
-			ActionConfig actionConfig)
+		final ActionHandler actionHandler,
+		final Class actionClass,
+		final Method actionClassMethod,
+		final Class<? extends ActionResult> actionResult,
+		final ActionFilter[] filters,
+		final ActionInterceptor[] interceptors,
+		final ActionDefinition actionDefinition,
+		final boolean async,
+		final ActionConfig actionConfig)
 	{
 		if (actionHandler != null) {
 

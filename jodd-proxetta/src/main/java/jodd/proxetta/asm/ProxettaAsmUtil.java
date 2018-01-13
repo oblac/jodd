@@ -102,7 +102,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Pushes int value in an optimal way.
 	 */
-	public static void pushInt(MethodVisitor mv, int value) {
+	public static void pushInt(final MethodVisitor mv, final int value) {
 		if (value <= 5) {
 			mv.visitInsn(ICONST_0 + value);
 		} else if (value <= Byte.MAX_VALUE) {
@@ -115,14 +115,14 @@ public class ProxettaAsmUtil {
 	/**
 	 * Changes method access to private and final.
 	 */
-	public static int makePrivateFinalAccess(int access) {
+	public static int makePrivateFinalAccess(final int access) {
 		return (access & 0xFFFFFFF0) | AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL;
 	}
 
 	/**
 	 * Validates argument index.
 	 */
-	public static void checkArgumentIndex(MethodInfo methodInfo, int argIndex) {
+	public static void checkArgumentIndex(final MethodInfo methodInfo, final int argIndex) {
 		if ((argIndex < 1) || (argIndex > methodInfo.getArgumentsCount())) {
 			throw new ProxettaException("Invalid argument index: " + argIndex);
 		}
@@ -131,25 +131,25 @@ public class ProxettaAsmUtil {
 	/**
 	 * Builds advice field name.
 	 */
-	public static String adviceFieldName(String name, int index) {
+	public static String adviceFieldName(final String name, final int index) {
 		return JoddProxetta.get().defaults().getFieldPrefix() + name + JoddProxetta.get().defaults().getFieldDivider() + index;
 	}
 
 	/**
 	 * Builds advice method name.
 	 */
-	public static String adviceMethodName(String name, int index) {
+	public static String adviceMethodName(final String name, final int index) {
 		return JoddProxetta.get().defaults().getMethodPrefix() + name + JoddProxetta.get().defaults().getMethodDivider() + index;
 	}
 
 	// ---------------------------------------------------------------- load
 
-	public static void loadMethodArgumentClass(MethodVisitor mv, MethodInfo methodInfo, int index) {
+	public static void loadMethodArgumentClass(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
 		TypeInfo argument = methodInfo.getArgument(index);
 		loadClass(mv, argument.getOpcode(), argument.getRawName());
 	}
 
-	public static void loadClass(MethodVisitor mv, int type, String typeName) {
+	public static void loadClass(final MethodVisitor mv, final int type, final String typeName) {
 		switch (type) {
 			case 'V':
 				mv.visitFieldInsn(GETSTATIC, AsmUtil.SIGNATURE_JAVA_LANG_VOID, "TYPE", AsmUtil.L_SIGNATURE_JAVA_LANG_CLASS);
@@ -188,7 +188,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Loads all method arguments before INVOKESPECIAL call.
 	 */
-	public static void loadSpecialMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void loadSpecialMethodArguments(final MethodVisitor mv, final MethodInfo methodInfo) {
 		mv.visitVarInsn(ALOAD, 0);
 		for (int i = 1; i <= methodInfo.getArgumentsCount(); i++) {
 			loadMethodArgument(mv, methodInfo, i);
@@ -198,7 +198,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Loads all method arguments before INVOKESTATIC call.
 	 */
-	public static void loadStaticMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void loadStaticMethodArguments(final MethodVisitor mv, final MethodInfo methodInfo) {
 		for (int i = 0; i < methodInfo.getArgumentsCount(); i++) {
 			loadMethodArgument(mv, methodInfo, i);
 		}
@@ -207,7 +207,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Loads all method arguments before INVOKEVIRTUAL call.
 	 */
-	public static void loadVirtualMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void loadVirtualMethodArguments(final MethodVisitor mv, final MethodInfo methodInfo) {
 		for (int i = 1; i <= methodInfo.getArgumentsCount(); i++) {
 			loadMethodArgument(mv, methodInfo, i);
 		}
@@ -216,7 +216,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Loads one argument. Index is 1-based. No conversion occurs.
 	 */
-	public static void loadMethodArgument(MethodVisitor mv, MethodInfo methodInfo, int index) {
+	public static void loadMethodArgument(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
 		int offset = methodInfo.getArgumentOffset(index);
 		int type = methodInfo.getArgument(index).getOpcode();
 		switch (type) {
@@ -244,7 +244,7 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static void loadMethodArgumentAsObject(MethodVisitor mv, MethodInfo methodInfo, int index) {
+	public static void loadMethodArgumentAsObject(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
 		int offset = methodInfo.getArgumentOffset(index);
 		int type = methodInfo.getArgument(index).getOpcode();
 		switch (type) {
@@ -292,7 +292,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Stores one argument. Index is 1-based. No conversion occurs.
 	 */
-	public static void storeMethodArgument(MethodVisitor mv, MethodInfo methodInfo, int index) {
+	public static void storeMethodArgument(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
 		int offset = methodInfo.getArgumentOffset(index);
 		int type = methodInfo.getArgument(index).getOpcode();
 		switch (type) {
@@ -318,7 +318,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Returns <code>true</code> if opcode is xSTORE.
 	 */
-	public static boolean isStoreOpcode(int opcode) {
+	public static boolean isStoreOpcode(final int opcode) {
 		return (opcode == ISTORE)
 				|| (opcode == LSTORE)
 				|| (opcode == FSTORE)
@@ -327,13 +327,13 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static void storeMethodArgumentFromObject(MethodVisitor mv, MethodInfo methodInfo, int index) {
+	public static void storeMethodArgumentFromObject(final MethodVisitor mv, final MethodInfo methodInfo, final int index) {
 		int type = methodInfo.getArgument(index).getOpcode();
 		int offset = methodInfo.getArgumentOffset(index);
 		storeValue(mv, offset, type);
 	}
 
-	public static void storeValue(MethodVisitor mv, int offset, int type) {
+	public static void storeValue(final MethodVisitor mv, final int offset, final int type) {
 		switch (type) {
 			case 'V':
 				break;
@@ -379,7 +379,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Visits return opcodes.
 	 */
-	public static void visitReturn(MethodVisitor mv, MethodInfo methodInfo, boolean isLast) {
+	public static void visitReturn(final MethodVisitor mv, final MethodInfo methodInfo, final boolean isLast) {
 		switch (methodInfo.getReturnType().getOpcode()) {
 			case 'V':
 				if (isLast) {
@@ -517,7 +517,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Prepares return value.
 	 */
-	public static void prepareReturnValue(MethodVisitor mv, MethodInfo methodInfo, int varOffset) {
+	public static void prepareReturnValue(final MethodVisitor mv, final MethodInfo methodInfo, int varOffset) {
 		varOffset += methodInfo.getAllArgumentsSize();
 		switch (methodInfo.getReturnType().getOpcode()) {
 			case 'V':
@@ -551,7 +551,7 @@ public class ProxettaAsmUtil {
 		}
 	}
 
-	public static void castToReturnType(MethodVisitor mv, MethodInfo methodInfo) {
+	public static void castToReturnType(final MethodVisitor mv, final MethodInfo methodInfo) {
 		final String returnType;
 
 		char returnOpcodeType = methodInfo.getReturnType().getOpcode();
@@ -601,7 +601,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Creates unique key for method signatures map.
 	 */
-	public static String createMethodSignaturesKey(int access, String methodName, String description, String className) {
+	public static String createMethodSignaturesKey(final int access, final String methodName, final String description, final String className) {
 		return new StringBand(7)
 			.append(access)
 			.append(COLON)
@@ -619,7 +619,7 @@ public class ProxettaAsmUtil {
 	 * Visits non-array element value for annotation. Returns <code>true</code>
 	 * if value is successfully processed.
 	 */
-	public static void visitElementValue(MethodVisitor mv, Object elementValue, boolean boxPrimitives) {
+	public static void visitElementValue(final MethodVisitor mv, final Object elementValue, final boolean boxPrimitives) {
 		if (elementValue instanceof String) {	// string
 			mv.visitLdcInsn(elementValue);
 			return;
@@ -721,7 +721,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Creates new array.
 	 */
-	public static void newArray(MethodVisitor mv, Class componentType) {
+	public static void newArray(final MethodVisitor mv, final Class componentType) {
 		if (componentType == int.class) {
 			mv.visitIntInsn(NEWARRAY, T_INT);
 			return;
@@ -761,7 +761,7 @@ public class ProxettaAsmUtil {
 	/**
 	 * Stores element on stack into an array.
 	 */
-	public static void storeIntoArray(MethodVisitor mv, Class componentType) {
+	public static void storeIntoArray(final MethodVisitor mv, final Class componentType) {
 		if (componentType == int.class) {
 			mv.visitInsn(IASTORE);
 			return;
@@ -800,7 +800,7 @@ public class ProxettaAsmUtil {
 
 	// ---------------------------------------------------------------- detect advice macros
 
-	public static boolean isInvokeMethod(String name, String desc) {
+	public static boolean isInvokeMethod(final String name, final String desc) {
 		if (name.equals("invoke")) {
 			if (desc.equals("()Ljava/lang/Object;")) {
 				return true;
@@ -809,7 +809,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isArgumentsCountMethod(String name, String desc) {
+	public static boolean isArgumentsCountMethod(final String name, final String desc) {
 		if (name.equals("argumentsCount")) {
 			if (desc.equals("()I")) {
 				return true;
@@ -818,7 +818,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isArgumentTypeMethod(String name, String desc) {
+	public static boolean isArgumentTypeMethod(final String name, final String desc) {
 		if (name.equals("argumentType")) {
 			if (desc.equals("(I)Ljava/lang/Class;")) {
 				return true;
@@ -827,7 +827,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isArgumentMethod(String name, String desc) {
+	public static boolean isArgumentMethod(final String name, final String desc) {
 		if (name.equals("argument")) {
 			if (desc.equals("(I)Ljava/lang/Object;")) {
 				return true;
@@ -836,7 +836,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isSetArgumentMethod(String name, String desc) {
+	public static boolean isSetArgumentMethod(final String name, final String desc) {
 		if (name.equals("setArgument")) {
 			if (desc.equals("(Ljava/lang/Object;I)V")) {
 				return true;
@@ -845,7 +845,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isCreateArgumentsArrayMethod(String name, String desc) {
+	public static boolean isCreateArgumentsArrayMethod(final String name, final String desc) {
 		if (name.equals("createArgumentsArray")) {
 			if (desc.equals("()[Ljava/lang/Object;")) {
 				return true;
@@ -854,7 +854,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isCreateArgumentsClassArrayMethod(String name, String desc) {
+	public static boolean isCreateArgumentsClassArrayMethod(final String name, final String desc) {
 		if (name.equals("createArgumentsClassArray")) {
 			if (desc.equals("()[Ljava/lang/Class;")) {
 				return true;
@@ -863,7 +863,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isReturnTypeMethod(String name, String desc) {
+	public static boolean isReturnTypeMethod(final String name, final String desc) {
 		if (name.equals("returnType")) {
 			if (desc.equals("()Ljava/lang/Class;")) {
 				return true;
@@ -872,7 +872,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isTargetMethod(String name, String desc) {
+	public static boolean isTargetMethod(final String name, final String desc) {
 		if (name.equals("target")) {
 			if (desc.equals("()Ljava/lang/Object;")) {
 				return true;
@@ -882,7 +882,7 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static boolean isTargetClassMethod(String name, String desc) {
+	public static boolean isTargetClassMethod(final String name, final String desc) {
 		if (name.equals("targetClass")) {
 			if (desc.equals("()Ljava/lang/Class;")) {
 				return true;
@@ -891,7 +891,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isTargetMethodNameMethod(String name, String desc) {
+	public static boolean isTargetMethodNameMethod(final String name, final String desc) {
 		if (name.equals("targetMethodName")) {
 			if (desc.equals("()Ljava/lang/String;")) {
 				return true;
@@ -900,7 +900,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isTargetMethodSignatureMethod(String name, String desc) {
+	public static boolean isTargetMethodSignatureMethod(final String name, final String desc) {
 		if (name.equals("targetMethodSignature")) {
 			if (desc.equals("()Ljava/lang/String;")) {
 				return true;
@@ -909,7 +909,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isTargetMethodDescriptionMethod(String name, String desc) {
+	public static boolean isTargetMethodDescriptionMethod(final String name, final String desc) {
 		if (name.equals("targetMethodDescription")) {
 			if (desc.equals("()Ljava/lang/String;")) {
 				return true;
@@ -918,7 +918,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isReturnValueMethod(String name, String desc) {
+	public static boolean isReturnValueMethod(final String name, final String desc) {
 		if (name.equals("returnValue")) {
 			if (desc.equals("(Ljava/lang/Object;)Ljava/lang/Object;")) {
 				return true;
@@ -927,7 +927,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isInfoMethod(String name, String desc) {
+	public static boolean isInfoMethod(final String name, final String desc) {
 		if (name.equals("info")) {
 			if (desc.equals("()Ljodd/proxetta/ProxyTargetInfo;")) {
 				return true;
@@ -936,7 +936,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isTargetMethodAnnotationMethod(String name, String desc) {
+	public static boolean isTargetMethodAnnotationMethod(final String name, final String desc) {
 		if (name.equals("targetMethodAnnotation")) {
 			if (desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
 				return true;
@@ -945,7 +945,7 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-	public static boolean isTargetClassAnnotationMethod(String name, String desc) {
+	public static boolean isTargetClassAnnotationMethod(final String name, final String desc) {
 		if (name.equals("targetClassAnnotation")) {
 			if (desc.equals("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;")) {
 				return true;

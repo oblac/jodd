@@ -62,7 +62,7 @@ public class DbQueryBuilder {
 	/**
 	 * Prepares <code>DbQuery</code>.
 	 */
-	public DbOomQuery createAndPopulateDbQuery(ProxyTargetInfo proxyTargetInfo, String query) {
+	public DbOomQuery createAndPopulateDbQuery(final ProxyTargetInfo proxyTargetInfo, String query) {
 
 		if (query == null) {
 			query = resolveQuery(proxyTargetInfo);
@@ -113,7 +113,7 @@ public class DbQueryBuilder {
 	/**
 	 * Resolves method parameter names.
 	 */
-	protected String[] resolveMethodParameterNames(ProxyTargetInfo proxyTargetInfo) {
+	protected String[] resolveMethodParameterNames(final ProxyTargetInfo proxyTargetInfo) {
 		String[] paramNames;Method method;
 
 		try {
@@ -141,7 +141,7 @@ public class DbQueryBuilder {
 	 * Returns query from target info.
 	 * Returns <code>null</code> if query is not found.
 	 */
-	protected String resolveQuery(ProxyTargetInfo proxyTargetInfo) {
+	protected String resolveQuery(final ProxyTargetInfo proxyTargetInfo) {
 		String keyName = proxyTargetInfo.targetClass.getName() + "." + proxyTargetInfo.targetMethodName;
 
 		String query = queryMap.getQuery(keyName);

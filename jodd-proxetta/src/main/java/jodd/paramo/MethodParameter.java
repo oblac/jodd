@@ -38,7 +38,7 @@ public class MethodParameter {
 
 	protected final String signature;
 
-	public MethodParameter(String name, String signature) {
+	public MethodParameter(final String name, final String signature) {
 		this.name = name;
 		this.signature = signature;
 	}

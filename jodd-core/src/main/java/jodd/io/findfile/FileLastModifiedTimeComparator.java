@@ -32,7 +32,7 @@ import java.util.Comparator;
 public class FileLastModifiedTimeComparator implements Comparator<File>, Serializable {
 	protected final int order;
 
-	public FileLastModifiedTimeComparator(boolean ascending) {
+	public FileLastModifiedTimeComparator(final boolean ascending) {
 		if (ascending) {
 			order = 1;
 		} else {
@@ -41,7 +41,7 @@ public class FileLastModifiedTimeComparator implements Comparator<File>, Seriali
 	}
 
 	@Override
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		long diff = file1.lastModified() - file2.lastModified();
 		if (diff == 0) {
 			return 0;

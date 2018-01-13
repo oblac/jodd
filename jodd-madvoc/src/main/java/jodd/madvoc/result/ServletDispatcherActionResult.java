@@ -53,7 +53,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	 * Renders the view by dispatching to the target JSP.
 	 */
 	@Override
-	protected void renderView(ActionRequest actionRequest, String target) throws Exception {
+	protected void renderView(final ActionRequest actionRequest, final String target) throws Exception {
 		HttpServletRequest request = actionRequest.httpServletRequest();
 		HttpServletResponse response = actionRequest.httpServletResponse();
 
@@ -94,7 +94,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	/**
 	 * Returns <code>true</code> if target exists.
 	 */
-	protected boolean targetExists(ActionRequest actionRequest, String target) {
+	protected boolean targetExists(final ActionRequest actionRequest, final String target) {
 		if (log.isDebugEnabled()) {
 			log.debug("target check: " + target);
 		}

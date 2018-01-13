@@ -25,8 +25,8 @@
 
 package jodd.upload.impl;
 
-import jodd.upload.FileUploadFactory;
 import jodd.upload.FileUpload;
+import jodd.upload.FileUploadFactory;
 import jodd.upload.MultipartRequestInputStream;
 
 import java.io.File;
@@ -47,7 +47,8 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public FileUpload create(MultipartRequestInputStream input) {
+	@Override
+	public FileUpload create(final MultipartRequestInputStream input) {
 		return new AdaptiveFileUpload(input, memoryThreshold, uploadPath, maxFileSize, breakOnError, fileExtensions, allowFileExtensions);
 	}
 
@@ -59,7 +60,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	/**
 	 * Specifies per file memory limit for keeping uploaded files in the memory.
 	 */
-	public AdaptiveFileUploadFactory setMemoryThreshold(int memoryThreshold) {
+	public AdaptiveFileUploadFactory setMemoryThreshold(final int memoryThreshold) {
 		if (memoryThreshold >= 0) {
 			this.memoryThreshold = memoryThreshold;
 		}
@@ -74,7 +75,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	 * Specifies the upload path. If set to <code>null</code> default
 	 * system TEMP path will be used.
 	 */
-	public AdaptiveFileUploadFactory  setUploadPath(File uploadPath) {
+	public AdaptiveFileUploadFactory  setUploadPath(final File uploadPath) {
 		this.uploadPath = uploadPath;
 		return this;
 	}
@@ -87,7 +88,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	 * Sets maximum file upload size. Setting to <code>-1</code>
 	 * disables this constraint.
 	 */
-	public AdaptiveFileUploadFactory setMaxFileSize(int maxFileSize) {
+	public AdaptiveFileUploadFactory setMaxFileSize(final int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 		return this;
 	}
@@ -96,7 +97,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 		return breakOnError;
 	}
 
-	public AdaptiveFileUploadFactory setBreakOnError(boolean breakOnError) {
+	public AdaptiveFileUploadFactory setBreakOnError(final boolean breakOnError) {
 		this.breakOnError = breakOnError;
 		return this;
 	}
@@ -104,7 +105,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	/**
 	 * Specifies if upload should break on error.
 	 */
-	public AdaptiveFileUploadFactory breakOnError(boolean breakOnError) {
+	public AdaptiveFileUploadFactory breakOnError(final boolean breakOnError) {
 		this.breakOnError = breakOnError;
 		return this;
 	}
@@ -114,7 +115,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	 * which means user can only specify extensions that are either allowed or disallowed.
 	 * Setting this value to <code>null</code> will turn this feature off.
 	 */
-	public AdaptiveFileUploadFactory setFileExtensions(String[] fileExtensions, boolean allow) {
+	public AdaptiveFileUploadFactory setFileExtensions(final String[] fileExtensions, final boolean allow) {
 		this.fileExtensions = fileExtensions;
 		this.allowFileExtensions = allow;
 		return this;

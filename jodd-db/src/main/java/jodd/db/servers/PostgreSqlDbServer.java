@@ -35,12 +35,12 @@ public class PostgreSqlDbServer implements DbServer {
 
 	private final String version;
 
-	public PostgreSqlDbServer(String version) {
+	public PostgreSqlDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 		JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
 		JoddDb.get().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}

@@ -39,7 +39,7 @@ public class SessionScopeInjector implements Injector, Outjector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.SESSION;
 
 	@Override
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
@@ -64,7 +64,7 @@ public class SessionScopeInjector implements Injector, Outjector {
 	}
 
 	@Override
-	public void outject(ActionRequest actionRequest) {
+	public void outject(final ActionRequest actionRequest) {
 		Targets targets = actionRequest.targets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;

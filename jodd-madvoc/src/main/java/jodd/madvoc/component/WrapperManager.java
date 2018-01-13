@@ -74,7 +74,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	/**
 	 * Looks up for existing wrapper. Returns <code>null</code> if wrapper is not already registered.
 	 */
-	public T lookup(String name) {
+	public T lookup(final String name) {
 		return wrappers.get(name);
 	}
 
@@ -82,7 +82,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Resolves single wrapper. Creates new wrapper instance if not already registered.
 	 * Does not expand the wrappers.
 	 */
-	public T resolve(Class<? extends T> wrapperClass) {
+	public T resolve(final Class<? extends T> wrapperClass) {
 		String wrapperClassName = wrapperClass.getName();
 
 		T wrapper = lookup(wrapperClassName);
@@ -101,7 +101,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Resolves wrappers. Unregistered wrappers will be registered. Returned array may be
 	 * different size than size of provided array, due to {@link #expand(ActionConfig, Class[]) expanding}.
 	 */
-	public T[] resolveAll(ActionConfig actionConfig, Class<? extends T>[] wrapperClasses) {
+	public T[] resolveAll(final ActionConfig actionConfig, Class<? extends T>[] wrapperClasses) {
 		if (wrapperClasses == null) {
 			return null;
 		}
@@ -124,7 +124,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	/**
 	 * Initializes action wrapper.
 	 */
-	protected void initializeWrapper(T wrapper) {
+	protected void initializeWrapper(final T wrapper) {
 		contextInjectorComponent.injectContext(new Target(wrapper));
 
 		wrapper.init();
@@ -146,7 +146,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Replaces all {@link #getDefaultWebAppWrapper()} with {@link #getDefaultWebAppWrapper()}
 	 * and {@link BaseActionWrapperStack} with stack values.
 	 */
-	protected Class<? extends T>[] expand(ActionConfig actionConfig, Class<? extends T>[] actionWrappers) {
+	protected Class<? extends T>[] expand(final ActionConfig actionConfig, final Class<? extends T>[] actionWrappers) {
 		if (actionWrappers == null) {
 			return null;
 		}
@@ -196,7 +196,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	/**
 	 * Creates new wrapper.
 	 */
-	protected <R extends T> R createWrapper(Class<R> wrapperClass) {
+	protected <R extends T> R createWrapper(final Class<R> wrapperClass) {
 		try {
 		    return ClassUtil.newInstance(wrapperClass);
 		} catch (Exception ex) {

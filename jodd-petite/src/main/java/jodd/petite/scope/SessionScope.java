@@ -53,7 +53,7 @@ public class SessionScope extends ShutdownAwareScope {
 	/**
 	 * Registers new session destroy callback if not already registered.
 	 */
-	protected Map<String, BeanData> registerSessionBeans(HttpSession httpSession) {
+	protected Map<String, BeanData> registerSessionBeans(final HttpSession httpSession) {
 	    SessionBeans sessionBeans = new SessionBeans();
 		httpSession.setAttribute(SESSION_BEANS_NAME, sessionBeans);
 		return sessionBeans.getBeanMap();
@@ -63,7 +63,7 @@ public class SessionScope extends ShutdownAwareScope {
 	 * Returns instance map from http session.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, BeanData> getSessionMap(HttpSession session) {
+	protected Map<String, BeanData> getSessionMap(final HttpSession session) {
 		SessionBeans sessionBeans = (SessionBeans) session.getAttribute(SESSION_BEANS_NAME);
 		if (sessionBeans == null) {
 			return null;
@@ -87,7 +87,7 @@ public class SessionScope extends ShutdownAwareScope {
 		}
 
 		@Override
-		public void valueBound(HttpSessionBindingEvent event) {
+		public void valueBound(final HttpSessionBindingEvent event) {
 			// do nothing
 		}
 
@@ -95,7 +95,7 @@ public class SessionScope extends ShutdownAwareScope {
 		 * Session is destroyed.
 		 */
 		@Override
-		public void valueUnbound(HttpSessionBindingEvent event) {
+		public void valueUnbound(final HttpSessionBindingEvent event) {
 			for (BeanData beanData : beanMap.values()) {
 				destroyBean(beanData);
 			}
@@ -114,7 +114,7 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	@Override
-	public Object lookup(String name) {
+	public Object lookup(final String name) {
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
 		if (map == null) {
@@ -129,7 +129,7 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	@Override
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
 		if (map == null) {
@@ -143,7 +143,7 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	@Override
-	public void remove(String name) {
+	public void remove(final String name) {
 		if (totalRegisteredDestroyableBeans() == 0) {
 			return;
 		}
@@ -155,7 +155,7 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	@Override
-	public boolean accept(Scope referenceScope) {
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
 		if (refScopeType == ProtoScope.class) {

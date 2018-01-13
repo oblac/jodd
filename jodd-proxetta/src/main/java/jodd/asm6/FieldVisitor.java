@@ -89,7 +89,7 @@ public abstract class FieldVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
-    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+    public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
         if (fv != null) {
             return fv.visitAnnotation(desc, visible);
         }
@@ -114,8 +114,8 @@ public abstract class FieldVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
-    public AnnotationVisitor visitTypeAnnotation(int typeRef,
-            TypePath typePath, String desc, boolean visible) {
+    public AnnotationVisitor visitTypeAnnotation(final int typeRef,
+                                                 final TypePath typePath, final String desc, final boolean visible) {
         if (api < Opcodes.ASM5) {
             throw new RuntimeException();
         }
@@ -131,7 +131,7 @@ public abstract class FieldVisitor {
      * @param attr
      *            an attribute.
      */
-    public void visitAttribute(Attribute attr) {
+    public void visitAttribute(final Attribute attr) {
         if (fv != null) {
             fv.visitAttribute(attr);
         }

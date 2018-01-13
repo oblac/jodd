@@ -58,14 +58,14 @@ public class RandomString {
 	 * Creates new random string with given random object,
 	 * so random strings can be repeated.
 	 */
-	public RandomString(Random rnd) {
+	public RandomString(final Random rnd) {
 		this.rnd = rnd;
 	}
 
 	/**
 	 * Creates new random string with given seed.
 	 */
-	public RandomString(long seed) {
+	public RandomString(final long seed) {
 		this.rnd = new Random(seed);
 	}
 
@@ -75,7 +75,7 @@ public class RandomString {
 	 * Creates random string whose length is the number of characters specified.
 	 * Characters are chosen from the set of characters specified.
 	 */
-	public String random(int count, char[] chars) {
+	public String random(int count, final char[] chars) {
 		if (count == 0) {
 			return StringPool.EMPTY;
 		}
@@ -90,7 +90,7 @@ public class RandomString {
 	 * Creates random string whose length is the number of characters specified.
 	 * Characters are chosen from the set of characters specified.
 	 */
-	public String random(int count, String chars) {
+	public String random(final int count, final String chars) {
 		return random(count, chars.toCharArray());
 	}
 
@@ -100,7 +100,7 @@ public class RandomString {
 	 * Creates random string whose length is the number of characters specified.
 	 * Characters are chosen from the provided range.
 	 */
-	public String random(int count, char start, char end) {
+	public String random(int count, final char start, final char end) {
 		if (count == 0) {
 			return StringPool.EMPTY;
 		}
@@ -117,14 +117,14 @@ public class RandomString {
 	 * Characters are chosen from the set of characters whose
 	 * ASCII value is between <code>32</code> and <code>126</code> (inclusive).
 	 */
-	public String randomAscii(int count) {
+	public String randomAscii(final int count) {
 		return random(count, (char) 32, (char) 126);
 	}
 
 	/**
 	 * Creates random string that consist only of numbers.
 	 */
-	public String randomNumeric(int count) {
+	public String randomNumeric(final int count) {
 		return random(count, '0', '9');
 	}
 
@@ -133,7 +133,7 @@ public class RandomString {
 	 * Characters are chosen from the multiple sets defined by range pairs.
 	 * All ranges must be in acceding order.
 	 */
-	public String randomRanges(int count, char... ranges) {
+	public String randomRanges(int count, final char... ranges) {
 		if (count == 0) {
 			return StringPool.EMPTY;
 		}
@@ -169,21 +169,21 @@ public class RandomString {
 	/**
 	 * Creates random string of characters.
 	 */
-	public String randomAlpha(int count) {
+	public String randomAlpha(final int count) {
 		return randomRanges(count, ALPHA_RANGE);
 	}
 
 	/**
 	 * Creates random string of characters and digits.
 	 */
-	public String randomAlphaNumeric(int count) {
+	public String randomAlphaNumeric(final int count) {
 		return randomRanges(count, ALPHA_NUMERIC_RANGE);
 	}
 
 	/**
 	 * Creates random string that contains only Base64 characters.
 	 */
-	public String randomBase64(int count) {
+	public String randomBase64(final int count) {
 		return random(count, Base64.CHARS);
 	}
 

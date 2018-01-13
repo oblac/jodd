@@ -34,7 +34,7 @@ import java.util.Comparator;
 public class FileExtensionComparator implements Comparator<File>, Serializable {
 	protected final int order;
 
-	public FileExtensionComparator(boolean ascending) {
+	public FileExtensionComparator(final boolean ascending) {
 		if (ascending) {
 			order = 1;
 		} else {
@@ -43,7 +43,7 @@ public class FileExtensionComparator implements Comparator<File>, Serializable {
 	}
 
 	@Override
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		String ext1 = FileNameUtil.getExtension(file1.getName());
 		String ext2 = FileNameUtil.getExtension(file2.getName());
 		long diff = ext1.compareToIgnoreCase(ext2);

@@ -37,7 +37,7 @@ public class HeadersMultiMap extends HttpMultiMap<String> {
 	 * Adds new header value. If existing value exist, it will be removed
 	 * so the store the new key value.
 	 */
-	public void addHeader(String name, String value) {
+	public void addHeader(final String name, final String value) {
 		List<String> valuesList = super.getAll(name);
 		if (valuesList.isEmpty()) {
 			super.add(name, value);
@@ -48,11 +48,11 @@ public class HeadersMultiMap extends HttpMultiMap<String> {
 		super.addAll(name, valuesList);
 	}
 
-	public void setHeader(String name, String value) {
+	public void setHeader(final String name, final String value) {
 		super.set(name, value);
 	}
 
-	public String getHeader(String name) {
+	public String getHeader(final String name) {
 		return super.get(name);
 	}
 }

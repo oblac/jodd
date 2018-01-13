@@ -29,9 +29,9 @@ import jodd.exception.UncheckedException;
 import jodd.io.FastCharArrayWriter;
 import jodd.servlet.ServletUtil;
 
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.JspFragment;
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -43,7 +43,7 @@ public class TagUtil {
 	/**
 	 * Invokes tag body.
 	 */
-	public static void invokeBody(JspFragment body) throws JspException {
+	public static void invokeBody(final JspFragment body) throws JspException {
 		if (body == null) {
 			return;
 		}
@@ -57,7 +57,7 @@ public class TagUtil {
 	/**
 	 * Invokes tag body to provided writer.
 	 */
-	public static void invokeBody(JspFragment body, Writer writer) throws JspException {
+	public static void invokeBody(final JspFragment body, final Writer writer) throws JspException {
 		if (body == null) {
 			return;
 		}
@@ -71,7 +71,7 @@ public class TagUtil {
 	/**
 	 * Renders tag body to char array.
 	 */
-	public static char[] renderBody(JspFragment body) throws JspException {
+	public static char[] renderBody(final JspFragment body) throws JspException {
 		FastCharArrayWriter writer = new FastCharArrayWriter();
 		invokeBody(body, writer);
 		return writer.toCharArray();
@@ -82,7 +82,7 @@ public class TagUtil {
 	 * Renders tag body to string.
 	 * @see #renderBody(javax.servlet.jsp.tagext.JspFragment)
 	 */
-	public static String renderBodyToString(JspFragment body) throws JspException {
+	public static String renderBodyToString(final JspFragment body) throws JspException {
 		char[] result = renderBody(body);
 		return new String(result);
 	}
@@ -90,7 +90,7 @@ public class TagUtil {
 	/**
 	 * Sets scope attribute.
 	 */
-	public static void setScopeAttribute(String name, Object value, String scope, PageContext pageContext) throws JspException {
+	public static void setScopeAttribute(final String name, final Object value, final String scope, final PageContext pageContext) throws JspException {
 		try {
 			ServletUtil.setScopeAttribute(name, value, scope, pageContext);
 		} catch (UncheckedException uex) {
@@ -101,7 +101,7 @@ public class TagUtil {
 	/**
 	 * Removes scope attribute.
 	 */
-	public static void removeScopeAttribute(String name, String scope, PageContext pageContext) throws JspException {
+	public static void removeScopeAttribute(final String name, final String scope, final PageContext pageContext) throws JspException {
 		try {
 			ServletUtil.removeScopeAttribute(name, scope, pageContext);
 		} catch (UncheckedException uex) {

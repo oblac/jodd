@@ -35,14 +35,14 @@ public class TypesUtil {
 	/**
 	 * Returns <code>true</code> if type is some integer-like type: INTEGER, SMALLINT, TINYINT, BIT.
 	 */
-	public static boolean isIntegerType(int type) {
+	public static boolean isIntegerType(final int type) {
 		return (type == Types.INTEGER) || (type == Types.SMALLINT) || (type == Types.TINYINT) || (type == Types.BIT);
 	}
 
 	/**
 	 * Returns <code>true</code> if type is some string-like type: CHAR, VARCHAR.
 	 */
-	public static boolean isStringType(int type) {
+	public static boolean isStringType(final int type) {
 		return (type == Types.VARCHAR) || (type == Types.CHAR);
 	}
 }

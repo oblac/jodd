@@ -65,7 +65,7 @@ public class HashCodeBenchmark {
 		/**
 		 * Calculates hash code for ints.
 		 */
-		public static int hash(int seed, int anInt) {
+		public static int hash(final int seed, final int anInt) {
 			return (PRIME * seed) + anInt;
 		}
 	}
@@ -81,11 +81,11 @@ public class HashCodeBenchmark {
 			return new HashCode_withInstance(173, 37);
 		}
 
-		public static HashCode_withInstance create(int seed, int prime) {
+		public static HashCode_withInstance create(final int seed, final int prime) {
 			return new HashCode_withInstance(seed, prime);
 		}
 
-		private HashCode_withInstance(int seed, int prime) {
+		private HashCode_withInstance(final int seed, final int prime) {
 			this.prime = prime;
 			this.hashcode = seed;
 		}
@@ -94,7 +94,7 @@ public class HashCodeBenchmark {
 			return hashcode;
 		}
 
-		public HashCode_withInstance hash(int anInt) {
+		public HashCode_withInstance hash(final int anInt) {
 			hashcode = (prime * hashcode) + anInt;
 			return this;
 		}

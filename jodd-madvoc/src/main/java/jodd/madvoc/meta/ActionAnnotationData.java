@@ -37,7 +37,7 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationData<A
 	protected String value;
 	protected String alias;
 
-	protected ActionAnnotationData(A annotation) {
+	protected ActionAnnotationData(final A annotation) {
 		super(annotation);
 	}
 

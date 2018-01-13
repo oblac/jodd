@@ -44,7 +44,7 @@ public class DbQueryConfig {
 	/**
 	 * Enables creation of prepared statements for all queries.
 	 */
-	public void setForcePreparedStatement(boolean forcePreparedStatement) {
+	public void setForcePreparedStatement(final boolean forcePreparedStatement) {
 		this.forcePreparedStatement = forcePreparedStatement;
 	}
 
@@ -56,7 +56,7 @@ public class DbQueryConfig {
 	 * Sets default type.
 	 * @see DbQuery#setType(int)
 	 */
-	public void setType(int type) {
+	public void setType(final int type) {
 		this.type = type;
 	}
 
@@ -68,7 +68,7 @@ public class DbQueryConfig {
 	 * Sets default concurrency type.
 	 * @see DbQuery#setConcurrencyType(int)
 	 */
-	public void setConcurrencyType(int concurrencyType) {
+	public void setConcurrencyType(final int concurrencyType) {
 		this.concurrencyType = concurrencyType;
 	}
 
@@ -80,7 +80,7 @@ public class DbQueryConfig {
 	 * Sets default holdability.
 	 * @see DbQuery#setHoldability(int)
 	 */
-	public void setHoldability(int holdability) {
+	public void setHoldability(final int holdability) {
 		this.holdability = holdability;
 	}
 
@@ -92,7 +92,7 @@ public class DbQueryConfig {
 	 * Sets default value for fetch size.
 	 * @see DbQuery#setFetchSize(int)
 	 */
-	public void setFetchSize(int fetchSize) {
+	public void setFetchSize(final int fetchSize) {
 		this.fetchSize = fetchSize;
 	}
 
@@ -107,7 +107,7 @@ public class DbQueryConfig {
 	 * Sets default value for max rows.
 	 * @see DbQuery#setMaxRows(int)
 	 */
-	public void setMaxRows(int maxRows) {
+	public void setMaxRows(final int maxRows) {
 		this.maxRows = maxRows;
 	}
 

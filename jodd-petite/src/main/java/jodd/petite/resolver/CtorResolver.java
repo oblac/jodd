@@ -41,7 +41,7 @@ public class CtorResolver {
 
 	protected final ReferencesResolver referencesResolver;
 
-	public CtorResolver(ReferencesResolver referencesResolver) {
+	public CtorResolver(final ReferencesResolver referencesResolver) {
 		this.referencesResolver = referencesResolver;
 	}
 
@@ -52,7 +52,7 @@ public class CtorResolver {
 	 * constructors exist, the default one will be used as injection point. Otherwise, exception
 	 * is thrown.
 	 */
-	public CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
+	public CtorInjectionPoint resolve(final Class type, final boolean useAnnotation) {
 		// lookup methods
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();

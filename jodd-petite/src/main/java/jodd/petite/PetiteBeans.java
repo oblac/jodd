@@ -112,7 +112,7 @@ public abstract class PetiteBeans {
 
 	protected final AnnotationResolver annotationResolver;
 
-	protected PetiteBeans(PetiteConfig petiteConfig) {
+	protected PetiteBeans(final PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
 		this.referencesResolver = new ReferencesResolver(petiteConfig);
 		this.petiteResolvers = new PetiteResolvers(referencesResolver);
@@ -142,7 +142,7 @@ public abstract class PetiteBeans {
 	 * Resolves and registers scope from a scope type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <S extends Scope> S resolveScope(Class<S> scopeType) {
+	public <S extends Scope> S resolveScope(final Class<S> scopeType) {
 		S scope = (S) scopes.get(scopeType);
 		if (scope == null) {
 
@@ -165,7 +165,7 @@ public abstract class PetiteBeans {
 	 * type with another. Replacing may be important for testing purposes when
 	 * using container-depended scopes.
 	 */
-	public void registerScope(Class<? extends Scope> scopeType, Scope scope) {
+	public void registerScope(final Class<? extends Scope> scopeType, final Scope scope) {
 		scopes.put(scopeType, scope);
 	}
 
@@ -175,7 +175,7 @@ public abstract class PetiteBeans {
 	 * Lookups for {@link BeanDefinition bean definition}.
 	 * Returns <code>null</code> if bean name doesn't exist.
 	 */
-	public BeanDefinition lookupBeanDefinition(String name) {
+	public BeanDefinition lookupBeanDefinition(final String name) {
 		BeanDefinition beanDefinition = beans.get(name);
 
 		// try alt bean names
@@ -192,7 +192,7 @@ public abstract class PetiteBeans {
 	 * Lookups for first founded {@link BeanDefinition bean definition}.
 	 * Returns <code>null</code> if none of the beans is found.
 	 */
-	protected BeanDefinition lookupBeanDefinitions(BeanReferences beanReferences) {
+	protected BeanDefinition lookupBeanDefinitions(final BeanReferences beanReferences) {
 		final int total = beanReferences.size();
 		for (int i = 0; i < total; i++) {
 			final String name = beanReferences.name(i);
@@ -210,7 +210,7 @@ public abstract class PetiteBeans {
 	 * Lookups for existing {@link jodd.petite.BeanDefinition bean definition}.
 	 * Throws exception if bean is not found.
 	 */
-	protected BeanDefinition lookupExistingBeanDefinition(String name) {
+	protected BeanDefinition lookupExistingBeanDefinition(final String name) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(name);
 		if (beanDefinition == null) {
 			throw new PetiteException("Bean not found: " + name);
@@ -221,7 +221,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Returns <code>true</code> if bean name is registered.
 	 */
-	public boolean isBeanNameRegistered(String name) {
+	public boolean isBeanNameRegistered(final String name) {
 		return lookupBeanDefinition(name) != null;
 	}
 
@@ -229,7 +229,7 @@ public abstract class PetiteBeans {
 	 * Resolves bean's name from bean annotation or type name. May be used for resolving bean name
 	 * of base type during registration of bean subclass.
 	 */
-	public String resolveBeanName(Class type) {
+	public String resolveBeanName(final Class type) {
 		return annotationResolver.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
 	}
 
@@ -242,7 +242,7 @@ public abstract class PetiteBeans {
 	 * By default returns new instance of {@link jodd.petite.BeanDefinition}.
 	 */
 	protected <T> BeanDefinition createBeanDefinitionForRegistration(
-			String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> consumer) {
+		final String name, final Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> consumer) {
 
 		return new BeanDefinition<>(name, type, scope, wiringMode, consumer);
 	}
@@ -250,13 +250,13 @@ public abstract class PetiteBeans {
 	/**
 	 * Registers a bean using provided class that is annotated.
 	 */
-	public BeanDefinition registerPetiteBean(Class type) {
+	public BeanDefinition registerPetiteBean(final Class type) {
 		return registerPetiteBean(type, null, null, null, false, null);
 	}
 	/**
 	 * Registers a bean using provided class that is annotated.
 	 */
-	public <T> BeanDefinition<T> registerPetiteBean(Class<T> type, Consumer<T> consumer) {
+	public <T> BeanDefinition<T> registerPetiteBean(final Class<T> type, final Consumer<T> consumer) {
 		return registerPetiteBean(type, null, null, null, false, consumer);
 	}
 
@@ -270,11 +270,11 @@ public abstract class PetiteBeans {
 	 * @param define when set to <code>true</code> bean will be defined - all injection points will be set to none
 	 */
 	public <T> BeanDefinition<T> registerPetiteBean(
-			Class<T> type, String name,
-			Class<? extends Scope> scopeType,
-			WiringMode wiringMode,
-			boolean define,
-			Consumer<T> consumer
+		final Class<T> type, String name,
+		Class<? extends Scope> scopeType,
+		WiringMode wiringMode,
+		final boolean define,
+		final Consumer<T> consumer
 	) {
 
 		if (name == null) {
@@ -349,7 +349,7 @@ public abstract class PetiteBeans {
 	 * not have petite name explicitly defined, alternative bean names
 	 * will be registered.
 	 */
-	protected void registerBean(String name, BeanDefinition beanDefinition) {
+	protected void registerBean(final String name, final BeanDefinition beanDefinition) {
 		beans.put(name, beanDefinition);
 
 		if (!petiteConfig.isUseAltBeanNames()) {
@@ -393,7 +393,7 @@ public abstract class PetiteBeans {
 	 * Instead, all beans are iterated and only beans with equal types are removed.
 	 * @see #removeBean(String)
 	 */
-	public void removeBean(Class type) {
+	public void removeBean(final Class type) {
 		// collect bean names
 		Set<String> beanNames = new HashSet<>();
 
@@ -414,7 +414,7 @@ public abstract class PetiteBeans {
 	 * All resolvers references are deleted, too.
 	 * Returns bean definition of removed bean or <code>null</code>.
 	 */
-	public BeanDefinition removeBean(String name) {
+	public BeanDefinition removeBean(final String name) {
 		BeanDefinition bd = beans.remove(name);
 		if (bd == null) {
 			return null;
@@ -428,7 +428,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Resolves bean names for give type.
 	 */
-	protected String[] resolveBeanNamesForType(Class type) {
+	protected String[] resolveBeanNamesForType(final Class type) {
 		String[] beanNames = beanCollections.get(type);
 		if (beanNames != null) {
 			return beanNames;
@@ -464,7 +464,7 @@ public abstract class PetiteBeans {
 	 * @param paramTypes constructor parameter types, may be <code>null</code>
 	 * @param references references for arguments
 	 */
-	public void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
+	public void registerPetiteCtorInjectionPoint(final String beanName, final Class[] paramTypes, final String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
@@ -502,7 +502,7 @@ public abstract class PetiteBeans {
 	 * @param property property name
 	 * @param reference explicit injection reference, may be <code>null</code>
 	 */
-	public void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
+	public void registerPetitePropertyInjectionPoint(final String beanName, final String property, final String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
@@ -525,7 +525,7 @@ public abstract class PetiteBeans {
 	 * @param beanName bean name
 	 * @param property set property name
 	 */
-	public void registerPetiteSetInjectionPoint(String beanName, String property) {
+	public void registerPetiteSetInjectionPoint(final String beanName, final String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
@@ -548,7 +548,7 @@ public abstract class PetiteBeans {
 	 * @param arguments method arguments, may be <code>null</code>
 	 * @param references injection references
 	 */
-	public void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
+	public void registerPetiteMethodInjectionPoint(final String beanName, final String methodName, final Class[] arguments, final String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
@@ -587,7 +587,7 @@ public abstract class PetiteBeans {
 	 * @param invocationStrategy moment of invocation
 	 * @param initMethodNames init method names
 	 */
-	public void registerPetiteInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
+	public void registerPetiteInitMethods(final String beanName, final InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
@@ -616,7 +616,7 @@ public abstract class PetiteBeans {
 	 * @param beanName bean name
 	 * @param destroyMethodNames destroy method names
 	 */
-	public void registerPetiteDestroyMethods(String beanName, String... destroyMethodNames) {
+	public void registerPetiteDestroyMethods(final String beanName, String... destroyMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
@@ -649,7 +649,7 @@ public abstract class PetiteBeans {
 	 * @param methodName instance method name
 	 * @param arguments method argument types
 	 */
-	public void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
+	public void registerPetiteProvider(final String providerName, final String beanName, final String methodName, final Class[] arguments) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
 
 		if (beanDefinition == null) {
@@ -678,7 +678,7 @@ public abstract class PetiteBeans {
 	 * @param staticMethodName static method name
 	 * @param arguments method argument types
 	 */
-	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
+	public void registerPetiteProvider(final String providerName, final Class type, final String staticMethodName, final Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		MethodDescriptor md = cd.getMethodDescriptor(staticMethodName, arguments, true);
 
@@ -718,7 +718,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Iterates all beans. Iteration occurs over the {@link #beanNames() snapshot of bean names}.
 	 */
-	public void forEachBean(Consumer<BeanDefinition> beanDefinitionConsumer) {
+	public void forEachBean(final Consumer<BeanDefinition> beanDefinitionConsumer) {
 		final Set<String> names = beanNames();
 		for (String beanName : names) {
 			BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
@@ -732,7 +732,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Iterates all beans that are of given type.
 	 */
-	public void forEachBeanType(Class type, Consumer<String> beanNameConsumer) {
+	public void forEachBeanType(final Class type, final Consumer<String> beanNameConsumer) {
 		forEachBean(bd -> {
 			if (ClassUtil.isTypeOf(bd.type, type)) {
 				beanNameConsumer.accept(bd.name);
@@ -745,28 +745,28 @@ public abstract class PetiteBeans {
 	/**
 	 * Defines new parameter. Parameters with same name will be replaced.
 	 */
-	public void defineParameter(String name, Object value) {
+	public void defineParameter(final String name, final Object value) {
 		paramManager.put(name, value);
 	}
 
 	/**
 	 * Returns defined parameter.
 	 */
-	public Object getParameter(String name) {
+	public Object getParameter(final String name) {
 		return paramManager.get(name);
 	}
 
 	/**
 	 * Prepares list of all bean parameters and optionally resolves inner references.
 	 */
-	protected String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
+	protected String[] resolveBeanParams(final String name, final boolean resolveReferenceParams) {
 		return paramManager.resolve(name, resolveReferenceParams);
 	}
 
 	/**
 	 * Defines many parameters at once.
 	 */
-	public void defineParameters(Map<?, ?> properties) {
+	public void defineParameters(final Map<?, ?> properties) {
 		for (Map.Entry<?, ?> entry : properties.entrySet()) {
 			defineParameter(entry.getKey().toString(), entry.getValue());
 		}
@@ -775,7 +775,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Defines many parameters at once from {@link jodd.props.Props}.
 	 */
-	public void defineParameters(Props props) {
+	public void defineParameters(final Props props) {
 		Map<?, ?> map = new HashMap<>();
 		props.extractProps(map);
 		defineParameters(map);

@@ -95,7 +95,7 @@ public class HtmlEncoder {
 	 *     <li><code>&amp;&nbsp;</code></li>
 	 * </ul>
 	 */
-	public static String attributeDoubleQuoted(CharSequence value) {
+	public static String attributeDoubleQuoted(final CharSequence value) {
 		return encode(value, ATTR_DQ, LEN);
 	}
 
@@ -108,7 +108,7 @@ public class HtmlEncoder {
 	 *     <li><code>&amp;&nbsp;</code></li>
 	 * </ul>
 	 */
-	public static String attributeSingleQuoted(CharSequence value) {
+	public static String attributeSingleQuoted(final CharSequence value) {
 		return encode(value, ATTR_SQ, LEN);
 	}
 
@@ -121,20 +121,20 @@ public class HtmlEncoder {
 	 * <li><code>\u00A0</code> with <code>&nbsp;</code></li>
 	 * </ul>
 	 */
-	public static String text(CharSequence text) {
+	public static String text(final CharSequence text) {
 		return encode(text, TEXT, LEN);
 	}
 
 	/**
 	 * Encodes XML string. In XML there are only 5 predefined character entities.
 	 */
-	public static String xml(CharSequence text) {
+	public static String xml(final CharSequence text) {
 		return encode(text, TEXT_XML, LEN_XML);
 	}
 
 	// ---------------------------------------------------------------- private
 
-	private static String encode(CharSequence text, char[][] buff, int bufflen) {
+	private static String encode(final CharSequence text, final char[][] buff, final int bufflen) {
 		int len;
 		if ((text == null) || ((len = text.length()) == 0)) {
 			return StringPool.EMPTY;

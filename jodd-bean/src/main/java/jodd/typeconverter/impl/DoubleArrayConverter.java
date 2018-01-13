@@ -40,12 +40,12 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public DoubleArrayConverter(TypeConverterManager typeConverterManager) {
+	public DoubleArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public double[] convert(Object value) {
+	public double[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected double convertType(Object value) {
+	protected double convertType(final Object value) {
 		return typeConverterManager.convertType(value, double.class).doubleValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected double[] convertToSingleElementArray(Object value) {
+	protected double[] convertToSingleElementArray(final Object value) {
 		return new double[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected double[] convertValueToArray(Object value) {
+	protected double[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			double[] target = new double[list.size()];
@@ -138,7 +138,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected double[] convertArrayToArray(Object value) {
+	protected double[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == double.class) {
@@ -168,7 +168,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected double[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected double[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		double[] result = null;
 
 		if (primitiveComponentType == double[].class) {

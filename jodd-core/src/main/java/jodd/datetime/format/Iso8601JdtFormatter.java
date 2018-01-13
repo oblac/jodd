@@ -27,8 +27,8 @@ package jodd.datetime.format;
 
 import jodd.datetime.DateTimeStamp;
 import jodd.datetime.JDateTime;
-import jodd.util.LocaleUtil;
 import jodd.util.DateFormatSymbolsEx;
+import jodd.util.LocaleUtil;
 
 import java.util.TimeZone;
 
@@ -95,7 +95,7 @@ public class Iso8601JdtFormatter extends AbstractFormatter {
 	}
 
 	@Override
-	protected String convertPattern(int patternIndex, JDateTime jdt) {
+	protected String convertPattern(final int patternIndex, final JDateTime jdt) {
 		DateFormatSymbolsEx dfs = LocaleUtil.getDateFormatSymbols(jdt.getLocale());
 		switch (patternIndex) {
 			case 0:
@@ -148,7 +148,7 @@ public class Iso8601JdtFormatter extends AbstractFormatter {
 	}
 
 	@Override
-	protected void parseValue(int patternIndex, String value, DateTimeStamp destination) {
+	protected void parseValue(final int patternIndex, final String value, final DateTimeStamp destination) {
 		int v = Integer.parseInt(value);
 		switch (patternIndex) {
 			case 0:		destination.year = v; break;

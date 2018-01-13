@@ -61,7 +61,7 @@ public abstract class WebRunner {
 	/**
 	 * Starts the app web application and {@link #run() runs} user code.
 	 */
-	public void runWebApp(Class<? extends WebApp> webAppClass) {
+	public void runWebApp(final Class<? extends WebApp> webAppClass) {
 
 /*
 		madvoc = new Madvoc();
@@ -111,7 +111,7 @@ public abstract class WebRunner {
 	/**
 	 * Sets transaction manager.
 	 */
-	public static void setJtxManager(JtxTransactionManager jm) {
+	public static void setJtxManager(final JtxTransactionManager jm) {
 		jtxManager = jm;
 	}
 

@@ -78,7 +78,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	protected final int includeColumns;
 	protected final String hint;
 
-	protected ColumnsSelectChunk(String tableRef, String columnRef,String[] columnRefArr, int includeColumns, String hint) {
+	protected ColumnsSelectChunk(final String tableRef, final String columnRef, final String[] columnRefArr, final int includeColumns, final String hint) {
 		super(CHUNK_SELECT_COLUMNS);
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
@@ -87,15 +87,15 @@ public class ColumnsSelectChunk extends SqlChunk {
 		this.hint = hint;
 	}
 
-	public ColumnsSelectChunk(String tableRef, String columnRef) {
+	public ColumnsSelectChunk(final String tableRef, final String columnRef) {
 		this(tableRef, columnRef, null, COLS_NA, null);
 	}
 	
-	public ColumnsSelectChunk(String tableRef, String... columnRefArr) {
+	public ColumnsSelectChunk(final String tableRef, final String... columnRefArr) {
 		this(tableRef, null, columnRefArr, COLS_NA_MULTI, null);
 	}
 
-	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
+	public ColumnsSelectChunk(final String tableRef, final boolean includeAll) {
 		this(tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
@@ -169,7 +169,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	 * Counts actual real hints.
 	 */
 	@Override
-	public void init(TemplateData templateData) {
+	public void init(final TemplateData templateData) {
 		super.init(templateData);
 		if (hint != null) {
 			templateData.incrementHintsCount();
@@ -177,7 +177,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		// hints
 		if (templateData.hasHints()) {
 			templateData.registerHint(hint == null ? tableRef : hint);
@@ -246,7 +246,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	/**
 	 * Appends alias.
 	 */
-	protected void appendAlias(StringBuilder query, DbEntityDescriptor ded, String column) {
+	protected void appendAlias(final StringBuilder query, final DbEntityDescriptor ded, final String column) {
 		String tableName = ded.getTableName();
 
 		ColumnAliasType columnAliasType = templateData.getColumnAliasType();
@@ -268,7 +268,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	/**
 	 * Simply appends column name with optional table reference and alias.
 	 */
-	protected void appendColumnName(StringBuilder query, DbEntityDescriptor ded, String column) {
+	protected void appendColumnName(final StringBuilder query, final DbEntityDescriptor ded, final String column) {
 		query.append(resolveTable(tableRef, ded)).append('.').append(column);
 		
 		if (templateData.getColumnAliasType() != null) {     // create column aliases

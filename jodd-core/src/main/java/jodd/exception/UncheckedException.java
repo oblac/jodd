@@ -51,13 +51,13 @@ public class UncheckedException extends RuntimeException {
 
 	// ---------------------------------------------------------------- constructors
 
-	public UncheckedException(Throwable t) {
+	public UncheckedException(final Throwable t) {
 		super(t.getMessage());
 		cause = t;
 		this.showCauseDetails = true;
 	}
 
-	public UncheckedException(Throwable t, boolean showCauseDetails) {
+	public UncheckedException(final Throwable t, final boolean showCauseDetails) {
 		super(t.getMessage());
 		cause = t;
 		this.showCauseDetails = showCauseDetails;
@@ -69,19 +69,19 @@ public class UncheckedException extends RuntimeException {
 		this.showCauseDetails = false;
 	}
 
-	public UncheckedException(String message) {
+	public UncheckedException(final String message) {
 		super(message);
 		cause = null;
 		this.showCauseDetails = false;
 	}
 
-	public UncheckedException(String message, Throwable t) {
+	public UncheckedException(final String message, final Throwable t) {
 		super(message, t);
 		cause = t;
 		this.showCauseDetails = true;
 	}
 
-	public UncheckedException(String message, Throwable t, boolean showCauseDetails) {
+	public UncheckedException(final String message, final Throwable t, final boolean showCauseDetails) {
 		super(message, t);
 		cause = t;
 		this.showCauseDetails = showCauseDetails;
@@ -95,7 +95,7 @@ public class UncheckedException extends RuntimeException {
 	}
 
 	@Override
-	public void printStackTrace(PrintStream ps) {
+	public void printStackTrace(final PrintStream ps) {
 		synchronized (ps) {
 			super.printStackTrace(ps);
 			if ((cause != null) && showCauseDetails) {
@@ -107,7 +107,7 @@ public class UncheckedException extends RuntimeException {
 	}
 
 	@Override
-	public void printStackTrace(PrintWriter pw) {
+	public void printStackTrace(final PrintWriter pw) {
 		synchronized (pw) {
 			super.printStackTrace(pw);
 			if ((cause != null) && showCauseDetails) {
@@ -134,7 +134,7 @@ public class UncheckedException extends RuntimeException {
 	 * Wraps checked exceptions in a <code>UncheckedException</code>.
 	 * Unchecked exceptions are not wrapped.
 	 */
-	public static <V> V callAndWrapException(Callable<V> callable) {
+	public static <V> V callAndWrapException(final Callable<V> callable) {
 		try {
 			return callable.call();
 		}
@@ -158,7 +158,7 @@ public class UncheckedException extends RuntimeException {
 	 * Wraps checked exceptions in a <code>UncheckedException</code>.
 	 * Unchecked exceptions are not wrapped.
 	 */
-	public static void runAndWrapException(CallableVoid callable) {
+	public static void runAndWrapException(final CallableVoid callable) {
 		try {
 			callable.call();
 		}
@@ -176,14 +176,14 @@ public class UncheckedException extends RuntimeException {
 	/**
 	 * Wraps all exceptions in a <code>UncheckedException</code>
 	 */
-	public static RuntimeException wrap(Throwable t) {
+	public static RuntimeException wrap(final Throwable t) {
 		return new UncheckedException(t);
 	}
 
 	/**
 	 * Wraps all exceptions in a <code>UncheckedException</code>
 	 */
-	public static RuntimeException wrap(Throwable t, String message) {
+	public static RuntimeException wrap(final Throwable t, final String message) {
 		return new UncheckedException(message, t);
 	}
 

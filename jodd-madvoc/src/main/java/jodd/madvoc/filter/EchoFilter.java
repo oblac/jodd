@@ -35,16 +35,16 @@ public class EchoFilter implements ActionFilter {
 
 	private EchoInterceptor echoInterceptor = new EchoInterceptor();
 
-	public void setPrefixIn(String prefixIn) {
+	public void setPrefixIn(final String prefixIn) {
 		this.echoInterceptor.setPrefixIn(prefixIn);
 	}
 
-	public void setPrefixOut(String prefixOut) {
+	public void setPrefixOut(final String prefixOut) {
 		this.echoInterceptor.setPrefixOut(prefixOut);
 	}
 
 	@Override
-	public Object filter(ActionRequest actionRequest) throws Exception {
+	public Object filter(final ActionRequest actionRequest) throws Exception {
 		return echoInterceptor.intercept(actionRequest);
 	}
 }

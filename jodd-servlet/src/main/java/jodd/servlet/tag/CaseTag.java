@@ -32,7 +32,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class CaseTag extends SimpleTagSupport {
 
 	private String value;
-	public void setValue(String value) {
+	public void setValue(final String value) {
 		this.value = value;
 	}
 

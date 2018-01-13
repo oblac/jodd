@@ -36,7 +36,7 @@ public class DbOomUtil {
 	/**
 	 * Populates entity with generated column values from executed query.
 	 */
-	public static void populateGeneratedKeys(Object entity, DbOomQuery query) {
+	public static void populateGeneratedKeys(final Object entity, final DbOomQuery query) {
 		String[] generatedColumns = query.getGeneratedColumnNames();
 		if (generatedColumns == null) {
 			return;
@@ -69,14 +69,14 @@ public class DbOomUtil {
 	 * Returns initial collections size when <code>max</code>
 	 * value is provided.
 	 */
-	public static int initialCollectionSize(int max) {
+	public static int initialCollectionSize(final int max) {
 		return max > 0 ? max : 10;
 	}
 
 	/**
 	 * Returns <code>true</code> if a value is considered empty i.e. not existing.
 	 */
-	public static boolean isEmptyColumnValue(DbEntityColumnDescriptor dec, Object value) {
+	public static boolean isEmptyColumnValue(final DbEntityColumnDescriptor dec, final Object value) {
 		if (value == null) {
 			return true;
 		}

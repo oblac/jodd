@@ -47,15 +47,15 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	protected final Class<T> targetComponentType;
 
 	public CollectionConverter(
-			Class<? extends Collection> collectionType,
-			Class<T> targetComponentType) {
+		final Class<? extends Collection> collectionType,
+		final Class<T> targetComponentType) {
 		this(TypeConverterManager.get(), collectionType, targetComponentType);
 	}
 
 	public CollectionConverter(
-			TypeConverterManager typeConverterManager,
-			Class<? extends Collection> collectionType,
-			Class<T> targetComponentType) {
+		final TypeConverterManager typeConverterManager,
+		final Class<? extends Collection> collectionType,
+		final Class<T> targetComponentType) {
 
 		this.typeConverterManager = typeConverterManager;
 		this.collectionType = collectionType;
@@ -63,7 +63,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	}
 
 	@Override
-	public Collection<T> convert(Object value) {
+	public Collection<T> convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -80,7 +80,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected T convertType(Object value) {
+	protected T convertType(final Object value) {
 		return typeConverterManager.convertType(value, targetComponentType);
 	}
 
@@ -90,7 +90,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * an collection of target type. Override it for better performances.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Collection<T> createCollection(int length) {
+	protected Collection<T> createCollection(final int length) {
 		if (collectionType.isInterface()) {
 			if (collectionType == List.class) {
 				if (length > 0) {
@@ -129,7 +129,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	/**
 	 * Creates a collection with single element.
 	 */
-	protected Collection<T> convertToSingleElementCollection(Object value) {
+	protected Collection<T> convertToSingleElementCollection(final Object value) {
 		Collection<T> collection = createCollection(0);
 
 		collection.add((T) value);
@@ -181,7 +181,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * Converts collection value to target collection.
 	 * Each element is converted to target component type.
 	 */
-	protected Collection<T> convertCollectionToCollection(Collection value) {
+	protected Collection<T> convertCollectionToCollection(final Collection value) {
 		Collection<T> collection = createCollection(value.size());
 
 		for (Object v : value) {
@@ -195,7 +195,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * Converts primitive array to target collection.
 	 */
 	@SuppressWarnings("AutoBoxing")
-	protected Collection<T> convertPrimitiveArrayToCollection(Object value, Class primitiveComponentType) {
+	protected Collection<T> convertPrimitiveArrayToCollection(final Object value, final Class primitiveComponentType) {
 		Collection<T> result = null;
 
 		if (primitiveComponentType == int.class) {

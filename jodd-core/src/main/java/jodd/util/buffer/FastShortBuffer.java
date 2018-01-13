@@ -55,7 +55,7 @@ public class FastShortBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastShortBuffer(int size) {
+	public FastShortBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastShortBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastShortBuffer {
 	/**
 	 * Appends <code>short</code> array to buffer.
 	 */
-	public FastShortBuffer append(short[] array, int off, int len) {
+	public FastShortBuffer append(final short[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastShortBuffer {
 	/**
 	 * Appends <code>short</code> array to buffer.
 	 */
-	public FastShortBuffer append(short[] array) {
+	public FastShortBuffer append(final short[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>short</code> to buffer.
 	 */
-	public FastShortBuffer append(short element) {
+	public FastShortBuffer append(final short element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastShortBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastShortBuffer append(FastShortBuffer buff) {
+	public FastShortBuffer append(final FastShortBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastShortBuffer {
 	 * Returns <code>short</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public short[] array(int index) {
+	public short[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastShortBuffer {
     /**
      * Creates <code>short</code> subarray from buffered content.
      */
-	public short[] toArray(int start, int len) {
+	public short[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		short[] array = new short[len];

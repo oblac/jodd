@@ -46,7 +46,7 @@ public class RestActionNamingStrategy extends BaseNamingStrategy {
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public ActionDefinition buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
+	public ActionDefinition buildActionDef(final Class actionClass, final Method actionMethod, final ActionNames actionNames) {
 
 		final String packageActionPath = actionNames.packageActionPath();
 		final String classActionPath = actionNames.classActionPath();
@@ -103,7 +103,7 @@ public class RestActionNamingStrategy extends BaseNamingStrategy {
 	 * If method name or first camel-case word of a method equals to
 	 * a HTTP method, it will be used as that HTTP methods.
 	 */
-	protected String resolveHttpMethodFromMethodName(String methodName) {
+	protected String resolveHttpMethodFromMethodName(final String methodName) {
 		int i = 0;
 
 		while (i < methodName.length()) {

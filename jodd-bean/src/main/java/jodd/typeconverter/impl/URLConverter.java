@@ -30,9 +30,9 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * Converts given object to <code>URL</code>.
@@ -47,7 +47,8 @@ import java.net.MalformedURLException;
  */
 public class URLConverter implements TypeConverter<URL> {
 
-	public URL convert(Object value) {
+	@Override
+	public URL convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

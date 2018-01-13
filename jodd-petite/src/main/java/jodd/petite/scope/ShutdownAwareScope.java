@@ -43,7 +43,7 @@ public abstract class ShutdownAwareScope implements Scope {
 	/**
 	 * Returns <code>true</code> if bean is destroyable.
 	 */
-	protected boolean isBeanDestroyable(BeanData beanData) {
+	protected boolean isBeanDestroyable(final BeanData beanData) {
 		DestroyMethodPoint[] dmp = beanData.definition().destroyMethodPoints();
 		return dmp != null && dmp.length != 0;
 	}
@@ -52,7 +52,7 @@ public abstract class ShutdownAwareScope implements Scope {
 	 * Checks if bean data is destroyable (has destroy methods) and
 	 * registers it for later {@link #shutdown()}.
 	 */
-	protected void registerDestroyableBeans(BeanData beanData) {
+	protected void registerDestroyableBeans(final BeanData beanData) {
 		if (!isBeanDestroyable(beanData)) {
 			return;
 		}
@@ -76,7 +76,7 @@ public abstract class ShutdownAwareScope implements Scope {
 	 * Removes destroyable bean from the list and calls it destroy methods.
 	 * If bean is not destroyable, does nothing. Bean gets destroyed only once.
 	 */
-	protected void destroyBean(BeanData beanData) {
+	protected void destroyBean(final BeanData beanData) {
 		if (destroyableBeans == null) {
 			return;
 		}

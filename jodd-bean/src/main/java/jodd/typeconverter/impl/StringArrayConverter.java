@@ -33,17 +33,17 @@ import jodd.typeconverter.TypeConverterManager;
  */
 public class StringArrayConverter extends ArrayConverter<String> {
 
-	public StringArrayConverter(TypeConverterManager typeConverterManager) {
+	public StringArrayConverter(final TypeConverterManager typeConverterManager) {
 		super(typeConverterManager, String.class);
 	}
 
 	@Override
-	protected String[] createArray(int length) {
+	protected String[] createArray(final int length) {
 		return new String[length];
 	}
 
 	@Override
-	protected String[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected String[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		String[] result = null;
 
 		if (primitiveComponentType == int.class) {

@@ -33,7 +33,7 @@ public class ProxettaProvider implements Supplier<ProxyProxetta> {
 
 	private final ProxyProxetta proxettaProvider;
 
-	public ProxettaProvider(ProxyProxetta proxettaProvider) {
+	public ProxettaProvider(final ProxyProxetta proxettaProvider) {
 		this.proxettaProvider = proxettaProvider;
 	}
 

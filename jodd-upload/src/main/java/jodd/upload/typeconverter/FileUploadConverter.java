@@ -39,7 +39,7 @@ import jodd.upload.FileUpload;
  */
 public class FileUploadConverter implements TypeConverter<FileUpload> {
 
-	public FileUpload convert(Object value) {
+	public FileUpload convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

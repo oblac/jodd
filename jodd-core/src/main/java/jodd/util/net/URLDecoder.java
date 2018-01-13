@@ -38,7 +38,7 @@ public class URLDecoder {
 	/**
 	 * Decodes URL elements.
 	 */
-	public static String decode(String url) {
+	public static String decode(final String url) {
 		return decode(url, JoddCore.get().defaults().getEncoding(), false);
 	}
 
@@ -48,25 +48,25 @@ public class URLDecoder {
 	 * not decode the '+' character.
 	 * @see #decodeQuery(String, String)
 	 */
-	public static String decode(String source, String encoding) {
+	public static String decode(final String source, final String encoding) {
 		return decode(source, encoding, false);
 	}
 
 	/**
 	 * Decodes query name or value.
 	 */
-	public static String decodeQuery(String source) {
+	public static String decodeQuery(final String source) {
 		return decode(source, JoddCore.get().defaults().getEncoding(), true);
 	}
 
 	/**
 	 * Decodes query name or value.
 	 */
-	public static String decodeQuery(String source, String encoding) {
+	public static String decodeQuery(final String source, final String encoding) {
 		return decode(source, encoding, true);
 	}
 
-	private static String decode(String source, String encoding, boolean decodePlus) {
+	private static String decode(final String source, final String encoding, final boolean decodePlus) {
 		int length = source.length();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
 

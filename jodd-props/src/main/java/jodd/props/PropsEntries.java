@@ -41,7 +41,7 @@ public final class PropsEntries {
 	private final PropsIterator propsIterator;
 	private final Props props;
 
-	public PropsEntries(Props props) {
+	public PropsEntries(final Props props) {
 		this.props = props;
 		this.propsIterator = new PropsIterator();
 	}
@@ -49,14 +49,14 @@ public final class PropsEntries {
 	/**
 	 * Enables profile to iterate.
 	 */
-	public PropsEntries profile(String profile) {
+	public PropsEntries profile(final String profile) {
 		addProfiles(profile);
 		return this;
 	}
 	/**
 	 * Enables profiles to iterate.
 	 */
-	public PropsEntries profile(String... profiles) {
+	public PropsEntries profile(final String... profiles) {
 		if (profiles == null) {
 			return this;
 		}
@@ -74,7 +74,7 @@ public final class PropsEntries {
 		return this;
 	}
 
-	private void addProfiles(String profile) {
+	private void addProfiles(final String profile) {
 		if (propsIterator.profiles == null) {
 			propsIterator.profiles = new ArrayList<>();
 		}
@@ -84,21 +84,21 @@ public final class PropsEntries {
 	/**
 	 * Enables section to iterate.
 	 */
-	public PropsEntries section(String section) {
+	public PropsEntries section(final String section) {
 		addSection(section);
 		return this;
 	}
 	/**
 	 * Enables sections to iterate.
 	 */
-	public PropsEntries section(String... section) {
+	public PropsEntries section(final String... section) {
 		for (String s : section) {
 			addSection(s);
 		}
 		return this;
 	}
 
-	private void addSection(String section) {
+	private void addSection(final String section) {
 		if (propsIterator.sections == null) {
 			propsIterator.sections = new ArrayList<>();
 		}
@@ -145,6 +145,7 @@ public final class PropsEntries {
 		private boolean skipDuplicatesByPosition;
 		private Set<String> keys;
 
+		@Override
 		public boolean hasNext() {
 			if (firstTime) {
 				start();
@@ -170,7 +171,7 @@ public final class PropsEntries {
 		 * Accepts an entry and returns <code>true</code>
 		 * if entry should appear in this iteration.
 		 */
-		private boolean accept(PropsEntry entry) {
+		private boolean accept(final PropsEntry entry) {
 			if (entry == null) {
 				return false;
 			}
@@ -244,6 +245,7 @@ public final class PropsEntries {
 			return true;
 		}
 
+		@Override
 		public PropsEntry next() {
 			if (firstTime) {
 				start();
@@ -266,6 +268,7 @@ public final class PropsEntries {
 			return returnValue;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}

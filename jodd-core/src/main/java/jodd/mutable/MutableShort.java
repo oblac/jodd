@@ -30,22 +30,22 @@ package jodd.mutable;
  */
 public final class MutableShort extends Number implements Comparable<MutableShort>, Cloneable {
 
-	public static MutableShort of(short value) {
+	public static MutableShort of(final short value) {
 		return new MutableShort(value);
 	}
 
 	public MutableShort() {
 	}
 
-	public MutableShort(short value) {
+	public MutableShort(final short value) {
 		this.value = value;
 	}
 
-	public MutableShort(String value) {
+	public MutableShort(final String value) {
 		this.value = Short.parseShort(value);
 	}
 
-	public MutableShort(Number number) {
+	public MutableShort(final Number number) {
 		this.value = number.shortValue();
 	}
 
@@ -66,14 +66,14 @@ public final class MutableShort extends Number implements Comparable<MutableShor
 	/**
 	 * Sets mutable value.
 	 */
-	public void set(short value) {
+	public void set(final short value) {
 		this.value = value;
 	}
 
 	/**
 	 * Sets mutable value from a Number.
 	 */
-	public void set(Number value) {
+	public void set(final Number value) {
 		this.value = value.shortValue();
 	}
 
@@ -103,7 +103,7 @@ public final class MutableShort extends Number implements Comparable<MutableShor
 	 *         <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj != null) {
 			if ( ((Short)this.value).getClass() == obj.getClass() ) {
 				return value == ((Short) obj).shortValue();
@@ -155,7 +155,7 @@ public final class MutableShort extends Number implements Comparable<MutableShor
 	 * Compares value of two same instances.
 	 */
 	@Override
-	public int compareTo(MutableShort other) {
+	public int compareTo(final MutableShort other) {
 		return value < other.value ? -1 : (value == other.value ? 0 : 1);
 	}
 

@@ -44,27 +44,27 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
 
-	public Socks5ProxySocketFactory(ProxyInfo proxy) {
+	public Socks5ProxySocketFactory(final ProxyInfo proxy) {
 		this.proxy = proxy;
 	}
 
-	public Socket createSocket(String host, int port) throws IOException {
+	public Socket createSocket(final String host, final int port) throws IOException {
 		return createSocks5ProxySocket(host, port);
 	}
 
-	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) throws IOException {
 		return createSocks5ProxySocket(host, port);
 	}
 
-	public Socket createSocket(InetAddress host, int port) throws IOException {
+	public Socket createSocket(final InetAddress host, final int port) throws IOException {
 		return createSocks5ProxySocket(host.getHostAddress(), port);
 	}
 
-	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) throws IOException {
 		return createSocks5ProxySocket(address.getHostAddress(), port);
 	}
 
-	private Socket createSocks5ProxySocket(String host, int port) {
+	private Socket createSocks5ProxySocket(final String host, final int port) {
 		Socket socket = null;
 		String proxyAddress = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();
@@ -196,7 +196,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 		}
 	}
 
-	private void fill(InputStream in, byte[] buf, int len) throws IOException {
+	private void fill(final InputStream in, final byte[] buf, final int len) throws IOException {
 		int s = 0;
 		while (s < len) {
 			int i = in.read(buf, s, len - s);
@@ -210,7 +210,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 	/**
 	 * Closes socket silently.
 	 */
-	private void closeSocket(Socket socket) {
+	private void closeSocket(final Socket socket) {
 		try {
 			if (socket != null) {
 				socket.close();

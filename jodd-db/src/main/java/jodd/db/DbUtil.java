@@ -44,7 +44,7 @@ public class DbUtil {
 	/**
 	 * Closes statement safely without throwing an exception.
 	 */
-	public static void close(Statement statement) {
+	public static void close(final Statement statement) {
 		if (statement == null) {
 			return;
 		}
@@ -59,7 +59,7 @@ public class DbUtil {
 	/**
 	 * Closes result set safely without throwing an exception.
 	 */
-	public static void close(ResultSet resultSet) {
+	public static void close(final ResultSet resultSet) {
 		if (resultSet == null) {
 			return;
 		}
@@ -73,7 +73,7 @@ public class DbUtil {
 	/**
 	 * Returns long value of very first column in result set.
 	 */
-	public static long getFirstLong(ResultSet resultSet) throws SQLException {
+	public static long getFirstLong(final ResultSet resultSet) throws SQLException {
 		if (resultSet.next()) {
 			return resultSet.getLong(1);
 		}
@@ -83,7 +83,7 @@ public class DbUtil {
 	/**
 	 * Returns int value of very first column in result set.
 	 */
-	public static int getFirstInt(ResultSet resultSet) throws SQLException {
+	public static int getFirstInt(final ResultSet resultSet) throws SQLException {
 		if (resultSet.next()) {
 			return resultSet.getInt(1);
 		}
@@ -95,7 +95,7 @@ public class DbUtil {
 	 * Here Jodd makes conversion and not JDBC driver.
 	 * See: http://www.tutorialspoint.com/jdbc/jdbc-data-types.htm
 	 */
-	public static void setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType) throws SQLException {
+	public static void setPreparedStatementObject(final PreparedStatement preparedStatement, final int index, final Object value, final int targetSqlType) throws SQLException {
 		if (value == null) {
 			preparedStatement.setNull(index, Types.NULL);
 			return;

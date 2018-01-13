@@ -60,7 +60,7 @@ public class AutomagicPetiteConfigurator {
 		return elapsed;
 	}
 
-	public AutomagicPetiteConfigurator withScanner(Consumer<ClassScanner> scannerConsumer) {
+	public AutomagicPetiteConfigurator withScanner(final Consumer<ClassScanner> scannerConsumer) {
 		scannerConsumer.accept(classScanner);
 		return this;
 	}
@@ -69,7 +69,7 @@ public class AutomagicPetiteConfigurator {
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
 	 * @see AutomagicPetiteConfigurator#configure(PetiteContainer, File[])
 	 */
-	public void configure(PetiteContainer petiteContainer, File[] classpath) {
+	public void configure(final PetiteContainer petiteContainer, final File[] classpath) {
 		this.container = petiteContainer;
 
 		classScanner.smartModeEntries();
@@ -89,7 +89,7 @@ public class AutomagicPetiteConfigurator {
 	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
 	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer, java.io.File[])
 	 */
-	public void configure(PetiteContainer petiteContainer) {
+	public void configure(final PetiteContainer petiteContainer) {
 		configure(petiteContainer, ClassLoaderUtil.getDefaultClasspath());
 	}
 
@@ -100,7 +100,7 @@ public class AutomagicPetiteConfigurator {
 	 */
 	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
 		@Override
-		public void accept(ClassScanner.EntryData entryData) {
+		public void accept(final ClassScanner.EntryData entryData) {
 			String entryName = entryData.name();
 			if (!entryData.isTypeSignatureInUse(petiteBeanAnnotationBytes)) {
 				return;

@@ -37,12 +37,12 @@ public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 	protected final TypeConverter<Integer> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableIntegerConverter(TypeConverterManager typeConverterManager) {
+	public MutableIntegerConverter(final TypeConverterManager typeConverterManager) {
 		typeConverter = typeConverterManager.lookup(Integer.class);
 	}
 
 	@Override
-	public MutableInteger convert(Object value) {
+	public MutableInteger convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

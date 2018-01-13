@@ -57,7 +57,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastCharBuffer(int size) {
+	public FastCharBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -68,7 +68,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -90,7 +90,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends <code>char</code> array to buffer.
 	 */
-	public FastCharBuffer append(char[] array, int off, int len) {
+	public FastCharBuffer append(final char[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -131,14 +131,15 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends <code>char</code> array to buffer.
 	 */
-	public FastCharBuffer append(char[] array) {
+	public FastCharBuffer append(final char[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>char</code> to buffer.
 	 */
-	public FastCharBuffer append(char element) {
+	@Override
+	public FastCharBuffer append(final char element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -153,7 +154,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastCharBuffer append(FastCharBuffer buff) {
+	public FastCharBuffer append(final FastCharBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -197,7 +198,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	 * Returns <code>char</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public char[] array(int index) {
+	public char[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -237,7 +238,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
     /**
      * Creates <code>char</code> subarray from buffered content.
      */
-	public char[] toArray(int start, int len) {
+	public char[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		char[] array = new char[len];
@@ -290,6 +291,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Returns buffer length, same as {@link #size()}.
 	 */
+	@Override
 	public int length() {
 		return size;
 	}
@@ -297,6 +299,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Returns buffer content as a string.
 	 */
+	@Override
 	public String toString() {
 		return new String(toArray());
 	}
@@ -304,14 +307,16 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Returns char at given index.
 	 */
-	public char charAt(int index) {
+	@Override
+	public char charAt(final int index) {
 		return get(index);
 	}
 
 	/**
 	 * Returns sub sequence.
 	 */
-	public CharSequence subSequence(int start, int end) {
+	@Override
+	public CharSequence subSequence(final int start, final int end) {
 		int len = end - start;
 		return new StringBuilder(len).append(toArray(start, len));
 	}
@@ -321,7 +326,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends string content to buffer.
 	 */
-	public FastCharBuffer append(String string) {
+	public FastCharBuffer append(final String string) {
 		int len = string.length();
 		if (len == 0) {
 			return this;
@@ -360,7 +365,8 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends character sequence to buffer.
 	 */
-	public FastCharBuffer append(CharSequence csq) {
+	@Override
+	public FastCharBuffer append(final CharSequence csq) {
 		append(csq, 0, csq.length());
 		return this;
 	}
@@ -368,7 +374,8 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends character sequence to buffer.
 	 */
-	public FastCharBuffer append(CharSequence csq, int start, int end) {
+	@Override
+	public FastCharBuffer append(final CharSequence csq, final int start, final int end) {
 		for (int i = start; i < end; i++) {
 			append(csq.charAt(i));
 		}

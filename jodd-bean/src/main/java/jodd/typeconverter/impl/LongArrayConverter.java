@@ -40,12 +40,12 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public LongArrayConverter(TypeConverterManager typeConverterManager) {
+	public LongArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public long[] convert(Object value) {
+	public long[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected long convertType(Object value) {
+	protected long convertType(final Object value) {
 		return typeConverterManager.convertType(value, long.class).longValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected long[] convertToSingleElementArray(Object value) {
+	protected long[] convertToSingleElementArray(final Object value) {
 		return new long[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected long[] convertValueToArray(Object value) {
+	protected long[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			long[] target = new long[list.size()];
@@ -138,7 +138,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected long[] convertArrayToArray(Object value) {
+	protected long[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == long.class) {
@@ -168,7 +168,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected long[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected long[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		long[] result = null;
 
 		if (primitiveComponentType == long[].class) {

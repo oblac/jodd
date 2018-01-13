@@ -49,7 +49,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * {@link jodd.proxetta.ProxyAdvice#execute()}
 	 */
-	public void setExecuteMethodName(String executeMethodName) {
+	public void setExecuteMethodName(final String executeMethodName) {
 		this.executeMethodName = executeMethodName;
 	}
 
@@ -63,7 +63,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines proxy class name suffix.
 	 */
-	public void setProxyClassNameSuffix(String proxyClassNameSuffix) {
+	public void setProxyClassNameSuffix(final String proxyClassNameSuffix) {
 		this.proxyClassNameSuffix = proxyClassNameSuffix;
 	}
 
@@ -77,7 +77,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines invoke proxy class name suffix.
 	 */
-	public void setInvokeProxyClassNameSuffix(String invokeProxyClassNameSuffix) {
+	public void setInvokeProxyClassNameSuffix(final String invokeProxyClassNameSuffix) {
 		this.invokeProxyClassNameSuffix = invokeProxyClassNameSuffix;
 	}
 
@@ -91,7 +91,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines wrapper class name suffix.
 	 */
-	public void setWrapperClassNameSuffix(String wrapperClassNameSuffix) {
+	public void setWrapperClassNameSuffix(final String wrapperClassNameSuffix) {
 		this.wrapperClassNameSuffix = wrapperClassNameSuffix;
 	}
 
@@ -105,7 +105,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines prefix for advice method names.
 	 */
-	public void setMethodPrefix(String methodPrefix) {
+	public void setMethodPrefix(final String methodPrefix) {
 		this.methodPrefix = methodPrefix;
 	}
 
@@ -119,7 +119,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines divider for method names.
 	 */
-	public void setMethodDivider(String methodDivider) {
+	public void setMethodDivider(final String methodDivider) {
 		this.methodDivider = methodDivider;
 	}
 
@@ -133,7 +133,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines method name for advice 'clinit' methods.
 	 */
-	public void setClinitMethodName(String clinitMethodName) {
+	public void setClinitMethodName(final String clinitMethodName) {
 		this.clinitMethodName = clinitMethodName;
 	}
 
@@ -147,7 +147,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines method name for advice default constructor ('init') methods.
 	 */
-	public void setInitMethodName(String initMethodName) {
+	public void setInitMethodName(final String initMethodName) {
 		this.initMethodName = initMethodName;
 	}
 
@@ -161,7 +161,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines prefix for advice field names.
 	 */
-	public void setFieldPrefix(String fieldPrefix) {
+	public void setFieldPrefix(final String fieldPrefix) {
 		this.fieldPrefix = fieldPrefix;
 	}
 
@@ -174,7 +174,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines divider for field names.
 	 */
-	public void setFieldDivider(String fieldDivider) {
+	public void setFieldDivider(final String fieldDivider) {
 		this.fieldDivider = fieldDivider;
 	}
 
@@ -188,7 +188,7 @@ public class JoddProxettaDefaults {
 	/**
 	 * Defines wrapper target field name.
 	 */
-	public void setWrapperTargetFieldName(String wrapperTargetFieldName) {
+	public void setWrapperTargetFieldName(final String wrapperTargetFieldName) {
 		this.wrapperTargetFieldName = wrapperTargetFieldName;
 	}
 }

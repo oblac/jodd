@@ -41,7 +41,7 @@ public class VtorViolationsJsonMessagesTag extends SimpleTagSupport {
 
 	protected List<Violation> violations;
 
-	public void setViolations(List<Violation> violations) {
+	public void setViolations(final List<Violation> violations) {
 		this.violations = violations;
 	}
 

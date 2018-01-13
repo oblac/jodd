@@ -35,7 +35,7 @@ import jodd.asm6.Opcodes;
  */
 public abstract class MethodAdapter extends MethodVisitor {
 
-	protected MethodAdapter(MethodVisitor mv) {
+	protected MethodAdapter(final MethodVisitor mv) {
 		super(Opcodes.ASM6, mv);
 	}
 }

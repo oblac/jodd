@@ -49,7 +49,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	/**
 	 * Constructor that sets date and time.
 	 */
-	public DateTimeStamp(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public DateTimeStamp(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 		this.year = year;
 		this.month = month;
 		this.day = day;
@@ -62,7 +62,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	/**
 	 * Constructor that sets just date. Time is set to zeros.
 	 */
-	public DateTimeStamp(int year, int month, int day) {
+	public DateTimeStamp(final int year, final int month, final int day) {
 		this(year, month, day, 0, 0, 0, 0);
 	}
 
@@ -108,7 +108,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(final int year) {
 		this.year = year;
 	}
 
@@ -116,7 +116,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return month;
 	}
 
-	public void setMonth(int month) {
+	public void setMonth(final int month) {
 		this.month = month;
 	}
 
@@ -124,7 +124,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return day;
 	}
 
-	public void setDay(int day) {
+	public void setDay(final int day) {
 		this.day = day;
 	}
 
@@ -132,7 +132,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return hour;
 	}
 
-	public void setHour(int hour) {
+	public void setHour(final int hour) {
 		this.hour = hour;
 	}
 
@@ -140,7 +140,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return minute;
 	}
 
-	public void setMinute(int minute) {
+	public void setMinute(final int minute) {
 		this.minute = minute;
 	}
 
@@ -148,7 +148,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return second;
 	}
 
-	public void setSecond(int second) {
+	public void setSecond(final int second) {
 		this.second = second;
 	}
 
@@ -156,7 +156,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		return millisecond;
 	}
 
-	public void setMillisecond(int millisecond) {
+	public void setMillisecond(final int millisecond) {
 		this.millisecond = millisecond;
 	}
 
@@ -175,7 +175,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	 *         from being compared to this Object.
 	 */
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(final Object o) {
 		DateTimeStamp dts = (DateTimeStamp) o;
 
 		int date1 = year * 10000 + month * 100 + day;
@@ -203,7 +203,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	/**
 	 * Compares just date component of two date time stamps.
 	 */
-	public int compareDateTo(Object o) {
+	public int compareDateTo(final Object o) {
 		DateTimeStamp dts = (DateTimeStamp) o;
 
 		int date1 = year * 10000 + month * 100 + day;
@@ -237,7 +237,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	// ---------------------------------------------------------------- equals & hashCode
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		if (object == null || this.getClass() != object.getClass()) {
 			return false;
 		}
@@ -285,13 +285,13 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 
 	// ---------------------------------------------------------------- equals
 
-	public boolean isEqualDate(DateTimeStamp date) {
+	public boolean isEqualDate(final DateTimeStamp date) {
 		return date.day == this.day
 				&& date.month == this.month
 				&& date.year == this.year;
 	}
 
-	public boolean isEqualTime(DateTimeStamp time) {
+	public boolean isEqualTime(final DateTimeStamp time) {
 		return time.hour == this.hour
 				&& time.minute == this.minute
 				&& time.second == this.second

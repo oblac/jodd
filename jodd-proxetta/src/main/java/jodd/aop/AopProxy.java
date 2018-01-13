@@ -38,7 +38,7 @@ public class AopProxy {
 	 * Creates a proxy of given target and the aspect.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T proxyOf(T target, Class<? extends Aspect> aspectClass) {
+	public static <T> T proxyOf(final T target, final Class<? extends Aspect> aspectClass) {
 		final Aspect aspect;
 
 		try {
@@ -55,7 +55,7 @@ public class AopProxy {
 	 * Creates a proxy from given {@link Aspect}.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T proxyOf(Aspect aspect) {
+	public static <T> T proxyOf(final Aspect aspect) {
 		final Object target = aspect.getTarget();
 		return (T) newProxyInstance(target.getClass().getClassLoader(), aspect, target.getClass().getInterfaces());
 	}
@@ -64,7 +64,7 @@ public class AopProxy {
 	 * Simple wrapper for javas {@code newProxyInstance}.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newProxyInstance(ClassLoader classloader, InvocationHandler invocationHandler, Class<?>... interfaces) {
+	public static <T> T newProxyInstance(final ClassLoader classloader, final InvocationHandler invocationHandler, final Class<?>... interfaces) {
 		if (interfaces.length == 0) {
 			throw new IllegalArgumentException("No interfaces of target class found.");
 		}

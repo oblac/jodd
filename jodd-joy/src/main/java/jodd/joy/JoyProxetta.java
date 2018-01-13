@@ -58,7 +58,7 @@ public class JoyProxetta extends JoyBase {
 	public class Config {
 		private final List<ProxyAspect> proxyAspects = new ArrayList<>();
 
-		public void addProxyAspect(ProxyAspect proxyAspect) {
+		public void addProxyAspect(final ProxyAspect proxyAspect) {
 			this.proxyAspects.add(proxyAspect);
 		}
 	}

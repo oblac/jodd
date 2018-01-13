@@ -39,7 +39,7 @@ public class NOPLogger implements Logger {
 
 	private final String name;
 
-	public NOPLogger(String name) {
+	public NOPLogger(final String name) {
 		this.name = name;
 	}
 
@@ -49,20 +49,20 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
-	public boolean isEnabled(Level level) {
+	public boolean isEnabled(final Level level) {
 		return false;
 	}
 
 	@Override
-	public void log(Level level, String message) {
+	public void log(final Level level, final String message) {
 	}
 
 	@Override
-	public void log(Level level, String message, Throwable throwable) {
+	public void log(final Level level, final String message, final Throwable throwable) {
 	}
 
 	@Override
-	public void setLevel(Level level) {
+	public void setLevel(final Level level) {
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
-	public void trace(String message) {
+	public void trace(final String message) {
 
 	}
 
@@ -81,7 +81,7 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
-	public void debug(String message) {
+	public void debug(final String message) {
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
-	public void info(String message) {
+	public void info(final String message) {
 	}
 
 	@Override
@@ -99,11 +99,11 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
-	public void warn(String message) {
+	public void warn(final String message) {
 	}
 
 	@Override
-	public void warn(String message, Throwable throwable) {
+	public void warn(final String message, final Throwable throwable) {
 	}
 
 	@Override
@@ -112,11 +112,11 @@ public class NOPLogger implements Logger {
 	}
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 	}
 
 	@Override
-	public void error(String message, Throwable throwable) {
+	public void error(final String message, final Throwable throwable) {
 	}
 
 }

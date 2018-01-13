@@ -43,7 +43,7 @@ public class AppDao extends GenericDao {
 	 * Generates next id by using {@link jodd.joy.db.DbIdGenerator}.
 	 */
 	@Override
-	protected long generateNextId(DbEntityDescriptor ded) {
+	protected long generateNextId(final DbEntityDescriptor ded) {
 		return dbIdGenerator.nextId(ded.getType());
 	}
 

@@ -98,7 +98,7 @@ public class PrintfFormat {
 	 *               </dl>
 	 *               </ul>
 	 */
-	public PrintfFormat(String s) {
+	public PrintfFormat(final String s) {
 		init(s, 0);
 	}
 
@@ -108,7 +108,7 @@ public class PrintfFormat {
 	protected PrintfFormat() {
 	}
 
-	protected PrintfFormat reinit(String s) {
+	protected PrintfFormat reinit(final String s) {
 		if (pre == null) {
 			init(s, 0);
 		} else {
@@ -117,7 +117,7 @@ public class PrintfFormat {
 		return this;
 	}
 
-	protected void init(String s, int i) {
+	protected void init(final String s, int i) {
 		width = 0;
 		precision = -1;
 		pre = (i == 0 ? new StringBuilder() : new StringBuilder(s.substring(0, i)));
@@ -286,7 +286,7 @@ public class PrintfFormat {
 	/**
 	 * Formats a double with fixed format.
 	 */
-	protected String fixedFormat(double d) {
+	protected String fixedFormat(final double d) {
 		boolean removeTrailing = (fmt == 'G' || fmt == 'g') && !alternate;
 
 		// remove trailing zeroes and decimal point
@@ -337,7 +337,7 @@ public class PrintfFormat {
 	/**
 	 * Pads the value with spaces and adds prefix and suffix.
 	 */
-	protected String pad(String value) {
+	protected String pad(final String value) {
 		String spaces = repeat(' ', width - value.length());
 		if (leftAlign) {
 			return pre + value + spaces + post;
@@ -349,7 +349,7 @@ public class PrintfFormat {
 	/**
 	 * Returns new string created by repeating a single character.
 	 */
-	protected static String repeat(char c, int n) {
+	protected static String repeat(final char c, final int n) {
 		if (n <= 0) {
 			return (StringPool.EMPTY);
 		}
@@ -360,7 +360,7 @@ public class PrintfFormat {
 		return new String(buffer);
 	}
 	
-	private String getAltPrefixFor(char fmt, String currentPrefix) {
+	private String getAltPrefixFor(final char fmt, final String currentPrefix) {
 		switch(fmt) {
 			case 'x':
 				return "0x";
@@ -375,7 +375,7 @@ public class PrintfFormat {
 		}
 	}
 
-	protected String sign(int s, String r) {
+	protected String sign(final int s, final String r) {
 		String p = StringPool.EMPTY;
 
 		if (s < 0) {
@@ -415,7 +415,7 @@ public class PrintfFormat {
 	 * Groups numbers by inserting 'separator' after every group of 'size' digits,
 	 * starting from the right.
 	 */
-	protected String groupDigits(String value, int size, char separator) {
+	protected String groupDigits(final String value, final int size, final char separator) {
 		if (!groupDigits) {
 			return value;
 		}
@@ -443,7 +443,7 @@ public class PrintfFormat {
 	/**
 	 * Formats a character into a string (like sprintf in C).
 	 */
-	public String form(char value) {
+	public String form(final char value) {
 		switch(fmt) {
 			case 'c':
 				return alternate ? "\\u" + Integer.toHexString((int) value & 0xFFFF) : pad(String.valueOf(value));
@@ -467,7 +467,7 @@ public class PrintfFormat {
 	/**
 	 * Formats a boolean into a string (like sprintf in C).
 	 */
-	public String form(boolean value) {
+	public String form(final boolean value) {
 		if (fmt == 'l') {
 			return pad(value ? "true" : "false");
 		}
@@ -506,7 +506,7 @@ public class PrintfFormat {
 	/**
 	 * Formats a long integer into a string (like sprintf in C).
 	 */
-	public String form(long x) {
+	public String form(final long x) {
 		String r;
 		int s = 0;
 
@@ -578,7 +578,7 @@ public class PrintfFormat {
 	/**
 	 * Formats an integer into a string (like sprintf in C).
 	 */
-	public String form(int x) {
+	public String form(final int x) {
 		String r;
 		int s = 0;
 
@@ -633,21 +633,21 @@ public class PrintfFormat {
 	/**
 	 * Formats a byte into a string (like sprintf in C).
 	 */
-	public String form(byte b) {
+	public String form(final byte b) {
 		return formInt(b, 0xFF);
 	}
 
 	/**
 	 * Formats a short into a string (like sprintf in C).
 	 */
-	public String form(short s) {
+	public String form(final short s) {
 		return formInt(s, 0xFFFF);
 	}
 
 	/**
 	 * Formatter for both <code>byte</code> and <code>short</code> values.
 	 */
-	private String formInt(int value, int unsignedMask) {
+	private String formInt(final int value, final int unsignedMask) {
 		String r;
 		int s = 0;
 
@@ -704,7 +704,7 @@ public class PrintfFormat {
 	 * If object is a numeric type and format is not one object formats (like 's' or 'p')
 	 * it will be converted to primitive and formatted as such.
 	 */
-	public String form(Object object) {
+	public String form(final Object object) {
 		if (object == null) {
 			return StringPool.NULL;
 		}
@@ -759,7 +759,7 @@ public class PrintfFormat {
 	/**
 	 * Creates <code>IllegalArgumentException</code> with message.
 	 */
-	protected IllegalArgumentException newIllegalArgumentException(String allowedFormats) {
+	protected IllegalArgumentException newIllegalArgumentException(final String allowedFormats) {
 		return new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of '" + allowedFormats + "'");
 	}
 

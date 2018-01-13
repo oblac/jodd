@@ -37,32 +37,37 @@ public class ProtoScope implements Scope {
 	/**
 	 * Returns <code>null</code> as no bean instance is stored.
 	 */
-	public Object lookup(String name) {
+	@Override
+	public Object lookup(final String name) {
 		return null;
 	}
 
 	/**
 	 * Does nothing, as bean instances are not stored.
 	 */
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	@Override
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 	}
 
 	/**
 	 * Does nothing.
 	 */
-	public void remove(String name) {
+	@Override
+	public void remove(final String name) {
 	}
 
 	/**
 	 * Allows all scopes to be injected into prototype scoped beans.
 	 */
-	public boolean accept(Scope referenceScope) {
+	@Override
+	public boolean accept(final Scope referenceScope) {
 		return true;
 	}
 
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void shutdown() {
 	}
 

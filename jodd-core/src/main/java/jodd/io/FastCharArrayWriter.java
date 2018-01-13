@@ -53,7 +53,7 @@ public class FastCharArrayWriter extends Writer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastCharArrayWriter(int size) {
+	public FastCharArrayWriter(final int size) {
 		buffer = new FastCharBuffer(size);
 	}
 
@@ -61,7 +61,7 @@ public class FastCharArrayWriter extends Writer {
 	 * @see Writer#write(char[], int, int)
 	 */
 	@Override
-	public void write(char[] b, int off, int len) {
+	public void write(final char[] b, final int off, final int len) {
 		buffer.append(b, off, len);
 	}
 
@@ -69,12 +69,12 @@ public class FastCharArrayWriter extends Writer {
 	 * Writes single byte.
 	 */
 	@Override
-	public void write(int b) {
+	public void write(final int b) {
 		buffer.append((char) b);
 	}
 
 	@Override
-	public void write(String s, int off, int len) {
+	public void write(final String s, final int off, final int len) {
 		write(s.toCharArray(), off, len);
 	}
 
@@ -113,7 +113,7 @@ public class FastCharArrayWriter extends Writer {
 	/**
 	 * @see CharArrayWriter#writeTo(Writer)
 	 */
-	public void writeTo(Writer out) throws IOException {
+	public void writeTo(final Writer out) throws IOException {
 		int index = buffer.index();
 		for (int i = 0; i < index; i++) {
 			char[] buf = buffer.array(i);

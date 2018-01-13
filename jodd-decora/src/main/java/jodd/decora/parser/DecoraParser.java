@@ -40,7 +40,7 @@ public class DecoraParser {
 	/**
 	 * Decorates page content with decorator template and outputs the result.
 	 */
-	public void decorate(Writer writer, char[] pageContent, char[] decoraContent) throws IOException {
+	public void decorate(final Writer writer, final char[] pageContent, final char[] decoraContent) throws IOException {
 		DecoraTag[] decoraTags = parseDecorator(decoraContent);
 
 		parsePage(pageContent, decoraTags);
@@ -53,7 +53,7 @@ public class DecoraParser {
 	 * used in template. Returned Decora tags have start and end index set,
 	 * but their region is not set.
 	 */
-	protected DecoraTag[] parseDecorator(char[] decoraContent) {
+	protected DecoraTag[] parseDecorator(final char[] decoraContent) {
 		LagartoParser lagartoParser = new LagartoParser(decoraContent);
 		lagartoParser.getConfig().setEnableRawTextModes(false);
 
@@ -65,7 +65,7 @@ public class DecoraParser {
 	/**
 	 * Parses target page and extracts Decora regions for replacements.
 	 */
-	protected void parsePage(char[] pageContent, DecoraTag[] decoraTags) {
+	protected void parsePage(final char[] pageContent, final DecoraTag[] decoraTags) {
 		LagartoParser lagartoParser = new LagartoParser(pageContent);
 		PageRegionExtractor writer = new PageRegionExtractor(decoraTags);
 		lagartoParser.parse(writer);
@@ -74,7 +74,7 @@ public class DecoraParser {
 	/**
 	 * Writes decorated content.
 	 */
-	protected void writeDecoratedPage(Writer out, char[] decoratorContent, char[] pageContent, DecoraTag[] decoraTags) throws IOException {
+	protected void writeDecoratedPage(final Writer out, final char[] decoratorContent, final char[] pageContent, final DecoraTag[] decoraTags) throws IOException {
 		int ndx = 0;
 
 		for (DecoraTag decoraTag : decoraTags) {
@@ -107,7 +107,7 @@ public class DecoraParser {
 	/**
 	 * Writes region to output, but extracts all inner regions.
 	 */
-	protected void writeRegion(Writer out, char[] pageContent, DecoraTag decoraTag, DecoraTag[] decoraTags) throws IOException {
+	protected void writeRegion(final Writer out, final char[] pageContent, final DecoraTag decoraTag, final DecoraTag[] decoraTags) throws IOException {
 		int regionStart = decoraTag.getRegionStart();
 		int regionLen = decoraTag.getRegionLength();
 		int regionEnd = regionStart + regionLen;

@@ -58,7 +58,7 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 
 		// detect multipart request
@@ -80,7 +80,7 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 	/**
 	 * Performs injection.
 	 */
-	protected void inject(ActionRequest actionRequest) {
+	protected void inject(final ActionRequest actionRequest) {
 
 		injectorsManager.madvocContextScopeInjector().inject(actionRequest);
 
@@ -100,7 +100,7 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 	/**
 	 * Performs outjection.
 	 */
-	protected void outject(ActionRequest actionRequest) {
+	protected void outject(final ActionRequest actionRequest) {
 		injectorsManager.cookieInjector().outject(actionRequest);
 
 		injectorsManager.applicationScopeInjector().outject(actionRequest);

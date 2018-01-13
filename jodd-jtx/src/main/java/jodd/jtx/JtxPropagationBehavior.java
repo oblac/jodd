@@ -62,7 +62,7 @@ public enum JtxPropagationBehavior {
 
 	private int value;
 
-	JtxPropagationBehavior(int value) {
+	JtxPropagationBehavior(final int value) {
 		this.value = value;
 	}
 

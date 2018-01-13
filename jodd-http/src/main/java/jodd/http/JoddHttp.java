@@ -72,7 +72,7 @@ public class JoddHttp {
 	/**
 	 * Defines the default HTTP transport provider.
 	 */
-	public void httpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+	public void httpConnectionProvider(final HttpConnectionProvider httpConnectionProvider) {
 		Objects.requireNonNull(httpConnectionProvider);
 		this.httpConnectionProvider = httpConnectionProvider;
 	}

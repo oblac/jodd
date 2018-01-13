@@ -73,7 +73,7 @@ public class JoddJson {
 	/**
 	 * Defines new type serializer map.
 	 */
-	public JoddJson typeSerializers(TypeJsonSerializerMap typeSerializers) {
+	public JoddJson typeSerializers(final TypeJsonSerializerMap typeSerializers) {
 		Objects.requireNonNull(typeSerializers);
 		this.typeSerializers = typeSerializers;
 		return this;
@@ -89,7 +89,7 @@ public class JoddJson {
 	/**
 	 * Sets new {@link JsonAnnotationManager}.
 	 */
-	public JoddJson setAnnotationManager(JsonAnnotationManager annotationManager) {
+	public JoddJson setAnnotationManager(final JsonAnnotationManager annotationManager) {
 		Objects.requireNonNull(annotationManager);
 		this.annotationManager = annotationManager;
 		return this;

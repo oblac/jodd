@@ -34,12 +34,12 @@ public class DerbyDbServer implements DbServer {
 
 	private final String version;
 
-	public DerbyDbServer(String version) {
+	public DerbyDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 	}
 
 	@Override

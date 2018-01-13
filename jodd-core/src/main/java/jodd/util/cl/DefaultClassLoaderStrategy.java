@@ -79,7 +79,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 	 * If <code>false</code> (default), classes will be loaded by <code>Class.forName</code>.
 	 * If <code>true</code>, classes will be loaded by reflection and component types.
 	 */
-	public void setLoadArrayClassByComponentTypes(boolean loadArrayClassByComponentTypes) {
+	public void setLoadArrayClassByComponentTypes(final boolean loadArrayClassByComponentTypes) {
 		this.loadArrayClassByComponentTypes = loadArrayClassByComponentTypes;
 	}
 
@@ -116,7 +116,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 	 * Detects if provided class name is a primitive type.
 	 * Returns >= 0 number if so.
 	 */
-	private static int getPrimitiveClassNameIndex(String className) {
+	private static int getPrimitiveClassNameIndex(final String className) {
 		int dotIndex = className.indexOf('.');
 		if (dotIndex != -1) {
 			return -1;
@@ -129,7 +129,8 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 	/**
 	 * Loads class by name.
 	 */
-	public Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+	@Override
+	public Class loadClass(final String className, final ClassLoader classLoader) throws ClassNotFoundException {
 		String arrayClassName = prepareArrayClassnameForLoading(className);
 
 		if ((className.indexOf('.') == -1) && (arrayClassName == null)) {
@@ -191,7 +192,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 	 * but only with <code>forName</code> method. However, array loading strategy can be
 	 * {@link #setLoadArrayClassByComponentTypes(boolean) changed}.
 	 */
-	protected Class loadClass(String className, String arrayClassName, ClassLoader classLoader) {
+	protected Class loadClass(final String className, final String arrayClassName, final ClassLoader classLoader) {
 		if (arrayClassName != null) {
 			try {
 				if (loadArrayClassByComponentTypes) {
@@ -214,7 +215,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 	/**
 	 * Loads array class using component type.
 	 */
-	protected Class loadArrayClassByComponentType(String className, ClassLoader classLoader) throws ClassNotFoundException {
+	protected Class loadArrayClassByComponentType(final String className, final ClassLoader classLoader) throws ClassNotFoundException {
 		int ndx = className.indexOf('[');
 		int multi = StringUtil.count(className, '[');
 

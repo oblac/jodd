@@ -45,7 +45,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean init(final String actionPath, String[] separators) {
+	public boolean init(final String actionPath, final String[] separators) {
 		String prefix = separators[0];
 		String split = separators[1];
 		String suffix = separators[2];
@@ -129,7 +129,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int match(String actionPath) {
+	public int match(final String actionPath) {
 		String[] values = process(actionPath, true);
 
 		if (values == null) {
@@ -156,7 +156,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String[] extract(String actionPath) {
+	public String[] extract(final String actionPath) {
 		return process(actionPath, false);
 	}
 
@@ -167,7 +167,7 @@ public abstract class BasePathMacros implements PathMacros {
 	 * Process action path in two modes: matching mode and extracting mode.
 	 * @return string array of extracted macro values (null element is allowed) or null
 	 */
-	private String[] process(String actionPath, boolean match) {
+	private String[] process(final String actionPath, final boolean match) {
 		// first check the first fixed as a prefix
 		if (match && !actionPath.startsWith(fixed[0])) {
 			return null;

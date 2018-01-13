@@ -81,7 +81,7 @@ public class TypePath {
      * @param offset
      *            the offset of the first byte of the type path in 'b'.
      */
-    TypePath(byte[] b, int offset) {
+    TypePath(final byte[] b, final int offset) {
         this.b = b;
         this.offset = offset;
     }
@@ -104,7 +104,7 @@ public class TypePath {
      *         INNER_TYPE}, {@link #WILDCARD_BOUND WILDCARD_BOUND}, or
      *         {@link #TYPE_ARGUMENT TYPE_ARGUMENT}.
      */
-    public int getStep(int index) {
+    public int getStep(final int index) {
         return b[offset + 2 * index + 1];
     }
 
@@ -118,7 +118,7 @@ public class TypePath {
      * @return the index of the type argument that the given step is stepping
      *         into.
      */
-    public int getStepArgument(int index) {
+    public int getStepArgument(final int index) {
         return b[offset + 2 * index + 2];
     }
 

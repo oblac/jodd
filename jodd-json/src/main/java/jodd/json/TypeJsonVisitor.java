@@ -47,7 +47,7 @@ public abstract class TypeJsonVisitor {
 	protected int count;
 	protected final JsonAnnotationManager.TypeData typeData;
 
-	public TypeJsonVisitor(JsonContext jsonContext, Class type) {
+	public TypeJsonVisitor(final JsonContext jsonContext, final Class type) {
 		this.jsonContext = jsonContext;
 		this.count = 0;
 		this.declared = false;
@@ -96,9 +96,9 @@ public abstract class TypeJsonVisitor {
 	 * {@link #onSerializableProperty(String, jodd.introspector.PropertyDescriptor)}.
 	 */
 	protected void onProperty(
-			String propertyName,
-			PropertyDescriptor propertyDescriptor,
-			boolean isTransient) {
+		String propertyName,
+		final PropertyDescriptor propertyDescriptor,
+		final boolean isTransient) {
 
 		Class propertyType = propertyDescriptor == null ?  null : propertyDescriptor.getType();
 

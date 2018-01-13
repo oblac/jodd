@@ -76,14 +76,14 @@ public class Methref<C> {
 	/**
 	 * Static factory, for convenient use.
 	 */
-	public static <T> Methref<T> on(Class<T> target) {
+	public static <T> Methref<T> on(final Class<T> target) {
 		return new Methref<>(target);
 	}
 
 	/**
 	 * Static factory that immediately returns {@link #to() method picker}.
 	 */
-	public static <T> T onto(Class<T> target) {
+	public static <T> T onto(final Class<T> target) {
 		return new Methref<>(target).to();
 	}
 
@@ -97,28 +97,28 @@ public class Methref<C> {
 
 	// ---------------------------------------------------------------- ref
 
-	public String ref(int dummy) {
+	public String ref(final int dummy) {
 		return ref(null);
 	}
-	public String ref(short dummy) {
+	public String ref(final short dummy) {
 		return ref(null);
 	}
-	public String ref(byte dummy) {
+	public String ref(final byte dummy) {
 		return ref(null);
 	}
-	public String ref(char dummy) {
+	public String ref(final char dummy) {
 		return ref(null);
 	}
-	public String ref(long dummy) {
+	public String ref(final long dummy) {
 		return ref(null);
 	}
-	public String ref(float dummy) {
+	public String ref(final float dummy) {
 		return ref(null);
 	}
-	public String ref(double dummy) {
+	public String ref(final double dummy) {
 		return ref(null);
 	}
-	public String ref(boolean dummy) {
+	public String ref(final boolean dummy) {
 		return ref(null);
 	}
 
@@ -127,7 +127,7 @@ public class Methref<C> {
 	 * can be called in convenient way. For methods that returns string,
 	 * value will be returned immediately.
 	 */
-	public String ref(Object dummy) {
+	public String ref(final Object dummy) {
 		if (dummy != null) {
 			if (dummy instanceof String) {
 				return (String) dummy;

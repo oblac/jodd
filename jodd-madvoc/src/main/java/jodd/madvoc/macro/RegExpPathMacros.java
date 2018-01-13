@@ -36,7 +36,7 @@ public class RegExpPathMacros extends BasePathMacros {
 	protected Pattern[] regexpPattern;
 
 	@Override
-	public boolean init(String actionPath, String[] separators) {
+	public boolean init(final String actionPath, final String[] separators) {
 		boolean hasMacros = super.init(actionPath, separators);
 		if (hasMacros) {
 			regexpPattern = new Pattern[macrosCount];
@@ -45,7 +45,7 @@ public class RegExpPathMacros extends BasePathMacros {
 	}
 
 	@Override
-	protected boolean matchValue(int macroIndex, String value) {
+	protected boolean matchValue(final int macroIndex, final String value) {
 		if (regexpPattern[macroIndex] == null) {
 			regexpPattern[macroIndex] = Pattern.compile(patterns[macroIndex]);
 		}

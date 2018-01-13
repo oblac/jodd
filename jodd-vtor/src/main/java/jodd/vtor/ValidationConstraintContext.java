@@ -34,7 +34,7 @@ public class ValidationConstraintContext {
 	protected final Object target;
 	protected final String name;
 
-	public ValidationConstraintContext(Vtor vtor, Object target, String name) {
+	public ValidationConstraintContext(final Vtor vtor, final Object target, final String name) {
 		this.vtor = vtor;
 		this.target = target;
 		this.name = name;
@@ -65,7 +65,7 @@ public class ValidationConstraintContext {
 	/**
 	 * Validates provided context and value withing this constraint content.
 	 */
-	public void validateWithin(ValidationContext vctx, Object value) {
+	public void validateWithin(final ValidationContext vctx, final Object value) {
 		vtor.validate(vctx, value, name);
 	}
 }

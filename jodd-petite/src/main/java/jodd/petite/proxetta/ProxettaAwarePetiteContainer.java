@@ -43,10 +43,10 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 
 	protected final ProxyProxetta proxetta;
 
-	public ProxettaAwarePetiteContainer(ProxyProxetta proxetta) {
+	public ProxettaAwarePetiteContainer(final ProxyProxetta proxetta) {
 		this.proxetta = proxetta;
 	}
-	public ProxettaAwarePetiteContainer(ProxyProxetta proxetta, PetiteConfig petiteConfig) {
+	public ProxettaAwarePetiteContainer(final ProxyProxetta proxetta, final PetiteConfig petiteConfig) {
 		super(petiteConfig);
 		this.proxetta = proxetta;
 	}
@@ -56,7 +56,7 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(String name, Class<T> type, Scope scope, WiringMode wiringMode, Consumer<T> consumer) {
+	protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(final String name, Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> consumer) {
 		if (proxetta != null) {
 			Class originalType = type;
 

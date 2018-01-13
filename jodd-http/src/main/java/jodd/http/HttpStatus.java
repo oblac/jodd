@@ -32,21 +32,21 @@ public class HttpStatus {
 	/**
 	 * Returns {@code true} if status code indicates successful result.
 	 */
-	public static boolean isSuccessful(int statusCode) {
+	public static boolean isSuccessful(final int statusCode) {
 		return statusCode < 400;
 	}
 
 	/**
 	 * Returns {@code true} if status code indicates a redirect.
 	 */
-	public static boolean isRedirect(int statusCode) {
+	public static boolean isRedirect(final int statusCode) {
 		return statusCode >=300 && statusCode < 400;
 	}
 
 	/**
 	 * Returns {@code true} if status code indicates an error.
 	 */
-	public static boolean isError(int statusCode) {
+	public static boolean isError(final int statusCode) {
 		return statusCode >= 500;
 	}
 

@@ -108,7 +108,7 @@ public class CharacterEncodingFilter implements Filter {
 	 *                   if a servlet error occurs
 	 */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 
 		// Conditionally select and set the character encoding to be used
 		if (ignore || (request.getCharacterEncoding() == null)) {
@@ -127,7 +127,7 @@ public class CharacterEncodingFilter implements Filter {
 	 * @param filterConfig The filter configuration object
 	 */
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig filterConfig) throws ServletException {
 
 		this.filterConfig = filterConfig;
 		this.encoding = filterConfig.getInitParameter("encoding");
@@ -149,7 +149,7 @@ public class CharacterEncodingFilter implements Filter {
 	 *
 	 * @param request The servlet request we are processing
 	 */
-	protected String selectEncoding(ServletRequest request) {
+	protected String selectEncoding(final ServletRequest request) {
 		return this.encoding;
 	}
 }

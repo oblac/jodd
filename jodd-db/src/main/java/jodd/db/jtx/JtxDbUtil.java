@@ -36,7 +36,7 @@ public class JtxDbUtil {
 	/**
 	 * Converter JTX transaction mode to DB transaction mode.
 	 */
-	public static DbTransactionMode convertToDbMode(JtxTransactionMode txMode) {
+	public static DbTransactionMode convertToDbMode(final JtxTransactionMode txMode) {
 		int isolation = -1;
 		switch (txMode.getIsolationLevel()) {
 			case ISOLATION_DEFAULT: isolation = DbTransactionMode.ISOLATION_DEFAULT; break;

@@ -40,7 +40,7 @@ public class DbPropsQueryMap implements QueryMap {
 	protected final String[] patterns;
 	protected Props props;
 
-	public DbPropsQueryMap(String... patterns) {
+	public DbPropsQueryMap(final String... patterns) {
 		this.patterns = patterns;
 		loadQueriesFromClasspath();
 	}
@@ -67,7 +67,7 @@ public class DbPropsQueryMap implements QueryMap {
 	 * In debug mode, props are reloaded every time before the lookup.
 	 */
 	@Override
-	public String getQuery(String key) {
+	public String getQuery(final String key) {
 		if (JoddDb.get().defaults().isDebug()) {
 			loadQueriesFromClasspath();
 		}

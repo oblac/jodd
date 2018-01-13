@@ -245,7 +245,7 @@ final class Item {
      * @param bsmIndex
      *            zero based index into the class attribute BootrapMethods.
      */
-    void set(String name, String desc, int bsmIndex) {
+    void set(final String name, final String desc, final int bsmIndex) {
         this.type = ClassWriter.INDY;
         this.longVal = bsmIndex;
         this.strVal1 = name;
@@ -264,7 +264,7 @@ final class Item {
      *            hashcode of the bootstrap method and the hashcode of all
      *            bootstrap arguments.
      */
-    void set(int position, int hashCode) {
+    void set(final int position, final int hashCode) {
         this.type = ClassWriter.BSM;
         this.intVal = position;
         this.hashCode = hashCode;

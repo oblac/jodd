@@ -32,23 +32,23 @@ import jodd.exception.UncheckedException;
  */
 public class HttpException extends UncheckedException {
 
-	public HttpException(Throwable t) {
+	public HttpException(final Throwable t) {
 		super(t);
 	}
 
-	public HttpException(String message) {
+	public HttpException(final String message) {
 		super(message);
 	}
 
-	public HttpException(Object networkObject, String message) {
+	public HttpException(final Object networkObject, final String message) {
 		super(networkObject.toString() + ": " + message);
 	}
 
-	public HttpException(String message, Throwable t) {
+	public HttpException(final String message, final Throwable t) {
 		super(message, t);
 	}
 
-	public HttpException(Object networkObject, String message, Throwable t) {
+	public HttpException(final Object networkObject, final String message, final Throwable t) {
 		super(networkObject.toString() + ": " + message, t);
 	}
 }

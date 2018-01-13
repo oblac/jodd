@@ -44,7 +44,7 @@ public class PrettyStringBuilder {
 	/**
 	 * Sets the max number of items of arrays, collections and maps to show.
 	 */
-	public PrettyStringBuilder maxItemsToShow(int maxItemsToShow) {
+	public PrettyStringBuilder maxItemsToShow(final int maxItemsToShow) {
 		this.maxItemsToShow = maxItemsToShow;
 		return this;
 	}
@@ -52,7 +52,7 @@ public class PrettyStringBuilder {
 	/**
 	 * Sets how deep to examine inner objects.
 	 */
-	public PrettyStringBuilder maxDeep(int maxDeep) {
+	public PrettyStringBuilder maxDeep(final int maxDeep) {
 		this.maxDeep = maxDeep;
 		return this;
 	}
@@ -60,7 +60,7 @@ public class PrettyStringBuilder {
 	/**
 	 * Sets <code>null</code> value representation.
 	 */
-	public PrettyStringBuilder showNullAs(String nullValue) {
+	public PrettyStringBuilder showNullAs(final String nullValue) {
 		this.nullValue = nullValue;
 		return this;
 	}
@@ -68,7 +68,7 @@ public class PrettyStringBuilder {
 	/**
 	 * Sets string for 'more'.
 	 */
-	public PrettyStringBuilder showMoreAs(String moreValue) {
+	public PrettyStringBuilder showMoreAs(final String moreValue) {
 		this.moreValue = moreValue;
 		return this;
 	}
@@ -76,7 +76,7 @@ public class PrettyStringBuilder {
 	/**
 	 * Returns pretty value from object value.
 	 */
-	protected String toPrettyString(Object obj) {
+	protected String toPrettyString(final Object obj) {
 		deep++;
 		if (obj == null) {
 			deep--;
@@ -153,14 +153,14 @@ public class PrettyStringBuilder {
 	/**
 	 * Returns pretty string representation of the object.
 	 */
-	public String toString(Object value) {
+	public String toString(final Object value) {
 		return toPrettyString(value);
 	}
 
 	/**
 	 * Static version for quick access.
 	 */
-	public static String str(Object value) {
+	public static String str(final Object value) {
 		return new PrettyStringBuilder().toPrettyString(value);
 	}
 

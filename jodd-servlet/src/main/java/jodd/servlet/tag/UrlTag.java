@@ -46,7 +46,7 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	/**
 	 * Sets base url value.
 	 */
-	public void set_(String value) {
+	public void set_(final String value) {
 		this.baseUrl = value;
 	}
 
@@ -54,13 +54,13 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	/**
 	 * Sets optional variable name.
 	 */
-	public void set_var(String value) {
+	public void set_var(final String value) {
 		this.var = value;
 	}
 
 	private final List<String> attrs = new ArrayList<>();
 	@Override
-	public void setDynamicAttribute(String uri, String localName, Object value) {
+	public void setDynamicAttribute(final String uri, final String localName, final Object value) {
 		attrs.add(localName);
 		attrs.add(value == null ? StringPool.EMPTY : value.toString());
 	}

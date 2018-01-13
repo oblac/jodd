@@ -37,11 +37,11 @@ public class FileLFUCache extends FileCache {
 	 * Creates file LFU cache with specified size. Sets
 	 * {@link #maxFileSize max available file size} to half of this value.
 	 */
-	public FileLFUCache(int maxSize) {
+	public FileLFUCache(final int maxSize) {
 		this(maxSize, maxSize / 2, 0);
 	}
 
-	public FileLFUCache(int maxSize, int maxFileSize) {
+	public FileLFUCache(final int maxSize, final int maxFileSize) {
 		this(maxSize, maxFileSize, 0);
 	}
 
@@ -51,7 +51,7 @@ public class FileLFUCache extends FileCache {
 	 * @param maxFileSize max available file size in bytes, may be 0
 	 * @param timeout timeout, may be 0
 	 */
-	public FileLFUCache(int maxSize, int maxFileSize, long timeout) {
+	public FileLFUCache(final int maxSize, final int maxFileSize, final long timeout) {
 		super(maxSize, maxFileSize, timeout);
 	}
 
@@ -64,12 +64,12 @@ public class FileLFUCache extends FileCache {
 			}
 
 			@Override
-			protected boolean isReallyFull(File file) {
+			protected boolean isReallyFull(final File file) {
 				return isFull();
 			}
 
 			@Override
-			protected void onRemove(File key, byte[] cachedObject) {
+			protected void onRemove(final File key, final byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}
 		};

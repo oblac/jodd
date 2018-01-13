@@ -51,8 +51,8 @@ public class JoyPetite extends JoyBase {
 	protected boolean isWebApplication = true;  // todo add this value as well!
 
 	public JoyPetite(
-		Supplier<ProxyProxetta> proxettaSupplier,
-		Supplier<Props> propsSupplier, Supplier<JoyScanner> joyScannerSupplier) {
+		final Supplier<ProxyProxetta> proxettaSupplier,
+		final Supplier<Props> propsSupplier, final Supplier<JoyScanner> joyScannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.propsSupplier = propsSupplier;
@@ -76,7 +76,7 @@ public class JoyPetite extends JoyBase {
 			return this;
 		}
 
-		public Config withPetite(Consumer<PetiteContainer> petiteContainerConsumer) {
+		public Config withPetite(final Consumer<PetiteContainer> petiteContainerConsumer) {
 			petiteContainerConsumers.add(petiteContainerConsumer);
 			return this;
 		}
@@ -132,7 +132,7 @@ public class JoyPetite extends JoyBase {
 	 * Configures Petite container. By default scans the class path
 	 * for petite beans and registers them automagically.
 	 */
-	protected void registerPetiteContainerBeans(PetiteContainer petiteContainer) {
+	protected void registerPetiteContainerBeans(final PetiteContainer petiteContainer) {
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
 
 		pcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));

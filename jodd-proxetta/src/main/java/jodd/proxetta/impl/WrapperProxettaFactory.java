@@ -40,7 +40,7 @@ import jodd.proxetta.asm.WorkData;
  */
 public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFactory, WrapperProxetta> {
 
-	public WrapperProxettaFactory(WrapperProxetta wrapperProxetta) {
+	public WrapperProxettaFactory(final WrapperProxetta wrapperProxetta) {
 		super(wrapperProxetta);
 	}
 
@@ -54,7 +54,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 	 * use {@link #setTargetInterface(Class)}.
 	 */
 	@Override
-	public WrapperProxettaFactory setTarget(Class target) {
+	public WrapperProxettaFactory setTarget(final Class target) {
 		super.setTarget(target);
 		this.targetClassOrInterface = target;
 		return this;
@@ -63,7 +63,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 	/**
 	 * Defines the interface of the resulting class.
 	 */
-	public WrapperProxettaFactory setTargetInterface(Class targetInterface) {
+	public WrapperProxettaFactory setTargetInterface(final Class targetInterface) {
 		if (!targetInterface.isInterface()) {
 			throw new ProxettaException("Not an interface: " + targetInterface.getName());
 		}
@@ -74,7 +74,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 	/**
 	 * Defines custom target field name.
 	 */
-	public WrapperProxettaFactory setTargetFieldName(String targetFieldName) {
+	public WrapperProxettaFactory setTargetFieldName(final String targetFieldName) {
 		this.targetFieldName = targetFieldName;
 		return this;
 	}
@@ -83,7 +83,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WorkData process(ClassReader cr, TargetClassInfoReader targetClassInfoReader) {
+	protected WorkData process(final ClassReader cr, final TargetClassInfoReader targetClassInfoReader) {
 		ProxettaWrapperClassBuilder pcb =
 				new ProxettaWrapperClassBuilder(
 						targetClassOrInterface,
@@ -103,7 +103,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 	/**
 	 * Injects target into wrapper.
 	 */
-	public void injectTargetIntoWrapper(Object target, Object wrapper) {
+	public void injectTargetIntoWrapper(final Object target, final Object wrapper) {
 		ProxettaUtil.injectTargetIntoWrapper(target, wrapper, targetFieldName);
 	}
 

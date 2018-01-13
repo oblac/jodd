@@ -77,7 +77,7 @@ public class DbEntityManager {
 	/**
 	 * Specifies array of class name prefixes that will be mapped directly to column.
 	 */
-	public void setPrimitiveEntitiesPrefixes(String... primitiveEntitiesPrefixes) {
+	public void setPrimitiveEntitiesPrefixes(final String... primitiveEntitiesPrefixes) {
 		this.primitiveEntitiesPrefixes = primitiveEntitiesPrefixes;
 	}
 
@@ -92,7 +92,7 @@ public class DbEntityManager {
 	 * Some types are <b>not</b> entities, i.e. domain objects. Instead, primitive entities
 	 * are simply mapped to one column. 
 	 */
-	public <E> DbEntityDescriptor<E> lookupType(Class<E> type) {
+	public <E> DbEntityDescriptor<E> lookupType(final Class<E> type) {
 		String typeName = type.getName();
 		if (StringUtil.startsWithOne(typeName, primitiveEntitiesPrefixes) != -1) {
 			return null;
@@ -107,7 +107,7 @@ public class DbEntityManager {
 	/**
 	 * Returns <code>true</code> if type is registered withing manager.
 	 */
-	public boolean isRegistered(Class type) {
+	public boolean isRegistered(final Class type) {
 		return descriptorsMap.containsKey(type);
 	}
 
@@ -116,7 +116,7 @@ public class DbEntityManager {
 	 * Lookups for {@link jodd.db.oom.DbEntityDescriptor} that was registered with this manager.
 	 * Returns <code>null</code> if name not found.
 	 */
-	public DbEntityDescriptor lookupName(String typeName) {
+	public DbEntityDescriptor lookupName(final String typeName) {
 		return entityNamesMap.get(typeName);
 	}
 
@@ -124,14 +124,14 @@ public class DbEntityManager {
 	 * Lookups for {@link jodd.db.oom.DbEntityDescriptor} that was registered with this manager.
 	 * Returns <code>null</code> if table name not found. Lookup is case-insensitive.
 	 */
-	public DbEntityDescriptor lookupTableName(String tableName) {
+	public DbEntityDescriptor lookupTableName(final String tableName) {
 		return tableNamesMap.get(tableName);
 	}
 
 	/**
 	 * Registers just type and entity names. Enough for most usages.
 	 */
-	public <E> DbEntityDescriptor<E> registerType(Class<E> type) {
+	public <E> DbEntityDescriptor<E> registerType(final Class<E> type) {
 		DbEntityDescriptor<E> ded = createDbEntityDescriptor(type);
 		DbEntityDescriptor<E> existing = descriptorsMap.put(type, ded);
 
@@ -157,7 +157,7 @@ public class DbEntityManager {
 	/**
 	 * Registers entity. {@link #registerType(Class) Registers types} and table names.
 	 */
-	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type) {
+	public <E> DbEntityDescriptor<E> registerEntity(final Class<E> type) {
 		DbEntityDescriptor<E> ded = registerType(type);
 		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
 
@@ -173,7 +173,7 @@ public class DbEntityManager {
 	/**
 	 * Registers entity. Existing entity will be removed if exist, so no exception will be thrown. 
 	 */
-	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type, boolean force) {
+	public <E> DbEntityDescriptor<E> registerEntity(final Class<E> type, final boolean force) {
 		if (force) {
 			removeEntity(type);
 		}
@@ -183,7 +183,7 @@ public class DbEntityManager {
 	/**
 	 * Removes entity and returns removed descriptor.
 	 */
-	public <E> DbEntityDescriptor<E> removeEntity(Class<E> type) {
+	public <E> DbEntityDescriptor<E> removeEntity(final Class<E> type) {
 		DbEntityDescriptor<E> ded = descriptorsMap.remove(type);
 		if (ded == null) {
 			ded = createDbEntityDescriptor(type);
@@ -196,7 +196,7 @@ public class DbEntityManager {
 	/**
 	 * Creates {@link DbEntityDescriptor}.
 	 */
-	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
+	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(final Class<E> type) {
 		final String schemaName = JoddDb.get().defaults().getDbOomConfig().getSchemaName();
 		final TableNamingStrategy tableNames = JoddDb.get().defaults().getDbOomConfig().getTableNames();
 		final ColumnNamingStrategy columnNames = JoddDb.get().defaults().getDbOomConfig().getColumnNames();
@@ -239,7 +239,7 @@ public class DbEntityManager {
 	/**
 	 * Creates new entity instances.
 	 */
-	public <E> E createEntityInstance(Class<E> type) {
+	public <E> E createEntityInstance(final Class<E> type) {
 		try {
 			return ClassUtil.newInstance(type);
 		} catch (Exception ex) {

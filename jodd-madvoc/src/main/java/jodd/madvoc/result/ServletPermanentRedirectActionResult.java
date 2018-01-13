@@ -57,7 +57,7 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
 	@Override
-	public void render(ActionRequest actionRequest, PermanentRedirect redirectResult) {
+	public void render(final ActionRequest actionRequest, final PermanentRedirect redirectResult) {
 		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
 
 		String resultPath;
@@ -79,7 +79,7 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 		redirect(request, response, path);
 	}
 
-	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) {
+	protected void redirect(final HttpServletRequest request, final HttpServletResponse response, final String path) {
 		DispatcherUtil.redirectPermanent(request, response, path);
 	}
 }

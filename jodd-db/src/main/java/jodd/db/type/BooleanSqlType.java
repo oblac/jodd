@@ -35,7 +35,7 @@ public class BooleanSqlType extends NullAwareSqlType<Boolean> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Boolean get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Boolean get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Boolean.valueOf(rs.getBoolean(index));
 	}
 
@@ -43,7 +43,7 @@ public class BooleanSqlType extends NullAwareSqlType<Boolean> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Boolean value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Boolean value, final int dbSqlType) throws SQLException {
 		st.setBoolean(index, value.booleanValue());
 	}
 

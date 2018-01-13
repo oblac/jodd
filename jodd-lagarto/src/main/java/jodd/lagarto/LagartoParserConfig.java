@@ -50,7 +50,7 @@ public class LagartoParserConfig<T extends LagartoParserConfig<T>> {
 	 * downlevel-hidden cond. comments will be treated as regular comment,
 	 * while revealed cond. comments will be treated as an error.
 	 */
-	public T setEnableConditionalComments(boolean enableConditionalComments) {
+	public T setEnableConditionalComments(final boolean enableConditionalComments) {
 		this.enableConditionalComments = enableConditionalComments;
 		return _this();
 	}
@@ -65,7 +65,7 @@ public class LagartoParserConfig<T extends LagartoParserConfig<T>> {
 	/**
 	 * Enables parsing of XML tags.
 	 */
-	public T setParseXmlTags(boolean parseXmlTags) {
+	public T setParseXmlTags(final boolean parseXmlTags) {
 		this.parseXmlTags = parseXmlTags;
 		return _this();
 	}
@@ -77,7 +77,7 @@ public class LagartoParserConfig<T extends LagartoParserConfig<T>> {
 	/**
 	 * Sets the case-sensitive flag for various matching.
 	 */
-	public T setCaseSensitive(boolean caseSensitive) {
+	public T setCaseSensitive(final boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
 		return _this();
 	}
@@ -93,7 +93,7 @@ public class LagartoParserConfig<T extends LagartoParserConfig<T>> {
 	 * overhead, and can't be easily disabled. By enabling this property,
 	 * position will be calculated manually only on errors.
 	 */
-	public T setCalculatePosition(boolean calculatePosition) {
+	public T setCalculatePosition(final boolean calculatePosition) {
 		this.calculatePosition = calculatePosition;
 		return _this();
 	}
@@ -105,7 +105,7 @@ public class LagartoParserConfig<T extends LagartoParserConfig<T>> {
 	/**
 	 * Enables RAW (CDATA) and RCDATA text mode while parsing.
 	 */
-	public T setEnableRawTextModes(boolean enableRawTextModes) {
+	public T setEnableRawTextModes(final boolean enableRawTextModes) {
 		this.enableRawTextModes = enableRawTextModes;
 		return _this();
 	}

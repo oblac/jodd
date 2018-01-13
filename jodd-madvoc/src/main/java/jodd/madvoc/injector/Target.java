@@ -45,11 +45,11 @@ public class Target {
 	 * hence the name and the types are irrelevant. Used for action itself
 	 * and action non-annotated arguments.
 	 */
-	public Target(Object value) {
+	public Target(final Object value) {
 		this.value = value;
 		this.type = null;
 	}
-	public Target(Object value, Class type) {
+	public Target(final Object value, final Class type) {
 		this.value = value;
 		this.type = type;
 	}
@@ -58,7 +58,7 @@ public class Target {
 	 * Creates target over a type with given name. Injection is actually a type conversion
 	 * from input content to the given type. Used for annotated arguments.
 	 */
-	public Target(Class type) {
+	public Target(final Class type) {
 		this.type = type;
 		this.value = null;
 	}
@@ -92,7 +92,7 @@ public class Target {
 	/**
 	 * Sets target value.
 	 */
-	public void setValue(Object value) {
+	public void setValue(final Object value) {
 		this.value = value;
 	}
 
@@ -120,7 +120,7 @@ public class Target {
 	/**
 	 * Reads target property.
 	 */
-	public Object readTargetProperty(ScopeData.Out out) {
+	public Object readTargetProperty(final ScopeData.Out out) {
 		if (out.target == null) {
 			return readValue(out.name);
 		} else {
@@ -135,7 +135,7 @@ public class Target {
 	 * completely silent, when no exception is thrown and with top performances.
 	 * Otherwise, an exception is thrown on a failure.
 	 */
-	public void writeValue(String propertyName, Object propertyValue, boolean silent) {
+	public void writeValue(String propertyName, final Object propertyValue, final boolean silent) {
 		if (type != null) {
 			// target type specified, save into target value!
 

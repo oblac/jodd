@@ -53,14 +53,14 @@ public abstract class AppAction {
 	/**
 	 * Creates alias. 
 	 */
-	protected String alias(String target) {
+	protected String alias(final String target) {
 		return StringPool.LEFT_CHEV.concat(target).concat(StringPool.RIGHT_CHEV);
 	}
 
 	/**
 	 * Creates alias from target class and target method name.
 	 */
-	protected String alias(Class targetClass, String targetMethodName) {
+	protected String alias(final Class targetClass, final String targetMethodName) {
 		return '<' + targetClass.getName() + '#' + targetMethodName + '>';
 	}
 
@@ -69,7 +69,7 @@ public abstract class AppAction {
 	 * If classname contains a '$' sign, everything will be stripped
 	 * after it (to get the real name, if action class is proxified).
 	 */
-	protected String alias(Object target, String targetMethodName) {
+	protected String alias(final Object target, final String targetMethodName) {
 		String targetClassName = target.getClass().getName();
 		targetClassName = StringUtil.cutToIndexOf(targetClassName, '$');
 		return '<' + targetClassName + '#' + targetMethodName + '>';
@@ -99,7 +99,7 @@ public abstract class AppAction {
 	 * Validates action. Profiles are reset after the invocation.
 	 * @return <code>true</code> if validation is successful, otherwise returns <code>false</code>
 	 */
-	protected boolean validateAction(String... profiles) {
+	protected boolean validateAction(final String... profiles) {
 		prepareValidator();
 		vtor.useProfiles(profiles);
 		vtor.validate(this);
@@ -111,7 +111,7 @@ public abstract class AppAction {
 	/**
 	 * Adds action violation.
 	 */
-	protected void addViolation(String name, Object invalidValue) {
+	protected void addViolation(final String name, final Object invalidValue) {
 		prepareValidator();
 		vtor.addViolation(new Violation(name, this, invalidValue));
 	}
@@ -119,7 +119,7 @@ public abstract class AppAction {
 	/**
 	 * Adds action violation.
 	 */
-	protected void addViolation(String name) {
+	protected void addViolation(final String name) {
 		addViolation(name, null);
 	}
 

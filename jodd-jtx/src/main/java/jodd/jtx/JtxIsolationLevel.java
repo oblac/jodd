@@ -39,7 +39,7 @@ public enum JtxIsolationLevel {
 
 	private int value;
 
-	JtxIsolationLevel(int value) {
+	JtxIsolationLevel(final int value) {
 		this.value = value;
 	}
 

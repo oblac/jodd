@@ -25,10 +25,10 @@
 
 package jodd.db.jtx;
 
-import jodd.jtx.JtxTransactionManager;
-import jodd.jtx.JtxTransaction;
-import jodd.jtx.JtxTransactionMode;
 import jodd.db.connection.ConnectionProvider;
+import jodd.jtx.JtxTransaction;
+import jodd.jtx.JtxTransactionManager;
+import jodd.jtx.JtxTransactionMode;
 
 /**
  * {@link jodd.jtx.JtxTransactionManager} that uses only <b>one</b> JTX db resource type.
@@ -41,7 +41,7 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	/**
 	 * Creates db jtx manager and registers provided {@link DbJtxResourceManager}.
 	 */
-	public DbJtxTransactionManager(DbJtxResourceManager resourceManager) {
+	public DbJtxTransactionManager(final DbJtxResourceManager resourceManager) {
 		setMaxResourcesPerTransaction(1);
 		setSingleResourceManager(true);
 		super.registerResourceManager(resourceManager);
@@ -51,7 +51,7 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	/**
 	 * Creates db jtx manager and registers new {@link DbJtxResourceManager}.
 	 */
-	public DbJtxTransactionManager(ConnectionProvider connectionProvider) {
+	public DbJtxTransactionManager(final ConnectionProvider connectionProvider) {
 		this(new DbJtxResourceManager(connectionProvider));
 	}
 
@@ -59,7 +59,7 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DbJtxTransaction requestTransaction(JtxTransactionMode mode) {
+	public DbJtxTransaction requestTransaction(final JtxTransactionMode mode) {
 		return (DbJtxTransaction) super.requestTransaction(mode, null);
 	}
 
@@ -67,7 +67,7 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DbJtxTransaction requestTransaction(JtxTransactionMode mode, Object scope) {
+	public DbJtxTransaction requestTransaction(final JtxTransactionMode mode, final Object scope) {
 		return (DbJtxTransaction) super.requestTransaction(mode, scope);
 	}
 
@@ -75,7 +75,7 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	 * Builds new transaction instance.
 	 */
 	@Override
-	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object scope, boolean active) {
+	protected JtxTransaction createNewTransaction(final JtxTransactionMode tm, final Object scope, final boolean active) {
 		return new DbJtxTransaction(this, tm, scope, active);
 	}
 

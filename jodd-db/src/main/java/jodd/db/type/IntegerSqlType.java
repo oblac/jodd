@@ -25,9 +25,9 @@
 
 package jodd.db.type;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
 
 public class IntegerSqlType extends NullAwareSqlType<Integer> {
 
@@ -35,7 +35,7 @@ public class IntegerSqlType extends NullAwareSqlType<Integer> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Integer get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+	public Integer get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		return Integer.valueOf(rs.getInt(index));
 	}
 
@@ -43,7 +43,7 @@ public class IntegerSqlType extends NullAwareSqlType<Integer> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Integer value, int dbSqlType) throws SQLException {
+	public void set(final PreparedStatement st, final int index, final Integer value, final int dbSqlType) throws SQLException {
 		st.setInt(index, value.intValue());
 	}
 }

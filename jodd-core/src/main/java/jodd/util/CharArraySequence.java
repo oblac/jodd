@@ -39,14 +39,14 @@ public class CharArraySequence implements CharSequence {
 	/**
 	 * Static constructor that creates a char sequence using provided char array.
 	 */
-	public static CharSequence of(char... value) {
+	public static CharSequence of(final char... value) {
 		return new CharArraySequence(value);
 	}
 
 	/**
 	 * Static constructor that creates a char sequence by making a copy of provided char array.
 	 */
-	public static CharSequence from(char[] value, int offset, int len) {
+	public static CharSequence from(final char[] value, final int offset, final int len) {
 		final char[] buffer = new char[value.length];
 
 		System.arraycopy(value, offset, buffer, 0, len);
@@ -54,13 +54,13 @@ public class CharArraySequence implements CharSequence {
 		return new CharArraySequence(buffer);
 	}
 
-	public CharArraySequence(char[] value) {
+	public CharArraySequence(final char[] value) {
 		buffer = value;
 		off = 0;
 		len = value.length;
 	}
 
-	public CharArraySequence(char[] value, int offset, int length) {
+	public CharArraySequence(final char[] value, final int offset, final int length) {
 		if ((offset | length | offset + length | value.length - offset - length) < 0) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -72,7 +72,7 @@ public class CharArraySequence implements CharSequence {
 	/**
 	 * Ctor without the bounds check.
 	 */
-	private CharArraySequence(int offset, int length, char[] value) {
+	private CharArraySequence(final int offset, final int length, final char[] value) {
 		off = offset;
 		len = length;
 		buffer = value;
@@ -85,7 +85,7 @@ public class CharArraySequence implements CharSequence {
 	public String toString() { return String.valueOf(buffer, off, len); }
 
 	@Override
-	public char charAt(int index) {
+	public char charAt(final int index) {
 		//if ((index | len - index - 1) < 0) {
 		if (index < 0) {
 			throw new IndexOutOfBoundsException();
@@ -94,7 +94,7 @@ public class CharArraySequence implements CharSequence {
 	}
 
 	@Override
-	public CharSequence subSequence(int start, int end) {
+	public CharSequence subSequence(final int start, final int end) {
 		int count = end - start;
 		int rem = len - end;
 		if ((start | end | count | rem) < 0) {

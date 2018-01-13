@@ -43,7 +43,7 @@ public class Wildcard {
 	 * @param pattern	pattern to match
 	 * @return 			<code>true</code> if string matches the pattern, otherwise <code>false</code>
 	 */
-	public static boolean match(CharSequence string, CharSequence pattern) {
+	public static boolean match(final CharSequence string, final CharSequence pattern) {
 		return match(string, pattern, 0, 0);
 	}
 
@@ -51,7 +51,7 @@ public class Wildcard {
 	 * Checks if two strings are equals or if they {@link #match(CharSequence, CharSequence)}.
 	 * Useful for cases when matching a lot of equal strings and speed is important.
 	 */
-	public static boolean equalsOrMatch(CharSequence string, CharSequence pattern) {
+	public static boolean equalsOrMatch(final CharSequence string, final CharSequence pattern) {
 		if (string.equals(pattern)) {
 			return true;
 		}
@@ -61,7 +61,7 @@ public class Wildcard {
 	/**
 	 * Internal matching recursive function.
 	 */
-	private static boolean match(CharSequence string, CharSequence pattern, int sNdx, int pNdx) {
+	private static boolean match(final CharSequence string, final CharSequence pattern, int sNdx, int pNdx) {
 		int pLen = pattern.length();
 		if (pLen == 1) {
 			if (pattern.charAt(0) == '*') {     // speed-up
@@ -140,7 +140,7 @@ public class Wildcard {
 	 * Returns index of matched pattern, or <code>-1</code> otherwise.
 	 * @see #match(CharSequence, CharSequence)
 	 */
-	public static int matchOne(String src, String... patterns) {
+	public static int matchOne(final String src, final String... patterns) {
 		for (int i = 0; i < patterns.length; i++) {
 			if (match(src, patterns[i])) {
 				return i;
@@ -154,7 +154,7 @@ public class Wildcard {
 	 * Returns index of matched pattern or <code>-1</code> otherwise.
 	 * @see #matchPath(String, String) 
 	 */
-	public static int matchPathOne(String path, String... patterns) {
+	public static int matchPathOne(final String path, final String... patterns) {
 		for (int i = 0; i < patterns.length; i++) {
 			if (matchPath(path, patterns[i])) {
 				return i;
@@ -173,7 +173,7 @@ public class Wildcard {
 	 * Both path and the pattern are tokenized on path separators (both \ and /).
 	 * '**' represents deep tree wildcard, as in Ant.
 	 */
-	public static boolean matchPath(String path, String pattern) {
+	public static boolean matchPath(final String path, final String pattern) {
 		String[] pathElements = StringUtil.splitc(path, PATH_SEPARATORS);
 		String[] patternElements = StringUtil.splitc(pattern, PATH_SEPARATORS);
 		return matchTokens(pathElements, patternElements);
@@ -182,7 +182,7 @@ public class Wildcard {
 	/**
 	 * Match tokenized string and pattern.
 	 */
-	protected static boolean matchTokens(String[] tokens, String[] patterns) {
+	protected static boolean matchTokens(final String[] tokens, final String[] patterns) {
 		int patNdxStart = 0;
 		int patNdxEnd = patterns.length - 1;
 		int tokNdxStart = 0;

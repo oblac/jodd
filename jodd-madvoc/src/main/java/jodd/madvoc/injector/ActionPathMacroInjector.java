@@ -40,7 +40,7 @@ public class ActionPathMacroInjector implements Injector {
 	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
 
 	@Override
-	public void inject(ActionRequest actionRequest) {
+	public void inject(final ActionRequest actionRequest) {
 		ActionRuntime actionRuntime = actionRequest.actionRuntime();
 		RouteChunk routeChunk = actionRuntime.routeChunk();
 
@@ -71,7 +71,7 @@ public class ActionPathMacroInjector implements Injector {
 		}
 	}
 
-	private void injectMacros(String actionPath, PathMacros pathMacros, final Targets targets) {
+	private void injectMacros(final String actionPath, final PathMacros pathMacros, final Targets targets) {
 		String[] names = pathMacros.names();
 		String[] values = pathMacros.extract(actionPath);
 

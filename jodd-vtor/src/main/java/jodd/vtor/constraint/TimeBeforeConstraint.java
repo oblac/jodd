@@ -35,7 +35,7 @@ public class TimeBeforeConstraint implements ValidationConstraint<TimeBefore> {
 	public TimeBeforeConstraint() {
 	}
 
-	public TimeBeforeConstraint(JDateTime time) {
+	public TimeBeforeConstraint(final JDateTime time) {
 		this.time = time;
 	}
 
@@ -47,25 +47,25 @@ public class TimeBeforeConstraint implements ValidationConstraint<TimeBefore> {
 		return time;
 	}
 
-	public void setTime(JDateTime time) {
+	public void setTime(final JDateTime time) {
 		this.time = time;
 	}
 
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(TimeBefore annotation) {
+	public void configure(final TimeBefore annotation) {
 		time = new JDateTime(annotation.value());
 	}
 
 	// ---------------------------------------------------------------- validate
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, time);
 	}
 
-	public static boolean validate(Object value, JDateTime then) {
+	public static boolean validate(final Object value, final JDateTime then) {
 		if (value == null) {
 			return true;
 		}

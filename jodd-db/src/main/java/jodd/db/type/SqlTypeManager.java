@@ -126,14 +126,14 @@ public class SqlTypeManager {
 	/**
 	 * Registers sql type for provided type.
 	 */
-	public static void register(Class type, Class<? extends SqlType> sqlTypeClass) {
+	public static void register(final Class type, final Class<? extends SqlType> sqlTypeClass) {
 		types.put(type, lookupSqlType(sqlTypeClass));
 	}
 
 	/**
 	 * Unregisters some sql type.
 	 */
-	public static void unregister(Class type) {
+	public static void unregister(final Class type) {
 		types.remove(type);
 	}
 
@@ -143,7 +143,7 @@ public class SqlTypeManager {
 	 * Retrieves SQL type for provided type. All subclasses and interfaces are examined
 	 * for matching sql type.
 	 */
-	public static SqlType lookup(Class clazz) {
+	public static SqlType lookup(final Class clazz) {
 		SqlType sqlType;
 		for (Class x = clazz; x != null; x = x.getSuperclass()) {
 			sqlType = types.get(clazz);
@@ -164,7 +164,7 @@ public class SqlTypeManager {
 	/**
 	 * Returns sql type instance. Instances are stored for better performances.
 	 */
-	public static SqlType lookupSqlType(Class<? extends SqlType> sqlTypeClass) {
+	public static SqlType lookupSqlType(final Class<? extends SqlType> sqlTypeClass) {
 		SqlType sqlType = sqlTypes.get(sqlTypeClass);
 		if (sqlType == null) {
 			try {

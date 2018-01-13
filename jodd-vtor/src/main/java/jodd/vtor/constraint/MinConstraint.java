@@ -34,7 +34,7 @@ public class MinConstraint implements ValidationConstraint<Min> {
 	public MinConstraint() {
 	}
 
-	public MinConstraint(double min) {
+	public MinConstraint(final double min) {
 		this.min = min;
 	}
 
@@ -46,7 +46,7 @@ public class MinConstraint implements ValidationConstraint<Min> {
 		return min;
 	}
 
-	public void setMin(double min) {
+	public void setMin(final double min) {
 		this.min = min;
 	}
 
@@ -54,18 +54,18 @@ public class MinConstraint implements ValidationConstraint<Min> {
 	// ---------------------------------------------------------------- configure
 
 	@Override
-	public void configure(Min annotation) {
+	public void configure(final Min annotation) {
 		this.min = annotation.value();
 	}
 
 	// ---------------------------------------------------------------- valid
 
 	@Override
-	public boolean isValid(ValidationConstraintContext vcc, Object value) {
+	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		return validate(value, min);
 	}
 
-	public static boolean validate(Object value, double min) {
+	public static boolean validate(final Object value, final double min) {
 		if (value == null) {
 			return true;
 		}

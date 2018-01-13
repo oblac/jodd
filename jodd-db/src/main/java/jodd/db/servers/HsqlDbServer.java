@@ -35,12 +35,12 @@ public class HsqlDbServer implements DbServer {
 
 	private final String version;
 
-	public HsqlDbServer(String version) {
+	public HsqlDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 		JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
 		JoddDb.get().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}

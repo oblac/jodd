@@ -25,9 +25,9 @@
 
 package jodd.servlet.tag;
 
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
  * Sets some value to scope. Default scope is 'page'.
@@ -36,19 +36,19 @@ public class SetTag extends SimpleTagSupport {
 
 	protected String name;
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
 	protected String scope;
 
-	public void setScope(String scope) {
+	public void setScope(final String scope) {
 		this.scope = scope;
 	}
 
 	protected Object value;
 
-	public void setValue(Object value) {
+	public void setValue(final Object value) {
 		this.value = value;
 	}
 

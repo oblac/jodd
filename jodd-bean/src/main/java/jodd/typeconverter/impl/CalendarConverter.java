@@ -48,7 +48,8 @@ import java.util.Date;
  */
 public class CalendarConverter implements TypeConverter<Calendar> {
 
-	public Calendar convert(Object value) {
+	@Override
+	public Calendar convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

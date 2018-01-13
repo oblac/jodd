@@ -40,12 +40,12 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public ShortArrayConverter(TypeConverterManager typeConverterManager) {
+	public ShortArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public short[] convert(Object value) {
+	public short[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,14 +64,14 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected short convertType(Object value) {
+	protected short convertType(final Object value) {
 		return typeConverterManager.convertType(value, short.class).shortValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected short[] convertToSingleElementArray(Object value) {
+	protected short[] convertToSingleElementArray(final Object value) {
 		return new short[] {convertType(value)};
 	}
 
@@ -80,7 +80,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 	 * collection types and iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected short[] convertValueToArray(Object value) {
+	protected short[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
 			List list = (List) value;
 			short[] target = new short[list.size()];
@@ -138,7 +138,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected short[] convertArrayToArray(Object value) {
+	protected short[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == short.class) {
@@ -168,7 +168,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected short[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected short[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		short[] result = null;
 
 		if (primitiveComponentType == short[].class) {

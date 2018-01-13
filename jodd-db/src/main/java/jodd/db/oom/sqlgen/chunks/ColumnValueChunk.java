@@ -32,21 +32,21 @@ import jodd.db.oom.DbEntityColumnDescriptor;
  */
 public class ColumnValueChunk extends ValueChunk {
 
-	public ColumnValueChunk(String name, Object value) {
+	public ColumnValueChunk(final String name, final Object value) {
 		this(name, value, null);
 	}
 
-	public ColumnValueChunk(String objReference) {
+	public ColumnValueChunk(final String objReference) {
 		this(null, null, objReference);
 	}
 
-	protected ColumnValueChunk(String name, Object value, String objReference) {
+	protected ColumnValueChunk(final String name, final Object value, final String objReference) {
 		super(name, value, objReference);
 	}
 
 	// ---------------------------------------------------------------- define
 	@Override
-	protected void defineParameter(StringBuilder query, String name, Object value, DbEntityColumnDescriptor dec) {
+	protected void defineParameter(final StringBuilder query, final String name, final Object value, DbEntityColumnDescriptor dec) {
 		if (dec == null) {
 			dec = templateData.lastColumnDec;
 		}

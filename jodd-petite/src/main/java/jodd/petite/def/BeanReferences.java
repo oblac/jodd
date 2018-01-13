@@ -38,12 +38,12 @@ public class BeanReferences {
 	/**
 	 * Creates new bean reference.
 	 */
-	public static BeanReferences of(String... names) {
+	public static BeanReferences of(final String... names) {
 		Objects.requireNonNull(names);
 		return new BeanReferences(names);
 	}
 
-	BeanReferences(String... names) {
+	BeanReferences(final String... names) {
 		this.names = names;
 	}
 
@@ -64,7 +64,7 @@ public class BeanReferences {
 	/**
 	 * Returns the name on the index.
 	 */
-	public String name(int ndx) {
+	public String name(final int ndx) {
 		return names[ndx];
 	}
 

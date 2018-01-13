@@ -90,7 +90,7 @@ public class ResultsManager {
 		return set;
 	}
 
-	public void registerResultName(String name, Function<String, Object> factory) {
+	public void registerResultName(final String name, final Function<String, Object> factory) {
 		stringResultsFactories.put(name, factory);
 	}
 
@@ -98,7 +98,7 @@ public class ResultsManager {
 	 * Registers an action result handler and returns created {@link jodd.madvoc.result.ActionResult} if
 	 * result with same type doesn't exist. Otherwise, returns existing result and created one will be ignored.
 	 */
-	public ActionResult register(Class<? extends ActionResult> resultClass) {
+	public ActionResult register(final Class<? extends ActionResult> resultClass) {
 		return register(createResult(resultClass));
 	}
 
@@ -108,7 +108,7 @@ public class ResultsManager {
 	 * same target class exist, it will be replaced! However, default Jodd results will
 	 * <i>never</i> replace other results. After the registration, results are initialized.
 	 */
-	protected ActionResult register(ActionResult result) {
+	protected ActionResult register(final ActionResult result) {
 		Class<? extends ActionResult> actionResultClass = result.getClass();
 
 		// check existing
@@ -136,7 +136,7 @@ public class ResultsManager {
 	/**
 	 * Lookups for action result and {@link #register(Class) registers} it if missing.
 	 */
-	private ActionResult lookupAndRegisterIfMissing(Class<? extends ActionResult> actionResultClass) {
+	private ActionResult lookupAndRegisterIfMissing(final Class<? extends ActionResult> actionResultClass) {
 		ActionResult actionResult = allResults.get(actionResultClass);
 
 		if (actionResult == null) {
@@ -151,7 +151,7 @@ public class ResultsManager {
 	 * based on current {@link jodd.madvoc.ActionRequest action request} and action method
 	 * result object.
 	 */
-	public ActionResult lookup(ActionRequest actionRequest, Object resultObject) {
+	public ActionResult lookup(final ActionRequest actionRequest, Object resultObject) {
 		// + use result value
 
 		boolean modifiedResultObject = false;
@@ -234,14 +234,14 @@ public class ResultsManager {
 		return defaultResultName;
 	}
 
-	public void setDefaultResultName(String defaultResultName) {
+	public void setDefaultResultName(final String defaultResultName) {
 		this.defaultResultName = defaultResultName;
 	}
 
 	/**
 	 * Initializes action result.
 	 */
-	protected void initializeResult(ActionResult result) {
+	protected void initializeResult(final ActionResult result) {
 		contextInjectorComponent.injectContext(new Target(result));
 	}
 
@@ -250,7 +250,7 @@ public class ResultsManager {
 	/**
 	 * Creates new {@link jodd.madvoc.result.ActionResult}.
 	 */
-	protected ActionResult createResult(Class<? extends ActionResult> actionResultClass) {
+	protected ActionResult createResult(final Class<? extends ActionResult> actionResultClass) {
 		try {
 			return ClassUtil.newInstance(actionResultClass);
 		} catch (Exception ex) {

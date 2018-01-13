@@ -49,7 +49,7 @@ public class MultipartStreamParser {
 		this(null);
 	}
 
-	public MultipartStreamParser(FileUploadFactory fileUploadFactory) {
+	public MultipartStreamParser(final FileUploadFactory fileUploadFactory) {
 		this.fileUploadFactory = (fileUploadFactory == null ? new MemoryFileUploadFactory() : fileUploadFactory);
 	}
 
@@ -75,7 +75,7 @@ public class MultipartStreamParser {
 
 	// ---------------------------------------------------------------- load and extract
 
-	protected void putFile(String name, FileUpload value) {
+	protected void putFile(final String name, final FileUpload value) {
 		if (requestFiles == null) {
 			requestFiles = new HashMap<>();
 		}
@@ -91,14 +91,14 @@ public class MultipartStreamParser {
 		requestFiles.put(name, fileUploads);
 	}
 
-	protected void putParameters(String name, String[] values) {
+	protected void putParameters(final String name, final String[] values) {
 		if (requestParameters == null) {
 			requestParameters = new HashMap<>();
 		}
 		requestParameters.put(name, values);
 	}
 
-	protected void putParameter(String name, String value) {
+	protected void putParameter(final String name, final String value) {
 		if (requestParameters == null) {
 			requestParameters = new HashMap<>();
 		}
@@ -117,7 +117,7 @@ public class MultipartStreamParser {
 	/**
 	 * Extracts uploaded files and parameters from the request data.
 	 */
-	public void parseRequestStream(InputStream inputStream, String encoding) throws IOException {
+	public void parseRequestStream(final InputStream inputStream, final String encoding) throws IOException {
 		setParsed();
 
 		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
@@ -174,7 +174,7 @@ public class MultipartStreamParser {
 	 *
 	 * @return parameter value, or <code>null</code> if not found
 	 */
-	public String getParameter(String paramName) {
+	public String getParameter(final String paramName) {
 		if (requestParameters == null) {
 			return null;
 		}
@@ -198,7 +198,7 @@ public class MultipartStreamParser {
 	/**
 	 * Returns all values all of the values the given request parameter has.
 	 */
-	public String[] getParameterValues(String paramName) {
+	public String[] getParameterValues(final String paramName) {
 		if (requestParameters == null) {
 			return null;
 		}
@@ -211,7 +211,7 @@ public class MultipartStreamParser {
 	 * @param paramName parameter name of the uploaded file
 	 * @return uploaded file or <code>null</code> if parameter name not found
 	 */
-	public FileUpload getFile(String paramName) {
+	public FileUpload getFile(final String paramName) {
 		if (requestFiles == null) {
 			return null;
 		}
@@ -226,7 +226,7 @@ public class MultipartStreamParser {
 	/**
 	 * Returns all uploaded files the given request parameter has.
 	 */
-	public FileUpload[] getFiles(String paramName) {
+	public FileUpload[] getFiles(final String paramName) {
 		if (requestFiles == null) {
 			return null;
 		}

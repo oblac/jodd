@@ -55,7 +55,7 @@ public class PetiteResolvers {
 	protected final DestroyMethodResolver destroyMethodResolver;
 	protected final ProviderResolver providerResolver;
 
-	public PetiteResolvers(ReferencesResolver referencesResolver) {
+	public PetiteResolvers(final ReferencesResolver referencesResolver) {
 		this.referencesResolver = referencesResolver;
 		this.ctorResolver = new CtorResolver(referencesResolver);
 		this.methodResolver = new MethodResolver(referencesResolver);
@@ -71,49 +71,49 @@ public class PetiteResolvers {
 	/**
 	 * Resolves constructor injection point.
 	 */
-	public CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
+	public CtorInjectionPoint resolveCtorInjectionPoint(final Class type) {
 		return ctorResolver.resolve(type, true);
 	}
 
 	/**
 	 * Resolves property injection points.
 	 */
-	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
+	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(final Class type, final boolean autowire) {
 		return propertyResolver.resolve(type, autowire);
 	}
 
 	/**
 	 * Resolves method injection points.
 	 */
-	public MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
+	public MethodInjectionPoint[] resolveMethodInjectionPoint(final Class type) {
 		return methodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves set injection points.
 	 */
-	public SetInjectionPoint[] resolveSetInjectionPoint(Class type, boolean autowire) {
+	public SetInjectionPoint[] resolveSetInjectionPoint(final Class type, final boolean autowire) {
 		return setResolver.resolve(type, autowire);
 	}
 
 	/**
 	 * Resolves init method points.
 	 */
-	public InitMethodPoint[] resolveInitMethodPoint(Object bean) {
+	public InitMethodPoint[] resolveInitMethodPoint(final Object bean) {
 		return initMethodResolver.resolve(bean);
 	}
 
 	/**
 	 * Resolves destroy method points.
 	 */
-	public DestroyMethodPoint[] resolveDestroyMethodPoint(Object bean) {
+	public DestroyMethodPoint[] resolveDestroyMethodPoint(final Object bean) {
 		return destroyMethodResolver.resolve(bean);
 	}
 
 	/**
 	 * Resolves provider definition defined in a bean.
 	 */
-	public ProviderDefinition[] resolveProviderDefinitions(BeanDefinition beanDefinition) {
+	public ProviderDefinition[] resolveProviderDefinitions(final BeanDefinition beanDefinition) {
 		return providerResolver.resolve(beanDefinition);
 	}
 

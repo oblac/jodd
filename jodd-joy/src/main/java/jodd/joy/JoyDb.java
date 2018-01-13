@@ -60,7 +60,7 @@ public class JoyDb extends JoyBase {
 	protected JtxTransactionManager jtxManager;
 	protected String jtxScopePattern;
 
-	public JoyDb(Supplier<PetiteContainer> petiteContainerSupplier, Supplier<JoyScanner> joyScannerSupplier) {
+	public JoyDb(final Supplier<PetiteContainer> petiteContainerSupplier, final Supplier<JoyScanner> joyScannerSupplier) {
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.petiteContainerSupplier = petiteContainerSupplier;
 	}
@@ -85,12 +85,12 @@ public class JoyDb extends JoyBase {
 			return this;
 		}
 
-		public Config withEntityManager(Consumer<DbEntityManager> dbEntityManagerConsumer) {
+		public Config withEntityManager(final Consumer<DbEntityManager> dbEntityManagerConsumer) {
 			dbEntityManagerConsumers.add(dbEntityManagerConsumer);
 			return this;
 		}
 
-		public Config withConnectionProvider(Supplier<ConnectionProvider> connectionProviderSupplier) {
+		public Config withConnectionProvider(final Supplier<ConnectionProvider> connectionProviderSupplier) {
 			this.connectionProviderSupplier = connectionProviderSupplier;
 			return this;
 		}
@@ -152,7 +152,7 @@ public class JoyDb extends JoyBase {
 	 * Registers DbOom entities. By default, scans the
 	 * class path and register entities automagically.
 	 */
-	protected void registerDbEntities(DbEntityManager dbEntityManager) {
+	protected void registerDbEntities(final DbEntityManager dbEntityManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 
 		dbcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));
@@ -165,7 +165,7 @@ public class JoyDb extends JoyBase {
 	/**
 	 * Creates JTX transaction manager.
 	 */
-	protected JtxTransactionManager createJtxTransactionManager(ConnectionProvider connectionProvider) {
+	protected JtxTransactionManager createJtxTransactionManager(final ConnectionProvider connectionProvider) {
 		return new DbJtxTransactionManager(connectionProvider);
 	}
 

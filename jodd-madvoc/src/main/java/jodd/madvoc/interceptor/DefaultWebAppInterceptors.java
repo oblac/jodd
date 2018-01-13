@@ -34,7 +34,7 @@ import jodd.madvoc.MadvocException;
 public final class DefaultWebAppInterceptors implements ActionInterceptor {
 
 	@Override
-	public String intercept(ActionRequest actionRequest) {
+	public String intercept(final ActionRequest actionRequest) {
 		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}
 }

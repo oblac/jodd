@@ -40,7 +40,7 @@ public class ActionMethodParamNameResolver {
 	/**
 	 * Returns method parameter names.
 	 */
-	public String[] resolveParamNames(Method actionClassMethod) {
+	public String[] resolveParamNames(final Method actionClassMethod) {
 		MethodParameter[] methodParameters = Paramo.resolveParameters(actionClassMethod);
 
 		String[] names = new String[methodParameters.length];

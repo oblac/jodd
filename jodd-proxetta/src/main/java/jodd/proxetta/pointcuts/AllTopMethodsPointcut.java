@@ -40,7 +40,7 @@ public class AllTopMethodsPointcut implements ProxyPointcut {
 	}
 
 	@Override
-	public boolean apply(MethodInfo methodInfo) {
+	public boolean apply(final MethodInfo methodInfo) {
 		return
 				methodInfo.isTopLevelMethod() &&
 					methodInfo.isPublicMethod();

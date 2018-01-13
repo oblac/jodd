@@ -54,11 +54,11 @@ public class SymmetricEncryptor {
 
 	private static final String ALGORITHM = "PBEWithMD5AndTripleDES";
 
-	public SymmetricEncryptor(String passPhrase) {
+	public SymmetricEncryptor(final String passPhrase) {
 		this(passPhrase, defaultSalt, 19);
 	}
 
-	public SymmetricEncryptor(String passPhrase, byte[] salt, int iterationCount) {
+	public SymmetricEncryptor(final String passPhrase, final byte[] salt, final int iterationCount) {
 		this.iterationCount = iterationCount;
 		try {
 			// create the key
@@ -81,7 +81,7 @@ public class SymmetricEncryptor {
 	/**
 	 * Symmetrically encrypts the string.
 	 */
-	public String encrypt(String str) {
+	public String encrypt(final String str) {
 		try {
 			byte[] utf8 = str.getBytes(UTF_8);		// encode the string into bytes using utf-8
 			byte[] enc = ecipher.doFinal(utf8); 	// encrypt

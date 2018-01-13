@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class DbEntityDescriptor<E> {
 
-	public DbEntityDescriptor(Class<E> type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy) {
+	public DbEntityDescriptor(final Class<E> type, final String schemaName, final TableNamingStrategy tableNamingStrategy, final ColumnNamingStrategy columnNamingStrategy) {
 		this.type = type;
 		this.entityName = type.getSimpleName();
 		this.isAnnotated = DbMetaUtil.resolveIsAnnotated(type);
@@ -131,7 +131,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Resolves list of all columns and properties.
 	 */
-	private void resolveColumnsAndProperties(Class type) {
+	private void resolveColumnsAndProperties(final Class type) {
 		PropertyDescriptor[] allProperties = ClassIntrospector.get().lookup(type).getAllPropertyDescriptors();
 		List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
 		int idcount = 0;
@@ -178,7 +178,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Finds column descriptor by column name. Case is ignored.
 	 */
-	public DbEntityColumnDescriptor findByColumnName(String columnName) {
+	public DbEntityColumnDescriptor findByColumnName(final String columnName) {
 		if (columnName == null) {
 			return null;
 		}
@@ -193,7 +193,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Finds column descriptor by property name.
 	 */
-	public DbEntityColumnDescriptor findByPropertyName(String propertyName) {
+	public DbEntityColumnDescriptor findByPropertyName(final String propertyName) {
 		if (propertyName == null) {
 			return null;
 		}
@@ -210,7 +210,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Returns property name for specified column name.
 	 */
-	public String getPropertyName(String columnName) {
+	public String getPropertyName(final String columnName) {
 		DbEntityColumnDescriptor dec = findByColumnName(columnName);
 		return dec == null ? null : dec.propertyName;
 	}
@@ -218,7 +218,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Returns column name for specified property name..
 	 */
-	public String getColumnName(String propertyName) {
+	public String getColumnName(final String propertyName) {
 		DbEntityColumnDescriptor dec = findByPropertyName(propertyName);
 		return dec == null ? null : dec.columnName;
 	}
@@ -278,7 +278,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Returns ID value for given entity instance.
 	 */
-	public Object getIdValue(E object) {
+	public Object getIdValue(final E object) {
 		String propertyName = getIdPropertyName();
 		return BeanUtil.declared.getProperty(object, propertyName);
 	}
@@ -286,7 +286,7 @@ public class DbEntityDescriptor<E> {
 	/**
 	 * Sets ID value for given entity.
 	 */
-	public void setIdValue(E object, Object value) {
+	public void setIdValue(final E object, final Object value) {
 		String propertyName = getIdPropertyName();
 		BeanUtil.declared.setProperty(object, propertyName, value);
 	}
@@ -295,7 +295,7 @@ public class DbEntityDescriptor<E> {
 	 * Returns unique key for this entity. Returned key
 	 * is built from entity class and id value.
 	 */
-	public String getKeyValue(E object) {
+	public String getKeyValue(final E object) {
 		Object idValue = getIdValue(object);
 
 		String idValueString = idValue == null ?  StringPool.NULL : idValue.toString();
@@ -305,6 +305,7 @@ public class DbEntityDescriptor<E> {
 
 	// ---------------------------------------------------------------- toString
 	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DbEntity: ");

@@ -55,12 +55,12 @@ public abstract class DbBaseTest {
 			}
 
 			@Override
-			public void warn(String message) {
+			public void warn(final String message) {
 				throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
 			}
 
 			@Override
-			public void warn(String message, Throwable throwable) {
+			public void warn(final String message, final Throwable throwable) {
 				throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
 			}
 		});

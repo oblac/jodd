@@ -39,7 +39,7 @@ public interface Task {
 	/**
 	 * Wraps a task into a runnable.
 	 */
-	public static Runnable runnableOf(Task task) {
+	public static Runnable runnableOf(final Task task) {
 		return () -> {
 			try {
 				task.run();
@@ -52,7 +52,7 @@ public interface Task {
 	/**
 	 * Wraps a task into a callable that returns {@code null}.
 	 */
-	public static Callable callableOf(Task task) {
+	public static Callable callableOf(final Task task) {
 		return () -> {
 			task.run();
 			return null;

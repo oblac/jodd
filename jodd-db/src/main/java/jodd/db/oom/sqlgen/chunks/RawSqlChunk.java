@@ -32,13 +32,13 @@ public class RawSqlChunk extends SqlChunk {
 
 	protected final String sql;
 
-	public RawSqlChunk(String sql) {
+	public RawSqlChunk(final String sql) {
 		super(CHUNK_RAW);
 		this.sql = sql;
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		out.append(sql);
 	}
 

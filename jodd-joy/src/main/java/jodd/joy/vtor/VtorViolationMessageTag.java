@@ -40,7 +40,7 @@ public class VtorViolationMessageTag extends SimpleTagSupport {
 
 	protected Violation violation;
 
-	public void setViolation(Violation violation) {
+	public void setViolation(final Violation violation) {
 		this.violation = violation;
 	}
 

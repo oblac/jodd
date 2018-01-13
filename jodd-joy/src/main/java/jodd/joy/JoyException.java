@@ -32,15 +32,15 @@ import jodd.exception.UncheckedException;
  */
 public class JoyException extends UncheckedException {
 
-	public JoyException(Throwable t) {
+	public JoyException(final Throwable t) {
 		super(t);
 	}
 
-	public JoyException(String message) {
+	public JoyException(final String message) {
 		super(message);
 	}
 
-	public JoyException(String message, Throwable t) {
+	public JoyException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

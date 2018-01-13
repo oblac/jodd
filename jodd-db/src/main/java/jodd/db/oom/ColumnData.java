@@ -33,12 +33,12 @@ public class ColumnData {
 	private final String tableName;
 	private final String columnName;
 
-	public ColumnData(String tableName) {
+	public ColumnData(final String tableName) {
 		this.tableName = tableName;
 		this.columnName = null;
 	}
 
-	public ColumnData(String tableName, String columnName) {
+	public ColumnData(final String tableName, final String columnName) {
 		this.tableName = tableName;
 		this.columnName = columnName;
 	}

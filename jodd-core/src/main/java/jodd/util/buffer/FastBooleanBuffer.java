@@ -55,7 +55,7 @@ public class FastBooleanBuffer {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastBooleanBuffer(int size) {
+	public FastBooleanBuffer(final int size) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
@@ -66,7 +66,7 @@ public class FastBooleanBuffer {
 	 * Prepares next chunk to match new size.
 	 * The minimal length of new chunk is <code>minChunkLen</code>.
 	 */
-	private void needNewBuffer(int newSize) {
+	private void needNewBuffer(final int newSize) {
 		int delta = newSize - size;
 		int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -88,7 +88,7 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends <code>boolean</code> array to buffer.
 	 */
-	public FastBooleanBuffer append(boolean[] array, int off, int len) {
+	public FastBooleanBuffer append(final boolean[] array, final int off, final int len) {
 		int end = off + len;
 		if ((off < 0)
 				|| (len < 0)
@@ -129,14 +129,14 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends <code>boolean</code> array to buffer.
 	 */
-	public FastBooleanBuffer append(boolean[] array) {
+	public FastBooleanBuffer append(final boolean[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends single <code>boolean</code> to buffer.
 	 */
-	public FastBooleanBuffer append(boolean element) {
+	public FastBooleanBuffer append(final boolean element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -151,7 +151,7 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastBooleanBuffer append(FastBooleanBuffer buff) {
+	public FastBooleanBuffer append(final FastBooleanBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -195,7 +195,7 @@ public class FastBooleanBuffer {
 	 * Returns <code>boolean</code> inner array chunk at given index.
 	 * May be used for iterating inner chunks in fast manner.
 	 */
-	public boolean[] array(int index) {
+	public boolean[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -235,7 +235,7 @@ public class FastBooleanBuffer {
     /**
      * Creates <code>boolean</code> subarray from buffered content.
      */
-	public boolean[] toArray(int start, int len) {
+	public boolean[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
 		boolean[] array = new boolean[len];

@@ -40,15 +40,15 @@ public class ValueChunk extends SqlChunk {
 	protected Object value;
 	protected final String objReference;
 
-	public ValueChunk(String name, Object value) {
+	public ValueChunk(final String name, final Object value) {
 		this(name, value, null);
 	}
 
-	public ValueChunk(String objReference) {
+	public ValueChunk(final String objReference) {
 		this(null, null, objReference);
 	}
 
-	protected ValueChunk(String name, Object value, String objReference) {
+	protected ValueChunk(final String name, final Object value, final String objReference) {
 		super(CHUNK_VALUE);
 		this.name = name;
 		this.value = value;
@@ -56,7 +56,7 @@ public class ValueChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		if (objReference != null) {
 			value = templateData.lookupObject(objReference);
 		}

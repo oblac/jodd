@@ -75,7 +75,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	// ---------------------------------------------------------------- ctors
 
-	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, String[] exceptions, String signature, ClassInfo targetClassInfo) {
+	public MethodSignatureVisitor(final String methodName, final int access, final String classname, final String description, final String[] exceptions, final String signature, final ClassInfo targetClassInfo) {
 		super(new StringBuilder());
 		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
@@ -141,12 +141,12 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	@Override
-	public TypeInfoImpl getArgument(int ndx) {
+	public TypeInfoImpl getArgument(final int ndx) {
 		return arguments.get(ndx);
 	}
 
 	@Override
-	public int getArgumentOffset(int index) {
+	public int getArgumentOffset(final int index) {
 		return argumentsOffset.get(index);
 	}
 
@@ -188,7 +188,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return declaredClassName;
 	}
 
-	public void setDeclaredClassName(String declaredClassName) {
+	public void setDeclaredClassName(final String declaredClassName) {
 		this.declaredClassName = declaredClassName;
 	}
 
@@ -249,7 +249,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	@Override
-	public void visitClassType(String name) {
+	public void visitClassType(final String name) {
 		if (isTopLevelType()) {
 			// mark type start
 			declarationTypeOffset = declaration.length();
@@ -277,7 +277,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		maybeUseType(type);
 	}
 
-	private void maybeUseType(String typeName) {
+	private void maybeUseType(final String typeName) {
 		if (!isTopLevelType()) {
 			return;
 		}
@@ -422,7 +422,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return rawTypeName;
 	}
 
-	private boolean isGenericType(String typeName) {
+	private boolean isGenericType(final String typeName) {
 		if (generics.containsKey(typeName)) {
 			return true;
 		}

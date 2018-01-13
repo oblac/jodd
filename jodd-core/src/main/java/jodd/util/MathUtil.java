@@ -37,7 +37,7 @@ public class MathUtil {
 	 * Converts char digit into integer value.
 	 * Accepts numeric chars (0 - 9) as well as letter (A-z).
 	 */
-	public static int parseDigit(char digit) {
+	public static int parseDigit(final char digit) {
 		if ((digit >= '0') && (digit <= '9')) {
 			return digit - '0';
 		}
@@ -57,7 +57,7 @@ public class MathUtil {
 	 * @return pseudo-random value
 	 */
 
-	public static long randomLong(long min, long max) {
+	public static long randomLong(final long min, final long max) {
 		return min + (long)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
@@ -71,21 +71,21 @@ public class MathUtil {
 	 *
 	 * @return pseudo-random value
 	 */
-	public static int randomInt(int min, int max) {
+	public static int randomInt(final int min, final int max) {
 		return min + (int)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 	/**
 	 * Returns <code>true</code> if a number is even.
 	 */
-	public static boolean isEven(int x) {
+	public static boolean isEven(final int x) {
 		return (x % 2) == 0;
 	}
 
 	/**
 	 * Returns <code>true</code> if a number is odd.
 	 */
-	public static boolean isOdd(int x) {
+	public static boolean isOdd(final int x) {
 		return (x % 2) != 0;
 	}
 

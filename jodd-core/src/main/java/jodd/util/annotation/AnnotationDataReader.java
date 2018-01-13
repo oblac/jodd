@@ -64,7 +64,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * @param defaultAnnotationClass optional default annotation type, used to annotate the annotation class.
 	 */
 	@SuppressWarnings( {"unchecked"})
-	protected AnnotationDataReader(Class<A> annotationClass, Class<? extends Annotation> defaultAnnotationClass) {
+	protected AnnotationDataReader(Class<A> annotationClass, final Class<? extends Annotation> defaultAnnotationClass) {
 		if (annotationClass == null) {
 			Class[] genericSupertypes = ClassUtil.getGenericSupertypes(this.getClass());
 
@@ -110,7 +110,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * Returns <code>true</code> if annotation is present on
 	 * given annotated element.
 	 */
-	public boolean hasAnnotationOn(AnnotatedElement annotatedElement) {
+	public boolean hasAnnotationOn(final AnnotatedElement annotatedElement) {
 		return annotatedElement.isAnnotationPresent(annotationClass);
 	}
 
@@ -118,7 +118,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * Reads {@link AnnotationData annotation data} on provided annotated element.
 	 * If annotation is not presented, <code>null</code> is returned.
 	 */
-	public D readAnnotatedElement(AnnotatedElement annotatedElement) {
+	public D readAnnotatedElement(final AnnotatedElement annotatedElement) {
 		A annotation = annotatedElement.getAnnotation(annotationClass);
 		if (annotation == null) {
 			return null;
@@ -139,7 +139,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * missing, it will read value from default annotation. If still missing,
 	 * returns <code>null</code>.
 	 */
-	protected String readStringElement(A annotation, String name) {
+	protected String readStringElement(final A annotation, final String name) {
 		Object annotationValue = ClassUtil.readAnnotationValue(annotation, name);
 		if (annotationValue == null) {
 			if (defaultAnnotation == null) {
@@ -159,7 +159,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * is missing, it will be read from default annotation.
 	 * If still missing, returns <code>null</code>.
 	 */
-	protected Object readElement(A annotation, String name) {
+	protected Object readElement(final A annotation, final String name) {
 		Object annotationValue = ClassUtil.readAnnotationValue(annotation, name);
 		if (annotationValue == null) {
 			if (defaultAnnotation != null) {
@@ -174,7 +174,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * Reads string element from the annotation. Empty strings are detected
 	 * and default value is returned instead.
 	 */
-	protected String readString(A annotation, String name, String defaultValue) {
+	protected String readString(final A annotation, final String name, final String defaultValue) {
 		String value = readStringElement(annotation, name);
 
 		if (StringUtil.isEmpty(value)) {
@@ -188,7 +188,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	/**
 	 * Reads boolean element from the annotation.
 	 */
-	protected boolean readBoolean(A annotation, String name, boolean defaultValue) {
+	protected boolean readBoolean(final A annotation, final String name, final boolean defaultValue) {
 		Boolean value = (Boolean) readElement(annotation, name);
 		if (value == null) {
 			return defaultValue;
@@ -200,7 +200,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	/**
 	 * Reads int element from the annotation.
 	 */
-	protected int readInt(A annotation, String name, int defaultValue) {
+	protected int readInt(final A annotation, final String name, final int defaultValue) {
 		Integer value = (Integer) readElement(annotation, name);
 		if (value == null) {
 			return defaultValue;

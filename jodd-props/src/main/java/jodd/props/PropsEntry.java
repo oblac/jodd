@@ -45,7 +45,7 @@ public class PropsEntry {
 
 	protected final PropsData propsData;
 
-	public PropsEntry(String key, String value, String profile, PropsData propsData) {
+	public PropsEntry(final String key, final String value, final String profile, final PropsData propsData) {
 		this.value = value;
 		this.key = key;
 		this.profile = profile;
@@ -63,7 +63,7 @@ public class PropsEntry {
 	/**
 	 * Returns the property value, with replaced macros.
 	 */
-	public String getValue(String... profiles) {
+	public String getValue(final String... profiles) {
 		if (hasMacro) {
 			return propsData.resolveMacros(value, profiles);
 		}

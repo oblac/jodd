@@ -29,9 +29,9 @@ import jodd.util.CharUtil;
 import jodd.util.StringUtil;
 import jodd.util.collection.IntArrayList;
 
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * SQL parameters parser that recognizes named and ordinal parameters.
@@ -46,7 +46,7 @@ class DbQueryParser {
 
 	// ---------------------------------------------------------------- ctors
 
-	DbQueryParser(String sql) {
+	DbQueryParser(final String sql) {
 		parseSql(sql);
 	}
 
@@ -54,7 +54,7 @@ class DbQueryParser {
 
 	private Map<String, IntArrayList> namedParameterLocationMap;
 
-	private void storeNamedParameter(String name, int position) {
+	private void storeNamedParameter(final String name, final int position) {
 		IntArrayList locations = namedParameterLocationMap.get(name);
 		if (locations == null) {
 			locations = new IntArrayList();
@@ -63,11 +63,11 @@ class DbQueryParser {
 		locations.add(position);
 	}
 
-	IntArrayList lookupNamedParameterIndices(String name) {
+	IntArrayList lookupNamedParameterIndices(final String name) {
 		return namedParameterLocationMap.get(name);
 	}
 
-	IntArrayList getNamedParameterIndices(String name) {
+	IntArrayList getNamedParameterIndices(final String name) {
 		IntArrayList positions = namedParameterLocationMap.get(name);
 		if (positions == null) {
 			throw new DbSqlException("Named parameter not found: " + name + "\nQuery: " + sql);
@@ -83,7 +83,7 @@ class DbQueryParser {
 
 	private Map<String, Integer> batchParams;
 
-	private void saveBatchParameter(String name, int size) {
+	private void saveBatchParameter(final String name, final int size) {
 		if (batchParams == null) {
 			batchParams = new HashMap<>();
 		}
@@ -94,7 +94,7 @@ class DbQueryParser {
 	 * Returns the size of batch parameter. Returns <code>0</code>
 	 * if parameter does not exist.
 	 */
-	protected int getBatchParameterSize(String name) {
+	protected int getBatchParameterSize(final String name) {
 		if (batchParams == null) {
 			return 0;
 		}
@@ -107,7 +107,7 @@ class DbQueryParser {
 
 	// ---------------------------------------------------------------- parser
 
-	void parseSql(String sqlString) {
+	void parseSql(final String sqlString) {
 		namedParameterLocationMap = new HashMap<>();
 		int stringLength = sqlString.length();
 		StringBuilder pureSql = new StringBuilder(stringLength);

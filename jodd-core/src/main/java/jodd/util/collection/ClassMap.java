@@ -49,7 +49,7 @@ public final class ClassMap<V> {
 	 * Creates new map with given initial capacity.
 	 */
 	@SuppressWarnings("unchecked")
-	public ClassMap(int initialCapacity) {
+	public ClassMap(final int initialCapacity) {
 		int initlen;
 		if (initialCapacity > MAXIMUM_CAPACITY) {
 			initlen = MAXIMUM_CAPACITY;
@@ -94,7 +94,7 @@ public final class ClassMap<V> {
 	/**
 	 * Returns a value associated to a key in thread-safe way.
 	 */
-	public synchronized V get(Class key) {
+	public synchronized V get(final Class key) {
 		return unsafeGet(key);
 	}
 
@@ -142,7 +142,7 @@ public final class ClassMap<V> {
 	 * if there was no mapping for key.
 	 */
 	@SuppressWarnings("unchecked")
-	public synchronized V put(Class key, V value) {
+	public synchronized V put(final Class key, final V value) {
 		final int id;
 		int index;
 
@@ -192,7 +192,7 @@ public final class ClassMap<V> {
 		V value;
 		Entry<V> next;
 
-		private Entry(int id, Class key, V value, Entry<V> next) {
+		private Entry(final int id, final Class key, final V value, final Entry<V> next) {
 			this.value = value;
 			this.id = id;
 			this.key = key;

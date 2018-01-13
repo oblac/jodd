@@ -87,7 +87,7 @@ public class TypeJsonSerializerMap {
 	/**
 	 * Creates new empty serializer map with given defaults map.
 	 */
-	public TypeJsonSerializerMap(TypeJsonSerializerMap defaultSerializerMap) {
+	public TypeJsonSerializerMap(final TypeJsonSerializerMap defaultSerializerMap) {
 		this.defaultSerializerMap = defaultSerializerMap;
 	}
 
@@ -118,23 +118,23 @@ public class TypeJsonSerializerMap {
 
 		map.put(Integer[].class, new ArraysJsonSerializer<Integer>() {
 			@Override
-			protected int getLength(Integer[] array) {
+			protected int getLength(final Integer[] array) {
 				return array.length;
 			}
 
 			@Override
-			protected Integer get(Integer[] array, int index) {
+			protected Integer get(final Integer[] array, final int index) {
 				return array[index];
 			}
 		});
 		map.put(Long[].class, new ArraysJsonSerializer<Long>() {
 			@Override
-			protected int getLength(Long[] array) {
+			protected int getLength(final Long[] array) {
 				return array.length;
 			}
 
 			@Override
-			protected Long get(Long[] array, int index) {
+			protected Long get(final Long[] array, final int index) {
 				return array[index];
 			}
 		});
@@ -197,7 +197,7 @@ public class TypeJsonSerializerMap {
 	/**
 	 * Registers new serializer.
 	 */
-	public void register(Class type, TypeJsonSerializer typeJsonSerializer) {
+	public void register(final Class type, final TypeJsonSerializer typeJsonSerializer) {
 		map.put(type, typeJsonSerializer);
 		cache.clear();
 	}
@@ -207,7 +207,7 @@ public class TypeJsonSerializerMap {
 	 * If serializer not found, then all interfaces and subclasses of the type are checked.
 	 * Finally, if no serializer is found, object's serializer is returned.
 	 */
-	public TypeJsonSerializer lookup(Class type) {
+	public TypeJsonSerializer lookup(final Class type) {
 		TypeJsonSerializer tjs = cache.unsafeGet(type);
 
 		if (tjs != null) {
@@ -225,7 +225,7 @@ public class TypeJsonSerializerMap {
 	 * Get type serializer from map. First the current map is used.
 	 * If element is missing, default map will be used, if exist.
 	 */
-	protected TypeJsonSerializer lookupSerializer(Class type) {
+	protected TypeJsonSerializer lookupSerializer(final Class type) {
 		TypeJsonSerializer tjs = map.unsafeGet(type);
 
 		if (tjs == null) {
@@ -237,7 +237,7 @@ public class TypeJsonSerializerMap {
 		return tjs;
 	}
 
-	protected TypeJsonSerializer _lookup(Class type) {
+	protected TypeJsonSerializer _lookup(final Class type) {
 		synchronized (map) {
 			TypeJsonSerializer tjs = lookupSerializer(type);
 

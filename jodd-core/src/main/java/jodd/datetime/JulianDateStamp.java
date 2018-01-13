@@ -119,7 +119,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	/**
 	 * Creates JD from a <code>double</code>.
 	 */
-	public JulianDateStamp(double jd) {
+	public JulianDateStamp(final double jd) {
 		set(jd);
 	}
 
@@ -132,7 +132,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	 * @param i      integer part
 	 * @param f      fractional part should be in range [0.0, 1.0)
 	 */
-	public JulianDateStamp(int i, double f) {
+	public JulianDateStamp(final int i, final double f) {
 		set(i, f);
 	}
 
@@ -187,7 +187,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	/**
 	 * Adds a JD to current instance.
 	 */
-	public JulianDateStamp add(JulianDateStamp jds) {
+	public JulianDateStamp add(final JulianDateStamp jds) {
 		int i = this.integer + jds.integer;
 		double f = this.fraction + jds.fraction;
 		set(i, f);
@@ -197,7 +197,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	/**
 	 * Adds a double to current instance.
 	 */
-	public JulianDateStamp add(double delta) {
+	public JulianDateStamp add(final double delta) {
 		set(this.integer, this.fraction + delta);
 		return this;
 	}
@@ -206,7 +206,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	/**
 	 * Subtracts a JD from current instance.
 	 */
-	public JulianDateStamp sub(JulianDateStamp jds) {
+	public JulianDateStamp sub(final JulianDateStamp jds) {
 		int i = this.integer - jds.integer;
 		double f = this.fraction -jds.fraction;
 		set(i, f);
@@ -216,7 +216,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	/**
 	 * Subtracts a double from current instance.
 	 */
-	public JulianDateStamp sub(double delta) {
+	public JulianDateStamp sub(final double delta) {
 		set(this.integer, this.fraction - delta);
 		return this;
 	}
@@ -226,7 +226,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	 * Normalization means that if double is out of range,
 	 * values will be correctly fixed. 
 	 */
-	public void set(int i, double f) {
+	public void set(final int i, double f) {
 		integer = i;
 		int fi = (int) f;
 		f -= fi;
@@ -238,7 +238,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		this.fraction = f;
 	}
 
-	public void set(double jd) {
+	public void set(final double jd) {
 		integer = (int)jd;
 		fraction = jd - (double)integer;
 	}
@@ -249,7 +249,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	/**
 	 * Calculates the number of days between two dates. Returned value is always positive.
 	 */
-	public int daysBetween(JulianDateStamp otherDate) {
+	public int daysBetween(final JulianDateStamp otherDate) {
 		int difference = daysSpan(otherDate);
 		return difference >= 0 ? difference : -difference;
 	}
@@ -258,7 +258,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	 * Returns span between two days. Returned value may be positive (when this date
 	 * is after the provided one) or negative (when comparing to future date).
 	 */
-	public int daysSpan(JulianDateStamp otherDate) {
+	public int daysSpan(final JulianDateStamp otherDate) {
 		int now = getJulianDayNumber();
 		int then = otherDate.getJulianDayNumber();
 		return now - then;
@@ -267,7 +267,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	// ---------------------------------------------------------------- equals & hashCode
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		if (this == object) {
 			return true;
 		}
@@ -304,7 +304,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		return new JulianDateStamp(integer - 2400000, fraction);
 	}
 
-	public void setReducedJulianDate(double rjd) {
+	public void setReducedJulianDate(final double rjd) {
 		set(rjd + 2400000);
 	}
 
@@ -316,7 +316,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		return new JulianDateStamp(integer - 2400000, fraction - 0.5);
 	}
 
-	public void setModifiedJulianDate(double mjd) {
+	public void setModifiedJulianDate(final double mjd) {
 		set(mjd + 2400000.5);
 	}
 
@@ -328,7 +328,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		return new JulianDateStamp(integer - 2440000, fraction - 0.5);
 	}
 
-	public void setTruncatedJulianDate(double tjd) {
+	public void setTruncatedJulianDate(final double tjd) {
 		set(tjd + 2440000.5);
 	}
 }

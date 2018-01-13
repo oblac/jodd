@@ -33,7 +33,7 @@ public class Comment extends Node {
 	/**
 	 * Creates a comment.
 	 */
-	public Comment(Document ownerDocument, String comment) {
+	public Comment(final Document ownerDocument, final String comment) {
 		super(ownerDocument, NodeType.COMMENT, null);
 		this.nodeValue = comment;
 	}
@@ -44,7 +44,7 @@ public class Comment extends Node {
 	}
 
 	@Override
-	protected void visitNode(NodeVisitor nodeVisitor) {
+	protected void visitNode(final NodeVisitor nodeVisitor) {
 		nodeVisitor.comment(this);
 	}
 }

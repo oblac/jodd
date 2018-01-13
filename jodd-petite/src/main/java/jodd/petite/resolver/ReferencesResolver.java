@@ -48,7 +48,7 @@ public class ReferencesResolver {
 
 	private final PetiteConfig petiteConfig;
 
-	public ReferencesResolver(PetiteConfig petiteConfig) {
+	public ReferencesResolver(final PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
 	}
 
@@ -56,7 +56,7 @@ public class ReferencesResolver {
 	 * Resolves reference from given values. Returns bean reference of given value or defaults
 	 * if given name is blank.
 	 */
-	public BeanReferences resolveReferenceFromValue(PropertyDescriptor propertyDescriptor, String refName) {
+	public BeanReferences resolveReferenceFromValue(final PropertyDescriptor propertyDescriptor, final String refName) {
 		BeanReferences references;
 
 		if (refName == null || refName.isEmpty()) {
@@ -74,7 +74,7 @@ public class ReferencesResolver {
 	/**
 	 * Takes given parameters references and returns reference set for given method or constructor.
 	 */
-	public BeanReferences[] resolveReferenceFromValues(Executable methodOrCtor, String... parameterReferences) {
+	public BeanReferences[] resolveReferenceFromValues(final Executable methodOrCtor, final String... parameterReferences) {
 		BeanReferences[] references = convertRefToReferences(parameterReferences);
 
 		if (references == null || references.length == 0) {
@@ -95,7 +95,7 @@ public class ReferencesResolver {
 	 * Extracts references for given property. Returns {@code null} if property is not marked with an
 	 * annotation.
 	 */
-	public BeanReferences readReferenceFromAnnotation(PropertyDescriptor propertyDescriptor) {
+	public BeanReferences readReferenceFromAnnotation(final PropertyDescriptor propertyDescriptor) {
 		final MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
 		final FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
 
@@ -128,7 +128,7 @@ public class ReferencesResolver {
 	/**
 	 * Extracts references from method or constructor annotation.
 	 */
-	public BeanReferences[] readAllReferencesFromAnnotation(Executable methodOrCtor) {
+	public BeanReferences[] readAllReferencesFromAnnotation(final Executable methodOrCtor) {
 		PetiteInject petiteInject = methodOrCtor.getAnnotation(PetiteInject.class);
 
 		final Parameter[] parameters = methodOrCtor.getParameters();
@@ -189,7 +189,7 @@ public class ReferencesResolver {
 	/**
 	 * Reads annotation value and returns {@code null} if value is empty.
 	 */
-	private String readAnnotationValue(PetiteInject annotation) {
+	private String readAnnotationValue(final PetiteInject annotation) {
 		String value = annotation.value().trim();
 
 		if (value.isEmpty()) {
@@ -198,7 +198,7 @@ public class ReferencesResolver {
 		return value;
 	}
 
-	private BeanReferences[] updateReferencesWithDefaultsIfNeeded(Executable methodOrCtor, BeanReferences[] references) {
+	private BeanReferences[] updateReferencesWithDefaultsIfNeeded(final Executable methodOrCtor, BeanReferences[] references) {
 		BeanReferences[] defaultReferences = buildDefaultReferences(methodOrCtor);
 
 		if (references == null || references.length == 0) {
@@ -222,7 +222,7 @@ public class ReferencesResolver {
 		return references;
 	}
 
-	private BeanReferences updateReferencesWithDefaultsIfNeeded(PropertyDescriptor propertyDescriptor, BeanReferences references) {
+	private BeanReferences updateReferencesWithDefaultsIfNeeded(final PropertyDescriptor propertyDescriptor, BeanReferences references) {
 		if (references == null || references.isEmpty()) {
 			references = buildDefaultReference(propertyDescriptor);
 		}
@@ -233,7 +233,7 @@ public class ReferencesResolver {
 	/**
 	 * Returns {@code true} if given parameter references is not set.
 	 */
-	private boolean parameterReferenceIsNotSet(BeanReferences parameterReferences) {
+	private boolean parameterReferenceIsNotSet(final BeanReferences parameterReferences) {
 		if (parameterReferences == null) {
 			return true;
 		}
@@ -243,7 +243,7 @@ public class ReferencesResolver {
 	/**
 	 * Builds default method references.
 	 */
-	private BeanReferences[] buildDefaultReferences(Executable methodOrCtor) {
+	private BeanReferences[] buildDefaultReferences(final Executable methodOrCtor) {
 		final boolean useParamo = petiteConfig.getUseParamo();
 		final PetiteReferenceType[] lookupReferences = petiteConfig.getLookupReferences();
 		MethodParameter[] methodParameters = null;
@@ -280,7 +280,7 @@ public class ReferencesResolver {
 	/**
 	 * Builds default field references.
 	 */
-	public BeanReferences buildDefaultReference(PropertyDescriptor propertyDescriptor) {
+	public BeanReferences buildDefaultReference(final PropertyDescriptor propertyDescriptor) {
 		final PetiteReferenceType[] lookupReferences = petiteConfig.getLookupReferences();
 
 		final String[] references = new String[lookupReferences.length];
@@ -305,7 +305,7 @@ public class ReferencesResolver {
 	/**
 	 * Removes duplicate names from bean references.
 	 */
-	private void removeAllDuplicateNames(BeanReferences[] allBeanReferences) {
+	private void removeAllDuplicateNames(final BeanReferences[] allBeanReferences) {
 		for (int i = 0; i < allBeanReferences.length; i++) {
 			BeanReferences references = allBeanReferences[i];
 			allBeanReferences[i] = references.removeDuplicateNames();
@@ -316,7 +316,7 @@ public class ReferencesResolver {
 	/**
 	 * Converts single string array to an array of bean references.
 	 */
-	private BeanReferences[] convertRefToReferences(String[] references) {
+	private BeanReferences[] convertRefToReferences(final String[] references) {
 		if (references == null) {
 			return null;
 		}

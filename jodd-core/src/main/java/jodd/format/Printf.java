@@ -36,72 +36,72 @@ public class Printf {
 	/**
 	 * @see jodd.format.PrintfFormat#form(byte)
 	 */
-	public static String str(String format, byte value) {
+	public static String str(final String format, final byte value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(char)
 	 */
-	public static String str(String format, char value) {
+	public static String str(final String format, final char value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(short)
 	 */
-	public static String str(String format, short value) {
+	public static String str(final String format, final short value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(int)
 	 */
-	public static String str(String format, int value) {
+	public static String str(final String format, final int value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(long)
 	 */
-	public static String str(String format, long value) {
+	public static String str(final String format, final long value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(double)
 	 */
-	public static String str(String format, float value) {
+	public static String str(final String format, final float value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(double)
 	 */
-	public static String str(String format, double value) {
+	public static String str(final String format, final double value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	/**
 	 * @see jodd.format.PrintfFormat#form(boolean)
 	 */
-	public static String str(String format, boolean value) {
+	public static String str(final String format, final boolean value) {
 		return new PrintfFormat(format).form(value);
 	}
 
 	// ---------------------------------------------------------------- objects
 
-	public static String str(String format, String value) {
+	public static String str(final String format, final String value) {
 		return new PrintfFormat(format).form(value);
 	}
 
-	public static String str(String format, Object param) {
+	public static String str(final String format, final Object param) {
 		return new PrintfFormat(format).form(param);
 	}
 
 	// ---------------------------------------------------------------- multiple objects
 
-	public static String str(String format, Object... params) {
+	public static String str(String format, final Object... params) {
 		PrintfFormat pf = new PrintfFormat();
 		for (Object param : params) {
 			pf.reinit(format);

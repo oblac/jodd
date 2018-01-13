@@ -52,7 +52,7 @@ public class NetUtil {
 	/**
 	 * Resolves IP address from a hostname.
 	 */
-	public static String resolveIpAddress(String hostname) {
+	public static String resolveIpAddress(final String hostname) {
 		try {
 			InetAddress netAddress;
 
@@ -70,7 +70,7 @@ public class NetUtil {
 	/**
 	 * Returns IP address as integer.
 	 */
-	public static int getIpAsInt(String ipAddress) {
+	public static int getIpAsInt(final String ipAddress) {
 		int ipIntValue = 0;
 		String[] tokens = StringUtil.splitc(ipAddress, '.');
 		for (String token : tokens) {
@@ -89,7 +89,7 @@ public class NetUtil {
 		return getIpAsInt(mask);
 	}
 
-	public static boolean isSocketAccessAllowed(int localIp, int socketIp, int mask) {
+	public static boolean isSocketAccessAllowed(final int localIp, final int socketIp, final int mask) {
 		boolean _retVal = false;
 
 		if (socketIp == INT_VALUE_127_0_0_1 || (localIp & mask) == (socketIp & mask)) {
@@ -105,7 +105,7 @@ public class NetUtil {
 	 * @return <tt>true</tt> if param has a valid ip v4 format <tt>false</tt> otherwise
 	 * @see <a href="https://en.wikipedia.org/wiki/IP_address#IPv4_addresses">ip address v4</a>
 	 */
-	public static boolean validateAgaintIPAdressV4Format(String input) {
+	public static boolean validateAgaintIPAdressV4Format(final String input) {
 		if (input == null) {
 			return false;
 		}
@@ -138,7 +138,7 @@ public class NetUtil {
 	/**
 	 * Resolves host name from IP address bytes.
 	 */
-	public static String resolveHostName(byte[] ip) {
+	public static String resolveHostName(final byte[] ip) {
 		try {
 			InetAddress address = InetAddress.getByAddress(ip);
 			return address.getHostName();
@@ -152,7 +152,7 @@ public class NetUtil {
 	/**
 	 * Downloads resource as byte array.
 	 */
-	public static byte[] downloadBytes(String url) throws IOException {
+	public static byte[] downloadBytes(final String url) throws IOException {
 		try (InputStream inputStream = new URL(url).openStream()) {
 			return StreamUtil.readBytes(inputStream);
 		}
@@ -161,7 +161,7 @@ public class NetUtil {
 	/**
 	 * Downloads resource as String.
 	 */
-	public static String downloadString(String url, String encoding) throws IOException {
+	public static String downloadString(final String url, final String encoding) throws IOException {
 		try (InputStream inputStream = new URL(url).openStream()) {
 			return new String(StreamUtil.readChars(inputStream, encoding));
 		}
@@ -170,7 +170,7 @@ public class NetUtil {
 	/**
 	 * Downloads resource as String.
 	 */
-	public static String downloadString(String url) throws IOException {
+	public static String downloadString(final String url) throws IOException {
 		try (InputStream inputStream = new URL(url).openStream()) {
 			return new String(StreamUtil.readChars(inputStream));
 		}
@@ -179,7 +179,7 @@ public class NetUtil {
 	/**
 	 * Downloads resource to a file, potentially very efficiently.
 	 */
-	public static void downloadFile(String url, File file) throws IOException {
+	public static void downloadFile(final String url, final File file) throws IOException {
 		try (
 			InputStream inputStream = new URL(url).openStream();
 			ReadableByteChannel rbc = Channels.newChannel(inputStream);

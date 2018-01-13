@@ -42,7 +42,7 @@ public abstract class BaseActionWrapperStack<T extends ActionWrapper> implements
 	/**
 	 * Constructs an wrapper stack with the given wrappers.
 	 */
-	protected BaseActionWrapperStack(Class<? extends T>... wrapperClasses) {
+	protected BaseActionWrapperStack(final Class<? extends T>... wrapperClasses) {
 		this.wrappers = wrapperClasses;
 	}
 
@@ -57,7 +57,7 @@ public abstract class BaseActionWrapperStack<T extends ActionWrapper> implements
 	 * Throws an exception, as stack can not be invoked.
 	 */
 	@Override
-	public Object apply(ActionRequest actionRequest) {
+	public Object apply(final ActionRequest actionRequest) {
 		throw new MadvocException("Wrapper stack can not be invoked");
 	}
 

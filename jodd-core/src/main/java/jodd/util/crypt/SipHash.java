@@ -44,18 +44,18 @@ public class SipHash {
 
 	private static Random rnd = ThreadLocalRandom.current();
 
-	public static long hashCode(byte[] data) {
+	public static long hashCode(final byte[] data) {
 		long k0 = rnd.nextLong();
 		long k1 = rnd.nextLong();
 
 		return hash24(k0, k1, data);
 	}
 
-	public static long hashCode(long k0, long k1, byte[] data) {
+	public static long hashCode(final long k0, final long k1, final byte[] data) {
 		return hash24(k0, k1, data);
 	}
 
-	private static long hash24(long k0, long k1, byte[] data) {
+	private static long hash24(final long k0, final long k1, final byte[] data) {
 		long v0 = 0x736f6d6570736575L ^ k0;
 		long v1 = 0x646f72616e646f6dL ^ k1;
 		long v2 = 0x6c7967656e657261L ^ k0;

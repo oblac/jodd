@@ -49,7 +49,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	/**
 	 * Creates resource manager.
 	 */
-	public DbJtxResourceManager(ConnectionProvider connectionProvider) {
+	public DbJtxResourceManager(final ConnectionProvider connectionProvider) {
 		this.connectionProvider = connectionProvider;
 	}
 
@@ -65,7 +65,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public DbSession beginTransaction(JtxTransactionMode jtxMode, boolean active) {
+	public DbSession beginTransaction(final JtxTransactionMode jtxMode, final boolean active) {
 		DbSession session = new DbSession(connectionProvider);
 		if (active) {
 			log.debug("begin jtx");
@@ -78,7 +78,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void commitTransaction(DbSession resource) {
+	public void commitTransaction(final DbSession resource) {
 		if (resource.isTransactionActive()) {
 			log.debug("commit jtx");
 
@@ -90,7 +90,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void rollbackTransaction(DbSession resource) {
+	public void rollbackTransaction(final DbSession resource) {
 		try {
 			if (resource.isTransactionActive()) {
 				log.debug("rollback tx");

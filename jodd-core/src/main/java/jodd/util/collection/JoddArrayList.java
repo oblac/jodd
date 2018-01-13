@@ -65,19 +65,19 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	public enum PIVOT_TYPE {
 		FIRST_QUARTER {
 			@Override
-			public int calculate(int value) {
+			public int calculate(final int value) {
 				return value >> 2;
 			}
 		},
 		HALF {
 			@Override
-			public int calculate(int value) {
+			public int calculate(final int value) {
 				return value >> 1;
 			}
 		},
 		LAST_QUARTER {
 			@Override
-			public int calculate(int value) {
+			public int calculate(final int value) {
 				return value - (value >> 2);
 			}
 		};
@@ -102,14 +102,14 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Constructs an empty list with the specified initial capacity.
 	 */
-	public JoddArrayList(int initialCapacity) {
+	public JoddArrayList(final int initialCapacity) {
 		init(initialCapacity);
 	}
 
 	/**
 	 * Constructs fine-tuned list.
 	 */
-	public JoddArrayList(int initialCapacity, PIVOT_TYPE pivot_type, int minimalGrowSize, int maxFreeSpaceBeforeNormalize) {
+	public JoddArrayList(final int initialCapacity, final PIVOT_TYPE pivot_type, final int minimalGrowSize, final int maxFreeSpaceBeforeNormalize) {
 		init(initialCapacity);
 		this.pivotType = pivot_type;
 		this.minimalGrowSize = minimalGrowSize;
@@ -128,7 +128,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * collection, in the order they are returned by the collection's
 	 * iterator.
 	 */
-	public JoddArrayList(Collection<? extends E> collection) {
+	public JoddArrayList(final Collection<? extends E> collection) {
 		buffer = collection.toArray();
 		size = buffer.length;
 		// c.toArray might (incorrectly) not return Object[] (see 6260652)
@@ -146,7 +146,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Constructs a list containing the elements of provided array.
 	 */
-	public JoddArrayList(E... array) {
+	public JoddArrayList(final E... array) {
 		buffer = array.clone();
 		size = buffer.length;
 		start = 0;
@@ -157,7 +157,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Initializes the list.
 	 */
-	protected void init(int capacity) {
+	protected void init(final int capacity) {
 		this.pivotIndex = capacity;
 		this.buffer = EMPTY_BUFFER;
 		this.size = 0;
@@ -216,7 +216,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * Ensures that buffer size will handle addition of <code>elementsToAdd</code> elements
 	 * on provided <code>index</code> position.
 	 */
-	protected void ensureCapacity(int index, int elementsToAdd) {
+	protected void ensureCapacity(final int index, final int elementsToAdd) {
 		if (buffer == EMPTY_BUFFER) {
 			// first time
 			if (elementsToAdd <= pivotIndex) {
@@ -340,7 +340,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * Returns <code>true</code> if this list contains the specified element.
 	 */
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return indexOf(o) >= 0;
 	}
 
@@ -352,7 +352,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * or -1 if there is no such index.
 	 */
 	@Override
-	public int indexOf(Object o) {
+	public int indexOf(final Object o) {
 		if (o == null) {
 			for (int i = start; i < end; i++) {
 				if (buffer[i] == null) {
@@ -374,7 +374,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * in this list, or -1 if this list does not contain the element.
 	 */
 	@Override
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf(final Object o) {
 		if (o == null) {
 			for (int i = end - 1; i >= start; i--) {
 				if (buffer[i] == null) {
@@ -440,7 +440,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T[] toArray(T[] array) {
+	public <T> T[] toArray(final T[] array) {
 		if (array.length < size) {
 			Class arrayType = array.getClass();
 			T[] copy = (arrayType == Object[].class)
@@ -463,7 +463,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public E get(int index) {
+	public E get(final int index) {
 		rangeCheck(index);
 
 		return (E) buffer[start + index];
@@ -489,7 +489,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public E set(int index, E element) {
+	public E set(int index, final E element) {
 		rangeCheck(index);
 
 		index += start;
@@ -505,7 +505,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * Appends the specified element to the end of this list.
 	 */
 	@Override
-	public boolean add(E e) {
+	public boolean add(final E e) {
 		int index = size;
 		ensureCapacity(index, 1);  // increments modCount!!
 		buffer[end] = e;
@@ -517,7 +517,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Adds the specified element to the beginning of this list.
 	 */
-	public boolean addFirst(E e) {
+	public boolean addFirst(final E e) {
 		int index = 0;
 		ensureCapacity(index, 1);  // increments modCount!!
 		if (size > 0) {
@@ -533,7 +533,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Appends element to the list.
 	 */
-	public boolean addLast(E e) {
+	public boolean addLast(final E e) {
 		return add(e);
 	}
 
@@ -543,7 +543,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * any subsequent elements to the right (adds one to their indices).
 	 */
 	@Override
-	public void add(int index, E element) {
+	public void add(final int index, final E element) {
 		if (index == 0) {
 			addFirst(element);
 			return;
@@ -579,7 +579,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * specified collection's Iterator.
 	 */
 	@Override
-	public boolean addAll(Collection<? extends E> collection) {
+	public boolean addAll(final Collection<? extends E> collection) {
 		if (collection.isEmpty()) {
 			return false;
 		}
@@ -591,7 +591,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Appends all elements of given array.
 	 */
-	public boolean addAll(E... array) {
+	public boolean addAll(final E... array) {
 		if (array.length == 0) {
 			return false;
 		}
@@ -599,7 +599,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 		return doAddAll(array);
 	}
 
-	protected boolean doAddAll(Object[] array) {
+	protected boolean doAddAll(final Object[] array) {
 		int numNew = array.length;
 		ensureCapacity(end, numNew);		// increments modCount
 
@@ -618,7 +618,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * specified collection's iterator.
 	 */
 	@Override
-	public boolean addAll(int index, Collection<? extends E> collection) {
+	public boolean addAll(final int index, final Collection<? extends E> collection) {
 		rangeCheck(index);
 		Object[] array = collection.toArray();
 		return doAddAll(index, array);
@@ -627,12 +627,12 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Inserts all array elements to this list.
 	 */
-	public boolean addAll(int index, E... array) {
+	public boolean addAll(final int index, final E... array) {
 		rangeCheck(index);
 		return doAddAll(index, array);
 	}
 
-	protected boolean doAddAll(int index, Object[] array) {
+	protected boolean doAddAll(final int index, final Object[] array) {
 		int numNew = array.length;
 		ensureCapacity(index, numNew);		// increments modCount
 
@@ -705,7 +705,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public E remove(int index) {
+	public E remove(final int index) {
 		rangeCheck(index);
 
 		modCount++;
@@ -713,7 +713,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 		return doRemove(index);
 	}
 
-	protected E doRemove(int index) {
+	protected E doRemove(final int index) {
 		int realIndex = start + index;
 
 		E oldValue = (E) buffer[realIndex];
@@ -755,7 +755,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * if it is present.
 	 */
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		if (o == null) {
 			for (int index = start; index < end; index++) {
 				if (buffer[index] == null) {
@@ -780,7 +780,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * Shifts any succeeding elements to the left (reduces their index).
 	 */
 	@Override
-	protected void removeRange(int fromIndex, int toIndex) {
+	protected void removeRange(final int fromIndex, final int toIndex) {
 		modCount++;
 
 		int numMoved = size - toIndex;
@@ -804,7 +804,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * specified collection.
 	 */
 	@Override
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll(final Collection<?> c) {
 		return batchRemove(c, false);
 	}
 
@@ -814,11 +814,11 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * of its elements that are not contained in the specified collection.
 	 */
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(final Collection<?> c) {
 		return batchRemove(c, true);
 	}
 
-	protected boolean batchRemove(Collection<?> collection, boolean complement) {
+	protected boolean batchRemove(final Collection<?> collection, final boolean complement) {
 		int r = 0, w = 0;
 		boolean modified = false;
 		try {
@@ -862,7 +862,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * A version of rangeCheck used by add and addAll.
 	 */
-	private void rangeCheck(int index) {
+	private void rangeCheck(final int index) {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 		}
@@ -876,7 +876,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * sequence), starting at the specified position in the list.
 	 */
 	@Override
-	public ListIterator<E> listIterator(int index) {
+	public ListIterator<E> listIterator(final int index) {
 		rangeCheck(index);
 		return new ListItr(index);
 	}
@@ -954,7 +954,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	 * An optimized version of <code>AbstractList.ListItr</code>.
 	 */
 	private class ListItr extends Itr implements ListIterator<E> {
-		ListItr(int index) {
+		ListItr(final int index) {
 			super();
 			cursor = index;
 		}
@@ -991,7 +991,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 		}
 
 		@Override
-		public void set(E e) {
+		public void set(final E e) {
 			if (lastRet < 0) {
 				throw new IllegalStateException();
 			}
@@ -1005,7 +1005,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 		}
 
 		@Override
-		public void add(E e) {
+		public void add(final E e) {
 			checkForComodification();
 
 			try {
@@ -1025,6 +1025,7 @@ public class JoddArrayList<E> extends AbstractList<E> implements RandomAccess, C
 	/**
 	 * Returns string representation of this array.
 	 */
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("[");
 		if (buffer != EMPTY_BUFFER) {

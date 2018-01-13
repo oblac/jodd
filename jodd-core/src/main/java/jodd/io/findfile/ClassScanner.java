@@ -94,7 +94,7 @@ public class ClassScanner {
 	/**
 	 * Specify excluded jars.
 	 */
-	public ClassScanner excludeJars(String... excludedJars) {
+	public ClassScanner excludeJars(final String... excludedJars) {
 		for (String excludedJar : excludedJars) {
 			rulesJars.exclude(excludedJar);
 		}
@@ -104,7 +104,7 @@ public class ClassScanner {
 	/**
 	 * Specify included jars.
 	 */
-	public ClassScanner includeJars(String... includedJars) {
+	public ClassScanner includeJars(final String... includedJars) {
 		for (String includedJar : includedJars) {
 			rulesJars.include(includedJar);
 		}
@@ -114,7 +114,7 @@ public class ClassScanner {
 	/**
 	 * Sets white/black list mode for jars.
 	 */
-	public ClassScanner includeAllJars(boolean blacklist) {
+	public ClassScanner includeAllJars(final boolean blacklist) {
 		if (blacklist) {
 			rulesJars.blacklist();
 		} else {
@@ -126,7 +126,7 @@ public class ClassScanner {
 	/**
 	 * Sets white/black list mode for jars.
 	 */
-	public ClassScanner excludeAllJars(boolean whitelist) {
+	public ClassScanner excludeAllJars(final boolean whitelist) {
 		if (whitelist) {
 			rulesJars.whitelist();
 		} else {
@@ -147,7 +147,7 @@ public class ClassScanner {
 	 * Sets included set of names that will be considered during configuration.
 	 * @see InExRules
 	 */
-	public ClassScanner includeEntries(String... includedEntries) {
+	public ClassScanner includeEntries(final String... includedEntries) {
 		for (String includedEntry : includedEntries) {
 			rulesEntries.include(includedEntry);
 		}
@@ -157,7 +157,7 @@ public class ClassScanner {
 	/**
 	 * Sets white/black list mode for entries.
 	 */
-	public ClassScanner includeAllEntries(boolean blacklist) {
+	public ClassScanner includeAllEntries(final boolean blacklist) {
 		if (blacklist) {
 			rulesEntries.blacklist();
 		} else {
@@ -168,7 +168,7 @@ public class ClassScanner {
 	/**
 	 * Sets white/black list mode for entries.
 	 */
-	public ClassScanner excludeAllEntries(boolean whitelist) {
+	public ClassScanner excludeAllEntries(final boolean whitelist) {
 		if (whitelist) {
 			rulesEntries.whitelist();
 		} else {
@@ -181,7 +181,7 @@ public class ClassScanner {
 	 * Sets excluded names that narrows included set of packages.
 	 * @see InExRules
 	 */
-	public ClassScanner excludeEntries(String... excludedEntries) {
+	public ClassScanner excludeEntries(final String... excludedEntries) {
 		for (String excludedEntry : excludedEntries) {
 			rulesEntries.exclude(excludedEntry);
 		}
@@ -204,7 +204,7 @@ public class ClassScanner {
 	 */
 	protected boolean ignoreException;
 
-	public ClassScanner includeResources(boolean includeResources) {
+	public ClassScanner includeResources(final boolean includeResources) {
 		this.includeResources = includeResources;
 		return this;
 	}
@@ -212,7 +212,7 @@ public class ClassScanner {
 	/**
 	 * Sets if exceptions during scanning process should be ignored or not.
 	 */
-	public ClassScanner ignoreException(boolean ignoreException) {
+	public ClassScanner ignoreException(final boolean ignoreException) {
 		this.ignoreException = ignoreException;
 		return this;
 	}
@@ -223,7 +223,7 @@ public class ClassScanner {
 	/**
 	 * Returns <code>true</code> if some JAR file has to be accepted.
 	 */
-	protected boolean acceptJar(File jarFile) {
+	protected boolean acceptJar(final File jarFile) {
 		String path = jarFile.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
@@ -235,7 +235,7 @@ public class ClassScanner {
 	 * Callback {@link #onEntry(EntryData)} is called on
 	 * each class name.
 	 */
-	protected void scanUrl(URL url) {
+	protected void scanUrl(final URL url) {
 		File file = FileUtil.toFile(url);
 		if (file == null) {
 			if (!ignoreException) {
@@ -248,7 +248,7 @@ public class ClassScanner {
 	/**
 	 * Scans single path.
 	 */
-	protected void scanPath(File file) {
+	protected void scanPath(final File file) {
 		String path = file.getAbsolutePath();
 
 		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT)) {
@@ -267,7 +267,7 @@ public class ClassScanner {
 	 * Scans classes inside single JAR archive. Archive is scanned as a zip file.
 	 * @see #onEntry(EntryData)
 	 */
-	protected void scanJarFile(File file) {
+	protected void scanJarFile(final File file) {
 		ZipFile zipFile;
 		try {
 			zipFile = new ZipFile(file);
@@ -313,7 +313,7 @@ public class ClassScanner {
 	 * Scans single classpath directory.
 	 * @see #onEntry(EntryData)
 	 */
-	protected void scanClassPath(File root) {
+	protected void scanClassPath(final File root) {
 		String rootPath = root.getAbsolutePath();
 		if (!rootPath.endsWith(File.separator)) {
 			rootPath += File.separatorChar;
@@ -337,7 +337,7 @@ public class ClassScanner {
 		}
 	}
 
-	protected void scanClassFile(String filePath, String rootPath, File file, boolean isClass) {
+	protected void scanClassFile(final String filePath, final String rootPath, final File file, final boolean isClass) {
 		if (StringUtil.startsWithIgnoreCase(filePath, rootPath)) {
 			String entryName = prepareEntryName(filePath.substring(rootPath.length()), isClass);
 			EntryData entryData = new EntryData(entryName, file);
@@ -353,7 +353,7 @@ public class ClassScanner {
 	 * Prepares resource and class names. For classes, it strips '.class' from the end and converts
 	 * all (back)slashes to dots. For resources, it replaces all backslashes to slashes.
 	 */
-	protected String prepareEntryName(String name, boolean isClass) {
+	protected String prepareEntryName(final String name, final boolean isClass) {
 		String entryName = name;
 		if (isClass) {
 			entryName = name.substring(0, name.length() - 6);		// 6 == ".class".length()
@@ -370,14 +370,14 @@ public class ClassScanner {
 	 * @see #prepareEntryName(String, boolean)
 	 * @see #scanEntry(EntryData)
 	 */
-	protected boolean acceptEntry(String entryName) {
+	protected boolean acceptEntry(final String entryName) {
 		return rulesEntries.match(entryName);
 	}
 
 	/**
 	 * If entry name is {@link #acceptEntry(String) accepted} invokes {@link #onEntry(EntryData)} a callback}.
 	 */
-	protected void scanEntry(EntryData entryData) {
+	protected void scanEntry(final EntryData entryData) {
 		if (!acceptEntry(entryData.name())) {
 			return;
 		}
@@ -393,7 +393,7 @@ public class ClassScanner {
 
 	private Consumers<EntryData> entryDataConsumers = Consumers.empty();
 
-	public ClassScanner onEntry(Consumer<EntryData> entryDataConsumer) {
+	public ClassScanner onEntry(final Consumer<EntryData> entryDataConsumer) {
 		entryDataConsumers.add(entryDataConsumer);
 		return this;
 	}
@@ -409,7 +409,7 @@ public class ClassScanner {
 	 * <code>InputStream</code> is provided by InputStreamProvider and opened lazy.
 	 * Once opened, input stream doesn't have to be closed - this is done by this class anyway.
 	 */
-	protected void onEntry(EntryData entryData) {
+	protected void onEntry(final EntryData entryData) {
 		entryDataConsumers.accept(entryData);
 	}
 
@@ -418,7 +418,7 @@ public class ClassScanner {
 	/**
 	 * Returns type signature bytes used for searching in class file.
 	 */
-	public static byte[] bytecodeSignatureOfType(Class type) {
+	public static byte[] bytecodeSignatureOfType(final Class type) {
 		String name = 'L' + type.getName().replace('.', '/') + ';';
 		return name.getBytes();
 	}
@@ -427,7 +427,7 @@ public class ClassScanner {
 	 * Loads class by its name. If {@link #ignoreException} is set,
 	 * no exception is thrown, but <code>null</code> is returned.
 	 */
-	public Class loadClass(String className) throws ClassNotFoundException {
+	public Class loadClass(final String className) throws ClassNotFoundException {
 		try {
 			return ClassLoaderUtil.loadClass(className);
 		} catch (ClassNotFoundException | Error cnfex) {
@@ -450,14 +450,14 @@ public class ClassScanner {
 		private final ZipEntry zipEntry;
 		private final String name;
 
-		EntryData(String name, ZipFile zipFile, ZipEntry zipEntry) {
+		EntryData(final String name, final ZipFile zipFile, final ZipEntry zipEntry) {
 			this.name = name;
 			this.zipFile = zipFile;
 			this.zipEntry = zipEntry;
 			this.file = null;
 			inputStream = null;
 		}
-		EntryData(String name, File file) {
+		EntryData(final String name, final File file) {
 			this.name = name;
 			this.file = file;
 			this.zipEntry = null;
@@ -497,7 +497,7 @@ public class ClassScanner {
 		 * class uses some type. Please note that if signature exists it still doesn't means that class uses
 		 * it in expected way, therefore, class should be loaded to complete the scan.
 		 */
-		public boolean isTypeSignatureInUse(byte[] bytes) {
+		public boolean isTypeSignatureInUse(final byte[] bytes) {
 			openInputStream();
 
 			try {
@@ -559,7 +559,7 @@ public class ClassScanner {
 	 * Scans URLs. If (#ignoreExceptions} is set, exceptions
 	 * per one URL will be ignored and loops continues.
 	 */
-	public void scan(URL... urls) {
+	public void scan(final URL... urls) {
 		for (URL path : urls) {
 			scanUrl(path);
 		}
@@ -575,7 +575,7 @@ public class ClassScanner {
 	/**
 	 * Scans provided paths.
 	 */
-	public void scan(File... paths) {
+	public void scan(final File... paths) {
 		for (File path : paths) {
 			scanPath(path);
 		}
@@ -584,7 +584,7 @@ public class ClassScanner {
 	/**
 	 * Scans provided paths.
 	 */
-	public void scan(String... paths) {
+	public void scan(final String... paths) {
 		for (String path : paths) {
 			scanPath(new File(path));
 		}

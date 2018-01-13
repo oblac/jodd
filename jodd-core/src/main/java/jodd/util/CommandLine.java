@@ -65,14 +65,14 @@ public class CommandLine {
 
 	// ---------------------------------------------------------------- ctor
 
-	protected CommandLine(String command) {
+	protected CommandLine(final String command) {
 		cmdLine.add(command);
 	}
 
 	/**
 	 * Creates command line with given command.
 	 */
-	public static CommandLine cmd(String command) {
+	public static CommandLine cmd(final String command) {
 		return new CommandLine(command);
 	}
 
@@ -81,7 +81,7 @@ public class CommandLine {
 	/**
 	 * Defines working directory.
 	 */
-	public CommandLine workingDirectory(File workDirectory) {
+	public CommandLine workingDirectory(final File workDirectory) {
 		this.workingDirectory = workDirectory;
 
 		return this;
@@ -90,7 +90,7 @@ public class CommandLine {
 	/**
 	 * Defines working directory.
 	 */
-	public CommandLine workingDirectory(String workDirectory) {
+	public CommandLine workingDirectory(final String workDirectory) {
 		this.workingDirectory = new File(workDirectory);
 
 		return this;
@@ -99,7 +99,7 @@ public class CommandLine {
 	/**
 	 * Adds single argument.
 	 */
-	public CommandLine arg(String argument) {
+	public CommandLine arg(final String argument) {
 		cmdLine.add(argument);
 
 		return this;
@@ -108,7 +108,7 @@ public class CommandLine {
 	/**
 	 * Adds several arguments.
 	 */
-	public CommandLine args(String... arguments) {
+	public CommandLine args(final String... arguments) {
 		if (arguments != null && arguments.length > 0) {
 			Collections.addAll(cmdLine, arguments);
 		}
@@ -119,7 +119,7 @@ public class CommandLine {
 	/**
 	 * Defines output prefix.
 	 */
-	public CommandLine outPrefix(String prefix) {
+	public CommandLine outPrefix(final String prefix) {
 		this.outPrefix = prefix;
 		return this;
 	}
@@ -127,17 +127,17 @@ public class CommandLine {
 	/**
 	 * Defines error prefix.
 	 */
-	public CommandLine errPrefix(String prefix) {
+	public CommandLine errPrefix(final String prefix) {
 		this.errPrefix = prefix;
 		return this;
 	}
 
-	public CommandLine out(OutputStream out) {
+	public CommandLine out(final OutputStream out) {
 		this.out = out;
 		return this;
 	}
 
-	public CommandLine err(OutputStream err) {
+	public CommandLine err(final OutputStream err) {
 		this.err = err;
 		return this;
 	}
@@ -145,7 +145,7 @@ public class CommandLine {
 	/**
 	 * Sets environment variable.
 	 */
-	public CommandLine env(String key, String value) {
+	public CommandLine env(final String key, final String value) {
 		if (env == null) {
 			env = new HashMap<>();
 		}
@@ -157,7 +157,7 @@ public class CommandLine {
 	 * When set to {@code true}, environment will not be copied from the
 	 * parent process and will be completly empty.
 	 */
-	public CommandLine newEnv(boolean clean) {
+	public CommandLine newEnv(final boolean clean) {
 		cleanEnvironment = clean;
 		return this;
 	}
@@ -221,7 +221,7 @@ public class CommandLine {
 		return new RuntimeUtil.ProcessResult(result, baos.toString());
 	}
 
-	private RuntimeUtil.ProcessResult writeException(ByteArrayOutputStream baos, Exception ex) {
+	private RuntimeUtil.ProcessResult writeException(final ByteArrayOutputStream baos, final Exception ex) {
 		try {
 			baos.write(errPrefix.getBytes());
 		}

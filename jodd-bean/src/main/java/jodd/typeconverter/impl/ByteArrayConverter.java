@@ -46,12 +46,12 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 
 	protected final TypeConverterManager typeConverterManager;
 
-	public ByteArrayConverter(TypeConverterManager typeConverterManager) {
+	public ByteArrayConverter(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	@Override
-	public byte[] convert(Object value) {
+	public byte[] convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -70,14 +70,14 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected byte convertType(Object value) {
+	protected byte convertType(final Object value) {
 		return typeConverterManager.convertType(value, byte.class).byteValue();
 	}
 
 	/**
 	 * Creates an array with single element.
 	 */
-	protected byte[] convertToSingleElementArray(Object value) {
+	protected byte[] convertToSingleElementArray(final Object value) {
 		return new byte[] {convertType(value)};
 	}
 
@@ -86,7 +86,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 	 * types and collections, iterates them to make conversion
 	 * and to create target array.
  	 */
-	protected byte[] convertValueToArray(Object value) {
+	protected byte[] convertValueToArray(final Object value) {
 		if (value instanceof Blob) {
 			Blob blob = (Blob) value;
 			try {
@@ -165,7 +165,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 	/**
 	 * Converts array value to array.
 	 */
-	protected byte[] convertArrayToArray(Object value) {
+	protected byte[] convertArrayToArray(final Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == byte.class) {
@@ -195,7 +195,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
-	protected byte[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+	protected byte[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		byte[] result = null;
 
 		if (primitiveComponentType == byte[].class) {

@@ -39,7 +39,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class IfTag extends SimpleTagSupport {
 
 	private String test;
-	public void setTest(String test) {
+	public void setTest(final String test) {
 		this.test = test;
 	}
 

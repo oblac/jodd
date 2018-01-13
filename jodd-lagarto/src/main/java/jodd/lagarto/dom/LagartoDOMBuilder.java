@@ -44,7 +44,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		return config;
 	}
 
-	public void setConfig(LagartoDomBuilderConfig config) {
+	public void setConfig(final LagartoDomBuilderConfig config) {
 		this.config = config;
 	}
 
@@ -131,7 +131,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from provided content.
 	 */
 	@Override
-	public Document parse(char[] content) {
+	public Document parse(final char[] content) {
 		LagartoParser lagartoParser = new LagartoParser(content);
 		return doParse(lagartoParser);
 	}
@@ -140,7 +140,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from the provided content.
 	 */
 	@Override
-	public Document parse(String content) {
+	public Document parse(final String content) {
 		LagartoParser lagartoParser = new LagartoParser(content);
 		return doParse(lagartoParser);
 	}
@@ -148,7 +148,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Parses the content using provided lagarto parser.
 	 */
-	protected Document doParse(LagartoParser lagartoParser) {
+	protected Document doParse(final LagartoParser lagartoParser) {
 		lagartoParser.setConfig(config);
 
 		LagartoDOMBuilderTagVisitor domBuilderTagVisitor =

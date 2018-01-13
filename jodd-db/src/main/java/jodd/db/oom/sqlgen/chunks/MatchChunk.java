@@ -50,15 +50,15 @@ public class MatchChunk extends SqlChunk {
 	protected final String objectRef;
 	protected final int includeColumns;
 
-	public MatchChunk(String tableRef, Object data, int includeColumns) {
+	public MatchChunk(final String tableRef, final Object data, final int includeColumns) {
 		this(tableRef, null, data, includeColumns);
 	}
 
-	public MatchChunk(String tableRef, String objectRef, int includeColumns) {
+	public MatchChunk(final String tableRef, final String objectRef, final int includeColumns) {
 		this(tableRef, objectRef, null, includeColumns);
 	}
 
-	protected MatchChunk(String tableRef, String objectRef, Object data, int includeColumns) {
+	protected MatchChunk(final String tableRef, final String objectRef, final Object data, final int includeColumns) {
 		super(CHUNK_MATCH);
 		this.tableRef = tableRef;
 		this.objectRef = objectRef;
@@ -88,7 +88,7 @@ public class MatchChunk extends SqlChunk {
 	}
 
 	@Override
-	public void process(StringBuilder out) {
+	public void process(final StringBuilder out) {
 		if (objectRef != null) {
 			data = templateData.lookupObject(objectRef);
 		}

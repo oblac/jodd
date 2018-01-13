@@ -35,12 +35,12 @@ public class MySqlDbServer implements DbServer {
 
 	private final String version;
 
-	public MySqlDbServer(String version) {
+	public MySqlDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 		JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
 		JoddDb.get().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}

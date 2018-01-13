@@ -75,7 +75,7 @@ public class MadvocComponentLifecycle {
 	 * Invoke the listener based on type.
 	 * Not very OOP, but works.
 	 */
-	public static void invoke(Object listener, final Class listenerType) {
+	public static void invoke(final Object listener, final Class listenerType) {
 		if (listenerType == Init.class) {
 			((Init) listener).init();
 			return;

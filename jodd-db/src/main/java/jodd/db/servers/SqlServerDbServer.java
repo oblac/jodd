@@ -35,12 +35,12 @@ public class SqlServerDbServer implements DbServer {
 
 	private final String version;
 
-	public SqlServerDbServer(String version) {
+	public SqlServerDbServer(final String version) {
 		this.version = version;
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 		JoddDb.get().defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
 		JoddDb.get().defaults().getSqlGenConfig().setUpdateablePrimaryKey(false);
 	}

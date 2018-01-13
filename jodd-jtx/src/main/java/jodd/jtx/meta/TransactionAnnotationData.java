@@ -41,7 +41,7 @@ public class TransactionAnnotationData<A extends Annotation> extends AnnotationD
 	protected boolean readOnly;
 	protected int timeout;
 
-	protected TransactionAnnotationData(A annotation) {
+	protected TransactionAnnotationData(final A annotation) {
 		super(annotation);
 	}
 

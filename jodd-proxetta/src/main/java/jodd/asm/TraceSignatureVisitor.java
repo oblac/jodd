@@ -84,7 +84,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
 
     private String separator = "";
 
-    public TraceSignatureVisitor(final StringBuilder buf, boolean isInterface) {		// jodd: added boolean argument to a constructor
+    public TraceSignatureVisitor(final StringBuilder buf, final boolean isInterface) {		// jodd: added boolean argument to a constructor
         super(Opcodes.ASM6);
         this.isInterface = isInterface;
         this.declaration = buf;

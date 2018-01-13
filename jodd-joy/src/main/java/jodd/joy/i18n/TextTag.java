@@ -53,7 +53,7 @@ public class TextTag extends SimpleTagSupport implements DynamicAttributes {
 	private static final String KEY_ATTR_NAME = "key";
 
 	protected String key;
-	public void setKey(String key) {
+	public void setKey(final String key) {
 		this.key = key;
 	}
 
@@ -62,14 +62,14 @@ public class TextTag extends SimpleTagSupport implements DynamicAttributes {
 	/**
 	 * Sets only default resource bundles.
 	 */
-	public void setDefaultOnly(String defaultOnly) {
+	public void setDefaultOnly(final String defaultOnly) {
 		this.defaultOnly = Boolean.parseBoolean(defaultOnly);
 	}
 
 	private final List<String[]> params = new ArrayList<>();
 
 	@Override
-	public void setDynamicAttribute(String uri, String localName, Object value) {
+	public void setDynamicAttribute(final String uri, final String localName, final Object value) {
 		params.add(new String[] {localName, StringUtil.toSafeString(value)});
 	}
 

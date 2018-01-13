@@ -42,7 +42,7 @@ public class ThreadDbSessionHolder {
 	/**
 	 * Sets current db session.
 	 */
-	public static void set(DbSession dbSession) {
+	public static void set(final DbSession dbSession) {
 		DB_SESSION.set(dbSession);
 	}
 

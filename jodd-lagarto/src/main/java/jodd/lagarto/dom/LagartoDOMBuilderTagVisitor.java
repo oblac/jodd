@@ -66,7 +66,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 */
 	protected boolean enabled;
 
-	public LagartoDOMBuilderTagVisitor(LagartoDOMBuilder domBuilder) {
+	public LagartoDOMBuilderTagVisitor(final LagartoDOMBuilder domBuilder) {
 		this.domBuilder = domBuilder;
 	}
 
@@ -145,7 +145,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	/**
 	 * Creates new element with correct configuration.
 	 */
-	protected Element createElementNode(Tag tag) {
+	protected Element createElementNode(final Tag tag) {
 		boolean hasVoidTags = htmlVoidRules != null;
 
 		boolean isVoid = false;
@@ -171,7 +171,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Visits tags.
 	 */
 	@Override
-	public void tag(Tag tag) {
+	public void tag(final Tag tag) {
 		if (!enabled) {
 			return;
 		}
@@ -272,7 +272,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	/**
 	 * Removes last child node if contains just empty text.
 	 */
-	protected void removeLastChildNodeIfEmptyText(Node parentNode, boolean closedTag) {
+	protected void removeLastChildNodeIfEmptyText(final Node parentNode, final boolean closedTag) {
 		if (parentNode == null) {
 			return;
 		}
@@ -338,7 +338,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * <p>
 	 * This is just a generic solutions, closest to the rules.
 	 */
-	protected void fixUnclosedTagsUpToMatchingParent(Tag tag, Node matchingParent) {
+	protected void fixUnclosedTagsUpToMatchingParent(final Tag tag, final Node matchingParent) {
 		if (domBuilder.config.isUnclosedTagAsOrphanCheck()) {
 			Node thisNode = parentNode;
 
@@ -395,7 +395,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	// ---------------------------------------------------------------- tree
 
 	@Override
-	public void script(Tag tag, CharSequence body) {
+	public void script(final Tag tag, final CharSequence body) {
 		if (!enabled) {
 			return;
 		}
@@ -411,7 +411,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	@Override
-	public void comment(CharSequence comment) {
+	public void comment(final CharSequence comment) {
 		if (!enabled) {
 			return;
 		}
@@ -430,7 +430,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	@Override
-	public void text(CharSequence text) {
+	public void text(final CharSequence text) {
 		if (!enabled) {
 			return;
 		}
@@ -443,7 +443,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	@Override
-	public void cdata(CharSequence cdata) {
+	public void cdata(final CharSequence cdata) {
 		if (!enabled) {
 			return;
 		}
@@ -454,7 +454,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	@Override
-	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+	public void xml(final CharSequence version, final CharSequence encoding, final CharSequence standalone) {
 		if (!enabled) {
 			return;
 		}
@@ -465,7 +465,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	@Override
-	public void doctype(Doctype doctype) {
+	public void doctype(final Doctype doctype) {
 		if (!enabled) {
 			return;
 		}
@@ -480,7 +480,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	@Override
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
+	public void condComment(final CharSequence expression, final boolean isStartingTag, final boolean isHidden, final boolean isHiddenEndTag) {
 		String expressionString = expression.toString().trim();
 
 		if (expressionString.equals("endif")) {
@@ -508,7 +508,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	// ---------------------------------------------------------------- error
 
 	@Override
-	public void error(String message) {
+	public void error(final String message) {
 		rootNode.addError(message);
 		log.log(domBuilder.config.getParsingErrorLogLevel(), message);
 	}

@@ -79,7 +79,7 @@ public class DbTransactionMode {
 	/**
 	 * Sets isolation level.
 	 */
-	public DbTransactionMode setIsolation(int isolation) {
+	public DbTransactionMode setIsolation(final int isolation) {
 		this.isolation = isolation;
 		return this;
 	}
@@ -95,7 +95,7 @@ public class DbTransactionMode {
 		return readOnlyMode;
 	}
 
-	public DbTransactionMode setReadOnly(boolean readOnly) {
+	public DbTransactionMode setReadOnly(final boolean readOnly) {
 		this.readOnlyMode = readOnly;
 		return this;
 	}
@@ -104,7 +104,7 @@ public class DbTransactionMode {
 	// ---------------------------------------------------------------- equals & hashCode
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		if (this == object) {
 			return true;
 		}

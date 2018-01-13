@@ -40,7 +40,7 @@ public class GenericsReader {
 	 * Parses signature for generic information and returns a map where key is generic name
 	 * and value is raw type. Returns an empty map if signature does not define any generics.
 	 */
-	public Map<String, String> parseSignatureForGenerics(String signature, boolean isInterface) {
+	public Map<String, String> parseSignatureForGenerics(final String signature, final boolean isInterface) {
 		Map<String, String> genericsMap = new HashMap<>();
 
 		if (signature == null) {
@@ -53,13 +53,13 @@ public class GenericsReader {
 			String genericName;
 
 			@Override
-			public void visitFormalTypeParameter(String name) {
+			public void visitFormalTypeParameter(final String name) {
 				genericName = name;
 				super.visitFormalTypeParameter(name);
 			}
 
 			@Override
-			public void visitClassType(String name) {
+			public void visitClassType(final String name) {
 				if (genericName != null) {
 					genericsMap.put(genericName, 'L' + name + ';');
 					genericName = null;

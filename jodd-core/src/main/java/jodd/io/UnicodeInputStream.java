@@ -60,7 +60,7 @@ public class UnicodeInputStream extends InputStream {
 	 * Read mode is active when target encoding is set. Then this stream reads
 	 * optional BOM for given encoding. If BOM doesn't exist, nothing is skipped.
 	 */
-	public UnicodeInputStream(InputStream in, String targetEncoding) {
+	public UnicodeInputStream(final InputStream in, final String targetEncoding) {
 		internalInputStream = new PushbackInputStream(in, MAX_BOM_SIZE);
 		this.targetEncoding = targetEncoding;
 	}

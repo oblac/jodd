@@ -64,7 +64,7 @@ public class Madvoc {
 	 * May return <code>null</code> indicating <code>Madvoc</code>
 	 * is not yet initialized.
 	 */
-	public static Madvoc get(ServletContext servletContext) {
+	public static Madvoc get(final ServletContext servletContext) {
 		return (Madvoc) servletContext.getAttribute(MADVOC_ATTR);
 	}
 
@@ -79,7 +79,7 @@ public class Madvoc {
 	/**
 	 * Sets {@link WebApp} class name.
 	 */
-	public void setWebAppClassName(String webAppClass) {
+	public void setWebAppClassName(final String webAppClass) {
 		this.webAppClassName = webAppClass;
 		this.webAppClass = null;
 	}
@@ -87,7 +87,7 @@ public class Madvoc {
 	/**
 	 * Sets {@link WebApp} class.
 	 */
-	public void setWebAppClass(Class webAppClass) {
+	public void setWebAppClass(final Class webAppClass) {
 		this.webAppClass = webAppClass;
 		this.webAppClassName = null;
 	}
@@ -95,7 +95,7 @@ public class Madvoc {
 	/**
 	 * Sets the name of the class that is going to be used for configuration of user actions.
 	 */
-	public void setMadvocConfiguratorClassName(String madvocConfiguratorClassName) {
+	public void setMadvocConfiguratorClassName(final String madvocConfiguratorClassName) {
 		this.madvocConfiguratorClassName = madvocConfiguratorClassName;
 		this.madvocConfiguratorClass = null;
 	}
@@ -103,19 +103,19 @@ public class Madvoc {
 	/**
 	 * Sets class that will be used for configuring the user actions.
 	 */
-	public void setMadvocConfiguratorClass(Class madvocConfiguratorClass) {
+	public void setMadvocConfiguratorClass(final Class madvocConfiguratorClass) {
 		this.madvocConfiguratorClass = madvocConfiguratorClass;
 		this.madvocConfiguratorClassName = null;
 	}
 
-	public void setParamsFiles(String[] paramsFiles) {
+	public void setParamsFiles(final String[] paramsFiles) {
 		this.paramsFiles = paramsFiles;
 	}
 
 	/**
 	 * Configures Madvoc by reading context init parameters.
 	 */
-	public void configureWith(ServletContext servletContext) {
+	public void configureWith(final ServletContext servletContext) {
 		webAppClassName = servletContext.getInitParameter(PARAM_MADVOC_WEBAPP);
 		paramsFiles = Converter.get().toStringArray(servletContext.getInitParameter(PARAM_MADVOC_PARAMS));
 		madvocConfiguratorClassName = servletContext.getInitParameter(PARAM_MADVOC_CONFIGURATOR);
@@ -140,7 +140,7 @@ public class Madvoc {
 	 * when web application is run out from container.
 	 */
 	@SuppressWarnings("InstanceofCatchParameter")
-	public WebApp startWebApplication(ServletContext servletContext) {
+	public WebApp startWebApplication(final ServletContext servletContext) {
 		try {
 			WebApp webApp = _start(servletContext);
 
@@ -161,7 +161,7 @@ public class Madvoc {
 		}
 	}
 	
-	private WebApp _start(ServletContext servletContext) {
+	private WebApp _start(final ServletContext servletContext) {
 		if (servletContext != null) {
 			this.servletContext = servletContext;
 
@@ -241,7 +241,7 @@ public class Madvoc {
 	/**
 	 * Loads Madvoc parameters. New {@link Props} is created from the classpath.
 	 */
-	protected Props loadMadvocParams(String[] patterns) {
+	protected Props loadMadvocParams(final String[] patterns) {
 		if (log.isInfoEnabled()) {
 			log.info("Loading Madvoc parameters from: " + Converter.get().toString(patterns));
 		}

@@ -37,12 +37,12 @@ public class MutableLongConverter implements TypeConverter<MutableLong> {
 	protected final TypeConverter<Long> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableLongConverter(TypeConverterManager typeConverterManager) {
+	public MutableLongConverter(final TypeConverterManager typeConverterManager) {
 		typeConverter = typeConverterManager.lookup(Long.class);
 	}
 
 	@Override
-	public MutableLong convert(Object value) {
+	public MutableLong convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

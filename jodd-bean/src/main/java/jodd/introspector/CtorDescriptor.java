@@ -37,7 +37,7 @@ public class CtorDescriptor extends Descriptor {
 	protected final Constructor constructor;
 	protected final Class[] parameters;
 
-	public CtorDescriptor(ClassDescriptor classDescriptor, Constructor constructor) {
+	public CtorDescriptor(final ClassDescriptor classDescriptor, final Constructor constructor) {
 		super(classDescriptor, ClassUtil.isPublic(constructor));
 		this.constructor = constructor;
 		this.parameters = constructor.getParameterTypes();

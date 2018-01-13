@@ -45,26 +45,26 @@ public class HttpServletContextMap extends StringKeyedMapAdapter {
 	/**
 	 * Create a map wrapping given servlet context.
 	 */
-	public HttpServletContextMap(ServletContext context) {
+	public HttpServletContextMap(final ServletContext context) {
 		this.context = context;
 	}
 
-	public HttpServletContextMap(HttpServletRequest request) {
+	public HttpServletContextMap(final HttpServletRequest request) {
 		this(request.getSession().getServletContext());
 	}
 
 	@Override
-	protected Object getAttribute(String key) {
+	protected Object getAttribute(final String key) {
 		return context.getAttribute(key);
 	}
 
 	@Override
-	protected void setAttribute(String key, Object value) {
+	protected void setAttribute(final String key, final Object value) {
 		context.setAttribute(key, value);
 	}
 
 	@Override
-	protected void removeAttribute(String key) {
+	protected void removeAttribute(final String key) {
 		context.removeAttribute(key);
 	}
 

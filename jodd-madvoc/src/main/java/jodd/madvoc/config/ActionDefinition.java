@@ -34,19 +34,19 @@ public class ActionDefinition {
 	protected final String actionMethod;
 	protected final String resultBasePath;
 
-	public ActionDefinition(String actionPath, String actionMethod, String resultBasePath) {
+	public ActionDefinition(final String actionPath, final String actionMethod, final String resultBasePath) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
 	}
 
-	public ActionDefinition(String actionPath, String actionMethod) {
+	public ActionDefinition(final String actionPath, final String actionMethod) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 		this.resultBasePath = actionPath;
 	}
 
-	public ActionDefinition(String actionPath) {
+	public ActionDefinition(final String actionPath) {
 		this(actionPath, null);
 	}
 

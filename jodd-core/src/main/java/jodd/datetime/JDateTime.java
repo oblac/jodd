@@ -215,7 +215,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Loads current date time information.
 	 */
-	public JDateTime setDateTimeStamp(DateTimeStamp dts) {
+	public JDateTime setDateTimeStamp(final DateTimeStamp dts) {
 		return set(dts.year, dts.month, dts.day, dts.hour, dts.minute, dts.second, dts.millisecond);
 	}
 
@@ -226,7 +226,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param jds    current julian date
 	 */
-	public JDateTime setJulianDate(JulianDateStamp jds) {
+	public JDateTime setJulianDate(final JulianDateStamp jds) {
 		setJdOnly(jds.clone());
 		calculateAdditionalData();
 		return this;
@@ -265,7 +265,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param jds    julian date
 	 */
-	private void setJdOnly(JulianDateStamp jds) {
+	private void setJdOnly(final JulianDateStamp jds) {
 		jdate = jds;
 		time = TimeUtil.fromJulianDate(jds);
 	}
@@ -281,7 +281,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param minute minute to set
 	 * @param second second to set
 	 */
-	public JDateTime set(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public JDateTime set(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 
 		// fix seconds fractions because of float point arithmetic
 		//second = ((int) second) + ((int) ((second - (int)second) * 1000 + 1e-9) / 1000.0);
@@ -349,7 +349,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param minute minute to set
 	 * @param second second to set
 	 */
-	private void setJdOnly(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	private void setJdOnly(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 		setJdOnly(TimeUtil.toJulianDate(year, month, day, hour, minute, second, millisecond));
 	}
 
@@ -389,7 +389,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @return week of year number
 	 */
-	private int calcWeekOfYear(int start, int must) {
+	private int calcWeekOfYear(final int start, final int must) {
 
 		// is modification required?
 		// modification is a fix for the days of year because of the different
@@ -473,7 +473,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *         month before the first week, when there are days before the first
 	 *         week because the minimum days in the first week is more than one.
 	 */
-	private int calcWeekNumber(int dayOfPeriod, int dayOfWeek) {
+	private int calcWeekNumber(final int dayOfPeriod, final int dayOfWeek) {
 		// Determine the day of the week of the first day of the period
 		// in question (either a year or a month).  Zero represents the
 		// first day of the week on this calendar.
@@ -519,7 +519,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param second   delta seconds
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime add(int year, int month, int day, int hour, int minute, int second, int millisecond, boolean monthFix) {
+	public JDateTime add(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond, final boolean monthFix) {
 		int difference = 0;
 		if (trackDST) {
 			difference = TimeZoneUtil.getOffset(this, timezone);
@@ -534,7 +534,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 
 		return this;
 	}
-	protected void addNoDST(int year, int month, int day, int hour, int minute, int second, int millisecond, boolean monthFix) {
+	protected void addNoDST(int year, int month, int day, int hour, int minute, int second, int millisecond, final boolean monthFix) {
 		millisecond += time.millisecond;
 		second += time.second;
 		minute += time.minute;
@@ -573,7 +573,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		}
 	}
 
-	public JDateTime sub(int year, int month, int day, int hour, int minute, int second, int millisecond, boolean monthFix) {
+	public JDateTime sub(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond, final boolean monthFix) {
 		return add(-year, -month,  -day,  -hour, -minute, -second, -millisecond, monthFix);
 	}
 
@@ -590,10 +590,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #add(int, int, int, int, int, int, int, boolean)
 	 */
-	public JDateTime add(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public JDateTime add(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 		return add(year, month, day, hour, minute, second, millisecond, monthFix);
 	}
-	public JDateTime sub(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public JDateTime sub(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 		return add(-year, -month, -day, -hour, -minute, -second, millisecond, monthFix);
 	}
 
@@ -608,10 +608,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #add(int, int, int, int, int, int, int, boolean)
 	 */
-	public JDateTime add(int year, int month, int day, boolean monthFix) {
+	public JDateTime add(final int year, final int month, final int day, final boolean monthFix) {
 		return add(year, month, day, 0, 0, 0, 0, monthFix);
 	}
-	public JDateTime sub(int year, int month, int day, boolean monthFix) {
+	public JDateTime sub(final int year, final int month, final int day, final boolean monthFix) {
 		return add(-year, -month, -day, 0, 0, 0, 0, monthFix);
 	}
 
@@ -625,10 +625,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #add(int, int, int, boolean)
 	 */
-	public JDateTime add(int year, int month, int day) {
+	public JDateTime add(final int year, final int month, final int day) {
 		return add(year, month, day, monthFix);
 	}
-	public JDateTime sub(int year, int month, int day) {
+	public JDateTime sub(final int year, final int month, final int day) {
 		return add(-year, -month, -day, monthFix);
 	}
 
@@ -642,17 +642,17 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #add(int, int, int, int, int, int, int)
 	 */
-	public JDateTime addTime(int hour, int minute, int second, int millisecond, boolean monthFix) {
+	public JDateTime addTime(final int hour, final int minute, final int second, final int millisecond, final boolean monthFix) {
 		return add(0, 0, 0, hour, minute, second, millisecond, monthFix);
 	}
-	public JDateTime subTime(int hour, int minute, int second, int millisecond, boolean monthFix) {
+	public JDateTime subTime(final int hour, final int minute, final int second, final int millisecond, final boolean monthFix) {
 		return add(0, 0, 0, -hour, -minute, -second, -millisecond, monthFix);
 	}
 
-	public JDateTime addTime(int hour, int minute, int second, boolean monthFix) {
+	public JDateTime addTime(final int hour, final int minute, final int second, final boolean monthFix) {
 		return add(0, 0, 0, hour, minute, second, 0, monthFix);
 	}
-	public JDateTime subTime(int hour, int minute, int second, boolean monthFix) {
+	public JDateTime subTime(final int hour, final int minute, final int second, final boolean monthFix) {
 		return add(0, 0, 0, -hour, -minute, -second, 0, monthFix);
 	}
 
@@ -666,16 +666,16 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #addTime(int, int, int, int, boolean)
 	 */
-	public JDateTime addTime(int hour, int minute, int second, int millisecond) {
+	public JDateTime addTime(final int hour, final int minute, final int second, final int millisecond) {
 		return addTime(hour, minute, second, millisecond, monthFix);
 	}
-	public JDateTime subTime(int hour, int minute, int second, int millisecond) {
+	public JDateTime subTime(final int hour, final int minute, final int second, final int millisecond) {
 		return addTime(-hour, -minute, -second, -millisecond, monthFix);
 	}
-	public JDateTime addTime(int hour, int minute, int second) {
+	public JDateTime addTime(final int hour, final int minute, final int second) {
 		return addTime(hour, minute, second, 0, monthFix);
 	}
-	public JDateTime subTime(int hour, int minute, int second) {
+	public JDateTime subTime(final int hour, final int minute, final int second) {
 		return addTime(-hour, -minute, -second, 0, monthFix);
 	}
 
@@ -686,10 +686,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param y        year to add
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addYear(int y, boolean monthFix) {
+	public JDateTime addYear(final int y, final boolean monthFix) {
 		return add(y, 0, 0, monthFix);
 	}
-	public JDateTime subYear(int y, boolean monthFix) {
+	public JDateTime subYear(final int y, final boolean monthFix) {
 		return add(-y, 0, 0, monthFix);
 	}
 	/**
@@ -697,10 +697,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param y        year to add
 	 */
-	public JDateTime addYear(int y) {
+	public JDateTime addYear(final int y) {
 		return addYear(y, monthFix);
 	}
-	public JDateTime subYear(int y) {
+	public JDateTime subYear(final int y) {
 		return addYear(-y, monthFix);
 	}
 
@@ -711,10 +711,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param m        month to add
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addMonth(int m, boolean monthFix) {
+	public JDateTime addMonth(final int m, final boolean monthFix) {
 		return add(0, m, 0, monthFix);
 	}
-	public JDateTime subMonth(int m, boolean monthFix) {
+	public JDateTime subMonth(final int m, final boolean monthFix) {
 		return add(0, -m, 0, monthFix);
 	}
 	/**
@@ -722,10 +722,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param m        month to add
 	 */
-	public JDateTime addMonth(int m) {
+	public JDateTime addMonth(final int m) {
 		return addMonth(m, monthFix);
 	}
-	public JDateTime subMonth(int m) {
+	public JDateTime subMonth(final int m) {
 		return addMonth(-m, monthFix);
 	}
 
@@ -735,10 +735,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param d      days to add
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addDay(int d, boolean monthFix) {
+	public JDateTime addDay(final int d, final boolean monthFix) {
 		return add(0, 0, d, monthFix);
 	}
-	public JDateTime subDay(int d, boolean monthFix) {
+	public JDateTime subDay(final int d, final boolean monthFix) {
 		return add(0, 0, -d, monthFix);
 	}
 	/**
@@ -746,10 +746,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param d      days to add
 	 */
-	public JDateTime addDay(int d) {
+	public JDateTime addDay(final int d) {
 		return addDay(d, monthFix);
 	}
-	public JDateTime subDay(int d) {
+	public JDateTime subDay(final int d) {
 		return addDay(-d, monthFix);
 	}
 
@@ -759,10 +759,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param h      hours to add
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addHour(int h, boolean monthFix) {
+	public JDateTime addHour(final int h, final boolean monthFix) {
 		return addTime(h, 0, 0, 0, monthFix);
 	}
-	public JDateTime subHour(int h, boolean monthFix) {
+	public JDateTime subHour(final int h, final boolean monthFix) {
 		return addTime(-h, 0, 0, 0, monthFix);
 	}
 	/**
@@ -770,10 +770,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param h      hours to add
 	 */
-	public JDateTime addHour(int h) {
+	public JDateTime addHour(final int h) {
 		return addHour(h, monthFix);
 	}
-	public JDateTime subHour(int h) {
+	public JDateTime subHour(final int h) {
 		return addHour(-h, monthFix);
 	}
 
@@ -784,10 +784,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param m      minutes to add.
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addMinute(int m, boolean monthFix) {
+	public JDateTime addMinute(final int m, final boolean monthFix) {
 		return addTime(0, m, 0, 0, monthFix);
 	}
-	public JDateTime subMinute(int m, boolean monthFix) {
+	public JDateTime subMinute(final int m, final boolean monthFix) {
 		return addTime(0, -m, 0, 0, monthFix);
 	}
 	/**
@@ -795,10 +795,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param m      minutes to add.
 	 */
-	public JDateTime addMinute(int m) {
+	public JDateTime addMinute(final int m) {
 		return addMinute(m, monthFix);
 	}
-	public JDateTime subMinute(int m) {
+	public JDateTime subMinute(final int m) {
 		return addMinute(-m, monthFix);
 	}
 
@@ -808,10 +808,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param s      seconds to add
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addSecond(int s, boolean monthFix) {
+	public JDateTime addSecond(final int s, final boolean monthFix) {
 		return addTime(0, 0, s, 0, monthFix);
 	}
-	public JDateTime subSecond(int s, boolean monthFix) {
+	public JDateTime subSecond(final int s, final boolean monthFix) {
 		return addTime(0, 0, -s, 0, monthFix);
 	}
 	/**
@@ -819,10 +819,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param s      seconds to add
 	 */
-	public JDateTime addSecond(int s) {
+	public JDateTime addSecond(final int s) {
 		return addSecond(s, monthFix);
 	}
-	public JDateTime subSecond(int s) {
+	public JDateTime subSecond(final int s) {
 		return addSecond(-s, monthFix);
 	}
 
@@ -833,10 +833,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param ms     milliseconds to add
 	 * @param monthFix <code>true</code> for month fixing, <code>false</code> otherwise
 	 */
-	public JDateTime addMillisecond(int ms, boolean monthFix) {
+	public JDateTime addMillisecond(final int ms, final boolean monthFix) {
 		return addTime(0, 0, 0, ms, monthFix);
 	}
-	public JDateTime subMillisecond(int ms, boolean monthFix) {
+	public JDateTime subMillisecond(final int ms, final boolean monthFix) {
 		return addTime(0, 0, 0, -ms, monthFix);
 	}
 	/**
@@ -844,10 +844,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param ms     milliseconds to add
 	 */
-	public JDateTime addMillisecond(int ms) {
+	public JDateTime addMillisecond(final int ms) {
 		return addMillisecond(ms, monthFix);
 	}
-	public JDateTime subMillisecond(int ms) {
+	public JDateTime subMillisecond(final int ms) {
 		return addMillisecond(-ms, monthFix);
 	}
 
@@ -866,7 +866,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #set(int, int, int, int, int, int, int)
 	 */
-	public JDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+	public JDateTime(final int year, final int month, final int day, final int hour, final int minute, final int second, final int millisecond) {
 		this.set(year, month, day, hour, minute, second, millisecond);
 	}
 
@@ -877,7 +877,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param month  month to set
 	 * @param day    day to set
 	 */
-	public JDateTime set(int year, int month, int day) {
+	public JDateTime set(final int year, final int month, final int day) {
 		return set(year, month, day, 0, 0, 0, 0);
 	}
 
@@ -890,7 +890,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #set(int, int, int)
 	 */
-	public JDateTime(int year, int month, int day) {
+	public JDateTime(final int year, final int month, final int day) {
 		this.set(year, month, day);
 	}
 
@@ -901,7 +901,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param minute minutes to set
 	 * @param second seconds to set
 	 */
-	public JDateTime setTime(int hour, int minute, int second, int millisecond) {
+	public JDateTime setTime(final int hour, final int minute, final int second, final int millisecond) {
 		return set(time.year, time.month, time.day, hour, minute, second, millisecond);
 	}
 
@@ -912,7 +912,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param month  month
 	 * @param day    day
 	 */
-	public JDateTime setDate(int year, int month, int day) {
+	public JDateTime setDate(final int year, final int month, final int day) {
 		return set(year, month, day, time.hour, time.minute, time.second, time.millisecond);
 	}
 
@@ -927,7 +927,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @see #setTimeInMillis(long )
 	 */
-	public JDateTime(long millis) {
+	public JDateTime(final long millis) {
 		setTimeInMillis(millis);
 	}
 
@@ -973,7 +973,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param y      year to set
 	 */
-	public JDateTime setYear(int y) {
+	public JDateTime setYear(final int y) {
 		return setDate(y, time.month, time.day);
 	}
 
@@ -982,7 +982,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param m      month to set
 	 */
-	public JDateTime setMonth(int m) {
+	public JDateTime setMonth(final int m) {
 		return setDate(time.year, m, time.day);
 	}
 
@@ -991,7 +991,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param d      day to set
 	 */
-	public JDateTime setDay(int d) {
+	public JDateTime setDay(final int d) {
 		return setDate(time.year, time.month, d);
 	}
 
@@ -1000,7 +1000,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param h      hour to set
 	 */
-	public JDateTime setHour(int h) {
+	public JDateTime setHour(final int h) {
 		return setTime(h, time.minute, time.second, time.millisecond);
 	}
 
@@ -1009,7 +1009,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param m      minutes to set
 	 */
-	public JDateTime setMinute(int m) {
+	public JDateTime setMinute(final int m) {
 		return setTime(time.hour, m, time.second, time.millisecond);
 
 	}
@@ -1019,11 +1019,11 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param s      seconds and milliseconds to set
 	 */
-	public JDateTime setSecond(int s) {
+	public JDateTime setSecond(final int s) {
 		return setTime(time.hour, time.minute, s, time.millisecond);
 	}
 
-	public JDateTime setSecond(int s, int m) {
+	public JDateTime setSecond(final int s, final int m) {
 		return setTime(time.hour, time.minute, s, m);
 	}
 
@@ -1033,7 +1033,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @param m      milliseconds to set
 	 */
-	public JDateTime setMillisecond(int m) {
+	public JDateTime setMillisecond(final int m) {
 		return setTime(time.hour, time.minute, time.second, m);
 	}
 
@@ -1141,7 +1141,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Returns the length of the specified month in days.
 	 */
-	public int getMonthLength(int month) {
+	public int getMonthLength(final int month) {
 		return TimeUtil.getMonthLength(time.year, month, this.leap);
 	}
 
@@ -1187,14 +1187,14 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Creates <code>JDateTime</code> from <code>Calendar</code>.
 	 */
-	public JDateTime(Calendar calendar) {
+	public JDateTime(final Calendar calendar) {
 		setDateTime(calendar);
 	}
 
 	/**
 	 * Sets current date and time from <code>Calendar</code>.
 	 */
-	public JDateTime setDateTime(Calendar calendar) {
+	public JDateTime setDateTime(final Calendar calendar) {
 		setTimeInMillis(calendar.getTimeInMillis());
 		changeTimeZone(calendar.getTimeZone());
 		return this;
@@ -1203,14 +1203,14 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Creates <code>JDateTime</code> from <code>Date</code>.
 	 */
-	public JDateTime(Date date) {
+	public JDateTime(final Date date) {
 		setDateTime(date);
 	}
 
 	/**
 	 * Sets current date and time from <code>Date</code>.
 	 */
-	public JDateTime setDateTime(Date date) {
+	public JDateTime setDateTime(final Date date) {
 		return setTimeInMillis(date.getTime());
 	}
 
@@ -1256,7 +1256,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Creates <code>JDateTime</code> from <code>DateTimeStamp</code>.
 	 */
-	public JDateTime(DateTimeStamp dts) {
+	public JDateTime(final DateTimeStamp dts) {
 		setDateTimeStamp(dts);
 	}
 
@@ -1264,32 +1264,32 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Creates <code>JDateTime</code> from <code>JulianDateStamp</code>.
 	 */
-	public JDateTime(JulianDateStamp jds) {
+	public JDateTime(final JulianDateStamp jds) {
 		setJulianDate(jds);
 	}
 
 	/**
 	 * Creates <code>JDateTime</code> from <code>double</code> that represents JD.
 	 */
-	public JDateTime(double jd) {
+	public JDateTime(final double jd) {
 		setJulianDate(new JulianDateStamp(jd));
 	}
 
 	/**
 	 * Creates <code>JDateTime</code> from a string.
 	 */
-	public JDateTime(String src) {
+	public JDateTime(final String src) {
 		parse(src);
 	}
 
 	/**
 	 * Creates <code>JDateTime</code> from a string, using specified template.
 	 */
-	public JDateTime(String src, String template) {
+	public JDateTime(final String src, final String template) {
 		parse(src, template);
 	}
 	
-	public JDateTime(String src, JdtFormat jdtFormat) {
+	public JDateTime(final String src, final JdtFormat jdtFormat) {
 		parse(src, jdtFormat);
 	}
 
@@ -1302,7 +1302,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		return trackDST;
 	}
 
-	public JDateTime setTrackDST(boolean trackDST) {
+	public JDateTime setTrackDST(final boolean trackDST) {
 		this.trackDST = trackDST;
 		return this;
 	}
@@ -1321,7 +1321,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Sets custom month fix value.
 	 */
-	public JDateTime setMonthFix(boolean monthFix) {
+	public JDateTime setMonthFix(final boolean monthFix) {
 		this.monthFix = monthFix;
 		return this;
 	}
@@ -1334,7 +1334,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Changes current timezone. Current time is changed if time zone has been changed.
 	 */
-	public JDateTime changeTimeZone(TimeZone timezone) {
+	public JDateTime changeTimeZone(final TimeZone timezone) {
 		long now = getTimeInMillis();
 		int difference = TimeZoneUtil.getOffsetDifference(now, this.timezone, timezone);
 		this.timezone = timezone;
@@ -1348,7 +1348,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Changes time zone. Equivalent to:
 	 * <code>setTimeZone(from); changeTimeZone(to);</code>
 	 */
-	public JDateTime changeTimeZone(TimeZone from, TimeZone to) {
+	public JDateTime changeTimeZone(final TimeZone from, final TimeZone to) {
 		this.timezone = from;
 		changeTimeZone(to);
 		return this;
@@ -1357,7 +1357,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Sets time zone <b>without</b> changing the time.
 	 */
-	public JDateTime setTimeZone(TimeZone timezone) {
+	public JDateTime setTimeZone(final TimeZone timezone) {
 		this.timezone = timezone;
 		return this;
 	}
@@ -1387,7 +1387,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Sets custom locale.
 	 */
-	public JDateTime setLocale(Locale locale) {
+	public JDateTime setLocale(final Locale locale) {
 		this.locale = locale;
 		return this;
 	}
@@ -1406,7 +1406,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Defines default format.
 	 */
-	public JDateTime setFormat(String format) {
+	public JDateTime setFormat(final String format) {
 		this.format = format;
 		return this;
 	}
@@ -1424,7 +1424,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Defines custom formatter.
 	 */
-	public JDateTime setJdtFormatter(JdtFormatter jdtFormatter) {
+	public JDateTime setJdtFormatter(final JdtFormatter jdtFormatter) {
 		this.jdtFormatter = jdtFormatter;
 		return this;
 	}
@@ -1439,7 +1439,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Sets both format and formatter from provided {@link JdtFormat}.
 	 */
-	public JDateTime setJdtFormat(JdtFormat jdtFormat) {
+	public JDateTime setJdtFormat(final JdtFormat jdtFormat) {
 		this.format = jdtFormat.getFormat();
 		this.jdtFormatter = jdtFormat.getFormatter();
 		return this;
@@ -1452,7 +1452,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Returns string representation of date/time in specified format.
 	 */
-	public String toString(String format) {
+	public String toString(final String format) {
 		return jdtFormatter.convert(this, format);
 	}
 
@@ -1465,7 +1465,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 		return jdtFormatter.convert(this, format);
 	}
 
-	public String toString(JdtFormat jdtFormat) {
+	public String toString(final JdtFormat jdtFormat) {
 		return jdtFormat.convert(this);
 	}
 
@@ -1474,7 +1474,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param src        string containing date time information
 	 * @param format format template
 	 */
-	public JDateTime parse(String src, String format) {
+	public JDateTime parse(final String src, final String format) {
 		setDateTimeStamp(jdtFormatter.parse(src, format));
 		return this;
 	}
@@ -1484,12 +1484,12 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param src        string containing date time information
 	 * @see #getFormat()
 	 */
-	public JDateTime parse(String src) {
+	public JDateTime parse(final String src) {
 		setDateTimeStamp(jdtFormatter.parse(src, format));
 		return this;
 	}
 
-	public JDateTime parse(String src, JdtFormat jdtFormat) {
+	public JDateTime parse(final String src, final JdtFormat jdtFormat) {
 		setDateTimeStamp(jdtFormat.parse(src));
 		return this;
 	}
@@ -1499,7 +1499,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @return <code>true</code> if date is valid, otherwise <code>false</code>
 	 */
-	public boolean isValid(String s) {
+	public boolean isValid(final String s) {
 		return isValid(s, format);
 	}
 
@@ -1508,7 +1508,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @return <code>true</code> if date is valid, otherwise <code>false</code>
 	 */
-	public boolean isValid(String s, String template) {
+	public boolean isValid(final String s, final String template) {
 		DateTimeStamp dtsOriginal;
 		try {
 			dtsOriginal = jdtFormatter.parse(s, template);
@@ -1533,7 +1533,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param start  first day in week, [1-7],
 	 * @param must   must have day of the 1st week, [1-7]
 	 */
-	public JDateTime setWeekDefinition(int start, int must) {
+	public JDateTime setWeekDefinition(final int start, final int must) {
 		if ((start >= 1) && (start <= 7)) {
 			firstDayOfWeek = start;
 		}
@@ -1580,7 +1580,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * @param min    minimal days of week
 	 */
 
-	public JDateTime setWeekDefinitionAlt(int start, int min) {
+	public JDateTime setWeekDefinitionAlt(final int start, final int min) {
 		if ((start >= 1) && (start <= 7)) {
 			firstDayOfWeek = start;
 		}
@@ -1600,7 +1600,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *
 	 * @return must have day of week
 	 */
-	private static int convertMin2Must(int start, int min) {
+	private static int convertMin2Must(final int start, final int min) {
 		int must = 8 - min + (start - 1);
 		if (must > 7) {
 			must -= 7;
@@ -1615,7 +1615,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Comparison precision is 1e-3 seconds.
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -1670,30 +1670,30 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 *         equal, and 1 if the current object is greater than the argument
 	 */
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(final Object o) {
 		return time.compareTo(((JDateTime) o).getDateTimeStamp());
 	}
-	public int compareTo(JDateTime jd) {
+	public int compareTo(final JDateTime jd) {
 		return time.compareTo(jd.getDateTimeStamp());
 	}
 
 	/**
 	 * Compares current JDateTime date with another date. Time component is ignored.
 	 */
-	public int compareDateTo(JDateTime jd) {
+	public int compareDateTo(final JDateTime jd) {
 		return time.compareDateTo(jd.getDateTimeStamp());
 	}
 
 	/**
 	 * Returns <code>true</code> if current time is after then provided time.
 	 */
-	public boolean isAfter(JDateTime then) {
+	public boolean isAfter(final JDateTime then) {
 		return time.compareTo((then).getDateTimeStamp()) > 0;
 	}
 	/**
 	 * Returns <code>true</code> if current time is before then provided time.
 	 */
-	public boolean isBefore(JDateTime then) {
+	public boolean isBefore(final JDateTime then) {
 		return time.compareTo((then).getDateTimeStamp()) < 0;
 	}
 
@@ -1701,14 +1701,14 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Returns <code>true</code> if current date is after then provided date.
 	 * Time component is ignored.
 	 */
-	public boolean isAfterDate(JDateTime then) {
+	public boolean isAfterDate(final JDateTime then) {
 		return time.compareDateTo((then).getDateTimeStamp()) > 0;
 	}
 	/**
 	 * Returns <code>true</code> if current date is before then provided date.
 	 * Time component is ignored.
 	 */
-	public boolean isBeforeDate(JDateTime then) {
+	public boolean isBeforeDate(final JDateTime then) {
 		return time.compareDateTo((then).getDateTimeStamp()) < 0;
 	}
 
@@ -1718,14 +1718,14 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Returns number of full days between two dates.
 	 */
-	public int daysBetween(JDateTime then) {
+	public int daysBetween(final JDateTime then) {
 		return this.jdate.daysBetween(then.jdate);
 	}
 
 	/**
 	 * Returns number of full days between two dates.
 	 */
-	public int daysBetween(JulianDateStamp then) {
+	public int daysBetween(final JulianDateStamp then) {
 		return this.jdate.daysBetween(then);
 	}
 
@@ -1743,7 +1743,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	/**
 	 * Sets JD.
 	 */
-	public JDateTime setJulianDate(double jd) {
+	public JDateTime setJulianDate(final double jd) {
 		return setJulianDate(new JulianDateStamp(jd));
 	}
 
@@ -1753,7 +1753,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Returns <code>true</code> if provided date is equal to current one.
 	 * May be used for date validation test.
 	 */
-	public boolean equalsDate(int year, int month, int day) {
+	public boolean equalsDate(final int year, final int month, final int day) {
 		return (time.year == year) && (time.month == month) && (time.day == day);
 	}
 
@@ -1761,7 +1761,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Returns <code>true</code> if two dates are equal.
 	 * Time component is ignored.
 	 */
-	public boolean equalsDate(JDateTime date) {
+	public boolean equalsDate(final JDateTime date) {
 		return time.isEqualDate(date.time);
 	}
 
@@ -1769,7 +1769,7 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 	 * Returns <code>true</code> if two times are equal.
 	 * Date component is ignored.
 	 */
-	public boolean equalsTime(JDateTime date) {
+	public boolean equalsTime(final JDateTime date) {
 		return time.isEqualTime(date.time);
 	}
 

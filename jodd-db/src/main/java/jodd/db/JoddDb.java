@@ -71,7 +71,7 @@ public class JoddDb {
 		return defaults;
 	}
 
-	public JoddDb defaults(JoddDbDefaults joddDbDefaults) {
+	public JoddDb defaults(final JoddDbDefaults joddDbDefaults) {
 		Objects.requireNonNull(joddDbDefaults);
 		this.defaults = new JoddDbDefaults();
 		return this;
@@ -87,7 +87,7 @@ public class JoddDb {
 	/**
 	 * Specifies the hint resolver.
 	 */
-	public JoddDb hintResolver(JoinHintResolver hintResolver) {
+	public JoddDb hintResolver(final JoinHintResolver hintResolver) {
 		Objects.requireNonNull(hintResolver);
 		this.hintResolver = hintResolver;
 		return this;
@@ -100,7 +100,7 @@ public class JoddDb {
 		return dbEntityManager;
 	}
 
-	public JoddDb dbEntityManager(DbEntityManager dbEntityManager) {
+	public JoddDb dbEntityManager(final DbEntityManager dbEntityManager) {
 		Objects.requireNonNull(dbEntityManager);
 		this.dbEntityManager = dbEntityManager;
 		return this;
@@ -116,7 +116,7 @@ public class JoddDb {
 	/**
 	 * Sets the connection provider.
 	 */
-	public JoddDb connectionProvider(ConnectionProvider connectionProvider) {
+	public JoddDb connectionProvider(final ConnectionProvider connectionProvider) {
 		Objects.requireNonNull(connectionProvider);
 		this.connectionProvider = connectionProvider;
 		return this;
@@ -129,7 +129,7 @@ public class JoddDb {
 	/**
 	 * Sets default session provider.
 	 */
-	public JoddDb sessionProvider(DbSessionProvider sessionProvider) {
+	public JoddDb sessionProvider(final DbSessionProvider sessionProvider) {
 		Objects.requireNonNull(sessionProvider);
 		this.sessionProvider = sessionProvider;
 		return this;
@@ -142,7 +142,7 @@ public class JoddDb {
 		return queryMap;
 	}
 
-	public JoddDb queryMap(QueryMap queryMap) {
+	public JoddDb queryMap(final QueryMap queryMap) {
 		Objects.requireNonNull(queryMap);
 		this.queryMap = queryMap;
 		return this;

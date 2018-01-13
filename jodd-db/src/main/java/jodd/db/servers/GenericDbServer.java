@@ -51,7 +51,7 @@ public class GenericDbServer implements DbServer {
 	}
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager) {
+	public void accept(final DbEntityManager dbEntityManager) {
 	}
 
 	@Override

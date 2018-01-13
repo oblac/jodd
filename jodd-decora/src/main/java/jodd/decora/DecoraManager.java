@@ -42,7 +42,7 @@ public class DecoraManager {
 		return decorateErrorPages;
 	}
 
-	public void setDecorateErrorPages(boolean decorateErrorPages) {
+	public void setDecorateErrorPages(final boolean decorateErrorPages) {
 		this.decorateErrorPages = decorateErrorPages;
 	}
 
@@ -52,7 +52,7 @@ public class DecoraManager {
 	 * Determines if a request should be decorated.
 	 * By default returns <code>true</code>.
 	 */
-	public boolean decorateRequest(HttpServletRequest request) {
+	public boolean decorateRequest(final HttpServletRequest request) {
 		return true;
 	}
 
@@ -60,7 +60,7 @@ public class DecoraManager {
 	 * Determines if some content type should be decorated.
 	 * By default returns <code>true</code>.
 	 */
-	public boolean decorateContentType(String contentType, String mimeType, String encoding) {
+	public boolean decorateContentType(final String contentType, final String mimeType, final String encoding) {
 		return true;
 	}
 
@@ -69,7 +69,7 @@ public class DecoraManager {
 	 * By default returns <code>true</code> for status code 200 and, optionally,
 	 * for error pages (status code {@literal >=} 400).
 	 */
-	public boolean decorateStatusCode(int statusCode) {
+	public boolean decorateStatusCode(final int statusCode) {
 		return (statusCode == 200) || (decorateErrorPages && statusCode >= 400);
 	}
 
@@ -80,7 +80,7 @@ public class DecoraManager {
 	 * If decorator is not found, returns <code>null</code>.
 	 * By default applies decorator on all *.html pages.
 	 */
-	public String resolveDecorator(HttpServletRequest request, String actionPath) {
+	public String resolveDecorator(final HttpServletRequest request, final String actionPath) {
 		if (actionPath.endsWith(".html")) {
 			return DEFAULT_DECORATOR;
 		}

@@ -30,17 +30,17 @@ package jodd.util.collection;
  */
 public class UnmodifiableMapEntry<K, V> extends MapEntry<K, V> {
 
-	public UnmodifiableMapEntry(K key, V value) {
+	public UnmodifiableMapEntry(final K key, final V value) {
 		super(key, value);
 	}
 
 	@Override
-	public final V setValue(V value) {
+	public final V setValue(final V value) {
 		throw new UnsupportedOperationException("The key can't be modified");
 	}
 
 	@Override
-	public final K setKey(K key) {
+	public final K setKey(final K key) {
 		throw new UnsupportedOperationException("The value can't be modified");
 	}
 }

@@ -50,7 +50,7 @@ public abstract class AuthorizationInterceptor implements ActionInterceptor {
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationInterceptor.class);
 
 	@Override
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object intercept(final ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.httpServletResponse();
 		HttpSession session = servletRequest.getSession();

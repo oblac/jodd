@@ -47,7 +47,7 @@ import java.net.URL;
 public class URIConverter implements TypeConverter<URI> {
 
 	@Override
-	public URI convert(Object value) {
+	public URI convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

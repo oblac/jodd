@@ -71,7 +71,7 @@ public class JsonAnnotationManager {
 		public final String[] jsonNames;
 		public final String[] realNames;
 
-		public TypeData(List<String> includes, List<String> excludes, boolean strict, String[] jsonNames, String[] realNames) {
+		public TypeData(final List<String> includes, final List<String> excludes, final boolean strict, final String[] jsonNames, final String[] realNames) {
 			rules = new InExRules<>();
 
 			for (String include : includes) {
@@ -90,7 +90,7 @@ public class JsonAnnotationManager {
 		/**
 		 * Resolves real name from JSON name.
 		 */
-		public String resolveRealName(String jsonName) {
+		public String resolveRealName(final String jsonName) {
 			if (jsonNames == null) {
 				return jsonName;
 			}
@@ -104,7 +104,7 @@ public class JsonAnnotationManager {
 		/**
 		 * Resolves JSON name from real name.
 		 */
-		public String resolveJsonName(String realName) {
+		public String resolveJsonName(final String realName) {
 			if (realNames == null) {
 				return realName;
 			}
@@ -127,7 +127,7 @@ public class JsonAnnotationManager {
 	 * Returns all includes for given type. Returns an empty array
 	 * when no includes are defined.
 	 */
-	public TypeData lookupTypeData(Class type) {
+	public TypeData lookupTypeData(final Class type) {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
@@ -147,7 +147,7 @@ public class JsonAnnotationManager {
 	/**
 	 * Lookups type data and creates one if missing.
 	 */
-	protected TypeData _lookupTypeData(Class type) {
+	protected TypeData _lookupTypeData(final Class type) {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
@@ -161,7 +161,7 @@ public class JsonAnnotationManager {
 	/**
 	 * Finds type data of first annotated superclass or interface.
 	 */
-	protected TypeData findSubclassTypeData(Class type) {
+	protected TypeData findSubclassTypeData(final Class type) {
 		final Class<? extends Annotation> defaultAnnotation = JoddJson.get().defaults().getJsonAnnotation();
 
 		if (type.getAnnotation(defaultAnnotation) != null) {
@@ -197,7 +197,7 @@ public class JsonAnnotationManager {
 	/**
 	 * Returns different name of a property if set by annotation.
 	 */
-	public String resolveJsonName(Class type, String name) {
+	public String resolveJsonName(final Class type, final String name) {
 		TypeData typeData = lookupTypeData(type);
 
 		return typeData.resolveJsonName(name);
@@ -206,7 +206,7 @@ public class JsonAnnotationManager {
 	/**
 	 * Returns real property name for given JSON property.
 	 */
-	public String resolveRealName(Class type, String jsonName) {
+	public String resolveRealName(final Class type, final String jsonName) {
 		TypeData typeData = lookupTypeData(type);
 
 		return typeData.resolveRealName(jsonName);
@@ -215,7 +215,7 @@ public class JsonAnnotationManager {
 	/**
 	 * Scans class for annotations and returns {@link jodd.json.meta.JsonAnnotationManager.TypeData}.
 	 */
-	private TypeData scanClassForAnnotations(Class type) {
+	private TypeData scanClassForAnnotations(final Class type) {
 		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();

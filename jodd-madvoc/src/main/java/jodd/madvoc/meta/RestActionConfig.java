@@ -31,7 +31,7 @@ import jodd.madvoc.result.JsonActionResult;
 
 public class RestActionConfig extends ActionConfig {
 
-	public RestActionConfig(ActionConfig parentActionConfig) {
+	public RestActionConfig(final ActionConfig parentActionConfig) {
 		super(parentActionConfig);
 
 		setNamingStrategy(RestActionNamingStrategy.class);

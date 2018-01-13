@@ -27,7 +27,7 @@ package jodd.util;
 
 public class CharSequenceUtil {
 
-	public static boolean equals(CharSequence charSequence1, CharSequence charSequence2) {
+	public static boolean equals(final CharSequence charSequence1, final CharSequence charSequence2) {
 		int len = charSequence1.length();
 
 		if (len != charSequence2.length()) {
@@ -43,7 +43,7 @@ public class CharSequenceUtil {
 		return true;
 	}
 
-	public static boolean equalsToLowercase(CharSequence charSequence, CharSequence name) {
+	public static boolean equalsToLowercase(final CharSequence charSequence, final CharSequence name) {
 		int len = charSequence.length();
 
 		if (len != name.length()) {
@@ -55,7 +55,7 @@ public class CharSequenceUtil {
 		return true;
 	}
 
-	public static boolean startsWithLowercase(CharSequence charSequence, CharSequence chars) {
+	public static boolean startsWithLowercase(final CharSequence charSequence, final CharSequence chars) {
 		int length = chars.length();
 		if (charSequence.length() < length) {
 			return false;
@@ -66,7 +66,7 @@ public class CharSequenceUtil {
 		return true;
 	}
 
-	private static boolean compare(CharSequence charSequence, CharSequence chars, int length) {
+	private static boolean compare(final CharSequence charSequence, final CharSequence chars, final int length) {
 		for (int i = 0; i < length; i++) {
 			char c = charSequence.charAt(i);
 
@@ -79,7 +79,7 @@ public class CharSequenceUtil {
 		return false;
 	}
 
-	public static boolean equalsIgnoreCase(CharSequence charSequence1, CharSequence charSequence2) {
+	public static boolean equalsIgnoreCase(final CharSequence charSequence1, final CharSequence charSequence2) {
 		int len = charSequence1.length();
 
 		if (len != charSequence2.length()) {
@@ -110,7 +110,7 @@ public class CharSequenceUtil {
 	 * @return <code>true</code> if characters match any character from given array,
 	 *         otherwise <code>false</code>
 	 */
-	public static boolean equalsOne(char c, CharSequence match) {
+	public static boolean equalsOne(final char c, final CharSequence match) {
 		for (int i = 0; i < match.length(); i++) {
 			char aMatch = match.charAt(i);
 			if (c == aMatch) {
@@ -126,7 +126,7 @@ public class CharSequenceUtil {
 	 *
 	 * @return index of matched character or -1
 	 */
-	public static int findFirstEqual(CharSequence source, int index, CharSequence match) {
+	public static int findFirstEqual(final CharSequence source, final int index, final CharSequence match) {
 		for (int i = index; i < source.length(); i++) {
 			if (equalsOne(source.charAt(i), match)) {
 				return i;
@@ -141,7 +141,7 @@ public class CharSequenceUtil {
 	 *
 	 * @return index of matched character or -1
 	 */
-	public static int findFirstEqual(char[] source, int index, char match) {
+	public static int findFirstEqual(final char[] source, final int index, final char match) {
 		for (int i = index; i < source.length; i++) {
 			if (source[i] == match) {
 				return i;
@@ -157,7 +157,7 @@ public class CharSequenceUtil {
 	 *
 	 * @return index of matched character or -1
 	 */
-	public static int findFirstDiff(CharSequence source, int index, CharSequence match) {
+	public static int findFirstDiff(final CharSequence source, final int index, final CharSequence match) {
 		for (int i = index; i < source.length(); i++) {
 			if (!equalsOne(source.charAt(i), match)) {
 				return i;
@@ -172,7 +172,7 @@ public class CharSequenceUtil {
 	 *
 	 * @return index of matched character or -1
 	 */
-	public static int findFirstDiff(char[] source, int index, char match) {
+	public static int findFirstDiff(final char[] source, final int index, final char match) {
 		for (int i = index; i < source.length; i++) {
 			if (source[i] != match) {
 				return i;

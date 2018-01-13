@@ -61,17 +61,17 @@ public class ActionRuntime {
 	private final ActionConfig actionConfig;
 
 	public ActionRuntime(
-			ActionHandler actionHandler,
-			Class actionClass,
-			Method actionClassMethod,
-			ActionFilter[] filters,
-			ActionInterceptor[] interceptors,
-			ActionDefinition actionDefinition,
-			Class<? extends ActionResult> actionResult,
-			boolean async,
-			ScopeData[][] scopeData,
-			MethodParam[] methodParams,
-			ActionConfig actionConfig
+		final ActionHandler actionHandler,
+		final Class actionClass,
+		final Method actionClassMethod,
+		final ActionFilter[] filters,
+		final ActionInterceptor[] interceptors,
+		final ActionDefinition actionDefinition,
+		final Class<? extends ActionResult> actionResult,
+		final boolean async,
+		final ScopeData[][] scopeData,
+		final MethodParam[] methodParams,
+		final ActionConfig actionConfig
 			)
 	{
 		this.actionHandler = actionHandler;
@@ -199,7 +199,7 @@ public class ActionRuntime {
 	/**
 	 * Binds a route chunk to this configuration.
 	 */
-	public void bind(RouteChunk routeChunk) {
+	public void bind(final RouteChunk routeChunk) {
 		this.routeChunk = routeChunk;
 	}
 

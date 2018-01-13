@@ -26,8 +26,8 @@
 package jodd.upload.impl;
 
 import jodd.upload.FileUpload;
-import jodd.upload.MultipartRequestInputStream;
 import jodd.upload.FileUploadFactory;
+import jodd.upload.MultipartRequestInputStream;
 import jodd.util.SystemUtil;
 
 import java.io.File;
@@ -46,12 +46,12 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 		this(SystemUtil.tempDir());
 	}
 
-	public DiskFileUploadFactory(String destFolder) throws IOException {
+	public DiskFileUploadFactory(final String destFolder) throws IOException {
 		this(destFolder, 102400);
 
 	}
 
-	public DiskFileUploadFactory(String destFolder, int maxFileSize) throws IOException {
+	public DiskFileUploadFactory(final String destFolder, final int maxFileSize) throws IOException {
 		setUploadDir(destFolder);
 		this.maxFileSize = maxFileSize;
 	}
@@ -79,7 +79,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 	/**
 	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
 	 */
-	public DiskFileUploadFactory setMaxFileSize(int maxFileSize) {
+	public DiskFileUploadFactory setMaxFileSize(final int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 		return this;
 	}
@@ -87,7 +87,8 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public FileUpload create(MultipartRequestInputStream input) {
+	@Override
+	public FileUpload create(final MultipartRequestInputStream input) {
 		return new DiskFileUpload(input, destFolder, maxFileSize);
 	}
 

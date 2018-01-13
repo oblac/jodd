@@ -42,7 +42,7 @@ public class Targets {
 	final Target[] targets;
 	final ScopeData[][] scopes;     //  [scope-type][target-index]
 
-	public Targets(Target target, ScopeData[] scopeData) {
+	public Targets(final Target target, final ScopeData[] scopeData) {
 		targets = new Target[]{target};
 
 		if (scopeData == null) {
@@ -57,23 +57,23 @@ public class Targets {
 		}
 	}
 
-	public Targets(ActionRuntime actionRuntime, Object action) {
+	public Targets(final ActionRuntime actionRuntime, final Object action) {
 		targets = makeTargets(actionRuntime, action);
 		scopes = actionRuntime.scopeData();
 	}
 
-	public boolean usesScope(ScopeType scopeType) {
+	public boolean usesScope(final ScopeType scopeType) {
 		final ScopeData[] scopeData = scopes[scopeType.value()];
 		return scopeData != null;
 	}
 
-	public void forEachTarget(Consumer<Target> targetConsumer) {
+	public void forEachTarget(final Consumer<Target> targetConsumer) {
 		for (Target target : targets) {
 			targetConsumer.accept(target);
 		}
 	}
 
-	public void forEachTargetAndInScopes(ScopeType scopeType, BiConsumer<Target, ScopeData.In> biConsumer) {
+	public void forEachTargetAndInScopes(final ScopeType scopeType, final BiConsumer<Target, ScopeData.In> biConsumer) {
 		final ScopeData[] scopeData = scopes[scopeType.value()];
 		if (scopeData == null) {
 			return;
@@ -91,7 +91,7 @@ public class Targets {
 			}
 		}
 	}
-	public void forEachTargetAndOutScopes(ScopeType scopeType, BiConsumer<Target, ScopeData.Out> biConsumer) {
+	public void forEachTargetAndOutScopes(final ScopeType scopeType, final BiConsumer<Target, ScopeData.Out> biConsumer) {
 		final ScopeData[] scopeData = scopes[scopeType.value()];
 		if (scopeData == null) {
 			return;
@@ -126,7 +126,7 @@ public class Targets {
 	/**
 	 * Joins action and parameters into one array of Targets.
 	 */
-	protected Target[] makeTargets(ActionRuntime actionRuntime, final Object action) {
+	protected Target[] makeTargets(final ActionRuntime actionRuntime, final Object action) {
 		if (!actionRuntime.hasArguments()) {
 			return new Target[] {new Target(action)};
 		}
@@ -171,7 +171,7 @@ public class Targets {
 	 * Creates action method arguments.
 	 */
 	@SuppressWarnings({"unchecked", "NullArgumentToVariableArgMethod"})
-	protected Object createActionMethodArgument(Class type, Object action) {
+	protected Object createActionMethodArgument(final Class type, final Object action) {
 		try {
 			if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
 				// regular or static class

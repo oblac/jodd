@@ -37,12 +37,12 @@ public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 	protected final TypeConverter<Float> typeConverter;
 
 	@SuppressWarnings("unchecked")
-	public MutableFloatConverter(TypeConverterManager typeConverterManager) {
+	public MutableFloatConverter(final TypeConverterManager typeConverterManager) {
 		typeConverter = typeConverterManager.lookup(Float.class);
 	}
 
 	@Override
-	public MutableFloat convert(Object value) {
+	public MutableFloat convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

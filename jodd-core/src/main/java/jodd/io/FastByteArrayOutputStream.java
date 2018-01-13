@@ -71,7 +71,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastByteArrayOutputStream(int size) {
+	public FastByteArrayOutputStream(final int size) {
 		buffer = new FastByteBuffer(size);
 	}
 
@@ -79,7 +79,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @see OutputStream#write(byte[], int, int)
 	 */
 	@Override
-	public void write(byte[] b, int off, int len) {
+	public void write(final byte[] b, final int off, final int len) {
 		buffer.append(b, off, len);
 	}
 
@@ -87,7 +87,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * Writes single byte.
 	 */
 	@Override
-	public void write(int b) {
+	public void write(final int b) {
 		buffer.append((byte) b);
 	}
 
@@ -118,7 +118,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	/**
 	 * @see ByteArrayOutputStream#writeTo(OutputStream)
 	 */
-	public void writeTo(OutputStream out) throws IOException {
+	public void writeTo(final OutputStream out) throws IOException {
 		int index = buffer.index();
 		for (int i = 0; i < index; i++) {
 			byte[] buf = buffer.array(i);
@@ -145,7 +145,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	/**
 	 * @see ByteArrayOutputStream#toString(String)
 	 */
-	public String toString(String enc) throws UnsupportedEncodingException {
+	public String toString(final String enc) throws UnsupportedEncodingException {
 		return new String(toByteArray(), enc);
 	}
 }

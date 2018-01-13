@@ -63,7 +63,7 @@ public class DbIdGenerator {
 	 * On the first call, it finds the max value of all IDs and stores it.
 	 * On later calls, stored id is incremented and returned.
 	 */
-	public synchronized long nextId(Class entityType) {
+	public synchronized long nextId(final Class entityType) {
 		MutableLong lastId = entityIdsMap.get(entityType);
 		if (lastId == null) {
 			DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();

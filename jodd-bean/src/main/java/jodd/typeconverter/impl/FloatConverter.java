@@ -41,7 +41,7 @@ import jodd.util.StringUtil;
  */
 public class FloatConverter implements TypeConverter<Float> {
 
-	public Float convert(Object value) {
+	public Float convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

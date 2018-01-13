@@ -47,7 +47,7 @@ public class RequestScope implements Scope {
 
 		private final transient BeanData beanData;
 
-		private TransientBeanData(BeanData beanData) {
+		private TransientBeanData(final BeanData beanData) {
 			this.beanData = beanData;
 		}
 
@@ -64,21 +64,21 @@ public class RequestScope implements Scope {
 	 * Returns instance map from http request.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, TransientBeanData> getRequestMap(HttpServletRequest servletRequest) {
+	protected Map<String, TransientBeanData> getRequestMap(final HttpServletRequest servletRequest) {
 		return (Map<String, TransientBeanData>) servletRequest.getAttribute(ATTR_NAME);
 	}
 
 	/**
 	 * Removes instance map from the request.
 	 */
-	protected void removeRequestMap(HttpServletRequest servletRequest) {
+	protected void removeRequestMap(final HttpServletRequest servletRequest) {
 		servletRequest.removeAttribute(ATTR_NAME);
 	}
 
 	/**
 	 * Creates instance map and stores it in the request.
 	 */
-	protected Map<String, TransientBeanData> createRequestMap(HttpServletRequest servletRequest) {
+	protected Map<String, TransientBeanData> createRequestMap(final HttpServletRequest servletRequest) {
 		Map<String, TransientBeanData> map = new HashMap<>();
 		servletRequest.setAttribute(ATTR_NAME, map);
 		return map;
@@ -92,7 +92,7 @@ public class RequestScope implements Scope {
 	}
 
 	@Override
-	public Object lookup(String name) {
+	public Object lookup(final String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
 		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map == null) {
@@ -107,7 +107,7 @@ public class RequestScope implements Scope {
 	}
 
 	@Override
-	public void register(BeanDefinition beanDefinition, Object bean) {
+	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
 		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map == null) {
@@ -119,7 +119,7 @@ public class RequestScope implements Scope {
 	}
 
 	@Override
-	public void remove(String name) {
+	public void remove(final String name) {
 		HttpServletRequest servletRequest = getCurrentHttpRequest();
 		Map<String, TransientBeanData> map = getRequestMap(servletRequest);
 		if (map != null) {
@@ -128,7 +128,7 @@ public class RequestScope implements Scope {
 	}
 
 	@Override
-	public boolean accept(Scope referenceScope) {
+	public boolean accept(final Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
 		if (refScopeType == ProtoScope.class) {

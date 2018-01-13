@@ -43,12 +43,12 @@ public class JspResolver {
 	protected final HttpServletRequest servletRequest;
 	protected final PageContext pageContext;
 
-	public JspResolver(HttpServletRequest servletRequest) {
+	public JspResolver(final HttpServletRequest servletRequest) {
 		this.pageContext = null;
 		this.servletRequest = servletRequest;
 	}
 
-	public JspResolver(PageContext pageContext) {
+	public JspResolver(final PageContext pageContext) {
 		this.pageContext = pageContext;
 		this.servletRequest = (HttpServletRequest) pageContext.getRequest();
 	}
@@ -58,7 +58,7 @@ public class JspResolver {
 	/**
 	 * Resolves values: attributes and parameters.
 	 */
-	public Object value(String name) {
+	public Object value(final String name) {
 		if (pageContext != null) {
 			return value(name, pageContext);
 		}
@@ -69,7 +69,7 @@ public class JspResolver {
 	 * Resolves value from scopes.
 	 * @see jodd.servlet.ServletUtil#value(HttpServletRequest, String)
 	 */
-	public static Object value(String name, HttpServletRequest request) {
+	public static Object value(final String name, final HttpServletRequest request) {
 		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.value(request, thisRef);
 		if (value == null) {
@@ -78,7 +78,7 @@ public class JspResolver {
 		return result(name, thisRef, value);
 	}
 
-	public static Object value(String name, PageContext pageContext) {
+	public static Object value(final String name, final PageContext pageContext) {
 		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.value(pageContext, thisRef);
 		if (value == null) {
@@ -93,7 +93,7 @@ public class JspResolver {
 	/**
 	 * Resolves attribute value from scopes.
 	 */
-	public Object attribute(String name) {
+	public Object attribute(final String name) {
 		if (pageContext != null) {
 			return attribute(name, pageContext);
 		}
@@ -104,7 +104,7 @@ public class JspResolver {
 	 * Resolves attribute value from scopes.
 	 * @see jodd.servlet.ServletUtil#attribute(HttpServletRequest, String)
 	 */
-	public static Object attribute(String name, HttpServletRequest request) {
+	public static Object attribute(final String name, final HttpServletRequest request) {
 		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.attribute(request, thisRef);
 		if (value == null) {
@@ -114,7 +114,7 @@ public class JspResolver {
 
 	}
 
-	public static Object attribute(String name, PageContext pageContext) {
+	public static Object attribute(final String name, final PageContext pageContext) {
 		String thisRef = BeanUtil.pojo.extractThisReference(name);
 		Object value = ServletUtil.attribute(pageContext, thisRef);
 		if (value == null) {
@@ -126,7 +126,7 @@ public class JspResolver {
 
 	// ---------------------------------------------------------------- tools
 
-	private static Object result(String name, String thisRef, Object value) {
+	private static Object result(String name, final String thisRef, final Object value) {
 		if (thisRef.equals(name)) {
 			return value;
 		}
