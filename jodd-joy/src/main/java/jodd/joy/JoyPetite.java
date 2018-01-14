@@ -45,7 +45,6 @@ public class JoyPetite extends JoyBase {
 	protected final Supplier<JoyScanner> joyScannerSupplier;
 	protected final Supplier<Props> propsSupplier;
 	protected final Supplier<ProxyProxetta> proxettaSupplier;
-	protected final Config config;
 
 	protected PetiteContainer petiteContainer;
 	protected boolean isWebApplication = true;  // todo add this value as well!
@@ -56,31 +55,33 @@ public class JoyPetite extends JoyBase {
 		this.proxettaSupplier = proxettaSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.propsSupplier = propsSupplier;
-		this.config = new Config();
 	}
 
-	public PetiteContainer petiteContainer() {
+	// ---------------------------------------------------------------- getters
+
+	/**
+	 * Returns PetiteContainer once when it is created.
+	 */
+	public PetiteContainer getPetiteContainer() {
 		return petiteContainer;
 	}
 
-	public Config config() {
-		return config;
+	// ---------------------------------------------------------------- config
+
+	private boolean autoConfiguration = true;
+	private Consumers<PetiteContainer> petiteContainerConsumers = Consumers.empty();
+
+	public JoyPetite disableAutoConfiguration() {
+		autoConfiguration = false;
+		return this;
 	}
 
-	public class Config {
-		private boolean autoConfiguration = true;
-		private Consumers<PetiteContainer> petiteContainerConsumers = Consumers.empty();
-
-		public Config disableAutoConfiguration() {
-			autoConfiguration = false;
-			return this;
-		}
-
-		public Config withPetite(final Consumer<PetiteContainer> petiteContainerConsumer) {
-			petiteContainerConsumers.add(petiteContainerConsumer);
-			return this;
-		}
+	public JoyPetite withPetite(final Consumer<PetiteContainer> petiteContainerConsumer) {
+		petiteContainerConsumers.add(petiteContainerConsumer);
+		return this;
 	}
+
+	// ---------------------------------------------------------------- lifecycle
 
 	/**
 	 * Creates and initializes Petite container.
@@ -90,7 +91,7 @@ public class JoyPetite extends JoyBase {
 	 * this instance of core into the container.
 	 */
 	@Override
-	public void start() {
+	void start() {
 		initLogger();
 
 		log.info("PETITE start  ----------");
@@ -111,14 +112,14 @@ public class JoyPetite extends JoyBase {
 		petiteContainer.addBean(PETITE_SCAN, joyScannerSupplier.get());
 
 		// automagic configuration
-		if (config.autoConfiguration) {
+		if (autoConfiguration) {
 			log.info("*PETITE Automagic scanning");
 
 			registerPetiteContainerBeans(petiteContainer);
 		}
 
 		log.debug("Petite manual configuration started...");
-		config.petiteContainerConsumers.accept(this.petiteContainer);
+		petiteContainerConsumers.accept(this.petiteContainer);
 
 		// add AppCore instance to Petite
 		petiteContainer.addBean(PETITE_CORE, petiteContainer);
@@ -133,7 +134,7 @@ public class JoyPetite extends JoyBase {
 	 * for petite beans and registers them automagically.
 	 */
 	protected void registerPetiteContainerBeans(final PetiteContainer petiteContainer) {
-		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
+		final AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
 
 		pcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));
 
@@ -144,7 +145,7 @@ public class JoyPetite extends JoyBase {
 	 * Stops Petite container.
 	 */
 	@Override
-	public void stop() {
+	void stop() {
 		if (log != null) {
 			log.info("PETITE stop");
 		}

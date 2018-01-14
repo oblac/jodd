@@ -34,40 +34,39 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class JoyProps extends JoyBase {
-	protected final Config config;
 	protected final Supplier<String> nameSupplier;
 
 	protected Props props;
 
 	public JoyProps(final Supplier<String> nameSupplier) {
 		this.nameSupplier = nameSupplier;
-		this.config = new Config();
 	}
 
-	public Props props() {
+	// ---------------------------------------------------------------- getters
+
+	/**
+	 * Returns application Props.
+	 */
+	public Props getProps() {
 		return props;
 	}
 
-	public Config config() {
-		return config;
+	// ---------------------------------------------------------------- config
+
+	private String propsNamePattern;
+	private List<String> propsProfiles = new ArrayList<>();
+
+	public JoyProps setPropsNamePattern(final String namePattern) {
+		this.propsNamePattern = namePattern;
+		return this;
 	}
 
-	public class Config {
-		private String propsNamePattern;
-		private List<String> propsProfiles = new ArrayList<>();
-
-		public Config setPropsNamePattern(final String namePattern) {
-			this.propsNamePattern = namePattern;
-			return this;
-		}
-
-		public Config addPropsProfiles(final String... profiles) {
-			Collections.addAll(propsProfiles, profiles);
-			return this;
-		}
+	public JoyProps addPropsProfiles(final String... profiles) {
+		Collections.addAll(propsProfiles, profiles);
+		return this;
 	}
 
-	// ---------------------------------------------------------------- start
+	// ---------------------------------------------------------------- lifecycle
 
 	/**
 	 * Creates and loads application props.
@@ -79,7 +78,7 @@ public class JoyProps extends JoyBase {
 	 * If props have been already loaded, does nothing.
 	 */
 	@Override
-	public void start() {
+	void start() {
 		initLogger();
 
 		log.info("PROPS start ----------");
@@ -91,9 +90,9 @@ public class JoyProps extends JoyBase {
 
 		log.info("Loaded sys&env props: " + props.countTotalProperties() + " propertes.");
 
-		props.setActiveProfiles(config.propsProfiles.toArray(new String[0]));
+		props.setActiveProfiles(propsProfiles.toArray(new String[0]));
 
-		String namePattern = config.propsNamePattern;
+		String namePattern = propsNamePattern;
 
 		if (namePattern == null) {
 			namePattern = "/" + nameSupplier.get() + "*.prop*";
@@ -112,14 +111,14 @@ public class JoyProps extends JoyBase {
 	 * resolved as empty string.
 	 */
 	protected Props createProps() {
-		Props props = new Props();
+		final Props props = new Props();
 		props.setSkipEmptyProps(true);
 		props.setIgnoreMissingMacros(true);
 		return props;
 	}
 
 	@Override
-	public void stop() {
+	void stop() {
 		props = null;
 	}
 }

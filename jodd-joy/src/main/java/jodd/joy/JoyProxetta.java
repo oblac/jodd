@@ -38,30 +38,31 @@ import java.util.List;
 
 public class JoyProxetta extends JoyBase {
 
-	protected final Config config;
 	protected ProxyProxetta proxyProxetta;
 
 	public JoyProxetta() {
-		this.config = new Config();
-
-		this.config.proxyAspects.add(createTxProxyAspects());
+		proxyAspects.add(createTxProxyAspects());
 	}
 
-	public ProxyProxetta proxetta() {
+	// ---------------------------------------------------------------- getters
+
+	/**
+	 * Returns proxetta once it is created.
+	 * @return
+	 */
+	public ProxyProxetta getProxetta() {
 		return proxyProxetta;
 	}
 
-	public Config config() {
-		return config;
+	// ---------------------------------------------------------------- config
+
+	private final List<ProxyAspect> proxyAspects = new ArrayList<>();
+
+	public void addProxyAspect(final ProxyAspect proxyAspect) {
+		this.proxyAspects.add(proxyAspect);
 	}
 
-	public class Config {
-		private final List<ProxyAspect> proxyAspects = new ArrayList<>();
-
-		public void addProxyAspect(final ProxyAspect proxyAspect) {
-			this.proxyAspects.add(proxyAspect);
-		}
-	}
+	// ---------------------------------------------------------------- lifecycle
 
 	/**
 	 * Creates Proxetta with all aspects. The following aspects are created:
@@ -72,16 +73,16 @@ public class JoyProxetta extends JoyBase {
 	 * </ul>
 	 */
 	@Override
-	public void start() {
+	void start() {
 		initLogger();
 
 		log.info("PROXETTA start ----------");
 
-		ProxyAspect[] proxyAspects = config.proxyAspects.toArray(new ProxyAspect[0]);
+		final ProxyAspect[] proxyAspectsArray = this.proxyAspects.toArray(new ProxyAspect[0]);
 
-		log.debug("Total proxy aspects: " + proxyAspects.length);
+		log.debug("Total proxy aspects: " + proxyAspectsArray.length);
 
-		proxyProxetta = Proxetta.proxyProxetta().withAspects(proxyAspects);
+		proxyProxetta = Proxetta.proxyProxetta().withAspects(proxyAspectsArray);
 	}
 
 	protected ProxyAspect createTxProxyAspects() {
@@ -94,7 +95,7 @@ public class JoyProxetta extends JoyBase {
 	}
 
 	@Override
-	public void stop() {
+	void stop() {
 	}
 
 }

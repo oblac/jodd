@@ -25,100 +25,63 @@
 
 package jodd.joy;
 
-import jodd.joy.db.AppDao;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.madvoc.Madvoc;
-import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.WebApp;
-import jodd.petite.PetiteContainer;
 import jodd.util.StringUtil;
-
-import java.lang.reflect.Method;
 
 /**
  * Standalone runner for Madvoc web application.
  */
-public abstract class WebRunner {
+public class StandaloneJoddJoyRunner {
 
-	/**
-	 * Web application.
-	 */
-	protected Madvoc madvoc;
-	protected WebApp app;
+	public void runWebApp(final Runnable runnable) {
+		final JoddJoy joddJoy = new JoddJoy();
 
-	/**
-	 * Application dao.
-	 */
-	protected AppDao appDao;
+		joddJoy.start(null);
 
-	/**
-	 * Petite container used in application.
-	 */
-	protected PetiteContainer petite;
+		joddJoy.withDb(joyDb -> setJtxManager(joyDb.getJtxManager()));
 
-	/**
-	 * Starts the app web application and {@link #run() runs} user code.
-	 */
-	public void runWebApp(final Class<? extends WebApp> webAppClass) {
-
-/*
-		madvoc = new Madvoc();
-		madvoc.setWebAppClass(webAppClass);
-		app = madvoc.startWebApplication(null);
-
-		appCore = BeanUtil.declared.getProperty(app, "appCore");
-
-		setJtxManager(appCore.getJtxManager());
-
-		appDao = appCore.getPetite().getBean(AppDao.class);
-
-		petite = appCore.getPetite();
-*/
-
-		JtxTransaction tx = startRwTx();
+		final JtxTransaction tx = startRwTx();
 		try {
 			System.out.println(StringUtil.repeat('-', 55) + " start");
 			System.out.println("\n\n");
-			run();
+
+			runnable.run();
+
 			System.out.println("\n\n");
 			System.out.println(StringUtil.repeat('-', 55) + " end");
-			tx.commit();
+			if (tx != null) {
+				tx.commit();
+			}
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
-			tx.rollback();
+			if (tx != null) {
+				tx.rollback();
+			}
 		}
 
-		try {
-			Method destroyMethod = MadvocConfig.class.getDeclaredMethod("destroy");
-			destroyMethod.setAccessible(true);
-			destroyMethod.invoke(app);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		joddJoy.stop();
 	}
 
-	/**
-	 * Runs user code without container. At this point everything is up and ready for the usage!
-	 */
-	public abstract void run();
+	// ---------------------------------------------------------------- jtx
 
-	// ---------------------------------------------------------------- jtx util
-
-	protected static JtxTransactionManager jtxManager;
+	protected JtxTransactionManager jtxManager;
 
 	/**
 	 * Sets transaction manager.
 	 */
-	public static void setJtxManager(final JtxTransactionManager jm) {
+	private void setJtxManager(final JtxTransactionManager jm) {
 		jtxManager = jm;
 	}
 
 	/**
 	 * Starts new read/write transaction in PROPAGATION_REQUIRED mode.
 	 */
-	public static JtxTransaction startRwTx() {
+	private JtxTransaction startRwTx() {
+		if (jtxManager == null) {
+			return null;
+		}
 		return jtxManager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
 	}
 

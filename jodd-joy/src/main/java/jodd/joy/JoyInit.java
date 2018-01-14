@@ -25,9 +25,12 @@
 
 package jodd.joy;
 
+/**
+ * Initialization classes.
+ */
 @FunctionalInterface
 public interface JoyInit {
 
-	public void joy();
+	public void onJoy();
 
 }

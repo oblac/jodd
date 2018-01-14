@@ -68,10 +68,10 @@ public abstract class AuthenticationInterceptor<U> implements ActionInterceptor 
 
 	@Override
 	public Object intercept(final ActionRequest actionRequest) throws Exception {
-		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.httpServletResponse();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 		HttpSession session = servletRequest.getSession();
-		String actionPath = actionRequest.actionPath();
+		String actionPath = actionRequest.getActionPath();
 
 		// LOGOUT
 		if (isLogoutAction(actionPath)) {

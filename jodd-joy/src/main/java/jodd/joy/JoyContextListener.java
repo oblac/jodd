@@ -51,9 +51,9 @@ public class JoyContextListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
-		ServletContext servletContext = sce.getServletContext();
+		final ServletContext servletContext = sce.getServletContext();
 
-		JoddJoy joy = createJoy();
+		final JoddJoy joy = createJoy();
 
 		configureServletContext(servletContext);
 

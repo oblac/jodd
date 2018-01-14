@@ -54,7 +54,6 @@ public class JoyDb extends JoyBase {
 
 	protected final Supplier<JoyScanner> joyScannerSupplier;
 	protected final Supplier<PetiteContainer> petiteContainerSupplier;
-	protected final Config config = new Config();
 
 	protected ConnectionProvider connectionProvider;
 	protected JtxTransactionManager jtxManager;
@@ -65,36 +64,56 @@ public class JoyDb extends JoyBase {
 		this.petiteContainerSupplier = petiteContainerSupplier;
 	}
 
-	public Config config() {
-		return config;
+	// ---------------------------------------------------------------- getters
+	/**
+	 * Returns connection provider once when component is started.
+	 */
+	public ConnectionProvider getConnectionProvider() {
+		return connectionProvider;
 	}
 
-	public class Config {
-		private boolean useDatabase = true;
-		private boolean autoConfiguration = true;
-		private Supplier<ConnectionProvider> connectionProviderSupplier;
-		private Consumers<DbEntityManager> dbEntityManagerConsumers = Consumers.empty();
-
-		public Config disableDatabase() {
-			useDatabase = false;
-			return this;
-		}
-
-		public Config disableAutoConfiguration() {
-			autoConfiguration = false;
-			return this;
-		}
-
-		public Config withEntityManager(final Consumer<DbEntityManager> dbEntityManagerConsumer) {
-			dbEntityManagerConsumers.add(dbEntityManagerConsumer);
-			return this;
-		}
-
-		public Config withConnectionProvider(final Supplier<ConnectionProvider> connectionProviderSupplier) {
-			this.connectionProviderSupplier = connectionProviderSupplier;
-			return this;
-		}
+	/**
+	 * Returns JTX transaction manager.
+	 */
+	public JtxTransactionManager getJtxManager() {
+		return jtxManager;
 	}
+
+	// ---------------------------------------------------------------- config
+
+	private boolean databaseEnabled = true;
+	private boolean autoConfiguration = true;
+	private Supplier<ConnectionProvider> connectionProviderSupplier;
+	private Consumers<DbEntityManager> dbEntityManagerConsumers = Consumers.empty();
+
+	public JoyDb disableDatabase() {
+		databaseEnabled = false;
+		return this;
+	}
+
+	public JoyDb disableAutoConfiguration() {
+		autoConfiguration = false;
+		return this;
+	}
+
+	public JoyDb withEntityManager(final Consumer<DbEntityManager> dbEntityManagerConsumer) {
+		dbEntityManagerConsumers.add(dbEntityManagerConsumer);
+		return this;
+	}
+
+	public JoyDb withConnectionProvider(final Supplier<ConnectionProvider> connectionProviderSupplier) {
+		this.connectionProviderSupplier = connectionProviderSupplier;
+		return this;
+	}
+
+	/**
+	 * Returns {@code true} if database usage is enabled.
+	 */
+	public boolean isDatabaseEnabled() {
+		return databaseEnabled;
+	}
+
+	// ---------------------------------------------------------------- lifecycle
 
 	/**
 	 * Initializes database. First, creates connection pool.
@@ -104,11 +123,11 @@ public class JoyDb extends JoyBase {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public void start() {
+	void start() {
 		initLogger();
 
-		if (!config.useDatabase) {
-			log.info("DB not used");
+		if (!databaseEnabled) {
+			log.info("DB not enabled.");
 			return;
 		}
 
@@ -117,6 +136,14 @@ public class JoyDb extends JoyBase {
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
 		petiteContainerSupplier.get().addBean(PETITE_DBPOOL, connectionProvider);
+		if (connectionProvider instanceof CoreConnectionPool) {
+			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;
+			if (pool.getDriver() == null) {
+				databaseEnabled = false;
+				log.warn("DB configuration not set. DB will be disabled.");
+				return;
+			}
+		}
 		connectionProvider.init();
 
 		checkConnectionProvider();
@@ -137,15 +164,15 @@ public class JoyDb extends JoyBase {
 		JoddDb.get().sessionProvider(sessionProvider);
 		petiteContainerSupplier.get().addBean(PETITE_DB, JoddDb.get().defaults());           // todo -> this is for the configuration!, make this for each bean
 
-		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
+		final DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
 		dbEntityManager.reset();
 
 		// automatic configuration
-		if (config.autoConfiguration) {
+		if (autoConfiguration) {
 			registerDbEntities(dbEntityManager);
 		}
 
-		config.dbEntityManagerConsumers.accept(dbEntityManager);
+		dbEntityManagerConsumers.accept(dbEntityManager);
 	}
 
 	/**
@@ -174,8 +201,8 @@ public class JoyDb extends JoyBase {
 	 * Instance will be registered into the Petite context.
 	 */
 	protected ConnectionProvider createConnectionProviderIfNotSupplied() {
-		if (config.connectionProviderSupplier != null) {
-			return config.connectionProviderSupplier.get();
+		if (connectionProviderSupplier != null) {
+			return connectionProviderSupplier.get();
 		}
 		return new CoreConnectionPool();
 	}
@@ -184,7 +211,7 @@ public class JoyDb extends JoyBase {
 	 * Checks if connection provider can return a connection.
 	 */
 	protected void checkConnectionProvider() {
-		Connection connection = connectionProvider.getConnection();
+		final Connection connection = connectionProvider.getConnection();
 		try {
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			String name = databaseMetaData.getDatabaseProductName();
@@ -201,8 +228,8 @@ public class JoyDb extends JoyBase {
 	}
 
 	@Override
-	public void stop() {
-		if (!config.useDatabase) {
+	void stop() {
+		if (!databaseEnabled) {
 			return;
 		}
 

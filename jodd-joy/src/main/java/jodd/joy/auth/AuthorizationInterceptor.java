@@ -51,8 +51,8 @@ public abstract class AuthorizationInterceptor implements ActionInterceptor {
 
 	@Override
 	public Object intercept(final ActionRequest actionRequest) throws Exception {
-		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.httpServletResponse();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 		HttpSession session = servletRequest.getSession();
 
 		Object userSession = AuthUtil.getUserSession(session);

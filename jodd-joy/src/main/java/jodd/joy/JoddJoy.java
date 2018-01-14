@@ -104,8 +104,8 @@ public class JoddJoy {
 
 	private final JoyProps joyProps = new JoyProps(() -> name);
 
-	public JoddJoy withProps(final Consumer<JoyProps.Config> propsConsumer) {
-		propsConsumer.accept(joyProps.config);
+	public JoddJoy withProps(final Consumer<JoyProps> propsConsumer) {
+		propsConsumer.accept(joyProps);
 		return this;
 	}
 
@@ -122,8 +122,8 @@ public class JoddJoy {
 
 	private final JoyProxetta joyProxetta = new JoyProxetta();
 
-	public JoddJoy withProxetta(final Consumer<JoyProxetta.Config> proxettaConsumer) {
-		proxettaConsumer.accept(joyProxetta.config);
+	public JoddJoy withProxetta(final Consumer<JoyProxetta> proxettaConsumer) {
+		proxettaConsumer.accept(joyProxetta);
 		return this;
 	}
 
@@ -131,13 +131,13 @@ public class JoddJoy {
 
 	private final JoyPetite joyPetite =
 		new JoyPetite(
-			joyProxetta::proxetta,
-			joyProps::props,
+			joyProxetta::getProxetta,
+			joyProps::getProps,
 			() -> joyScanner
 		);
 
-	public JoddJoy withPetite(final Consumer<JoyPetite.Config> petiteConsumer) {
-		petiteConsumer.accept(joyPetite.config);
+	public JoddJoy withPetite(final Consumer<JoyPetite> petiteConsumer) {
+		petiteConsumer.accept(joyPetite);
 		return this;
 	}
 
@@ -145,11 +145,11 @@ public class JoddJoy {
 
 	private JoyDb joyDb =
 		new JoyDb(
-			joyPetite::petiteContainer,
+			joyPetite::getPetiteContainer,
 			() -> joyScanner);
 
-	public JoddJoy withDb(final Consumer<JoyDb.Config> dbConsumer) {
-		dbConsumer.accept(joyDb.config());
+	public JoddJoy withDb(final Consumer<JoyDb> dbConsumer) {
+		dbConsumer.accept(joyDb);
 		return this;
 	}
 
@@ -157,9 +157,9 @@ public class JoddJoy {
 
 	private JoyMadvoc joyMadvoc =
 		new JoyMadvoc(
-			joyPetite::petiteContainer,
-			joyProxetta::proxetta,
-			joyProps::props,
+			joyPetite::getPetiteContainer,
+			joyProxetta::getProxetta,
+			joyProps::getProps,
 			() -> joyScanner
 		);
 
@@ -242,11 +242,12 @@ public class JoddJoy {
 	}
 
 	protected void runJoyInitBeans() {
-		final PetiteContainer pc = joyPetite.petiteContainer();
+		final PetiteContainer pc = joyPetite.getPetiteContainer();
 		pc.forEachBeanType(JoyInit.class, beanName -> {
-			JoyInit joyInit = pc.getBean(beanName);
+			final JoyInit joyInit = pc.getBean(beanName);
+
 			if (joyInit != null) {
-				joyInit.joy();
+				joyInit.onJoy();
 			}
 		});
 	}

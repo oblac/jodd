@@ -39,24 +39,24 @@ public class JoyPaths extends JoyBase {
 	private String appDir;
 
 	/**
-	 * Returns app dir.
+	 * Returns resolved app dir.
 	 */
-	public String appDir() {
+	public String getAppDir() {
 		return appDir;
 	}
 
 	@Override
-	public void start() {
+	void start() {
 		initLogger();
 
-		String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
+		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
 
 		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
 
 		if (url == null) {
 			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
 		}
-		String protocol = url.getProtocol();
+		final String protocol = url.getProtocol();
 
 		if (!protocol.equals("file")) {
 			try {
@@ -67,7 +67,7 @@ public class JoyPaths extends JoyBase {
 
 		appDir = url.getFile();
 
-		int ndx = appDir.indexOf("WEB-INF");
+		final int ndx = appDir.indexOf("WEB-INF");
 
 		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.workingFolder();
 
@@ -77,6 +77,6 @@ public class JoyPaths extends JoyBase {
 	}
 
 	@Override
-	public void stop() {
+	void stop() {
 	}
 }

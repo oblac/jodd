@@ -28,6 +28,9 @@ package jodd.joy;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
+/**
+ * Base class for all Joy components.
+ */
 public abstract class JoyBase {
 
 	protected JoyBase() {}
@@ -36,14 +39,23 @@ public abstract class JoyBase {
 
 	protected Logger log;
 
+	/**
+	 * Initializes the logger for the component.
+	 */
 	protected void initLogger() {
 		log = LoggerFactory.getLogger(this.getClass());
 	}
 
 	// ---------------------------------------------------------------- lifecycle
 
-	public abstract void start();
+	/**
+	 * Starts the Joy component.
+	 */
+	abstract void start();
 
-	public abstract void stop();
+	/**
+	 * Stops the Joy component.
+	 */
+	abstract void stop();
 
 }

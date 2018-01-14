@@ -66,10 +66,10 @@ public class VtorJsonActionResult implements ActionResult<String> {
 
 	@Override
 	public void render(final ActionRequest actionRequest, final String resultValue) throws Exception {
-		HttpServletRequest request = actionRequest.httpServletRequest();
-		HttpServletResponse response = actionRequest.httpServletResponse();
+		HttpServletRequest request = actionRequest.getHttpServletRequest();
+		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
-		Object action = actionRequest.action();
+		Object action = actionRequest.getAction();
 		AppAction appAction = (AppAction) action;
 
 		List<Violation> list = appAction.violations();

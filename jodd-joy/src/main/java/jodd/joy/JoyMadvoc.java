@@ -76,7 +76,9 @@ public class JoyMadvoc extends JoyBase {
 		webApp.configure(madvocConfig -> madvocConfig.getActionConfig().setInterceptors(DefaultInterceptorStack.class));
 		webApp.withPetiteContainer(petiteSupplier);
 
-		webApp.bindServletContext(servletContext);
+		if (servletContext != null) {
+			webApp.bindServletContext(servletContext);
+		}
 		webApp.withParams(propsSupplier.get());
 
 		webApp.registerComponent(new ProxettaProvider(proxettaSupplier.get()));
