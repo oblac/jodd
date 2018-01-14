@@ -6,7 +6,7 @@ Please follow this style guide and naming conventions when sending your submissi
 
 + Use **TABS** and not spaces for indentation. We just had to choose one. 
 + Interfaces may contain static factories for known implementations. Examples:
-```
+```java
 	Value.of(123);      // creates a value
 	List.arrayList();   // creates new array list
 	Component.get();    // returns default singleton implementation
@@ -17,7 +17,15 @@ Please follow this style guide and naming conventions when sending your submissi
 + `*Util` classes do not have `private` constructor (_common sense principle_).
 + Returning `null` should be generally avoided for the public methods.
 + Only beans have accessors (`getFoo()` and `setFoo()` methods). Method should not be named with e.g. `get` if it is not a bean.
-+ Util static methods that return new instance should be named e.g. `createFooBar()` if there is no argument or `fooBarOf(argument)` if there is an argument provided; but _never_ `getFooBar()`. Getters should never create a new instance of anything.
++ Util static methods that return new instance should be named e.g. `create()` or `createFooBar()` if there is no argument or `fooBarOf(argument)` if there is an argument provided; but _never_ `getFooBar()`. Getters should never create a new instance of anything.
++ Use `_this()` for base abstract classes of some fluent interfaces API:
+```java
+	@SuppressWarnings("unchecked")
+	protected T _this() {
+		return (T) this;
+	}
+```
++ Use `final` method arguments.
 
 ### About deprecation and @Since tag
 
