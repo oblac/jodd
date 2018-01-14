@@ -56,7 +56,7 @@ public class MadvocContainer {
 	/**
 	 * Returns Petite container used for the Madvoc.
 	 */
-	public PetiteContainer petite() {
+	public PetiteContainer getPetiteContainer() {
 		return madpc;
 	}
 

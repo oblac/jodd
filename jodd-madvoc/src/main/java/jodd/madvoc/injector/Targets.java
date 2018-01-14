@@ -59,7 +59,7 @@ public class Targets {
 
 	public Targets(final ActionRuntime actionRuntime, final Object action) {
 		targets = makeTargets(actionRuntime, action);
-		scopes = actionRuntime.scopeData();
+		scopes = actionRuntime.getScopeData();
 	}
 
 	public boolean usesScope(final ScopeType scopeType) {
@@ -131,7 +131,7 @@ public class Targets {
 			return new Target[] {new Target(action)};
 		}
 
-		MethodParam[] methodParams = actionRuntime.methodParams();
+		MethodParam[] methodParams = actionRuntime.getMethodParams();
 		Target[] target = new Target[methodParams.length + 1];
 
 		target[0] = new Target(action);

@@ -77,7 +77,7 @@ public class EchoInterceptor implements ActionInterceptor {
 	protected void printBefore(final ActionRequest request) {
 		StringBuilder message = new StringBuilder(prefixIn);
 
-		message.append(request.actionPath()).append("   [").append(request.actionRuntime().actionString()).append(']');
+		message.append(request.getActionPath()).append("   [").append(request.getActionRuntime().createActionString()).append(']');
 		out(message.toString());
 	}
 
@@ -93,7 +93,7 @@ public class EchoInterceptor implements ActionInterceptor {
 			resultString = resultString.substring(0, 70);
 			resultString += "...";
 		}
-		message.append(request.actionPath()).append("  (")
+		message.append(request.getActionPath()).append("  (")
 				.append(resultString).append(") in ").append(executionTime)
 				.append("ms.");
 		out(message.toString());

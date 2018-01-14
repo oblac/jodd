@@ -113,7 +113,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				return actionPath;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.actionString());
+				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.createActionString());
 			}
 
 			// set character encoding
@@ -133,10 +133,10 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			final Object action;
 
 			if (actionRuntime.isActionHandlerDefined()) {
-				action = actionRuntime.actionHandler();
+				action = actionRuntime.getActionHandler();
 			}
 			else {
-				action = createAction(actionRuntime.actionClass());
+				action = createAction(actionRuntime.getActionClass());
 			}
 
 			final ActionRequest actionRequest = createActionRequest(
@@ -148,13 +148,13 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 				servletResponse);
 
 			// invoke and render
-			if (actionRuntime.async()) {
+			if (actionRuntime.isAsync()) {
 				asyncActionExecutor.invoke(actionRequest);
 			} else {
 				actionRequest.invoke();
 			}
 
-			actionPath = actionRequest.nextActionPath();
+			actionPath = actionRequest.getNextActionPath();
 		}
 		return null;
 	}
@@ -187,10 +187,10 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 		}
 
 		if (madvocConfig.isPreventCaching()) {
-			ServletUtil.preventCaching(actionRequest.httpServletResponse());
+			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
 
-		actionResult.render(actionRequest, actionRequest.actionResult());
+		actionResult.render(actionRequest, actionRequest.getActionResult());
 	}
 
 	// ---------------------------------------------------------------- create

@@ -48,7 +48,7 @@ public class TextActionResult implements ActionResult<TextResult> {
 
 	@Override
 	public void render(final ActionRequest actionRequest, final TextResult resultValue) throws Exception {
-		final HttpServletResponse response = actionRequest.httpServletResponse();
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String encoding = response.getCharacterEncoding();
 

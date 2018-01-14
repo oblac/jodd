@@ -65,7 +65,7 @@ public class ActionRequest {
 	/**
 	 * Returns servlet request.
 	 */
-	public HttpServletRequest httpServletRequest() {
+	public HttpServletRequest getHttpServletRequest() {
 		return servletRequest;
 	}
 
@@ -79,7 +79,7 @@ public class ActionRequest {
 	/**
 	 * Returns servlet response.
 	 */
-	public HttpServletResponse httpServletResponse() {
+	public HttpServletResponse getHttpServletResponse() {
 		return servletResponse;
 	}
 
@@ -93,49 +93,49 @@ public class ActionRequest {
 	/**
 	 * Returns {@link ActionRuntime action runtime} configuration.
 	 */
-	public ActionRuntime actionRuntime() {
+	public ActionRuntime getActionRuntime() {
 		return actionRuntime;
 	}
 
 	/**
 	 * Returns action object.
 	 */
-	public Object action() {
+	public Object getAction() {
 		return action;
 	}
 
 	/**
 	 * Returns action path.
 	 */
-	public String actionPath() {
+	public String getActionPath() {
 		return actionPath;
 	}
 
 	/**
 	 * Returns next request string for action chaining.
 	 */
-	public String nextActionPath() {
+	public String getNextActionPath() {
 		return nextActionPath;
 	}
 
 	/**
 	 * Specifies the next action path, that will be chained to current action request.
 	 */
-	public void nextActionPath(final String nextActionPath) {
+	public void setNextActionPath(final String nextActionPath) {
 		this.nextActionPath = nextActionPath;
 	}
 
 	/**
 	 * Returns all injection targets.
 	 */
-	public Targets targets() {
+	public Targets getTargets() {
 		return targets;
 	}
 
 	/**
 	 * Returns action result object.
 	 */
-	public Object actionResult() {
+	public Object getActionResult() {
 		return actionResult;
 	}
 
@@ -150,7 +150,7 @@ public class ActionRequest {
 	 * Returns chunks of action path. Action path is split on {@code /}. For example,
 	 * the path {@code "/hello/world"} would return 2 chunks: {@code hello} and {@code world}.
 	 */
-	public String[] actionPathChunks() {
+	public String[] getActionPathChunks() {
 		return actionPathChunks;
 	}
 
@@ -186,8 +186,8 @@ public class ActionRequest {
 	 * in correct order.
 	 */
 	protected ActionWrapper[] createExecutionArray() {
-		int totalInterceptors = (this.actionRuntime.interceptors() != null ? this.actionRuntime.interceptors().length : 0);
-		int totalFilters = (this.actionRuntime.filters() != null ? this.actionRuntime.filters().length : 0);
+		int totalInterceptors = (this.actionRuntime.getInterceptors() != null ? this.actionRuntime.getInterceptors().length : 0);
+		int totalFilters = (this.actionRuntime.getFilters() != null ? this.actionRuntime.getFilters().length : 0);
 
 		ActionWrapper[] executionArray = new ActionWrapper[totalFilters + 1 + totalInterceptors + 1];
 
@@ -196,7 +196,7 @@ public class ActionRequest {
 		int index = 0;
 
 		if (totalFilters > 0) {
-			System.arraycopy(actionRuntime.filters(), 0, executionArray, index, totalFilters);
+			System.arraycopy(actionRuntime.getFilters(), 0, executionArray, index, totalFilters);
 			index += totalFilters;
 		}
 
@@ -213,7 +213,7 @@ public class ActionRequest {
 		// interceptors
 
 		if (totalInterceptors > 0) {
-			System.arraycopy(actionRuntime.interceptors(), 0, executionArray, index, totalInterceptors);
+			System.arraycopy(actionRuntime.getInterceptors(), 0, executionArray, index, totalInterceptors);
 			index += totalInterceptors;
 		}
 
@@ -243,13 +243,13 @@ public class ActionRequest {
 	 */
 	protected Object invokeActionMethod() throws Exception {
 		if (actionRuntime.isActionHandlerDefined()) {
-			actionRuntime.actionHandler().handle(this);
+			actionRuntime.getActionHandler().handle(this);
 			return null;
 		}
 
-		Object[] params = targets.extractParametersValues();
+		final Object[] params = targets.extractParametersValues();
 		try {
-			return actionRuntime.actionClassMethod().invoke(action, params);
+			return actionRuntime.getActionClassMethod().invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw wrapToException(unwrapThrowable(itex));
 		}

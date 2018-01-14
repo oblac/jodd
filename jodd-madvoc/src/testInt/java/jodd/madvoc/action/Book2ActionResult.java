@@ -34,16 +34,16 @@ public class Book2ActionResult implements ActionResult<Book> {
 
 	@Override
 	public void render(ActionRequest actionRequest, Book book) throws Exception {
-		HttpServletRequest request = actionRequest.httpServletRequest();
+		HttpServletRequest request = actionRequest.getHttpServletRequest();
 
 		request.setAttribute("book", book);
 
-		String method = actionRequest.actionRuntime().actionMethod();
+		String method = actionRequest.getActionRuntime().getActionMethod();
 
 		if (method.equalsIgnoreCase("PUT")) {
 			// JSPs only permit GET POST or HEAD
 			//DispatcherUtil.forward(request, actionRequest.getHttpServletResponse(), "/book/put.jsp");
-			actionRequest.httpServletResponse().getWriter().write("OldBook: " + book.getIban() + ":" + book.getName() + ".");
+			actionRequest.getHttpServletResponse().getWriter().write("OldBook: " + book.getIban() + ":" + book.getName() + ".");
 		}
 	}
 }

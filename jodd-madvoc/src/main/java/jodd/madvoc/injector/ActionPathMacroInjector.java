@@ -41,21 +41,21 @@ public class ActionPathMacroInjector implements Injector {
 
 	@Override
 	public void inject(final ActionRequest actionRequest) {
-		ActionRuntime actionRuntime = actionRequest.actionRuntime();
-		RouteChunk routeChunk = actionRuntime.routeChunk();
+		ActionRuntime actionRuntime = actionRequest.getActionRuntime();
+		RouteChunk routeChunk = actionRuntime.getRouteChunk();
 
 		if (!routeChunk.hasMacrosOnPath()) {
 			// no action path macros at all, just exit
 			return;
 		}
 
-		final Targets targets = actionRequest.targets();
+		final Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
 		// inject
-		final String[] actionPath = actionRequest.actionPathChunks();
+		final String[] actionPath = actionRequest.getActionPathChunks();
 
 		int ndx = actionPath.length - 1;
 

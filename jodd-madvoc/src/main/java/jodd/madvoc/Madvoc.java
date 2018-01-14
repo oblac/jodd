@@ -179,7 +179,7 @@ public class Madvoc {
 		webapp.bindServletContext(servletContext);
 
 		if (paramsFiles != null) {
-			Props params = loadMadvocParams(paramsFiles);
+			final Props params = loadMadvocParams(paramsFiles);
 
 			webapp.withParams(params);
 		}

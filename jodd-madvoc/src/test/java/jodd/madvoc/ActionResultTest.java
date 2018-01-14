@@ -205,7 +205,7 @@ class ActionResultTest extends MadvocTestCase {
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo2");
-		String path = cfg.actionPath();
+		String path = cfg.getActionPath();
 
 		String resultPath = resultMapper.resolveResultPathString(path, null);
 		assertEquals("/aliased", resultPath);
@@ -219,7 +219,7 @@ class ActionResultTest extends MadvocTestCase {
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 		actionsManager.registerAction(BooAction.class, "foo2", null);
 
-		assertEquals("/boo.foo2.xxx", actionsManager.lookup(BooAction.class.getName() + "#foo2").actionPath());
+		assertEquals("/boo.foo2.xxx", actionsManager.lookup(BooAction.class.getName() + "#foo2").getActionPath());
 	}
 
 }

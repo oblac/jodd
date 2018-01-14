@@ -59,7 +59,7 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 	 */
 	@Override
 	public Object intercept(final ActionRequest actionRequest) throws Exception {
-		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		// detect multipart request
 		if (ServletUtil.isMultipartRequest(servletRequest)) {

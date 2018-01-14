@@ -40,12 +40,12 @@ public class SessionScopeInjector implements Injector, Outjector {
 
 	@Override
 	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.targets();
+		Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
 		Enumeration attributeNames = session.getAttributeNames();
@@ -65,12 +65,12 @@ public class SessionScopeInjector implements Injector, Outjector {
 
 	@Override
 	public void outject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.targets();
+		Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
 		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {

@@ -67,13 +67,13 @@ class ManualRegistrationTest {
 
 		ActionRuntime actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/hello"));
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.actionClass());
-		assertEquals("foo1", actionRuntime.actionClassMethod().getName());
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo1", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/world"));
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.actionClass());
-		assertEquals("foo2", actionRuntime.actionClassMethod().getName());
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo2", actionRuntime.getActionClassMethod().getName());
 	}
 
 	@Test
@@ -100,12 +100,12 @@ class ManualRegistrationTest {
 
 		ActionRuntime actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/hello"));
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.actionClass());
-		assertEquals("foo1", actionRuntime.actionClassMethod().getName());
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo1", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/world"));
 		assertNotNull(actionRuntime);
-		assertEquals(BooAction.class, actionRuntime.actionClass());
-		assertEquals("foo2", actionRuntime.actionClassMethod().getName());
+		assertEquals(BooAction.class, actionRuntime.getActionClass());
+		assertEquals("foo2", actionRuntime.getActionClassMethod().getName());
 	}
 }

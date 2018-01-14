@@ -35,16 +35,16 @@ public class BookActionResult implements ActionResult<Book> {
 
 	@Override
 	public void render(ActionRequest actionRequest, Book book) throws Exception {
-		HttpServletRequest request = actionRequest.httpServletRequest();
+		HttpServletRequest request = actionRequest.getHttpServletRequest();
 
 		request.setAttribute("book", book);
 
-		String method = actionRequest.actionRuntime().actionMethod();
+		String method = actionRequest.getActionRuntime().getActionMethod();
 
 		if (method.equalsIgnoreCase("POST")) {
-			DispatcherUtil.forward(request, actionRequest.httpServletResponse(), "/book/post.jsp");
+			DispatcherUtil.forward(request, actionRequest.getHttpServletResponse(), "/book/post.jsp");
 		} else {
-			DispatcherUtil.forward(request, actionRequest.httpServletResponse(), "/book/get.jsp");
+			DispatcherUtil.forward(request, actionRequest.getHttpServletResponse(), "/book/get.jsp");
 		}
 	}
 

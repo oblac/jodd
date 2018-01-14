@@ -151,7 +151,7 @@ class ServletDispatcherResultTest {
 				new ActionDefinition(actionPath, "GET"),
 				null, false, null, null, madvocConfig.getActionConfig());
 
-		return new ActionRequest(madvocController, actionRuntime.actionPath(), MadvocUtil.splitPathToChunks(actionRuntime.actionPath()), actionRuntime, action, servletRequest, servletResponse);
+		return new ActionRequest(madvocController, actionRuntime.getActionPath(), MadvocUtil.splitPathToChunks(actionRuntime.getActionPath()), actionRuntime, action, servletRequest, servletResponse);
 	}
 
 	class Action {

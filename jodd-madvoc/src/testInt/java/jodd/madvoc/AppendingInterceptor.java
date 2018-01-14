@@ -46,7 +46,7 @@ public class AppendingInterceptor implements ActionInterceptor {
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object result =  actionRequest.invoke();
 
-		Object action = actionRequest.action();
+		Object action = actionRequest.getAction();
 
 		if (action instanceof IntcptAction) {
 			IntcptAction intcptAction = (IntcptAction) action;

@@ -54,7 +54,7 @@ public class RawActionResult implements ActionResult<RawData> {
 			return;
 		}
 
-		HttpServletResponse response = actionRequest.httpServletResponse();
+		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		// reset content type and prepare response
 		// since we are using MadvocResponseWrapper, the charset will be reset as well.

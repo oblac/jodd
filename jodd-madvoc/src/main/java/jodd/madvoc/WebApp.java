@@ -230,7 +230,8 @@ public class WebApp {
 
 		if (!madvocRouterConsumers.isEmpty()) {
 
-			MadvocRouter madvocRouter = MadvocRouter.create();
+			final MadvocRouter madvocRouter = MadvocRouter.create();
+
 			madvocContainer.registerComponentInstance(madvocRouter);
 
 			madvocRouterConsumers.accept(madvocRouter);

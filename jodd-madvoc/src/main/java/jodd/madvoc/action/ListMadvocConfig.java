@@ -82,7 +82,7 @@ public class ListMadvocConfig {
 	 * Collects all interceptors.
 	 */
 	protected void collectActionInterceptors() {
-		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAllInterceptors();
+		final Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAllInterceptors();
 		interceptors = new ArrayList<>();
 		interceptors.addAll(interceptorValues);
 		interceptors.sort(Comparator.comparing(a -> a.getClass().getSimpleName()));
@@ -92,7 +92,7 @@ public class ListMadvocConfig {
 	 * Collects all filters.
 	 */
 	protected void collectActionFilters() {
-		Collection<? extends ActionFilter> filterValues = filtersManager.getAllFilters();
+		final Collection<? extends ActionFilter> filterValues = filtersManager.getAllFilters();
 		filters = new ArrayList<>();
 		filters.addAll(filterValues);
 		filters.sort(Comparator.comparing(a -> a.getClass().getSimpleName()));
@@ -102,7 +102,7 @@ public class ListMadvocConfig {
 	 * Collects all action results.
 	 */
 	protected void collectActionResults() {
-		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults();
+		final Collection<ActionResult> resultsValues = resultsManager.getAllActionResults();
 		results = new ArrayList<>();
 		results.addAll(resultsValues);
 		results.sort(Comparator.comparing(a -> a.getClass().getSimpleName()));
@@ -113,7 +113,7 @@ public class ListMadvocConfig {
 	 */
 	protected void collectActionRuntimes() {
 		actions = actionsManager.getAllActionRuntimes();
-		actions.sort(Comparator.comparing(ActionRuntime::actionPath));
+		actions.sort(Comparator.comparing(ActionRuntime::getActionPath));
 	}
 
 }

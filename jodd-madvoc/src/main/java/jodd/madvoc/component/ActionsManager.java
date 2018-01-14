@@ -134,7 +134,7 @@ public class ActionsManager {
 	 * @see #registerActionRuntime(ActionRuntime)
 	 */
 	public ActionRuntime registerAction(final Class actionClass, final Method actionMethod, final ActionDefinition actionDefinition) {
-		ActionRuntime actionRuntime = actionMethodParser.parse(actionClass, actionMethod, actionDefinition);
+		final ActionRuntime actionRuntime = actionMethodParser.parse(actionClass, actionMethod, actionDefinition);
 		if (actionRuntime == null) {
 			return null;
 		}
@@ -147,11 +147,12 @@ public class ActionsManager {
 	 * exception will be thrown.
 	 */
 	public ActionRuntime registerActionRuntime(final ActionRuntime actionRuntime) {
-		final String actionPath = actionRuntime.actionPath();
-		final String method = actionRuntime.actionMethod();
+		final String actionPath = actionRuntime.getActionPath();
+		final String method = actionRuntime.getActionMethod();
 
-		log.debug(() -> "Madvoc action: " + ifNotNull(method, m -> m + " ") + actionRuntime.actionPath() + " => " + actionRuntime.actionString());
-		RouteChunk routeChunk = routes.registerPath(method, actionPath);
+		log.debug(() -> "Madvoc action: " + ifNotNull(method, m -> m + " ") + actionRuntime.getActionPath() + " => " + actionRuntime.createActionString());
+
+		final RouteChunk routeChunk = routes.registerPath(method, actionPath);
 
 		if (routeChunk.value() != null) {
 			// existing chunk
@@ -167,10 +168,10 @@ public class ActionsManager {
 
 		// finally
 
-		runtimes.put(actionRuntime.actionString(), actionRuntime);
+		runtimes.put(actionRuntime.createActionString(), actionRuntime);
 
 		// async check
-		if (actionRuntime.async()) {
+		if (actionRuntime.isAsync()) {
 			asyncMode = true;
 		}
 
@@ -186,7 +187,7 @@ public class ActionsManager {
 	/**
 	 * Lookups action runtime config for given action class and method string (aka 'action string').
 	 * The action string has the following format: <code>className#methodName</code>.
-	 * @see ActionRuntime#actionString()
+	 * @see ActionRuntime#createActionString()
 	 */
 	public ActionRuntime lookup(final String actionString) {
 		return runtimes.get(actionString);

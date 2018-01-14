@@ -62,7 +62,7 @@ public class ResultMapper {
 		if (value == null) {
 			ActionRuntime cfg = actionsManager.lookup(alias);
 			if (cfg != null) {
-				value = cfg.actionPath();
+				value = cfg.getActionPath();
 			}
 		}
 		return value;

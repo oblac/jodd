@@ -39,14 +39,14 @@ public class RequestBodyScopeInject implements Injector {
 
 	@Override
 	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.targets();
+		Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
 		String body;
 		try {
-			body = actionRequest.httpServletRequest().getReader().lines().collect(Collectors.joining());
+			body = actionRequest.getHttpServletRequest().getReader().lines().collect(Collectors.joining());
 		} catch (IOException ignore) {
 			return;
 		}

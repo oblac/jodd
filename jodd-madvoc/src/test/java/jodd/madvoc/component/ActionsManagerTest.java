@@ -79,13 +79,13 @@ class ActionsManagerTest {
 		actionsManager.registerAction(FooAction.class, "one", new ActionDefinition("/{one}"));
 
 		ActionRuntime actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/foo"));
-		assertEquals("one", actionRuntime.actionClassMethod().getName());
+		assertEquals("one", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/foo/boo"));
 		assertNull(actionRuntime);
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/xxx-foo"));
-		assertEquals("two", actionRuntime.actionClassMethod().getName());	// best match!
+		assertEquals("two", actionRuntime.getActionClassMethod().getName());	// best match!
 
 	}
 
@@ -105,10 +105,10 @@ class ActionsManagerTest {
 		assertNull(actionRuntime);
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/yyy-111"));
-		assertEquals("one", actionRuntime.actionClassMethod().getName());
+		assertEquals("one", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/xxx-222"));
-		assertEquals("two", actionRuntime.actionClassMethod().getName());
+		assertEquals("two", actionRuntime.getActionClassMethod().getName());
 
 		try {
 			actionsManager.registerAction(FooAction.class, "two", new ActionDefinition("/xxx-{two}"));
@@ -131,13 +131,13 @@ class ActionsManagerTest {
 		actionsManager.registerAction(FooAction.class, "two", new ActionDefinition("/{two}/{three}"));
 
 		ActionRuntime actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/foo"));
-		assertEquals("one", actionRuntime.actionClassMethod().getName());
+		assertEquals("one", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/scott/ramonna"));
-		assertEquals("two", actionRuntime.actionClassMethod().getName());
+		assertEquals("two", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/life/universe"));
-		assertEquals("three", actionRuntime.actionClassMethod().getName());
+		assertEquals("three", actionRuntime.getActionClassMethod().getName());
 
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/scott/ramonna/envy"));
 		assertNull(actionRuntime);

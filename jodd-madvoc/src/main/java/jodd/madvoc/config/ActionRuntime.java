@@ -104,70 +104,70 @@ public class ActionRuntime {
 	/**
 	 * Returns action handler.
 	 */
-	public ActionHandler actionHandler() {
+	public ActionHandler getActionHandler() {
 		return actionHandler;
 	}
 
 	/**
 	 * Returns action class.
 	 */
-	public Class actionClass() {
+	public Class getActionClass() {
 		return actionClass;
 	}
 
 	/**
 	 * Returns action class method.
 	 */
-	public Method actionClassMethod() {
+	public Method getActionClassMethod() {
 		return actionClassMethod;
 	}
 
 	/**
 	 * Returns action path.
 	 */
-	public String actionPath() {
+	public String getActionPath() {
 		return actionPath;
 	}
 
 	/**
 	 * Returns action method.
 	 */
-	public String actionMethod() {
+	public String getActionMethod() {
 		return actionMethod;
 	}
 
 	/**
 	 * Returns action result base path.
 	 */
-	public String resultBasePath() {
+	public String getResultBasePath() {
 		return resultBasePath;
 	}
 
 	/**
 	 * Returns interceptor instances.
 	 */
-	public ActionInterceptor[] interceptors() {
+	public ActionInterceptor[] getInterceptors() {
 		return interceptors;
 	}
 
 	/**
 	 * Returns filters instances.
 	 */
-	public ActionFilter[] filters() {
+	public ActionFilter[] getFilters() {
 		return filters;
 	}
 
 	/**
 	 * Returns <code>true</code> if action is asynchronous.
 	 */
-	public boolean async() {
+	public boolean isAsync() {
 		return async;
 	}
 
 	/**
 	 * Returns method parameters information, or <code>null</code> if method has no params.
 	 */
-	public MethodParam[] methodParams() {
+	public MethodParam[] getMethodParams() {
 		return methodParams;
 	}
 
@@ -175,7 +175,7 @@ public class ActionRuntime {
 	 * Returns action result class that will render the result.
 	 * may be <code>null</code>.
 	 */
-	public Class<? extends ActionResult> actionResult() {
+	public Class<? extends ActionResult> getActionResult() {
 		return actionResult;
 	}
 
@@ -186,11 +186,11 @@ public class ActionRuntime {
 		return hasArguments;
 	}
 
-	public ScopeData[][] scopeData() {
+	public ScopeData[][] getScopeData() {
 		return scopeData;
 	}
 
-	public ActionConfig actionConfig() {
+	public ActionConfig getActionConfig() {
 		return actionConfig;
 	}
 
@@ -206,7 +206,7 @@ public class ActionRuntime {
 	/**
 	 * Returns route chunk associated with this configuration.
 	 */
-	public RouteChunk routeChunk() {
+	public RouteChunk getRouteChunk() {
 		return routeChunk;
 	}
 
@@ -215,13 +215,13 @@ public class ActionRuntime {
 	/**
 	 * Returns action string in form 'actionClass#actionMethod'.
 	 */
-	public String actionString() {
+	public String createActionString() {
 		if (actionHandler != null) {
 			return actionHandler.getClass().getName();
 		}
 		String className = actionClass.getName();
 
-		int ndx = className.indexOf("$$");
+		final int ndx = className.indexOf("$$");
 
 		if (ndx != -1) {
 			className = className.substring(0, ndx);
@@ -232,7 +232,7 @@ public class ActionRuntime {
 
 	@Override
 	public String toString() {
-		return "action: " + actionPath + (actionMethod == null ? "" : '#' + actionMethod) + "  -->  " + actionString();
+		return "action: " + actionPath + (actionMethod == null ? "" : '#' + actionMethod) + "  -->  " + createActionString();
 	}
 
 }

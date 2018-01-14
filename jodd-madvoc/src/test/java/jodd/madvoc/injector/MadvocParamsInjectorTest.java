@@ -39,7 +39,7 @@ class MadvocParamsInjectorTest {
 	void testInjection() {
 		WebApp webapp = new WebApp();
 		webapp.start();
-		PetiteContainer madpc = webapp.madvocContainer().petite();
+		PetiteContainer madpc = webapp.madvocContainer().getPetiteContainer();
 
 		MadvocConfig madvocConfig = new MadvocConfig();
 

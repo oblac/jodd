@@ -53,7 +53,7 @@ public class AppendingFilter implements ActionFilter {
 
 	@Override
 	public Object filter(ActionRequest actionRequest) throws Exception {
-		HttpServletResponse httpResponse = actionRequest.httpServletResponse();
+		HttpServletResponse httpResponse = actionRequest.getHttpServletResponse();
 
 		BufferResponseWrapper wrapper = new BufferResponseWrapper(httpResponse);
 		actionRequest.bind(wrapper);

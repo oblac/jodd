@@ -85,7 +85,7 @@ public class AsyncActionExecutor {
 			throw new MadvocException("No action is marked as async!");
 		}
 
-		HttpServletRequest servletRequest = actionRequest.httpServletRequest();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		log.debug(() -> "Async call to: " + actionRequest);
 

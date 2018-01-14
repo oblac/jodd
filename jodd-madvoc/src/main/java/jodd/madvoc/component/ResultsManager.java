@@ -190,9 +190,9 @@ public class ResultsManager {
 		// + read @RenderWith value on method
 		if (actionResultHandler == null) {
 
-			ActionRuntime actionRuntime = actionRequest.actionRuntime();
+			ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			Class<? extends ActionResult> actionResultClass = actionRuntime.actionResult();
+			Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
 			if (actionResultClass != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
 			}
@@ -209,7 +209,7 @@ public class ResultsManager {
 
 		// + use annotation's configuration
 		if (actionResultHandler == null || modifiedResultObject) {
-			ActionConfig actionConfig = actionRequest.actionRuntime().actionConfig();
+			ActionConfig actionConfig = actionRequest.getActionRuntime().getActionConfig();
 
 			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
 			if (actionResultClass != null) {

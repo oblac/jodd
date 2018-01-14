@@ -50,7 +50,7 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 
 	@Override
 	public Object intercept(final ActionRequest actionRequest) throws Exception {
-		Object action = actionRequest.action();
+		Object action = actionRequest.getAction();
 		Class actionType = action.getClass();
 
 		PropertyDescriptor[] allProperties = lookupAnnotatedProperties(actionType);

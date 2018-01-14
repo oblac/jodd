@@ -43,15 +43,15 @@ public class ChainActionResult implements ActionResult<Chain> {
 	protected ResultMapper resultMapper;
 
 	/**
-	 * Sets the {@link jodd.madvoc.ActionRequest#nextActionPath(String) next action request} for the chain.
+	 * Sets the {@link jodd.madvoc.ActionRequest#setNextActionPath(String) next action request} for the chain.
 	 */
 	@Override
 	public void render(final ActionRequest actionRequest, final Chain chainResult) {
-		String resultBasePath = actionRequest.actionRuntime().resultBasePath();
+		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
 
 		String resultPath = resultMapper.resolveResultPathString(resultBasePath, chainResult.path());
 
-		actionRequest.nextActionPath(resultPath);
+		actionRequest.setNextActionPath(resultPath);
 	}
 
 }

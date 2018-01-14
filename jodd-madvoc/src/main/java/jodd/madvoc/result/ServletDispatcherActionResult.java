@@ -54,8 +54,8 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	 */
 	@Override
 	protected void renderView(final ActionRequest actionRequest, final String target) throws Exception {
-		HttpServletRequest request = actionRequest.httpServletRequest();
-		HttpServletResponse response = actionRequest.httpServletResponse();
+		HttpServletRequest request = actionRequest.getHttpServletRequest();
+		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(target);
 		if (dispatcher == null) {
@@ -99,7 +99,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 			log.debug("target check: " + target);
 		}
 
-		final ServletContext servletContext = actionRequest.httpServletRequest().getSession().getServletContext();
+		final ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
 		try {
 			return servletContext.getResource(target) != null;

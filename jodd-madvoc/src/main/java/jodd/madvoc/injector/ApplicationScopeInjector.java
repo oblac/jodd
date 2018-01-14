@@ -40,12 +40,12 @@ public class ApplicationScopeInjector implements Injector, Outjector, ContextInj
 
 	@Override
 	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.targets();
+		Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		ServletContext servletContext = actionRequest.httpServletRequest().getSession().getServletContext();
+		ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
 		Enumeration attributeNames = servletContext.getAttributeNames();
 
 		while (attributeNames.hasMoreElements()) {
@@ -84,12 +84,12 @@ public class ApplicationScopeInjector implements Injector, Outjector, ContextInj
 
 	@Override
 	public void outject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.targets();
+		Targets targets = actionRequest.getTargets();
 		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
-		ServletContext context = actionRequest.httpServletRequest().getSession().getServletContext();
+		ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
 		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
 			Object value = target.readTargetProperty(out);
