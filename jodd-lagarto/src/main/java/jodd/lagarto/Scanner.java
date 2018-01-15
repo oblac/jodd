@@ -33,7 +33,7 @@ import jodd.util.CharUtil;
  */
 class Scanner {
 
-	protected CharSequence input;
+	protected char[] input;
 	protected int ndx = 0;
 	protected int total;
 
@@ -42,10 +42,10 @@ class Scanner {
 	/**
 	 * Initializes scanner.
 	 */
-	protected void initialize(final CharSequence input) {
+	protected void initialize(final char[] input) {
 		this.input = input;
 		this.ndx = -1;
-		this.total = input.length();
+		this.total = input.length;
 	}
 
 	// ---------------------------------------------------------------- find
@@ -56,7 +56,7 @@ class Scanner {
 	 */
 	protected final int find(final char target, int from, final int end) {
 		while (from < end) {
-			if (input.charAt(from) == target) {
+			if (input[from] == target) {
 				break;
 			}
 			from++;
@@ -93,7 +93,7 @@ class Scanner {
 		int j = ndx;
 
 		for (int i = 0; i < target.length(); i++, j++) {
-			if (input.charAt(j) != target.charAt(i)) {
+			if (input[j] != target.charAt(i)) {
 				return false;
 			}
 		}
@@ -120,7 +120,7 @@ class Scanner {
 		int j = ndx;
 
 		for (int i = 0; i < uppercaseTarget.length(); i++, j++) {
-			char c = CharUtil.toUpperAscii(input.charAt(j));
+			char c = CharUtil.toUpperAscii(input[j]);
 
 			if (c != uppercaseTarget.charAt(i)) {
 				return false;
@@ -139,7 +139,7 @@ class Scanner {
 		if (from == to) {
 			return CharArraySequence.EMPTY;
 		}
-		return input.subSequence(from, to);
+		return CharArraySequence.of(input, from, to - from);
 	}
 
 	// ---------------------------------------------------------------- position
@@ -174,7 +174,7 @@ class Scanner {
 		}
 
 		while (offset < position) {
-			char c = input.charAt(offset);
+			char c = input[offset];
 
 			if (c == '\n') {
 				line++;

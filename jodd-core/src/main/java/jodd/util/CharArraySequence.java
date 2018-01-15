@@ -39,14 +39,18 @@ public class CharArraySequence implements CharSequence {
 	/**
 	 * Static constructor that creates a char sequence using provided char array.
 	 */
-	public static CharSequence of(final char... value) {
+	public static CharArraySequence of(final char... value) {
 		return new CharArraySequence(value);
+	}
+
+	public static CharArraySequence of(final char[] value, final int offset, final int len) {
+		return new CharArraySequence(value, offset, len);
 	}
 
 	/**
 	 * Static constructor that creates a char sequence by making a copy of provided char array.
 	 */
-	public static CharSequence from(final char[] value, final int offset, final int len) {
+	public static CharArraySequence from(final char[] value, final int offset, final int len) {
 		final char[] buffer = new char[value.length];
 
 		System.arraycopy(value, offset, buffer, 0, len);
@@ -95,14 +99,16 @@ public class CharArraySequence implements CharSequence {
 
 	@Override
 	public CharSequence subSequence(final int start, final int end) {
-		int count = end - start;
-		int rem = len - end;
+		final int count = end - start;
+		final int rem = len - end;
+
 		if ((start | end | count | rem) < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 		if ((start | rem) == 0) {
 			return this;
 		}
+
 		return new CharArraySequence(off + start, count, buffer);
 	}
 

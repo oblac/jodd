@@ -26,6 +26,7 @@
 package jodd.csselly;
 
 import jodd.util.StringUtil;
+import jodd.util.UnsafeUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class CSSelly {
 	protected final CSSellyLexer lexer;
 
 	public CSSelly(final String input) {
-		this(input.toCharArray());
+		this(UnsafeUtil.getChars(input));
 	}
 
 	public CSSelly(final char[] input) {

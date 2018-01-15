@@ -32,6 +32,7 @@ import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
+import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
 import java.util.Collection;
@@ -71,7 +72,7 @@ public class JsonParser extends JsonParserBase {
 	public static final String VALUES = "values";
 
 	protected int ndx = 0;
-	protected CharSequence input;
+	protected char[] input;
 	protected int total;
 	protected Path path;
 	protected boolean useAltPaths = JoddJson.get().defaults().isUseAltPathsByParser();
@@ -241,7 +242,7 @@ public class JsonParser extends JsonParserBase {
 	@SuppressWarnings("unchecked")
 	public <T> T parse(final String input, final Class<T> targetType) {
 		rootType = targetType;
-		return _parse(input);
+		return _parse(UnsafeUtil.getChars(input));
 	}
 
 	/**
@@ -283,7 +284,7 @@ public class JsonParser extends JsonParserBase {
 	 * Parses input JSON string.
 	 */
 	public <T> T parse(final String input) {
-		return _parse(input);
+		return _parse(UnsafeUtil.getChars(input));
 	}
 
 	/**
@@ -292,20 +293,20 @@ public class JsonParser extends JsonParserBase {
 	@SuppressWarnings("unchecked")
 	public <T> T parse(final char[] input, final Class<T> targetType) {
 		rootType = targetType;
-		return _parse(CharArraySequence.of(input));
+		return _parse(input);
 	}
 
 	/**
 	 * Parses input JSON char array.
 	 */
 	public <T> T parse(final char[] input) {
-		return _parse(CharArraySequence.of(input));
+		return _parse(input);
 	}
 
 
-	private <T> T _parse(final CharSequence input) {
+	private <T> T _parse(final char[] input) {
 		this.input = input;
-		this.total = input.length();
+		this.total = input.length;
 
 		reset();
 
@@ -351,7 +352,7 @@ public class JsonParser extends JsonParserBase {
 	protected Object parseValue(final Class targetType, final Class keyType, final Class componentType) {
 		ValueConverter valueConverter;
 
-		char c = input.charAt(ndx);
+		char c = input[ndx];
 
 		switch (c) {
 			case '\'':
@@ -464,7 +465,7 @@ public class JsonParser extends JsonParserBase {
 			return string;
 		}
 
-		syntaxError("Invalid char: " + input.charAt(ndx));
+		syntaxError("Invalid char: " + input[ndx]);
 		return null;
 	}
 
@@ -494,16 +495,16 @@ public class JsonParser extends JsonParserBase {
 	 * Parses string content, once when starting quote has been consumer.
 	 */
 	protected String parseStringContent(final char quote) {
-		int startNdx = ndx;
+		final int startNdx = ndx;
 
 		// roll-out until the end of the string or the escape char
 		while (true) {
-			char c = input.charAt(ndx);
+			final char c = input[ndx];
 
 			if (c == quote) {
 				// no escapes found, just use existing string
 				ndx++;
-				return input.subSequence(startNdx, ndx - 1).toString();
+				return new String(input, startNdx, ndx - 1 - startNdx);
 			}
 
 			if (c == '\\') {
@@ -520,13 +521,13 @@ public class JsonParser extends JsonParserBase {
 		growEmpty();
 
 		for (int i = startNdx, j = 0; j < textLen; i++, j++) {
-			text[j] = input.charAt(i);
+			text[j] = input[i];
 		}
 		//System.arraycopy(input, startNdx, text, 0, textLen);
 
 		// escape char, process everything until the end
 		while (true) {
-			char c = input.charAt(ndx);
+			char c = input[ndx];
 
 			if (c == quote) {
 				// done
@@ -540,7 +541,7 @@ public class JsonParser extends JsonParserBase {
 				// escape char found
 				ndx++;
 
-				c = input.charAt(ndx);
+				c = input[ndx];
 
 				switch (c) {
 					case '\"' : c = '\"'; break;
@@ -610,10 +611,10 @@ public class JsonParser extends JsonParserBase {
 	 * Parses 4 characters and returns unicode character.
 	 */
 	protected char parseUnicode() {
-		int i0 = CharUtil.hex2int(input.charAt(ndx++));
-		int i1 = CharUtil.hex2int(input.charAt(ndx++));
-		int i2 = CharUtil.hex2int(input.charAt(ndx++));
-		int i3 = CharUtil.hex2int(input.charAt(ndx));
+		int i0 = CharUtil.hex2int(input[ndx++]);
+		int i1 = CharUtil.hex2int(input[ndx++]);
+		int i2 = CharUtil.hex2int(input[ndx++]);
+		int i3 = CharUtil.hex2int(input[ndx]);
 
 		return (char) ((i0 << 12) + (i1 << 8) + (i2 << 4) + i3);
 	}
@@ -626,18 +627,18 @@ public class JsonParser extends JsonParserBase {
 	 * Parses un-quoted string content.
 	 */
 	protected String parseUnquotedStringContent() {
-		int startNdx = ndx;
+		final int startNdx = ndx;
 
 		while (true) {
-			char c = input.charAt(ndx);
+			final char c = input[ndx];
 
 			if (c <= ' ' || CharUtil.equalsOne(c, UNQOUTED_DELIMETERS)) {
-				int currentNdx = ndx;
+				final int currentNdx = ndx;
 
 				// done
 				skipWhiteSpaces();
 
-				return input.subSequence(startNdx, currentNdx).toString();
+				return new String(input, startNdx, currentNdx - startNdx);
 			}
 
 			ndx++;
@@ -651,9 +652,9 @@ public class JsonParser extends JsonParserBase {
 	 * Parses JSON numbers.
 	 */
 	protected Number parseNumber() {
-		int startIndex = ndx;
+		final int startIndex = ndx;
 
-		char c = input.charAt(ndx);
+		char c = input[ndx];
 
 		boolean isDouble = false;
 		boolean isExp = false;
@@ -667,7 +668,7 @@ public class JsonParser extends JsonParserBase {
 				break;
 			}
 
-			c = input.charAt(ndx);
+			c = input[ndx];
 
 			if (c >= '0' && c <= '9') {
 				ndx++;
@@ -690,7 +691,7 @@ public class JsonParser extends JsonParserBase {
 		}
 
 
-		final String value = input.subSequence(startIndex, ndx).toString();
+		final String value = new String(input, startIndex, ndx - startIndex);
 
 		if (isDouble) {
 			return Double.valueOf(value);
@@ -767,7 +768,7 @@ public class JsonParser extends JsonParserBase {
 		while (true) {
 			skipWhiteSpaces();
 
-			char c = input.charAt(ndx);
+			char c = input[ndx];
 
 			if (c == ']') {
 				if (koma) {
@@ -785,7 +786,7 @@ public class JsonParser extends JsonParserBase {
 
 			skipWhiteSpaces();
 
-			c = input.charAt(ndx);
+			c = input[ndx];
 
 			switch (c) {
 				case ']': ndx++; break mainloop;
@@ -861,7 +862,7 @@ public class JsonParser extends JsonParserBase {
 		while (true) {
 			skipWhiteSpaces();
 
-			char c = input.charAt(ndx);
+			char c = input[ndx];
 
 			if (c == '}') {
 				if (koma) {
@@ -951,7 +952,7 @@ public class JsonParser extends JsonParserBase {
 
 			skipWhiteSpaces();
 
-			c = input.charAt(ndx);
+			c = input[ndx];
 
 			switch (c) {
 				case '}': ndx++; break mainloop;
@@ -976,7 +977,7 @@ public class JsonParser extends JsonParserBase {
 	 * Consumes char at current position. If char is different, throws the exception.
 	 */
 	protected void consume(final char c) {
-		if (input.charAt(ndx) != c) {
+		if (input[ndx] != c) {
 			syntaxError("Invalid char: expected " + c);
 		}
 
@@ -989,7 +990,7 @@ public class JsonParser extends JsonParserBase {
 	 * If matched, returns matched char.
 	 */
 	protected char consumeOneOf(final char c1, final char c2) {
-		char c = input.charAt(ndx);
+		char c = input[ndx];
 
 		if ((c != c1) && (c != c2)) {
 			return 0;
@@ -1016,7 +1017,7 @@ public class JsonParser extends JsonParserBase {
 			if (isEOF()) {
 				return;
 			}
-			if (input.charAt(ndx) > 32) {
+			if (input[ndx] > 32) {
 				return;
 			}
 			ndx++;
@@ -1028,7 +1029,7 @@ public class JsonParser extends JsonParserBase {
 	 */
 	protected final boolean match(final char[] target) {
 		for (char c : target) {
-			if (input.charAt(ndx) != c) {
+			if (input[ndx] != c) {
 				return false;
 			}
 			ndx++;
@@ -1055,12 +1056,12 @@ public class JsonParser extends JsonParserBase {
 		}
 
 		int to = ndx + offset;
-		if (to > input.length()) {
-			to = input.length();
+		if (to > input.length) {
+			to = input.length;
 			right = StringPool.EMPTY;
 		}
 
-		CharSequence str = input.subSequence(from, to);
+		final CharSequence str = CharArraySequence.of(input, from, to - from);
 
 		throw new JsonException(
 				"Syntax error! " + message + "\n" +

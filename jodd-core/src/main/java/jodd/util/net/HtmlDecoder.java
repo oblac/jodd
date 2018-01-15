@@ -169,15 +169,15 @@ mainloop:
 	/**
 	 * Detects the longest character reference name on given position in char array.
 	 */
-	public static String detectName(final CharSequence input, int ndx) {
+	public static String detectName(final char[] input, int ndx) {
 		final Ptr ptr = new Ptr();
 
 		int firstIndex = 0;
 		int lastIndex = ENTITY_NAMES.length - 1;
-		int len = input.length();
+		int len = input.length;
 		char[] lastName = null;
 
-		BinarySearchBase binarySearch = new BinarySearchBase() {
+		final BinarySearchBase binarySearch = new BinarySearchBase() {
 			@Override
 			protected int compare(final int index) {
 				char[] name = ENTITY_NAMES[index];
@@ -191,7 +191,7 @@ mainloop:
 		};
 
 		while (true) {
-			ptr.c = input.charAt(ndx);
+			ptr.c = input[ndx];
 
 			if (!CharUtil.isAlphaOrDigit(ptr.c)) {
 				return lastName != null ? new String(lastName) : null;
@@ -214,7 +214,7 @@ mainloop:
 			if (firstIndex == lastIndex) {
 				// only one element found, check the rest
 				for (int i = ptr.offset; i < element.length; i++) {
-					if (element[i] != input.charAt(ndx)) {
+					if (element[i] != input[ndx]) {
 						return lastName != null ? new String(lastName) : null;
 					}
 					ndx++;

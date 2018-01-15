@@ -113,19 +113,19 @@ class HtmlDecoderTest {
 
 	@Test
 	void testDetectName() {
-		String str = "&nbsp;";
+		char[] str = "&nbsp;".toCharArray();
 		assertEquals("nbsp", HtmlDecoder.detectName(str, 1));
 
-		str = "&nbsppppp";
+		str = "&nbsppppp".toCharArray();
 		assertEquals("nbsp", HtmlDecoder.detectName(str, 1));
 
-		str = "&nb";
+		str = "&nb".toCharArray();
 		assertEquals(null, HtmlDecoder.detectName(str, 1));
 
-		str = "&acE";
+		str = "&acE".toCharArray();
 		assertEquals("acE", HtmlDecoder.detectName(str, 1));
 
-		str = "&notit";
+		str = "&notit".toCharArray();
 		assertEquals("not", HtmlDecoder.detectName(str, 1));
 	}
 }
