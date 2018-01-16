@@ -29,7 +29,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagWriter;
 import jodd.mutable.MutableInteger;
-import jodd.util.CharArraySequence;
+import jodd.util.CharSequenceUtil;
 import jodd.util.StringUtil;
 
 import java.util.HashMap;
@@ -40,12 +40,12 @@ import java.util.Map;
  */
 public class FormProcessorVisitor extends TagWriter {
 
-	private static final CharSequence INPUT = CharArraySequence.of('i', 'n', 'p', 'u', 't');
-	private static final CharSequence TYPE = CharArraySequence.of('t', 'y', 'p', 'e');
-	private static final CharSequence SELECT = CharArraySequence.of('s', 'e', 'l', 'e', 'c', 't');
-	private static final CharSequence OPTION = CharArraySequence.of('o', 'p', 't', 'i', 'o', 'n');
-	private static final CharSequence TEXTAREA = CharArraySequence.of('t', 'e', 'x', 't', 'a', 'r', 'e', 'a');
+	private static final String INPUT = "input";
+	private static final String SELECT = "select";
+	private static final String OPTION = "option";
+	private static final String TEXTAREA = "textarea";
 
+	private static final String TYPE = "type";
 	private static final String VALUE = "value";
 	private static final String NAME = "name";
 	private static final String TEXT = "text";
@@ -68,12 +68,12 @@ public class FormProcessorVisitor extends TagWriter {
 	@Override
 	public void tag(final Tag tag) {
 		if (tag.getType().isStartingTag()) {
-			if (tag.matchTagName(INPUT)) {
+			if (CharSequenceUtil.equalsToLowercase(tag.getName(), INPUT)) {
 				processInputStartTag(tag);
 				super.tag(tag);
 				return;
 			}
-			if (inSelect && tag.matchTagName(OPTION)) {
+			if (inSelect && CharSequenceUtil.equalsToLowercase(tag.getName(), OPTION)) {
 				processOptionOpenTag(tag);
 				super.tag(tag);
 				return;
@@ -81,18 +81,18 @@ public class FormProcessorVisitor extends TagWriter {
 		}
 
 		if (tag.getType() == TagType.START) {
-			if (tag.matchTagName(TEXTAREA)) {
+			if (CharSequenceUtil.equalsToLowercase(tag.getName(), TEXTAREA)) {
 				processTextareaStartTag(tag);
 			}
-			else if (tag.matchTagName(SELECT)) {
+			else if (CharSequenceUtil.equalsToLowercase(tag.getName(), SELECT)) {
 				processSelectOpenTag(tag);
 			}
 		}
 		else if (tag.getType() == TagType.END) {
-			if (inTextArea && tag.matchTagName(TEXTAREA)) {
+			if (inTextArea && CharSequenceUtil.equalsToLowercase(tag.getName(), TEXTAREA)) {
 				processTextareaEndTag();
 			}
-			else if (inSelect && tag.matchTagName(SELECT)) {
+			else if (inSelect && CharSequenceUtil.equalsToLowercase(tag.getName(), SELECT)) {
 				processSelectEndTag();
 			}
 		}

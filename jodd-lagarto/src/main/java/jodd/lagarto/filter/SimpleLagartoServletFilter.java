@@ -72,9 +72,6 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 		protected FastCharArrayWriter fastCharArrayWriter;
 		protected TagWriter tagWriter;
 
-		protected LagartoParsingProcessor() {
-		}
-
 		/**
 		 * Initialize processor by creating new Lagarto and root TagWriter.
 		 */

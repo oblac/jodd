@@ -26,7 +26,6 @@
 package jodd.lagarto;
 
 import jodd.util.ArraysUtil;
-import jodd.util.CharArraySequence;
 import jodd.util.CharSequenceUtil;
 import jodd.util.net.HtmlEncoder;
 
@@ -37,7 +36,7 @@ import java.io.IOException;
  */
 class ParsedTag implements Tag {
 
-	private static final CharSequence ATTR_NAME_ID = CharArraySequence.of('i', 'd');
+	private static final CharSequence ATTR_NAME_ID = "id";
 
 	// flags
 	private boolean caseSensitive;
@@ -50,8 +49,8 @@ class ParsedTag implements Tag {
 
 	// attributes
 	private int attributesCount;
-	private CharSequence[] attrNames = new CharSequence[10];
-	private CharSequence[] attrValues = new CharSequence[10];
+	private CharSequence[] attrNames = new CharSequence[16];
+	private CharSequence[] attrValues = new CharSequence[16];
 
 	private int tagStartIndex;
 	private int tagLength;
@@ -167,8 +166,8 @@ class ParsedTag implements Tag {
 	@Override
 	public CharSequence getAttributeValue(final CharSequence name) {
 		for (int i = 0; i < attributesCount; i++) {
-			CharSequence current = attrNames[i];
-			if (caseSensitive ? CharSequenceUtil.equals(current, name) : CharSequenceUtil.equalsIgnoreCase(current, name)) {
+			final CharSequence current = attrNames[i];
+			if (caseSensitive ? current.equals(name) : CharSequenceUtil.equalsIgnoreCase(current, name)) {
 				return attrValues[i];
 			}
 		}
@@ -178,8 +177,8 @@ class ParsedTag implements Tag {
 	@Override
 	public int getAttributeIndex(final CharSequence name) {
 		for (int i = 0; i < attributesCount; i++) {
-			CharSequence current = attrNames[i];
-			if (caseSensitive ? CharSequenceUtil.equals(current, name) : CharSequenceUtil.equalsIgnoreCase(current, name)) {
+			final CharSequence current = attrNames[i];
+			if (caseSensitive ? current.equals(name) : CharSequenceUtil.equalsIgnoreCase(current, name)) {
 				return i;
 			}
 		}
@@ -237,7 +236,7 @@ class ParsedTag implements Tag {
 
 	@Override
 	public void setAttribute(final CharSequence name, final CharSequence value) {
-		int index = getAttributeIndex(name);
+		final int index = getAttributeIndex(name);
 		if (index == -1) {
 			addAttribute(name, value);
 		} else {
@@ -257,7 +256,7 @@ class ParsedTag implements Tag {
 
 	@Override
 	public void setAttributeValue(final CharSequence name, final CharSequence value) {
-		int index = getAttributeIndex(name);
+		final int index = getAttributeIndex(name);
 		if (index != -1) {
 			setAttrVal(index, name, value);
 			modified = true;
@@ -287,7 +286,7 @@ class ParsedTag implements Tag {
 
 	@Override
 	public void removeAttribute(final CharSequence name) {
-		int index = getAttributeIndex(name);
+		final int index = getAttributeIndex(name);
 		if (index != -1) {
 			removeAttribute(index);
 		}
@@ -310,19 +309,6 @@ class ParsedTag implements Tag {
 	public boolean nameEquals(final CharSequence charSequence) {
 		return caseSensitive ? CharSequenceUtil.equals(name, charSequence) : CharSequenceUtil.equalsIgnoreCase(name, charSequence);
 	}
-
-	/**
-	 * Match tag name to given name in <b>lowercase</b>.
-	 */
-	@Override
-	public boolean matchTagName(final CharSequence tagNameLowercase) {
-		return CharSequenceUtil.equalsToLowercase(name, tagNameLowercase);
-	}
-
-	@Override
-	public boolean matchTagNamePrefix(final CharSequence tagNamePrefixLowercase) {
-			return CharSequenceUtil.startsWithLowercase(name, tagNamePrefixLowercase);
-		}
 
 	// ---------------------------------------------------------------- util
 
@@ -358,7 +344,7 @@ class ParsedTag implements Tag {
 				for (int i = 0; i < attributesCount; i++) {
 					out.append(' ');
 					out.append(attrNames[i]);
-					CharSequence value = attrValues[i];
+					final CharSequence value = attrValues[i];
 					if (value != null) {
 						out.append('=').append('"');
 						out.append(HtmlEncoder.attributeDoubleQuoted(value));
@@ -380,7 +366,7 @@ class ParsedTag implements Tag {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		appendTo(sb);
 		return sb.toString();
 	}

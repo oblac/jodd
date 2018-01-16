@@ -186,18 +186,6 @@ public interface Tag {
 	 */
 	boolean nameEquals(CharSequence charSequence);
 
-	/**
-	 * Matches tag name to given <b>lowercase</b> tag name.
-	 * Should be somewhat faster then {@link #nameEquals(CharSequence)}
-	 * since only one name is getting converted to lower ascii.
-	 */
-	boolean matchTagName(CharSequence tagNameLowercase);
-
-	/**
-	 * Matches tag name to given <b>lowercase</b> prefix.
-	 */
-	boolean matchTagNamePrefix(CharSequence tagPrefix);
-
 	// ---------------------------------------------------------------- output
 
 	/**
@@ -208,6 +196,7 @@ public interface Tag {
 	/**
 	 * Get the complete tag as a string.
 	 */
+	@Override
 	String toString();
 
 }

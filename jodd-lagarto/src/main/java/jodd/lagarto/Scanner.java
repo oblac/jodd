@@ -69,7 +69,7 @@ class Scanner {
 	 * Finds character buffer in some range and returns its index.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	protected final int find(final CharSequence target, int from, final int end) {
+	protected final int find(final char[] target, int from, final int end) {
 		while (from < end) {
 			if (match(target, from)) {
 				break;
@@ -85,15 +85,15 @@ class Scanner {
 	/**
 	 * Matches char buffer with content on given location.
 	 */
-	protected final boolean match(final CharSequence target, final int ndx) {
-		if (ndx + target.length() >= total) {
+	protected final boolean match(final char[] target, final int ndx) {
+		if (ndx + target.length >= total) {
 			return false;
 		}
 
 		int j = ndx;
 
-		for (int i = 0; i < target.length(); i++, j++) {
-			if (input[j] != target.charAt(i)) {
+		for (int i = 0; i < target.length; i++, j++) {
+			if (input[j] != target[i]) {
 				return false;
 			}
 		}
@@ -104,7 +104,7 @@ class Scanner {
 	/**
 	 * Matches char buffer with content at current location case-sensitive.
 	 */
-	public final boolean match(final CharSequence target) {
+	public final boolean match(final char[] target) {
 		return match(target, ndx);
 	}
 
@@ -112,17 +112,17 @@ class Scanner {
 	 * Matches char buffer given in uppercase with content at current location, that will
 	 * be converted to upper case to make case-insensitive matching.
 	 */
-	public final boolean matchUpperCase(final CharSequence uppercaseTarget) {
-		if (ndx + uppercaseTarget.length() > total) {
+	public final boolean matchUpperCase(final char[] uppercaseTarget) {
+		if (ndx + uppercaseTarget.length > total) {
 			return false;
 		}
 
 		int j = ndx;
 
-		for (int i = 0; i < uppercaseTarget.length(); i++, j++) {
-			char c = CharUtil.toUpperAscii(input[j]);
+		for (int i = 0; i < uppercaseTarget.length; i++, j++) {
+			final char c = CharUtil.toUpperAscii(input[j]);
 
-			if (c != uppercaseTarget.charAt(i)) {
+			if (c != uppercaseTarget[i]) {
 				return false;
 			}
 		}
@@ -174,7 +174,7 @@ class Scanner {
 		}
 
 		while (offset < position) {
-			char c = input[offset];
+			final char c = input[offset];
 
 			if (c == '\n') {
 				line++;
