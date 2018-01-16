@@ -37,8 +37,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '4.0.1'
-//version = '4.0.2-' + date()
+version = '4.1.0'
+//version = '4.1.0-' + date()
 
 // --- properties -------------------------------------------------------------
 
@@ -66,8 +66,8 @@ ext {
 		log_log4j2:		     'org.apache.logging.log4j:log4j-api:[2.8,2.9)',
 		log_log4j2_core:     'org.apache.logging.log4j:log4j-core:[2.8,2.9)',
 
-		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.0.2',
-		junit5_params:	'org.junit.jupiter:junit-jupiter-params:5.0.2',
+		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.0.3',
+		junit5_params:	'org.junit.jupiter:junit-jupiter-params:5.0.3',
 		junit5_console: 'org.junit.platform:junit-platform-console:1.0.2',
 		mockito:		'org.mockito:mockito-core:2.12.0',
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
@@ -95,9 +95,9 @@ ext {
 	commonManifest = [
 		'Debug-Info' : 'on',
 		'Built-By' : 'jodd.org',
-		'Bundle-License' : 'http://jodd.org/license.html',
+		'Bundle-License' : 'https://jodd.org/license.html',
 		'Bundle-Vendor' : 'Jodd',
-		'Bundle-DocURL' : 'http://jodd.org',
+		'Bundle-DocURL' : 'https://jodd.org',
 		'Implementation-Version': version,
 		'Implementation-Vendor': 'Jodd Team'
 	]
