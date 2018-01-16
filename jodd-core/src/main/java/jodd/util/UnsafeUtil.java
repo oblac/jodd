@@ -25,6 +25,9 @@
 
 package jodd.util;
 
+import jodd.core.JoddCore;
+import jodd.core.JoddCoreDefaults;
+
 /**
  * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
  * See: http://mishadoff.github.io/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/
@@ -33,11 +36,12 @@ package jodd.util;
  */
 public class UnsafeUtil {
 
-	// IMPORTANT - order of declaration here is important! we need to detect
+	// IMPORTANT - the order of declaration here is important! we need to detect
 	// first the Android, and then to check for the unsafe field.
 
 	private static final boolean IS_ANDROID = SystemUtil.isHostAndroid();
 	private static final boolean HAS_UNSAFE = !IS_ANDROID && UnsafeInternal.hasUnsafe();
+	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
 
 	/**
 	 * Returns <code>true</code> if system has the <code>Unsafe</code>.
@@ -56,11 +60,16 @@ public class UnsafeUtil {
 		if (string == null) {
 			return null;
 		}
-		if (!HAS_UNSAFE) {
+
+		if (!HAS_UNSAFE || !JODD_CORE_DEFAULTS.isUnsafeUsed()) {
 			return string.toCharArray();
 		}
 
 		return UnsafeInternal.unsafeGetChars(string);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getChars("123"));
 	}
 
 }

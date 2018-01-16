@@ -32,6 +32,7 @@ public class JoddCoreDefaults {
 	private String tempFilePrefix = "jodd-";
 	private String encoding = StringPool.UTF_8;
 	private int ioBufferSize = 16384;
+	private boolean unsafeUsed = true;
 
 	/**
 	 * Returns default prefix for temporary files.
@@ -75,4 +76,17 @@ public class JoddCoreDefaults {
 		this.ioBufferSize = ioBufferSize;
 	}
 
+	/**
+	 * Returns {@code true} if Unsafe is used (if possible). Enabled by default.
+	 */
+	public boolean isUnsafeUsed() {
+		return unsafeUsed;
+	}
+
+	/**
+	 * Enables or disables usage of Unsafe.
+	 */
+	public void setUnsafeUsed(final boolean unsafeUsed) {
+		this.unsafeUsed = unsafeUsed;
+	}
 }
