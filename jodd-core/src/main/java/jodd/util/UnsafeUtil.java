@@ -68,8 +68,4 @@ public class UnsafeUtil {
 		return UnsafeInternal.unsafeGetChars(string);
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getChars("123"));
-	}
-
 }
