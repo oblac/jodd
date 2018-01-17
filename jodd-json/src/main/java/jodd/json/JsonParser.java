@@ -122,6 +122,16 @@ public class JsonParser extends JsonParserBase {
 		return this;
 	}
 
+	/**
+	 * Defines how JSON parser works. In non-lazy mode, the whole JSON is parsed as it is.
+	 * In the lazy mode, not everything is parsed, but some things are left lazy.
+	 * This way we gain some performances, especially on partial usage of the whole JSON.
+	 */
+	public JsonParser lazy(final boolean lazy) {
+		this.mapSupplier = lazy ? LAZYMAP_SUPPLIER : HASMAP_SUPPLIER;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- mappings
 
 	protected Map<Path, Class> mappings;

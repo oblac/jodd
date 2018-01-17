@@ -39,12 +39,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Just a base class of {@link jodd.json.JsonParser} that contains
  * various utilities, to reduce the size of a parser.
  */
 public abstract class JsonParserBase {
+
+	protected static final Supplier<Map> HASMAP_SUPPLIER = HashMap::new;
+	protected static final Supplier<Map> LAZYMAP_SUPPLIER = LazyMap::new;
+
+	protected Supplier<Map> mapSupplier = HASMAP_SUPPLIER;
 
 	/**
 	 * Creates new instance of {@link jodd.json.MapToBean}.
@@ -88,7 +94,7 @@ public abstract class JsonParserBase {
 		if (targetType == null ||
 			targetType == Map.class) {
 
-			return new HashMap();
+			return mapSupplier.get();
 		}
 
 		ClassDescriptor cd = ClassIntrospector.get().lookup(targetType);
@@ -99,6 +105,7 @@ public abstract class JsonParserBase {
 		}
 
 		try {
+//			return ClassUtil.newInstance(targetType);
 			return ctorDescriptor.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
