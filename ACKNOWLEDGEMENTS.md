@@ -16,3 +16,12 @@ Jodd is made with:
 + [YourKit profiler](https://www.yourkit.com)
 
 Thanx for providing open-source licenses!
+
+## Friendly Projects
+
+These projects made significant impact and provided awesome amount of help.
+
++ [Gatling](https://gatling.io)
++ [Liferay](http://liferay.com)
+
+(p.s. sorry if we missed someone; please let us know if so!)
