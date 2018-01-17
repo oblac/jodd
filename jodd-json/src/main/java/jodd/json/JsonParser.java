@@ -492,7 +492,7 @@ public class JsonParser extends JsonParserBase {
 	}
 
 	/**
-	 * Parses string content, once when starting quote has been consumer.
+	 * Parses string content, once when starting quote has been consumed.
 	 */
 	protected String parseStringContent(final char quote) {
 		final int startNdx = ndx;
@@ -520,10 +520,10 @@ public class JsonParser extends JsonParserBase {
 
 		growEmpty();
 
-		for (int i = startNdx, j = 0; j < textLen; i++, j++) {
-			text[j] = input[i];
-		}
-		//System.arraycopy(input, startNdx, text, 0, textLen);
+//		for (int i = startNdx, j = 0; j < textLen; i++, j++) {
+//			text[j] = input[i];
+//		}
+		System.arraycopy(input, startNdx, text, 0, textLen);
 
 		// escape char, process everything until the end
 		while (true) {
