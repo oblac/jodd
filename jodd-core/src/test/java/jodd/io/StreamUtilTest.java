@@ -47,6 +47,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -693,7 +695,7 @@ class StreamUtilTest {
 
         }
 
-        Stream<Arguments> testdata_testCopy_Reader_Outpustream_Encoding_CharCount() throws Exception {
+        Stream<Arguments> testdata_testCopy_Reader_Outpustream_Encoding_CharCount() {
             return Stream.of(
                     Arguments.of(new byte[] {63,63,63}, "üöä", "US-ASCII", 4),
                     Arguments.of(new byte[] {-61,-68,-61,-74}, "üöä", "UTF-8", 2),
@@ -701,5 +703,38 @@ class StreamUtilTest {
             );
         }
     }
+
+    @Test
+    void testCopy_all() throws IOException {
+    	byte[] bytes = randomBuffer(128 * 1024*1024);
+
+    	InputStream inputStream = new ByteArrayInputStream(bytes);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		StreamUtil.copy(inputStream, outputStream);
+		byte[] outBytes = outputStream.toByteArray();
+
+		assertArrayEquals(bytes, outBytes);
+    }
+
+    @Test
+    void testCopy_withSize() throws IOException {
+    	byte[] bytes = randomBuffer(128 * 1024*1024);
+
+    	InputStream inputStream = new ByteArrayInputStream(bytes);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		StreamUtil.copy(inputStream, outputStream, bytes.length);
+		byte[] outBytes = outputStream.toByteArray();
+
+		assertArrayEquals(bytes, outBytes);
+    }
+
+    private byte[] randomBuffer(int size) {
+    	byte[] bytes = new byte[size];
+		for (int i = 0; i < size; i++) {
+			bytes[i] = (byte) MathUtil.randomInt(Byte.MIN_VALUE, Byte.MAX_VALUE);
+		}
+
+		return bytes;
+	}
 
 }

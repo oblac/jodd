@@ -143,7 +143,7 @@ public class StreamUtil {
 			return copy(input, output);
 		}
 
-		int numToRead = bufferSize(count);
+		int numToRead = count;
 		char[] buffer = new char[numToRead];
 
 		int totalRead = ZERO;
@@ -179,7 +179,7 @@ public class StreamUtil {
 			return copy(input, output);
 		}
 
-		int numToRead = bufferSize(count);
+		int numToRead = count;
 		byte[] buffer = new byte[numToRead];
 
 		int totalRead = ZERO;
