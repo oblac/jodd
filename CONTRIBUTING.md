@@ -29,4 +29,4 @@ We do love to enhance Jodd with you to become more powerful! The best way to wor
 Simply contact our *support* via email - or ask question on [stackoverflow](https://stackoverflow.com/questions/tagged/jodd).
 
 ## :closed_book: Want to write docs?
-Documentation is very valuable to us. So just send it anyway you like :)
+Documentation is very valuable to us. So just send it any way you like :)
