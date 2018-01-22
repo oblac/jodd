@@ -2,10 +2,13 @@
 
 All notable changes to Jodd project are documented here.
 
-## [Unreleased](https://github.com/oblac/jodd/compare/v4.1.0...maste)
+## [Unreleased](https://github.com/oblac/jodd/compare/v4.1.0...master)
 
+### Bug Fixes
 
-## [4.1.0](https://github.com/oblac/jodd/compare/v4.1.0...3.0.1)
++ **core** - fixed a regression with the stream copying.
+
+## [4.1.0](https://github.com/oblac/jodd/compare/v3.9.1...v4.1.0)
 
 This is the first 4.x release. It contains a _massive_ set of changes from the version 3.
 
