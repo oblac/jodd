@@ -142,7 +142,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @see SmtpServer
 	 * @see SmtpSslServer
 	 */
-	static class Builder {
+	public static class Builder {
 		private String host = null;
 		private int port = -1;
 		private boolean ssl = false;
