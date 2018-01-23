@@ -7,6 +7,7 @@ All notable changes to Jodd project are documented here.
 ### Bug Fixes
 
 + **core** - fixed a regression with the stream copying.
++ **email** - fixed access issue for a `Builder`. 
 
 ### Features
 
