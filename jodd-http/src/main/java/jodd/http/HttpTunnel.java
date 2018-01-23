@@ -192,7 +192,7 @@ public class HttpTunnel {
 
 			// fix response
 			if (response.body() != null) {
-				response.removeHeader("Transfer-Encoding");
+				response.headerRemove("Transfer-Encoding");
 				response.contentLength(response.body().length());
 			}
 

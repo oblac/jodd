@@ -441,7 +441,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * Removes query parameters for given name.
 	 */
-	public HttpRequest removeQuery(final String name) {
+	public HttpRequest queryRemove(final String name) {
 		query.remove(name);
 		return this;
 	}

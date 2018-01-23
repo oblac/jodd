@@ -141,7 +141,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 
 		if (contentEncoding != null && contentEncoding().equals("gzip")) {
 			if (body != null) {
-				removeHeader(HEADER_CONTENT_ENCODING);
+				headerRemove(HEADER_CONTENT_ENCODING);
 				try {
 					ByteArrayInputStream in = new ByteArrayInputStream(body.getBytes(StringPool.ISO_8859_1));
 					GZIPInputStream gzipInputStream = new GZIPInputStream(in);

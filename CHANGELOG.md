@@ -13,9 +13,10 @@ All notable changes to Jodd project are documented here.
 
 + **http** - added a `header(Map)` method to `HttpRequest`.
 
-### Breaking change
+### Breaking changes
 
 + **http** - methods with `boolean` argument renamed to `*Overwrite`.
++ **http** - methods named `remove` renamed. 
 
 ## [4.1.0](https://github.com/oblac/jodd/compare/v3.9.1...v4.1.0)
 

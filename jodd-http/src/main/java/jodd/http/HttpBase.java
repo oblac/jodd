@@ -140,7 +140,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Removes all header parameters for given name.
 	 */
-	public void removeHeader(final String name) {
+	public void headerRemove(final String name) {
 		headers.remove(name.trim());
 	}
 

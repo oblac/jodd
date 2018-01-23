@@ -346,7 +346,7 @@ class HttpRequestTest {
 		assertEquals(2, request.headers("KEY-TEST2").size());
 		assertEquals(2 + 2, request.headerNames().size());		// 2 default and 2 added
 
-		request.removeHeader("key-test2");
+		request.headerRemove("key-test2");
 		assertFalse(request.headers.contains("key-test2"));
 		assertFalse(request.headers.contains("key-tEST2"));
 
@@ -366,7 +366,7 @@ class HttpRequestTest {
 		assertEquals(2, request.headers("KEY-TEST1").size());
 		assertEquals(2 + 2, request.headerNames().size());		// 2 default and 2 added
 
-		request.removeHeader("key-test1");
+		request.headerRemove("key-test1");
 		assertFalse(request.headers.contains("key-test1"));
 		assertFalse(request.headers.contains("KEY-TEST1"));
 	}
