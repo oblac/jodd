@@ -381,7 +381,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			cookieString.append(cookie.getValue());
 		}
 
-		header("cookie", cookieString.toString(), true);
+		headerOverwrite("cookie", cookieString.toString());
 
 		return this;
 	}
@@ -548,7 +548,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			String base64 = Base64.encodeToString(data);
 
-			header("Authorization", "Basic " + base64, true);
+			headerOverwrite("Authorization", "Basic " + base64);
 		}
 
 		return this;
@@ -601,7 +601,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			hostPort += StringPool.COLON + port;
 		}
 
-		header(HEADER_HOST, hostPort, true);
+		headerOverwrite(HEADER_HOST, hostPort);
 		return this;
 	}
 

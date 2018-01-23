@@ -154,14 +154,33 @@ public abstract class HttpBase<T> {
 	 * values.
 	 */
 	public T header(final String name, final String value) {
-		return header(name, value, false);
+		return _header(name, value, false);
+	}
+
+	/**
+	 * Adds many header parameters at once.
+	 * @see #header(String, String)
+	 */
+	public T header(final Map<String, String> headerMap) {
+		for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+			header(entry.getKey(), entry.getValue());
+		}
+		return _this();
+	}
+
+	/**
+	 * Sets the header by overwriting it.
+	 * @see #header(String, String)
+	 */
+	public T headerOverwrite(final String name, String value) {
+		return _header(name, value, true);
 	}
 
 	/**
 	 * Adds or sets header parameter.
 	 * @see #header(String, String)
 	 */
-	public T header(final String name, String value, final boolean overwrite) {
+	protected T _header(final String name, String value, final boolean overwrite) {
 		String key = name.trim();
 
 		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
@@ -171,7 +190,7 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		_header(name, value, overwrite);
+		_headerRaw(name, value, overwrite);
 
 		return _this();
 	}
@@ -179,7 +198,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Internal direct header setting.
 	 */
-	protected void _header(String name, String value, final boolean overwrite) {
+	protected void _headerRaw(String name, String value, final boolean overwrite) {
 		name = name.trim();
 		value = value.trim();
 
@@ -195,7 +214,7 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	public T header(final String name, final int value) {
-		_header(name, String.valueOf(value), false);
+		_headerRaw(name, String.valueOf(value), false);
 		return _this();
 	}
 
@@ -204,7 +223,7 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	public T header(final String name, final long millis) {
-		_header(name, TimeUtil.formatHttpDate(millis), false);
+		_headerRaw(name, TimeUtil.formatHttpDate(millis), false);
 		return _this();
 	}
 
@@ -276,7 +295,7 @@ public abstract class HttpBase<T> {
 	 * and {@link #charset() charset} are overridden.
 	 */
 	public T contentType(final String contentType) {
-		header(HEADER_CONTENT_TYPE, contentType, true);
+		headerOverwrite(HEADER_CONTENT_TYPE, contentType);
 		return _this();
 	}
 
@@ -305,7 +324,7 @@ public abstract class HttpBase<T> {
 			contentType += ";charset=" + charset;
 		}
 
-		_header(HEADER_CONTENT_TYPE, contentType, true);
+		_headerRaw(HEADER_CONTENT_TYPE, contentType, true);
 		return _this();
 	}
 
@@ -317,9 +336,9 @@ public abstract class HttpBase<T> {
 	 */
 	public T connectionKeepAlive(final boolean keepAlive) {
 		if (keepAlive) {
-			header(HEADER_CONNECTION, HEADER_KEEP_ALIVE, true);
+			headerOverwrite(HEADER_CONNECTION, HEADER_KEEP_ALIVE);
 		} else {
-			header(HEADER_CONNECTION, HEADER_CLOSE, true);
+			headerOverwrite(HEADER_CONNECTION, HEADER_CLOSE);
 		}
 		return _this();
 	}
@@ -357,7 +376,7 @@ public abstract class HttpBase<T> {
 	 * Sets the full "Content-Length" header.
 	 */
 	public T contentLength(final int value) {
-		_header(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
+		_headerRaw(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
 		return _this();
 	}
 
@@ -379,7 +398,7 @@ public abstract class HttpBase<T> {
 	 * Sets "Accept" header.
 	 */
 	public T accept(final String encodings) {
-		header(HEADER_ACCEPT, encodings, true);
+		headerOverwrite(HEADER_ACCEPT, encodings);
 		return _this();
 	}
 	
@@ -394,7 +413,7 @@ public abstract class HttpBase<T> {
 	 * Sets "Accept-Encoding" header.
 	 */
 	public T acceptEncoding(final String encodings) {
-		header(HEADER_ACCEPT_ENCODING, encodings, true);
+		headerOverwrite(HEADER_ACCEPT_ENCODING, encodings);
 		return _this();
 	}
 
@@ -453,18 +472,13 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Sets form parameter. Optionally overwrite existing one.
+	 * Sets form parameter by overwriting.
 	 */
-	public T form(final String name, Object value, final boolean overwrite) {
+	public T formOverwrite(final String name, Object value) {
 		initForm();
 
 		value = wrapFormValue(value);
-
-		if (overwrite) {
-			((HttpMultiMap<Object>)form).set(name, value);
-		} else {
-			((HttpMultiMap<Object>)form).add(name, value);
-		}
+		((HttpMultiMap<Object>)form).set(name, value);
 
 		return _this();
 	}

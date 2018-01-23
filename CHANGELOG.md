@@ -8,6 +8,14 @@ All notable changes to Jodd project are documented here.
 
 + **core** - fixed a regression with the stream copying.
 
+### Features
+
++ **http** - added a `header(Map)` method to `HttpRequest`.
+
+### Breaking change
+
++ **http** - methods with `boolean` argument renamed to `*Overwrite`.
+
 ## [4.1.0](https://github.com/oblac/jodd/compare/v3.9.1...v4.1.0)
 
 This is the first 4.x release. It contains a _massive_ set of changes from the version 3.
