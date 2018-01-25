@@ -65,7 +65,6 @@ public class ClassScanner {
 		return new ClassScanner();
 	}
 
-
 	// ---------------------------------------------------------------- excluded jars
 
 	/**
@@ -528,6 +527,14 @@ public class ClassScanner {
 	// ---------------------------------------------------------------- public scanning
 
 	private Set<File> filesToScan = new LinkedHashSet<>();
+
+	/**
+	 * Resets all the paths previously added by some of {@code scan} methods.
+	 */
+	public ClassScanner resetPaths() {
+		filesToScan.clear();
+		return this;
+	}
 
 	/**
 	 * Scans URLs. If (#ignoreExceptions} is set, exceptions
