@@ -172,6 +172,7 @@ class ClassLoaderUtilTest {
 
 		classScanner.includeResources(true);
 		classScanner.scan(containerFile);
+		classScanner.start();
 
 		assertNotNull(url);
 

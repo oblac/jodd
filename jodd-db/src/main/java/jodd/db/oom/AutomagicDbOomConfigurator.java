@@ -29,9 +29,6 @@ import jodd.db.oom.meta.DbTable;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.util.ClassLoaderUtil;
-
-import java.io.File;
 import java.util.function.Consumer;
 
 /**
@@ -73,15 +70,16 @@ public class AutomagicDbOomConfigurator {
 	 * Configures {@link DbEntityManager} with specified class path.
 	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager)
 	 */
-	public void configure(final DbEntityManager dbEntityManager, final File[] classpath) {
+	public void configure(final DbEntityManager dbEntityManager) {
 		this.dbEntityManager = dbEntityManager;
 
 		classScanner.smartModeEntries();
 		classScanner.onEntry(ENTRY_CONSUMER);
+		classScanner.scanDefaultClasspath();
 
 		elapsed = System.currentTimeMillis();
 		try {
-			classScanner.scan(classpath);
+			classScanner.start();
 		} catch (Exception ex) {
 			throw new DbOomException("Scan classpath error", ex);
 		}
@@ -89,14 +87,6 @@ public class AutomagicDbOomConfigurator {
 		if (log.isInfoEnabled()) {
 			log.info("DbEntityManager configured in " + elapsed + "ms. Total entities: " + dbEntityManager.getTotalNames());
 		}
-	}
-
-	/**
-	 * Configures {@link DbEntityManager} with default class path.
-	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager, java.io.File[])
-	 */
-	public void configure(final DbEntityManager dbEntityManager) {
-		configure(dbEntityManager, ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**

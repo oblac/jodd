@@ -29,9 +29,6 @@ import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.meta.PetiteBean;
-import jodd.util.ClassLoaderUtil;
-
-import java.io.File;
 import java.util.function.Consumer;
 
 /**
@@ -67,30 +64,22 @@ public class AutomagicPetiteConfigurator {
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
-	 * @see AutomagicPetiteConfigurator#configure(PetiteContainer, File[])
 	 */
-	public void configure(final PetiteContainer petiteContainer, final File[] classpath) {
+	public void configure(final PetiteContainer petiteContainer) {
 		this.container = petiteContainer;
 
 		classScanner.smartModeEntries();
 		classScanner.onEntry(ENTRY_CONSUMER);
+		classScanner.scanDefaultClasspath();
 
 		elapsed = System.currentTimeMillis();
 		try {
-			classScanner.scan(classpath);
+			classScanner.start();
 		} catch (Exception ex) {
 			throw new PetiteException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
 		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.beansCount());
-	}
-
-	/**
-	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
-	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer, java.io.File[])
-	 */
-	public void configure(final PetiteContainer petiteContainer) {
-		configure(petiteContainer, ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**

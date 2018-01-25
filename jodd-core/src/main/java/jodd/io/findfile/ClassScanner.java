@@ -41,7 +41,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -228,37 +231,6 @@ public class ClassScanner {
 		path = FileNameUtil.separatorsToUnix(path);
 
 		return rulesJars.match(path);
-	}
-
-	/**
-	 * Scans single URL for classes and jar files.
-	 * Callback {@link #onEntry(EntryData)} is called on
-	 * each class name.
-	 */
-	protected void scanUrl(final URL url) {
-		File file = FileUtil.toFile(url);
-		if (file == null) {
-			if (!ignoreException) {
-				throw new FindFileException("URL is not a valid file: " + url);
-			}
-		}
-		scanPath(file);
-	}
-
-	/**
-	 * Scans single path.
-	 */
-	protected void scanPath(final File file) {
-		String path = file.getAbsolutePath();
-
-		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT)) {
-			if (!acceptJar(file)) {
-				return;
-			}
-			scanJarFile(file);
-		} else if (file.isDirectory()) {
-			scanClassPath(file);
-		}
 	}
 
 	// ---------------------------------------------------------------- internal
@@ -555,39 +527,67 @@ public class ClassScanner {
 
 	// ---------------------------------------------------------------- public scanning
 
+	private Set<File> filesToScan = new LinkedHashSet<>();
+
 	/**
 	 * Scans URLs. If (#ignoreExceptions} is set, exceptions
 	 * per one URL will be ignored and loops continues.
 	 */
-	public void scan(final URL... urls) {
-		for (URL path : urls) {
-			scanUrl(path);
+	public ClassScanner scan(final URL... urls) {
+		for (URL url : urls) {
+			File file = FileUtil.toContainerFile(url);
+			if (file == null) {
+				if (!ignoreException) {
+					throw new FindFileException("URL is not a valid file: " + url);
+				}
+			}
+			else {
+				filesToScan.add(file);
+			}
 		}
+		return this;
 	}
 
 	/**
 	 * Scans {@link jodd.util.ClassLoaderUtil#getDefaultClasspath() default class path}.
 	 */
-	public void scanDefaultClasspath() {
-		scan(ClassLoaderUtil.getDefaultClasspath());
+	public ClassScanner scanDefaultClasspath() {
+		return scan(ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**
 	 * Scans provided paths.
 	 */
-	public void scan(final File... paths) {
-		for (File path : paths) {
-			scanPath(path);
-		}
+	public ClassScanner scan(final File... paths) {
+		filesToScan.addAll(Arrays.asList(paths));
+		return this;
 	}
 
 	/**
 	 * Scans provided paths.
 	 */
-	public void scan(final String... paths) {
+	public ClassScanner scan(final String... paths) {
 		for (String path : paths) {
-			scanPath(new File(path));
+			filesToScan.add(new File(path));
 		}
+		return this;
+	}
+
+	/**
+	 * Starts with the scanner.
+	 */
+	public void start() {
+		filesToScan.forEach(file -> {
+			String path = file.getAbsolutePath();
+			if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT)) {
+				if (!acceptJar(file)) {
+					return;
+				}
+				scanJarFile(file);
+			} else if (file.isDirectory()) {
+				scanClassPath(file);
+			}
+		});
 	}
 
 }

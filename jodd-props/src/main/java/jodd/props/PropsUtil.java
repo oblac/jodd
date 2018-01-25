@@ -60,7 +60,8 @@ public class PropsUtil {
 		.ignoreException(true)
 		.excludeAllEntries(true)
 		.includeEntries(patterns)
-		.scanDefaultClasspath();
+		.scanDefaultClasspath()
+		.start();
 	}
 
 	/**

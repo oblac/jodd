@@ -34,13 +34,11 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocContainer;
-import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.ClassLoaderUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -95,9 +93,10 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 
 		classScanner.smartModeEntries();
 		classScanner.onEntry(ENTRY_CONSUMER);
+		classScanner.scanDefaultClasspath();
 
 		try {
-			classScanner.scan(ClassLoaderUtil.getDefaultClasspath());
+			classScanner.start();
 		} catch (Exception ex) {
 			throw new MadvocException("Scan classpath error", ex);
 		}
@@ -223,7 +222,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 				continue;
 			}
 
-			webappConfigurations.add(() -> actionsManager.registerAction((Class) actionClass, method, (ActionDefinition) null));
+			webappConfigurations.add(() -> actionsManager.registerAction(actionClass, method, null));
 		}
 	}
 
