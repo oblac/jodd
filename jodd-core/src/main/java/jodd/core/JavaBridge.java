@@ -28,13 +28,17 @@ package jodd.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Methods that requires different implementations on various Java Platforms.
  */
 public class JavaBridge {
 
-	private static final String RESOURCE = JavaBridge.class.getName().replace('.', '/') + ".class";
+	public static URL[] getURLs(Class clazz) {
+		return getURLs(clazz.getClassLoader(), clazz);
+	}
 
 	/**
 	 * Returns urls for the classloader
@@ -43,22 +47,36 @@ public class JavaBridge {
 	 * @return list of urls or {@code null} if not found
 	 */
 	public static URL[] getURLs(final ClassLoader classLoader) {
-		if (classLoader instanceof URLClassLoader) {
-			URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
-			return urlClassLoader.getURLs();
-		}
-
-		URL url = currentModuleURL();
-
-		if (url == null) {
-			return new URL[0];
-		}
-
-		return new URL[] {url};
+		return getURLs(classLoader, JavaBridge.class);
 	}
 
-	private static URL currentModuleURL() {
-		URL url = JavaBridge.class.getClassLoader().getResource(RESOURCE);
+	private static URL[] getURLs(ClassLoader classLoader, final Class clazz) {
+		final Set<URL> urls = new LinkedHashSet<>();
+
+		while (classLoader != null) {
+			if (classLoader instanceof URLClassLoader) {
+				URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
+				return urlClassLoader.getURLs();
+			}
+
+			URL url = classModuleUrl(classLoader, clazz);
+
+			if (url != null) {
+				urls.add(url);
+			}
+			classLoader = classLoader.getParent();
+		}
+
+		return urls.toArray(new URL[urls.size()]);
+	}
+
+	private static URL classModuleUrl(ClassLoader classLoader, Class clazz) {
+		if (clazz == null) {
+			return null;
+		}
+		final String name = clazz.getName().replace('.', '/') + ".class";
+
+		URL url = classLoader.getResource(name);
 
 		if (url == null) {
 			return null;
@@ -66,8 +84,8 @@ public class JavaBridge {
 
 		// use root
 		String urlString = url.toString();
-		int ndx = urlString.indexOf(RESOURCE);
-		urlString = urlString.substring(0, ndx) + urlString.substring(ndx + RESOURCE.length());
+		int ndx = urlString.indexOf(name);
+		urlString = urlString.substring(0, ndx) + urlString.substring(ndx + name.length());
 
 		try {
 			return new URL(urlString);
