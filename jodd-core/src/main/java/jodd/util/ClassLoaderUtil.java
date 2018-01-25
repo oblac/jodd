@@ -206,7 +206,7 @@ public class ClassLoaderUtil {
 			URL[] urls = JavaBridge.getURLs(classLoader);
 			if (urls != null) {
 				for (URL u : urls) {
-					File f = FileUtil.toFile(u);
+					File f = FileUtil.toContainerFile(u);
 					if ((f != null) && f.exists()) {
 						try {
 							f = f.getCanonicalFile();
