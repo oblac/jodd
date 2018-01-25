@@ -30,49 +30,76 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Methods that requires different implementations on various Java Platforms.
  */
 public class JavaBridge {
 
-	private static String RESOURCE = JavaBridge.class.getName().replace('.', '/') + ".class";
 	private static final String MANIFEST = "META-INF/MANIFEST.MF";
 
 	/**
-	 * Returns urls for the classloader
+	 * Returns urls for the class and it's classloader.
+	 */
+	public static URL[] getURLs(Class clazz) {
+		return getURLs(clazz.getClassLoader(), clazz);
+	}
+
+	/**
+	 * Returns urls for the classloader.
 	 *
 	 * @param classLoader classloader in which to find urls
 	 * @return list of urls or {@code null} if not found
 	 */
 	public static URL[] getURLs(ClassLoader classLoader) {
-		if (classLoader instanceof URLClassLoader) {
-			URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
-			return urlClassLoader.getURLs();
-		}
+		return getURLs(classLoader, JavaBridge.class);
+	}
 
-		List<URL> urls = new ArrayList<>();
+	private static URL[] getURLs(ClassLoader classLoader, final Class clazz) {
+		final Set<URL> urls = new LinkedHashSet<>();
 
-		urls.add(currentModuleURL());
+		while (classLoader != null) {
+			if (classLoader instanceof URLClassLoader) {
+				URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
+				URL[] allURLS = urlClassLoader.getURLs();
+				Collections.addAll(urls, allURLS);
+				break;
+			}
 
-		ModuleDescriptor moduleDescriptor = JavaBridge.class.getModule().getDescriptor();
+			URL classUrl = classModuleUrl(classLoader, clazz);
+			if (classUrl != null) {
+				urls.add(classUrl);
+			}
+			classUrl = classModuleUrl(classLoader, JavaBridge.class);
+			if (classUrl != null) {
+				urls.add(classUrl);
+			}
 
-		if (moduleDescriptor != null) {
-			moduleDescriptor.requires().forEach(req -> {
-				ModuleLayer.boot()
-					.findModule(req.name())
-					.ifPresent(mod -> {
-						ClassLoader moduleClassLoader = mod.getClassLoader();
-						if (moduleClassLoader != null) {
-							URL url = moduleClassLoader.getResource(MANIFEST);
-							if (url != null) {
-								url = fixManifestUrl(url);
-								urls.add(url);
+			ModuleDescriptor moduleDescriptor = clazz.getModule().getDescriptor();
+
+			if (moduleDescriptor != null) {
+				moduleDescriptor.requires().forEach(req -> {
+					ModuleLayer.boot()
+						.findModule(req.name())
+						.ifPresent(mod -> {
+							ClassLoader moduleClassLoader = mod.getClassLoader();
+							if (moduleClassLoader != null) {
+								URL url = moduleClassLoader.getResource(MANIFEST);
+								if (url != null) {
+									url = fixManifestUrl(url);
+									urls.add(url);
+								}
 							}
-						}
-					});
-			});
+						});
+				});
+			}
+
+			classLoader = classLoader.getParent();
 		}
 
 		return urls.toArray(new URL[urls.size()]);
@@ -90,8 +117,17 @@ public class JavaBridge {
 		}
 	}
 
-	private static URL currentModuleURL() {
-		URL url = JavaBridge.class.getClassLoader().getResource(RESOURCE);
+	private static URL classModuleUrl(ClassLoader classLoader, Class clazz) {
+		if (clazz == null) {
+			return null;
+		}
+		final String name = clazz.getName().replace('.', '/') + ".class";
+
+		return resourceModuleUrl(classLoader, name);
+	}
+
+	private static URL resourceModuleUrl(ClassLoader classLoader, String resourceClassPath) {
+		URL url = classLoader.getResource(resourceClassPath);
 
 		if (url == null) {
 			return null;
@@ -99,12 +135,13 @@ public class JavaBridge {
 
 		// use root
 		String urlString = url.toString();
-		int ndx = urlString.indexOf(RESOURCE);
-		urlString = urlString.substring(0, ndx) + urlString.substring(ndx + RESOURCE.length());
+		int ndx = urlString.indexOf(resourceClassPath);
+		urlString = urlString.substring(0, ndx) + urlString.substring(ndx + resourceClassPath.length());
 
 		try {
 			return new URL(urlString);
-		} catch (MalformedURLException ignore) {
+		}
+		catch (MalformedURLException ignore) {
 			return null;
 		}
 	}

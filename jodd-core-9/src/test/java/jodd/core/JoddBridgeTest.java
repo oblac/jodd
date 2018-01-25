@@ -9,5 +9,15 @@ public class JoddBridgeTest {
 		for (URL url : urls) {
 			System.out.println(url);
 		}
+		System.out.println("---");
+		urls = JavaBridge.getURLs(JavaBridge.class.getClassLoader());
+		for (URL url : urls) {
+			System.out.println(url);
+		}
+		System.out.println("---");
+		urls = JavaBridge.getURLs(JoddBridgeTest.class);
+		for (URL url : urls) {
+			System.out.println(url);
+		}
 	}
 }
