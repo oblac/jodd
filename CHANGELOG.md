@@ -7,7 +7,8 @@ All notable changes to Jodd project are documented here.
 ### Bug Fixes
 
 + **core** - fixed a regression with the stream copying.
-+ **email** - fixed access issue for a `Builder`. 
++ **email** - fixed access issue for a `Builder`.
++ **core** - `JavaBridge` now works with Java9.
 
 ### Features
 
@@ -15,6 +16,7 @@ All notable changes to Jodd project are documented here.
 
 ### Breaking changes
 
++ **core** - `ClassScanner` now begins scanning with `scan()`.
 + **http** - methods with `boolean` argument renamed to `*Overwrite`.
 + **http** - methods named `remove` renamed. 
 

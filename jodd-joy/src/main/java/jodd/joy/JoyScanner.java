@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.core.JavaBridge;
 import jodd.io.findfile.ClassScanner;
 import jodd.typeconverter.Converter;
 
@@ -53,6 +54,11 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	private List<String> includedJars = new ArrayList<>();
 
 	/**
+	 * List of APP classes.
+	 */
+	private List<Class> appClasses = new ArrayList<>();
+
+	/**
 	 * Should scanning ignore the exception.
 	 */
 	private boolean ignoreExceptions;
@@ -70,6 +76,24 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	public JoyScanner setIgnoreExceptions(final boolean ignoreExceptions) {
 		this.ignoreExceptions = ignoreExceptions;
 		return this;
+	}
+
+	/**
+	 * Defines class and it's classloader to scan. This is not required in Java8
+	 * and would not hurt anything if called. However, for Java9, you should
+	 * pass <i>any</i> user-application class, so Jodd can figure out the real
+	 * class path to scan.
+	 */
+	public JoyScanner scanClasspathOf(Class applicationClass) {
+		appClasses.add(applicationClass);
+		return this;
+	}
+
+	/**
+	 * Shortcut for {@link #scanClasspathOf(Class)}.
+	 */
+	public JoyScanner scanClasspathOf(Object applicationObject) {
+		return scanClasspathOf(applicationObject.getClass());
 	}
 
 
@@ -107,7 +131,10 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 		classScanner
 			.includeEntries(includedEntries.toArray(new String[includedEntries.size()]))
 			.includeJars(includedJars.toArray(new String[includedJars.size()]))
-			.ignoreException(ignoreExceptions);
+			.ignoreException(ignoreExceptions)
+			.scanDefaultClasspath();
+
+		appClasses.forEach(clazz -> classScanner.scan(JavaBridge.getURLs(clazz)));
 	}
 
 	@Override
