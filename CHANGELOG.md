@@ -2,7 +2,11 @@
 
 All notable changes to Jodd project are documented here.
 
-## [Unreleased](https://github.com/oblac/jodd/compare/v4.1.0...master)
+## [Unreleased](https://github.com/oblac/jodd/compare/v4.1.1...master)
+
+Work-in-progress :thunder:
+
+## [4.1.1](https://github.com/oblac/jodd/compare/v4.1.0...v4.1.1)
 
 ### Bug Fixes
 
