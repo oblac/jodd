@@ -48,6 +48,7 @@ ext {
 	// libraries
 
 	tomcatVersion = '8.0.47'
+	jmhVersion = '1.20'
 
 	lib = [
 		mail:			[
@@ -240,8 +241,8 @@ configure(javaModules()) {
 	}
 
 	dependencies {
-		perfCompile 'org.openjdk.jmh:jmh-core:1.19'
-		perfCompile 'org.openjdk.jmh:jmh-generator-annprocess:1.19'
+		perfCompile "org.openjdk.jmh:jmh-core:${jmhVersion}"
+		perfCompile "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
 	}
 
 	idea {
