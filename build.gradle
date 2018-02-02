@@ -23,10 +23,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-plugins {
-	id "com.jfrog.bintray" version "1.7.3"
-}
-
 description = '''
 
 	Jodd is an open-source Java utility library and set of micro frameworks.
@@ -37,8 +33,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '4.1.1'
-//version = '4.1.2-' + date()
+version = '4.1.3'
+//version = '4.1.4-' + date()
 
 // --- properties -------------------------------------------------------------
 
@@ -104,14 +100,12 @@ ext {
 	]
 }
 
-
-
 // --- modules sets -----------------------------------------------------------
 
 allprojects {
 	version = rootProject.version
 
-	ext.isSnapshot = version.contains("-");
+	ext.isSnapshot = version.contains("-")
 	ext.isSubproject = project.parent != null
 
 	repositories {
@@ -125,6 +119,12 @@ def javaModules() {
 		it.name.contains('jodd-') &&
 		!it.name.equals('jodd-bom') &&
 		!it.name.equals('jodd-all')
+	}
+}
+
+def java8Modules() {
+	subprojects.findAll {
+		it.name.equals('jodd-core')
 	}
 }
 
@@ -162,23 +162,14 @@ configure(javaModules()) {
 	apply plugin: 'java'
 	apply plugin: 'jacoco'
 	apply plugin: 'osgi'
-	apply plugin: 'maven'
 	apply plugin: 'signing'
+	apply plugin: 'maven-publish'
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
 	apply from: "${gradleScriptDir}/provided.gradle"
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	group = 'org.jodd'
-
-	// bintray
-
-	apply plugin: 'com.jfrog.bintray'
-	apply from: "${gradleScriptDir}/bintray.gradle"
-
-	configurations {
-		published
-	}
 
 	// compile
 
@@ -352,10 +343,6 @@ configure(javaModules()) {
 		archives jar
 		archives sourcesJar
 		archives javadocJar
-
-		published jar
-		published sourcesJar
-		published javadocJar
 	}
 
 	jar {
@@ -387,6 +374,34 @@ configure(javaModules()) {
 			}
 		}
 	}
+}
+
+configure (java8Modules()) {
+	task code8Jar(type: Jar, dependsOn: osgiClasses) {
+		classifier 'jre8'
+		from sourceSets.main.output.classesDirs // + sourceSets.main.output.resourcesDir
+		manifest.attributes << commonManifest
+		manifest {
+			attributes 'Implementation-Title': project.name
+			//name project.moduleName
+			version project.version
+			//description project.moduleDescription
+			//attributes 'Implementation-Title': project.moduleName
+		}
+		manifest = osgiManifest {
+			classesDir = sourceSets.main.output.classesDirs.singleFile
+			classpath = sourceSets.main.runtimeClasspath
+		}
+	}
+	publishing {
+		publications {
+			jre8(MavenPublication) {
+				artifact code8Jar
+			}
+		}
+	}
+
+	jar.dependsOn code8Jar
 }
 
 // --- project ----------------------------------------------------------------
@@ -449,14 +464,6 @@ task javadocAll(type: Javadoc) {
 
 dependencyReport {
 	projects = javaModules()
-}
-
-task bintray {
-	group 'Publishing'
-	description 'Publish all artifcats to bintray'
-
-	dependsOn javaModules().bintrayUpload
-	dependsOn(":jodd-bom:bintrayUpload")
 }
 
 task codeCoverageReport(type: JacocoReport) {

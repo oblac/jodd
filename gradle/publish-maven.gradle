@@ -24,65 +24,114 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 signing {
-	if (project.hasProperty('JODD_ADMIN')) {
-		sign configurations.archives
-	}
+	sign configurations.archives
 }
 
-install {
-	repositories.mavenInstaller {
-		customizePom(pom, project)
-	}
-}
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
 
-uploadArchives {
-	repositories.mavenDeployer {
-		customizePom(pom, project)
-		
-		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			customizePom(pom, project)
 
-		if (project.hasProperty('JODD_ADMIN')) {
-//			snapshotRepository(url: 'file:///Users/igor/m2')
-			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			artifact sourcesJar
+			artifact javadocJar
+
+			// sign the pom
+			pom.withXml {
+				def pomFile = file("${project.buildDir}/generated-pom.xml")
+				writeTo(pomFile)
+				def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+				artifact(pomAscFile) {
+					classifier = null
+					extension = 'pom.asc'
+				}
+				pomFile.delete()
 			}
-			repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
-				authentication(userName: sonatypeUsername, password: sonatypePassword)
+
+			// sign the artifacts
+			project.tasks.signArchives.signatureFiles.each {
+				artifact(it) {
+					def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+					if (matcher.find()) {
+						classifier = matcher.group(1)
+					} else {
+						classifier = null
+					}
+					extension = 'jar.asc'
+				}
 			}
 		}
 	}
+	repositories {
+		if (project.hasProperty('JODD_ADMIN')) {
+			maven {
+				url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+				credentials {
+					username sonatypeUsername
+					password sonatypePassword
+				}
+			}
+		}
+	}
+}
+
+model {
+	tasks.publishMavenJavaPublicationToMavenLocal {
+		dependsOn(project.tasks.signArchives)
+	}
+	tasks.publishMavenJavaPublicationToMavenRepository {
+		dependsOn(project.tasks.signArchives)
+	}
+}
+
+task install(dependsOn: publishToMavenLocal) {
+	group = 'Publishing'
+	description = 'Installs artifacts to local Maven repository'
 }
 
 def customizePom(pom, gradleProject) {
-	pom.whenConfigured { generatedPom ->
+	pom.withXml {
+		def root = asNode()
 
-		// eliminate test-scoped dependencies (no need in maven central POMs)
-		generatedPom.dependencies.removeAll { dep ->
-			dep.scope == "test"
-		}
-
-		// modify POM and change scope to provided and/or add optional flag where needed
-		generatedPom.dependencies.findAll {
-			ext.artifactId = it.artifactId
-			ext.fulldep = it.groupId + ':' + it.artifactId + ':' + it.version
+		// modify POM and add optional flag where needed
+		root.dependencies.'*'.findAll {
+			ext.artifactId = it.artifactId.text()
+			ext.fulldep = it.groupId.text() + ':' + it.artifactId.text() + ':' + it.version.text()
 
 			if (ext.artifactId in project.optionalDeps || ext.fulldep in project.optionalDeps) {
-				it.optional = true
+				def xmlOptional = it.optional[0]
+				if (!xmlOptional) {
+					xmlOptional = it.appendNode('optional')
+				}
+				xmlOptional.value = 'true'
+			}
+		}
+
+		// modify POM and set provided scope where needed
+		root.dependencies.'*'.findAll {
+			def d = it
+			project.configurations.findByName("provided").allDependencies.find { dep ->
+				dep.name == it.artifactId.text()
+			}.each() {
+				d.scope*.value = 'provided'
 			}
 		}
 
 		// add all items necessary for maven central publication
-		generatedPom.project {
-			name = gradleProject.moduleName
-			description = gradleProject.moduleDescription
-			url = 'http://jodd.org'
+		root.children().last() + {
+			resolveStrategy = Closure.DELEGATE_FIRST
+
+			name gradleProject.moduleName
+			description gradleProject.moduleDescription
+			url 'http://jodd.org'
 			organization {
-				name = 'Jodd'
-				url = 'http://jodd.org'
+				name 'Jodd'
+				url 'http://jodd.org'
 			}
 			issueManagement {
-				system = 'GitHub'
-				url = 'https://github.com/oblac/jodd/issues'
+				system 'GitHub'
+				url 'https://github.com/oblac/jodd/issues'
 			}
 			licenses {
 				license {
@@ -92,16 +141,16 @@ def customizePom(pom, gradleProject) {
 				}
 			}
 			scm {
-				url = 'https://github.com/oblac/jodd'
-				connection = 'scm:git:git://github.com/oblac/jodd.git'
-				developerConnection = 'scm:git:ssh://git@github.com/oblac/jodd.git'
+				url 'https://github.com/oblac/jodd'
+				connection 'scm:git:git://github.com/oblac/jodd.git'
+				developerConnection 'scm:git:ssh://git@github.com/oblac/jodd.git'
 			}
 			developers {
 				developer {
-					id = 'igor'
-					name = 'Igor Spasić'
-					email = 'igor@jodd.org'
-					timezone = '+1'
+					id 'igor'
+					name 'Igor Spasić'
+					email 'igor@jodd.org'
+					timezone  '+1'
 				}
 			}
 		}

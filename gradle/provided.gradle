@@ -52,14 +52,6 @@ configurations {
 	compile.extendsFrom provided
 }
 
-// add provided scope to the maven
-Conf2ScopeMappingContainer scopeMappings = project.conf2ScopeMappings
-scopeMappings.addMapping(
-		MavenPlugin.COMPILE_PRIORITY + 1,
-		project.configurations.getByName("provided"),
-		Conf2ScopeMappingContainer.PROVIDED)
-
-
 // set provided scope for IDEA dependencies
 idea {
 	module {
@@ -77,8 +69,8 @@ eclipse {
 }
 
 
-// OPTIONAL
-
+// OPTIONAL attribute
+//
 // + an extra property List that holds optional dependencies
 // + an extra method that can be executed as parameter when declaring dependencies
 
