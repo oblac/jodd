@@ -16,10 +16,26 @@ task javadocJar(type: Jar, dependsOn: classes) {
 	classifier = 'javadoc'
 }
 
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives javadocJar
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			buildBomDependencies(pom)
+
+			// RE-sign the pom, as it has been modified
+
+			pom.withXml {
+				def pomFile = file("${project.buildDir}/generated-pom.xml")
+				writeTo(pomFile)
+				def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+				pomFile.delete()
+			}
+
 		}
 	}
 }
