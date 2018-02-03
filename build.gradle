@@ -109,7 +109,6 @@ allprojects {
 	ext.isSubproject = project.parent != null
 
 	repositories {
-		jcenter()
 		mavenCentral()
 	}
 }
@@ -377,32 +376,7 @@ configure(javaModules()) {
 }
 
 configure (java9Modules()) {
-	task code9Jar(type: Jar, dependsOn: osgiClasses) {
-		classifier 'jre9'
-		from sourceSets.main.output.classesDirs
-		from sourceSets.main.output.resourcesDir
-		from("src/main/resources9")
-		manifest = osgiManifest {
-			classesDir = sourceSets.main.output.classesDirs.singleFile
-			classpath = sourceSets.main.runtimeClasspath
-		}
-		manifest.attributes << commonManifest
-		manifest {
-			name = project.name
-			version = project.version
-			description = project.description
-			attributes 'Implementation-Title': project.name
-		}
-	}
-	publishing {
-		publications {
-			jre9(MavenPublication) {
-				artifact code9Jar
-			}
-		}
-	}
-
-	jar.dependsOn code9Jar
+	apply from: "${gradleScriptDir}/jre9.gradle"
 }
 
 // --- project ----------------------------------------------------------------
