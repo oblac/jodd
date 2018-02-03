@@ -122,7 +122,7 @@ def javaModules() {
 	}
 }
 
-def java8Modules() {
+def java9Modules() {
 	subprojects.findAll {
 		it.name.equals('jodd-core')
 	}
@@ -376,32 +376,33 @@ configure(javaModules()) {
 	}
 }
 
-configure (java8Modules()) {
-	task code8Jar(type: Jar, dependsOn: osgiClasses) {
-		classifier 'jre8'
-		from sourceSets.main.output.classesDirs // + sourceSets.main.output.resourcesDir
-		manifest.attributes << commonManifest
-		manifest {
-			attributes 'Implementation-Title': project.name
-			//name project.moduleName
-			version project.version
-			//description project.moduleDescription
-			//attributes 'Implementation-Title': project.moduleName
-		}
+configure (java9Modules()) {
+	task code9Jar(type: Jar, dependsOn: osgiClasses) {
+		classifier 'jre9'
+		from sourceSets.main.output.classesDirs
+		from sourceSets.main.output.resourcesDir
+		from("src/main/resources9")
 		manifest = osgiManifest {
 			classesDir = sourceSets.main.output.classesDirs.singleFile
 			classpath = sourceSets.main.runtimeClasspath
 		}
+		manifest.attributes << commonManifest
+		manifest {
+			name = project.name
+			version = project.version
+			description = project.description
+			attributes 'Implementation-Title': project.name
+		}
 	}
 	publishing {
 		publications {
-			jre8(MavenPublication) {
-				artifact code8Jar
+			jre9(MavenPublication) {
+				artifact code9Jar
 			}
 		}
 	}
 
-	jar.dependsOn code8Jar
+	jar.dependsOn code9Jar
 }
 
 // --- project ----------------------------------------------------------------
