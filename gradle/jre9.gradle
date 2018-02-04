@@ -38,7 +38,9 @@ task jar9(type: Jar, dependsOn: osgiClasses) {
         name = project.name
         version = project.version
         description = project.description
-        attributes 'Implementation-Title': project.name
+        attributes(
+                'Implementation-Title': project.name,
+                'Multi-Release': true)
     }
 }
 artifacts {
