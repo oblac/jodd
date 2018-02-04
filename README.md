@@ -19,10 +19,11 @@
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
 
-## :zap: Jodd Modules
+# :zap: Jodd
 
-**Jodd** is split into many modules, so choose what to use.
-Some tools and utility modules are:
+**Jodd** is set of micro-frameworks and developer-friendly utilities.
+
+Tools and utilities:
 
 + `jodd-core` contains many utilities, including `JDateTime`.
 + `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
@@ -32,7 +33,7 @@ Some tools and utility modules are:
 + `jodd-servlet` with many servlet utilities, including nice tag library.
 + `jodd-http`, tiny HTTP client.
 
-and some **micro-frameworks**:
+**Micro-frameworks**:
 
 + `jodd-madvoc` - slick MVC framework.
 + `jodd-petite` - pragmatic DI container.
@@ -43,14 +44,13 @@ and some **micro-frameworks**:
 + `jodd-db` - thin database layer and object mapper.
 + `jodd-json` - JSON parser and serializer.
 + `jodd-vtor` - validation framework.
++ `jodd-jtx` - transactions management.
+
+**WebApp frameworks**
+
++ `jodd-joy` - super-easy web app framework, built with **Jodd* micro-frameworks.
 
 Read more in our [official documentation](http://jodd.org/doc).
-
-## :sunny: Jodd Bundle
-
-If you are already using many **Jodd** jars, you can simply
-just use the _bundle_ jar: `jodd-all`. It's a single jar with
-all modules included; where all dependencies are optional. Why not :)
 
 
 ## :octocat: Building Jodd from source
