@@ -24,6 +24,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 signing {
+	required { isRelease && project.hasProperty('JODD_ADMIN') }
 	sign configurations.archives
 }
 

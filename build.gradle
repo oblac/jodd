@@ -105,7 +105,8 @@ ext {
 allprojects {
 	version = rootProject.version
 
-	ext.isSnapshot = version.contains("-")
+	ext.isRelease = !version.endsWith("SNAPSHOT")
+	ext.isSnapshot = !ext.isRelease
 	ext.isSubproject = project.parent != null
 
 	repositories {
