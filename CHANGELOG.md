@@ -2,15 +2,15 @@
 
 All notable changes to Jodd project are documented here.
 
-## [Unreleased](https://github.com/oblac/jodd/compare/v4.1.3...master)
+## [Unreleased](https://github.com/oblac/jodd/compare/v4.1.4...master)
 
 Work-in-progress :thunder:
 
-## [4.1.3](https://github.com/oblac/jodd/compare/v4.1.1...v4.1.3)
+## [4.1.4](https://github.com/oblac/jodd/compare/v4.1.1...v4.1.4)
 
-+ **all** jars are now signed with correct PGP key
-+ **core** added `jre9` classifier
++ **core** added `jre9` classifier release
 + **gradle** migrated to new `maven-publish` plugin
++ **all** jars are now signed with the correct PGP key
 
 ## [4.1.1](https://github.com/oblac/jodd/compare/v4.1.0...v4.1.1)
 
