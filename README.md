@@ -1,5 +1,4 @@
-<h1 align="center">Jodd</h1>
-<h4 align="center">Open-source Java micro-frameworks and tools; compact, yet powerful.</h4>
+![](jodd-github-logo.png)
 <br>
 
 [![GitHub release](https://img.shields.io/github/release/oblac/jodd.svg)](https://jodd.org)
