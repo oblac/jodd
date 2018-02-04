@@ -64,9 +64,9 @@ publishing {
 		}
 	}
 	repositories {
-		if (project.hasProperty('JODD_ADMIN')) {
-			maven {
-				url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+		maven {
+			url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+			if (project.hasProperty('JODD_ADMIN')) {
 				credentials {
 					username sonatypeUsername
 					password sonatypePassword
