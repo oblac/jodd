@@ -33,8 +33,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '4.1.4'
-//version = '4.1.5-' + date()
+//version = '4.1.4'
+version = '4.1.5-' + date()
 
 // --- properties -------------------------------------------------------------
 
@@ -105,7 +105,7 @@ ext {
 allprojects {
 	version = rootProject.version
 
-	ext.isRelease = !version.endsWith("SNAPSHOT")
+	ext.isRelease = !version.contains("-")
 	ext.isSnapshot = !ext.isRelease
 	ext.isSubproject = project.parent != null
 

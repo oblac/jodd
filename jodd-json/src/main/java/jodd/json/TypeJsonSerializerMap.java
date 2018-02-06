@@ -52,6 +52,7 @@ import jodd.json.impl.LongArrayJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
+import jodd.json.impl.UUIDJsonSerializer;
 import jodd.util.collection.ClassMap;
 
 import java.io.File;
@@ -61,6 +62,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Map of {@link jodd.json.TypeJsonSerializer json type serializers}.
@@ -187,6 +189,8 @@ public class TypeJsonSerializerMap {
 
 		map.put(Character.class, jsonSerializer);
 		map.put(char.class, jsonSerializer);
+
+		map.put(UUID.class, new UUIDJsonSerializer());
 
 		map.put(Class.class, new ClassJsonSerializer());
 

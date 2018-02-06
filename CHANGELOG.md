@@ -6,6 +6,11 @@ All notable changes to Jodd project are documented here.
 
 Work-in-progress :thunder:
 
+### Features
+
++ **bean** - `UUID` type converter added.
++ **json** - added `UUID` JSON type serializer. 
+
 ## [4.1.4](https://github.com/oblac/jodd/compare/v4.1.1...v4.1.4)
 
 + **core** added `jre9` classifier release

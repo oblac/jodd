@@ -41,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static jodd.util.ArraysUtil.bytes;
 import static jodd.util.ArraysUtil.ints;
@@ -626,6 +627,20 @@ class JsonSerializerTest {
 
 		json = JsonSerializer.create().withClassMetadata(true).serialize(123);
 		assertEquals("123", json);
+	}
 
+	@Test
+	void testUuidSerialization() {
+		UUID uuid = UUID.randomUUID();
+
+		String json = JsonSerializer
+			.create()
+			.serialize(uuid);
+
+		UUID uuid2 = JsonParser
+			.create()
+			.parse(json, UUID.class);
+
+		assertEquals(uuid, uuid2);
 	}
 }
