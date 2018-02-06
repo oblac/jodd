@@ -74,6 +74,7 @@ import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.TimeZoneConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
+import jodd.typeconverter.impl.UUIDConverter;
 import jodd.util.ClassUtil;
 
 import java.io.File;
@@ -89,6 +90,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -247,6 +249,8 @@ public class TypeConverterManager {
 
 		register(Locale.class, new LocaleConverter());
 		register(TimeZone.class, new TimeZoneConverter());
+
+		register(UUID.class, new UUIDConverter());
 	}
 
 	/**
