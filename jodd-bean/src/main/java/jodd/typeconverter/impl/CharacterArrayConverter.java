@@ -50,7 +50,7 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 			return null;
 		}
 
-		Class valueClass = value.getClass();
+		final Class valueClass = value.getClass();
 
 		if (!valueClass.isArray()) {
 			// source is not an array
@@ -82,11 +82,11 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
  	 */
 	protected char[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
-			List list = (List) value;
-			char[] target = new char[list.size()];
+			final List list = (List) value;
+			final char[] target = new char[list.size()];
 
 			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
+				final Object element = list.get(i);
 				target[i] = convertType(element);
 			}
 
@@ -94,11 +94,11 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		}
 
 		if (value instanceof Collection) {
-			Collection collection = (Collection) value;
-			char[] target = new char[collection.size()];
+			final Collection collection = (Collection) value;
+			final char[] target = new char[collection.size()];
 
 			int i = 0;
-			for (Object element : collection) {
+			for (final Object element : collection) {
 				target[i] = convertType(element);
 				i++;
 			}
@@ -107,19 +107,19 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		}
 
 		if (value instanceof Iterable) {
-			Iterable iterable = (Iterable) value;
+			final Iterable iterable = (Iterable) value;
 
-			ArrayList<Character> charArrayList = new ArrayList<>();
+			final ArrayList<Character> charArrayList = new ArrayList<>();
 
-			for (Object element : iterable) {
-				char convertedValue = convertType(element);
+			for (final Object element : iterable) {
+				final char convertedValue = convertType(element);
 				charArrayList.add(Character.valueOf(convertedValue));
 			}
 
-			char[] array = new char[charArrayList.size()];
+			final char[] array = new char[charArrayList.size()];
 
 			for (int i = 0; i < charArrayList.size(); i++) {
-				Character c = charArrayList.get(i);
+				final Character c = charArrayList.get(i);
 				array[i] = c.charValue();
 			}
 
@@ -128,9 +128,9 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			CharSequence charSequence = (CharSequence) value;
+			final CharSequence charSequence = (CharSequence) value;
 
-			char[] result = new char[charSequence.length()];
+			final char[] result = new char[charSequence.length()];
 
 			for (int i = 0; i < result.length; i++) {
 				result[i] = charSequence.charAt(i);
@@ -147,21 +147,15 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	 * Converts array value to array.
 	 */
 	protected char[] convertArrayToArray(final Object value) {
-		Class valueComponentType = value.getClass().getComponentType();
+		final Class valueComponentType = value.getClass().getComponentType();
 
-		if (valueComponentType == char.class) {
-			// equal types, no conversion needed
-			return (char[]) value;
-		}
-
-		char[] result;
+		final char[] result;
 
 		if (valueComponentType.isPrimitive()) {
-			// convert primitive array to target array
 			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		} else {
 			// convert object array to target array
-			Object[] array = (Object[]) value;
+			final Object[] array = (Object[]) value;
 			result = new char[array.length];
 
 			for (int i = 0; i < array.length; i++) {
@@ -179,54 +173,54 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	protected char[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		char[] result = null;
 
-		if (primitiveComponentType == char[].class) {
+		if (primitiveComponentType == char.class) {
 			return (char[]) value;
 		}
 
 		if (primitiveComponentType == int.class) {
-			int[] array = (int[]) value;
+			final int[] array = (int[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) array[i];
 			}
 		}
 		else if (primitiveComponentType == long.class) {
-			long[] array = (long[]) value;
+			final long[] array = (long[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) array[i];
 			}
 		}
 		else if (primitiveComponentType == float.class) {
-			float[] array = (float[]) value;
+			final float[] array = (float[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) array[i];
 			}
 		}
 		else if (primitiveComponentType == double.class) {
-			double[] array = (double[]) value;
+			final double[] array = (double[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) array[i];
 			}
 		}
 		else if (primitiveComponentType == short.class) {
-			short[] array = (short[]) value;
+			final short[] array = (short[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) array[i];
 			}
 		}
 		else if (primitiveComponentType == byte.class) {
-			byte[] array = (byte[]) value;
+			final byte[] array = (byte[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) array[i];
 			}
 		}
 		else if (primitiveComponentType == boolean.class) {
-			boolean[] array = (boolean[]) value;
+			final boolean[] array = (boolean[]) value;
 			result = new char[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (char) (array[i] ? 1 : 0);

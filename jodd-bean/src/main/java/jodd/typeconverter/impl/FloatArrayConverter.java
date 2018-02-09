@@ -50,7 +50,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 			return null;
 		}
 
-		Class valueClass = value.getClass();
+		final Class valueClass = value.getClass();
 
 		if (!valueClass.isArray()) {
 			// source is not an array
@@ -82,11 +82,11 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
  	 */
 	protected float[] convertValueToArray(final Object value) {
 		if (value instanceof List) {
-			List list = (List) value;
-			float[] target = new float[list.size()];
+			final List list = (List) value;
+			final float[] target = new float[list.size()];
 
 			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
+				final Object element = list.get(i);
 				target[i] = convertType(element);
 			}
 
@@ -94,11 +94,11 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 		}
 
 		if (value instanceof Collection) {
-			Collection collection = (Collection) value;
-			float[] target = new float[collection.size()];
+			final Collection collection = (Collection) value;
+			final float[] target = new float[collection.size()];
 
 			int i = 0;
-			for (Object element : collection) {
+			for (final Object element : collection) {
 				target[i] = convertType(element);
 				i++;
 			}
@@ -107,19 +107,19 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 		}
 
 		if (value instanceof Iterable) {
-			Iterable iterable = (Iterable) value;
+			final Iterable iterable = (Iterable) value;
 
-			ArrayList<Float> floatArrayList = new ArrayList<>();
+			final ArrayList<Float> floatArrayList = new ArrayList<>();
 
-			for (Object element : iterable) {
-				float convertedValue = convertType(element);
+			for (final Object element : iterable) {
+				final float convertedValue = convertType(element);
 				floatArrayList.add(Float.valueOf(convertedValue));
 			}
 
-			float[] array = new float[floatArrayList.size()];
+			final float[] array = new float[floatArrayList.size()];
 
 			for (int i = 0; i < floatArrayList.size(); i++) {
-				Float f = floatArrayList.get(i);
+				final Float f = floatArrayList.get(i);
 				array[i] = f.floatValue();
 			}
 
@@ -127,7 +127,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
+			final String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
 			return convertArrayToArray(strings);
 		}
 
@@ -139,21 +139,15 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	 * Converts array value to array.
 	 */
 	protected float[] convertArrayToArray(final Object value) {
-		Class valueComponentType = value.getClass().getComponentType();
+		final Class valueComponentType = value.getClass().getComponentType();
 
-		if (valueComponentType == float.class) {
-			// equal types, no conversion needed
-			return (float[]) value;
-		}
-
-		float[] result;
+		final float[] result;
 
 		if (valueComponentType.isPrimitive()) {
-			// convert primitive array to target array
 			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		} else {
 			// convert object array to target array
-			Object[] array = (Object[]) value;
+			final Object[] array = (Object[]) value;
 			result = new float[array.length];
 
 			for (int i = 0; i < array.length; i++) {
@@ -171,54 +165,54 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	protected float[] convertPrimitiveArrayToArray(final Object value, final Class primitiveComponentType) {
 		float[] result = null;
 
-		if (primitiveComponentType == float[].class) {
+		if (primitiveComponentType == float.class) {
 			return (float[]) value;
 		}
 
 		if (primitiveComponentType == int.class) {
-			int[] array = (int[]) value;
+			final int[] array = (int[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == long.class) {
-			long[] array = (long[]) value;
+			final long[] array = (long[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == double.class) {
-			double[] array = (double[]) value;
+			final double[] array = (double[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = (float) array[i];
 			}
 		}
 		else if (primitiveComponentType == short.class) {
-			short[] array = (short[]) value;
+			final short[] array = (short[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == byte.class) {
-			byte[] array = (byte[]) value;
+			final byte[] array = (byte[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == char.class) {
-			char[] array = (char[]) value;
+			final char[] array = (char[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i];
 			}
 		}
 		else if (primitiveComponentType == boolean.class) {
-			boolean[] array = (boolean[]) value;
+			final boolean[] array = (boolean[]) value;
 			result = new float[array.length];
 			for (int i = 0; i < array.length; i++) {
 				result[i] = array[i] ? 1 : 0;
