@@ -11,6 +11,11 @@ Work-in-progress :thunder:
 + **bean** - `UUID` type converter added.
 + **json** - added `UUID` JSON type serializer. 
 
+### Bug Fixes
+
++ **gradle** - fixes the `pom.xml` for `jodd-all`.
+
+
 ## [4.1.4](https://github.com/oblac/jodd/compare/v4.1.1...v4.1.4)
 
 + **core** added `jre9` classifier release

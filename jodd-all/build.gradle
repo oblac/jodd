@@ -1,4 +1,3 @@
-
 ext.moduleName = 'Jodd Bundle'
 ext.moduleDescription = 'Jodd bundle - all classes in one jar'
 
@@ -35,4 +34,68 @@ artifacts {
     archives jar
     archives sourcesJar
     archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            rebuildAllDependencies(pom)
+
+            // RE-sign the pom, as it has been modified
+
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                pomFile.delete()
+            }
+
+        }
+    }
+}
+
+def rebuildAllDependencies(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        root.remove(root.get("dependencies"))
+
+        def used = []
+
+        javaBundleModules().each { prj ->
+            prj.configurations.compile.allDependencies.each { dep ->
+                // ignore all Jodd dependencies
+                if (dep.group != "org.jodd") {
+                    def fulldep = dep.name + ':' + dep.group + ':' + dep.version
+
+
+                    if (!(fulldep in used)) {
+                        used << fulldep
+
+                        def provided = false
+                        prj.configurations.findByName("provided").allDependencies.each { depdep ->
+                            if (depdep.name == dep.name && depdep.group == dep.group && depdep.version == dep.version) {
+                                provided = true
+                            }
+                        }
+
+                        root.children().last() + {
+                            resolveStrategy = Closure.DELEGATE_FIRST
+                            delegate.dependencies {
+                                delegate.dependency {
+                                    delegate.groupId(dep.group)
+                                    delegate.artifactId(dep.name)
+                                    delegate.version(dep.version)
+                                    delegate.optional(true)
+                                    if (provided) {
+                                        delegate.scope("provided")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
