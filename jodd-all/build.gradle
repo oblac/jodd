@@ -60,6 +60,13 @@ def rebuildAllDependencies(pom) {
 
         root.remove(root.get("dependencies"))
 
+        root.children().last() + {
+            delegate.dependencies {
+            }
+        }
+
+        def node = root.children().last()
+
         def used = []
 
         javaBundleModules().each { prj ->
@@ -79,19 +86,14 @@ def rebuildAllDependencies(pom) {
                             }
                         }
 
-                        root.children().last() + {
-                            resolveStrategy = Closure.DELEGATE_FIRST
-                            delegate.dependencies {
-                                delegate.dependency {
-                                    delegate.groupId(dep.group)
-                                    delegate.artifactId(dep.name)
-                                    delegate.version(dep.version)
-                                    delegate.optional(true)
-                                    if (provided) {
-                                        delegate.scope("provided")
-                                    }
-                                }
-                            }
+                        def depNode = new Node(node, "dependency")
+
+                        def groupNode = new Node(depNode, "groupId", dep.group)
+                        def artifcatNode = new Node(depNode, "artifactId", dep.name)
+                        def versionNode = new Node(depNode, "version", dep.version)
+                        def optionalNode = new Node(depNode, "optional", true)
+                        if (provided) {
+                            def scopeNode = new Node(depNode, "scope", "provided")
                         }
                     }
                 }
