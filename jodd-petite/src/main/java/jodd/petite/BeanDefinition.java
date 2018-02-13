@@ -29,6 +29,7 @@ import jodd.petite.def.CtorInjectionPoint;
 import jodd.petite.def.DestroyMethodPoint;
 import jodd.petite.def.InitMethodPoint;
 import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.ParamInjectionPoint;
 import jodd.petite.def.PropertyInjectionPoint;
 import jodd.petite.def.SetInjectionPoint;
 import jodd.petite.scope.Scope;
@@ -66,6 +67,7 @@ public class BeanDefinition<T> {
 	protected InitMethodPoint[] initMethods;
 	protected DestroyMethodPoint[] destroyMethods;
 	protected String[] params;
+	protected ParamInjectionPoint[] paramsInjections;
 
 	// ---------------------------------------------------------------- definition getters
 

@@ -23,47 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.petite.meta;
 
-import jodd.madvoc.MadvocConfig;
-import jodd.petite.ParamManager;
-import jodd.petite.PetiteContainer;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Specific non-scoped injector that injects Madvoc parameters (from madvoc.props to targets).
- * Invoked on creation of all singleton instances, like interceptors etc.
- * Used to configure various Madvoc classes that are created in lazy manner.
+ * Petite parameter value.
  */
-public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
-
-	protected final MadvocConfig madvocConfig;
-
-	public MadvocParamsInjector(final MadvocConfig madvocConfig) {
-		this.madvocConfig = madvocConfig;
-	}
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD})
+public @interface PetiteValue {
 
 	/**
-	 * Injects all matching parameters to target instance.
-	 * Matching parameters are named as given base name.
+	 * Defines parameter key which value will be injected.
 	 */
-	@Override
-	public void injectContext(final Targets targets, final PetiteContainer madpc) {
-		targets.forEachTarget(target -> {
-			Class targetType = target.resolveType();
-			String baseName = targetType.getName();
-
-			ParamManager madvocPetiteParamManager = madpc.paramManager();
-
-			String[] params = madvocPetiteParamManager.filterParametersForBeanName(baseName, true);
-
-			for (String param : params) {
-				Object value = madvocPetiteParamManager.get(param);
-
-				String propertyName = param.substring(baseName.length() + 1);
-
-				target.writeValue(propertyName, value, false);
-			}
-		});
-	}
+	String value() default "";
 
 }

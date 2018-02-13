@@ -25,6 +25,13 @@
 
 package jodd.petite;
 
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
+import jodd.petite.def.ParamInjectionPoint;
+import jodd.petite.meta.PetiteValue;
 import jodd.util.PropertiesUtil;
 import jodd.util.StringPool;
 
@@ -63,7 +70,7 @@ public class ParamManager {
 	 * Returns an array of param keys that belongs to provided bean.
 	 * Optionally resolves the value of returned parameters.
 	 */
-	public String[] resolve(String beanName, final boolean resolveReferenceParams) {
+	public String[] filterParametersForBeanName(String beanName, final boolean resolveReferenceParams) {
 		beanName = beanName + '.';
 
 		List<String> list = new ArrayList<>();
@@ -85,6 +92,37 @@ public class ParamManager {
 		} else {
 			return list.toArray(new String[list.size()]);
 		}
+	}
+
+	public ParamInjectionPoint[] resolveParamInjectionPoints(final Object bean) {
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(bean.getClass());
+
+		final List<ParamInjectionPoint> paramInjectionPointList = new ArrayList<>();
+
+		for (final PropertyDescriptor pd : cd.getAllPropertyDescriptors()) {
+			final FieldDescriptor fd = pd.getFieldDescriptor();
+
+			if (fd != null) {
+				final PetiteValue petiteValue = fd.getField().getAnnotation(PetiteValue.class);
+
+				if (petiteValue != null) {
+					paramInjectionPointList.add(new ParamInjectionPoint(pd.getName(), petiteValue.value()));
+					continue;
+				}
+			}
+
+			MethodDescriptor md = pd.getWriteMethodDescriptor();
+			if (md != null) {
+				final PetiteValue petiteValue = md.getMethod().getAnnotation(PetiteValue.class);
+
+				if (petiteValue != null) {
+					paramInjectionPointList.add(new ParamInjectionPoint(pd.getName(), petiteValue.value()));
+					continue;
+				}
+			}
+		}
+
+		return paramInjectionPointList.toArray(new ParamInjectionPoint[paramInjectionPointList.size()]);
 	}
 
 }

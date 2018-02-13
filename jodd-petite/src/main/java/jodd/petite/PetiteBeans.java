@@ -757,13 +757,6 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Prepares list of all bean parameters and optionally resolves inner references.
-	 */
-	protected String[] resolveBeanParams(final String name, final boolean resolveReferenceParams) {
-		return paramManager.resolve(name, resolveReferenceParams);
-	}
-
-	/**
 	 * Defines many parameters at once.
 	 */
 	public void defineParameters(final Map<?, ?> properties) {

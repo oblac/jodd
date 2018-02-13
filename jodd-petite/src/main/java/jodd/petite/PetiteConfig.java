@@ -40,8 +40,26 @@ public class PetiteConfig {
 		wireScopedProxy = false;
 		detectMixedScopes = false;
 		useAltBeanNames = true;
+		implicitParamInjection = true;
 	}
 
+	// ----------------------------------------------------------------
+
+	protected boolean implicitParamInjection;
+
+	/**
+	 * Returns {@code true} if implicit parameter injection is enabled.
+	 */
+	public boolean isImplicitParamInjection() {
+		return implicitParamInjection;
+	}
+
+	/**
+	 * Enables implicit parameter injection.
+	 */
+	public void setImplicitParamInjection(final boolean implicitParamInjection) {
+		this.implicitParamInjection = implicitParamInjection;
+	}
 	// ----------------------------------------------------------------
 
 	protected boolean useAltBeanNames;

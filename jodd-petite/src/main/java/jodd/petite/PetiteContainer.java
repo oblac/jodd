@@ -32,6 +32,7 @@ import jodd.log.LoggerFactory;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.InitMethodPoint;
 import jodd.petite.def.MethodInjectionPoint;
+import jodd.petite.def.ParamInjectionPoint;
 import jodd.petite.def.PropertyInjectionPoint;
 import jodd.petite.def.ProviderDefinition;
 import jodd.petite.def.SetInjectionPoint;
@@ -285,19 +286,37 @@ public class PetiteContainer extends PetiteBeans {
 			return;
 		}
 
-		if (def.params == null) {
-			def.params = resolveBeanParams(def.name, petiteConfig.getResolveReferenceParameters());
-		}
-		int len = def.name.length() + 1;
-		for (String param : def.params) {
-			Object value = getParameter(param);
-			String destination = param.substring(len);
-			try {
-				BeanUtil.declared.setProperty(bean, destination, value);
-			} catch (Exception ex) {
-				throw new PetiteException("Unable to set parameter: '" + param + "' to bean: " + def.name, ex);
+		if (petiteConfig.isImplicitParamInjection()) {
+			// implicit
+			if (def.params == null) {
+				def.params = paramManager.filterParametersForBeanName(
+					def.name, petiteConfig.getResolveReferenceParameters());
+			}
+			final int len = def.name.length() + 1;
+			for (final String param : def.params) {
+				final Object value = getParameter(param);
+				final String destination = param.substring(len);
+				try {
+					BeanUtil.declared.setProperty(bean, destination, value);
+				} catch (Exception ex) {
+					throw new PetiteException("Unable to set parameter: '" + param + "' to bean: " + def.name, ex);
+				}
 			}
 		}
+
+		// explicit
+		if (def.paramsInjections == null) {
+			def.paramsInjections = paramManager.resolveParamInjectionPoints(bean);
+		}
+		for (final ParamInjectionPoint pip : def.paramsInjections) {
+			final Object value = getParameter(pip.key);
+			try {
+				BeanUtil.declared.setProperty(bean, pip.property, value);
+			} catch (Exception ex) {
+				throw new PetiteException("Unable to set value for: '" + pip.key + "' to bean: " + def.name, ex);
+			}
+		}
+
 	}
 
 	protected <T> void invokeConsumerIfRegistered(final T bean, final BeanDefinition<T> def) {

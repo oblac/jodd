@@ -9,7 +9,9 @@ Work-in-progress :thunder:
 ### Features
 
 + **bean** - `UUID` type converter added.
-+ **json** - added `UUID` JSON type serializer. 
++ **json** - added `UUID` JSON type serializer.
++ **petite** - added `@PetiteValue` annotation for injecting parameters.
++ **petite** - added `implicitParamInjection` flag to enable/disable implicit injection. 
 
 ### Bug Fixes
 
