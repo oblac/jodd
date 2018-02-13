@@ -26,6 +26,7 @@
 package jodd.petite;
 
 import jodd.petite.fixtures.tst.Foo;
+import jodd.petite.fixtures.tst.Val;
 import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
@@ -42,7 +43,7 @@ class ParamTest {
 
 		pc.defineParameter("foo.name", "FOONAME");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("FOONAME", foo.getName());
 	}
@@ -58,7 +59,7 @@ class ParamTest {
 		pc.defineParameter("name2", "FOONAME");
 		pc.defineParameter("FOONAME", "aaa");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("$FOONAME", foo.getName());
 	}
@@ -70,7 +71,7 @@ class ParamTest {
 
 		pc.defineParameter("foo.name", "\\${name}");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("${name}", foo.getName());
 	}
@@ -85,7 +86,7 @@ class ParamTest {
 		pc.defineParameter("name", "${name2}");
 		pc.defineParameter("name2", "FOONAME");
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("${name}", foo.getName());
 	}
@@ -101,9 +102,24 @@ class ParamTest {
 		p.setProperty("name2", "FOONAME");
 		pc.defineParameters(p);
 
-		Foo foo = (Foo) pc.getBean("foo");
+		Foo foo = pc.getBean("foo");
 		assertNotNull(foo);
 		assertEquals("FOONAME", foo.getName());
+	}
+
+	@Test
+	void testInjectedParams() {
+		final PetiteContainer pc = new PetiteContainer();
+		pc.registerPetiteBean(Val.class, null, null, null, false, null);
+		pc.config().setImplicitParamInjection(false);
+
+		pc.defineParameter("someValue", "173");
+		pc.defineParameter("jodd.is.cool", "yes!");
+
+		Val val = pc.getBean("val");
+		assertNotNull(val);
+		assertEquals("{foo=173,hello='yes!'}", val.toString());
+
 	}
 
 }
