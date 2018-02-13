@@ -30,10 +30,12 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.petite.def.ParamInjectionPoint;
+import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.meta.PetiteValue;
 import jodd.util.PropertiesUtil;
 import jodd.util.StringPool;
+import jodd.util.template.ContextTemplateParser;
+import jodd.util.template.MapTemplateParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,9 +48,11 @@ import java.util.Map;
 public class ParamManager {
 
 	protected final Map<String, Object> params;
+	protected final ContextTemplateParser contextTemplateParser;
 
 	public ParamManager() {
 		params = new HashMap<>();
+		contextTemplateParser =  new MapTemplateParser().of(params);
 	}
 
 	/**
@@ -64,6 +68,10 @@ public class ParamManager {
 	 */
 	public Object get(final String name) {
 		return params.get(name);
+	}
+
+	public String parseKeyTemplate(final String input) {
+		return contextTemplateParser.parse(input);
 	}
 
 	/**
@@ -94,10 +102,10 @@ public class ParamManager {
 		}
 	}
 
-	public ParamInjectionPoint[] resolveParamInjectionPoints(final Object bean) {
+	public ValueInjectionPoint[] resolveParamInjectionPoints(final Object bean) {
 		final ClassDescriptor cd = ClassIntrospector.get().lookup(bean.getClass());
 
-		final List<ParamInjectionPoint> paramInjectionPointList = new ArrayList<>();
+		final List<ValueInjectionPoint> valueInjectionPointList = new ArrayList<>();
 
 		for (final PropertyDescriptor pd : cd.getAllPropertyDescriptors()) {
 			final FieldDescriptor fd = pd.getFieldDescriptor();
@@ -106,7 +114,7 @@ public class ParamManager {
 				final PetiteValue petiteValue = fd.getField().getAnnotation(PetiteValue.class);
 
 				if (petiteValue != null) {
-					paramInjectionPointList.add(new ParamInjectionPoint(pd.getName(), petiteValue.value()));
+					valueInjectionPointList.add(new ValueInjectionPoint(pd.getName(), petiteValue.value()));
 					continue;
 				}
 			}
@@ -116,13 +124,13 @@ public class ParamManager {
 				final PetiteValue petiteValue = md.getMethod().getAnnotation(PetiteValue.class);
 
 				if (petiteValue != null) {
-					paramInjectionPointList.add(new ParamInjectionPoint(pd.getName(), petiteValue.value()));
+					valueInjectionPointList.add(new ValueInjectionPoint(pd.getName(), petiteValue.value()));
 					continue;
 				}
 			}
 		}
 
-		return paramInjectionPointList.toArray(new ParamInjectionPoint[paramInjectionPointList.size()]);
+		return valueInjectionPointList.toArray(new ValueInjectionPoint[valueInjectionPointList.size()]);
 	}
 
 }

@@ -29,12 +29,12 @@ import jodd.petite.meta.PetiteValue;
 
 public class Val {
 
-	@PetiteValue("someValue")
+	@PetiteValue("${someValue}")
 	private Integer foo;
 
 	private String hello;
 
-	@PetiteValue("jodd.is.cool")
+	@PetiteValue("WOO-${jodd.is.cool}${someValue}")
 	public void setHello(String hello) {
 		this.hello = hello;
 	}

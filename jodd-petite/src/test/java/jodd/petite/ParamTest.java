@@ -118,7 +118,7 @@ class ParamTest {
 
 		Val val = pc.getBean("val");
 		assertNotNull(val);
-		assertEquals("{foo=173,hello='yes!'}", val.toString());
+		assertEquals("{foo=173,hello='WOO-yes!173'}", val.toString());
 
 	}
 

@@ -25,13 +25,13 @@
 
 package jodd.petite.def;
 
-public class ParamInjectionPoint {
+public class ValueInjectionPoint {
 
 	public final String property;
-	public final String key;
+	public final String valueTemplate;
 
-	public ParamInjectionPoint(final String property, final String key) {
+	public ValueInjectionPoint(final String property, final String valueTemplate) {
 		this.property = property;
-		this.key = key;
+		this.valueTemplate = valueTemplate;
 	}
 }

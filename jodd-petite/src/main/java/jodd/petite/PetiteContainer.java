@@ -32,10 +32,10 @@ import jodd.log.LoggerFactory;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.InitMethodPoint;
 import jodd.petite.def.MethodInjectionPoint;
-import jodd.petite.def.ParamInjectionPoint;
 import jodd.petite.def.PropertyInjectionPoint;
 import jodd.petite.def.ProviderDefinition;
 import jodd.petite.def.SetInjectionPoint;
+import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
@@ -305,15 +305,16 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		// explicit
-		if (def.paramsInjections == null) {
-			def.paramsInjections = paramManager.resolveParamInjectionPoints(bean);
+		if (def.values == null) {
+			def.values = paramManager.resolveParamInjectionPoints(bean);
 		}
-		for (final ParamInjectionPoint pip : def.paramsInjections) {
-			final Object value = getParameter(pip.key);
+		for (final ValueInjectionPoint pip : def.values) {
+			final String value = paramManager.parseKeyTemplate(pip.valueTemplate);
+
 			try {
 				BeanUtil.declared.setProperty(bean, pip.property, value);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to set value for: '" + pip.key + "' to bean: " + def.name, ex);
+				throw new PetiteException("Unable to set value for: '" + pip.valueTemplate + "' to bean: " + def.name, ex);
 			}
 		}
 
