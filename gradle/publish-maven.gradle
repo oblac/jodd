@@ -24,7 +24,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 signing {
-	required { isRelease && project.hasProperty('JODD_ADMIN') }
+	required { isAdminRelease }
 	sign configurations.archives
 }
 
@@ -38,28 +38,30 @@ publishing {
 			artifact sourcesJar
 			artifact javadocJar
 
-			// sign the pom
-			pom.withXml {
-				def pomFile = file("${project.buildDir}/generated-pom.xml")
-				writeTo(pomFile)
-				def pomAscFile = signing.sign(pomFile).signatureFiles[0]
-				artifact(pomAscFile) {
-					classifier = null
-					extension = 'pom.asc'
-				}
-				pomFile.delete()
-			}
-
-			// sign the artifacts
-			project.tasks.signArchives.signatureFiles.each {
-				artifact(it) {
-					def matcher = it.file =~ /-(sources|javadoc|jre9)\.jar\.asc$/
-					if (matcher.find()) {
-						classifier = matcher.group(1)
-					} else {
+			if (isAdminRelease) {
+				// sign the pom
+				pom.withXml {
+					def pomFile = file("${project.buildDir}/generated-pom.xml")
+					writeTo(pomFile)
+					def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+					artifact(pomAscFile) {
 						classifier = null
+						extension = 'pom.asc'
 					}
-					extension = 'jar.asc'
+					pomFile.delete()
+				}
+
+				// sign the artifacts
+				project.tasks.signArchives.signatureFiles.each {
+					artifact(it) {
+						def matcher = it.file =~ /-(sources|javadoc|jre9)\.jar\.asc$/
+						if (matcher.find()) {
+							classifier = matcher.group(1)
+						} else {
+							classifier = null
+						}
+						extension = 'jar.asc'
+					}
 				}
 			}
 		}
@@ -67,7 +69,7 @@ publishing {
 	repositories {
 		maven {
 			url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-			if (project.hasProperty('JODD_ADMIN')) {
+			if (isAdminRelease) {
 				credentials {
 					username sonatypeUsername
 					password sonatypePassword

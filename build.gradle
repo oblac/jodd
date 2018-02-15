@@ -108,6 +108,7 @@ allprojects {
 	ext.isRelease = !version.contains("-")
 	ext.isSnapshot = !ext.isRelease
 	ext.isSubproject = project.parent != null
+	ext.isAdminRelease = ext.isRelease && project.hasProperty('JODD_ADMIN')
 
 	repositories {
 		mavenCentral()
