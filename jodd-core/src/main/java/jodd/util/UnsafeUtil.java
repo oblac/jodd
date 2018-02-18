@@ -61,7 +61,7 @@ public class UnsafeUtil {
 			return null;
 		}
 
-		if (!HAS_UNSAFE || !JODD_CORE_DEFAULTS.isUnsafeUsed()) {
+		if (!HAS_UNSAFE || !JODD_CORE_DEFAULTS.isUnsafeUsageEnabled()) {
 			return string.toCharArray();
 		}
 
