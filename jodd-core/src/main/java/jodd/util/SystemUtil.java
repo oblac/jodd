@@ -70,13 +70,27 @@ public class SystemUtil {
 
 	// ---------------------------------------------------------------- unsafe
 
-	private static final boolean HAS_UNSAFE = hasUnsafe0();
+	private static boolean HAS_UNSAFE = hasUnsafe0();
 
 	/**
-	 * Returns <code>true</code> if system has the <code>Unsafe</code>.
+	 * Returns <code>true</code> if system has the <code>Unsafe</code> enabled.
 	 */
 	public static boolean hasUnsafe() {
 		return HAS_UNSAFE;
+	}
+
+	/**
+	 * Disables usage of <code>Unsafe</code>.
+	 */
+	public static void disableUnsafeUsage() {
+		HAS_UNSAFE = false;
+	}
+
+	/**
+	 * Enables usage of Unsafe, if system has it.
+	 */
+	public static void enableUnsafeUsage() {
+		HAS_UNSAFE = hasUnsafe0();
 	}
 
 	private static boolean hasUnsafe0() {
