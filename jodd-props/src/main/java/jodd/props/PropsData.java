@@ -187,6 +187,7 @@ public class PropsData implements Cloneable {
 
 	/**
 	 * Lookup props value through profiles and base properties.
+	 * Returns {@code null} if value not found.
 	 */
 	protected String lookupValue(final String key, final String... profiles) {
 		if (profiles != null) {

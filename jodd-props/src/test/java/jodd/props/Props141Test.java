@@ -25,6 +25,7 @@
 
 package jodd.props;
 
+import jodd.util.StringPool;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -54,9 +55,9 @@ class Props141Test extends BasePropsTest {
 		props.load(data);
 
 		// Without profile, and using ERROR profile
-		assertEquals("NOT AN ERROR 1", props.getValue("code", null));
-		assertEquals("NOT AN ERROR 2", props.getValue("label", null));
-		assertEquals("NOT AN ERROR 3", props.getValue("details", null));
+		assertEquals("NOT AN ERROR 1", props.getValue("code", StringPool.EMPTY));
+		assertEquals("NOT AN ERROR 2", props.getValue("label", StringPool.EMPTY));
+		assertEquals("NOT AN ERROR 3", props.getValue("details", StringPool.EMPTY));
 
 		assertEquals("#UNDEFINED", props.getValue("code", "ERROR"));
 		assertEquals("UNDEFINED LABEL", props.getValue("label", "ERROR"));

@@ -335,42 +335,113 @@ public class Props implements Cloneable {
 	 */
 	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
 	public String getBaseValue(final String key) {
-		return getValue(key, null);
+		return getValue(key, StringPool.EMPTY_ARRAY);
 	}
 
 	/**
-	 * Returns value of property, using active profiles.
+	 * Returns value of property, using active profiles, or {@code null} if property not found.
 	 */
 	public String getValue(final String key) {
 		initialize();
 		return data.lookupValue(key, activeProfiles);
 	}
 
+	/**
+	 * Returns value of property, using active profiles or default value if not found.
+	 */
+	public String getValueOrDefault(final String key, final String defaultValue) {
+		initialize();
+		final String value = data.lookupValue(key, activeProfiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value;
+	}
+
+	/**
+	 * Returns integer value of given property or {@code null} if property not found.
+	 */
 	public Integer getIntegerValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
 		}
 		return Integer.valueOf(value);
 	}
+
+	/**
+	 * Returns integer value or default one if property not defined.
+	 */
+	public Integer getIntegerValue(final String key, final Integer defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Integer.valueOf(value);
+	}
+
+	/**
+	 * Returns long value of given property or {@code null} if property not found.
+	 */
 	public Long getLongValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
 		}
 		return Long.valueOf(value);
 	}
+
+	/**
+	 * Returns long value or default one if property not defined.
+	 */
+	public Long getLongValue(final String key, final Long defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Long.valueOf(value);
+	}
+
+	/**
+	 * Returns double value of given property or {@code null} if property not found.
+	 */
 	public Double getDoubleValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
 		}
 		return Double.valueOf(value);
 	}
+
+	/**
+	 * Returns double value or default one if property not defined.
+	 */
+	public Double getDoubleValue(final String key, final Double defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Double.valueOf(value);
+	}
+
+	/**
+	 * Returns boolean value of given property or {@code null} if property not found.
+	 */
 	public Boolean getBooleanValue(final String key) {
-		String value = getValue(key);
+		final String value = getValue(key);
 		if (value == null) {
 			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+
+	/**
+	 * Returns boolean value or default one if property not defined.
+	 */
+	public Boolean getBooleanValue(final String key, final Boolean defaultValue) {
+		final String value = getValue(key);
+		if (value == null) {
+			return defaultValue;
 		}
 		return Boolean.valueOf(value);
 	}
@@ -386,30 +457,58 @@ public class Props implements Cloneable {
 	}
 
 	public Integer getIntegerValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
 		}
 		return Integer.valueOf(value);
 	}
+	public Integer getIntegerValue(final String key, final Integer defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Integer.valueOf(value);
+	}
 	public Long getLongValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
 		}
 		return Long.valueOf(value);
 	}
+	public Long getLongValue(final String key, final Long defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Long.valueOf(value);
+	}
 	public Double getDoubleValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
 		}
 		return Double.valueOf(value);
 	}
+	public Double getDoubleValue(final String key, final Double defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Double.valueOf(value);
+	}
 	public Boolean getBooleanValue(final String key, final String... profiles) {
-		String value = getValue(key, profiles);
+		final String value = getValue(key, profiles);
 		if (value == null) {
 			return null;
+		}
+		return Boolean.valueOf(value);
+	}
+	public Boolean getBooleanValue(final String key, final Boolean defaultValue, final String... profiles) {
+		final String value = getValue(key, profiles);
+		if (value == null) {
+			return defaultValue;
 		}
 		return Boolean.valueOf(value);
 	}
