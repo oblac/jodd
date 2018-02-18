@@ -11,10 +11,13 @@
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/oblac/jodd.svg?style=social)](https://twitter.com/intent/tweet?text=Hey,@joddorg%20is%20cool!&url=%5Bobject%20Object%5D)
 [![Help Contribute to Open Source](https://www.codetriage.com/oblac/jodd/badges/users.svg)](https://www.codetriage.com/oblac/jodd)
 
+
+> We want to inspire the world to create. To use tech skills and build something truly... Awesome. Beautiful. Helpful. Changing. Now you are free to code lightweight and focus to unleash your potential. Jodd is set of developer friendly and open-source Java micro-frameworks; designed to make things simple, but not simpler.
+
 + Official web site (site & documentation): https://jodd.org
-+ GitHub page (5 min overview): https://oblac.github.io/jodd
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
 + One-page love: https://jodd.org/about
++ GitHub page (5 min overview): https://oblac.github.io/jodd
 + Talk with us at [gitter](https://gitter.im/oblac/jodd)!
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
