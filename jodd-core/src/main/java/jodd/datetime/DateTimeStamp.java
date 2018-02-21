@@ -167,11 +167,12 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
      *
-     * @param o the Object to be compared.
-     * @return a negative integer, zero, or a positive integer as this object
-     * is less than, equal to, or greater than the specified object.
+     * @param   o the Object to be compared.
+     * @return  a negative integer, zero, or a positive integer as this object
+     *		is less than, equal to, or greater than the specified object.
+     *
      * @throws ClassCastException if the specified object's type prevents it
-     *                            from being compared to this Object.
+     *         from being compared to this Object.
      */
     @Override
     public int compareTo(final Object o) {
@@ -258,7 +259,7 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
             return true;
         }
         DateTimeStamp stamp = (DateTimeStamp) object;
-        return (stamp.year == this.year) &&
+        return  (stamp.year == this.year) &&
                 (stamp.month == this.month) &&
                 (stamp.day == this.day) &&
                 (stamp.hour == this.hour) &&
