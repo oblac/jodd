@@ -232,7 +232,8 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
     }
 
     /**
-     * Simple to string conversion using provided character. for example : y(dateConnector)m(dateConnector)d(midConnector)h(timeConnector)m(timeConnector)m(millisecondConnector)s
+     * Simple to string conversion using provided character.
+     * example : y(dateConnector)m(dateConnector)d(midConnector)h(timeConnector)m(timeConnector)m(millisecondConnector)s
      *
      * @param dateConnector        connect data's connector
      * @param timeConnector        connect time's connector
@@ -240,7 +241,8 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
      * @param midConnector         connect date and time connector
      * @return date/time string using provided character format
      */
-    public String toString(final String dateConnector, final String timeConnector, final String millisecondConnector, final String midConnector) {
+    public String toString(final String dateConnector, final String timeConnector, final String millisecondConnector,
+                           final String midConnector) {
 
         return new StringBand().append(year).append(dateConnector).append(month)
                 .append(dateConnector).append(day).append(midConnector).append(hour).append(timeConnector)
