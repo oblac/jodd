@@ -27,13 +27,16 @@ package jodd.util;
 import jodd.exception.SignatureCannotBeNullException;
 
 /**
- * MD5Util
+ * MD5Util.
  * @author zhangxin
  */
 public class MD5Util {
 
+    private MD5Util() {
+    }
+
     /**
-     * MD5 encrypts function
+     * MD5 encrypts function.
      *
      * @param message the character string will be encrypt
      * @return encrypt result
@@ -52,8 +55,7 @@ public class MD5Util {
      * @return compare result
      */
     public static boolean encode(String str, String signature) throws SignatureCannotBeNullException {
-        if (signature==null||"".equals(signature))
-        {
+        if (signature == null||"".equals(signature)) {
             throw new SignatureCannotBeNullException("The signature mustn't be null or none string");
         }
         return encode(str).equals(signature);

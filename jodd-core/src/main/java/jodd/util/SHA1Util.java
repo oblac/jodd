@@ -29,10 +29,13 @@ import jodd.exception.SignatureCannotBeNullException;
 import java.util.Arrays;
 
 /**
- * SHA1Util
+ * SHA1Util.
  * @author zhangxin
  */
 public class SHA1Util {
+
+    private SHA1Util() {
+    }
 
     /**
      * SHA1 encrypts function, which determines whether the incoming parameters are sorted in the dictionary order
@@ -42,7 +45,7 @@ public class SHA1Util {
      * @param flag the content need sort by dictionary order or not
      * @return the encrypt result
      */
-    public static String encode(String[] str,boolean flag) {
+    public static String encode(String[] str, boolean flag) {
         if (flag) {
             // 字典序排序
             Arrays.sort(str);
@@ -65,12 +68,11 @@ public class SHA1Util {
      * @param signature the signature message
      * @return compare result
      */
-    public static boolean encode(String[] str,boolean flag,String signature) throws SignatureCannotBeNullException {
-        if (signature==null||"".equals(signature))
-        {
+    public static boolean encode(String[] str, boolean flag, String signature) throws SignatureCannotBeNullException {
+        if (signature == null||"".equals(signature)) {
             throw new SignatureCannotBeNullException("The signature mustn't be null or none string");
         }
-        return encode(str,flag).equals(signature);
+        return encode(str, flag).equals(signature);
     }
 
 

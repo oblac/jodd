@@ -25,7 +25,7 @@
 package jodd.exception;
 
 /**
- * SignatureCannotBeNullException
+ * SignatureCannotBeNullException.
  * @author zhangxin
  */
 public class SignatureCannotBeNullException extends IllegalArgumentException {

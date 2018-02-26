@@ -27,12 +27,15 @@ package jodd.util;
 import java.security.MessageDigest;
 
 /**
- * The common sign util
+ * The common sign util.
  * @author zhangxin
  */
 public class SignUtil {
 
-    private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    private SignUtil() {
+    }
+
+    private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'a', 'b', 'c', 'd', 'e', 'f' };
 
     /**
