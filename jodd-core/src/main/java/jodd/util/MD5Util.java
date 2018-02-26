@@ -30,7 +30,7 @@ import jodd.exception.SignatureCannotBeNullException;
  * MD5Util.
  * @author zhangxin
  */
-public class MD5Util {
+public final class MD5Util {
 
     private MD5Util() {
     }
@@ -55,7 +55,7 @@ public class MD5Util {
      * @return compare result
      */
     public static boolean encode(String str, String signature) throws SignatureCannotBeNullException {
-        if (signature == null||"".equals(signature)) {
+        if (signature == null || "".equals(signature)) {
             throw new SignatureCannotBeNullException("The signature mustn't be null or none string");
         }
         return encode(str).equals(signature);

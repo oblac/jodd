@@ -32,7 +32,7 @@ import java.util.Arrays;
  * SHA1Util.
  * @author zhangxin
  */
-public class SHA1Util {
+public final class SHA1Util {
 
     private SHA1Util() {
     }
@@ -69,7 +69,7 @@ public class SHA1Util {
      * @return compare result
      */
     public static boolean encode(String[] str, boolean flag, String signature) throws SignatureCannotBeNullException {
-        if (signature == null||"".equals(signature)) {
+        if (signature == null || "".equals(signature)) {
             throw new SignatureCannotBeNullException("The signature mustn't be null or none string");
         }
         return encode(str, flag).equals(signature);

@@ -30,7 +30,7 @@ import java.security.MessageDigest;
  * The common sign util.
  * @author zhangxin
  */
-public class SignUtil {
+public final class SignUtil {
 
     private SignUtil() {
     }
