@@ -12,7 +12,8 @@ Work-in-progress :thunder:
 + **json** - added `UUID` JSON type serializer.
 + **petite** - added `@PetiteValue` annotation for injecting parameters.
 + **petite** - added `implicitParamInjection` flag to enable/disable implicit injection.
-+ **props** - added optional default values when getting props. 
++ **props** - added optional default values when getting props.
++ **json** - added `PrettyJsonSerializer`! 
 
 ### Bug Fixes
 

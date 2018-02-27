@@ -36,6 +36,7 @@ import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
 
 /**
  * JSON serializer.
+ * @see PrettyJsonSerializer
  */
 public class JsonSerializer {
 
@@ -44,6 +45,13 @@ public class JsonSerializer {
 	 */
 	public static JsonSerializer create() {
 		return new JsonSerializer();
+	}
+
+	/**
+	 * Static ctor for {@link PrettyJsonSerializer}.
+	 */
+	public static PrettyJsonSerializer createPrettyOne() {
+		return new PrettyJsonSerializer();
 	}
 
 	// ---------------------------------------------------------------- config
