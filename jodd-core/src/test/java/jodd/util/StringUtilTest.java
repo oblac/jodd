@@ -966,7 +966,7 @@ class StringUtilTest {
 		try {
 			assertEquals("123", StringUtil.convertCharset("123", "yyy", "xxx"));
 			fail("error");
-		} catch (IllegalArgumentException e) {
+		} catch (RuntimeException e) {
 			// ignore
 		}
 	}
