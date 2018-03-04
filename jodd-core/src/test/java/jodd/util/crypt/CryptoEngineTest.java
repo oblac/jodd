@@ -25,48 +25,29 @@
 
 package jodd.util.crypt;
 
-import jodd.util.MathUtil;
-import jodd.util.RandomString;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ThreefishTest {
+class CryptoEngineTest {
 
-	Threefish threefish;
+	@Test
+	void testThreefish() {
+		CryptoEngine cryptoEngine = CryptoEngine.threefish("PASSWORD");
 
-	@BeforeEach
-	void setUp() {
-		threefish = new Threefish(Threefish.BLOCK_SIZE_BITS_1024);
-		threefish.init("This is a key message and I feel good", 0x1122334455667788L, 0xFF00FF00AABB9933L);
+		byte[] encrypted = cryptoEngine.encryptString("Jodd");
 
+		assertEquals("Jodd", cryptoEngine.decryptString(encrypted));
 	}
 
 	@Test
-	void testSimple() {
-		String message = "Threefish!";
-		byte[] encrypted = threefish.encryptString(message);
-		String message2 = threefish.decryptString(encrypted);
-		assertEquals(message, message2);
+	void testSymmetrical() {
+		CryptoEngine cryptoEngine = CryptoEngine.pbe3des("PASSWORD");
 
-		message = "Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!";
-		encrypted = threefish.encryptString(message);
-		message2 = threefish.decryptString(encrypted);
+		byte[] encrypted = cryptoEngine.encryptString("Jodd");
 
-		assertEquals(message, message2);
+		assertEquals("Jodd", cryptoEngine.decryptString(encrypted));
 	}
 
-	@Test
-	void testLoop() {
 
-		long reps = 10000;
-		while (reps-- > 0) {
-			String s = RandomString.getInstance().randomAscii(MathUtil.randomInt(1, 1024));
-			byte[] encrypted = threefish.encryptString(s);
-			String s2 = threefish.decryptString(encrypted);
-			assertEquals(s, s2);
-		}
-
-	}
 }

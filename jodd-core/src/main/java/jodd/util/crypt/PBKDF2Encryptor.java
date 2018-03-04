@@ -31,49 +31,48 @@ import jodd.util.StringUtil;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-import java.security.spec.AlgorithmParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.AlgorithmParameters;
+import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 
 import static jodd.util.StringPool.UTF_8;
 
 /**
- * Simple symmetric de/encryptor that uses PBE With MD5 And Triple DES.
+ * Symmetric de/encryptor that uses PBE With MD5 And Triple DES.
+ * <b>Note: Requires Java8 u151</b> or installed <i>Unlimited Strength Jurisdiction Policy Files</i>.
  */
-public class SymmetricEncryptor {
+public class PBKDF2Encryptor {
 
 	protected final Cipher ecipher;
 	protected final Cipher dcipher;
 	protected final int iterationCount;
 
-	protected static final byte[] defaultSalt = {
-			(byte) 0xBA, (byte) 0xC7, (byte) 0x17, (byte) 0x31,
-			(byte) 0xBE, (byte) 0x7E, (byte) 0x73, (byte) 0xFF
-	};
-
-	private static final String ALGORITHM = "PBEWithMD5AndTripleDES";
-
-	public SymmetricEncryptor(final String passPhrase) {
-		this(passPhrase, defaultSalt, 19);
+	public PBKDF2Encryptor(final String passPhrase) {
+		this(passPhrase, SecureRandom.getSeed(8), 65536, 256);
 	}
 
-	public SymmetricEncryptor(final String passPhrase, final byte[] salt, final int iterationCount) {
+	public PBKDF2Encryptor(final String passPhrase, final byte[] salt, final int iterationCount, final int i1) {
 		this.iterationCount = iterationCount;
 		try {
 			// create the key
-			KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount);
-			SecretKey key = SecretKeyFactory.getInstance(ALGORITHM).generateSecret(keySpec);
-			ecipher = Cipher.getInstance(key.getAlgorithm());
-			dcipher = Cipher.getInstance(key.getAlgorithm());
+			KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount, i1);
+			SecretKey tmp = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(keySpec);
+			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 
-			// prepare the parameter to the ciphers
-			AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, iterationCount);
+			// encryptor
+			ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			ecipher.init(Cipher.ENCRYPT_MODE, secret);
+			AlgorithmParameters params = ecipher.getParameters();
+			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 
-			// create the ciphers
-			ecipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
-			dcipher.init(Cipher.DECRYPT_MODE, key, paramSpec);
-		} catch (Exception ex) {
+			// decryptor
+			dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			dcipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+		}
+		catch (Exception ex) {
 			throw new IllegalArgumentException(ex);
 		}
 	}
@@ -91,6 +90,14 @@ public class SymmetricEncryptor {
 		}
 	}
 
+	public byte[] encrypt(final byte[] input) {
+		try {
+			return ecipher.doFinal(input);
+		} catch (Throwable ignore) {
+			return null;
+		}
+	}
+
 	/**
 	 * Symmetrically decrypts the string.
 	 */
@@ -100,6 +107,14 @@ public class SymmetricEncryptor {
 			byte[] dec = Base64.decode(str);    	// decode base64 to get bytes
 			byte[] utf8 = dcipher.doFinal(dec);     // decrypt
 			return new String(utf8, UTF_8);			// decode using utf-8
+		} catch (Throwable ignore) {
+			return null;
+		}
+	}
+
+	public byte[] decrypt(final byte[] bytes) {
+		try {
+			return dcipher.doFinal(bytes);
 		} catch (Throwable ignore) {
 			return null;
 		}

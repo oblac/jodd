@@ -25,48 +25,61 @@
 
 package jodd.util.crypt;
 
-import jodd.util.MathUtil;
-import jodd.util.RandomString;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import jodd.util.StringUtil;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * Symmetric encryption engines.
+ */
+public interface CryptoEngine {
 
-class ThreefishTest {
+	/**
+	 * Creates new encryptor.
+	 */
+	public static CryptoEngine pbe3des(final String password) {
+		final PBKDF2Encryptor PBKDF2Encryptor = new PBKDF2Encryptor(password);
 
-	Threefish threefish;
+		return new CryptoEngine() {
+			@Override
+			public byte[] encryptString(final String input) {
+				return PBKDF2Encryptor.encrypt(StringUtil.getBytes(input));
+			}
 
-	@BeforeEach
-	void setUp() {
-		threefish = new Threefish(Threefish.BLOCK_SIZE_BITS_1024);
-		threefish.init("This is a key message and I feel good", 0x1122334455667788L, 0xFF00FF00AABB9933L);
-
+			@Override
+			public String decryptString(final byte[] encryptedContent) {
+				return StringUtil.ofBytes(PBKDF2Encryptor.decrypt(encryptedContent));
+			}
+		};
 	}
 
-	@Test
-	void testSimple() {
-		String message = "Threefish!";
-		byte[] encrypted = threefish.encryptString(message);
-		String message2 = threefish.decryptString(encrypted);
-		assertEquals(message, message2);
+	/**
+	 * Creates new {@link Threefish} encryptor.
+	 */
+	public static CryptoEngine threefish(String password) {
+		final Threefish threefish = new Threefish(512);
+		threefish.init(password, 0x1122334455667788L, 0xFF00FF00AABB9933L);
 
-		message = "Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!";
-		encrypted = threefish.encryptString(message);
-		message2 = threefish.decryptString(encrypted);
+		return new CryptoEngine() {
+			@Override
+			public byte[] encryptString(final String input) {
+				return threefish.encryptString(input);
+			}
 
-		assertEquals(message, message2);
+			@Override
+			public String decryptString(final byte[] encryptedContent) {
+				return threefish.decryptString(encryptedContent);
+			}
+		};
 	}
 
-	@Test
-	void testLoop() {
 
-		long reps = 10000;
-		while (reps-- > 0) {
-			String s = RandomString.getInstance().randomAscii(MathUtil.randomInt(1, 1024));
-			byte[] encrypted = threefish.encryptString(s);
-			String s2 = threefish.decryptString(encrypted);
-			assertEquals(s, s2);
-		}
+	/**
+	 * Encrypts the input string.
+	 */
+	public byte[] encryptString(String input);
 
-	}
+	/**
+	 * Decrypts the encrypted content to string.
+	 */
+	public String decryptString(byte[] encryptedContent);
+
 }
