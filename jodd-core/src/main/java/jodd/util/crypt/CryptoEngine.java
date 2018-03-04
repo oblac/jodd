@@ -46,7 +46,7 @@ public interface CryptoEngine {
 
 			@Override
 			public String decryptString(final byte[] encryptedContent) {
-				return StringUtil.ofBytes(PBKDF2Encryptor.decrypt(encryptedContent));
+				return StringUtil.newString(PBKDF2Encryptor.decrypt(encryptedContent));
 			}
 		};
 	}

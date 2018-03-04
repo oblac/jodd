@@ -25,10 +25,8 @@
 
 package jodd.util.crypt;
 
-import jodd.core.JoddCore;
 import jodd.util.StringUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 
 /**
@@ -101,11 +99,8 @@ public interface DigestEngine {
 	 * Returns byte-hash of input string.
 	 */
 	public default byte[] digest(final String input) {
-		try {
-			return digest(input.getBytes(JoddCore.get().defaults().getEncoding()));
-		} catch (UnsupportedEncodingException uneex) {
-			throw new RuntimeException(uneex);
-		}
+		return digest(StringUtil.getBytes(input));
+
 	}
 
 	/**

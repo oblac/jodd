@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
@@ -194,15 +193,11 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 		byte[] content = buffer.toByteArray();
 		String encoding = getContentTypeEncoding();
 
-		try {
-			if (encoding == null) {
-				// assume default encoding
-				return CharUtil.toCharArray(content);
-			} else {
-				return CharUtil.toCharArray(content, encoding);
-			}
-		} catch (UnsupportedEncodingException ueex) {
-			throw new IllegalArgumentException(ueex);
+		if (encoding == null) {
+			// assume default encoding
+			return CharUtil.toCharArray(content);
+		} else {
+			return CharUtil.toCharArray(content, encoding);
 		}
 	}
 
@@ -222,15 +217,11 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 		char[] content = buffer.toCharArray();
 		String encoding = getContentTypeEncoding();
 
-		try {
-			if (encoding == null) {
-				// assume default encoding
-				return CharUtil.toByteArray(content);
-			} else {
-				return CharUtil.toByteArray(content, encoding);
-			}
-		} catch (UnsupportedEncodingException ueex) {
-			throw new IllegalArgumentException(ueex);
+		if (encoding == null) {
+			// assume default encoding
+			return CharUtil.toByteArray(content);
+		} else {
+			return CharUtil.toByteArray(content, encoding);
 		}
 	}
 

@@ -25,9 +25,6 @@
 
 package jodd.util;
 
-import jodd.core.JoddCore;
-
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -145,19 +142,11 @@ public class Base64 {
 	// ---------------------------------------------------------------- byte
 
 	public static byte[] encodeToByte(final String s) {
-		try {
-			return encodeToByte(s.getBytes(JoddCore.get().defaults().getEncoding()), false);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return encodeToByte(StringUtil.getBytes(s), false);
 	}
 
 	public static byte[] encodeToByte(final String s, final boolean lineSep) {
-		try {
-			return encodeToByte(s.getBytes(JoddCore.get().defaults().getEncoding()), lineSep);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return encodeToByte(StringUtil.getBytes(s), lineSep);
 	}
 
 	public static byte[] encodeToByte(final byte[] arr) {
@@ -207,11 +196,7 @@ public class Base64 {
 	}
 
 	public static String decodeToString(final byte[] arr) {
-		try {
-			return new String(decode(arr), JoddCore.get().defaults().getEncoding());
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return StringUtil.newString(decode(arr));
 	}
 
 	/**
@@ -260,19 +245,11 @@ public class Base64 {
 	// ---------------------------------------------------------------- string
 
 	public static String encodeToString(final String s) {
-		try {
-			return new String(encodeToChar(s.getBytes(JoddCore.get().defaults().getEncoding()), false));
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return new String(encodeToChar(StringUtil.getBytes(s), false));
 	}
 
 	public static String encodeToString(final String s, final boolean lineSep) {
-		try {
-			return new String(encodeToChar(s.getBytes(JoddCore.get().defaults().getEncoding()), lineSep));
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return new String(encodeToChar(StringUtil.getBytes(s), lineSep));
 	}
 
 	public static String encodeToString(final byte[] arr) {
@@ -287,11 +264,7 @@ public class Base64 {
 	}
 
 	public static String decodeToString(final String s) {
-		try {
-			return new String(decode(s), JoddCore.get().defaults().getEncoding());
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return StringUtil.newString(decode(s));
 	}
 
 	/**

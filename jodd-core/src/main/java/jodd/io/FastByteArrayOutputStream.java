@@ -25,12 +25,12 @@
 
 package jodd.io;
 
+import jodd.util.StringUtil;
 import jodd.util.buffer.FastByteBuffer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * This class implements an {@link OutputStream} in which the data is
@@ -145,7 +145,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	/**
 	 * @see ByteArrayOutputStream#toString(String)
 	 */
-	public String toString(final String enc) throws UnsupportedEncodingException {
-		return new String(toByteArray(), enc);
+	public String toString(final String enc) {
+		return StringUtil.newString(toByteArray(), enc);
 	}
 }

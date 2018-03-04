@@ -25,6 +25,8 @@
 
 package jodd.util;
 
+import jodd.core.JoddCore;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -2353,11 +2355,7 @@ public class StringUtil {
 		if (srcCharsetName.equals(newCharsetName)) {
 			return source;
 		}
-		try {
-			return new String(source.getBytes(srcCharsetName), newCharsetName);
-		} catch (UnsupportedEncodingException unex) {
-			throw new IllegalArgumentException(unex);
-		}
+		return StringUtil.newString(StringUtil.getBytes(source, srcCharsetName), newCharsetName);
 	}
 
 	/**
@@ -3069,6 +3067,42 @@ public class StringUtil {
 			return StringPool.EMPTY;
 		}
 		return stringFunction.apply(input);
+	}
+
+
+	// ---------------------------------------------------------------- bytes
+
+	/**
+	 * Returns String bytes using Jodds default encoding.
+	 */
+	public static byte[] getBytes(final String string) {
+		try {
+			return string.getBytes(JoddCore.get().defaults().getEncoding());
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public static byte[] getBytes(final String string, final String charsetName) {
+		try {
+			return string.getBytes(charsetName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static String newString(final byte[] bytes) {
+		try {
+			return new String(bytes, JoddCore.get().defaults().getEncoding());
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	public static String newString(final byte[] bytes, final String charsetName) {
+		try {
+			return new String(bytes, charsetName);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

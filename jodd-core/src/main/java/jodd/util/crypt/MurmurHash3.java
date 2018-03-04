@@ -25,7 +25,7 @@
 
 package jodd.util.crypt;
 
-import java.io.UnsupportedEncodingException;
+import jodd.util.StringUtil;
 
 /**
  * MurmurHash3 128bits.
@@ -45,6 +45,7 @@ public class MurmurHash3 {
 			this.val2 = val2;
 		}
 
+		@Override
 		public String toString() {
 			return Long.toHexString(val1) + Long.toHexString(val2);
 		}
@@ -74,13 +75,8 @@ public class MurmurHash3 {
 	}
 
 	public static HashValue murmurhash3_x64_128(final String str, final int seed) {
-		try {
-			byte[] bytes = str.getBytes("UTF-8");
-			return murmurhash3_x64_128(bytes, 0, bytes.length, seed);
-		}
-		catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		byte[] bytes = StringUtil.getBytes(str);
+		return murmurhash3_x64_128(bytes, 0, bytes.length, seed);
 	}
 
 	/**

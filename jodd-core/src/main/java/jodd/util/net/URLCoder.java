@@ -27,9 +27,9 @@ package jodd.util.net;
 
 import jodd.core.JoddCore;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -189,12 +189,7 @@ public class URLCoder {
 			return null;
 		}
 
-		byte[] bytes;
-		try {
-			bytes = encodeBytes(source.getBytes(encoding), uriPart);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		byte[] bytes = encodeBytes(StringUtil.getBytes(source, encoding), uriPart);
 
 		char[] chars = new char[bytes.length];
 		for (int i = 0; i < bytes.length; i++) {

@@ -26,9 +26,9 @@
 package jodd.util.net;
 
 import jodd.core.JoddCore;
+import jodd.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * URL decoder.
@@ -102,11 +102,7 @@ public class URLDecoder {
 					bos.write(ch);
 			}
 		}
-		try {
-			return changed ? new String(bos.toByteArray(), encoding) : source;
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return changed ? StringUtil.newString(bos.toByteArray(), encoding) : source;
 	}
 
 }

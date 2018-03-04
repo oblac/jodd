@@ -26,12 +26,12 @@
 package jodd.io;
 
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -146,12 +146,7 @@ public class ZipBuilder {
 	// ---------------------------------------------------------------- add content
 
 	public AddContentToZip add(final String content) {
-		try {
-			return new AddContentToZip(content.getBytes(StringPool.UTF_8));
-		}
-		catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return new AddContentToZip(StringUtil.getBytes(content, StringPool.UTF_8));
 	}
 
 	public AddContentToZip add(final byte[] content) {

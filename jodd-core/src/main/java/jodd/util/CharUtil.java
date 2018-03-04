@@ -25,10 +25,6 @@
 
 package jodd.util;
 
-import jodd.core.JoddCore;
-
-import java.io.UnsupportedEncodingException;
-
 /**
  * Various character and character sequence utilities, including <code>char[]</code> - <code>byte[]</code> conversions.
  */
@@ -153,29 +149,29 @@ public class CharUtil {
 	/**
 	 * Converts char array to byte array using default Jodd encoding.
 	 */
-	public static byte[] toByteArray(final char[] carr) throws UnsupportedEncodingException {
-		return new String(carr).getBytes(JoddCore.get().defaults().getEncoding());
+	public static byte[] toByteArray(final char[] carr) {
+		return StringUtil.getBytes(new String(carr));
 	}
 
 	/**
 	 * Converts char array to byte array using provided encoding.  
 	 */
-	public static byte[] toByteArray(final char[] carr, final String charset) throws UnsupportedEncodingException {
-		return new String(carr).getBytes(charset);
+	public static byte[] toByteArray(final char[] carr, final String charset) {
+		return StringUtil.getBytes(new String(carr), charset);
 	}
 
 	/**
 	 * Converts byte array of default Jodd encoding to char array.
 	 */
-	public static char[] toCharArray(final byte[] barr) throws UnsupportedEncodingException {
-		return new String(barr, JoddCore.get().defaults().getEncoding()).toCharArray();
+	public static char[] toCharArray(final byte[] barr) {
+		return StringUtil.newString(barr).toCharArray();
 	}
 
 	/**
 	 * Converts byte array of specific encoding to char array.
 	 */
-	public static char[] toCharArray(final byte[] barr, final String charset) throws UnsupportedEncodingException {
-		return new String(barr, charset).toCharArray();
+	public static char[] toCharArray(final byte[] barr, final String charset) {
+		return StringUtil.newString(barr, charset).toCharArray();
 	}
 
 	// ---------------------------------------------------------------- find

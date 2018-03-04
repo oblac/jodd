@@ -27,8 +27,7 @@ package jodd.util.crypt;
 
 import jodd.util.Bits;
 import jodd.util.StringPool;
-
-import java.io.UnsupportedEncodingException;
+import jodd.util.StringUtil;
 
 /**
  * Threefish cipher.
@@ -419,7 +418,7 @@ public class Threefish extends BlockCipher {
 	public void init(final String keyMessage, final long tweak1, final long tweak2) {
 		long[] tweak = new long[] {tweak1, tweak2};
 		byte[] key = new byte[blockSize / Byte.SIZE];
-		byte[] keyData = getBytes(keyMessage);
+		byte[] keyData = StringUtil.getBytes(keyMessage);
 		System.arraycopy(keyData, 0, key, 0, key.length < keyData.length ? key.length : keyData.length);
 		init(bytesToLongs(key), tweak);
 	}
@@ -454,30 +453,18 @@ public class Threefish extends BlockCipher {
 	 * Encrypts a string.
 	 */
 	public byte[] encryptString(final String plain) {
-		return encrypt(getBytes(plain));
+		return encrypt(StringUtil.getBytes(plain));
 	}
 
 	/**
 	 * Decrypts a string.
 	 */
 	public String decryptString(final byte[] encrypted) {
-		try {
-			return new String(decrypt(encrypted), StringPool.UTF_8);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
+		return StringUtil.newString(decrypt(encrypted), StringPool.UTF_8);
 	}
 
 	// ---------------------------------------------------------------- util
 	
-	protected byte[] getBytes(final String string) {
-		try {
-			return string.getBytes(StringPool.UTF_8);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
-	}
-
 	protected static long[] bytesToLongs(final byte[] ba) {
 		return bytesToLongs(ba, 0, ba.length);
 	}

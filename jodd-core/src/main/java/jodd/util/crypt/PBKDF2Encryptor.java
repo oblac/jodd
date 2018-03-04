@@ -82,7 +82,7 @@ public class PBKDF2Encryptor {
 	 */
 	public String encrypt(final String str) {
 		try {
-			byte[] utf8 = str.getBytes(UTF_8);		// encode the string into bytes using utf-8
+			byte[] utf8 = StringUtil.getBytes(str);		// encode the string into bytes using utf-8
 			byte[] enc = ecipher.doFinal(utf8); 	// encrypt
 			return Base64.encodeToString(enc);		// encode bytes to base64 to get a string
 		} catch (Throwable ignore) {
