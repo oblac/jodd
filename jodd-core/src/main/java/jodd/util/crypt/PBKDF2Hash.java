@@ -25,16 +25,17 @@
 
 package jodd.util.crypt;
 
+import jodd.util.StringUtil;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 public class PBKDF2Hash {
 
-	public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+	private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA512";
 
 	private final int saltBytes;
 	private final int hashBytes;
@@ -80,7 +81,7 @@ public class PBKDF2Hash {
 		byte[] hash = pbkdf2(password, salt, pbkdf2Iterations, hashBytes);
 
 		// format iterations:salt:hash
-		return pbkdf2Iterations + ":" + toHex(salt) + ":" + toHex(hash);
+		return pbkdf2Iterations + ":" + StringUtil.toHexString(salt) + ":" + StringUtil.toHexString(hash);
 	}
 
 	/**
@@ -143,9 +144,8 @@ public class PBKDF2Hash {
 	 */
 	private static byte[] pbkdf2(final char[] password, final byte[] salt, final int iterations, final int bytes) {
 		PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
-		SecretKeyFactory skf = null;
 		try {
-			skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
+			SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
 			return skf.generateSecret(spec).getEncoded();
 		}
 		catch (NoSuchAlgorithmException ignore) {
@@ -163,27 +163,11 @@ public class PBKDF2Hash {
 	 * @return the hex string decoded into a byte array
 	 */
 	private static byte[] fromHex(final String hex) {
-		byte[] binary = new byte[hex.length() / 2];
+		final byte[] binary = new byte[hex.length() / 2];
 		for (int i = 0; i < binary.length; i++) {
 			binary[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
 		}
 		return binary;
-	}
-
-	/**
-	 * Converts a byte array into a hexadecimal string.
-	 *
-	 * @param array the byte array to convert
-	 * @return a length*2 character string encoding the byte array
-	 */
-	private static String toHex(final byte[] array) {
-		BigInteger bi = new BigInteger(1, array);
-		String hex = bi.toString(16);
-		int paddingLength = (array.length * 2) - hex.length();
-		if (paddingLength > 0) {
-			return String.format("%0" + paddingLength + "d", Integer.valueOf(0)) + hex;
-		}
-		return hex;
 	}
 
 }

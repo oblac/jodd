@@ -27,18 +27,22 @@ package jodd.util.crypt;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PBKDF2HashTest {
+class HashEngineTest {
 
 	@Test
-	void simpleTest() {
-		PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
-
-		String hash = pbkdf2Hash.createHash("secret");
-
-		assertFalse(pbkdf2Hash.validatePassword("bad", hash));
-		assertTrue(pbkdf2Hash.validatePassword("secret", hash));
+	void testBcrypt() {
+		HashEngine hashEngine = HashEngine.bcrypt(7);
+		String hash = hashEngine.hash("Jodd");
+		assertTrue(hashEngine.check("Jodd", hash));
 	}
+
+	@Test
+	void testPbk2() {
+		HashEngine hashEngine = HashEngine.pbk2();
+		String hash = hashEngine.hash("Jodd");
+		assertTrue(hashEngine.check("Jodd", hash));
+	}
+
 }

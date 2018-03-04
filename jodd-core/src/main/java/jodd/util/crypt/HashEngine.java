@@ -25,20 +25,63 @@
 
 package jodd.util.crypt;
 
-import org.junit.jupiter.api.Test;
+/**
+ * Hash engines.
+ */
+public interface HashEngine {
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class PBKDF2HashTest {
-
-	@Test
-	void simpleTest() {
-		PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
-
-		String hash = pbkdf2Hash.createHash("secret");
-
-		assertFalse(pbkdf2Hash.validatePassword("bad", hash));
-		assertTrue(pbkdf2Hash.validatePassword("secret", hash));
+	/**
+	 * Returns the {@link BCrypt} hash tool with given rounds number for salt generation.
+	 */
+	public static HashEngine bcrypt(final int rounds) {
+		return bcrypt(BCrypt.gensalt(rounds));
 	}
+
+	/**
+	 * Returns the {@link BCrypt} hash tool with given salt.
+	 */
+	public static HashEngine bcrypt(final String salt) {
+		return new HashEngine() {
+			@Override
+			public String hash(final String input) {
+				return BCrypt.hashpw(input, salt);
+			}
+
+			@Override
+			public boolean check(final String input, final String hash) {
+				return BCrypt.checkpw(input, hash);
+			}
+		};
+	}
+
+	/**
+	 * Returns PBK2DF2 hash.
+	 */
+	public static HashEngine pbk2() {
+		final PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
+
+		return new HashEngine() {
+			@Override
+			public String hash(final String input) {
+				return pbkdf2Hash.createHash(input);
+			}
+
+			@Override
+			public boolean check(final String input, final String hash) {
+				return pbkdf2Hash.validatePassword(input, hash);
+			}
+		};
+	}
+
+	/**
+	 * Creates a hash from the input string.
+	 */
+	public String hash(String input);
+
+	/**
+	 * Validates the input string with given hash. Returns {@code true}
+	 * if input matches the hash.
+	 */
+	public boolean check(String input, String hash);
+
 }

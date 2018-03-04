@@ -27,18 +27,27 @@ package jodd.util.crypt;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PBKDF2HashTest {
+class DigestEngineTest {
 
 	@Test
-	void simpleTest() {
-		PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
+	void testSha1() {
+		assertEquals("626B0566A836677FA85C6952417E704E727E336C", DigestEngine.sha1().digestString("Jodd"));
+	}
 
-		String hash = pbkdf2Hash.createHash("secret");
+	@Test
+	void testSha256() {
+		assertEquals("D5E94A2DD851E6E2A233EFA00CF26B385A933F26223B00757E189397F8B92530", DigestEngine.sha256().digestString("Jodd"));
+	}
 
-		assertFalse(pbkdf2Hash.validatePassword("bad", hash));
-		assertTrue(pbkdf2Hash.validatePassword("secret", hash));
+	@Test
+	void testSha512() {
+		assertEquals("ACF65B0C3DE891B2984F461FA12EF4DD205B2DE360F3C834A47368CBDD334687AB5E8405AA910DF8AC6B5631BF1F2CC5133B0D95493A40452EC5B984E4FC31E8", DigestEngine.sha512().digestString("Jodd"));
+	}
+
+	@Test
+	void testMD5() {
+		assertEquals("5513A194A0D3E46B8D90021B283BE791", DigestEngine.md5().digestString("Jodd"));
 	}
 }
