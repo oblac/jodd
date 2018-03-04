@@ -13,7 +13,12 @@ Work-in-progress :thunder:
 + **petite** - added `@PetiteValue` annotation for injecting parameters.
 + **petite** - added `implicitParamInjection` flag to enable/disable implicit injection.
 + **props** - added optional default values when getting props.
-+ **json** - added `PrettyJsonSerializer`! 
++ **json** - added `PrettyJsonSerializer`!
++ **core** - enabled unlimited crypto security (requires > Java8 u151)
++ **core** - added engines for digest, hashes and encryption 
++ **core** - `StringUtil` methods for conversion to and from `byte[]`.
+
+### Breaking changes
 
 ### Bug Fixes
 
