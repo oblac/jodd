@@ -29,6 +29,7 @@ import jodd.Jodd;
 import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 
+import java.security.Security;
 import java.util.Objects;
 
 /**
@@ -47,6 +48,11 @@ public class JoddCore {
 
 	static {
 		Jodd.initModule();
+
+		// Starting from Java8 u151, the `Unlimited Strength Jurisdiction Policy Files`
+		// are included with Java, but has to be enabled.
+		// They are enabled on Java9 by default.
+		Security.setProperty("crypto.policy", "unlimited");
 	}
 
 	public static void init() {}
