@@ -6,6 +6,10 @@ All notable changes to Jodd project are documented here.
 
 Work-in-progress :thunder:
 
+## [4.1.5](https://github.com/oblac/jodd/compare/v4.1.4...4.1.5)
+
+Like in every movie flick, having a nice release is always a good thing. Jodd is ready for an Oscar :) In this episode find some sweet addons.
+
 ### Features
 
 + **bean** - `UUID` type converter added.
@@ -17,8 +21,6 @@ Work-in-progress :thunder:
 + **core** - enabled unlimited crypto security (requires > Java8 u151)
 + **core** - added engines for digest, hashes and encryption 
 + **core** - `StringUtil` methods for conversion to and from `byte[]`.
-
-### Breaking changes
 
 ### Bug Fixes
 
