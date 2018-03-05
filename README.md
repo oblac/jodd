@@ -12,7 +12,7 @@
 [![Help Contribute to Open Source](https://www.codetriage.com/oblac/jodd/badges/users.svg)](https://www.codetriage.com/oblac/jodd)
 
 
-> We want to inspire the world to create. To use tech skills and build something truly... Awesome. Beautiful. Helpful. Changing. Now you are free to code lightweight and focus to unleash your potential. Jodd is set of developer friendly and open-source Java micro-frameworks; designed to make things simple, but not simpler.
+> We want to inspire the world to create. To use tech skills and build something truly... Awesome. Beautiful. Helpful. Impactful. Now you can produce lightweight code and focus on unleashing your full potential. Jodd is a set of developer-friendly and open-source Java micro-frameworks. It's designed to make things simple, but not simpler.
 
 + Official web site (site & documentation): https://jodd.org
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
