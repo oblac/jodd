@@ -30,7 +30,7 @@ import jodd.util.StringUtil;
 /**
  * Path to a property from JSON root.
  */
-public class Path {
+public final class Path implements Cloneable {
 
 	protected CharSequence[] paths = new CharSequence[8];
 	protected int index = 0;
@@ -60,6 +60,12 @@ public class Path {
 			System.arraycopy(fields, 0, paths, 0, fields.length);
 			index = fields.length;
 		}
+	}
+
+	private Path(CharSequence[] paths, int index, Path altPath) {
+		this.paths = paths;
+		this.index = index;
+		this.altPath = altPath;
 	}
 
 	/**
@@ -150,9 +156,11 @@ public class Path {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+
+		// correct, but aint gonna happen
+//		if (o == null || getClass() != o.getClass()) {
+//			return false;
+//		}
 
 		Path path1 = (Path) o;
 
@@ -186,4 +194,12 @@ public class Path {
 		return result;
 	}
 
+	@Override
+	public Path clone() {
+		CharSequence[] clonedPaths = new CharSequence[paths.length];
+
+		System.arraycopy(paths, 0, clonedPaths, 0, paths.length);
+
+		return new Path(clonedPaths, index, altPath != null ? altPath.clone() : null);
+	}
 }
