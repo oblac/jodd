@@ -50,7 +50,11 @@ public abstract class JsonParserBase {
 	protected static final Supplier<Map> HASMAP_SUPPLIER = HashMap::new;
 	protected static final Supplier<Map> LAZYMAP_SUPPLIER = LazyMap::new;
 
+	protected static final Supplier<List> ARRAYLIST_SUPPLIER = ArrayList::new;
+	protected static final Supplier<List> LAZYLIST_SUPPLIER = LazyList::new;
+
 	protected Supplier<Map> mapSupplier = HASMAP_SUPPLIER;
+	protected Supplier<List> listSupplier = ARRAYLIST_SUPPLIER;
 
 	/**
 	 * Creates new instance of {@link jodd.json.MapToBean}.
@@ -73,7 +77,7 @@ public abstract class JsonParserBase {
 			targetType == Collection.class ||
 			targetType.isArray()) {
 
-			return new ArrayList<>();
+			return listSupplier.get();
 		}
 
 		if (targetType == Set.class) {
