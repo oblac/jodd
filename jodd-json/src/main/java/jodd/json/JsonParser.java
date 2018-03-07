@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
 
@@ -50,6 +51,9 @@ import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
  * See: http://www.ietf.org/rfc/rfc4627.txt
  */
 public class JsonParser extends JsonParserBase {
+
+	private boolean lazy;
+	private boolean notFirstObject = false;
 
 	/**
 	 * Static ctor.
@@ -128,7 +132,9 @@ public class JsonParser extends JsonParserBase {
 	 * This way we gain some performances, especially on partial usage of the whole JSON.
 	 */
 	public JsonParser lazy(final boolean lazy) {
+		this.lazy = lazy;
 		this.mapSupplier = lazy ? LAZYMAP_SUPPLIER : HASMAP_SUPPLIER;
+		this.listSupplier = lazy ? LAZYLIST_SUPPLIER : ARRAYLIST_SUPPLIER;
 		return this;
 	}
 
@@ -339,6 +345,11 @@ public class JsonParser extends JsonParserBase {
 			return null;
 		}
 
+		if (lazy) {
+			// lets resolve root lazy values
+			value = resolveLazyValue(value);
+		}
+
 		// convert map to target type
 
 		if (classMetadataName != null && rootType == null) {
@@ -360,7 +371,7 @@ public class JsonParser extends JsonParserBase {
 	 * @param componentType component type for maps and arrays, may be <code>null</code>
 	 */
 	protected Object parseValue(final Class targetType, final Class keyType, final Class componentType) {
-		ValueConverter valueConverter;
+		final ValueConverter valueConverter;
 
 		char c = input[ndx];
 
@@ -385,6 +396,19 @@ public class JsonParser extends JsonParserBase {
 
 			case '{':
 				ndx++;
+				if (lazy) {
+					if (notFirstObject) {
+						final Object value = new ObjectParser(this, targetType, keyType, componentType);
+
+						skipObject();
+
+						return value;
+					}
+					else {
+						notFirstObject = true;
+					}
+				}
+
 				return parseObjectContent(targetType, keyType, componentType);
 
 			case '[':
@@ -477,6 +501,53 @@ public class JsonParser extends JsonParserBase {
 
 		syntaxError("Invalid char: " + input[ndx]);
 		return null;
+	}
+
+
+	// ---------------------------------------------------------------- lazy
+
+	/**
+	 * Resolves lazy value during the parsing runtime.
+	 */
+	private Object resolveLazyValue(Object value) {
+		if (value instanceof Supplier) {
+			value = ((Supplier)value).get();
+		}
+		return value;
+	}
+
+	/**
+	 * Skips over complete object. It is not parsed, just skipped. It will be
+	 * parsed later, but oonly if required.
+	 */
+	private void skipObject() {
+		int bracketCount = 1;
+		boolean insideString = false;
+
+		while (ndx < total) {
+			final char c = input[ndx];
+
+			if (insideString) {
+				if (c == '\"') {
+					insideString = false;
+				}
+			}
+			else {
+				if (c == '\"') {
+					insideString = true;
+				}
+				if (c == '{') {
+					bracketCount++;
+				} else if (c == '}') {
+					bracketCount--;
+					if (bracketCount == 0) {
+						ndx++;
+						return;
+					}
+				}
+			}
+			ndx++;
+		}
 	}
 
 	// ---------------------------------------------------------------- string
@@ -863,7 +934,7 @@ public class JsonParser extends JsonParserBase {
 			isTargetTypeMap = isTargetRealTypeMap;
 		} else {
 			// all beans will be created first as a map
-			target = new HashMap();
+			target = mapSupplier.get();
 		}
 
 		boolean koma = false;
@@ -931,6 +1002,11 @@ public class JsonParser extends JsonParserBase {
 				if (typeData.rules.match(keyOriginal, !typeData.strict)) {
 
 					if (pd != null) {
+						if (lazy) {
+							// need to resolve lazy value before injecting objects into it
+							value = resolveLazyValue(value);
+						}
+
 						// only inject values if target property exist
 						injectValueIntoObject(target, pd, value);
 					}
