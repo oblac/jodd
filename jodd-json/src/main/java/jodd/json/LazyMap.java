@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
- * This maps only builds once you ask for a key for the first time.
+ * This map only builds once you ask for a key for the first time.
  * It is designed to not incur the overhead of creating a map unless needed.
  *
  * Taken from Boon project (https://github.com/boonproject/boon)
@@ -136,11 +137,16 @@ public class LazyMap extends AbstractMap {
 
 	private void buildIfNeeded() {
 		if (map == null) {
-
 			map = new HashMap<>();
 
 			for (int index = 0; index < size; index++) {
-				map.put(keys[index], values[index]);
+				Object value = values[index];
+
+				if (value instanceof Supplier) {
+					value = ((Supplier)value).get();
+				}
+
+				map.put(keys[index], value);
 			}
 			this.keys = null;
 			this.values = null;
