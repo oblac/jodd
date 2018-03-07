@@ -346,7 +346,7 @@ public class TypeConverterManager {
 		}
 
 		// fail
-		throw new TypeConversionException("Conversion failed: " + destinationType.getName());
+		throw new TypeConversionException("Conversion failed of input type: " + value.getClass() + " into: " + destinationType.getName());
 	}
 
 	/**
