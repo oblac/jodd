@@ -250,20 +250,18 @@ class JSONDeserializerTest {
 
 		String json = new JsonSerializer().serialize(list);
 		List<Person> people = new JsonParser().parse(json);
-		assertEquals(ArrayList.class, people.getClass());
+		assertTrue(people instanceof List);
 
 		json = new JsonSerializer().exclude("*.class").serialize(list);
 		people = new JsonParser().map("values", Person.class).parse(json);
 
-		assertEquals(ArrayList.class, people.getClass());
 		assertEquals(3, people.size());
 		assertEquals(Person.class, people.get(0).getClass());
 
 		List<Map> peopleMap = new JsonParser().parse(json);
 
-		assertEquals(ArrayList.class, peopleMap.getClass());
 		assertEquals(3, peopleMap.size());
-		assertEquals(HashMap.class, peopleMap.get(0).getClass());
+		assertTrue(peopleMap.get(0) instanceof Map);
 	}
 
 	@Test
@@ -354,7 +352,6 @@ class JSONDeserializerTest {
 		String json = new JsonSerializer().exclude("*.class").serialize(list);
 		List<Person> people = new JsonParser()
 				.map("values", Person.class).parse(json);
-		assertEquals(ArrayList.class, people.getClass());
 		assertEquals(3, list.size());
 		assertEquals(modesty.getFirstname(), list.get(0).getFirstname());
 		assertEquals(igor.getFirstname(), list.get(1).getFirstname());
@@ -374,7 +371,6 @@ class JSONDeserializerTest {
 		String json = new JsonSerializer().serialize(list);
 		List<Person> people = new JsonParser()
 				.map("values", Person.class).parse(json);
-		assertEquals(ArrayList.class, people.getClass());
 		assertEquals(3, list.size());
 		assertEquals(modesty.getFirstname(), list.get(0).getFirstname());
 		assertEquals(igor.getFirstname(), list.get(1).getFirstname());
