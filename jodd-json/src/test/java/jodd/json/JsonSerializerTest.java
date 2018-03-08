@@ -25,6 +25,7 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
 import jodd.json.fixtures.model.FileMan;
 import jodd.json.fixtures.model.HitList;
 import jodd.json.fixtures.model.State;
@@ -305,15 +306,17 @@ class JsonSerializerTest {
 
 	@Test
 	void testEscapeChars() {
-		String json = "\"1\\\" 2\\\\ 3\\/ 4\\b 5\\f 6\\n 7\\r 8\\t\"";
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = "\"1\\\" 2\\\\ 3\\/ 4\\b 5\\f 6\\n 7\\r 8\\t\"";
 
-		String str = new JsonParser().parse(json);
+			String str = jsonParser.parse(json);
 
-		assertEquals("1\" 2\\ 3/ 4\b 5\f 6\n 7\r 8\t", str);
+			assertEquals("1\" 2\\ 3/ 4\b 5\f 6\n 7\r 8\t", str);
 
-		String jsonStr = new JsonSerializer().strictStringEncoding(true).serialize(str);
+			String jsonStr = new JsonSerializer().strictStringEncoding(true).serialize(str);
 
-		assertEquals(json, jsonStr);
+			assertEquals(json, jsonStr);
+		});
 	}
 
 	@Test
@@ -423,87 +426,93 @@ class JsonSerializerTest {
 
 	@Test
 	void testCuriousModeOfSerialization() {
-		Map<String, Object> map = new HashMap<>();
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> map = new HashMap<>();
 
-		List<Integer> numbers = new ArrayList<>();
-		numbers.add(Integer.valueOf(8));
-		numbers.add(Integer.valueOf(4));
-		numbers.add(Integer.valueOf(2));
-		map.put("array", numbers);
-		map.put("value", "BIG");
+			List<Integer> numbers = new ArrayList<>();
+			numbers.add(Integer.valueOf(8));
+			numbers.add(Integer.valueOf(4));
+			numbers.add(Integer.valueOf(2));
+			map.put("array", numbers);
+			map.put("value", "BIG");
 
-		List<Map<String, Object>> list = new ArrayList<>();
-		map.put("list", list);
+			List<Map<String, Object>> list = new ArrayList<>();
+			map.put("list", list);
 
-		Map<String, Object> val = new HashMap<>();
-		val.put("name", "Root");
-		val.put("value", "Hack");
-		list.add(val);
+			Map<String, Object> val = new HashMap<>();
+			val.put("name", "Root");
+			val.put("value", "Hack");
+			list.add(val);
 
-		val = new HashMap<>();
-		val.put("name", "John");
-		val.put("value", "Protected");
-		list.add(val);
+			val = new HashMap<>();
+			val.put("name", "John");
+			val.put("value", "Protected");
+			list.add(val);
 
-		// serialize
+			// serialize
 
-		JsonSerializer jsonSerializer = new JsonSerializer();
+			JsonSerializer jsonSerializer = new JsonSerializer();
 
-		jsonSerializer.exclude("list");		// not applied
-		jsonSerializer.include("array");
-//		jsonSerializer.include("list");		// not needed, will be included by next two
-		jsonSerializer.include("list.name");
-		jsonSerializer.include("list.value");
+			jsonSerializer.exclude("list");        // not applied
+			jsonSerializer.include("array");
+			//		jsonSerializer.include("list");		// not needed, will be included by next two
+			jsonSerializer.include("list.name");
+			jsonSerializer.include("list.value");
 
-		String str = jsonSerializer.serialize(map);
+			String str = jsonSerializer.serialize(map);
 
-		Map<String, Object> result = new JsonParser().parse(str);
+			Map<String, Object> result = jsonParser.parse(str);
 
-		assertEquals(map, result);
+			assertEquals(map, result);
+		});
 	}
 
 	@Test
 	void testCircularDependenciesBean() {
-		White white = new White();
-		white.setIntensity(20);
+		JsonParsers.forEachParser(jsonParser -> {
+			White white = new White();
+			white.setIntensity(20);
 
-		Black black = new Black();
-		black.setDarkness(80);
+			Black black = new Black();
+			black.setDarkness(80);
 
-		black.setWhite(white);
+			black.setWhite(white);
 
-		white.setBlack(black);
+			white.setBlack(black);
 
-		String json = new JsonSerializer().serialize(white);
+			String json = new JsonSerializer().serialize(white);
 
-		White whiteNew = new JsonParser().parse(json, White.class);
+			White whiteNew = jsonParser.parse(json, White.class);
 
-		assertEquals(white.getIntensity(), whiteNew.getIntensity());
-		assertEquals(white.getBlack().getDarkness(), whiteNew.getBlack().getDarkness());
-		assertNull(whiteNew.getBlack().getWhite());
+			assertEquals(white.getIntensity(), whiteNew.getIntensity());
+			assertEquals(white.getBlack().getDarkness(), whiteNew.getBlack().getDarkness());
+			assertNull(whiteNew.getBlack().getWhite());
+		});
 	}
 
 	@Test
 	void testCircularDependenciesMap() {
-		Map<String, Object> white = new HashMap<>();
-		white.put("intensity", Integer.valueOf(20));
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> white = new HashMap<>();
+			white.put("intensity", Integer.valueOf(20));
 
-		Map<String, Object> black = new HashMap<>();
-		black.put("darkness", Integer.valueOf(80));
+			Map<String, Object> black = new HashMap<>();
+			black.put("darkness", Integer.valueOf(80));
 
-		black.put("white", white);
-		white.put("black", black);
+			black.put("white", white);
+			white.put("black", black);
 
-		String json = new JsonSerializer().serialize(white);
+			String json = new JsonSerializer().serialize(white);
 
-		Map<String, Object> whiteNew = new JsonParser().parse(json);
+			Map<String, Object> whiteNew = jsonParser.parse(json);
 
-		assertEquals(white.get("intensity"), whiteNew.get("intensity"));
-		assertEquals(
-				((Map<String, Object>)(white.get("black"))).get("darkness"),
-				((Map<String, Object>)(whiteNew.get("black"))).get("darkness"));
-		assertNull(((Map<String, Object>) (whiteNew.get("black"))).get("black"));
-		assertFalse(((Map<String, Object>) (whiteNew.get("black"))).containsKey("white"));
+			assertEquals(white.get("intensity"), whiteNew.get("intensity"));
+			assertEquals(
+				((Map<String, Object>) (white.get("black"))).get("darkness"),
+				((Map<String, Object>) (whiteNew.get("black"))).get("darkness"));
+			assertNull(((Map<String, Object>) (whiteNew.get("black"))).get("black"));
+			assertFalse(((Map<String, Object>) (whiteNew.get("black"))).containsKey("white"));
+		});
 	}
 
 	@Test
@@ -599,18 +608,20 @@ class JsonSerializerTest {
 
 	@Test
 	void testSerializeStringEscapes() {
-		String path = "/foo/bar";
+		JsonParsers.forEachParser(jsonParser -> {
+			String path = "/foo/bar";
 
-		String json = JsonSerializer
-			.create()
-			.strictStringEncoding(true)
-			.serialize(path);
+			String json = JsonSerializer
+				.create()
+				.strictStringEncoding(true)
+				.serialize(path);
 
-		assertEquals("\"\\/foo\\/bar\"", json);
+			assertEquals("\"\\/foo\\/bar\"", json);
 
-		String path2 = JsonParser.create().parse(json);
+			String path2 = jsonParser.parse(json);
 
-		assertEquals(path, path2);
+			assertEquals(path, path2);
+		});
 	}
 
 	@Test

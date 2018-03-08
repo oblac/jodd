@@ -69,6 +69,13 @@ public class JsonParser extends JsonParserBase {
 		return new JsonParser();
 	}
 
+	/**
+	 * Creates a lazy implementation of the JSON parser.
+	 */
+	public static JsonParser createLazyOne() {
+		return new JsonParser().lazy(true);
+	}
+
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};

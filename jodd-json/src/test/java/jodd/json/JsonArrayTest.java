@@ -25,6 +25,7 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -695,23 +696,25 @@ class JsonArrayTest {
 
 	@Test
 	void testDecode() {
-		byte[] bytes = randomByteArray(10);
-		String strBytes = Base64.getEncoder().encodeToString(bytes);
-		String json = "[\"foo\",123,1234,1.23,2.34,true,\"" + strBytes + "\",null,{\"foo\":\"bar\"},[\"foo\",123]]";
-		JsonArray arr = JsonParser.create().parseAsJsonArray(json);
-		assertEquals("foo", arr.getString(0));
-		assertEquals(Integer.valueOf(123), arr.getInteger(1));
-		assertEquals(Long.valueOf(1234L), arr.getLong(2));
-		assertEquals(Float.valueOf(1.23f), arr.getFloat(3));
-		assertEquals(Double.valueOf(2.34d), arr.getDouble(4));
-		assertEquals(true, arr.getBoolean(5));
-		assertArrayEquals(bytes, arr.getBinary(6));
-		assertTrue(arr.hasNull(7));
-		JsonObject obj = arr.getJsonObject(8);
-		assertEquals("bar", obj.getString("foo"));
-		JsonArray arr2 = arr.getJsonArray(9);
-		assertEquals("foo", arr2.getString(0));
-		assertEquals(Integer.valueOf(123), arr2.getInteger(1));
+		JsonParsers.forEachParser(jsonParser -> {
+			byte[] bytes = randomByteArray(10);
+			String strBytes = Base64.getEncoder().encodeToString(bytes);
+			String json = "[\"foo\",123,1234,1.23,2.34,true,\"" + strBytes + "\",null,{\"foo\":\"bar\"},[\"foo\",123]]";
+			JsonArray arr = jsonParser.parseAsJsonArray(json);
+			assertEquals("foo", arr.getString(0));
+			assertEquals(Integer.valueOf(123), arr.getInteger(1));
+			assertEquals(Long.valueOf(1234L), arr.getLong(2));
+			assertEquals(Float.valueOf(1.23f), arr.getFloat(3));
+			assertEquals(Double.valueOf(2.34d), arr.getDouble(4));
+			assertEquals(true, arr.getBoolean(5));
+			assertArrayEquals(bytes, arr.getBinary(6));
+			assertTrue(arr.hasNull(7));
+			JsonObject obj = arr.getJsonObject(8);
+			assertEquals("bar", obj.getString("foo"));
+			JsonArray arr2 = arr.getJsonArray(9);
+			assertEquals("foo", arr2.getString(0));
+			assertEquals(Integer.valueOf(123), arr2.getInteger(1));
+		});
 	}
 
 	@Test

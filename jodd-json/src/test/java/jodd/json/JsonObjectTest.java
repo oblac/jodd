@@ -24,6 +24,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -1023,91 +1024,128 @@ class JsonObjectTest {
 
 	@Test
 	void testMergeInDepth0() {
-		JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
-		JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
-		obj1.mergeIn(obj2, 0);
-		assertEquals(1, obj1.size());
-		assertEquals(1, obj1.getJsonObject("foo").size());
-		assertEquals("flurb", obj1.getJsonObject("foo").getString("bar"));
+		{
+			JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
+			JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
+			obj1.mergeIn(obj2, 0);
+			assertEquals(1, obj1.size());
+			assertEquals(1, obj1.getJsonObject("foo").size());
+			assertEquals("flurb", obj1.getJsonObject("foo").getString("bar"));
+		}
+		{
+			JsonObject obj1 = JsonParser.createLazyOne().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\" }}");
+			JsonObject obj2 = JsonParser.createLazyOne().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
+			obj1.mergeIn(obj2, 0);
+			assertEquals(1, obj1.size());
+			assertEquals(1, obj1.getJsonObject("foo").size());
+			assertEquals("flurb", obj1.getJsonObject("foo").getString("bar"));
+		}
 	}
 
 	@Test
 	void testMergeInFlat() {
-		JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\", \"eek\": 32 }}");
-		JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
-		obj1.mergeIn(obj2);
-		assertEquals(1, obj1.size());
-		assertEquals(1, obj1.getJsonObject("foo").size());
-		assertEquals("eek", obj1.getJsonObject("foo").getString("bar"));
+		JsonParsers.forEachParser(jsonParser -> {
+			JsonObject obj1 = jsonParser.parseAsJsonObject("{ \"foo\": { \"bar\": \"flurb\", \"eek\": 32 }}");
+			JsonObject obj2 = jsonParser.parseAsJsonObject("{ \"foo\": { \"bar\": \"eek\" }}");
+			obj1.mergeIn(obj2);
+			assertEquals(1, obj1.size());
+			assertEquals(1, obj1.getJsonObject("foo").size());
+			assertEquals("eek", obj1.getJsonObject("foo").getString("bar"));
+		});
 	}
 
 	@Test
 	void testMergeInDepth1() {
-		JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
-		JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
-		obj1.mergeIn(obj2, 1);
-		assertEquals(2, obj1.size());
-		assertEquals(1, obj1.getJsonObject("flurb").size());
-		assertEquals("flurb1", obj1.getJsonObject("flurb").getString("bar"));
+		{
+			JsonObject obj1 = JsonParser.create().parseAsJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
+			JsonObject obj2 = JsonParser.create().parseAsJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
+			obj1.mergeIn(obj2, 1);
+			assertEquals(2, obj1.size());
+			assertEquals(1, obj1.getJsonObject("flurb").size());
+			assertEquals("flurb1", obj1.getJsonObject("flurb").getString("bar"));
+		}
+		{
+			JsonObject obj1 = JsonParser.createLazyOne().parseAsJsonObject("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}");
+			JsonObject obj2 = JsonParser.createLazyOne().parseAsJsonObject("{ \"flurb\": { \"bar\": \"flurb1\" }}");
+			obj1.mergeIn(obj2, 1);
+			assertEquals(2, obj1.size());
+			assertEquals(1, obj1.getJsonObject("flurb").size());
+			assertEquals("flurb1", obj1.getJsonObject("flurb").getString("bar"));
+		}
 	}
 
 	@Test
 	void testMergeInDepth2() {
-		JsonObject obj1 = new JsonObject(JsonParser.create().parse("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}"));
-		JsonObject obj2 = new JsonObject(JsonParser.create().parse("{ \"flurb\": { \"bar\": \"flurb1\" }}"));
-		obj1.mergeIn(obj2, 2);
-		assertEquals(2, obj1.size());
-		assertEquals(2, obj1.getJsonObject("flurb").size());
-		assertEquals("foo", obj1.getJsonObject("flurb").getString("eek"));
-		assertEquals("flurb1", obj1.getJsonObject("flurb").getString("bar"));
+		{
+			JsonObject obj1 = new JsonObject(JsonParser.create().parse("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}"));
+			JsonObject obj2 = new JsonObject(JsonParser.create().parse("{ \"flurb\": { \"bar\": \"flurb1\" }}"));
+			obj1.mergeIn(obj2, 2);
+			assertEquals(2, obj1.size());
+			assertEquals(2, obj1.getJsonObject("flurb").size());
+			assertEquals("foo", obj1.getJsonObject("flurb").getString("eek"));
+			assertEquals("flurb1", obj1.getJsonObject("flurb").getString("bar"));
+		}
+		{
+			JsonObject obj1 = new JsonObject(JsonParser.createLazyOne().parse("{ \"foo\": \"bar\", \"flurb\": { \"eek\": \"foo\", \"bar\": \"flurb\"}}"));
+			JsonObject obj2 = new JsonObject(JsonParser.createLazyOne().parse("{ \"flurb\": { \"bar\": \"flurb1\" }}"));
+			obj1.mergeIn(obj2, 2);
+			assertEquals(2, obj1.size());
+			assertEquals(2, obj1.getJsonObject("flurb").size());
+			assertEquals("foo", obj1.getJsonObject("flurb").getString("eek"));
+			assertEquals("flurb1", obj1.getJsonObject("flurb").getString("bar"));
+		}
 	}
 
 	@Test
-	void testEncode() throws Exception {
-		JsonObject jsonObject = new JsonObject();
+	void testEncode() {
+		JsonParsers.forEachParser(jsonParser -> {
+			JsonObject jsonObject = new JsonObject();
 
-		jsonObject.put("mystr", "foo");
-		jsonObject.put("mycharsequence", new StringBuilder("oob"));
-		jsonObject.put("myint", 123);
-		jsonObject.put("mylong", 1234L);
-		jsonObject.put("myfloat", 1.23f);
-		jsonObject.put("mydouble", 2.34d);
-		jsonObject.put("myboolean", true);
-		byte[] bytes = randomByteArray(10);
-		jsonObject.put("mybinary", bytes);
-		jsonObject.putNull("mynull");
-		jsonObject.put("myobj", new JsonObject().put("foo", "bar"));
-		jsonObject.put("myarr", new JsonArray().add("foo").add(123));
+			jsonObject.put("mystr", "foo");
+			jsonObject.put("mycharsequence", new StringBuilder("oob"));
+			jsonObject.put("myint", 123);
+			jsonObject.put("mylong", 1234L);
+			jsonObject.put("myfloat", 1.23f);
+			jsonObject.put("mydouble", 2.34d);
+			jsonObject.put("myboolean", true);
+			byte[] bytes = randomByteArray(10);
+			jsonObject.put("mybinary", bytes);
+			jsonObject.putNull("mynull");
+			jsonObject.put("myobj", new JsonObject().put("foo", "bar"));
+			jsonObject.put("myarr", new JsonArray().add("foo").add(123));
 
-		String json = JsonSerializer.create().serialize(jsonObject);
+			String json = JsonSerializer.create().serialize(jsonObject);
 
-		JsonObject expectedParsedJsonObject = JsonParser.create().parseAsJsonObject(json);
+			JsonObject expectedParsedJsonObject = jsonParser.parseAsJsonObject(json);
 
-		// need to replace float with double, as decoding will do so
-		jsonObject.put("myfloat", 1.23d);
-		assertEquals(expectedParsedJsonObject, jsonObject);
+			// need to replace float with double, as decoding will do so
+			jsonObject.put("myfloat", 1.23d);
+			assertEquals(expectedParsedJsonObject, jsonObject);
+		});
 	}
 
 	@Test
-	void testDecode() throws Exception {
-		byte[] bytes = randomByteArray(10);
-		String strBytes = Base64.getEncoder().encodeToString(bytes);
-		String json = "{\"mystr\":\"foo\",\"myint\":123,\"mylong\":1234,\"myfloat\":1.23,\"mydouble\":2.34,\"" +
-			"myboolean\":true,\"mybinary\":\"" + strBytes + "\",\"mynull\":null,\"myobj\":{\"foo\":\"bar\"},\"myarr\":[\"foo\",123]}";
-		JsonObject obj = new JsonObject(JsonParser.create().parse(json));
-		assertEquals("foo", obj.getString("mystr"));
-		assertEquals(Integer.valueOf(123), obj.getInteger("myint"));
-		assertEquals(Long.valueOf(1234), obj.getLong("mylong"));
-		assertEquals(Float.valueOf(1.23f), obj.getFloat("myfloat"));
-		assertEquals(Double.valueOf(2.34d), obj.getDouble("mydouble"));
-		assertTrue(obj.getBoolean("myboolean"));
-		assertArrayEquals(bytes, obj.getBinary("mybinary"));
-		assertTrue(obj.containsKey("mynull"));
-		JsonObject nestedObj = obj.getJsonObject("myobj");
-		assertEquals("bar", nestedObj.getString("foo"));
-		JsonArray nestedArr = obj.getJsonArray("myarr");
-		assertEquals("foo", nestedArr.getString(0));
-		assertEquals(Integer.valueOf(123), Integer.valueOf(nestedArr.getInteger(1)));
+	void testDecode() {
+		JsonParsers.forEachParser(jsonParser -> {
+			byte[] bytes = randomByteArray(10);
+			String strBytes = Base64.getEncoder().encodeToString(bytes);
+			String json = "{\"mystr\":\"foo\",\"myint\":123,\"mylong\":1234,\"myfloat\":1.23,\"mydouble\":2.34,\"" +
+				"myboolean\":true,\"mybinary\":\"" + strBytes + "\",\"mynull\":null,\"myobj\":{\"foo\":\"bar\"},\"myarr\":[\"foo\",123]}";
+			JsonObject obj = new JsonObject(jsonParser.parse(json));
+			assertEquals("foo", obj.getString("mystr"));
+			assertEquals(Integer.valueOf(123), obj.getInteger("myint"));
+			assertEquals(Long.valueOf(1234), obj.getLong("mylong"));
+			assertEquals(Float.valueOf(1.23f), obj.getFloat("myfloat"));
+			assertEquals(Double.valueOf(2.34d), obj.getDouble("mydouble"));
+			assertTrue(obj.getBoolean("myboolean"));
+			assertArrayEquals(bytes, obj.getBinary("mybinary"));
+			assertTrue(obj.containsKey("mynull"));
+			JsonObject nestedObj = obj.getJsonObject("myobj");
+			assertEquals("bar", nestedObj.getString("foo"));
+			JsonArray nestedArr = obj.getJsonArray("myarr");
+			assertEquals("foo", nestedArr.getString(0));
+			assertEquals(Integer.valueOf(123), Integer.valueOf(nestedArr.getInteger(1)));
+		});
 	}
 
 	@Test

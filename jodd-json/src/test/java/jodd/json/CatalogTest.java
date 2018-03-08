@@ -27,6 +27,7 @@ package jodd.json;
 
 import jodd.datetime.JDateTime;
 import jodd.io.StreamUtil;
+import jodd.json.fixtures.JsonParsers;
 import jodd.json.fixtures.model.cat.Area;
 import jodd.json.fixtures.model.cat.Catalog;
 import jodd.json.fixtures.model.cat.Event;
@@ -65,74 +66,83 @@ class CatalogTest {
 	}
 
 	@Test
-	void testParseCatalogAsObject() throws IOException {
-		String json = loadJSON("citm_catalog");
+	void testParseCatalogAsObject() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = loadJSON("citm_catalog");
 
-		Catalog catalog = new JsonParser().parse(json, Catalog.class);
+			Catalog catalog = jsonParser.parse(json, Catalog.class);
 
-		assertCatalog(catalog);
+			assertCatalog(catalog);
+		});
 	}
 
 	@Test
-	void testParseCatalogAsObjectWithClassname() throws IOException {
-		String json = loadJSON("citm_catalog");
+	void testParseCatalogAsObjectWithClassname() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = loadJSON("citm_catalog");
 
-		Catalog catalog = new JsonParser().setClassMetadataName("class").parse(json, Catalog.class);
+			Catalog catalog = jsonParser.setClassMetadataName("class").parse(json, Catalog.class);
 
-		assertCatalog(catalog);
+			assertCatalog(catalog);
+		});
 	}
 
 	@Test
-	void testParseSerializeCatalogNotDeep() throws IOException {
-		String json = loadJSON("citm_catalog");
+	void testParseSerializeCatalogNotDeep() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = loadJSON("citm_catalog");
 
-		Catalog catalog = new JsonParser().parse(json, Catalog.class);
+			Catalog catalog = jsonParser.parse(json, Catalog.class);
 
-		String newJson = new JsonSerializer().deep(false).serialize(catalog);
+			String newJson = new JsonSerializer().deep(false).serialize(catalog);
 
-		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
+			Catalog jsonCatalog = jsonParser.parse(newJson, Catalog.class);
 
-		assertNull(jsonCatalog.getPerformances());
-		assertNull(jsonCatalog.getAreaNames());
-		assertNull(jsonCatalog.getEvents());
-		assertNull(jsonCatalog.getAudienceSubCategoryNames());
-		assertNull(jsonCatalog.getSeatCategoryNames());
-		assertNull(jsonCatalog.getSubTopicNames());
-		assertNull(jsonCatalog.getTopicNames());
-		assertNull(jsonCatalog.getTopicSubTopics());
-		assertNull(jsonCatalog.getVenueNames());
+			assertNull(jsonCatalog.getPerformances());
+			assertNull(jsonCatalog.getAreaNames());
+			assertNull(jsonCatalog.getEvents());
+			assertNull(jsonCatalog.getAudienceSubCategoryNames());
+			assertNull(jsonCatalog.getSeatCategoryNames());
+			assertNull(jsonCatalog.getSubTopicNames());
+			assertNull(jsonCatalog.getTopicNames());
+			assertNull(jsonCatalog.getTopicSubTopics());
+			assertNull(jsonCatalog.getVenueNames());
+		});
 	}
 
 	@Test
-	void testParseSerializeCatalog() throws IOException {
-		String json = loadJSON("citm_catalog");
+	void testParseSerializeCatalog() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = loadJSON("citm_catalog");
 
-		Catalog catalog = new JsonParser().parse(json, Catalog.class);
+			Catalog catalog = jsonParser.parse(json, Catalog.class);
 
-		String newJson = new JsonSerializer().deep(true).serialize(catalog);
+			String newJson = new JsonSerializer().deep(true).serialize(catalog);
 
-		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
+			Catalog jsonCatalog = jsonParser.parse(newJson, Catalog.class);
 
-		assertCatalog(jsonCatalog);
+			assertCatalog(jsonCatalog);
+		});
 	}
 
 	@Test
-	void testParseCatalogAsMap() throws IOException {
-		String json = loadJSON("citm_catalog");
+	void testParseCatalogAsMap() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = loadJSON("citm_catalog");
 
-		Map catalog = new JsonParser()
+			Map catalog = jsonParser
 				.map("values.keys", Long.class)
 				.map("venueNames.keys", String.class)
 				.useAltPaths()
 				.parse(json);
 
-		String newJson = new JsonSerializer().deep(true).serialize(catalog);
+			String newJson = new JsonSerializer().deep(true).serialize(catalog);
 
-		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
+			Catalog jsonCatalog = jsonParser.parse(newJson, Catalog.class);
 
-		assertCatalog(jsonCatalog);
+			assertCatalog(jsonCatalog);
+		});
 	}
-
 
 	private void assertCatalog(Catalog catalog) {
 		assertNotNull(catalog);
@@ -239,31 +249,38 @@ class CatalogTest {
 	}
 
 	@Test
-	void test20k() throws IOException {
-		String json = loadJSON("20k");
+	void test20k() {
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = loadJSON("20k");
 
-		List<Map<String, Object>> array = new JsonParser().parse(json);
+			List<Map<String, Object>> array = jsonParser.parse(json);
 
-		assertEquals(22, array.size());
+			assertEquals(22, array.size());
 
-		for (int i = 0; i < 22; i++) {
-			Map<String, Object> map = array.get(i);
+			for (int i = 0; i < 22; i++) {
+				Map<String, Object> map = array.get(i);
 
-			assertEquals(19, map.size());
-			assertEquals(i, ((Integer)map.get("id")).intValue());
-		}
+				assertEquals(19, map.size());
+				assertEquals(i, ((Integer) map.get("id")).intValue());
+			}
+		});
 	}
 
-	private String loadJSON(String name) throws IOException {
-		FileInputStream fis = new FileInputStream(new File(dataRoot, name + ".json.gz"));
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+	private String loadJSON(String name) {
+		try {
+			FileInputStream fis = new FileInputStream(new File(dataRoot, name + ".json.gz"));
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		StreamUtil.copy(new GZIPInputStream(fis), out);
+			StreamUtil.copy(new GZIPInputStream(fis), out);
 
-		String json = out.toString("UTF-8");
+			String json = out.toString("UTF-8");
 
-		fis.close();
+			fis.close();
 
-		return json;
+			return json;
+		}
+		catch (IOException io) {
+			throw new RuntimeException(io);
+		}
 	}
 }

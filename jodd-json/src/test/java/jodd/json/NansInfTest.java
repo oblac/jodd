@@ -25,6 +25,7 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,62 +35,70 @@ public class NansInfTest {
 
 	@Test
 	public void testDouble_NaN() {
-		String json = JsonSerializer.create().serialize(Double.NaN);
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = JsonSerializer.create().serialize(Double.NaN);
 
-		assertEquals("\"NaN\"", json);
+			assertEquals("\"NaN\"", json);
 
-		Double d = JsonParser.create().parse(json, Double.class);
+			Double d = jsonParser.parse(json, Double.class);
 
-		assertTrue(d.isNaN());
+			assertTrue(d.isNaN());
+		});
 	}
 
 	@Test
 	public void testFloat_NaN() {
-		String json = JsonSerializer.create().serialize(Float.NaN);
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = JsonSerializer.create().serialize(Float.NaN);
 
-		assertEquals("\"NaN\"", json);
+			assertEquals("\"NaN\"", json);
 
-		Float d = JsonParser.create().parse(json, Float.class);
+			Float d = jsonParser.parse(json, Float.class);
 
-		assertTrue(d.isNaN());
+			assertTrue(d.isNaN());
+		});
 	}
 
 	@Test
 	public void testDouble_Infinity() {
-		String json = JsonSerializer.create().serialize(Double.POSITIVE_INFINITY);
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = JsonSerializer.create().serialize(Double.POSITIVE_INFINITY);
 
-		assertEquals("\"+Infinity\"", json);
+			assertEquals("\"+Infinity\"", json);
 
-		Double d = JsonParser.create().parse(json, Double.class);
+			Double d = jsonParser.parse(json, Double.class);
 
-		assertEquals(Double.POSITIVE_INFINITY, d.doubleValue());
+			assertEquals(Double.POSITIVE_INFINITY, d.doubleValue());
 
-		json = JsonSerializer.create().serialize(Double.NEGATIVE_INFINITY);
+			json = JsonSerializer.create().serialize(Double.NEGATIVE_INFINITY);
 
-		assertEquals("\"-Infinity\"", json);
+			assertEquals("\"-Infinity\"", json);
 
-		d = JsonParser.create().parse(json, Double.class);
+			d = jsonParser.parse(json, Double.class);
 
-		assertEquals(Double.NEGATIVE_INFINITY, d.doubleValue());
+			assertEquals(Double.NEGATIVE_INFINITY, d.doubleValue());
+		});
 	}
 
 	@Test
 	public void testFloat_Infinity() {
-		String json = JsonSerializer.create().serialize(Float.POSITIVE_INFINITY);
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = JsonSerializer.create().serialize(Float.POSITIVE_INFINITY);
 
-		assertEquals("\"+Infinity\"", json);
+			assertEquals("\"+Infinity\"", json);
 
-		Float d = JsonParser.create().parse(json, Float.class);
+			Float d = jsonParser.parse(json, Float.class);
 
-		assertEquals(Float.POSITIVE_INFINITY, d.floatValue());
+			assertEquals(Float.POSITIVE_INFINITY, d.floatValue());
 
-		json = JsonSerializer.create().serialize(Float.NEGATIVE_INFINITY);
+			json = JsonSerializer.create().serialize(Float.NEGATIVE_INFINITY);
 
-		assertEquals("\"-Infinity\"", json);
+			assertEquals("\"-Infinity\"", json);
 
-		d = JsonParser.create().parse(json, Float.class);
+			d = jsonParser.parse(json, Float.class);
 
-		assertEquals(Float.NEGATIVE_INFINITY, d.floatValue());
+			assertEquals(Float.NEGATIVE_INFINITY, d.floatValue());
+		});
 	}
 
 }

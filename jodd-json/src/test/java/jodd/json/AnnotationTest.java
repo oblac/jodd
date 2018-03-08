@@ -25,50 +25,65 @@
 
 package jodd.json;
 
+import jodd.json.fixtures.JsonParsers;
 import jodd.json.fixtures.mock.Location;
-import jodd.json.fixtures.model.*;
+import jodd.json.fixtures.model.App;
+import jodd.json.fixtures.model.MyFolder1;
+import jodd.json.fixtures.model.MyFolder2;
+import jodd.json.fixtures.model.MyFolder3;
+import jodd.json.fixtures.model.MyFolder4;
+import jodd.json.fixtures.model.User;
+import jodd.json.fixtures.model.UserHolder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AnnotationTest {
 
 	@Test
 	void testAnnName() {
-		Location location = new Location();
+		JsonParsers.forEachParser(jsonParser -> {
+			Location location = new Location();
 
-		location.setLatitude(65);
-		location.setLongitude(12);
+			location.setLatitude(65);
+			location.setLongitude(12);
 
-		String json = new JsonSerializer().serialize(location);
+			String json = new JsonSerializer().serialize(location);
 
-		assertEquals("{\"lat\":65,\"lng\":12}", json);
+			assertEquals("{\"lat\":65,\"lng\":12}", json);
 
-		Location jsonLocation = new JsonParser().parse(json, Location.class);
+			Location jsonLocation = jsonParser.parse(json, Location.class);
 
-		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
-		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+			assertEquals(location.getLatitude(), jsonLocation.getLatitude());
+			assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+		});
 	}
 
 	@Test
 	void testAnnNameWithClass() {
-		Location location = new Location();
+		JsonParsers.forEachParser(jsonParser -> {
+			Location location = new Location();
 
-		location.setLatitude(65);
-		location.setLongitude(12);
+			location.setLatitude(65);
+			location.setLongitude(12);
 
-		String json = new JsonSerializer().setClassMetadataName("class").serialize(location);
+			String json = new JsonSerializer().setClassMetadataName("class").serialize(location);
 
-		assertEquals("{\"class\":\"" + Location.class.getName() + "\",\"lat\":65,\"lng\":12}", json);
+			assertEquals("{\"class\":\"" + Location.class.getName() + "\",\"lat\":65,\"lng\":12}", json);
 
-		Location jsonLocation = new JsonParser().setClassMetadataName("class").parse(json, Location.class);
+			Location jsonLocation = jsonParser.setClassMetadataName("class").parse(json, Location.class);
 
-		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
-		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+			assertEquals(location.getLatitude(), jsonLocation.getLatitude());
+			assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+		});
 	}
 
 	@Test
@@ -94,7 +109,7 @@ class AnnotationTest {
 		assertFalse(json.contains("joe"));
 		assertFalse(json.contains("name"));
 
-		User[] users = new User[] {user};
+		User[] users = new User[]{user};
 
 		json = JsonSerializer.create().serialize(users);
 
@@ -116,85 +131,96 @@ class AnnotationTest {
 
 	@Test
 	void testCustomMap() {
-		String json = "{\"userId\" : 123, \"name\": 456}";
+		JsonParsers.forEachParser(jsonParser -> {
+			String json = "{\"userId\" : 123, \"name\": 456}";
 
-		Map<String, Integer> map = JsonParser.create().parse(json);
-		assertEquals(2, map.size());
-		assertEquals(Integer.valueOf(123), map.get("userId"));
-		assertEquals(Integer.valueOf(456), map.get("name"));
+			Map<String, Integer> map = jsonParser.parse(json);
+			assertEquals(2, map.size());
+			assertEquals(Integer.valueOf(123), map.get("userId"));
+			assertEquals(Integer.valueOf(456), map.get("name"));
 
-		Map<String, Long> map2 = JsonParser
-			.create()
-			.map(JsonParser.VALUES, Long.class)
-			.parse(json);
+			Map<String, Long> map2 = JsonParser
+				.create()
+				.map(JsonParser.VALUES, Long.class)
+				.parse(json);
 
-		assertEquals(2, map2.size());
-		assertEquals(Long.valueOf(123), map2.get("userId"));
-		assertEquals(Long.valueOf(456), map2.get("name"));
+			assertEquals(2, map2.size());
+			assertEquals(Long.valueOf(123), map2.get("userId"));
+			assertEquals(Long.valueOf(456), map2.get("name"));
+		});
 
+		JsonParsers.forEachParser(jsonParser -> {
 
-		json = "{\"123\" : \"hey\", \"456\": \"man\"}";
+			String json = "{\"123\" : \"hey\", \"456\": \"man\"}";
 
-		Map<Long, String> map3 = JsonParser
-			.create()
-			.map(JsonParser.KEYS, Long.class)
-			.parse(json);
+			Map<Long, String> map3 = jsonParser
+				.map(JsonParser.KEYS, Long.class)
+				.parse(json);
 
-		assertEquals(2, map3.size());
-		assertEquals("hey", map3.get(Long.valueOf(123)));
-		assertEquals("man", map3.get(Long.valueOf(456)));
+			assertEquals(2, map3.size());
+			assertEquals("hey", map3.get(Long.valueOf(123)));
+			assertEquals("man", map3.get(Long.valueOf(456)));
+		});
 	}
 
-		@Test
+	@Test
 	void testClassInArrayOrMapParse() {
-		String json = "{\"userId\" : 123, \"name\":\"Joe\"}";
+		final String json = "{\"userId\" : 123, \"name\":\"Joe\"}";
 
-		User user = JsonParser.create().parse(json, User.class);
+		JsonParsers.forEachParser(jsonParser -> {
+			User user = jsonParser.parse(json, User.class);
 
-		assertEquals(123, user.getId());
-		assertNull(user.getName());
+			assertEquals(123, user.getId());
+			assertNull(user.getName());
+		});
 
-		List<User> users = JsonParser.create().map(JsonParser.VALUES, User.class).parse("[" + json + "]");
+		JsonParsers.forEachParser(jsonParser -> {
+			List<User> users = jsonParser.map(JsonParser.VALUES, User.class).parse("[" + json + "]");
 
-		assertEquals(1, users.size());
-		user = users.get(0);
-		assertEquals(123, user.getId());
-		assertNull(user.getName());
+			assertEquals(1, users.size());
+			User user = users.get(0);
+			assertEquals(123, user.getId());
+			assertNull(user.getName());
+		});
 
-		Map<String, Object> map = JsonParser.create().map(JsonParser.VALUES, User.class).parse("{ \"user\":" + json + "}");
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> map = jsonParser.map(JsonParser.VALUES, User.class).parse("{ \"user\":" + json + "}");
 
-		assertEquals(1, map.size());
-		user = (User) map.get("user");
-		assertEquals(123, user.getId());
-		assertNull(user.getName());
+			assertEquals(1, map.size());
+			User user = (User) map.get("user");
+			assertEquals(123, user.getId());
+			assertNull(user.getName());
+		});
 
-		UserHolder userHolder = JsonParser.create().parse("{ \"user\":" + json + "}", UserHolder.class);
-		assertNotNull(userHolder);
-		user = userHolder.getUser();
-		assertEquals(123, user.getId());
-		assertNull(user.getName());
+		JsonParsers.forEachParser(jsonParser -> {
+			UserHolder userHolder = jsonParser.parse("{ \"user\":" + json + "}", UserHolder.class);
+			assertNotNull(userHolder);
+			User user = userHolder.getUser();
+			assertEquals(123, user.getId());
+			assertNull(user.getName());
+		});
 	}
 
 	@Test
 	void testBeanSettersGetters() {
 		String json = "{\"foo.folder\":\"vvvv\"}";
 
-		{
-			MyFolder1 mf1 = JsonParser.create().parse(json, MyFolder1.class);
+		JsonParsers.forEachParser(jsonParser -> {
+			MyFolder1 mf1 = jsonParser.parse(json, MyFolder1.class);
 			assertEquals("vvvv", mf1.getFolder());
-		}
-		{
-			MyFolder2 mf2 = JsonParser.create().parse(json, MyFolder2.class);
+		});
+		JsonParsers.forEachParser(jsonParser -> {
+			MyFolder2 mf2 = jsonParser.parse(json, MyFolder2.class);
 			assertEquals("vvvv", mf2.get());
-		}
-		{
-			MyFolder3 mf3 = JsonParser.create().parse(json, MyFolder3.class);
+		});
+		JsonParsers.forEachParser(jsonParser -> {
+			MyFolder3 mf3 = jsonParser.parse(json, MyFolder3.class);
 			assertEquals("vvvv", mf3.getFolder());
-		}
-		{
-			MyFolder4 mf4 = JsonParser.create().parse(json, MyFolder4.class);
+		});
+		JsonParsers.forEachParser(jsonParser -> {
+			MyFolder4 mf4 = jsonParser.parse(json, MyFolder4.class);
 			assertEquals("vvvv", mf4.get());
-		}
+		});
 	}
 
 }
