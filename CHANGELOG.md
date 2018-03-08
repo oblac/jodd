@@ -6,6 +6,9 @@ All notable changes to Jodd project are documented here.
 
 Work-in-progress :thunder:
 
+### Features
+
++ **json** - lazy parser mode performance improved... a lot.
 
 ## [4.1.5](https://github.com/oblac/jodd/compare/v4.1.4...4.1.5)
 

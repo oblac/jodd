@@ -48,6 +48,13 @@ import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
  * and type mappings. Uses Jodd's type converters, so it is natural
  * companion for Jodd projects.
  * <p>
+ * This JSON parser also works in {@link #lazy(boolean)} mode. This
+ * mode is for top performance usage: parsing is done very, very lazy.
+ * While you can use all the mappings and other tools, for best performance
+ * the lazy mode should be used only with maps and lists (no special mappings).
+ * Also, the performance has it's price: more memory consumption, because the
+ * original input is hold until the result is in use.
+ * <p>
  * See: http://www.ietf.org/rfc/rfc4627.txt
  */
 public class JsonParser extends JsonParserBase {
@@ -129,7 +136,9 @@ public class JsonParser extends JsonParserBase {
 	/**
 	 * Defines how JSON parser works. In non-lazy mode, the whole JSON is parsed as it is.
 	 * In the lazy mode, not everything is parsed, but some things are left lazy.
-	 * This way we gain some performances, especially on partial usage of the whole JSON.
+	 * This way we gain performance, especially on partial usage of the whole JSON.
+	 * However, be aware that parser holds the input memory until the returned
+	 * objects are disposed.
 	 */
 	public JsonParser lazy(final boolean lazy) {
 		this.lazy = lazy;
