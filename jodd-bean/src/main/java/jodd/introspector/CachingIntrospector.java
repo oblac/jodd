@@ -25,8 +25,7 @@
 
 package jodd.introspector;
 
-import java.util.HashMap;
-import java.util.Map;
+import jodd.cache.TypeCache;
 
 /**
  * Default {@link jodd.introspector.ClassIntrospector introspector} that caches all class descriptors.
@@ -36,7 +35,7 @@ import java.util.Map;
  */
 public class CachingIntrospector implements ClassIntrospector {
 
-	protected final Map<Class, ClassDescriptor> cache;
+	protected final TypeCache<ClassDescriptor> cache;
 	protected final boolean scanAccessible;
 	protected final boolean enhancedProperties;
 	protected final boolean includeFieldsAsProperties;
@@ -55,7 +54,7 @@ public class CachingIntrospector implements ClassIntrospector {
 	 * constructors.
 	 */
 	public CachingIntrospector(final boolean scanAccessible, final boolean enhancedProperties, final boolean includeFieldsAsProperties, final String[] propertyFieldPrefix) {
-		this.cache = new HashMap<>();
+		this.cache = TypeCache.createDefault();
 		this.scanAccessible = scanAccessible;
 		this.enhancedProperties = enhancedProperties;
 		this.includeFieldsAsProperties = includeFieldsAsProperties;
