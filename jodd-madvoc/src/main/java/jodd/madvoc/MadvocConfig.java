@@ -25,6 +25,7 @@
 
 package jodd.madvoc;
 
+import jodd.cache.TypeCache;
 import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
@@ -43,8 +44,6 @@ import jodd.util.StringPool;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import static jodd.util.StringPool.COLON;
@@ -101,7 +100,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- action method annotations
 
-	private Map<Class<? extends Annotation>, ActionConfig> annotations = new HashMap<>();
+	private TypeCache<ActionConfig> annotations = TypeCache.createDefault();
 	private Class<? extends Annotation>[] actionAnnotations = ClassUtil.emptyClassArray();
 	private ActionAnnotation<?>[] actionAnnotationInstances = new ActionAnnotation[0];
 

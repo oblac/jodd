@@ -25,6 +25,7 @@
 
 package jodd.joy.db;
 
+import jodd.cache.TypeCache;
 import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityManager;
@@ -33,9 +34,6 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.mutable.MutableLong;
 import jodd.petite.meta.PetiteBean;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static jodd.db.oom.DbOomQuery.query;
 
@@ -49,7 +47,7 @@ public class DbIdGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(DbIdGenerator.class);
 
-	protected Map<Class<?>, MutableLong> entityIdsMap = new HashMap<>();
+	protected TypeCache<MutableLong> entityIdsMap = TypeCache.createDefault();
 
 	/**
 	 * Resets all stored data.

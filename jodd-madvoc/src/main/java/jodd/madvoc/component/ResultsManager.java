@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
@@ -65,7 +66,7 @@ public class ResultsManager {
 
 	public ResultsManager() {
 		this.stringResultsFactories = new HashMap<>();
-		this.allResults = new HashMap<>();
+		this.allResults = TypeCache.createDefault();
 
 		// defaults
 		registerResultName("chain", Chain::to);
@@ -79,7 +80,7 @@ public class ResultsManager {
 	// ---------------------------------------------------------------- container
 
 	protected final Map<String, Function<String, Object>> stringResultsFactories;
-	protected final Map<Class<? extends ActionResult>, ActionResult> allResults;
+	protected final TypeCache<ActionResult> allResults;
 
 	/**
 	 * Returns all action results.

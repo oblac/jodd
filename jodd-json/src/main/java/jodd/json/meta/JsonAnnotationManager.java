@@ -25,6 +25,7 @@
 
 package jodd.json.meta;
 
+import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
@@ -38,9 +39,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Cached includes and excludes annotation data per type.
@@ -54,11 +53,11 @@ public class JsonAnnotationManager {
 		return JoddJson.get().annotationManager();
 	}
 
-	private final Map<Class, TypeData> typeDataMap;
+	private final TypeCache<TypeData> typeDataMap;
 
 	@SuppressWarnings("unchecked")
 	public JsonAnnotationManager() {
-		typeDataMap = new HashMap<>();
+		typeDataMap = TypeCache.createDefault();
 	}
 
 	/**

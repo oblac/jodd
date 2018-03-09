@@ -27,6 +27,7 @@ package jodd.cache;
 
 import jodd.core.JoddCore;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,4 +150,19 @@ public class TypeCache<T> {
 	public boolean isEmpty() {
 		return map.isEmpty();
 	}
+
+	/**
+	 * Returns collection of map values.
+	 */
+	public Collection<T> values() {
+		return map.values();
+	}
+
+	/**
+	 * Returns {@code true} if the key is contained in the cache.
+	 */
+	public boolean containsKey(final Class type) {
+		return map.containsKey(type);
+	}
+
 }

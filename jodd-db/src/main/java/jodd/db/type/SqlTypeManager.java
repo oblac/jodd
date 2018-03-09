@@ -25,6 +25,7 @@
 
 package jodd.db.type;
 
+import jodd.cache.TypeCache;
 import jodd.datetime.JDateTime;
 import jodd.db.DbSqlException;
 import jodd.mutable.MutableBoolean;
@@ -46,7 +47,6 @@ import java.sql.Date;
 import java.sql.Ref;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.HashMap;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -54,8 +54,8 @@ import java.util.HashMap;
  */
 public class SqlTypeManager {
 
-	private static HashMap<Class, SqlType> types = new HashMap<>();
-	private static HashMap<Class<? extends SqlType>, SqlType> sqlTypes = new HashMap<>();
+	private static TypeCache<SqlType> types = TypeCache.createDefault();
+	private static TypeCache<SqlType> sqlTypes = TypeCache.createDefault();
 
 	static {
 		registerDefaults();
