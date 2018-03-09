@@ -57,10 +57,10 @@ public class TypeCacheBenchmark {
 		Throwable.class, Thread.class, System.class
 	};
 
-	private TypeCache<?, String> map = TypeCache.create(TypeCache.Implementation.MAP);
-	private TypeCache<?, String> syncMap = TypeCache.create(TypeCache.Implementation.SYNC_MAP);
-	private TypeCache<?, String> weakMap = TypeCache.create(TypeCache.Implementation.WEAK);
-	private TypeCache<?, String> weakSyncMap = TypeCache.create(TypeCache.Implementation.SYNC_WEAK);
+	private TypeCache<String> map = TypeCache.create(TypeCache.Implementation.MAP);
+	private TypeCache<String> syncMap = TypeCache.create(TypeCache.Implementation.SYNC_MAP);
+	private TypeCache<String> weakMap = TypeCache.create(TypeCache.Implementation.WEAK);
+	private TypeCache<String> weakSyncMap = TypeCache.create(TypeCache.Implementation.SYNC_WEAK);
 	private int[] indexes = new int[1024];
 
 	@Setup
