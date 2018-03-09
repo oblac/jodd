@@ -33,6 +33,7 @@ import jodd.asm6.ClassReader;
 import jodd.asm6.FieldVisitor;
 import jodd.asm6.Label;
 import jodd.asm6.MethodVisitor;
+import jodd.cache.TypeCache;
 import jodd.io.StreamUtil;
 import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.MethodInfo;
@@ -44,8 +45,6 @@ import jodd.util.ClassLoaderUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import static jodd.asm6.Opcodes.ALOAD;
 import static jodd.asm6.Opcodes.INVOKEINTERFACE;
@@ -96,7 +95,7 @@ final class ProxyAspectData {
 
 	// ---------------------------------------------------------------- advice reader cache
 
-	private static Map<Class<? extends ProxyAdvice>, ClassReader> adviceClassReaderCache;
+	private static TypeCache<ClassReader> adviceClassReaderCache;
 
 
 	/**
@@ -119,7 +118,7 @@ final class ProxyAspectData {
 	 */
 	private ClassReader getCachedAdviceClassReader(final Class<? extends ProxyAdvice> advice) {
 		if (adviceClassReaderCache == null) {
-			adviceClassReaderCache = new HashMap<>();
+			adviceClassReaderCache = TypeCache.createDefault();
 		}
 		ClassReader adviceReader = adviceClassReaderCache.get(advice);
 		if (adviceReader == null) {
