@@ -25,7 +25,6 @@
 
 package jodd.madvoc.proxetta;
 
-import jodd.cache.TypeCache;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
@@ -33,6 +32,8 @@ import jodd.petite.meta.PetiteInject;
 import jodd.proxetta.impl.ProxyProxetta;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Madvoc {@link jodd.madvoc.component.ActionsManager actions manager} that works with Proxetta.
@@ -42,10 +43,10 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	@PetiteInject
 	protected ProxettaProvider proxettaProvider;
 
-	protected final TypeCache<Class> proxyActionClasses;
+	protected final Map<Class, Class> proxyActionClasses;
 
 	public ProxettaAwareActionsManager() {
-		this.proxyActionClasses = TypeCache.createDefault();
+		this.proxyActionClasses = new HashMap<>();
 	}
 
 	/**

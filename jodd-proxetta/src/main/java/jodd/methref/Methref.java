@@ -25,12 +25,12 @@
 
 package jodd.methref;
 
-import jodd.cache.TypeCache;
-import jodd.cache.TypeCache.Implementation;
 import jodd.proxetta.ProxettaUtil;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Super tool for getting method references (names) in compile-time.
@@ -39,7 +39,7 @@ import java.lang.reflect.Field;
 public class Methref<C> {
 
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
-	private static final TypeCache<Class> cache = TypeCache.create(Implementation.WEAK);
+	private static final Map<Class, Class> cache = new WeakHashMap<>();
 
 	private final C instance;
 

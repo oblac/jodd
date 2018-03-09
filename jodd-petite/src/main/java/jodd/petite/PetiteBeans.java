@@ -25,7 +25,6 @@
 
 package jodd.petite;
 
-import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
@@ -79,7 +78,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all bean scopes.
 	 */
-	protected final TypeCache<Scope> scopes = TypeCache.createDefault();
+	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<>();
 
 	/**
 	 * Map of all providers.
@@ -89,7 +88,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all bean collections.
 	 */
-	protected final TypeCache<String[]> beanCollections = TypeCache.createDefault();
+	protected final Map<Class, String[]> beanCollections = new HashMap<>();
 
 	/**
 	 * {@link PetiteConfig Petite configuration}.

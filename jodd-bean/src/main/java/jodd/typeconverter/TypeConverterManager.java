@@ -26,7 +26,6 @@
 package jodd.typeconverter;
 
 import jodd.bean.JoddBean;
-import jodd.cache.TypeCache;
 import jodd.datetime.JDateTime;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
@@ -88,6 +87,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -105,7 +105,7 @@ public class TypeConverterManager {
 		return JoddBean.get().typeConverterManager();
 	}
 
-	private final TypeCache<TypeConverter> converters = TypeCache.createDefault();
+	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);
 	private final Converter converter;
 
 	// ---------------------------------------------------------------- methods

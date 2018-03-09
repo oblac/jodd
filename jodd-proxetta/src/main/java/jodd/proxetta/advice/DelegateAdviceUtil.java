@@ -25,7 +25,6 @@
 
 package jodd.proxetta.advice;
 
-import jodd.cache.TypeCache;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxettaException;
@@ -34,13 +33,14 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 /**
  * Utilities for applying {@link DelegateAdvice} to target.
  */
 public class DelegateAdviceUtil {
 
-	private static TypeCache<Class> advicesMap = TypeCache.createDefault();
+	private static HashMap<Class, Class> advicesMap = new HashMap<>();
 
 	/**
 	 * Proxy Proxetta, applied on all public methods of the target class.

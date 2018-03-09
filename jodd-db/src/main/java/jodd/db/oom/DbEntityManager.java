@@ -25,7 +25,6 @@
 
 package jodd.db.oom;
 
-import jodd.cache.TypeCache;
 import jodd.db.JoddDb;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
@@ -82,7 +81,7 @@ public class DbEntityManager {
 		this.primitiveEntitiesPrefixes = primitiveEntitiesPrefixes;
 	}
 
-	protected TypeCache<DbEntityDescriptor> descriptorsMap = TypeCache.createDefault();
+	protected Map<Class, DbEntityDescriptor> descriptorsMap = new HashMap<>();
 	protected Map<String, DbEntityDescriptor> entityNamesMap = new HashMap<>();
 	protected Map<String, DbEntityDescriptor> tableNamesMap = new NamedValuesHashMap<>();
 

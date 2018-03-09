@@ -25,7 +25,6 @@
 
 package jodd.vtor;
 
-import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
@@ -80,7 +79,7 @@ public class ValidationContext {
 
 	// ---------------------------------------------------------------- annotation resolver
 
-	private static TypeCache<List<Check>> cache = TypeCache.createDefault();
+	private static Map<Class, List<Check>> cache = new HashMap<>();
 
 	/**
 	 * Resolve validation context for provided target class.
