@@ -36,16 +36,16 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Type cache.
  */
-public class TypeCache<K, T> {
+public class TypeCache<T> {
 
 	/**
 	 * Creates default type cache implementation, as defined in {@link jodd.core.JoddCoreDefaults}.
 	 */
-	public static <A, B> TypeCache<A, B> create() {
+	public static <A> TypeCache<A> createDefault() {
 		return new TypeCache<>(JoddCore.get().typeCacheImplementation());
 	}
 
-	public static <A, B> TypeCache<A, B> create(final Implementation implementation) {
+	public static <A> TypeCache<A> create(final Implementation implementation) {
 		return new TypeCache<>(implementation);
 	}
 
@@ -78,7 +78,7 @@ public class TypeCache<K, T> {
 		/**
 		 * Creates a map based on type.
 		 */
-		public <A, B> Map<Class<A>, B> createMap() {
+		public <A> Map<Class<?>, A> createMap() {
 			if (weak) {
 				if (sync) {
 					return Collections.synchronizedMap(new WeakHashMap<>());
@@ -95,7 +95,7 @@ public class TypeCache<K, T> {
 		}
 	}
 
-	private final Map<Class<K>, T> map;
+	private final Map<Class<?>, T> map;
 
 	public TypeCache(final Implementation typeCacheImplementation) {
 		this.map = typeCacheImplementation.createMap();
@@ -104,28 +104,28 @@ public class TypeCache<K, T> {
 	/**
 	 * Returns value from the map or {@code null} if value does not exist.
 	 */
-	public T get(final Class<K> key) {
+	public T get(final Class<?> key) {
 		return map.get(key);
 	}
 
 	/**
 	 * Returns existing value of default one if key is not registered.
 	 */
-	public T getOrDefault(final Class<K> key, final T defaultValue) {
+	public T getOrDefault(final Class<?> key, final T defaultValue) {
 		return map.getOrDefault(key, defaultValue);
 	}
 
 	/**
 	 * Cache some value for given class.
 	 */
-	public T put(final Class<K> key, final T value) {
+	public T put(final Class<?> key, final T value) {
 		return map.put(key, value);
 	}
 
 	/**
 	 * Removes element from type cache.
 	 */
-	public T remove(final Class<K> type) {
+	public T remove(final Class<?> type) {
 		return map.remove(type);
 	}
 
