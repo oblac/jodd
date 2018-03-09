@@ -45,6 +45,4 @@ public class JoddLagarto {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

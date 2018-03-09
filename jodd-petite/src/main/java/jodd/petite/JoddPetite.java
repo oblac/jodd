@@ -45,6 +45,4 @@ public class JoddPetite {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

@@ -45,6 +45,4 @@ public class JoddHtmlStapler {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

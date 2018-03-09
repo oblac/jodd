@@ -46,6 +46,4 @@ public class JoddMadvoc {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

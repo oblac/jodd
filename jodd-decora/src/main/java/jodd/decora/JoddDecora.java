@@ -45,6 +45,4 @@ public class JoddDecora {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

@@ -45,6 +45,4 @@ public class JoddProps {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

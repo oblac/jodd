@@ -26,6 +26,7 @@
 package jodd.core;
 
 import jodd.Jodd;
+import jodd.cache.TypeCache;
 import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 
@@ -55,12 +56,11 @@ public class JoddCore {
 		Security.setProperty("crypto.policy", "unlimited");
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private JoddCoreDefaults defaults = new JoddCoreDefaults();
 	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+	private TypeCache.Implementation typeCacheImplementation = TypeCache.Implementation.WEAK;
 
 	/**
 	 * Returns defaults module configuration.
@@ -84,5 +84,20 @@ public class JoddCore {
 		this.classLoaderStrategy = classLoaderStrategy;
 		return this;
 	}
+
+	/**
+	 * Returns default type cache implementation variant.
+	 */
+	public TypeCache.Implementation typeCacheImplementation() {
+		return typeCacheImplementation;
+	}
+
+	/**
+	 * Sets default type cache implementation.
+	 */
+	public void typeCacheImplementation(final TypeCache.Implementation typeCacheImplementation) {
+		this.typeCacheImplementation = typeCacheImplementation;
+	}
+
 
 }

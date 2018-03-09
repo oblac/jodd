@@ -45,5 +45,4 @@ public class JoddServlet {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
 }

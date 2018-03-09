@@ -48,8 +48,6 @@ public class JoddJson {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private JoddJsonDefaults defaults = new JoddJsonDefaults();

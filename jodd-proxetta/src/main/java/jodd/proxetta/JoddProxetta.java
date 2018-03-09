@@ -45,8 +45,6 @@ public class JoddProxetta {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private JoddProxettaDefaults defaults = new JoddProxettaDefaults();

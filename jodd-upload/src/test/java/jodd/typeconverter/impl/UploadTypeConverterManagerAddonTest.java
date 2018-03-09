@@ -39,7 +39,7 @@ class UploadTypeConverterManagerAddonTest {
 
 	@Test
 	void testRegistration() {
-		JoddUpload.init();
+		JoddUpload.get();
 
 		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.get().lookup(FileUpload.class);
 

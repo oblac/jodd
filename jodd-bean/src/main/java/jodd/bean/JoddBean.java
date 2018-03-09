@@ -51,8 +51,6 @@ public class JoddBean {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private ClassIntrospector classIntrospector = new CachingIntrospector();

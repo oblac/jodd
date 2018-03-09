@@ -53,8 +53,6 @@ public class JoddDb {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private JoddDbDefaults defaults = new JoddDbDefaults();

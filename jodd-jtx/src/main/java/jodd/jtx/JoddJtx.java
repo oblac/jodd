@@ -45,8 +45,6 @@ public class JoddJtx {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private JoddJtxDefaults defaults = new JoddJtxDefaults();

@@ -49,6 +49,4 @@ public class JoddUpload {
 			}
 		});
 	}
-
-	public static void init() {}
 }

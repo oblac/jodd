@@ -47,9 +47,6 @@ public class JoddMail {
 		Jodd.initModule();
 	}
 
-	public static void init() {
-	}
-
 	// ---------------------------------------------------------------- instance
 
 	private final JoddMailDefaults defaults = new JoddMailDefaults();

@@ -36,7 +36,6 @@ package jodd;
  * static {
  *     Jodd.initModule();
  * }
- * public static void init() {}
  * }</pre>
  *
  * <h2>How Jodd module gets loaded and initialized?</h2>

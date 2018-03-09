@@ -45,6 +45,4 @@ public class JoddVtor {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 }

@@ -48,8 +48,6 @@ public class JoddHttp {
 		Jodd.initModule();
 	}
 
-	public static void init() {}
-
 	// ---------------------------------------------------------------- instance
 
 	private JoddHttpDefaults defaults = new JoddHttpDefaults();
