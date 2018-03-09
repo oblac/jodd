@@ -9,6 +9,7 @@ Work-in-progress :thunder:
 ### Features
 
 + **json** - lazy parser mode performance improved... a lot.
++ **core** - added `TypeCache` with 4 different implementations.
 
 ## [4.1.5](https://github.com/oblac/jodd/compare/v4.1.4...4.1.5)
 

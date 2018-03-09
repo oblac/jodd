@@ -60,7 +60,7 @@ public class JoddCore {
 
 	private JoddCoreDefaults defaults = new JoddCoreDefaults();
 	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
-	private TypeCache.Implementation typeCacheImplementation = TypeCache.Implementation.WEAK;
+	private TypeCache.Implementation typeCacheImplementation = TypeCache.Implementation.SYNC_MAP;
 
 	/**
 	 * Returns defaults module configuration.

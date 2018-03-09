@@ -45,6 +45,10 @@ public class TypeCache<K, T> {
 		return new TypeCache<>(JoddCore.get().typeCacheImplementation());
 	}
 
+	public static <A, B> TypeCache<A, B> create(final Implementation implementation) {
+		return new TypeCache<>(implementation);
+	}
+
 	public enum Implementation {
 		/**
 		 * Just a simple map.
