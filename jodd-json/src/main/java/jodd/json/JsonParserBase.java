@@ -34,8 +34,8 @@ import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +47,7 @@ import java.util.function.Supplier;
  */
 public abstract class JsonParserBase {
 
-	protected static final Supplier<Map> HASMAP_SUPPLIER = HashMap::new;
+	protected static final Supplier<Map> HASMAP_SUPPLIER = LinkedHashMap::new;
 	protected static final Supplier<Map> LAZYMAP_SUPPLIER = LazyMap::new;
 
 	protected static final Supplier<List> ARRAYLIST_SUPPLIER = ArrayList::new;

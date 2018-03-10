@@ -44,8 +44,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import static jodd.util.ArraysUtil.ints;
@@ -895,4 +897,19 @@ class JsonParserTest {
 		});
 	}
 
+	@Test
+	void testLazyParserPreservesFieldOrder() {
+		String json = "{\"field1\":\"value1\", \"field2\":\"value2\", \"field3\":\"value3\", \"field4\":\"value4\"}";
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, String> object = jsonParser.parse(json);
+
+			List<Map.Entry<String, String>> entries = object.entrySet().stream().collect(Collectors.toList());
+
+			assertEquals(4, entries.size());
+			assertEquals("field1", entries.get(0).getKey());
+			assertEquals("field2", entries.get(1).getKey());
+			assertEquals("field3", entries.get(2).getKey());
+			assertEquals("field4", entries.get(3).getKey());
+		});
+	}
 }
