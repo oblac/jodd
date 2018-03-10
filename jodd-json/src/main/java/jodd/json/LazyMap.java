@@ -137,7 +137,7 @@ public class LazyMap extends AbstractMap {
 
 	private void buildIfNeeded() {
 		if (map == null) {
-			map = new HashMap<>();
+			map = new LinkedHashMap<>(size, 0.01f);
 
 			for (int index = 0; index < size; index++) {
 				Object value = values[index];
@@ -299,7 +299,5 @@ public class LazyMap extends AbstractMap {
 		public int size() {
 			return array.length;
 		}
-
 	}
-
 }
