@@ -25,8 +25,8 @@
 
 package jodd.json;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
@@ -62,7 +62,7 @@ public abstract class TypeJsonVisitor {
 	 * Visits a type.
 	 */
 	public void visit() {
-		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
+		ClassDescriptor classDescriptor = JoddBean.defaults().getClassIntrospector().lookup(type);
 
 		if (classMetadataName != null) {
 			// process first 'meta' fields 'class'

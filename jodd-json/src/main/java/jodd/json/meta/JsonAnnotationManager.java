@@ -25,8 +25,8 @@
 
 package jodd.json.meta;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -51,7 +51,7 @@ public class JsonAnnotationManager {
 	 * Returns default instance.
 	 */
 	public static JsonAnnotationManager get() {
-		return JoddJson.defaults().annotationManager();
+		return JoddJson.defaults().getAnnotationManager();
 	}
 
 	private final Map<Class, TypeData> typeDataMap;
@@ -131,7 +131,7 @@ public class JsonAnnotationManager {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
-			if (JoddJson.defaults().defaults().isSerializationSubclassAware()) {
+			if (JoddJson.defaults().isSerializationSubclassAware()) {
 				typeData = findSubclassTypeData(type);
 			}
 
@@ -162,14 +162,14 @@ public class JsonAnnotationManager {
 	 * Finds type data of first annotated superclass or interface.
 	 */
 	protected TypeData findSubclassTypeData(final Class type) {
-		final Class<? extends Annotation> defaultAnnotation = JoddJson.defaults().defaults().getJsonAnnotation();
+		final Class<? extends Annotation> defaultAnnotation = JoddJson.defaults().getJsonAnnotation();
 
 		if (type.getAnnotation(defaultAnnotation) != null) {
 			// current type has annotation, don't find anything, let type data be created
 			return null;
 		}
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
 
 		// lookup superclasses
 
@@ -216,7 +216,7 @@ public class JsonAnnotationManager {
 	 * Scans class for annotations and returns {@link jodd.json.meta.JsonAnnotationManager.TypeData}.
 	 */
 	private TypeData scanClassForAnnotations(final Class type) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
@@ -225,7 +225,7 @@ public class JsonAnnotationManager {
 		ArrayList<String> jsonNames = new ArrayList<>();
 		ArrayList<String> realNames = new ArrayList<>();
 
-		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.defaults().defaults().getJsonAnnotation());
+		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.defaults().getJsonAnnotation());
 
 		for (PropertyDescriptor pd : pds) {
 			JSONAnnotationData data = null;

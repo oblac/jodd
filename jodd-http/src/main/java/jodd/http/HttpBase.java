@@ -32,8 +32,8 @@ import jodd.http.up.Uploadable;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartStreamParser;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.MultipartStreamParser;
 import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -72,7 +72,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected boolean capitalizeHeaderKeys = JoddHttp.defaults().defaults().isCapitalizeHeaderKeys();
+	protected boolean capitalizeHeaderKeys = JoddHttp.defaults().isCapitalizeHeaderKeys();
 	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -521,7 +521,7 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- form encoding
 
-	protected String formEncoding = JoddHttp.defaults().defaults().getFormEncoding();
+	protected String formEncoding = JoddHttp.defaults().getFormEncoding();
 
 	/**
 	 * Defines encoding for forms parameters. Default value is
@@ -603,7 +603,7 @@ public abstract class HttpBase<T> {
 	 * that will be encoded in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body, final String mediaType) {
-		return bodyText(body, mediaType, JoddHttp.defaults().defaults().getBodyEncoding());
+		return bodyText(body, mediaType, JoddHttp.defaults().getBodyEncoding());
 	}
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
@@ -611,7 +611,7 @@ public abstract class HttpBase<T> {
 	 * in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body) {
-		return bodyText(body, JoddHttp.defaults().defaults().getBodyMediaType(), JoddHttp.defaults().defaults().getBodyEncoding());
+		return bodyText(body, JoddHttp.defaults().getBodyMediaType(), JoddHttp.defaults().getBodyEncoding());
 	}
 
 	/**

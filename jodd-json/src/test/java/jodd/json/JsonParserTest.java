@@ -25,7 +25,6 @@
 
 package jodd.json;
 
-import jodd.Jodd;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.json.fixtures.JsonParsers;
@@ -74,7 +73,7 @@ class JsonParserTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().defaults().setClassMetadataName(null);
+		JoddJson.defaults().setClassMetadataName(null);
 	}
 
 	@Test
@@ -561,7 +560,7 @@ class JsonParserTest {
 
 	@Test
 	void testComplexObject() {
-		JoddJson.defaults().defaults().setClassMetadataName("class");
+		JoddJson.defaults().setClassMetadataName("class");
 
 		JsonParsers.forEachParser(jsonParser -> {
 			String json = null;
@@ -748,11 +747,6 @@ class JsonParserTest {
 
 			assertEquals(rbig, jsonParser.parse("\"" + jbig + "\""));
 		});
-	}
-
-	@Test
-	void testJsonModule() {
-		assertTrue(Jodd.isModuleLoaded(Jodd.JoddModule.JSON));
 	}
 
 	@Test

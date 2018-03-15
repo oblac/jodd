@@ -66,7 +66,7 @@ class DbOomTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbOom = JoddDb.defaults().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.defaults().getDbEntityManager();
 
 		dbOom.registerEntity(Girl.class);
 		dbOom.registerEntity(BadBoy.class);

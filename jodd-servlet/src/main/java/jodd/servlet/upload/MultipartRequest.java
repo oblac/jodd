@@ -26,9 +26,9 @@
 package jodd.servlet.upload;
 
 import jodd.core.JoddCore;
+import jodd.io.upload.FileUploadFactory;
+import jodd.io.upload.MultipartStreamParser;
 import jodd.servlet.ServletUtil;
-import jodd.upload.FileUploadFactory;
-import jodd.upload.MultipartStreamParser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -113,7 +113,7 @@ public class MultipartRequest extends MultipartStreamParser {
 			this.characterEncoding = request.getCharacterEncoding();
 		}
 		if (this.characterEncoding == null) {
-			this.characterEncoding = JoddCore.defaults().defaults().getEncoding();
+			this.characterEncoding = JoddCore.defaults().getEncoding();
 		}
 	}
 

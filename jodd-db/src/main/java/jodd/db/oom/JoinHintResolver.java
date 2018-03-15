@@ -26,9 +26,8 @@
 package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
-import jodd.db.JoddDb;
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
@@ -44,10 +43,6 @@ import java.util.Map;
  * If hint is not available, methods returns the very same object array instance. 
  */
 public class JoinHintResolver {
-
-	public static JoinHintResolver get() {
-		return JoddDb.defaults().hintResolver();
-	}
 
 	public Object[] join(final Object[] data, final String hints) {
 		if (hints == null) {
@@ -101,7 +96,7 @@ public class JoinHintResolver {
 				Class hintPropertyType = BeanUtil.pojo.getPropertyType(value, hintPropertyName);
 
 				if (hintPropertyType != null) {
-					ClassDescriptor cd = ClassIntrospector.get().lookup(hintPropertyType);
+					ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(hintPropertyType);
 
 					if (cd.isCollection()) {
 						// add element to collection

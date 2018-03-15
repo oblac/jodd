@@ -6,7 +6,6 @@ dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
 	compile project(':jodd-props')
-	compile project(':jodd-upload')
 	compile project(':jodd-servlet')
 	compile project(':jodd-petite')
 	compile project(':jodd-log')

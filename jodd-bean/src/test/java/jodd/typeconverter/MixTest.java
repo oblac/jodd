@@ -52,7 +52,7 @@ class MixTest {
 	void testStringArrayMix() {
 		String[] strings;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		strings = typeConverterManager.convertType(new Class[]{Long.class, int.class}, String[].class);
 		assertEquals("java.lang.Long", strings[0]);
@@ -87,7 +87,7 @@ class MixTest {
 	void testIntArrayMix() {
 		int[] ints;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		ints = typeConverterManager.convertType("123, 234", int[].class);
 		assertEquals(123, ints[0]);
@@ -118,7 +118,7 @@ class MixTest {
 	void testLongArrayMix() {
 		long[] longs;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		longs = typeConverterManager.convertType("123, 234", long[].class);
 		assertEquals(123, longs[0]);
@@ -149,7 +149,7 @@ class MixTest {
 	void testFloatArrayMix() {
 		float[] floats;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		floats = typeConverterManager.convertType("123.1, 234.2", float[].class);
 		assertEquals(123.1, floats[0], 0.1);
@@ -180,7 +180,7 @@ class MixTest {
 	void testDoubleArrayMix() {
 		double[] doubles;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		doubles = typeConverterManager.convertType("123.1, 234.2", double[].class);
 		assertEquals(123.1, doubles[0], 0.1);
@@ -211,7 +211,7 @@ class MixTest {
 	void testByteArrayMix() {
 		byte[] bytes;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		bytes = typeConverterManager.convertType("123, -12", byte[].class);
 		assertEquals(123, bytes[0]);
@@ -242,7 +242,7 @@ class MixTest {
 	void testShortArrayMix() {
 		short[] shorts;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		shorts = typeConverterManager.convertType("123, -12", short[].class);
 		assertEquals(123, shorts[0]);
@@ -273,7 +273,7 @@ class MixTest {
 	void testCharArrayMix() {
 		char[] chars;
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		chars = typeConverterManager.convertType("123, -12", char[].class);
 		assertEquals("123, -12", new String(chars));
@@ -301,7 +301,7 @@ class MixTest {
 
 	@Test
 	void testMultipleArrays() {
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		MutableInteger[] mutableIntegers = typeConverterManager.convertType(arri(1,2,3,4), MutableInteger[].class);
 
@@ -314,7 +314,7 @@ class MixTest {
 
 	@Test
 	void testCollections() {
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		List list1 = typeConverterManager.convertType(arri(1,2,3), List.class);
 		assertEquals(listo(1,2,3), list1);
@@ -338,7 +338,7 @@ class MixTest {
 
 	@Test
 	void testCollectionsWithComponentType() {
-		TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 		CollectionConverter cc = new CollectionConverter(typeConverterManager, List.class, String.class);
 		List<String> list1 = (List<String>) cc.convert(arri(1, 2, 3));
@@ -360,7 +360,7 @@ class MixTest {
 		list.add(9L);
 		list.add(2L);
 
-		Long[] array = JoddBean.defaults().typeConverterManager().convertType(list, Long[].class);
+		Long[] array = JoddBean.defaults().getTypeConverterManager().convertType(list, Long[].class);
 
 		assertEquals(3, array.length);
 		assertEquals(1, array[0].longValue());

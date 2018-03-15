@@ -8,9 +8,15 @@ Work-in-progress :thunder:
 
 ### Breaking changes
 
-+ **all** no more internal modules, simplify!
++ **all** no more internal modules, removed `Defaults` 
++ **upload** module merged to core
 
-## [4.1.5](https://github.com/oblac/jodd/compare/v4.1.5...4.2.0)
+### Features
+
++ **json** - the order of the keys in JSON is now preserved.
+
+
+## [4.2.0](https://github.com/oblac/jodd/compare/v4.1.5...4.2.0)
 
 ### Features
 

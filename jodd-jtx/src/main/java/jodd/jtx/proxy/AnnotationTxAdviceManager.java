@@ -85,7 +85,7 @@ public class AnnotationTxAdviceManager {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.scopePattern = scopePattern;
-		registerAnnotations(JoddJtx.defaults().defaults().getTxAnnotations());
+		registerAnnotations(JoddJtx.defaults().getTxAnnotations());
 	}
 
 	// ---------------------------------------------------------------- methods

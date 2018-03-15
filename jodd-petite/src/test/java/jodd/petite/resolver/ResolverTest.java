@@ -25,7 +25,7 @@
 
 package jodd.petite.resolver;
 
-import jodd.introspector.ClassIntrospector;
+import jodd.bean.JoddBean;
 import jodd.introspector.PropertyDescriptor;
 import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteException;
@@ -264,7 +264,7 @@ class ResolverTest {
 
 	private PropertyDescriptor field(Class type, String name) {
 		PropertyDescriptor[] propertyDescriptors
-			= ClassIntrospector.get().lookup(type).getAllPropertyDescriptors();
+			= JoddBean.defaults().getClassIntrospector().lookup(type).getAllPropertyDescriptors();
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			if (propertyDescriptor.getName().equals(name)) {

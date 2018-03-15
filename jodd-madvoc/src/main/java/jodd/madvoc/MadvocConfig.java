@@ -25,6 +25,8 @@
 
 package jodd.madvoc;
 
+import jodd.io.upload.FileUploadFactory;
+import jodd.io.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
@@ -35,8 +37,6 @@ import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPathNamingStrategy;
-import jodd.upload.FileUploadFactory;
-import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;

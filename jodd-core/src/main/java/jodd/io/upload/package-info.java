@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Jodd Upload module add-on for type converters.
+ * Multipart streams and file uploads.
  */
-package jodd.upload.typeconverter;
+package jodd.io.upload;

@@ -23,11 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload.impl;
+package jodd.io.upload.impl;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartRequestInputStream;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.MultipartRequestInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class MemoryFileUpload extends FileUpload {
 	 * Returns byte array input stream.
 	 */
 	@Override
-	public InputStream getFileInputStream() throws IOException {
+	public InputStream getFileInputStream() {
 		return new ByteArrayInputStream(data);
 	}
 

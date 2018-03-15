@@ -4,7 +4,6 @@ ext.moduleDescription = 'Jodd HTTP client is easy-to-use http client.'
 
 dependencies {
 	compile project(':jodd-core')
-	compile project(':jodd-upload')
 
 	testCompile lib.junit5
 	testCompile lib.tomcat_embed

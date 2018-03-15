@@ -30,7 +30,6 @@ import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.NamedValuesHashMap;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public abstract class TemplateData {
 	private static final String COL_CODE_PREFIX = "col_";
 	
 	protected TemplateData() {
-		columnAliasType = JoddDb.defaults().defaults().getDbOomConfig().getDefaultColumnAliasType();
+		columnAliasType = JoddDb.defaults().getDbOomConfig().getDefaultColumnAliasType();
 	}
 
 	/**
@@ -78,7 +77,7 @@ public abstract class TemplateData {
 	protected void resetHard() {
 		resetSoft();
 		objectRefs = null;
-		columnAliasType = JoddDb.defaults().defaults().getDbOomConfig().getDefaultColumnAliasType();
+		columnAliasType = JoddDb.defaults().getDbOomConfig().getDefaultColumnAliasType();
 	}
 
 
@@ -254,7 +253,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(final String entityName) {
-		DbEntityDescriptor ded = DbEntityManager.get().lookupName(entityName);
+		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -265,7 +264,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(final Class entity) {
-		DbEntityDescriptor ded = DbEntityManager.get().lookupType(entity);
+		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
 		}

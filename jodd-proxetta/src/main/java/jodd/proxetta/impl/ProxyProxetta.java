@@ -35,7 +35,7 @@ import jodd.proxetta.ProxyAspect;
 public class ProxyProxetta extends Proxetta<ProxyProxetta, ProxyAspect> {
 
 	public ProxyProxetta() {
-		classNameSuffix = JoddProxetta.defaults().defaults().getProxyClassNameSuffix();
+		classNameSuffix = JoddProxetta.defaults().getProxyClassNameSuffix();
 	}
 
 	@Override

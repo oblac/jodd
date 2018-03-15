@@ -46,7 +46,6 @@ import jodd.bean.fixtures.UppercaseBean;
 import jodd.bean.fixtures.XBean;
 import jodd.bean.fixtures.ZBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.mutable.MutableInteger;
@@ -1307,7 +1306,7 @@ class BeanUtilTest {
 		assertNotNull(value);
 		assertTrue((Boolean) value);
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(IsGetBool.class);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(IsGetBool.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
@@ -1326,7 +1325,7 @@ class BeanUtilTest {
 		assertNotNull(value);
 		assertTrue((Boolean) value);
 
-		cd = ClassIntrospector.get().lookup(GetIsBool.class);
+		cd = JoddBean.defaults().getClassIntrospector().lookup(GetIsBool.class);
 		assertEquals("flag", propertyDescriptors[0].getName());
 		assertEquals("isFlag", propertyDescriptors[0].getReadMethodDescriptor().getMethod().getName());
 		mds = cd.getAllMethodDescriptors();

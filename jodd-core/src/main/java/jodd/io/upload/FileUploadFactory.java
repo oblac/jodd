@@ -23,17 +23,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd;
+package jodd.io.upload;
 
-import org.junit.jupiter.api.Test;
+/**
+ * {@link FileUpload} factory for handling uploaded files. Implementations may
+ * handle uploaded files differently: to store them to memory, directly to disk
+ * or something else.
+ */
+public interface FileUploadFactory {
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class JoddHtmlStaplerTest {
-
-	@Test
-	void testLoadedModules() {
-		assertTrue(Jodd.isModuleLoaded(Jodd.JoddModule.HTML_STAPLER));
-	}
-
+	/**
+	 * Creates new instance of {@link FileUpload uploaded file}.
+	 */
+	FileUpload create(MultipartRequestInputStream input);
 }

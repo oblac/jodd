@@ -25,9 +25,9 @@
 
 package jodd.servlet.upload;
 
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.FileUploadFactory;
 import jodd.servlet.ServletUtil;
-import jodd.upload.FileUpload;
-import jodd.upload.FileUploadFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;

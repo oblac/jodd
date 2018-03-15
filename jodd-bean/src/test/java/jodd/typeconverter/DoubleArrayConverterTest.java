@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DoubleArrayConverterTest {
 
-	private TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+	private TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 	@Test
 	void testConversion() {

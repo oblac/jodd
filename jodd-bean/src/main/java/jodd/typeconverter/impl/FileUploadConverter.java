@@ -23,30 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload;
+package jodd.typeconverter.impl;
 
-import jodd.Jodd;
-import jodd.upload.typeconverter.FileUploadBinder;
+import jodd.io.upload.FileUpload;
+import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.TypeConverter;
 
 /**
- * Jodd UPLOAD module.
+ * Converts given object to {@link FileUpload}.
+ * Conversion rules:
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * </ul>
  */
-public class JoddUpload {
+public class FileUploadConverter implements TypeConverter<FileUpload> {
 
-	private static final JoddUpload instance = new JoddUpload();
-
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddUpload get() {
-		return instance;
+	@Override
+	public FileUpload convert(final Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof FileUpload) {
+			return (FileUpload) value;
+		}
+		throw new TypeConversionException(value);
 	}
 
-	static {
-		Jodd.initModule(() -> {
-			if (Jodd.isModuleLoaded(Jodd.JoddModule.BEAN)) {
-				FileUploadBinder.registerTypeConverter();
-			}
-		});
-	}
 }

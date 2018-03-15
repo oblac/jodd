@@ -23,12 +23,12 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload.impl;
+package jodd.io.upload.impl;
 
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartRequestInputStream;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.MultipartRequestInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -92,11 +92,11 @@ public class DiskFileUpload extends FileUpload {
 		return new BufferedInputStream(new FileInputStream(file));
 	}
 
-
 	@Override
 	protected void processStream() throws IOException {
 		file = new File(destFolder, header.getFileName());
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+		final OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+
 		size = 0;
 		try {
 			if (maxFileSize == -1) {

@@ -45,7 +45,7 @@ class ToCollectionTest {
 		set.add("456");
 
 		List<Integer> list =
-			JoddBean.defaults().typeConverterManager().convertToCollection(set, List.class, Integer.class);
+			JoddBean.defaults().getTypeConverterManager().convertToCollection(set, List.class, Integer.class);
 
 		assertNotNull(list);
 		assertEquals(2, list.size());

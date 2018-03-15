@@ -25,12 +25,12 @@
 
 package jodd.madvoc.injector;
 
+import jodd.io.upload.FileUpload;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.ScopeType;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
-import jodd.upload.FileUpload;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 

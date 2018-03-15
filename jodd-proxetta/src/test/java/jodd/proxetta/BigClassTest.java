@@ -26,8 +26,8 @@
 package jodd.proxetta;
 
 import jodd.asm6.Type;
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.mutable.MutableBoolean;
 import jodd.proxetta.fixtures.data.Action;
 import jodd.proxetta.fixtures.data.BigFatJoe;
@@ -167,7 +167,7 @@ class BigClassTest {
 
 
 		// test method annotation
-		ClassDescriptor cd = ClassIntrospector.get().lookup(clazz);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(clazz);
 		Method m = cd.getMethodDescriptor("publicMethod", false).getMethod();
 		assertNotNull(m);
 		Annotation[] aa = m.getAnnotations();

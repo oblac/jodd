@@ -27,9 +27,9 @@ package jodd.servlet;
 
 import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
+import jodd.io.upload.FileUpload;
 import jodd.servlet.upload.MultipartRequest;
 import jodd.servlet.upload.MultipartRequestWrapper;
-import jodd.upload.FileUpload;
 import jodd.util.Base64;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;

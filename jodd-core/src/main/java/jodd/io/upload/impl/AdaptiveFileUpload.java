@@ -23,15 +23,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload.impl;
+package jodd.io.upload.impl;
 
 import jodd.core.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartRequestInputStream;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.MultipartRequestInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -157,7 +157,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 		}
 
-		tempFile = FileUtil.createTempFile(JoddCore.defaults().defaults().getTempFilePrefix(), TMP_FILE_SUFFIX, uploadPath);
+		tempFile = FileUtil.createTempFile(JoddCore.defaults().getTempFilePrefix(), TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;

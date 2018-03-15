@@ -41,7 +41,7 @@ class KeyTest {
 	@Test
 	void testEqualEntities() {
 		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.defaults().dbEntityManager();
+		DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
 
 		DbEntityDescriptor<Foo> fooded = dbEntityManager.registerEntity(Foo.class);
 		DbEntityDescriptor<Bar> barded = dbEntityManager.registerEntity(Bar.class);

@@ -26,17 +26,11 @@
 package jodd.introspector;
 
 
-import jodd.bean.JoddBean;
-
 /**
  * Default class {@link ClassIntrospector} simply delegates method calls for
  * more convenient usage.
  */
 public interface ClassIntrospector {
-
-	public static ClassIntrospector get() {
-		return JoddBean.defaults().classIntrospector();
-	}
 
 	/**
 	 * Returns class descriptor for specified type.

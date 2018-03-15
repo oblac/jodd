@@ -40,7 +40,7 @@ class MutableDoubleConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) JoddBean.defaults().typeConverterManager().lookup(MutableDouble.class);
+		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableDouble.class);
 
 		assertNull(mutableDoubleConverter.convert(null));
 

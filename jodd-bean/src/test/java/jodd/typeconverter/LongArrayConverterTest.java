@@ -42,7 +42,7 @@ class LongArrayConverterTest {
 
 	@Test
 	void testConversion() {
-		LongArrayConverter longArrayConverter = (LongArrayConverter) JoddBean.defaults().typeConverterManager().lookup(long[].class);
+		LongArrayConverter longArrayConverter = (LongArrayConverter) JoddBean.defaults().getTypeConverterManager().lookup(long[].class);
 
 		assertNull(longArrayConverter.convert(null));
 

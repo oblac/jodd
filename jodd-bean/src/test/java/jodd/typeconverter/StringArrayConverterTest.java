@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class StringArrayConverterTest {
 	
-	private TypeConverterManager typeConverterManager = JoddBean.defaults().typeConverterManager();
+	private TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
 
 	@Test
 	void testConversion() {

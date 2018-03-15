@@ -23,11 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload.impl;
+package jodd.io.upload.impl;
 
-import jodd.upload.FileUpload;
-import jodd.upload.FileUploadFactory;
-import jodd.upload.MultipartRequestInputStream;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.FileUploadFactory;
+import jodd.io.upload.MultipartRequestInputStream;
 
 import java.io.File;
 

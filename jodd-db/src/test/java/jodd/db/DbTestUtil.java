@@ -26,15 +26,17 @@
 package jodd.db;
 
 import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.DbOomConfig;
 import jodd.db.oom.JoinHintResolver;
 import jodd.db.querymap.EmptyQueryMap;
 
 public class DbTestUtil {
 
 	public static void resetAll() {
-		JoddDb.defaults().dbEntityManager(new DbEntityManager());
-		JoddDb.defaults().queryMap(new EmptyQueryMap());
-		JoddDb.defaults().hintResolver(new JoinHintResolver());
-		JoddDb.defaults().defaults(new JoddDbDefaults());
+		JoddDb.defaults().setDbEntityManager(new DbEntityManager());
+		JoddDb.defaults().setQueryMap(new EmptyQueryMap());
+		JoddDb.defaults().setHintResolver(new JoinHintResolver());
+		JoddDb.defaults().setDbOomConfig(new DbOomConfig());
+		JoddDb.defaults().setQueryConfig(new DbQueryConfig());
 	}
 }

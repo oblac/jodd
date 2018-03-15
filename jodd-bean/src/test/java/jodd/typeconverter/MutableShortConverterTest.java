@@ -38,7 +38,7 @@ class MutableShortConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableShortConverter mutableShortConverter = (MutableShortConverter) JoddBean.defaults().typeConverterManager().lookup(MutableShort.class);
+		MutableShortConverter mutableShortConverter = (MutableShortConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableShort.class);
 
 		assertNull(mutableShortConverter.convert(null));
 

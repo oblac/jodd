@@ -35,7 +35,7 @@ import jodd.proxetta.Proxetta;
 public class InvokeProxetta extends Proxetta<InvokeProxetta, InvokeAspect> {
 
 	public InvokeProxetta() {
-		classNameSuffix = JoddProxetta.defaults().defaults().getInvokeProxyClassNameSuffix();
+		classNameSuffix = JoddProxetta.defaults().getInvokeProxyClassNameSuffix();
 	}
 
 	@Override

@@ -26,6 +26,7 @@
 package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
+import jodd.db.JoddDb;
 import jodd.util.StringUtil;
 
 /**
@@ -41,7 +42,7 @@ public class DbOomUtil {
 		if (generatedColumns == null) {
 			return;
 		}
-		DbEntityDescriptor ded = DbEntityManager.get().lookupType(entity.getClass());
+		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupType(entity.getClass());
 
 		// prepare key types
 		Class[] keyTypes = new Class[generatedColumns.length];

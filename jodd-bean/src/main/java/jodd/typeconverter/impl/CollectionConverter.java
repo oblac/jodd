@@ -25,6 +25,7 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.bean.JoddBean;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManager;
@@ -49,7 +50,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	public CollectionConverter(
 		final Class<? extends Collection> collectionType,
 		final Class<T> targetComponentType) {
-		this(TypeConverterManager.get(), collectionType, targetComponentType);
+		this(JoddBean.defaults().getTypeConverterManager(), collectionType, targetComponentType);
 	}
 
 	public CollectionConverter(

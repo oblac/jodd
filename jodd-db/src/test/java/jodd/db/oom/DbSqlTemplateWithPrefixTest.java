@@ -41,13 +41,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DbSqlTemplateWithPrefixTest {
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbOom = JoddDb.defaults().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.defaults().getDbEntityManager();
 
-		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setPrefix("PRE_");
-		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setSuffix("_SUF");
+		JoddDb.defaults().getDbOomConfig().getTableNames().setPrefix("PRE_");
+		JoddDb.defaults().getDbOomConfig().getTableNames().setSuffix("_SUF");
 
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);

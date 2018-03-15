@@ -25,11 +25,10 @@
 
 package jodd.json;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
-import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 
@@ -80,7 +79,7 @@ public class MapToBean {
 			target = jsonParser.newObjectInstance(targetType);
 		}
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(target.getClass());
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(target.getClass());
 
 		boolean targetIsMap = target instanceof Map;
 
@@ -232,7 +231,7 @@ public class MapToBean {
 		}
 
 		try {
-			return TypeConverterManager.get().convertType(value, targetType);
+			return JoddBean.defaults().getTypeConverterManager().convertType(value, targetType);
 		}
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);

@@ -40,7 +40,7 @@ class MutableFloatConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) JoddBean.defaults().typeConverterManager().lookup(MutableFloat.class);
+		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableFloat.class);
 
 		assertNull(mutableFloatConverter.convert(null));
 

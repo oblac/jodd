@@ -46,7 +46,7 @@ class DbEntitySqlTest {
 	void setUp() throws Exception {
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbOom = JoddDb.defaults().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.defaults().getDbEntityManager();
 
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);

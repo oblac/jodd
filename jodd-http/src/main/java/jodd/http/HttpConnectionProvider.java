@@ -33,13 +33,6 @@ import java.io.IOException;
 public interface HttpConnectionProvider {
 
 	/**
-	 * Returns default http connection provider.
-	 */
-	public static HttpConnectionProvider get() {
-		return JoddHttp.defaults().httpConnectionProvider();
-	}
-
-	/**
 	 * Specifies {@link ProxyInfo proxy} for provide to use.
 	 */
 	public void useProxy(ProxyInfo proxyInfo);

@@ -40,7 +40,7 @@ class ShortArrayConverterTest {
 
 	@Test
 	void testConversion() {
-		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) JoddBean.defaults().typeConverterManager().lookup(short[].class);
+		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) JoddBean.defaults().getTypeConverterManager().lookup(short[].class);
 
 		assertNull(shortArrayConverter.convert(null));
 

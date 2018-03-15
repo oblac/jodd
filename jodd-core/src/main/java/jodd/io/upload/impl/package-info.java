@@ -23,17 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload;
-
 /**
- * {@link FileUpload} factory for handling uploaded files. Implementations may
- * handle uploaded files differently: to store them to memory, directly to disk
- * or something else.
+ * Various implementations of uploaded files and their factories.
  */
-public interface FileUploadFactory {
-
-	/**
-	 * Creates new instance of {@link FileUpload uploaded file}.
-	 */
-	FileUpload create(MultipartRequestInputStream input);
-}
+package jodd.io.upload.impl;

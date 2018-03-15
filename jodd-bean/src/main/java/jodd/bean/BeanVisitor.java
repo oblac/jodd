@@ -26,7 +26,6 @@
 package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -83,7 +82,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Returns all bean property names.
 	 */
 	protected String[] getAllBeanPropertyNames(final Class type, final boolean declared) {
-		ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
+		ClassDescriptor classDescriptor = JoddBean.defaults().getClassIntrospector().lookup(type);
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 

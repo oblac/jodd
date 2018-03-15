@@ -44,22 +44,22 @@ class DbSessionProviderTest extends DbHsqldbTestCase {
 
 	@BeforeEach
 	void setup() {
-		sessionProvider = JoddDb.defaults().sessionProvider();
-		connectionProvider = JoddDb.defaults().connectionProvider();
+		sessionProvider = JoddDb.defaults().getSessionProvider();
+		connectionProvider = JoddDb.defaults().getConnectionProvider();
 	}
 
 	@Override
 	@AfterEach
 	protected void tearDown() {
-		JoddDb.defaults().getSessionProvider(sessionProvider);
-		JoddDb.defaults().connectionProvider(connectionProvider);
+		JoddDb.defaults().setSessionProvider(sessionProvider);
+		JoddDb.defaults().setConnectionProvider(connectionProvider);
 	}
 
 	@Test
 	void testThreadSessionProvider() {
 		// set connection provider and thread session manager
-		JoddDb.defaults().connectionProvider(cp);
-		JoddDb.defaults().getSessionProvider(new ThreadDbSessionProvider());
+		JoddDb.defaults().setConnectionProvider(cp);
+		JoddDb.defaults().setSessionProvider(new ThreadDbSessionProvider());
 
 		for (int i = 0; i < 2; i++) {
 			// create thread session

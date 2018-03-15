@@ -23,18 +23,54 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload.impl;
+package jodd.io.upload.impl;
 
-import jodd.upload.FileUploadFactory;
-import jodd.upload.FileUpload;
-import jodd.upload.MultipartRequestInputStream;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.FileUploadFactory;
+import jodd.io.upload.MultipartRequestInputStream;
+import jodd.util.SystemUtil;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
- * Factory for {@link jodd.upload.impl.MemoryFileUpload}.
+ * Factory for {@link jodd.io.upload.impl.DiskFileUpload}
  */
-public class MemoryFileUploadFactory implements FileUploadFactory {
+public class DiskFileUploadFactory implements FileUploadFactory {
 
-	protected int maxFileSize = 102400;
+	protected File destFolder;
+
+	protected int maxFileSize = 102400; 
+
+	public DiskFileUploadFactory() throws IOException {
+		this(SystemUtil.tempDir());
+	}
+
+	public DiskFileUploadFactory(final String destFolder) throws IOException {
+		this(destFolder, 102400);
+
+	}
+
+	public DiskFileUploadFactory(final String destFolder, final int maxFileSize) throws IOException {
+		setUploadDir(destFolder);
+		this.maxFileSize = maxFileSize;
+	}
+
+
+	public DiskFileUploadFactory setUploadDir(String destFolder) throws IOException {
+		if (destFolder == null) {
+			destFolder = SystemUtil.tempDir();
+		}
+		File destination = new File(destFolder);
+		if (!destination.exists()) {
+			destination.mkdirs();
+		}
+		if (!destination.isDirectory()) {
+			throw new IOException("Invalid destination folder: " + destFolder);
+		}
+		this.destFolder = destination;
+		return this;
+	}
 
 	public int getMaxFileSize() {
 		return maxFileSize;
@@ -43,7 +79,7 @@ public class MemoryFileUploadFactory implements FileUploadFactory {
 	/**
 	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
 	 */
-	public MemoryFileUploadFactory setMaxFileSize(final int maxFileSize) {
+	public DiskFileUploadFactory setMaxFileSize(final int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 		return this;
 	}
@@ -51,8 +87,9 @@ public class MemoryFileUploadFactory implements FileUploadFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public FileUpload create(final MultipartRequestInputStream input) {
-		return new MemoryFileUpload(input, maxFileSize);
+		return new DiskFileUpload(input, destFolder, maxFileSize);
 	}
 
 }

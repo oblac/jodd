@@ -88,7 +88,7 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 		methodVisitor.visitMethodInsn(
 			INVOKESPECIAL,
 			wd.thisReference,
-			JoddProxetta.defaults().defaults().getInitMethodName(), DESC_VOID,
+			JoddProxetta.defaults().getInitMethodName(), DESC_VOID,
 			false);
 
 		methodVisitor.visitInsn(RETURN);

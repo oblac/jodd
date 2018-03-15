@@ -66,14 +66,14 @@ public abstract class DbBaseTest {
 		});
 		DbTestUtil.resetAll();
 
-		dboom = JoddDb.defaults().dbEntityManager();
+		dboom = JoddDb.defaults().getDbEntityManager();
 
 		connectionPool = new CoreConnectionPool();
 	}
 
 	protected void connect() {
 		connectionPool.init();
-		JoddDb.defaults().connectionProvider(connectionPool);
+		JoddDb.defaults().setConnectionProvider(connectionPool);
 	}
 
 	// ---------------------------------------------------------------- dbaccess
@@ -124,8 +124,8 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
 
-			JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setUppercase(true);
-			JoddDb.defaults().defaults().getDbOomConfig().getColumnNames().setUppercase(true);
+			JoddDb.defaults().getDbOomConfig().getTableNames().setUppercase(true);
+			JoddDb.defaults().getDbOomConfig().getColumnNames().setUppercase(true);
 
 			//dboom.getTableNames().setLowercase(true);
 			//dboom.getColumnNames().setLowercase(true);
@@ -177,8 +177,8 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("sa");
 			connectionPool.setPassword("");
 
-			JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setUppercase(true);
-			JoddDb.defaults().defaults().getDbOomConfig().getColumnNames().setUppercase(true);
+			JoddDb.defaults().getDbOomConfig().getTableNames().setUppercase(true);
+			JoddDb.defaults().getDbOomConfig().getColumnNames().setUppercase(true);
 		}
 	}
 

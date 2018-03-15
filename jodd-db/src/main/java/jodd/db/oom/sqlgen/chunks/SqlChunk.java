@@ -25,9 +25,9 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
+import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.CharUtil;
@@ -155,7 +155,7 @@ public abstract class SqlChunk {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(final String entityName) {
-		DbEntityDescriptor ded = DbEntityManager.get().lookupName(entityName);
+		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -166,7 +166,7 @@ public abstract class SqlChunk {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(final Class entity) {
-		DbEntityDescriptor ded = DbEntityManager.get().lookupType(entity);
+		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity: " + entity.getName());
 		}

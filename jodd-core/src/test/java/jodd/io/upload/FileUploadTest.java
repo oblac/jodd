@@ -23,27 +23,34 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd;
+package jodd.io.upload;
 
 import org.junit.jupiter.api.Test;
 
-import static jodd.Jodd.JoddModule;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 
-class JoddPropsTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class FileUploadTest {
 
 	@Test
-	void testLoadedModules() {
-		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.HTTP));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.MADVOC));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.MAIL));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.PETITE));
-		assertTrue (Jodd.isModuleLoaded(JoddModule.PROPS));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.PROXETTA));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.SERVLET));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.UPLOAD));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.VTOR));
+	void testFileNames() throws IOException {
+		URL data = FileUploadTest.class.getResource("upload.txt");
+		String file = data.getFile();
+
+		MultipartStreamParser msp = new MultipartStreamParser();
+		msp.parseRequestStream(new FileInputStream(new File(file)), "ISO-8859-1");
+
+		FileUpload fu = msp.getFile("avatar");
+		assertEquals("smiley-cool.png", fu.getHeader().getFileName());
+
+		fu = msp.getFile("attach1");
+		assertEquals("file1.txt", fu.getHeader().getFileName());
+
+		fu = msp.getFile("attach2");
+		assertEquals("file2.txt", fu.getHeader().getFileName());
 	}
 }

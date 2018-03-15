@@ -25,8 +25,8 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.datetime.JDateTime;
+import jodd.io.upload.FileUpload;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
 import jodd.mutable.MutableFloat;
@@ -50,6 +50,7 @@ import jodd.typeconverter.impl.DateConverter;
 import jodd.typeconverter.impl.DoubleArrayConverter;
 import jodd.typeconverter.impl.DoubleConverter;
 import jodd.typeconverter.impl.FileConverter;
+import jodd.typeconverter.impl.FileUploadConverter;
 import jodd.typeconverter.impl.FloatArrayConverter;
 import jodd.typeconverter.impl.FloatConverter;
 import jodd.typeconverter.impl.IntegerArrayConverter;
@@ -98,14 +99,7 @@ import java.util.UUID;
  */
 public class TypeConverterManager {
 
-	/**
-	 * Returns default instance.
-	 */
-	public static TypeConverterManager get() {
-		return JoddBean.defaults().typeConverterManager();
-	}
-
-	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);
+	private final HashMap<Class, TypeConverter> converters = new HashMap<>();
 	private final Converter converter;
 
 	// ---------------------------------------------------------------- methods
@@ -240,6 +234,7 @@ public class TypeConverterManager {
 		register(JDateTime.class, new JDateTimeConverter());
 
 		register(File.class, new FileConverter());
+		register(FileUpload.class, new FileUploadConverter());
 
 		register(Class.class, new ClassConverter());
 		register(Class[].class, new ClassArrayConverter(this));

@@ -90,7 +90,7 @@ public class JoyProxetta extends JoyBase {
 			AnnotationTxAdvice.class,
 			((ProxyPointcut)
 				methodInfo -> methodInfo.isPublicMethod() && methodInfo.isTopLevelMethod())
-				.and(MethodWithAnnotationPointcut.of(JoddJtx.defaults().defaults().getTxAnnotations()))
+				.and(MethodWithAnnotationPointcut.of(JoddJtx.defaults().getTxAnnotations()))
 		);
 	}
 

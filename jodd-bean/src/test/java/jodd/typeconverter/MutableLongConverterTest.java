@@ -39,7 +39,7 @@ class MutableLongConverterTest {
 	@Test
 	void testConversion() {
 		MutableLongConverter mutableLongConverter =
-			(MutableLongConverter) JoddBean.defaults().typeConverterManager().lookup(MutableLong.class);
+			(MutableLongConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableLong.class);
 
 		assertNull(mutableLongConverter.convert(null));
 

@@ -23,27 +23,37 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd;
+package jodd.io.upload.impl;
 
-import jodd.Jodd.JoddModule;
-import org.junit.jupiter.api.Test;
+import jodd.io.upload.FileUpload;
+import jodd.io.upload.FileUploadFactory;
+import jodd.io.upload.MultipartRequestInputStream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+/**
+ * Factory for {@link jodd.io.upload.impl.MemoryFileUpload}.
+ */
+public class MemoryFileUploadFactory implements FileUploadFactory {
 
-class JoddUploadTest {
+	protected int maxFileSize = 102400;
 
-	@Test
-	void testLoadedModules() {
-		assertTrue (Jodd.isModuleLoaded(JoddModule.BEAN));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.HTTP));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.MADVOC));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.MAIL));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.PETITE));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.PROPS));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.PROXETTA));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.SERVLET));
-		assertTrue (Jodd.isModuleLoaded(JoddModule.UPLOAD));
-		assertFalse(Jodd.isModuleLoaded(JoddModule.VTOR));
+	public int getMaxFileSize() {
+		return maxFileSize;
 	}
+
+	/**
+	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
+	 */
+	public MemoryFileUploadFactory setMaxFileSize(final int maxFileSize) {
+		this.maxFileSize = maxFileSize;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public FileUpload create(final MultipartRequestInputStream input) {
+		return new MemoryFileUpload(input, maxFileSize);
+	}
+
 }

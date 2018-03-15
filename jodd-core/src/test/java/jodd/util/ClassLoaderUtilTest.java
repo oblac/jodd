@@ -25,11 +25,11 @@
 
 package jodd.util;
 
+import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.findfile.ClassScanner;
 import jodd.mutable.Value;
 import jodd.test.DisabledOnJava;
-import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.jupiter.api.Test;
@@ -129,7 +129,7 @@ class ClassLoaderUtilTest {
 
 		// special case
 
-		DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) ClassLoaderStrategy.get();
+		DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) JoddCore.defaults().getClassLoaderStrategy();
 
 		defaultClassLoaderStrategy.setLoadArrayClassByComponentTypes(true);
 

@@ -25,8 +25,6 @@
 
 package jodd.cache;
 
-import jodd.core.JoddCore;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,13 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Type cache.
  */
 public class TypeCache<T> {
-
-	/**
-	 * Creates default type cache implementation, as defined in {@link jodd.core.JoddCoreDefaults}.
-	 */
-	public static <A> TypeCache<A> createDefault() {
-		return new TypeCache<>(JoddCore.defaults().typeCacheImplementation());
-	}
 
 	public static <A> TypeCache<A> create(final Implementation implementation) {
 		return new TypeCache<>(implementation);

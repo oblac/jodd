@@ -53,7 +53,7 @@ public abstract class DbTestBase {
 			queryMap.props().load(this.getClass().getClassLoader().getResourceAsStream("queries.sql.props"));
 		}
 
-		JoddDb.defaults().queryMap(queryMap);
+		JoddDb.defaults().setQueryMap(queryMap);
 
 		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {

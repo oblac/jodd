@@ -40,7 +40,6 @@ public class UnsafeUtil {
 
 	private static final boolean IS_ANDROID = SystemUtil.isHostAndroid();
 	private static final boolean HAS_UNSAFE = !IS_ANDROID && UnsafeInternal.hasUnsafe();
-	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.defaults().defaults();
 
 	/**
 	 * Returns <code>true</code> if system has the <code>Unsafe</code>.
@@ -60,7 +59,7 @@ public class UnsafeUtil {
 			return null;
 		}
 
-		if (!HAS_UNSAFE || !JODD_CORE_DEFAULTS.isUnsafeUsageEnabled()) {
+		if (!HAS_UNSAFE || !JoddCore.defaults().isUnsafeUsageEnabled()) {
 			return string.toCharArray();
 		}
 

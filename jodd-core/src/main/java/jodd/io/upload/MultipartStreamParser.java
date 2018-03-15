@@ -23,10 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.upload;
+package jodd.io.upload;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.upload.impl.MemoryFileUploadFactory;
+import jodd.io.upload.impl.MemoryFileUploadFactory;
 import jodd.util.ArraysUtil;
 
 import java.io.IOException;

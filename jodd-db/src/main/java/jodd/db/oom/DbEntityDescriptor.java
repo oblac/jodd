@@ -26,9 +26,9 @@
 package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
+import jodd.bean.JoddBean;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.StringPool;
 
@@ -132,7 +132,7 @@ public class DbEntityDescriptor<E> {
 	 * Resolves list of all columns and properties.
 	 */
 	private void resolveColumnsAndProperties(final Class type) {
-		PropertyDescriptor[] allProperties = ClassIntrospector.get().lookup(type).getAllPropertyDescriptors();
+		PropertyDescriptor[] allProperties = JoddBean.defaults().getClassIntrospector().lookup(type).getAllPropertyDescriptors();
 		List<DbEntityColumnDescriptor> decList = new ArrayList<>(allProperties.length);
 		int idcount = 0;
 

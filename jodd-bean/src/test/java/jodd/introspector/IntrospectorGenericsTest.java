@@ -25,6 +25,7 @@
 
 package jodd.introspector;
 
+import jodd.bean.JoddBean;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +56,7 @@ class IntrospectorGenericsTest {
 
 	@Test
 	void testFields() throws NoSuchFieldException {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(MethodParameterType.class);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
 		assertEquals(4, cd.getAllFieldDescriptors().length);
@@ -87,7 +88,7 @@ class IntrospectorGenericsTest {
 		assertEquals(Long.class, fd4.getRawComponentType());
 
 		// impl
-		cd = ClassIntrospector.get().lookup(Foo.class);
+		cd = JoddBean.defaults().getClassIntrospector().lookup(Foo.class);
 
 		fd = cd.getFieldDescriptor("f", true);
 		fd2 = cd.getFieldDescriptor("f2", true);
@@ -106,7 +107,7 @@ class IntrospectorGenericsTest {
 
 	@Test
 	void testMethods() throws NoSuchMethodException {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(MethodParameterType.class);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
 		assertEquals(5, cd.getAllMethodDescriptors().length);
@@ -168,7 +169,7 @@ class IntrospectorGenericsTest {
 
 		Class[] params2 = new Class[] {Integer.class, String.class, List.class, List.class, List.class};
 
-		ClassDescriptor cd1 = ClassIntrospector.get().lookup(Foo.class);
+		ClassDescriptor cd1 = JoddBean.defaults().getClassIntrospector().lookup(Foo.class);
 
 		assertEquals(0, Foo.class.getDeclaredMethods().length);
 

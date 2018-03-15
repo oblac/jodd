@@ -25,21 +25,15 @@
 
 package jodd.db.querymap;
 
-import jodd.db.JoddDb;
-
 /**
  * Storage of SQL queries.
  */
 @FunctionalInterface
 public interface QueryMap {
 
-	public static QueryMap get() {
-		return JoddDb.defaults().queryMap();
-	}
-
 	/**
 	 * Returns query for given key. Returns <code>null</code> if query not found.
 	 */
-	public String getQuery(String key);
+	String getQuery(String key);
 
 }

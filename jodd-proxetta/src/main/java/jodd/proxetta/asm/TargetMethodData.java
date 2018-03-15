@@ -62,7 +62,7 @@ final class TargetMethodData {
 	// ---------------------------------------------------------------- method names
 
 	private String methodName(final int index) {
-		return methodName + JoddProxetta.defaults().defaults().getMethodDivider() + proxyData[index].aspectIndex;
+		return methodName + JoddProxetta.defaults().getMethodDivider() + proxyData[index].aspectIndex;
 	}
 
 	/**

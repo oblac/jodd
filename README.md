@@ -32,7 +32,6 @@ Tools and utilities:
 + `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
 + `jodd-props` is the super-replacement for Java `Properties`.
 + `jodd-mail` for easier email sending.
-+ `jodd-upload`, handles HTTP uploads.
 + `jodd-servlet` with many servlet utilities, including nice tag library.
 + `jodd-http`, tiny HTTP client.
 

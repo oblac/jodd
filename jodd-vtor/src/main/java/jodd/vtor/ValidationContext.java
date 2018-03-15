@@ -25,8 +25,8 @@
 
 package jodd.vtor;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -99,7 +99,7 @@ public class ValidationContext {
 		List<Check> list = cache.get(target);
 		if (list == null) {
 			list = new ArrayList<>();
-			ClassDescriptor cd = ClassIntrospector.get().lookup(target);
+			ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(target);
 
 			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 			for (PropertyDescriptor propertyDescriptor : allProperties) {

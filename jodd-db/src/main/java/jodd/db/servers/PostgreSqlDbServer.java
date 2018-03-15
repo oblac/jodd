@@ -41,8 +41,8 @@ public class PostgreSqlDbServer implements DbServer {
 
 	@Override
 	public void accept(final DbEntityManager dbEntityManager) {
-		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setLowercase(true);
-		JoddDb.defaults().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
+		JoddDb.defaults().getDbOomConfig().getTableNames().setLowercase(true);
+		JoddDb.defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}
 
 	@Override

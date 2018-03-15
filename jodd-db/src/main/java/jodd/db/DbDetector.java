@@ -25,7 +25,6 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
-import jodd.db.oom.DbEntityManager;
 import jodd.db.servers.Db2DbServer;
 import jodd.db.servers.DbServer;
 import jodd.db.servers.DerbyDbServer;
@@ -64,7 +63,7 @@ public class DbDetector {
 
 		cp.closeConnection(connection);
 
-		dbServer.accept(DbEntityManager.get());
+		dbServer.accept(JoddDb.defaults().getDbEntityManager());
 
 		return dbServer;
 	}

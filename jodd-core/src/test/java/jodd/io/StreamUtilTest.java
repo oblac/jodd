@@ -602,7 +602,7 @@ class StreamUtilTest {
 
         Stream<Arguments> testdata_testCopy_Inputstream_Outputstream_ByteCount() throws Exception {
             return Stream.of(
-                    Arguments.of("The Unbearable Lightness of Java", "The Unbearable Lightness of Java", JoddCore.defaults().defaults().getIoBufferSize() + 250),
+                    Arguments.of("The Unbearable Lightness of Java", "The Unbearable Lightness of Java", JoddCore.defaults().getIoBufferSize() + 250),
                     Arguments.of("j", "jodd" , 1),
                     Arguments.of("jodd makes fun!", "jodd makes fun!",  15),
                     Arguments.of("", "text does not matter",  0)

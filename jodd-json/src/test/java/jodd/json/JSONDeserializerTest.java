@@ -78,7 +78,7 @@ class JSONDeserializerTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().defaults().setClassMetadataName(null);
+		JoddJson.defaults().setClassMetadataName(null);
 	}
 
 	@Test
@@ -175,7 +175,7 @@ class JSONDeserializerTest {
 			assertEquals(4, jsonSuperMan.getPowers().size());
 			assertHeroHasSuperPowers(jsonSuperMan);
 
-			JoddJson.defaults().defaults().setClassMetadataName(null);
+			JoddJson.defaults().setClassMetadataName(null);
 		});
 	}
 
@@ -191,7 +191,7 @@ class JSONDeserializerTest {
 			assertEquals(4, jsonSuperMan.getPowers().size());
 			assertHeroHasSuperPowers(jsonSuperMan);
 
-			JoddJson.defaults().defaults().setClassMetadataName(null);
+			JoddJson.defaults().setClassMetadataName(null);
 		});
 	}
 
@@ -199,7 +199,7 @@ class JSONDeserializerTest {
 	void testNoClassHints() {
 		JsonParsers.forEachParser(jsonParser -> {
 
-			JoddJson.defaults().defaults().setClassMetadataName(null);
+			JoddJson.defaults().setClassMetadataName(null);
 
 			Hero superman = creator.createSuperman();
 			String json = new JsonSerializer().exclude("*.class").serialize(superman);
@@ -221,7 +221,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testNoHintsButClassesForCollection() {
-		JoddJson.defaults().defaults().setClassMetadataName("class");
+		JoddJson.defaults().setClassMetadataName("class");
 
 		JsonParsers.forEachParser(jsonParser -> {
 
@@ -237,7 +237,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testNoClassHintsForCollections() {
-		JoddJson.defaults().defaults().setClassMetadataName("class");
+		JoddJson.defaults().setClassMetadataName("class");
 
 		JsonParsers.forEachParser(jsonParser -> {
 
@@ -266,7 +266,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testListSerialization() {
-		JoddJson.defaults().defaults().setClassMetadataName("class");
+		JoddJson.defaults().setClassMetadataName("class");
 
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
@@ -302,7 +302,7 @@ class JSONDeserializerTest {
 	@Test
 	void testGenericTypeDeserialization() {
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().defaults().setClassMetadataName("class");
+			JoddJson.defaults().setClassMetadataName("class");
 
 			Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
 
@@ -355,7 +355,7 @@ class JSONDeserializerTest {
 	@Test
 	void testGeneralMapDeserialization() {
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().defaults().setClassMetadataName("class");
+			JoddJson.defaults().setClassMetadataName("class");
 
 			String json = new JsonSerializer().exclude("*.class").serialize(creator.createJodder());
 			Map<String, Object> deserialized = jsonParser.parse(json);
@@ -383,7 +383,7 @@ class JSONDeserializerTest {
 	@Test
 	void testListDeserializationNoClass() {
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().defaults().setClassMetadataName("class");
+			JoddJson.defaults().setClassMetadataName("class");
 
 			Person modesty = creator.createModesty();
 			Person igor = creator.createJodder();
@@ -476,7 +476,7 @@ class JSONDeserializerTest {
 	@Test
 	void testMapWithEmbeddedObject2() {
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().defaults().setClassMetadataName(null);
+			JoddJson.defaults().setClassMetadataName(null);
 
 			Map<String, Pair<Phone, Network>> complex = jsonParser
 				.map("values", Pair.class)
@@ -642,7 +642,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testDeserializationIntoPublicFields() {
-		JoddJson.defaults().defaults().setClassMetadataName("class");
+		JoddJson.defaults().setClassMetadataName("class");
 		JsonParsers.forEachParser(jsonParser -> {
 			Spiderman spiderman = new Spiderman();
 			spiderman.spideySense = false;
@@ -695,7 +695,7 @@ class JSONDeserializerTest {
 
 	@Test
 	void testPoint() {
-		JoddJson.defaults().defaults().setClassMetadataName("__class");
+		JoddJson.defaults().setClassMetadataName("__class");
 
 		JsonParsers.forEachParser(jsonParser -> {
 			String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));

@@ -41,7 +41,7 @@ public class SQLiteDbServer implements DbServer {
 
 	@Override
 	public void accept(final DbEntityManager dbEntityManager) {
-		JoddDb.defaults().defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
+		JoddDb.defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
 	}
 
 	@Override

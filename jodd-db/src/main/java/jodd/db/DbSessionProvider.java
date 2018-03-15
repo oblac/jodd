@@ -38,13 +38,6 @@ package jodd.db;
 public interface DbSessionProvider {
 
 	/**
-	 * Returns default instance.
-	 */
-	public static DbSessionProvider get() {
-		return JoddDb.defaults().sessionProvider();
-	}
-
-	/**
 	 * Returns {@link DbSession}. May throws an exception
 	 * if session can not be provided.
 	 */

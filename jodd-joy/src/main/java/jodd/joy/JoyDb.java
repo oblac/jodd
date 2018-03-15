@@ -154,17 +154,17 @@ public class JoyDb extends JoyBase {
 		jtxManager.setValidateExistingTransaction(true);
 
 		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, jtxScopePattern);
-		annTxAdviceManager.registerAnnotations(JoddJtx.defaults().defaults().getTxAnnotations());
+		annTxAdviceManager.registerAnnotations(JoddJtx.defaults().getTxAnnotations());
 		AnnotationTxAdviceSupport.manager = annTxAdviceManager;
 
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		JoddDb.defaults().connectionProvider(connectionProvider);
-		JoddDb.defaults().getSessionProvider(sessionProvider);
-		petiteContainerSupplier.get().addBean(PETITE_DB, JoddDb.defaults().defaults());           // todo -> this is for the configuration!, make this for each bean
+		JoddDb.defaults().setConnectionProvider(connectionProvider);
+		JoddDb.defaults().setSessionProvider(sessionProvider);
+		petiteContainerSupplier.get().addBean(PETITE_DB, JoddDb.defaults());           // todo -> this is for the configuration!, make this for each bean
 
-		final DbEntityManager dbEntityManager = JoddDb.defaults().dbEntityManager();
+		final DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
 		dbEntityManager.reset();
 
 		// automatic configuration

@@ -25,8 +25,8 @@
 
 package jodd.json;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.util.ClassUtil;
 import jodd.util.Wildcard;
 
@@ -207,7 +207,7 @@ public class JsonContext extends JsonWriter {
 
 		if (propertyType != null) {
 			if (!jsonSerializer.deep) {
-				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.get().lookup(propertyType);
+				ClassDescriptor propertyTypeClassDescriptor = JoddBean.defaults().getClassIntrospector().lookup(propertyType);
 
 				if (propertyTypeClassDescriptor.isArray()) {
 					return false;
@@ -226,8 +226,8 @@ public class JsonContext extends JsonWriter {
 
 			// + excluded types
 
-			if (JoddJson.defaults().defaults().getExcludedTypes() != null) {
-				for (Class excludedType : JoddJson.defaults().defaults().getExcludedTypes()) {
+			if (JoddJson.defaults().getExcludedTypes() != null) {
+				for (Class excludedType : JoddJson.defaults().getExcludedTypes()) {
 					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
@@ -245,8 +245,8 @@ public class JsonContext extends JsonWriter {
 
 			String propertyTypeName = propertyType.getName();
 
-			if (JoddJson.defaults().defaults().getExcludedTypeNames() != null) {
-				for (String excludedTypeName : JoddJson.defaults().defaults().getExcludedTypeNames()) {
+			if (JoddJson.defaults().getExcludedTypeNames() != null) {
+				for (String excludedTypeName : JoddJson.defaults().getExcludedTypeNames()) {
 					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
 						return false;
 					}

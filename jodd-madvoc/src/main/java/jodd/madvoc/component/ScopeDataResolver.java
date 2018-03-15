@@ -25,8 +25,8 @@
 
 package jodd.madvoc.component;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionRuntime;
@@ -237,7 +237,7 @@ public class ScopeDataResolver {
 	 * Returns <code>null</code> if there are no In and Out data.
 	 */
 	protected ScopeData inspectClassScopeData(final Class actionClass, final ScopeType scopeType) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(actionClass);
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 

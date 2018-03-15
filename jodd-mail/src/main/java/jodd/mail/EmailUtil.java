@@ -112,17 +112,17 @@ public class EmailUtil {
 	 *
 	 * @param contentType     content type.
 	 * @param defaultEncoding Default encoding to be used if extract returns {@code null}.
-	 *                        If defaultEncoding is {@code null}, {@link JoddCoreDefaults#getEncoding()} will be used.
+	 *                        If defaultEncoding is {@code null}, {@link JoddCore#getEncoding()} will be used.
 	 * @return Encoding from the content type.
 	 * @see #extractEncoding(String)
-	 * @see JoddCoreDefaults#getEncoding()
+	 * @see JoddCore#getEncoding()
 	 */
 	public static String extractEncoding(final String contentType, String defaultEncoding) {
 		String encoding = extractEncoding(contentType);
 
 		if (encoding == null) {
 			if (defaultEncoding == null) {
-				defaultEncoding = JoddCore.defaults().defaults().getEncoding();
+				defaultEncoding = JoddCore.defaults().getEncoding();
 			}
 			encoding = defaultEncoding;
 		}
@@ -172,7 +172,7 @@ public class EmailUtil {
 	 * Setups the system email properties.
 	 */
 	public static void setupSystemMailProperties() {
-		final JoddMailDefaults defaults = JoddMail.defaults().defaults();
+		final JoddMail defaults = JoddMail.defaults();
 		System.setProperty("mail.mime.encodefilename", Boolean.valueOf(defaults.isMailMimeEncodefilename()).toString());
 		System.setProperty("mail.mime.decodefilename", Boolean.valueOf(defaults.isMailMimeDecodefilename()).toString());
 	}

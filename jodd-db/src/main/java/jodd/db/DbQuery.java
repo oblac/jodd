@@ -26,7 +26,6 @@
 package jodd.db;
 
 import jodd.bean.BeanUtil;
-import jodd.db.querymap.QueryMap;
 import jodd.db.type.SqlType;
 import jodd.db.type.SqlTypeManager;
 import jodd.util.CharUtil;
@@ -75,7 +74,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 * Creates new query.
 	 */
 	public DbQuery(final Connection conn, final String sqlString) {
-		super(JoddDb.defaults().defaults().getQueryConfig(), JoddDb.defaults().defaults().isDebug());
+		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
 		this.connection = conn;
 		this.sqlString = preprocessSql(sqlString);
 	}
@@ -84,7 +83,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 * Creates a new query from {@link DbSession}.
 	 */
 	public DbQuery(final DbSession session, final String sqlString) {
-		super(JoddDb.defaults().defaults().getQueryConfig(), JoddDb.defaults().defaults().isDebug());
+		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
 
 		initSession(session);
 
@@ -120,7 +119,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 			return sqlString;
 		}
 
-		String sqlFromMap = QueryMap.get().getQuery(sqlString);
+		String sqlFromMap = JoddDb.defaults().getQueryMap().getQuery(sqlString);
 
 		if (sqlFromMap != null) {
 			sqlString = sqlFromMap.trim();

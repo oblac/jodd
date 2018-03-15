@@ -25,8 +25,8 @@
 
 package jodd.petite.resolver;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.PropertyInjectionPoint;
@@ -52,7 +52,7 @@ public class PropertyResolver {
 	 */
 	public PropertyInjectionPoint[] resolve(final Class type, final boolean autowire) {
 		// lookup fields
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
 		List<PropertyInjectionPoint> list = new ArrayList<>();
 		PropertyDescriptor[] allPropertyDescriptors = cd.getAllPropertyDescriptors();
 

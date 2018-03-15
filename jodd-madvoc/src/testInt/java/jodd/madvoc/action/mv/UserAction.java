@@ -25,11 +25,11 @@
 
 package jodd.madvoc.action.mv;
 
+import jodd.io.upload.FileUpload;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
-import jodd.upload.FileUpload;
 
 import java.io.IOException;
 

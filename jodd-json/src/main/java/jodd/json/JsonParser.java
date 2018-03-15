@@ -25,8 +25,8 @@
 
 package jodd.json;
 
+import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.CharArraySequence;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static jodd.json.JoddJsonDefaults.DEFAULT_CLASS_METADATA_NAME;
+import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
 
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
@@ -93,7 +93,7 @@ public class JsonParser extends JsonParserBase {
 	protected char[] input;
 	protected int total;
 	protected Path path;
-	protected boolean useAltPaths = JoddJson.defaults().defaults().isUseAltPathsByParser();
+	protected boolean useAltPaths = JoddJson.defaults().isUseAltPathsByParser();
 	protected Class rootType;
 	protected MapToBean mapToBean;
 	protected boolean looseMode;
@@ -245,7 +245,7 @@ public class JsonParser extends JsonParserBase {
 
 	// ---------------------------------------------------------------- class meta data name
 
-	protected String classMetadataName = JoddJson.defaults().defaults().getClassMetadataName();
+	protected String classMetadataName = JoddJson.defaults().getClassMetadataName();
 
 	/**
 	 * Sets local class meta-data name.
@@ -925,7 +925,7 @@ public class JsonParser extends JsonParserBase {
 		JsonAnnotationManager.TypeData typeData = null;
 
 		if (targetType != null) {
-			targetTypeClassDescriptor = ClassIntrospector.get().lookup(targetType);
+			targetTypeClassDescriptor = JoddBean.defaults().getClassIntrospector().lookup(targetType);
 
 			// find if the target is really a map
 			// because when classMetadataName != null we are forcing

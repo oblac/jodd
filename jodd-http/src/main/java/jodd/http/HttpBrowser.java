@@ -46,7 +46,7 @@ public class HttpBrowser {
 	protected boolean catchTransportExceptions = true;
 
 	public HttpBrowser() {
-		httpConnectionProvider = HttpConnectionProvider.get();
+		httpConnectionProvider = JoddHttp.defaults().getHttpConnectionProvider();
 	}
 
 	/**
