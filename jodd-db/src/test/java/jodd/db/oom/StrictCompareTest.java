@@ -38,7 +38,7 @@ class StrictCompareTest {
 	@Test
 	void testTableNameDefault() {
 		DbTestUtil.resetAll();
-		DbEntityManager dboom = JoddDb.get().dbEntityManager();
+		DbEntityManager dboom = JoddDb.defaults().dbEntityManager();
 
 		dboom.registerEntity(Tester.class);
 
@@ -56,7 +56,7 @@ class StrictCompareTest {
 		assertNotNull(ded.findByColumnName("iD"));
 
 		dboom.reset();
-		JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
+		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setLowercase(true);
 		dboom.registerEntity(Tester.class);
 
 		ded = dboom.lookupType(Tester.class);
@@ -73,8 +73,8 @@ class StrictCompareTest {
 		assertNotNull(ded.findByColumnName("iD"));
 
 		dboom.reset();
-		JoddDb.get().defaults().getDbOomConfig().getTableNames().setChangeCase(false);
-		JoddDb.get().defaults().getDbOomConfig().getTableNames().setSplitCamelCase(false);
+		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setChangeCase(false);
+		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setSplitCamelCase(false);
 		dboom.registerEntity(Tester.class);
 
 		ded = dboom.lookupType(Tester.class);

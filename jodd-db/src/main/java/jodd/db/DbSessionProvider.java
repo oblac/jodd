@@ -41,7 +41,7 @@ public interface DbSessionProvider {
 	 * Returns default instance.
 	 */
 	public static DbSessionProvider get() {
-		return JoddDb.get().sessionProvider();
+		return JoddDb.defaults().sessionProvider();
 	}
 
 	/**

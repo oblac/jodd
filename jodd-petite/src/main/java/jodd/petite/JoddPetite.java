@@ -25,8 +25,6 @@
 
 package jodd.petite;
 
-import jodd.Jodd;
-
 /**
  * Jodd PETITE module.
  */
@@ -34,15 +32,8 @@ public class JoddPetite {
 
 	private static final JoddPetite instance = new JoddPetite();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddPetite get() {
+	public static JoddPetite defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

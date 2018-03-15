@@ -25,8 +25,6 @@
 
 package jodd.madvoc;
 
-import jodd.Jodd;
-
 /**
  * Jodd MADVOC module.
  */
@@ -34,16 +32,8 @@ public class JoddMadvoc {
 
 	private static final JoddMadvoc instance = new JoddMadvoc();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddMadvoc get() {
+	public static JoddMadvoc defaults() {
 		return instance;
-	}
-
-
-	static {
-		Jodd.initModule();
 	}
 
 }

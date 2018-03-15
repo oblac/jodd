@@ -25,8 +25,6 @@
 
 package jodd.props;
 
-import jodd.Jodd;
-
 /**
  * Jodd PROPS module.
  */
@@ -34,15 +32,8 @@ public class JoddProps {
 
 	private static final JoddProps instance = new JoddProps();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddProps get() {
+	public static JoddProps defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

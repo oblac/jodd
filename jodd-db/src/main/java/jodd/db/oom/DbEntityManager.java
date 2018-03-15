@@ -52,7 +52,7 @@ public class DbEntityManager {
 	 * Returns default instance.
 	 */
 	public static DbEntityManager get() {
-		return JoddDb.get().dbEntityManager();
+		return JoddDb.defaults().dbEntityManager();
 	}
 
 	private static final Logger log = LoggerFactory.getLogger(DbEntityManager.class);
@@ -197,9 +197,9 @@ public class DbEntityManager {
 	 * Creates {@link DbEntityDescriptor}.
 	 */
 	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(final Class<E> type) {
-		final String schemaName = JoddDb.get().defaults().getDbOomConfig().getSchemaName();
-		final TableNamingStrategy tableNames = JoddDb.get().defaults().getDbOomConfig().getTableNames();
-		final ColumnNamingStrategy columnNames = JoddDb.get().defaults().getDbOomConfig().getColumnNames();
+		final String schemaName = JoddDb.defaults().defaults().getDbOomConfig().getSchemaName();
+		final TableNamingStrategy tableNames = JoddDb.defaults().defaults().getDbOomConfig().getTableNames();
+		final ColumnNamingStrategy columnNames = JoddDb.defaults().defaults().getDbOomConfig().getColumnNames();
 
 		return new DbEntityDescriptor<>(type, schemaName, tableNames, columnNames);
 	}

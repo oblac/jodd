@@ -36,7 +36,7 @@ public interface ClassLoaderStrategy {
 	 * Returns default implementation.
 	 */
 	static ClassLoaderStrategy get() {
-		return JoddCore.get().classLoaderStrategy();
+		return JoddCore.defaults().classLoaderStrategy();
 	}
 
 	/**

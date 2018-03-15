@@ -25,9 +25,6 @@
 
 package jodd.io;
 
-import jodd.core.JoddCore;
-import jodd.core.JoddCoreDefaults;
-
 import javax.activation.DataSource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -50,8 +47,6 @@ public class StreamUtil {
 	private static final int ZERO = 0;
 	private static final int NEGATIVE_ONE = -1;
 	private static final int ALL = -1;
-
-	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
 
 	// ---------------------------------------------------------------- silent close
 

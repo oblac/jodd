@@ -42,7 +42,7 @@ class IntegerArrayConverterTest {
 
 	@Test
 	void testConversion() {
-		IntegerArrayConverter integerArrayConverter = (IntegerArrayConverter) JoddBean.get().typeConverterManager().lookup(int[].class);
+		IntegerArrayConverter integerArrayConverter = (IntegerArrayConverter) JoddBean.defaults().typeConverterManager().lookup(int[].class);
 
 		assertNull(integerArrayConverter.convert(null));
 

@@ -25,8 +25,9 @@
 
 package jodd.http;
 
-import jodd.Jodd;
 import jodd.http.net.SocketHttpConnectionProvider;
+import jodd.util.StringPool;
+import jodd.util.net.MimeTypes;
 
 import java.util.Objects;
 
@@ -37,40 +38,132 @@ public class JoddHttp {
 
 	private static final JoddHttp instance = new JoddHttp();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddHttp get() {
+	public static JoddHttp defaults() {
 		return instance;
 	}
 
-	static {
-		Jodd.initModule();
-	}
+	// ---------------------------------------------------------------- settings
 
-	// ---------------------------------------------------------------- instance
-
-	private JoddHttpDefaults defaults = new JoddHttpDefaults();
+	private String queryEncoding = StringPool.UTF_8;
+	private String formEncoding = StringPool.UTF_8;
+	private String bodyMediaType = MimeTypes.MIME_TEXT_HTML;
+	private String bodyEncoding = StringPool.UTF_8;
+	private String secureEnabledProtocols = System.getProperty("https.protocols");
+	private String userAgent = "Jodd HTTP";
+	private boolean capitalizeHeaderKeys = true;
 	private HttpConnectionProvider httpConnectionProvider = new SocketHttpConnectionProvider();
 
 	/**
-	 * Returns {@link JoddHttpDefaults default configuration}.
+	 * Returns default query encoding.
 	 */
-	public JoddHttpDefaults defaults() {
-		return defaults;
+	public String getQueryEncoding() {
+		return queryEncoding;
+	}
+
+	/**
+	 * Sets default HTTP query parameters encoding (UTF-8).
+	 */
+	public void setQueryEncoding(final String queryEncoding) {
+		this.queryEncoding = queryEncoding;
+	}
+
+	/**
+	 * Returns default form encoding (UTF-8).
+	 */
+	public String getFormEncoding() {
+		return formEncoding;
+	}
+
+	/**
+	 * Sets default form encoding (UTF-8).
+	 */
+	public void setFormEncoding(final String formEncoding) {
+		this.formEncoding = formEncoding;
+	}
+
+	/**
+	 * Returns body media type.
+	 */
+	public String getBodyMediaType() {
+		return bodyMediaType;
+	}
+
+	/**
+	 * Sets default body media type (text/html).
+	 */
+	public void setBodyMediaType(final String bodyMediaType) {
+		this.bodyMediaType = bodyMediaType;
+	}
+
+	/**
+	 * Returns default body encoding (UTF-8).
+	 */
+	public String getBodyEncoding() {
+		return bodyEncoding;
+	}
+
+	/**
+	 * Sets default body encoding (UTF-8).
+	 */
+	public void setBodyEncoding(final String bodyEncoding) {
+		this.bodyEncoding = bodyEncoding;
+	}
+
+	/**
+	 * @see #setSecureEnabledProtocols(String)
+	 */
+	public String getSecureEnabledProtocols() {
+		return secureEnabledProtocols;
+	}
+
+	/**
+	 * CSV of default enabled secured protocols. By default the value is
+	 * read from system property <code>https.protocols</code>.
+	 */
+	public void setSecureEnabledProtocols(final String secureEnabledProtocols) {
+		this.secureEnabledProtocols = secureEnabledProtocols;
+	}
+
+	/**
+	 * Returns default user agent value.
+	 */
+	public String getUserAgent() {
+		return userAgent;
+	}
+	/**
+	 * Sets default user agent value.
+	 */
+	public void setUserAgent(final String userAgent) {
+		this.userAgent = userAgent;
+	}
+
+	/**
+	 * @see #setCapitalizeHeaderKeys(boolean)
+	 */
+	public boolean isCapitalizeHeaderKeys() {
+		return capitalizeHeaderKeys;
+	}
+
+	/**
+	 * Flag that controls if headers should be rewritten and capitalized in PascalCase.
+	 * When disabled, header keys are used as they are passed.
+	 * When flag is enabled, header keys will be capitalized.
+	 */
+	public void setCapitalizeHeaderKeys(final boolean capitalizeHeaderKeys) {
+		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
 	}
 
 	/**
 	 * Returns default http connection provider.
 	 */
-	public HttpConnectionProvider httpConnectionProvider() {
+	public HttpConnectionProvider getHttpConnectionProvider() {
 		return httpConnectionProvider;
 	}
 
 	/**
 	 * Defines the default HTTP transport provider.
 	 */
-	public void httpConnectionProvider(final HttpConnectionProvider httpConnectionProvider) {
+	public void setHttpConnectionProvider(final HttpConnectionProvider httpConnectionProvider) {
 		Objects.requireNonNull(httpConnectionProvider);
 		this.httpConnectionProvider = httpConnectionProvider;
 	}

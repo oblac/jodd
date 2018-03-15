@@ -73,7 +73,7 @@ public class TypeJsonSerializerMap {
 	 * Returns default instance.
 	 */
 	public static TypeJsonSerializerMap get() {
-		return JoddJson.get().typeSerializers();
+		return JoddJson.defaults().typeSerializers();
 	}
 
 	private final TypeJsonSerializerMap defaultSerializerMap;

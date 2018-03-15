@@ -48,7 +48,6 @@ import java.io.FileReader;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -603,7 +602,7 @@ class StreamUtilTest {
 
         Stream<Arguments> testdata_testCopy_Inputstream_Outputstream_ByteCount() throws Exception {
             return Stream.of(
-                    Arguments.of("The Unbearable Lightness of Java", "The Unbearable Lightness of Java", JoddCore.get().defaults().getIoBufferSize() + 250),
+                    Arguments.of("The Unbearable Lightness of Java", "The Unbearable Lightness of Java", JoddCore.defaults().defaults().getIoBufferSize() + 250),
                     Arguments.of("j", "jodd" , 1),
                     Arguments.of("jodd makes fun!", "jodd makes fun!",  15),
                     Arguments.of("", "text does not matter",  0)

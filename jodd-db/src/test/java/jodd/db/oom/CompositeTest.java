@@ -52,7 +52,7 @@ class CompositeTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
+		DbEntityManager dbEntityManager = JoddDb.defaults().dbEntityManager();
 		dbEntityManager.registerEntity(User.class);
 		dbEntityManager.registerEntity(Wizard.class);
 

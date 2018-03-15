@@ -135,7 +135,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				String tableName = null;
 
 				// resolve column and table name
-				final String columnAliasSeparator = JoddDb.get().defaults().getDbOomConfig().getColumnAliasSeparator();
+				final String columnAliasSeparator = JoddDb.defaults().defaults().getDbOomConfig().getColumnAliasSeparator();
 
 				int sepNdx = columnName.indexOf(columnAliasSeparator);
 				if (sepNdx != -1) {

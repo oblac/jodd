@@ -93,7 +93,7 @@ public class JsonParser extends JsonParserBase {
 	protected char[] input;
 	protected int total;
 	protected Path path;
-	protected boolean useAltPaths = JoddJson.get().defaults().isUseAltPathsByParser();
+	protected boolean useAltPaths = JoddJson.defaults().defaults().isUseAltPathsByParser();
 	protected Class rootType;
 	protected MapToBean mapToBean;
 	protected boolean looseMode;
@@ -245,7 +245,7 @@ public class JsonParser extends JsonParserBase {
 
 	// ---------------------------------------------------------------- class meta data name
 
-	protected String classMetadataName = JoddJson.get().defaults().getClassMetadataName();
+	protected String classMetadataName = JoddJson.defaults().defaults().getClassMetadataName();
 
 	/**
 	 * Sets local class meta-data name.

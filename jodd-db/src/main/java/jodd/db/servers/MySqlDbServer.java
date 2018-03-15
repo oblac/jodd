@@ -41,8 +41,8 @@ public class MySqlDbServer implements DbServer {
 
 	@Override
 	public void accept(final DbEntityManager dbEntityManager) {
-		JoddDb.get().defaults().getDbOomConfig().getTableNames().setLowercase(true);
-		JoddDb.get().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
+		JoddDb.defaults().defaults().getDbOomConfig().getTableNames().setLowercase(true);
+		JoddDb.defaults().defaults().getDbOomConfig().getColumnNames().setLowercase(true);
 	}
 
 	@Override

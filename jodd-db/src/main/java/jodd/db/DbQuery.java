@@ -75,7 +75,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 * Creates new query.
 	 */
 	public DbQuery(final Connection conn, final String sqlString) {
-		super(JoddDb.get().defaults().getQueryConfig(), JoddDb.get().defaults().isDebug());
+		super(JoddDb.defaults().defaults().getQueryConfig(), JoddDb.defaults().defaults().isDebug());
 		this.connection = conn;
 		this.sqlString = preprocessSql(sqlString);
 	}
@@ -84,7 +84,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 * Creates a new query from {@link DbSession}.
 	 */
 	public DbQuery(final DbSession session, final String sqlString) {
-		super(JoddDb.get().defaults().getQueryConfig(), JoddDb.get().defaults().isDebug());
+		super(JoddDb.defaults().defaults().getQueryConfig(), JoddDb.defaults().defaults().isDebug());
 
 		initSession(session);
 

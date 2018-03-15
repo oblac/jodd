@@ -25,10 +25,11 @@
 
 package jodd.db;
 
-import jodd.Jodd;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.DbOomConfig;
 import jodd.db.oom.JoinHintResolver;
+import jodd.db.oom.sqlgen.SqlGenConfig;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.EmptyQueryMap;
 import jodd.db.querymap.QueryMap;
@@ -42,50 +43,81 @@ public class JoddDb {
 
 	private static final JoddDb instance = new JoddDb();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddDb get() {
+	public static JoddDb defaults() {
 		return instance;
 	}
 
-	static {
-		Jodd.initModule();
-	}
+	// ---------------------------------------------------------------- settings
 
-	// ---------------------------------------------------------------- instance
-
-	private JoddDbDefaults defaults = new JoddDbDefaults();
 	private ConnectionProvider connectionProvider = new CoreConnectionPool();
 	private DbSessionProvider sessionProvider = new ThreadDbSessionProvider();
 	private QueryMap queryMap = new EmptyQueryMap();
 	private JoinHintResolver hintResolver = new JoinHintResolver();
 	private DbEntityManager dbEntityManager = new DbEntityManager();
+	private boolean debug = false;
+	private DbTransactionMode transactionMode = new DbTransactionMode();
+	private DbQueryConfig queryConfig = new DbQueryConfig();
+	private SqlGenConfig sqlGenConfig = new SqlGenConfig();
 
-	/**
-	 * Returns default module configuration.
-	 */
-	public JoddDbDefaults defaults() {
-		return defaults;
+	public boolean isDebug() {
+		return debug;
 	}
 
-	public JoddDb defaults(final JoddDbDefaults joddDbDefaults) {
-		Objects.requireNonNull(joddDbDefaults);
-		this.defaults = new JoddDbDefaults();
-		return this;
+	/**
+	 * Enables debug mode.
+	 */
+	public void setDebug(final boolean debug) {
+		this.debug = debug;
+	}
+
+	public DbTransactionMode getTransactionMode() {
+		return transactionMode;
+	}
+
+	public void setTransactionMode(final DbTransactionMode transactionMode) {
+		this.transactionMode = transactionMode;
+	}
+
+	public DbQueryConfig getQueryConfig() {
+		return queryConfig;
+	}
+
+	public void setQueryConfig(final DbQueryConfig queryConfig) {
+		this.queryConfig = queryConfig;
+	}
+
+	protected DbOomConfig dbOomConfig = new DbOomConfig();
+
+	public DbOomConfig getDbOomConfig() {
+		return dbOomConfig;
+	}
+
+	public void setDbOomConfig(final DbOomConfig dbOomConfig) {
+		this.dbOomConfig = dbOomConfig;
+	}
+
+	/**
+	 * Returns {@link SqlGenConfig}.
+	 */
+	public SqlGenConfig getSqlGenConfig() {
+		return sqlGenConfig;
+	}
+
+	public void setSqlGenConfig(final SqlGenConfig sqlGenConfig) {
+		this.sqlGenConfig = sqlGenConfig;
 	}
 
 	/**
 	 * Returns hints resolver.
 	 */
-	public JoinHintResolver hintResolver() {
+	public JoinHintResolver getHintResolver() {
 		return hintResolver;
 	}
 
 	/**
 	 * Specifies the hint resolver.
 	 */
-	public JoddDb hintResolver(final JoinHintResolver hintResolver) {
+	public JoddDb setHintResolver(final JoinHintResolver hintResolver) {
 		Objects.requireNonNull(hintResolver);
 		this.hintResolver = hintResolver;
 		return this;
@@ -94,11 +126,11 @@ public class JoddDb {
 	/**
 	 * Returns the manager for db entities.
 	 */
-	public DbEntityManager dbEntityManager() {
+	public DbEntityManager getDbEntityManager() {
 		return dbEntityManager;
 	}
 
-	public JoddDb dbEntityManager(final DbEntityManager dbEntityManager) {
+	public JoddDb setDbEntityManager(final DbEntityManager dbEntityManager) {
 		Objects.requireNonNull(dbEntityManager);
 		this.dbEntityManager = dbEntityManager;
 		return this;
@@ -107,27 +139,27 @@ public class JoddDb {
 	/**
 	 * Returns the connection provider.
 	 */
-	public ConnectionProvider connectionProvider() {
+	public ConnectionProvider getConnectionProvider() {
 		return connectionProvider;
 	}
 
 	/**
 	 * Sets the connection provider.
 	 */
-	public JoddDb connectionProvider(final ConnectionProvider connectionProvider) {
+	public JoddDb setConnectionProvider(final ConnectionProvider connectionProvider) {
 		Objects.requireNonNull(connectionProvider);
 		this.connectionProvider = connectionProvider;
 		return this;
 	}
 
-	public DbSessionProvider sessionProvider() {
+	public DbSessionProvider getSessionProvider() {
 		return sessionProvider;
 	}
 
 	/**
 	 * Sets default session provider.
 	 */
-	public JoddDb sessionProvider(final DbSessionProvider sessionProvider) {
+	public JoddDb setSessionProvider(final DbSessionProvider sessionProvider) {
 		Objects.requireNonNull(sessionProvider);
 		this.sessionProvider = sessionProvider;
 		return this;
@@ -136,11 +168,11 @@ public class JoddDb {
 	/**
 	 * Returns {@link jodd.db.querymap.QueryMap} instance. May be <code>null</code>.
 	 */
-	public QueryMap queryMap() {
+	public QueryMap getQueryMap() {
 		return queryMap;
 	}
 
-	public JoddDb queryMap(final QueryMap queryMap) {
+	public JoddDb setQueryMap(final QueryMap queryMap) {
 		Objects.requireNonNull(queryMap);
 		this.queryMap = queryMap;
 		return this;

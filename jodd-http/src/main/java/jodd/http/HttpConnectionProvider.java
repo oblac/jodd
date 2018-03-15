@@ -36,7 +36,7 @@ public interface HttpConnectionProvider {
 	 * Returns default http connection provider.
 	 */
 	public static HttpConnectionProvider get() {
-		return JoddHttp.get().httpConnectionProvider();
+		return JoddHttp.defaults().httpConnectionProvider();
 	}
 
 	/**

@@ -25,7 +25,11 @@
 
 package jodd.jtx;
 
-import jodd.Jodd;
+import jodd.jtx.meta.ReadOnlyTransaction;
+import jodd.jtx.meta.ReadWriteTransaction;
+import jodd.jtx.meta.Transaction;
+
+import java.lang.annotation.Annotation;
 
 /**
  * Jodd JTX module.
@@ -34,26 +38,25 @@ public class JoddJtx {
 
 	private static final JoddJtx instance = new JoddJtx();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddJtx get() {
+	public static JoddJtx defaults() {
 		return instance;
 	}
 
-	static {
-		Jodd.initModule();
+	// ---------------------------------------------------------------- settings
+
+	private Class<? extends Annotation>[] txAnnotations = new Class[] {
+		Transaction.class, ReadWriteTransaction.class, ReadOnlyTransaction.class
+	};
+
+	public Class<? extends Annotation>[] getTxAnnotations() {
+		return txAnnotations;
 	}
 
-	// ---------------------------------------------------------------- instance
-
-	private JoddJtxDefaults defaults = new JoddJtxDefaults();
-
 	/**
-	 * Returns {@link JoddJtxDefaults default configuration}.
+	 * Defines default JTX annotations.
 	 */
-	public JoddJtxDefaults defaults() {
-		return defaults;
+	public void setTxAnnotations(final Class<? extends Annotation>... txAnnotations) {
+		this.txAnnotations = txAnnotations;
 	}
 
 }

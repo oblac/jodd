@@ -38,9 +38,9 @@ class EnumTest {
 
 	@Test
 	void testCastEnums() {
-		En en = JoddBean.get().typeConverterManager().convertType("ONE", En.class);
+		En en = JoddBean.defaults().typeConverterManager().convertType("ONE", En.class);
 		assertEquals(En.ONE, en);
-		en = JoddBean.get().typeConverterManager().convertType("TWO", En.class);
+		en = JoddBean.defaults().typeConverterManager().convertType("TWO", En.class);
 		assertEquals(En.TWO, en);
 	}
 

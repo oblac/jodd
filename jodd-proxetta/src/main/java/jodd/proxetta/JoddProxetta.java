@@ -25,8 +25,6 @@
 
 package jodd.proxetta;
 
-import jodd.Jodd;
-
 /**
  * Jodd PROXETTA module.
  */
@@ -34,27 +32,175 @@ public class JoddProxetta {
 
 	private static final JoddProxetta instance = new JoddProxetta();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddProxetta get() {
+	public static JoddProxetta defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 	// ---------------------------------------------------------------- instance
 
-	private JoddProxettaDefaults defaults = new JoddProxettaDefaults();
+	private String executeMethodName = "execute";
+	private String proxyClassNameSuffix = "$$Proxetta";
+	private String invokeProxyClassNameSuffix = "$$Clonetou";
+	private String wrapperClassNameSuffix = "$$Wraporetto";
+	private String methodPrefix = "$__";
+	private String methodDivider = "$";
+	private String clinitMethodName = "$clinit";
+	private String initMethodName = "$init";
+	private String fieldPrefix = "$__";
+	private String fieldDivider = "$";
+	private String wrapperTargetFieldName = "_target";
 
 	/**
-	 * Returns {@link JoddProxettaDefaults default configuration}.
+	 * @see #setExecuteMethodName(String)
 	 */
-	public JoddProxettaDefaults defaults() {
-		return defaults;
+	public String getExecuteMethodName() {
+		return executeMethodName;
 	}
 
+	/**
+	 * {@link jodd.proxetta.ProxyAdvice#execute()}
+	 */
+	public void setExecuteMethodName(final String executeMethodName) {
+		this.executeMethodName = executeMethodName;
+	}
+
+	/**
+	 * Returns proxy class name suffix.
+	 */
+	public String getProxyClassNameSuffix() {
+		return proxyClassNameSuffix;
+	}
+
+	/**
+	 * Defines proxy class name suffix.
+	 */
+	public void setProxyClassNameSuffix(final String proxyClassNameSuffix) {
+		this.proxyClassNameSuffix = proxyClassNameSuffix;
+	}
+
+	/**
+	 * Returns invoke proxy class name suffix.
+	 */
+	public String getInvokeProxyClassNameSuffix() {
+		return invokeProxyClassNameSuffix;
+	}
+
+	/**
+	 * Defines invoke proxy class name suffix.
+	 */
+	public void setInvokeProxyClassNameSuffix(final String invokeProxyClassNameSuffix) {
+		this.invokeProxyClassNameSuffix = invokeProxyClassNameSuffix;
+	}
+
+	/**
+	 * Returns wrapper class name suffix.
+	 */
+	public String getWrapperClassNameSuffix() {
+		return wrapperClassNameSuffix;
+	}
+
+	/**
+	 * Defines wrapper class name suffix.
+	 */
+	public void setWrapperClassNameSuffix(final String wrapperClassNameSuffix) {
+		this.wrapperClassNameSuffix = wrapperClassNameSuffix;
+	}
+
+	/**
+	 * Returns prefix for advice method names.
+	 */
+	public String getMethodPrefix() {
+		return methodPrefix;
+	}
+
+	/**
+	 * Defines prefix for advice method names.
+	 */
+	public void setMethodPrefix(final String methodPrefix) {
+		this.methodPrefix = methodPrefix;
+	}
+
+	/**
+	 * Returns divider for method names.
+	 */
+	public String getMethodDivider() {
+		return methodDivider;
+	}
+
+	/**
+	 * Defines divider for method names.
+	 */
+	public void setMethodDivider(final String methodDivider) {
+		this.methodDivider = methodDivider;
+	}
+
+	/**
+	 * Returns method name for advice 'clinit' methods.
+	 */
+	public String getClinitMethodName() {
+		return clinitMethodName;
+	}
+
+	/**
+	 * Defines method name for advice 'clinit' methods.
+	 */
+	public void setClinitMethodName(final String clinitMethodName) {
+		this.clinitMethodName = clinitMethodName;
+	}
+
+	/**
+	 * Returns method name for advice default constructor ('init') methods.
+	 */
+	public String getInitMethodName() {
+		return initMethodName;
+	}
+
+	/**
+	 * Defines method name for advice default constructor ('init') methods.
+	 */
+	public void setInitMethodName(final String initMethodName) {
+		this.initMethodName = initMethodName;
+	}
+
+	/**
+	 * Returns prefix for advice field names.
+	 */
+	public String getFieldPrefix() {
+		return fieldPrefix;
+	}
+
+	/**
+	 * Defines prefix for advice field names.
+	 */
+	public void setFieldPrefix(final String fieldPrefix) {
+		this.fieldPrefix = fieldPrefix;
+	}
+
+	/**
+	 * Returns divider for field names.
+	 */
+	public String getFieldDivider() {
+		return fieldDivider;
+	}
+	/**
+	 * Defines divider for field names.
+	 */
+	public void setFieldDivider(final String fieldDivider) {
+		this.fieldDivider = fieldDivider;
+	}
+
+	/**
+	 * Defines wrapper target field name.
+	 */
+	public String getWrapperTargetFieldName() {
+		return wrapperTargetFieldName;
+	}
+
+	/**
+	 * Defines wrapper target field name.
+	 */
+	public void setWrapperTargetFieldName(final String wrapperTargetFieldName) {
+		this.wrapperTargetFieldName = wrapperTargetFieldName;
+	}
 
 }

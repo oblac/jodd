@@ -36,13 +36,14 @@ import java.util.Date;
 /**
  * Simple and fast and direct conversion.
  */
+// REMOVE?
 public class Converter {
 
 	/**
 	 * Returns default instance.
 	 */
 	public static Converter get() {
-		return JoddBean.get().converter();
+		return JoddBean.defaults().getConverter();
 	}
 
 	/**

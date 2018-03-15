@@ -25,8 +25,6 @@
 
 package jodd.servlet;
 
-import jodd.Jodd;
-
 /**
  * Jodd SERVLET module.
  */
@@ -34,15 +32,8 @@ public class JoddServlet {
 
 	private static final JoddServlet instance = new JoddServlet();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddServlet get() {
+	public static JoddServlet defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

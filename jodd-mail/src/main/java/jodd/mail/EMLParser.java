@@ -26,7 +26,6 @@
 package jodd.mail;
 
 import jodd.core.JoddCore;
-import jodd.core.JoddCoreDefaults;
 import jodd.io.StreamUtil;
 
 import javax.mail.MessagingException;
@@ -76,7 +75,7 @@ public class EMLParser extends EMLProperties<EMLParser> {
 	 */
 	public ReceivedEmail parse(final String emlContent) throws MessagingException {
 		try {
-			return parse(emlContent, JoddCore.get().defaults().getEncoding());
+			return parse(emlContent, JoddCore.defaults().defaults().getEncoding());
 		} catch (final UnsupportedEncodingException ignore) {
 			return null;
 		}

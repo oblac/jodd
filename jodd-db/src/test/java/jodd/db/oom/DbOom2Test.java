@@ -103,7 +103,7 @@ class DbOom2Test extends DbH2TestCase {
 			// ignore
 		}
 
-		DbEntityManager dbOom = JoddDb.get().dbEntityManager();
+		DbEntityManager dbOom = JoddDb.defaults().dbEntityManager();
 
 		assertEquals(2, dbOom.getTotalTypes());
 		assertEquals(0, dbOom.getTotalTableNames());

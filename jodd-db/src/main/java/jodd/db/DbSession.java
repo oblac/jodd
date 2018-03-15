@@ -75,7 +75,7 @@ public class DbSession implements AutoCloseable {
 
 		this.connectionProvider = connectionProvider;
 		this.txActive = false;
-		this.txMode = JoddDb.get().defaults().getTransactionMode();
+		this.txMode = JoddDb.defaults().defaults().getTransactionMode();
 		this.queries = new HashSet<>();
 	}
 
@@ -256,7 +256,7 @@ public class DbSession implements AutoCloseable {
 	 * Starts transaction with default transaction mode.
 	 */
 	public void beginTransaction() {
-		beginTransaction(JoddDb.get().defaults().getTransactionMode());
+		beginTransaction(JoddDb.defaults().defaults().getTransactionMode());
 	}
 
 	/**

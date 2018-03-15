@@ -25,7 +25,6 @@
 
 package jodd.bean;
 
-import jodd.Jodd;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassIntrospector;
 import jodd.typeconverter.Converter;
@@ -40,18 +39,11 @@ public class JoddBean {
 
 	private static final JoddBean instance = new JoddBean();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddBean get() {
+	public static JoddBean defaults() {
 		return instance;
 	}
 
-	static {
-		Jodd.initModule();
-	}
-
-	// ---------------------------------------------------------------- instance
+	// ---------------------------------------------------------------- settings
 
 	private ClassIntrospector classIntrospector = new CachingIntrospector();
 	private Converter converter = new Converter();
@@ -60,14 +52,14 @@ public class JoddBean {
 	/**
 	 * Returns the {@link ClassIntrospector} implementation. Default is {@link CachingIntrospector}.
 	 */
-	public ClassIntrospector classIntrospector() {
+	public ClassIntrospector getClassIntrospector() {
 		return classIntrospector;
 	}
 
 	/**
 	 * Changes the {@link ClassIntrospector} implementation.
 	 */
-	public JoddBean classIntrospector(final ClassIntrospector introspector) {
+	public JoddBean setClassIntrospector(final ClassIntrospector introspector) {
 		Objects.requireNonNull(introspector);
 		this.classIntrospector = introspector;
 		return this;
@@ -76,14 +68,14 @@ public class JoddBean {
 	/**
 	 * Returns the {@link TypeConverterManager} instance.
 	 */
-	public TypeConverterManager typeConverterManager() {
+	public TypeConverterManager getTypeConverterManager() {
 		return typeConverterManager;
 	}
 
 	/**
 	 * Defines the {@link TypeConverterManager} implementation.
 	 */
-	public JoddBean typeConverterManager(final TypeConverterManager typeConverterManager) {
+	public JoddBean setTypeConverterManager(final TypeConverterManager typeConverterManager) {
 		Objects.requireNonNull(typeConverterManager);
 		this.typeConverterManager = typeConverterManager;
 		return this;
@@ -92,14 +84,14 @@ public class JoddBean {
 	/**
 	 * Returns the {@link Converter} instance.
 	 */
-	public Converter converter() {
+	public Converter getConverter() {
 		return converter;
 	}
 
 	/**
 	 * Defines the {@link Converter}.
 	 */
-	public JoddBean converter(final Converter converter) {
+	public JoddBean setConverter(final Converter converter) {
 		Objects.requireNonNull(converter);
 		this.converter = converter;
 		return this;

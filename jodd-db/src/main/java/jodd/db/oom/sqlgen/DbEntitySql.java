@@ -76,7 +76,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder update(final Object entity) {
 		String tableRef = createTableRefName(entity);
 
-		if (!JoddDb.get().defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+		if (!JoddDb.defaults().defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
 			tableRef = null;
 		}
 
@@ -89,7 +89,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder updateAll(final Object entity) {
 		String tableRef = createTableRefName(entity);
 
-		if (!JoddDb.get().defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+		if (!JoddDb.defaults().defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
 			tableRef = null;
 		}
 
@@ -102,7 +102,7 @@ public class DbEntitySql {
 	public static DbSqlBuilder updateColumn(final Object entity, final String columnRef, final Object value) {
 		String tableRef = createTableRefName(entity);
 
-		if (!JoddDb.get().defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
+		if (!JoddDb.defaults().defaults().getSqlGenConfig().isUpdateAcceptsTableAlias()) {
 			tableRef = null;
 		}
 
@@ -220,8 +220,8 @@ public class DbEntitySql {
 
 		DbEntityDescriptor dedFk = DbEntityManager.get().lookupType(value.getClass());
 
-		String tableName = JoddDb.get().defaults().getDbOomConfig().getTableNames().convertTableNameToEntityName(dedFk.getTableName());
-		String columnName = JoddDb.get().defaults().getDbOomConfig().getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());
+		String tableName = JoddDb.defaults().defaults().getDbOomConfig().getTableNames().convertTableNameToEntityName(dedFk.getTableName());
+		String columnName = JoddDb.defaults().defaults().getDbOomConfig().getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());
 
 		String fkColumn = uncapitalize(tableName) + capitalize(columnName);
 		Object idValue = BeanUtil.pojo.getProperty(value, dedFk.getIdPropertyName());

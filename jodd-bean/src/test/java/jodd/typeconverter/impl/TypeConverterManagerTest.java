@@ -37,7 +37,7 @@ class TypeConverterManagerTest {
 
 	@Test
 	void testRegistration() {
-		FileConverter fileTypeConverter = (FileConverter) JoddBean.get().typeConverterManager().lookup(File.class);
+		FileConverter fileTypeConverter = (FileConverter) JoddBean.defaults().typeConverterManager().lookup(File.class);
 
 		assertNotNull(fileTypeConverter);
 		assertNull(fileTypeConverter.addonFileConverters);

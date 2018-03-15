@@ -51,7 +51,7 @@ public class JsonAnnotationManager {
 	 * Returns default instance.
 	 */
 	public static JsonAnnotationManager get() {
-		return JoddJson.get().annotationManager();
+		return JoddJson.defaults().annotationManager();
 	}
 
 	private final Map<Class, TypeData> typeDataMap;
@@ -131,7 +131,7 @@ public class JsonAnnotationManager {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
-			if (JoddJson.get().defaults().isSerializationSubclassAware()) {
+			if (JoddJson.defaults().defaults().isSerializationSubclassAware()) {
 				typeData = findSubclassTypeData(type);
 			}
 
@@ -162,7 +162,7 @@ public class JsonAnnotationManager {
 	 * Finds type data of first annotated superclass or interface.
 	 */
 	protected TypeData findSubclassTypeData(final Class type) {
-		final Class<? extends Annotation> defaultAnnotation = JoddJson.get().defaults().getJsonAnnotation();
+		final Class<? extends Annotation> defaultAnnotation = JoddJson.defaults().defaults().getJsonAnnotation();
 
 		if (type.getAnnotation(defaultAnnotation) != null) {
 			// current type has annotation, don't find anything, let type data be created
@@ -225,7 +225,7 @@ public class JsonAnnotationManager {
 		ArrayList<String> jsonNames = new ArrayList<>();
 		ArrayList<String> realNames = new ArrayList<>();
 
-		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.get().defaults().getJsonAnnotation());
+		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.defaults().defaults().getJsonAnnotation());
 
 		for (PropertyDescriptor pd : pds) {
 			JSONAnnotationData data = null;

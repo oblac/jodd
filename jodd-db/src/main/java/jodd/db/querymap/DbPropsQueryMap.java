@@ -68,7 +68,7 @@ public class DbPropsQueryMap implements QueryMap {
 	 */
 	@Override
 	public String getQuery(final String key) {
-		if (JoddDb.get().defaults().isDebug()) {
+		if (JoddDb.defaults().defaults().isDebug()) {
 			loadQueriesFromClasspath();
 		}
 		return props.getValue(key);

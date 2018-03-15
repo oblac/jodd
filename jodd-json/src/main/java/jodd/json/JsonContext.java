@@ -226,8 +226,8 @@ public class JsonContext extends JsonWriter {
 
 			// + excluded types
 
-			if (JoddJson.get().defaults().getExcludedTypes() != null) {
-				for (Class excludedType : JoddJson.get().defaults().getExcludedTypes()) {
+			if (JoddJson.defaults().defaults().getExcludedTypes() != null) {
+				for (Class excludedType : JoddJson.defaults().defaults().getExcludedTypes()) {
 					if (ClassUtil.isTypeOf(propertyType, excludedType)) {
 						return false;
 					}
@@ -245,8 +245,8 @@ public class JsonContext extends JsonWriter {
 
 			String propertyTypeName = propertyType.getName();
 
-			if (JoddJson.get().defaults().getExcludedTypeNames() != null) {
-				for (String excludedTypeName : JoddJson.get().defaults().getExcludedTypeNames()) {
+			if (JoddJson.defaults().defaults().getExcludedTypeNames() != null) {
+				for (String excludedTypeName : JoddJson.defaults().defaults().getExcludedTypeNames()) {
 					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
 						return false;
 					}

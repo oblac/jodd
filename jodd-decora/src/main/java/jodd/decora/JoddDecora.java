@@ -25,8 +25,6 @@
 
 package jodd.decora;
 
-import jodd.Jodd;
-
 /**
  * Jodd Decora module.
  */
@@ -34,15 +32,8 @@ public class JoddDecora {
 
 	private static final JoddDecora instance = new JoddDecora();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddDecora get() {
+	public static JoddDecora defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

@@ -25,8 +25,6 @@
 
 package jodd.vtor;
 
-import jodd.Jodd;
-
 /**
  * Jodd VTOR module.
  */
@@ -34,15 +32,8 @@ public class JoddVtor {
 
 	private static final JoddVtor instance = new JoddVtor();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddVtor get() {
+	public static JoddVtor defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

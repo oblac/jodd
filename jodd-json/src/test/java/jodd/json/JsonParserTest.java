@@ -44,7 +44,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,7 +74,7 @@ class JsonParserTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.get().defaults().setClassMetadataName(null);
+		JoddJson.defaults().defaults().setClassMetadataName(null);
 	}
 
 	@Test
@@ -562,7 +561,7 @@ class JsonParserTest {
 
 	@Test
 	void testComplexObject() {
-		JoddJson.get().defaults().setClassMetadataName("class");
+		JoddJson.defaults().defaults().setClassMetadataName("class");
 
 		JsonParsers.forEachParser(jsonParser -> {
 			String json = null;

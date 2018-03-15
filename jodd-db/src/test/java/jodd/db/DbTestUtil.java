@@ -32,9 +32,9 @@ import jodd.db.querymap.EmptyQueryMap;
 public class DbTestUtil {
 
 	public static void resetAll() {
-		JoddDb.get().dbEntityManager(new DbEntityManager());
-		JoddDb.get().queryMap(new EmptyQueryMap());
-		JoddDb.get().hintResolver(new JoinHintResolver());
-		JoddDb.get().defaults(new JoddDbDefaults());
+		JoddDb.defaults().dbEntityManager(new DbEntityManager());
+		JoddDb.defaults().queryMap(new EmptyQueryMap());
+		JoddDb.defaults().hintResolver(new JoinHintResolver());
+		JoddDb.defaults().defaults(new JoddDbDefaults());
 	}
 }

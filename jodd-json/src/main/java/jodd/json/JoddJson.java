@@ -25,9 +25,10 @@
 
 package jodd.json;
 
-import jodd.Jodd;
+import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 
+import java.lang.annotation.Annotation;
 import java.util.Objects;
 
 /**
@@ -40,38 +41,36 @@ public class JoddJson {
 	/**
 	 * Returns the module instance.
 	 */
-	public static JoddJson get() {
+	public static JoddJson defaults() {
 		return instance;
 	}
 
-	static {
-		Jodd.initModule();
-	}
+	// ---------------------------------------------------------------- settings
 
-	// ---------------------------------------------------------------- instance
+	public static final String DEFAULT_CLASS_METADATA_NAME = "__class";
 
-	private JoddJsonDefaults defaults = new JoddJsonDefaults();
 	private TypeJsonSerializerMap typeSerializers = new TypeJsonSerializerMap();
 	private JsonAnnotationManager annotationManager = new JsonAnnotationManager();
-
-	/**
-	 * Returns {@link JoddJsonDefaults default configuration}.
-	 */
-	public JoddJsonDefaults defaults() {
-		return defaults;
-	}
+	private Class<? extends Annotation> jsonAnnotation = JSON.class;
+	private String classMetadataName = null;
+	private boolean deepSerialization = false;
+	private boolean useAltPathsByParser = false;
+	private Class[] excludedTypes = null;
+	private String[] excludedTypeNames = null;
+	private boolean serializationSubclassAware = true;
+	private boolean strictStringEncoding = false;
 
 	/**
 	 * Returns {@link TypeJsonSerializerMap type serializer map}
 	 */
-	public TypeJsonSerializerMap typeSerializers() {
+	public TypeJsonSerializerMap getTypeSerializers() {
 		return typeSerializers;
 	}
 
 	/**
 	 * Defines new type serializer map.
 	 */
-	public JoddJson typeSerializers(final TypeJsonSerializerMap typeSerializers) {
+	public JoddJson setTypeSerializers(final TypeJsonSerializerMap typeSerializers) {
 		Objects.requireNonNull(typeSerializers);
 		this.typeSerializers = typeSerializers;
 		return this;
@@ -80,7 +79,7 @@ public class JoddJson {
 	/**
 	 * Returns {@link JsonAnnotationManager}.
 	 */
-	public JsonAnnotationManager annotationManager() {
+	public JsonAnnotationManager getAnnotationManager() {
 		return annotationManager;
 	}
 
@@ -91,6 +90,130 @@ public class JoddJson {
 		Objects.requireNonNull(annotationManager);
 		this.annotationManager = annotationManager;
 		return this;
+	}
+
+
+	/**
+	 * Returns the annotation used for marking the properties.
+	 */
+	public Class<? extends Annotation> getJsonAnnotation() {
+		return jsonAnnotation;
+	}
+
+	/**
+	 * Defines new custom JSON annotation for marking the JSON properties that are going to be serialized.
+	 */
+	public void setJsonAnnotation(final Class<? extends Annotation> jsonAnnotation) {
+		this.jsonAnnotation = jsonAnnotation;
+	}
+
+	/**
+	 * @see #setClassMetadataName(String)
+	 */
+	public String getClassMetadataName() {
+		return classMetadataName;
+	}
+
+	/**
+	 * Specifies if 'class' metadata is used and its value. When set, class metadata
+	 * is used by {@link jodd.json.JsonSerializer} and all objects
+	 * will have additional field with the class type in the resulting JSON.
+	 * {@link jodd.json.JsonParser} will also consider this flag to build
+	 * correct object type. If <code>null</code>, class information is not used.
+	 */
+	public void setClassMetadataName(final String classMetadataName) {
+		this.classMetadataName = classMetadataName;
+	}
+
+	public boolean isDeepSerialization() {
+		return deepSerialization;
+	}
+
+	/**
+	 * Defines default behavior of a {@link jodd.json.JsonSerializer}.
+	 * If set to <code>true</code>, objects will be serialized
+	 * deep, so all collections and arrays will get serialized.
+	 */
+	public void setDeepSerialization(final boolean deepSerialization) {
+		this.deepSerialization = deepSerialization;
+	}
+
+	/**
+	 * @see #setUseAltPathsByParser(boolean)
+	 */
+	public boolean isUseAltPathsByParser() {
+		return useAltPathsByParser;
+	}
+
+	/**
+	 * Defines if parser will use extended paths information
+	 * and path matching.
+	 */
+	public void setUseAltPathsByParser(final boolean useAltPathsByParser) {
+		this.useAltPathsByParser = useAltPathsByParser;
+	}
+
+	/**
+	 * @see #setExcludedTypes(Class[])
+	 */
+	public Class[] getExcludedTypes() {
+		return excludedTypes;
+	}
+
+	/**
+	 * Defines list of excluded types for serialization.
+	 */
+	public void setExcludedTypes(final Class... excludedTypes) {
+		this.excludedTypes = excludedTypes;
+	}
+
+	/**
+	 * @see #setExcludedTypeNames(String...)
+	 */
+	public String[] getExcludedTypeNames() {
+		return excludedTypeNames;
+	}
+
+	/**
+	 * Defines a list of excluded types names for serialization. Type name
+	 * can contain wildcards (<code>*</code> and <code>?</code>).
+	 */
+	public void setExcludedTypeNames(final String... excludedTypeNames) {
+		this.excludedTypeNames = excludedTypeNames;
+	}
+
+	/**
+	 * @see #setSerializationSubclassAware(boolean)
+	 */
+	public boolean isSerializationSubclassAware() {
+		return serializationSubclassAware;
+	}
+
+	/**
+	 * When set searches for first annotated class or interface and use it's data.
+	 */
+	public void setSerializationSubclassAware(final boolean serializationSubclassAware) {
+		this.serializationSubclassAware = serializationSubclassAware;
+	}
+
+	/**
+	 * @see #setStrictStringEncoding(boolean)
+	 */
+	public boolean isStrictStringEncoding() {
+		return strictStringEncoding;
+	}
+
+	/**
+	 * Sets the strict JSON encoding.
+	 * JSON specification specifies that certain characters should be
+	 * escaped (see: http://json.org/). However, in the real world, not all
+	 * needs to be escaped: especially the 'solidus' character (/). If this one
+	 * is escaped, many things can go wrong, from URLs to Base64 encodings.
+	 * This flag controls the behavior of strict encoding. By default, the
+	 * strict encoding is set to {@code false}.
+	 */
+	public void setStrictStringEncoding(final boolean strictStringEncoding) {
+		this.strictStringEncoding = strictStringEncoding;
 	}
 
 }

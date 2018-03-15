@@ -69,7 +69,7 @@ public class UpdateSetChunk extends SqlChunk {
 
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
-			final boolean isUpdateablePrimaryKey = JoddDb.get().defaults().getSqlGenConfig().isUpdateablePrimaryKey();
+			final boolean isUpdateablePrimaryKey = JoddDb.defaults().defaults().getSqlGenConfig().isUpdateablePrimaryKey();
 
 			if (dec.isId() && !isUpdateablePrimaryKey) {
 				continue;

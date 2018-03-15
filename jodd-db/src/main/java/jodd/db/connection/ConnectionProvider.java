@@ -42,7 +42,7 @@ public interface ConnectionProvider extends AutoCloseable {
 	 * Returns default instance.
 	 */
 	public static ConnectionProvider get() {
-		return JoddDb.get().connectionProvider();
+		return JoddDb.defaults().connectionProvider();
 	}
 
 	/**

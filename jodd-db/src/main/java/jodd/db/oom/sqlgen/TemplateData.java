@@ -47,7 +47,7 @@ public abstract class TemplateData {
 	private static final String COL_CODE_PREFIX = "col_";
 	
 	protected TemplateData() {
-		columnAliasType = JoddDb.get().defaults().getDbOomConfig().getDefaultColumnAliasType();
+		columnAliasType = JoddDb.defaults().defaults().getDbOomConfig().getDefaultColumnAliasType();
 	}
 
 	/**
@@ -78,7 +78,7 @@ public abstract class TemplateData {
 	protected void resetHard() {
 		resetSoft();
 		objectRefs = null;
-		columnAliasType = JoddDb.get().defaults().getDbOomConfig().getDefaultColumnAliasType();
+		columnAliasType = JoddDb.defaults().defaults().getDbOomConfig().getDefaultColumnAliasType();
 	}
 
 

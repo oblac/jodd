@@ -25,8 +25,6 @@
 
 package jodd.htmlstapler;
 
-import jodd.Jodd;
-
 /**
  * Jodd HTML Stapler module.
  */
@@ -34,15 +32,8 @@ public class JoddHtmlStapler {
 
 	private static final JoddHtmlStapler instance = new JoddHtmlStapler();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddHtmlStapler get() {
+	public static JoddHtmlStapler defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

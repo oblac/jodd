@@ -34,7 +34,7 @@ import jodd.db.JoddDb;
 public interface QueryMap {
 
 	public static QueryMap get() {
-		return JoddDb.get().queryMap();
+		return JoddDb.defaults().queryMap();
 	}
 
 	/**

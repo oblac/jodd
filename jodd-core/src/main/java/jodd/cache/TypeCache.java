@@ -43,7 +43,7 @@ public class TypeCache<T> {
 	 * Creates default type cache implementation, as defined in {@link jodd.core.JoddCoreDefaults}.
 	 */
 	public static <A> TypeCache<A> createDefault() {
-		return new TypeCache<>(JoddCore.get().typeCacheImplementation());
+		return new TypeCache<>(JoddCore.defaults().typeCacheImplementation());
 	}
 
 	public static <A> TypeCache<A> create(final Implementation implementation) {

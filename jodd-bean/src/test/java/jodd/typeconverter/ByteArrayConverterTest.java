@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ByteArrayConverterTest {
 
-	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) JoddBean.get().typeConverterManager().lookup(byte[].class);
+	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) JoddBean.defaults().typeConverterManager().lookup(byte[].class);
 
 	@Test
 	void testArrayConversion() {

@@ -26,7 +26,6 @@
 package jodd.util;
 
 import jodd.core.JoddCore;
-import jodd.core.JoddCoreDefaults;
 
 /**
  * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
@@ -41,7 +40,7 @@ public class UnsafeUtil {
 
 	private static final boolean IS_ANDROID = SystemUtil.isHostAndroid();
 	private static final boolean HAS_UNSAFE = !IS_ANDROID && UnsafeInternal.hasUnsafe();
-	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
+	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.defaults().defaults();
 
 	/**
 	 * Returns <code>true</code> if system has the <code>Unsafe</code>.

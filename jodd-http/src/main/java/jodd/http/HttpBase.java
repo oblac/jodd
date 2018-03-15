@@ -72,7 +72,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected boolean capitalizeHeaderKeys = JoddHttp.get().defaults().isCapitalizeHeaderKeys();
+	protected boolean capitalizeHeaderKeys = JoddHttp.defaults().defaults().isCapitalizeHeaderKeys();
 	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -521,7 +521,7 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- form encoding
 
-	protected String formEncoding = JoddHttp.get().defaults().getFormEncoding();
+	protected String formEncoding = JoddHttp.defaults().defaults().getFormEncoding();
 
 	/**
 	 * Defines encoding for forms parameters. Default value is
@@ -603,7 +603,7 @@ public abstract class HttpBase<T> {
 	 * that will be encoded in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body, final String mediaType) {
-		return bodyText(body, mediaType, JoddHttp.get().defaults().getBodyEncoding());
+		return bodyText(body, mediaType, JoddHttp.defaults().defaults().getBodyEncoding());
 	}
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
@@ -611,7 +611,7 @@ public abstract class HttpBase<T> {
 	 * in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body) {
-		return bodyText(body, JoddHttp.get().defaults().getBodyMediaType(), JoddHttp.get().defaults().getBodyEncoding());
+		return bodyText(body, JoddHttp.defaults().defaults().getBodyMediaType(), JoddHttp.defaults().defaults().getBodyEncoding());
 	}
 
 	/**

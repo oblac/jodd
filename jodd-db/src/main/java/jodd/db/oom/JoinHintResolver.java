@@ -46,7 +46,7 @@ import java.util.Map;
 public class JoinHintResolver {
 
 	public static JoinHintResolver get() {
-		return JoddDb.get().hintResolver();
+		return JoddDb.defaults().hintResolver();
 	}
 
 	public Object[] join(final Object[] data, final String hints) {

@@ -26,7 +26,6 @@
 package jodd.mail;
 
 import jodd.core.JoddCore;
-import jodd.core.JoddCoreDefaults;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
 import jodd.util.CharUtil;
@@ -123,7 +122,7 @@ public class EmailUtil {
 
 		if (encoding == null) {
 			if (defaultEncoding == null) {
-				defaultEncoding = JoddCore.get().defaults().getEncoding();
+				defaultEncoding = JoddCore.defaults().defaults().getEncoding();
 			}
 			encoding = defaultEncoding;
 		}
@@ -173,7 +172,7 @@ public class EmailUtil {
 	 * Setups the system email properties.
 	 */
 	public static void setupSystemMailProperties() {
-		final JoddMailDefaults defaults = JoddMail.get().defaults();
+		final JoddMailDefaults defaults = JoddMail.defaults().defaults();
 		System.setProperty("mail.mime.encodefilename", Boolean.valueOf(defaults.isMailMimeEncodefilename()).toString());
 		System.setProperty("mail.mime.decodefilename", Boolean.valueOf(defaults.isMailMimeDecodefilename()).toString());
 	}

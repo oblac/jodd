@@ -25,8 +25,6 @@
 
 package jodd.lagarto;
 
-import jodd.Jodd;
-
 /**
  * Jodd LAGARTO module.
  */
@@ -34,15 +32,8 @@ public class JoddLagarto {
 
 	private static final JoddLagarto instance = new JoddLagarto();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddLagarto get() {
+	public static JoddLagarto defaults() {
 		return instance;
-	}
-
-	static {
-		Jodd.initModule();
 	}
 
 }

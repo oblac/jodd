@@ -52,7 +52,7 @@ class DbSqlTemplateTest {
 	void setUp() throws Exception {
 
 		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.get().dbEntityManager();
+		DbEntityManager dbEntityManager = JoddDb.defaults().dbEntityManager();
 		dbEntityManager.registerType(Boy.class);
 		dbEntityManager.registerType(BadBoy.class);
 		dbEntityManager.registerType(BadGirl.class);

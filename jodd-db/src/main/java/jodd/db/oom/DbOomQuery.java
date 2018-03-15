@@ -220,7 +220,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	// ---------------------------------------------------------------- result set
 
-	protected boolean cacheEntities = JoddDb.get().defaults().getDbOomConfig().isCacheEntitiesInResultSet();
+	protected boolean cacheEntities = JoddDb.defaults().defaults().getDbOomConfig().isCacheEntitiesInResultSet();
 
 	/**
 	 * Defines if entities should be cached in {@link ResultSetMapper}.
@@ -251,7 +251,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	// ---------------------------------------------------------------- db list
 
-	protected boolean entityAwareMode = JoddDb.get().defaults().getDbOomConfig().isEntityAwareMode();
+	protected boolean entityAwareMode = JoddDb.defaults().defaults().getDbOomConfig().isEntityAwareMode();
 
 	/**
 	 * Defines entity-aware mode for entities tracking in result collection.

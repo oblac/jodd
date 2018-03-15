@@ -46,7 +46,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 
 	protected Class targetClassOrInterface;
 	protected Class targetInterface;
-	protected String targetFieldName = JoddProxetta.get().defaults().getWrapperTargetFieldName();
+	protected String targetFieldName = JoddProxetta.defaults().defaults().getWrapperTargetFieldName();
 
 	/**
 	 * Defines class or interface to wrap.

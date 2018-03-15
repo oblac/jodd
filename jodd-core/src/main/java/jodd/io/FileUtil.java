@@ -26,7 +26,6 @@
 package jodd.io;
 
 import jodd.core.JoddCore;
-import jodd.core.JoddCoreDefaults;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
@@ -65,7 +64,6 @@ public class FileUtil {
 	private static final String MSG_NOT_A_FILE = "Not a file: ";
 	private static final String MSG_UNABLE_TO_DELETE = "Unable to delete: ";
 
-	private static final JoddCoreDefaults JODD_CORE_DEFAULTS = JoddCore.get().defaults();
 	private static final int ZERO = 0;
 	private static final int NEGATIVE_ONE = -1;
 	private static final String FILE_PROTOCOL = "file";
@@ -1775,7 +1773,7 @@ public class FileUtil {
 	 * @return default encoding.
 	 */
 	private static String encoding() {
-		return JODD_CORE_DEFAULTS.getEncoding();
+		return JoddCore.defaults().getEncoding();
 	}
 
 	/**
@@ -1783,6 +1781,6 @@ public class FileUtil {
 	 * @return default prefix for temp files.
 	 */
 	private static String tempPrefix() {
-		return JODD_CORE_DEFAULTS.getTempFilePrefix();
+		return JoddCore.defaults().getTempFilePrefix();
 	}
 }

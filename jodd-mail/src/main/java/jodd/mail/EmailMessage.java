@@ -26,7 +26,6 @@
 package jodd.mail;
 
 import jodd.core.JoddCore;
-import jodd.core.JoddCoreDefaults;
 
 /**
  * Represents email message including the mime type and encoding.
@@ -69,7 +68,7 @@ public class EmailMessage {
 	 * @see JoddCoreDefaults#getEncoding()
 	 */
 	public EmailMessage(final String content, final String mimeType) {
-		this(content, mimeType, JoddCore.get().defaults().getEncoding());
+		this(content, mimeType, JoddCore.defaults().defaults().getEncoding());
 	}
 
 	// ---------------------------------------------------------------- getters

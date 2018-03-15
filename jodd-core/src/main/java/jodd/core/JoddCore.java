@@ -25,8 +25,7 @@
 
 package jodd.core;
 
-import jodd.Jodd;
-import jodd.cache.TypeCache;
+import jodd.util.StringPool;
 import jodd.util.cl.ClassLoaderStrategy;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 
@@ -40,64 +39,95 @@ public class JoddCore {
 
 	private static final JoddCore instance = new JoddCore();
 
-	/**
-	 * Returns the module instance.
-	 */
-	public static JoddCore get() {
+	public static JoddCore defaults() {
 		return instance;
 	}
 
 	static {
-		Jodd.initModule();
-
 		// Starting from Java8 u151, the `Unlimited Strength Jurisdiction Policy Files`
 		// are included with Java, but has to be enabled.
 		// They are enabled on Java9 by default.
 		Security.setProperty("crypto.policy", "unlimited");
 	}
 
-	// ---------------------------------------------------------------- instance
+	// ---------------------------------------------------------------- settings
 
-	private JoddCoreDefaults defaults = new JoddCoreDefaults();
+	private String tempFilePrefix = "jodd-";
+	private String encoding = StringPool.UTF_8;
+	private int ioBufferSize = 16384;
+	private boolean unsafeUsageEnabled = true;
 	private ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
-	private TypeCache.Implementation typeCacheImplementation = TypeCache.Implementation.SYNC_MAP;
 
 	/**
-	 * Returns defaults module configuration.
+	 * Returns default prefix for temporary files.
 	 */
-	public JoddCoreDefaults defaults() {
-		return defaults;
+	public String getTempFilePrefix() {
+		return tempFilePrefix;
+	}
+
+	/**
+	 * Sets default file prefix.
+	 */
+	public void setTempFilePrefix(final String tempFilePrefix) {
+		this.tempFilePrefix = tempFilePrefix;
+	}
+
+	/**
+	 * Returns default encoding used across the Jodd classes. "UTF-8".
+	 */
+	public String getEncoding() {
+		return encoding;
+	}
+
+	/**
+	 * Sets new encoding that is used across the Jodd library.
+	 */
+	public void setEncoding(final String encoding) {
+		this.encoding = encoding;
+	}
+
+	/**
+	 * Returns buffer size for various IO operations.
+	 */
+	public int getIoBufferSize() {
+		return ioBufferSize;
+	}
+
+	/**
+	 * Sets new buffer size for various IO operations.
+	 */
+	public void setIoBufferSize(final int ioBufferSize) {
+		this.ioBufferSize = ioBufferSize;
+	}
+
+	/**
+	 * Returns {@code true} if {@code Unsafe} is enabled (if system detects so). Enabled by default.
+	 */
+	public boolean isUnsafeUsageEnabled() {
+		return unsafeUsageEnabled;
+	}
+
+	/**
+	 * Enables or disables usage of {@code Unsafe}.
+	 */
+	public void setUnsafeUsageEnabled(final boolean unsafeUsed) {
+		this.unsafeUsageEnabled = unsafeUsed;
 	}
 
 	/**
 	 * Returns the classloader strategy implementation.
 	 */
-	public ClassLoaderStrategy classLoaderStrategy() {
+	public ClassLoaderStrategy getClassLoaderStrategy() {
 		return classLoaderStrategy;
 	}
 
 	/**
 	 * Defines classloader strategy implementation.
 	 */
-	public JoddCore classLoaderStrategy(final ClassLoaderStrategy classLoaderStrategy) {
+	public JoddCore setClassLoaderStrategy(final ClassLoaderStrategy classLoaderStrategy) {
 		Objects.requireNonNull(classLoaderStrategy);
 		this.classLoaderStrategy = classLoaderStrategy;
 		return this;
 	}
-
-	/**
-	 * Returns default type cache implementation variant.
-	 */
-	public TypeCache.Implementation typeCacheImplementation() {
-		return typeCacheImplementation;
-	}
-
-	/**
-	 * Sets default type cache implementation.
-	 */
-	public void typeCacheImplementation(final TypeCache.Implementation typeCacheImplementation) {
-		this.typeCacheImplementation = typeCacheImplementation;
-	}
-
 
 }

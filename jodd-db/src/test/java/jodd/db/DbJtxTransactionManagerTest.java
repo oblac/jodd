@@ -51,7 +51,7 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 	@Override
 	@AfterEach
 	protected void tearDown() {
-		JoddDb.get().sessionProvider(sessionProvider);
+		JoddDb.defaults().getSessionProvider(sessionProvider);
 	}
 
 	@Test
@@ -60,7 +60,7 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 		JtxTransactionManager jtxManager = new DbJtxTransactionManager(cp);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
-		JoddDb.get().sessionProvider(sessionProvider);
+		JoddDb.defaults().getSessionProvider(sessionProvider);
 
 		for (int i = 0; i < 2; i++) {
 

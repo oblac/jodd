@@ -67,7 +67,7 @@ public class InsertChunk extends SqlChunk {
 
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
-			final boolean defaultIsUpdateablePrimaryKey = JoddDb.get().defaults().getSqlGenConfig().isUpdateablePrimaryKey();
+			final boolean defaultIsUpdateablePrimaryKey = JoddDb.defaults().defaults().getSqlGenConfig().isUpdateablePrimaryKey();
 
 			 if (dec.isId() && !defaultIsUpdateablePrimaryKey) {
 			 	continue;
