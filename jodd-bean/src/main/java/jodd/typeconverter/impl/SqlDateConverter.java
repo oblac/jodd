@@ -25,9 +25,9 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.JulianDate;
 import jodd.util.StringUtil;
 
 import java.sql.Date;
@@ -65,8 +65,8 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		if (value instanceof java.util.Date) {
 			return new Date(((java.util.Date)value).getTime());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToSqlDate();
+		if (value instanceof JulianDate) {
+			return new Date(((JulianDate) value).toMilliseconds());
 		}
 
 		if (value instanceof Number) {

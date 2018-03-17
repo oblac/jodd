@@ -26,7 +26,6 @@
 package jodd.json;
 
 import jodd.bean.JoddBean;
-import jodd.datetime.JDateTime;
 import jodd.introspector.ClassDescriptor;
 import jodd.json.impl.ArraysJsonSerializer;
 import jodd.json.impl.BooleanArrayJsonSerializer;
@@ -45,19 +44,22 @@ import jodd.json.impl.FloatArrayJsonSerializer;
 import jodd.json.impl.FloatJsonSerializer;
 import jodd.json.impl.IntArrayJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
-import jodd.json.impl.JDateTimeSerializer;
 import jodd.json.impl.JsonArraySerializer;
 import jodd.json.impl.JsonObjectSerializer;
+import jodd.json.impl.JulianDateSerializer;
+import jodd.json.impl.LocalDateTimeSerializer;
 import jodd.json.impl.LongArrayJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
 import jodd.json.impl.UUIDJsonSerializer;
+import jodd.util.JulianDate;
 import jodd.util.collection.ClassMap;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -179,7 +181,8 @@ public class TypeJsonSerializerMap {
 		map.put(boolean.class, new BooleanJsonSerializer());
 		map.put(Date.class, new DateJsonSerializer());
 		map.put(Calendar.class, new CalendarJsonSerializer());
-		map.put(JDateTime.class, new JDateTimeSerializer());
+		map.put(JulianDate.class, new JulianDateSerializer());
+		map.put(LocalDateTime.class, new LocalDateTimeSerializer());
 		map.put(Enum.class, new EnumJsonSerializer());
 		map.put(File.class, new FileJsonSerializer(FileJsonSerializer.Type.PATH));
 

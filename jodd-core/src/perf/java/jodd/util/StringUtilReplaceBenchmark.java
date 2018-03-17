@@ -34,7 +34,6 @@ import org.openjdk.jmh.annotations.Warmup;
  * Following methods will be compared:
  * <ol>
  *     <li>{@link String#replace(CharSequence, CharSequence)}</li>
- *     <li>{@link org.apache.commons.lang3.StringUtils#replace(String, String, String)}</li>
  *     <li>{@link StringUtil#replace(String, String, String)}</li>
  * </ol>
  *
@@ -117,38 +116,6 @@ public class StringUtilReplaceBenchmark {
     @Benchmark
     public String stringReplaceLongStringSeveralMatches() {
         return LONG_STRING_SEVERAL_MATCHES.replace("'", "''");
-    }
-
-    // ----------------------------------------------------------------------- Apache Commons Lang StringUtils#replace
-    
-    @Benchmark
-    public String apacheStringUtilsReplaceShortStringNoMatch() {
-        return org.apache.commons.lang3.StringUtils.replace(SHORT_STRING_NO_MATCH, "'", "''");
-    }
-
-    @Benchmark
-    public String apacheStringUtilsReplaceLongStringNoMatch() {
-        return org.apache.commons.lang3.StringUtils.replace(LONG_STRING_NO_MATCH, "'", "''");
-    }
-
-    @Benchmark
-    public String apacheStringUtilsReplaceShortStringOneMatch() {
-        return org.apache.commons.lang3.StringUtils.replace(SHORT_STRING_ONE_MATCH, "'", "''");
-    }
-
-    @Benchmark
-    public String apacheStringUtilsReplaceLongStringOneMatch() {
-        return org.apache.commons.lang3.StringUtils.replace(LONG_STRING_ONE_MATCH, "'", "''");
-    }
-
-    @Benchmark
-    public String apacheStringUtilsReplaceShortStringSeveralMatches() {
-        return org.apache.commons.lang3.StringUtils.replace(SHORT_STRING_SEVERAL_MATCHES, "'", "''");
-    }
-
-    @Benchmark
-    public String apacheStringUtilsReplaceLongStringSeveralMatches() {
-        return org.apache.commons.lang3.StringUtils.replace(LONG_STRING_SEVERAL_MATCHES, "'", "''");
     }
 
     // ----------------------------------------------------------------------- Jodd StringUtil#replace

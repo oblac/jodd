@@ -25,12 +25,14 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.JulianDate;
 import jodd.util.StringUtil;
+import jodd.util.TimeUtil;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -66,8 +68,11 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 			Date date = (Date) value;
 			return new Timestamp(date.getTime());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToSqlTimestamp();
+		if (value instanceof JulianDate) {
+			return new Timestamp(((JulianDate) value).toMilliseconds());
+		}
+		if (value instanceof LocalDateTime) {
+			return new Timestamp(TimeUtil.toMilliseconds((LocalDateTime) value));
 		}
 
 		if (value instanceof Number) {

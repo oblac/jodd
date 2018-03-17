@@ -25,7 +25,6 @@
 
 package jodd.db.type;
 
-import jodd.datetime.JDateTime;
 import jodd.db.DbSqlException;
 import jodd.mutable.MutableBoolean;
 import jodd.mutable.MutableByte;
@@ -35,6 +34,7 @@ import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
 import jodd.util.ClassUtil;
+import jodd.util.JulianDate;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -112,7 +112,7 @@ public class SqlTypeManager {
 		register(Timestamp.class, TimestampSqlType.class);
 		register(Time.class, TimeSqlType.class);
 		register(java.util.Date.class, DateSqlType.class);
-		register(JDateTime.class, JDateTimeSqlType.class);
+		register(JulianDate.class, JulianDateSqlType.class);
 
 		register(byte[].class, ByteArraySqlType.class);
 		register(URL.class, URLSqlType.class);

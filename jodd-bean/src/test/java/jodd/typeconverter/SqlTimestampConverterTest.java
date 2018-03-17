@@ -25,8 +25,8 @@
 
 package jodd.typeconverter;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.impl.SqlTimestampConverter;
+import jodd.util.JulianDate;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
@@ -34,11 +34,13 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SqlTimestampConverterTest {
 
-	private static long time = new JDateTime(2011, 11, 1, 9, 10, 12, 567).getTimeInMillis();
+	private static long time = JulianDate.of(2011, 11, 1, 9, 10, 12, 567).toMilliseconds();
 
 	SqlTimestampConverter sqlTimestampConverter = new SqlTimestampConverter();
 
@@ -80,13 +82,6 @@ class SqlTimestampConverterTest {
 	void testSqlTime2Timestamp() {
 		Time sqltime = new Time(time);
 		Timestamp timestamp = sqlTimestampConverter.convert(sqltime);
-		assertEquals(time, timestamp.getTime());
-	}
-
-	@Test
-	void testJDateTime2Timestamp() {
-		JDateTime jdt = new JDateTime(time);
-		Timestamp timestamp = sqlTimestampConverter.convert(jdt);
 		assertEquals(time, timestamp.getTime());
 	}
 

@@ -25,8 +25,9 @@
 
 package jodd.util;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.RepeatedTest;
+
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,16 +36,19 @@ class HashCodeTest {
 	@RepeatedTest(5)
 	void testhashCode() {
 
-		final boolean randomBoolean = RandomUtils.nextBoolean();
+		Random rnd = new Random();
+
+		final boolean randomBoolean = rnd.nextBoolean();
 		final boolean[] randomBooleanArray = new boolean[] {randomBoolean, !randomBoolean};
 		final String randomString = RandomString.getInstance().randomAscii(10);
-		final int randomInt = RandomUtils.nextInt();
-		final short randomShort = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
-		final byte[] randomByteArray = RandomUtils.nextBytes(5);
+		final int randomInt = rnd.nextInt();
+		final short randomShort = (short) rnd.nextInt();
+		final byte[] randomByteArray = new byte[5];
+		rnd.nextBytes(randomByteArray);
 		final byte randomByte = randomByteArray[0];
-		final long randomLong = RandomUtils.nextLong(1L, 250000L);
-		final float randomFloat = RandomUtils.nextFloat(1F, 250000F);
-		final double randomDouble = RandomUtils.nextDouble(1F, 250000F);
+		final long randomLong = rnd.nextLong();
+		final float randomFloat = rnd.nextFloat();
+		final double randomDouble = rnd.nextDouble();
 		final NameValue<String, String> randomNameValue = new NameValue<>(RandomString.getInstance().randomAscii(10), RandomString.getInstance().randomAscii(10));
 		final Object[] randomObjectArray = new Object[] {randomBoolean, randomBooleanArray, randomString, randomInt, randomShort, randomByte, randomLong, randomFloat, randomDouble, randomNameValue, null };
 		

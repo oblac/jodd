@@ -25,8 +25,7 @@
 
 package jodd.json.fixtures.model.cat;
 
-import jodd.datetime.JDateTime;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Performance {
@@ -38,7 +37,7 @@ public class Performance {
 	private List<Price> prices;
 	private List<SeatCategory> seatCategories;
 	private String seatMapImage;
-	private JDateTime start;
+	private LocalDateTime start;
 	private String venueCode;
 
 	public Long getEventId() {
@@ -97,11 +96,11 @@ public class Performance {
 		this.seatMapImage = seatMapImage;
 	}
 
-	public JDateTime getStart() {
+	public LocalDateTime getStart() {
 		return start;
 	}
 
-	public void setStart(JDateTime start) {
+	public void setStart(LocalDateTime start) {
 		this.start = start;
 	}
 

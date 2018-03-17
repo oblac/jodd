@@ -26,7 +26,6 @@
 package jodd.htmlstapler;
 
 import jodd.bean.BeanUtil;
-import jodd.datetime.TimeUtil;
 import jodd.io.StreamUtil;
 import jodd.lagarto.TagVisitor;
 import jodd.lagarto.TagWriter;
@@ -37,6 +36,7 @@ import jodd.log.LoggerFactory;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringPool;
+import jodd.util.TimeUtil;
 import jodd.util.net.MimeTypes;
 
 import javax.servlet.FilterConfig;

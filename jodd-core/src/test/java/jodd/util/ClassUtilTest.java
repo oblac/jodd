@@ -39,12 +39,10 @@ import jodd.util.fixtures.testdata.C;
 import jodd.util.fixtures.testdata.JavaBean;
 import jodd.util.fixtures.testdata2.D;
 import jodd.util.fixtures.testdata2.E;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.io.File;
 import java.io.Serializable;
@@ -957,7 +955,7 @@ class ClassUtilTest {
 
 			// asserts
 			assertNotNull(actual);
-			assertTrue(actual.getName().contains("commons-lang3"));
+			assertTrue(actual.getName().contains("junit-platform-commons"));
 		}
 
 		@Test

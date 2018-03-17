@@ -45,4 +45,19 @@ public interface TypeConverter<T> {
 	 */
 	T convert(Object value);
 
+	/**
+	 * Converts object and returns default value if conversion fails.
+	 */
+	default T convert(final Object value, final T defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		try {
+			return convert(value);
+		}
+		catch (Exception e) {
+			return defaultValue;
+		}
+	}
+
 }

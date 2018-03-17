@@ -23,48 +23,41 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.type;
+package jodd.util;
 
-import jodd.datetime.JDateTime;
+import org.junit.jupiter.api.Test;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.time.LocalDateTime;
 
-/**
- * JDateTime sql type stores JDateTime data as number of milliseconds passed from 1970.
- */
-public class JDateTimeSqlType extends SqlType<JDateTime> {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-	@Override
-	public void set(final PreparedStatement st, final int index, final JDateTime value, final int dbSqlType) throws SQLException {
-		if (value == null) {
-			st.setNull(index, dbSqlType);
-			return;
-		}
-		if (dbSqlType == Types.TIMESTAMP) {
-			st.setTimestamp(index, value.convertToSqlTimestamp());
-			return;
-		}
-		st.setLong(index, value.getTimeInMillis());
+class JulianDateTest {
+
+	@Test
+	void testSet() {
+		JulianDate jdt = JulianDate.of(2008, 12, 20, 10, 44, 55, 0);
+		JulianDate jdt2 = JulianDate.of(jdt.integer - 1, jdt.fraction);
+
+		assertEquals(jdt.toLocalDateTime().getYear(), jdt2.toLocalDateTime().getYear());
+		assertEquals(jdt.toLocalDateTime().getMonth(), jdt2.toLocalDateTime().getMonth());
+		assertEquals(jdt.toLocalDateTime().getDayOfMonth() - 1, jdt2.toLocalDateTime().getDayOfMonth());
+		assertEquals(jdt.toLocalDateTime().getHour(), jdt2.toLocalDateTime().getHour());
+		assertEquals(jdt.toLocalDateTime().getMinute(), jdt2.toLocalDateTime().getMinute());
+		assertEquals(jdt.toLocalDateTime().getSecond(), jdt2.toLocalDateTime().getSecond(), 0.0001);
 	}
 
-	@Override
-	public JDateTime get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
-		if (dbSqlType == Types.TIMESTAMP) {
-			Timestamp timestamp = rs.getTimestamp(index);
-			if (timestamp == null) {
-				return null;
-			}
-			return new JDateTime(timestamp);
-		}
-		long time = rs.getLong(index);
+	@Test
+	void testDecimalFloating() {
+		LocalDateTime ldt = LocalDateTime.of(1970, 1, 13, 14, 24, 0, 0);
+		JulianDate jdt = new JulianDate(2440600, 0.1);
 
-		if (time == 0 && rs.wasNull()) {
-			return null;
-		}
-		return new JDateTime(time);
+		assertTrue(ldt.isEqual(jdt.toLocalDateTime()));
+
+		JulianDate jdt2 = new JulianDate(2440600, 0.09999999991);
+		assertTrue(ldt.isEqual(jdt2.toLocalDateTime()));
+
+		JulianDate jdt3 = new JulianDate(2440600, 0.10000001);
+		assertTrue(ldt.isEqual(jdt3.toLocalDateTime()));
 	}
 }

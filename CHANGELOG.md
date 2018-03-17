@@ -9,12 +9,14 @@ Work-in-progress :thunder:
 ### Breaking changes
 
 + **all** no more internal modules, removed `Defaults` 
-+ **upload** module merged to core
++ **upload** module moved to core
++ **core** `JDateTime` removed, RIP.
 
 ### Features
 
 + **json** - the order of the keys in JSON is now preserved.
-
++ **core** - added `TimeUtil` utils. 
++ **core** - added `JulianDate` class, just for Julian dates.
 
 ## [4.2.0](https://github.com/oblac/jodd/compare/v4.1.5...4.2.0)
 

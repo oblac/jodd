@@ -25,7 +25,6 @@
 
 package jodd.json;
 
-import jodd.datetime.JDateTime;
 import jodd.io.StreamUtil;
 import jodd.json.fixtures.JsonParsers;
 import jodd.json.fixtures.model.cat.Area;
@@ -34,6 +33,7 @@ import jodd.json.fixtures.model.cat.Event;
 import jodd.json.fixtures.model.cat.Performance;
 import jodd.json.fixtures.model.cat.Price;
 import jodd.json.fixtures.model.cat.SeatCategory;
+import jodd.util.TimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -211,8 +212,8 @@ class CatalogTest {
 		Area area = areas.get(0);
 		assertEquals(205705999, area.getAreaId().longValue());
 		assertEquals(0, area.getBlockIds().length);
-		JDateTime start = performance.getStart();
-		assertEquals(1372701600000L, start.getTimeInMillis());
+		LocalDateTime start = performance.getStart();
+		assertEquals(1372701600000L, TimeUtil.toMilliseconds(start));
 		assertEquals("PLEYEL_PLEYEL", performance.getVenueCode());
 
 		// seatCategoryNames

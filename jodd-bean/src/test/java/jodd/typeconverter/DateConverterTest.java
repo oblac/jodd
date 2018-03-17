@@ -25,8 +25,8 @@
 
 package jodd.typeconverter;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.impl.DateConverter;
+import jodd.util.JulianDate;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DateConverterTest {
 
-	private static long time = new JDateTime(2011, 11, 1, 9, 10, 12, 567).getTimeInMillis();
+	private static long time = JulianDate.of(2011, 11, 1, 9, 10, 12, 567).toMilliseconds();
 
 	DateConverter dateConverter = new DateConverter();
 
@@ -84,13 +84,6 @@ class DateConverterTest {
 		assertEquals(time, date.getTime());
 	}
 
-	@Test
-	void testJDateTime2Date() {
-		JDateTime jdt = new JDateTime(time);
-		Date date = dateConverter.convert(jdt);
-		assertEquals(time, date.getTime());
-	}
-
 
 	@Test
 	@SuppressWarnings({"deprecation"})
@@ -101,10 +94,10 @@ class DateConverterTest {
 		assertEquals(new Date(123), dateConverter.convert(Integer.valueOf(123)));
 
 		Date date = new Date(111, 0, 1);
-		assertEquals(date, dateConverter.convert("2011-01-01"));
+		assertEquals(date, dateConverter.convert("2011-01-01T00:00:00"));
 
 		date = new Date(111, 0, 1, 10, 59, 55);
-		assertEquals(date, dateConverter.convert("2011-01-01 10:59:55"));
+		assertEquals(date, dateConverter.convert("2011-01-01T10:59:55"));
 	}
 }
 

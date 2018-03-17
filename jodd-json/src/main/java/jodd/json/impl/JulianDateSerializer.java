@@ -23,7 +23,20 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+package jodd.json.impl;
+
+import jodd.json.JsonContext;
+import jodd.json.TypeJsonSerializer;
+import jodd.util.JulianDate;
+
 /**
- * JDateTime formatters for converting date/time informations to/from strings.
+ * Serializer for JDateTime.
  */
-package jodd.datetime.format;
+public class JulianDateSerializer implements TypeJsonSerializer<JulianDate> {
+
+	@Override
+	public boolean serialize(final JsonContext jsonContext, final JulianDate value) {
+		jsonContext.writeString(value.toLocalDateTime().toString());
+		return true;
+	}
+}

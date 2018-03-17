@@ -26,14 +26,10 @@
 package jodd.typeconverter;
 
 import jodd.bean.JoddBean;
-import jodd.datetime.JDateTime;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,7 +54,6 @@ class ConverterTest {
 		assertEquals(true, Converter.get().toBooleanValue("true"));
 		assertEquals(false, Converter.get().toBooleanValue(null));
 
-		assertNotNull(Converter.get().toCalendar((new JDateTime())));
 
 		assertEquals(Character.valueOf('A'), Converter.get().toCharacter("A"));
 		assertEquals('A', Converter.get().toCharValue("A", ' '));
@@ -69,7 +64,6 @@ class ConverterTest {
 		assertEquals(Integer.class, Converter.get().toClassArray("java.lang.Integer")[0]);
 		assertEquals(1, Converter.get().toClassArray("java.lang.Integer").length);
 
-		assertNotNull(Converter.get().toDate(new JDateTime()));
 
 		assertEquals(173, Converter.get().toIntValue("173"));
 		assertEquals(173, Converter.get().toLongValue("173"));
@@ -87,7 +81,6 @@ class ConverterTest {
 
 		assertEquals(12, Converter.get().toInteger("12").intValue());
 
-		assertNotNull(Converter.get().toJDateTime(new GregorianCalendar()));
 
 		assertEquals(555, Converter.get().toLong("555").longValue());
 
@@ -130,15 +123,6 @@ class ConverterTest {
 
 		String defaultString = "123qweasdzxc";
 		assertEquals(defaultString, Converter.get().toString(null, defaultString));
-
-		JDateTime defaultJDateTime = new JDateTime(2010, 4, 20);
-		assertEquals(defaultJDateTime, Converter.get().toJDateTime(null, defaultJDateTime));
-
-		Date defaultDate = defaultJDateTime.convertToDate();
-		assertEquals(defaultDate, Converter.get().toDate(null, defaultDate));
-
-		Calendar defaultCalendar = defaultJDateTime.convertToCalendar();
-		assertEquals(defaultCalendar, Converter.get().toCalendar(null, defaultCalendar));
 
 		assertEquals(Boolean.TRUE, Converter.get().toBoolean(null, Boolean.TRUE));
 		assertEquals(Byte.valueOf((byte) 123), Converter.get().toByte(null, Byte.valueOf((byte) 123)));

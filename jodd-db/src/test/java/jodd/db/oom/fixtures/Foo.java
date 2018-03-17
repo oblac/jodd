@@ -25,17 +25,18 @@
 
 package jodd.db.oom.fixtures;
 
-import jodd.db.oom.meta.DbTable;
-import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbTable;
 import jodd.db.type.IntegerSqlType;
 import jodd.mutable.MutableInteger;
-import jodd.datetime.JDateTime;
+import jodd.util.JulianDate;
 
-import java.sql.Timestamp;
-import java.sql.Clob;
-import java.sql.Blob;
 import java.math.BigDecimal;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @DbTable
 public class Foo {
@@ -65,7 +66,7 @@ public class Foo {
 	public Timestamp timestamp;
 
 	@DbColumn
-	public JDateTime timestamp2;
+	public LocalDateTime timestamp2;
 
 	@DbColumn
 	public Clob clob;
@@ -80,10 +81,10 @@ public class Foo {
 	public BigDecimal decimal2;
 
 	@DbColumn
-	public JDateTime jdt1;
+	public JulianDate jdt1;
 
 	@DbColumn
-	public JDateTime jdt2;
+	public JulianDate jdt2;
 
 }
 

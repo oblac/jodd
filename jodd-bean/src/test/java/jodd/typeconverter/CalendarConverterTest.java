@@ -25,13 +25,11 @@
 
 package jodd.typeconverter;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.impl.CalendarConverter;
+import jodd.util.JulianDate;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -41,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CalendarConverterTest {
 
-	private static long time = new JDateTime(2011, 11, 1, 9, 10, 12, 567).getTimeInMillis();
+	private static long time = JulianDate.of(2011, 11, 1, 9, 10, 12, 567).toMilliseconds();
 
 	CalendarConverter calendarConverter = new CalendarConverter();
 
@@ -84,23 +82,6 @@ class CalendarConverterTest {
 		java.sql.Time sqltime = new java.sql.Time(time);
 		Calendar calendar = calendarConverter.convert(sqltime);
 		assertEquals(time, calendar.getTimeInMillis());
-	}
-
-	@Test
-	void testJDateTime2Calendar() {
-		JDateTime jdt = new JDateTime(time);
-		Calendar calendar = calendarConverter.convert(jdt);
-		assertEquals(time, calendar.getTimeInMillis());
-	}
-
-	@Test
-	void testCalendarDate() {
-		JDateTime jdt = new JDateTime();
-
-		CalendarConverter calendarConverter = new CalendarConverter();
-		Calendar gc = calendarConverter.convert(jdt);
-		DateFormat df = new SimpleDateFormat();
-		assertEquals(df.format(gc.getTime()), df.format(Converter.get().toDate(jdt)));
 	}
 
 	@Test

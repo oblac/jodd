@@ -25,11 +25,12 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.StringUtil;
+import jodd.util.TimeUtil;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -62,9 +63,6 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 			calendar.setTime((Date) value);
 			return calendar;
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime)value).convertToCalendar();
-		}
 
 		if (value instanceof Number) {
 			Calendar calendar = Calendar.getInstance();
@@ -76,8 +74,7 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 
 		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			// try to parse default string format
-			JDateTime jdt = new JDateTime(stringValue, JDateTime.DEFAULT_FORMAT);
-			return jdt.convertToCalendar();
+			return TimeUtil.toCalendar(LocalDateTime.parse(stringValue));
 		}
 
 		try {

@@ -25,16 +25,17 @@
 
 package jodd.proxetta.fixtures.data;
 
-import jodd.datetime.JDateTime;
 import jodd.proxetta.ProxyTargetInfo;
 import jodd.util.MathUtil;
 import jodd.util.ThreadUtil;
 
+import java.time.LocalDateTime;
+
 public class DateDao2 {
 
-	public JDateTime currentTime0() {
+	public LocalDateTime currentTime0() {
 		ThreadUtil.sleep(MathUtil.randomLong(1, 2));
-		return new JDateTime(System.currentTimeMillis());
+		return LocalDateTime.now();
 	}
 
 
@@ -45,9 +46,9 @@ public class DateDao2 {
 		proxyTargetInfo.argumentCount = 0;
 		proxyTargetInfo.argumentsClasses = new Class[0];
 		proxyTargetInfo.arguments = new Object[0];
-		proxyTargetInfo.returnType = JDateTime.class;
+		proxyTargetInfo.returnType = LocalDateTime.class;
 		proxyTargetInfo.targetMethodName = "currentTime";
-		proxyTargetInfo.targetMethodDescription = "()Ljodd/dateitme/JDateTime;";
+		proxyTargetInfo.targetMethodDescription = "()Ljava/time/LocalDateTime;";
 
 		long end = start;
 

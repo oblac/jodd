@@ -25,7 +25,6 @@
 
 package jodd.http;
 
-import jodd.datetime.TimeUtil;
 import jodd.http.up.ByteArrayUploadable;
 import jodd.http.up.FileUploadable;
 import jodd.http.up.Uploadable;
@@ -37,6 +36,7 @@ import jodd.io.upload.MultipartStreamParser;
 import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.TimeUtil;
 import jodd.util.net.MimeTypes;
 
 import java.io.BufferedReader;
@@ -103,7 +103,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns whether header keys should be strict or not, when they are
 	 * modified by changing them to PascalCase.
-	 * @see JoddHttpDefaults#capitalizeHeaderKeys
+	 * @see JoddHttp#capitalizeHeaderKeys
 	 */
 	public boolean capitalizeHeaderKeys() {
 		return capitalizeHeaderKeys;
@@ -111,7 +111,7 @@ public abstract class HttpBase<T> {
 	
 	/**
 	 * Sets headers behavior.
-	 * @see JoddHttpDefaults#capitalizeHeaderKeys
+	 * @see JoddHttp#capitalizeHeaderKeys
 	 */
 	public T capitalizeHeaderKeys(final boolean capitalizeHeaderKeys) {
 		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
@@ -525,7 +525,7 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Defines encoding for forms parameters. Default value is
-	 * copied from {@link JoddHttpDefaults#formEncoding}.
+	 * copied from {@link JoddHttp#formEncoding}.
 	 * It is overridden by {@link #charset() charset} value.
 	 */
 	public T formEncoding(final String encoding) {
@@ -600,15 +600,15 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
-	 * that will be encoded in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
+	 * that will be encoded in {@link JoddHttp#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body, final String mediaType) {
 		return bodyText(body, mediaType, JoddHttp.defaults().getBodyEncoding());
 	}
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
-	 * that will be encoded as {@link JoddHttpDefaults#bodyMediaType default body media type}
-	 * in {@link JoddHttpDefaults#bodyEncoding default body encoding}.
+	 * that will be encoded as {@link JoddHttp#bodyMediaType default body media type}
+	 * in {@link JoddHttp#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body) {
 		return bodyText(body, JoddHttp.defaults().getBodyMediaType(), JoddHttp.defaults().getBodyEncoding());

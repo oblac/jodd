@@ -25,12 +25,13 @@
 
 package jodd.proxetta;
 
-import jodd.datetime.JDateTime;
 import jodd.proxetta.fixtures.data.DateDao;
 import jodd.proxetta.fixtures.data.PerformanceMeasureProxyAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -43,7 +44,7 @@ class ProxyInfoTest {
 
 		DateDao dateDateProxy = (DateDao) proxetta.proxy().setTarget(DateDao.class).newInstance();
 
-		JDateTime jDateTime = dateDateProxy.currentTime();
+		LocalDateTime jDateTime = dateDateProxy.currentTime();
 
 		assertNotNull(jDateTime);
 	}

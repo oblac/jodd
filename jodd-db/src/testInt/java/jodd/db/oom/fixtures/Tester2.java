@@ -25,12 +25,12 @@
 
 package jodd.db.oom.fixtures;
 
-import jodd.datetime.JDateTime;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @DbTable
 public class Tester2 {
@@ -43,5 +43,5 @@ public class Tester2 {
 	@DbColumn
 	public Timestamp time;
 	@DbColumn
-	public JDateTime time2;
+	public LocalDateTime time2;
 }

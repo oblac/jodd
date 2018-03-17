@@ -25,12 +25,14 @@
 
 package jodd.db.oom;
 
-import jodd.datetime.JDateTime;
 import jodd.db.DbSession;
 import jodd.db.JoddDb;
 import jodd.db.oom.fixtures.Tester2;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -124,7 +126,7 @@ class LiveMapperDbTest extends DbBaseTest {
 	// ---------------------------------------------------------------- test
 
 	@Test
-	void testLiveMapperDb() throws Exception {
+	void testLiveMapperDb() {
 		for (DbAccess db : databases) {
 			System.out.println("\t" + db.getClass().getSimpleName());
 			init();
@@ -144,7 +146,6 @@ class LiveMapperDbTest extends DbBaseTest {
 		}
 	}
 
-
 	protected Tester2 insertEntry() {
 		DbSession session = new DbSession();
 
@@ -152,8 +153,8 @@ class LiveMapperDbTest extends DbBaseTest {
 		tester2.id = 1;
 		tester2.name = "Hello";
 		tester2.value = Integer.valueOf(123);
-		tester2.time = new JDateTime(2014, 1, 30, 10, 42, 34, 0).convertToSqlTimestamp();
-		tester2.time2 = new JDateTime(2014, 1, 31, 11, 41, 32, 0);
+		tester2.time = Timestamp.valueOf(LocalDateTime.of(2014, 1, 30, 10, 42, 34, 0));
+		tester2.time2 = LocalDateTime.of(2014, 1, 31, 11, 41, 32, 0);
 
 		DbOomQuery dbOomQuery = DbOomQuery.query(session, DbEntitySql.insert(tester2));
 		dbOomQuery.setGeneratedKey();

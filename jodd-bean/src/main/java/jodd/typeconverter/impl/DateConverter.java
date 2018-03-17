@@ -25,11 +25,13 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.JulianDate;
 import jodd.util.StringUtil;
+import jodd.util.TimeUtil;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -60,8 +62,8 @@ public class DateConverter implements TypeConverter<Date> {
 		if (value instanceof Calendar) {
 			return new Date(((Calendar)value).getTimeInMillis());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToDate();
+		if (value instanceof JulianDate) {
+			return new Date(((JulianDate) value).toMilliseconds());
 		}
 		if (value instanceof Number) {
 			return new Date(((Number) value).longValue());
@@ -71,8 +73,7 @@ public class DateConverter implements TypeConverter<Date> {
 
 		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			// try to parse default string format
-			JDateTime jdt = new JDateTime(stringValue, JDateTime.DEFAULT_FORMAT);
-			return jdt.convertToDate();
+			return TimeUtil.toDate(LocalDateTime.parse(stringValue));
 		}
 
 		try {

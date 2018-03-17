@@ -25,12 +25,14 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.JulianDate;
 import jodd.util.StringUtil;
+import jodd.util.TimeUtil;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -65,12 +67,16 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 		if (value instanceof Date) {
 			return new Time(((Date)value).getTime());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToSqlTime();
+		if (value instanceof JulianDate) {
+			return new Time(((JulianDate) value).toMilliseconds());
 		}
 		if (value instanceof Number) {
 			return new Time(((Number) value).longValue());
 		}
+		if (value instanceof LocalDateTime) {
+			return new Time(TimeUtil.toMilliseconds((LocalDateTime) value));
+		}
+
 
 		String stringValue = value.toString().trim();
 

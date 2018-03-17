@@ -25,15 +25,16 @@
 
 package jodd.proxetta.fixtures.data;
 
-import jodd.datetime.JDateTime;
 import jodd.util.MathUtil;
 import jodd.util.ThreadUtil;
 
+import java.time.LocalDateTime;
+
 public class DateDao {
 
-	public JDateTime currentTime() {
+	public LocalDateTime currentTime() {
 		ThreadUtil.sleep(MathUtil.randomLong(1, 2));
-		return new JDateTime(System.currentTimeMillis());
+		return LocalDateTime.now();
 	}
 
 }

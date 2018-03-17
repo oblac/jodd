@@ -26,7 +26,6 @@
 package jodd.typeconverter;
 
 import jodd.bean.JoddBean;
-import jodd.datetime.JDateTime;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,7 +35,7 @@ import java.util.Date;
 /**
  * Simple and fast and direct conversion.
  */
-// REMOVE?
+//todo REMOVE?
 public class Converter {
 
 	/**
@@ -81,7 +80,7 @@ public class Converter {
 			Class.class,		// 25
 			Class[].class,		// 26
 
-			JDateTime.class,	// 27
+null,
 			Date.class,			// 28
 			Calendar.class,		// 29
 
@@ -504,25 +503,6 @@ public class Converter {
 	 */
 	public Class[] toClassArray(final Object value) {
 		return (Class[]) typeConverters[26].convert(value);
-	}
-
-	/**
-	 * Converts value to <code>JDateTime</code>.
-	 */
-	public JDateTime toJDateTime(final Object value) {
-		return (JDateTime) typeConverters[27].convert(value);
-	}
-
-	/**
-	 * Converts value to <code>JDateTime</code>. Returns default value
-	 * when conversion result is <code>null</code>
-	 */
-	public JDateTime toJDateTime(final Object value, final JDateTime defaultValue) {
-		JDateTime result = (JDateTime) typeConverters[27].convert(value);
-		if (result == null) {
-			return defaultValue;
-		}
-		return result;
 	}
 
 	/**

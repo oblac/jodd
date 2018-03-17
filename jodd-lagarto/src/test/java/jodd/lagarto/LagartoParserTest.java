@@ -25,7 +25,6 @@
 
 package jodd.lagarto;
 
-import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
@@ -76,7 +75,7 @@ class LagartoParserTest {
 	private void _testHtmls(String root) throws IOException {
 		FindFile ff = new WildcardFindFile().include("**/*.*ml");
 		long reps = 1;
-		JStopWatch jsw = new JStopWatch();
+
 		boolean processed = false;
 		while (reps-- > 0) {
 			ff.searchPath(root);
@@ -118,7 +117,7 @@ class LagartoParserTest {
 			}
 		}
 		assertTrue(processed);
-		System.out.println(jsw);
+
 	}
 
 	/**

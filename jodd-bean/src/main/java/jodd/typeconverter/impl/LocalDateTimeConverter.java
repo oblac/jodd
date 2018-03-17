@@ -23,50 +23,50 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.datetime.format;
+package jodd.typeconverter.impl;
 
-import jodd.datetime.DateTimeStamp;
-import jodd.datetime.JDateTime;
+import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
+import jodd.util.TimeUtil;
 
-/**
- * Immutable format-formatter pair.
- */
-public class JdtFormat {
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
-	protected final String format;
-	protected final JdtFormatter formatter;
+public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
+	@Override
+	public LocalDateTime convert(Object value) {
+		if (value == null) {
+			return null;
+		}
 
-	public JdtFormat(final JdtFormatter formatter, final String format) {
-		this.format = format;
-		this.formatter = formatter;
-	}
+		if (value instanceof Calendar) {
+			return TimeUtil.fromCalendar((Calendar) value);
+		}
+		if (value instanceof Timestamp) {
+			return TimeUtil.fromMilliseconds(((Timestamp)value).getTime());
+		}
+		if (value instanceof Date) {
+			return TimeUtil.fromDate((Date) value);
+		}
+		if (value instanceof Number) {
+			return TimeUtil.fromMilliseconds(((Number)value).longValue());
+		}
 
-	/**
-	 * Returns format.
-	 */
-	public String getFormat() {
-		return format;
-	}
+		String stringValue = value.toString().trim();
 
-	/**
-	 * Returns formatter.
-	 */
-	public JdtFormatter getFormatter() {
-		return formatter;
-	}
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
+			// try to parse default string format
+			return LocalDateTime.parse(stringValue);
+		}
 
+		try {
+			return TimeUtil.fromMilliseconds(Long.parseLong(stringValue));
+		} catch (NumberFormatException nfex) {
+			throw new TypeConversionException(value, nfex);
+		}
 
-	/**
-	 * Delegates for {@link jodd.datetime.format.JdtFormatter#convert(jodd.datetime.JDateTime, String)}. 
-	 */
-	public String convert(final JDateTime jdt) {
-		return formatter.convert(jdt, format);
-	}
-
-	/**
-	 * Delegates for {@link jodd.datetime.format.JdtFormatter#parse(String, String)}.
-	 */
-	public DateTimeStamp parse(final String value) {
-		return formatter.parse(value, format);
 	}
 }
