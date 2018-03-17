@@ -25,8 +25,6 @@
 
 package jodd.util.concurrent;
 
-import jodd.format.Printf;
-
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -119,7 +117,7 @@ public class ThreadFactoryBuilder {
 		return runnable -> {
 			Thread thread = backingThreadFactory.newThread(runnable);
 			if (nameFormat != null) {
-				String name = Printf.str(nameFormat, count.getAndIncrement());
+				String name = String.format(nameFormat, count.getAndIncrement());
 
 				thread.setName(name);
 			}

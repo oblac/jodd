@@ -10,7 +10,8 @@ Work-in-progress :thunder:
 
 + **all** no more internal modules, removed `Defaults` 
 + **upload** module moved to core
-+ **core** `JDateTime` removed, RIP.
++ **core** `JDateTime` removed.
++ **core** `Printf` removed.
 
 ### Features
 
