@@ -37,7 +37,7 @@ class ServletUtilTest {
 	void testPrepareParameters() {
 		String[] p = new String[]{"one", "", " three ", null, "five"};
 		p = ServletUtil.prepareParameters(p, false, false);
-		assertEquals("three", p[2]);
+		assertEquals(" three ", p[2]);
 		assertNotNull(p[1]);
 		assertNull(p[3]);
 		p = ServletUtil.prepareParameters(p, true, false);
@@ -45,6 +45,8 @@ class ServletUtilTest {
 		assertNull(p[3]);
 
 		p = ServletUtil.prepareParameters(new String[]{"", null, "   "}, true, true);
-		assertNull(p);
+		assertNull(p[0]);
+		assertNull(p[1]);
+		assertNotNull(p[2]);
 	}
 }
