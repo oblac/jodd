@@ -442,11 +442,11 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 								BeanUtil.declared.setProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;
 							}
-							colNdx++;
 							resultColumns.add(columnName);
-							continue;
 						}
 					}
+					colNdx++;
+					continue;
 				}
 			}
 			// go to next type, i.e. result
