@@ -25,13 +25,44 @@
 
 package jodd.joy;
 
-import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLogger;
+import jodd.io.FileUtil;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
-public class MyWebApplication extends JoyContextListener {
+import java.io.File;
 
-	public MyWebApplication() {
-		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
+public class JoyJettyTestServer extends TestServerBase {
+
+	// ---------------------------------------------------------------- instance
+
+	protected File webRoot;
+	protected Server jetty;
+
+	public void start() throws Exception {
+		webRoot = prepareWebApplication();
+
+		jetty = new Server(8174);
+
+		WebAppContext webAppContext = new WebAppContext();
+		webAppContext.setContextPath("/");
+		webAppContext.setResourceBase(webRoot.getAbsolutePath());
+		webAppContext.setDescriptor(this.webXmlFile.getAbsolutePath());
+
+		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
+		webAppContext.setClassLoader(
+			Thread.currentThread().getContextClassLoader()
+		);
+
+
+		jetty.setHandler(webAppContext);
+
+		jetty.start();
+	}
+
+	public void stop() throws Exception {
+		jetty.stop();
+		jetty.destroy();
+		FileUtil.deleteDir(webRoot);
 	}
 
 }

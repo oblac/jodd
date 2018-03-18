@@ -5,31 +5,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-	<filter>
-		<filter-name>madvoc</filter-name>
-		<filter-class>jodd.madvoc.MadvocServletFilter</filter-class>
-		<init-param>
-			<param-name>madvoc.configurator</param-name>
-			<param-value>jodd.joy.MadvocTestIntegrationConfig</param-value>
-		</init-param>
-		<init-param>
-			<param-name>madvoc.webapp</param-name>
-			<param-value>jodd.joy.MyWebApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>madvoc.params</param-name>
-			<param-value>/madvoc.props</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>madvoc</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
-
 	<listener>
-		<listener-class>jodd.servlet.RequestContextListener</listener-class>
+		<listener-class>jodd.joy.MyWebApplication</listener-class>
 	</listener>
 
 </web-app>

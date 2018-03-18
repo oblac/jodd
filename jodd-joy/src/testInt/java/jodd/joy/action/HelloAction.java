@@ -26,13 +26,24 @@
 package jodd.joy.action;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.result.JsonResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @MadvocAction
 public class HelloAction {
 
+	@In
+	private String username = "";
+
 	@Action
-	public void view() {
+	public JsonResult execute() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("username", username);
+		return JsonResult.of(map);
 	}
 
 }

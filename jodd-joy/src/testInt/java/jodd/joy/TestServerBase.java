@@ -25,13 +25,55 @@
 
 package jodd.joy;
 
-import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLogger;
+import jodd.io.FileUtil;
 
-public class MyWebApplication extends JoyContextListener {
+import java.io.File;
+import java.net.URL;
 
-	public MyWebApplication() {
-		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
+class TestServerBase {
+
+	protected File webXmlFile;
+
+	protected File prepareWebApplication() throws Exception {
+		File webRoot = FileUtil.createTempDirectory("jodd-joy", "test-int");
+		webRoot.deleteOnExit();
+
+		// web-inf
+
+		File webInfFolder = new File(webRoot, "WEB-INF");
+		webInfFolder.mkdir();
+
+		// web.xml
+
+		URL webXmlUrl = JoyTomcatTestServer.class.getResource("/web-test-int.xml");
+		File webXmlFile = FileUtil.toFile(webXmlUrl);
+		this.webXmlFile = new File(webInfFolder, "web.xml");
+
+		FileUtil.copyFile(webXmlFile, this.webXmlFile);
+
+		// jsp
+
+		File jspFolder = new File(webXmlFile.getParent(), "jsp");
+		FileUtil.copyDir(jspFolder, webRoot);
+
+		// lib folder
+
+		File libFolder = new File(webInfFolder, "lib");
+		libFolder.mkdir();
+
+		// classes
+
+		File classes = new File(webInfFolder, "classes");
+		classes.mkdirs();
+
+		// classes/madvoc.props
+
+		URL madvocPropsUrl = JoyTomcatTestServer.class.getResource("/madvoc.props");
+		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
+
+		FileUtil.copyFileToDir(madvocPropsFile, classes);
+
+		return webRoot;
 	}
 
 }
