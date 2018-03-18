@@ -27,7 +27,6 @@ package jodd.joy.i18n;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.util.LocaleUtil;
 import jodd.util.ResourceBundleMessageResolver;
 
 import javax.servlet.ServletRequest;
@@ -83,13 +82,13 @@ public class LocalizationUtil {
 	}
 
 	/**
-	 * Saves locale to HTTP session.
+	 * Saves Locale to HTTP session.
 	 */
 	public static void setSessionLocale(final HttpSession session, final String localeCode) {
 		if (log.isDebugEnabled()) {
 			log.debug("Locale stored to session: " + localeCode);
 		}
-		Locale locale = LocaleUtil.getLocale(localeCode);
+		Locale locale = Locale.forLanguageTag(localeCode);
 		session.setAttribute(SESSION_LOCALE_ATTR, locale);
 	}
 

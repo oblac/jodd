@@ -40,7 +40,7 @@ import java.util.Set;
  */
 public class ResourceBundleMessageResolver {
 
-	protected Locale fallbackLocale = LocaleUtil.getLocale("en");
+	protected Locale fallbackLocale = Locale.forLanguageTag("en");
 	protected String fallbackBundlename = "messages";
 	protected List<String> defaultBundles = new ArrayList<>();
 	protected boolean cacheResourceBundles = true;
@@ -197,7 +197,7 @@ public class ResourceBundleMessageResolver {
 				return null;
 			}
 		}
-		String key = bundleName + '_' + LocaleUtil.resolveLocaleCode(locale);
+		String key = bundleName + '_' + locale.toLanguageTag();
 		try {
 			if (!misses.contains(key)) {
 				ResourceBundle bundle = notmisses.get(key);
@@ -241,7 +241,7 @@ public class ResourceBundleMessageResolver {
 	}
 
 	public void setFallbackLocale(final String localeCode) {
-		this.fallbackLocale = LocaleUtil.getLocale(localeCode);
+		this.fallbackLocale = Locale.forLanguageTag(localeCode);
 	}
 
 	public boolean isCacheResourceBundles() {

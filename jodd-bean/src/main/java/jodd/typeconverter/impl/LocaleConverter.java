@@ -26,7 +26,6 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
-import jodd.util.LocaleUtil;
 
 import java.util.Locale;
 
@@ -50,7 +49,7 @@ public class LocaleConverter implements TypeConverter<Locale> {
 			return (Locale) value;
 		}
 
-		return LocaleUtil.getLocale(value.toString());
+		return Locale.forLanguageTag(value.toString());
 	}
 
 }

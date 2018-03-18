@@ -12,12 +12,14 @@ Work-in-progress :thunder:
 + **upload** module moved to core
 + **core** `JDateTime` removed.
 + **core** `Printf` removed.
++ **core** `LocaleUtil` and `DateFormatSymbolsEx` removed.
 
 ### Features
 
 + **json** - the order of the keys in JSON is now preserved.
 + **core** - added `TimeUtil` utils. 
 + **core** - added `JulianDate` class, just for Julian dates.
++ **joy** - allow to set manually props files to load.
 
 ## [4.2.0](https://github.com/oblac/jodd/compare/v4.1.5...4.2.0)
 
