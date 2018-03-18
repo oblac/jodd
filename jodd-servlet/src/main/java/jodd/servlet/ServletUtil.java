@@ -25,6 +25,7 @@
 
 package jodd.servlet;
 
+import jodd.core.JoddCore;
 import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
 import jodd.io.upload.FileUpload;
@@ -44,8 +45,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import java.io.BufferedReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -90,9 +94,9 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- authorization
 	/**
 	 * Decodes the "Authorization" header and retrieves the
-	 * user's name from it.  Returns <code>null</code> if the header is not present.
+	 * user's name from it. Returns <code>null</code> if the header is not present.
 	 */
-	public static String getAuthUsername(final HttpServletRequest request) {
+	public static String resolveAuthUsername(final HttpServletRequest request) {
 		String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
@@ -106,7 +110,7 @@ public class ServletUtil {
 	 * Decodes the "Authorization" header and retrieves the
 	 * password from it. Returns <code>null</code> if the header is not present.
 	 */
-	public static String getAuthPassword(final HttpServletRequest request) {
+	public static String resolveAuthPassword(final HttpServletRequest request) {
 		String header = request.getHeader(HEADER_AUTHORIZATION);
 		if (header == null) {
 			return null;
@@ -223,14 +227,42 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- request body
 
 	/**
-	 * Reads HTTP request body. Useful only with POST requests. Once body is read,
+	 * Reads HTTP request body using the request reader. Once body is read,
 	 * it cannot be read again!
 	 */
-	public static String readRequestBody(final HttpServletRequest request) throws IOException {
+	public static String readRequestBodyFromReader(final HttpServletRequest request) throws IOException {
 		BufferedReader buff = request.getReader();
 		StringWriter out = new StringWriter();
 		StreamUtil.copy(buff, out);
 		return out.toString();
+	}
+
+	/**
+	 * Reads HTTP request body using the request stream. Once body is read,
+	 * it cannot be read again!
+	 */
+	public static String readRequestBodyFromStream(final HttpServletRequest request) throws IOException {
+		String charEncoding = request.getCharacterEncoding();
+		if (charEncoding == null) {
+			charEncoding = JoddCore.defaults().getEncoding();
+		}
+		CharArrayWriter charArrayWriter = new CharArrayWriter();
+		BufferedReader bufferedReader = null;
+
+		try {
+			InputStream inputStream = request.getInputStream();
+			if (inputStream != null) {
+				bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charEncoding));
+
+				StreamUtil.copy(bufferedReader, charArrayWriter);
+			} else {
+				return StringPool.EMPTY;
+			}
+		} finally {
+			StreamUtil.close(bufferedReader);
+		}
+
+		return charArrayWriter.toString();
 	}
 
 
@@ -545,17 +577,15 @@ public class ServletUtil {
 	/**
 	 * Prepares parameters for further processing.
 	 * @param paramValues	string array of param values
-	 * @param trimParams	trim parameters
 	 * @param treatEmptyParamsAsNull	empty parameters should be treated as <code>null</code>
 	 * @param ignoreEmptyRequestParams	if all parameters are empty, return <code>null</code>
 	 */
 	public static String[] prepareParameters(
 		final String[] paramValues,
-		final boolean trimParams,
 		final boolean treatEmptyParamsAsNull,
 		final boolean ignoreEmptyRequestParams) {
 
-		if (trimParams || treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
+		if (treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
 			int emptyCount = 0;
 			int total = paramValues.length;
 			for (int i = 0; i < paramValues.length; i++) {
@@ -563,9 +593,6 @@ public class ServletUtil {
 				if (paramValue == null) {
 					emptyCount++;
 					continue;
-				}
-				if (trimParams) {
-					paramValue = paramValue.trim();
 				}
 				if (paramValue.length() == 0) {
 					emptyCount++;
@@ -590,7 +617,6 @@ public class ServletUtil {
 	 */
 	public static void copyParamsToAttributes(
 		final HttpServletRequest servletRequest,
-		final boolean trimParams,
 		final boolean treatEmptyParamsAsNull,
 		final boolean ignoreEmptyRequestParams) {
 
@@ -602,7 +628,7 @@ public class ServletUtil {
 			}
 
 			String[] paramValues = servletRequest.getParameterValues(paramName);
-			paramValues = prepareParameters(paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+			paramValues = prepareParameters(paramValues, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 			if (paramValues == null) {
 				continue;
 			}
@@ -765,6 +791,5 @@ public class ServletUtil {
 		response.setHeader("Pragma","no-cache");        // HTTP 1.0
 		response.setDateHeader ("Expires", 0);          // prevents caching at the proxy server
 	}
-
 
 }

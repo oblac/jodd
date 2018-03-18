@@ -27,22 +27,24 @@ package jodd.servlet;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ServletUtilTest {
 
 	@Test
 	void testPrepareParameters() {
 		String[] p = new String[]{"one", "", " three ", null, "five"};
-		p = ServletUtil.prepareParameters(p, true, false, false);
+		p = ServletUtil.prepareParameters(p, false, false);
 		assertEquals("three", p[2]);
 		assertNotNull(p[1]);
 		assertNull(p[3]);
-		p = ServletUtil.prepareParameters(p, true, true, false);
+		p = ServletUtil.prepareParameters(p, true, false);
 		assertNull(p[1]);
 		assertNull(p[3]);
 
-		p = ServletUtil.prepareParameters(new String[]{"", null, "   "}, true, true, true);
+		p = ServletUtil.prepareParameters(new String[]{"", null, "   "}, true, true);
 		assertNull(p);
 	}
 }

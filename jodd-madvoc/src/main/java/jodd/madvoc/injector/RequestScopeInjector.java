@@ -61,7 +61,6 @@ public class RequestScopeInjector implements Injector, Outjector {
 	protected boolean treatEmptyParamsAsNull;
 	protected boolean injectAttributes = true;
 	protected boolean injectParameters = true;
-	protected boolean trimParams;
 	protected boolean encodeGetParams;
 	protected boolean ignoreInvalidUploadFiles = true;
 
@@ -91,13 +90,6 @@ public class RequestScopeInjector implements Injector, Outjector {
 	 */
 	public void setInjectParameters(final boolean injectParameters) {
 		this.injectParameters = injectParameters;
-	}
-
-	/**
-	 * Specifies if parameters will be trimmed before injection.
-	 */
-	public void setTrimParams(final boolean trimParams) {
-		this.trimParams = trimParams;
 	}
 
 	/**
@@ -159,7 +151,7 @@ public class RequestScopeInjector implements Injector, Outjector {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
 
 					paramValues = ServletUtil.prepareParameters(
-							paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+							paramValues, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 
 					if (paramValues != null) {
 						if (encode) {

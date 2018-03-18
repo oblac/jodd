@@ -28,10 +28,10 @@ package jodd.madvoc.injector;
 import jodd.json.JsonParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
+import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 public class RequestBodyScopeInject implements Injector {
 
@@ -46,7 +46,7 @@ public class RequestBodyScopeInject implements Injector {
 
 		String body;
 		try {
-			body = actionRequest.getHttpServletRequest().getReader().lines().collect(Collectors.joining());
+			body = ServletUtil.readRequestBodyFromStream(actionRequest.getHttpServletRequest());
 		} catch (IOException ignore) {
 			return;
 		}

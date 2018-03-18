@@ -109,7 +109,7 @@ public class ServletContextScopeInjector implements Injector, ContextInjector<Se
 				value = new HttpServletRequestParamMap(servletRequest);
 			} else if (in.name.equals(REQUEST_BODY)) {
 				try {
-					value = ServletUtil.readRequestBody(servletRequest);
+					value = ServletUtil.readRequestBodyFromStream(servletRequest);
 				} catch (IOException e) {
 					value = e.toString();
 				}
