@@ -24,36 +24,43 @@
 
 # :zap: Jodd
 
-**Jodd** is set of micro-frameworks and developer-friendly utilities.
+**Jodd** is set of micro-frameworks and developer-friendly tools and utilities.
 
-Tools and utilities:
+_Use what you like._
 
-+ `jodd-core` contains many utilities, including `JDateTime`.
-+ `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
-+ `jodd-props` is the super-replacement for Java `Properties`.
-+ `jodd-mail` for easier email sending.
-+ `jodd-servlet` with many servlet utilities, including nice tag library.
+**Cool libraries**:
+
++ `jodd-json` - JSON parser and serializer.
++ `jodd-lagarto` - HTML parser with `Jerry` and `CSSelly` and `Form` tag.
 + `jodd-http`, tiny HTTP client.
++ `jodd-mail` for easier email sending.
 
 **Micro-frameworks**:
 
 + `jodd-madvoc` - slick MVC framework.
 + `jodd-petite` - pragmatic DI container.
-+ `jodd-lagarto` - HTML parser with `Jerry` and `CSSelly`.
-+ `jodd-decora` - pages decorator.
-+ `jodd-htmlstapler` - static page resources handler.
 + `jodd-proxetta` - dynamic proxies and `Paramo`.
 + `jodd-db` - thin database layer and object mapper.
-+ `jodd-json` - JSON parser and serializer.
-+ `jodd-vtor` - validation framework.
 + `jodd-jtx` - transactions management.
 
-**WebApp frameworks**
+**Less used tools**:
 
-+ `jodd-joy` - super-easy web app framework, built with **Jodd* micro-frameworks.
++ `jodd-decora` - pages decorator.
++ `jodd-htmlstapler` - static page resources handler.
++ `jodd-vtor` - validation framework.
+
+**Full Stack Bundle**:
+
++ `jodd-joy` - super-easy app framework, built with *Jodd* micro-frameworks.
+
+**Utilities**:
+
++ `jodd-core` contains many utilities, including `JDateTime`.
++ `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
++ `jodd-props` is the super-replacement for Java `Properties`.
++ `jodd-servlet` with many servlet utilities, including nice tag library.
 
 Read more in our [official documentation](http://jodd.org/doc).
-
 
 ## :octocat: Building Jodd from source
 
