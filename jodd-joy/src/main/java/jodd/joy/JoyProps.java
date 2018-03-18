@@ -53,11 +53,14 @@ public class JoyProps extends JoyBase {
 
 	// ---------------------------------------------------------------- config
 
-	private String propsNamePattern;
+	private List<String> propsNamePatterns = new ArrayList<>();
 	private List<String> propsProfiles = new ArrayList<>();
 
-	public JoyProps setPropsNamePattern(final String namePattern) {
-		this.propsNamePattern = namePattern;
+	/**
+	 * Adds props files or patterns.
+	 */
+	public JoyProps addPropsFile(final String namePattern) {
+		this.propsNamePatterns.add(namePattern);
 		return this;
 	}
 
@@ -88,21 +91,25 @@ public class JoyProps extends JoyBase {
 		props.loadSystemProperties("sys");
 		props.loadEnvironment("env");
 
-		log.info("Loaded sys&env props: " + props.countTotalProperties() + " propertes.");
+		log.info("Loaded sys&env props: " + props.countTotalProperties() + " properties.");
 
-		props.setActiveProfiles(propsProfiles.toArray(new String[0]));
+		props.setActiveProfiles(propsProfiles.toArray(new String[propsProfiles.size()]));
 
-		String namePattern = propsNamePattern;
+		// prepare patterns
 
-		if (namePattern == null) {
-			namePattern = "/" + nameSupplier.get() + "*.prop*";
+		final String[] patterns = new String[propsNamePatterns.size() + 1];
+
+		patterns[0] = "/" + nameSupplier.get() + "*.prop*";
+
+		for (int i = 0; i < propsNamePatterns.size(); i++) {
+			patterns[i + 1] = propsNamePatterns.get(i);
 		}
 
-		log.debug("Loading props from classpath: " + namePattern);
+		log.debug("Loading props from classpath...");
 
-		PropsUtil.loadFromClasspath(props, namePattern);
+		PropsUtil.loadFromClasspath(props, patterns);
 
-		log.info("Props is ready: " + props.countTotalProperties() + " propertes.");
+		log.info("Props is ready: " + props.countTotalProperties() + " properties.");
 	}
 
 	/**
