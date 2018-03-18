@@ -42,8 +42,9 @@ class LocaleConverterTest {
 		assertNull(localeConverter.convert(null));
 
 		assertEquals(new Locale("en"), localeConverter.convert("en"));
-		assertEquals(new Locale("en", "US"), localeConverter.convert("en_US"));
-		assertEquals(new Locale("en", "US", "win"), localeConverter.convert("en_US_win"));
+		assertEquals(new Locale("en", "US"), localeConverter.convert("en-US"));
+		assertEquals(new Locale("en", "US"), localeConverter.convert("en-US-win"));
+		assertEquals(Locale.forLanguageTag("ja-JP-x-lvariant-JP"), localeConverter.convert("ja-JP-x-lvariant-JP"));
 
 		assertEquals(new Locale("en"), localeConverter.convert(new Locale("en")));
 
