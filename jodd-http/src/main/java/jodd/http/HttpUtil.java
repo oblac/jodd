@@ -219,7 +219,7 @@ public class HttpUtil {
 			index++;
 
 			// skip whitespaces
-			while (header.charAt(index) == ' ') {
+			while (index < header.length() && header.charAt(index) == ' ') {
 				index++;
 			}
 

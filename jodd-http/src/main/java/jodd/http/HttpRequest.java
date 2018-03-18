@@ -480,7 +480,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * Defines encoding for query parameters. Default value is
-	 * copied from {@link JoddHttpDefaults#queryEncoding}.
+	 * copied from {@link JoddHttp#queryEncoding}.
 	 */
 	public HttpRequest queryEncoding(final String encoding) {
 		this.queryEncoding = encoding;

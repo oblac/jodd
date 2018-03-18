@@ -45,6 +45,10 @@ class HttpUtilTest {
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
 		assertEquals(null, HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
 
+		contentType = "text/html;"; // special case, see #588
+
+		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
+		assertEquals(null, HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
 
 		contentType = "text/html; charset=ISO-8859-4";
 

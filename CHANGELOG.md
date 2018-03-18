@@ -21,6 +21,9 @@ Work-in-progress :thunder:
 + **core** - added `JulianDate` class, just for Julian dates.
 + **joy** - allow to set manually props files to load.
 
+### Bug Fixes
++ **http** - special case of media and charset heading value.
+
 ## [4.2.0](https://github.com/oblac/jodd/compare/v4.1.5...4.2.0)
 
 ### Features
