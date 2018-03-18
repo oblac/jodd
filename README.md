@@ -16,9 +16,7 @@
 
 + Official web site (site & documentation): https://jodd.org
 + Jodd micro-frameworks (30 min overview): https://joddframework.org
-+ One-page love: https://jodd.org/about
-+ GitHub page (5 min overview): https://oblac.github.io/jodd
-+ Talk with us at [gitter](https://gitter.im/oblac/jodd)!
++ Talk to Jodd via [gitter](https://gitter.im/oblac/jodd) or [slack](https://jodd.slack.com).
 
 <h4 align="center">Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.7 Mb</h4>
 
