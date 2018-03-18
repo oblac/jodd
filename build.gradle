@@ -44,6 +44,7 @@ ext {
 	// libraries
 
 	tomcatVersion = '8.0.47'
+	jettyVersion = '9.3.21.v20170918'
 	jmhVersion = '1.20'
 
 	lib = [
@@ -85,6 +86,11 @@ ext {
 							"org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}",
 							"org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
 							"org.apache.tomcat.embed:tomcat-embed-logging-log4j:${tomcatVersion}"
+						],
+		jetty_embed:	[
+		        			"org.eclipse.jetty:jetty-server:${jettyVersion}",
+							"org.eclipse.jetty:jetty-webapp:${jettyVersion}",
+							"org.eclipse.jetty:jetty-jsp:9.2.23.v20171218"
 						],
 		mockserver:		'org.mock-server:mockserver-netty:5.1.1',
 	]
