@@ -22,7 +22,9 @@ Work-in-progress :thunder:
 + **joy** - allow to set manually props files to load.
 
 ### Bug Fixes
+
 + **http** - special case of media and charset heading value.
++ **madvoc** - fixes body reading on Jetty.
 
 ## [4.2.0](https://github.com/oblac/jodd/compare/v4.1.5...4.2.0)
 
