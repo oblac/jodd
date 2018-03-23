@@ -28,7 +28,6 @@ package jodd.introspector;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 /**
@@ -113,7 +112,7 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	// ---------------------------------------------------------------- getter/setter
 
 	@Override
-	public Object invokeGetter(final Object target) throws InvocationTargetException, IllegalAccessException {
+	public Object invokeGetter(final Object target) throws IllegalAccessException {
 		return field.get(target);
 	}
 

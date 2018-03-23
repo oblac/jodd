@@ -28,7 +28,6 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509ExtendedTrustManager;
 import java.net.Socket;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 public class TrustManagers {
@@ -38,26 +37,26 @@ public class TrustManagers {
 	public static TrustManager[] TRUST_ALL_CERTS = new TrustManager[]{
 		new X509ExtendedTrustManager() {
 			@Override
-			public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s) throws CertificateException {
+			public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s) {
 			}
 			@Override
-			public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s) throws CertificateException {
+			public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s) {
 			}
 			@Override
 			public X509Certificate[] getAcceptedIssuers() {
 				return null;
 			}
 			@Override
-			public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s, final Socket socket) throws CertificateException {
+			public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s, final Socket socket) {
 			}
 			@Override
-			public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s, final Socket socket) throws CertificateException {
+			public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s, final Socket socket) {
 			}
 			@Override
-			public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s, final SSLEngine sslEngine) throws CertificateException {
+			public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s, final SSLEngine sslEngine) {
 			}
 			@Override
-			public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s, final SSLEngine sslEngine) throws CertificateException {
+			public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s, final SSLEngine sslEngine) {
 			}
 		}
 	};

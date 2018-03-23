@@ -74,7 +74,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * Returns the wrapped output stream.
 	 */
 	@Override
-	public ServletOutputStream getOutputStream() throws IOException {
+	public ServletOutputStream getOutputStream() {
 		return out;
 	}
 
@@ -83,7 +83,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * wrapped output stream.
 	 */
 	@Override
-	public PrintWriter getWriter() throws IOException {
+	public PrintWriter getWriter() {
 		return writer;
 	}
 

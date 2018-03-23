@@ -631,7 +631,7 @@ final class CSSellyLexer {
    * Contains user EOF-code, which will be executed exactly once,
    * when the end of file is reached
    */
-  private void zzDoEOF() throws java.io.IOException {
+  private void zzDoEOF() {
     if (!zzEOFDone) {
       zzEOFDone = true;
       yyclose();

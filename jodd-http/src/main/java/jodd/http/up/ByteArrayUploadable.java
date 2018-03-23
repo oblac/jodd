@@ -26,7 +26,6 @@
 package jodd.http.up;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -50,27 +49,33 @@ public class ByteArrayUploadable implements Uploadable<byte[]> {
 		this.mimeType = mimeType;
 	}
 
+	@Override
 	public byte[] getContent() {
 		return byteArray;
 	}
 
+	@Override
 	public byte[] getBytes() {
 		return byteArray;
 	}
 
+	@Override
 	public String getFileName() {
 		return fileName;
 	}
 
+	@Override
 	public String getMimeType() {
 		return mimeType;
 	}
 
+	@Override
 	public int getSize() {
 		return byteArray.length;
 	}
 
-	public InputStream openInputStream() throws IOException {
+	@Override
+	public InputStream openInputStream() {
 		return new ByteArrayInputStream(byteArray);
 	}
 }

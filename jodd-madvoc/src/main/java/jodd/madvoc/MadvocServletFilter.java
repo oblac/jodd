@@ -126,7 +126,7 @@ public class MadvocServletFilter implements Filter {
 	 * otherwise returns {@code false} so to be consumed by filter chain.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected boolean processUnhandledPath(final String actionPath, final ServletRequest request, final ServletResponse response) throws IOException, ServletException {
+	protected boolean processUnhandledPath(final String actionPath, final ServletRequest request, final ServletResponse response) {
 		return false;
 	}
 

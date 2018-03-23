@@ -116,7 +116,7 @@ public class AuthUtil {
 	 * Returns <code>null</code> if cookie does not exist.
 	 * Throws an exception if cookie data is invalid or corrupted.
 	 */
-	public static String[] readAuthCookie(final HttpServletRequest request) throws Exception {
+	public static String[] readAuthCookie(final HttpServletRequest request) {
 		Cookie cookie = ServletUtil.getCookie(request, AUTH_COOKIE_NAME);
 		if (cookie == null) {
 			return null;

@@ -28,7 +28,6 @@ package jodd.servlet.tag;
 import jodd.util.StringPool;
 import jodd.util.net.URLCoder;
 
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.DynamicAttributes;
@@ -66,7 +65,7 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	@Override
-	public void doTag() throws JspException {
+	public void doTag() {
 		PageContext pageContext = (PageContext) getJspContext();
 		URLCoder.Builder builder = URLCoder.build(baseUrl);
 

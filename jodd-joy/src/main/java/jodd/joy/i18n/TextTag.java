@@ -29,7 +29,6 @@ import jodd.util.StringUtil;
 import jodd.util.net.HtmlEncoder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.DynamicAttributes;
@@ -74,7 +73,7 @@ public class TextTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	@Override
-	public void doTag() throws JspException {
+	public void doTag() {
 		PageContext pageContext = (PageContext) getJspContext();
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 

@@ -29,7 +29,6 @@ import jodd.Jodd;
 import jodd.io.StreamGobbler;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * Runtime utilities.
@@ -117,7 +116,7 @@ public class RuntimeUtil {
 	/**
 	 * Executes a process and returns the process output and exit code.
 	 */
-	public static ProcessResult run(final Process process) throws IOException, InterruptedException {
+	public static ProcessResult run(final Process process) throws InterruptedException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, OUTPUT_PREFIX);

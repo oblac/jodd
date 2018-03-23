@@ -44,7 +44,7 @@ public class SSLSocketHttpConnectionProvider extends SocketHttpConnectionProvide
 		this.socketFactory = sslContext.getSocketFactory();
 	}
 
-	protected SocketFactory getSSLSocketFactory() throws Exception {
+	protected SocketFactory getSSLSocketFactory() {
 		return socketFactory;
 	}
 }

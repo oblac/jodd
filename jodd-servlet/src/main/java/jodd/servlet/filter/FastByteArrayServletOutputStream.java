@@ -29,7 +29,6 @@ import jodd.io.FastByteArrayOutputStream;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
-import java.io.IOException;
 
 /**
  * Implementation of <code>ServletOutputStream</code> that buffers
@@ -63,7 +62,7 @@ public class FastByteArrayServletOutputStream extends ServletOutputStream {
 	 * Writes to wrapped buffer.
 	 */
 	@Override
-	public void write(final int i) throws IOException {
+	public void write(final int i) {
 		wrapped.write(i);
 	}
 

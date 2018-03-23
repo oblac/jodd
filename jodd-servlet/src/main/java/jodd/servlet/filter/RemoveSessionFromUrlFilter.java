@@ -112,7 +112,7 @@ public class RemoveSessionFromUrlFilter implements Filter {
 	}
 
 	@Override
-	public void init(final FilterConfig config) throws ServletException {
+	public void init(final FilterConfig config) {
 	}
 
 	@Override

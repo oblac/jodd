@@ -135,7 +135,7 @@ class LiveDatabaseTest extends DbBaseTest {
 	// ---------------------------------------------------------------- test
 
 	@Test
-	void testLiveDb() throws Exception {
+	void testLiveDb() {
 		for (DbAccess db : databases) {
 			System.out.println("\t" + db.getClass().getSimpleName());
 			init();

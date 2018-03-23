@@ -59,7 +59,7 @@ public class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> impl
 	 * Filter is not used since this is just an filter container.
 	 */
 	@Override
-	public final Object filter(final ActionRequest actionRequest) throws Exception {
+	public final Object filter(final ActionRequest actionRequest) {
 		return apply(actionRequest);
 	}
 

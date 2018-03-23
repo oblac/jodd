@@ -64,5 +64,5 @@ public interface Task {
 	 *
 	 * @throws Exception if unable to execute task
 	 */
-	void run() throws Exception;
+	void run();
 }

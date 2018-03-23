@@ -122,7 +122,7 @@ public class GzipFilter implements Filter {
 	 * Filter initialization.
 	 */
 	@Override
-	public void init(final FilterConfig config) throws ServletException {
+	public void init(final FilterConfig config) {
 
 		try {
 			wildcards = Converter.get().toBooleanValue(config.getInitParameter("wildcards"), false);

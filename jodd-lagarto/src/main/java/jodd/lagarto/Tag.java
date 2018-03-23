@@ -25,8 +25,6 @@
 
 package jodd.lagarto;
 
-import java.io.IOException;
-
 /**
  * Tag information.
  */
@@ -191,7 +189,7 @@ public interface Tag {
 	/**
 	 * Writes the tag to the output.
 	 */
-	void writeTo(Appendable out) throws IOException;
+	void writeTo(Appendable out);
 
 	/**
 	 * Get the complete tag as a string.

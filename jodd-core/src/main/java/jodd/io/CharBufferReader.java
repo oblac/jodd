@@ -25,7 +25,6 @@
 
 package jodd.io;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
 
@@ -43,19 +42,19 @@ public class CharBufferReader extends Reader {
 	}
 
 	@Override
-	public int read(final char[] chars, final int offset, final int length) throws IOException {
+	public int read(final char[] chars, final int offset, final int length) {
 		int read = Math.min(charBuffer.remaining(), length);
 		charBuffer.get(chars, offset, read);
 		return read;
 	}
 
 	@Override
-	public int read() throws IOException {
+	public int read() {
 		return charBuffer.position() < charBuffer.limit() ? charBuffer.get() : -1;
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 	}
 
 }

@@ -127,7 +127,7 @@ public class CharacterEncodingFilter implements Filter {
 	 * @param filterConfig The filter configuration object
 	 */
 	@Override
-	public void init(final FilterConfig filterConfig) throws ServletException {
+	public void init(final FilterConfig filterConfig) {
 
 		this.filterConfig = filterConfig;
 		this.encoding = filterConfig.getInitParameter("encoding");

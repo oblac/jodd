@@ -29,7 +29,6 @@ import jodd.http.HttpException;
 import jodd.http.ProxyInfo;
 
 import javax.net.SocketFactory;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -49,22 +48,22 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 	}
 
 	@Override
-	public Socket createSocket(final String host, final int port) throws IOException {
+	public Socket createSocket(final String host, final int port) {
 		return createSocks4ProxySocket(host, port);
 	}
 
 	@Override
-	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) throws IOException {
+	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) {
 		return createSocks4ProxySocket(host, port);
 	}
 
 	@Override
-	public Socket createSocket(final InetAddress host, final int port) throws IOException {
+	public Socket createSocket(final InetAddress host, final int port) {
 		return createSocks4ProxySocket(host.getHostAddress(), port);
 	}
 
 	@Override
-	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) throws IOException {
+	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) {
 		return createSocks4ProxySocket(address.getHostAddress(), port);
 	}
 
