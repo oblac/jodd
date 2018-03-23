@@ -188,10 +188,7 @@ class LagartoParserTest {
 						break;
 				}
 				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-					}
+					tag.writeTo(result);
 				}
 				result.append(NEWLINE);
 			}
@@ -206,10 +203,7 @@ class LagartoParserTest {
 			public void script(Tag tag, CharSequence bodyM) {
 				result.append("scr:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-					}
+					tag.writeTo(result);
 				}
 				String body = bodyM.toString();
 				body = StringUtil.removeChars(body, "\r\n\t\b");

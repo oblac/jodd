@@ -60,11 +60,7 @@ public class TagWriter implements TagVisitor {
 
 	@Override
 	public void tag(final Tag tag) {
-		try {
-			tag.writeTo(appendable);
-		} catch (IOException ioex) {
-			throw new LagartoException(ioex);
-		}
+		tag.writeTo(appendable);
 	}
 
 	@Override
