@@ -6,17 +6,26 @@ All notable changes to Jodd project are documented here.
 
 Work-in-progress :thunder:
 
+### Features
+
++ **madvoc** - added two more configurations: `defaultViewPageName` and `defaultViewExtensions`.
+
+### Breaking changes
+
++ **code** - removed `JoddArrayList`. 
+
+
 ## [Unreleased](https://github.com/oblac/jodd/compare/v4.2.0...4.3.0)
 
 An emotional roller coaster of the release :)
 
 ### Breaking changes
 
-+ **all** no more internal modules, removed `Defaults` 
-+ **upload** module moved to core
-+ **core** `JDateTime` removed.
-+ **core** `Printf` removed.
-+ **core** `LocaleUtil` and `DateFormatSymbolsEx` removed.
++ **all** - no more internal modules, removed `Defaults` 
++ **upload** - module moved to core
++ **core** - `JDateTime` removed.
++ **core** - `Printf` removed.
++ **core** - `LocaleUtil` and `DateFormatSymbolsEx` removed.
 
 ### Features
 

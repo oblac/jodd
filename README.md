@@ -30,8 +30,8 @@ _Use what you like._
 
 + `jodd-json` - JSON parser and serializer.
 + `jodd-lagarto` - HTML parser with `Jerry` and `CSSelly` and `Form` tag.
-+ `jodd-http`, tiny HTTP client.
-+ `jodd-mail` for easier email sending.
++ `jodd-http` - tiny HTTP client.
++ `jodd-mail` - for easier email sending.
 
 **Micro-frameworks**:
 
@@ -53,10 +53,10 @@ _Use what you like._
 
 **Utilities**:
 
-+ `jodd-core` contains many utilities, including `JDateTime`.
-+ `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
-+ `jodd-props` is the super-replacement for Java `Properties`.
-+ `jodd-servlet` with many servlet utilities, including nice tag library.
++ `jodd-core` - contains many utilities, including `JDateTime`.
++ `jodd-bean` - our infamous `BeanUtil`, type inspectors and converters.
++ `jodd-props` - is the super-replacement for Java `Properties`.
++ `jodd-servlet` - with many servlet utilities, including nice tag library.
 
 Read more in our [official documentation](http://jodd.org/doc).
 
