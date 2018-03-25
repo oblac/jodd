@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DefaultViewActionTestBase {
+abstract class DefaultViewActionTestBase {
 
 	@Test
 	void testDefaultPage() {
