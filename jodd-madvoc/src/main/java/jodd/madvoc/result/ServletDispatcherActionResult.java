@@ -29,6 +29,7 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.servlet.DispatcherUtil;
+import jodd.util.StringPool;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -48,6 +49,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherActionResult.class);
 
 	protected String[] extensions = new String[] {".jspf", ".jsp"};
+	protected String defaultViewPageName = "index";
 
 	/**
 	 * Renders the view by dispatching to the target JSP.
@@ -77,10 +79,14 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	 * Locates target using path with various extensions appended.
 	 */
 	@Override
-	protected String locateTarget(final ActionRequest actionRequest, final String path) {
+	protected String locateTarget(final ActionRequest actionRequest, String path) {
 		String target;
 
-		for (String ext : extensions) {
+		if (path.endsWith(StringPool.SLASH)) {
+			path = path + defaultViewPageName;
+		}
+
+		for (final String ext : extensions) {
 			target = path + ext;
 
 			if (targetExists(actionRequest, target)) {
@@ -99,7 +105,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 			log.debug("target check: " + target);
 		}
 
-		final ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
+		final ServletContext servletContext = actionRequest.getHttpServletRequest().getServletContext();
 
 		try {
 			return servletContext.getResource(target) != null;

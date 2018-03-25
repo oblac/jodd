@@ -142,4 +142,6 @@ class MadvocSuiteTest {
 	class ComponentTest extends ComponentTestBase {}
 	@Nested
 	class CookieTest extends CookieTestBase {}
+	@Nested
+	class DefaultViewActionTest extends DefaultViewActionTestBase {}
 }
