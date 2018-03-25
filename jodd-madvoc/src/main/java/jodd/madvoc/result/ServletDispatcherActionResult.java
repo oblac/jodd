@@ -28,6 +28,10 @@ package jodd.madvoc.result;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.Scope;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringPool;
 
@@ -48,8 +52,9 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 
 	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherActionResult.class);
 
-	protected String[] extensions = new String[] {".jspf", ".jsp"};
-	protected String defaultViewPageName = "index";
+	@In
+	@Scope(ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
 
 	/**
 	 * Renders the view by dispatching to the target JSP.
@@ -83,10 +88,10 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 		String target;
 
 		if (path.endsWith(StringPool.SLASH)) {
-			path = path + defaultViewPageName;
+			path = path + madvocConfig.getDefaultViewPageName();
 		}
 
-		for (final String ext : extensions) {
+		for (final String ext : madvocConfig.getDefaultViewExtensions()) {
 			target = path + ext;
 
 			if (targetExists(actionRequest, target)) {

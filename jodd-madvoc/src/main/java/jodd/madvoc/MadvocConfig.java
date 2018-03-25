@@ -82,6 +82,9 @@ public final class MadvocConfig {
 		pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
+
+		defaultViewExtensions = new String[] {".jspf", ".jsp"};
+		defaultViewPageName = "index";
 	}
 
 	// ---------------------------------------------------------------- action configs
@@ -308,5 +311,24 @@ public final class MadvocConfig {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
-	// ---------------------------------------------------------------- toString
+	// ---------------------------------------------------------------- default
+
+	private String[] defaultViewExtensions;
+	private String defaultViewPageName;
+
+	public String[] getDefaultViewExtensions() {
+		return defaultViewExtensions;
+	}
+
+	public void setDefaultViewExtensions(String[] defaultViewExtensions) {
+		this.defaultViewExtensions = defaultViewExtensions;
+	}
+
+	public String getDefaultViewPageName() {
+		return defaultViewPageName;
+	}
+
+	public void setDefaultViewPageName(String defaultViewPageName) {
+		this.defaultViewPageName = defaultViewPageName;
+	}
 }
