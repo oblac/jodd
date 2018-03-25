@@ -30,7 +30,6 @@ import jodd.io.FileUtil;
 import jodd.util.Consumers;
 import jodd.util.MultiComparator;
 import jodd.util.StringUtil;
-import jodd.util.collection.JoddArrayList;
 import jodd.util.inex.InExRules;
 
 import java.io.File;
@@ -40,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -499,10 +499,10 @@ public class FindFile implements Iterable<File> {
 
 	// ---------------------------------------------------------------- next file
 
-	protected JoddArrayList<File> pathList;
-	protected JoddArrayList<File> pathListOriginal;
-	protected JoddArrayList<File> todoFolders;
-	protected JoddArrayList<FilesIterator> todoFiles;
+	protected LinkedList<File> pathList;
+	protected LinkedList<File> pathListOriginal;
+	protected LinkedList<File> todoFolders;
+	protected LinkedList<FilesIterator> todoFiles;
 
 	protected File lastFile;
 	protected File rootFile;
@@ -526,7 +526,7 @@ public class FindFile implements Iterable<File> {
 			return;
 		}
 		if (pathList == null) {
-			pathList = new JoddArrayList<>();
+			pathList = new LinkedList<>();
 		}
 
 		pathList.add(path);
@@ -641,16 +641,16 @@ public class FindFile implements Iterable<File> {
 	protected void init() {
 		rules.smartMode();
 
-		todoFiles = new JoddArrayList<>();
-		todoFolders = new JoddArrayList<>();
+		todoFiles = new LinkedList<>();
+		todoFolders = new LinkedList<>();
 
 		if (pathList == null) {
-			pathList = new JoddArrayList<>();
+			pathList = new LinkedList<>();
 			return;
 		}
 
 		if (pathListOriginal == null) {
-			pathListOriginal = (JoddArrayList<File>) pathList.clone();
+			pathListOriginal = (LinkedList<File>) pathList.clone();
 		}
 		String[] files = new String[pathList.size()];
 

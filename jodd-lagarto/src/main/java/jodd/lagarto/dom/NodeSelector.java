@@ -28,10 +28,10 @@ package jodd.lagarto.dom;
 import jodd.csselly.CSSelly;
 import jodd.csselly.Combinator;
 import jodd.csselly.CssSelector;
-import jodd.util.collection.JoddArrayList;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -161,7 +161,7 @@ public class NodeSelector {
 	/**
 	 * Walks over the child notes, maintaining the tree order and not using recursion.
 	 */
-	protected void walkDescendantsIteratively(final JoddArrayList<Node> nodes, final CssSelector cssSelector, final List<Node> result) {
+	protected void walkDescendantsIteratively(final LinkedList<Node> nodes, final CssSelector cssSelector, final List<Node> result) {
 		while (!nodes.isEmpty()) {
 			Node node = nodes.removeFirst();
 			selectAndAdd(node, cssSelector, result);
@@ -188,7 +188,7 @@ public class NodeSelector {
 
 		switch (combinator) {
 			case DESCENDANT:
-				JoddArrayList<Node> nodes = new JoddArrayList<>();
+				LinkedList<Node> nodes = new LinkedList<>();
 				int childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
 					nodes.add(rootNode.getChild(i));
