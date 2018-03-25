@@ -65,6 +65,8 @@ class ServletDispatcherResultTest {
 			}
 		};
 
+		sdr.madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
+
 		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 		BeanUtil.declared.setProperty(sdr, "resultMapper", resultMapper);
 
