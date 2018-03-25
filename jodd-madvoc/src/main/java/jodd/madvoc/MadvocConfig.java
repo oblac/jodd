@@ -46,6 +46,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static jodd.util.StringPool.COLON;
 import static jodd.util.StringPool.LEFT_BRACE;
@@ -54,7 +55,10 @@ import static jodd.util.StringPool.RIGHT_BRACE;
 /**
  * Madvoc configuration. This is the single place where component configuration is stored.
  * New custom component that requires configuration may override and enhance this config
- * with new configuration. 
+ * with new configuration.
+ * <p>
+ * This class is instantiated in {@link WebApp}. Use {@link WebApp#configure(Consumer)} to change the
+ * configuration.
  */
 public final class MadvocConfig {
 
@@ -305,29 +309,4 @@ public final class MadvocConfig {
 	}
 
 	// ---------------------------------------------------------------- toString
-
-	/**
-	 * Prepares string with full configuration.
-	 */
-	@Override
-	public String toString() {
-		return "MadvocConfig{" +
-				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
-				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
-				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
-				",\n\tencoding='" + encoding + '\'' +
-				",\n\tfileUploadFactory=" + fileUploadFactory +
-				",\n\tpathMacroClass=" + pathMacroClass.getName() +
-				",\n\tpreventCaching=" + preventCaching +
-				",\n\trootPackages=" + rootPackages +
-				"\n}";
-	}
-
-	private static String toString(final Class[] classes) {
-		StringBuilder s = new StringBuilder();
-		for (Class clazz : classes) {
-			s.append("\n\t\t").append(clazz.getName());
-		}
-		return s.toString();
-	}
 }
