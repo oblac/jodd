@@ -31,6 +31,7 @@ import jodd.log.LoggerFactory;
 import jodd.log.LoggerProvider;
 import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.WebApp;
+import jodd.madvoc.petite.PetiteWebApp;
 import jodd.petite.PetiteContainer;
 
 import javax.servlet.ServletContext;
@@ -165,6 +166,14 @@ public class JoddJoy {
 
 	public JoddJoy withWebApp(final Consumer<WebApp> webAppConsumer) {
 		joyMadvoc.add(webAppConsumer);
+		return this;
+	}
+
+	/**
+	 * Defines custom {@link PetiteWebApp} implementation.
+	 */
+	public JoddJoy useWebApp(final Supplier<PetiteWebApp> webAppSupplier) {
+		joyMadvoc.setWebAppSupplier(webAppSupplier);
 		return this;
 	}
 

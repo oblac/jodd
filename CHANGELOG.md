@@ -9,6 +9,7 @@ Work-in-progress :thunder:
 ### Features
 
 + **madvoc** - added two more configurations: `defaultViewPageName` and `defaultViewExtensions`.
++ **joy** - add option to use custom web application with `useWebApp()` method.
 
 ### Breaking changes
 

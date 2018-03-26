@@ -49,6 +49,7 @@ public class JoyMadvoc extends JoyBase {
 	private final Supplier<Props> propsSupplier;
 	private ServletContext servletContext;
 	private PetiteWebApp webApp;
+	private Supplier<PetiteWebApp> webAppSupplier;
 
 	public JoyMadvoc(final Supplier<PetiteContainer> petiteSupplier, final Supplier<ProxyProxetta> proxettaSupplier, final Supplier<Props> propsSupplier, final Supplier<JoyScanner> scannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
@@ -58,8 +59,18 @@ public class JoyMadvoc extends JoyBase {
 		this.webAppConsumers = Consumers.empty();
 	}
 
+	/**
+	 * Defines optional servlet context.
+	 */
 	public void setServletContext(final ServletContext servletContext) {
 		this.servletContext = servletContext;
+	}
+
+	/**
+	 * Defines optional web app supplier that creates custom {@link PetiteWebApp}.
+	 */
+	public void setWebAppSupplier(final Supplier<PetiteWebApp> webAppSupplier) {
+		this.webAppSupplier = webAppSupplier;
 	}
 
 	public void add(final Consumer<WebApp> webAppConsumer) {
@@ -72,7 +83,8 @@ public class JoyMadvoc extends JoyBase {
 
 		log.info("MADVOC start  ----------");
 
-		webApp = new PetiteWebApp();
+		webApp = webAppSupplier == null ? new PetiteWebApp() : webAppSupplier.get();
+
 		webApp.configure(madvocConfig -> madvocConfig.getActionConfig().setInterceptors(DefaultInterceptorStack.class));
 		webApp.withPetiteContainer(petiteSupplier);
 
