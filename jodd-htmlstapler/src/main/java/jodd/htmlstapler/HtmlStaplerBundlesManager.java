@@ -39,11 +39,10 @@ import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
+import jodd.util.crypt.DigestEngine;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -398,14 +397,10 @@ public class HtmlStaplerBundlesManager {
 	 * Returned digest must be filename safe, for all platforms.
 	 */
 	protected String createDigest(final String source) {
-		MessageDigest shaDigester;
-		try {
-			shaDigester = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException nsaex) {
-			throw new HtmlStaplerException(nsaex);
-		}
+		final DigestEngine digestEngine = DigestEngine.sha256();
 
-		byte[] bytes = shaDigester.digest(CharUtil.toSimpleByteArray(source));
+		final byte[] bytes = digestEngine.digest(CharUtil.toSimpleByteArray(source));
+
 		String digest = Base32.encode(bytes);
 
 		if (uniqueDigestKey != null) {
