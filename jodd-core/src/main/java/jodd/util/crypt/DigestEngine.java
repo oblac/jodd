@@ -25,8 +25,14 @@
 
 package jodd.util.crypt;
 
+import jodd.io.StreamUtil;
 import jodd.util.StringUtil;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
 /**
@@ -49,6 +55,29 @@ public interface DigestEngine {
 		@Override
 		public byte[] digest(final byte[] byteArray) {
 			messageDigest.update(byteArray);
+			return messageDigest.digest();
+		}
+
+		@Override
+		public byte[] digest(final File file) throws IOException {
+			FileInputStream fis = null;
+			BufferedInputStream bis = null;
+			DigestInputStream dis = null;
+
+			try {
+				fis = new FileInputStream(file);
+				bis = new BufferedInputStream(fis);
+				dis = new DigestInputStream(bis, messageDigest);
+
+				while (dis.read() != -1) {
+				}
+			}
+			finally {
+				StreamUtil.close(dis);
+				StreamUtil.close(bis);
+				StreamUtil.close(fis);
+			}
+
 			return messageDigest.digest();
 		}
 	}
@@ -100,8 +129,13 @@ public interface DigestEngine {
 	 */
 	public default byte[] digest(final String input) {
 		return digest(StringUtil.getBytes(input));
-
 	}
+
+	/**
+	 * Returns digest of a file. Implementations may not read the whole
+	 * file into the memory.
+	 */
+	public byte[] digest(final File file) throws IOException;
 
 	/**
 	 * Returns string hash of input byte array.
@@ -115,6 +149,10 @@ public interface DigestEngine {
 	 */
 	public default String digestString(final String input) {
 		return StringUtil.toHexString(digest(input));
+	}
+
+	public default String digestString(final File file) throws IOException {
+		return StringUtil.toHexString(digest(file));
 	}
 
 }

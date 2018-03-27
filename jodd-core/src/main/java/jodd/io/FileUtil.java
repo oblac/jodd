@@ -29,9 +29,9 @@ import jodd.core.JoddCore;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
+import jodd.util.crypt.DigestEngine;
 import jodd.util.net.URLDecoder;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -47,9 +47,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,7 +232,7 @@ public class FileUtil {
 	 */
 	public static void touch(final File file) throws IOException {
 		if (!file.exists()) {
-			StreamUtil.close(fileOutputStreamOf(file));
+			StreamUtil.close(new FileOutputStream(file, false));
 		}
 		file.setLastModified(System.currentTimeMillis());
 	}
@@ -279,8 +276,8 @@ public class FileUtil {
 		FileInputStream input = null;
 		FileOutputStream output = null;
 		try {
-			input = fileInputStreamOf(srcFile);
-			output = fileOutputStreamOf(destFile);
+			input = new FileInputStream(srcFile);
+			output = new FileOutputStream(destFile, false);
 			StreamUtil.copy(input, output);
 		} finally {
 			StreamUtil.close(output);
@@ -662,7 +659,7 @@ public class FileUtil {
 		if (dest.exists()) {
 			checkIsFile(dest);
 		}
-		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(fileOutputStreamOf(dest, append), encoding));
+		Writer out = new BufferedWriter(StreamUtil.outputStreamWriterOf(new FileOutputStream(dest, append), encoding));
 		try {
 			out.write(data);
 		} finally {
@@ -836,7 +833,7 @@ public class FileUtil {
 		}
 		FileOutputStream out = null;
 		try {
-			out = fileOutputStreamOf(dest, append);
+			out = new FileOutputStream(dest, append);
 			out.write(data.getBytes(encoding));
 		} finally {
 			StreamUtil.close(out);
@@ -857,7 +854,7 @@ public class FileUtil {
 	 * @see #writeStream(FileOutputStream, InputStream)
 	 */
 	public static void writeStream(final File dest, final InputStream in) throws IOException {
-		writeStream(fileOutputStreamOf(dest), in);
+		writeStream(new FileOutputStream(dest, false), in);
 	}
 
 	/**
@@ -1094,8 +1091,8 @@ public class FileUtil {
 		InputStream input1 = null;
 		InputStream input2 = null;
 		try {
-			input1 = fileInputStreamOf(one);
-			input2 = fileInputStreamOf(two);
+			input1 = new FileInputStream(one);
+			input2 = new FileInputStream(two);
 			return StreamUtil.compare(input1, input2);
 		} finally {
 			StreamUtil.close(input1);
@@ -1448,17 +1445,7 @@ public class FileUtil {
 	 * @return MD5 digest of the {@link File}.
 	 */
 	public static String md5(final File file) throws IOException {
-		return _createDigestOfFileWithAlgorithm(file, "MD5");
-	}
-
-	/**
-	 * Creates SHA-1 digest of a file.
-	 *
-	 * @param file {@link File} to create digest of.
-	 * @return SHA-1 digest of the {@link File}.
-	 */
-	public static String sha1(final File file) throws IOException {
-		return _createDigestOfFileWithAlgorithm(file, "SHA-1");
+		return DigestEngine.md5().digestString(file);
 	}
 
 	/**
@@ -1468,17 +1455,7 @@ public class FileUtil {
 	 * @return SHA-256 digest of the {@link File}.
 	 */
 	public static String sha256(final File file) throws IOException {
-		return _createDigestOfFileWithAlgorithm(file, "SHA-256");
-	}
-
-	/**
-	 * Creates SHA-384 digest of a file.
-	 *
-	 * @param file {@link File} to create digest of.
-	 * @return SHA-384 digest of the {@link File}.
-	 */
-	public static String sha384(final File file) throws IOException {
-		return _createDigestOfFileWithAlgorithm(file, "SHA-384");
+		return DigestEngine.sha256().digestString(file);
 	}
 
 	/**
@@ -1488,53 +1465,7 @@ public class FileUtil {
 	 * @return SHA-512 digest of the {@link File}.
 	 */
 	public static String sha512(final File file) throws IOException {
-		return _createDigestOfFileWithAlgorithm(file, "SHA-512");
-	}
-
-	/**
-	 * Create a digest (as String) of a {@link File}.
-	 *
-	 * @param file      {@link File} to create digest of.
-	 * @param algorithm Algorithm to use for {@link MessageDigest#getInstance(String)}.
-	 * @return digest of the {@link File}.
-	 * @throws IOException if there is an error creating digest.
-	 */
-	private static String _createDigestOfFileWithAlgorithm(final File file, final String algorithm) throws IOException {
-		MessageDigest messageDigest = null;
-		try {
-			messageDigest = MessageDigest.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException ignore) {
-		}
-
-		byte[] digest = digest(file, messageDigest);
-
-		return StringUtil.toHexString(digest);
-	}
-
-	/**
-	 * Calculates digest for a {@link File} using provided algorithm.
-	 *
-	 * @param file      {@link File} to create digest of.
-	 * @param algorithm Algorithm to use from {@link MessageDigest#getInstance(String)}.
-	 * @return digest for the {@link File}.
-	 * @throws IOException if something went wrong.
-	 */
-	public static byte[] digest(final File file, final MessageDigest algorithm) throws IOException {
-		algorithm.reset();
-		FileInputStream fis = fileInputStreamOf(file);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		DigestInputStream dis = new DigestInputStream(bis, algorithm);
-
-		try {
-			while (dis.read() != NEGATIVE_ONE) {
-			}
-		} finally {
-			StreamUtil.close(dis);
-			StreamUtil.close(bis);
-			StreamUtil.close(fis);
-		}
-
-		return algorithm.digest();
+		return DigestEngine.sha512().digestString(file);
 	}
 
 	/**
@@ -1556,46 +1487,14 @@ public class FileUtil {
 	}
 
 	/**
-	 * Returns new {@link FileInputStream}.
-	 *
-	 * @param file {@link File}
-	 * @return new {@link FileInputStream}.
-	 * @throws IOException if something went wrong.
-	 */
-	private static FileInputStream fileInputStreamOf(final File file) throws IOException {
-		return new FileInputStream(file);
-	}
-
-	/**
-	 * @see #fileOutputStreamOf(File, boolean)
-	 */
-	private static FileOutputStream fileOutputStreamOf(final File file) throws IOException {
-		return fileOutputStreamOf(file, false);
-	}
-
-	/**
-	 * Returns new {@link FileOutputStream}.
-	 *
-	 * @param file     {@link File}
-	 * @param isAppend if {@code true}, then bytes will be written
-	 *                 to the end of the file rather than the beginning
-	 * @return new {@link FileOutputStream}.
-	 * @throws IOException
-	 */
-	private static FileOutputStream fileOutputStreamOf(final File file, final boolean isAppend) throws IOException {
-		return new FileOutputStream(file, isAppend);
-	}
-
-	/**
 	 * @see #unicodeInputStreamOf(InputStream, String)
 	 * @see #checkExists(File)
 	 * @see #checkIsFile(File)
-	 * @see #fileInputStreamOf(File)
 	 */
 	private static UnicodeInputStream unicodeInputStreamOf(final File file) throws IOException {
 		checkExists(file);
 		checkIsFile(file);
-		return unicodeInputStreamOf(fileInputStreamOf(file), null);
+		return unicodeInputStreamOf(new FileInputStream(file), null);
 	}
 
 	/**
@@ -1614,11 +1513,10 @@ public class FileUtil {
 	 *
 	 * @return either {@link FileInputStream} or {@link UnicodeInputStream}.
 	 * @throws IOException if something went wrong.
-	 * @see #fileInputStreamOf(File)
 	 * @see #unicodeInputStreamOf(InputStream, String)
 	 */
 	private static InputStream streamOf(final File file, final String encoding) throws IOException {
-		InputStream in = fileInputStreamOf(file);
+		InputStream in = new FileInputStream(file);
 		if (encoding.startsWith("UTF")) {
 			in = unicodeInputStreamOf(in, encoding);
 		}
