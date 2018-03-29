@@ -46,9 +46,6 @@ public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
 	 */
 	protected static final int DEFAULT_SSL_PORT = 465;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public SmtpSslServer(final String host, final int port, final Authenticator authenticator) {
 		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator);
 	}

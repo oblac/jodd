@@ -45,13 +45,10 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 	protected static final String PROTOCOL_POP3 = "pop3";
 
 	/**
-	 * Default POP3 port
+	 * Default POP3 port.
 	 */
 	protected static final int DEFAULT_POP3_PORT = 110;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Pop3Server(final String host, final int port, final Authenticator authenticator) {
 		super(host, port == -1 ? DEFAULT_POP3_PORT : port, authenticator);
 	}

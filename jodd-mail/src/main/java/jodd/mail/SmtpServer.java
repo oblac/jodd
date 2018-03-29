@@ -80,9 +80,6 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 		return (T) this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public SmtpServer(final String host, final int port, final Authenticator authenticator) {
 		super(host, port == -1 ? DEFAULT_SMTP_PORT : port, authenticator);
 	}

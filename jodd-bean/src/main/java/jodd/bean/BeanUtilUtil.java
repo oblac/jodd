@@ -92,6 +92,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	/**
 	 * Converter to collection.
 	 */
+	@SuppressWarnings("unchecked")
 	protected Object convertToCollection(final Object value, final Class destinationType, final Class componentType) {
 		return typeConverterManager.convertToCollection(value, destinationType, componentType);
 	}
@@ -139,6 +140,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 		Object value = Array.get(array, index);
 		if (value == null) {
 			try {
+				//noinspection unchecked
 				value = ClassUtil.newInstance(componentType);
 			} catch (Exception ex) {
 				if (isSilent) {

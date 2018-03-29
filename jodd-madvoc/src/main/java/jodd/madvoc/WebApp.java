@@ -37,6 +37,9 @@ import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
+import jodd.madvoc.component.MadvocComponentLifecycle.Init;
+import jodd.madvoc.component.MadvocComponentLifecycle.Ready;
+import jodd.madvoc.component.MadvocComponentLifecycle.Start;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
@@ -219,14 +222,14 @@ public class WebApp {
 
 
 		//// listeners
-		madvocContainer.fireEvent(MadvocComponentLifecycle.Init.class);
+		madvocContainer.fireEvent(Init.class);
 
 		//// component configuration
 		componentConfigs.accept(madvocContainer());
 
 		initialized();
 
-		madvocContainer.fireEvent(MadvocComponentLifecycle.Start.class);
+		madvocContainer.fireEvent(Start.class);
 
 		if (!madvocRouterConsumers.isEmpty()) {
 
@@ -240,7 +243,7 @@ public class WebApp {
 
 		started();
 
-		madvocContainer.fireEvent(MadvocComponentLifecycle.Ready.class);
+		madvocContainer.fireEvent(Ready.class);
 
 		ready();
 
@@ -282,21 +285,21 @@ public class WebApp {
 	}
 
 	/**
-	 * Called when Madvoc is initialized, at the end of the {@link MadvocComponentLifecycle.Init INIT} phase.
+	 * Called when Madvoc is initialized, at the end of the {@link Init INIT} phase.
 	 * @see MadvocComponentLifecycle
 	 */
 	protected void initialized() {
 	}
 
 	/**
-	 * Called when Madvoc is started, at the end of the {@link MadvocComponentLifecycle.Start START} phase.
+	 * Called when Madvoc is started, at the end of the {@link Start START} phase.
 	 * @see MadvocComponentLifecycle
 	 */
 	protected void started() {
 	}
 
 	/**
-	 * Called when Madvoc is ready, at the end of the {@link MadvocComponentLifecycle.Ready READY} phase.
+	 * Called when Madvoc is ready, at the end of the {@link Ready READY} phase.
 	 * @see MadvocComponentLifecycle
 	 */
 	protected void ready() {

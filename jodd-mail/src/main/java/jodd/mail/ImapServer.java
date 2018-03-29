@@ -49,9 +49,6 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 	 */
 	protected static final int DEFAULT_IMAP_PORT = 143;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public ImapServer(final String host, final int port, final Authenticator authenticator) {
 		super(host, port == -1 ? DEFAULT_IMAP_PORT : port, authenticator);
 	}

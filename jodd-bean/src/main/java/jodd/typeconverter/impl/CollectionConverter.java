@@ -133,6 +133,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	protected Collection<T> convertToSingleElementCollection(final Object value) {
 		Collection<T> collection = createCollection(0);
 
+		//noinspection unchecked
 		collection.add((T) value);
 
 		return collection;

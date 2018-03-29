@@ -71,7 +71,7 @@ public class EMLParser extends EMLProperties<EMLParser> {
 	 * @return {@link ReceivedEmail}.
 	 * @throws MessagingException if {@link MimeMessage} cannot be created.
 	 * @see #parse(String, String)
-	 * @see JoddCoreDefaults#getEncoding()
+	 * @see JoddCore#getEncoding()
 	 */
 	public ReceivedEmail parse(final String emlContent) throws MessagingException {
 		try {

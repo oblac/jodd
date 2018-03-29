@@ -48,7 +48,6 @@ public class JoyProxetta extends JoyBase {
 
 	/**
 	 * Returns proxetta once it is created.
-	 * @return
 	 */
 	public ProxyProxetta getProxetta() {
 		return proxyProxetta;

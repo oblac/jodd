@@ -61,11 +61,10 @@ public class EmailMessage {
 	}
 
 	/**
-	 * Uses UTF-8 email content by default (as per {@link JoddCoreDefaults#getEncoding()}.
+	 * Uses UTF-8 email content by default (as per {@link JoddCore#getEncoding()}.
 	 *
 	 * @param content  The content as a {@link String}.
 	 * @param mimeType The MIME type as a as a {@link String}.
-	 * @see JoddCoreDefaults#getEncoding()
 	 */
 	public EmailMessage(final String content, final String mimeType) {
 		this(content, mimeType, JoddCore.defaults().getEncoding());

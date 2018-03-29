@@ -48,9 +48,6 @@ public class ImapSslServer extends ImapServer {
 	 */
 	protected static final int DEFAULT_SSL_PORT = 993;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public ImapSslServer(final String host, final int port, final Authenticator authenticator) {
 		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator);
 	}
