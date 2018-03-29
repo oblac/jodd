@@ -192,9 +192,10 @@ configure(javaModules()) {
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
-		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//		options.compilerArgs << "-Xlint:unchecked"
+		options.compilerArgs << "-Xlint:deprecation"
 		options.incremental = true
-		//configurations.compile.transitive = false
+		options.fork = true
 	}
 	tasks.withType(Javadoc) {
 		options.addStringOption('Xdoclint:none', '-quiet')
