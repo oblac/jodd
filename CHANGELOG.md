@@ -6,7 +6,7 @@ All notable changes to Jodd project are documented here.
 
 Work-in-progress :thunder:
 
-## [Unreleased](https://github.com/oblac/jodd/compare/v4.3.0...4.3.1)
+## [4.3.1](https://github.com/oblac/jodd/compare/v4.3.0...4.3.1)
 
 Just few minor changes.
 
@@ -20,7 +20,7 @@ Just few minor changes.
 + **code** - removed `JoddArrayList`. 
 
 
-## [Unreleased](https://github.com/oblac/jodd/compare/v4.2.0...4.3.0)
+## [4.3.0](https://github.com/oblac/jodd/compare/v4.2.0...4.3.0)
 
 An emotional roller coaster of the release :)
 
