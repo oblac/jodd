@@ -12,6 +12,5 @@ dependencies {
 jar {
 	manifest {
 		instruction 'Import-Package', '*;resolution:=optional'
-		instruction 'Multi-Release', 'true'
 	}
 }
