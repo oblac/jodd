@@ -158,9 +158,9 @@ public class StringTemplateParser {
 			strict = false;
 		}
 
-		int prefixLen = macroPrefix.length();
-		int startLen = macroStart.length();
-		int endLen = macroEnd.length();
+		final int prefixLen = macroPrefix.length();
+		final int startLen = macroStart.length();
+		final int endLen = macroEnd.length();
 
 		while (i < len) {
 			int ndx = template.indexOf(macroPrefix, i);
@@ -196,18 +196,18 @@ public class StringTemplateParser {
 
 			// macro started, detect strict format
 
-			boolean strictFormat = strict;
+			boolean detectedStrictFormat = strict;
 
-			if (!strictFormat) {
+			if (!detectedStrictFormat) {
 				if (StringUtil.isSubstringAt(template, macroStart, ndx)) {
-					strictFormat = true;
+					detectedStrictFormat = true;
 				}
 			}
 
 			int ndx1;
 			int ndx2;
 
-			if (!strictFormat) {
+			if (!detectedStrictFormat) {
 				// not strict format: $foo
 
 				ndx += prefixLen;
@@ -273,7 +273,11 @@ public class StringTemplateParser {
 					if (replaceMissingKey) {
 						value = missingKeyReplacement;
 					} else {
-						value = template.substring(ndx1 - startLen, ndx2 + 1);
+						if (detectedStrictFormat) {
+							value = template.substring(ndx1 - startLen, ndx2 + endLen);
+						} else {
+							value = template.substring(ndx1 - 1, ndx2);
+						}
 					}
 				}
 			} else {
@@ -293,7 +297,7 @@ public class StringTemplateParser {
 				result.append(stringValue);
 
 				i = ndx2;
-				if (strictFormat) {
+				if (detectedStrictFormat) {
 					i += endLen;
 				}
 			} else {
