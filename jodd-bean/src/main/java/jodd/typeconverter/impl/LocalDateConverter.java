@@ -37,27 +37,27 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
-public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
+public class LocalDateConverter implements TypeConverter<LocalDate> {
 	@Override
-	public LocalDateTime convert(Object value) {
+	public LocalDate convert(Object value) {
 		if (value == null) {
 			return null;
 		}
 
-		if (value instanceof LocalDate) {
-			return LocalDateTime.of(((LocalDate) value), LocalTime.MIDNIGHT);
+		if (value instanceof LocalDateTime) {
+			return ((LocalDateTime)value).toLocalDate();
 		}
 		if (value instanceof Calendar) {
-			return TimeUtil.fromCalendar((Calendar) value);
+			return TimeUtil.fromCalendar((Calendar) value).toLocalDate();
 		}
 		if (value instanceof Timestamp) {
-			return TimeUtil.fromMilliseconds(((Timestamp)value).getTime());
+			return TimeUtil.fromMilliseconds(((Timestamp)value).getTime()).toLocalDate();
 		}
 		if (value instanceof Date) {
-			return TimeUtil.fromDate((Date) value);
+			return TimeUtil.fromDate((Date) value).toLocalDate();
 		}
 		if (value instanceof Number) {
-			return TimeUtil.fromMilliseconds(((Number)value).longValue());
+			return TimeUtil.fromMilliseconds(((Number)value).longValue()).toLocalDate();
 		}
 		if (value instanceof LocalTime) {
 			throw new TypeConversionException("Can't convert to date just from time: " + value);
@@ -67,11 +67,11 @@ public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
 
 		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			// try to parse default string format
-			return LocalDateTime.parse(stringValue);
+			return LocalDate.parse(stringValue);
 		}
 
 		try {
-			return TimeUtil.fromMilliseconds(Long.parseLong(stringValue));
+			return TimeUtil.fromMilliseconds(Long.parseLong(stringValue)).toLocalDate();
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
