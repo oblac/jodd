@@ -6,6 +6,15 @@ All notable changes to Jodd project are documented here.
 
 Work-in-progress :thunder:
 
+### Features
+
++ **bean** - added missing date-time type converters.
+
+### Bug Fixes
+
++ **core** - fixed special cases of `StringTemplateParser` usage.
+
+
 ## [4.3.1](https://github.com/oblac/jodd/compare/v4.3.0...4.3.1)
 
 Just few minor changes.

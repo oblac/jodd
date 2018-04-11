@@ -25,7 +25,7 @@
 
 package jodd.typeconverter;
 
-import jodd.typeconverter.impl.LocalDateConverter;
+import jodd.typeconverter.impl.LocalTimeConverter;
 import jodd.util.TimeUtil;
 import org.junit.jupiter.api.Test;
 
@@ -40,10 +40,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class LocalDateConverterTest {
+class LocalTimeConverterTest {
 	@Test
 	void testConversion() {
-		LocalDateConverter c = new LocalDateConverter();
+		LocalTimeConverter c = new LocalTimeConverter();
 
 		assertNull(c.convert(null));
 
@@ -51,17 +51,17 @@ class LocalDateConverterTest {
 		final LocalDate localDate = localDateTime.toLocalDate();
 		final LocalTime localTime = localDateTime.toLocalTime();
 
-		assertEquals(localDate, c.convert(localDate));
-		assertEquals(localDate, c.convert(new GregorianCalendar(2018, 3, 11, 9, 11, 23)));
-		assertEquals(localDate, c.convert(new Timestamp(118, 3, 11, 9, 11, 23, 0)));
-		assertEquals(localDate, c.convert(new Date(118, 3, 11, 9, 11, 23)));
-		assertEquals(localDate, c.convert("2018-04-11"));
+		assertEquals(localTime, c.convert(localTime));
+		assertEquals(localTime, c.convert(new GregorianCalendar(2018, 3, 11, 9, 11, 23)));
+		assertEquals(localTime, c.convert(new Timestamp(118, 3, 11, 9, 11, 23, 0)));
+		assertEquals(localTime, c.convert(new Date(118, 3, 11, 9, 11, 23)));
+		assertEquals(localTime, c.convert("09:11:23"));
 
-		assertThrows(TypeConversionException.class, () -> c.convert(localTime));
+		assertThrows(TypeConversionException.class, () -> c.convert(localDate));
 
 		final long miliseconds = TimeUtil.toMilliseconds(localDateTime);
-		assertEquals(localDate, c.convert(miliseconds));
-		assertEquals(localDate, c.convert("" + miliseconds));
+		assertEquals(localTime, c.convert(miliseconds));
+		assertEquals(localTime, c.convert("" + miliseconds));
 	}
 
 }

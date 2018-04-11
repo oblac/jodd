@@ -56,6 +56,7 @@ import jodd.typeconverter.impl.IntegerArrayConverter;
 import jodd.typeconverter.impl.IntegerConverter;
 import jodd.typeconverter.impl.LocalDateConverter;
 import jodd.typeconverter.impl.LocalDateTimeConverter;
+import jodd.typeconverter.impl.LocalTimeConverter;
 import jodd.typeconverter.impl.LocaleConverter;
 import jodd.typeconverter.impl.LongArrayConverter;
 import jodd.typeconverter.impl.LongConverter;
@@ -87,6 +88,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -235,6 +237,7 @@ public class TypeConverterManager {
 		register(GregorianCalendar.class, new CalendarConverter());
 		register(LocalDateTime.class, new LocalDateTimeConverter());
 		register(LocalDate.class, new LocalDateConverter());
+		register(LocalTime.class, new LocalTimeConverter());
 
 		register(File.class, new FileConverter());
 		register(FileUpload.class, new FileUploadConverter());

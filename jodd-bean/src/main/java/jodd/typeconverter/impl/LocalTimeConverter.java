@@ -23,45 +23,58 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.typeconverter;
+package jodd.typeconverter.impl;
 
-import jodd.typeconverter.impl.LocalDateConverter;
+import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 import jodd.util.TimeUtil;
-import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+public class LocalTimeConverter implements TypeConverter<LocalTime> {
+	@Override
+	public LocalTime convert(Object value) {
+		if (value == null) {
+			return null;
+		}
 
-class LocalDateConverterTest {
-	@Test
-	void testConversion() {
-		LocalDateConverter c = new LocalDateConverter();
+		if (value instanceof LocalDateTime) {
+			return ((LocalDateTime)value).toLocalTime();
+		}
+		if (value instanceof Calendar) {
+			return TimeUtil.fromCalendar((Calendar) value).toLocalTime();
+		}
+		if (value instanceof Timestamp) {
+			return TimeUtil.fromMilliseconds(((Timestamp)value).getTime()).toLocalTime();
+		}
+		if (value instanceof Date) {
+			return TimeUtil.fromDate((Date) value).toLocalTime();
+		}
+		if (value instanceof Number) {
+			return TimeUtil.fromMilliseconds(((Number)value).longValue()).toLocalTime();
+		}
+		if (value instanceof LocalDate) {
+			throw new TypeConversionException("Can't convert to time just from date: " + value);
+		}
 
-		assertNull(c.convert(null));
+		String stringValue = value.toString().trim();
 
-		final LocalDateTime localDateTime = LocalDateTime.of(2018, 4, 11, 9, 11, 23);
-		final LocalDate localDate = localDateTime.toLocalDate();
-		final LocalTime localTime = localDateTime.toLocalTime();
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
+			// try to parse default string format
+			return LocalTime.parse(stringValue);
+		}
 
-		assertEquals(localDate, c.convert(localDate));
-		assertEquals(localDate, c.convert(new GregorianCalendar(2018, 3, 11, 9, 11, 23)));
-		assertEquals(localDate, c.convert(new Timestamp(118, 3, 11, 9, 11, 23, 0)));
-		assertEquals(localDate, c.convert(new Date(118, 3, 11, 9, 11, 23)));
-		assertEquals(localDate, c.convert("2018-04-11"));
+		try {
+			return TimeUtil.fromMilliseconds(Long.parseLong(stringValue)).toLocalTime();
+		} catch (NumberFormatException nfex) {
+			throw new TypeConversionException(value, nfex);
+		}
 
-		assertThrows(TypeConversionException.class, () -> c.convert(localTime));
-
-		final long miliseconds = TimeUtil.toMilliseconds(localDateTime);
-		assertEquals(localDate, c.convert(miliseconds));
-		assertEquals(localDate, c.convert("" + miliseconds));
 	}
-
 }
