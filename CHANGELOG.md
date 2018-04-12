@@ -10,6 +10,7 @@ Work-in-progress :thunder:
 
 + **bean** - added missing date-time type converters.
 + **dboom** - added missing date-time sql type converters.
++ **json** - added missing date-time json type converters.
 
 ### Bug Fixes
 
