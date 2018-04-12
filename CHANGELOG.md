@@ -9,6 +9,7 @@ Work-in-progress :thunder:
 ### Features
 
 + **bean** - added missing date-time type converters.
++ **dboom** - added missing date-time sql type converters.
 
 ### Bug Fixes
 
