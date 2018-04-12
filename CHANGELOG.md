@@ -15,6 +15,7 @@ Work-in-progress :thunder:
 ### Bug Fixes
 
 + **core** - fixed special cases of `StringTemplateParser` usage.
++ **mail** - fixed NPE when creating SSL variant of email server.
 
 
 ## [4.3.1](https://github.com/oblac/jodd/compare/v4.3.0...4.3.1)

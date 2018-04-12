@@ -50,7 +50,7 @@ public class Pop3SslServer extends Pop3Server {
 
 	@Override
 	protected Properties createSessionProperties() {
-		final Properties props = super.getSessionProperties();
+		final Properties props = super.createSessionProperties();
 		props.setProperty(MAIL_POP3_SOCKET_FACTORY_PORT, String.valueOf(getPort()));
 		props.setProperty(MAIL_POP3_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
 		props.setProperty(MAIL_POP3_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
