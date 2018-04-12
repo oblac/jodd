@@ -65,9 +65,20 @@ public class TimeUtil {
 		return GregorianCalendar.from(ZonedDateTime.of(localDateTime, ZoneId.systemDefault()));
 	}
 
+	/**
+	 * Converts local date time to epoh milliseconds.
+	 */
 	public static long toMilliseconds(final LocalDateTime localDateTime) {
 		return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
+
+	/**
+	 * Converts local date time to epoh milliseconds assuming start of the day as time point.
+	 */
+	public static long toMilliseconds(LocalDate localDate) {
+		return toMilliseconds(localDate.atStartOfDay());
+	}
+
 
 	public static LocalDateTime fromCalendar(final Calendar calendar) {
 		TimeZone tz = calendar.getTimeZone();

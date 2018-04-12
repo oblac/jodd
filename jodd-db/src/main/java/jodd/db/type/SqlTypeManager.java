@@ -46,6 +46,9 @@ import java.sql.Date;
 import java.sql.Ref;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 
 /**
@@ -108,6 +111,9 @@ public class SqlTypeManager {
 
 		register(String.class, StringSqlType.class);
 
+		register(LocalDateTime.class, LocalDateTimeSqlType.class);
+		register(LocalDate.class, LocalDateSqlType.class);
+		register(LocalTime.class, LocalTimeSqlType.class);
 		register(Date.class, SqlDateSqlType.class);
 		register(Timestamp.class, TimestampSqlType.class);
 		register(Time.class, TimeSqlType.class);
