@@ -8,6 +8,15 @@ Work-in-progress :thunder:
 
 ### Features
 
++ **mail** - added `updateEmailFlags`.
+
+
+## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)
+
+Minor fixes.
+
+### Features
+
 + **bean** - added missing date-time type converters.
 + **dboom** - added missing date-time sql type converters.
 + **json** - added missing date-time json type converters.
