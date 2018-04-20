@@ -33,7 +33,6 @@ import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
-import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPathNamingStrategy;
@@ -157,12 +156,6 @@ public final class MadvocConfig {
 	 */
 	public ActionConfig lookupActionConfig(final Class<? extends Annotation> annotationType) {
 		return annotations.getOrDefault(annotationType, actionConfig);
-	}
-	public ActionConfig lookupActionConfig(final ActionAnnotationData actionAnnotationData) {
-		if (actionAnnotationData == null) {
-			return actionConfig;
-		}
-		return annotations.getOrDefault(actionAnnotationData.annotation().annotationType(), actionConfig);
 	}
 
 	// ---------------------------------------------------------------- encoding

@@ -2,13 +2,14 @@
 
 All notable changes to Jodd project are documented here.
 
-## [Unreleased](https://github.com/oblac/jodd/compare/v4.3.1...master)
+## [Unreleased](https://github.com/oblac/jodd/compare/v4.3.2...master)
 
 Work-in-progress :thunder:
 
 ### Features
 
 + **mail** - added `updateEmailFlags`.
++ **madvoc** - added flag to `RestActionNamingStrategy`.
 
 
 ## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)

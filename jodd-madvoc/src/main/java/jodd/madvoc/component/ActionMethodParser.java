@@ -185,11 +185,14 @@ public class ActionMethodParser {
 	 * Resolves action config.
 	 */
 	protected ActionConfig resolveActionConfig(final ActionAnnotationData annotationData) {
-		return madvocConfig.lookupActionConfig(annotationData);
+		if (annotationData == null) {
+			return madvocConfig.getActionConfig();
+		}
+		return madvocConfig.lookupActionConfig(annotationData.annotation().annotationType());
 	}
 
 	/**
-	 * Detects {@link jodd.madvoc.meta.ActionAnnotationData}.
+	 * Detects {@link jodd.madvoc.meta.ActionAnnotationData}. Returns {@code null} if annotation does not exist.
 	 */
 	protected ActionAnnotationData detectActionAnnotationData(final Method actionMethod) {
 		ActionAnnotationData annotationData = null;

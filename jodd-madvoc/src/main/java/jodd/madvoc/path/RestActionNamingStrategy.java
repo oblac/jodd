@@ -45,12 +45,15 @@ public class RestActionNamingStrategy extends BaseNamingStrategy {
 	@In @Scope(ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
+	protected boolean includeMethodActionPath = true;
+
 	@Override
 	public ActionDefinition buildActionDef(final Class actionClass, final Method actionMethod, final ActionNames actionNames) {
 
 		final String packageActionPath = actionNames.packageActionPath();
 		final String classActionPath = actionNames.classActionPath();
-		String methodActionPath = actionNames.methodActionPath();
+
+		String methodActionPath = includeMethodActionPath ? actionNames.methodActionPath() : null;
 		String httpMethod = actionNames.httpMethod();
 
 		if (httpMethod == null) {
