@@ -31,7 +31,6 @@ import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>float[]</code>.
@@ -81,18 +80,6 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 	 * and to create target array.
  	 */
 	protected float[] convertValueToArray(final Object value) {
-		if (value instanceof List) {
-			final List list = (List) value;
-			final float[] target = new float[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				final Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
 		if (value instanceof Collection) {
 			final Collection collection = (Collection) value;
 			final float[] target = new float[collection.size()];

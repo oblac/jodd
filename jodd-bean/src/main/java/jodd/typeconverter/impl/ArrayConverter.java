@@ -108,18 +108,6 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	 * and to create target array.
  	 */
 	protected T[] convertValueToArray(final Object value) {
-		if (value instanceof List) {
-			List list = (List) value;
-			T[] target = createArray(list.size());
-
-			for (int i = 0; i < list.size(); i++) {
-				Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
 		if (value instanceof Collection) {
 			Collection collection = (Collection) value;
 			T[] target = createArray(collection.size());

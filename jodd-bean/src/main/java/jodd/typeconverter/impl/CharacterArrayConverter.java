@@ -31,7 +31,6 @@ import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>char[]</code>.
@@ -81,18 +80,6 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 	 * and to create target array.
  	 */
 	protected char[] convertValueToArray(final Object value) {
-		if (value instanceof List) {
-			final List list = (List) value;
-			final char[] target = new char[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				final Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
 		if (value instanceof Collection) {
 			final Collection collection = (Collection) value;
 			final char[] target = new char[collection.size()];

@@ -31,7 +31,6 @@ import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>boolean[]</code>.
@@ -81,17 +80,6 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 	 * and to create target array.
  	 */
 	protected boolean[] convertValueToArray(final Object value) {
-		if (value instanceof List) {
-			final List list = (List) value;
-			final boolean[] target = new boolean[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				final Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-			return target;
-		}
-
 		if (value instanceof Collection) {
 			final Collection collection = (Collection) value;
 			final boolean[] target = new boolean[collection.size()];

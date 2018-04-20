@@ -31,7 +31,6 @@ import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>short[]</code>.
@@ -81,18 +80,6 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 	 * and to create target array.
  	 */
 	protected short[] convertValueToArray(final Object value) {
-		if (value instanceof List) {
-			final List list = (List) value;
-			final short[] target = new short[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				final Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
-		}
-
 		if (value instanceof Collection) {
 			final Collection collection = (Collection) value;
 			final short[] target = new short[collection.size()];

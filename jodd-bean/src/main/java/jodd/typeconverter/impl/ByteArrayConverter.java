@@ -37,7 +37,6 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts given object to <code>byte[]</code>.
@@ -106,18 +105,6 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 			} catch (IOException ioex) {
 				throw new TypeConversionException(value, ioex);
 			}
-		}
-
-		if (value instanceof List) {
-			final List list = (List) value;
-			final byte[] target = new byte[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				final Object element = list.get(i);
-				target[i] = convertType(element);
-			}
-
-			return target;
 		}
 
 		if (value instanceof Collection) {
