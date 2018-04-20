@@ -10,6 +10,7 @@ Work-in-progress :thunder:
 
 + **mail** - added `updateEmailFlags`.
 + **madvoc** - added flag to `RestActionNamingStrategy`.
++ **petite** - added `PetiteContainer#invokeMethod`.
 
 
 ## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)

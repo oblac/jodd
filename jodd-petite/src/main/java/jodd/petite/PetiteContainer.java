@@ -40,6 +40,7 @@ import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
@@ -215,41 +216,44 @@ public class PetiteContainer extends PetiteBeans {
 			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
-			BeanReferences[] refNames = methodRef.references;
-			Object[] args = new Object[refNames.length];
-			for (int i = 0; i < refNames.length; i++) {
-				BeanReferences refName = refNames[i];
-				Object value = null;
+			invokeMethod(bean, def, methodRef);
+		}
+	}
 
-				boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
+	protected Object invokeMethod(final Object bean, final BeanDefinition def, final MethodInjectionPoint methodRef) {
+		BeanReferences[] refNames = methodRef.references;
+		Object[] args = new Object[refNames.length];
+		for (int i = 0; i < refNames.length; i++) {
+			BeanReferences refName = refNames[i];
+			Object value = null;
 
-				if (mixing) {
-					BeanDefinition refBeanDefinition = lookupBeanDefinitions(refName);
+			boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
 
-					if (refBeanDefinition != null) {
-						value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
-					}
-				}
+			if (mixing) {
+				BeanDefinition refBeanDefinition = lookupBeanDefinitions(refName);
 
-				if (value == null) {
-					value = getBean(refName);
-				}
-
-				args[i] = value;
-				if (value == null) {
-					if ((def.wiringMode == WiringMode.STRICT)) {
-						throw new PetiteException("Wiring failed. Beans references: '" +
-								refName + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
-					}
+				if (refBeanDefinition != null) {
+					value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
 				}
 			}
 
-			try {
-				methodRef.method.invoke(bean, args);
-			} catch (Exception ex) {
-				throw new PetiteException(ex);
+			if (value == null) {
+				value = getBean(refName);
 			}
 
+			args[i] = value;
+			if (value == null) {
+				if ((def.wiringMode == WiringMode.STRICT)) {
+					throw new PetiteException("Wiring failed. Beans references: '" +
+							refName + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
+				}
+			}
+		}
+
+		try {
+			return methodRef.method.invoke(bean, args);
+		} catch (Exception ex) {
+			throw new PetiteException(ex);
 		}
 	}
 
@@ -427,6 +431,26 @@ public class PetiteContainer extends PetiteBeans {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
 		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
+	}
+
+	/**
+	 * Invokes the method of some bean with the container, when its parameters requires to be injected into.
+	 * The bean is <b>not</b> registered within container.
+	 */
+	public <T> T invokeMethod(Object bean, Method method) {
+		WiringMode wiringMode = petiteConfig.resolveWiringMode(null);
+		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+		def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
+		for (MethodInjectionPoint methodInjectionPoint : def.methods) {
+			if (methodInjectionPoint.method.equals(method)) {
+				return (T) invokeMethod(bean, def, methodInjectionPoint);
+			}
+		}
+		try {
+			return (T) method.invoke(bean);
+		} catch (Exception e) {
+			throw new PetiteException(e);
+		}
 	}
 
 	// ---------------------------------------------------------------- create
