@@ -30,6 +30,7 @@ import jodd.introspector.Setter;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.def.BeanReferences;
+import jodd.petite.def.CtorInjectionPoint;
 import jodd.petite.def.InitMethodPoint;
 import jodd.petite.def.MethodInjectionPoint;
 import jodd.petite.def.PropertyInjectionPoint;
@@ -88,6 +89,11 @@ public class PetiteContainer extends PetiteBeans {
 	 */
 	protected Object newBeanInstance(final BeanDefinition def) {
 		initBeanDefinition(def);
+
+		if (def.ctor == CtorInjectionPoint.EMPTY) {
+			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for: " + def.type.getName());
+		}
+
 		int paramNo = def.ctor.references.length;
 		Object[] args = new Object[paramNo];
 
@@ -406,8 +412,7 @@ public class PetiteContainer extends PetiteBeans {
 		}
 		// params
 		if (def.params == null) {
-			def.params = paramManager.filterParametersForBeanName(
-				def.name, petiteConfig.getResolveReferenceParameters());
+			def.params = paramManager.filterParametersForBeanName(def.name, petiteConfig.getResolveReferenceParameters());
 		}
 	}
 
@@ -417,7 +422,6 @@ public class PetiteContainer extends PetiteBeans {
 	 */
 	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(final BeanDefinition def, final Object bean) {
 		initBeanDefinition(def);
-
 		def.scopeRegister(bean);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
 		wireBean(bean, def);
@@ -528,8 +532,6 @@ public class PetiteContainer extends PetiteBeans {
 
 		throw new PetiteException("Invalid provider");
 	}
-
-
 
 	// ---------------------------------------------------------------- add
 

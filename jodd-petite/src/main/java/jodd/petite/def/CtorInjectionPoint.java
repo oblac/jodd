@@ -33,8 +33,15 @@ import java.util.Objects;
  */
 public class CtorInjectionPoint {
 
+	public static final CtorInjectionPoint EMPTY = new CtorInjectionPoint();
+
 	public final Constructor constructor;
 	public final BeanReferences[] references;
+
+	private CtorInjectionPoint() {
+		this.constructor = null;
+		this.references = null;
+	}
 
 	public CtorInjectionPoint(final Constructor constructor, final BeanReferences[] references) {
 		Objects.requireNonNull(constructor);
