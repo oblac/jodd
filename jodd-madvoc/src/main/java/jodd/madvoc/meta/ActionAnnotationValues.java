@@ -35,25 +35,18 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class ActionAnnotationValues implements Action {
 
-	/**
-	 * Shortcut methods for given annotation class.
-	 */
-	public static AnnotationParser parserFor(final Class<? extends Annotation> annotationClass) {
-		return new AnnotationParser(annotationClass, Action.class);
-	}
-
-	/**
-	 * Shortcut method assuming default annotation.
-	 */
-	public static ActionAnnotationValues of(final AnnotatedElement annotatedElement) {
-		return new ActionAnnotationValues(new AnnotationParser(Action.class).of(annotatedElement));
+	public static ActionAnnotationValues of(final AnnotationParser annotationParser, final AnnotatedElement annotatedElement) {
+		if (!annotationParser.hasAnnotationOn(annotatedElement)) {
+			return null;
+		}
+		return new ActionAnnotationValues(annotationParser.of(annotatedElement));
 	}
 
 	protected final String value;
 	protected final String alias;
 	protected final Class<? extends Annotation> annotationType;
 
-	public ActionAnnotationValues(final AnnotationParser.Reader reader) {
+	private ActionAnnotationValues(final AnnotationParser.Reader reader) {
 		this.annotationType = reader.annotationType();
 		this.value = reader.readString("value", null);
 		this.alias = reader.readString("alias", null);

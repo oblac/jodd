@@ -197,7 +197,7 @@ public class ActionMethodParser {
 	protected ActionAnnotationValues detectActionAnnotationValues(final Method actionMethod) {
 		for (AnnotationParser annotationParser : madvocConfig.getAnnotationParsers()) {
 			if (annotationParser.hasAnnotationOn(actionMethod)) {
-				return new ActionAnnotationValues(annotationParser.of(actionMethod));
+				return ActionAnnotationValues.of(annotationParser, actionMethod);
 			}
 		}
 		return null;

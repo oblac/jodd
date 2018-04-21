@@ -28,6 +28,8 @@ package jodd.madvoc.meta;
 import jodd.util.annotation.AnnotationParser;
 import org.junit.jupiter.api.Test;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,13 +65,13 @@ class ActionAnnotationTest {
 	void testActionAnnotationOnly() throws NoSuchMethodException {
 		Method method = this.getClass().getMethod("hello");
 
-		ActionAnnotationValues annotationValues = ActionAnnotationValues.of(method);
+		ActionAnnotationValues annotationValues = annValueOf(method);
 
 		assertNull(annotationValues.alias());
 		assertNull(annotationValues.value());
 
 		method = this.getClass().getMethod("hello2");
-		annotationValues = ActionAnnotationValues.of(method);
+		annotationValues = annValueOf(method);
 
 		assertEquals("alias", annotationValues.alias);
 		assertEquals("value.ext", annotationValues.value);
@@ -77,16 +79,16 @@ class ActionAnnotationTest {
 
 	@Test
 	void testCustomActionAnnotation() throws NoSuchMethodException {
-		final AnnotationParser annotationParser = ActionAnnotationValues.parserFor(CustomAction.class);
+		final AnnotationParser annotationParser = parserFor(CustomAction.class);
 
 		Method method = this.getClass().getMethod("hello3");
-		ActionAnnotationValues annotationValues = new ActionAnnotationValues(annotationParser.of(method));
+		ActionAnnotationValues annotationValues = ActionAnnotationValues.of(annotationParser, method);
 
 		assertEquals("ALIAS", annotationValues.alias());
 		assertNull(annotationValues.value());
 
 		method = this.getClass().getMethod("hello4");
-		annotationValues = new ActionAnnotationValues(annotationParser.of(method));
+		annotationValues = ActionAnnotationValues.of(annotationParser, method);
 
 		assertEquals("ALIAS", annotationValues.alias());
 		assertNull(annotationValues.value());
@@ -94,18 +96,35 @@ class ActionAnnotationTest {
 
 	@Test
 	void testMiscActionAnnotation() throws NoSuchMethodException {
-		final AnnotationParser annotationParser = ActionAnnotationValues.parserFor(MiscAnnotation.class);
+		final AnnotationParser annotationParser = parserFor(MiscAnnotation.class);
 
 		Method method = this.getClass().getMethod("hello5");
-		ActionAnnotationValues annotationValues = new ActionAnnotationValues(annotationParser.of(method));
+		ActionAnnotationValues annotationValues = ActionAnnotationValues.of(annotationParser, method);
 
 		assertNull(annotationValues.alias());
 		assertEquals("VAL", annotationValues.value());
 
 		method = this.getClass().getMethod("hello6");
-		annotationValues = new ActionAnnotationValues(annotationParser.of(method));
+		annotationValues = ActionAnnotationValues.of(annotationParser, method);
 
 		assertNull(annotationValues.alias());
 		assertEquals("VAL", annotationValues.value());
 	}
+
+
+	/**
+	 * Shortcut methods for given annotation class.
+	 */
+	public static AnnotationParser parserFor(final Class<? extends Annotation> annotationClass) {
+		return new AnnotationParser(annotationClass, Action.class);
+	}
+
+	/**
+	 * Shortcut method assuming default annotation.
+	 */
+	public static ActionAnnotationValues annValueOf(final AnnotatedElement annotatedElement) {
+		return ActionAnnotationValues.of(new AnnotationParser(Action.class), annotatedElement);
+	}
+
+
 }
