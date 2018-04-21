@@ -40,9 +40,7 @@ import java.util.List;
  */
 public class DestroyMethodResolver {
 
-	public DestroyMethodPoint[] resolve(final Object bean) {
-		Class<?> type = bean.getClass();
-
+	public DestroyMethodPoint[] resolve(final Class<?> type) {
 		// lookup methods
 		List<DestroyMethodPoint> list = new ArrayList<>();
 		ClassDescriptor cd = new ClassDescriptor(type, false, false, false, null);

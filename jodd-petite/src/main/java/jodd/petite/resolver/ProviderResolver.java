@@ -28,7 +28,6 @@ package jodd.petite.resolver;
 import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.MethodDescriptor;
-import jodd.petite.BeanDefinition;
 import jodd.petite.def.ProviderDefinition;
 import jodd.petite.meta.PetiteProvider;
 import jodd.util.StringUtil;
@@ -46,9 +45,7 @@ public class ProviderResolver {
 	/**
 	 * Resolves all providers in the class
 	 */
-	public ProviderDefinition[] resolve(final BeanDefinition beanDefinition) {
-		Class type = beanDefinition.type();
-
+	public ProviderDefinition[] resolve(final Class type, final String name) {
 		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
 		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
@@ -78,7 +75,7 @@ public class ProviderResolver {
 			if (Modifier.isStatic(method.getModifiers())) {
 				providerDefinition = new ProviderDefinition(providerName, method);
 			} else {
-				providerDefinition = new ProviderDefinition(providerName, beanDefinition.name(), method);
+				providerDefinition = new ProviderDefinition(providerName, name, method);
 			}
 
 			list.add(providerDefinition);
