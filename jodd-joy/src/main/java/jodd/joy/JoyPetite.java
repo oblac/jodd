@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.cache.TypeCache;
 import jodd.petite.AutomagicPetiteConfigurator;
 import jodd.petite.PetiteContainer;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
@@ -69,10 +70,16 @@ public class JoyPetite extends JoyBase {
 	// ---------------------------------------------------------------- config
 
 	private boolean autoConfiguration = true;
+	private boolean externalsCache = true;
 	private Consumers<PetiteContainer> petiteContainerConsumers = Consumers.empty();
 
 	public JoyPetite disableAutoConfiguration() {
 		autoConfiguration = false;
+		return this;
+	}
+
+	public JoyPetite disableExternalsCache() {
+		externalsCache = true;
 		return this;
 	}
 
@@ -98,7 +105,11 @@ public class JoyPetite extends JoyBase {
 
 		petiteContainer = createPetiteContainer();
 
-		log.info("app in web: " + isWebApplication);
+		if (externalsCache) {
+			petiteContainer.setExternalsCache(TypeCache.Implementation.MAP);
+		}
+
+		log.info("Is web application: " + isWebApplication);
 
 		if (!isWebApplication) {
 			// make session scope to act as singleton scope
