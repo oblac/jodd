@@ -25,40 +25,60 @@
 
 package jodd.json.meta;
 
-import jodd.util.annotation.AnnotationDataReader;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-/**
- * JSON Annotation reader.
- */
-public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A, JSONAnnotationData<A>> {
+public class JSONAnnotationValues implements JSON {
 
-	public JSONAnnotation(final Class<A> annotationClass) {
-		super(annotationClass, JSON.class);
+	/**
+	 * Shortcut methods for given annotation class.
+	 */
+	public static AnnotationParser parserFor(final Class<? extends Annotation> annotationClass) {
+		return new AnnotationParser(annotationClass, JSON.class);
 	}
 
 	/**
-	 * Need to override to make java compiler happy.
+	 * Shortcut for checking the annotation on annotated element and returning either the values or {@code null}.
 	 */
-	@Override
-	public JSONAnnotationData<A> readAnnotatedElement(final AnnotatedElement annotatedElement) {
-		return super.readAnnotatedElement(annotatedElement);
+	public static JSONAnnotationValues of(final AnnotationParser annotationParser, final AnnotatedElement annotatedElement) {
+		if (!annotationParser.hasAnnotationOn(annotatedElement)) {
+			return null;
+		}
+		return new JSONAnnotationValues(annotationParser.of(annotatedElement));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected JSONAnnotationData<A> createAnnotationData(final A annotation) {
-		JSONAnnotationData<A> jad = new JSONAnnotationData<>(annotation);
+	protected final boolean strict;
+	protected final String name;
+	protected final boolean include;
+	protected final Class<? extends Annotation> annotationType;
 
-		jad.name = readString(annotation, "name", null);
-		jad.included = readBoolean(annotation, "include", true);
-		jad.strict = readBoolean(annotation, "strict", false);
+	private JSONAnnotationValues(final AnnotationParser.Reader reader) {
+		this.annotationType = reader.annotationType();
 
-		return jad;
+		this.name = reader.readString("name", null);
+		this.include = reader.readBoolean("include", true);
+		this.strict = reader.readBoolean("strict", false);
 	}
 
+	@Override
+	public boolean strict() {
+		return strict;
+	}
+
+	@Override
+	public String name() {
+		return name;
+	}
+
+	@Override
+	public boolean include() {
+		return include;
+	}
+
+	@Override
+	public Class<? extends Annotation> annotationType() {
+		return annotationType;
+	}
 }

@@ -32,6 +32,7 @@ import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.JoddJson;
 import jodd.util.ArraysUtil;
+import jodd.util.annotation.AnnotationParser;
 import jodd.util.inex.InExRules;
 
 import java.lang.annotation.Annotation;
@@ -225,16 +226,16 @@ public class JsonAnnotationManager {
 		ArrayList<String> jsonNames = new ArrayList<>();
 		ArrayList<String> realNames = new ArrayList<>();
 
-		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.defaults().getJsonAnnotation());
+		AnnotationParser annotationParser = JSONAnnotationValues.parserFor(JoddJson.defaults().getJsonAnnotation());
 
 		for (PropertyDescriptor pd : pds) {
-			JSONAnnotationData data = null;
+			JSONAnnotationValues data = null;
 			{
 				MethodDescriptor md = pd.getReadMethodDescriptor();
 
 				if (md != null) {
 					Method method = md.getMethod();
-					data = jsonAnnotation.readAnnotatedElement(method);
+					data = JSONAnnotationValues.of(annotationParser, method);
 				}
 			}
 
@@ -243,7 +244,7 @@ public class JsonAnnotationManager {
 
 				if (md != null) {
 					Method method = md.getMethod();
-					data = jsonAnnotation.readAnnotatedElement(method);
+					data = JSONAnnotationValues.of(annotationParser, method);
 				}
 			}
 
@@ -252,7 +253,7 @@ public class JsonAnnotationManager {
 
 				if (fd != null) {
 					Field field = fd.getField();
-					data = jsonAnnotation.readAnnotatedElement(field);
+					data = JSONAnnotationValues.of(annotationParser, field);
 				}
 			}
 
@@ -268,7 +269,7 @@ public class JsonAnnotationManager {
 					propertyName = newPropertyName;
 				}
 
-				if (data.included()) {
+				if (data.include()) {
 					includedList.add(propertyName);
 				} else {
 					excludedList.add(propertyName);
@@ -291,7 +292,7 @@ public class JsonAnnotationManager {
 
 		// type
 
-		JSONAnnotationData data = (JSONAnnotationData) jsonAnnotation.readAnnotatedElement(type);
+		JSONAnnotationValues data = JSONAnnotationValues.of(annotationParser, type);
 
 		return new TypeData(includedList, excludedList, data != null && data.strict(), jsons, reals);
 	}
