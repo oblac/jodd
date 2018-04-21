@@ -216,14 +216,14 @@ public class PetiteContainer extends PetiteBeans {
 			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
-			invokeMethod(bean, def, methodRef);
+			invokeMethodInjectionPoint(bean, def, methodRef);
 		}
 	}
 
 	/**
 	 * Invokes single method injection point on given bean with given bean definition.
 	 */
-	protected Object invokeMethod(final Object bean, final BeanDefinition def, final MethodInjectionPoint methodRef) {
+	protected Object invokeMethodInjectionPoint(final Object bean, final BeanDefinition def, final MethodInjectionPoint methodRef) {
 		BeanReferences[] refNames = methodRef.references;
 		Object[] args = new Object[refNames.length];
 		for (int i = 0; i < refNames.length; i++) {
@@ -448,7 +448,7 @@ public class PetiteContainer extends PetiteBeans {
 
 		for (MethodInjectionPoint methodInjectionPoint : def.methods) {
 			if (methodInjectionPoint.method.equals(method)) {
-				return (T) invokeMethod(bean, def, methodInjectionPoint);
+				return (T) invokeMethodInjectionPoint(bean, def, methodInjectionPoint);
 			}
 		}
 		try {
