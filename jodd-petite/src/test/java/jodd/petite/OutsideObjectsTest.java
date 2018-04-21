@@ -53,9 +53,7 @@ class OutsideObjectsTest {
 		pc.wire(beBean);
 
 		assertNotNull(beBean.inBean);
-
-		pc.forEachBean(beanDefinition -> {
-			sout
-		});
+		assertNotNull(pc.lookupBeanDefinition("inBean"));
+		assertNull(pc.lookupBeanDefinition("beBean"));
 	}
 }

@@ -209,7 +209,7 @@ public class PetiteContainer extends PetiteBeans {
 	}
 
 	/**
-	 * Wires methods.
+	 * Wires methods and invokes them.
 	 */
 	protected void wireMethods(final Object bean, final BeanDefinition def) {
 		if (def.methods == null) {
@@ -220,6 +220,9 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
+	/**
+	 * Invokes single method injection point on given bean with given bean definition.
+	 */
 	protected Object invokeMethod(final Object bean, final BeanDefinition def, final MethodInjectionPoint methodRef) {
 		BeanReferences[] refNames = methodRef.references;
 		Object[] args = new Object[refNames.length];
@@ -440,7 +443,9 @@ public class PetiteContainer extends PetiteBeans {
 	public <T> T invokeMethod(Object bean, Method method) {
 		WiringMode wiringMode = petiteConfig.resolveWiringMode(null);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+
 		def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
+
 		for (MethodInjectionPoint methodInjectionPoint : def.methods) {
 			if (methodInjectionPoint.method.equals(method)) {
 				return (T) invokeMethod(bean, def, methodInjectionPoint);

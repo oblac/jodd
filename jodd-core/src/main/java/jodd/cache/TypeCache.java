@@ -33,7 +33,15 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Type cache.
+ * Types cache. Provides several implementations depending on what you need to be addressed.
+ * There are two things you should take care off:
+ * <ul>
+ *     <li>synchronization - especially on storing items. If not synchronized, one instance of an item may be put
+ *     more then once into the map. This is usually fine, as it happens only during the initialization and makes not
+ *     harm if something is created twice</li>
+ *     <li>weak - if your key classes are replaced during the runtime, you should use weak map, in order to automatically
+ *     remove obsolete keys.</li>
+ * </ul>
  */
 public class TypeCache<T> {
 
@@ -43,15 +51,15 @@ public class TypeCache<T> {
 
 	public enum Implementation {
 		/**
-		 * Just a simple map.
+		 * Just a simple map: not synchronized and not weak.
 		 */
 		MAP(false, false),
 		/**
-		 * Synchronized map.
+		 * Synchronized map, but not weak.
 		 */
 		SYNC_MAP(false, true),
 		/**
-		 * Weak map.
+		 * Weak map, but not synchronized.
 		 */
 		WEAK(true, false),
 		/**
