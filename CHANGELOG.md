@@ -16,7 +16,7 @@ Work-in-progress :thunder:
 ### Breaking changes
 
 + **core** - `TypeCache` made better. `put()` removed in favor of `get()`.
-
++ **core** - `AnnotationParser` added instead of clumsy `AnnotatedData` and `AnnotatedReader`.
 
 ## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)
 
