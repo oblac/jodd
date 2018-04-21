@@ -26,6 +26,7 @@
 package jodd.petite;
 
 import jodd.bean.JoddBean;
+import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.CtorDescriptor;
 import jodd.introspector.MethodDescriptor;
@@ -54,6 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -89,6 +91,22 @@ public abstract class PetiteBeans {
 	 * Map of all bean collections.
 	 */
 	protected final Map<Class, String[]> beanCollections = new HashMap<>();
+
+	/**
+	 * Cache used for storing the internals about the external types that are not
+	 * registered withing the container.
+	 */
+	protected TypeCache<BeanDefinition> externalsCache = TypeCache.create(TypeCache.Implementation.NO_CACHE);
+
+	/**
+	 * Sets the type of cache used for storing the configurations for external types that
+	 * are not part of the container. This affects usages of the methods
+	 * like {@link PetiteContainer#wire(Object)} and {@link PetiteContainer#invokeMethod(Object, Method)}.
+	 */
+	public void setExternalsCache(final TypeCache.Implementation typeCacheImplementation) {
+		Objects.requireNonNull(typeCacheImplementation);
+		this.externalsCache = TypeCache.create(typeCacheImplementation);
+	}
 
 	/**
 	 * {@link PetiteConfig Petite configuration}.
@@ -323,7 +341,7 @@ public abstract class PetiteBeans {
 		registerBean(name, beanDefinition);
 
 		// providers
-		ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(beanDefinition);
+		ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(type, name);
 
 		if (providerDefinitions != null) {
 			for (ProviderDefinition providerDefinition : providerDefinitions) {

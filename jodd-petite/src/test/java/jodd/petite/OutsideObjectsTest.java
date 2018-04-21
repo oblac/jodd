@@ -25,16 +25,17 @@
 
 package jodd.petite;
 
+import jodd.cache.TypeCache;
 import jodd.petite.meta.PetiteInject;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class OutsideObjectsTest {
 
 	public static class InBean {
-
 	}
 
 	public static class BeBean {
@@ -55,5 +56,32 @@ class OutsideObjectsTest {
 		assertNotNull(beBean.inBean);
 		assertNotNull(pc.lookupBeanDefinition("inBean"));
 		assertNull(pc.lookupBeanDefinition("beBean"));
+		assertEquals(1, pc.beansCount());
+		assertEquals(0, pc.externalsCache.size());
+	}
+
+	@Test
+	void testWire_withCache() {
+		PetiteContainer pc = new PetiteContainer();
+		pc.setExternalsCache(TypeCache.Implementation.MAP);
+		pc.registerPetiteBean(InBean.class);
+
+		BeBean beBean = new BeBean();
+
+		assertNull(beBean.inBean);
+
+		pc.wire(beBean);
+
+		assertNotNull(beBean.inBean);
+		assertNotNull(pc.lookupBeanDefinition("inBean"));
+		assertNull(pc.lookupBeanDefinition("beBean"));
+		assertEquals(1, pc.beansCount());
+
+		// repeating
+		beBean = new BeBean();
+		pc.wire(beBean);
+		assertNotNull(beBean.inBean);
+		assertEquals(1, pc.beansCount());
+		assertEquals(1, pc.externalsCache.size());
 	}
 }

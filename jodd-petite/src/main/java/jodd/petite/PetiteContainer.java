@@ -87,10 +87,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Creates new bean instance and performs constructor injection.
 	 */
 	protected Object newBeanInstance(final BeanDefinition def) {
-		if (def.ctor == null) {
-			def.ctor = petiteResolvers.resolveCtorInjectionPoint(def.type);
-		}
-
+		initBeanDefinition(def);
 		int paramNo = def.ctor.references.length;
 		Object[] args = new Object[paramNo];
 
@@ -136,11 +133,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires properties.
 	 */
 	protected void wireProperties(final Object bean, final BeanDefinition def) {
-		if (def.properties == null) {
-			def.properties = petiteResolvers.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
-		}
-
-		boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
+		final boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
 
 		for (PropertyInjectionPoint pip : def.properties) {
 			BeanReferences refNames = pip.references;
@@ -180,9 +173,6 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		// sets
-		if (def.sets == null) {
-			def.sets = petiteResolvers.resolveSetInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
-		}
 		for (SetInjectionPoint sip : def.sets) {
 
 			String[] beanNames = resolveBeanNamesForType(sip.targetClass);
@@ -212,9 +202,6 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires methods and invokes them.
 	 */
 	protected void wireMethods(final Object bean, final BeanDefinition def) {
-		if (def.methods == null) {
-			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
-		}
 		for (MethodInjectionPoint methodRef : def.methods) {
 			invokeMethodInjectionPoint(bean, def, methodRef);
 		}
@@ -260,15 +247,6 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
-	protected void resolveInitAndDestroyMethods(final Object bean, final BeanDefinition def) {
-		if (def.initMethods == null) {
-			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
-		}
-		if (def.destroyMethods == null) {
-			def.destroyMethods = petiteResolvers.resolveDestroyMethodPoint(bean);
-		}
-	}
-
 	/**
 	 * Invokes all init methods, if they exist. Also resolves destroy methods.
 	 */
@@ -295,10 +273,6 @@ public class PetiteContainer extends PetiteBeans {
 
 		if (petiteConfig.isImplicitParamInjection()) {
 			// implicit
-			if (def.params == null) {
-				def.params = paramManager.filterParametersForBeanName(
-					def.name, petiteConfig.getResolveReferenceParameters());
-			}
 			final int len = def.name.length() + 1;
 			for (final String param : def.params) {
 				final Object value = getParameter(param);
@@ -312,9 +286,6 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		// explicit
-		if (def.values == null) {
-			def.values = paramManager.resolveParamInjectionPoints(bean);
-		}
 		for (final ValueInjectionPoint pip : def.values) {
 			final String value = paramManager.parseKeyTemplate(pip.valueTemplate);
 
@@ -402,11 +373,51 @@ public class PetiteContainer extends PetiteBeans {
 	}
 
 	/**
+	 * Resolves and initializes bean definition. May be called multiple times.
+	 */
+	protected void initBeanDefinition(final BeanDefinition def) {
+		// init methods
+		if (def.initMethods == null) {
+			def.initMethods = petiteResolvers.resolveInitMethodPoint(def.type);
+		}
+		// destroy methods
+		if (def.destroyMethods == null) {
+			def.destroyMethods = petiteResolvers.resolveDestroyMethodPoint(def.type);
+		}
+		// properties
+		if (def.properties == null) {
+			def.properties = petiteResolvers.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+		}
+		// methods
+		if (def.methods == null) {
+			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
+		}
+		// ctors
+		if (def.ctor == null) {
+			def.ctor = petiteResolvers.resolveCtorInjectionPoint(def.type);
+		}
+		// values
+		if (def.values == null) {
+			def.values = paramManager.resolveParamInjectionPoints(def.type);
+		}
+		// sets
+		if (def.sets == null) {
+			def.sets = petiteResolvers.resolveSetInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+		}
+		// params
+		if (def.params == null) {
+			def.params = paramManager.filterParametersForBeanName(
+				def.name, petiteConfig.getResolveReferenceParameters());
+		}
+	}
+
+	/**
 	 * Wires bean, injects parameters and invokes init methods.
 	 * Such a loooong name :)
 	 */
 	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(final BeanDefinition def, final Object bean) {
-		resolveInitAndDestroyMethods(bean, def);
+		initBeanDefinition(def);
+
 		def.scopeRegister(bean);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
 		wireBean(bean, def);
@@ -430,9 +441,16 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires provided bean with the container and optionally invokes init methods.
 	 * Bean is <b>not</b> registered withing container.
 	 */
-	public void wire(final Object bean, WiringMode wiringMode) {
-		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
-		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+	public void wire(final Object bean, final WiringMode wiringMode) {
+		final WiringMode finalWiringMode = petiteConfig.resolveWiringMode(wiringMode);
+
+		final BeanDefinition def = externalsCache.get(
+			bean.getClass(), () -> {
+				BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, finalWiringMode, null);
+				initBeanDefinition(beanDefinition);
+				return beanDefinition;
+			});
+
 		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 	}
 
@@ -440,11 +458,15 @@ public class PetiteContainer extends PetiteBeans {
 	 * Invokes the method of some bean with the container, when its parameters requires to be injected into.
 	 * The bean is <b>not</b> registered within container.
 	 */
-	public <T> T invokeMethod(Object bean, Method method) {
-		WiringMode wiringMode = petiteConfig.resolveWiringMode(null);
-		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+	public <T> T invokeMethod(final Object bean, final Method method) {
+		final WiringMode wiringMode = petiteConfig.resolveWiringMode(null);
 
-		def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
+		final BeanDefinition def = externalsCache.get(
+			bean.getClass(), () -> {
+				BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+				initBeanDefinition(beanDefinition);
+				return beanDefinition;
+			});
 
 		for (MethodInjectionPoint methodInjectionPoint : def.methods) {
 			if (methodInjectionPoint.method.equals(method)) {
