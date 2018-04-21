@@ -66,10 +66,10 @@ public class TypeCacheBenchmark {
 	@Setup
 	public void prepare() {
 		for (Class type : TYPES) {
-			map.put(type, type.getName());
-			syncMap.put(type, type.getName());
-			weakMap.put(type, type.getName());
-			weakSyncMap.put(type, type.getName());
+			map.get(type, type::getName);
+			syncMap.get(type, type::getName);
+			weakMap.get(type, type::getName);
+			weakSyncMap.get(type, type::getName);
 		}
 
 		Random rnd = new Random();

@@ -25,12 +25,15 @@
 
 package jodd.cache;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * Types cache. Provides several implementations depending on what you need to be addressed.
@@ -42,6 +45,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *     <li>weak - if your key classes are replaced during the runtime, you should use weak map, in order to automatically
  *     remove obsolete keys.</li>
  * </ul>
+ * This cache is specific as there is never a {@code put()} method. Putting is done only via {@link #get(Class, Supplier)}
+ * by providing a supplier. This way we ensure synchronization if enabled.
  */
 public class TypeCache<T> {
 
@@ -50,6 +55,10 @@ public class TypeCache<T> {
 	}
 
 	public enum Implementation {
+		/**
+		 * Nothing is actually cached.
+		 */
+		NO_CACHE,
 		/**
 		 * Just a simple map: not synchronized and not weak.
 		 */
@@ -69,16 +78,42 @@ public class TypeCache<T> {
 
 		private final boolean sync;
 		private final boolean weak;
+		private final boolean none;
+
+		Implementation() {
+			sync = false;
+			weak = false;
+			none = true;
+		}
 
 		Implementation(final boolean weak, final boolean sync) {
+			this.none = false;
 			this.weak = weak;
 			this.sync = sync;
 		}
 
 		/**
-		 * Creates a map based on type.
+		 * Creates a map based on cache type.
 		 */
 		public <A> Map<Class<?>, A> createMap() {
+			if (none) {
+				return new AbstractMap<Class<?>, A>() {
+					@Override
+					public A put(Class<?> key, A value) {
+						return null;
+					}
+
+					@Override
+					public A get(Object key) {
+						return null;
+					}
+
+					@Override
+					public Set<Entry<Class<?>, A>> entrySet() {
+						return Collections.EMPTY_SET;
+					}
+				};
+			}
 			if (weak) {
 				if (sync) {
 					return Collections.synchronizedMap(new WeakHashMap<>());
@@ -109,17 +144,10 @@ public class TypeCache<T> {
 	}
 
 	/**
-	 * Returns existing value of default one if key is not registered.
+	 * Returns existing value or add default supplied one.
 	 */
-	public T getOrDefault(final Class<?> key, final T defaultValue) {
-		return map.getOrDefault(key, defaultValue);
-	}
-
-	/**
-	 * Cache some value for given class.
-	 */
-	public T put(final Class<?> key, final T value) {
-		return map.put(key, value);
+	public T get(final Class<?> key, final Supplier<T> valueSupplier) {
+		return map.computeIfAbsent(key, aClass -> valueSupplier.get());
 	}
 
 	/**
