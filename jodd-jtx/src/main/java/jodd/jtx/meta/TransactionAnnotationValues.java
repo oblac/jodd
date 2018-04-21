@@ -27,38 +27,72 @@ package jodd.jtx.meta;
 
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
-import jodd.util.annotation.AnnotationData;
+import jodd.jtx.JtxTransactionMode;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 
-/**
- * {@link Transaction} annotation elements.
- */
-public class TransactionAnnotationData<A extends Annotation> extends AnnotationData<A> {
+public class TransactionAnnotationValues implements Transaction {
 
-	protected JtxPropagationBehavior propagation;
-	protected JtxIsolationLevel isolation;
-	protected boolean readOnly;
-	protected int timeout;
-
-	protected TransactionAnnotationData(final A annotation) {
-		super(annotation);
+	/**
+	 * Shortcut methods for given annotation class.
+	 */
+	public static AnnotationParser parserFor(final Class<? extends Annotation> annotationClass) {
+		return new AnnotationParser(annotationClass, Transaction.class);
 	}
 
+	/**
+	 * Shortcut for checking the annotation on annotated element and returning either the values or {@code null}.
+	 */
+	public static TransactionAnnotationValues of(final AnnotationParser annotationParser, final AnnotatedElement annotatedElement) {
+		if (!annotationParser.hasAnnotationOn(annotatedElement)) {
+			return null;
+		}
+		return new TransactionAnnotationValues(annotationParser.of(annotatedElement));
+	}
+
+	protected final Class<? extends Annotation> annotationType;
+	protected final JtxPropagationBehavior propagation;
+	protected final JtxIsolationLevel isolation;
+	protected final boolean readOnly;
+	protected final int timeout;
+
+	private TransactionAnnotationValues(final AnnotationParser.Reader reader) {
+		this.annotationType = reader.annotationType();
+
+		this.propagation = (JtxPropagationBehavior) reader.readElement("propagation");
+
+		this.isolation = (JtxIsolationLevel) reader.readElement("isolation");
+
+		this.readOnly = reader.readBoolean("readOnly", false);
+
+		this.timeout = reader.readInt("timeout", JtxTransactionMode.DEFAULT_TIMEOUT);
+	}
+
+
+	@Override
 	public JtxPropagationBehavior propagation() {
 		return propagation;
 	}
 
+	@Override
 	public JtxIsolationLevel isolation() {
 		return isolation;
 	}
 
+	@Override
 	public boolean readOnly() {
 		return readOnly;
 	}
 
+	@Override
 	public int timeout() {
 		return timeout;
 	}
 
+	@Override
+	public Class<? extends Annotation> annotationType() {
+		return null;
+	}
 }

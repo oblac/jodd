@@ -28,11 +28,11 @@ package jodd.jtx.proxy;
 import jodd.jtx.JoddJtx;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.jtx.meta.TransactionAnnotation;
-import jodd.jtx.meta.TransactionAnnotationData;
+import jodd.jtx.meta.TransactionAnnotationValues;
 import jodd.jtx.worker.LeanJtxWorker;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringUtil;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -56,7 +56,7 @@ public class AnnotationTxAdviceManager {
 	protected final String scopePattern;
 
 	protected Class<? extends Annotation>[] annotations;
-	protected TransactionAnnotation[] annotationInstances;
+	protected AnnotationParser[] annotationParsers;
 
 	// ---------------------------------------------------------------- ctors
 
@@ -130,14 +130,14 @@ public class AnnotationTxAdviceManager {
 		if (txMode == null) {
 			if (!txmap.containsKey(signature)) {
 
-				Method m;
+				final Method m;
 				try {
 					m = type.getMethod(methodName, methodArgTypes);
 				} catch (NoSuchMethodException nsmex) {
 					throw new ProxettaException(nsmex);
 				}
 
-				TransactionAnnotationData txAnn = getTransactionAnnotation(m);
+				final TransactionAnnotationValues txAnn = getTransactionAnnotation(m);
 				if (txAnn != null) {
 					txMode = new JtxTransactionMode();
 					txMode.setPropagationBehaviour(txAnn.propagation());
@@ -162,10 +162,10 @@ public class AnnotationTxAdviceManager {
 	public void registerAnnotations(final Class<? extends Annotation>... txAnnotations) {
 		this.annotations = txAnnotations;
 
-		this.annotationInstances = new TransactionAnnotation<?>[annotations.length];
+		this.annotationParsers = new AnnotationParser[annotations.length];
 		for (int i = 0; i < annotations.length; i++) {
 			Class<? extends Annotation> annotationClass = annotations[i];
-			annotationInstances[i] = new TransactionAnnotation(annotationClass);
+			annotationParsers[i] = TransactionAnnotationValues.parserFor(annotationClass);
 		}
 
 	}
@@ -173,9 +173,9 @@ public class AnnotationTxAdviceManager {
 	/**
 	 * Finds TX annotation.
 	 */
-	protected TransactionAnnotationData getTransactionAnnotation(final Method method) {
-		for (TransactionAnnotation annotationInstance : annotationInstances) {
-			TransactionAnnotationData tad = annotationInstance.readAnnotatedElement(method);
+	protected TransactionAnnotationValues getTransactionAnnotation(final Method method) {
+		for (AnnotationParser annotationParser : annotationParsers) {
+			TransactionAnnotationValues tad = TransactionAnnotationValues.of(annotationParser, method);
 			if (tad != null) {
 				return tad;
 			}
