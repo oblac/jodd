@@ -99,22 +99,22 @@ public class PetiteResolvers {
 	/**
 	 * Resolves init method points.
 	 */
-	public InitMethodPoint[] resolveInitMethodPoint(final Object bean) {
-		return initMethodResolver.resolve(bean);
+	public InitMethodPoint[] resolveInitMethodPoint(final Class type) {
+		return initMethodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves destroy method points.
 	 */
-	public DestroyMethodPoint[] resolveDestroyMethodPoint(final Object bean) {
-		return destroyMethodResolver.resolve(bean);
+	public DestroyMethodPoint[] resolveDestroyMethodPoint(final Class type) {
+		return destroyMethodResolver.resolve(type);
 	}
 
 	/**
 	 * Resolves provider definition defined in a bean.
 	 */
-	public ProviderDefinition[] resolveProviderDefinitions(final BeanDefinition beanDefinition) {
-		return providerResolver.resolve(beanDefinition);
+	public ProviderDefinition[] resolveProviderDefinitions(final Class type, final String name) {
+		return providerResolver.resolve(type, name);
 	}
 
 }

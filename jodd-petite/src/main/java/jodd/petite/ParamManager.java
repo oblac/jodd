@@ -102,8 +102,8 @@ public class ParamManager {
 		}
 	}
 
-	public ValueInjectionPoint[] resolveParamInjectionPoints(final Object bean) {
-		final ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(bean.getClass());
+	public ValueInjectionPoint[] resolveParamInjectionPoints(final Class type) {
+		final ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
 
 		final List<ValueInjectionPoint> valueInjectionPointList = new ArrayList<>();
 
