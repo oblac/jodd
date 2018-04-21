@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * Marker for action methods. It is not necessary to mark a method, however, this annotation 
  * may be used to specify non-default action path. Moreover, this annotation may be used
  * to mark custom annotations!
- * @see jodd.madvoc.meta.ActionAnnotationData
+ * @see ActionAnnotationValues
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

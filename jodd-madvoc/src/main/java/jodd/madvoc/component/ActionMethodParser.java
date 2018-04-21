@@ -41,8 +41,7 @@ import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.ActionAnnotation;
-import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.ActionAnnotationValues;
 import jodd.madvoc.meta.Async;
 import jodd.madvoc.meta.DELETE;
 import jodd.madvoc.meta.FilteredBy;
@@ -64,6 +63,7 @@ import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -115,15 +115,15 @@ public class ActionMethodParser {
 	 */
 	public ActionDefinition parseActionDefinition(final Class<?> actionClass, final Method actionMethod) {
 
-		final ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+		final ActionAnnotationValues annotationValues = detectActionAnnotationValues(actionMethod);
 
-		final ActionConfig actionConfig = resolveActionConfig(annotationData);
+		final ActionConfig actionConfig = resolveActionConfig(annotationValues);
 
 		final String[] packageActionNames = readPackageActionPath(actionClass);
 
 		final String[] classActionNames = readClassActionPath(actionClass);
 
-		final String[] methodActionNames = readMethodActionPath(actionMethod.getName(), annotationData, actionConfig);
+		final String[] methodActionNames = readMethodActionPath(actionMethod.getName(), annotationValues, actionConfig);
 
 		final String method = readMethodHttpMethod(actionMethod);
 
@@ -150,9 +150,9 @@ public class ActionMethodParser {
 	 * @param actionDefinition optional action def, usually <code>null</code> so to be parsed
 	 */
 	public ActionRuntime parse(final Class<?> actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
-		final ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+		final ActionAnnotationValues annotationValues = detectActionAnnotationValues(actionMethod);
 
-		final ActionConfig actionConfig = resolveActionConfig(annotationData);
+		final ActionConfig actionConfig = resolveActionConfig(annotationValues);
 
 		// interceptors
 		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod, actionConfig);
@@ -165,7 +165,7 @@ public class ActionMethodParser {
 			actionDefinition = parseActionDefinition(actionClass, actionMethod);
 		}
 
-		detectAndRegisterAlias(annotationData, actionDefinition);
+		detectAndRegisterAlias(annotationValues, actionDefinition);
 
 		final boolean async = parseMethodAsyncFlag(actionMethod);
 
@@ -184,32 +184,30 @@ public class ActionMethodParser {
 	/**
 	 * Resolves action config.
 	 */
-	protected ActionConfig resolveActionConfig(final ActionAnnotationData annotationData) {
-		if (annotationData == null) {
+	protected ActionConfig resolveActionConfig(final ActionAnnotationValues annotationValues) {
+		if (annotationValues == null) {
 			return madvocConfig.getActionConfig();
 		}
-		return madvocConfig.lookupActionConfig(annotationData.annotation().annotationType());
+		return madvocConfig.lookupActionConfig(annotationValues.annotationType());
 	}
 
 	/**
-	 * Detects {@link jodd.madvoc.meta.ActionAnnotationData}. Returns {@code null} if annotation does not exist.
+	 * Detects {@link jodd.madvoc.meta.ActionAnnotationValues}. Returns {@code null} if annotation does not exist.
 	 */
-	protected ActionAnnotationData detectActionAnnotationData(final Method actionMethod) {
-		ActionAnnotationData annotationData = null;
-		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-			annotationData = actionAnnotation.readAnnotatedElement(actionMethod);
-			if (annotationData != null) {
-				break;
+	protected ActionAnnotationValues detectActionAnnotationValues(final Method actionMethod) {
+		for (AnnotationParser annotationParser : madvocConfig.getAnnotationParsers()) {
+			if (annotationParser.hasAnnotationOn(actionMethod)) {
+				return new ActionAnnotationValues(annotationParser.of(actionMethod));
 			}
 		}
-		return annotationData;
+		return null;
 	}
 
 	/**
 	 * Detects if alias is defined in annotation and registers it if so.
 	 */
-	protected void detectAndRegisterAlias(final ActionAnnotationData annotationData, final ActionDefinition actionDefinition) {
-		final String alias = parseMethodAlias(annotationData);
+	protected void detectAndRegisterAlias(final ActionAnnotationValues annotationValues, final ActionDefinition actionDefinition) {
+		final String alias = parseMethodAlias(annotationValues);
 
 		if (alias != null) {
 			String aliasPath = StringUtil.cutToIndexOf(actionDefinition.actionPath(), StringPool.HASH);
@@ -379,9 +377,9 @@ public class ActionMethodParser {
 	/**
 	 * Reads action path from the action method.
 	 */
-	protected String[] readMethodActionPath(final String methodName, final ActionAnnotationData annotationData, final ActionConfig actionConfig) {
+	protected String[] readMethodActionPath(final String methodName, final ActionAnnotationValues annotationValues, final ActionConfig actionConfig) {
 		// read annotation
-		String methodActionPath = annotationData != null ? annotationData.value() : null;
+		String methodActionPath = annotationValues != null ? annotationValues.value() : null;
 
 		if (methodActionPath == null) {
 			methodActionPath = methodName;
@@ -405,10 +403,10 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's alias value.
 	 */
-	protected String parseMethodAlias(final ActionAnnotationData annotationData) {
+	protected String parseMethodAlias(final ActionAnnotationValues annotationValues) {
 		String alias = null;
-		if (annotationData != null) {
-			alias = annotationData.alias();
+		if (annotationValues != null) {
+			alias = annotationValues.alias();
 		}
 		return alias;
 	}

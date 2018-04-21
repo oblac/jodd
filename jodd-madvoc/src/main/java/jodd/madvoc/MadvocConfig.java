@@ -32,13 +32,13 @@ import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPathNamingStrategy;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -109,12 +109,12 @@ public final class MadvocConfig {
 
 	private Map<Class<? extends Annotation>, ActionConfig> annotations = new HashMap<>();
 	private Class<? extends Annotation>[] actionAnnotations = ClassUtil.emptyClassArray();
-	private ActionAnnotation<?>[] actionAnnotationInstances = new ActionAnnotation[0];
+	private AnnotationParser[] annotationParsers = new AnnotationParser[0];
 
 	public void setActionAnnotations(final Class<? extends Annotation>... annotationsClasses) {
 
-		for (Class<? extends Annotation> annotation : annotationsClasses) {
-			ActionConfiguredBy actionConfiguredBy = annotation.getAnnotation(ActionConfiguredBy.class);
+		for (Class<? extends Annotation> annotationType : annotationsClasses) {
+			ActionConfiguredBy actionConfiguredBy = annotationType.getAnnotation(ActionConfiguredBy.class);
 
 			if (actionConfiguredBy != null) {
 				Class<? extends ActionConfig> actionConfigClass = actionConfiguredBy.value();
@@ -128,11 +128,11 @@ public final class MadvocConfig {
 					throw new MadvocException("Invalid action configuration: " + actionConfigClass.getSimpleName(), ex);
 				}
 
-				annotations.put(annotation, newActionConfig);
+				annotations.put(annotationType, newActionConfig);
 			}
 
-			actionAnnotations = ArraysUtil.append(actionAnnotations, annotation);
-			actionAnnotationInstances = ArraysUtil.append(actionAnnotationInstances, new ActionAnnotation<>(annotation));
+			actionAnnotations = ArraysUtil.append(actionAnnotations, annotationType);
+			annotationParsers = ArraysUtil.append(annotationParsers, new AnnotationParser(annotationType, Action.class));
 		}
 	}
 
@@ -146,8 +146,8 @@ public final class MadvocConfig {
 	/**
 	 * Returns instances of action method annotation readers.
 	 */
-	public ActionAnnotation<?>[] getActionAnnotationInstances() {
-		return actionAnnotationInstances;
+	public AnnotationParser[] getAnnotationParsers() {
+		return annotationParsers;
 	}
 
 	/**

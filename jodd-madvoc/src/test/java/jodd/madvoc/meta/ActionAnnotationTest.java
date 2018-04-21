@@ -25,6 +25,7 @@
 
 package jodd.madvoc.meta;
 
+import jodd.util.annotation.AnnotationParser;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -60,55 +61,51 @@ class ActionAnnotationTest {
 
 	@Test
 	void testActionAnnotationOnly() throws NoSuchMethodException {
-		ActionAnnotation<Action> actionAnnotation = new ActionAnnotation<>(Action.class);
-		assertEquals(Action.class, actionAnnotation.getAnnotationClass());
-
 		Method method = this.getClass().getMethod("hello");
-		ActionAnnotationData<Action> annotationData = actionAnnotation.readAnnotatedElement(method);
 
-		assertNull(annotationData.alias);
-		assertNull(annotationData.value);
+		ActionAnnotationValues annotationValues = ActionAnnotationValues.of(method);
+
+		assertNull(annotationValues.alias());
+		assertNull(annotationValues.value());
 
 		method = this.getClass().getMethod("hello2");
-		annotationData = actionAnnotation.readAnnotatedElement(method);
+		annotationValues = ActionAnnotationValues.of(method);
 
-		assertEquals("alias", annotationData.alias);
-		assertEquals("value.ext", annotationData.value);
+		assertEquals("alias", annotationValues.alias);
+		assertEquals("value.ext", annotationValues.value);
 	}
 
 	@Test
 	void testCustomActionAnnotation() throws NoSuchMethodException {
-		ActionAnnotation<CustomAction> actionAnnotation = new ActionAnnotation<>(CustomAction.class);
-		assertEquals(CustomAction.class, actionAnnotation.getAnnotationClass());
+		final AnnotationParser annotationParser = ActionAnnotationValues.parserFor(CustomAction.class);
 
 		Method method = this.getClass().getMethod("hello3");
-		ActionAnnotationData<CustomAction> annotationData = actionAnnotation.readAnnotatedElement(method);
+		ActionAnnotationValues annotationValues = new ActionAnnotationValues(annotationParser.of(method));
 
-		assertEquals("ALIAS", annotationData.alias);
-		assertNull(annotationData.value);
+		assertEquals("ALIAS", annotationValues.alias());
+		assertNull(annotationValues.value());
 
 		method = this.getClass().getMethod("hello4");
-		annotationData = actionAnnotation.readAnnotatedElement(method);
+		annotationValues = new ActionAnnotationValues(annotationParser.of(method));
 
-		assertEquals("ALIAS", annotationData.alias);
-		assertNull(annotationData.value);
+		assertEquals("ALIAS", annotationValues.alias());
+		assertNull(annotationValues.value());
 	}
 
 	@Test
 	void testMiscActionAnnotation() throws NoSuchMethodException {
-		ActionAnnotation<MiscAnnotation> actionAnnotation = new ActionAnnotation<>(MiscAnnotation.class);
-		assertEquals(MiscAnnotation.class, actionAnnotation.getAnnotationClass());
+		final AnnotationParser annotationParser = ActionAnnotationValues.parserFor(MiscAnnotation.class);
 
 		Method method = this.getClass().getMethod("hello5");
-		ActionAnnotationData<MiscAnnotation> annotationData = actionAnnotation.readAnnotatedElement(method);
+		ActionAnnotationValues annotationValues = new ActionAnnotationValues(annotationParser.of(method));
 
-		assertNull(annotationData.alias);
-		assertEquals("VAL", annotationData.value);
+		assertNull(annotationValues.alias());
+		assertEquals("VAL", annotationValues.value());
 
 		method = this.getClass().getMethod("hello6");
-		annotationData = actionAnnotation.readAnnotatedElement(method);
+		annotationValues = new ActionAnnotationValues(annotationParser.of(method));
 
-		assertNull(annotationData.alias);
-		assertEquals("VAL", annotationData.value);
+		assertNull(annotationValues.alias());
+		assertEquals("VAL", annotationValues.value());
 	}
 }

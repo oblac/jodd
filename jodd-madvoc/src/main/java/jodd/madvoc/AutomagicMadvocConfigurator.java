@@ -35,10 +35,10 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.annotation.AnnotationParser;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -212,8 +212,8 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			Method method = methodDescriptor.getMethod();
 
 			boolean hasAnnotation = false;
-			for (ActionAnnotation<?> actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-				if (actionAnnotation.hasAnnotationOn(method)) {
+			for (AnnotationParser annotationParser : madvocConfig.getAnnotationParsers()) {
+				if (annotationParser.hasAnnotationOn(method)) {
 					hasAnnotation = true;
 					break;
 				}
