@@ -642,6 +642,7 @@ public class PetiteContainer extends PetiteBeans {
 			scope.shutdown();
 		}
 
+		externalsCache.clear();
 		beans.clear();
 		beansAlt.clear();
 		scopes.clear();
