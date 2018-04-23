@@ -29,9 +29,9 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.MadvocScope;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringPool;
 
@@ -53,7 +53,7 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherActionResult.class);
 
 	@In
-	@Scope(ScopeType.CONTEXT)
+	@Scope(MadvocScope.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
 	/**

@@ -37,13 +37,12 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.scope.MadvocScope;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-
-import static jodd.madvoc.ScopeType.CONTEXT;
 
 /**
  * Helper action that returns sorted list of all registered action runtime configurations,
@@ -51,19 +50,19 @@ import static jodd.madvoc.ScopeType.CONTEXT;
  */
 public class ListMadvocConfig {
 
-	@In @Scope(CONTEXT)
+	@In @Scope(MadvocScope.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	@In @Scope(CONTEXT)
+	@In @Scope(MadvocScope.CONTEXT)
 	protected ActionsManager actionsManager;
 
-	@In @Scope(CONTEXT)
+	@In @Scope(MadvocScope.CONTEXT)
 	protected FiltersManager filtersManager;
 
-	@In @Scope(CONTEXT)
+	@In @Scope(MadvocScope.CONTEXT)
 	protected InterceptorsManager interceptorsManager;
 
-	@In @Scope(CONTEXT)
+	@In @Scope(MadvocScope.CONTEXT)
 	protected ResultsManager resultsManager;
 
 	@Out

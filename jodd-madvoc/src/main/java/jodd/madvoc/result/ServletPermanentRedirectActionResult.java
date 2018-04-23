@@ -27,10 +27,10 @@ package jodd.madvoc.result;
 
 import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.MadvocScope;
 import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +50,7 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 	}
 
 	@In
-	@Scope(ScopeType.CONTEXT)
+	@Scope(MadvocScope.CONTEXT)
 	protected ResultMapper resultMapper;
 
 	/**
