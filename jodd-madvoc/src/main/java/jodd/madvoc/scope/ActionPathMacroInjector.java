@@ -23,34 +23,32 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.RouteChunk;
+import jodd.madvoc.config.Targets;
 import jodd.madvoc.macro.PathMacros;
 import jodd.util.StringUtil;
 
 /**
- * Injects macro values from action path into the action bean.
- * Path macros are considered to be in {@link jodd.madvoc.ScopeType#REQUEST request scope}.
+ * Special scope that is used from the {@link RequestScope}.
  */
-public class ActionPathMacroInjector implements Injector {
-	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
+public class ActionPathMacroInjector {
 
-	@Override
-	public void inject(final ActionRequest actionRequest) {
-		ActionRuntime actionRuntime = actionRequest.getActionRuntime();
-		RouteChunk routeChunk = actionRuntime.getRouteChunk();
+	private final MadvocScope madvocScope;
+
+	public ActionPathMacroInjector(final MadvocScope bindedScope) {
+		this.madvocScope = bindedScope;
+	}
+
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final ActionRuntime actionRuntime = actionRequest.getActionRuntime();
+		final RouteChunk routeChunk = actionRuntime.getRouteChunk();
 
 		if (!routeChunk.hasMacrosOnPath()) {
 			// no action path macros at all, just exit
-			return;
-		}
-
-		final Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
 			return;
 		}
 
@@ -61,7 +59,7 @@ public class ActionPathMacroInjector implements Injector {
 
 		RouteChunk chunk = routeChunk;
 		while (chunk.parent() != null) {
-			PathMacros pathMacros = chunk.pathMacros();
+			final PathMacros pathMacros = chunk.pathMacros();
 
 			if (pathMacros != null) {
 				injectMacros(actionPath[ndx], pathMacros, targets);
@@ -69,23 +67,24 @@ public class ActionPathMacroInjector implements Injector {
 			ndx--;
 			chunk = chunk.parent();
 		}
+
 	}
 
 	private void injectMacros(final String actionPath, final PathMacros pathMacros, final Targets targets) {
-		String[] names = pathMacros.names();
-		String[] values = pathMacros.extract(actionPath);
+		final String[] names = pathMacros.names();
+		final String[] values = pathMacros.extract(actionPath);
 
 		for (int ndx = 0; ndx < values.length; ndx++) {
-			String value = values[ndx];
+			final String value = values[ndx];
 
 			if (StringUtil.isEmpty(value)) {
 				continue;
 			}
 
-			String macroName = names[ndx];
+			final String macroName = names[ndx];
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-				String name = in.matchedPropertyName(macroName);
+			targets.forEachTargetAndIn(madvocScope, (target, in) -> {
+				final String name = in.matchedPropertyName(macroName);
 
 				if (name != null) {
 					target.writeValue(name, value, true);
@@ -93,4 +92,5 @@ public class ActionPathMacroInjector implements Injector {
 			});
 		}
 	}
+
 }

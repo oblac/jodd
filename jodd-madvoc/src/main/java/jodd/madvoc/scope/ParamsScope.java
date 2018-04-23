@@ -23,44 +23,39 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.Targets;
+import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInject;
 
 /**
- * Madvoc context injector. Injects beans from Madvocs internal container,
- * i.e. Madvocs components.
+ * Special kind of scope that is used on all targets.
  */
-public class MadvocContextScopeInjector implements Injector, ContextInjector<PetiteContainer> {
-	private final static ScopeType SCOPE_TYPE = ScopeType.CONTEXT;
-	protected final PetiteContainer madpc;
+public class ParamsScope implements MadvocScope {
 
-	public MadvocContextScopeInjector(final PetiteContainer madpc) {
-		this.madpc = madpc;
-	}
+	@PetiteInject
+	PetiteContainer madpc;
 
 	@Override
-	public void injectContext(final Targets targets, final PetiteContainer madpc) {
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Object value = madpc.getBean(in.name);
-			if (value != null) {
-				target.writeValue(in.propertyName(), value, false);
+	public void inject(final Targets targets) {
+		targets.forEachTarget(target -> {
+			final Class targetType = target.resolveType();
+			final String baseName = targetType.getName();
+
+			final ParamManager madvocPetiteParamManager = madpc.paramManager();
+
+			final String[] params = madvocPetiteParamManager.filterParametersForBeanName(baseName, true);
+
+			for (final String param : params) {
+				final Object value = madvocPetiteParamManager.get(param);
+
+				final String propertyName = param.substring(baseName.length() + 1);
+
+				target.writeValue(propertyName, value, false);
 			}
 		});
+
 	}
-
-	@Override
-	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Object value = madpc.getBean(in.name);
-			if (value != null) {
-				target.writeValue(in.propertyName(), value, false);
-			}
-		});
-	}
-
 }

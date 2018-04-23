@@ -23,42 +23,46 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
-import jodd.json.JsonParser;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
-import jodd.servlet.ServletUtil;
-import jodd.util.StringUtil;
+import jodd.madvoc.config.Targets;
 
-import java.io.IOException;
+import javax.servlet.ServletContext;
 
-public class RequestBodyScopeInject implements Injector {
+/**
+ * Madvoc scope implementation. In a nutshell, a scope is an object that knows how
+ * to perform injection and outjection of some scope context into and from a
+ * {@link jodd.madvoc.config.Target}.
+ */
+public interface MadvocScope {
 
-	private final static ScopeType SCOPE_TYPE = ScopeType.BODY;
+	String APPLICATION = "Application";
+	String BODY = "Body";
+	String COOKIE = "Cookie";
+	String CONTEXT = "MadvocContext";
+	String REQUEST = "Request";
+	String SERVLET = "ServletContext";
+	String SESSION = "Session";
 
-	@Override
-	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
+	/**
+	 * Injects action request context into the targets.
+	 */
+	public default void inject(final ActionRequest actionRequest, final Targets targets) {}
 
-		String body;
-		try {
-			body = ServletUtil.readRequestBodyFromStream(actionRequest.getHttpServletRequest());
-		} catch (IOException ignore) {
-			return;
-		}
-		if (StringUtil.isEmpty(body)) {
-			return;
-		}
+	/**
+	 * Injects servlet context into the targets.
+	 */
+	public default void inject(final ServletContext servletContext, final Targets targets) {}
 
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-			Object value = JsonParser.create().parse(body, in.type);
+	/**
+	 * Injects general context into the targets.
+	 */
+	public default void inject(final Targets targets) {}
 
-			target.writeValue(in.propertyName(), value, true);
-		});
-	}
+	/**
+	 * Outjects targets into action request context..
+	 */
+	public default void outject(final ActionRequest actionRequest, final Targets targets) {}
 
 }

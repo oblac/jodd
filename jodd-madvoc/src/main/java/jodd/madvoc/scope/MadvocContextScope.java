@@ -23,19 +23,34 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
+
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.config.Targets;
+import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInject;
 
 /**
- * Context injector. Context is injected only during the initialization.
- * @see jodd.madvoc.component.ContextInjectorComponent
+ * Madvoc context scope.
  */
-public interface ContextInjector<C> {
+public class MadvocContextScope implements MadvocScope {
 
-	/**
-	 * Injects data from context object into the target.
-	 * @param targets injection targets
-	 * @param contextObject injection source or any key for retrieving context
-	 */
-	public void injectContext(Targets targets, C contextObject);
+	@PetiteInject
+	protected PetiteContainer madpc;
+
+	@Override
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		inject(targets);
+	}
+
+	@Override
+	public void inject(final Targets targets) {
+		targets.forEachTargetAndIn(this, (target, in) -> {
+			final Object value = madpc.getBean(in.name());
+			if (value != null) {
+				target.writeValue(in.propertyName(), value, false);
+			}
+		});
+	}
 
 }

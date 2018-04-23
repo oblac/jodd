@@ -23,59 +23,49 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.Targets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
 /**
- * Servlet session scope injector.
+ * Session scope.
  */
-public class SessionScopeInjector implements Injector, Outjector {
-	private final static ScopeType SCOPE_TYPE = ScopeType.SESSION;
+public class SessionScope implements MadvocScope {
 
 	@Override
-	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		final HttpSession session = servletRequest.getSession();
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpSession session = servletRequest.getSession();
-
-		Enumeration attributeNames = session.getAttributeNames();
+		final Enumeration attributeNames = session.getAttributeNames();
 
 		while (attributeNames.hasMoreElements()) {
-			String attrName = (String) attributeNames.nextElement();
+			final String attrName = (String) attributeNames.nextElement();
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-				String name = in.matchedPropertyName(attrName);
+			targets.forEachTargetAndIn(this, (target, in) -> {
+				final String name = in.matchedPropertyName(attrName);
 				if (name != null) {
-					Object attrValue = session.getAttribute(attrName);
+					final Object attrValue = session.getAttribute(attrName);
 					target.writeValue(name, attrValue, true);
 				}
 			});
 		}
+
 	}
 
 	@Override
-	public void outject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		final HttpSession session = servletRequest.getSession();
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpSession session = servletRequest.getSession();
-
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
-			Object value = target.readTargetProperty(out);
-			session.setAttribute(out.name, value);
+		targets.forEachTargetAndOut(this, (target, out) -> {
+			final Object value = target.readValue(out.propertyName());
+			session.setAttribute(out.name(), value);
 		});
 	}
 }

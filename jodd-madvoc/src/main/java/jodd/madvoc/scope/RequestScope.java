@@ -23,12 +23,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
 import jodd.io.upload.FileUpload;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
-import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.Targets;
+import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.util.StringPool;
@@ -37,61 +38,36 @@ import jodd.util.StringUtil;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
-
 /**
- * Request scope injector.
- * Request injector should be independent and therefore more then one
- * instance can be used in the Madvoc application. That's why
- * configuration is being cloned on injector creation.
+ * The request scope.
  */
-public class RequestScopeInjector implements Injector, Outjector {
-	private final static ScopeType SCOPE_TYPE = ScopeType.REQUEST;
+public class RequestScope implements MadvocScope {
 
-	public RequestScopeInjector(final MadvocConfig madvocConfig) {
-		this.encoding = madvocConfig.getEncoding();
-	}
+	@PetiteInject
+	MadvocConfig madvocConfig;
+
+	protected final ActionPathMacroInjector actionPathMacroInjector = new ActionPathMacroInjector(this);
 
 	// ---------------------------------------------------------------- configuration
 
-	protected final String encoding;
-
 	// flags
-
-	protected boolean ignoreEmptyRequestParams;
-	protected boolean treatEmptyParamsAsNull;
-	protected boolean injectAttributes = true;
-	protected boolean injectParameters = true;
-	protected boolean encodeGetParams;
-	protected boolean ignoreInvalidUploadFiles = true;
 
 	/**
 	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
 	 */
-	public void setIgnoreEmptyRequestParams(final boolean ignoreEmptyRequestParams) {
-		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
-	}
-
+	protected boolean ignoreEmptyRequestParams;
 	/**
 	 * Specifies if empty parameters will be injected as <code>null</code> value.
 	 */
-	public void setTreatEmptyParamsAsNull(final boolean treatEmptyParamsAsNull) {
-		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
-	}
-
+	protected boolean treatEmptyParamsAsNull;
 	/**
 	 * Specifies if attributes will be injected.
 	 */
-	public void setInjectAttributes(final boolean injectAttributes) {
-		this.injectAttributes = injectAttributes;
-	}
-
+	protected boolean injectAttributes = true;
 	/**
 	 * Specifies if parameters will be injected.
 	 */
-	public void setInjectParameters(final boolean injectParameters) {
-		this.injectParameters = injectParameters;
-	}
-
+	protected boolean injectParameters = true;
 	/**
 	 * Specifies if GET parameters should be encoded. Alternatively, this can be set in container as well.
 	 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
@@ -101,31 +77,43 @@ public class RequestScopeInjector implements Injector, Outjector {
 	 * can be included in the sun-web.xml file.
 	 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
 	 */
-	public void setEncodeGetParams(final boolean encodeGetParams) {
-		this.encodeGetParams = encodeGetParams;
-	}
-
+	protected boolean encodeGetParams;
 	/**
 	 * Specifies if invalid and non-existing upload files should be <code>null</code>.
 	 */
-	public void setIgnoreInvalidUploadFiles(final boolean ignoreInvalidUploadFiles) {
-		this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
-	}
+	protected boolean ignoreInvalidUploadFiles = true;
 
 	// ---------------------------------------------------------------- inject
+
+	@Override
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+
+		if (injectAttributes) {
+			injectAttributes(servletRequest, targets);
+		}
+		if (injectParameters) {
+			injectParameters(servletRequest, targets);
+			injectUploadedFiles(servletRequest, targets);
+		}
+
+		actionPathMacroInjector.inject(actionRequest, targets);
+	}
+
+
 
 	/**
 	 * Injects request attributes.
 	 */
-	protected void injectAttributes(final Targets targets, final HttpServletRequest servletRequest) {
-		Enumeration attributeNames = servletRequest.getAttributeNames();
+	protected void injectAttributes(final HttpServletRequest servletRequest, final Targets targets) {
+		final Enumeration attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
-			String attrName = (String) attributeNames.nextElement();
+			final String attrName = (String) attributeNames.nextElement();
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-				String name = in.matchedPropertyName(attrName);
+			targets.forEachTargetAndIn(this, (target, in) -> {
+				final String name = in.matchedPropertyName(attrName);
 				if (name != null) {
-					Object attrValue = servletRequest.getAttribute(attrName);
+					final Object attrValue = servletRequest.getAttribute(attrName);
 					target.writeValue(name, attrValue, true);
 				}
 			});
@@ -135,34 +123,35 @@ public class RequestScopeInjector implements Injector, Outjector {
 	/**
 	 * Inject request parameters.
 	 */
-	protected void injectParameters(final Targets targets, final HttpServletRequest servletRequest) {
-		boolean encode = encodeGetParams && servletRequest.getMethod().equals("GET");
-		Enumeration paramNames = servletRequest.getParameterNames();
+	protected void injectParameters(final HttpServletRequest servletRequest, final Targets targets) {
+		final boolean encode = encodeGetParams && servletRequest.getMethod().equals("GET");
+		final Enumeration paramNames = servletRequest.getParameterNames();
 
 		while (paramNames.hasMoreElements()) {
-			String paramName = (String) paramNames.nextElement();
+			final String paramName = (String) paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-				String name = in.matchedPropertyName(paramName);
+			targets.forEachTargetAndIn(this, (target, in) -> {
+				final String name = in.matchedPropertyName(paramName);
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
 
 					paramValues = ServletUtil.prepareParameters(
-							paramValues, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+						paramValues, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 
 					if (paramValues != null) {
 						if (encode) {
 							for (int j = 0; j < paramValues.length; j++) {
-								String p = paramValues[j];
+								final String p = paramValues[j];
 								if (p != null) {
+									final String encoding = madvocConfig.getEncoding();
 									paramValues[j] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
 								}
 							}
 						}
-						Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
+						final Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
 						target.writeValue(name, value, true);
 					}
 				}
@@ -173,29 +162,29 @@ public class RequestScopeInjector implements Injector, Outjector {
 	/**
 	 * Inject uploaded files from multipart request parameters.
 	 */
-	protected void injectUploadedFiles(final Targets targets, final HttpServletRequest servletRequest) {
+	protected void injectUploadedFiles(final HttpServletRequest servletRequest, final Targets targets) {
 		if (!(servletRequest instanceof MultipartRequestWrapper)) {
 			return;
 		}
-		MultipartRequestWrapper multipartRequest = (MultipartRequestWrapper) servletRequest;
+		final MultipartRequestWrapper multipartRequest = (MultipartRequestWrapper) servletRequest;
 		if (!multipartRequest.isMultipart()) {
 			return;
 		}
-		Enumeration paramNames = multipartRequest.getFileParameterNames();
+		final Enumeration paramNames = multipartRequest.getFileParameterNames();
 		while (paramNames.hasMoreElements()) {
-			String paramName = (String) paramNames.nextElement();
+			final String paramName = (String) paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
 
-			targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
-				String name = in.matchedPropertyName(paramName);
+			targets.forEachTargetAndIn(this, (target, in) -> {
+				final String name = in.matchedPropertyName(paramName);
 				if (name != null) {
-					FileUpload[] paramValues = multipartRequest.getFiles(paramName);
+					final FileUpload[] paramValues = multipartRequest.getFiles(paramName);
 
 					if (ignoreInvalidUploadFiles) {
 						for (int j = 0; j < paramValues.length; j++) {
-							FileUpload paramValue = paramValues[j];
+							final FileUpload paramValue = paramValues[j];
 
 							if ((!paramValue.isValid()) || (!paramValue.isUploaded())) {
 								paramValues[j] = null;
@@ -203,45 +192,22 @@ public class RequestScopeInjector implements Injector, Outjector {
 						}
 					}
 
-					Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
+					final Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
 					target.writeValue(name, value, true);
 				}
 			});
 		}
 	}
 
-	@Override
-	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
-
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-
-		if (injectAttributes) {
-			injectAttributes(targets, servletRequest);
-		}
-		if (injectParameters) {
-			injectParameters(targets, servletRequest);
-			injectUploadedFiles(targets, servletRequest);
-		}
-	}
-
 	// ---------------------------------------------------------------- outject
 
 	@Override
-	public void outject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
-			Object value = target.readTargetProperty(out);
-			servletRequest.setAttribute(out.name, value);
+		targets.forEachTargetAndOut(this, (target, out) -> {
+			final Object value = target.readValue(out.propertyName());
+			servletRequest.setAttribute(out.name(), value);
 		});
 	}
 

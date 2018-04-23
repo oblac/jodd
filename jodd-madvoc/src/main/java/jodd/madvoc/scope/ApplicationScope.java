@@ -23,23 +23,51 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.config.Targets;
+
+import javax.servlet.ServletContext;
+import java.util.Enumeration;
 
 /**
- * Injector interface. Injections happen on action invocation.
- * All injection data should be cached in {@link jodd.madvoc.ActionRequest}
- * or {@link ActionRuntime}.
+ * Application Context scope.
  */
-public interface Injector {
+public class ApplicationScope implements MadvocScope {
 
-	/**
-	 * Injects some content into action request.
-	 * Usually, some parameters/attributes are injected into
-	 * action object.
-	 */
-	public void inject(ActionRequest actionRequest);
+	@Override
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
+		inject(servletContext, targets);
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+		final Enumeration attributeNames = servletContext.getAttributeNames();
+
+		while (attributeNames.hasMoreElements()) {
+			final String attrName = (String) attributeNames.nextElement();
+
+			targets.forEachTargetAndIn(this, (target, in) -> {
+				final String name = in.matchedPropertyName(attrName);
+				if (name != null) {
+					final Object attrValue = servletContext.getAttribute(attrName);
+					target.writeValue(name, attrValue, true);
+				}
+			});
+		}
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+		final ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
+
+		targets.forEachTargetAndOut(this, (target, out) -> {
+			final Object value = target.readValue(out.propertyName());
+			context.setAttribute(out.name(), value);
+		});
+
+	}
 
 }

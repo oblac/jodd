@@ -23,7 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+package jodd.madvoc.scope;
+
+import jodd.json.JsonParser;
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.config.Targets;
+import jodd.util.StringUtil;
+
 /**
- * Action injectors usually are used by interceptors to put data in and out of an action.
+ * Request body scope.
+ * it is assumed that body is a JSON.
  */
-package jodd.madvoc.injector;
+public class BodyScope implements MadvocScope {
+
+	@Override
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final String body = actionRequest.readRequestBody();
+		if (StringUtil.isEmpty(body)) {
+			return;
+		}
+
+		targets.forEachTargetAndIn(this, (target, in) -> {
+			final Object value = JsonParser.create().parse(body, in.type());
+
+			target.writeValue(in.propertyName(), value, true);
+		});
+
+	}
+}

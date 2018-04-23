@@ -23,10 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.scope;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
+import jodd.madvoc.config.Targets;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 
@@ -34,32 +34,28 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class CookieScopeInjector implements Injector, Outjector {
-
-	private final static ScopeType SCOPE_TYPE = ScopeType.COOKIE;
+/**
+ * Cookie scope.
+ */
+public class CookieScope implements MadvocScope {
 
 	@Override
-	public void inject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-
-		targets.forEachTargetAndInScopes(SCOPE_TYPE, (target, in) -> {
+		targets.forEachTargetAndIn(this, (target, in) -> {
 			Object value = null;
 
-			if (in.type == Cookie.class) {
-				String cookieName = StringUtil.uncapitalize(in.name);
+			if (in.type() == Cookie.class) {
+				final String cookieName = StringUtil.uncapitalize(in.name());
 				value = ServletUtil.getCookie(servletRequest, cookieName);     // get single cookie
 			}
-			else if (in.type.isArray()) {
-				if (in.type.getComponentType().equals(Cookie.class)) {
-					if (StringUtil.isEmpty(in.name)) {
+			else if (in.type().isArray()) {
+				if (in.type().getComponentType().equals(Cookie.class)) {
+					if (StringUtil.isEmpty(in.name())) {
 						value = servletRequest.getCookies();		                    // get all cookies
 					} else {
-						value = ServletUtil.getAllCookies(servletRequest, in.name);     // get all cookies by name
+						value = ServletUtil.getAllCookies(servletRequest, in.name());     // get all cookies by name
 					}
 				}
 			}
@@ -70,22 +66,15 @@ public class CookieScopeInjector implements Injector, Outjector {
 		});
 	}
 
-
 	@Override
-	public void outject(final ActionRequest actionRequest) {
-		Targets targets = actionRequest.getTargets();
-		if (!targets.usesScope(SCOPE_TYPE)) {
-			return;
-		}
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
-
-		targets.forEachTargetAndOutScopes(SCOPE_TYPE, (target, out) -> {
-			Cookie cookie = (Cookie) target.readTargetProperty(out);
+		targets.forEachTargetAndOut(this, (target, out) -> {
+			final Cookie cookie = (Cookie) target.readValue(out.propertyName());
 			if (cookie != null) {
 				servletResponse.addCookie(cookie);
 			}
 		});
 	}
-
 }
