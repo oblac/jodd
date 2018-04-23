@@ -27,10 +27,13 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.config.ActionRuntime;
-import jodd.madvoc.injector.Targets;
+import jodd.madvoc.config.Targets;
+import jodd.servlet.ServletUtil;
+import jodd.util.StringPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import static jodd.exception.ExceptionUtil.unwrapThrowable;
@@ -175,7 +178,7 @@ public class ActionRequest {
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		this.action = action;
-		this.targets = new Targets(actionRuntime, action);
+		this.targets = new Targets(this);
 
 		this.executionIndex = 0;
 		this.executionArray = createExecutionArray();
@@ -248,11 +251,30 @@ public class ActionRequest {
 		}
 
 		final Object[] params = targets.extractParametersValues();
+
 		try {
 			return actionRuntime.getActionClassMethod().invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw wrapToException(unwrapThrowable(itex));
 		}
+	}
+
+	// ---------------------------------------------------------------- special
+
+	private String requestBody;
+
+	/**
+	 * Reads request body only once and returns it to user.
+	 */
+	public String readRequestBody() {
+		if (requestBody == null) {
+			try {
+				requestBody = ServletUtil.readRequestBodyFromStream(getHttpServletRequest());
+			} catch (IOException ioex) {
+				requestBody = StringPool.EMPTY;
+			}
+		}
+		return requestBody;
 	}
 
 }
