@@ -12,11 +12,14 @@ Work-in-progress :thunder:
 + **madvoc** - added flag to `RestActionNamingStrategy`.
 + **petite** - added `PetiteContainer#invokeMethod`.
 + **petite** - added cache for external types that are not registered into the container.
++ **madvoc** - `MadvocScope` added, injectors removed. Scopes are now defined by annotations only.
 
 ### Breaking changes
 
 + **core** - `TypeCache` made better. `put()` removed in favor of `get()`.
 + **core** - `AnnotationParser` added instead of clumsy `AnnotatedData` and `AnnotatedReader`.
++ **madvoc** - `Scope` annotation has been changed.
+
 
 ## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)
 
