@@ -23,57 +23,60 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.config;
 
 import jodd.bean.BeanUtil;
 import jodd.bean.JoddBean;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.config.ScopeData;
 
 import java.lang.reflect.Constructor;
 
 /**
- * Injection target.
+ * Wrapper of a target for IN/OUT operations. It wraps one of these:
+ * <ul>
+ *     <li>action object</li>
+ *     <li>method parameter</li>
+ *     <li>third-party object</li>
+ * </ul>
+ *
+ * Target provides a common interface to write or read certain property from a wrapped value.
  */
 public class Target {
 
-	protected final Class type;
-	protected Object value;
-
 	/**
-	 * Creates target over the value. Injection will be done into the value,
-	 * hence the name and the types are irrelevant. Used for action itself
-	 * and action non-annotated arguments.
+	 * Creates a common target over a value, with known scope data.
 	 */
-	public Target(final Object value) {
-		this.value = value;
-		this.type = null;
+	public static Target ofValue(final Object value, final ScopeData scopeData) {
+		return new Target(value, null, scopeData);
 	}
-	public Target(final Object value, final Class type) {
-		this.value = value;
-		this.type = type;
+	/**
+	 * Creates a common target over a method param.
+	 */
+	public static Target ofMethodParam(final MethodParam methodParam, final Object object) {
+		return new Target(object, methodParam.type(), methodParam.scopeData());
 	}
 
-	/**
-	 * Creates target over a type with given name. Injection is actually a type conversion
-	 * from input content to the given type. Used for annotated arguments.
-	 */
-	public Target(final Class type) {
+	private final Class type;
+	private final ScopeData scopeData;
+	private Object value;
+
+	protected Target(final Object value, final Class type, final ScopeData scopeData) {
+		this.value = value;
 		this.type = type;
-		this.value = null;
+		this.scopeData = scopeData;
 	}
 
 	/**
 	 * Returns targets type, if specified.
 	 * @see #resolveType()
 	 */
-	public Class getType() {
+	public Class type() {
 		return type;
 	}
 
 	/**
-	 * Resolves target type: either using {@link #getType() provided type}
-	 * or type of the {@link #getValue() value}.
+	 * Resolves target type: either using {@link #type() provided type}
+	 * or type of the {@link #value() value}.
 	 */
 	public Class resolveType() {
 		if (type != null) {
@@ -85,15 +88,15 @@ public class Target {
 	/**
 	 * Returns target value, if specified.
 	 */
-	public Object getValue() {
+	public Object value() {
 		return value;
 	}
 
 	/**
-	 * Sets target value.
+	 * Returns associated scope data.
 	 */
-	public void setValue(final Object value) {
-		this.value = value;
+	public ScopeData scopeData() {
+		return scopeData;
 	}
 
 	// ---------------------------------------------------------------- read
@@ -101,11 +104,11 @@ public class Target {
 	/**
 	 * Reads value from the target. If something goes wrong, exception
 	 * is thrown. We assume that outjection is controlled by developer
-	 * and that each reading of a value must be successful operation.
+	 * and that each reading of a value must be a successful operation.
 	 */
 	public Object readValue(String propertyName) {
 		if (type != null) {
-			int dotNdx = propertyName.indexOf('.');
+			final int dotNdx = propertyName.indexOf('.');
 
 			if (dotNdx == -1) {
 				return value;
@@ -117,21 +120,10 @@ public class Target {
 		return BeanUtil.declared.getProperty(value, propertyName);
 	}
 
-	/**
-	 * Reads target property.
-	 */
-	public Object readTargetProperty(final ScopeData.Out out) {
-		if (out.target == null) {
-			return readValue(out.name);
-		} else {
-			return readValue(out.target);
-		}
-	}
-
 	// ---------------------------------------------------------------- write
 
 	/**
-	 * Writes value to this target. Depending on a flag, setting the value can be
+	 * Writes value to this target. Depending on a flag, writing the value can be
 	 * completely silent, when no exception is thrown and with top performances.
 	 * Otherwise, an exception is thrown on a failure.
 	 */
@@ -147,7 +139,7 @@ public class Target {
 			}
 
 			if (value == null) {
-				createValueInstance();
+				value = createValueInstance(type);
 			}
 
 			propertyName = propertyName.substring(dotNdx + 1);
@@ -157,21 +149,21 @@ public class Target {
 
 		if (silent) {
 			BeanUtil.declaredForcedSilent.setProperty(value, propertyName, propertyValue);
-			return;
 		}
-
-		BeanUtil.declaredForced.setProperty(value, propertyName, propertyValue);
+		else {
+			BeanUtil.declaredForced.setProperty(value, propertyName, propertyValue);
+		}
 	}
 
 	/**
-	 * Creates new instance of a type and stores it in the value.
+	 * Creates new instance of a type.
 	 */
 	@SuppressWarnings({"unchecked", "NullArgumentToVariableArgMethod"})
-	protected void createValueInstance() {
+	protected Object createValueInstance(Class type) {
 		try {
-			Constructor ctor = type.getDeclaredConstructor(null);
+			final Constructor ctor = type.getDeclaredConstructor(null);
 			ctor.setAccessible(true);
-			value = ctor.newInstance();
+			return ctor.newInstance();
 		} catch (Exception ex) {
 			throw new MadvocException(ex);
 		}

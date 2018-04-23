@@ -28,7 +28,8 @@ package jodd.madvoc.config;
 import jodd.madvoc.component.ScopeDataInspector;
 
 /**
- * Simple data object that holds IN and OUT injection points.
+ * Simple data object that holds IN and OUT injection points for a target,
+ * for all scopes.
  * It also holds the {@link ScopeDataInspector} instance, as it may
  * be handy later. It's not super nice, but it works.
  */
