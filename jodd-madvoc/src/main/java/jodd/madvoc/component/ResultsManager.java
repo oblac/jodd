@@ -32,7 +32,6 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionRuntime;
-import jodd.madvoc.injector.Target;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Chain;
@@ -242,7 +241,7 @@ public class ResultsManager {
 	 * Initializes action result.
 	 */
 	protected void initializeResult(final ActionResult result) {
-		contextInjectorComponent.injectContext(new Target(result));
+		contextInjectorComponent.injectContext(result);
 	}
 
 	// ---------------------------------------------------------------- create
