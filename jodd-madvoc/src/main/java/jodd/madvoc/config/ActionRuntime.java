@@ -48,8 +48,8 @@ public class ActionRuntime {
 	private final String resultBasePath;
 	private final boolean async;
 
-	// scope data information matrix: [scope-type][target-index]
-	private final ScopeData[][] scopeData;
+	// scope data
+	private final ScopeData scopeData;
 	private final MethodParam[] methodParams;
 
 	private final boolean hasArguments;
@@ -69,7 +69,7 @@ public class ActionRuntime {
 		final ActionDefinition actionDefinition,
 		final Class<? extends ActionResult> actionResult,
 		final boolean async,
-		final ScopeData[][] scopeData,
+		final ScopeData scopeData,
 		final MethodParam[] methodParams,
 		final ActionConfig actionConfig
 			)
@@ -186,10 +186,16 @@ public class ActionRuntime {
 		return hasArguments;
 	}
 
-	public ScopeData[][] getScopeData() {
+	/**
+	 * Returns scope data.
+	 */
+	public ScopeData getScopeData() {
 		return scopeData;
 	}
 
+	/**
+	 * Returns action configuration.
+	 */
 	public ActionConfig getActionConfig() {
 		return actionConfig;
 	}
