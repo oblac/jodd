@@ -25,60 +25,34 @@
 
 package jodd.madvoc.config;
 
+import jodd.madvoc.component.ScopeDataInspector;
+
 /**
- * Holds IN and OUT information for single scope.
+ * Simple data object that holds IN and OUT injection points.
+ * It also holds the {@link ScopeDataInspector} instance, as it may
+ * be handy later. It's not super nice, but it works.
  */
 public class ScopeData {
 
-	public In[] in;
-	public Out[] out;
+	private final ScopeDataInspector scopeDataInspector;
+	private final InjectionPoint in[];
+	private final InjectionPoint out[];
 
-	public static class In {
-		public Class type;			// property type
-		public String name;			// property name
-		public String target;		// real property name, if different from 'name'
-
-		public String propertyName() {
-			return target != null ? target : name;
-		}
-
-		/**
-		 * Returns matched property name or <code>null</code> if name is not matched.
-		 * <p>
-		 * Matches if attribute name matches the required field name. If the match is positive,
-		 * injection or outjection is performed on the field.
-		 * <p>
-		 * Parameter name matches field name if param name starts with field name and has
-		 * either '.' or '[' after the field name.
-		 * <p>
-		 * Returns real property name, once when name is matched.
-		 */
-		public String matchedPropertyName(final String value) {
-			// match
-			if (!value.startsWith(name)) {
-				return null;
-			}
-			int requiredLen = name.length();
-			if (value.length() >= requiredLen + 1) {
-				char c = value.charAt(requiredLen);
-				if ((c != '.') && (c != '[')) {
-					return null;
-				}
-			}
-
-			// get param
-			if (target == null) {
-				return value;
-			}
-			return target + value.substring(name.length());
-		}
-
-
+	public ScopeData(
+			final ScopeDataInspector scopeDataInspector,
+			final InjectionPoint[] allIns,
+			final InjectionPoint[] allOuts) {
+		this.scopeDataInspector = scopeDataInspector;
+		this.in = allIns;
+		this.out = allOuts;
 	}
-	public static class Out {
-		public Class type;			// property type
-		public String name;			// property name
-		public String target;		// real property name, if different from 'name'
+
+	public InjectionPoint[] in() { return in;}
+
+	public InjectionPoint[] out() { return out;}
+
+	public ScopeDataInspector inspector() {
+		return scopeDataInspector;
 	}
 
 }
