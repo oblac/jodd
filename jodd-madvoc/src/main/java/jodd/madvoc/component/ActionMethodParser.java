@@ -30,7 +30,6 @@ import jodd.madvoc.ActionHandler;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.config.ActionRuntime;
@@ -38,7 +37,6 @@ import jodd.madvoc.config.MethodParam;
 import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotationValues;
@@ -105,7 +103,7 @@ public class ActionMethodParser {
 	protected MadvocConfig madvocConfig;
 
 	@PetiteInject
-	protected ScopeDataResolver scopeDataResolver;
+	protected ScopeDataInspector scopeDataInspector;
 
 	@PetiteInject
 	protected ActionMethodParamNameResolver actionMethodParamNameResolver;
@@ -129,12 +127,12 @@ public class ActionMethodParser {
 
 		final ActionNames actionNames = new ActionNames(packageActionNames, classActionNames, methodActionNames, method);
 
-		ActionNamingStrategy namingStrategy;
+		final ActionNamingStrategy namingStrategy;
 
 		try {
 			namingStrategy = ClassUtil.newInstance(actionConfig.getNamingStrategy());
 
-			contextInjectorComponent.injectContext(new Target(namingStrategy));
+			contextInjectorComponent.injectContext(namingStrategy);
 		} catch (Exception ex) {
 			throw new MadvocException(ex);
 		}
@@ -464,57 +462,37 @@ public class ActionMethodParser {
 				actionConfig);
 
 		}
-		// 1) find ins and outs
 
-		Class[] paramTypes = actionClassMethod.getParameterTypes();
-		MethodParam[] params = new MethodParam[paramTypes.length];
+		final ScopeData scopeData = scopeDataInspector.inspectClassScopes(actionClass);
 
-		Annotation[][] paramAnns = actionClassMethod.getParameterAnnotations();
+		// find ins and outs
+
+		final Class[] paramTypes = actionClassMethod.getParameterTypes();
+		final MethodParam[] params = new MethodParam[paramTypes.length];
+
+		final Annotation[][] paramAnns = actionClassMethod.getParameterAnnotations();
 		String[] methodParamNames = null;
 
-		// expand arguments array with action itself, on first position
-		Class[] types = ArraysUtil.insert(paramTypes, actionClass, 0);
-
-		ScopeData[][] allScopeData = new ScopeData[ScopeType.values().length][];
 
 		// for all elements: action and method arguments...
-		for (int i = 0; i < types.length; i++) {
-			Class type = types[i];
+		for (int ndx = 0; ndx < paramTypes.length; ndx++) {
+			Class paramType = paramTypes[ndx];
 
-			ScopeData[] scopeData = null;
-
-			if (i > 0) {
-				// lazy init to postpone bytecode usage, when method has no arguments
-				if (methodParamNames == null) {
-					methodParamNames = actionMethodParamNameResolver.resolveParamNames(actionClassMethod);
-				}
-
-				int paramIndex = i - 1;
-
-				String paramName = methodParamNames[paramIndex];
-
-				scopeData = scopeDataResolver.resolveScopeData(paramName, type, paramAnns[paramIndex]);
-
-				params[paramIndex] = new MethodParam(
-						paramTypes[paramIndex], paramName, scopeDataResolver.detectAnnotationType(paramAnns[paramIndex]));
+			// lazy init to postpone bytecode usage, when method has no arguments
+			if (methodParamNames == null) {
+				methodParamNames = actionMethodParamNameResolver.resolveParamNames(actionClassMethod);
 			}
 
-			if (scopeData == null) {
-				// read annotations inside the type for all scope types
-				scopeData = scopeDataResolver.resolveScopeData(type);
-			}
+			String paramName = methodParamNames[ndx];
 
-			if (scopeData == null) {
-				continue;
-			}
+			final ScopeData paramsScopeData = scopeDataInspector.inspectMethodParameterScopes(paramName, paramType, paramAnns[ndx]);
 
-			// for all scope types... merge
-			for (int j = 0; j < ScopeType.values().length; j++) {
-				if (allScopeData[j] == null) {
-					allScopeData[j] = new ScopeData[types.length];
-				}
-				allScopeData[j][i] = scopeData[j];
-			}
+			params[ndx] = new MethodParam(
+				paramTypes[ndx],
+				paramName,
+				scopeDataInspector.detectAnnotationType(paramAnns[ndx]),
+				paramsScopeData
+			);
 		}
 
 		return new ActionRuntime(
@@ -526,7 +504,7 @@ public class ActionMethodParser {
 				actionDefinition,
 				actionResult,
 				async,
-				allScopeData,
+				scopeData,
 				params,
 				actionConfig);
 	}
