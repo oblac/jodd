@@ -30,7 +30,6 @@ import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.BaseActionWrapperStack;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.injector.Target;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
 
@@ -125,7 +124,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Initializes action wrapper.
 	 */
 	protected void initializeWrapper(final T wrapper) {
-		contextInjectorComponent.injectContext(new Target(wrapper));
+		contextInjectorComponent.injectContext(wrapper);
 
 		wrapper.init();
 	}
