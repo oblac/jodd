@@ -25,9 +25,11 @@
 
 package jodd.madvoc.injector;
 
+import jodd.bean.BeanUtil;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.WebApp;
-import jodd.madvoc.config.ScopeData;
+import jodd.madvoc.config.Targets;
+import jodd.madvoc.scope.ParamsScope;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
 
@@ -51,11 +53,12 @@ class MadvocParamsInjectorTest {
 		madpc.defineParameter(baseName + ".string", "jodd");
 		madpc.defineParameter(baseName, "huh");
 
-		MadvocParamsInjector madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
+		ParamsScope paramsScope = new ParamsScope();
+		BeanUtil.declared.setProperty(paramsScope, "madpc", madpc);
 
 		FooBean fooBean = new FooBean();
 
-		madvocParamsInjector.injectContext(new Targets(new Target(fooBean), new ScopeData[]{}), madpc);
+		paramsScope.inject(new Targets(fooBean, null));
 
 		assertEquals(173, fooBean.getInteger().intValue());
 		assertEquals("jodd", fooBean.getString());

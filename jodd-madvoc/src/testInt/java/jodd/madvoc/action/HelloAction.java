@@ -25,12 +25,12 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.MadvocScope;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -88,7 +88,7 @@ public class HelloAction {
 
 	// ----------------------------------------------------------------
 
-	@In @Scope(ScopeType.SERVLET)
+	@In @Scope(MadvocScope.SERVLET)
 	HttpServletResponse servletResponse;
 
 	/**
@@ -101,10 +101,10 @@ public class HelloAction {
 		return "none:";
 	}
 
-	@In @Scope(ScopeType.SERVLET)
+	@In @Scope(MadvocScope.SERVLET)
 	Map<String, String> requestParamMap;
 
-	@In @Scope(ScopeType.SERVLET)
+	@In @Scope(MadvocScope.SERVLET)
 	String requestMethod;
 
 	@Out
@@ -117,7 +117,7 @@ public class HelloAction {
 		public String name;
 	}
 
-	@In @Scope(ScopeType.SERVLET)
+	@In @Scope(MadvocScope.SERVLET)
 	String requestBody;
 
 	@Out

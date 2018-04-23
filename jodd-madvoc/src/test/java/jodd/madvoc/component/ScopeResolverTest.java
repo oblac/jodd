@@ -23,64 +23,40 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.injector;
+package jodd.madvoc.component;
 
-import jodd.madvoc.config.ScopeData;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ScopeDataResolver;
-import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.Out;
+import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.scope.MadvocScope;
+import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ScopeDataResolverTest {
+class ScopeResolverTest {
 
-	static class Action {
-		@In String input;
+	private static class MyScope implements MadvocScope {
 	}
 
 	@Test
-	void testInAnnotations() {
-		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
+	void testScopeRegistration() {
+		ScopeResolver scopeResolver = new ScopeResolver();
+		scopeResolver.madpc = new PetiteContainer();
+		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
 
-		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(Action.class);
+		MadvocScope requestScope = scopeResolver.defaultOrScopeType(MadvocScope.REQUEST);
+		MadvocScope requestScope2 = scopeResolver.defaultOrScopeType(MadvocScope.REQUEST);
 
-		ScopeData.In[] in1 = scopeData[ScopeType.REQUEST.value()].in;
+		assertEquals(requestScope2, requestScope);
 
-		ScopeData.In in = in1[0];
+		scopeResolver.registerScope(MadvocScope.REQUEST, MyScope.class);
 
-		assertEquals("input", in.name);
-		assertEquals(String.class, in.type);
+		requestScope = scopeResolver.defaultOrScopeType(MadvocScope.REQUEST);
+		assertNotEquals(requestScope2, requestScope);
+
+		assertTrue(requestScope instanceof MyScope);
+
+		assertEquals(1, scopeResolver.allScopes.size());
 	}
-
-	// ----------------------------------------------------------------
-
-	static class BaseAction<A, B> {
-		@In A input;
-		@Out B output;
-	}
-
-	static class GenAction extends BaseAction<String, Integer> {
-	}
-
-	@Test
-	void testGenericAction() {
-		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
-
-		ScopeData[] scopeData = scopeDataResolver.resolveScopeData(GenAction.class);
-
-		ScopeData.In[] in1 = scopeData[ScopeType.REQUEST.value()].in;
-		ScopeData.Out[] out1 = scopeData[ScopeType.REQUEST.value()].out;
-
-		ScopeData.In in = in1[0];
-		ScopeData.Out out = out1[0];
-
-		assertEquals("input", in.name);
-		assertEquals(String.class, in.type);
-
-		assertEquals("output", out.name);
-		assertEquals(Integer.class, out.type);
-	}
-
 }
