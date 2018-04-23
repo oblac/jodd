@@ -466,7 +466,7 @@ public abstract class PetiteBeans {
 		if (list.isEmpty()) {
 			beanNames = StringPool.EMPTY_ARRAY;
 		} else {
-			beanNames = list.toArray(new String[list.size()]);
+			beanNames = list.toArray(new String[0]);
 		}
 
 		beanCollections.put(type, beanNames);

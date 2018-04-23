@@ -185,7 +185,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Creates child Jerry.
 	 */
 	protected Jerry(final Jerry parent, final List<Node> nodeList) {
-		this(parent, nodeList.toArray(new Node[nodeList.size()]));
+		this(parent, nodeList.toArray(new Node[0]));
 	}
 
 	// ---------------------------------------------------------------- this
@@ -1200,16 +1200,19 @@ public class Jerry implements Iterable<Jerry> {
 	 * Returns iterator over nodes contained in the Jerry object.
 	 * Each node is wrapped. Similar to {@link #each(JerryFunction)}.
 	 */
+	@Override
 	public Iterator<Jerry> iterator() {
 		final Jerry jerry = this;
 
 		return new Iterator<Jerry>() {
 			private int index = 0;
 
+			@Override
 			public boolean hasNext() {
 				return index < jerry.nodes.length;
 			}
 
+			@Override
 			public Jerry next() {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
@@ -1219,6 +1222,7 @@ public class Jerry implements Iterable<Jerry> {
 				return nextJerry;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}

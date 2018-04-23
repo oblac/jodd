@@ -67,7 +67,7 @@ public class InitMethodResolver {
 			methods = InitMethodPoint.EMPTY;
 		} else {
 			Collections.sort(list);
-			methods = list.toArray(new InitMethodPoint[list.size()]);
+			methods = list.toArray(new InitMethodPoint[0]);
 		}
 
 		return methods;

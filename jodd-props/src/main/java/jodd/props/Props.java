@@ -686,7 +686,7 @@ public class Props implements Cloneable {
 			}
 		}
 
-		return profiles.toArray(new String[profiles.size()]);
+		return profiles.toArray(new String[0]);
 	}
 
 	/**

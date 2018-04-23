@@ -83,7 +83,7 @@ public class MethodResolver {
 		if (list.isEmpty()) {
 			methodInjectionPoints = MethodInjectionPoint.EMPTY;
 		} else {
-			methodInjectionPoints = list.toArray(new MethodInjectionPoint[list.size()]);
+			methodInjectionPoints = list.toArray(new MethodInjectionPoint[0]);
 		}
 
 		return methodInjectionPoints;

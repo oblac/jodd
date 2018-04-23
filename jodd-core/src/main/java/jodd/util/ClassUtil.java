@@ -199,7 +199,7 @@ public class ClassUtil {
 		Set<Class> bag = new LinkedHashSet<>();
 		_resolveAllInterfaces(type, bag);
 
-		return bag.toArray(new Class[bag.size()]);
+		return bag.toArray(new Class[0]);
 	}
 
 	private static void _resolveAllInterfaces(final Class type, final Set<Class> bag) {
@@ -242,7 +242,7 @@ public class ClassUtil {
 			list.add(type);
 		}
 
-		return list.toArray(new Class[list.size()]);
+		return list.toArray(new Class[0]);
 	}
 
 	// ---------------------------------------------------------------- accessible methods
@@ -414,7 +414,7 @@ public class ClassUtil {
 				}
 			}
 		}
-		return supportedMethods.toArray(new Method[supportedMethods.size()]);
+		return supportedMethods.toArray(new Method[0]);
 	}
 
 
@@ -439,7 +439,7 @@ public class ClassUtil {
 				}
 			}
 		}
-		return supportedFields.toArray(new Field[supportedFields.size()]);
+		return supportedFields.toArray(new Field[0]);
 	}
 
 

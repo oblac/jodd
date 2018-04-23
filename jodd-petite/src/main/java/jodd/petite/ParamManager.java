@@ -98,7 +98,7 @@ public class ParamManager {
 		if (list.isEmpty()) {
 			return StringPool.EMPTY_ARRAY;
 		} else {
-			return list.toArray(new String[list.size()]);
+			return list.toArray(new String[0]);
 		}
 	}
 
@@ -130,7 +130,7 @@ public class ParamManager {
 			}
 		}
 
-		return valueInjectionPointList.toArray(new ValueInjectionPoint[valueInjectionPointList.size()]);
+		return valueInjectionPointList.toArray(new ValueInjectionPoint[0]);
 	}
 
 }

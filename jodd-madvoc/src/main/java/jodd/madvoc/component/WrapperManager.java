@@ -187,7 +187,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 			}
 			i++;
 		}
-		return list.toArray(new Class[list.size()]);
+		return list.toArray(new Class[0]);
 	}
 
 	// ---------------------------------------------------------------- create

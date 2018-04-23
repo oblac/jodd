@@ -443,7 +443,7 @@ public class PropsParser implements Cloneable {
 
 			String[] profiles = null;
 			if (keyProfiles != null) {
-				profiles = keyProfiles.toArray(new String[keyProfiles.size()]);
+				profiles = keyProfiles.toArray(new String[0]);
 			}
 
 			String[] sources = StringUtil.splitc(value, ',');

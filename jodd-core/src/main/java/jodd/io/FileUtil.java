@@ -919,7 +919,7 @@ public class FileUtil {
 		} finally {
 			StreamUtil.close(in);
 		}
-		return list.toArray(new String[list.size()]);
+		return list.toArray(new String[0]);
 	}
 
 	// ---------------------------------------------------------------- read/write byte array

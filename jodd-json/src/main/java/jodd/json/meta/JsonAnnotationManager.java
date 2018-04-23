@@ -281,13 +281,13 @@ public class JsonAnnotationManager {
 		String[] reals = null;
 
 		if (!realNames.isEmpty()) {
-			reals = realNames.toArray(new String[realNames.size()]);
+			reals = realNames.toArray(new String[0]);
 		}
 
 		String[] jsons = null;
 	
 		if (!jsonNames.isEmpty()) {
-			jsons = jsonNames.toArray(new String[jsonNames.size()]);
+			jsons = jsonNames.toArray(new String[0]);
 		}
 
 		// type

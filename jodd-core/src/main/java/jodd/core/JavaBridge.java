@@ -67,7 +67,7 @@ public class JavaBridge {
 			classLoader = classLoader.getParent();
 		}
 
-		return urls.toArray(new URL[urls.size()]);
+		return urls.toArray(new URL[0]);
 	}
 
 	private static URL classModuleUrl(ClassLoader classLoader, Class clazz) {

@@ -127,7 +127,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			}
 		}
 
-		return cookieList.toArray(new Cookie[cookieList.size()]);
+		return cookieList.toArray(new Cookie[0]);
 	}
 
 	// ---------------------------------------------------------------- body

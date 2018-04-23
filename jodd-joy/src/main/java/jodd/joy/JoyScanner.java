@@ -129,8 +129,8 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 		}
 
 		classScanner
-			.includeEntries(includedEntries.toArray(new String[includedEntries.size()]))
-			.includeJars(includedJars.toArray(new String[includedJars.size()]))
+			.includeEntries(includedEntries.toArray(new String[0]))
+			.includeJars(includedJars.toArray(new String[0]))
 			.ignoreException(ignoreExceptions)
 			.scanDefaultClasspath();
 

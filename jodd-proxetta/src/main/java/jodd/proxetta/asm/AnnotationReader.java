@@ -116,7 +116,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 
 			@Override
 			public void visitEnd() {
-				Object[] data = array.toArray(new Object[array.size()]);
+				Object[] data = array.toArray(new Object[0]);
 				elements.put(name, data);
 			}
 		};

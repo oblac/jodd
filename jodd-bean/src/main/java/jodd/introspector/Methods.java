@@ -145,7 +145,7 @@ public class Methods {
 				Collections.addAll(allMethodsList, methodDescriptors);
 			}
 
-			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
+			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[0]);
 
 			Arrays.sort(allMethods, new Comparator<MethodDescriptor>() {
 				@Override

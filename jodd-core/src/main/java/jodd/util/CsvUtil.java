@@ -122,7 +122,7 @@ public class CsvUtil {
         if (len > 0 && fieldStart <= len) {
             addField(row, line, fieldStart, len, inQuotedField);
         }
-        return row.toArray(new String[row.size()]);
+        return row.toArray(new String[0]);
 	}
 
 	private static void addField(final List<String> row, final String line, final int startIndex, final int endIndex, final boolean inQuoted) {

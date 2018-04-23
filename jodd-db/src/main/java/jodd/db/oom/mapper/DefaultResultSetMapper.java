@@ -225,7 +225,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			}
 			resultColumns.add(columnName);
 		}
-		return classes.toArray(new Class[classes.size()]);
+		return classes.toArray(new Class[0]);
 	}
 
 	// ---------------------------------------------------------------- cache

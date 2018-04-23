@@ -48,7 +48,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	 * Returns an array of founded Decora tags.
 	 */
 	public DecoraTag[] getDecoraTags() {
-		return decoraTags.toArray(new DecoraTag[decoraTags.size()]);
+		return decoraTags.toArray(new DecoraTag[0]);
 	}
 
 	protected String decoraTagName;

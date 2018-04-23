@@ -293,7 +293,7 @@ public class HttpBrowser {
 				cookiesList.add(cookieEntry.getValue());
 			}
 
-			httpRequest.cookies(cookiesList.toArray(new Cookie[cookiesList.size()]));
+			httpRequest.cookies(cookiesList.toArray(new Cookie[0]));
 		}
 	}
 }

@@ -228,7 +228,7 @@ public class SystemUtil {
 				break;
 		}
 
-		jrePackages = packages.toArray(new String[packages.size()]);
+		jrePackages = packages.toArray(new String[0]);
 	}
 
 

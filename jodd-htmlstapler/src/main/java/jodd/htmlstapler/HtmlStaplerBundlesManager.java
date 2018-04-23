@@ -362,7 +362,7 @@ public class HtmlStaplerBundlesManager {
 		}
 
 		// create unique digest from the collected sources
-		String[] sourcesArray = sources.toArray(new String[sources.size()]);
+		String[] sourcesArray = sources.toArray(new String[0]);
 		for (int i = 0, sourcesArrayLength = sourcesArray.length; i < sourcesArrayLength; i++) {
 			sourcesArray[i] = sourcesArray[i].trim().toLowerCase();
 		}

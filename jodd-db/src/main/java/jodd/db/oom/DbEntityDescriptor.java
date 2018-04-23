@@ -158,7 +158,7 @@ public class DbEntityDescriptor<E> {
 		if (decList.isEmpty()) {
 			throw new DbOomException("No column mappings in entity: " + type);
 		}
-		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[decList.size()]);
+		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[0]);
 		Arrays.sort(columnDescriptors);
 
 		// extract ids from sorted list

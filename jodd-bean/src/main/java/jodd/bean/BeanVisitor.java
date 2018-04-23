@@ -105,7 +105,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 		}
 
-		return names.toArray(new String[names.size()]);
+		return names.toArray(new String[0]);
 	}
 
 	/**

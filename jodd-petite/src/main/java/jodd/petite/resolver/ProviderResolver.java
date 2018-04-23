@@ -86,7 +86,7 @@ public class ProviderResolver {
 		if (list.isEmpty()) {
 			providers = ProviderDefinition.EMPTY;
 		} else {
-			providers = list.toArray(new ProviderDefinition[list.size()]);
+			providers = list.toArray(new ProviderDefinition[0]);
 		}
 
 		return providers;

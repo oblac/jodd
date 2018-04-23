@@ -160,6 +160,6 @@ public class MimeTypes {
 			return StringPool.EMPTY_ARRAY;
 		}
 
-		return extensions.toArray(new String[extensions.size()]);
+		return extensions.toArray(new String[0]);
 	}
 }

@@ -193,7 +193,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 		// prepare class annotations
 		if (classAnnotations != null) {
-			annotations = classAnnotations.toArray(new AnnotationInfo[classAnnotations.size()]);
+			annotations = classAnnotations.toArray(new AnnotationInfo[0]);
 			classAnnotations = null;
 		}
 
@@ -227,7 +227,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				Collections.addAll(allInterfaces, cr.getInterfaces());
 			}
 		}
-		superClasses = superList.toArray(new String[superList.size()]);
+		superClasses = superList.toArray(new String[0]);
 
 		// check all interface methods that are not overridden in super-interface
 
@@ -327,7 +327,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		public void visitEnd() {
 			if (!methodAnns.isEmpty()) {
 				// method annotations
-				msign.annotations = methodAnns.toArray(new AnnotationInfo[methodAnns.size()]);
+				msign.annotations = methodAnns.toArray(new AnnotationInfo[0]);
 			}
 
 			// arguments annotations
@@ -336,7 +336,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				List<AnnotationInfo> methodParamsAnn = methodParamsAnns[i];
 
 				if (methodParamsAnn != null) {
-					msign.getArgument(i + 1).annotations = methodParamsAnn.toArray(new AnnotationInfo[methodParamsAnn.size()]);
+					msign.getArgument(i + 1).annotations = methodParamsAnn.toArray(new AnnotationInfo[0]);
 				}
 			}
 		}

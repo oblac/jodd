@@ -251,10 +251,10 @@ public class ScopeDataInspector {
 		InjectionPoint[] out = null;
 
 		if (!listIn.isEmpty()) {
-			in = listIn.toArray(new InjectionPoint[listIn.size()]);
+			in = listIn.toArray(new InjectionPoint[0]);
 		}
 		if (!listOut.isEmpty()) {
-			out = listOut.toArray(new InjectionPoint[listOut.size()]);
+			out = listOut.toArray(new InjectionPoint[0]);
 		}
 
 		return new ScopeData(this, in, out);

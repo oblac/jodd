@@ -541,7 +541,7 @@ public abstract class Node implements Cloneable {
 		if (childNodes == null) {
 			return new Node[0];
 		}
-		return childNodes.toArray(new Node[childNodes.size()]);
+		return childNodes.toArray(new Node[0]);
 	}
 
 	/**

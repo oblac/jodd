@@ -93,7 +93,7 @@ public class JoyProps extends JoyBase {
 
 		log.info("Loaded sys&env props: " + props.countTotalProperties() + " properties.");
 
-		props.setActiveProfiles(propsProfiles.toArray(new String[propsProfiles.size()]));
+		props.setActiveProfiles(propsProfiles.toArray(new String[0]));
 
 		// prepare patterns
 

@@ -87,7 +87,7 @@ public class SetResolver {
 		if (list.isEmpty()) {
 			fields = SetInjectionPoint.EMPTY;
 		} else {
-			fields = list.toArray(new SetInjectionPoint[list.size()]);
+			fields = list.toArray(new SetInjectionPoint[0]);
 		}
 		return fields;
 	}

@@ -248,7 +248,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		if (hints == null) {
 			return null;
 		}
-		return hints.toArray(new String[hints.size()]);
+		return hints.toArray(new String[0]);
 	}
 
 	// ---------------------------------------------------------------- table

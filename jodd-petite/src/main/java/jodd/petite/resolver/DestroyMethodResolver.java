@@ -64,7 +64,7 @@ public class DestroyMethodResolver {
 		if (list.isEmpty()) {
 			methods = DestroyMethodPoint.EMPTY;
 		} else {
-			methods = list.toArray(new DestroyMethodPoint[list.size()]);
+			methods = list.toArray(new DestroyMethodPoint[0]);
 		}
 
 		return methods;

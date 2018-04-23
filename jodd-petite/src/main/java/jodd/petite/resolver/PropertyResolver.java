@@ -86,7 +86,7 @@ public class PropertyResolver {
 		if (list.isEmpty()) {
 			fields = PropertyInjectionPoint.EMPTY;
 		} else {
-			fields = list.toArray(new PropertyInjectionPoint[list.size()]);
+			fields = list.toArray(new PropertyInjectionPoint[0]);
 		}
 
 		return fields;

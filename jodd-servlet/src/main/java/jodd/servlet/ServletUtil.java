@@ -221,7 +221,7 @@ public class ServletUtil {
 		if (list.isEmpty()) {
 			return null;
 		}
-		return list.toArray(new Cookie[list.size()]);
+		return list.toArray(new Cookie[0]);
 	}
 
 	// ---------------------------------------------------------------- request body

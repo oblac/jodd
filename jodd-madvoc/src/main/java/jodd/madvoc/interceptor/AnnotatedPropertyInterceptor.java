@@ -110,7 +110,7 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 		if (list.isEmpty()) {
 			properties = EMPTY;
 		} else {
-			properties = list.toArray(new PropertyDescriptor[list.size()]);
+			properties = list.toArray(new PropertyDescriptor[0]);
 		}
 
 		annotatedProperties.put(type, properties);

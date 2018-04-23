@@ -41,7 +41,7 @@ final class TargetMethodData {
 	TargetMethodData(final MethodSignatureVisitor msign, final List<ProxyAspectData> aspectList) {
 		this.msign = msign;
 		this.methodName = msign.getMethodName();
-		this.proxyData = aspectList.toArray(new ProxyAspectData[aspectList.size()]);
+		this.proxyData = aspectList.toArray(new ProxyAspectData[0]);
 	}
 
 	// ---------------------------------------------------------------- current
