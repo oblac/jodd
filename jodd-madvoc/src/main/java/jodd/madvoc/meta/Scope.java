@@ -25,7 +25,7 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.ScopeType;
+import jodd.madvoc.scope.MadvocScope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -41,8 +41,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 public @interface Scope {
 	/**
-	 * Specifies parameter scope.
+	 * Scope type.
 	 */
-	ScopeType value() default ScopeType.REQUEST;
+	String value() default MadvocScope.REQUEST;
 
 }
