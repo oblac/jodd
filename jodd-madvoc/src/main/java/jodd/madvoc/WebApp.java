@@ -34,7 +34,6 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.AsyncActionExecutor;
 import jodd.madvoc.component.ContextInjectorComponent;
 import jodd.madvoc.component.FiltersManager;
-import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocComponentLifecycle.Init;
@@ -44,7 +43,8 @@ import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ResultsManager;
-import jodd.madvoc.component.ScopeDataResolver;
+import jodd.madvoc.component.ScopeDataInspector;
+import jodd.madvoc.component.ScopeResolver;
 import jodd.madvoc.component.ServletContextProvider;
 import jodd.props.Props;
 import jodd.util.ClassConsumer;
@@ -274,13 +274,13 @@ public class WebApp {
 		madvocContainer.registerComponent(ActionPathRewriter.class);
 		madvocContainer.registerComponent(ActionsManager.class);
 		madvocContainer.registerComponent(ContextInjectorComponent.class);
-		madvocContainer.registerComponent(InjectorsManager.class);
 		madvocContainer.registerComponent(InterceptorsManager.class);
 		madvocContainer.registerComponent(FiltersManager.class);
 		madvocContainer.registerComponent(MadvocController.class);
 		madvocContainer.registerComponent(ResultsManager.class);
 		madvocContainer.registerComponent(ResultMapper.class);
-		madvocContainer.registerComponent(ScopeDataResolver.class);
+		madvocContainer.registerComponent(ScopeResolver.class);
+		madvocContainer.registerComponent(ScopeDataInspector.class);
 		madvocContainer.registerComponent(AsyncActionExecutor.class);
 	}
 
