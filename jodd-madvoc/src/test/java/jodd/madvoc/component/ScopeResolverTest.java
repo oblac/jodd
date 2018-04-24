@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScopeResolverTest {
@@ -58,5 +59,19 @@ class ScopeResolverTest {
 		assertTrue(requestScope instanceof MyScope);
 
 		assertEquals(1, scopeResolver.allScopes.size());
+	}
+
+	@Test
+	void testScopeClassLookup() {
+		ScopeResolver scopeResolver = new ScopeResolver();
+		scopeResolver.madpc = new PetiteContainer();
+		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
+
+		MadvocScope madvocScope = scopeResolver.defaultOrScopeType(MyScope.class.getName());
+		assertNotNull(madvocScope);
+		assertTrue(madvocScope instanceof MyScope);
+		MadvocScope madvocScope2 = scopeResolver.defaultOrScopeType(MyScope.class.getName());
+
+		assertEquals(madvocScope2, madvocScope);
 	}
 }

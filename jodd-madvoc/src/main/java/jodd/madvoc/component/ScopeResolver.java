@@ -37,6 +37,7 @@ import jodd.madvoc.scope.ServletContextScope;
 import jodd.madvoc.scope.SessionScope;
 import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
@@ -93,7 +94,12 @@ public class ScopeResolver {
 		Class<? extends MadvocScope> scopeClass = scopeNames.get(scope);
 
 		if (scopeClass == null) {
-			throw new MadvocException("Unknown scope: " + scope);
+			// scope not found, try to find it
+			try {
+				scopeClass = ClassLoaderUtil.loadClass(scope);
+			} catch (ClassNotFoundException ignore) {
+				throw new MadvocException("Unknown scope: " + scope);
+			}
 		}
 
 		return getOrInitScope(scopeClass);
