@@ -13,6 +13,7 @@ Work-in-progress :thunder:
 + **petite** - added `PetiteContainer#invokeMethod`.
 + **petite** - added cache for external types that are not registered into the container.
 + **madvoc** - `MadvocScope` added, injectors removed. Scopes are now defined by annotations only.
++ **proxetta** - ASM library updated to v6.1.1.
 
 ### Breaking changes
 
