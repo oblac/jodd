@@ -32,7 +32,7 @@ import jodd.util.StringUtil;
 
 /**
  * Request body scope.
- * it is assumed that body is a JSON.
+ * Assumes that body is a JSON and parses it into the target type.
  */
 public class BodyScope implements MadvocScope {
 
@@ -44,10 +44,18 @@ public class BodyScope implements MadvocScope {
 		}
 
 		targets.forEachTargetAndIn(this, (target, in) -> {
-			final Object value = JsonParser.create().parse(body, in.type());
+			final Object value = parseRequestBody(body, in.type());
 
 			target.writeValue(in.propertyName(), value, true);
 		});
 
 	}
+
+	/**
+	 * Parses request body into the target type.
+	 */
+	protected Object parseRequestBody(final String body, final Class targeType) {
+		return JsonParser.create().parse(body, targeType);
+	}
+
 }
