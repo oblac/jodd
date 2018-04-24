@@ -76,8 +76,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	// ---------------------------------------------------------------- ctors
 
 	public MethodSignatureVisitor(final String methodName, final int access, final String classname, final String description, final String[] exceptions, final String signature, final ClassInfo targetClassInfo) {
-		super(new StringBuilder());
-		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
+		super(new StringBuilder(), (access & Opcodes.ACC_INTERFACE) != 0);
+//		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
 		this.methodName = methodName;
 		this.access = access;
