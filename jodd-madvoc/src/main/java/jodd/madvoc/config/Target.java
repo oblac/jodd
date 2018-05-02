@@ -106,7 +106,12 @@ public class Target {
 	 * is thrown. We assume that outjection is controlled by developer
 	 * and that each reading of a value must be a successful operation.
 	 */
-	public Object readValue(String propertyName) {
+	public Object readValue(final InjectionPoint injectionPoint) {
+		return readValue(injectionPoint.targetName());
+	}
+	public Object readValue(final String name) {
+		String propertyName = name;
+
 		if (type != null) {
 			final int dotNdx = propertyName.indexOf('.');
 
@@ -127,7 +132,12 @@ public class Target {
 	 * completely silent, when no exception is thrown and with top performances.
 	 * Otherwise, an exception is thrown on a failure.
 	 */
-	public void writeValue(String propertyName, final Object propertyValue, final boolean silent) {
+	public void writeValue(final InjectionPoint injectionPoint, final Object propertyValue, final boolean silent) {
+		writeValue(injectionPoint.targetName(), propertyValue, silent);
+	}
+	public void writeValue(final String name, final Object propertyValue, final boolean silent) {
+		String propertyName = name;
+
 		if (type != null) {
 			// target type specified, save into target value!
 

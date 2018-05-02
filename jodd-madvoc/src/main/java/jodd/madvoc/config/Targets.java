@@ -63,7 +63,7 @@ public class Targets {
 	 * Iterates all targets.
 	 */
 	public void forEachTarget(final Consumer<Target> targetConsumer) {
-		for (Target target : targets) {
+		for (final Target target : targets) {
 			targetConsumer.accept(target);
 		}
 	}
@@ -72,13 +72,13 @@ public class Targets {
 	 * Iterates all targets and for each target iterates all IN injection points of given scope.
 	 */
 	public void forEachTargetAndIn(final MadvocScope scope, final BiConsumer<Target, InjectionPoint> biConsumer) {
-		for (Target target : targets) {
+		for (final Target target : targets) {
 			final ScopeData scopeData = target.scopeData();
 
 			if (scopeData.in() == null) {
 				continue;
 			}
-			for (InjectionPoint in : scopeData.in()) {
+			for (final InjectionPoint in : scopeData.in()) {
 				if (in.scope() != scope) {
 					continue;
 				}
@@ -91,13 +91,13 @@ public class Targets {
 	 * Iterates all targets and for each target iterates all OUT injection points of given scope.
 	 */
 	public void forEachTargetAndOut(final MadvocScope scope, final BiConsumer<Target, InjectionPoint> biConsumer) {
-		for (Target target : targets) {
+		for (final Target target : targets) {
 			final ScopeData scopeData = target.scopeData();
 
 			if (scopeData.out() == null) {
 				continue;
 			}
-			for (InjectionPoint out : scopeData.out()) {
+			for (final InjectionPoint out : scopeData.out()) {
 				if (out.scope() != scope) {
 					continue;
 				}
@@ -112,7 +112,7 @@ public class Targets {
 	 * Collects all parameters from target into an array.
 	 */
 	public Object[] extractParametersValues() {
-		Object[] values = new Object[targets.length - 1];
+		final Object[] values = new Object[targets.length - 1];
 
 		for (int i = 1; i < targets.length; i++) {
 			values[i - 1] = targets[i].value();

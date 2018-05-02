@@ -49,7 +49,7 @@ public class InjectionPoint {
 	}
 
 	/**
-	 * Returns base name.
+	 * Returns injection point name.
 	 */
 	public String name() {
 		return name;
@@ -63,14 +63,14 @@ public class InjectionPoint {
 	}
 
 	/**
-	 * Returns real property name.
+	 * Returns real targets name, used for writing and reading directly to the target.
 	 */
-	public String propertyName() {
+	public String targetName() {
 		return targetName != null ? targetName : name;
 	}
 
 	/**
-	 * Returns matched property name or <code>null</code> if name is not matched.
+	 * Returns matched name or <code>null</code> if name is not matched.
 	 * <p>
 	 * Matches if attribute name matches the required field name. If the match is positive,
 	 * injection is performed on the field.
@@ -80,12 +80,14 @@ public class InjectionPoint {
 	 * <p>
 	 * Returns real property name, once when name is matched.
 	 */
-	public String matchedPropertyName(final String value) {
+	public String matchedName(final String value) {
 		// match
 		if (!value.startsWith(name)) {
 			return null;
 		}
+
 		final int requiredLen = name.length();
+
 		if (value.length() >= requiredLen + 1) {
 			final char c = value.charAt(requiredLen);
 			if ((c != '.') && (c != '[')) {
@@ -97,6 +99,7 @@ public class InjectionPoint {
 		if (targetName == null) {
 			return value;
 		}
+
 		return targetName + value.substring(name.length());
 	}
 }
