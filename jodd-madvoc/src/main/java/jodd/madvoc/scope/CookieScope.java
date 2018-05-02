@@ -47,21 +47,24 @@ public class CookieScope implements MadvocScope {
 			Object value = null;
 
 			if (in.type() == Cookie.class) {
+				// get single cookie
 				final String cookieName = StringUtil.uncapitalize(in.name());
-				value = ServletUtil.getCookie(servletRequest, cookieName);     // get single cookie
+				value = ServletUtil.getCookie(servletRequest, cookieName);
 			}
 			else if (in.type().isArray()) {
 				if (in.type().getComponentType().equals(Cookie.class)) {
 					if (StringUtil.isEmpty(in.name())) {
-						value = servletRequest.getCookies();		                    // get all cookies
+						// get all cookies
+						value = servletRequest.getCookies();
 					} else {
-						value = ServletUtil.getAllCookies(servletRequest, in.name());     // get all cookies by name
+						// get all cookies by name
+						value = ServletUtil.getAllCookies(servletRequest, in.name());
 					}
 				}
 			}
 
 			if (value != null) {
-				target.writeValue(in.propertyName(), value, true);
+				target.writeValue(in, value, true);
 			}
 		});
 	}
@@ -71,7 +74,7 @@ public class CookieScope implements MadvocScope {
 		final HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		targets.forEachTargetAndOut(this, (target, out) -> {
-			final Cookie cookie = (Cookie) target.readValue(out.propertyName());
+			final Cookie cookie = (Cookie) target.readValue(out);
 			if (cookie != null) {
 				servletResponse.addCookie(cookie);
 			}

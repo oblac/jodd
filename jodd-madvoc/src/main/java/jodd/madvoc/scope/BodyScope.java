@@ -25,14 +25,12 @@
 
 package jodd.madvoc.scope;
 
-import jodd.json.JsonParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
 import jodd.util.StringUtil;
 
 /**
- * Request body scope.
- * Assumes that body is a JSON and parses it into the target type.
+ * Raw BODY scope.
  */
 public class BodyScope implements MadvocScope {
 
@@ -43,19 +41,8 @@ public class BodyScope implements MadvocScope {
 			return;
 		}
 
-		targets.forEachTargetAndIn(this, (target, in) -> {
-			final Object value = parseRequestBody(body, in.type());
-
-			target.writeValue(in.propertyName(), value, true);
-		});
-
+		targets.forEachTargetAndIn(this, (target, in) -> target.writeValue(in, body, true));
 	}
 
-	/**
-	 * Parses request body into the target type.
-	 */
-	protected Object parseRequestBody(final String body, final Class targeType) {
-		return JsonParser.create().parse(body, targeType);
-	}
 
 }

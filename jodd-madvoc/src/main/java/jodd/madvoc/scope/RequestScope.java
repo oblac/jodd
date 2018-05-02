@@ -47,6 +47,7 @@ public class RequestScope implements MadvocScope {
 	MadvocConfig madvocConfig;
 
 	protected final ActionPathMacroInjector actionPathMacroInjector = new ActionPathMacroInjector(this);
+	protected final InstancesInjector instancesInjector = new InstancesInjector(this);
 
 	// ---------------------------------------------------------------- configuration
 
@@ -89,6 +90,8 @@ public class RequestScope implements MadvocScope {
 	public void inject(final ActionRequest actionRequest, final Targets targets) {
 		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
+		instancesInjector.inject(actionRequest, targets);
+
 		if (injectAttributes) {
 			injectAttributes(servletRequest, targets);
 		}
@@ -100,18 +103,16 @@ public class RequestScope implements MadvocScope {
 		actionPathMacroInjector.inject(actionRequest, targets);
 	}
 
-
-
 	/**
 	 * Injects request attributes.
 	 */
 	protected void injectAttributes(final HttpServletRequest servletRequest, final Targets targets) {
-		final Enumeration attributeNames = servletRequest.getAttributeNames();
+		final Enumeration<String> attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
-			final String attrName = (String) attributeNames.nextElement();
+			final String attrName = attributeNames.nextElement();
 
 			targets.forEachTargetAndIn(this, (target, in) -> {
-				final String name = in.matchedPropertyName(attrName);
+				final String name = in.matchedName(attrName);
 				if (name != null) {
 					final Object attrValue = servletRequest.getAttribute(attrName);
 					target.writeValue(name, attrValue, true);
@@ -125,16 +126,16 @@ public class RequestScope implements MadvocScope {
 	 */
 	protected void injectParameters(final HttpServletRequest servletRequest, final Targets targets) {
 		final boolean encode = encodeGetParams && servletRequest.getMethod().equals("GET");
-		final Enumeration paramNames = servletRequest.getParameterNames();
+		final Enumeration<String> paramNames = servletRequest.getParameterNames();
 
 		while (paramNames.hasMoreElements()) {
-			final String paramName = (String) paramNames.nextElement();
+			final String paramName = paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
 
 			targets.forEachTargetAndIn(this, (target, in) -> {
-				final String name = in.matchedPropertyName(paramName);
+				final String name = in.matchedName(paramName);
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
 
@@ -170,15 +171,15 @@ public class RequestScope implements MadvocScope {
 		if (!multipartRequest.isMultipart()) {
 			return;
 		}
-		final Enumeration paramNames = multipartRequest.getFileParameterNames();
+		final Enumeration<String> paramNames = multipartRequest.getFileParameterNames();
 		while (paramNames.hasMoreElements()) {
-			final String paramName = (String) paramNames.nextElement();
+			final String paramName = paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
 
 			targets.forEachTargetAndIn(this, (target, in) -> {
-				final String name = in.matchedPropertyName(paramName);
+				final String name = in.matchedName(paramName);
 				if (name != null) {
 					final FileUpload[] paramValues = multipartRequest.getFiles(paramName);
 
@@ -206,7 +207,7 @@ public class RequestScope implements MadvocScope {
 		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		targets.forEachTargetAndOut(this, (target, out) -> {
-			final Object value = target.readValue(out.propertyName());
+			final Object value = target.readValue(out);
 			servletRequest.setAttribute(out.name(), value);
 		});
 	}

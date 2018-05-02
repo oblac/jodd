@@ -37,14 +37,6 @@ import javax.servlet.ServletContext;
  */
 public interface MadvocScope {
 
-	String APPLICATION = "Application";
-	String BODY = "Body";
-	String COOKIE = "Cookie";
-	String CONTEXT = "MadvocContext";
-	String REQUEST = "Request";
-	String SERVLET = "ServletContext";
-	String SESSION = "Session";
-
 	/**
 	 * Injects action request context into the targets.
 	 */

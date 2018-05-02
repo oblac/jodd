@@ -42,13 +42,13 @@ public class SessionScope implements MadvocScope {
 		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		final HttpSession session = servletRequest.getSession();
 
-		final Enumeration attributeNames = session.getAttributeNames();
+		final Enumeration<String> attributeNames = session.getAttributeNames();
 
 		while (attributeNames.hasMoreElements()) {
-			final String attrName = (String) attributeNames.nextElement();
+			final String attrName = attributeNames.nextElement();
 
 			targets.forEachTargetAndIn(this, (target, in) -> {
-				final String name = in.matchedPropertyName(attrName);
+				final String name = in.matchedName(attrName);
 				if (name != null) {
 					final Object attrValue = session.getAttribute(attrName);
 					target.writeValue(name, attrValue, true);
@@ -64,7 +64,7 @@ public class SessionScope implements MadvocScope {
 		final HttpSession session = servletRequest.getSession();
 
 		targets.forEachTargetAndOut(this, (target, out) -> {
-			final Object value = target.readValue(out.propertyName());
+			final Object value = target.readValue(out);
 			session.setAttribute(out.name(), value);
 		});
 	}

@@ -84,7 +84,7 @@ public class ActionPathMacroInjector {
 			final String macroName = names[ndx];
 
 			targets.forEachTargetAndIn(madvocScope, (target, in) -> {
-				final String name = in.matchedPropertyName(macroName);
+				final String name = in.matchedName(macroName);
 
 				if (name != null) {
 					target.writeValue(name, value, true);

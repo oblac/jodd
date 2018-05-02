@@ -25,128 +25,57 @@
 
 package jodd.madvoc.scope;
 
-import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
-import jodd.servlet.CsrfShield;
-import jodd.servlet.map.HttpServletContextMap;
-import jodd.servlet.map.HttpServletRequestMap;
-import jodd.servlet.map.HttpServletRequestParamMap;
-import jodd.servlet.map.HttpSessionMap;
-import jodd.util.StringUtil;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 /**
  * Servlet context scope.
  */
 public class ServletContextScope implements MadvocScope {
 
-	public static final String REQUEST = "request";
-	public static final String SESSION = "session";
-	public static final String CONTEXT = "context";
-	public static final String REQUEST_MAP = "requestMap";
-	public static final String REQUEST_PARAM_MAP = "requestParamMap";
-	public static final String REQUEST_BODY = "requestBody";
-	public static final String SESSION_MAP = "sessionMap";
-	public static final String CONTEXT_MAP = "contextMap";
-	public static final String CSRF = "csrfTokenValid";
-
+	protected final InstancesInjector instancesInjector = new InstancesInjector(this);
 
 	@Override
 	public void inject(final ActionRequest actionRequest, final Targets targets) {
 		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		final HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		targets.forEachTargetAndIn(this, (target, in) -> {
-			final Class fieldType = in.type();
-			Object value = null;
-
-			// raw servlet types
-			// todo measure ReflectUtil.isSubclass() vs .equals()
-			if (fieldType.equals(HttpServletRequest.class)) {
-				value = servletRequest;
-			} else if (fieldType.equals(ServletRequest.class)) {
-				value = servletRequest;
-			} else if (fieldType.equals(HttpServletResponse.class)) {
-				value = servletResponse;
-			} else if (fieldType.equals(ServletResponse.class)) {
-				value = servletResponse;
-			} else if (fieldType.equals(HttpSession.class)) {
-				value = servletRequest.getSession();
-			} else if (fieldType.equals(ServletContext.class)) {
-				value = servletRequest.getSession().getServletContext();
-			} else
-
-				// names
-				if (in.name().equals(REQUEST_MAP)) {
-					value = new HttpServletRequestMap(servletRequest);
-				} else if (in.name().equals(REQUEST_PARAM_MAP)) {
-					value = new HttpServletRequestParamMap(servletRequest);
-				} else if (in.name().equals(REQUEST_BODY)) {
-				value = actionRequest.readRequestBody();
-				} else if (in.name().equals(REQUEST_BODY)) {
-					value = new HttpServletRequestParamMap(servletRequest);
-				} else if (in.name().equals(SESSION_MAP)) {
-					value = new HttpSessionMap(servletRequest);
-				} else if (in.name().equals(CONTEXT_MAP)) {
-					value = new HttpServletContextMap(servletRequest);
-				} else
-
-					// names partial
-					if (in.name().startsWith(REQUEST)) {
-						final String name = StringUtil.uncapitalize(in.name().substring(REQUEST.length()));
-						if (!name.isEmpty()) {
-							value = BeanUtil.declared.getProperty(servletRequest, name);
-						}
-					} else if (in.name().startsWith(SESSION)) {
-						final String name = StringUtil.uncapitalize(in.name().substring(SESSION.length()));
-						if (!name.isEmpty()) {
-							value = BeanUtil.declared.getProperty(servletRequest.getSession(), name);
-						}
-					} else if (in.name().startsWith(CONTEXT)) {
-						final String name = StringUtil.uncapitalize(in.name().substring(CONTEXT.length()));
-						if (!name.isEmpty()) {
-							value = BeanUtil.declared.getProperty(servletRequest.getSession().getServletContext(), name);
-						}
-					} else
-
-						// csrf
-						if (in.name().equals(CSRF)) {
-							value = Boolean.valueOf(CsrfShield.checkCsrfToken(servletRequest));
-						}
-
-			if (value != null) {
-				target.writeValue(in.propertyName(), value, true);
-			}
-		});
+		inject(servletRequest.getServletContext(), targets);
 	}
 
 	@Override
 	public void inject(final ServletContext servletContext, final Targets targets) {
-		targets.forEachTargetAndIn(this, (target, in) -> {
-			final Class fieldType = in.type();
-			Object value = null;
 
-			if (fieldType.equals(ServletContext.class)) {
-				// raw servlet type
-				value = servletContext;
-			} else if (in.name().equals(CONTEXT_MAP)) {
-				// names
-				value = new HttpServletContextMap(servletContext);
-			} else if (in.name().startsWith(CONTEXT)) {
-				value = BeanUtil.declared.getProperty(servletContext, StringUtil.uncapitalize(in.name().substring(CONTEXT.length())));
-			}
+		instancesInjector.inject(servletContext, targets);
 
-			if (value != null) {
-				target.writeValue(in.propertyName(), value, true);
-			}
+		final Enumeration<String> attributeNames = servletContext.getAttributeNames();
+
+		while (attributeNames.hasMoreElements()) {
+			final String attrName = (String) attributeNames.nextElement();
+
+			targets.forEachTargetAndIn(this, (target, in) -> {
+				final String name = in.matchedName(attrName);
+				if (name != null) {
+					final Object attrValue = servletContext.getAttribute(attrName);
+					target.writeValue(name, attrValue, true);
+				}
+			});
+		}
+
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+		final ServletContext context = actionRequest.getHttpServletRequest().getServletContext();
+
+		targets.forEachTargetAndOut(this, (target, out) -> {
+			final Object value = target.readValue(out);
+			context.setAttribute(out.name(), value);
 		});
+
 	}
 
 }

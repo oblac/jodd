@@ -48,7 +48,7 @@ public class MadvocContextScope implements MadvocScope {
 		targets.forEachTargetAndIn(this, (target, in) -> {
 			final Object value = madpc.getBean(in.name());
 			if (value != null) {
-				target.writeValue(in.propertyName(), value, false);
+				target.writeValue(in, value, false);
 			}
 		});
 	}

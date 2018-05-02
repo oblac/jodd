@@ -25,49 +25,42 @@
 
 package jodd.madvoc.scope;
 
+import jodd.json.JsonParser;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
-
-import javax.servlet.ServletContext;
-import java.util.Enumeration;
+import jodd.util.StringUtil;
 
 /**
- * Application Context scope.
+ * JSON body scope.
+ * Assumes that body is a JSON and parses it into the target type.
+ * If target is a String, RAW body is copied.
  */
-public class ApplicationScope implements MadvocScope {
+public class JsonBodyScope implements MadvocScope {
 
 	@Override
 	public void inject(final ActionRequest actionRequest, final Targets targets) {
-		final ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
-		inject(servletContext, targets);
-	}
-
-	@Override
-	public void inject(final ServletContext servletContext, final Targets targets) {
-		final Enumeration attributeNames = servletContext.getAttributeNames();
-
-		while (attributeNames.hasMoreElements()) {
-			final String attrName = (String) attributeNames.nextElement();
-
-			targets.forEachTargetAndIn(this, (target, in) -> {
-				final String name = in.matchedPropertyName(attrName);
-				if (name != null) {
-					final Object attrValue = servletContext.getAttribute(attrName);
-					target.writeValue(name, attrValue, true);
-				}
-			});
+		final String body = actionRequest.readRequestBody();
+		if (StringUtil.isEmpty(body)) {
+			return;
 		}
+
+		targets.forEachTargetAndIn(this, (target, in) -> {
+			if (in.type() == String.class) {
+				target.writeValue(in, body, true);
+			}
+			else {
+				final Object value = parseRequestBody(body, in.type());
+
+				target.writeValue(in, value, true);
+			}
+		});
 	}
 
-	@Override
-	public void outject(final ActionRequest actionRequest, final Targets targets) {
-		final ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
-
-		targets.forEachTargetAndOut(this, (target, out) -> {
-			final Object value = target.readValue(out.propertyName());
-			context.setAttribute(out.name(), value);
-		});
-
+	/**
+	 * Parses request body into the target type.
+	 */
+	protected Object parseRequestBody(final String body, final Class targetType) {
+		return JsonParser.create().parse(body, targetType);
 	}
 
 }
