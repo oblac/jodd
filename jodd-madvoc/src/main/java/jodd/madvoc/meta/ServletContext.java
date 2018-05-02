@@ -23,49 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.servlet.map;
+package jodd.madvoc.meta;
 
-import jodd.util.CollectionUtil;
-import jodd.util.collection.StringKeyedMapAdapter;
+import jodd.madvoc.scope.ServletContextScope;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Iterator;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Map backed by the Servlet session for accessing session scoped attributes.
+ * Annotation for {@link ServletContextScope}.
  */
-public class HttpSessionMap extends StringKeyedMapAdapter {
-
-	private final HttpSession session;
-
-	public HttpSessionMap(final HttpSession session) {
-		this.session = session;
-	}
-
-	public HttpSessionMap(final HttpServletRequest request) {
-		this(request.getSession());
-	}
-
-	@Override
-	protected Object getAttribute(final String key) {
-		return session.getAttribute(key);
-	}
-
-	@Override
-	protected void setAttribute(final String key, final Object value) {
-		session.setAttribute(key, value);
-	}
-
-	@Override
-	protected void removeAttribute(final String key) {
-		session.removeAttribute(key);
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked"})
-	protected Iterator<String> getAttributeNames() {
-		return CollectionUtil.asIterator(session.getAttributeNames());
-	}
-
+@Documented
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@Scope(ServletContextScope.class)
+public @interface ServletContext {
 }
