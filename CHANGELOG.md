@@ -13,6 +13,7 @@ Work-in-progress :thunder:
 + **petite** - added `PetiteContainer#invokeMethod`.
 + **petite** - added cache for external types that are not registered into the container.
 + **madvoc** - `MadvocScope` added, injectors removed. Scopes are now defined by annotations only.
++ **madvoc** - Aux scope annotations added.
 + **proxetta** - ASM library updated to v6.1.1.
 
 ### Breaking changes
@@ -20,7 +21,8 @@ Work-in-progress :thunder:
 + **core** - `TypeCache` made better. `put()` removed in favor of `get()`.
 + **core** - `AnnotationParser` added instead of clumsy `AnnotatedData` and `AnnotatedReader`.
 + **madvoc** - `Scope` annotation has been changed.
-
++ **madvoc** - `ApplicationScope` removed.
++ **servlet** - removed map wrappers over servlet components.
 
 ## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)
 
