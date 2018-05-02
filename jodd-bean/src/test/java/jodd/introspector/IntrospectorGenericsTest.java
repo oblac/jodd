@@ -132,25 +132,25 @@ class IntrospectorGenericsTest {
 		MethodDescriptor md1 = cd.getMethodDescriptor("m", params, true);
 		assertNotNull(md1);
 		assertEquals(m, md1.getMethod());
-		assertArrayEquals(params, md1.getRawParameterTypes());
+		assertArrayEquals(params, getRawParameterTypes(md1));
 		assertEquals(void.class, md1.getRawReturnType());
 		assertNull(md1.getRawReturnComponentType());
 
 		MethodDescriptor md2 = cd.getMethodDescriptor("m2", params, true);
 		assertNotNull(md2);
-		assertArrayEquals(params, md2.getRawParameterTypes());
+		assertArrayEquals(params, getRawParameterTypes(md2));
 		assertEquals(List.class, md2.getRawReturnType());
 		assertEquals(List.class, md2.getRawReturnComponentType());
 
 		MethodDescriptor md3 = cd.getMethodDescriptor("m3", params, true);
 		assertNotNull(md3);
-		assertArrayEquals(params, md3.getRawParameterTypes());
+		assertArrayEquals(params, getRawParameterTypes(md3));
 		assertEquals(List.class, md3.getRawReturnType());
 		assertEquals(Object.class, md3.getRawReturnComponentType());
 
 		MethodDescriptor md4 = cd.getMethodDescriptor("m4", new Class[] {List.class}, true);
 		assertNotNull(md4);
-		assertArrayEquals(new Class[] {List.class}, md4.getRawParameterTypes());
+		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md4));
 		assertEquals(List.class, md4.getRawReturnType());
 		assertEquals(Byte.class, md4.getRawReturnComponentType());
 		assertEquals(List.class, md4.getSetterRawType());
@@ -158,7 +158,7 @@ class IntrospectorGenericsTest {
 
 		MethodDescriptor md5 = cd.getMethodDescriptor("m5", new Class[] {List.class}, true);
 		assertNotNull(md5);
-		assertArrayEquals(new Class[] {List.class}, md5.getRawParameterTypes());
+		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md5));
 		assertEquals(List.class, md5.getRawReturnType());
 		assertEquals(Object.class, md5.getRawReturnComponentType());
 		assertEquals(List.class, md5.getSetterRawType());
@@ -180,20 +180,31 @@ class IntrospectorGenericsTest {
 		md3 = cd1.getMethodDescriptor("m", params, true);
 		assertNotNull(md3);
 
-		assertArrayEquals(params2, md3.getRawParameterTypes());
+		assertArrayEquals(params2, getRawParameterTypes(md3));
 
 		md3 = cd1.getMethodDescriptor("m3", params, true);
 		assertNotNull(md3);
-		assertArrayEquals(params2, md3.getRawParameterTypes());
+		assertArrayEquals(params2, getRawParameterTypes(md3));
 		assertEquals(List.class, md3.getRawReturnType());
 		assertEquals(Integer.class, md3.getRawReturnComponentType());
 
 		md5 = cd1.getMethodDescriptor("m5", new Class[] {List.class}, true);
 		assertNotNull(md5);
-		assertArrayEquals(new Class[] {List.class}, md5.getRawParameterTypes());
+		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md5));
 		assertEquals(List.class, md5.getRawReturnType());
 		assertEquals(Integer.class, md5.getRawReturnComponentType());
 		assertEquals(List.class, md5.getSetterRawType());
 		assertEquals(Integer.class, md5.getSetterRawComponentType());
+	}
+
+	private Class[] getRawParameterTypes(MethodDescriptor md) {
+		MethodParamDescriptor[] params = md.getParameters();
+		Class[] out = new Class[params.length];
+
+		for (int i = 0; i < params.length; i++) {
+			out[i] = params[i].getRawType();
+		}
+
+		return out;
 	}
 }

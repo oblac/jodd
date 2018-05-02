@@ -23,6 +23,7 @@ Work-in-progress :thunder:
 + **madvoc** - `Scope` annotation has been changed.
 + **madvoc** - `ApplicationScope` removed.
 + **servlet** - removed map wrappers over servlet components.
++ **bean** - added `MethodParamDescriptor` instead of array-returning param-methods.
 
 ## [4.3.2](https://github.com/oblac/jodd/compare/v4.3.1...4.3.2)
 

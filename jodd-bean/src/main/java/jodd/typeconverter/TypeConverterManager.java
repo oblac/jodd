@@ -302,7 +302,8 @@ public class TypeConverterManager {
 			// no conversion :)
 			return (T) value;
 		}
-		TypeConverter converter = lookup(destinationType);
+
+		final TypeConverter converter = lookup(destinationType);
 
 		if (converter != null) {
 			return (T) converter.convert(value);
@@ -312,6 +313,11 @@ public class TypeConverterManager {
 
 		if (value == null) {
 			return null;
+		}
+
+		// check same instances
+		if (ClassUtil.isInstanceOf(value, destinationType)) {
+			return (T) value;
 		}
 
 		// handle destination arrays
@@ -330,11 +336,6 @@ public class TypeConverterManager {
 					return (T) e;
 				}
 			}
-		}
-
-		// check same instances
-		if (ClassUtil.isInstanceOf(value, destinationType)) {
-			return (T) value;
 		}
 
 		// collection
