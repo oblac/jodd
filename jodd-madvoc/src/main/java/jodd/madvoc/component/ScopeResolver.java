@@ -26,83 +26,36 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.meta.Scope;
-import jodd.madvoc.scope.ApplicationScope;
-import jodd.madvoc.scope.BodyScope;
-import jodd.madvoc.scope.CookieScope;
-import jodd.madvoc.scope.MadvocContextScope;
 import jodd.madvoc.scope.MadvocScope;
 import jodd.madvoc.scope.RequestScope;
-import jodd.madvoc.scope.ServletContextScope;
-import jodd.madvoc.scope.SessionScope;
 import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Scope resolver maintains scope instances and provides lookups.
  */
 public class ScopeResolver {
 
-	public static final String SCOPE_SUFFIX = "Scope";
 	@PetiteInject
 	protected PetiteContainer madpc;
 
 	protected List<MadvocScope> allScopes = new ArrayList<>();
-	protected Map<String, Class<? extends MadvocScope>> scopeNames = new HashMap<>();
-
-	public ScopeResolver() {
-		Arrays.stream(new Class[]{
-			ApplicationScope.class,
-			BodyScope.class,
-			CookieScope.class,
-			RequestScope.class,
-			MadvocContextScope.class,
-			RequestScope.class,
-			ServletContextScope.class,
-			SessionScope.class,
-		})
-			.forEach(this::registerScope);
-	}
 
 	/**
 	 * Lookups the scope instance of given scope annotation.
 	 * If instance does not exist, it will be created, cached and returned.
-	 * @see #defaultOrScopeType(String)
 	 */
-	public MadvocScope defaultOrScopeType(final Scope scope) {
-		if (scope == null) {
-			return getOrInitScope(RequestScope.class);
-		}
-		return defaultOrScopeType(scope.value());
-	}
-
-	/**
-	 * Lookups the scope instance for given scope name.
-	 * @see #defaultOrScopeType(Scope)
-	 */
-	public MadvocScope defaultOrScopeType(final String scope) {
-		Class<? extends MadvocScope> scopeClass = scopeNames.get(scope);
-
+	@SuppressWarnings("unchecked")
+	public <S extends MadvocScope> S defaultOrScopeType(final Class<S> scopeClass) {
 		if (scopeClass == null) {
-			// scope not found, try to find it
-			try {
-				scopeClass = ClassLoaderUtil.loadClass(scope);
-			} catch (ClassNotFoundException ignore) {
-				throw new MadvocException("Unknown scope: " + scope);
-			}
+			return (S) getOrInitScope(RequestScope.class);
 		}
 
-		return getOrInitScope(scopeClass);
+		return (S) getOrInitScope(scopeClass);
 	}
 
 	/**
@@ -126,41 +79,6 @@ public class ScopeResolver {
 		allScopes.add(newScope);
 
 		return newScope;
-	}
-
-	// ---------------------------------------------------------------- registration
-
-	/**
-	 * Registers new scope type. It will be registered under following names:
-	 * <ul>
-	 *     <li>full class name (w/o 'Scope' suffix)</li>
-	 *     <li>short class name (w/o 'Scope' suffix)</li>
-	 * </ul>
-	 */
-	public void registerScope(final Class<? extends MadvocScope> scopeType) {
-		String name = scopeType.getSimpleName();
-		if (name.endsWith(SCOPE_SUFFIX)) {
-			name = StringUtil.cutSuffix(name, SCOPE_SUFFIX);
-		}
-		registerScope(name, scopeType);
-
-		name = scopeType.getName();
-		if (name.endsWith(SCOPE_SUFFIX)) {
-			name = StringUtil.cutSuffix(name, SCOPE_SUFFIX);
-		}
-		registerScope(name, scopeType);
-	}
-
-	/**
-	 * Registers scope type for given name, previous scope is removed.
-	 */
-	public void registerScope(final String name, final Class<? extends MadvocScope> scopeType) {
-		Class<? extends MadvocScope> previousType = scopeNames.put(name, scopeType);
-
-		// remove previous scope
-		allScopes = allScopes.stream()
-			.filter(scope -> !scope.getClass().equals(previousType))
-			.collect(Collectors.toList());
 	}
 
 	// ---------------------------------------------------------------- iteration

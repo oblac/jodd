@@ -27,11 +27,11 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.scope.MadvocScope;
+import jodd.madvoc.scope.RequestScope;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,19 +46,14 @@ class ScopeResolverTest {
 		scopeResolver.madpc = new PetiteContainer();
 		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
 
-		MadvocScope requestScope = scopeResolver.defaultOrScopeType(MadvocScope.REQUEST);
-		MadvocScope requestScope2 = scopeResolver.defaultOrScopeType(MadvocScope.REQUEST);
+		MadvocScope requestScope = scopeResolver.defaultOrScopeType(RequestScope.class);
+		MadvocScope requestScope2 = scopeResolver.defaultOrScopeType(RequestScope.class);
 
 		assertEquals(requestScope2, requestScope);
 
-		scopeResolver.registerScope(MadvocScope.REQUEST, MyScope.class);
+		MyScope myScope = scopeResolver.defaultOrScopeType(MyScope.class);
 
-		requestScope = scopeResolver.defaultOrScopeType(MadvocScope.REQUEST);
-		assertNotEquals(requestScope2, requestScope);
-
-		assertTrue(requestScope instanceof MyScope);
-
-		assertEquals(1, scopeResolver.allScopes.size());
+		assertEquals(2, scopeResolver.allScopes.size());
 	}
 
 	@Test
@@ -67,10 +62,10 @@ class ScopeResolverTest {
 		scopeResolver.madpc = new PetiteContainer();
 		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
 
-		MadvocScope madvocScope = scopeResolver.defaultOrScopeType(MyScope.class.getName());
+		MadvocScope madvocScope = scopeResolver.defaultOrScopeType(MyScope.class);
 		assertNotNull(madvocScope);
 		assertTrue(madvocScope instanceof MyScope);
-		MadvocScope madvocScope2 = scopeResolver.defaultOrScopeType(MyScope.class.getName());
+		MadvocScope madvocScope2 = scopeResolver.defaultOrScopeType(MyScope.class);
 
 		assertEquals(madvocScope2, madvocScope);
 	}

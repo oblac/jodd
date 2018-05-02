@@ -34,10 +34,9 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.MadvocContext;
 import jodd.madvoc.meta.Out;
-import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.scope.MadvocScope;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,19 +49,19 @@ import java.util.List;
  */
 public class ListMadvocConfig {
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected MadvocConfig madvocConfig;
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected ActionsManager actionsManager;
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected FiltersManager filtersManager;
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected InterceptorsManager interceptorsManager;
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected ResultsManager resultsManager;
 
 	@Out

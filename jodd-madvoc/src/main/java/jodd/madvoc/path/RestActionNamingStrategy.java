@@ -29,8 +29,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.Scope;
-import jodd.madvoc.scope.MadvocScope;
+import jodd.madvoc.meta.MadvocContext;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.net.HttpMethod;
@@ -42,7 +41,7 @@ import java.lang.reflect.Method;
  */
 public class RestActionNamingStrategy extends BaseNamingStrategy {
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected MadvocConfig madvocConfig;
 
 	protected boolean includeMethodActionPath = true;

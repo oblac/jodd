@@ -26,21 +26,19 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.Cookies;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RenderWith;
-import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.NoneActionResult;
-import jodd.madvoc.scope.MadvocScope;
 
 import javax.servlet.http.Cookie;
 
 @MadvocAction
 public class CookieAction {
 
-	@In @Scope(MadvocScope.COOKIE)
-	@Out
+	@In @Cookies @Out
 	Cookie foo;
 
 	@Action("/cookie")

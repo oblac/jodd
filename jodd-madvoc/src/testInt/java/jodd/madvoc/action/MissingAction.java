@@ -28,9 +28,8 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.Scope;
+import jodd.madvoc.meta.Request;
 import jodd.madvoc.result.TextResult;
-import jodd.madvoc.scope.MadvocScope;
 
 @MadvocAction
 public class MissingAction {
@@ -47,7 +46,7 @@ public class MissingAction {
 		}
 	}
 
-	@In @Scope(MadvocScope.REQUEST)
+	@In @Request
 	final Data data = new Data();
 
 	@Action

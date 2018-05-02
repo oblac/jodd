@@ -29,8 +29,7 @@ import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.Scope;
-import jodd.madvoc.scope.MadvocScope;
+import jodd.madvoc.meta.MadvocContext;
 import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +44,7 @@ import java.io.OutputStream;
  */
 public class RawActionResult implements ActionResult<RawData> {
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected MadvocConfig madvocConfig;
 
 	@Override

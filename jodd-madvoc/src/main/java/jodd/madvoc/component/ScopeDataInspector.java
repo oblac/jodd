@@ -29,12 +29,15 @@ import jodd.bean.JoddBean;
 import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.InjectionPoint;
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.MadvocScope;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -62,10 +65,11 @@ public class ScopeDataInspector {
 	 * Scans annotation and returns type of Madvoc annotations.
 	 */
 	public Class<? extends Annotation> detectAnnotationType(final Annotation[] annotations) {
-		for (Annotation annotation : annotations) {
+		for (final Annotation annotation : annotations) {
 			if (annotation instanceof In) {
 				return annotation.annotationType();
-			} else if (annotation instanceof Out) {
+			}
+			else if (annotation instanceof Out) {
 				return annotation.annotationType();
 			}
 		}
@@ -80,18 +84,17 @@ public class ScopeDataInspector {
 	public ScopeData inspectMethodParameterScopes(final String name, final Class type, final Annotation[] annotations) {
 		In in = null;
 		Out out = null;
-		Scope scope = null;
 
-		for (Annotation annotation : annotations) {
-
+		for (final Annotation annotation : annotations) {
 			if (annotation instanceof In) {
 				in = (In) annotation;
 			} else if (annotation instanceof Out) {
 				out = (Out) annotation;
-			} else if (annotation instanceof Scope) {
-				scope = (Scope) annotation;
 			}
 		}
+
+		final Class<? extends MadvocScope> scope = resolveScopeClassFromAnnotations(annotations);
+
 
 		int count = 0;
 
@@ -99,14 +102,14 @@ public class ScopeDataInspector {
 		InjectionPoint[] outs = null;
 
 		if (in != null) {
-			InjectionPoint scopeDataIn = inspectIn(in, scope, name, type);
+			final InjectionPoint scopeDataIn = buildInjectionPoint(in.value(), name, type, scope);
 			if (scopeDataIn != null) {
 				count++;
 				ins = new InjectionPoint[]{scopeDataIn};
 			}
 		}
 		if (out != null) {
-			InjectionPoint scopeDataOut = inspectOut(out, scope, name, type);
+			final InjectionPoint scopeDataOut = buildInjectionPoint(out.value(), name, type, scope);
 			if (scopeDataOut != null) {
 				count++;
 				outs = new InjectionPoint[]{scopeDataOut};
@@ -120,51 +123,63 @@ public class ScopeDataInspector {
 		return new ScopeData(this, ins, outs);
 	}
 
+	protected Class<? extends MadvocScope> resolveScopeClassFromAnnotations(final Annotation[] annotations) {
+		Class<? extends MadvocScope> scope = null;
+
+		for (final Annotation annotation : annotations) {
+			if (annotation instanceof Scope) {
+				if (scope != null) {
+					throw new MadvocException("Scope already defined: " + scope);
+				}
+				scope = ((Scope) annotation).value();
+			} else {
+				Class<? extends MadvocScope> annotationScope = null;
+
+				final Annotation[] annotationAnnotations = annotation.annotationType().getAnnotations();
+				for (final Annotation innerAnnotation : annotationAnnotations) {
+					if (innerAnnotation instanceof Scope) {
+						annotationScope = ((Scope) innerAnnotation).value();
+					}
+				}
+
+				if (annotationScope != null) {
+					if (scope == null) {
+						scope = annotationScope;
+					}
+					else {
+						throw new MadvocException("Scope already defined: " + scope);
+					}
+				}
+			}
+		}
+
+		return scope;
+	}
+
 	// ---------------------------------------------------------------- inspect class
 
 	/**
-	 * Inspects single IN annotation for a property.
+	 * Builds injection point.
 	 */
-	protected InjectionPoint inspectIn(final In in, final Scope scope, final String propertyName, final Class propertyType) {
-		if (in == null) {
-			return null;
-		}
+	protected InjectionPoint buildInjectionPoint(
+			final String annotationValue,
+			final String propertyName,
+			final Class propertyType,
+			final Class<? extends MadvocScope> scope) {
 
-		final String value = in.value().trim();
+		final String value = annotationValue.trim();
 		final String name, targetName;
 
-		if (value.length() > 0) {
+		if (StringUtil.isNotBlank(value)) {
 			name = value;
 			targetName = propertyName;
-		} else {
+		}
+		else {
 			name = propertyName;
 			targetName = null;
 		}
 		return new InjectionPoint(propertyType, name, targetName, scopeResolver.defaultOrScopeType(scope));
 	}
-
-	/**
-	 * Inspects single OUT annotation for a property.
-	 */
-	protected InjectionPoint inspectOut(final Out out, final Scope scope, final String propertyName, final Class propertyType) {
-		if (out == null) {
-			return null;
-		}
-
-		final String value = out.value().trim();
-		final String name, targetName;
-
-		if (value.length() > 0) {
-			name = value;
-			targetName = propertyName;
-		} else {
-			name = propertyName;
-			targetName = null;
-		}
-
-		return new InjectionPoint(propertyType, name, targetName, scopeResolver.defaultOrScopeType(scope));
-	}
-
 
 	private TypeCache<ScopeData> scopeDataTypeCache = TypeCache.create(TypeCache.Implementation.MAP);
 
@@ -192,7 +207,7 @@ public class ScopeDataInspector {
 		for (PropertyDescriptor pd : allProperties) {
 			// collect annotations
 
-			Scope scope = null;
+			Class<? extends MadvocScope> scope = null;
 			In in = null;
 			Out out = null;
 
@@ -201,7 +216,7 @@ public class ScopeDataInspector {
 
 				in = field.getAnnotation(In.class);
 				out = field.getAnnotation(Out.class);
-				scope = field.getAnnotation(Scope.class);
+				scope = resolveScopeClassFromAnnotations(field.getAnnotations());
 			}
 
 			if (pd.getWriteMethodDescriptor() != null) {
@@ -213,7 +228,7 @@ public class ScopeDataInspector {
 					out = method.getAnnotation(Out.class);
 				}
 				if (scope == null) {
-					scope = method.getAnnotation(Scope.class);
+					scope = resolveScopeClassFromAnnotations(method.getAnnotations());
 				}
 			}
 
@@ -226,18 +241,18 @@ public class ScopeDataInspector {
 					out = method.getAnnotation(Out.class);
 				}
 				if (scope == null) {
-					scope = method.getAnnotation(Scope.class);
+					scope = resolveScopeClassFromAnnotations(method.getAnnotations());
 				}
 			}
 
 			// inspect all
 
-			InjectionPoint ii = inspectIn(in, scope, pd.getName(), pd.getType());
+			final InjectionPoint ii = in == null ? null : buildInjectionPoint(in.value(), pd.getName(), pd.getType(), scope);
 			if (ii != null) {
 				listIn.add(ii);
 			}
 
-			InjectionPoint oi = inspectOut(out, scope, pd.getName(), pd.getType());
+			final InjectionPoint oi = out == null ? null : buildInjectionPoint(out.value(), pd.getName(), pd.getType(), scope);
 			if (oi != null) {
 				listOut.add(oi);
 			}

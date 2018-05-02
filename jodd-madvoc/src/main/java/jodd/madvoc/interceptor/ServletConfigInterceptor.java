@@ -30,8 +30,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.component.ScopeResolver;
 import jodd.madvoc.config.Targets;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.Scope;
-import jodd.madvoc.scope.MadvocScope;
+import jodd.madvoc.meta.MadvocContext;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
@@ -50,10 +49,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ServletConfigInterceptor implements ActionInterceptor {
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected ScopeResolver scopeResolver;
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	protected MadvocConfig madvocConfig;
 
 	/**

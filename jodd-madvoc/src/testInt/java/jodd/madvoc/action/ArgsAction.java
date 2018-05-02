@@ -27,12 +27,11 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.JsonBody;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RenderWith;
-import jodd.madvoc.meta.Scope;
 import jodd.madvoc.result.JsonActionResult;
-import jodd.madvoc.scope.MadvocScope;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +98,7 @@ public class ArgsAction {
 			@In @Out MutableInteger muti,
 			@In("hello") Data2 hello,
 			Hello hello2,
-			@In @Scope(MadvocScope.SERVLET)HttpServletRequest request,
+			@In HttpServletRequest request,
 			@Out User user
 			) {
 
@@ -119,7 +118,7 @@ public class ArgsAction {
 
 	@Action
 	@RenderWith(JsonActionResult.class)
-	public User user2(@In @Scope(MadvocScope.BODY) User user) {
+	public User user2(@In @JsonBody User user) {
 		user.setUsername(user.getUsername() + "!");
 		return user;
 	}

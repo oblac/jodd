@@ -26,18 +26,17 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.Body;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
-import jodd.madvoc.meta.Scope;
-import jodd.madvoc.scope.MadvocScope;
 import jodd.mutable.MutableInteger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @MadvocAction
 public class HelloAction {
@@ -88,7 +87,7 @@ public class HelloAction {
 
 	// ----------------------------------------------------------------
 
-	@In @Scope(MadvocScope.SERVLET)
+	@In
 	HttpServletResponse servletResponse;
 
 	/**
@@ -101,15 +100,9 @@ public class HelloAction {
 		return "none:";
 	}
 
-	@In @Scope(MadvocScope.SERVLET)
-	Map<String, String> requestParamMap;
-
-	@In @Scope(MadvocScope.SERVLET)
-	String requestMethod;
-
 	@Out
 	public String getReqMethod() {
-		return requestMethod;
+		return servletRequest.getMethod();
 	}
 
 	static class ReqReqOut {
@@ -117,7 +110,10 @@ public class HelloAction {
 		public String name;
 	}
 
-	@In @Scope(MadvocScope.SERVLET)
+	@In
+	HttpServletRequest servletRequest;
+
+	@In @Body
 	String requestBody;
 
 	@Out
@@ -127,7 +123,7 @@ public class HelloAction {
 
 	@Action
 	public void reqreq(ReqReqOut reqReqOut) {
-		String hey = requestParamMap.get("hey");
+		String hey = servletRequest.getParameter("hey");
 
 		reqReqOut.name = hey;
 	}

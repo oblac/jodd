@@ -29,15 +29,14 @@ import jodd.madvoc.component.MyComponent;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.Scope;
+import jodd.madvoc.meta.MadvocContext;
 import jodd.madvoc.result.RawData;
-import jodd.madvoc.scope.MadvocScope;
 import jodd.util.CharUtil;
 
 @MadvocAction
 public class ComponentAction {
 
-	@In @Scope(MadvocScope.CONTEXT)
+	@In @MadvocContext
 	MyComponent myComponent;
 
 	@Action
