@@ -33,6 +33,7 @@ import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.petite.PetiteContainer;
+import jodd.util.Chalk256;
 
 import javax.servlet.ServletContext;
 import java.util.Objects;
@@ -231,7 +232,11 @@ public class JoddJoy {
 			throw ex;
 		}
 
-		log.info("Joy is up. Enjoy Joy!");
+		joyMadvoc.printRoutes();
+
+		System.out.println(Chalk256.chalk().yellow().on("Joy") + " is up. Enjoy!");
+
+		log.info("Joy is up. Enjoy!");
 	}
 
 	/**

@@ -163,7 +163,7 @@ public class WebApp {
 	 */
 	public <T> WebApp withRegisteredComponent(final Class<T> madvocComponent, final Consumer<T> componentConsumer) {
 		componentConfigs.add(madvocContainer -> {
-			T component = madvocContainer.lookupComponent(madvocComponent);
+			final T component = madvocContainer.lookupComponent(madvocComponent);
 			if (component != null) {
 				componentConsumer.accept(component);
 			}

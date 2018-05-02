@@ -28,15 +28,21 @@ package jodd.joy;
 import jodd.joy.madvoc.interceptor.DefaultInterceptorStack;
 import jodd.madvoc.AutomagicMadvocConfigurator;
 import jodd.madvoc.WebApp;
+import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaProvider;
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
 import jodd.proxetta.impl.ProxyProxetta;
+import jodd.util.Chalk256;
 import jodd.util.Consumers;
+import jodd.util.StringUtil;
 
 import javax.servlet.ServletContext;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -113,4 +119,52 @@ public class JoyMadvoc extends JoyBase {
 		}
 	}
 
+	/**
+	 * Prints routes to console.
+	 */
+	protected void printRoutes() {
+		final ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
+
+		System.out.println(StringUtil.repeat('-', 80));
+
+		final List<ActionRuntime> actions = actionsManager.getAllActionRuntimes();
+		actions.stream()
+			.sorted(Comparator.comparing(
+				actionRuntime -> actionRuntime.getActionMethod() + ' ' + actionRuntime.getActionPath()))
+			.forEach(ar -> {
+
+				System.out.print(Chalk256.chalk().yellow().on(val(ar.getActionMethod(), 6)));
+				System.out.print(" ");
+				System.out.print(Chalk256.chalk().green().on(val(ar.getActionPath(), 24)));
+				System.out.print(" ");
+				final String signature = ar.getActionClass().getName() + '#' + ar.getActionClassMethod().getName();
+				System.out.print(Chalk256.chalk().blue().on(valRight(signature, 48)));
+				System.out.println();
+			});
+
+		System.out.println(StringUtil.repeat('-', 80));
+	}
+
+	protected String val(final String value, final int len) {
+		if (value.length() > len) {
+			return value.substring(value.length() - len);
+		}
+
+		if (value.length() == len) {
+			return value;
+		}
+
+		return value + StringUtil.repeat(' ', len - value.length());
+	}
+	protected String valRight(final String value, final int len) {
+		if (value.length() > len) {
+			return value.substring(value.length() - len);
+		}
+
+		if (value.length() == len) {
+			return value;
+		}
+
+		return StringUtil.repeat(' ', len - value.length()) + value;
+	}
 }
