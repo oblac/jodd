@@ -355,7 +355,7 @@ public class ServletUtil {
 		if (value != null) {
 			return value;
 		}
-		return request.getSession().getServletContext().getAttribute(name);
+		return request.getServletContext().getAttribute(name);
 	}
 
 	/**
@@ -416,7 +416,7 @@ public class ServletUtil {
 		if (value != null) {
 			return value;
 		}
-		return request.getSession().getServletContext().getAttribute(name);
+		return request.getServletContext().getAttribute(name);
 	}
 
 	// ---------------------------------------------------------------- scope attributes
@@ -437,7 +437,7 @@ public class ServletUtil {
 			request.getSession().setAttribute(name, value);
 		}
 		else if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().setAttribute(name, value);
+            request.getServletContext().setAttribute(name, value);
         }
 		else {
 			throw new IllegalArgumentException("Invalid scope: " + scope);
@@ -460,7 +460,7 @@ public class ServletUtil {
 			request.getSession().removeAttribute(name);
 		}
 		else if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().removeAttribute(name);
+            request.getServletContext().removeAttribute(name);
         }
 		else {
 			throw new IllegalArgumentException("Invalid scope: " + scope);

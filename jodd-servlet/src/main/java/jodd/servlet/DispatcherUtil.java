@@ -59,7 +59,7 @@ public class DispatcherUtil {
 	 * Include named resource.
 	 */
 	public static boolean includeNamed(final HttpServletRequest request, final ServletResponse response, final String resource) throws IOException, ServletException {
-		return includeNamed(request.getSession().getServletContext(), request, response, resource);
+		return includeNamed(request.getServletContext(), request, response, resource);
 	}
 
 
@@ -81,7 +81,7 @@ public class DispatcherUtil {
 	 * Include page which path relative to the root of the ServletContext.
 	 */
 	public static boolean includeAbsolute(final HttpServletRequest request, final HttpServletResponse response, final String page) throws IOException, ServletException {
-		return includeAbsolute(request.getSession().getServletContext(), request, response, page);
+		return includeAbsolute(request.getServletContext(), request, response, page);
 	}
 
 
@@ -115,7 +115,7 @@ public class DispatcherUtil {
 	 * Forward to named resource.
 	 */
 	public static boolean forwardNamed(final HttpServletRequest request, final ServletResponse response, final String resource) throws IOException, ServletException {
-		return forwardNamed(request.getSession().getServletContext(), request, response, resource);
+		return forwardNamed(request.getServletContext(), request, response, resource);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class DispatcherUtil {
 	 * Forward to page path relative to the root of the ServletContext.
 	 */
 	public static boolean forwardAbsolute(final HttpServletRequest request, final ServletResponse response, final String page) throws IOException, ServletException {
-		return forwardAbsolute(request.getSession().getServletContext(), request, response, page);
+		return forwardAbsolute(request.getServletContext(), request, response, page);
 	}
 
 	/**
