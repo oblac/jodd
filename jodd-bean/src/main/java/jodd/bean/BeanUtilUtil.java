@@ -27,6 +27,7 @@ package jodd.bean;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.Getter;
+import jodd.introspector.MapperFunction;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassUtil;
@@ -105,7 +106,14 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 */
 	protected Object invokeSetter(final Setter setter, final BeanProperty bp, Object value) {
 		try {
-			Class type = setter.getSetterRawType();
+
+			final MapperFunction setterMapperFunction = setter.getMapperFunction();
+
+			if (setterMapperFunction != null) {
+				value = setterMapperFunction.apply(value);
+			}
+
+			final Class type = setter.getSetterRawType();
 
 			if (ClassUtil.isTypeOf(type, Collection.class)) {
 				Class componentType = setter.getSetterRawComponentType();
