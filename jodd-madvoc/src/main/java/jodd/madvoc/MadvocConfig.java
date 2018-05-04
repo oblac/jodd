@@ -35,6 +35,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionConfiguredBy;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.DefaultActionPathNamingStrategy;
+import jodd.madvoc.result.ServletDispatcherActionResult;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
@@ -63,9 +64,10 @@ public final class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
-		actionConfig = new ActionConfig(null);
+		actionConfig = new ActionConfig();
+
 		actionConfig.setActionMethodNames("view", "execute");
-		actionConfig.setActionResult(null);
+		actionConfig.setActionResult(ServletDispatcherActionResult.class);
 		actionConfig.setFilters();
 		actionConfig.setInterceptors(ServletConfigInterceptor.class);
 		actionConfig.setNamingStrategy(DefaultActionPathNamingStrategy.class);

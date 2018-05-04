@@ -35,24 +35,24 @@ import jodd.madvoc.result.ActionResult;
  */
 public class ActionConfig {
 
-	private final ActionConfig parent;
-
 	private Class<? extends ActionResult> actionResult;
 	private Class<? extends ActionInterceptor>[] interceptors;
 	private Class<? extends ActionFilter>[] filters;
 	private String[] actionMethodNames;
 	private Class<? extends ActionNamingStrategy> namingStrategy;
 
+	public ActionConfig() {
+	}
+
 	public ActionConfig(final ActionConfig parentActionConfig) {
-		this.parent = parentActionConfig;
+		this.actionResult = parentActionConfig.getActionResult();
+		this.interceptors = parentActionConfig.getInterceptors();
+		this.filters = parentActionConfig.getFilters();
+		this.actionMethodNames = parentActionConfig.getActionMethodNames();
+		this.namingStrategy = parentActionConfig.getNamingStrategy();
 	}
 
 	public Class<? extends ActionResult> getActionResult() {
-		if (actionResult == null) {
-			if (parent != null) {
-				return parent.getActionResult();
-			}
-		}
 		return actionResult;
 	}
 
@@ -61,11 +61,6 @@ public class ActionConfig {
 	}
 
 	public Class<? extends ActionInterceptor>[] getInterceptors() {
-		if (interceptors == null) {
-			if (parent != null) {
-				return parent.getInterceptors();
-			}
-		}
 		return interceptors;
 	}
 
@@ -74,11 +69,6 @@ public class ActionConfig {
 	}
 
 	public Class<? extends ActionFilter>[] getFilters() {
-		if (filters == null) {
-			if (parent != null) {
-				return parent.getFilters();
-			}
-		}
 		return filters;
 	}
 
@@ -87,11 +77,6 @@ public class ActionConfig {
 	}
 
 	public String[] getActionMethodNames() {
-		if (actionMethodNames == null) {
-			if (parent != null) {
-				return parent.getActionMethodNames();
-			}
-		}
 		return actionMethodNames;
 	}
 
@@ -100,11 +85,6 @@ public class ActionConfig {
 	}
 
 	public Class<? extends ActionNamingStrategy> getNamingStrategy() {
-		if (namingStrategy == null) {
-			if (parent != null) {
-				return parent.getNamingStrategy();
-			}
-		}
 		return namingStrategy;
 	}
 
