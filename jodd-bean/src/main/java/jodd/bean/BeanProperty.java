@@ -42,7 +42,7 @@ import jodd.introspector.Setter;
 class BeanProperty {
 
 	BeanProperty(final BeanUtilBean beanUtilBean, final Object bean, final String propertyName) {
-		this.introspector = beanUtilBean.getIntrospector();
+		this.introspector = beanUtilBean.introspector;
 		setName(propertyName);
 		setBean(bean);
 		this.last = true;

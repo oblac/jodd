@@ -49,8 +49,8 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- introspector
 
-	protected ClassIntrospector introspector = JoddBean.defaults().getClassIntrospector();
-	protected TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
+	protected ClassIntrospector introspector = ClassIntrospector.get();
+	protected TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	/**
 	 * Sets {@link ClassIntrospector introspector} implementation.
@@ -60,24 +60,10 @@ abstract class BeanUtilUtil implements BeanUtil {
 	}
 
 	/**
-	 * Returns {@link ClassIntrospector introspector} implementation.
-	 */
-	public ClassIntrospector getIntrospector() {
-		return introspector;
-	}
-
-	/**
 	 * Sets {@link TypeConverterManager type converter manager} implementation.
 	 */
 	public void setTypeConverterManager(final TypeConverterManager typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
-	}
-
-	/**
-	 * Returns {@link TypeConverterManager type converter manager} implementation.
-	 */
-	public TypeConverterManager getTypeConverterManager() {
-		return typeConverterManager;
 	}
 
 	/**

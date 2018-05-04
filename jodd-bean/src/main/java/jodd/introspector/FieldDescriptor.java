@@ -25,7 +25,6 @@
 
 package jodd.introspector;
 
-import jodd.bean.JoddBean;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
@@ -72,7 +71,7 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 		final Mapper mapper = field.getAnnotation(Mapper.class);
 
 		if (mapper != null) {
-			mapperFunction = JoddBean.defaults().getMapperFunctionInstances().lookup(mapper.value());
+			mapperFunction = MapperFunctionInstances.get().lookup(mapper.value());
 		} else {
 			mapperFunction = null;
 		}

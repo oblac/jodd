@@ -25,8 +25,6 @@
 
 package jodd.introspector;
 
-import jodd.bean.JoddBean;
-
 /**
  * Property descriptor. It consist of read, write and field descriptor.
  * Only one of those three descriptors may exist.
@@ -102,7 +100,7 @@ public class PropertyDescriptor extends Descriptor {
 
 		for (Class superclass : superclasses) {
 
-			ClassDescriptor classDescriptor = JoddBean.defaults().getClassIntrospector().lookup(superclass);
+			ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(superclass);
 
 			fieldDescriptor = classDescriptor.getFieldDescriptor(fieldName, true);
 

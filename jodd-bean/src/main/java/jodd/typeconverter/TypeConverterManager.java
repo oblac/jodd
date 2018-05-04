@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.io.upload.FileUpload;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
@@ -94,6 +93,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -103,8 +103,20 @@ import java.util.UUID;
  */
 public class TypeConverterManager {
 
+	public static class Defaults {
+		private static TypeConverterManager typeConverterManager = new TypeConverterManager();
+
+		public static void set(final TypeConverterManager typeConverterManager) {
+			Objects.requireNonNull(typeConverterManager);
+			Defaults.typeConverterManager = typeConverterManager;
+		}
+	}
+
+	/**
+	 * Returns default implementation.
+	 */
 	public static TypeConverterManager get() {
-		return JoddBean.defaults().getTypeConverterManager();
+		return Defaults.typeConverterManager;
 	}
 
 	private final HashMap<Class, TypeConverter> converters = new HashMap<>();
