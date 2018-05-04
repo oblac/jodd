@@ -25,6 +25,7 @@
 
 package jodd.typeconverter;
 
+import jodd.bean.JoddBean;
 import jodd.io.upload.FileUpload;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
@@ -91,7 +92,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -103,13 +103,15 @@ import java.util.UUID;
  */
 public class TypeConverterManager {
 
+	public static TypeConverterManager get() {
+		return JoddBean.defaults().getTypeConverterManager();
+	}
+
 	private final HashMap<Class, TypeConverter> converters = new HashMap<>();
-	private final Converter converter;
 
 	// ---------------------------------------------------------------- methods
 
-	public TypeConverterManager(final Converter converter) {
-		this.converter = converter;
+	public TypeConverterManager() {
 		registerDefaults();
 	}
 
@@ -234,7 +236,7 @@ public class TypeConverterManager {
 		register(Time.class, new SqlTimeConverter());
 		register(Timestamp.class, new SqlTimestampConverter());
 		register(Calendar.class, new CalendarConverter());
-		register(GregorianCalendar.class, new CalendarConverter());
+//		register(GregorianCalendar.class, new CalendarConverter());
 		register(LocalDateTime.class, new LocalDateTimeConverter());
 		register(LocalDate.class, new LocalDateConverter());
 		register(LocalTime.class, new LocalTimeConverter());
@@ -261,8 +263,7 @@ public class TypeConverterManager {
 	 * @param type		class that converter is for
 	 * @param typeConverter	converter for provided class
 	 */
-	public void register(final Class type, final TypeConverter typeConverter) {
-		converter.register(type, typeConverter);
+	public <T> void register(final Class<T> type, final TypeConverter<T> typeConverter) {
 		converters.put(type, typeConverter);
 	}
 
@@ -270,7 +271,6 @@ public class TypeConverterManager {
 	 * Un-registers converter for given type.
 	 */
 	public void unregister(final Class type) {
-		converter.register(type, null);
 		converters.remove(type);
 	}
 
@@ -282,7 +282,7 @@ public class TypeConverterManager {
 	 *
 	 * @return founded converter or <code>null</code>
 	 */
-	public TypeConverter lookup(final Class type) {
+	public <T> TypeConverter<T> lookup(final Class<T> type) {
 		return converters.get(type);
 	}
 
