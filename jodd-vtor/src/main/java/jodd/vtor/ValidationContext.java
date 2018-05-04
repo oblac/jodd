@@ -25,8 +25,8 @@
 
 package jodd.vtor;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -59,11 +59,7 @@ public class ValidationContext {
 	 */
 	public void add(final Check check) {
 		String name = check.getName();
-		List<Check> list = map.get(name);
-		if (list == null) {
-			list = new ArrayList<>();
-			map.put(name, list);
-		}
+		List<Check> list = map.computeIfAbsent(name, k -> new ArrayList<>());
 		list.add(check);
 	}
 
@@ -99,7 +95,7 @@ public class ValidationContext {
 		List<Check> list = cache.get(target);
 		if (list == null) {
 			list = new ArrayList<>();
-			ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(target);
+			ClassDescriptor cd = ClassIntrospector.get().lookup(target);
 
 			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 			for (PropertyDescriptor propertyDescriptor : allProperties) {
@@ -190,7 +186,6 @@ public class ValidationContext {
 			return ctor.newInstance(resolveFor(targetType));
 		}
 	}
-
 
 
 	/**

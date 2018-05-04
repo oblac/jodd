@@ -25,7 +25,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.bean.JoddBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.impl.LocalDateTimeConverter;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
@@ -71,7 +71,7 @@ public class TimeAfterConstraint implements ValidationConstraint<TimeAfter> {
 		if (value == null) {
 			return true;
 		}
-		LocalDateTimeConverter ldtc = (LocalDateTimeConverter) JoddBean.defaults().getTypeConverterManager().lookup(LocalDateTime.class);
+		LocalDateTimeConverter ldtc = (LocalDateTimeConverter) TypeConverterManager.get().lookup(LocalDateTime.class);
 		LocalDateTime now = ldtc.convert(value);
 		return now.isAfter(then);
 	}
