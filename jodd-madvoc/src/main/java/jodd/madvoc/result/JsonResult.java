@@ -75,7 +75,6 @@ public class JsonResult {
 
 	public JsonResult status(final int status) {
 		this.status = status;
-		this.message = message;
 		return this;
 	}
 

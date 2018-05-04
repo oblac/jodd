@@ -31,25 +31,26 @@ import java.util.function.Consumer;
 
 /**
  * Permanent redirection.
+ * @see Redirect
  */
 @RenderWith(ServletPermanentRedirectActionResult.class)
-public class PermanentRedirect extends PathResult {
+public class PermRedirect extends PathResult {
 
-	public static PermanentRedirect to(final String target) {
-		return new PermanentRedirect(target);
+	public static PermRedirect to(final String target) {
+		return new PermRedirect(target);
 	}
 
-	public static <T> PermanentRedirect to(final Class<T> target, final Consumer<T> consumer) {
-		return new PermanentRedirect(target, consumer);
+	public static <T> PermRedirect to(final Class<T> target, final Consumer<T> consumer) {
+		return new PermRedirect(target, consumer);
 	}
 
 	// ---------------------------------------------------------------- ctor
 
-	public <T> PermanentRedirect(final Class<T> target, final Consumer<T> consumer) {
+	public <T> PermRedirect(final Class<T> target, final Consumer<T> consumer) {
 		super(target, consumer);
 	}
 
-	public PermanentRedirect(final String path) {
+	public PermRedirect(final String path) {
 		super(path);
 	}
 }

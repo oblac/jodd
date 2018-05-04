@@ -39,7 +39,7 @@ public interface ActionResult<T> {
 	/**
 	 * Renders result on given action result value.
 	 * @param actionRequest action request
-	 * @param resultValue action method result, may be <code>null</code>.
+	 * @param resultValue action method result, may be <code>null</code> or any type.
 	 */
 	void render(ActionRequest actionRequest, T resultValue) throws Exception;
 

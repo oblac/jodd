@@ -30,7 +30,7 @@ import jodd.methref.Methref;
 import java.util.function.Consumer;
 
 /**
- * Path result.
+ * Result that works over some Url path.
  */
 public abstract class PathResult {
 
@@ -61,12 +61,12 @@ public abstract class PathResult {
 	}
 
 	/**
-	 * Returns path value;
+	 * Returns path value.
 	 */
 	public String path() {
 		if (methref != null) {
-			String methodName = methref.ref();
-			return target.getName() + "#" + methodName;
+			final String methodName = methref.ref();
+			return target.getName() + '#' + methodName;
 		}
 		return path;
 	}

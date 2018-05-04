@@ -31,6 +31,7 @@ import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocContext;
 import jodd.servlet.DispatcherUtil;
+import jodd.util.StringPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Simply sends permanent redirection to an external location.
  */
-public class ServletPermanentRedirectActionResult implements ActionResult<PermanentRedirect> {
+public class ServletPermanentRedirectActionResult implements ActionResult {
 
 	protected final BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
@@ -55,29 +56,39 @@ public class ServletPermanentRedirectActionResult implements ActionResult<Perman
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
 	@Override
-	public void render(final ActionRequest actionRequest, final PermanentRedirect redirectResult) {
-		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+	public void render(final ActionRequest actionRequest, final Object resultValue) {
+		final PermRedirect redirectResult;
 
-		String resultPath;
-		final String resultValue = redirectResult.path();
+		if (resultValue == null) {
+			redirectResult = PermRedirect.to(StringPool.SLASH);
+		} else {
+			if (resultValue instanceof String) {
+				redirectResult = PermRedirect.to((String)resultValue);
+			}
+			else {
+				redirectResult = (PermRedirect) resultValue;
+			}
+		}
 
-		if (resultValue.startsWith("http://") || resultValue.startsWith("https://")) {
-			resultPath = resultValue;
+		final String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+
+		final String redirectValue = redirectResult.path();
+
+		final String resultPath;
+
+		if (redirectValue.startsWith("http://") || redirectValue.startsWith("https://")) {
+			resultPath = redirectValue;
 		}
 		else {
-			resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
+			resultPath = resultMapper.resolveResultPathString(resultBasePath, redirectValue);
 		}
 
-		HttpServletRequest request = actionRequest.getHttpServletRequest();
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		final HttpServletRequest request = actionRequest.getHttpServletRequest();
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
-		String path = resultPath;
-		path = beanTemplateParser.parseWithBean(path, actionRequest.getAction());
+		String path = beanTemplateParser.parseWithBean(resultPath, actionRequest.getAction());
 
-		redirect(request, response, path);
-	}
-
-	protected void redirect(final HttpServletRequest request, final HttpServletResponse response, final String path) {
 		DispatcherUtil.redirectPermanent(request, response, path);
 	}
+
 }

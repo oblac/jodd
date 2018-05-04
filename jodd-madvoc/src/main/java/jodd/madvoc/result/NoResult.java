@@ -27,38 +27,9 @@ package jodd.madvoc.result;
 
 import jodd.madvoc.meta.RenderWith;
 
-import java.util.function.Consumer;
-
-/**
- * Redirect result.
- * @see PermRedirect
- */
-@RenderWith(ServletRedirectActionResult.class)
-public class Redirect extends PathResult {
-
-	public static Redirect to(final String target) {
-		return new Redirect(target);
-	}
-
-	public static <T> Redirect to(final Class<T> target, final Consumer<T> consumer) {
-		return new Redirect(target, consumer);
-	}
-	@SuppressWarnings("unchecked")
-	public static <T> Redirect to(final T target, final Consumer<T> consumer) {
-		return new Redirect((Class<T>) target.getClass(), consumer);
-	}
-
-	public static Redirect of(final Redirect result, final String append) {
-		return new Redirect("/<" + result.path() + ">" + append);
-	}
-
-	// ---------------------------------------------------------------- ctor
-
-	public <T> Redirect(final Class<T> target, final Consumer<T> consumer) {
-		super(target, consumer);
-	}
-
-	public Redirect(final String path) {
-		super(path);
+@RenderWith(NoneActionResult.class)
+public class NoResult {
+	public static NoResult value() {
+		return new NoResult();
 	}
 }

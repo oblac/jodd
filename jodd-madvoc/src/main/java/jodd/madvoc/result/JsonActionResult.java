@@ -45,8 +45,8 @@ public class JsonActionResult implements ActionResult {
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public void render(final ActionRequest actionRequest, final Object object) throws Exception {
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+	public void render(final ActionRequest actionRequest, final Object resultValue) throws Exception {
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String encoding = response.getCharacterEncoding();
 
@@ -61,15 +61,15 @@ public class JsonActionResult implements ActionResult {
 		final int status;
 		final String statusMessage;
 
-		if (object instanceof JsonResult) {
-			JsonResult jsonResult = (JsonResult) object;
+		if (resultValue instanceof JsonResult) {
+			JsonResult jsonResult = (JsonResult) resultValue;
 
 			json = jsonResult.value();
 			status = jsonResult.status();
 			statusMessage = jsonResult.message();
 		}
 		else {
-			json = JsonSerializer.create().deep(true).serialize(object);
+			json = JsonSerializer.create().deep(true).serialize(resultValue);
 			status = 200;
 			statusMessage = "OK";
 		}

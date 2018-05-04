@@ -45,7 +45,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 /**
  * Base class for dispatching results. May be used as base class for any template-based views.
  */
-public abstract class AbstractTemplateViewActionResult<T extends PathResult> implements ActionResult<T> {
+public abstract class AbstractTemplateViewActionResult implements ActionResult {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractTemplateViewActionResult.class);
 
@@ -59,17 +59,30 @@ public abstract class AbstractTemplateViewActionResult<T extends PathResult> imp
 	protected ResultMapper resultMapper;
 
 	/**
-	 * Dispatches to the JSP location created from result value and JSP extension.
+	 * Dispatches to the template location created from result value and JSP extension.
 	 * Does its forward via a <code>RequestDispatcher</code>. If the dispatch fails, a 404 error
 	 * will be sent back in the http response.
 	 */
 	@Override
-	public void render(final ActionRequest actionRequest, final T resultValue) throws Exception {
-		String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+	public void render(final ActionRequest actionRequest, final Object resultValue) throws Exception {
+		final PathResult pathResult;
 
-		final String path = resultValue != null ? resultValue.path() : StringPool.EMPTY;
+		if (resultValue == null) {
+			pathResult = resultOf(StringPool.EMPTY);
+		} else {
+			if (resultValue instanceof String) {
+				pathResult = resultOf(resultValue);
+			}
+			else {
+				pathResult = (PathResult) resultValue;
+			}
+		}
 
-		String actionAndResultPath = resultBasePath + (resultValue != null ? ':' + path : StringPool.EMPTY);
+		final String resultBasePath = actionRequest.getActionRuntime().getResultBasePath();
+
+		final String path = pathResult != null ? pathResult.path() : StringPool.EMPTY;
+
+		final String actionAndResultPath = resultBasePath + (pathResult != null ? ':' + path : StringPool.EMPTY);
 
 		String target = targetCache.get(actionAndResultPath);
 
@@ -178,10 +191,16 @@ public abstract class AbstractTemplateViewActionResult<T extends PathResult> imp
 	protected abstract void renderView(ActionRequest actionRequest, String target) throws Exception;
 
 	/**
+	 * Converts different types to path result.
+	 */
+	protected abstract PathResult resultOf(Object value);
+
+	/**
 	 * Called when target not found. By default sends 404 to the response.
 	 */
 	protected void targetNotFound(final ActionRequest actionRequest, final String actionAndResultPath) throws IOException {
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		final HttpServletResponse response = actionRequest.getHttpServletResponse();
+
 		response.sendError(SC_NOT_FOUND, "Result not found: " + actionAndResultPath);
 	}
 
