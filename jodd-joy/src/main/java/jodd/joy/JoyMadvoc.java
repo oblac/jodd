@@ -130,10 +130,12 @@ public class JoyMadvoc extends JoyBase {
 		final List<ActionRuntime> actions = actionsManager.getAllActionRuntimes();
 		actions.stream()
 			.sorted(Comparator.comparing(
-				actionRuntime -> actionRuntime.getActionMethod() + ' ' + actionRuntime.getActionPath()))
+				actionRuntime -> actionRuntime.getActionPath() + ' ' + actionRuntime.getActionMethod()))
 			.forEach(ar -> {
 
-				System.out.print(Chalk256.chalk().yellow().on(val(ar.getActionMethod(), 6)));
+				final String actionMethod = ar.getActionMethod();
+
+				System.out.print(Chalk256.chalk().yellow().on(val(actionMethod == null ? "*" : actionMethod, 6)));
 				System.out.print(" ");
 				System.out.print(Chalk256.chalk().green().on(val(ar.getActionPath(), 24)));
 				System.out.print(" ");
