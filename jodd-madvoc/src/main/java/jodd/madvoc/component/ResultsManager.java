@@ -151,13 +151,17 @@ public class ResultsManager {
 			if (renderWith != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(renderWith.value());
 			}
+			else if (resultObject instanceof ActionResult) {
+				// special case - returned value is already the ActionResult
+				actionResultHandler = (ActionResult) resultObject;
+			}
 		}
 
 		// + use action configuration
 		if (actionResultHandler == null) {
 			final ActionConfig actionConfig = actionRequest.getActionRuntime().getActionConfig();
 
-			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
+			final Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
 
 			if (actionResultClass != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
@@ -166,16 +170,6 @@ public class ResultsManager {
 
 		if (actionResultHandler == null) {
 			throw new MadvocException("ActionResult not found for: " + resultObject);
-		}
-
-		// + special case: use result value
-
-		if (resultObject instanceof String) {
-			Object resultValueFromString = actionResultHandler.resultOf(resultObject);
-
-			if (resultValueFromString != null) {
-				resultObject = resultValueFromString;
-			}
 		}
 
 		// set action result object into action request!
