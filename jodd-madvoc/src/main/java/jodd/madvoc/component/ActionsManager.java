@@ -25,7 +25,7 @@
 
 package jodd.madvoc.component;
 
-import jodd.bean.JoddBean;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -107,7 +107,7 @@ public class ActionsManager {
 	 * Resolves action method for given action class ane method name.
 	 */
 	public Method resolveActionMethod(final Class<?> actionClass, final String methodName) {
-		MethodDescriptor methodDescriptor = JoddBean.defaults().getClassIntrospector().lookup(actionClass).getMethodDescriptor(methodName, false);
+		MethodDescriptor methodDescriptor = ClassIntrospector.get().lookup(actionClass).getMethodDescriptor(methodName, false);
 		if (methodDescriptor == null) {
 			throw new MadvocException("Public method not found: " + actionClass.getSimpleName() + "#" + methodName);
 		}

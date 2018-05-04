@@ -25,8 +25,8 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.madvoc.ActionRequest;
 
@@ -83,7 +83,7 @@ public abstract class AnnotatedPropertyInterceptor implements ActionInterceptor 
 			return properties;
 		}
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
 		List<PropertyDescriptor> list = new ArrayList<>();

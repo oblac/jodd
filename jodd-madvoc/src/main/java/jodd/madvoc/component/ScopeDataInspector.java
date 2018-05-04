@@ -25,9 +25,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.bean.JoddBean;
 import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.InjectionPoint;
@@ -197,7 +197,7 @@ public class ScopeDataInspector {
 	 * For cached version, use {@link #inspectClassScopesWithCache(Class)}.
 	 */
 	public ScopeData inspectClassScopes(final Class actionClass) {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(actionClass);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 

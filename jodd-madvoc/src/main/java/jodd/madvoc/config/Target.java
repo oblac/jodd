@@ -26,9 +26,9 @@
 package jodd.madvoc.config;
 
 import jodd.bean.BeanUtil;
-import jodd.bean.JoddBean;
 import jodd.introspector.MapperFunction;
 import jodd.madvoc.MadvocException;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassUtil;
 
 import java.util.function.Function;
@@ -169,7 +169,7 @@ public class Target {
 					value = mapperFunction.apply(propertyValue);
 				}
 				else {
-					value = JoddBean.defaults().getTypeConverterManager().convertType(propertyValue, type);
+					value = TypeConverterManager.get().convertType(propertyValue, type);
 				}
 				return;
 			}

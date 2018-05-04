@@ -25,8 +25,8 @@
 
 package jodd.madvoc;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
@@ -201,7 +201,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 			return;
 		}
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(actionClass);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
 		MethodDescriptor[] allMethodDescriptors = cd.getAllMethodDescriptors();
 		for (MethodDescriptor methodDescriptor : allMethodDescriptors) {

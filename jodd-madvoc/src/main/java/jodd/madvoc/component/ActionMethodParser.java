@@ -25,9 +25,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.Mapper;
 import jodd.introspector.MapperFunction;
+import jodd.introspector.MapperFunctionInstances;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionHandler;
 import jodd.madvoc.MadvocConfig;
@@ -495,7 +495,7 @@ public class ActionMethodParser {
 			MapperFunction mapperFunction = null;
 			for (final Annotation annotation : parameterAnnotations) {
 				if (annotation instanceof Mapper) {
-					mapperFunction = JoddBean.defaults().getMapperFunctionInstances().lookup(((Mapper) annotation).value());
+					mapperFunction = MapperFunctionInstances.get().lookup(((Mapper) annotation).value());
 					break;
 				}
 			}
