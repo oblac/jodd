@@ -27,6 +27,7 @@ package jodd.bean;
 
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MapperFunctionInstances;
 import jodd.typeconverter.Converter;
 import jodd.typeconverter.TypeConverterManager;
 
@@ -48,6 +49,7 @@ public class JoddBean {
 	private ClassIntrospector classIntrospector = new CachingIntrospector();
 	private Converter converter = new Converter();
 	private TypeConverterManager typeConverterManager = new TypeConverterManager(converter);
+	private MapperFunctionInstances mapperFunctionInstances = new MapperFunctionInstances();
 
 	/**
 	 * Returns the {@link ClassIntrospector} implementation. Default is {@link CachingIntrospector}.
@@ -97,4 +99,11 @@ public class JoddBean {
 		return this;
 	}
 
+	public MapperFunctionInstances getMapperFunctionInstances() {
+		return mapperFunctionInstances;
+	}
+
+	public void setMapperFunctionInstances(final MapperFunctionInstances mapperFunctionInstances) {
+		this.mapperFunctionInstances = mapperFunctionInstances;
+	}
 }
