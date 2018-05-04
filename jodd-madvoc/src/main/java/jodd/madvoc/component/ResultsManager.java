@@ -34,19 +34,13 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.result.Chain;
-import jodd.madvoc.result.Forward;
-import jodd.madvoc.result.PermanentRedirect;
-import jodd.madvoc.result.Redirect;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
-import jodd.util.StringPool;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Manager for Madvoc result handlers.
@@ -60,24 +54,12 @@ public class ResultsManager {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	protected String defaultResultName;
-
 	public ResultsManager() {
-		this.stringResultsFactories = new HashMap<>();
 		this.allResults = new HashMap<>();
-
-		// defaults
-		registerResultName("chain", Chain::to);
-		registerResultName("redirect", Redirect::to);
-		registerResultName("url", PermanentRedirect::to);
-		registerResultName("dispatch", Forward::to);
-
-		setDefaultResultName("dispatch");
 	}
 
 	// ---------------------------------------------------------------- container
 
-	protected final Map<String, Function<String, Object>> stringResultsFactories;
 	protected final Map<Class<? extends ActionResult>, ActionResult> allResults;
 
 	/**
@@ -87,10 +69,6 @@ public class ResultsManager {
 		Set<ActionResult> set = new HashSet<>(allResults.size());
 		set.addAll(allResults.values());
 		return set;
-	}
-
-	public void registerResultName(final String name, final Function<String, Object> factory) {
-		stringResultsFactories.put(name, factory);
 	}
 
 	/**
@@ -151,66 +129,36 @@ public class ResultsManager {
 	 * result object.
 	 */
 	public ActionResult lookup(final ActionRequest actionRequest, Object resultObject) {
-		// + use result value
-
-		boolean modifiedResultObject = false;
-
-		if (resultObject == null || resultObject instanceof String) {
-			// string results
-
-			String resultName = defaultResultName;
-			String resultValue = StringPool.EMPTY;
-
-			if (resultObject != null) {
-				resultValue = resultObject.toString();
-
-				// first check result value
-				int columnIndex = resultValue.indexOf(':');
-
-				if (columnIndex != -1) {
-					resultName = resultValue.substring(0, columnIndex);
-
-					resultValue = resultValue.substring(columnIndex + 1);
-				}
-			}
-
-			Function<String, Object> function = stringResultsFactories.get(resultName);
-
-			if (function == null) {
-				throw new MadvocException("Invalid result name:" + resultName);
-			}
-
-			resultObject = function.apply(resultValue);
-			modifiedResultObject = true;
-		}
 
 		ActionResult actionResultHandler = null;
 
 		// + read @RenderWith value on method
-		if (actionResultHandler == null) {
+		{
 
-			ActionRuntime actionRuntime = actionRequest.getActionRuntime();
+			final ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
 			Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
+
 			if (actionResultClass != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
 			}
 		}
 
 		// + use @RenderWith value on resulting object if exist
-		if (actionResultHandler == null) {
-			RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
+		if (actionResultHandler == null && resultObject != null) {
+			final RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
 
 			if (renderWith != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(renderWith.value());
 			}
 		}
 
-		// + use annotation's configuration
-		if (actionResultHandler == null || modifiedResultObject) {
-			ActionConfig actionConfig = actionRequest.getActionRuntime().getActionConfig();
+		// + use action configuration
+		if (actionResultHandler == null) {
+			final ActionConfig actionConfig = actionRequest.getActionRuntime().getActionConfig();
 
 			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
+
 			if (actionResultClass != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
 			}
@@ -218,6 +166,16 @@ public class ResultsManager {
 
 		if (actionResultHandler == null) {
 			throw new MadvocException("ActionResult not found for: " + resultObject);
+		}
+
+		// + special case: use result value
+
+		if (resultObject instanceof String) {
+			Object resultValueFromString = actionResultHandler.resultOf(resultObject);
+
+			if (resultValueFromString != null) {
+				resultObject = resultValueFromString;
+			}
 		}
 
 		// set action result object into action request!
@@ -228,14 +186,6 @@ public class ResultsManager {
 
 
 	// ---------------------------------------------------------------- init
-
-	public String getDefaultResultName() {
-		return defaultResultName;
-	}
-
-	public void setDefaultResultName(final String defaultResultName) {
-		this.defaultResultName = defaultResultName;
-	}
 
 	/**
 	 * Initializes action result.
