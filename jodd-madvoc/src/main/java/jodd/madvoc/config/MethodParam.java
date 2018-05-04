@@ -25,6 +25,8 @@
 
 package jodd.madvoc.config;
 
+import jodd.introspector.MapperFunction;
+
 import java.lang.annotation.Annotation;
 
 /**
@@ -36,16 +38,19 @@ public class MethodParam {
 	private final String name;
 	private final Class<? extends Annotation> annotationType;
 	private final ScopeData scopeData;
+	private final MapperFunction mapperFunction;
 
 	public MethodParam(
 			final Class type,
 			final String name,
 			final Class<? extends Annotation> annotationType,
-			final ScopeData scopeData) {
+			final ScopeData scopeData,
+			final MapperFunction mapperFunction) {
 		this.type = type;
 		this.name = name;
 		this.annotationType = annotationType;
 		this.scopeData = scopeData;
+		this.mapperFunction = mapperFunction;
 	}
 
 	/**
@@ -75,5 +80,9 @@ public class MethodParam {
 	 */
 	public ScopeData scopeData() {
 		return scopeData;
+	}
+
+	public MapperFunction mapperFunction() {
+		return mapperFunction;
 	}
 }
