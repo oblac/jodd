@@ -30,6 +30,7 @@ package jodd.typeconverter;
  *
  * @see TypeConverterManager
  */
+@FunctionalInterface
 public interface TypeConverter<T> {
 
 	/**
