@@ -157,12 +157,7 @@ public class Targets {
 			else {
 				// parameter is annotated with any IN annotation
 				// create target with NO value, as the value will be created later
-				paramTarget = new Target(null, paramType, methodParam.scopeData()) {
-					@Override
-					protected Object createValueInstance(final Class type) {
-						return createActionMethodArgument(paramType, action);
-					}
-				};
+				paramTarget = Target.ofMethodParam(methodParam, type -> createActionMethodArgument(type, action));
 			}
 
 			target[i + 1] = paramTarget;

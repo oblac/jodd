@@ -27,9 +27,11 @@ package jodd.madvoc.config;
 
 import jodd.bean.BeanUtil;
 import jodd.bean.JoddBean;
+import jodd.introspector.MapperFunction;
 import jodd.madvoc.MadvocException;
+import jodd.util.ClassUtil;
 
-import java.lang.reflect.Constructor;
+import java.util.function.Function;
 
 /**
  * Wrapper of a target for IN/OUT operations. It wraps one of these:
@@ -43,27 +45,45 @@ import java.lang.reflect.Constructor;
  */
 public class Target {
 
+	private static final Function<Class, Object> VALUE_INSTANCE_CREATOR = type -> {
+		try {
+			return ClassUtil.newInstance(type);
+		} catch (Exception ex) {
+			throw new MadvocException(ex);
+		}
+	};
+
 	/**
 	 * Creates a common target over a value, with known scope data.
 	 */
 	public static Target ofValue(final Object value, final ScopeData scopeData) {
-		return new Target(value, null, scopeData);
+		return new Target(value, null, scopeData, null, VALUE_INSTANCE_CREATOR);
 	}
 	/**
 	 * Creates a common target over a method param.
 	 */
 	public static Target ofMethodParam(final MethodParam methodParam, final Object object) {
-		return new Target(object, methodParam.type(), methodParam.scopeData());
+		return new Target(object, methodParam.type(), methodParam.scopeData(), methodParam.mapperFunction(), VALUE_INSTANCE_CREATOR);
+	}
+	/**
+	 * Creates a common target over a method param.
+	 */
+	public static Target ofMethodParam(final MethodParam methodParam, final Function<Class, Object> valueInstanceCreator) {
+		return new Target(null, methodParam.type(), methodParam.scopeData(), methodParam.mapperFunction(), valueInstanceCreator);
 	}
 
 	private final Class type;
 	private final ScopeData scopeData;
 	private Object value;
+	private final Function<Class, Object> valueInstanceCreator;
+	private final MapperFunction mapperFunction;
 
-	protected Target(final Object value, final Class type, final ScopeData scopeData) {
+	private Target(final Object value, final Class type, final ScopeData scopeData, final MapperFunction mapperFunction, final Function<Class, Object> valueInstanceCreator) {
 		this.value = value;
 		this.type = type;
 		this.scopeData = scopeData;
+		this.valueInstanceCreator = valueInstanceCreator;
+		this.mapperFunction = mapperFunction;
 	}
 
 	/**
@@ -144,12 +164,18 @@ public class Target {
 			int dotNdx = propertyName.indexOf('.');
 
 			if (dotNdx == -1) {
-				value = JoddBean.defaults().getTypeConverterManager().convertType(propertyValue, type);
+
+				if (mapperFunction != null) {
+					value = mapperFunction.apply(propertyValue);
+				}
+				else {
+					value = JoddBean.defaults().getTypeConverterManager().convertType(propertyValue, type);
+				}
 				return;
 			}
 
 			if (value == null) {
-				value = createValueInstance(type);
+				value = valueInstanceCreator.apply(type);
 			}
 
 			propertyName = propertyName.substring(dotNdx + 1);
@@ -162,20 +188,6 @@ public class Target {
 		}
 		else {
 			BeanUtil.declaredForced.setProperty(value, propertyName, propertyValue);
-		}
-	}
-
-	/**
-	 * Creates new instance of a type.
-	 */
-	@SuppressWarnings({"unchecked", "NullArgumentToVariableArgMethod"})
-	protected Object createValueInstance(Class type) {
-		try {
-			final Constructor ctor = type.getDeclaredConstructor(null);
-			ctor.setAccessible(true);
-			return ctor.newInstance();
-		} catch (Exception ex) {
-			throw new MadvocException(ex);
 		}
 	}
 
