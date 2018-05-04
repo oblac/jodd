@@ -25,26 +25,38 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InterceptedBy;
+import jodd.introspector.Mapper;
+import jodd.introspector.MapperFunction;
+import jodd.madvoc.meta.Body;
+import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.result.Redirect;
+import jodd.madvoc.meta.RestAction;
 
 @MadvocAction
-public class ExcAction {
+public class BodyAction {
 
-	@Action
-	@InterceptedBy({ExcInterceptor.class, DefaultWebAppInterceptors.class})
-	public void view() {
-		int a = 0;
-		int b = 4 / a;
-		System.out.println(b);
+	private static class MyMapper implements MapperFunction<String, Integer> {
+		@Override
+		public Integer apply(String s) {
+			return Integer.valueOf(s) + 1;
+		}
 	}
 
-	@Action
-	public Redirect red() {
-		return Redirect.to("/500.html");
+	@In @Body @Mapper(MyMapper.class) Integer body1;
+
+	private Integer body2;
+
+	public Integer getBody2() {
+		return body2;
 	}
 
+	@In @Body @Mapper(MyMapper.class)
+	public void setBody2(Integer body2) {
+		this.body2 = body2;
+	}
+
+	@RestAction
+	public Integer one(@In @Body @Mapper(MyMapper.class) Integer body) {
+		return body + body1 + body2;
+	}
 }

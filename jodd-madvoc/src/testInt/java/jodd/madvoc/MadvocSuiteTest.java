@@ -103,6 +103,8 @@ class MadvocSuiteTest {
 	@Nested
 	class HelloActionTest extends HelloActionTestBase {}
 	@Nested
+	class BodyTest extends BodyTestBase {}
+	@Nested
 	class SimpleTest extends SimpleTestBase {}
 	@Nested
 	class RawActionTest extends RawActionTestBase {}

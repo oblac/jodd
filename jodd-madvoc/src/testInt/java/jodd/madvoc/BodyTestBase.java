@@ -23,28 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.action;
+package jodd.madvoc;
 
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InterceptedBy;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.result.Redirect;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
+import org.junit.jupiter.api.Test;
 
-@MadvocAction
-public class ExcAction {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	@Action
-	@InterceptedBy({ExcInterceptor.class, DefaultWebAppInterceptors.class})
-	public void view() {
-		int a = 0;
-		int b = 4 / a;
-		System.out.println(b);
-	}
+abstract class BodyTestBase {
 
-	@Action
-	public Redirect red() {
-		return Redirect.to("/500.html");
+	@Test
+	void testBody() {
+		HttpResponse response = HttpRequest.get("localhost:8173/body/one").body("172").send();
+
+		assertEquals(String.valueOf(173 * 3), response.bodyText().trim());
 	}
 
 }

@@ -30,6 +30,8 @@ import jodd.madvoc.meta.Body;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.result.Chain;
+import jodd.madvoc.result.NoResult;
 import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,9 +97,9 @@ public class HelloAction {
 	 * No result.
 	 */
 	@Action
-	public String direct() throws IOException {
+	public NoResult direct() throws IOException {
 		servletResponse.getWriter().print("Direct stream output");
-		return "none:";
+		return NoResult.value();
 	}
 
 	@Out
@@ -142,9 +144,9 @@ public class HelloAction {
 	int chain;
 
 	@Action
-	public String chain() {
+	public Chain chain() {
 		chain++;
-		return "chain:/hello.link.html";
+		return Chain.to("/hello.link.html");
 	}
 
 	@Action

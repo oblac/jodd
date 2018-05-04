@@ -27,6 +27,7 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.result.Redirect;
 
 public class ExcInterceptor implements ActionInterceptor {
 
@@ -36,7 +37,7 @@ public class ExcInterceptor implements ActionInterceptor {
 			return actionRequest.invoke();
 		}
 		catch (ArithmeticException ex) {
-			return "redirect:/500.html";
+			return Redirect.to("/500.html");
 		}
 	}
 }

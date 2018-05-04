@@ -29,6 +29,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.result.Redirect;
 
 @MadvocAction("/re/")
 public class RestAction {
@@ -42,8 +43,8 @@ public class RestAction {
 	}
 
 	@Action(value = "view2/g-{itemId}")
-	public String viewItem2() {
-		return "redirect:/re/view/{itemId}";
+	public Redirect viewItem2() {
+		return Redirect.to("/re/view/{itemId}");
 	}
 
 	@Action(value = "view3/{itemId:^[0-9]+}")
