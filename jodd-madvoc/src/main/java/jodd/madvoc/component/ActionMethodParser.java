@@ -25,6 +25,9 @@
 
 package jodd.madvoc.component;
 
+import jodd.bean.JoddBean;
+import jodd.introspector.Mapper;
+import jodd.introspector.MapperFunction;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionHandler;
 import jodd.madvoc.MadvocConfig;
@@ -483,15 +486,26 @@ public class ActionMethodParser {
 				methodParamNames = actionMethodParamNameResolver.resolveParamNames(actionClassMethod);
 			}
 
-			String paramName = methodParamNames[ndx];
+			final String paramName = methodParamNames[ndx];
 
-			final ScopeData paramsScopeData = scopeDataInspector.inspectMethodParameterScopes(paramName, paramType, paramAnns[ndx]);
+			final Annotation[] parameterAnnotations = paramAnns[ndx];
+
+			final ScopeData paramsScopeData = scopeDataInspector.inspectMethodParameterScopes(paramName, paramType, parameterAnnotations);
+
+			MapperFunction mapperFunction = null;
+			for (final Annotation annotation : parameterAnnotations) {
+				if (annotation instanceof Mapper) {
+					mapperFunction = JoddBean.defaults().getMapperFunctionInstances().lookup(((Mapper) annotation).value());
+					break;
+				}
+			}
 
 			params[ndx] = new MethodParam(
 				paramTypes[ndx],
 				paramName,
-				scopeDataInspector.detectAnnotationType(paramAnns[ndx]),
-				paramsScopeData
+				scopeDataInspector.detectAnnotationType(parameterAnnotations),
+				paramsScopeData,
+				mapperFunction
 			);
 		}
 
