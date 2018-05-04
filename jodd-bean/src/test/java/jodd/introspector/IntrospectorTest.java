@@ -26,7 +26,6 @@
 package jodd.introspector;
 
 import jodd.bean.BeanUtil;
-import jodd.bean.JoddBean;
 import jodd.introspector.fixtures.Abean;
 import jodd.introspector.fixtures.Ac;
 import jodd.introspector.fixtures.Bbean;
@@ -55,7 +54,7 @@ class IntrospectorTest {
 
 	@Test
 	void testBasic() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Abean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Abean.class);
 		assertNotNull(cd);
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		int c = 0;
@@ -94,7 +93,7 @@ class IntrospectorTest {
 
 	@Test
 	void testExtends() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Bbean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Bbean.class);
 		assertNotNull(cd);
 
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
@@ -160,7 +159,7 @@ class IntrospectorTest {
 
 	@Test
 	void testCtors() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Ac.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Ac.class);
 		CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
 		int c = 0;
 		for (CtorDescriptor ctor : ctors) {
@@ -175,7 +174,7 @@ class IntrospectorTest {
 		Constructor ctor = cd.getCtorDescriptor(new Class[] {Integer.class}, true).getConstructor();
 		assertNotNull(ctor);
 
-		cd = JoddBean.defaults().getClassIntrospector().lookup(Bc.class);
+		cd = ClassIntrospector.get().lookup(Bc.class);
 		ctors = cd.getAllCtorDescriptors();
 		c = 0;
 		for (CtorDescriptor ccc : ctors) {
@@ -196,7 +195,7 @@ class IntrospectorTest {
 
 	@Test
 	void testSameFieldDifferentClass() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Abean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Abean.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("shared", false);
 		assertNull(fd);
@@ -204,7 +203,7 @@ class IntrospectorTest {
 		fd = cd.getFieldDescriptor("shared", true);
 		assertNotNull(fd);
 
-		ClassDescriptor cd2 = JoddBean.defaults().getClassIntrospector().lookup(Bbean.class);
+		ClassDescriptor cd2 = ClassIntrospector.get().lookup(Bbean.class);
 		FieldDescriptor fd2 = cd2.getFieldDescriptor("shared", true);
 
 		assertNotEquals(fd, fd2);
@@ -213,7 +212,7 @@ class IntrospectorTest {
 
 	@Test
 	void testPropertyMatches() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Cbean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Cbean.class);
 
 		PropertyDescriptor pd;
 
@@ -255,7 +254,7 @@ class IntrospectorTest {
 
 	@Test
 	void testOverload() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Overload.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Overload.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
@@ -270,14 +269,14 @@ class IntrospectorTest {
 
 	@Test
 	void testSerialUid() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Bbean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Bbean.class);
 
 		assertNull(cd.getFieldDescriptor("serialVersionUID", true));
 	}
 
 	@Test
 	void testStaticFieldsForProperties() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Mojo.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Mojo.class);
 
 		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
 		assertEquals(3, fieldDescriptors.length);
@@ -300,7 +299,7 @@ class IntrospectorTest {
 
 	@Test
 	void testPropertiesOneClass() throws InvocationTargetException, IllegalAccessException {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(One.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(One.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
@@ -349,7 +348,7 @@ class IntrospectorTest {
 
 	@Test
 	void testPropertiesOneSubClass() throws InvocationTargetException, IllegalAccessException {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(OneSub.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(OneSub.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
@@ -389,7 +388,7 @@ class IntrospectorTest {
 
 	@Test
 	void testPropertiesTwoSubClass() throws InvocationTargetException, IllegalAccessException {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(TwoSub.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(TwoSub.class);
 
 		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 

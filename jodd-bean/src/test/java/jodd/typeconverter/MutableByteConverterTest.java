@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableByte;
 import jodd.typeconverter.impl.MutableByteConverter;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class MutableByteConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableByteConverter mutableByteConverter = (MutableByteConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableByte.class);
+		MutableByteConverter mutableByteConverter = (MutableByteConverter) TypeConverterManager.get().lookup(MutableByte.class);
 
 		assertNull(mutableByteConverter.convert(null));
 

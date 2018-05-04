@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableInteger;
 import jodd.typeconverter.impl.MutableIntegerConverter;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class MutableIntegerConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableIntegerConverter mutableIntegerConverter = (MutableIntegerConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableInteger.class);
+		MutableIntegerConverter mutableIntegerConverter = (MutableIntegerConverter) TypeConverterManager.get().lookup(MutableInteger.class);
 
 		assertNull(mutableIntegerConverter.convert(null));
 

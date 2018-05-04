@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ class MatrixTest {
 		matrix.add(intsList(1, 2, 3));
 		matrix.add(intsList(9, 8, 7));
 
-		int[][] arr = JoddBean.defaults().getTypeConverterManager().convertType(matrix, int[][].class);
+		int[][] arr = TypeConverterManager.get().convertType(matrix, int[][].class);
 
 		assertEquals(2, arr.length);
 
@@ -67,7 +66,7 @@ class MatrixTest {
 				{"432", "345", "9832"}
 		};
 
-		int[][] arr = JoddBean.defaults().getTypeConverterManager().convertType(strings, int[][].class);
+		int[][] arr = TypeConverterManager.get().convertType(strings, int[][].class);
 
 		assertEquals(2, arr.length);
 
@@ -82,7 +81,7 @@ class MatrixTest {
 				{432, 345, 9832}
 		};
 
-		String[][] arr = JoddBean.defaults().getTypeConverterManager().convertType(values, String[][].class);
+		String[][] arr = TypeConverterManager.get().convertType(values, String[][].class);
 
 		assertEquals(2, arr.length);
 

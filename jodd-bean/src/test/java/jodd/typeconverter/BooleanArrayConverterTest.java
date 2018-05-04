@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.typeconverter.impl.BooleanArrayConverter;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BooleanArrayConverterTest {
 
-	private TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	@Test
 	void testConversion() {

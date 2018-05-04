@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableShort;
 import jodd.typeconverter.impl.MutableShortConverter;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class MutableShortConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableShortConverter mutableShortConverter = (MutableShortConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableShort.class);
+		MutableShortConverter mutableShortConverter = (MutableShortConverter) TypeConverterManager.get().lookup(MutableShort.class);
 
 		assertNull(mutableShortConverter.convert(null));
 

@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableInteger;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ArraysTest {
 
-	private TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	public static final Integer[] INTEGERS = new Integer[] {1, 2, 3};
 	public static final int[] INTS = new int[] {1, 2, 3};

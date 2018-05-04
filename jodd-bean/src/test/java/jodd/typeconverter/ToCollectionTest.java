@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -44,8 +43,7 @@ class ToCollectionTest {
 		set.add("123");
 		set.add("456");
 
-		List<Integer> list =
-			JoddBean.defaults().getTypeConverterManager().convertToCollection(set, List.class, Integer.class);
+		List<Integer> list = TypeConverterManager.get().convertToCollection(set, List.class, Integer.class);
 
 		assertNotNull(list);
 		assertEquals(2, list.size());

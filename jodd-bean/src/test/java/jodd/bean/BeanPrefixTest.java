@@ -28,6 +28,7 @@ package jodd.bean;
 import jodd.bean.fixtures.LifeBean;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import org.junit.jupiter.api.Test;
 
@@ -43,13 +44,13 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		JoddBean.defaults().setClassIntrospector(new CachingIntrospector(true, true, true, new String[] {"_"}));
+		ClassIntrospector.Defaults.set(new CachingIntrospector(true, true, true, new String[] {"_"}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(LifeBean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -60,7 +61,7 @@ class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals(null, pds[2].getFieldDescriptor());
 
-		JoddBean.defaults().setClassIntrospector(new CachingIntrospector());
+		ClassIntrospector.Defaults.set(new CachingIntrospector());
 	}
 
 	@Test
@@ -71,14 +72,14 @@ class BeanPrefixTest {
 
 		assertEquals("foo", foo);
 
-		JoddBean.defaults().setClassIntrospector(new CachingIntrospector(true, true, true, new String[] {"_", ""}));
+		ClassIntrospector.Defaults.set(new CachingIntrospector(true, true, true, new String[] {"_", ""}));
 
 		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(LifeBean.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(LifeBean.class);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 		assertEquals(3, pds.length);
@@ -89,7 +90,7 @@ class BeanPrefixTest {
 		assertEquals("www", pds[2].getName());
 		assertEquals("www", pds[2].getFieldDescriptor().getName());
 
-		JoddBean.defaults().setClassIntrospector(new CachingIntrospector());
+		ClassIntrospector.Defaults.set(new CachingIntrospector());
 	}
 
 	@Test

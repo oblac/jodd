@@ -27,6 +27,7 @@ package jodd.bean;
 
 import jodd.bean.fixtures.Woof;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class BeanUtilGenericsTest {
 	void testAllBeanSetters() {
 		Woof woof = new Woof();
 		Class type = woof.getClass();
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		assertNotNull(properties);
 		assertEquals(7, properties.length);

@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import static jodd.typeconverter.TypeConverterTestHelper.arrc;
@@ -35,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class ClassArrayConverterTest {
 	
-	private TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	@Test
 	@SuppressWarnings({"unchecked"})

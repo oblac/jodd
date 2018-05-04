@@ -25,7 +25,6 @@
 
 package jodd.introspector;
 
-import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,7 +50,7 @@ class IntrospectorPropertyGenericsTest {
 
 	@Test
 	void testGenAction() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(GenAction.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(GenAction.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("input", true);
 
@@ -75,7 +74,7 @@ class IntrospectorPropertyGenericsTest {
 
 	@Test
 	void testNormal() {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(Normal.class);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(Normal.class);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("input", true);
 

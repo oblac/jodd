@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableLong;
 import jodd.typeconverter.impl.MutableLongConverter;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,7 @@ class MutableLongConverterTest {
 	@Test
 	void testConversion() {
 		MutableLongConverter mutableLongConverter =
-			(MutableLongConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableLong.class);
+			(MutableLongConverter) TypeConverterManager.get().lookup(MutableLong.class);
 
 		assertNull(mutableLongConverter.convert(null));
 

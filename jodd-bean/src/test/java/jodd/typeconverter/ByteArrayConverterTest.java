@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.typeconverter.impl.ByteArrayConverter;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ByteArrayConverterTest {
 
-	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) JoddBean.defaults().getTypeConverterManager().lookup(byte[].class);
+	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) TypeConverterManager.get().lookup(byte[].class);
 
 	@Test
 	void testArrayConversion() {

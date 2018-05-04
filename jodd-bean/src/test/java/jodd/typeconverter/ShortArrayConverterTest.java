@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.typeconverter.impl.ShortArrayConverter;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ class ShortArrayConverterTest {
 
 	@Test
 	void testConversion() {
-		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) JoddBean.defaults().getTypeConverterManager().lookup(short[].class);
+		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) TypeConverterManager.get().lookup(short[].class);
 
 		assertNull(shortArrayConverter.convert(null));
 

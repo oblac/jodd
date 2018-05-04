@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -163,7 +162,7 @@ class ConverterTest {
 
 		// change boolean converter! boolean[] depends on it!
 
-		TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
+		TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 		typeConverterManager.register(boolean.class, booleanTypeConverter);
 

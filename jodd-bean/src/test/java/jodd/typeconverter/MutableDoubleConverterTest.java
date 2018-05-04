@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableDouble;
 import jodd.typeconverter.impl.MutableDoubleConverter;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ class MutableDoubleConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableDouble.class);
+		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) TypeConverterManager.get().lookup(MutableDouble.class);
 
 		assertNull(mutableDoubleConverter.convert(null));
 

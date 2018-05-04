@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.typeconverter.impl.IntegerArrayConverter;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +41,7 @@ class IntegerArrayConverterTest {
 
 	@Test
 	void testConversion() {
-		IntegerArrayConverter integerArrayConverter = (IntegerArrayConverter) JoddBean.defaults().getTypeConverterManager().lookup(int[].class);
+		IntegerArrayConverter integerArrayConverter = (IntegerArrayConverter) TypeConverterManager.get().lookup(int[].class);
 
 		assertNull(integerArrayConverter.convert(null));
 

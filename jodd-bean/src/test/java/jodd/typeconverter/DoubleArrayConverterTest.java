@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.typeconverter.impl.DoubleArrayConverter;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DoubleArrayConverterTest {
 
-	private TypeConverterManager typeConverterManager = JoddBean.defaults().getTypeConverterManager();
+	private TypeConverterManager typeConverterManager = TypeConverterManager.get();
 
 	@Test
 	void testConversion() {

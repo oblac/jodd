@@ -25,7 +25,6 @@
 
 package jodd.typeconverter;
 
-import jodd.bean.JoddBean;
 import jodd.mutable.MutableFloat;
 import jodd.typeconverter.impl.MutableFloatConverter;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ class MutableFloatConverterTest {
 
 	@Test
 	void testConversion() {
-		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) JoddBean.defaults().getTypeConverterManager().lookup(MutableFloat.class);
+		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) TypeConverterManager.get().lookup(MutableFloat.class);
 
 		assertNull(mutableFloatConverter.convert(null));
 
