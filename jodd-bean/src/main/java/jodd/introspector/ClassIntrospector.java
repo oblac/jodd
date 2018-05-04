@@ -38,11 +38,6 @@ public interface ClassIntrospector {
 	ClassDescriptor lookup(Class type);
 
 	/**
-	 * Registers new type.
-	 */
-	ClassDescriptor register(Class type);
-
-	/**
 	 * Clears all cached data.
 	 */
 	void reset();
