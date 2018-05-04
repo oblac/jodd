@@ -25,8 +25,8 @@
 
 package jodd.petite.resolver;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.petite.def.ProviderDefinition;
 import jodd.petite.meta.PetiteProvider;
@@ -46,7 +46,7 @@ public class ProviderResolver {
 	 * Resolves all providers in the class
 	 */
 	public ProviderDefinition[] resolve(final Class type, final String name) {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
 		List<ProviderDefinition> list = new ArrayList<>();

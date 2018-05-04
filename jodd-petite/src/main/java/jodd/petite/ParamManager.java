@@ -25,8 +25,8 @@
 
 package jodd.petite;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -103,7 +103,7 @@ public class ParamManager {
 	}
 
 	public ValueInjectionPoint[] resolveParamInjectionPoints(final Class type) {
-		final ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		final List<ValueInjectionPoint> valueInjectionPointList = new ArrayList<>();
 

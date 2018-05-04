@@ -25,9 +25,9 @@
 
 package jodd.petite;
 
-import jodd.bean.JoddBean;
 import jodd.cache.TypeCache;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -485,7 +485,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteCtorInjectionPoint(final String beanName, final Class[] paramTypes, final String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		Constructor constructor = null;
 
 		if (paramTypes == null) {
@@ -523,7 +523,7 @@ public abstract class PetiteBeans {
 	public void registerPetitePropertyInjectionPoint(final String beanName, final String property, final String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
 
 		if (propertyDescriptor == null) {
@@ -545,7 +545,7 @@ public abstract class PetiteBeans {
 	 */
 	public void registerPetiteSetInjectionPoint(final String beanName, final String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
 		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
 
@@ -569,7 +569,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteMethodInjectionPoint(final String beanName, final String methodName, final Class[] arguments, final String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 
 		Method method = null;
 		if (arguments == null) {
@@ -608,7 +608,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteInitMethods(final String beanName, final InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		if (initMethodNames == null) {
 			initMethodNames = StringPool.EMPTY_ARRAY;
 		}
@@ -637,7 +637,7 @@ public abstract class PetiteBeans {
 	public void registerPetiteDestroyMethods(final String beanName, String... destroyMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanDefinition.type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanDefinition.type);
 		if (destroyMethodNames == null) {
 			destroyMethodNames = StringPool.EMPTY_ARRAY;
 		}
@@ -676,7 +676,7 @@ public abstract class PetiteBeans {
 
 		Class beanType = beanDefinition.type;
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(beanType);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(beanType);
 		MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
 
 		if (md == null) {
@@ -697,7 +697,7 @@ public abstract class PetiteBeans {
 	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(final String providerName, final Class type, final String staticMethodName, final Class[] arguments) {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		MethodDescriptor md = cd.getMethodDescriptor(staticMethodName, arguments, true);
 
 		if (md == null) {

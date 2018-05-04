@@ -25,8 +25,8 @@
 
 package jodd.petite.resolver;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
@@ -47,7 +47,7 @@ public class SetResolver {
 	 * Resolves all collections for given type.
 	 */
 	public SetInjectionPoint[] resolve(final Class type, final boolean autowire) {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<SetInjectionPoint> list = new ArrayList<>();
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();

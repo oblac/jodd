@@ -25,8 +25,8 @@
 
 package jodd.petite.resolver;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
 import jodd.petite.PetiteException;
 import jodd.petite.def.BeanReferences;
@@ -54,7 +54,7 @@ public class CtorResolver {
 	 */
 	public CtorInjectionPoint resolve(final Class type, final boolean useAnnotation) {
 		// lookup methods
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();
 		Constructor foundedCtor = null;
 		Constructor defaultCtor = null;

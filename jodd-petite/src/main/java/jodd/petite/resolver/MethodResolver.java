@@ -25,8 +25,8 @@
 
 package jodd.petite.resolver;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.petite.def.BeanReferences;
 import jodd.petite.def.MethodInjectionPoint;
@@ -52,7 +52,7 @@ public class MethodResolver {
 	 */
 	public MethodInjectionPoint[] resolve(final Class type) {
 		// lookup methods
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 		List<MethodInjectionPoint> list = new ArrayList<>();
 		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 
