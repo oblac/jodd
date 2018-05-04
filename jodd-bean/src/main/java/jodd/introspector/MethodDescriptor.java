@@ -25,6 +25,7 @@
 
 package jodd.introspector;
 
+import jodd.bean.JoddBean;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,6 +46,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	protected final Class rawReturnComponentType;
 	protected final Class rawReturnKeyComponentType;
 	protected final MethodParamDescriptor[] parameters;
+	protected final MapperFunction mapperFunction;
 
 	public MethodDescriptor(final ClassDescriptor classDescriptor, final Method method) {
 		super(classDescriptor, ClassUtil.isPublic(method));
@@ -61,7 +63,21 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 			this.rawReturnKeyComponentType = null;
 		}
 
+		// force access
+
 		ClassUtil.forceAccess(method);
+
+		// mapper
+
+		final Mapper mapper = method.getAnnotation(Mapper.class);
+
+		if (mapper != null) {
+			mapperFunction = JoddBean.defaults().getMapperFunctionInstances().lookup(mapper.value());
+		} else {
+			mapperFunction = null;
+		}
+
+		// parameters
 
 		if (method.getParameterCount() == 0) {
 			parameters = NO_PARAMS;
@@ -183,6 +199,14 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	@Override
 	public Class getSetterRawComponentType() {
 		return getParameters()[0].getRawComponentType();
+	}
+
+	/**
+	 * Returns {@link MapperFunction} if defined, or {@code null} otherwise.
+	 */
+	@Override
+	public MapperFunction getMapperFunction() {
+		return mapperFunction;
 	}
 
 	// ---------------------------------------------------------------- toString

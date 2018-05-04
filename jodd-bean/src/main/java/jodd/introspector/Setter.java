@@ -38,4 +38,5 @@ public interface Setter {
 
 	Class getSetterRawComponentType();
 
+	MapperFunction getMapperFunction();
 }

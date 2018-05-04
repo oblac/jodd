@@ -35,7 +35,7 @@ public class MapperFunctionInstances {
 
 	private TypeCache<MapperFunction> typeCache = new TypeCache<>(TypeCache.Implementation.MAP);
 
-	public MapperFunction lookup(final Class<MapperFunction> mapperFunctionClass) {
+	public MapperFunction lookup(final Class<? extends MapperFunction> mapperFunctionClass) {
 		return typeCache.get(mapperFunctionClass, () -> {
 			try {
 				return ClassUtil.newInstance(mapperFunctionClass);

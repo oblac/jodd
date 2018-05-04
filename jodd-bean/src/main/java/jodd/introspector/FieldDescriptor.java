@@ -25,6 +25,7 @@
 
 package jodd.introspector;
 
+import jodd.bean.JoddBean;
 import jodd.util.ClassUtil;
 
 import java.lang.reflect.Field;
@@ -41,6 +42,7 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	protected final Class rawType;
 	protected final Class rawComponentType;
 	protected final Class rawKeyComponentType;
+	protected final MapperFunction mapperFunction;
 
 	/**
 	 * Creates new field descriptor and resolve all additional field data.
@@ -61,7 +63,19 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 			this.rawKeyComponentType = null;
 		}
 
+		// force access
+
 		ClassUtil.forceAccess(field);
+
+		// mapper
+
+		final Mapper mapper = field.getAnnotation(Mapper.class);
+
+		if (mapper != null) {
+			mapperFunction = JoddBean.defaults().getMapperFunctionInstances().lookup(mapper.value());
+		} else {
+			mapperFunction = null;
+		}
 	}
 
 	/**
@@ -144,6 +158,11 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	@Override
 	public Class getSetterRawComponentType() {
 		return getRawComponentType();
+	}
+
+	@Override
+	public MapperFunction getMapperFunction() {
+		return mapperFunction;
 	}
 
 	// ---------------------------------------------------------------- toString
