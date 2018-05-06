@@ -39,7 +39,7 @@ public class URLDecoder {
 	 * Decodes URL elements.
 	 */
 	public static String decode(final String url) {
-		return decode(url, JoddCore.defaults().getEncoding(), false);
+		return decode(url, JoddCore.encoding, false);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class URLDecoder {
 	 * Decodes query name or value.
 	 */
 	public static String decodeQuery(final String source) {
-		return decode(source, JoddCore.defaults().getEncoding(), true);
+		return decode(source, JoddCore.encoding, true);
 	}
 
 	/**

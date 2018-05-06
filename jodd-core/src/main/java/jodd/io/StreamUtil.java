@@ -570,7 +570,7 @@ public class StreamUtil {
 	 * @return default IO buffer size.
 	 */
 	private static int bufferSize() {
-		return JoddCore.defaults().getIoBufferSize();
+		return JoddCore.ioBufferSize;
 	}
 
 	/**
@@ -580,7 +580,7 @@ public class StreamUtil {
 	 * @return buffer size (either count or default IO buffer size, whichever is smaller).
 	 */
 	private static int bufferSize(final int count) {
-		final int ioBufferSize = JoddCore.defaults().getIoBufferSize();
+		final int ioBufferSize = JoddCore.ioBufferSize;
 		if (count < ioBufferSize) {
 			return count;
 		} else {
@@ -593,7 +593,7 @@ public class StreamUtil {
 	 * @return default encoding.
 	 */
 	private static String encoding() {
-		return JoddCore.defaults().getEncoding();
+		return JoddCore.encoding;
 	}
 
 	// ---------------------------------------------------------------- wrappers

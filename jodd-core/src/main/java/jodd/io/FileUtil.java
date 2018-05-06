@@ -1671,7 +1671,7 @@ public class FileUtil {
 	 * @return default encoding.
 	 */
 	private static String encoding() {
-		return JoddCore.defaults().getEncoding();
+		return JoddCore.encoding;
 	}
 
 	/**
@@ -1679,6 +1679,6 @@ public class FileUtil {
 	 * @return default prefix for temp files.
 	 */
 	private static String tempPrefix() {
-		return JoddCore.defaults().getTempFilePrefix();
+		return JoddCore.tempFilePrefix;
 	}
 }

@@ -157,7 +157,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 		}
 
-		tempFile = FileUtil.createTempFile(JoddCore.defaults().getTempFilePrefix(), TMP_FILE_SUFFIX, uploadPath);
+		tempFile = FileUtil.createTempFile(JoddCore.tempFilePrefix, TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;

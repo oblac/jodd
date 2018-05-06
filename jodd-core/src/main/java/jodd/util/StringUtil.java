@@ -3077,7 +3077,7 @@ public class StringUtil {
 	 */
 	public static byte[] getBytes(final String string) {
 		try {
-			return string.getBytes(JoddCore.defaults().getEncoding());
+			return string.getBytes(JoddCore.encoding);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
@@ -3092,7 +3092,7 @@ public class StringUtil {
 
 	public static String newString(final byte[] bytes) {
 		try {
-			return new String(bytes, JoddCore.defaults().getEncoding());
+			return new String(bytes, JoddCore.encoding);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}

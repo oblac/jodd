@@ -26,9 +26,9 @@
 package jodd.util;
 
 import jodd.core.JavaBridge;
-import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.util.cl.ClassLoaderStrategy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -423,7 +423,7 @@ public class ClassLoaderUtil {
 	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
 	public static Class loadClass(final String className) throws ClassNotFoundException {
-		return JoddCore.defaults().getClassLoaderStrategy().loadClass(className, null);
+		return ClassLoaderStrategy.get().loadClass(className, null);
 	}
 	
 	/**
@@ -431,7 +431,7 @@ public class ClassLoaderUtil {
 	 * @see jodd.util.cl.DefaultClassLoaderStrategy
 	 */
 	public static Class loadClass(final String className, final ClassLoader classLoader) throws ClassNotFoundException {
-		return JoddCore.defaults().getClassLoaderStrategy().loadClass(className, classLoader);
+		return ClassLoaderStrategy.get().loadClass(className, classLoader);
 	}
 
 }
