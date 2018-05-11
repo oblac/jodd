@@ -26,23 +26,16 @@
 package jodd.petite;
 
 import jodd.bean.BeanUtil;
-import jodd.introspector.Setter;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.def.BeanReferences;
-import jodd.petite.def.CtorInjectionPoint;
-import jodd.petite.def.InitMethodPoint;
 import jodd.petite.def.MethodInjectionPoint;
-import jodd.petite.def.PropertyInjectionPoint;
 import jodd.petite.def.ProviderDefinition;
-import jodd.petite.def.SetInjectionPoint;
-import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 /**
  * Petite IOC container.
@@ -84,231 +77,24 @@ public class PetiteContainer extends PetiteBeans {
 
 	// ---------------------------------------------------------------- core
 
-	/**
-	 * Creates new bean instance and performs constructor injection.
-	 */
-	protected Object newBeanInstance(final BeanDefinition def) {
-		initBeanDefinition(def);
-
-		if (def.ctor == CtorInjectionPoint.EMPTY) {
-			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for: " + def.type.getName());
-		}
-
-		int paramNo = def.ctor.references.length;
-		Object[] args = new Object[paramNo];
-
-		// wiring
-		if (def.wiringMode != WiringMode.NONE) {
-			for (int i = 0; i < paramNo; i++) {
-				args[i] = getBean(def.ctor.references[i]);
-				if (args[i] == null) {
-					if ((def.wiringMode == WiringMode.STRICT)) {
-						throw new PetiteException(
-								"Wiring constructor failed. References '" + def.ctor.references[i] +
-								"' not found for constructor: " + def.ctor.constructor);
-					}
-				}
-			}
-		}
-
-		// create instance
-		Object bean;
-		try {
-			bean = def.ctor.constructor.newInstance(args);
-		} catch (Exception ex) {
-			throw new PetiteException("Failed to create new bean instance '" + def.type.getName() + "' using constructor: " + def.ctor.constructor, ex);
-		}
-
-		return bean;
-	}
-
-	/**
-	 * Wires beans.
-	 * @param bean target bean
-	 * @param def bean definition
-	 */
-	protected void wireBean(final Object bean, final BeanDefinition def) {
-		if (def.wiringMode == WiringMode.NONE) {
-			return;
-		}
-		wireProperties(bean, def);
-		wireMethods(bean, def);
-	}
-
-	/**
-	 * Wires properties.
-	 */
-	protected void wireProperties(final Object bean, final BeanDefinition def) {
+	protected Object lookupMixingScopedBean(final BeanDefinition def, final BeanReferences refNames) {
 		final boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
 
-		for (PropertyInjectionPoint pip : def.properties) {
-			BeanReferences refNames = pip.references;
+		Object value = null;
 
-			Object value = null;
+		if (mixing) {
+			final BeanDefinition refBeanDefinition = lookupBeanDefinitions(refNames);
 
-			if (mixing) {
-				BeanDefinition refBeanDefinition = lookupBeanDefinitions(refNames);
-
-				if (refBeanDefinition != null) {
-					value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
-				}
-			}
-
-			if (value == null) {
-				value = getBean(refNames);
-			}
-
-			if (value == null) {
-				if ((def.wiringMode == WiringMode.STRICT)) {
-					throw new PetiteException("Wiring failed. Beans references: '" +
-							refNames + "' not found for property: "+ def.type.getName() +
-							'#' + pip.propertyDescriptor.getName());
-				}
-				continue;
-			}
-
-			// BeanUtil.setDeclaredProperty(bean, pip.propertyDescriptor.getName(), value);
-
-			Setter setter = pip.propertyDescriptor.getSetter(true);
-			try {
-				setter.invokeSetter(bean, value);
-			}
-			catch (Exception ex) {
-				throw new PetiteException("Wiring failed", ex);
+			if (refBeanDefinition != null) {
+				value = scopedProxyManager.lookupValue(PetiteContainer.this, def, refBeanDefinition);
 			}
 		}
 
-		// sets
-		for (SetInjectionPoint sip : def.sets) {
-
-			String[] beanNames = resolveBeanNamesForType(sip.targetClass);
-
-			Collection beans = sip.createSet(beanNames.length);
-
-			for (String beanName : beanNames) {
-				if (!beanName.equals(def.name)) {
-					Object value = getBean(beanName);
-					beans.add(value);
-				}
-			}
-
-			//BeanUtil.setDeclaredProperty(bean, sip.field.getName(), beans);
-
-			Setter setter = sip.propertyDescriptor.getSetter(true);
-			try {
-				setter.invokeSetter(bean, beans);
-			}
-			catch (Exception ex) {
-				throw new PetiteException("Wiring failed", ex);
-			}
-		}
-	}
-
-	/**
-	 * Wires methods and invokes them.
-	 */
-	protected void wireMethods(final Object bean, final BeanDefinition def) {
-		for (MethodInjectionPoint methodRef : def.methods) {
-			invokeMethodInjectionPoint(bean, def, methodRef);
-		}
-	}
-
-	/**
-	 * Invokes single method injection point on given bean with given bean definition.
-	 */
-	protected Object invokeMethodInjectionPoint(final Object bean, final BeanDefinition def, final MethodInjectionPoint methodRef) {
-		BeanReferences[] refNames = methodRef.references;
-		Object[] args = new Object[refNames.length];
-		for (int i = 0; i < refNames.length; i++) {
-			BeanReferences refName = refNames[i];
-			Object value = null;
-
-			boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
-
-			if (mixing) {
-				BeanDefinition refBeanDefinition = lookupBeanDefinitions(refName);
-
-				if (refBeanDefinition != null) {
-					value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
-				}
-			}
-
-			if (value == null) {
-				value = getBean(refName);
-			}
-
-			args[i] = value;
-			if (value == null) {
-				if ((def.wiringMode == WiringMode.STRICT)) {
-					throw new PetiteException("Wiring failed. Beans references: '" +
-							refName + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
-				}
-			}
+		if (value == null) {
+			value = PetiteContainer.this.getBean(refNames);
 		}
 
-		try {
-			return methodRef.method.invoke(bean, args);
-		} catch (Exception ex) {
-			throw new PetiteException(ex);
-		}
-	}
-
-	/**
-	 * Invokes all init methods, if they exist. Also resolves destroy methods.
-	 */
-	protected void invokeInitMethods(final Object bean, final BeanDefinition def, final InitMethodInvocationStrategy invocationStrategy) {
-		for (InitMethodPoint initMethod : def.initMethods) {
-			if (invocationStrategy != initMethod.invocationStrategy) {
-				continue;
-			}
-			try {
-				initMethod.method.invoke(bean);
-			} catch (Exception ex) {
-				throw new PetiteException("Invalid init method: " + initMethod, ex);
-			}
-		}
-	}
-
-	/**
-	 * Injects all parameters.
-	 */
-	protected void injectParams(final Object bean, final BeanDefinition def) {
-		if (def.name == null) {
-			return;
-		}
-
-		if (petiteConfig.isImplicitParamInjection()) {
-			// implicit
-			final int len = def.name.length() + 1;
-			for (final String param : def.params) {
-				final Object value = getParameter(param);
-				final String destination = param.substring(len);
-				try {
-					BeanUtil.declared.setProperty(bean, destination, value);
-				} catch (Exception ex) {
-					throw new PetiteException("Unable to set parameter: '" + param + "' to bean: " + def.name, ex);
-				}
-			}
-		}
-
-		// explicit
-		for (final ValueInjectionPoint pip : def.values) {
-			final String value = paramManager.parseKeyTemplate(pip.valueTemplate);
-
-			try {
-				BeanUtil.declared.setProperty(bean, pip.property, value);
-			} catch (Exception ex) {
-				throw new PetiteException("Unable to set value for: '" + pip.valueTemplate + "' to bean: " + def.name, ex);
-			}
-		}
-
-	}
-
-	protected <T> void invokeConsumerIfRegistered(final T bean, final BeanDefinition<T> def) {
-		if (def.consumer() == null) {
-			return;
-		}
-		def.consumer().accept(bean);
+		return value;
 	}
 
 	// ---------------------------------------------------------------- get beans
@@ -371,8 +157,10 @@ public class PetiteContainer extends PetiteBeans {
 
 		if (bean == null) {
 			// Create new bean in the scope
-			bean = newBeanInstance(def);
-			registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
+			initBeanDefinition(def);
+			final BeanData beanData = new BeanData(this, def);
+			registerBeanAndWireAndInjectParamsAndInvokeInitMethods(beanData);
+			bean = beanData.bean();
 		}
 
 		return (T) bean;
@@ -420,15 +208,16 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires bean, injects parameters and invokes init methods.
 	 * Such a loooong name :)
 	 */
-	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(final BeanDefinition def, final Object bean) {
-		initBeanDefinition(def);
-		def.scopeRegister(bean);
-		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
-		wireBean(bean, def);
-		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_DEFINE);
-		injectParams(bean, def);
-		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_INITIALIZE);
-		invokeConsumerIfRegistered(bean, def);
+	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(final BeanData beanData) {
+		initBeanDefinition(beanData.definition());
+
+		beanData.scopeRegister();
+		beanData.invokeInitMethods(InitMethodInvocationStrategy.POST_CONSTRUCT);
+		beanData.wireBean();
+		beanData.invokeInitMethods(InitMethodInvocationStrategy.POST_DEFINE);
+		beanData.injectParams(paramManager, petiteConfig.isImplicitParamInjection());
+		beanData.invokeInitMethods(InitMethodInvocationStrategy.POST_INITIALIZE);
+		beanData.invokeConsumerIfRegistered();
 	}
 
 	// ---------------------------------------------------------------- wire
@@ -455,7 +244,7 @@ public class PetiteContainer extends PetiteBeans {
 				return beanDefinition;
 			});
 
-		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(new BeanData(this, def, bean));
 	}
 
 	/**
@@ -472,9 +261,12 @@ public class PetiteContainer extends PetiteBeans {
 				return beanDefinition;
 			});
 
+
+		final BeanData beanData = new BeanData(this, def, bean);
+
 		for (MethodInjectionPoint methodInjectionPoint : def.methods) {
 			if (methodInjectionPoint.method.equals(method)) {
-				return (T) invokeMethodInjectionPoint(bean, def, methodInjectionPoint);
+				return (T) beanData.invokeMethodInjectionPoint(methodInjectionPoint);
 			}
 		}
 		try {
@@ -501,10 +293,12 @@ public class PetiteContainer extends PetiteBeans {
 	@SuppressWarnings({"unchecked"})
 	public <E> E createBean(final Class<E> type, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
-		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode, null);
-		Object bean = newBeanInstance(def);
-		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
-		return (E) bean;
+		final BeanDefinition def = new BeanDefinition(null, type, null, wiringMode, null);
+		initBeanDefinition(def);
+
+		final BeanData<E> beanData = new BeanData(this, def);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(beanData);
+		return beanData.bean();
 	}
 
 	// ---------------------------------------------------------------- providers
@@ -550,7 +344,7 @@ public class PetiteContainer extends PetiteBeans {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false, null);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
-		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(new BeanData(this, def, bean));
 	}
 
 	/**
@@ -640,7 +434,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Shutdowns container. After container is down, it can't be used anymore.
 	 */
 	public void shutdown() {
-		for (Scope scope : scopes.values()) {
+		for (final Scope scope : scopes.values()) {
 			scope.shutdown();
 		}
 

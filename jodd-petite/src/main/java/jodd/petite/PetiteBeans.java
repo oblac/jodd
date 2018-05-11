@@ -165,7 +165,7 @@ public abstract class PetiteBeans {
 		if (scope == null) {
 
 			try {
-				scope = PetiteUtil.newInstance(scopeType, (PetiteContainer) this);
+				scope = newInternalInstance(scopeType, (PetiteContainer) this);
 			} catch (Exception ex) {
 				throw new PetiteException("Invalid Petite scope: " + scopeType.getName(), ex);
 			}
@@ -175,6 +175,32 @@ public abstract class PetiteBeans {
 		}
 		return scope;
 	}
+
+
+	/**
+	 * Creates new instance of given type. In the first try, it tries to use
+	 * constructor with a {@link PetiteContainer}. If that files, uses default
+	 * constructor to builds an instance.
+	 */
+	private <T> T newInternalInstance(final Class<T> type, final PetiteContainer petiteContainer) throws Exception {
+		T t = null;
+
+		// first try ctor(PetiteContainer)
+		try {
+			Constructor<T> ctor = type.getConstructor(PetiteContainer.class);
+			t = ctor.newInstance(petiteContainer);
+		} catch (NoSuchMethodException nsmex) {
+			// ignore
+		}
+
+		// if first try failed, try default ctor
+		if (t == null) {
+			return ClassUtil.newInstance(type);
+		}
+
+		return t;
+	}
+
 
 	/**
 	 * Registers new scope. It is not necessary to manually register scopes,

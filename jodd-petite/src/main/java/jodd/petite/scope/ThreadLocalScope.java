@@ -27,6 +27,7 @@ package jodd.petite.scope;
 
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
+import jodd.petite.PetiteContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,13 @@ import java.util.Map;
  * finish when expected. ThreadLocalScope can not invoke destroy methods.
  */
 public class ThreadLocalScope implements Scope {
+
+	private final PetiteContainer pc;
+
+	public ThreadLocalScope(final PetiteContainer pc) {
+		this.pc = pc;
+	}
+
 
 	protected static ThreadLocal<Map<String, BeanData>> context = new ThreadLocal<Map<String, BeanData>>() {
 		@Override
@@ -59,7 +67,7 @@ public class ThreadLocalScope implements Scope {
 	@Override
 	public void register(final BeanDefinition beanDefinition, final Object bean) {
 		Map<String, BeanData> threadLocalMap = context.get();
-		threadLocalMap.put(beanDefinition.name(), BeanData.of(beanDefinition, bean));
+		threadLocalMap.put(beanDefinition.name(), new BeanData(pc, beanDefinition, bean));
 	}
 
 	@Override
