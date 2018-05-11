@@ -25,7 +25,13 @@
 
 package jodd.props;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
@@ -86,10 +92,7 @@ public class PropertiesToPropsTestHelper {
 		final Props expectedProps = new Props();
 		try {
 			expectedProps.load(getResourceFile(expectedResourceFileName));
-		} catch (IOException e) {
-			fail(e.getMessage());
-			throw new IllegalStateException(e);
-		} catch (URISyntaxException e) {
+		} catch (IOException | URISyntaxException e) {
 			fail(e.getMessage());
 			throw new IllegalStateException(e);
 		}
