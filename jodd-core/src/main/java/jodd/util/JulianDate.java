@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static jodd.util.TimeUtil.MILLIS_IN_DAY;
 
@@ -430,10 +431,7 @@ public class JulianDate implements Serializable, Cloneable {
 
 	@Override
 	public int hashCode() {
-		return HashCode.create()
-			.hash(integer)
-			.hash(fraction)
-			.get();
+		return Objects.hash(integer, fraction);
 	}
 
 	// ---------------------------------------------------------------- clone
