@@ -34,7 +34,7 @@ import java.util.Objects;
 public interface ClassLoaderStrategy {
 
 	/**
-	 * Default instance of {@link ClassLoaderStrategy}.
+	 * Default implementation of {@link ClassLoaderStrategy}.
 	 */
 	class Implementation {
 
