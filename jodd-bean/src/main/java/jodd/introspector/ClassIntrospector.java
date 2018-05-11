@@ -34,12 +34,15 @@ import java.util.Objects;
  */
 public interface ClassIntrospector {
 
-	class Defaults {
+	class Implementation {
 		private static ClassIntrospector classIntrospector = new CachingIntrospector();
 
+		/**
+		 * Sets default implementation.
+		 */
 		public static void set(final ClassIntrospector classIntrospector) {
 			Objects.requireNonNull(classIntrospector);
-			Defaults.classIntrospector = classIntrospector;
+			Implementation.classIntrospector = classIntrospector;
 		}
 	}
 
@@ -47,7 +50,7 @@ public interface ClassIntrospector {
 	 * Returns default implementation.
 	 */
 	static ClassIntrospector get() {
-		return Defaults.classIntrospector;
+		return Implementation.classIntrospector;
 	}
 
 	/**

@@ -27,27 +27,19 @@ package jodd.typeconverter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Objects;
 
 /**
  * Just a convenient {@link TypeConverterManager} usage.
  */
 public class Converter {
 
-	public static class Defaults {
-		private static Converter converter = new Converter();
-
-		public static void set(final Converter converter) {
-			Objects.requireNonNull(converter);
-			Defaults.converter = converter;
-		}
-	}
+	private static final Converter CONVERTER = new Converter();
 
 	/**
 	 * Returns default instance.
 	 */
 	public static Converter get() {
-		return Defaults.converter;
+		return CONVERTER;
 	}
 
 	// ---------------------------------------------------------------- boolean

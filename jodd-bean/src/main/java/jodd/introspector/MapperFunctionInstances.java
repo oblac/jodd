@@ -28,27 +28,18 @@ package jodd.introspector;
 import jodd.cache.TypeCache;
 import jodd.util.ClassUtil;
 
-import java.util.Objects;
-
 /**
  * Simple cache of {@link MapperFunction} instances.
  */
 public class MapperFunctionInstances {
 
-	public static class Defaults {
-		private static MapperFunctionInstances mapperFunctionInstances = new MapperFunctionInstances();
-
-		public static void set(final MapperFunctionInstances mapperFunctionInstances) {
-			Objects.requireNonNull(mapperFunctionInstances);
-			Defaults.mapperFunctionInstances = mapperFunctionInstances;
-		}
-	}
+	private static final MapperFunctionInstances MAPPER_FUNCTION_INSTANCES = new MapperFunctionInstances();
 
 	/**
-	 * Returns default implementation.
+	 * Returns the instance.
 	 */
 	public static MapperFunctionInstances get() {
-		return Defaults.mapperFunctionInstances;
+		return MAPPER_FUNCTION_INSTANCES;
 	}
 
 	protected TypeCache<MapperFunction> typeCache = new TypeCache<>(TypeCache.Implementation.MAP);
