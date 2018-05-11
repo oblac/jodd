@@ -36,7 +36,8 @@ public interface ClassLoaderStrategy {
 	/**
 	 * Default instance of {@link ClassLoaderStrategy}.
 	 */
-	class Instance {
+	class Implementation {
+
 		private static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
 
 		/**
@@ -44,7 +45,7 @@ public interface ClassLoaderStrategy {
 		 */
 		public static void set(final ClassLoaderStrategy classLoaderStrategy) {
 			Objects.requireNonNull(classLoaderStrategy);
-			Instance.classLoaderStrategy = classLoaderStrategy;
+			Implementation.classLoaderStrategy = classLoaderStrategy;
 		}
 	}
 
@@ -52,7 +53,7 @@ public interface ClassLoaderStrategy {
 	 * Returns the implementation.
 	 */
 	static ClassLoaderStrategy get() {
-		return Instance.classLoaderStrategy;
+		return Implementation.classLoaderStrategy;
 	}
 
 	// ---------------------------------------------------------------- interface
