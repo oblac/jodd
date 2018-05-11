@@ -125,7 +125,7 @@ public class SessionScope extends ShutdownAwareScope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.instance();
+		return beanData.bean();
 	}
 
 	@Override
@@ -136,7 +136,8 @@ public class SessionScope extends ShutdownAwareScope {
 			map = registerSessionBeans(session);
 		}
 
-		BeanData beanData = new BeanData(beanDefinition, bean);
+		final BeanData beanData = BeanData.of(beanDefinition, bean);
+
 		map.put(beanDefinition.name(), beanData);
 
 		registerDestroyableBeans(beanData);

@@ -27,7 +27,6 @@ package jodd.petite.scope;
 
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
-import jodd.petite.PetiteUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,13 +45,12 @@ public class SingletonScope implements Scope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.instance();
+		return beanData.bean();
 	}
 
 	@Override
 	public void register(final BeanDefinition beanDefinition, final Object bean) {
-		BeanData beanData = new BeanData(beanDefinition, bean);
-		instances.put(beanDefinition.name(), beanData);
+		instances.put(beanDefinition.name(), BeanData.of(beanDefinition, bean));
 	}
 
 	@Override
@@ -83,8 +81,8 @@ public class SingletonScope implements Scope {
 	 */
 	@Override
 	public void shutdown() {
-		for (BeanData beanData : instances.values()) {
-			PetiteUtil.callDestroyMethods(beanData);
+		for (final BeanData beanData : instances.values()) {
+			beanData.callDestroyMethods();
 		}
 		instances.clear();
 	}

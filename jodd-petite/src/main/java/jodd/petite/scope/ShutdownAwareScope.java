@@ -26,7 +26,6 @@
 package jodd.petite.scope;
 
 import jodd.petite.BeanData;
-import jodd.petite.PetiteUtil;
 import jodd.petite.def.DestroyMethodPoint;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public abstract class ShutdownAwareScope implements Scope {
 			return;
 		}
 		if (destroyableBeans.remove(beanData)) {
-			PetiteUtil.callDestroyMethods(beanData);
+			beanData.callDestroyMethods();
 		}
 	}
 
@@ -97,8 +96,8 @@ public abstract class ShutdownAwareScope implements Scope {
 			return;
 		}
 
-		for (BeanData destroyableBean : destroyableBeans) {
-			PetiteUtil.callDestroyMethods(destroyableBean);
+		for (final BeanData destroyableBean : destroyableBeans) {
+			destroyableBean.callDestroyMethods();
 		}
 
 		destroyableBeans.clear();

@@ -103,7 +103,7 @@ public class RequestScope implements Scope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.instance();
+		return beanData.bean();
 	}
 
 	@Override
@@ -114,8 +114,7 @@ public class RequestScope implements Scope {
 			map = createRequestMap(servletRequest);
 		}
 
-		BeanData beanData = new BeanData(beanDefinition, bean);
-		map.put(beanDefinition.name(), new TransientBeanData(beanData));
+		map.put(beanDefinition.name(), new TransientBeanData(BeanData.of(beanDefinition, bean)));
 	}
 
 	@Override

@@ -53,14 +53,13 @@ public class ThreadLocalScope implements Scope {
 		if (beanData == null) {
 			return null;
 		}
-		return beanData.instance();
+		return beanData.bean();
 	}
 
 	@Override
 	public void register(final BeanDefinition beanDefinition, final Object bean) {
-		BeanData beanData = new BeanData(beanDefinition, bean);
 		Map<String, BeanData> threadLocalMap = context.get();
-		threadLocalMap.put(beanDefinition.name(), beanData);
+		threadLocalMap.put(beanDefinition.name(), BeanData.of(beanDefinition, bean));
 	}
 
 	@Override
