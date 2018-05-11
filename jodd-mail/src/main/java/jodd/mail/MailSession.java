@@ -30,11 +30,37 @@ import javax.mail.Service;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
+import javax.mail.internet.MimeUtility;
 
 /**
- *
+ * Mail session base.
  */
 abstract class MailSession<T extends Service> implements AutoCloseable {
+
+	public static class Defaults {
+		/**
+		 * If set to {@code true}, the setFileName method uses the
+		 * {@link MimeUtility#encodeText(String)} to encode any non-ASCII characters in the filename.
+		 * Note that this encoding violates the MIME specification, but is useful for interoperating
+		 * with some mail clients that use this convention. The default is {@code true}.
+		 */
+		public static boolean mailMimeEncodefilename = true;
+		/**
+		 * If set to {@code true}, the setFileName method uses the
+		 * {@link MimeUtility#encodeText(String)} to encode any non-ASCII characters in the filename.
+		 * Note that this encoding violates the MIME specification, but is useful for interoperating
+		 * with some mail clients that use this convention. The default is {@code true}.
+		 */
+		public static boolean mailMimeDecodefilename = true;
+	}
+
+	/**
+	 * Setups the system email properties.
+	 */
+	protected static void setupSystemMailProperties() {
+		System.setProperty("mail.mime.encodefilename", Boolean.valueOf(Defaults.mailMimeEncodefilename).toString());
+		System.setProperty("mail.mime.decodefilename", Boolean.valueOf(Defaults.mailMimeDecodefilename).toString());
+	}
 
 	private final Session session;
 	protected final Service service;

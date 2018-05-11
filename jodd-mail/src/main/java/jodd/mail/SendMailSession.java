@@ -55,7 +55,7 @@ public class SendMailSession extends MailSession<Transport> {
 	private static final String INLINE = "inline";
 
 	static {
-		EmailUtil.setupSystemMailProperties();
+		setupSystemMailProperties();
 	}
 
 	/**

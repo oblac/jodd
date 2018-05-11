@@ -49,7 +49,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	private Folder folder;
 
 	static {
-		EmailUtil.setupSystemMailProperties();
+		setupSystemMailProperties();
 	}
 
 	/**

@@ -26,10 +26,14 @@
 package jodd.mail;
 
 import jodd.io.FastByteArrayOutputStream;
+import jodd.io.StreamUtil;
 
 import javax.activation.DataSource;
 import javax.mail.internet.MimeUtility;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -267,16 +271,40 @@ public class EmailAttachment<T extends DataSource> {
 	 * @param destination The destination file to be written.
 	 */
 	public void writeToFile(final File destination) {
-		EmailUtil.copyStream(getDataSource(), destination);
+		InputStream input = null;
+		final OutputStream output;
+		try {
+			input = getDataSource().getInputStream();
+			output = new FileOutputStream(destination);
+
+			StreamUtil.copy(input, output);
+		}
+		catch (final IOException ioex) {
+			throw new MailException(ioex);
+		}
+		finally {
+			StreamUtil.close(input);
+		}
 	}
 
 	/**
-	 * Saves attachment to output stream.
+	 * Saves attachment to the output stream.
 	 *
 	 * @param out OutputStream where attachment should be copied to.
 	 */
 	public void writeToStream(final OutputStream out) {
-		EmailUtil.copyStream(getDataSource(), out);
+		InputStream input = null;
+		try {
+			input = getDataSource().getInputStream();
+
+			StreamUtil.copy(input, out);
+		}
+		catch (final IOException ioex) {
+			throw new MailException(ioex);
+		}
+		finally {
+			StreamUtil.close(input);
+		}
 	}
 
 }
