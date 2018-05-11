@@ -30,7 +30,7 @@ import jodd.util.StringPool;
 import java.security.Security;
 
 /**
- * Jodd CORE module.
+ * Jodd library-wide properties.
  */
 public class JoddCore {
 
