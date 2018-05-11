@@ -33,22 +33,33 @@ import java.util.Objects;
 @FunctionalInterface
 public interface ClassLoaderStrategy {
 
-	public static class Defaults {
+	/**
+	 * Default instance of {@link ClassLoaderStrategy}.
+	 */
+	class Instance {
 		private static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
 
+		/**
+		 * Sets the instance.
+		 */
 		public static void set(final ClassLoaderStrategy classLoaderStrategy) {
 			Objects.requireNonNull(classLoaderStrategy);
-			Defaults.classLoaderStrategy = classLoaderStrategy;
+			Instance.classLoaderStrategy = classLoaderStrategy;
 		}
 	}
 
-	public static ClassLoaderStrategy get() {
-		return Defaults.classLoaderStrategy;
+	/**
+	 * Returns the implementation.
+	 */
+	static ClassLoaderStrategy get() {
+		return Instance.classLoaderStrategy;
 	}
+
+	// ---------------------------------------------------------------- interface
 
 	/**
 	 * Loads class with given name and optionally provided class loader.
 	 */
-	public Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException;
+	Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException;
 
 }
