@@ -26,7 +26,7 @@
 package jodd.proxetta.impl;
 
 import jodd.asm6.ClassReader;
-import jodd.proxetta.JoddProxetta;
+import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxettaFactory;
 import jodd.proxetta.ProxettaUtil;
@@ -46,7 +46,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 
 	protected Class targetClassOrInterface;
 	protected Class targetInterface;
-	protected String targetFieldName = JoddProxetta.defaults().getWrapperTargetFieldName();
+	protected String targetFieldName = ProxettaNames.wrapperTargetFieldName;
 
 	/**
 	 * Defines class or interface to wrap.

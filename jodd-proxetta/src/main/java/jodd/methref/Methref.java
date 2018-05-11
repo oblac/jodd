@@ -50,7 +50,7 @@ public class Methref<C> {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public Methref(Class<C> target) {
-		target = ProxettaUtil.getTargetClass(target);
+		target = ProxettaUtil.resolveTargetClass(target);
 
 		Class proxyClass = cache.get(target);
 

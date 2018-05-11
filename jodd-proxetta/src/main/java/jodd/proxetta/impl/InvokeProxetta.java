@@ -26,8 +26,8 @@
 package jodd.proxetta.impl;
 
 import jodd.proxetta.InvokeAspect;
-import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.Proxetta;
+import jodd.proxetta.ProxettaNames;
 
 /**
  * Proxetta that does method (i.e. invocation) replacements.
@@ -35,7 +35,7 @@ import jodd.proxetta.Proxetta;
 public class InvokeProxetta extends Proxetta<InvokeProxetta, InvokeAspect> {
 
 	public InvokeProxetta() {
-		classNameSuffix = JoddProxetta.defaults().getInvokeProxyClassNameSuffix();
+		classNameSuffix = ProxettaNames.invokeProxyClassNameSuffix;
 	}
 
 	@Override

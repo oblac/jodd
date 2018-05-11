@@ -28,7 +28,7 @@ package jodd.proxetta.asm;
 import jodd.asm.EmptyMethodVisitor;
 import jodd.asm6.AnnotationVisitor;
 import jodd.asm6.MethodVisitor;
-import jodd.proxetta.JoddProxetta;
+import jodd.proxetta.ProxettaNames;
 
 import static jodd.asm6.Opcodes.ALOAD;
 import static jodd.asm6.Opcodes.INVOKESPECIAL;
@@ -88,7 +88,7 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 		methodVisitor.visitMethodInsn(
 			INVOKESPECIAL,
 			wd.thisReference,
-			JoddProxetta.defaults().getInitMethodName(), DESC_VOID,
+			ProxettaNames.initMethodName, DESC_VOID,
 			false);
 
 		methodVisitor.visitInsn(RETURN);

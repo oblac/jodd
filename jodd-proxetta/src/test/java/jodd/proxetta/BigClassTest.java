@@ -142,7 +142,7 @@ class BigClassTest {
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
 		assertEquals(BigFatJoe.class.getName() + "$$Proxetta", bigFatJoe.getClass().getName());
-		assertEquals(BigFatJoe.class, ProxettaUtil.getTargetClass(bigFatJoe.getClass()));
+		assertEquals(BigFatJoe.class, ProxettaUtil.resolveTargetClass(bigFatJoe.getClass()));
 
 		// test invocation
 

@@ -38,14 +38,14 @@ public class ProxettaUtil {
 	 * Returns target class if proxetta applied on given class.
 	 * If not, returns given class as result.
 	 */
-	public static Class getTargetClass(final Class proxy) {
-		String name = proxy.getName();
+	public static Class resolveTargetClass(final Class proxy) {
+		final String name = proxy.getName();
 
-		if (name.endsWith(JoddProxetta.defaults().getProxyClassNameSuffix())) {
+		if (name.endsWith(ProxettaNames.proxyClassNameSuffix)) {
 			return proxy.getSuperclass();
 		}
 
-		if (name.endsWith(JoddProxetta.defaults().getWrapperClassNameSuffix())) {
+		if (name.endsWith(ProxettaNames.wrapperClassNameSuffix)) {
 			return getTargetWrapperType(proxy);
 		}
 
@@ -59,7 +59,7 @@ public class ProxettaUtil {
 	 */
 	public static void injectTargetIntoWrapper(final Object target, final Object wrapper, final String targetFieldName) {
 		try {
-			Field field = wrapper.getClass().getField(targetFieldName);
+			final Field field = wrapper.getClass().getField(targetFieldName);
 			field.setAccessible(true);
 			field.set(wrapper, target);
 		} catch (Exception ex) {
@@ -72,20 +72,19 @@ public class ProxettaUtil {
 	 * @see #injectTargetIntoWrapper(Object, Object, String)
 	 */
 	public static void injectTargetIntoWrapper(final Object target, final Object wrapper) {
-		injectTargetIntoWrapper(target, wrapper, JoddProxetta.defaults().getWrapperTargetFieldName());
+		injectTargetIntoWrapper(target, wrapper, ProxettaNames.wrapperTargetFieldName);
 	}
 
 	/**
 	 * Returns wrapper target type.
 	 */
 	public static Class getTargetWrapperType(final Class wrapperClass) {
-		Field field;
 		try {
-			field = wrapperClass.getField(JoddProxetta.defaults().getWrapperTargetFieldName());
+			final Field field = wrapperClass.getField(ProxettaNames.wrapperTargetFieldName);
+			return field.getType();
 		} catch (NoSuchFieldException nsfex) {
 			throw new ProxettaException(nsfex);
 		}
-		return field.getType();
 	}
 
 }

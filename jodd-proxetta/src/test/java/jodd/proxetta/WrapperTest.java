@@ -68,7 +68,7 @@ class WrapperTest {
 		Object object = calc2Class.newInstance();
 
 		assertTrue(object instanceof Calc);
-		assertEquals(CalcImpl.class, ProxettaUtil.getTargetClass(object.getClass()));
+		assertEquals(CalcImpl.class, ProxettaUtil.resolveTargetClass(object.getClass()));
 		assertEquals(1, calc2Class.getInterfaces().length);
 
 		builder.injectTargetIntoWrapper(calc, object);

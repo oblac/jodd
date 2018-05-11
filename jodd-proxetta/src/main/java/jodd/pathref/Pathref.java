@@ -80,7 +80,7 @@ public class Pathref<C> {
 	 * Creates proxy object.
 	 */
 	protected C createProxyObject(Class<C> target) {
-		target = ProxettaUtil.getTargetClass(target);
+		target = ProxettaUtil.resolveTargetClass(target);
 
 		Class proxyClass = cache.get(target);
 

@@ -23,36 +23,56 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.oom.sqlgen;
+package jodd.proxetta;
 
 /**
- * Configurations of SQL generation.
+ * Jodd PROXETTA default names, used all over the library..
  */
-public class SqlGenConfig {
+public class ProxettaNames {
 
 	/**
-	 * Returns {@code true} if SQL syntax allow usage of table alias in the update query.
+	 * {@link jodd.proxetta.ProxyAdvice#execute()}
 	 */
-	public boolean isUpdateAcceptsTableAlias() {
-		return updateAcceptsTableAlias;
-	}
-
-	public void setUpdateAcceptsTableAlias(final boolean updateAcceptsTableAlias) {
-		this.updateAcceptsTableAlias = updateAcceptsTableAlias;
-	}
-
+	public static String executeMethodName = "execute";
 	/**
-	 * Returns {@code true} if database supports update of the primary key.
+	 * Proxy class name suffix.
 	 */
-	public boolean isUpdateablePrimaryKey() {
-		return updateablePrimaryKey;
-	}
-
-	public void setUpdateablePrimaryKey(final boolean updateablePrimaryKey) {
-		this.updateablePrimaryKey = updateablePrimaryKey;
-	}
-
-	private boolean updateAcceptsTableAlias = true;
-	private boolean updateablePrimaryKey = true;
+	public static String proxyClassNameSuffix = "$$Proxetta";
+	/**
+	 * Invoke proxy class name suffix.
+	 */
+	public static String invokeProxyClassNameSuffix = "$$Clonetou";
+	/**
+	 * Wrapper class name suffix.
+	 */
+	public static String wrapperClassNameSuffix = "$$Wraporetto";
+	/**
+	 * Prefix for advice method names.
+	 */
+	public static String methodPrefix = "$__";
+	/**
+	 * Divider for method names.
+	 */
+	public static String methodDivider = "$";
+	/**
+	 * Method name for advice 'clinit' methods.
+	 */
+	public static String clinitMethodName = "$clinit";
+	/**
+	 * Method name for advice default constructor ('init') methods.
+	 */
+	public static String initMethodName = "$init";
+	/**
+	 * Prefix for advice field names.
+	 */
+	public static String fieldPrefix = "$__";
+	/**
+	 * Divider for field names.
+	 */
+	public static String fieldDivider = "$";
+	/**
+	 * Wrapper target field name.
+	 */
+	public static String wrapperTargetFieldName = "_target";
 
 }

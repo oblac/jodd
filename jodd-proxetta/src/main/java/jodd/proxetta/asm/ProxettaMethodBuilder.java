@@ -31,8 +31,8 @@ import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
 import jodd.asm6.AnnotationVisitor;
 import jodd.asm6.MethodVisitor;
-import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.ProxyTarget;
 import jodd.proxetta.ProxyTargetReplacement;
 
@@ -213,7 +213,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 
-				if (!name.equals(JoddProxetta.defaults().getExecuteMethodName())) {
+				if (!name.equals(ProxettaNames.executeMethodName)) {
 					return null;
 				}
 

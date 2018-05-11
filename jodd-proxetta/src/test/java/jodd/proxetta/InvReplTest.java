@@ -62,7 +62,7 @@ class InvReplTest {
 //		PrintStream out = System.out;
 		System.setOut(new PrintStream(fbaos));
 
-		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(JoddProxetta.defaults().getInvokeProxyClassNameSuffix()).toString(), klazz).newInstance();
+		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(ProxettaNames.invokeProxyClassNameSuffix).toString(), klazz).newInstance();
 		assertEquals("one ctor!one ctor!", fbaos.toString());    // clone ctor calls super ctor,
 		fbaos.reset();
 

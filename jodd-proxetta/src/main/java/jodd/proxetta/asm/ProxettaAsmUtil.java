@@ -29,9 +29,9 @@ import jodd.asm.AsmUtil;
 import jodd.asm6.Label;
 import jodd.asm6.MethodVisitor;
 import jodd.asm6.Type;
-import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.TypeInfo;
 import jodd.util.ClassUtil;
 import jodd.util.StringBand;
@@ -132,14 +132,14 @@ public class ProxettaAsmUtil {
 	 * Builds advice field name.
 	 */
 	public static String adviceFieldName(final String name, final int index) {
-		return JoddProxetta.defaults().getFieldPrefix() + name + JoddProxetta.defaults().getFieldDivider() + index;
+		return ProxettaNames.fieldPrefix + name + ProxettaNames.fieldDivider + index;
 	}
 
 	/**
 	 * Builds advice method name.
 	 */
 	public static String adviceMethodName(final String name, final int index) {
-		return JoddProxetta.defaults().getMethodPrefix() + name + JoddProxetta.defaults().getMethodDivider() + index;
+		return ProxettaNames.methodPrefix + name + ProxettaNames.methodDivider + index;
 	}
 
 	// ---------------------------------------------------------------- load

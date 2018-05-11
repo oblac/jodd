@@ -34,8 +34,8 @@ import jodd.asm6.ClassReader;
 import jodd.asm6.ClassVisitor;
 import jodd.asm6.FieldVisitor;
 import jodd.asm6.MethodVisitor;
-import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.ProxyAspect;
 
 import java.util.ArrayList;
@@ -199,7 +199,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * This created init method is called from each destination's constructor.
 	 */
 	protected void makeProxyConstructor() {
-		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL, JoddProxetta.defaults().getInitMethodName(), DESC_VOID, null, null);
+		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL, ProxettaNames.initMethodName, DESC_VOID, null, null);
 		mv.visitCode();
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {
