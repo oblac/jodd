@@ -142,7 +142,7 @@ public class BeanDefinition<T> {
 	/**
 	 * Returns init method points.
 	 */
-	public InitMethodPoint[] InitMethodPoints() {
+	public InitMethodPoint[] initMethodPoints() {
 		return initMethods;
 	}
 
