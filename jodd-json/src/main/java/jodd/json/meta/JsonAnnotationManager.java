@@ -53,19 +53,9 @@ public class JsonAnnotationManager {
 		return JSON_ANNOTATION_MANAGER;
 	}
 
-	public static class Defaults {
-
-		public static boolean serializationSubclassAware = true;
-
-		/**
-		 * JSON annotation for marking the JSON properties that are going to be serialized.
-		 */
-		public static Class<? extends Annotation> jsonAnnotation = JSON.class;
-	}
-
 	private final Map<Class, TypeData> typeDataMap = new HashMap<>();
-	private boolean serializationSubclassAware = Defaults.serializationSubclassAware;
-	private Class<? extends Annotation> jsonAnnotation = Defaults.jsonAnnotation;
+	private boolean serializationSubclassAware;
+	private Class<? extends Annotation> jsonAnnotation;
 
 	@SuppressWarnings("unchecked")
 	public JsonAnnotationManager() {
@@ -263,7 +253,7 @@ public class JsonAnnotationManager {
 
 	public void reset() {
 		typeDataMap.clear();
-		serializationSubclassAware = Defaults.serializationSubclassAware;
-		jsonAnnotation = Defaults.jsonAnnotation;
+		serializationSubclassAware = true;
+		jsonAnnotation = JSON.class;
 	}
 }
