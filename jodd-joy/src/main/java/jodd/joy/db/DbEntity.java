@@ -28,28 +28,32 @@ package jodd.joy.db;
 /**
  * Marker for mapped database entities.
  */
-public interface DbEntity {
+public interface DbEntity<ID> {
 
 	/**
-	 * Returns entity ID. Value <code>0</code> means that entity
-	 * is not stored in the persistence layer.
+	 * Returns entity ID. Value <code>null</code> means that entity
+	 * is not stored in the persistence layer and that is in detached mode.
 	 */
-	long getEntityId();
+	ID getEntityId();
 
 	/**
 	 * Sets the entity ID.
 	 */
-	void setEntityId(long id);
+	void setEntityId(ID id);
 
 	/**
 	 * Returns <code>true</code> if entity is persisted. i.e.
 	 * {@link #getEntityId() ID} is not <code>0</code>
 	 */
-	boolean isPersistent();
+	default boolean isPersistent() {
+		return getEntityId() != null;
+	}
 
 	/**
-	 * Detaches entity by setting ID to <code>0</code>.
+	 * Detaches entity by setting ID to <code>null</code>.
 	 */
-	void detach();
+	default void detach() {
+		setEntityId(null);
+	}
 
 }
