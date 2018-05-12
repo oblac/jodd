@@ -31,6 +31,7 @@ import jodd.json.fixtures.model.HitList;
 import jodd.json.fixtures.model.State;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
+import jodd.json.meta.TypeData;
 import jodd.util.SystemUtil;
 import org.junit.jupiter.api.Test;
 
@@ -341,9 +342,9 @@ class JsonSerializerTest {
 
 	@Test
 	void testClass() {
-		String json = new JsonSerializer().serialize(JoddJson.class);
+		String json = new JsonSerializer().serialize(JsonSerializerTest.class);
 
-		assertEquals("\"" + JoddJson.class.getName() + "\"", json);
+		assertEquals("\"" + JsonSerializerTest.class.getName() + "\"", json);
 	}
 
 	@JSON(strict = false)
@@ -389,7 +390,7 @@ class JsonSerializerTest {
 		Cook cook = new Cook();
 		JsonAnnotationManager jam = JsonAnnotationManager.get();
 
-		JsonAnnotationManager.TypeData typeData = jam.lookupTypeData(Cook.class);
+		TypeData typeData = jam.lookupTypeData(Cook.class);
 
 		assertEquals(1, typeData.rules.totalIncludeRules());
 		assertEquals(1, typeData.rules.totalExcludeRules());

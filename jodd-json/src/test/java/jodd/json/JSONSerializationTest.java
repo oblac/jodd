@@ -93,12 +93,12 @@ class JSONSerializationTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JsonSerializer.Defaults.classMetadataName = null;
 	}
 
 	@Test
 	void testObject() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonSerializer.Defaults.classMetadataName = "class";
 		JsonSerializer serializer = new JsonSerializer();
 
 		String jodderJson = serializer.serialize(jodder);
@@ -250,7 +250,7 @@ class JSONSerializationTest {
 
 	@Test
 	void testListOfObjects() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonSerializer.Defaults.classMetadataName = "class";
 
 		JsonSerializer serializer = new JsonSerializer();
 		String peopleJson = serializer.serialize(people);
@@ -428,7 +428,7 @@ class JSONSerializationTest {
 
 	@Test
 	void testWildcards() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonSerializer.Defaults.classMetadataName = "class";
 		JsonSerializer serializer = new JsonSerializer();
 		String json = serializer.include("phones").exclude("*.class").serialize(jodder);
 
@@ -619,18 +619,18 @@ class JSONSerializationTest {
 		mountain.setHeight("123");
 		mountain.setWild(true);
 
-		JoddJson.defaults().setSerializationSubclassAware(false);
-
 		JsonAnnotationManager.get().reset();
+		JsonAnnotationManager.get().setSerializationSubclassAware(false);
+
 		json = new JsonSerializer().serialize(mountain);
 
 		assertAttribute("height", json);
 		assertAttribute("name", json);
 		assertAttribute("wild", json);
 
-		JoddJson.defaults().setSerializationSubclassAware(true);
-
 		JsonAnnotationManager.get().reset();
+		JsonAnnotationManager.get().setSerializationSubclassAware(true);
+
 		json = new JsonSerializer().serialize(mountain);
 
 		assertAttribute("height", json);

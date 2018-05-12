@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 
 public class JsonParsers {
 
-	public static void forEachParser(Consumer<JsonParser> jsonParserConsumer) {
+	public static void forEachParser(final Consumer<JsonParser> jsonParserConsumer) {
 		for (int i = 0; i < 2; i++) {
 			final JsonParser jsonParser;
 
@@ -39,7 +39,7 @@ public class JsonParsers {
 				case 0: jsonParser = JsonParser.create(); break;
 				case 1: jsonParser = JsonParser.create().lazy(true); break;
 				default:
-					throw new IllegalArgumentException("Not good: ");
+					throw new IllegalArgumentException("Not good.");
 			}
 
 			jsonParserConsumer.accept(jsonParser);

@@ -28,6 +28,7 @@ package jodd.json;
 import jodd.json.fixtures.JsonParsers;
 import jodd.json.fixtures.mock.LocationAlt;
 import jodd.json.meta.JSON;
+import jodd.json.meta.JsonAnnotationManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +39,12 @@ class CustomAnnotationTest {
 
 	@BeforeEach
 	void setUp() {
-		JoddJson.defaults().setJsonAnnotation(JSON2.class);
+		JsonAnnotationManager.get().setJsonAnnotation(JSON2.class);
 	}
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().setJsonAnnotation(JSON.class);
+		JsonAnnotationManager.get().setJsonAnnotation(JSON.class);
 	}
 
 	@Test

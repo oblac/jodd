@@ -78,7 +78,8 @@ class JSONDeserializerTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JsonParser.Defaults.classMetadataName = null;
+		JsonSerializer.Defaults.classMetadataName = null;
 	}
 
 	@Test
@@ -174,8 +175,6 @@ class JSONDeserializerTest {
 			assertNotNull(jsonSuperMan);
 			assertEquals(4, jsonSuperMan.getPowers().size());
 			assertHeroHasSuperPowers(jsonSuperMan);
-
-			JoddJson.defaults().setClassMetadataName(null);
 		});
 	}
 
@@ -190,17 +189,12 @@ class JSONDeserializerTest {
 			assertNotNull(jsonSuperMan);
 			assertEquals(4, jsonSuperMan.getPowers().size());
 			assertHeroHasSuperPowers(jsonSuperMan);
-
-			JoddJson.defaults().setClassMetadataName(null);
 		});
 	}
 
 	@Test
 	void testNoClassHints() {
 		JsonParsers.forEachParser(jsonParser -> {
-
-			JoddJson.defaults().setClassMetadataName(null);
-
 			Hero superman = creator.createSuperman();
 			String json = new JsonSerializer().exclude("*.class").serialize(superman);
 
@@ -221,7 +215,8 @@ class JSONDeserializerTest {
 
 	@Test
 	void testNoHintsButClassesForCollection() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
 
 		JsonParsers.forEachParser(jsonParser -> {
 
@@ -237,7 +232,8 @@ class JSONDeserializerTest {
 
 	@Test
 	void testNoClassHintsForCollections() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
 
 		JsonParsers.forEachParser(jsonParser -> {
 
@@ -266,7 +262,8 @@ class JSONDeserializerTest {
 
 	@Test
 	void testListSerialization() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
 
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
@@ -301,8 +298,10 @@ class JSONDeserializerTest {
 
 	@Test
 	void testGenericTypeDeserialization() {
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
+
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().setClassMetadataName("class");
 
 			Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
 
@@ -354,8 +353,10 @@ class JSONDeserializerTest {
 
 	@Test
 	void testGeneralMapDeserialization() {
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
+
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().setClassMetadataName("class");
 
 			String json = new JsonSerializer().exclude("*.class").serialize(creator.createJodder());
 			Map<String, Object> deserialized = jsonParser.parse(json);
@@ -382,8 +383,10 @@ class JSONDeserializerTest {
 
 	@Test
 	void testListDeserializationNoClass() {
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
+
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().setClassMetadataName("class");
 
 			Person modesty = creator.createModesty();
 			Person igor = creator.createJodder();
@@ -476,8 +479,6 @@ class JSONDeserializerTest {
 	@Test
 	void testMapWithEmbeddedObject2() {
 		JsonParsers.forEachParser(jsonParser -> {
-			JoddJson.defaults().setClassMetadataName(null);
-
 			Map<String, Pair<Phone, Network>> complex = jsonParser
 				.map("values", Pair.class)
 				.map("values.first", Phone.class)
@@ -642,7 +643,9 @@ class JSONDeserializerTest {
 
 	@Test
 	void testDeserializationIntoPublicFields() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonParser.Defaults.classMetadataName = "class";
+		JsonSerializer.Defaults.classMetadataName = "class";
+
 		JsonParsers.forEachParser(jsonParser -> {
 			Spiderman spiderman = new Spiderman();
 			spiderman.spideySense = false;
@@ -695,7 +698,8 @@ class JSONDeserializerTest {
 
 	@Test
 	void testPoint() {
-		JoddJson.defaults().setClassMetadataName("__class");
+		JsonParser.Defaults.classMetadataName = "__class";
+		JsonSerializer.Defaults.classMetadataName = "__class";
 
 		JsonParsers.forEachParser(jsonParser -> {
 			String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));
@@ -745,6 +749,5 @@ class JSONDeserializerTest {
 			assertTrue(hero.getPowers().get(i) instanceof SuperPower);
 		}
 	}
-
 
 }

@@ -73,7 +73,7 @@ class JsonParserTest {
 
 	@AfterEach
 	void tearDown() {
-		JoddJson.defaults().setClassMetadataName(null);
+		JsonParser.Defaults.classMetadataName = null;
 	}
 
 	@Test
@@ -560,7 +560,7 @@ class JsonParserTest {
 
 	@Test
 	void testComplexObject() {
-		JoddJson.defaults().setClassMetadataName("class");
+		JsonParser.Defaults.classMetadataName = "class";
 
 		JsonParsers.forEachParser(jsonParser -> {
 			String json = null;

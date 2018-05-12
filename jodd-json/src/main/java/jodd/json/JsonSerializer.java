@@ -77,7 +77,6 @@ public class JsonSerializer {
 		 * correct object type. If <code>null</code>, class information is not used.
 		 */
 		public static String classMetadataName = null;
-
 	}
 
 	/**
