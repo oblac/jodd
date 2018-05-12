@@ -25,11 +25,12 @@
 
 package jodd.json;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,7 +101,7 @@ public abstract class JsonParserBase {
 			return mapSupplier.get();
 		}
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(targetType);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(targetType);
 
 		CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
 		if (ctorDescriptor == null) {
@@ -148,7 +149,7 @@ public abstract class JsonParserBase {
 		}
 
 		try {
-			return JoddBean.defaults().getTypeConverterManager().convertType(value, targetType);
+			return TypeConverterManager.get().convertType(value, targetType);
 		}
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);

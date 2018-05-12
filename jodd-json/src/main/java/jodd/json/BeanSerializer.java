@@ -54,7 +54,7 @@ public class BeanSerializer extends TypeJsonVisitor {
 	 */
 	@Override
 	protected final void onSerializableProperty(String propertyName, final PropertyDescriptor propertyDescriptor) {
-		Object value;
+		final Object value;
 
 		if (propertyDescriptor == null) {
 			// metadata - classname

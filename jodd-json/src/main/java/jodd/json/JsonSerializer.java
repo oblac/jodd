@@ -32,13 +32,53 @@ import jodd.util.inex.InExRules;
 import java.util.HashMap;
 import java.util.Map;
 
-import static jodd.json.JoddJson.DEFAULT_CLASS_METADATA_NAME;
-
 /**
  * JSON serializer.
  * @see PrettyJsonSerializer
  */
 public class JsonSerializer {
+
+	public static class Defaults {
+
+		public static final String DEFAULT_CLASS_METADATA_NAME = "__class";
+
+		/**
+		 * Defines default behavior of a {@link jodd.json.JsonSerializer}.
+		 * If set to <code>true</code>, objects will be serialized
+		 * deep, so all collections and arrays will get serialized.
+		 */
+		public static boolean deepSerialization = false;
+		/**
+		 * List of excluded types for serialization.
+		 */
+		public static Class[] excludedTypes = null;
+		/**
+		 * List of excluded types names for serialization. Type name
+		 * can contain wildcards (<code>*</code> and <code>?</code>).
+		 */
+		public static String[] excludedTypeNames = null;
+
+		/**
+		 * Sets the strict JSON encoding.
+		 * JSON specification specifies that certain characters should be
+		 * escaped (see: http://json.org/). However, in the real world, not all
+		 * needs to be escaped: especially the 'solidus' character (/). If this one
+		 * is escaped, many things can go wrong, from URLs to Base64 encodings.
+		 * This flag controls the behavior of strict encoding. By default, the
+		 * strict encoding is set to {@code false}.
+		 */
+		public static boolean strictStringEncoding = false;
+
+		/**
+		 * Specifies if 'class' metadata is used and its value. When set, class metadata
+		 * is used by {@link jodd.json.JsonSerializer} and all objects
+		 * will have additional field with the class type in the resulting JSON.
+		 * {@link jodd.json.JsonParser} will also consider this flag to build
+		 * correct object type. If <code>null</code>, class information is not used.
+		 */
+		public static String classMetadataName = null;
+
+	}
 
 	/**
 	 * Static ctor.
@@ -66,11 +106,11 @@ public class JsonSerializer {
 		}
 	};
 
-	protected String classMetadataName = JoddJson.defaults().getClassMetadataName();
-	protected boolean strictStringEncoding = JoddJson.defaults().isStrictStringEncoding();
-	protected boolean deep = JoddJson.defaults().isDeepSerialization();
-	protected Class[] excludedTypes = null;
-	protected String[] excludedTypeNames = null;
+	protected String classMetadataName = Defaults.classMetadataName;
+	protected boolean strictStringEncoding = Defaults.strictStringEncoding;
+	protected boolean deep = Defaults.deepSerialization;
+	protected Class[] excludedTypes = Defaults.excludedTypes;
+	protected String[] excludedTypeNames = Defaults.excludedTypeNames;
 	protected boolean excludeNulls = false;
 
 	/**
@@ -91,7 +131,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer withSerializer(final Class type, final TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
-			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaults().getTypeSerializers());
+			typeSerializersMap = new TypeJsonSerializerMap(TypeJsonSerializerMap.get());
 		}
 
 		typeSerializersMap.register(type, typeJsonSerializer);
@@ -174,7 +214,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer withClassMetadata(final boolean useMetadata) {
 		if (useMetadata) {
-			classMetadataName = DEFAULT_CLASS_METADATA_NAME;
+			classMetadataName = Defaults.DEFAULT_CLASS_METADATA_NAME;
 		}
 		else {
 			classMetadataName = null;
@@ -228,7 +268,6 @@ public class JsonSerializer {
 
 	/**
 	 * Specifies strict string encoding.
-	 * @see JoddJson#strictStringEncoding
 	 */
 	public JsonSerializer strictStringEncoding(final boolean strictStringEncoding) {
 		this.strictStringEncoding = strictStringEncoding;

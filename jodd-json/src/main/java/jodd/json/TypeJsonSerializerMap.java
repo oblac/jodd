@@ -25,8 +25,8 @@
 
 package jodd.json;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.json.impl.ArraysJsonSerializer;
 import jodd.json.impl.BooleanArrayJsonSerializer;
 import jodd.json.impl.BooleanJsonSerializer;
@@ -75,11 +75,13 @@ import java.util.UUID;
  */
 public class TypeJsonSerializerMap {
 
+	private static final TypeJsonSerializerMap TYPE_JSON_SERIALIZER_MAP = new TypeJsonSerializerMap();
+
 	/**
 	 * Returns default instance.
 	 */
 	public static TypeJsonSerializerMap get() {
-		return JoddJson.defaults().getTypeSerializers();
+		return TYPE_JSON_SERIALIZER_MAP;
 	}
 
 	private final TypeJsonSerializerMap defaultSerializerMap;
@@ -258,7 +260,7 @@ public class TypeJsonSerializerMap {
 				return tjs;
 			}
 
-			ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+			ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 			// check array
 

@@ -25,22 +25,18 @@
 
 package jodd.json.meta;
 
-import jodd.bean.JoddBean;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.json.JoddJson;
-import jodd.util.ArraysUtil;
 import jodd.util.annotation.AnnotationParser;
-import jodd.util.inex.InExRules;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,80 +44,32 @@ import java.util.Map;
  */
 public class JsonAnnotationManager {
 
+	private static final JsonAnnotationManager JSON_ANNOTATION_MANAGER = new JsonAnnotationManager();
+
 	/**
-	 * Returns default instance.
+	 * Returns instance of this class.
 	 */
 	public static JsonAnnotationManager get() {
-		return JoddJson.defaults().getAnnotationManager();
+		return JSON_ANNOTATION_MANAGER;
 	}
 
-	private final Map<Class, TypeData> typeDataMap;
+	public static class Defaults {
+
+		public static boolean serializationSubclassAware = true;
+
+		/**
+		 * JSON annotation for marking the JSON properties that are going to be serialized.
+		 */
+		public static Class<? extends Annotation> jsonAnnotation = JSON.class;
+	}
+
+	private final Map<Class, TypeData> typeDataMap = new HashMap<>();
+	private boolean serializationSubclassAware = Defaults.serializationSubclassAware;
+	private Class<? extends Annotation> jsonAnnotation = Defaults.jsonAnnotation;
 
 	@SuppressWarnings("unchecked")
 	public JsonAnnotationManager() {
-		typeDataMap = new HashMap<>();
-	}
-
-	/**
-	 * Type information read from annotations.
-	 */
-	public static class TypeData {
-		public final InExRules<String, String, String> rules;
-		public final boolean strict;
-
-		public final String[] jsonNames;
-		public final String[] realNames;
-
-		public TypeData(final List<String> includes, final List<String> excludes, final boolean strict, final String[] jsonNames, final String[] realNames) {
-			rules = new InExRules<>();
-
-			for (String include : includes) {
-				rules.include(include);
-			}
-			for (String exclude : excludes) {
-				rules.exclude(exclude);
-			}
-
-
-			this.strict = strict;
-			this.jsonNames = jsonNames;
-			this.realNames = realNames;
-		}
-
-		/**
-		 * Resolves real name from JSON name.
-		 */
-		public String resolveRealName(final String jsonName) {
-			if (jsonNames == null) {
-				return jsonName;
-			}
-			int jsonIndex = ArraysUtil.indexOf(jsonNames, jsonName);
-			if (jsonIndex == -1) {
-				return jsonName;
-			}
-			return realNames[jsonIndex];
-		}
-
-		/**
-		 * Resolves JSON name from real name.
-		 */
-		public String resolveJsonName(final String realName) {
-			if (realNames == null) {
-				return realName;
-			}
-			int realIndex = ArraysUtil.indexOf(realNames, realName);
-			if (realIndex == -1) {
-				return realName;
-			}
-			return jsonNames[realIndex];
-		}
-	}
-
-	/**
-	 * Resets type data map.
-	 */
-	public void reset() {
-		typeDataMap.clear();
+		reset();
 	}
 
 	/**
@@ -132,7 +80,7 @@ public class JsonAnnotationManager {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
-			if (JoddJson.defaults().isSerializationSubclassAware()) {
+			if (serializationSubclassAware) {
 				typeData = findSubclassTypeData(type);
 			}
 
@@ -163,14 +111,14 @@ public class JsonAnnotationManager {
 	 * Finds type data of first annotated superclass or interface.
 	 */
 	protected TypeData findSubclassTypeData(final Class type) {
-		final Class<? extends Annotation> defaultAnnotation = JoddJson.defaults().getJsonAnnotation();
+		final Class<? extends Annotation> defaultAnnotation = jsonAnnotation;
 
 		if (type.getAnnotation(defaultAnnotation) != null) {
 			// current type has annotation, don't find anything, let type data be created
 			return null;
 		}
 
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		// lookup superclasses
 
@@ -214,10 +162,10 @@ public class JsonAnnotationManager {
 	}
 
 	/**
-	 * Scans class for annotations and returns {@link jodd.json.meta.JsonAnnotationManager.TypeData}.
+	 * Scans class for annotations and returns {@link TypeData}.
 	 */
 	private TypeData scanClassForAnnotations(final Class type) {
-		ClassDescriptor cd = JoddBean.defaults().getClassIntrospector().lookup(type);
+		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
@@ -226,7 +174,7 @@ public class JsonAnnotationManager {
 		ArrayList<String> jsonNames = new ArrayList<>();
 		ArrayList<String> realNames = new ArrayList<>();
 
-		AnnotationParser annotationParser = JSONAnnotationValues.parserFor(JoddJson.defaults().getJsonAnnotation());
+		AnnotationParser annotationParser = JSONAnnotationValues.parserFor(jsonAnnotation);
 
 		for (PropertyDescriptor pd : pds) {
 			JSONAnnotationValues data = null;
@@ -297,4 +245,25 @@ public class JsonAnnotationManager {
 		return new TypeData(includedList, excludedList, data != null && data.strict(), jsons, reals);
 	}
 
+	/**
+	 * When set searches for first annotated class or interface and use it's data.
+	 */
+	public JsonAnnotationManager setSerializationSubclassAware(final boolean serializationSubclassAware) {
+		this.serializationSubclassAware = serializationSubclassAware;
+		return this;
+	}
+
+	/**
+	 * Sets different annotation.
+	 */
+	public JsonAnnotationManager setJsonAnnotation(final Class<? extends Annotation> jsonAnnotation) {
+		this.jsonAnnotation = jsonAnnotation;
+		return this;
+	}
+
+	public void reset() {
+		typeDataMap.clear();
+		serializationSubclassAware = Defaults.serializationSubclassAware;
+		jsonAnnotation = Defaults.jsonAnnotation;
+	}
 }
