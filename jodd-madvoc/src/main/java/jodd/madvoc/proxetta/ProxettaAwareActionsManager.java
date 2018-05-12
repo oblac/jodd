@@ -41,7 +41,7 @@ import java.util.Map;
 public class ProxettaAwareActionsManager extends ActionsManager {
 
 	@PetiteInject
-	protected ProxettaProvider proxettaProvider;
+	protected ProxettaSupplier proxettaSupplier;
 
 	protected final Map<Class, Class> proxyActionClasses;
 
@@ -56,11 +56,11 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	 */
 	@Override
 	public synchronized ActionRuntime registerAction(Class actionClass, final Method actionMethod, ActionDefinition actionDefinition) {
-		if (proxettaProvider == null) {
+		if (proxettaSupplier == null) {
 			return super.registerAction(actionClass, actionMethod, actionDefinition);
 		}
 
-		final ProxyProxetta proxetta = proxettaProvider.get();
+		final ProxyProxetta proxetta = proxettaSupplier.get();
 
 		if (actionDefinition == null) {
 			actionDefinition = actionMethodParser.parseActionDefinition(actionClass, actionMethod);
