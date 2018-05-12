@@ -58,7 +58,40 @@ import static jodd.util.StringPool.CRLF;
  */
 public abstract class HttpBase<T> {
 
-    public static final String HEADER_ACCEPT = "Accept";
+	public static class Defaults {
+
+		public static final int DEFAULT_PORT = -1;
+
+		/**
+		 * Default HTTP query parameters encoding (UTF-8).
+		 */
+		public static String queryEncoding = StringPool.UTF_8;
+		/**
+		 * Default form encoding (UTF-8).
+		 */
+		public static String formEncoding = StringPool.UTF_8;
+		/**
+		 * Default body media type.
+		 */
+		public static String bodyMediaType = MimeTypes.MIME_TEXT_HTML;
+		/**
+		 * Default body encoding (UTF-8).
+		 */
+		public static String bodyEncoding = StringPool.UTF_8;
+		/**
+		 * Default user agent value.
+		 */
+		public static String userAgent = "Jodd HTTP";
+		/**
+		 * Flag that controls if headers should be rewritten and capitalized in PascalCase.
+		 * When disabled, header keys are used as they are passed.
+		 * When flag is enabled, header keys will be capitalized.
+		 */
+		public static boolean capitalizeHeaderKeys = true;
+
+	}
+
+	public static final String HEADER_ACCEPT = "Accept";
 	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -72,7 +105,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected boolean capitalizeHeaderKeys = JoddHttp.defaults().isCapitalizeHeaderKeys();
+	protected boolean capitalizeHeaderKeys = Defaults.capitalizeHeaderKeys;
 	protected final HeadersMultiMap headers = new HeadersMultiMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
@@ -103,7 +136,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns whether header keys should be strict or not, when they are
 	 * modified by changing them to PascalCase.
-	 * @see JoddHttp#capitalizeHeaderKeys
+	 * @see Defaults#capitalizeHeaderKeys
 	 */
 	public boolean capitalizeHeaderKeys() {
 		return capitalizeHeaderKeys;
@@ -111,7 +144,7 @@ public abstract class HttpBase<T> {
 	
 	/**
 	 * Sets headers behavior.
-	 * @see JoddHttp#capitalizeHeaderKeys
+	 * @see Defaults#capitalizeHeaderKeys
 	 */
 	public T capitalizeHeaderKeys(final boolean capitalizeHeaderKeys) {
 		this.capitalizeHeaderKeys = capitalizeHeaderKeys;
@@ -521,11 +554,11 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- form encoding
 
-	protected String formEncoding = JoddHttp.defaults().getFormEncoding();
+	protected String formEncoding = Defaults.formEncoding;
 
 	/**
 	 * Defines encoding for forms parameters. Default value is
-	 * copied from {@link JoddHttp#formEncoding}.
+	 * copied from {@link Defaults#formEncoding}.
 	 * It is overridden by {@link #charset() charset} value.
 	 */
 	public T formEncoding(final String encoding) {
@@ -600,18 +633,18 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
-	 * that will be encoded in {@link JoddHttp#bodyEncoding default body encoding}.
+	 * that will be encoded in {@link Defaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body, final String mediaType) {
-		return bodyText(body, mediaType, JoddHttp.defaults().getBodyEncoding());
+		return bodyText(body, mediaType, Defaults.bodyEncoding);
 	}
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
-	 * that will be encoded as {@link JoddHttp#bodyMediaType default body media type}
-	 * in {@link JoddHttp#bodyEncoding default body encoding}.
+	 * that will be encoded as {@link Defaults#bodyMediaType default body media type}
+	 * in {@link Defaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body) {
-		return bodyText(body, JoddHttp.defaults().getBodyMediaType(), JoddHttp.defaults().getBodyEncoding());
+		return bodyText(body, Defaults.bodyMediaType, Defaults.bodyEncoding);
 	}
 
 	/**

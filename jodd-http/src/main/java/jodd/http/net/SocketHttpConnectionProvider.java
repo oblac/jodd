@@ -29,7 +29,6 @@ import jodd.http.HttpConnection;
 import jodd.http.HttpConnectionProvider;
 import jodd.http.HttpException;
 import jodd.http.HttpRequest;
-import jodd.http.JoddHttp;
 import jodd.http.ProxyInfo;
 import jodd.util.StringUtil;
 
@@ -50,6 +49,7 @@ import java.security.NoSuchAlgorithmException;
 public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 	protected ProxyInfo proxy = ProxyInfo.directProxy();
+	protected String secureEnabledProtocols = System.getProperty("https.protocols");
 
 	/**
 	 * Defines proxy to use for created sockets.
@@ -57,6 +57,14 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	@Override
 	public void useProxy(final ProxyInfo proxyInfo) {
 		proxy = proxyInfo;
+	}
+
+	/**
+	 * CSV of default enabled secured protocols. By default the value is
+	 * read from system property <code>https.protocols</code>.
+	 */
+	public void setSecuredProtocols(final String secureEnabledProtocols) {
+		this.secureEnabledProtocols = secureEnabledProtocols;
 	}
 
 	/**
@@ -180,10 +188,8 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 		// sslSocket is now ready
 
-		String enabledProtocols = JoddHttp.defaults().getSecureEnabledProtocols();
-
-		if (enabledProtocols != null) {
-			String[] values = StringUtil.splitc(enabledProtocols, ',');
+		if (secureEnabledProtocols != null) {
+			final String[] values = StringUtil.splitc(secureEnabledProtocols, ',');
 
 			StringUtil.trimAll(values);
 
@@ -193,7 +199,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		// set SSL parameters to allow host name verifier
 
 		if (verifyHttpsHost) {
-			SSLParameters sslParams = new SSLParameters();
+			final SSLParameters sslParams = new SSLParameters();
 
 			sslParams.setEndpointIdentificationAlgorithm("HTTPS");
 
