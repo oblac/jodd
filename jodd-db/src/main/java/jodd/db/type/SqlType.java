@@ -25,7 +25,7 @@
 
 package jodd.db.type;
 
-import jodd.bean.JoddBean;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassUtil;
 
 import java.sql.PreparedStatement;
@@ -75,7 +75,7 @@ public abstract class SqlType<T> {
 	 * Stores value in database. Value is casted to sql type.
 	 */
 	public void storeValue(final PreparedStatement st, final int index, final Object value, final int dbSqlType) throws SQLException {
-		T t = JoddBean.defaults().getTypeConverterManager().convertType(value, sqlType);
+		T t = TypeConverterManager.get().convertType(value, sqlType);
 		set(st, index, t, dbSqlType);
 	}
 
@@ -104,7 +104,7 @@ public abstract class SqlType<T> {
 		if (destinationType == null) {
 			return (E) t;
 		}
-		return JoddBean.defaults().getTypeConverterManager().convertType(t, destinationType);
+		return TypeConverterManager.get().convertType(t, destinationType);
 	}
 
 }
