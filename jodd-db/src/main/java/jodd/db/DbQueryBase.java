@@ -53,14 +53,14 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 	// ---------------------------------------------------------------- ctor
 
-	protected DbQueryBase(final DbQueryConfig dbQueryConfig, final boolean debug) {
-		this.forcePreparedStatement = dbQueryConfig.isForcePreparedStatement();
-		this.type = dbQueryConfig.getType();
-		this.concurrencyType = dbQueryConfig.getConcurrencyType();
-		this.holdability = dbQueryConfig.getHoldability();
-		this.debug = debug;
-		this.fetchSize = dbQueryConfig.getFetchSize();
-		this.maxRows = dbQueryConfig.getMaxRows();
+	protected DbQueryBase() {
+		this.forcePreparedStatement = DbQuery.Defaults.forcePreparedStatement;
+		this.type = DbQuery.Defaults.type;
+		this.concurrencyType = DbQuery.Defaults.concurrencyType;
+		this.holdability = DbQuery.Defaults.holdability;
+		this.debug = DbQuery.Defaults.debug;
+		this.fetchSize = DbQuery.Defaults.fetchSize;
+		this.maxRows = DbQuery.Defaults.maxRows;
 	}
 
 	// ---------------------------------------------------------------- query states
@@ -94,7 +94,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 */
 	protected void checkCreated() {
 		if (queryState != CREATED) {
-			String message = (queryState == INITIALIZED ?
+			final String message = (queryState == INITIALIZED ?
 									"Query is already initialized." : "Query is closed.");
 			throw new DbSqlException(this, message + " Operation may be performed only on created queries.");
 		}
@@ -105,7 +105,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 */
 	protected void checkInitialized() {
 		if (queryState != INITIALIZED) {
-			String message = (queryState == CREATED ?
+			final String message = (queryState == CREATED ?
 									"Query is created but not yet initialized." : "Query is closed.");
 			throw new DbSqlException(this, message + " Operation may be performed only on initialized queries.");
 		}
@@ -211,11 +211,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			return;
 		}
 
-		DbSessionProvider dbSessionProvider = JoddDb.defaults().getSessionProvider();
-
-		if (dbSessionProvider == null) {
-			throw new DbSqlException("Session provider not available.");
-		}
+		final DbSessionProvider dbSessionProvider = DbOom.get().sessionProvider();
 
 		this.session = dbSessionProvider.getDbSession();
 	}
@@ -355,7 +351,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		SQLException sqlException = null;
 
 		if (resultSets != null) {
-			for (ResultSet rs : resultSets) {
+			for (final ResultSet rs : resultSets) {
 				try {
 					rs.close();
 				} catch (SQLException sex) {
@@ -378,7 +374,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 * Closes all result sets created by this query. Query remains active.
 	 */
 	public Q closeAllResultSets() {
-		SQLException sex = closeQueryResultSets();
+		final SQLException sex = closeQueryResultSets();
 		if (sex != null) {
 			throw new DbSqlException("Close associated ResultSets error", sex);
 		}
@@ -413,7 +409,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	@Override
 	@SuppressWarnings({"ClassReferencesSubclass"})
 	public void close() {
-		SQLException sqlException = closeQuery();
+		final SQLException sqlException = closeQuery();
 		connection = null;
 		if (this.session != null) {
 			this.session.detachQuery(this);
@@ -756,7 +752,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		start = System.currentTimeMillis();
 
 		init();
-		int result;
+		final int result;
 		if (log.isDebugEnabled()) {
 			log.debug("Executing update: " + getQueryString());
 		}
@@ -817,7 +813,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 				rs = preparedStatement.executeQuery();
 			}
 
-			long firstLong = DbUtil.getFirstLong(rs);
+			final long firstLong = DbUtil.getFirstLong(rs);
 
 			elapsed = System.currentTimeMillis() - start;
 			if (log.isDebugEnabled()) {
@@ -842,13 +838,13 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 * {@link QueryMapper maps} each row.
 	 */
 	public <T> List<T> list(final QueryMapper<T> queryMapper) {
-		ResultSet resultSet = execute();
+		final ResultSet resultSet = execute();
 
-		List<T> list = new ArrayList<>();
+		final List<T> list = new ArrayList<>();
 
 		try {
 			while (resultSet.next()) {
-				T t = queryMapper.process(resultSet);
+				final T t = queryMapper.process(resultSet);
 				if (t == null) {
 					break;
 				}
@@ -867,7 +863,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 * {@link #execute() Executes} the query and {@link QueryMapper maps} single result row.
 	 */
 	public <T> T find(final QueryMapper<T> queryMapper) {
-		ResultSet resultSet = execute();
+		final ResultSet resultSet = execute();
 
 		try {
 			if (resultSet.next()) {
@@ -886,13 +882,13 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 * {@link QueryMapper maps} them.
 	 */
 	public <T> Set<T> listSet(final QueryMapper<T> queryMapper) {
-		ResultSet resultSet = execute();
+		final ResultSet resultSet = execute();
 
-		Set<T> set = new HashSet<>();
+		final Set<T> set = new HashSet<>();
 
 		try {
 			while (resultSet.next()) {
-				T t = queryMapper.process(resultSet);
+				final T t = queryMapper.process(resultSet);
 				if (t == null) {
 					break;
 				}
@@ -916,7 +912,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		if (generatedColumns == null) {
 			throw new DbSqlException(this, "No column is specified as auto-generated");
 		}
-		ResultSet rs;
+		final ResultSet rs;
 		try {
 			rs = statement.getGeneratedKeys();
 		} catch (SQLException sex) {
@@ -932,7 +928,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 */
 	public long getGeneratedKey() {
 		checkInitialized();
-		ResultSet rs = getGeneratedColumns();
+		final ResultSet rs = getGeneratedColumns();
 		try {
 			return DbUtil.getFirstLong(rs);
 		} catch (SQLException sex) {

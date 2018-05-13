@@ -28,7 +28,6 @@ package jodd.db;
 import jodd.bean.BeanUtil;
 import jodd.db.type.SqlType;
 import jodd.db.type.SqlTypeManager;
-import jodd.util.CharUtil;
 import jodd.util.collection.IntArrayList;
 
 import java.io.IOException;
@@ -70,25 +69,53 @@ import java.util.Map;
  */
 public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 
+	public static class Defaults {
+		/**
+		 * Default debug mode.
+		 */
+		public static boolean debug = false;
+		/**
+		 * Enables creation of prepared statements for all queries.
+		 */
+		public static boolean forcePreparedStatement = false;
+		/**
+		 * Default type.
+		 */
+		public static int type = TYPE_FORWARD_ONLY;
+		/**
+		 * Default concurrency type.
+		 */
+		public static int concurrencyType = CONCUR_READ_ONLY;
+		/**
+		 * Default holdability.
+		 */
+		public static int holdability = DEFAULT_HOLDABILITY;
+		/**
+		 * Default value for fetch size.
+		 */
+		public static int fetchSize = 0;
+		/**
+		 * Default value for max rows.
+		 */
+		public static int maxRows = 0;
+	}
+
 	/**
 	 * Creates new query.
 	 */
 	public DbQuery(final Connection conn, final String sqlString) {
-		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
 		this.connection = conn;
-		this.sqlString = preprocessSql(sqlString);
+		this.sqlString = sqlString;
 	}
 
 	/**
 	 * Creates a new query from {@link DbSession}.
 	 */
 	public DbQuery(final DbSession session, final String sqlString) {
-		super(JoddDb.defaults().getQueryConfig(), JoddDb.defaults().isDebug());
-
 		initSession(session);
 
 		this.session.attachQuery(this);
-		this.sqlString = preprocessSql(sqlString);
+		this.sqlString = sqlString;
 	}
 
 	/**
@@ -96,36 +123,6 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public DbQuery(final String sqlString) {
 		this((DbSession)null, sqlString);
-	}
-
-	// ---------------------------------------------------------------- sql map
-
-	/**
-	 * Pre-process SQL before using it. If string starts with a non-ascii char
-	 * or it has no spaces, it will be loaded from the query map.
-	 */
-	protected String preprocessSql(String sqlString) {
-
-		// detects callable
-		if (sqlString.charAt(0) == '{') {
-			return sqlString;
-		}
-
-		// quickly detect if sql string is a key
-		if (!CharUtil.isAlpha(sqlString.charAt(0))) {
-			sqlString = sqlString.substring(1);
-		}
-		else if (sqlString.indexOf(' ') != -1) {
-			return sqlString;
-		}
-
-		String sqlFromMap = JoddDb.defaults().getQueryMap().getQuery(sqlString);
-
-		if (sqlFromMap != null) {
-			sqlString = sqlFromMap.trim();
-		}
-
-		return sqlString;
 	}
 
 	// ---------------------------------------------------------------- additional statement parameters

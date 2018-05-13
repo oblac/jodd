@@ -25,16 +25,18 @@
 
 package jodd.db.oom;
 
+import jodd.bean.BeanUtil;
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbUtil;
-import jodd.db.JoddDb;
 import jodd.db.oom.mapper.DefaultResultSetMapper;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
 import jodd.db.type.SqlType;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.CharUtil;
 import jodd.util.StringUtil;
 
 import java.sql.Connection;
@@ -49,8 +51,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static jodd.db.oom.DbOomUtil.initialCollectionSize;
-
 /**
  * A simple ORM extension for {@link DbQuery}.
  * <p>
@@ -64,57 +64,81 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	private static final Logger log = LoggerFactory.getLogger(DbOomQuery.class);
 
+	private final DbOom dbOom;
+
 	// ---------------------------------------------------------------- default ctors
 
-	public DbOomQuery(final Connection conn, final String sqlString) {
+	public DbOomQuery(final DbOom dbOom, final Connection conn, final String sqlString) {
 		super(conn, sqlString);
+		this.sqlgen = null;
+		this.dbOom = dbOom;
+		init(dbOom);
 	}
+
 	public static DbOomQuery query(final Connection conn, final String sqlString) {
-		return new DbOomQuery(conn, sqlString);
+		return new DbOomQuery(DbOom.get(), conn, sqlString);
 	}
 
-
-	public DbOomQuery(final DbSession session, final String sqlString) {
+	public DbOomQuery(final DbOom dbOom, final DbSession session, final String sqlString) {
 		super(session, sqlString);
+		this.sqlgen = null;
+		this.dbOom = dbOom;
+		init(dbOom);
 	}
+
 	public static DbOomQuery query(final DbSession session, final String sqlString) {
-		return new DbOomQuery(session, sqlString);
+		return new DbOomQuery(DbOom.get(), session, sqlString);
 	}
 
-
-	public DbOomQuery(final String sqlString) {
+	public DbOomQuery(final DbOom dbOom, final String sqlString) {
 		super(sqlString);
+		this.sqlgen = null;
+		this.dbOom = dbOom;
+		init(dbOom);
 	}
+
 	public static DbOomQuery query(final String sqlString) {
-		return new DbOomQuery(sqlString);
+		return new DbOomQuery(DbOom.get(), sqlString);
 	}
 
 	// ---------------------------------------------------------------- sqlgen ctors
 
-	protected DbSqlGenerator sqlgen;
+	protected final DbSqlGenerator sqlgen;
 
-	public DbOomQuery(final Connection conn, final DbSqlGenerator sqlgen) {
+	public DbOomQuery(final DbOom dbOom, final Connection conn, final DbSqlGenerator sqlgen) {
 		super(conn, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
+		this.dbOom = dbOom;
+		init(dbOom);
 	}
 	public static DbOomQuery query(final Connection conn, final DbSqlGenerator sqlgen) {
-		return new DbOomQuery(conn, sqlgen);
+		return new DbOomQuery(DbOom.get(), conn, sqlgen);
 	}
 
-	public DbOomQuery(final DbSession session, final DbSqlGenerator sqlgen) {
+	public DbOomQuery(final DbOom dbOom, final DbSession session, final DbSqlGenerator sqlgen) {
 		super(session, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
+		this.dbOom = dbOom;
+		init(dbOom);
 	}
 	public static DbOomQuery query(final DbSession session, final DbSqlGenerator sqlgen) {
-		return new DbOomQuery(session, sqlgen);
+		return new DbOomQuery(DbOom.get(), session, sqlgen);
 	}
 
-	public DbOomQuery(final DbSqlGenerator sqlgen) {
+	public DbOomQuery(final DbOom dbOom, final DbSqlGenerator sqlgen) {
 		super(sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
+		this.dbOom = dbOom;
+		init(dbOom);
 	}
 	public static DbOomQuery query(final DbSqlGenerator sqlgen) {
-		return new DbOomQuery(sqlgen);
+		return new DbOomQuery(DbOom.get(), sqlgen);
+	}
+
+	protected void init(final DbOom dbOom) {
+		this.sqlString = preprocessSql(sqlString);
+		this.cacheEntities = dbOom.config().isCacheEntitiesInResultSet();
+		this.entityAwareMode = dbOom.config().isEntityAwareMode();
 	}
 
 	// ---------------------------------------------------------------- initialization
@@ -185,10 +209,38 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 		}
 	}
 
+	/**
+	 * Pre-process SQL before using it. If string starts with a non-ascii char
+	 * or it has no spaces, it will be loaded from the query map.
+	 */
+	protected String preprocessSql(String sqlString) {
+		// detects callable statement
+		if (sqlString.charAt(0) == '{') {
+			return sqlString;
+		}
+
+		// quickly detect if SQL string is a key
+		if (!CharUtil.isAlpha(sqlString.charAt(0))) {
+			sqlString = sqlString.substring(1);
+		}
+		else if (sqlString.indexOf(' ') != -1) {
+			return sqlString;
+		}
+
+		final String sqlFromMap = dbOom.queryMap().getQuery(sqlString);
+
+		if (sqlFromMap != null) {
+			sqlString = sqlFromMap.trim();
+		}
+
+		return sqlString;
+	}
+
+
 
 	// ---------------------------------------------------------------- join hints
 
-	protected final JoinHintResolver hintResolver = JoddDb.defaults().getHintResolver();
+	protected JoinHintResolver hintResolver;
 
 	protected String[] hints;
 
@@ -214,13 +266,16 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 * Returns either single object or objects array.
 	 */
 	protected Object resolveRowResults(Object[] row) {
+		if (hintResolver == null) {
+			hintResolver = new JoinHintResolver();
+		}
 		row = hintResolver.join(row, hints);
 		return row.length == 1 ? row[0] : row;
 	}
 
 	// ---------------------------------------------------------------- result set
 
-	protected boolean cacheEntities = JoddDb.defaults().getDbOomConfig().isCacheEntitiesInResultSet();
+	protected boolean cacheEntities;
 
 	/**
 	 * Defines if entities should be cached in {@link ResultSetMapper}.
@@ -244,14 +299,14 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	 * Factory for result sets mapper.
 	 */
 	protected ResultSetMapper createResultSetMapper(final ResultSet resultSet) {
-		Map<String, ColumnData> columnAliases = sqlgen != null ? sqlgen.getColumnData() : null;
+		final Map<String, ColumnData> columnAliases = sqlgen != null ? sqlgen.getColumnData() : null;
 
-		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
+		return new DefaultResultSetMapper(dbOom, resultSet, columnAliases, cacheEntities, this);
 	}
 
 	// ---------------------------------------------------------------- db list
 
-	protected boolean entityAwareMode = JoddDb.defaults().getDbOomConfig().isEntityAwareMode();
+	protected boolean entityAwareMode;
 
 	/**
 	 * Defines entity-aware mode for entities tracking in result collection.
@@ -343,6 +398,15 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 		close(rsm, close);
 		return result;
 	}
+
+	/**
+	 * Returns initial collections size when <code>max</code>
+	 * value is provided.
+	 */
+	private static int initialCollectionSize(final int max) {
+		return max > 0 ? max : 10;
+	}
+
 
 	// ---------------------------------------------------------------- set
 
@@ -446,6 +510,41 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	public Object findGeneratedColumns(final Class... types) {
 		return find(types, false, getGeneratedColumns());
 	}
+
+
+	/**
+	 * Populates entity with generated column values from executed query.
+	 */
+	public void populateGeneratedKeys(final Object entity) {
+
+		final String[] generatedColumns = getGeneratedColumnNames();
+		if (generatedColumns == null) {
+			return;
+		}
+		DbEntityDescriptor ded = dbOom.entityManager().lookupType(entity.getClass());
+
+		// prepare key types
+		Class[] keyTypes = new Class[generatedColumns.length];
+		String[] properties = new String[generatedColumns.length];
+		for (int i = 0; i < generatedColumns.length; i++) {
+			String column = generatedColumns[i];
+			DbEntityColumnDescriptor decd = ded.findByColumnName(column);
+			if (decd != null) {
+				keyTypes[i] = decd.getPropertyType();
+				properties[i] = decd.getPropertyName();
+			}
+		}
+
+		final Object keyValues = findGeneratedColumns(keyTypes);
+		if (!keyValues.getClass().isArray()) {
+			BeanUtil.declared.setProperty(entity, properties[0], keyValues);
+		} else {
+			for (int i = 0; i < properties.length; i++) {
+				BeanUtil.declared.setProperty(entity, properties[i], ((Object[]) keyValues)[i]);
+			}
+		}
+	}
+
 
 	// ---------------------------------------------------------------- util
 
