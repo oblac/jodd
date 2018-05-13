@@ -25,19 +25,13 @@
 
 package jodd.db;
 
-import jodd.util.HashCode;
-
 import java.sql.Connection;
+import java.util.Objects;
 
 /**
  * Native SQL transaction mode for {@link DbSession} transactions.
  */
 public class DbTransactionMode {
-
-	public DbTransactionMode() {
-		this.isolation = ISOLATION_DEFAULT;
-		this.readOnlyMode = READ_ONLY;
-	}
 
 	// ---------------------------------------------------------------- isolation
 
@@ -66,8 +60,7 @@ public class DbTransactionMode {
 	 */
 	public static final int ISOLATION_SERIALIZABLE 			= Connection.TRANSACTION_SERIALIZABLE;
 
-
-	private int isolation;
+	private final int isolation;
 
 	/**
 	 * Returns isolation level.
@@ -76,30 +69,30 @@ public class DbTransactionMode {
 		return isolation;
 	}
 
-	/**
-	 * Sets isolation level.
-	 */
-	public DbTransactionMode setIsolation(final int isolation) {
-		this.isolation = isolation;
-		return this;
-	}
-
 	// ---------------------------------------------------------------- read-only
 
 	public static final boolean READ_ONLY		= true;
 	public static final boolean READ_WRITE		= false;
 
-	private boolean readOnlyMode = READ_ONLY;
+	private final boolean readOnlyMode;
 
+	/**
+	 * Returns {@code true} if transaction is read-only.
+	 */
 	public boolean isReadOnly() {
 		return readOnlyMode;
 	}
 
-	public DbTransactionMode setReadOnly(final boolean readOnly) {
-		this.readOnlyMode = readOnly;
-		return this;
-	}
 
+	// ---------------------------------------------------------------- ctor
+
+	public static final DbTransactionMode READ_ONLY_TX = new DbTransactionMode(ISOLATION_DEFAULT, READ_ONLY);
+	public static final DbTransactionMode READ_WRITE_TX = new DbTransactionMode(ISOLATION_DEFAULT, READ_WRITE);
+
+	public DbTransactionMode(final int isolation, boolean readOnlyMode) {
+		this.isolation = isolation;
+		this.readOnlyMode = readOnlyMode;
+	}
 
 	// ---------------------------------------------------------------- equals & hashCode
 
@@ -118,10 +111,7 @@ public class DbTransactionMode {
 
 	@Override
 	public int hashCode() {
-		return HashCode.create()
-				.hash(readOnlyMode)
-				.hash(isolation)
-				.get();
+		return Objects.hash(readOnlyMode, isolation);
 	}
 
 
