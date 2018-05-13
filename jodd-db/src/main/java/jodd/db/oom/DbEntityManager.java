@@ -25,7 +25,6 @@
 
 package jodd.db.oom;
 
-import jodd.db.JoddDb;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.log.Logger;
@@ -49,6 +48,12 @@ import java.util.Map;
 public class DbEntityManager {
 
 	private static final Logger log = LoggerFactory.getLogger(DbEntityManager.class);
+
+	private final DbOomConfig dbOomConfig;
+
+	public DbEntityManager(final DbOomConfig dbOomConfig) {
+		this.dbOomConfig = dbOomConfig;
+	}
 
 	// ---------------------------------------------------------------- registration
 
@@ -190,9 +195,9 @@ public class DbEntityManager {
 	 * Creates {@link DbEntityDescriptor}.
 	 */
 	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(final Class<E> type) {
-		final String schemaName = JoddDb.defaults().getDbOomConfig().getSchemaName();
-		final TableNamingStrategy tableNames = JoddDb.defaults().getDbOomConfig().getTableNames();
-		final ColumnNamingStrategy columnNames = JoddDb.defaults().getDbOomConfig().getColumnNames();
+		final String schemaName = dbOomConfig.getSchemaName();
+		final TableNamingStrategy tableNames = dbOomConfig.getTableNames();
+		final ColumnNamingStrategy columnNames = dbOomConfig.getColumnNames();
 
 		return new DbEntityDescriptor<>(type, schemaName, tableNames, columnNames);
 	}
