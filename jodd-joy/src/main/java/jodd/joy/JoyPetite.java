@@ -39,11 +39,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static jodd.joy.JoddJoy.PETITE_CORE;
+import static jodd.joy.JoddJoy.PETITE_DBPOOL;
 import static jodd.joy.JoddJoy.PETITE_SCAN;
 
 public class JoyPetite extends JoyBase {
 
 	protected final Supplier<JoyScanner> joyScannerSupplier;
+	protected final Supplier<JoyDb> joyDbSupplier;
 	protected final Supplier<Props> propsSupplier;
 	protected final Supplier<ProxyProxetta> proxettaSupplier;
 
@@ -51,11 +53,14 @@ public class JoyPetite extends JoyBase {
 	protected boolean isWebApplication = true;  // todo add this value as well!
 
 	public JoyPetite(
-		final Supplier<ProxyProxetta> proxettaSupplier,
-		final Supplier<Props> propsSupplier, final Supplier<JoyScanner> joyScannerSupplier) {
+			final Supplier<ProxyProxetta> proxettaSupplier,
+			final Supplier<Props> propsSupplier,
+			final Supplier<JoyDb> joyDbSupplier,
+			final Supplier<JoyScanner> joyScannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.propsSupplier = propsSupplier;
+		this.joyDbSupplier = joyDbSupplier;
 	}
 
 	// ---------------------------------------------------------------- getters
@@ -114,7 +119,7 @@ public class JoyPetite extends JoyBase {
 		if (!isWebApplication) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).
-			petiteContainer.registerScope(SessionScope.class, new SingletonScope());
+			petiteContainer.registerScope(SessionScope.class, new SingletonScope(petiteContainer));
 		}
 
 		// load parameters from properties files
@@ -134,6 +139,9 @@ public class JoyPetite extends JoyBase {
 
 		// add AppCore instance to Petite
 		petiteContainer.addBean(PETITE_CORE, petiteContainer);
+
+		// add DB beans
+		petiteContainer.addBean(PETITE_DBPOOL, joyDbSupplier.get().connectionProvider);
 	}
 
 	protected ProxettaAwarePetiteContainer createPetiteContainer() {

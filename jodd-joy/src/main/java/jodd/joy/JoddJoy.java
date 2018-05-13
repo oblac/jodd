@@ -129,12 +129,25 @@ public class JoddJoy {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- db
+
+	private final JoyDb joyDb =
+		new JoyDb(
+			() -> joyProxetta,
+			() -> joyScanner);
+
+	public JoddJoy withDb(final Consumer<JoyDb> dbConsumer) {
+		dbConsumer.accept(joyDb);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- petite
 
 	private final JoyPetite joyPetite =
 		new JoyPetite(
 			joyProxetta::getProxetta,
 			joyProps::getProps,
+			() -> joyDb,
 			() -> joyScanner
 		);
 
@@ -143,21 +156,9 @@ public class JoddJoy {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- db
-
-	private JoyDb joyDb =
-		new JoyDb(
-			joyPetite::getPetiteContainer,
-			() -> joyScanner);
-
-	public JoddJoy withDb(final Consumer<JoyDb> dbConsumer) {
-		dbConsumer.accept(joyDb);
-		return this;
-	}
-
 	// ---------------------------------------------------------------- madvoc
 
-	private JoyMadvoc joyMadvoc =
+	private final JoyMadvoc joyMadvoc =
 		new JoyMadvoc(
 			joyPetite::getPetiteContainer,
 			joyProxetta::getProxetta,
@@ -207,8 +208,8 @@ public class JoddJoy {
 			joyProps.start();
 			joyScanner.start();
 			joyProxetta.start();
-			joyPetite.start();
 			joyDb.start();
+			joyPetite.start();
 
 			joyMadvoc.setServletContext(servletContext);
 			joyMadvoc.start();

@@ -52,7 +52,7 @@ public class I18nInterceptor implements ActionInterceptor {
 	protected String getActionClassName(final Object action) {
 		Class clazz = action.getClass();
 
-		clazz = ProxettaUtil.getTargetClass(clazz);
+		clazz = ProxettaUtil.resolveTargetClass(clazz);
 
 		return clazz.getName();
 	}

@@ -25,43 +25,47 @@
 
 package jodd.joy;
 
-import jodd.db.DbDetector;
+import jodd.db.DbOom;
 import jodd.db.DbSessionProvider;
-import jodd.db.JoddDb;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.oom.AutomagicDbOomConfigurator;
 import jodd.db.oom.DbEntityManager;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.jtx.JoddJtx;
+import jodd.db.querymap.DbPropsQueryMap;
 import jodd.jtx.JtxTransactionManager;
+import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
-import jodd.petite.PetiteContainer;
+import jodd.jtx.worker.LeanJtxWorker;
+import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.ProxyPointcut;
+import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 import jodd.util.Consumers;
 
+import java.lang.annotation.Annotation;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static jodd.joy.JoddJoy.PETITE_DB;
-import static jodd.joy.JoddJoy.PETITE_DBPOOL;
-
 public class JoyDb extends JoyBase {
 
 	protected final Supplier<JoyScanner> joyScannerSupplier;
-	protected final Supplier<PetiteContainer> petiteContainerSupplier;
+	protected final Supplier<JoyProxetta> joyProxettaSupplier;
 
 	protected ConnectionProvider connectionProvider;
+	protected DbOom dbOom;
 	protected JtxTransactionManager jtxManager;
 	protected String jtxScopePattern;
 
-	public JoyDb(final Supplier<PetiteContainer> petiteContainerSupplier, final Supplier<JoyScanner> joyScannerSupplier) {
+	public JoyDb(
+			final Supplier<JoyProxetta> joyProxettaSupplier,
+			final Supplier<JoyScanner> joyScannerSupplier) {
 		this.joyScannerSupplier = joyScannerSupplier;
-		this.petiteContainerSupplier = petiteContainerSupplier;
+		this.joyProxettaSupplier = joyProxettaSupplier;
 	}
 
 	// ---------------------------------------------------------------- getters
@@ -135,7 +139,7 @@ public class JoyDb extends JoyBase {
 
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
-		petiteContainerSupplier.get().addBean(PETITE_DBPOOL, connectionProvider);
+
 		if (connectionProvider instanceof CoreConnectionPool) {
 			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;
 			if (pool.getDriver() == null) {
@@ -147,24 +151,28 @@ public class JoyDb extends JoyBase {
 		connectionProvider.init();
 
 		checkConnectionProvider();
-		DbDetector.detectDatabaseAndConfigureDbOom(connectionProvider);
 
 		// transactions manager
 		jtxManager = createJtxTransactionManager(connectionProvider);
 		jtxManager.setValidateExistingTransaction(true);
 
-		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, jtxScopePattern);
-		annTxAdviceManager.registerAnnotations(JoddJtx.defaults().getTxAnnotations());
+		final AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(new LeanJtxWorker(jtxManager), jtxScopePattern);
 		AnnotationTxAdviceSupport.manager = annTxAdviceManager;
 
-		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
+		// create proxy
+		joyProxettaSupplier.get().addProxyAspect(createTxProxyAspects(annTxAdviceManager.getAnnotations()));
+
+
+		final DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		JoddDb.defaults().setConnectionProvider(connectionProvider);
-		JoddDb.defaults().setSessionProvider(sessionProvider);
-		petiteContainerSupplier.get().addBean(PETITE_DB, JoddDb.defaults());           // todo -> this is for the configuration!, make this for each bean
+		dbOom = DbOom.create()
+			.withConnectionProvider(connectionProvider)
+			.withSessionProvider(sessionProvider)
+			.withQueryMap(new DbPropsQueryMap())
+			.get();
 
-		final DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
+		final DbEntityManager dbEntityManager = dbOom.entityManager();
 		dbEntityManager.reset();
 
 		// automatic configuration
@@ -226,6 +234,16 @@ public class JoyDb extends JoyBase {
 			connectionProvider.closeConnection(connection);
 		}
 	}
+
+	protected ProxyAspect createTxProxyAspects(final Class<? extends Annotation>[] annotations) {
+		return new ProxyAspect(
+			AnnotationTxAdvice.class,
+			((ProxyPointcut)
+				methodInfo -> methodInfo.isPublicMethod() && methodInfo.isTopLevelMethod())
+				.and(MethodWithAnnotationPointcut.of(annotations))
+		);
+	}
+
 
 	@Override
 	void stop() {

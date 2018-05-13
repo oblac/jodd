@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
@@ -82,7 +83,7 @@ public class StandaloneJoddJoyRunner {
 		if (jtxManager == null) {
 			return null;
 		}
-		return jtxManager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
+		return jtxManager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, false));
 	}
 
 }

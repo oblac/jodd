@@ -32,7 +32,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
-import jodd.madvoc.proxetta.ProxettaProvider;
+import jodd.madvoc.proxetta.ProxettaSupplier;
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -99,7 +99,7 @@ public class JoyMadvoc extends JoyBase {
 		}
 		webApp.withParams(propsSupplier.get());
 
-		webApp.registerComponent(new ProxettaProvider(proxettaSupplier.get()));
+		webApp.registerComponent(new ProxettaSupplier(proxettaSupplier.get()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
 
 		webApp.registerComponent(AutomagicMadvocConfigurator.class, amc -> amc.withScanner(scannerSupplier.get()));

@@ -25,13 +25,9 @@
 
 package jodd.joy;
 
-import jodd.jtx.JoddJtx;
-import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +35,6 @@ import java.util.List;
 public class JoyProxetta extends JoyBase {
 
 	protected ProxyProxetta proxyProxetta;
-
-	public JoyProxetta() {
-		proxyAspects.add(createTxProxyAspects());
-	}
 
 	// ---------------------------------------------------------------- getters
 
@@ -57,6 +49,9 @@ public class JoyProxetta extends JoyBase {
 
 	private final List<ProxyAspect> proxyAspects = new ArrayList<>();
 
+	/**
+	 * Adds a proxy aspect.
+	 */
 	public void addProxyAspect(final ProxyAspect proxyAspect) {
 		this.proxyAspects.add(proxyAspect);
 	}
@@ -82,15 +77,6 @@ public class JoyProxetta extends JoyBase {
 		log.debug("Total proxy aspects: " + proxyAspectsArray.length);
 
 		proxyProxetta = Proxetta.proxyProxetta().withAspects(proxyAspectsArray);
-	}
-
-	protected ProxyAspect createTxProxyAspects() {
-		return new ProxyAspect(
-			AnnotationTxAdvice.class,
-			((ProxyPointcut)
-				methodInfo -> methodInfo.isPublicMethod() && methodInfo.isTopLevelMethod())
-				.and(MethodWithAnnotationPointcut.of(JoddJtx.defaults().getTxAnnotations()))
-		);
 	}
 
 	@Override
