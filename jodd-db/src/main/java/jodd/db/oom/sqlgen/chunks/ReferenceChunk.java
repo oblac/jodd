@@ -27,6 +27,7 @@ package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.util.StringPool;
 
@@ -43,19 +44,19 @@ public class ReferenceChunk extends SqlChunk {
 	protected final String columnRef;
 	protected final boolean onlyId;
 
-	public ReferenceChunk(final String tableRef, final String columnRef) {
-		this(tableRef, columnRef, false);
+	public ReferenceChunk(final DbEntityManager dbEntityManager, final String tableRef, final String columnRef) {
+		this(dbEntityManager, tableRef, columnRef, false);
 	}
 
-	public ReferenceChunk(final String tableRef, final String columnRef, final boolean onlyId) {
-		super(CHUNK_REFERENCE);
+	public ReferenceChunk(final DbEntityManager dbEntityManager, final String tableRef, final String columnRef, final boolean onlyId) {
+		super(dbEntityManager, CHUNK_REFERENCE);
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
 		this.onlyId = onlyId;
 	}
 
-	public ReferenceChunk(final String reference) {
-		super(CHUNK_REFERENCE);
+	public ReferenceChunk(final DbEntityManager dbEntityManager, final String reference) {
+		super(dbEntityManager, CHUNK_REFERENCE);
 
 		int dotNdx = reference.indexOf('.');
 

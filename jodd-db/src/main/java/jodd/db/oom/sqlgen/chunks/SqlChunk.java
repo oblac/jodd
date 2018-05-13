@@ -25,12 +25,13 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.CharUtil;
+import jodd.util.StringUtil;
 
 /**
  * SQL chunk defines part of the SQL query that can be processed.
@@ -44,7 +45,6 @@ public abstract class SqlChunk {
 	public static final int COLS_ALL_BUT_ID = 4;        // using all available columns except the identity column
 	public static final int COLS_NA_MULTI = 0;          // using explicit reference.
 
-	protected final int chunkType;                      // chunk type
 	public static final int CHUNK_RAW = -1;
 	public static final int CHUNK_SELECT_COLUMNS = 1;
 	public static final int CHUNK_TABLE = 2;
@@ -54,8 +54,11 @@ public abstract class SqlChunk {
 	public static final int CHUNK_INSERT = 5;
 	public static final int CHUNK_UPDATE = 6;
 
+	private final int chunkType;
+	private final DbEntityManager dbEntityManager;
 
-	protected SqlChunk(final int chunkType) {
+	protected SqlChunk(final DbEntityManager dbEntityManager, final int chunkType) {
+		this.dbEntityManager = dbEntityManager;
 		this.chunkType = chunkType;
 	}
 
@@ -155,7 +158,7 @@ public abstract class SqlChunk {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(final String entityName) {
-		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupName(entityName);
+		DbEntityDescriptor ded = dbEntityManager.lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -166,7 +169,7 @@ public abstract class SqlChunk {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(final Class entity) {
-		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupType(entity);
+		final DbEntityDescriptor ded = dbEntityManager.lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity: " + entity.getName());
 		}
@@ -235,6 +238,40 @@ public abstract class SqlChunk {
 		Class type = object.getClass();
 		return type == Class.class ? (Class) object : type;
 	}
+
+	/**
+	 * Returns <code>true</code> if a value is considered empty i.e. not existing.
+	 */
+	protected boolean isEmptyColumnValue(final DbEntityColumnDescriptor dec, final Object value) {
+		if (value == null) {
+			return true;
+		}
+
+		// special case for ID column
+		if (dec.isId() && value instanceof Number) {
+			if (((Number) value).intValue() == 0) {
+				return true;
+			}
+		}
+
+		// special case for primitives
+		if (dec.getPropertyType().isPrimitive()) {
+			int n = ((Number) value).intValue();
+			if (n == 0) {
+				return true;
+			}
+		}
+
+		// special case for strings
+		if (value instanceof CharSequence) {
+			if (StringUtil.isBlank((CharSequence) value)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	// ---------------------------------------------------------------- separation
 

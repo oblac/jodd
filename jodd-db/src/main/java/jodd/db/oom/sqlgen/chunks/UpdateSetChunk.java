@@ -26,10 +26,9 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.bean.BeanUtil;
-import jodd.db.JoddDb;
+import jodd.db.DbOom;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOomUtil;
 import jodd.util.StringUtil;
 
 /**
@@ -43,12 +42,14 @@ public class UpdateSetChunk extends SqlChunk {
 	protected final Object data;
 	protected final String tableRef;
 	protected final int includeColumns;
+	protected final boolean isUpdateablePrimaryKey;
 
-	public UpdateSetChunk(final String tableRef, final Object data, final int includeColumns) {
-		super(CHUNK_UPDATE);
+	public UpdateSetChunk(final DbOom dbOom, final String tableRef, final Object data, final int includeColumns) {
+		super(dbOom.entityManager(), CHUNK_UPDATE);
 		this.tableRef = tableRef;
 		this.data = data;
 		this.includeColumns = includeColumns;
+		this.isUpdateablePrimaryKey = dbOom.config().isUpdateablePrimaryKey();
 	}
 
 	@Override
@@ -69,8 +70,6 @@ public class UpdateSetChunk extends SqlChunk {
 
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
-			final boolean isUpdateablePrimaryKey = JoddDb.defaults().getSqlGenConfig().isUpdateablePrimaryKey();
-
 			if (dec.isId() && !isUpdateablePrimaryKey) {
 				continue;
 			}
@@ -79,7 +78,7 @@ public class UpdateSetChunk extends SqlChunk {
 			Object value = BeanUtil.declared.getProperty(data, property);
 
 			if (includeColumns == COLS_ONLY_EXISTING) {
-				if (DbOomUtil.isEmptyColumnValue(dec, value)) {
+				if (isEmptyColumnValue(dec, value)) {
 					continue;
 				}
 			}

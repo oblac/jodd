@@ -25,6 +25,7 @@
 
 package jodd.db.oom.sqlgen;
 
+import jodd.db.DbOom;
 import jodd.db.DbSession;
 import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.ColumnData;
@@ -63,24 +64,39 @@ import java.util.Map;
  */
 public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
+	private final DbOom dbOom;
+
 	/**
 	 * Creates new SQL builder.
 	 */
 	public DbSqlBuilder() {
-		super();
+		this(DbOom.get());
 	}
 
 	public DbSqlBuilder(final String template) {
-		super();
+		this(DbOom.get(), template);
+	}
+
+	public DbSqlBuilder(final DbOom dbOom) {
+		super(dbOom);
+		this.dbOom = dbOom;
+	}
+
+	public DbSqlBuilder(final DbOom dbOom, final String template) {
+		super(dbOom);
+		this.dbOom = dbOom;
 		append(template);
 	}
 
+	/**
+	 * Template static constructor.
+	 */
 	public static DbSqlBuilder sql() {
 		return new DbSqlBuilder();
 	}
 
 	/**
-	 * Template constructor.
+	 * Template static constructor.
 	 */
 	public static DbSqlBuilder sql(final String template) {
 		return new DbSqlBuilder().append(template);
@@ -169,7 +185,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	 * Simply adds text without parsing to the query.
 	 */
 	public DbSqlBuilder appendRaw(final String text) {
-		addChunk(new RawSqlChunk(text));
+		addChunk(new RawSqlChunk(entityManager, text));
 		return this;
 	}
 
@@ -254,56 +270,56 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	// ---------------------------------------------------------------- table
 
 	public DbSqlBuilder table(final String entityName) {
-		return addChunk(new TableChunk(entityName));
+		return addChunk(new TableChunk(entityManager, entityName));
 	}
 
 	public DbSqlBuilder table(final String entityName, final String alias) {
-		return addChunk(new TableChunk(entityName, alias));
+		return addChunk(new TableChunk(entityManager, entityName, alias));
 	}
 
 	public DbSqlBuilder table(final Object entity, final String alias) {
-		return addChunk(new TableChunk(entity, alias));
+		return addChunk(new TableChunk(entityManager, entity, alias));
 	}
 
 	public DbSqlBuilder table(final Object entity, final String alias, final String tableReference) {
-		return addChunk(new TableChunk(entity, alias, tableReference));
+		return addChunk(new TableChunk(entityManager, entity, alias, tableReference));
 	}
 
 	public DbSqlBuilder table(final Object entity) {
-		return addChunk(new TableChunk(entity));
+		return addChunk(new TableChunk(entityManager, entity));
 	}
 
 	// ---------------------------------------------------------------- columns
 
 	public DbSqlBuilder column(final String reference) {
-		return addChunk(new ColumnsSelectChunk(reference));
+		return addChunk(new ColumnsSelectChunk(entityManager, dbOom.config().getColumnAliasSeparator(), reference));
 	}
 
 	public DbSqlBuilder column(final String tableRef, final String columnRef) {
-		return addChunk(new ColumnsSelectChunk(tableRef, columnRef));
+		return addChunk(new ColumnsSelectChunk(entityManager, dbOom.config().getColumnAliasSeparator(), tableRef, columnRef));
 	}
 
 	public DbSqlBuilder columnsAll(final String tableRef) {
-		return addChunk(new ColumnsSelectChunk(tableRef, true));
+		return addChunk(new ColumnsSelectChunk(entityManager, dbOom.config().getColumnAliasSeparator(), tableRef, true));
 	}
 
 	public DbSqlBuilder columnsIds(final String tableRef) {
-		return addChunk(new ColumnsSelectChunk(tableRef, false));
+		return addChunk(new ColumnsSelectChunk(entityManager, dbOom.config().getColumnAliasSeparator(), tableRef, false));
 	}
 
 
 	// ---------------------------------------------------------------- reference
 
 	public DbSqlBuilder ref(final String columnRef) {
-		return addChunk(new ReferenceChunk(columnRef));
+		return addChunk(new ReferenceChunk(entityManager, columnRef));
 	}
 
 	public DbSqlBuilder ref(final String tableRef, final String columnRef) {
-		return addChunk(new ReferenceChunk(tableRef, columnRef, false));
+		return addChunk(new ReferenceChunk(entityManager, tableRef, columnRef, false));
 	}
 
 	public DbSqlBuilder refId(final String tableRef) {
-		return addChunk(new ReferenceChunk(tableRef, null, true));
+		return addChunk(new ReferenceChunk(entityManager, tableRef, null, true));
 	}
 
 
@@ -313,102 +329,101 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	 * Creates condition part of the query only for existing columns.
 	 */
 	public DbSqlBuilder match(final String tableRef, final Object value) {
-		return addChunk(new MatchChunk(tableRef, value, SqlChunk.COLS_ONLY_EXISTING));
+		return addChunk(new MatchChunk(entityManager, tableRef, value, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
 	public DbSqlBuilder match(final String tableRef, final String objectRef) {
-		return addChunk(new MatchChunk(tableRef, objectRef, SqlChunk.COLS_ONLY_EXISTING));
+		return addChunk(new MatchChunk(entityManager, tableRef, objectRef, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
 	/**
 	 * Creates condition part of the query for id columns
 	 */
 	public DbSqlBuilder matchIds(final String tableRef, final Object value) {
-		return addChunk(new MatchChunk(tableRef, value, SqlChunk.COLS_ONLY_IDS));
+		return addChunk(new MatchChunk(entityManager, tableRef, value, SqlChunk.COLS_ONLY_IDS));
 	}
 
 	public DbSqlBuilder matchIds(final String tableRef, final String objectRef) {
-		return addChunk(new MatchChunk(tableRef, objectRef, SqlChunk.COLS_ONLY_IDS));
+		return addChunk(new MatchChunk(entityManager, tableRef, objectRef, SqlChunk.COLS_ONLY_IDS));
 	}
 
 	/**
 	 * Creates condition part of the query for all columns, including the null values.
 	 */
 	public DbSqlBuilder matchAll(final String tableRef, final Object value) {
-		return addChunk(new MatchChunk(tableRef, value, SqlChunk.COLS_ALL));
+		return addChunk(new MatchChunk(entityManager, tableRef, value, SqlChunk.COLS_ALL));
 	}
 
 	public DbSqlBuilder matchAll(final String tableRef, final String objectRef) {
-		return addChunk(new MatchChunk(tableRef, objectRef, SqlChunk.COLS_ALL));
+		return addChunk(new MatchChunk(entityManager, tableRef, objectRef, SqlChunk.COLS_ALL));
 	}
 
 	public DbSqlBuilder match(final String expression) {
-		return addChunk(new MatchChunk(expression));
+		return addChunk(new MatchChunk(entityManager, expression));
 	}
 
 
 	// ---------------------------------------------------------------- values
 
 	public DbSqlBuilder value(final String name, final Object value) {
-		return addChunk(new ValueChunk(name, value));
+		return addChunk(new ValueChunk(entityManager, name, value));
 	}
 
 	public DbSqlBuilder value(final Object value) {
-		return addChunk(new ValueChunk(null, value));
+		return addChunk(new ValueChunk(entityManager, null, value));
 	}
 
 	public DbSqlBuilder valueRef(final String objectReference) {
-		return addChunk(new ValueChunk(objectReference));
+		return addChunk(new ValueChunk(entityManager, objectReference));
 	}
 
 	public DbSqlBuilder columnValue(final String name, final Object value) {
-		return addChunk(new ColumnValueChunk(name, value));
+		return addChunk(new ColumnValueChunk(entityManager, name, value));
 	}
 
 	public DbSqlBuilder columnValue(final Object value) {
-		return addChunk(new ColumnValueChunk(null, value));
+		return addChunk(new ColumnValueChunk(entityManager, null, value));
 	}
 
 	public DbSqlBuilder columnValueRef(final String objectReference) {
-		return addChunk(new ColumnValueChunk(objectReference));
+		return addChunk(new ColumnValueChunk(entityManager, objectReference));
 	}
 
 	// ---------------------------------------------------------------- insert
 
 	public DbSqlBuilder insert(final String entityName, final Object values) {
-		return addChunk(new InsertChunk(entityName, values));
+		return addChunk(new InsertChunk(entityManager, dbOom.config().isUpdateablePrimaryKey(), entityName, values));
 	}
 
 	public DbSqlBuilder insert(final Class entity, final Object values) {
-		return addChunk(new InsertChunk(entity, values));
+		return addChunk(new InsertChunk(entityManager, dbOom.config().isUpdateablePrimaryKey(), entity, values));
 	}
 
 	public DbSqlBuilder insert(final Object values) {
-		return addChunk(new InsertChunk(values.getClass(), values));
+		return addChunk(new InsertChunk(entityManager, dbOom.config().isUpdateablePrimaryKey(), values.getClass(), values));
 	}
 
 	// ---------------------------------------------------------------- update set
 
 	public DbSqlBuilder set(final String tableRef, final Object values) {
-		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ONLY_EXISTING));
+		return addChunk(new UpdateSetChunk(dbOom, tableRef, values, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
 	public DbSqlBuilder setAll(final String tableRef, final Object values) {
-		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ALL));
+		return addChunk(new UpdateSetChunk(dbOom, tableRef, values, SqlChunk.COLS_ALL));
 	}
 
 	// ---------------------------------------------------------------- query factories
 
 	/**
 	 * Returns {@link jodd.db.oom.DbOomQuery} instance for more fluent interface.
-	 *
 	 */
 	public DbOomQuery query() {
-		return new DbOomQuery(this);
+		return new DbOomQuery(dbOom, this);
 	}
 
 	public DbOomQuery query(final DbSession session) {
-		return new DbOomQuery(session, this);
+		return new DbOomQuery(dbOom, session, this);
 	}
 
 }

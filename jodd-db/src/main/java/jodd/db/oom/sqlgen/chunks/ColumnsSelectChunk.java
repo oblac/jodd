@@ -25,10 +25,10 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.JoddDb;
 import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.ArraysUtil;
@@ -77,9 +77,18 @@ public class ColumnsSelectChunk extends SqlChunk {
 	protected final String[] columnRefArr;
 	protected final int includeColumns;
 	protected final String hint;
+	protected final String columnAliasSeparator;
 
-	protected ColumnsSelectChunk(final String tableRef, final String columnRef, final String[] columnRefArr, final int includeColumns, final String hint) {
-		super(CHUNK_SELECT_COLUMNS);
+	private ColumnsSelectChunk(
+			final DbEntityManager dbEntityManager,
+			final String columnAliasSeparator,
+			final String tableRef,
+			final String columnRef,
+			final String[] columnRefArr,
+			final int includeColumns,
+			final String hint) {
+		super(dbEntityManager, CHUNK_SELECT_COLUMNS);
+		this.columnAliasSeparator = columnAliasSeparator;
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
 		this.columnRefArr = columnRefArr;
@@ -87,20 +96,20 @@ public class ColumnsSelectChunk extends SqlChunk {
 		this.hint = hint;
 	}
 
-	public ColumnsSelectChunk(final String tableRef, final String columnRef) {
-		this(tableRef, columnRef, null, COLS_NA, null);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, final String tableRef, final String columnRef) {
+		this(dbEntityManager, columnAliasSeparator, tableRef, columnRef, null, COLS_NA, null);
 	}
 	
-	public ColumnsSelectChunk(final String tableRef, final String... columnRefArr) {
-		this(tableRef, null, columnRefArr, COLS_NA_MULTI, null);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, final String tableRef, final String... columnRefArr) {
+		this(dbEntityManager, columnAliasSeparator, tableRef, null, columnRefArr, COLS_NA_MULTI, null);
 	}
 
-	public ColumnsSelectChunk(final String tableRef, final boolean includeAll) {
-		this(tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, final String tableRef, final boolean includeAll) {
+		this(dbEntityManager, columnAliasSeparator, tableRef, null, null, includeAll ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
-	public ColumnsSelectChunk(String reference) {
-		super(CHUNK_SELECT_COLUMNS);
+	public ColumnsSelectChunk(final DbEntityManager dbEntityManager, final String columnAliasSeparator, String reference) {
+		super(dbEntityManager, CHUNK_SELECT_COLUMNS);
 		reference = reference.trim();
 		int dotNdx = reference.lastIndexOf('.');
 		if (dotNdx == -1) {
@@ -160,6 +169,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.includeColumns = COLS_NA;
 			}
 		}
+		this.columnAliasSeparator = columnAliasSeparator;
 	}
 
 	// ---------------------------------------------------------------- process
@@ -249,8 +259,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 	protected void appendAlias(final StringBuilder query, final DbEntityDescriptor ded, final String column) {
 		String tableName = ded.getTableName();
 
-		ColumnAliasType columnAliasType = templateData.getColumnAliasType();
-		String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+		final ColumnAliasType columnAliasType = templateData.getColumnAliasType();
 
 		if (columnAliasType == null || columnAliasType == ColumnAliasType.TABLE_REFERENCE) {
 			templateData.registerColumnDataForTableRef(tableRef, tableName);
@@ -272,10 +281,9 @@ public class ColumnsSelectChunk extends SqlChunk {
 		query.append(resolveTable(tableRef, ded)).append('.').append(column);
 		
 		if (templateData.getColumnAliasType() != null) {     // create column aliases
-			String tableName = ded.getTableName();
-			query.append(AS);
+			final String tableName = ded.getTableName();
 
-			final String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
+			query.append(AS);
 
 			switch (templateData.getColumnAliasType()) {
 				case TABLE_NAME:
@@ -286,7 +294,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 					query.append(tableRef).append(columnAliasSeparator).append(column);
 					break;
 				case COLUMN_CODE:
-					String code = templateData.registerColumnDataForColumnCode(tableName, column);
+					final String code = templateData.registerColumnDataForColumnCode(tableName, column);
 					query.append(code);
 					break;
 			}

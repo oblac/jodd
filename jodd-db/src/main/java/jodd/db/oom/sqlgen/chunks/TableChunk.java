@@ -26,6 +26,7 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.sqlgen.TemplateData;
 
 /**
@@ -43,44 +44,44 @@ public class TableChunk extends SqlChunk {
 	protected final String tableAlias;
 	protected final String tableReference;
 
-	public TableChunk(final Object entity) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, final Object entity) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = this.entity.getSimpleName();
 		this.tableReference = null;
 	}
 
-	public TableChunk(final Object entity, final String alias) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, final Object entity, final String alias) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = alias;
 		this.tableReference = null;
 	}
 
-	public TableChunk(final Object entity, final String alias, final String tableReference) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, final Object entity, final String alias, final String tableReference) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = alias;
 		this.tableReference = tableReference;
 	}
 
-	public TableChunk(final String entityName, final String alias) {
-		this(null, entityName, alias, null);
+	public TableChunk(final DbEntityManager dbEntityManager, final String entityName, final String alias) {
+		this(dbEntityManager, null, entityName, alias, null);
 	}
 
-	protected TableChunk(final Class entity, final String entityName, final String tableAlias, final String tableReference) {
-		super(CHUNK_TABLE);
+	private TableChunk(final DbEntityManager dbEntityManager, final Class entity, final String entityName, final String tableAlias, final String tableReference) {
+		super(dbEntityManager, CHUNK_TABLE);
 		this.entity = entity;
 		this.entityName = entityName;
 		this.tableAlias = tableAlias;
 		this.tableReference = tableReference;
 	}
 
-	public TableChunk(String tableRef) {
-		super(CHUNK_TABLE);
+	public TableChunk(final DbEntityManager dbEntityManager, String tableRef) {
+		super(dbEntityManager, CHUNK_TABLE);
 		tableRef = tableRef.trim();
 		int spaceNdx = tableRef.indexOf(' ');
 		this.entity = null;

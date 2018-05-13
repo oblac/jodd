@@ -25,6 +25,8 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
+import jodd.db.oom.DbEntityManager;
+
 /**
  * Simply holds hard-coded SQL string that will be appended to the result.
  */
@@ -32,8 +34,8 @@ public class RawSqlChunk extends SqlChunk {
 
 	protected final String sql;
 
-	public RawSqlChunk(final String sql) {
-		super(CHUNK_RAW);
+	public RawSqlChunk(final DbEntityManager dbEntityManager, final String sql) {
+		super(dbEntityManager, CHUNK_RAW);
 		this.sql = sql;
 	}
 

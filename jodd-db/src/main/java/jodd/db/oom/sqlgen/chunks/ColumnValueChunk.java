@@ -26,22 +26,23 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityManager;
 
 /**
  * {@link ValueChunk Value} for the <b>last</b> column.
  */
 public class ColumnValueChunk extends ValueChunk {
 
-	public ColumnValueChunk(final String name, final Object value) {
-		this(name, value, null);
+	public ColumnValueChunk(final DbEntityManager dbEntityManager, final String name, final Object value) {
+		this(dbEntityManager, name, value, null);
 	}
 
-	public ColumnValueChunk(final String objReference) {
-		this(null, null, objReference);
+	public ColumnValueChunk(final DbEntityManager dbEntityManager, final String objReference) {
+		this(dbEntityManager, null, null, objReference);
 	}
 
-	protected ColumnValueChunk(final String name, final Object value, final String objReference) {
-		super(name, value, objReference);
+	private ColumnValueChunk(final DbEntityManager dbEntityManager, final String name, final Object value, final String objReference) {
+		super(dbEntityManager, name, value, objReference);
 	}
 
 	// ---------------------------------------------------------------- define

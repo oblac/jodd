@@ -25,11 +25,12 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.JoddDb;
+import jodd.db.DbOom;
 import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.NamedValuesHashMap;
 
 import java.util.ArrayList;
@@ -44,9 +45,12 @@ import java.util.Map;
 public abstract class TemplateData {
 
 	private static final String COL_CODE_PREFIX = "col_";
-	
-	protected TemplateData() {
-		columnAliasType = JoddDb.defaults().getDbOomConfig().getDefaultColumnAliasType();
+	protected final DbEntityManager entityManager;
+	protected final ColumnAliasType defaultColumnAliasType;
+
+	protected TemplateData(final DbOom dbOom) {
+		this.entityManager = dbOom.entityManager();
+		this.columnAliasType = defaultColumnAliasType = dbOom.config().getDefaultColumnAliasType();
 	}
 
 	/**
@@ -71,13 +75,13 @@ public abstract class TemplateData {
 		if (hints != null) {
 			hints.clear();
 		}
-		//columnAliasType = dbEntityManager.getDefaultColumnAliasType();
+		//columnAliasType = defaultColumnAliasType;
 	}
 
 	protected void resetHard() {
 		resetSoft();
 		objectRefs = null;
-		columnAliasType = JoddDb.defaults().getDbOomConfig().getDefaultColumnAliasType();
+		columnAliasType = defaultColumnAliasType;
 	}
 
 
@@ -253,7 +257,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(final String entityName) {
-		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupName(entityName);
+		DbEntityDescriptor ded = entityManager.lookupName(entityName);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
@@ -264,7 +268,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(final Class entity) {
-		DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupType(entity);
+		DbEntityDescriptor ded = entityManager.lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
 		}

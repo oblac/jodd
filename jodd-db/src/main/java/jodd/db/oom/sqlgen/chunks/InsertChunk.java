@@ -26,9 +26,9 @@
 package jodd.db.oom.sqlgen.chunks;
 
 import jodd.bean.BeanUtil;
-import jodd.db.JoddDb;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityManager;
 import jodd.util.StringUtil;
 
 /**
@@ -40,17 +40,32 @@ public class InsertChunk extends SqlChunk {
 	protected final String entityName;
 	protected final Class entityType;
 	protected final Object data;
+	protected final boolean defaultIsUpdateablePrimaryKey;
 
-	public InsertChunk(final String entityName, final Object data) {
-		this(entityName, null, data);
+	public InsertChunk(
+			final DbEntityManager dbEntityManager,
+			final boolean isUpdateablePrimaryKey,
+			final String entityName,
+			final Object data) {
+		this(dbEntityManager, isUpdateablePrimaryKey, entityName, null, data);
 	}
 
-	public InsertChunk(final Class entityType, final Object data) {
-		this(null, entityType, data);
+	public InsertChunk(
+			final DbEntityManager dbEntityManager,
+			final boolean isUpdateablePrimaryKey,
+			final Class entityType,
+			final Object data) {
+		this(dbEntityManager, isUpdateablePrimaryKey, null, entityType, data);
 	}
 
-	protected InsertChunk(final String entityName, final Class entityType, final Object data) {
-		super(CHUNK_INSERT);
+	private InsertChunk(
+			final DbEntityManager dbEntityManager,
+			final boolean isUpdateablePrimaryKey,
+			final String entityName,
+			final Class entityType,
+			final Object data) {
+		super(dbEntityManager, CHUNK_INSERT);
+		this.defaultIsUpdateablePrimaryKey = isUpdateablePrimaryKey;
 		this.entityName = entityName;
 		this.entityType = entityType;
 		this.data = data;
@@ -67,8 +82,6 @@ public class InsertChunk extends SqlChunk {
 
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
-			final boolean defaultIsUpdateablePrimaryKey = JoddDb.defaults().getSqlGenConfig().isUpdateablePrimaryKey();
-
 			 if (dec.isId() && !defaultIsUpdateablePrimaryKey) {
 			 	continue;
 			 }
