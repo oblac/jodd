@@ -25,10 +25,8 @@
 
 package jodd.db;
 
-import jodd.db.connection.ConnectionProvider;
 import jodd.db.fixtures.DbHsqldbTestCase;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import jodd.db.pool.CoreConnectionPool;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,27 +37,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbSessionProviderTest extends DbHsqldbTestCase {
 
-	DbSessionProvider sessionProvider;
-	ConnectionProvider connectionProvider;
-
-	@BeforeEach
-	void setup() {
-		sessionProvider = JoddDb.defaults().getSessionProvider();
-		connectionProvider = JoddDb.defaults().getConnectionProvider();
-	}
-
-	@Override
-	@AfterEach
-	protected void tearDown() {
-		JoddDb.defaults().setSessionProvider(sessionProvider);
-		JoddDb.defaults().setConnectionProvider(connectionProvider);
-	}
-
 	@Test
 	void testThreadSessionProvider() {
 		// set connection provider and thread session manager
-		JoddDb.defaults().setConnectionProvider(cp);
-		JoddDb.defaults().setSessionProvider(new ThreadDbSessionProvider());
+
+		DbOom.get().shutdown();     // kill default DbOom used in tests
+
+		cp = new CoreConnectionPool();  // create new CP.
+		super.setupPool(cp);
+
+		DbOom dbOom = DbOom.create()
+			.withConnectionProvider(cp)
+			.withSessionProvider(new ThreadDbSessionProvider())
+			.get()
+			.connect();
 
 		for (int i = 0; i < 2; i++) {
 			// create thread session

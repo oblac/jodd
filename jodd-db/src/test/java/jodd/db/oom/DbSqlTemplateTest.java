@@ -25,14 +25,14 @@
 
 package jodd.db.oom;
 
-import jodd.db.DbTestUtil;
-import jodd.db.JoddDb;
+import jodd.db.DbOom;
 import jodd.db.oom.fixtures.BadBoy;
 import jodd.db.oom.fixtures.BadGirl;
 import jodd.db.oom.fixtures.Boy;
 import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.sqlgen.ParameterValue;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,25 +44,22 @@ import static jodd.db.oom.ColumnAliasType.TABLE_REFERENCE;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbSqlTemplateTest {
 
 	@BeforeEach
-	void setUp() throws Exception {
-
-		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
+	void setUp() {
+		DbOom.create().get();
+		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
 		dbEntityManager.registerType(Boy.class);
 		dbEntityManager.registerType(BadBoy.class);
 		dbEntityManager.registerType(BadGirl.class);
 		dbEntityManager.registerType(Girl.class);
 	}
 
-	protected void assertContains(String string, String... chunks) {
-		for (String chunk : chunks) {
-			assertTrue(string.contains(chunk));
-		}
+	@AfterEach
+	void tearDown() {
+		DbOom.get().shutdown();
 	}
 
 	@Test

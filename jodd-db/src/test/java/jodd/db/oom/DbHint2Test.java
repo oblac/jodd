@@ -25,14 +25,13 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbOom;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Boy4;
 import jodd.db.oom.fixtures.Girl4;
 import jodd.db.oom.fixtures.Room;
-import jodd.db.oom.sqlgen.DbEntitySql;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,11 +101,11 @@ class DbHint2Test extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbEntityManager dbOom = JoddDb.defaults().getDbEntityManager();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		dbOom.registerEntity(Boy4.class);
-		dbOom.registerEntity(Girl4.class);
-		dbOom.registerEntity(Room.class);
+		dbEntityManager.registerEntity(Boy4.class);
+		dbEntityManager.registerEntity(Girl4.class);
+		dbEntityManager.registerEntity(Room.class);
 	}
 
 	@Test
@@ -115,21 +114,21 @@ class DbHint2Test extends DbHsqldbTestCase {
 
 		// prepare data
 
-		assertEquals(1, DbEntitySql.insert(new Room(1, "Room1")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Room(2, "Room2")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Room(1, "Room1")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Room(2, "Room2")).query().executeUpdate());
 
-		assertEquals(1, DbEntitySql.insert(new Boy4(1, 1, "Oleg")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Boy4(2, 2, "Stephene")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Boy4(3, 2, "Joe")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Boy4(1, 1, "Oleg")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Boy4(2, 2, "Stephene")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Boy4(3, 2, "Joe")).query().executeUpdate());
 
-		assertEquals(1, DbEntitySql.insert(new Girl4(1, 1, "Anna")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl4(2, 2, "Sandra")).query().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl4(3, 3, "Jossy")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Girl4(1, 1, "Anna")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Girl4(2, 2, "Sandra")).query().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Girl4(3, 3, "Jossy")).query().executeUpdate());
 
 
 		// select
 
-		DbOomQuery dbOomQuery = new DbOomQuery(sql(
+		DbOomQuery dbOomQuery = DbOomQuery.query(sql(
 			"select $C{room.*}, $C{boy.*}, $C{girl.*} " +
 				"from $T{Room room} join $T{Boy4 boy} on $room.id=$boy.roomId " +
 				"join $T{Girl4 girl} on $boy.id=$girl.boyId " +
@@ -147,7 +146,7 @@ class DbHint2Test extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- hints
 
-		dbOomQuery = new DbOomQuery(sql(
+		dbOomQuery = DbOomQuery.query(sql(
 			"select $C{room.*}, $C{room.boys:boy.*}, $C{room.boys.girl:girl.*} " +
 				"from $T{Room room} join $T{Boy4 boy} on $room.id=$boy.roomId " +
 				"join $T{Girl4 girl} on $boy.id=$girl.boyId " +

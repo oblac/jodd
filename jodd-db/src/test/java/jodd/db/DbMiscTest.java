@@ -26,6 +26,7 @@
 package jodd.db;
 
 import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.DbOomQuery;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
@@ -33,7 +34,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbMiscTest extends DbHsqldbTestCase {
 
@@ -41,7 +45,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 	void testBig() throws Exception {
 		DbSession session = new DbSession(cp);
 
-		DbQuery query = new DbQuery(session, "girlCount");
+		DbQuery query = DbOomQuery.query(session, "girlCount");
 		assertEquals(0, query.executeCount());
 		assertEquals(1, executeUpdate(session, "insert into GIRL values(1, 'Anna', 'swim')"));
 		assertEquals(1, query.executeCount());
@@ -92,7 +96,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 		DbSession session1 = new DbSession(cp);
 		DbSession session2 = new DbSession(cp);
 
-		session1.beginTransaction(new DbTransactionMode().setReadOnly(false));
+		session1.beginTransaction(DbTransactionMode.READ_WRITE_TX);
 		query = new DbQuery(session1, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
 		assertEquals(1, query.executeUpdate());
 		query.close();

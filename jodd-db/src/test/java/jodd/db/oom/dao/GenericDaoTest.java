@@ -25,9 +25,8 @@
 
 package jodd.db.oom.dao;
 
+import jodd.db.DbOom;
 import jodd.db.DbSession;
-import jodd.db.DbTestUtil;
-import jodd.db.JoddDb;
 import jodd.db.ThreadDbSessionHolder;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.DbEntityManager;
@@ -47,12 +46,10 @@ class GenericDaoTest extends DbHsqldbTestCase {
 	@BeforeEach
 	protected void setUp() throws Exception {
 		super.setUp();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		DbTestUtil.resetAll();
-		DbEntityManager dbOom = JoddDb.defaults().getDbEntityManager();
-
-		dbOom.registerEntity(Girl.class);
-		dbOom.registerEntity(Boy.class);
+		dbEntityManager.registerEntity(Girl.class);
+		dbEntityManager.registerEntity(Boy.class);
 	}
 
 	@Test
@@ -60,7 +57,7 @@ class GenericDaoTest extends DbHsqldbTestCase {
 		DbSession session = new DbSession(cp);
 		ThreadDbSessionHolder.set(session);
 
-		GenericDao dao = new GenericDao();
+		GenericDao dao = dbOom.dao();
 
 		// save
 

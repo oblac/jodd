@@ -29,7 +29,6 @@ import jodd.db.oom.fixtures.Status33;
 import jodd.db.oom.fixtures.Status33SqlType;
 import jodd.db.oom.fixtures.Tester3;
 import jodd.db.oom.fixtures.Tester33;
-import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.type.SqlTypeManager;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +37,7 @@ class Kotlin399Test extends DbBaseTest {
 	class PostgreSql extends PostgreSqlDbAccess {
 
 		@Override
-		public String getCreateTableSql() {
+		public String createTableSql() {
 			return "create table TESTER (" +
 				"ID			SERIAL," +
 				"NAME		varchar(20)	NOT NULL," +
@@ -59,9 +58,7 @@ class Kotlin399Test extends DbBaseTest {
 		DbAccess db = new PostgreSql();
 
 		System.out.println("\t" + db.getClass().getSimpleName());
-		init();
-		db.initDb();
-		connect();
+		init(db);
 
 		db.createTables();
 		SqlTypeManager.register(Tester3.Status.class, StatusSqlType.class);
@@ -75,13 +72,13 @@ class Kotlin399Test extends DbBaseTest {
 	}
 
 	private void workoutJavaEntity() {
-		DbSession session = new DbSession();
+		DbSession session = new DbSession(connectionPool);
 
 		Tester3 tester = new Tester3();
 		tester.setName(Tester3.Status.SELECTED);
 		tester.setValue(7);
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, DbEntitySql.insert(tester));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().insert(tester));
 		dbOomQuery.setGeneratedKey();
 		dbOomQuery.executeUpdate();
 
@@ -90,11 +87,11 @@ class Kotlin399Test extends DbBaseTest {
 
 	private void workoutKotlinEntity() {
 		SqlTypeManager.register(Status33.class, Status33SqlType.class);
-		DbSession session = new DbSession();
+		DbSession session = new DbSession(connectionPool);
 
 		Tester33 tester = new Tester33(9, Status33.SELECTED, 3);
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, DbEntitySql.insert(tester));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().insert(tester));
 		dbOomQuery.setGeneratedKey();
 		dbOomQuery.executeUpdate();
 

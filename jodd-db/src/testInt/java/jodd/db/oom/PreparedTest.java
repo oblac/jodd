@@ -34,7 +34,7 @@ class PreparedTest extends DbBaseTest {
 
 	class PostgreSql extends PostgreSqlDbAccess {
 		@Override
-		public String getCreateTableSql() {
+		public String createTableSql() {
 			return "create table TESTER (" +
 				"ID			SERIAL," +
 				"NAME		varchar(20)	NOT NULL," +
@@ -52,9 +52,7 @@ class PreparedTest extends DbBaseTest {
 	@Test
 	void testPreparedStatementDebugFalse() {
 		DbBaseTest.DbAccess db = new PreparedTest.PostgreSql();
-		init();
-		db.initDb();
-		connect();
+		init(db);
 
 		db.createTables();
 		try {
@@ -67,9 +65,7 @@ class PreparedTest extends DbBaseTest {
 	@Test
 	void testPrepredStatementDebugTrue() {
 		DbBaseTest.DbAccess db = new PreparedTest.PostgreSql();
-		init();
-		db.initDb();
-		connect();
+		init(db);
 
 		db.createTables();
 		try {
@@ -80,7 +76,7 @@ class PreparedTest extends DbBaseTest {
 	}
 
 	private void test(final boolean debug) {
-		DbSession session = new DbSession();
+		DbSession session = new DbSession(connectionPool);
 
 		DbQuery dbQuery = new DbQuery(session, "select * from TESTER where id=:id and name=:name");
 		dbQuery.setDebug(debug);

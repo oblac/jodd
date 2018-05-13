@@ -24,10 +24,10 @@
 // POSSIBILITY OF SUCH DAMAGE.
 package jodd.db.fixtures;
 
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.JoddDb;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
@@ -42,18 +42,17 @@ import org.junit.jupiter.api.BeforeEach;
  */
 public abstract class DbTestBase {
 
+	protected DbOom dbOom;
 	protected DbJtxTransactionManager dbtxm;
 	protected static CoreConnectionPool cp;
 
 	@BeforeEach
 	protected void setUp() throws Exception {
-		DbPropsQueryMap queryMap = new DbPropsQueryMap();
+		final DbPropsQueryMap queryMap = new DbPropsQueryMap();
 
 		if (SystemUtil.javaVersionNumber() == 9) {
 			queryMap.props().load(this.getClass().getClassLoader().getResourceAsStream("queries.sql.props"));
 		}
-
-		JoddDb.defaults().setQueryMap(queryMap);
 
 		LoggerFactory.setLoggerProvider(new TestLoggerProvider());
 		if (dbtxm != null) {
@@ -69,8 +68,14 @@ public abstract class DbTestBase {
 
 		dbtxm = new DbJtxTransactionManager(cp);
 
+		dbOom = DbOom
+			.create()
+			.withConnectionProvider(cp)
+			.withQueryMap(queryMap)
+			.connect();
+
 		// initial data
-		DbSession session = new DbSession(cp);
+		final DbSession session = new DbSession(cp);
 		initDb(session);
 		session.closeSession();
 	}
@@ -79,10 +84,11 @@ public abstract class DbTestBase {
 	protected void tearDown() throws Exception {
 		dbtxm.close();
 		dbtxm = null;
+		DbOom.get().shutdown();
 	}
 
 	@AfterAll
-	static void tearDownAfterClass()  throws Exception {
+	static void tearDownAfterClass() {
 		cp.close();
 		cp = null;
 	}
@@ -96,7 +102,7 @@ public abstract class DbTestBase {
 	 * Initializes database before every test.
 	 * It <b>MUST</b> cleanup any existing data or tables first!
 	 */
-	protected void initDb(DbSession dbSession) {
+	protected void initDb(final DbSession dbSession) {
 	}
 
 	// ---------------------------------------------------------------- helpers

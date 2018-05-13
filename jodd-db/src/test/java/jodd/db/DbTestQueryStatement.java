@@ -26,6 +26,7 @@
 package jodd.db;
 
 import jodd.db.fixtures.DbHsqldbTestCase;
+import jodd.db.oom.DbOomQuery;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Types;
@@ -40,7 +41,7 @@ public class DbTestQueryStatement extends DbHsqldbTestCase {
 	public void testParams() {
 		DbSession session = new DbSession(cp);
 
-		DbQuery query = new DbQuery(session, "!girlCount");
+		DbQuery query = DbOomQuery.query(session, "!girlCount");
 		assertEquals(0, query.executeCount());
 		assertEquals(1, executeUpdate(session, "insert into GIRL values(1, 'Anna', 'swim')"));
 		assertEquals(1, query.executeCount());

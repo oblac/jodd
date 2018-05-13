@@ -27,6 +27,7 @@ package jodd.db.jtx;
 
 import jodd.db.DbTransactionMode;
 import jodd.jtx.JtxIsolationLevel;
+import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransactionMode;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,13 +62,13 @@ class JtxDbUtilTest {
 		{
 			final boolean readonly = RandomUtils.nextBoolean();
 
-			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
-			jtxTransactionMode.setIsolationLevel(JtxIsolationLevel.ISOLATION_DEFAULT);
-			jtxTransactionMode.setReadOnly(readonly);
+			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode(
+				JtxPropagationBehavior.PROPAGATION_REQUIRED,
+				JtxIsolationLevel.ISOLATION_DEFAULT,
+				readonly,
+				JtxTransactionMode.DEFAULT_TIMEOUT);
 
-			DbTransactionMode dbTransactionMode = new DbTransactionMode();
-			dbTransactionMode.setIsolation(DbTransactionMode.ISOLATION_DEFAULT);
-			dbTransactionMode.setReadOnly(readonly);
+			DbTransactionMode dbTransactionMode = new DbTransactionMode(DbTransactionMode.ISOLATION_DEFAULT, readonly);
 
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
@@ -76,13 +77,13 @@ class JtxDbUtilTest {
 		{
 			final boolean readonly = RandomUtils.nextBoolean();
 
-			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
-			jtxTransactionMode.setIsolationLevel(JtxIsolationLevel.ISOLATION_NONE);
-			jtxTransactionMode.setReadOnly(readonly);
+			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode(
+				JtxPropagationBehavior.PROPAGATION_REQUIRED,
+				JtxIsolationLevel.ISOLATION_NONE,
+				readonly,
+				JtxTransactionMode.DEFAULT_TIMEOUT);
 
-			DbTransactionMode dbTransactionMode = new DbTransactionMode();
-			dbTransactionMode.setIsolation(DbTransactionMode.ISOLATION_NONE);
-			dbTransactionMode.setReadOnly(readonly);
+			DbTransactionMode dbTransactionMode = new DbTransactionMode(DbTransactionMode.ISOLATION_NONE, readonly);
 
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
@@ -91,13 +92,13 @@ class JtxDbUtilTest {
 		{
 			final boolean readonly = RandomUtils.nextBoolean();
 
-			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
-			jtxTransactionMode.setIsolationLevel(JtxIsolationLevel.ISOLATION_READ_COMMITTED);
-			jtxTransactionMode.setReadOnly(readonly);
+			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode(
+				JtxPropagationBehavior.PROPAGATION_REQUIRED,
+				JtxIsolationLevel.ISOLATION_READ_COMMITTED,
+				readonly,
+				JtxTransactionMode.DEFAULT_TIMEOUT);
 
-			DbTransactionMode dbTransactionMode = new DbTransactionMode();
-			dbTransactionMode.setIsolation(DbTransactionMode.ISOLATION_READ_COMMITTED);
-			dbTransactionMode.setReadOnly(readonly);
+			DbTransactionMode dbTransactionMode = new DbTransactionMode(DbTransactionMode.ISOLATION_READ_COMMITTED, readonly);
 
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
@@ -106,13 +107,13 @@ class JtxDbUtilTest {
 		{
 			final boolean readonly = RandomUtils.nextBoolean();
 
-			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
-			jtxTransactionMode.setIsolationLevel(JtxIsolationLevel.ISOLATION_READ_UNCOMMITTED);
-			jtxTransactionMode.setReadOnly(readonly);
+			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode(
+				JtxPropagationBehavior.PROPAGATION_REQUIRED,
+				JtxIsolationLevel.ISOLATION_READ_UNCOMMITTED,
+				readonly,
+				JtxTransactionMode.DEFAULT_TIMEOUT);
 
-			DbTransactionMode dbTransactionMode = new DbTransactionMode();
-			dbTransactionMode.setIsolation(DbTransactionMode.ISOLATION_READ_UNCOMMITTED);
-			dbTransactionMode.setReadOnly(readonly);
+			DbTransactionMode dbTransactionMode = new DbTransactionMode(DbTransactionMode.ISOLATION_READ_UNCOMMITTED,readonly);
 
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
@@ -121,13 +122,13 @@ class JtxDbUtilTest {
 		{
 			final boolean readonly = RandomUtils.nextBoolean();
 
-			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
-			jtxTransactionMode.setIsolationLevel(JtxIsolationLevel.ISOLATION_REPEATABLE_READ);
-			jtxTransactionMode.setReadOnly(readonly);
+			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode(
+				JtxPropagationBehavior.PROPAGATION_REQUIRED,
+				JtxIsolationLevel.ISOLATION_REPEATABLE_READ,
+				readonly,
+				JtxTransactionMode.DEFAULT_TIMEOUT);
 
-			DbTransactionMode dbTransactionMode = new DbTransactionMode();
-			dbTransactionMode.setIsolation(DbTransactionMode.ISOLATION_REPEATABLE_READ);
-			dbTransactionMode.setReadOnly(readonly);
+			DbTransactionMode dbTransactionMode = new DbTransactionMode(DbTransactionMode.ISOLATION_REPEATABLE_READ, readonly);
 
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}
@@ -136,13 +137,13 @@ class JtxDbUtilTest {
 		{
 			final boolean readonly = RandomUtils.nextBoolean();
 
-			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode();
-			jtxTransactionMode.setIsolationLevel(JtxIsolationLevel.ISOLATION_SERIALIZABLE);
-			jtxTransactionMode.setReadOnly(readonly);
+			JtxTransactionMode jtxTransactionMode = new JtxTransactionMode(
+				JtxPropagationBehavior.PROPAGATION_REQUIRED,
+				JtxIsolationLevel.ISOLATION_SERIALIZABLE,
+				readonly,
+				JtxTransactionMode.DEFAULT_TIMEOUT);
 
-			DbTransactionMode dbTransactionMode = new DbTransactionMode();
-			dbTransactionMode.setIsolation(DbTransactionMode.ISOLATION_SERIALIZABLE);
-			dbTransactionMode.setReadOnly(readonly);
+			DbTransactionMode dbTransactionMode = new DbTransactionMode(DbTransactionMode.ISOLATION_SERIALIZABLE, readonly);
 
 			params.add(Arguments.of(dbTransactionMode, jtxTransactionMode));
 		}

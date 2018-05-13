@@ -25,15 +25,13 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbOom;
 import jodd.db.DbSession;
-import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
-import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Girl;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
-import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,8 +46,7 @@ class DbNoTableTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
+		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
 		dbEntityManager.registerEntity(Bean1.class);
 	}
 
@@ -57,11 +54,11 @@ class DbNoTableTest extends DbHsqldbTestCase {
 	void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.gen().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		// one
-		DbOomQuery q = new DbOomQuery(DbSqlBuilder.sql("select $C{g.id} + 10, UCASE($C{g.name}) from $T{Girl g}"));
+		DbOomQuery q = dbOom.query(DbSqlBuilder.sql("select $C{g.id} + 10, UCASE($C{g.name}) from $T{Girl g}"));
 		Object[] row = q.find(Integer.class, String.class);
 
 		assertEquals(Integer.valueOf(11), row[0]);
@@ -85,7 +82,7 @@ class DbNoTableTest extends DbHsqldbTestCase {
 
 		dbSqlBuilder.reset();
 
-		q = new DbOomQuery(dbSqlBuilder);
+		q = dbOom.query(dbSqlBuilder);
 		row = q.find(Bean1.class, Girl.class);
 
 		Bean1 bean1 = (Bean1) row[0];
@@ -110,7 +107,7 @@ class DbNoTableTest extends DbHsqldbTestCase {
 
 		dbSqlBuilder.reset();
 
-		q = new DbOomQuery(dbSqlBuilder);
+		q = dbOom.query(dbSqlBuilder);
 		row = q.find(Bean1.class, Girl.class);
 
 		bean1 = (Bean1) row[0];

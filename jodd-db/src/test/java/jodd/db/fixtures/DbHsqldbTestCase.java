@@ -34,7 +34,7 @@ import jodd.db.pool.CoreConnectionPool;
 public abstract class DbHsqldbTestCase extends DbTestBase {
 
 	@Override
-	protected void setupPool(CoreConnectionPool cp) {
+	protected void setupPool(final CoreConnectionPool cp) {
 		cp.setDriver("org.hsqldb.jdbcDriver");
 		cp.setUrl("jdbc:hsqldb:mem:test");
 
@@ -43,7 +43,7 @@ public abstract class DbHsqldbTestCase extends DbTestBase {
 	}
 
 	@Override
-	protected void initDb(DbSession session) {
+	protected void initDb(final DbSession session) {
 		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
 

@@ -28,12 +28,20 @@ package jodd.db;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.jtx.JtxException;
+import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.worker.LeanJtxWorker;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DbPropagationTest extends DbHsqldbTestCase {
 
@@ -43,7 +51,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- required
 
 	private JtxTransactionMode required() {
-		return new JtxTransactionMode().propagationRequired().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, false);
 	}
 
 	@Test
@@ -198,7 +206,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- supports
 
 	private JtxTransactionMode supports() {
-		return new JtxTransactionMode().propagationSupports().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_SUPPORTS, false);
 	}
 
 	@Test
@@ -312,7 +320,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- not supported
 
 	private JtxTransactionMode notSupported() {
-		return new JtxTransactionMode().propagationNotSupported().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_NOT_SUPPORTED, false);
 	}
 
 	@Test
@@ -395,7 +403,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- never
 
 	private JtxTransactionMode never() {
-		return new JtxTransactionMode().propagationNever().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_NEVER, false);
 	}
 
 	@Test
@@ -464,7 +472,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- requires new
 
 	private JtxTransactionMode requiredNew() {
-		return new JtxTransactionMode().propagationRequiresNew().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW, false);
 	}
 
 /*
@@ -591,7 +599,7 @@ class DbPropagationTest extends DbHsqldbTestCase {
 	// ---------------------------------------------------------------- mandatory
 
 	private JtxTransactionMode mandatory() {
-		return new JtxTransactionMode().propagationMandatory().readOnly(false);
+		return new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_MANDATORY, false);
 	}
 
 	@Test

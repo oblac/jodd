@@ -25,17 +25,14 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
-import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
-import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Enumerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static jodd.db.oom.sqlgen.DbEntitySql.insert;
 
 class DbEnumTest extends DbHsqldbTestCase {
 
@@ -44,8 +41,7 @@ class DbEnumTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 		dbEntityManager.registerEntity(Enumerator.class);
 	}
 
@@ -63,8 +59,7 @@ class DbEnumTest extends DbHsqldbTestCase {
 		e.name = "Ikigami";
 		e.status = Enumerator.STATUS.ONE;
 
-		DbSqlGenerator gen = insert(e);
-		query = new DbOomQuery(gen);
+		query = DbOomQuery.query(dbOom.gen().insert(e));
 		query.executeUpdate();
 
 		session.closeSession();

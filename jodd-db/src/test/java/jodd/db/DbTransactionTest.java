@@ -29,15 +29,20 @@ import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.jtx.DbJtxResourceManager;
 import jodd.db.jtx.DbJtxTransaction;
 import jodd.jtx.JtxException;
+import jodd.jtx.JtxIsolationLevel;
+import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import jodd.util.ThreadUtil;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DbTransactionTest extends DbHsqldbTestCase {
 
@@ -45,13 +50,13 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	 * Tests if rollback works.
 	 */
 	@Test
-	void testRollback() throws SQLException {
+	void testRollback() {
 		// prepare manager
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
 
 		// request transaction
-		JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
+		JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, false));
 		DbSession session = tx.requestResource(DbSession.class);
 		assertNotNull(session);
 
@@ -139,7 +144,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 
 	void service0() {
 		assertTotals(0, 0);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationRequired());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, true));
 		assertTotals(1, 1);
 		s0 = tx.requestResource();
 		service0_1(tx);
@@ -149,7 +154,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 
 	void service0_1(JtxTransaction uptx) {
 		assertTotals(1, 1);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationSupports());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_SUPPORTS, true));
 		assertTotals(1, 1);
 		assertEquals(uptx, tx);
 		DbSession s1 = tx.requestResource();
@@ -163,7 +168,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	// service #1 REQUIRED
 	JtxTransaction service1() {
 		assertTotals(0, 0);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationRequired());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, true));
 		assertTotals(1, 1);
 		s1 = tx.requestResource();
 		return tx;
@@ -172,7 +177,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	// service #2 REQUIRES NEW
 	void service2(JtxTransaction tx1) {
 		assertTotals(1, 1);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationRequiresNew());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW, true));
 		assertTotals(2, 2);
 		assertNotSame(tx1, tx);
 		assertNotSame(s1, tx.requestResource());
@@ -183,7 +188,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	// service #3 REQUIRED
 	void service3(JtxTransaction tx1) {
 		assertTotals(1, 1);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationRequired());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, true));
 		assertEquals(tx1, tx);
 		assertTotals(1, 1);
 		assertEquals(s1, tx.requestResource());
@@ -195,7 +200,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 	// service #3_1 NOT SUPPORTED
 	void service3_1(JtxTransaction tx3) {
 		assertTotals(1, 1);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationNotSupported());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_NOT_SUPPORTED, true));
 		assertNotSame(tx3, tx);
 		assertTotals(2, 1);
 		assertNotSame(s1, tx.requestResource());
@@ -223,7 +228,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
 
-		JtxTransaction tx1 = manager.requestTransaction(new JtxTransactionMode().propagationRequired().transactionTimeout(1));
+		JtxTransaction tx1 = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, JtxIsolationLevel.ISOLATION_DEFAULT, true, 1));
 		DbSession session1 = tx1.requestResource(DbSession.class);
 		assertNotNull(session1);
 		executeCount(session1, "select count(*) from GIRL");
@@ -252,7 +257,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		new Thread() {
 			@Override
 			public void run() {
-				JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().transactionTimeout(1));
+				JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, JtxIsolationLevel.ISOLATION_DEFAULT, true, 1));
 				count[0]++;
 				assertEquals(count[0], manager.totalTransactions());
 				assertEquals(1, manager.totalTransactions());
@@ -266,7 +271,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		new Thread() {
 			@Override
 			public void run() {
-				JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().transactionTimeout(1));
+				JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_REQUIRED, JtxIsolationLevel.ISOLATION_DEFAULT, true, 1));
 				count[0]++;
 				assertEquals(count[0], manager.totalTransactions());
 				assertEquals(2, manager.totalTransactions());
@@ -285,7 +290,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		final JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
 
-		JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode().propagationSupports());
+		JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_SUPPORTS, true));
 		assertTrue(tx.isNoTransaction());
 
 		try {
@@ -302,7 +307,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		} catch (Exception ignore) {
 		}
 
-		tx = manager.requestTransaction(new JtxTransactionMode().propagationSupports());
+		tx = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_SUPPORTS, true));
 
 		try {
 			tx.rollback();
@@ -310,7 +315,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 			fail(ex.toString());
 		}
 
-		tx = manager.requestTransaction(new JtxTransactionMode().propagationSupports());
+		tx = manager.requestTransaction(new JtxTransactionMode(JtxPropagationBehavior.PROPAGATION_SUPPORTS, true));
 
 		try {
 			tx.setRollbackOnly();

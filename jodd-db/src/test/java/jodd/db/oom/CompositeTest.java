@@ -25,11 +25,10 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
-import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
-import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.User;
 import jodd.db.oom.fixtures.WizUser;
@@ -51,8 +50,7 @@ class CompositeTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbTestUtil.resetAll();
-		DbEntityManager dbEntityManager = JoddDb.defaults().getDbEntityManager();
+		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 		dbEntityManager.registerEntity(User.class);
 		dbEntityManager.registerEntity(Wizard.class);
 
@@ -86,6 +84,7 @@ class CompositeTest extends DbHsqldbTestCase {
 	@AfterEach
 	protected void tearDown() {
 		session.closeSession();
+		DbOom.get().shutdown();
 	}
 
 	@Test

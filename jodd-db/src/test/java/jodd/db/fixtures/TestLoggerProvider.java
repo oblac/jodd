@@ -25,10 +25,11 @@
 
 package jodd.db.fixtures;
 
-import jodd.exception.UncheckedException;
 import jodd.log.Logger;
 import jodd.log.LoggerProvider;
 import jodd.log.impl.NOPLogger;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestLoggerProvider implements LoggerProvider {
 
@@ -40,12 +41,12 @@ public class TestLoggerProvider implements LoggerProvider {
 
 		@Override
 		public void warn(String message) {
-			throw new UncheckedException("NO WARNING ALLOWED IN TESTS: " + message);
+			fail("NO WARNING ALLOWED IN TESTS! " + message);
 		}
 
 		@Override
 		public void warn(String message, Throwable throwable) {
-			throw new UncheckedException("NO WARNING ALLOWED IN TESTS: " + message);
+			fail("NO WARNING ALLOWED IN TESTS! " + message, throwable);
 		}
 	};
 

@@ -36,7 +36,7 @@ class CallableTest extends DbBaseTest {
 
 	class PostgreSql extends PostgreSqlDbAccess {
 		@Override
-		public String getCreateTableSql() {
+		public String createTableSql() {
 			return "create table TESTER (" +
 				"ID			SERIAL," +
 				"NAME		varchar(20)	NOT NULL," +
@@ -54,9 +54,7 @@ class CallableTest extends DbBaseTest {
 	@Test
 	void testCallableStatementDebugFalse() {
 		DbBaseTest.DbAccess db = new PostgreSql();
-		init();
-		db.initDb();
-		connect();
+		init(db);
 
 		db.createTables();
 		try {
@@ -69,9 +67,7 @@ class CallableTest extends DbBaseTest {
 	@Test
 	void testCallableStatementDebugTrue() {
 		DbBaseTest.DbAccess db = new PostgreSql();
-		init();
-		db.initDb();
-		connect();
+		init(db);
 
 		db.createTables();
 		try {
@@ -82,7 +78,7 @@ class CallableTest extends DbBaseTest {
 	}
 
 	private void test(final boolean debug) {
-		DbSession session = new DbSession();
+		DbSession session = new DbSession(connectionPool);
 
 		DbQuery dbQuery = new DbQuery(session, "{ :upp = call upper( :str ) }");
 		dbQuery.setDebug(debug);

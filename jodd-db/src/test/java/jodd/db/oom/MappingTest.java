@@ -25,10 +25,9 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbOom;
 import jodd.db.DbSession;
-import jodd.db.DbTestUtil;
 import jodd.db.DbThreadSession;
-import jodd.db.JoddDb;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.oom.fixtures.Boo;
 import jodd.db.oom.fixtures.BooSqlType;
@@ -36,7 +35,6 @@ import jodd.db.oom.fixtures.Foo;
 import jodd.db.oom.fixtures.FooColor;
 import jodd.db.oom.fixtures.FooWeight;
 import jodd.db.oom.fixtures.FooWeigthSqlType;
-import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.type.SqlTypeManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,8 +53,6 @@ class MappingTest extends DbHsqldbTestCase {
 	@BeforeEach
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		DbTestUtil.resetAll();
 	}
 
 	@Test
@@ -87,13 +83,13 @@ class MappingTest extends DbHsqldbTestCase {
 		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', '2010-01-20 01:02:03.4444', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
 		executeUpdate(session, sql);
 
-		DbEntityManager dbOom = JoddDb.defaults().getDbEntityManager();
+		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
-		dbOom.registerEntity(Foo.class);
+		dbEntityManager.registerEntity(Foo.class);
 		SqlTypeManager.register(Boo.class, BooSqlType.class);
 		SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);
 
-		List<Foo> foos = new DbOomQuery("select * from FOO").list(Foo.class);
+		List<Foo> foos = dbOom.query("select * from FOO").list(Foo.class);
 		assertEquals(1, foos.size());
 		Foo foo = foos.get(0);
 		assertEquals(1, foo.id);
@@ -135,7 +131,7 @@ class MappingTest extends DbHsqldbTestCase {
 		foo.timestamp.setYear(108);
 		foo.decimal = new Double("34.12");
 		foo.decimal2 = new BigDecimal("1.099");
-		DbOomQuery doq = new DbOomQuery(DbEntitySql.update(foo));
+		DbOomQuery doq = dbOom.gen().update(foo).query();
 //		foo.jdt1 = new JulianDate(3000, );
 //		foo.jdt1.setYear(3000);
 //		foo.jdt2.setDay(3);
@@ -143,11 +139,11 @@ class MappingTest extends DbHsqldbTestCase {
 		doq.executeUpdate();
 
 
-		doq = new DbOomQuery(DbEntitySql.updateColumn(foo, "timestamp2", LocalDateTime.parse("2010-02-02T20:20:20.222")));
+		doq = dbOom.query(dbOom.gen().updateColumn(foo, "timestamp2", LocalDateTime.parse("2010-02-02T20:20:20.222")));
 
 		doq.executeUpdate();
 
-		foos = new DbOomQuery("select * from FOO").list(Foo.class);
+		foos = dbOom.query("select * from FOO").list(Foo.class);
 		assertEquals(1, foos.size());
 		foo = foos.get(0);
 		assertEquals(1, foo.id);

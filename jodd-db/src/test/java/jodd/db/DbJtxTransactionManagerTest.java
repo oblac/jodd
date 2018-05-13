@@ -28,10 +28,10 @@ package jodd.db;
 import jodd.db.fixtures.DbHsqldbTestCase;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.db.pool.CoreConnectionPool;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,26 +41,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 
-	DbSessionProvider sessionProvider;
-
-	@BeforeEach
-	void setup() {
-		sessionProvider = JoddDb.defaults().getSessionProvider();
-	}
-
 	@Override
 	@AfterEach
 	protected void tearDown() {
-		JoddDb.defaults().setSessionProvider(sessionProvider);
+		DbOom.get().shutdown();
 	}
 
 	@Test
 	void testSessionProvider() {
 		// prepare
+		DbOom.get().shutdown(); // since we are creating a new one, kill default
+		cp = new CoreConnectionPool();
+		super.setupPool(cp);
+
 		JtxTransactionManager jtxManager = new DbJtxTransactionManager(cp);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
-		JoddDb.defaults().setSessionProvider(sessionProvider);
+		DbOom.create()
+			.withConnectionProvider(cp)
+			.withSessionProvider(sessionProvider)
+			.get().connect();
 
 		for (int i = 0; i < 2; i++) {
 
@@ -68,7 +68,7 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 			assertEquals(0, jtxManager.totalTransactions());
 
 			// start transaction
-			jtxManager.requestTransaction(new JtxTransactionMode());
+			jtxManager.requestTransaction(JtxTransactionMode.PROPAGATION_SUPPORTS_READ_ONLY);
 
 			// get session from provider!
 			DbSession dbSession = sessionProvider.getDbSession();
