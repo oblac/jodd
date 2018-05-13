@@ -25,9 +25,9 @@
 
 package jodd.db;
 
-import jodd.bean.JoddBean;
 import jodd.db.type.SqlType;
 import jodd.typeconverter.Converter;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -124,7 +124,7 @@ public class DbUtil {
 				break;
 
 			case Types.DATE:
-				preparedStatement.setDate(index, JoddBean.defaults().getTypeConverterManager().convertType(value, java.sql.Date.class));
+				preparedStatement.setDate(index, TypeConverterManager.get().convertType(value, java.sql.Date.class));
 				break;
 
 			case Types.NUMERIC:
@@ -142,16 +142,16 @@ public class DbUtil {
 			    break;
 
 			case Types.TIME:
-				preparedStatement.setTime(index, JoddBean.defaults().getTypeConverterManager().convertType(value, java.sql.Time.class));
+				preparedStatement.setTime(index, TypeConverterManager.get().convertType(value, java.sql.Time.class));
 				break;
 
 			case Types.TIMESTAMP:
-				preparedStatement.setTimestamp(index, JoddBean.defaults().getTypeConverterManager().convertType(value, Timestamp.class));
+				preparedStatement.setTimestamp(index, TypeConverterManager.get().convertType(value, Timestamp.class));
 				break;
 
 			case Types.BINARY:
 			case Types.VARBINARY:
-				preparedStatement.setBytes(index, JoddBean.defaults().getTypeConverterManager().convertType(value, byte[].class));
+				preparedStatement.setBytes(index, TypeConverterManager.get().convertType(value, byte[].class));
 				break;
 
 			default:
