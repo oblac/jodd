@@ -33,6 +33,7 @@ import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.db.type.SqlType;
 import jodd.introspector.PropertyDescriptor;
+import jodd.util.StringUtil;
 
 /**
  * Meta-data resolving utils.
@@ -140,7 +141,8 @@ public class DbMetaUtil {
 			}
 		}
 
-		if ((columnName == null) || (columnName.length() == 0)) {
+		if (StringUtil.isEmpty(columnName)) {
+			// default annotation value
 			columnName = columnNamingStrategy.convertPropertyNameToColumnName(property.getName());
 		} else {
 			if (!columnNamingStrategy.isStrictAnnotationNames()) {
