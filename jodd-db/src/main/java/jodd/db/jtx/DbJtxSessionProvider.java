@@ -56,7 +56,7 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 	public DbSession getDbSession() {
 		log.debug("Requesting db TX manager session");
 
-		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
+		final DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 
 		if (jtx == null) {
 			throw new DbSqlException(

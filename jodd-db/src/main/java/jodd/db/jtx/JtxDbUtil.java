@@ -37,7 +37,7 @@ public class JtxDbUtil {
 	 * Converter JTX transaction mode to DB transaction mode.
 	 */
 	public static DbTransactionMode convertToDbMode(final JtxTransactionMode txMode) {
-		int isolation = -1;
+		final int isolation;
 		switch (txMode.getIsolationLevel()) {
 			case ISOLATION_DEFAULT: isolation = DbTransactionMode.ISOLATION_DEFAULT; break;
 			case ISOLATION_NONE: isolation = DbTransactionMode.ISOLATION_NONE; break;
@@ -45,10 +45,9 @@ public class JtxDbUtil {
 			case ISOLATION_READ_UNCOMMITTED: isolation = DbTransactionMode.ISOLATION_READ_UNCOMMITTED; break;
 			case ISOLATION_REPEATABLE_READ: isolation = DbTransactionMode.ISOLATION_REPEATABLE_READ; break;
 			case ISOLATION_SERIALIZABLE: isolation = DbTransactionMode.ISOLATION_SERIALIZABLE; break;
+			default:
+				throw new IllegalArgumentException();
 		}
-		DbTransactionMode result = new DbTransactionMode();
-		result.setIsolation(isolation);
-		result.setReadOnly(txMode.isReadOnly());
-		return result;
+		return new DbTransactionMode(isolation, txMode.isReadOnly());
 	}
 }
