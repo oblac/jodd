@@ -25,7 +25,7 @@
 
 package jodd.db.servers;
 
-import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.DbOomConfig;
 
 /**
  * DB2.
@@ -43,7 +43,7 @@ public class Db2DbServer implements DbServer {
 	}
 
 	@Override
-	public void accept(final DbEntityManager dbEntityManager) {
+	public void accept(final DbOomConfig dbOomConfig) {
 	}
 
 	@Override

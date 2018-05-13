@@ -25,8 +25,7 @@
 
 package jodd.db.servers;
 
-import jodd.db.JoddDb;
-import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.DbOomConfig;
 
 /**
  * SQL Server.
@@ -40,9 +39,9 @@ public class SqlServerDbServer implements DbServer {
 	}
 
 	@Override
-	public void accept(final DbEntityManager dbEntityManager) {
-		JoddDb.defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
-		JoddDb.defaults().getSqlGenConfig().setUpdateablePrimaryKey(false);
+	public void accept(final DbOomConfig dbOomConfig) {
+		dbOomConfig.setUpdateAcceptsTableAlias(false);
+		dbOomConfig.setUpdateablePrimaryKey(false);
 	}
 
 	@Override

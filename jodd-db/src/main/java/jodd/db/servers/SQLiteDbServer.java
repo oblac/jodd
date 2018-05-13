@@ -25,8 +25,7 @@
 
 package jodd.db.servers;
 
-import jodd.db.JoddDb;
-import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.DbOomConfig;
 
 /**
  * SQLite.
@@ -40,8 +39,8 @@ public class SQLiteDbServer implements DbServer {
 	}
 
 	@Override
-	public void accept(final DbEntityManager dbEntityManager) {
-		JoddDb.defaults().getSqlGenConfig().setUpdateAcceptsTableAlias(false);
+	public void accept(final DbOomConfig dbOomConfig) {
+		dbOomConfig.setUpdateAcceptsTableAlias(false);
 	}
 
 	@Override

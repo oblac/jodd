@@ -25,13 +25,13 @@
 
 package jodd.db.servers;
 
-import jodd.db.oom.DbEntityManager;
+import jodd.db.oom.DbOomConfig;
 
 import java.util.function.Consumer;
 
-public interface DbServer extends Consumer<DbEntityManager> {
+public interface DbServer extends Consumer<DbOomConfig> {
 
 	@Override
-	public void accept(DbEntityManager dbEntityManager);
+	void accept(DbOomConfig dbOomConfig);
 
 }
