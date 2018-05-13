@@ -54,20 +54,14 @@ public class DbSession implements AutoCloseable {
 	protected Connection connection;
 
 	/**
-	 * Creates new database session using default connection provider.
-	 */
-	public DbSession() {
-		this(null);
-	}
-
-	/**
 	 * Creates new database session with default transaction mode and in autocommit mode.
 	 */
 	public DbSession(ConnectionProvider connectionProvider) {
 		log.debug("Creating new db session");
 
 		if (connectionProvider == null) {
-			connectionProvider = JoddDb.defaults().getConnectionProvider();
+			connectionProvider = DbOom.get().connectionProvider();
+
 			if (connectionProvider == null) {
 				throw new DbSqlException("Connection provider is not available");
 			}
@@ -75,7 +69,7 @@ public class DbSession implements AutoCloseable {
 
 		this.connectionProvider = connectionProvider;
 		this.txActive = false;
-		this.txMode = JoddDb.defaults().getTransactionMode();
+		this.txMode = DbTransactionMode.READ_ONLY_TX;
 		this.queries = new HashSet<>();
 	}
 
@@ -167,7 +161,7 @@ public class DbSession implements AutoCloseable {
 	 * Attaches a new {@link DbQuery}. May be invoked both inside and outside of transaction.
 	 */
 	protected void attachQuery(final DbQueryBase query) {
-		checkOpenSession();
+		assertSessionIsOpen();
 		openConnectionForQuery();
 		queries.add(query);
 	}
@@ -247,16 +241,9 @@ public class DbSession implements AutoCloseable {
 	public void beginTransaction(final DbTransactionMode mode) {
 		log.debug("Beginning transaction");
 
-		checkClosedTx();
+		assertTxIsClosed();
 		this.txMode = mode;
 		openTx();
-	}
-
-	/**
-	 * Starts transaction with default transaction mode.
-	 */
-	public void beginTransaction() {
-		beginTransaction(JoddDb.defaults().getTransactionMode());
 	}
 
 	/**
@@ -266,7 +253,7 @@ public class DbSession implements AutoCloseable {
 	public void commitTransaction() {
 		log.debug("Committing transaction");
 
-		checkActiveTx();
+		assertTxIsActive();
 		try {
 			connection.commit();
 		} catch (SQLException sex) {
@@ -282,7 +269,8 @@ public class DbSession implements AutoCloseable {
 	public void rollbackTransaction() {
 		log.debug("Rolling-back transaction");
 
-		checkActiveTx();
+		assertTxIsActive();
+
 		try {
 			connection.rollback();
 		} catch (SQLException sex) {
@@ -295,21 +283,21 @@ public class DbSession implements AutoCloseable {
 
 	// ---------------------------------------------------------------- checking
 
-	protected void checkOpenSession() {
+	protected void assertSessionIsOpen() {
 		if (queries == null) {
 			throw new DbSqlException("Session is closed");
 		}
 	}
 
-	protected void checkClosedTx() {
-		checkOpenSession();
+	protected void assertTxIsClosed() {
+		assertSessionIsOpen();
 		if (txActive) {
 			throw new DbSqlException("TX already started for this session");
 		}
 	}
 
-	protected void checkActiveTx() {
-		checkOpenSession();
+	protected void assertTxIsActive() {
+		assertSessionIsOpen();
 		if (!txActive) {
 			throw new DbSqlException("TX not available for this session");
 		}
