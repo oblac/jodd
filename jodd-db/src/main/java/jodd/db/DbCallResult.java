@@ -29,6 +29,9 @@ import jodd.util.collection.IntArrayList;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 
+/**
+ * Result of a CALL statement.
+ */
 public class DbCallResult {
 	private final DbQueryParser query;
 	private final CallableStatement statement;
@@ -49,7 +52,7 @@ public class DbCallResult {
 	}
 
 	public int getInteger(final String param) {
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			if (positions.size() == 1) {
 				return statement.getInt(positions.get(0));
