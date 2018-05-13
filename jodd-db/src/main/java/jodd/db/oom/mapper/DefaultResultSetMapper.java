@@ -26,8 +26,7 @@
 package jodd.db.oom.mapper;
 
 import jodd.bean.BeanUtil;
-import jodd.bean.JoddBean;
-import jodd.db.JoddDb;
+import jodd.db.DbOom;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.DbEntityDescriptor;
@@ -36,6 +35,7 @@ import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbOomQuery;
 import jodd.db.type.SqlType;
 import jodd.db.type.SqlTypeManager;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -96,6 +96,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	protected final String[] tableNames;		// list of table names for each column, table name may be null
 
 	private final Set<String> resultColumns;	// internal columns per entity cache
+	private final DbEntityManager dbEntityManager;
 
 	// ---------------------------------------------------------------- ctor
 
@@ -106,8 +107,15 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * @param cacheEntities flag if entities should be cached
 	 * @param dbOomQuery query that created this mapper.
 	 */
-	public DefaultResultSetMapper(final ResultSet resultSet, final Map<String, ColumnData> columnAliases, final boolean cacheEntities, final DbOomQuery dbOomQuery) {
+	public DefaultResultSetMapper(
+			final DbOom dbOom,
+			final ResultSet resultSet,
+			final Map<String, ColumnData> columnAliases,
+			final boolean cacheEntities,
+			final DbOomQuery dbOomQuery) {
 		super(resultSet);
+
+		this.dbEntityManager = dbOom.entityManager();
 		this.dbOomQuery = dbOomQuery;
 		this.cacheEntities = cacheEntities;
 
@@ -135,9 +143,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				String tableName = null;
 
 				// resolve column and table name
-				final String columnAliasSeparator = JoddDb.defaults().getDbOomConfig().getColumnAliasSeparator();
-
-				int sepNdx = columnName.indexOf(columnAliasSeparator);
+				int sepNdx = columnName.indexOf(dbOom.config().getColumnAliasSeparator());
 				if (sepNdx != -1) {
 					// column alias exist, result set is ignored and columnAliases contains table data
 					tableName = columnName.substring(0, sepNdx);
@@ -216,7 +222,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				resultColumns.clear();
 				lastTableName = tableName;
 
-				DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupTableName(tableName);
+				DbEntityDescriptor ded = dbEntityManager.lookupTableName(tableName);
 				if (ded == null) {
 					throw new DbOomException(dbOomQuery, "Table name not registered: " + tableName);
 				}
@@ -245,7 +251,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			for (int i = 0; i < types.length; i++) {
 				Class type = types[i];
 				if (type != null) {
-					descs[i] = JoddDb.defaults().getDbEntityManager().lookupType(type);
+					descs[i] = dbEntityManager.lookupType(type);
 				}
 			}
 			cachedDbEntityDescriptors = descs;
@@ -300,7 +306,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				names[i] = null;
 				continue;
 			}
-			DbEntityDescriptor ded = JoddDb.defaults().getDbEntityManager().lookupType(types[i]);
+			DbEntityDescriptor ded = dbEntityManager.lookupType(types[i]);
 			if (ded != null) {
 				String tableName = ded.getTableName();
 				tableName = tableName.toUpperCase();
@@ -333,7 +339,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					cachedColumnValue = sqlType.readValue(resultSet, colNdx + 1, destinationType, columnDbSqlType);
 				} else {
 					cachedColumnValue = resultSet.getObject(colNdx + 1);
-					cachedColumnValue = JoddBean.defaults().getTypeConverterManager().convertType(cachedColumnValue, destinationType);
+					cachedColumnValue = TypeConverterManager.get().convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
 				throw new DbOomException(dbOomQuery, "Invalid value for column #" + (colNdx + 1), sex);
@@ -423,7 +429,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 						// if current entity instance does not exist (i.e. we are at the first column
 						// of some entity), create the instance and store it
 						if (result[currentResult] == null) {
-							result[currentResult] = JoddDb.defaults().getDbEntityManager().createEntityInstance(currentType);
+							result[currentResult] = dbEntityManager.createEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?
