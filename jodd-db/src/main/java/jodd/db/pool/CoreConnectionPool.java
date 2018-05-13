@@ -381,6 +381,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	}
 
 	private void closeConnections(final ArrayList<ConnectionData> connections) {
+		if (connections == null) {
+			return;
+		}
 		try {
 			for (ConnectionData connectionData : connections) {
 				Connection connection = connectionData.connection;
@@ -388,7 +391,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 					connection.close();
 				}
 			}
-		} catch (SQLException sex) {
+		} catch (SQLException ignore) {
 			// Ignore errors; garbage collect anyhow
 		}
 	}
