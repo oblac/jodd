@@ -45,7 +45,8 @@ public class DbThreadSession extends DbSession {
 	 */
 	public DbThreadSession(final ConnectionProvider connectionProvider) {
 		super(connectionProvider);
-		DbSession session = ThreadDbSessionHolder.get();
+
+		final DbSession session = ThreadDbSessionHolder.get();
 		if (session != null) {
 			session.closeSession();
 		}

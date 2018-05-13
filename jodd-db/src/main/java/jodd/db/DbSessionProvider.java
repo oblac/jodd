@@ -35,6 +35,7 @@ package jodd.db;
  * weather connection should be closed after closing a query;
  * or still hold on open for the next query.
  */
+@FunctionalInterface
 public interface DbSessionProvider {
 
 	/**
