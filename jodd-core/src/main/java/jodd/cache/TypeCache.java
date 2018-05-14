@@ -45,8 +45,6 @@ import java.util.function.Supplier;
  *     <li>weak - if your key classes are replaced during the runtime, you should use weak map, in order to automatically
  *     remove obsolete keys.</li>
  * </ul>
- * This cache is specific as there is never a {@code put()} method. Putting is done only via {@link #get(Class, Supplier)}
- * by providing a supplier. This way we ensure synchronization if enabled.
  */
 public class TypeCache<T> {
 
@@ -137,6 +135,13 @@ public class TypeCache<T> {
 	}
 
 	/**
+	 * Add values to the map.
+	 */
+	public void put(final Class<?> type, final T value) {
+		map.put(type, value);
+	}
+
+	/**
 	 * Returns value from the map or {@code null} if value does not exist.
 	 */
 	public T get(final Class<?> key) {
@@ -145,6 +150,7 @@ public class TypeCache<T> {
 
 	/**
 	 * Returns existing value or add default supplied one.
+	 * Use this method instead of {@code get-nullcheck-put} block.
 	 */
 	public T get(final Class<?> key, final Supplier<T> valueSupplier) {
 		return map.computeIfAbsent(key, aClass -> valueSupplier.get());
@@ -191,5 +197,6 @@ public class TypeCache<T> {
 	public boolean containsKey(final Class type) {
 		return map.containsKey(type);
 	}
+
 
 }
