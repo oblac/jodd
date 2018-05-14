@@ -418,7 +418,7 @@ public class JsonParser extends JsonParserBase {
 	protected Object parseValue(final Class targetType, final Class keyType, final Class componentType) {
 		final ValueConverter valueConverter;
 
-		char c = input[ndx];
+		final char c = input[ndx];
 
 		switch (c) {
 			case '\'':
