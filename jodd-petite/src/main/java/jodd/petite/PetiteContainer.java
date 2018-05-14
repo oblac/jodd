@@ -239,7 +239,7 @@ public class PetiteContainer extends PetiteBeans {
 
 		final BeanDefinition def = externalsCache.get(
 			bean.getClass(), () -> {
-				BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, finalWiringMode, null);
+				final BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, finalWiringMode, null);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
@@ -256,7 +256,7 @@ public class PetiteContainer extends PetiteBeans {
 
 		final BeanDefinition def = externalsCache.get(
 			bean.getClass(), () -> {
-				BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+				final BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
