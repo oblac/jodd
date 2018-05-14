@@ -66,17 +66,13 @@ public class CachingIntrospector implements ClassIntrospector {
 	 */
 	@Override
 	public ClassDescriptor lookup(final Class type) {
-		final ClassDescriptor cd = cache.get(type, () -> describeClass(type));
-		cd.increaseUsageCount();
-		return cd;
-	}
-
-	/**
-	 * Describes a class by creating a new instance of {@link ClassDescriptor}
-	 * that examines all accessible methods and fields.
-	 */
-	protected ClassDescriptor describeClass(final Class type) {
-		return new ClassDescriptor(type, scanAccessible, enhancedProperties, includeFieldsAsProperties, propertyFieldPrefix);
+		return cache.get(type, () ->
+			new ClassDescriptor(
+				type,
+				scanAccessible,
+				enhancedProperties,
+				includeFieldsAsProperties,
+				propertyFieldPrefix));
 	}
 
 	/**
