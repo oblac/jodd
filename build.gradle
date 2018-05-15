@@ -262,7 +262,7 @@ configure(javaModules()) {
 			// see: https://youtrack.jetbrains.com/issue/IDEA-151925#comment=27-2356605
 			// since IDEA 2017.2.3
 			testSourceDirs += project.sourceSets.testInt.java.srcDirs
-			testSourceDirs += project.sourceSets.testInt.resources.srcDirs
+			testResourceDirs += project.sourceSets.testInt.resources.srcDirs
 		}
 	}
 
