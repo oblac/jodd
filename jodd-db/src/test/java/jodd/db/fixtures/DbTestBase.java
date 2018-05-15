@@ -72,7 +72,8 @@ public abstract class DbTestBase {
 			.create()
 			.withConnectionProvider(cp)
 			.withQueryMap(queryMap)
-			.buildAndConnect();
+			.get()
+			.connect();
 
 		// initial data
 		final DbSession session = new DbSession(cp);

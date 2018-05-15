@@ -46,7 +46,7 @@ class DbEntitySqlTest {
 
 	@BeforeEach
 	void setUp() {
-		dbOom = DbOom.create().build();
+		dbOom = DbOom.create().get();
 		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
 		dbEntityManager.registerType(Boy.class);

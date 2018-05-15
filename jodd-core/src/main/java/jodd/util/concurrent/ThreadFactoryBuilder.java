@@ -44,7 +44,7 @@ public class ThreadFactoryBuilder {
 	/**
 	 * Returns new {@code ThreadFactory} builder.
 	 */
-	public static ThreadFactoryBuilder newThreadFactory() {
+	public static ThreadFactoryBuilder create() {
 		return new ThreadFactoryBuilder();
 	}
 
@@ -97,11 +97,11 @@ public class ThreadFactoryBuilder {
 	 * building, it is still possible to change the options used to build the ThreadFactory and/or
 	 * build again.
 	 */
-	public ThreadFactory build() {
-		return build(this);
+	public ThreadFactory get() {
+		return get(this);
 	}
 
-	private static ThreadFactory build(final ThreadFactoryBuilder builder) {
+	private static ThreadFactory get(final ThreadFactoryBuilder builder) {
 		final String nameFormat = builder.nameFormat;
 		final Boolean daemon = builder.daemonThread;
 		final Integer priority = builder.priority;

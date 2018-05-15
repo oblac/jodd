@@ -49,7 +49,7 @@ class DbSessionProviderTest extends DbHsqldbTestCase {
 		DbOom dbOom = DbOom.create()
 			.withConnectionProvider(cp)
 			.withSessionProvider(new ThreadDbSessionProvider())
-			.build()
+			.get()
 			.connect();
 
 		for (int i = 0; i < 2; i++) {

@@ -44,10 +44,11 @@ public class Futures {
 	private static final ScheduledExecutorService SCHEDULER =
 		Executors.newScheduledThreadPool(
 			1,
-			new ThreadFactoryBuilder()
+			ThreadFactoryBuilder
+				.create()
 				.setDaemon(true)
 				.setNameFormat("failAfter-%d")
-				.build());
+				.get());
 
 	/**
 	 * Returns {@code CompletableFuture} that fails after certain number of milliseconds.

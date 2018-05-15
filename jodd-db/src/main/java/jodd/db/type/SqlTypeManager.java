@@ -59,6 +59,9 @@ public class SqlTypeManager {
 
 	private static final SqlTypeManager SQL_TYPE_MANAGER = new SqlTypeManager();
 
+	/**
+	 * Returns default implementation of the {@code SqlTypeManager}.
+	 */
 	public static SqlTypeManager get() {
 		return SQL_TYPE_MANAGER;
 	}

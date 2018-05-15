@@ -42,7 +42,7 @@ class DbSqlTemplateWithPrefixTest {
 
 	@BeforeEach
 	void setUp() {
-		DbOom dbOom = DbOom.create().build();
+		DbOom dbOom = DbOom.create().get();
 		DbEntityManager dbEntityManager = dbOom.entityManager();
 
 		dbOom.config().getTableNames().setPrefix("PRE_");
