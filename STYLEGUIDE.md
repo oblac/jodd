@@ -18,6 +18,7 @@ Please follow this style guide and naming conventions when sending your submissi
 + Returning `null` should be generally avoided for the public methods.
 + Only beans have accessors (`getFoo()` and `setFoo()` methods). Method should not be named with e.g. `get` if it is not a bean.
 + Util static methods that return new instance should be named e.g. `create()` or `createFooBar()` if there is no argument or `fooBarOf(argument)` if there is an argument provided; but _never_ `getFooBar()`. Getters should never create a new instance of anything.
++ _Builder_ pattern functions should be also named `create()` and end with `build()` or `buildFoo()` method; unless there is more natural naming available.
 + Use `_this()` for base abstract classes of some fluent interfaces API:
 ```java
 	@SuppressWarnings("unchecked")
