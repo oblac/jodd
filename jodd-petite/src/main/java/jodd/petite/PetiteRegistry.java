@@ -145,8 +145,6 @@ public class PetiteRegistry {
 		return new BeanWire(beanName);
 	}
 
-	// todo wire(class)
-
 	/**
 	 * Bean wiring.
 	 */

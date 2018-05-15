@@ -436,6 +436,7 @@ public class PetiteContainer extends PetiteBeans {
 	public void shutdown() {
 		scopes.forEachValue(Scope::shutdown);
 
+
 		externalsCache.clear();
 		beans.clear();
 		beansAlt.clear();

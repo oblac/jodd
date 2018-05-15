@@ -50,7 +50,7 @@ public class JoyPetite extends JoyBase {
 	protected final Supplier<ProxyProxetta> proxettaSupplier;
 
 	protected PetiteContainer petiteContainer;
-	protected boolean isWebApplication = true;  // todo add this value as well!
+	protected boolean isWebApplication = true;
 
 	public JoyPetite(
 			final Supplier<ProxyProxetta> proxettaSupplier,

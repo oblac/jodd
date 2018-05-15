@@ -218,7 +218,6 @@ public class JoddJoy {
 
 			// cleanup things we will not use
 
-			// todo optimization
 			joyScanner.stop();
 			joyProps.stop();
 		}
