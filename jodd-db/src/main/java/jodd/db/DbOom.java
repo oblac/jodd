@@ -99,7 +99,7 @@ public class DbOom {
 		/**
 		 * Creates new DbOom.
 		 */
-		public DbOom get() {
+		public DbOom build() {
 			if (connectionProvider == null) {
 				connectionProvider = new CoreConnectionPool();
 			}
@@ -115,8 +115,8 @@ public class DbOom {
 		/**
 		 * Creates new DbOom and {@link DbOom#connect() initialize it}.
 		 */
-		public DbOom connect() {
-			return get().connect();
+		public DbOom buildAndConnect() {
+			return build().connect();
 		}
 	}
 

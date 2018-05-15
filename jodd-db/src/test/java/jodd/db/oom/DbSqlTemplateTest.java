@@ -49,7 +49,7 @@ class DbSqlTemplateTest {
 
 	@BeforeEach
 	void setUp() {
-		DbOom.create().get();
+		DbOom.create().build();
 		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
 		dbEntityManager.registerType(Boy.class);
 		dbEntityManager.registerType(BadBoy.class);

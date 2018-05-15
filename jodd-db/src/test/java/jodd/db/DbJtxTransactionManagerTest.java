@@ -60,7 +60,7 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 		DbOom.create()
 			.withConnectionProvider(cp)
 			.withSessionProvider(sessionProvider)
-			.get().connect();
+			.build().connect();
 
 		for (int i = 0; i < 2; i++) {
 

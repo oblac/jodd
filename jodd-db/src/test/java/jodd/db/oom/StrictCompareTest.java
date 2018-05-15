@@ -36,7 +36,7 @@ class StrictCompareTest {
 
 	@Test
 	void testTableNameDefault() {
-		DbOom dbOom = DbOom.create().get();
+		DbOom dbOom = DbOom.create().build();
 		DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
 		dbEntityManager.registerEntity(Tester.class);

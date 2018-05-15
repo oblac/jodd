@@ -39,7 +39,7 @@ class KeyTest {
 
 	@Test
 	void testEqualEntities() {
-		DbOom dbOom = DbOom.create().get();
+		DbOom dbOom = DbOom.create().build();
 
 		DbEntityManager dbEntityManager = dbOom.entityManager();
 

@@ -70,7 +70,7 @@ public abstract class DbBaseTest {
 			}
 		});
 		connectionPool = new CoreConnectionPool();
-		dbOom = DbOom.create().withConnectionProvider(connectionPool).get();
+		dbOom = DbOom.create().withConnectionProvider(connectionPool).build();
 	}
 
 	// ---------------------------------------------------------------- dbaccess

@@ -170,7 +170,7 @@ public class JoyDb extends JoyBase {
 			.withConnectionProvider(connectionProvider)
 			.withSessionProvider(sessionProvider)
 			.withQueryMap(new DbPropsQueryMap())
-			.get();
+			.build();
 
 		final DbEntityManager dbEntityManager = dbOom.entityManager();
 		dbEntityManager.reset();
