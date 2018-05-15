@@ -76,7 +76,7 @@ public class ValidationContext {
 
 	// ---------------------------------------------------------------- annotation resolver
 
-	private static TypeCache<List<Check>> cache = TypeCache.createDefault();
+	public static TypeCache<List<Check>> cache = TypeCache.createDefault();
 
 	/**
 	 * Resolve validation context for provided target class.
@@ -93,18 +93,15 @@ public class ValidationContext {
 	 * @see #resolveFor(Class)
 	 */
 	public void addClassChecks(final Class target) {
-		List<Check> list = cache.get(target);
-		if (list == null) {
-			list = new ArrayList<>();
-			ClassDescriptor cd = ClassIntrospector.get().lookup(target);
-
-			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+		final List<Check> list = cache.get(target, () -> {
+			final List<Check> newList = new ArrayList<>();
+			final ClassDescriptor cd = ClassIntrospector.get().lookup(target);
+			final PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 			for (PropertyDescriptor propertyDescriptor : allProperties) {
-				collectPropertyAnnotationChecks(list, propertyDescriptor);
+				collectPropertyAnnotationChecks(newList, propertyDescriptor);
 			}
-
-			cache.put(target, list);
-		}
+			return newList;
+		});
 		addAll(list);
 	}
 

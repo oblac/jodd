@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
  */
 public class DelegateAdviceUtil {
 
-	private static TypeCache<Class> advicesMap = TypeCache.createDefault();
+	public static TypeCache<Class> cache = TypeCache.createDefault();
 
 	/**
 	 * Proxy Proxetta, applied on all public methods of the target class.
@@ -54,14 +54,14 @@ public class DelegateAdviceUtil {
 	 * Applies advice on given target class and returns proxy instance.
 	 */
 	public static <T> T applyAdvice(final Class<T> targetClass) {
-		Class adviceClass = advicesMap.get(targetClass);
+		Class adviceClass = cache.get(targetClass);
 
 		if (adviceClass == null) {
 			// advice not yet created
 
 			adviceClass = PROXY_PROXETTA.proxy().setTarget(targetClass).define();
 
-			advicesMap.put(targetClass, adviceClass);
+			cache.put(targetClass, adviceClass);
 		}
 
 		// create new advice instance and injects target instance to it

@@ -44,8 +44,9 @@ public class Pathref<C> {
 
 	public static final int ALL = -1;
 
+	public static TypeCache<Class> cache = TypeCache.createDefault();
+
 	private static final PathrefProxetta proxetta = new PathrefProxetta();
-	private static final TypeCache<Class> cache = TypeCache.createDefault();
 
 	private final C instance;
 

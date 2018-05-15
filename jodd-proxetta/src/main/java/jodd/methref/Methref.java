@@ -37,8 +37,9 @@ import java.lang.reflect.Field;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Methref<C> {
 
+	public static TypeCache<Class> cache = TypeCache.createDefault();
+
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
-	private static final TypeCache<Class> cache = TypeCache.createDefault();
 
 	private final C instance;
 
