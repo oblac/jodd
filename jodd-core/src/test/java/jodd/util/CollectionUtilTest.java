@@ -29,7 +29,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -50,7 +57,7 @@ class CollectionUtilTest {
 
 		@Test
 		void testAsCollection_with_null() throws Exception {
-			assertThrows(NullPointerException.class, () -> {CollectionUtil.asCollection(null);});
+			assertThrows(NullPointerException.class, () -> {CollectionUtil.collectionOf(null);});
 		}
 
 		@Test
@@ -58,7 +65,7 @@ class CollectionUtilTest {
 
 			final Iterator<Object> input = Arrays.asList().iterator();
 
-			final Collection<Object> actual = CollectionUtil.asCollection(input);
+			final Collection<Object> actual = CollectionUtil.collectionOf(input);
 
 			// asserts
 			assertNotNull(actual);
@@ -70,7 +77,7 @@ class CollectionUtilTest {
 			final Collection<Integer> expected = Arrays.asList(1,2,3,4,5,6,7);
 			final Iterator<Integer> input = expected.iterator();
 
-			final Collection<Integer> actual = CollectionUtil.asCollection(input);
+			final Collection<Integer> actual = CollectionUtil.collectionOf(input);
 
 			// asserts
 			assertNotNull(actual);
@@ -180,7 +187,7 @@ class CollectionUtilTest {
 		void testAsStream_with_empty_iterator() throws Exception {
 			final Iterator input = Collections.EMPTY_LIST.iterator();
 
-			final Stream actual = CollectionUtil.asStream(input);
+			final Stream actual = CollectionUtil.streamOf(input);
 
 			// asserts
 			assertNotNull(actual);
@@ -191,7 +198,7 @@ class CollectionUtilTest {
 		void testAsStream_with_non_empty_iterator() throws Exception {
 			final Iterator<Integer> input = Arrays.asList(1,2,3).iterator();
 
-			final Stream<Integer> actual = CollectionUtil.asStream(input);
+			final Stream<Integer> actual = CollectionUtil.streamOf(input);
 
 			// asserts
 			assertNotNull(actual);
