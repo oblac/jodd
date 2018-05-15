@@ -85,8 +85,8 @@ public class CollectionUtil {
 	/**
 	 * Returns a collection containing all elements of the iterator.
 	 */
-	public static <T> Collection<T> asCollection(final Iterator<? extends T> iterator) {
-		List<T> list = new ArrayList<>();
+	public static <T> Collection<T> collectionOf(final Iterator<? extends T> iterator) {
+		final List<T> list = new ArrayList<>();
 		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}
@@ -94,18 +94,32 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * Wraps an iterator as a stream.
+	 * Converts iterator to a stream.
 	 */
-	public static <T> Stream<T> asStream(final Iterator<T> sourceIterator) {
-		return asStream(sourceIterator, false);
+	public static <T> Stream<T> streamOf(final Iterator<T> iterator) {
+		return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), false);
+	}
+
+	/**
+	 * Converts interable to a non-parallel stream.
+	 */
+	public static <T> Stream<T> streamOf(final Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 
 	/**
 	 * Wraps an iterator as a stream.
 	 */
-	public static <T> Stream<T> asStream(final Iterator<T> sourceIterator, final boolean parallel) {
-		Iterable<T> iterable = () -> sourceIterator;
-		return StreamSupport.stream(iterable.spliterator(), parallel);
+	public static <T> Stream<T> parallelStreamOf(final Iterator<T> iterator) {
+		return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), true);
 	}
+
+	/**
+	 * Wraps an iterator as a stream.
+	 */
+	public static <T> Stream<T> parallelStreamOf(final Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), true);
+	}
+
 
 }
