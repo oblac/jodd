@@ -25,6 +25,18 @@
 
 package jodd.cache;
 
+import jodd.io.FastByteArrayOutputStream;
+import jodd.io.FastCharArrayWriter;
+import jodd.io.FileNameUtil;
+import jodd.io.NetUtil;
+import jodd.io.PathUtil;
+import jodd.io.StreamUtil;
+import jodd.io.ZipUtil;
+import jodd.mutable.MutableBoolean;
+import jodd.mutable.MutableByte;
+import jodd.mutable.MutableInteger;
+import jodd.mutable.MutableLong;
+import jodd.util.buffer.FastCharBuffer;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
@@ -33,15 +45,20 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 
 /**
- TypeCacheBenchmark.map          thrpt   20  32709.552 ± 612.549  ops/s
- TypeCacheBenchmark.syncMap      thrpt   20  32646.570 ± 483.059  ops/s
- TypeCacheBenchmark.weakMap      thrpt   20  31566.891 ± 361.375  ops/s
- TypeCacheBenchmark.weakSyncMap  thrpt   20  22311.518 ± 342.584  ops/s
- */
+ TypeCacheBenchmark.map            thrpt   20  47135.079 ±  968.012  ops/s
+ TypeCacheBenchmark.simpleHashMap  thrpt   20  45526.617 ±  797.989  ops/s
+ TypeCacheBenchmark.smoothieMap    thrpt   20  39182.106 ±  545.616  ops/s
+ TypeCacheBenchmark.syncMap        thrpt   20  40134.180 ± 1308.250  ops/s
+ TypeCacheBenchmark.timedCache     thrpt   20  13929.643 ±   95.971  ops/s
+ TypeCacheBenchmark.weakMap        thrpt   20  36468.661 ± 1612.440  ops/s
+ TypeCacheBenchmark.weakSyncMap    thrpt   20  26196.027 ±  252.894  ops/s
+*/
 @Fork(2)
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
@@ -54,62 +71,106 @@ public class TypeCacheBenchmark {
 		Cloneable.class, ClassLoader.class, Compiler.class, Comparable.class, IllegalArgumentException.class,
 		Appendable.class, String.class, AssertionError.class, CharSequence.class, OutOfMemoryError.class,
 		ProcessBuilder.class, NullPointerException.class, Void.class, VerifyError.class,
-		Throwable.class, Thread.class, System.class
+		Throwable.class, Thread.class, System.class, AbstractCacheMap.class, Cache.class, FIFOCache.class,
+		FileCache.class, NoCache.class, FastByteArrayOutputStream.class, FastCharArrayWriter.class,
+		FileNameUtil.class, NetUtil.class, PathUtil.class, StreamUtil.class, ZipUtil.class,
+		MutableInteger.class, MutableLong.class, MutableBoolean.class, MutableByte.class
 	};
 
-	private TypeCache<String> map = TypeCache.create(TypeCache.Implementation.MAP);
-	private TypeCache<String> syncMap = TypeCache.create(TypeCache.Implementation.SYNC_MAP);
-	private TypeCache<String> weakMap = TypeCache.create(TypeCache.Implementation.WEAK);
-	private TypeCache<String> weakSyncMap = TypeCache.create(TypeCache.Implementation.SYNC_WEAK);
-	private int[] indexes = new int[1024];
+	{
+		System.out.println("Total types: " + TYPES.length);
+	}
+
+	private static final int TOTAL_READS = 1024;
+	private TypeCache<String> map = TypeCache.<String>create().get();
+	private TypeCache<String> syncMap = TypeCache.<String>create().threadsafe(true).get();
+	private TypeCache<String> weakMap = TypeCache.<String>create().weak(true).get();
+	private TypeCache<String> weakSyncMap = TypeCache.<String>create().weak(true).threadsafe(true).get();
+	private Map<Class, String> smoothieMap = new net.openhft.smoothie.SmoothieMap<>();
+	private Map<Class, String> simpleHashMap = new HashMap<>();
+	private Cache<Class, String> timedCache = new TimedCache<>(0);
+	private int[] indexes = new int[TOTAL_READS];
 
 	@Setup
 	public void prepare() {
-		for (Class type : TYPES) {
-			map.get(type, type::getName);
-			syncMap.get(type, type::getName);
-			weakMap.get(type, type::getName);
-			weakSyncMap.get(type, type::getName);
+		for (final Class type : TYPES) {
+			final String typeName = type.getName();
+			map.put(type, typeName);
+			syncMap.put(type, typeName);
+			weakMap.put(type, typeName);
+			weakSyncMap.put(type, typeName);
+			smoothieMap.put(type, typeName);
+			simpleHashMap.put(type, typeName);
+			timedCache.put(type, typeName);
 		}
 
-		Random rnd = new Random();
-		for (int i = 0; i < 1024; i++) {
+		final Random rnd = new Random();
+		for (int i = 0; i < TOTAL_READS; i++) {
 			indexes[i] = rnd.nextInt(TYPES.length);
 		}
 	}
 
+	// ---------------------------------------------------------------- benchmark
+
 	@Benchmark
-	public StringBuilder map() {
-		StringBuilder sb = new StringBuilder();
-		for (int index : indexes) {
+	public Object map() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
 			sb.append(map.get(TYPES[index]));
 		}
 		return sb;
 	}
 
 	@Benchmark
-	public StringBuilder syncMap() {
-		StringBuilder sb = new StringBuilder();
-		for (int index : indexes) {
+	public Object syncMap() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
 			sb.append(syncMap.get(TYPES[index]));
 		}
 		return sb;
 	}
 
 	@Benchmark
-	public StringBuilder weakMap() {
-		StringBuilder sb = new StringBuilder();
-		for (int index : indexes) {
+	public Object weakMap() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
 			sb.append(weakMap.get(TYPES[index]));
 		}
 		return sb;
 	}
 
 	@Benchmark
-	public StringBuilder weakSyncMap() {
-		StringBuilder sb = new StringBuilder();
-		for (int index : indexes) {
+	public Object weakSyncMap() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
 			sb.append(weakSyncMap.get(TYPES[index]));
+		}
+		return sb;
+	}
+
+	@Benchmark
+	public Object smoothieMap() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
+			sb.append(smoothieMap.get(TYPES[index]));
+		}
+		return sb;
+	}
+
+	@Benchmark
+	public Object simpleHashMap() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
+			sb.append(simpleHashMap.get(TYPES[index]));
+		}
+		return sb;
+	}
+
+	@Benchmark
+	public Object timedCache() {
+		final FastCharBuffer sb = new FastCharBuffer();
+		for (final int index : indexes) {
+			sb.append(timedCache.get(TYPES[index]));
 		}
 		return sb;
 	}
