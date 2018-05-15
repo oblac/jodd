@@ -37,7 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CharUtilTest {
 
@@ -314,12 +317,18 @@ class CharUtilTest {
 	@ParameterizedTest (name = "{index} : CharUtil.isSubDelimiter({1}) == {0}")
 	@CsvSource({
 			// only generic delimiters
-			"true, !", "true, $", "true, &", "true, \'", "true, (", "true, )", "true, *", "true, +", "true, ','", "true, ;", "true, =",
+			"true, !", "true, $", "true, &", "true, (", "true, )", "true, *", "true, +", "true, ','", "true, ;", "true, =",
 			// few non generic delimters
 			"false, #", "false, ]"
 		})
 	void testIsSubDelimiter(final boolean expected, final char input) {
 		assertEquals(expected, CharUtil.isSubDelimiter(input));
+	}
+
+	@Test
+	void testIsSubDelimiter_specialCase() {
+		// special case as I dont know how to add singletquote to the parameterized CsvSource
+		assertTrue(CharUtil.isSubDelimiter('\''));
 	}
 
 	@ParameterizedTest (name = "{index} : CharUtil.isLowercaseAlpha({1}) == {0}")
