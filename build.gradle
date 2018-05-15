@@ -38,6 +38,16 @@ version = '5.0.0-' + date()
 
 // --- properties -------------------------------------------------------------
 
+buildscript {
+	ext.kotlin_version = '1.2.41'
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+
 ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
 
@@ -548,5 +558,5 @@ def date() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.5'
+	gradleVersion = '4.7'
 }

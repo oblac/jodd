@@ -2,15 +2,6 @@
 ext.moduleName = 'Jodd DbOom'
 ext.moduleDescription = 'Jodd DB is efficient and thin database facade; DbOom is convenient database object mapper.'
 
-buildscript {
-	ext.kotlin_version = '1.2.0'
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-	}
-}
 apply plugin: 'kotlin'
 
 dependencies {
