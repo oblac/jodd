@@ -25,6 +25,7 @@
 
 package jodd.db.type;
 
+import jodd.cache.TypeCache;
 import jodd.db.DbSqlException;
 import jodd.mutable.MutableBoolean;
 import jodd.mutable.MutableByte;
@@ -49,7 +50,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -57,24 +57,30 @@ import java.util.HashMap;
  */
 public class SqlTypeManager {
 
-	private static HashMap<Class, SqlType> types = new HashMap<>();
-	private static HashMap<Class<? extends SqlType>, SqlType> sqlTypes = new HashMap<>();
+	private static final SqlTypeManager SQL_TYPE_MANAGER = new SqlTypeManager();
 
-	static {
+	public static SqlTypeManager get() {
+		return SQL_TYPE_MANAGER;
+	}
+
+	private TypeCache<SqlType> types = TypeCache.createDefault();
+	private TypeCache<SqlType> sqlTypes = TypeCache.createDefault();
+
+	public SqlTypeManager() {
 		registerDefaults();
 	}
 
 	/**
 	 * Unregisters all converters.
 	 */
-	public static void unregisterAll() {
+	public void unregisterAll() {
 		types.clear();
 	}
 
 	/**
 	 * Registers default set of SQL types.
 	 */
-	public static void registerDefaults() {
+	public void registerDefaults() {
 		register(Integer.class, IntegerSqlType.class);
 		register(int.class, IntegerSqlType.class);
 		register(MutableInteger.class, IntegerSqlType.class);
@@ -132,14 +138,14 @@ public class SqlTypeManager {
 	/**
 	 * Registers sql type for provided type.
 	 */
-	public static void register(final Class type, final Class<? extends SqlType> sqlTypeClass) {
+	public void register(final Class type, final Class<? extends SqlType> sqlTypeClass) {
 		types.put(type, lookupSqlType(sqlTypeClass));
 	}
 
 	/**
 	 * Unregisters some sql type.
 	 */
-	public static void unregister(final Class type) {
+	public void unregister(final Class type) {
 		types.remove(type);
 	}
 
@@ -149,7 +155,7 @@ public class SqlTypeManager {
 	 * Retrieves SQL type for provided type. All subclasses and interfaces are examined
 	 * for matching sql type.
 	 */
-	public static SqlType lookup(final Class clazz) {
+	public SqlType lookup(final Class clazz) {
 		SqlType sqlType;
 		for (Class x = clazz; x != null; x = x.getSuperclass()) {
 			sqlType = types.get(clazz);
@@ -170,7 +176,7 @@ public class SqlTypeManager {
 	/**
 	 * Returns sql type instance. Instances are stored for better performances.
 	 */
-	public static SqlType lookupSqlType(final Class<? extends SqlType> sqlTypeClass) {
+	public SqlType lookupSqlType(final Class<? extends SqlType> sqlTypeClass) {
 		SqlType sqlType = sqlTypes.get(sqlTypeClass);
 		if (sqlType == null) {
 			try {

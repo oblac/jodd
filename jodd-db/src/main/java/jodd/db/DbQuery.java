@@ -1110,9 +1110,9 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		}
 		SqlType sqlType;
 		if (sqlTypeClass != null) {
-			sqlType = SqlTypeManager.lookupSqlType(sqlTypeClass);
+			sqlType = SqlTypeManager.get().lookupSqlType(sqlTypeClass);
 		} else {
-			sqlType = SqlTypeManager.lookup(value.getClass());
+			sqlType = SqlTypeManager.get().lookup(value.getClass());
 		}
 		try {
 			if ((sqlType != null) && (dbSqlType != SqlType.DB_SQLTYPE_NOT_AVAILABLE)) {

@@ -111,7 +111,7 @@ public class JoyPetite extends JoyBase {
 		petiteContainer = createPetiteContainer();
 
 		if (externalsCache) {
-			petiteContainer.setExternalsCache(TypeCache.Implementation.MAP);
+			petiteContainer.setExternalsCache(TypeCache.createDefault());
 		}
 
 		log.info("Is web application: " + isWebApplication);

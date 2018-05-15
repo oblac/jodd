@@ -42,7 +42,7 @@ public class MapperFunctionInstances {
 		return MAPPER_FUNCTION_INSTANCES;
 	}
 
-	protected TypeCache<MapperFunction> typeCache = new TypeCache<>(TypeCache.Implementation.MAP);
+	protected TypeCache<MapperFunction> typeCache = TypeCache.createDefault();
 
 	public MapperFunction lookup(final Class<? extends MapperFunction> mapperFunctionClass) {
 		return typeCache.get(mapperFunctionClass, () -> {

@@ -25,6 +25,7 @@
 
 package jodd.petite;
 
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.proxetta.ProxettaBeanDefinition;
@@ -62,7 +63,7 @@ public class ScopedProxyManager {
 
 	protected ProxyAspect aspect = new ProxyAspect(ScopedProxyAdvice.class, new AllMethodsPointcut());
 
-	protected Map<Class, Class> proxyClasses = new HashMap<>();
+	protected TypeCache<Class> proxyClasses = TypeCache.createDefault();
 	protected Map<String, Object> proxies = new HashMap<>();
 
 	public ScopedProxyManager() {

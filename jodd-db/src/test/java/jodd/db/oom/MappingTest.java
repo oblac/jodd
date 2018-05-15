@@ -86,8 +86,8 @@ class MappingTest extends DbHsqldbTestCase {
 		final DbEntityManager dbEntityManager = DbOom.get().entityManager();
 
 		dbEntityManager.registerEntity(Foo.class);
-		SqlTypeManager.register(Boo.class, BooSqlType.class);
-		SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);
+		SqlTypeManager.get().register(Boo.class, BooSqlType.class);
+		SqlTypeManager.get().register(FooWeight.class, FooWeigthSqlType.class);
 
 		List<Foo> foos = dbOom.query("select * from FOO").list(Foo.class);
 		assertEquals(1, foos.size());

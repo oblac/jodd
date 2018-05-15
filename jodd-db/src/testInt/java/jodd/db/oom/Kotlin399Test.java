@@ -61,7 +61,7 @@ class Kotlin399Test extends DbBaseTest {
 		init(db);
 
 		db.createTables();
-		SqlTypeManager.register(Tester3.Status.class, StatusSqlType.class);
+		SqlTypeManager.get().register(Tester3.Status.class, StatusSqlType.class);
 
 		try {
 			workoutJavaEntity();
@@ -86,7 +86,7 @@ class Kotlin399Test extends DbBaseTest {
 	}
 
 	private void workoutKotlinEntity() {
-		SqlTypeManager.register(Status33.class, Status33SqlType.class);
+		SqlTypeManager.get().register(Status33.class, Status33SqlType.class);
 		DbSession session = new DbSession(connectionPool);
 
 		Tester33 tester = new Tester33(9, Status33.SELECTED, 3);

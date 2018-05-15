@@ -434,9 +434,7 @@ public class PetiteContainer extends PetiteBeans {
 	 * Shutdowns container. After container is down, it can't be used anymore.
 	 */
 	public void shutdown() {
-		for (final Scope scope : scopes.values()) {
-			scope.shutdown();
-		}
+		scopes.forEachValue(Scope::shutdown);
 
 		externalsCache.clear();
 		beans.clear();

@@ -331,9 +331,9 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			try {
 				SqlType sqlType;
 				if (sqlTypeClass != null) {
-					sqlType = SqlTypeManager.lookupSqlType(sqlTypeClass);
+					sqlType = SqlTypeManager.get().lookupSqlType(sqlTypeClass);
 				} else {
-					sqlType = SqlTypeManager.lookup(destinationType);
+					sqlType = SqlTypeManager.get().lookup(destinationType);
 				}
 				if (sqlType != null) {
 					cachedColumnValue = sqlType.readValue(resultSet, colNdx + 1, destinationType, columnDbSqlType);

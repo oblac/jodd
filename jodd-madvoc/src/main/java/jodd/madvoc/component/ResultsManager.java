@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
@@ -37,9 +38,7 @@ import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -55,19 +54,19 @@ public class ResultsManager {
 	protected MadvocConfig madvocConfig;
 
 	public ResultsManager() {
-		this.allResults = new HashMap<>();
+		this.allResults = TypeCache.createDefault();
 	}
 
 	// ---------------------------------------------------------------- container
 
-	protected final Map<Class<? extends ActionResult>, ActionResult> allResults;
+	protected final TypeCache<ActionResult> allResults;
 
 	/**
-	 * Returns all action results.
+	 * Returns all action results as new set.
 	 */
 	public Set<ActionResult> getAllActionResults() {
-		Set<ActionResult> set = new HashSet<>(allResults.size());
-		set.addAll(allResults.values());
+		final Set<ActionResult> set = new HashSet<>(allResults.size());
+		allResults.forEachValue(set::add);
 		return set;
 	}
 

@@ -181,7 +181,7 @@ public class ScopeDataInspector {
 		return new InjectionPoint(propertyType, name, targetName, scopeResolver.defaultOrScopeType(scope));
 	}
 
-	private TypeCache<ScopeData> scopeDataTypeCache = TypeCache.create(TypeCache.Implementation.MAP);
+	private TypeCache<ScopeData> scopeDataTypeCache = TypeCache.createDefault();
 
 	/**
 	 * Cached version of {@link #inspectClassScopes(Class)}. Use it in runtime when

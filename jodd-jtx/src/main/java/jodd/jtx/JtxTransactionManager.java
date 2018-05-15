@@ -25,12 +25,11 @@
 
 package jodd.jtx;
 
+import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static jodd.jtx.JtxIsolationLevel.ISOLATION_DEFAULT;
 import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
@@ -52,7 +51,7 @@ public class JtxTransactionManager {
 	protected boolean oneResourceManager;
 	protected boolean validateExistingTransaction;
 	protected boolean ignoreScope;
-	protected Map<Class, JtxResourceManager> resourceManagers;
+	protected TypeCache<JtxResourceManager> resourceManagers;
 
 	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<>();
 
@@ -61,7 +60,7 @@ public class JtxTransactionManager {
 	 */
 	public JtxTransactionManager() {
 		this.maxResourcesPerTransaction = -1;
-		this.resourceManagers = new HashMap<>();
+		this.resourceManagers = TypeCache.createDefault();
 	}
 
 	// ---------------------------------------------------------------- config
@@ -456,13 +455,13 @@ public class JtxTransactionManager {
 	 * will be closed.
 	 */
 	public void close() {
-		for (JtxResourceManager resourceManager : this.resourceManagers.values()) {
+		this.resourceManagers.forEachValue(resourceManager -> {
 			try {
 				resourceManager.close();
 			} catch (Exception ex) {
 				// ignore
 			}
-		}
+		});
 		resourceManagers.clear();
 	}
 

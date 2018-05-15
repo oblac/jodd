@@ -101,8 +101,8 @@ public class TypeJsonSerializerMap {
 		this.defaultSerializerMap = defaultSerializerMap;
 	}
 
-	protected final TypeCache<TypeJsonSerializer> map = new TypeCache<>(TypeCache.Implementation.MAP);
-	protected final TypeCache<TypeJsonSerializer> cache = new TypeCache<>(TypeCache.Implementation.MAP);
+	protected final TypeCache<TypeJsonSerializer> map = TypeCache.createDefault();
+	protected final TypeCache<TypeJsonSerializer> cache = TypeCache.createDefault();
 
 	/**
 	 * Registers default set of {@link jodd.json.TypeJsonSerializer serializers}.

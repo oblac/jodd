@@ -63,7 +63,7 @@ class OutsideObjectsTest {
 	@Test
 	void testWire_withCache() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.setExternalsCache(TypeCache.Implementation.MAP);
+		pc.setExternalsCache(TypeCache.createDefault());
 		pc.registerPetiteBean(InBean.class);
 
 		BeBean beBean = new BeBean();

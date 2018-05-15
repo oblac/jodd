@@ -25,6 +25,7 @@
 
 package jodd.madvoc;
 
+import jodd.cache.TypeCache;
 import jodd.io.upload.FileUploadFactory;
 import jodd.io.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.config.RootPackages;
@@ -43,8 +44,6 @@ import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -109,7 +108,7 @@ public final class MadvocConfig {
 
 	// ---------------------------------------------------------------- action method annotations
 
-	private Map<Class<? extends Annotation>, ActionConfig> annotations = new HashMap<>();
+	private TypeCache<ActionConfig> annotations = TypeCache.createDefault();
 	private Class<? extends Annotation>[] actionAnnotations = ClassUtil.emptyClassArray();
 	private AnnotationParser[] annotationParsers = new AnnotationParser[0];
 
@@ -157,7 +156,7 @@ public final class MadvocConfig {
 	 * action configuration.
 	 */
 	public ActionConfig lookupActionConfig(final Class<? extends Annotation> annotationType) {
-		return annotations.getOrDefault(annotationType, actionConfig);
+		return annotations.get(annotationType, () -> actionConfig);
 	}
 
 	// ---------------------------------------------------------------- encoding

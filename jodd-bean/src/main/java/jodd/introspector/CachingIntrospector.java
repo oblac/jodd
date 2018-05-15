@@ -54,7 +54,7 @@ public class CachingIntrospector implements ClassIntrospector {
 	 * constructors.
 	 */
 	public CachingIntrospector(final boolean scanAccessible, final boolean enhancedProperties, final boolean includeFieldsAsProperties, final String[] propertyFieldPrefix) {
-		this.cache = new TypeCache<>(TypeCache.Implementation.MAP);
+		this.cache = TypeCache.createDefault();
 		this.scanAccessible = scanAccessible;
 		this.enhancedProperties = enhancedProperties;
 		this.includeFieldsAsProperties = includeFieldsAsProperties;

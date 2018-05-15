@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -80,7 +79,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all bean scopes.
 	 */
-	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<>();
+	protected final TypeCache<Scope> scopes = TypeCache.createDefault();
 
 	/**
 	 * Map of all providers.
@@ -90,22 +89,21 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all bean collections.
 	 */
-	protected final Map<Class, String[]> beanCollections = new HashMap<>();
+	protected final TypeCache<String[]> beanCollections = TypeCache.createDefault();
 
 	/**
 	 * Cache used for storing the internals about the external types that are not
 	 * registered withing the container.
 	 */
-	protected TypeCache<BeanDefinition> externalsCache = TypeCache.create(TypeCache.Implementation.NO_CACHE);
+	protected TypeCache<BeanDefinition> externalsCache = TypeCache.<BeanDefinition>create().noCache().get();
 
 	/**
 	 * Sets the type of cache used for storing the configurations for external types that
 	 * are not part of the container. This affects usages of the methods
 	 * like {@link PetiteContainer#wire(Object)} and {@link PetiteContainer#invokeMethod(Object, Method)}.
 	 */
-	public void setExternalsCache(final TypeCache.Implementation typeCacheImplementation) {
-		Objects.requireNonNull(typeCacheImplementation);
-		this.externalsCache = TypeCache.create(typeCacheImplementation);
+	public void setExternalsCache(final TypeCache<BeanDefinition> typeCacheImplementation) {
+		this.externalsCache = typeCacheImplementation;
 	}
 
 	/**

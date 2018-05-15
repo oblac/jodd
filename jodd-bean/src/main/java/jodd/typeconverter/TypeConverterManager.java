@@ -25,6 +25,7 @@
 
 package jodd.typeconverter;
 
+import jodd.cache.TypeCache;
 import jodd.io.upload.FileUpload;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
@@ -91,7 +92,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -111,7 +111,7 @@ public class TypeConverterManager {
 		return TYPE_CONVERTER_MANAGER;
 	}
 
-	private final HashMap<Class, TypeConverter> converters = new HashMap<>();
+	private final TypeCache<TypeConverter> converters = TypeCache.createDefault();
 
 	// ---------------------------------------------------------------- methods
 
