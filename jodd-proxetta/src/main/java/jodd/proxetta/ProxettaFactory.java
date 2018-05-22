@@ -100,7 +100,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Defines class input stream as a target.
 	 */
 	protected T setTarget(final InputStream target) {
-		checkTarget();
+		assertTargetIsNotDefined();
 
 		targetInputStream = target;
 		targetClass = null;
@@ -114,7 +114,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Class will not be loaded by classloader!
 	 */
 	protected T setTarget(final String targetName) {
-		checkTarget();
+		assertTargetIsNotDefined();
 
 		try {
 			targetInputStream = ClassLoaderUtil.getClassAsStream(targetName);
@@ -135,7 +135,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Defines class as a target.
 	 */
 	protected T setTarget(final Class target) {
-		checkTarget();
+		assertTargetIsNotDefined();
 
 		try {
 			targetInputStream = ClassLoaderUtil.getClassAsStream(target);
@@ -155,7 +155,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Checks if target is not defined yet.
 	 */
-	private void checkTarget() {
+	private void assertTargetIsNotDefined() {
 		if (targetInputStream != null) {
 			throw new ProxettaException("Target already defined");
 		}
@@ -208,10 +208,10 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 */
 	protected void process() {
 		if (targetInputStream == null) {
-			throw new ProxettaException("Target missing");
+			throw new ProxettaException("Target missing: " + targetClassName);
 		}
 		// create class reader
-		ClassReader classReader;
+		final ClassReader classReader;
 		try {
 			classReader = new ClassReader(targetInputStream);
 		} catch (IOException ioex) {
@@ -357,7 +357,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Checks if proxy is created and throws an exception if not.
 	 */
-	protected void checkAccepted() {
+	protected void assertProxyIsCreated() {
 		if (destClassWriter == null) {
 			throw new ProxettaException("Target not accepted yet!");
 		}
@@ -367,7 +367,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Returns raw bytecode.
 	 */
 	protected byte[] toByteArray() {
-		checkAccepted();
+		assertProxyIsCreated();
 		return destClassWriter.toByteArray();
 	}
 
@@ -375,7 +375,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Returns <code>true</code> if at least one method was wrapped.
 	 */
 	public boolean isProxyApplied() {
-		checkAccepted();
+		assertProxyIsCreated();
 		return proxyApplied;
 	}
 
@@ -383,7 +383,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	 * Returns proxy class name.
 	 */
 	public String getProxyClassName() {
-		checkAccepted();
+		assertProxyIsCreated();
 		return proxyClassName;
 	}
 
