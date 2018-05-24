@@ -34,7 +34,7 @@ public class Chalk256 extends Chalk<Chalk256> {
 	private static final String[] FG_CODES = new String[256];
 	private static final String[] BG_CODES = new String[256];
 
-	{
+	static {
 		for (int i = 0; i < FG_CODES.length; i++) {
 			FG_CODES[i] = "38;5;" + i;
 		}
