@@ -29,6 +29,8 @@ import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.meta.PetiteBean;
+import jodd.util.Consumers;
+
 import java.util.function.Consumer;
 
 /**
@@ -41,63 +43,58 @@ import java.util.function.Consumer;
 public class AutomagicPetiteConfigurator {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicPetiteConfigurator.class);
-	private final ClassScanner classScanner = new ClassScanner();
-	private PetiteContainer container;
-	private final byte[] petiteBeanAnnotationBytes;
-	protected long elapsed;
+	private final static byte[] PETITE_BEAN_ANNOTATION_BYTES = ClassScanner.bytecodeSignatureOfType(PetiteBean.class);
+	private final PetiteContainer container;
+	private final Consumers<ClassScanner> classScannerConsumers = new Consumers<>();
 
-	public AutomagicPetiteConfigurator() {
-		petiteBeanAnnotationBytes = ClassScanner.bytecodeSignatureOfType(PetiteBean.class);
-	}
-
-	/**
-	 * Return elapsed number of milliseconds for configuration. 
-	 */
-	public long elapsedTime() {
-		return elapsed;
+	public AutomagicPetiteConfigurator(final PetiteContainer petiteContainer) {
+		this.container = petiteContainer;
 	}
 
 	public AutomagicPetiteConfigurator withScanner(final Consumer<ClassScanner> scannerConsumer) {
-		scannerConsumer.accept(classScanner);
+		classScannerConsumers.add(scannerConsumer);
 		return this;
 	}
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
 	 */
-	public void configure(final PetiteContainer petiteContainer) {
-		this.container = petiteContainer;
+	public void configure() {
+		long elapsed = System.currentTimeMillis();
+
+		final ClassScanner classScanner = new ClassScanner();
 
 		classScanner.smartModeEntries();
-		classScanner.onEntry(ENTRY_CONSUMER);
 		classScanner.scanDefaultClasspath();
 
-		elapsed = System.currentTimeMillis();
+		classScannerConsumers.accept(classScanner);
+
+		registerAsConsumer(classScanner);
+
 		try {
 			classScanner.start();
 		} catch (Exception ex) {
 			throw new PetiteException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.beansCount());
+		log.info("Petite configured in " + elapsed + " ms. Total beans: " + container.beansCount());
 	}
 
 	/**
-	 * Scans all classes and registers only those annotated with {@link jodd.petite.meta.PetiteBean}.
+	 * Registers a class consumer that registers only those annotated with {@link jodd.petite.meta.PetiteBean}.
 	 * Because of performance purposes, classes are not dynamically loaded; instead, their
 	 * file content is examined.
 	 */
-	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
-		@Override
-		public void accept(final ClassScanner.EntryData entryData) {
-			String entryName = entryData.name();
-			if (!entryData.isTypeSignatureInUse(petiteBeanAnnotationBytes)) {
+	public void registerAsConsumer(final ClassScanner classScanner) {
+		classScanner.registerEntryConsumer(classPathEntry -> {
+			if (!classPathEntry.isTypeSignatureInUse(PETITE_BEAN_ANNOTATION_BYTES)) {
 				return;
 			}
-			Class<?> beanClass;
+
+			final Class<?> beanClass;
 
 			try {
-				beanClass = classScanner.loadClass(entryName);
+				beanClass = classPathEntry.loadClass();
 			} catch (ClassNotFoundException cnfex) {
 				throw new PetiteException("Unable to load class: " + cnfex, cnfex);
 			}
@@ -106,12 +103,12 @@ public class AutomagicPetiteConfigurator {
 				return;
 			}
 
-			PetiteBean petiteBean = beanClass.getAnnotation(PetiteBean.class);
+			final PetiteBean petiteBean = beanClass.getAnnotation(PetiteBean.class);
+
 			if (petiteBean == null) {
 				return;
 			}
 			container.registerPetiteBean(beanClass, null, null, null, false, null);
-		}
-
-	};
+		});
+	}
 }
