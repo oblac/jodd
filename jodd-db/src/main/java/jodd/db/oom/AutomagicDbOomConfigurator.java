@@ -29,6 +29,8 @@ import jodd.db.oom.meta.DbTable;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.util.Consumers;
+
 import java.util.function.Consumer;
 
 /**
@@ -37,47 +39,38 @@ import java.util.function.Consumer;
 public class AutomagicDbOomConfigurator {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicDbOomConfigurator.class);
-	private final ClassScanner classScanner = new ClassScanner();
 
-	protected final byte[] dbTableAnnotationBytes;
+	protected final static byte[] DB_TABLE_ANNOTATION_BYTES = ClassScanner.bytecodeSignatureOfType(DbTable.class);
 	protected final boolean registerAsEntities;
+	protected final DbEntityManager dbEntityManager;
+	private final Consumers<ClassScanner> classScannerConsumers = new Consumers<>();
 
-	public AutomagicDbOomConfigurator(final boolean registerAsEntities) {
-		dbTableAnnotationBytes = ClassScanner.bytecodeSignatureOfType(DbTable.class);
+	public AutomagicDbOomConfigurator(final DbEntityManager dbEntityManager, final boolean registerAsEntities) {
+		this.dbEntityManager = dbEntityManager;
 		this.registerAsEntities = registerAsEntities;
-	}
-	public AutomagicDbOomConfigurator() {
-		this(true);
-	}
-
-	protected DbEntityManager dbEntityManager;
-
-	protected long elapsed;
-
-	/**
-	 * Return elapsed number of milliseconds for configuration.
-	 */
-	public long getElapsed() {
-		return elapsed;
 	}
 
 	public AutomagicDbOomConfigurator withScanner(final Consumer<ClassScanner> scannerConsumer) {
-		scannerConsumer.accept(classScanner);
+		classScannerConsumers.add(scannerConsumer);
 		return this;
 	}
 
+
 	/**
 	 * Configures {@link DbEntityManager} with specified class path.
-	 * @see AutomagicDbOomConfigurator#configure(DbEntityManager)
 	 */
-	public void configure(final DbEntityManager dbEntityManager) {
-		this.dbEntityManager = dbEntityManager;
+	public void configure() {
+		long elapsed = System.currentTimeMillis();
+
+		final ClassScanner classScanner = new ClassScanner();
 
 		classScanner.smartModeEntries();
-		classScanner.onEntry(ENTRY_CONSUMER);
 		classScanner.scanDefaultClasspath();
 
-		elapsed = System.currentTimeMillis();
+		classScannerConsumers.accept(classScanner);
+
+		registerAsConsumer(classScanner);
+
 		try {
 			classScanner.start();
 		} catch (Exception ex) {
@@ -90,38 +83,39 @@ public class AutomagicDbOomConfigurator {
 	}
 
 	/**
-	 * Scans all classes and registers only those annotated with {@link DbTable}.
+	 * Registers a class consumer that registers only those annotated with {@link DbTable}.
 	 * Because of performance purposes, classes are not dynamically loaded; instead, their
 	 * file content is examined.
 	 */
-	private Consumer<ClassScanner.EntryData> ENTRY_CONSUMER = new Consumer<ClassScanner.EntryData>() {
-	@Override
-	public void accept(final ClassScanner.EntryData entryData) {
-		String entryName = entryData.name();
-		if (!entryData.isTypeSignatureInUse(dbTableAnnotationBytes)) {
-			return;
-		}
+	public void registerAsConsumer(final ClassScanner classScanner) {
+		classScanner.registerEntryConsumer(classPathEntry -> {
+			if (!classPathEntry.isTypeSignatureInUse(DB_TABLE_ANNOTATION_BYTES)) {
+				return;
+			}
 
-		Class<?> beanClass;
-		try {
-			beanClass = classScanner.loadClass(entryName);
-		} catch (ClassNotFoundException cnfex) {
-			throw new DbOomException("Entry class not found: " + entryName, cnfex);
-		}
+			final Class<?> beanClass;
+			try {
+				beanClass = classPathEntry.loadClass();
+			} catch (ClassNotFoundException cnfex) {
+				throw new DbOomException("Entry class not found: " + classPathEntry.name(), cnfex);
+			}
 
-		if (beanClass == null) {
-			return;
-		}
+			if (beanClass == null) {
+				return;
+			}
 
-		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
-		if (dbTable == null) {
-			return;
-		}
-		if (registerAsEntities) {
-			dbEntityManager.registerEntity(beanClass);
-		} else {
-			dbEntityManager.registerType(beanClass);
-		}
-	}};
+			final DbTable dbTable = beanClass.getAnnotation(DbTable.class);
+
+			if (dbTable == null) {
+				return;
+			}
+
+			if (registerAsEntities) {
+				dbEntityManager.registerEntity(beanClass);
+			} else {
+				dbEntityManager.registerType(beanClass);
+			}
+		});
+	}
 
 }
