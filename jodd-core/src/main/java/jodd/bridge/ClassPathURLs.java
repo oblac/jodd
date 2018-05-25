@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.core;
+package jodd.bridge;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,14 +31,8 @@ import java.net.URLClassLoader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Methods that requires different implementations on various Java Platforms.
- */
-public class JavaBridge {
-
-	public static URL[] getURLs(Class clazz) {
-		return getURLs(clazz.getClassLoader(), clazz);
-	}
+@JavaIncompatible
+public class ClassPathURLs {
 
 	/**
 	 * Returns urls for the classloader
@@ -46,20 +40,17 @@ public class JavaBridge {
 	 * @param classLoader classloader in which to find urls
 	 * @return list of urls or {@code null} if not found
 	 */
-	public static URL[] getURLs(final ClassLoader classLoader) {
-		return getURLs(classLoader, JavaBridge.class);
-	}
-
-	private static URL[] getURLs(ClassLoader classLoader, final Class clazz) {
+	public static URL[] of(ClassLoader classLoader) {
+		final Class clazz = ClassPathURLs.class;
 		final Set<URL> urls = new LinkedHashSet<>();
 
 		while (classLoader != null) {
 			if (classLoader instanceof URLClassLoader) {
-				URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
+				final URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
 				return urlClassLoader.getURLs();
 			}
 
-			URL url = classModuleUrl(classLoader, clazz);
+			final URL url = classModuleUrl(classLoader, clazz);
 
 			if (url != null) {
 				urls.add(url);
@@ -70,13 +61,13 @@ public class JavaBridge {
 		return urls.toArray(new URL[0]);
 	}
 
-	private static URL classModuleUrl(ClassLoader classLoader, Class clazz) {
+	private static URL classModuleUrl(final ClassLoader classLoader, final Class clazz) {
 		if (clazz == null) {
 			return null;
 		}
 		final String name = clazz.getName().replace('.', '/') + ".class";
 
-		URL url = classLoader.getResource(name);
+		final URL url = classLoader.getResource(name);
 
 		if (url == null) {
 			return null;
@@ -84,7 +75,7 @@ public class JavaBridge {
 
 		// use root
 		String urlString = url.toString();
-		int ndx = urlString.indexOf(name);
+		final int ndx = urlString.indexOf(name);
 		urlString = urlString.substring(0, ndx) + urlString.substring(ndx + name.length());
 
 		try {

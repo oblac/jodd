@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.bridge.JavaIncompatible;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -35,6 +36,7 @@ import java.lang.reflect.Field;
  *
  * @see https://github.com/netty/netty/blob/master/common/src/main/java/io/netty/util/internal/PlatformDependent.java
  */
+@JavaIncompatible
 final class UnsafeInternal {
 
 	private static final Unsafe UNSAFE;
