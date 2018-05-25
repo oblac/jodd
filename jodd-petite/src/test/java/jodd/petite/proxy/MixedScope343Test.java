@@ -47,15 +47,14 @@ class MixedScope343Test {
 
 	@BeforeEach
 	void setupPetiteContainer() {
-		PetiteConfig petiteConfig = PetiteHelper.createPetiteConfig();
+		final PetiteConfig petiteConfig = PetiteHelper.createPetiteConfig();
 
-		ProxyProxetta proxyProxetta = PetiteHelper.createProxyProxetta();
+		final ProxyProxetta proxyProxetta = PetiteHelper.createProxyProxetta();
 		petiteContainer = new ProxettaAwarePetiteContainer(proxyProxetta, petiteConfig);
 
-		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator();
+		final AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator(petiteContainer);
 		petiteConfigurator.withScanner(scanner -> scanner.includeEntries(this.getClass().getPackage().getName() + ".*"));
-
-		petiteConfigurator.configure(petiteContainer);
+		petiteConfigurator.configure();
 	}
 
 	@AfterEach

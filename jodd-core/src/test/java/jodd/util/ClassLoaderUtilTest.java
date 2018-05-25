@@ -163,7 +163,7 @@ class ClassLoaderUtilTest {
 
 		ClassScanner classScanner = new ClassScanner() {
 			@Override
-			protected void onEntry(EntryData entryData) {
+			protected void onEntry(ClassPathEntry entryData) {
 				if (entryData.name().endsWith("jquery.js")) {
 					jqueryName.set(entryData.name());
 				}

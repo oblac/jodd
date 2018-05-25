@@ -146,7 +146,7 @@ class InExRulesTest {
 
 		inExRules.include("xxx");
 
-		inExRules.smartMode();
+		inExRules.detectMode();
 
 		assertFalse(inExRules.isBlacklist());
 		assertTrue(inExRules.isWhitelist());

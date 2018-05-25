@@ -59,7 +59,7 @@ class WireTest {
 	@DisabledOnJava(value = 9, description = "Automagic configuration only works with MR-JAR jars as they don't work in exploded mode.")
 	void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
-		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator();
+		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator(pc);
 
 		petiteConfigurator.withScanner(classScanner ->
 			classScanner
@@ -70,7 +70,7 @@ class WireTest {
 					"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses",
 					"*Public*", "*Secret*", "*$*", "jodd.petite.proxy.*"));
 
-		petiteConfigurator.configure(pc);
+		petiteConfigurator.configure();
 
 		assertEquals(1, pc.beansCount());
 		assertEquals(1, pc.scopesCount());

@@ -34,4 +34,8 @@ public class MyWebApplication extends JoyContextListener {
 		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 	}
 
+	@Override
+	protected JoddJoy createJoy() {
+		return super.createJoy().withScanner(joyScanner -> joyScanner.setIncludedJars("foo.jar"));
+	}
 }

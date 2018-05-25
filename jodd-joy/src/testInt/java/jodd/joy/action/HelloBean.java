@@ -23,19 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc;
+package jodd.joy.action;
 
-/**
- * Configurator that loads only actions for integration tests.
- */
-public class MadvocTestIntegrationConfig extends AutomagicMadvocConfigurator {
+import jodd.petite.meta.PetiteBean;
 
-	@Override
-	protected void acceptActionClass(Class actionClass) {
-		String className = actionClass.getName();
-		if (!className.startsWith("jodd.madvoc.action.")) {
-			return;
-		}
-		super.acceptActionClass(actionClass);
-	}
+@PetiteBean
+public class HelloBean {
 }
