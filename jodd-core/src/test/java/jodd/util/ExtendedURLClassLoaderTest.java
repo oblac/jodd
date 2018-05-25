@@ -73,7 +73,7 @@ class ExtendedURLClassLoaderTest {
 	void testParentFirst() throws ClassNotFoundException {
 		ClassLoader parentCL = A.class.getClassLoader();
 
-		URL[] urls = ClassPathURLs.of(parentCL);
+		URL[] urls = ClassPathURLs.of(parentCL, null);
 
 		// parent-first
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, true);
@@ -100,7 +100,7 @@ class ExtendedURLClassLoaderTest {
 	@DisabledOnJava(value = 9, description = "Usage of URLClassLoader")
 	void testParentLast() throws ClassNotFoundException {
 		ClassLoader parentCL = A.class.getClassLoader();
-		URL[] urls = ClassPathURLs.of(parentCL);
+		URL[] urls = ClassPathURLs.of(parentCL, null);
 
 		// parent-last
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, false);

@@ -133,7 +133,7 @@ public class JoyScanner extends JoyBase {
 			.ignoreException(ignoreExceptions)
 			.scanDefaultClasspath();
 
-		appClasses.forEach(clazz -> classScanner.scan(ClassPathURLs.of(clazz.getClassLoader())));
+		appClasses.forEach(clazz -> classScanner.scan(ClassPathURLs.of(null, clazz)));
 	}
 
 	@Override

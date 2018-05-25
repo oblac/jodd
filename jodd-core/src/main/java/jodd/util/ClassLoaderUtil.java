@@ -203,7 +203,7 @@ public class ClassLoaderUtil {
 		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
-			URL[] urls = ClassPathURLs.of(classLoader);
+			URL[] urls = ClassPathURLs.of(classLoader, null);
 			if (urls != null) {
 				for (URL u : urls) {
 					File f = FileUtil.toContainerFile(u);
