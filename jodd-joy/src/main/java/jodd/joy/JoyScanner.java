@@ -25,7 +25,7 @@
 
 package jodd.joy;
 
-import jodd.core.JavaBridge;
+import jodd.bridge.ClassPathURLs;
 import jodd.io.findfile.ClassScanner;
 import jodd.typeconverter.Converter;
 
@@ -133,7 +133,7 @@ public class JoyScanner extends JoyBase {
 			.ignoreException(ignoreExceptions)
 			.scanDefaultClasspath();
 
-		appClasses.forEach(clazz -> classScanner.scan(JavaBridge.getURLs(clazz)));
+		appClasses.forEach(clazz -> classScanner.scan(ClassPathURLs.of(clazz.getClassLoader())));
 	}
 
 	@Override

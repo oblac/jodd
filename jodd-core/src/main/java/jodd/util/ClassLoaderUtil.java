@@ -25,7 +25,7 @@
 
 package jodd.util;
 
-import jodd.core.JavaBridge;
+import jodd.bridge.ClassPathURLs;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.cl.ClassLoaderStrategy;
@@ -203,7 +203,7 @@ public class ClassLoaderUtil {
 		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
-			URL[] urls = JavaBridge.getURLs(classLoader);
+			URL[] urls = ClassPathURLs.of(classLoader);
 			if (urls != null) {
 				for (URL u : urls) {
 					File f = FileUtil.toContainerFile(u);

@@ -25,7 +25,7 @@
 
 package jodd.util;
 
-import jodd.core.JavaBridge;
+import jodd.bridge.ClassPathURLs;
 import jodd.io.FileUtil;
 import jodd.test.DisabledOnJava;
 import jodd.util.cl.ExtendedURLClassLoader;
@@ -73,7 +73,7 @@ class ExtendedURLClassLoaderTest {
 	void testParentFirst() throws ClassNotFoundException {
 		ClassLoader parentCL = A.class.getClassLoader();
 
-		URL[] urls = JavaBridge.getURLs(parentCL);
+		URL[] urls = ClassPathURLs.of(parentCL);
 
 		// parent-first
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, true);
@@ -100,7 +100,7 @@ class ExtendedURLClassLoaderTest {
 	@DisabledOnJava(value = 9, description = "Usage of URLClassLoader")
 	void testParentLast() throws ClassNotFoundException {
 		ClassLoader parentCL = A.class.getClassLoader();
-		URL[] urls = JavaBridge.getURLs(parentCL);
+		URL[] urls = ClassPathURLs.of(parentCL);
 
 		// parent-last
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, parentCL, false);
