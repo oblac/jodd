@@ -27,9 +27,14 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
+import jodd.json.JsonParser;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public abstract class TagActionTestBase {
 
@@ -65,6 +70,23 @@ public abstract class TagActionTestBase {
 				.query("tag.name", "JODD")
 				.send();
 		assertEquals("save-Tag{123:JODD}", response.bodyText().trim());
+	}
+
+	@Test
+	void testError() {
+		HttpResponse response = HttpRequest
+			.get("localhost:8173/tag/boom")
+			.send();
+
+		assertEquals(500, response.statusCode());
+		String body = response.bodyText();
+		Map map = JsonParser.create().parse(body);
+
+		assertEquals("/ by zero", map.get("message"));
+		assertEquals("java.lang.ArithmeticException", map.get("error"));
+
+		List<String> details = (List<String>) map.get("details");
+		assertFalse(details.isEmpty());
 	}
 
 

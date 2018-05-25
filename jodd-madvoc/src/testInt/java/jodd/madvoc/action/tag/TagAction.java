@@ -88,4 +88,13 @@ public class TagAction {
 
 		return TextResult.of("save-" + tag);
 	}
+
+
+	@GET @RestAction("boom")
+	public TextResult exception() {
+		int b = 0;
+		int a = 5 / b;
+		return TextResult.of("Hi" + a);
+	}
+
 }
