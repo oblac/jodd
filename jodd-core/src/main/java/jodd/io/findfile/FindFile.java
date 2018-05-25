@@ -639,7 +639,7 @@ public class FindFile implements Iterable<File> {
 	 * Separates input files and folders.
 	 */
 	protected void init() {
-		rules.smartMode();
+		rules.detectMode();
 
 		todoFiles = new LinkedList<>();
 		todoFolders = new LinkedList<>();

@@ -210,12 +210,12 @@ public class PropertiesUtil {
 	 */
 	public static Properties loadFromClasspath(final Properties p, final String... rootTemplate) {
 			ClassScanner.get()
-				.onEntry(entryData -> UncheckedException.runAndWrapException(() -> p.load(entryData.openInputStream())))
-			.includeResources(true)
-			.ignoreException(true)
-			.excludeAllEntries(true)
-			.includeEntries(rootTemplate)
-			.scanDefaultClasspath();
+				.registerEntryConsumer(entryData -> UncheckedException.runAndWrapException(() -> p.load(entryData.openInputStream())))
+				.includeResources(true)
+				.ignoreException(true)
+				.excludeAllEntries(true)
+				.includeEntries(rootTemplate)
+				.scanDefaultClasspath();
 		return p;
 	}
 
