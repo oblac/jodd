@@ -43,8 +43,13 @@ public class ClassPathURLs {
 	 * @param classLoader classloader in which to find urls
 	 * @return list of urls or {@code null} if not found
 	 */
-	public static URL[] of(ClassLoader classLoader) {
-		final Class clazz = ClassPathURLs.class;
+	public static URL[] of(ClassLoader classLoader, Class clazz) {
+		if (clazz == null) {
+			clazz = ClassPathURLs.class;
+		}
+		if (classLoader == null) {
+			classLoader = clazz.getClassLoader();
+		}
 		final Set<URL> urls = new LinkedHashSet<>();
 
 		while (classLoader != null) {
