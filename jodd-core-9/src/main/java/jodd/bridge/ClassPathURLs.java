@@ -23,32 +23,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.core;
+package jodd.bridge;
 
 import java.lang.module.ModuleDescriptor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-/**
- * Methods that requires different implementations on various Java Platforms.
- */
-public class JavaBridge {
+public class ClassPathURLs {
 
 	private static final String MANIFEST = "META-INF/MANIFEST.MF";
-
-	/**
-	 * Returns urls for the class and it's classloader.
-	 */
-	public static URL[] getURLs(Class clazz) {
-		return getURLs(clazz.getClassLoader(), clazz);
-	}
 
 	/**
 	 * Returns urls for the classloader.
@@ -56,11 +43,8 @@ public class JavaBridge {
 	 * @param classLoader classloader in which to find urls
 	 * @return list of urls or {@code null} if not found
 	 */
-	public static URL[] getURLs(ClassLoader classLoader) {
-		return getURLs(classLoader, JavaBridge.class);
-	}
-
-	private static URL[] getURLs(ClassLoader classLoader, final Class clazz) {
+	public static URL[] of(ClassLoader classLoader) {
+		final Class clazz = ClassPathURLs.class;
 		final Set<URL> urls = new LinkedHashSet<>();
 
 		while (classLoader != null) {
@@ -75,7 +59,7 @@ public class JavaBridge {
 			if (classUrl != null) {
 				urls.add(classUrl);
 			}
-			classUrl = classModuleUrl(classLoader, JavaBridge.class);
+			classUrl = classModuleUrl(classLoader, ClassPathURLs.class);
 			if (classUrl != null) {
 				urls.add(classUrl);
 			}
@@ -102,7 +86,7 @@ public class JavaBridge {
 			classLoader = classLoader.getParent();
 		}
 
-		return urls.toArray(new URL[urls.size()]);
+		return urls.toArray(new URL[0]);
 	}
 
 	private static URL fixManifestUrl(URL url) {
