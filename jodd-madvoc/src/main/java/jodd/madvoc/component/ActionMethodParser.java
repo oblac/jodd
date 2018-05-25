@@ -25,6 +25,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.bridge.Packages;
 import jodd.introspector.Mapper;
 import jodd.introspector.MapperFunction;
 import jodd.introspector.MapperFunctionInstances;
@@ -318,13 +319,13 @@ public class ActionMethodParser {
 				actionPackage = null;
 
 				while (actionPackage == null) {
-					int ndx = newPackage.lastIndexOf('.');
+					final int ndx = newPackage.lastIndexOf('.');
 					if (ndx == -1) {
 						// end of hierarchy, nothing found
 						break mainloop;
 					}
 					newPackage = newPackage.substring(0, ndx);
-					actionPackage = Package.getPackage(newPackage);
+					actionPackage = Packages.of(actionClass.getClassLoader(), newPackage);
 				}
 			}
 			else {
