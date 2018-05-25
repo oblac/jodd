@@ -30,17 +30,18 @@ import jodd.util.Wildcard;
 /**
  * Rule matcher.
  */
+@FunctionalInterface
 public interface InExRuleMatcher<T, R> {
 
 	/**
 	 * {@link jodd.util.Wildcard#match(CharSequence, CharSequence) Wilcard} rule matcher.
 	 */
-	public static final InExRuleMatcher<String, String> WILDCARD_RULE_MATCHER =
+	InExRuleMatcher<String, String> WILDCARD_RULE_MATCHER =
 		(value, rule, include) -> Wildcard.match(value, rule);
 	/**
 	 * {@link jodd.util.Wildcard#matchPath(String, String)  Wilcard path} rule matcher.
 	 */
-	public static final InExRuleMatcher<String, String> WILDCARD_PATH_RULE_MATCHER =
+	InExRuleMatcher<String, String> WILDCARD_PATH_RULE_MATCHER =
 		(value, rule, include) -> Wildcard.matchPath(value, rule);
 
 	/**

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * One-class rule engine for includes/excludes logic. It can be used when
+ * A single-class rule engine for includes/excludes filtering logic. It can be used when
  * set of objects has to filtered using includes and excludes rules.
  * For example, when filtering files by file name etc.
  * <p>
@@ -218,7 +218,7 @@ public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 	 * </ul>
 	 * Should be called <b>after</b> all the rules are set, before matching starts.
 	 */
-	public void smartMode() {
+	public void detectMode() {
 		if (excludesCount == 0 && includesCount > 0) {
 			whitelist();
 		}
