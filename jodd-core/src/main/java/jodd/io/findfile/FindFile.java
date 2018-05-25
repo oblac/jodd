@@ -56,13 +56,13 @@ import java.util.function.Consumer;
  */
 public class FindFile implements Iterable<File> {
 
-	public static WildcardFindFile wildcard() {
+	public static WildcardFindFile createWildcardFF() {
 		return new WildcardFindFile();
 	}
-	public static RegExpFindFile regexp() {
+	public static RegExpFindFile createRegExpFF() {
 		return new RegExpFindFile();
 	}
-	public static FindFile get() {
+	public static FindFile create() {
 		return new FindFile();
 	}
 

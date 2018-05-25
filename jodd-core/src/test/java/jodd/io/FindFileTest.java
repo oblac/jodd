@@ -55,7 +55,7 @@ class FindFileTest {
 
 	@Test
 	void testUncompleted() {
-		List<File> fileList = FindFile.get().findAll();
+		List<File> fileList = FindFile.create().findAll();
 		assertEquals(0, fileList.size());
 	}
 
@@ -192,7 +192,7 @@ class FindFileTest {
 
 	@Test
 	void testRegexp() {
-		FindFile ff = FindFile.regexp()
+		FindFile ff = FindFile.createRegExpFF()
 				.include(".*/a[.].*")
 				.recursive(true)
 				.includeDirs(true)
@@ -247,7 +247,7 @@ class FindFileTest {
 	void testConsumer() {
 		final List<File> foundedFiles = new ArrayList<>();
 
-		WildcardFindFile.get()
+		WildcardFindFile.create()
 			.include("**/*file/a*")
 			.recursive(true)
 			.includeDirs(true)

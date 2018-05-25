@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  */
 public class RegExpFindFile extends FindFile {
 
-	public static RegExpFindFile get() {
+	public static RegExpFindFile create() {
 		return new RegExpFindFile();
 	}
 

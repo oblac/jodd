@@ -46,7 +46,7 @@ public class PropsUtil {
 	 * Loads props from classpath.
 	 */
 	public static void loadFromClasspath(final Props p, final String... patterns) {
-		ClassScanner.get()
+		ClassScanner.create()
 			.registerEntryConsumer(entryData -> {
 				String usedEncoding = JoddCore.encoding;
 				if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {

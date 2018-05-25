@@ -209,7 +209,7 @@ public class PropertiesUtil {
 	 * Loads properties from classpath file(s). Properties are specified using wildcards.
 	 */
 	public static Properties loadFromClasspath(final Properties p, final String... rootTemplate) {
-			ClassScanner.get()
+			ClassScanner.create()
 				.registerEntryConsumer(entryData -> UncheckedException.runAndWrapException(() -> p.load(entryData.openInputStream())))
 				.includeResources(true)
 				.ignoreException(true)

@@ -56,7 +56,7 @@ import java.util.List;
  */
 public class InExRules<V, D, R> implements InExRuleMatcher<V, R> {
 
-	public InExRules<String, String, String> get() {
+	public InExRules<String, String, String> create() {
 		return new InExRules<>();
 	}
 

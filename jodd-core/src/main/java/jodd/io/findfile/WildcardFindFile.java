@@ -36,7 +36,7 @@ import jodd.util.inex.InExRules;
  */
 public class WildcardFindFile extends FindFile {
 
-	public static WildcardFindFile get() {
+	public static WildcardFindFile create() {
 		return new WildcardFindFile();
 	}
 

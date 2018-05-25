@@ -60,7 +60,10 @@ public class ClassScanner {
 	private static final String CLASS_FILE_EXT = ".class";
 	private static final String JAR_FILE_EXT = ".jar";
 
-	public static ClassScanner get() {
+	/**
+	 * Create new class scanner.
+	 */
+	public static ClassScanner create() {
 		return new ClassScanner();
 	}
 
@@ -290,7 +293,7 @@ public class ClassScanner {
 			rootPath += File.separatorChar;
 		}
 
-		FindFile ff = FindFile.get().includeDirs(false).recursive(true).searchPath(rootPath);
+		FindFile ff = FindFile.create().includeDirs(false).recursive(true).searchPath(rootPath);
 		File file;
 		while ((file = ff.nextFile()) != null) {
 			String filePath = file.getAbsolutePath();
