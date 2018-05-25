@@ -64,9 +64,8 @@ public class AutomagicPetiteConfigurator {
 
 		final ClassScanner classScanner = new ClassScanner();
 
-		classScanner.smartModeEntries();
+		classScanner.detectEntriesMode(true);
 		classScanner.scanDefaultClasspath();
-
 		classScannerConsumers.accept(classScanner);
 
 		registerAsConsumer(classScanner);
