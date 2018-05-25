@@ -27,20 +27,27 @@ package jodd.joy;
 
 import jodd.cache.TypeCache;
 import jodd.petite.AutomagicPetiteConfigurator;
+import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteContainer;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
 import jodd.proxetta.impl.ProxyProxetta;
+import jodd.util.Chalk256;
+import jodd.util.ClassUtil;
 import jodd.util.Consumers;
+import jodd.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static jodd.joy.JoddJoy.PETITE_CORE;
 import static jodd.joy.JoddJoy.PETITE_DBPOOL;
-import static jodd.joy.JoddJoy.PETITE_SCAN;
+import static jodd.joy.JoddJoy.PETITE_SCANNER;
 
 public class JoyPetite extends JoyBase {
 
@@ -125,13 +132,14 @@ public class JoyPetite extends JoyBase {
 		// load parameters from properties files
 		petiteContainer.defineParameters(propsSupplier.get());
 
-		petiteContainer.addBean(PETITE_SCAN, joyScannerSupplier.get());
+		petiteContainer.addBean(PETITE_SCANNER, joyScannerSupplier.get());
 
 		// automagic configuration
 		if (autoConfiguration) {
-			log.info("*PETITE Automagic scanning");
+			final AutomagicPetiteConfigurator automagicPetiteConfigurator =
+				new AutomagicPetiteConfigurator(petiteContainer);
 
-			registerPetiteContainerBeans(petiteContainer);
+			automagicPetiteConfigurator.registerAsConsumer(joyScannerSupplier.get().classScanner());
 		}
 
 		log.debug("Petite manual configuration started...");
@@ -149,18 +157,6 @@ public class JoyPetite extends JoyBase {
 	}
 
 	/**
-	 * Configures Petite container. By default scans the class path
-	 * for petite beans and registers them automagically.
-	 */
-	protected void registerPetiteContainerBeans(final PetiteContainer petiteContainer) {
-		final AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
-
-		pcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));
-
-		pcfg.configure(petiteContainer);
-	}
-
-	/**
 	 * Stops Petite container.
 	 */
 	@Override
@@ -171,5 +167,39 @@ public class JoyPetite extends JoyBase {
 		if (petiteContainer != null) {
 			petiteContainer.shutdown();
 		}
+	}
+
+	public void printBeans(final int width) {
+		final Print print = new Print();
+
+		print.line("Beans", width);
+
+		final List<BeanDefinition> beanDefinitionList = new ArrayList<>();
+		petiteContainer.forEachBean(beanDefinitionList::add);
+
+		beanDefinitionList.stream()
+			.sorted(Comparator.comparing(BeanDefinition::name))
+			.forEach(beanDefinition -> {
+				print.out(Chalk256.chalk().yellow(), scopeName(beanDefinition), 10);
+				print.space();
+
+				print.out(Chalk256.chalk().green(), beanDefinition.name(), 30);
+				print.space();
+
+				final int remaining = width - 10 - 1 - 30 - 1;
+				print.outRight(Chalk256.chalk().blue(), ClassUtil.getShortClassName(beanDefinition.type(), 2), remaining);
+
+				print.newLine();
+			});
+
+		print.line(width);
+	}
+
+	private String scopeName(final BeanDefinition beanDefinition) {
+		String scopeName = beanDefinition.scope().getSimpleName();
+
+		scopeName = StringUtil.cutSuffix(scopeName, "Scope");
+
+		return scopeName.toLowerCase();
 	}
 }

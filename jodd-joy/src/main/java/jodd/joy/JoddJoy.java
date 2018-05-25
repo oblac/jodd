@@ -61,7 +61,7 @@ public class JoddJoy {
 	/**
 	 * Petite bean name for {@link JoyScanner} bean.
 	 */
-	public static final String PETITE_SCAN = "scan";
+	public static final String PETITE_SCANNER = "scanner";
 
 	private static JoddJoy joddJoy;
 
@@ -199,7 +199,8 @@ public class JoddJoy {
 		LoggerFactory.setLoggerProvider(loggerProvider);
 		log = LoggerFactory.getLogger(JoddJoy.class);
 
-		log.info(Jodd.JODD);
+		printLogo();
+
 		log.info("Ah, Joy!");
 		log.info("Logging using: " + loggerProvider.getClass().getSimpleName());
 
@@ -232,11 +233,19 @@ public class JoddJoy {
 			throw ex;
 		}
 
-		joyMadvoc.printRoutes();
+		joyPetite.printBeans(100);
+		joyMadvoc.printRoutes(100);
 
 		System.out.println(Chalk256.chalk().yellow().on("Joy") + " is up. Enjoy!");
 
 		log.info("Joy is up. Enjoy!");
+	}
+
+	/**
+	 * Prints a logo.
+	 */
+	private void printLogo() {
+		System.out.println(Chalk256.chalk().yellow().on(Jodd.JODD));
 	}
 
 	/**

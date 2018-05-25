@@ -39,7 +39,6 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.Consumers;
-import jodd.util.StringUtil;
 
 import javax.servlet.ServletContext;
 import java.util.Comparator;
@@ -58,7 +57,11 @@ public class JoyMadvoc extends JoyBase {
 	private PetiteWebApp webApp;
 	private Supplier<PetiteWebApp> webAppSupplier;
 
-	public JoyMadvoc(final Supplier<PetiteContainer> petiteSupplier, final Supplier<ProxyProxetta> proxettaSupplier, final Supplier<Props> propsSupplier, final Supplier<JoyScanner> scannerSupplier) {
+	public JoyMadvoc(
+			final Supplier<PetiteContainer> petiteSupplier,
+			final Supplier<ProxyProxetta> proxettaSupplier,
+			final Supplier<Props> propsSupplier,
+			final Supplier<JoyScanner> scannerSupplier) {
 		this.proxettaSupplier = proxettaSupplier;
 		this.petiteSupplier = petiteSupplier;
 		this.scannerSupplier = scannerSupplier;
@@ -103,7 +106,18 @@ public class JoyMadvoc extends JoyBase {
 		webApp.registerComponent(new ProxettaSupplier(proxettaSupplier.get()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
 
-		webApp.registerComponent(AutomagicMadvocConfigurator.class, amc -> amc.withScanner(scannerSupplier.get()));
+		// Automagic Madvoc configurator will scan and register ALL!
+		// This way we reduce the startup time and have only one scanning.
+		// Scanning happens in the INIT phase.
+		final AutomagicMadvocConfigurator automagicMadvocConfigurator =
+			new AutomagicMadvocConfigurator(scannerSupplier.get().classScanner()) {
+				@Override
+				protected String createInfoMessage() {
+					return "Scanning completed in " + elapsed + "ms.";
+				}
+			};
+
+		webApp.registerComponent(automagicMadvocConfigurator);
 
 		webAppConsumers.accept(webApp);
 
@@ -123,10 +137,12 @@ public class JoyMadvoc extends JoyBase {
 	/**
 	 * Prints routes to console.
 	 */
-	protected void printRoutes() {
-		final ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
+	protected void printRoutes(final int width) {
+		final Print print = new Print();
 
-		System.out.println(StringUtil.repeat('-', 80));
+		print.line("Routes", width);
+
+		final ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
 
 		final List<ActionRuntime> actions = actionsManager.getAllActionRuntimes();
 		actions.stream()
@@ -136,40 +152,21 @@ public class JoyMadvoc extends JoyBase {
 
 				final String actionMethod = ar.getActionMethod();
 
-				System.out.print(Chalk256.chalk().yellow().on(val(actionMethod == null ? "*" : actionMethod, 7)));
-				System.out.print(" ");
-				System.out.print(Chalk256.chalk().green().on(val(ar.getActionPath(), 24)));
-				System.out.print(" ");
+				print.out(Chalk256.chalk().yellow(), actionMethod == null ? "*" : actionMethod, 7);
+				print.space();
+
+				print.out(Chalk256.chalk().green(), ar.getActionPath(), 30);
+				print.space();
+
 				final String signature = ClassUtil.getShortClassName(
-						ar.getActionClass()) + '#' + ar.getActionClassMethod().getName();
-				System.out.print(Chalk256.chalk().blue().on(valRight(signature, 48)));
-				System.out.println();
+						ar.getActionClass(), 2) + '#' + ar.getActionClassMethod().getName();
+
+				final int remaining = width - 7 - 1 - 30 - 1;
+				print.outRight(Chalk256.chalk().blue(), signature, remaining);
+
+				print.newLine();
 			});
 
-		System.out.println(StringUtil.repeat('-', 80));
-	}
-
-	protected String val(final String value, final int len) {
-		if (value.length() > len) {
-			return value.substring(value.length() - len);
-		}
-
-		if (value.length() == len) {
-			return value;
-		}
-
-		return value + StringUtil.repeat(' ', len - value.length());
-	}
-
-	protected String valRight(final String value, final int len) {
-		if (value.length() > len) {
-			return value.substring(value.length() - len);
-		}
-
-		if (value.length() == len) {
-			return value;
-		}
-
-		return StringUtil.repeat(' ', len - value.length()) + value;
+		print.line(width);
 	}
 }

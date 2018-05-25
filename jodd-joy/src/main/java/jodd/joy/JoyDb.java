@@ -177,24 +177,14 @@ public class JoyDb extends JoyBase {
 
 		// automatic configuration
 		if (autoConfiguration) {
-			registerDbEntities(dbEntityManager);
+			final AutomagicDbOomConfigurator automagicDbOomConfigurator =
+				new AutomagicDbOomConfigurator(dbEntityManager, true);
+
+			automagicDbOomConfigurator.registerAsConsumer(
+				joyScannerSupplier.get().classScanner());
 		}
 
 		dbEntityManagerConsumers.accept(dbEntityManager);
-	}
-
-	/**
-	 * Registers DbOom entities. By default, scans the
-	 * class path and register entities automagically.
-	 */
-	protected void registerDbEntities(final DbEntityManager dbEntityManager) {
-		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
-
-		dbcfg.withScanner(classScanner -> joyScannerSupplier.get().accept(classScanner));
-
-		log.info("*DB Automagic scanning");
-
-		dbcfg.configure(dbEntityManager);
 	}
 
 	/**

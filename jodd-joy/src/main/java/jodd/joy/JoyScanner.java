@@ -32,7 +32,6 @@ import jodd.typeconverter.Converter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * <code>AppScanner</code> defines entries that will be included/excluded in
@@ -40,7 +39,7 @@ import java.util.function.Consumer;
  * By default, scanning entries includes all classes that belongs
  * to the project and to the Jodd.
  */
-public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
+public class JoyScanner extends JoyBase {
 
 	/**
 	 * Scanning entries that will be examined by various
@@ -84,7 +83,7 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	 * pass <i>any</i> user-application class, so Jodd can figure out the real
 	 * class path to scan.
 	 */
-	public JoyScanner scanClasspathOf(Class applicationClass) {
+	public JoyScanner scanClasspathOf(final Class applicationClass) {
 		appClasses.add(applicationClass);
 		return this;
 	}
@@ -92,13 +91,20 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 	/**
 	 * Shortcut for {@link #scanClasspathOf(Class)}.
 	 */
-	public JoyScanner scanClasspathOf(Object applicationObject) {
+	public JoyScanner scanClasspathOf(final Object applicationObject) {
 		return scanClasspathOf(applicationObject.getClass());
 	}
 
 
 	// ---------------------------------------------------------------- start
 
+	private final ClassScanner classScanner = new ClassScanner();
+
+	/**
+	 * Configures scanner class finder. Works for all three scanners:
+	 * Petite, DbOom and Madvoc. All scanners by default include all jars,
+	 * but exclude all entries.
+	 */
 	@Override
 	public void start() {
 		initLogger();
@@ -110,15 +116,7 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 			log.debug("Scan jars: " + Converter.get().toString(includedJars));
 			log.debug("Scan ignore exception: " + ignoreExceptions);
 		}
-	}
 
-	/**
-	 * Configures scanner class finder. Works for all three scanners:
-	 * Petite, DbOom and Madvoc. All scanners by default include all jars,
-	 * but exclude all entries.
-	 */
-	@Override
-	public void accept(final ClassScanner classScanner) {
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
 			classScanner.excludeAllEntries(false);
 			classScanner.excludeEntries("ch.qos.logback.*");
@@ -129,6 +127,7 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 		}
 
 		classScanner
+			.detectEntriesMode(true)
 			.includeEntries(includedEntries.toArray(new String[0]))
 			.includeJars(includedJars.toArray(new String[0]))
 			.ignoreException(ignoreExceptions)
@@ -139,7 +138,12 @@ public class JoyScanner extends JoyBase implements Consumer<ClassScanner> {
 
 	@Override
 	public void stop() {
-		includedEntries.clear();
-		includedJars.clear();
+	}
+
+	/**
+	 * Returns class scanner.
+	 */
+	public ClassScanner classScanner() {
+		return classScanner;
 	}
 }
