@@ -25,10 +25,14 @@
 
 package jodd.madvoc.result;
 
+import jodd.exception.ExceptionUtil;
 import jodd.json.JsonSerializer;
 import jodd.madvoc.meta.RenderWith;
 import jodd.util.StringPool;
 import jodd.util.net.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * General JSON result.
@@ -51,7 +55,7 @@ public class JsonResult {
 	 * Creates JSON result from given object. The object will be serialized to JSON.
 	 */
 	public static JsonResult of(final Object object) {
-		String json = JsonSerializer.create().deep(true).serialize(object);
+		final String json = JsonSerializer.create().deep(true).serialize(object);
 		return new JsonResult(json);
 	}
 
@@ -60,6 +64,30 @@ public class JsonResult {
 	 */
 	public static JsonResult of(final HttpStatus httpStatus) {
 		return empty().status(httpStatus);
+	}
+
+	/**
+	 * Creates a JSON response from an exception. Response body will have information about the
+	 * exception and response status will be set to 500.
+	 */
+	public static JsonResult of(final Exception exception) {
+		final HashMap<String, Object> errorMap = new HashMap<>();
+
+		errorMap.put("message", ExceptionUtil.message(exception));
+		errorMap.put("error", exception.getClass().getName());
+		errorMap.put("cause", exception.getCause() != null ? exception.getCause().getClass().getName() : null);
+
+		final ArrayList<String> details = new ArrayList<>();
+
+		final StackTraceElement[] ste = ExceptionUtil.getStackTrace(exception, null, null);
+		for (StackTraceElement stackTraceElement : ste) {
+			details.add(stackTraceElement.toString());
+		}
+
+		errorMap.put("details", details);
+
+		final String json = JsonSerializer.create().deep(true).serialize(errorMap);
+		return new JsonResult(json).status(HttpStatus.error500().internalError());
 	}
 
 	/**

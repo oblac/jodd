@@ -74,21 +74,17 @@ public class JsonActionResult implements ActionResult {
 			statusMessage = "OK";
 		}
 
-		byte[] data = json.getBytes(encoding);
+		response.setStatus(status);
+
+		// write data
+
+		final byte[] data = json.getBytes(encoding);
 		response.setContentLength(data.length);
 
 		OutputStream out = null;
 		try {
 			out = response.getOutputStream();
 			out.write(data);
-
-			if (status < 400) {
-				response.setStatus(status);
-			}
-			else {
-				response.sendError(status, statusMessage);
-			}
-
 		} finally {
 			StreamUtil.close(out);
 		}

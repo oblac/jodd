@@ -23,23 +23,20 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.interceptor;
 
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.interceptor.JsonErrorInterceptor;
-import jodd.madvoc.interceptor.ServletConfigInterceptor;
-import jodd.madvoc.path.RestActionNamingStrategy;
-import jodd.madvoc.result.JsonActionResult;
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.result.JsonResult;
 
-public class RestActionConfig extends ActionConfig {
+public class JsonErrorInterceptor implements ActionInterceptor {
 
-	public RestActionConfig(final ActionConfig parentActionConfig) {
-		super(parentActionConfig);
-
-		setNamingStrategy(RestActionNamingStrategy.class);
-
-		setActionResult(JsonActionResult.class);
-
-		setInterceptors(JsonErrorInterceptor.class, ServletConfigInterceptor.class);
+	@Override
+	public Object intercept(final ActionRequest actionRequest) {
+		try {
+			return actionRequest.invoke();
+		}
+		catch (Exception ex) {
+			return JsonResult.of(ex);
+		}
 	}
 }
