@@ -47,7 +47,7 @@ public class PropsUtil {
 	 */
 	public static void loadFromClasspath(final Props p, final String... patterns) {
 		ClassScanner.get()
-			.onEntry(entryData -> {
+			.registerEntryConsumer(entryData -> {
 				String usedEncoding = JoddCore.encoding;
 				if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
 					usedEncoding = StringPool.ISO_8859_1;
