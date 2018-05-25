@@ -45,7 +45,7 @@ public class PetiteWebApp extends WebApp {
 	 */
 	private Supplier<PetiteContainer> petiteContainerSupplier = () -> {
 		PetiteContainer pc = new PetiteContainer();
-		new AutomagicPetiteConfigurator().configure(pc);
+		new AutomagicPetiteConfigurator(pc).configure();
 		return pc;
 	};
 
@@ -62,7 +62,7 @@ public class PetiteWebApp extends WebApp {
 	protected void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
-		PetiteContainer petiteContainer = petiteContainerSupplier.get();
+		final PetiteContainer petiteContainer = petiteContainerSupplier.get();
 
 		madvocContainer.registerComponentInstance(PETITE_CONTAINER_NAME, petiteContainer);
 
