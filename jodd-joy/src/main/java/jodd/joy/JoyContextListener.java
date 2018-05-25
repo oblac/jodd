@@ -25,7 +25,6 @@
 
 package jodd.joy;
 
-import jodd.util.ClassUtil;
 import jodd.util.SystemUtil;
 
 import javax.servlet.DispatcherType;
@@ -70,10 +69,7 @@ public class JoyContextListener implements ServletContextListener {
 		final JoddJoy joy = JoddJoy.get();
 
 		if (SystemUtil.isAtLeastJavaVersion(9)) {
-			final Class callerClass = ClassUtil.getCallerClass(2);
-			if (callerClass != null) {
-				joy.withScanner(joyScanner -> joyScanner.scanClasspathOf(callerClass));
-			}
+			joy.withScanner(joyScanner -> joyScanner.scanClasspathOf(this.getClass()));
 		}
 
 		return joy;
