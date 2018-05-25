@@ -26,6 +26,7 @@
 package jodd.props;
 
 import jodd.bean.BeanCopy;
+import jodd.bean.BeanUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -69,5 +70,25 @@ class PropsBeanTest {
 		assertEquals("10101", props.getValue("http.port"));
 		assertEquals("30", props.getValue("http.pool"));
 		assertEquals("localhost", props.getValue("http.address"));
+	}
+
+	@Test
+	void testToBean() {
+		String data = "port=10101\n" +
+			"address=localhost\n" +
+			"pool=30\n" +
+			"foo=bar";
+
+		final Props props = new Props();
+		props.load(data);
+
+		final HttpConfig httpConfig = new HttpConfig();
+
+		props.entries().forEach(pe -> BeanUtil.silent.setProperty(httpConfig, pe.getKey(), pe.getValue()));
+
+		assertEquals(10101, httpConfig.port);
+		assertEquals(30, httpConfig.pool);
+		assertEquals("localhost", httpConfig.address);
+
 	}
 }

@@ -25,6 +25,8 @@
 
 package jodd.props;
 
+import jodd.util.CollectionUtil;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Props iterator builder. Should be used with: {@link jodd.props.Props#entries()}.
@@ -129,6 +132,13 @@ public final class PropsEntries {
 	 */
 	public Iterator<PropsEntry> iterator() {
 		return propsIterator;
+	}
+
+	/**
+	 * Consumer all properties.
+	 */
+	public void forEach(final Consumer<PropsEntry> propsDataConsumer) {
+		CollectionUtil.streamOf(propsIterator).forEach(propsDataConsumer);
 	}
 
 	// ---------------------------------------------------------------- iterator
