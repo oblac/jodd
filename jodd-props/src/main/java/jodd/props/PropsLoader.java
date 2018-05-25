@@ -31,16 +31,10 @@ import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
-
 /**
- * Some {@link Props} utilities.
+ * {@link Props} loaders.
  */
-public class PropsUtil {
+public class PropsLoader {
 
 	/**
 	 * Loads props from classpath.
@@ -73,29 +67,4 @@ public class PropsUtil {
 		return p;
 	}
 
-	/**
-	 * Convert Java Properties to Jodd Props format.
-	 *
-	 * @param writer     Writer to write Props formatted file content to
-	 * @param properties Properties to convert to Props format
-	 * @throws IOException On any I/O error when writing to the writer
-	 */
-	public static void convert(final Writer writer, final Properties properties) throws IOException {
-		final Map<String, Properties> emptyProfiles = Collections.emptyMap();
-		convert(writer, properties, emptyProfiles);
-	}
-
-	/**
-	 * Convert Java Properties to Jodd Props format.
-	 *
-	 * @param writer     Writer to write Props formatted file content to
-	 * @param properties Properties to convert to Props format
-	 * @param profiles   Properties per profile to convert and add to the Props format
-	 * @throws IOException On any I/O error when writing to the writer
-	 */
-	public static void convert(final Writer writer, final Properties properties, final Map<String, Properties> profiles)
-			throws IOException {
-		final PropertiesToProps toProps = new PropertiesToProps();
-		toProps.convertToWriter(writer, properties, profiles);
-	}
 }

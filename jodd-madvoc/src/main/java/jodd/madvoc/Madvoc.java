@@ -28,7 +28,7 @@ package jodd.madvoc;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.props.Props;
-import jodd.props.PropsUtil;
+import jodd.props.PropsLoader;
 import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
@@ -246,7 +246,7 @@ public class Madvoc {
 			log.info("Loading Madvoc parameters from: " + Converter.get().toString(patterns));
 		}
 		try {
-			return PropsUtil.createFromClasspath(patterns);
+			return PropsLoader.createFromClasspath(patterns);
 		} catch (Exception ex) {
 			throw new MadvocException("Unable to load Madvoc parameters from: " +
 					Converter.get().toString(patterns) + ".properties': " + ex.toString(), ex);

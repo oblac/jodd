@@ -23,51 +23,43 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.db.querymap;
+package jodd.props;
 
-import jodd.props.Props;
-import jodd.props.PropsLoader;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- * {@link jodd.db.querymap.QueryMap} implementation based on
- * {@link jodd.props.Props} properties files.
- * Scans for <code>"*.sql.props"</code> and <code>"*.oom.props"</code>
- * properties on class path.
+ * Converter of Java Properties to Jodd Props format.
  */
-public class DbPropsQueryMap implements QueryMap {
+public class PropsConverter {
 
-	protected final String[] patterns;
-	protected Props props;
-
-	public DbPropsQueryMap(final String... patterns) {
-		this.patterns = patterns;
-		reload();
-	}
-
-	public DbPropsQueryMap() {
-		this("*.sql.props", "*.oom.props", "*.sql.properties", "*.oom.properties");
+	/**
+	 * Convert Java Properties to Jodd Props format.
+	 *
+	 * @param writer     Writer to write Props formatted file content to
+	 * @param properties Properties to convert to Props format
+	 * @throws IOException On any I/O error when writing to the writer
+	 */
+	public static void convert(final Writer writer, final Properties properties) throws IOException {
+		convert(writer, properties, Collections.emptyMap());
 	}
 
 	/**
-	 * Returns <code>Props</code>.
+	 * Convert Java Properties to Jodd Props format.
+	 *
+	 * @param writer     Writer to write Props formatted file content to
+	 * @param properties Properties to convert to Props format
+	 * @param profiles   Properties per profile to convert and add to the Props format
+	 * @throws IOException On any I/O error when writing to the writer
 	 */
-	public Props props() {
-		return props;
+	public static void convert(final Writer writer, final Properties properties, final Map<String, Properties> profiles)
+			throws IOException {
+
+		final PropertiesToProps toProps = new PropertiesToProps();
+		toProps.convertToWriter(writer, properties, profiles);
 	}
 
-	@Override
-	public void reload() {
-		props = PropsLoader.createFromClasspath(patterns);
-	}
-
-	// ---------------------------------------------------------------- sql
-
-	/**
-	 * Returns query for given key.
-	 * In debug mode, props are reloaded every time before the lookup.
-	 */
-	@Override
-	public String getQuery(final String key) {
-		return props.getValue(key);
-	}
 }

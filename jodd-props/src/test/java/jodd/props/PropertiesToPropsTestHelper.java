@@ -54,7 +54,7 @@ public class PropertiesToPropsTestHelper {
 	public static void safelyWritePropertiesToProps(final Writer writer, final Properties baseProperties)
 			throws IOException {
 		try {
-			PropsUtil.convert(writer, baseProperties);
+			PropsConverter.convert(writer, baseProperties);
 		} finally {
 			try {
 				writer.close();
@@ -74,7 +74,7 @@ public class PropertiesToPropsTestHelper {
 	public static void safelyWritePropertiesToProps(final Writer writer, final Properties baseProperties,
 													final Map<String, Properties> profiles) throws IOException {
 		try {
-			PropsUtil.convert(writer, baseProperties, profiles);
+			PropsConverter.convert(writer, baseProperties, profiles);
 		} finally {
 			try {
 				writer.close();

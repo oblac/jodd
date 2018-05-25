@@ -26,7 +26,7 @@
 package jodd.joy;
 
 import jodd.props.Props;
-import jodd.props.PropsUtil;
+import jodd.props.PropsLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,7 +107,7 @@ public class JoyProps extends JoyBase {
 
 		log.debug("Loading props from classpath...");
 
-		PropsUtil.loadFromClasspath(props, patterns);
+		PropsLoader.loadFromClasspath(props, patterns);
 
 		log.info("Props is ready: " + props.countTotalProperties() + " properties.");
 	}
