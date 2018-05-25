@@ -323,9 +323,7 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Returns detected java version. Returned number is
-	 * a number 10x the <code>major.minor</code>, e.g.
-	 * Java1.5 returns <code>15</code>.
+	 * Returns detected java version.
 	 */
 	public static int javaVersionNumber() {
 		return javaVersionNumber;
@@ -341,7 +339,6 @@ public class SystemUtil {
 	/**
 	 * Checks if the currently running JVM is at least compliant
 	 * with provided JDK version.
-	 * @param version java version multiplied by 10, e.g. <code>1.5</code> is <code>15</code>
 	 */
 	public static boolean isAtLeastJavaVersion(final int version) {
 		return javaVersionNumber >= version;
@@ -349,7 +346,6 @@ public class SystemUtil {
 
 	/**
 	 * Checks if the currently running JVM is equal to provided version.
-	 * @param version java version, multiplied by 10, e.g. <code>1.5</code> is <code>15</code>.
 	 */
 	public static boolean isJavaVersion(final int version) {
 		return javaVersionNumber == version;

@@ -25,11 +25,8 @@
 
 package jodd.joy;
 
-import jodd.bridge.ClassPathURLs;
 import jodd.log.LoggerFactory;
 import jodd.log.impl.SimpleLogger;
-
-import java.net.URL;
 
 public class MyWebApplication extends JoyContextListener {
 
@@ -37,13 +34,4 @@ public class MyWebApplication extends JoyContextListener {
 		LoggerFactory.setLoggerProvider(SimpleLogger.PROVIDER);
 	}
 
-	@Override
-	protected JoddJoy createJoy() {
-		URL[] uls = ClassPathURLs.of(null, this.getClass());
-		for (URL ul : uls) {
-			System.out.println(ul);
-		}
-		return super.createJoy()
-			.withScanner(joyScanner -> joyScanner.scanClasspathOf(this).setIncludedJars("foo.jar"));
-	}
 }
