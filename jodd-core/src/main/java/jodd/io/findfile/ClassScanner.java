@@ -52,9 +52,8 @@ import java.util.zip.ZipFile;
 import static jodd.util.inex.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
 import static jodd.util.inex.InExRuleMatcher.WILDCARD_RULE_MATCHER;
 
-
 /**
- * Super class scanner.
+ * Convenient class path scanner.
  */
 public class ClassScanner {
 
@@ -140,6 +139,7 @@ public class ClassScanner {
 	// ---------------------------------------------------------------- included entries
 
 	protected final InExRules<String, String, String> rulesEntries = createEntriesRules();
+	protected boolean detectEntriesMode = false;
 
 	protected InExRules<String, String, String> createEntriesRules() {
 		return new InExRules<>(WILDCARD_RULE_MATCHER);
@@ -190,8 +190,8 @@ public class ClassScanner {
 		return this;
 	}
 
-	public ClassScanner smartModeEntries() {
-		rulesEntries.smartMode();
+	public ClassScanner detectEntriesMode(final boolean detectMode) {
+		this.detectEntriesMode = detectMode;
 		return this;
 	}
 
@@ -236,7 +236,7 @@ public class ClassScanner {
 
 	/**
 	 * Scans classes inside single JAR archive. Archive is scanned as a zip file.
-	 * @see #onEntry(EntryData)
+	 * @see #onEntry(ClassPathEntry)
 	 */
 	protected void scanJarFile(final File file) {
 		ZipFile zipFile;
@@ -248,26 +248,26 @@ public class ClassScanner {
 			}
 			return;
 		}
-		Enumeration entries = zipFile.entries();
+		final Enumeration entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
 			String zipEntryName = zipEntry.getName();
 			try {
 				if (StringUtil.endsWithIgnoreCase(zipEntryName, CLASS_FILE_EXT)) {
 					String entryName = prepareEntryName(zipEntryName, true);
-					EntryData entryData = new EntryData(entryName, zipFile, zipEntry);
+					ClassPathEntry classPathEntry = new ClassPathEntry(entryName, zipFile, zipEntry);
 					try {
-						scanEntry(entryData);
+						scanEntry(classPathEntry);
 					} finally {
-						entryData.closeInputStream();
+						classPathEntry.closeInputStream();
 					}
 				} else if (includeResources) {
 					String entryName = prepareEntryName(zipEntryName, false);
-					EntryData entryData = new EntryData(entryName, zipFile, zipEntry);
+					ClassPathEntry classPathEntry = new ClassPathEntry(entryName, zipFile, zipEntry);
 					try {
-						scanEntry(entryData);
+						scanEntry(classPathEntry);
 					} finally {
-						entryData.closeInputStream();
+						classPathEntry.closeInputStream();
 					}
 				}
 			} catch (RuntimeException rex) {
@@ -282,7 +282,7 @@ public class ClassScanner {
 
 	/**
 	 * Scans single classpath directory.
-	 * @see #onEntry(EntryData)
+	 * @see #onEntry(ClassPathEntry)
 	 */
 	protected void scanClassPath(final File root) {
 		String rootPath = root.getAbsolutePath();
@@ -290,7 +290,7 @@ public class ClassScanner {
 			rootPath += File.separatorChar;
 		}
 
-		FindFile ff = new FindFile().includeDirs(false).recursive(true).searchPath(rootPath);
+		FindFile ff = FindFile.get().includeDirs(false).recursive(true).searchPath(rootPath);
 		File file;
 		while ((file = ff.nextFile()) != null) {
 			String filePath = file.getAbsolutePath();
@@ -310,12 +310,12 @@ public class ClassScanner {
 
 	protected void scanClassFile(final String filePath, final String rootPath, final File file, final boolean isClass) {
 		if (StringUtil.startsWithIgnoreCase(filePath, rootPath)) {
-			String entryName = prepareEntryName(filePath.substring(rootPath.length()), isClass);
-			EntryData entryData = new EntryData(entryName, file);
+			final String entryName = prepareEntryName(filePath.substring(rootPath.length()), isClass);
+			final ClassPathEntry classPathEntry = new ClassPathEntry(entryName, file);
 			try {
-				scanEntry(entryData);
+				scanEntry(classPathEntry);
 			} finally {
-				entryData.closeInputStream();
+				classPathEntry.closeInputStream();
 			}
 		}
 	}
@@ -339,32 +339,36 @@ public class ClassScanner {
 	/**
 	 * Returns <code>true</code> if some entry name has to be accepted.
 	 * @see #prepareEntryName(String, boolean)
-	 * @see #scanEntry(EntryData)
+	 * @see #scanEntry(ClassPathEntry)
 	 */
 	protected boolean acceptEntry(final String entryName) {
 		return rulesEntries.match(entryName);
 	}
 
 	/**
-	 * If entry name is {@link #acceptEntry(String) accepted} invokes {@link #onEntry(EntryData)} a callback}.
+	 * If entry name is {@link #acceptEntry(String) accepted} invokes {@link #onEntry(ClassPathEntry)} a callback}.
 	 */
-	protected void scanEntry(final EntryData entryData) {
-		if (!acceptEntry(entryData.name())) {
+	protected void scanEntry(final ClassPathEntry classPathEntry) {
+		if (!acceptEntry(classPathEntry.name())) {
 			return;
 		}
 		try {
-			onEntry(entryData);
+			onEntry(classPathEntry);
 		} catch (Exception ex) {
-			throw new FindFileException("Scan entry error: " + entryData, ex);
+			throw new FindFileException("Scan entry error: " + classPathEntry, ex);
 		}
 	}
 
 
 	// ---------------------------------------------------------------- callback
 
-	private Consumers<EntryData> entryDataConsumers = Consumers.empty();
+	private Consumers<ClassPathEntry> entryDataConsumers = Consumers.empty();
 
-	public ClassScanner onEntry(final Consumer<EntryData> entryDataConsumer) {
+	/**
+	 * Registers a {@link ClassPathEntry class path entry} consumer.
+	 * It will be called on each loaded entry.
+	 */
+	public ClassScanner registerEntryConsumer(final Consumer<ClassPathEntry> entryDataConsumer) {
 		entryDataConsumers.add(entryDataConsumer);
 		return this;
 	}
@@ -380,8 +384,8 @@ public class ClassScanner {
 	 * <code>InputStream</code> is provided by InputStreamProvider and opened lazy.
 	 * Once opened, input stream doesn't have to be closed - this is done by this class anyway.
 	 */
-	protected void onEntry(final EntryData entryData) {
-		entryDataConsumers.accept(entryData);
+	protected void onEntry(final ClassPathEntry classPathEntry) {
+		entryDataConsumers.accept(classPathEntry);
 	}
 
 	// ---------------------------------------------------------------- utilities
@@ -390,23 +394,8 @@ public class ClassScanner {
 	 * Returns type signature bytes used for searching in class file.
 	 */
 	public static byte[] bytecodeSignatureOfType(final Class type) {
-		String name = 'L' + type.getName().replace('.', '/') + ';';
+		final String name = 'L' + type.getName().replace('.', '/') + ';';
 		return name.getBytes();
-	}
-
-	/**
-	 * Loads class by its name. If {@link #ignoreException} is set,
-	 * no exception is thrown, but <code>null</code> is returned.
-	 */
-	public Class loadClass(final String className) throws ClassNotFoundException {
-		try {
-			return ClassLoaderUtil.loadClass(className);
-		} catch (ClassNotFoundException | Error cnfex) {
-			if (ignoreException) {
-				return null;
-			}
-			throw cnfex;
-		}
 	}
 
 	// ---------------------------------------------------------------- provider
@@ -414,26 +403,26 @@ public class ClassScanner {
 	/**
 	 * Provides input stream on demand. Input stream is not open until get().
 	 */
-	public static class EntryData {
+	public class ClassPathEntry {
 
 		private final File file;
 		private final ZipFile zipFile;
 		private final ZipEntry zipEntry;
 		private final String name;
 
-		EntryData(final String name, final ZipFile zipFile, final ZipEntry zipEntry) {
+		ClassPathEntry(final String name, final ZipFile zipFile, final ZipEntry zipEntry) {
 			this.name = name;
 			this.zipFile = zipFile;
 			this.zipEntry = zipEntry;
 			this.file = null;
-			inputStream = null;
+			this.inputStream = null;
 		}
-		EntryData(final String name, final File file) {
+		ClassPathEntry(final String name, final File file) {
 			this.name = name;
 			this.file = file;
 			this.zipEntry = null;
 			this.zipFile = null;
-			inputStream = null;
+			this.inputStream = null;
 		}
 
 		private InputStream inputStream;
@@ -518,23 +507,30 @@ public class ClassScanner {
 			inputStream = null;
 		}
 
+		/**
+		 * Loads class by its name. If {@link #ignoreException} is set,
+		 * no exception is thrown, but <code>null</code> is returned.
+		 */
+		public Class loadClass() throws ClassNotFoundException {
+			try {
+				return ClassLoaderUtil.loadClass(name);
+			} catch (ClassNotFoundException | Error cnfex) {
+				if (ignoreException) {
+					return null;
+				}
+				throw cnfex;
+			}
+		}
+
 		@Override
 		public String toString() {
-			return "EntryData{" + name + '\'' +'}';
+			return "ClassPathEntry{" + name + '\'' +'}';
 		}
 	}
 
 	// ---------------------------------------------------------------- public scanning
 
 	private Set<File> filesToScan = new LinkedHashSet<>();
-
-	/**
-	 * Resets all the paths previously added by some of {@code scan} methods.
-	 */
-	public ClassScanner resetPaths() {
-		filesToScan.clear();
-		return this;
-	}
 
 	/**
 	 * Scans URLs. If (#ignoreExceptions} is set, exceptions
@@ -584,8 +580,12 @@ public class ClassScanner {
 	 * Starts with the scanner.
 	 */
 	public void start() {
+		if (detectEntriesMode) {
+			rulesEntries.detectMode();
+		}
+
 		filesToScan.forEach(file -> {
-			String path = file.getAbsolutePath();
+			final String path = file.getAbsolutePath();
 			if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT)) {
 				if (!acceptJar(file)) {
 					return;
