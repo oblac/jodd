@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.AccessController;
@@ -89,33 +88,6 @@ public class ClassLoaderUtil {
 		else {
 			return AccessController.doPrivileged(
 				(PrivilegedAction<ClassLoader>) ClassLoader::getSystemClassLoader);
-		}
-	}
-
-	// ---------------------------------------------------------------- define class
-
-	/**
-	 * Defines a class from byte array into the system class loader.
-	 * @see #defineClass(String, byte[], ClassLoader)
-	 */
-	public static Class defineClass(final String className, final byte[] classData) {
-		return defineClass(className, classData, getDefaultClassLoader());
-	}
-
-	/**
-	 * Defines a class from byte array into the specified class loader.
-	 * Warning: this is a <b>hack</b>!
-	 * @param className optional class name, may be <code>null</code>
-	 * @param classData bytecode data
-	 * @param classLoader classloader that will load class
-	 */
-	public static Class defineClass(final String className, final byte[] classData, final ClassLoader classLoader) {
-		try {
-			Method defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
-			defineClassMethod.setAccessible(true);
-			return (Class) defineClassMethod.invoke(classLoader, className, classData, 0, classData.length);
-		} catch (Throwable th) {
-			throw new RuntimeException("Define class failed: " + className, th);
 		}
 	}
 

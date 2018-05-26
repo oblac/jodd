@@ -27,6 +27,7 @@ package jodd.proxetta;
 
 import jodd.asm6.ClassReader;
 import jodd.asm6.ClassWriter;
+import jodd.bridge.DefineClass;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.log.Logger;
@@ -298,11 +299,11 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 				}
 			}
 
-			byte[] bytes = toByteArray();
+			final byte[] bytes = toByteArray();
 
 			dumpClassInDebugFolder(bytes);
 
-			return ClassLoaderUtil.defineClass(getProxyClassName(), bytes, classLoader);
+			return DefineClass.of(getProxyClassName(), bytes, classLoader);
 		} catch (Exception ex) {
 			throw new ProxettaException("Class definition failed", ex);
 		}

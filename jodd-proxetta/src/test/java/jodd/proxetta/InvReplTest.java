@@ -25,6 +25,7 @@
 
 package jodd.proxetta;
 
+import jodd.bridge.DefineClass;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.proxetta.fixtures.inv.Inter;
 import jodd.proxetta.fixtures.inv.MySystem;
@@ -35,7 +36,6 @@ import jodd.proxetta.fixtures.inv.TimeClass;
 import jodd.proxetta.fixtures.inv.Two;
 import jodd.proxetta.fixtures.inv.Wimp;
 import jodd.proxetta.impl.InvokeProxetta;
-import jodd.util.ClassLoaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.PrintStream;
@@ -62,7 +62,7 @@ class InvReplTest {
 //		PrintStream out = System.out;
 		System.setOut(new PrintStream(fbaos));
 
-		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(ProxettaNames.invokeProxyClassNameSuffix).toString(), klazz).newInstance();
+		One one = (One) DefineClass.of((new StringBuilder()).append(className).append(ProxettaNames.invokeProxyClassNameSuffix).toString(), klazz, null).newInstance();
 		assertEquals("one ctor!one ctor!", fbaos.toString());    // clone ctor calls super ctor,
 		fbaos.reset();
 

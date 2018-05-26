@@ -26,6 +26,7 @@
 package jodd.proxetta;
 
 import jodd.asm6.Type;
+import jodd.bridge.DefineClass;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.mutable.MutableBoolean;
@@ -38,7 +39,6 @@ import jodd.proxetta.fixtures.data.PetiteInject;
 import jodd.proxetta.fixtures.data.StatCounter;
 import jodd.proxetta.fixtures.data.StatCounterAdvice;
 import jodd.proxetta.fixtures.data.Transaction;
-import jodd.util.ClassLoaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -138,7 +138,7 @@ class BigClassTest {
 //		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
 //		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
 //		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);
-		Class clazz = ClassLoaderUtil.defineClass(null, classBytes);
+		Class clazz = DefineClass.of(null, classBytes, null);
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
 		assertEquals(BigFatJoe.class.getName() + "$$Proxetta", bigFatJoe.getClass().getName());
