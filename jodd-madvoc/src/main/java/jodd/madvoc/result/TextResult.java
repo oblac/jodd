@@ -26,6 +26,7 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.meta.RenderWith;
+import jodd.util.net.HttpStatus;
 import jodd.util.net.MimeTypes;
 
 import java.util.Objects;
@@ -37,6 +38,7 @@ import java.util.Objects;
 public class TextResult {
 
 	private final String value;
+	private int status = 200;
 	private String mimeType = MimeTypes.MIME_TEXT_PLAIN;
 
 	public static TextResult of(final String value) {
@@ -64,11 +66,28 @@ public class TextResult {
 		return this;
 	}
 
+	public TextResult status(final int status) {
+		this.status = status;
+		return this;
+	}
+
+	public TextResult status(final HttpStatus httpStatus) {
+		this.status = httpStatus.status();
+		return this;
+	}
+
 	/**
 	 * Returns text content.
 	 */
 	public String value() {
 		return value;
+	}
+
+	/**
+	 * Returns status.
+	 */
+	public int status() {
+		return status;
 	}
 
 	public String contentType() {

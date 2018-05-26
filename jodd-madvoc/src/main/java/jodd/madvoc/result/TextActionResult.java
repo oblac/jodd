@@ -70,6 +70,7 @@ public class TextActionResult implements ActionResult {
 
 		response.setContentType(textResult.contentType());
 		response.setCharacterEncoding(encoding);
+		response.setStatus(textResult.status());
 
 		String text = textResult.value();
 
