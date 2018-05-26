@@ -234,6 +234,7 @@ public class JoddJoy {
 		}
 
 		joyPetite.printBeans(100);
+		joyDb.printEntities(100);
 		joyMadvoc.printRoutes(100);
 
 		System.out.println(Chalk256.chalk().yellow().on("Joy") + " is up. Enjoy!");

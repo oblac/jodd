@@ -35,6 +35,7 @@ import jodd.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * DbOom Entity manager.
@@ -237,6 +238,10 @@ public class DbEntityManager {
 		} catch (Exception ex) {
 			throw new DbOomException(ex);
 		}
+	}
+
+	public void forEachEntity(final Consumer<DbEntityDescriptor> consumer) {
+		descriptorsMap.forEachValue(consumer);
 	}
 
 }

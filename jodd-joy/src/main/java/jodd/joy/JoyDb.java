@@ -31,6 +31,7 @@ import jodd.db.connection.ConnectionProvider;
 import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.oom.AutomagicDbOomConfigurator;
+import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
@@ -42,12 +43,16 @@ import jodd.jtx.worker.LeanJtxWorker;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
+import jodd.util.Chalk256;
 import jodd.util.Consumers;
 
 import java.lang.annotation.Annotation;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -252,5 +257,28 @@ public class JoyDb extends JoyBase {
 		if (connectionProvider != null) {
 			connectionProvider.close();
 		}
+	}
+
+	public void printEntities(final int width) {
+		if (!databaseEnabled) {
+			return;
+		}
+
+		final Print print = new Print();
+		print.line("Entities", width);
+
+		final List<DbEntityDescriptor> list = new ArrayList<>();
+		dbOom.entityManager().forEachEntity(list::add);
+
+		list.stream()
+			.sorted(Comparator.comparing(DbEntityDescriptor::getEntityName))
+			.forEach(ded -> {
+				print.out(Chalk256.chalk().yellow(), ded.getTableName(), 30);
+				print.space();
+				print.outRight(Chalk256.chalk().yellow(), ded.getEntityName(), width - 30 - 1);
+				print.newLine();
+		});
+
+		print.line(width);
 	}
 }
