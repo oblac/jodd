@@ -23,25 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.interceptor;
+package jodd.madvoc;
 
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ResponseException;
-import jodd.madvoc.result.JsonResult;
 import jodd.util.net.HttpStatus;
 
-public class JsonErrorInterceptor implements ActionInterceptor {
+public class ResponseException extends MadvocException {
+
+	private final int status;
+	private final String message;
+
+	public ResponseException(final int status, final String message) {
+		super("Error " + status + ":" + message);
+		this.status = status;
+		this.message = message;
+	}
+	public ResponseException(final HttpStatus httpStatus) {
+		this(httpStatus.status(), httpStatus.message());
+	}
+
+	public int getStatus() {
+		return status;
+	}
 
 	@Override
-	public Object intercept(final ActionRequest actionRequest) {
-		try {
-			return actionRequest.invoke();
-		}
-		catch (ResponseException rex) {
-			return JsonResult.of(HttpStatus.of(rex.getStatus(), rex.getMessage()));
-		}
-		catch (Exception ex) {
-			return JsonResult.of(ex);
-		}
+	public String getMessage() {
+		return message;
 	}
 }

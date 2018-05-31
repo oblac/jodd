@@ -27,6 +27,7 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.RootPackages;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.RouteChunk;
 import jodd.madvoc.fixtures.tst.Boo1Action;
@@ -106,8 +107,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.BooAction#foo");
 		assertNotNull(cfg);
@@ -177,8 +178,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo1Action#foo");
 		assertNotNull(cfg);
@@ -207,8 +208,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst.Boo3Action#foo");
 		assertNotNull(cfg);
@@ -232,8 +233,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.Boo4Action#foo");
 		assertNotNull(cfg);
@@ -257,8 +258,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.Boo5Action#foo");
 		assertNotNull(cfg);
@@ -282,8 +283,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionMethodParser actionMethodParser = webapp.madvocContainer().lookupComponent(ActionMethodParser.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		ActionRuntime cfg = parse(actionMethodParser, "fixtures.tst2.ReAction#hello");
 		assertNotNull(cfg);
@@ -302,8 +303,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 		
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		actionsManager.registerAction(ReAction.class, "macro", null);
 		ActionRuntime cfg = actionsManager.lookup("GET", MadvocUtil.splitPathToChunks("/re/user/173/macro.html"));
@@ -368,8 +369,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		actionsManager.registerAction(ReAction.class, "wild1", null);
 		actionsManager.registerAction(ReAction.class, "wild2", null);
@@ -412,7 +413,7 @@ class ActionMethodParserTest extends MadvocTestCase {
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
 		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		webapp.madvocContainer().lookupComponent(RootPackages.class).addRootPackageOf(this.getClass());
 		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
 		actionsManager.registerAction(ReAction.class, "duplo2", null);
@@ -444,8 +445,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+		RootPackages rootPackages = webapp.madvocContainer().lookupComponent(RootPackages.class);
+		rootPackages.addRootPackageOf(this.getClass());
 
 		actionsManager.registerAction(ReAction.class, "zqq1", null);
 		actionsManager.registerAction(ReAction.class, "zqq2", null);
