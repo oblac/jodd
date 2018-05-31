@@ -38,7 +38,6 @@ import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.MethodParam;
-import jodd.madvoc.config.RootPackages;
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -107,6 +106,9 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
+
+	@PetiteInject
+	protected RootPackages rootPackages;
 
 	@PetiteInject
 	protected ScopeDataInspector scopeDataInspector;
@@ -297,7 +299,6 @@ public class ActionMethodParser {
 		Package actionPackage = actionClass.getPackage();
 
 		final String actionPackageName = actionPackage.getName();
-		final RootPackages rootPackages = madvocConfig.getRootPackages();
 
 		// 1 - read annotations first
 

@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.config;
+package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.util.ArraysUtil;
@@ -42,15 +42,6 @@ public class RootPackages {
 	protected String[] mappings;
 
 	protected Map<String, String> packagePaths;     // cache: package -> path
-
-	/**
-	 * Resets all root packages mappings.
-	 */
-	public void reset() {
-		packages = null;
-		mappings = null;
-		packagePaths = null;
-	}
 
 	/**
 	 * Adds root package with no additional mapping.
