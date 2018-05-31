@@ -25,25 +25,13 @@
 
 package jodd.madvoc;
 
-import jodd.cache.TypeCache;
 import jodd.io.upload.FileUploadFactory;
 import jodd.io.upload.impl.AdaptiveFileUploadFactory;
-import jodd.madvoc.config.RootPackages;
-import jodd.madvoc.interceptor.ServletConfigInterceptor;
+import jodd.madvoc.action.DefaultActionConfig;
 import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.RegExpPathMacros;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.ActionConfiguredBy;
-import jodd.madvoc.meta.RestAction;
-import jodd.madvoc.path.DefaultActionPathNamingStrategy;
-import jodd.madvoc.result.ServletDispatcherActionResult;
-import jodd.util.ArraysUtil;
-import jodd.util.ClassUtil;
 import jodd.util.StringPool;
-import jodd.util.annotation.AnnotationParser;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -63,106 +51,16 @@ public final class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
-		actionConfig = new ActionConfig();
-
-		actionConfig.setActionMethodNames("view", "execute");
-		actionConfig.setActionResult(ServletDispatcherActionResult.class);
-		actionConfig.setFilters();
-		actionConfig.setInterceptors(ServletConfigInterceptor.class);
-		actionConfig.setNamingStrategy(DefaultActionPathNamingStrategy.class);
-
-		setActionAnnotations(Action.class, RestAction.class);
-
 		encoding = StringPool.UTF_8;
-		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
-		rootPackages = new RootPackages();
-		detectDuplicatePathsEnabled = true;
-		preventCaching = true;
+		defaultActionConfig = DefaultActionConfig.class;
 		pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
-		resultPathPrefix = null;
-
-		defaultViewExtensions = new String[] {".jspf", ".jsp"};
-		defaultViewPageName = "index";
-	}
-
-	// ---------------------------------------------------------------- action configs
-
-	private ActionConfig actionConfig;
-
-	/**
-	 * Returns default {@link ActionConfig}.
-	 */
-	public ActionConfig getActionConfig() {
-		return actionConfig;
-	}
-
-	/**
-	 * Sets default action configuration.
-	 */
-	public void setActionConfig(final ActionConfig actionConfig) {
-		Objects.requireNonNull(actionConfig);
-		this.actionConfig = actionConfig;
-	}
-
-	// ---------------------------------------------------------------- action method annotations
-
-	private TypeCache<ActionConfig> annotations = TypeCache.createDefault();
-	private Class<? extends Annotation>[] actionAnnotations = ClassUtil.emptyClassArray();
-	private AnnotationParser[] annotationParsers = new AnnotationParser[0];
-
-	public void setActionAnnotations(final Class<? extends Annotation>... annotationsClasses) {
-
-		for (Class<? extends Annotation> annotationType : annotationsClasses) {
-			ActionConfiguredBy actionConfiguredBy = annotationType.getAnnotation(ActionConfiguredBy.class);
-
-			if (actionConfiguredBy != null) {
-				Class<? extends ActionConfig> actionConfigClass = actionConfiguredBy.value();
-				ActionConfig newActionConfig;
-
-				try {
-					Constructor<? extends ActionConfig> ctor = actionConfigClass.getDeclaredConstructor(ActionConfig.class);
-					newActionConfig = ctor.newInstance(this.actionConfig);
-				}
-				catch (Exception ex) {
-					throw new MadvocException("Invalid action configuration: " + actionConfigClass.getSimpleName(), ex);
-				}
-
-				annotations.put(annotationType, newActionConfig);
-			}
-
-			actionAnnotations = ArraysUtil.append(actionAnnotations, annotationType);
-			annotationParsers = ArraysUtil.append(annotationParsers, new AnnotationParser(annotationType, Action.class));
-		}
-	}
-
-	/**
-	 * Returns array of action annotations.
-	 */
-	public Class<? extends Annotation>[] getActionAnnotations() {
-		return actionAnnotations;
-	}
-
-	/**
-	 * Returns instances of action method annotation readers.
-	 */
-	public AnnotationParser[] getAnnotationParsers() {
-		return annotationParsers;
-	}
-
-	/**
-	 * Lookups action config for given annotation. If annotations is not registered, returns default
-	 * action configuration.
-	 */
-	public ActionConfig lookupActionConfig(final Class<? extends Annotation> annotationType) {
-		return annotations.get(annotationType, () -> actionConfig);
 	}
 
 	// ---------------------------------------------------------------- encoding
 
 	private String encoding;
-	private boolean applyCharacterEncoding;
 
 	/**
 	 * Returns character encoding.
@@ -177,20 +75,6 @@ public final class MadvocConfig {
 	public void setEncoding(final String encoding) {
 		Objects.requireNonNull(encoding);
 		this.encoding = encoding;
-	}
-
-	/**
-	 * Returns if character encoding should be set in request and response by Madvoc.
-	 */
-	public boolean isApplyCharacterEncoding() {
-		return applyCharacterEncoding;
-	}
-
-	/**
-	 * Defines is character encoding has to be set by Madvoc into the request and response.
-	 */
-	public void setApplyCharacterEncoding(final boolean applyCharacterEncoding) {
-		this.applyCharacterEncoding = applyCharacterEncoding;
 	}
 
 	// ---------------------------------------------------------------- file upload factory
@@ -211,67 +95,16 @@ public final class MadvocConfig {
 		this.fileUploadFactory = fileUploadFactory;
 	}
 
+	// ---------------------------------------------------------------- default action config
 
-	// ---------------------------------------------------------------- packageRoot
+	private Class<? extends ActionConfig> defaultActionConfig;
 
-	private RootPackages rootPackages;
-
-	/**
-	 * Returns root packages collection.
-	 */
-	public RootPackages getRootPackages() {
-		return rootPackages;
+	public Class<? extends ActionConfig> getDefaultActionConfig() {
+		return defaultActionConfig;
 	}
 
-	// ---------------------------------------------------------------- duplicates
-
-	private boolean detectDuplicatePathsEnabled;
-
-	public boolean isDetectDuplicatePathsEnabled() {
-		return detectDuplicatePathsEnabled;
-	}
-
-	/**
-	 * Defines if duplicate paths should be detected and if an exception should
-	 * be thrown on duplication.
-	 */
-	public void setDetectDuplicatePathsEnabled(final boolean detectDuplicatePathsEnabled) {
-		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
-	}
-
-	// ---------------------------------------------------------------- caching
-
-	private boolean preventCaching;
-
-	public boolean isPreventCaching() {
-		return preventCaching;
-	}
-
-	/**
-	 * Specifies if Madvoc should add response params to prevent browser caching.
-	 */
-	public void setPreventCaching(final boolean preventCaching) {
-		this.preventCaching = preventCaching;
-	}
-
-	// ---------------------------------------------------------------- result
-
-	private String resultPathPrefix;
-
-	/**
-	 * Returns default prefix for all result paths.
-	 * Returns <code>null</code> when not used.
-	 */
-	public String getResultPathPrefix() {
-		return resultPathPrefix;
-	}
-
-	/**
-	 * Defines result path prefix that will be added to all result paths.
-	 * If set to <code>null</code> will be ignored.
-	 */
-	public void setResultPathPrefix(final String resultPathPrefix) {
-		this.resultPathPrefix = resultPathPrefix;
+	public void setDefaultActionConfig(final Class<? extends ActionConfig> defaultActionConfig) {
+		this.defaultActionConfig = defaultActionConfig;
 	}
 
 	// ---------------------------------------------------------------- path macro class
@@ -305,24 +138,4 @@ public final class MadvocConfig {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
-	// ---------------------------------------------------------------- default
-
-	private String[] defaultViewExtensions;
-	private String defaultViewPageName;
-
-	public String[] getDefaultViewExtensions() {
-		return defaultViewExtensions;
-	}
-
-	public void setDefaultViewExtensions(String[] defaultViewExtensions) {
-		this.defaultViewExtensions = defaultViewExtensions;
-	}
-
-	public String getDefaultViewPageName() {
-		return defaultViewPageName;
-	}
-
-	public void setDefaultViewPageName(String defaultViewPageName) {
-		this.defaultViewPageName = defaultViewPageName;
-	}
 }
