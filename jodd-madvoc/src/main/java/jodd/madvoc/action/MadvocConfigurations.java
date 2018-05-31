@@ -47,7 +47,7 @@ import java.util.List;
  * Helper action that returns sorted list of all registered action runtime configurations,
  * action results and interceptors. It can be extended as an Madvoc action or used independently.
  */
-public class ListMadvocConfig {
+public class MadvocConfigurations {
 
 	@In @MadvocContext
 	protected MadvocConfig madvocConfig;
