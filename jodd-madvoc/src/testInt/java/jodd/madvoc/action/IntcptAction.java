@@ -27,7 +27,6 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.AppendingInterceptor;
 import jodd.madvoc.MyInterceptorStack;
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.meta.Action;
@@ -63,13 +62,13 @@ public class IntcptAction {
 	public String value;
 
 	@Action
-	@InterceptedBy({DefaultWebAppInterceptors.class, AppendingInterceptor.class})
+	@InterceptedBy({ServletConfigInterceptor.class, AppendingInterceptor.class})
 	public void inap() {
 		value = "appending";
 	}
 
 	@Action
-	@InterceptedBy({DefaultWebAppInterceptors.class, AppendingInterceptor.Hey.class})
+	@InterceptedBy({ServletConfigInterceptor.class, AppendingInterceptor.Hey.class})
 	public void inap2() {
 		value = "appending2";
 	}

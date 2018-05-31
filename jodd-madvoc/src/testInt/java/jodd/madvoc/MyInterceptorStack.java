@@ -28,5 +28,4 @@ package jodd.madvoc;
 import jodd.madvoc.interceptor.ActionInterceptorStack;
 
 public class MyInterceptorStack extends ActionInterceptorStack {
-
 }

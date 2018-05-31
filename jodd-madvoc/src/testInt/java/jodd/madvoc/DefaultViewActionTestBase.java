@@ -35,7 +35,7 @@ abstract class DefaultViewActionTestBase {
 
 	@Test
 	void testDefaultPage() {
-		HttpResponse response = HttpRequest.get("localhost:8173/").send();
+		final HttpResponse response = HttpRequest.get("localhost:8173/").send();
 		assertEquals("default", response.bodyText().trim());
 	}
 }

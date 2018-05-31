@@ -7,7 +7,7 @@ jodd.madvoc.AppendingInterceptor.addon=<jodd>
 jodd.madvoc.AppendingInterceptor$Hey.addon=<heyp>
 
 jodd.madvoc.MyInterceptorStack.interceptors=\
-	jodd.madvoc.interceptor.DefaultWebAppInterceptors,\
+	jodd.madvoc.interceptor.ServletConfigInterceptor,\
 	jodd.madvoc.AppendingInterceptor
 
 asyncActionExecutor.foo=3

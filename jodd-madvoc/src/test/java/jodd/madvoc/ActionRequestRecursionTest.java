@@ -30,6 +30,7 @@ import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.result.ServletDispatcherActionResult;
 import jodd.util.ClassUtil;
 import org.junit.jupiter.api.Test;
 
@@ -177,7 +178,6 @@ class ActionRequestRecursionTest {
 
 	private MyActionRequest createMyActionRequest(ActionFilter[] actionFilters, ActionInterceptor[] actionInterceptors) {
 		SimpleMadvocController madvocController = new SimpleMadvocController();
-		MadvocConfig madvocConfig = new MadvocConfig();
 
 		Action action = new Action();
 		ActionRuntime actionRuntime = new ActionRuntime(
@@ -186,8 +186,9 @@ class ActionRequestRecursionTest {
 				ClassUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,
 				new ActionDefinition("path", "method"),
+				ServletDispatcherActionResult.class,
 				null,
-				false, null, null, madvocConfig.getActionConfig());
+				false, null, null);
 
 		return new MyActionRequest(
 				madvocController, "actionPath", actionRuntime, action, null, null);

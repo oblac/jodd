@@ -131,12 +131,11 @@ class ActionResultTest extends MadvocTestCase {
 
 	@Test
 	void testMethodWithPrefix() {
-		WebApp webapp = new WebApp();
+		final WebApp webapp = new WebApp();
 		webapp.start();
 
-		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.setResultPathPrefix("/WEB-INF");
+		final ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
+		resultMapper.setResultPathPrefix("/WEB-INF");
 
 		String path = "/boo.foo";
 

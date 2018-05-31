@@ -142,7 +142,6 @@ class ServletDispatcherResultTest {
 		when(httpSession.getServletContext()).thenReturn(servletContext);
 
 		MadvocController madvocController = new MadvocController();
-		MadvocConfig madvocConfig = new MadvocConfig();
 
 		Object action = new Object();
 		ActionRuntime actionRuntime = new ActionRuntime(
@@ -151,7 +150,7 @@ class ServletDispatcherResultTest {
 				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
 				new ActionDefinition(actionPath, "GET"),
-				null, false, null, null, madvocConfig.getActionConfig());
+				ServletDispatcherActionResult.class, null, false, null, null);
 
 		return new ActionRequest(madvocController, actionRuntime.getActionPath(), MadvocUtil.splitPathToChunks(actionRuntime.getActionPath()), actionRuntime, action, servletRequest, servletResponse);
 	}

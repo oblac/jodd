@@ -26,7 +26,7 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.AppendingFilter;
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.InterceptedBy;
@@ -34,7 +34,7 @@ import jodd.madvoc.meta.MadvocAction;
 
 @MadvocAction
 @FilteredBy({AppendingFilter.class, AppendingFilter.class})
-@InterceptedBy(DefaultWebAppInterceptors.class)
+@InterceptedBy(ServletConfigInterceptor.class)
 public class FilterAction {
 
 	@Action
