@@ -68,6 +68,22 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	@PetiteInject
 	protected AsyncActionExecutor asyncActionExecutor;
 
+	/**
+	 * Defines is character encoding has to be set by Madvoc into the request and response.
+	 */
+	protected boolean applyCharacterEncoding = true;
+	/**
+	 * Specifies if Madvoc should add response params to prevent browser caching.
+	 */
+	protected boolean preventCaching = true;
+
+	public void setApplyCharacterEncoding(final boolean applyCharacterEncoding) {
+		this.applyCharacterEncoding = applyCharacterEncoding;
+	}
+
+	public void setPreventCaching(final boolean preventCaching) {
+		this.preventCaching = preventCaching;
+	}
 
 	@Override
 	public void ready() {
@@ -93,6 +109,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 * On first invoke, initializes the action runtime before further proceeding.
 	 */
 	public String invoke(String actionPath, final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) throws Exception {
+		final String originalActionPath = actionPath;
 		boolean characterEncodingSet = false;
 
 		while (actionPath != null) {
@@ -105,19 +122,28 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
-			final String[] actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
+			String[] actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
 
 			// resolve action runtime
 			ActionRuntime actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
 			if (actionRuntime == null) {
-				return actionPath;
+
+				// special case!
+				if (actionPath.endsWith("/index.jsp")) {
+					actionPath = actionPath.substring(0, actionPath.length() - 9);
+					actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
+					actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
+				}
+				if (actionRuntime == null) {
+					return originalActionPath;
+				}
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path '" + actionPath + "' using " + actionRuntime.createActionString());
+				log.debug("Invoke action for '" + actionPath + "' using " + actionRuntime.createActionString());
 			}
 
 			// set character encoding
-			if (!characterEncodingSet && madvocConfig.isApplyCharacterEncoding()) {
+			if (!characterEncodingSet && applyCharacterEncoding) {
 
 				String encoding = madvocConfig.getEncoding();
 
@@ -180,15 +206,17 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	 */
 	@SuppressWarnings("unchecked")
 	public void render(final ActionRequest actionRequest, final Object resultObject) throws Exception {
-		ActionResult actionResult = resultsManager.lookup(actionRequest, resultObject);
+		final ActionResult actionResult = resultsManager.lookup(actionRequest, resultObject);
 
 		if (actionResult == null) {
 			throw new MadvocException("Action result not found");
 		}
 
-		if (madvocConfig.isPreventCaching()) {
+		if (preventCaching) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
+
+		log.debug(() -> "Result type: " + actionResult.getClass().getSimpleName());
 
 		actionResult.render(actionRequest, actionRequest.getActionResult());
 	}
