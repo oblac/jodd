@@ -65,7 +65,6 @@ import jodd.util.ArraysUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.annotation.AnnotationParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -93,6 +92,9 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
+
+	@PetiteInject
+	protected ActionConfigManager actionConfigManager;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -172,15 +174,18 @@ public class ActionMethodParser {
 		final boolean async = parseMethodAsyncFlag(actionMethod);
 
 		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
+		final Class<? extends ActionResult> defaultActionResult = actionConfig.getActionResult();
 
 		return createActionRuntime(
-				null,
-				actionClass, actionMethod,
-				actionResult,
-				actionFilters, actionInterceptors,
-				actionDefinition,
-				async,
-				actionConfig);
+			null,
+			actionClass,
+			actionMethod,
+			actionResult,
+			defaultActionResult,
+			actionFilters,
+			actionInterceptors,
+			actionDefinition,
+			async);
 	}
 
 	/**
@@ -188,21 +193,16 @@ public class ActionMethodParser {
 	 */
 	protected ActionConfig resolveActionConfig(final ActionAnnotationValues annotationValues) {
 		if (annotationValues == null) {
-			return madvocConfig.getActionConfig();
+			return actionConfigManager.lookup(madvocConfig.getDefaultActionConfig());
 		}
-		return madvocConfig.lookupActionConfig(annotationValues.annotationType());
+		return actionConfigManager.lookup(annotationValues.annotationType());
 	}
 
 	/**
 	 * Detects {@link jodd.madvoc.meta.ActionAnnotationValues}. Returns {@code null} if annotation does not exist.
 	 */
 	protected ActionAnnotationValues detectActionAnnotationValues(final Method actionMethod) {
-		for (AnnotationParser annotationParser : madvocConfig.getAnnotationParsers()) {
-			if (annotationParser.hasAnnotationOn(actionMethod)) {
-				return ActionAnnotationValues.of(annotationParser, actionMethod);
-			}
-		}
-		return null;
+		return actionConfigManager.readAnnotationValue(actionMethod);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class ActionMethodParser {
 	}
 
 	protected Class<? extends ActionResult> parseActionResult(final Method actionMethod) {
-		RenderWith renderWith = actionMethod.getAnnotation(RenderWith.class);
+		final RenderWith renderWith = actionMethod.getAnnotation(RenderWith.class);
 
 		if (renderWith != null) {
 			return renderWith.value();
@@ -236,7 +236,7 @@ public class ActionMethodParser {
 			interceptorClasses = actionConfig.getInterceptors();
 		}
 
-		return interceptorsManager.resolveAll(actionConfig, interceptorClasses);
+		return interceptorsManager.resolveAll(interceptorClasses);
 	}
 
 	protected ActionFilter[] parseActionFilters(final Class<?> actionClass, final Method actionMethod, final ActionConfig actionConfig) {
@@ -248,7 +248,7 @@ public class ActionMethodParser {
 			filterClasses = actionConfig.getFilters();
 		}
 
-		return filtersManager.resolveAll(actionConfig, filterClasses);
+		return filtersManager.resolveAll(filterClasses);
 	}
 
 	// ---------------------------------------------------------------- interceptors
@@ -444,11 +444,11 @@ public class ActionMethodParser {
 		final Class actionClass,
 		final Method actionClassMethod,
 		final Class<? extends ActionResult> actionResult,
+		final Class<? extends ActionResult> defaultActionResult,
 		final ActionFilter[] filters,
 		final ActionInterceptor[] interceptors,
 		final ActionDefinition actionDefinition,
-		final boolean async,
-		final ActionConfig actionConfig)
+		final boolean async)
 	{
 		if (actionHandler != null) {
 
@@ -460,10 +460,10 @@ public class ActionMethodParser {
 				interceptors,
 				actionDefinition,
 				NoneActionResult.class,
+				NoneActionResult.class,
 				async,
 				null,
-				null,
-				actionConfig);
+				null);
 
 		}
 
@@ -518,10 +518,10 @@ public class ActionMethodParser {
 				interceptors,
 				actionDefinition,
 				actionResult,
+				defaultActionResult,
 				async,
 				scopeData,
-				params,
-				actionConfig);
+				params);
 	}
 
 }
