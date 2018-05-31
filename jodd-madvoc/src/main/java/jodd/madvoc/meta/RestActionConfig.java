@@ -33,13 +33,11 @@ import jodd.madvoc.result.JsonActionResult;
 
 public class RestActionConfig extends ActionConfig {
 
-	public RestActionConfig(final ActionConfig parentActionConfig) {
-		super(parentActionConfig);
-
+	public RestActionConfig() {
+		setActionMethodNames("get", "post", "put", "delete", "options");
 		setNamingStrategy(RestActionNamingStrategy.class);
-
 		setActionResult(JsonActionResult.class);
-
+		setFilters();
 		setInterceptors(JsonErrorInterceptor.class, ServletConfigInterceptor.class);
 	}
 }
