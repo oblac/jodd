@@ -34,9 +34,16 @@ public class Val {
 
 	private String hello;
 
+	@PetiteValue
+	private String justValue;
+
 	@PetiteValue("WOO-${jodd.is.cool}${someValue}")
 	public void setHello(String hello) {
 		this.hello = hello;
+	}
+
+	public String getJustValue() {
+		return justValue;
 	}
 
 	@Override

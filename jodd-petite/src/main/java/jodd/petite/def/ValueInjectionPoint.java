@@ -32,6 +32,6 @@ public class ValueInjectionPoint {
 
 	public ValueInjectionPoint(final String property, final String valueTemplate) {
 		this.property = property;
-		this.valueTemplate = valueTemplate;
+		this.valueTemplate = valueTemplate.isEmpty() ? "${" + property + "}" : valueTemplate;
 	}
 }

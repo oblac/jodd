@@ -122,4 +122,18 @@ class ParamTest {
 
 	}
 
+	@Test
+	void testEmptyParam() {
+		final PetiteContainer pc = new PetiteContainer();
+		pc.registerPetiteBean(Val.class, null, null, null, false, null);
+		pc.config().setImplicitParamInjection(false);
+
+		pc.defineParameter("someValue", "173");
+		pc.defineParameter("justValue", "aaa");
+
+		Val val = pc.getBean("val");
+		assertNotNull(val);
+		assertEquals("aaa", val.getJustValue());
+	}
+
 }
