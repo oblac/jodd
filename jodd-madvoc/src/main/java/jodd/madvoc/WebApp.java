@@ -27,6 +27,7 @@ package jodd.madvoc;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.component.ActionConfigManager;
 import jodd.madvoc.component.ActionMethodParamNameResolver;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionPathRewriter;
@@ -43,9 +44,12 @@ import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.component.RootPackages;
 import jodd.madvoc.component.ScopeDataInspector;
 import jodd.madvoc.component.ScopeResolver;
 import jodd.madvoc.component.ServletContextProvider;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.RestAction;
 import jodd.props.Props;
 import jodd.util.ClassConsumer;
 import jodd.util.Consumers;
@@ -140,6 +144,11 @@ public class WebApp {
 		return this;
 	}
 
+	public <A extends ActionConfig> WebApp withActionConfig(final Class<A> actionConfigType, final Consumer<A> actionConfigConsumer) {
+		withRegisteredComponent(ActionConfigManager.class, acm -> acm.with(actionConfigType, actionConfigConsumer));
+		return this;
+	}
+
 	// ---------------------------------------------------------------- main components
 
 	protected final MadvocContainer madvocContainer;
@@ -217,15 +226,18 @@ public class WebApp {
 		madvocComponents.forEach(
 			madvocComponent -> madvocContainer.registerComponent(madvocComponent.type(), madvocComponent.consumer()));
 		madvocComponents = null;
+
 		madvocComponentInstances.forEach(madvocContainer::registerComponentInstance);
 		madvocComponentInstances = null;
+
+		configureDefaults();
 
 
 		//// listeners
 		madvocContainer.fireEvent(Init.class);
 
 		//// component configuration
-		componentConfigs.accept(madvocContainer());
+		componentConfigs.accept(madvocContainer);
 
 		initialized();
 
@@ -251,6 +263,17 @@ public class WebApp {
 	}
 
 	/**
+	 * Configure defaults.
+	 */
+	protected void configureDefaults() {
+		final ActionConfigManager actionConfigManager =
+			madvocContainer.lookupComponent(ActionConfigManager.class);
+
+		actionConfigManager.registerActionAnnotation(Action.class);
+		actionConfigManager.registerActionAnnotation(RestAction.class);
+	}
+
+	/**
 	 * Hook for manual Madvoc configuration. No component is registered yet. You can use
 	 * only {@link MadvocConfig} and {@link MadvocContainer}.
 	 */
@@ -269,6 +292,7 @@ public class WebApp {
 
 		madvocContainer.registerComponentInstance(new ServletContextProvider(servletContext));
 
+		madvocContainer.registerComponent(ActionConfigManager.class);
 		madvocContainer.registerComponent(ActionMethodParamNameResolver.class);
 		madvocContainer.registerComponent(ActionMethodParser.class);
 		madvocContainer.registerComponent(ActionPathRewriter.class);
@@ -277,6 +301,7 @@ public class WebApp {
 		madvocContainer.registerComponent(InterceptorsManager.class);
 		madvocContainer.registerComponent(FiltersManager.class);
 		madvocContainer.registerComponent(MadvocController.class);
+		madvocContainer.registerComponent(RootPackages.class);
 		madvocContainer.registerComponent(ResultsManager.class);
 		madvocContainer.registerComponent(ResultMapper.class);
 		madvocContainer.registerComponent(ScopeResolver.class);

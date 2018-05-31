@@ -25,7 +25,7 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.config.RootPackages;
+import jodd.madvoc.component.RootPackages;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
