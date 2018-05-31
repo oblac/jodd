@@ -26,6 +26,7 @@
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.action.RestActionConfig;
 import jodd.madvoc.path.RestActionNamingStrategy;
 
 import java.lang.annotation.Documented;

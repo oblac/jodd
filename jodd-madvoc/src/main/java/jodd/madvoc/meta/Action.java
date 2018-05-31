@@ -25,7 +25,7 @@
 
 package jodd.madvoc.meta;
 
-import jodd.madvoc.ActionConfig;
+import jodd.madvoc.action.DefaultActionConfig;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
-@ActionConfiguredBy(ActionConfig.class)
+@ActionConfiguredBy(DefaultActionConfig.class)
 public @interface Action {
 
 	/**
