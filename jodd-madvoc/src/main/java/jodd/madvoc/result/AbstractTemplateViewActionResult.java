@@ -201,7 +201,9 @@ public abstract class AbstractTemplateViewActionResult implements ActionResult {
 	protected void targetNotFound(final ActionRequest actionRequest, final String actionAndResultPath) throws IOException {
 		final HttpServletResponse response = actionRequest.getHttpServletResponse();
 
-		response.sendError(SC_NOT_FOUND, "Result not found: " + actionAndResultPath);
+		if (!response.isCommitted()) {
+			response.sendError(SC_NOT_FOUND, "Result not found: " + actionAndResultPath);
+		}
 	}
 
 }
