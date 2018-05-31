@@ -33,12 +33,9 @@ import jodd.madvoc.BaseActionWrapperStack;
  * an {@link jodd.madvoc.meta.InterceptedBy} annotation. It is only
  * used for grouping and will be not really added to the interceptors.
  */
-public class ActionInterceptorStack extends BaseActionWrapperStack<ActionInterceptor> implements ActionInterceptor {
+public abstract class ActionInterceptorStack extends BaseActionWrapperStack<ActionInterceptor> implements ActionInterceptor {
 
-	public ActionInterceptorStack() {
-	}
-
-	public ActionInterceptorStack(final Class<? extends ActionInterceptor>... interceptorClasses) {
+	protected ActionInterceptorStack(final Class<? extends ActionInterceptor>... interceptorClasses) {
 		super(interceptorClasses);
 	}
 
