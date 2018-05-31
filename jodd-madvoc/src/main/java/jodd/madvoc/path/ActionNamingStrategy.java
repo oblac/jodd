@@ -43,7 +43,7 @@ public interface ActionNamingStrategy {
 	 * @param actionMethod action method
 	 * @param actionNames action names
 	 */
-	public ActionDefinition buildActionDef(
+	ActionDefinition buildActionDef(
 			Class actionClass,
 			Method actionMethod,
 			ActionNames actionNames);
