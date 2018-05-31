@@ -25,7 +25,6 @@
 
 package jodd.madvoc.config;
 
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionHandler;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -43,6 +42,7 @@ public class ActionRuntime {
 	private final Class actionClass;
 	private final Method actionClassMethod;
 	private final Class<? extends ActionResult> actionResult;
+	private final Class<? extends ActionResult> defaultActionResult;
 	private final String actionPath;
 	private final String actionMethod;
 	private final String resultBasePath;
@@ -58,22 +58,20 @@ public class ActionRuntime {
 	private RouteChunk routeChunk;
 	private final ActionFilter[] filters;
 	private final ActionInterceptor[] interceptors;
-	private final ActionConfig actionConfig;
 
 	public ActionRuntime(
-		final ActionHandler actionHandler,
-		final Class actionClass,
-		final Method actionClassMethod,
-		final ActionFilter[] filters,
-		final ActionInterceptor[] interceptors,
-		final ActionDefinition actionDefinition,
-		final Class<? extends ActionResult> actionResult,
-		final boolean async,
-		final ScopeData scopeData,
-		final MethodParam[] methodParams,
-		final ActionConfig actionConfig
-			)
-	{
+			final ActionHandler actionHandler,
+			final Class actionClass,
+			final Method actionClassMethod,
+			final ActionFilter[] filters,
+			final ActionInterceptor[] interceptors,
+			final ActionDefinition actionDefinition,
+			final Class<? extends ActionResult> actionResult,
+			final Class<? extends ActionResult> defaultActionResult,
+			final boolean async,
+			final ScopeData scopeData,
+			final MethodParam[] methodParams
+	) {
 		this.actionHandler = actionHandler;
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
@@ -82,6 +80,7 @@ public class ActionRuntime {
 		this.resultBasePath = actionDefinition.resultBasePath();
 		this.hasArguments = actionClassMethod != null && (actionClassMethod.getParameterTypes().length != 0);
 		this.actionResult = actionResult;
+		this.defaultActionResult = defaultActionResult;
 		this.async = async;
 
 		this.scopeData = scopeData;
@@ -89,7 +88,6 @@ public class ActionRuntime {
 		this.filters = filters;
 		this.interceptors = interceptors;
 		this.methodParams = methodParams;
-		this.actionConfig = actionConfig;
 	}
 
 	// ---------------------------------------------------------------- getters
@@ -180,6 +178,13 @@ public class ActionRuntime {
 	}
 
 	/**
+	 * Returns default action result.
+	 */
+	public Class<? extends ActionResult> getDefaultActionResult() {
+		return defaultActionResult;
+	}
+
+	/**
 	 * Returns {@code true} if action has arguments.
 	 */
 	public boolean hasArguments() {
@@ -191,13 +196,6 @@ public class ActionRuntime {
 	 */
 	public ScopeData getScopeData() {
 		return scopeData;
-	}
-
-	/**
-	 * Returns action configuration.
-	 */
-	public ActionConfig getActionConfig() {
-		return actionConfig;
 	}
 
 	// ---------------------------------------------------------------- bind
