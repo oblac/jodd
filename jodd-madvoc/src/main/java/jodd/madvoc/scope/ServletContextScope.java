@@ -54,7 +54,7 @@ public class ServletContextScope implements MadvocScope {
 		final Enumeration<String> attributeNames = servletContext.getAttributeNames();
 
 		while (attributeNames.hasMoreElements()) {
-			final String attrName = (String) attributeNames.nextElement();
+			final String attrName = attributeNames.nextElement();
 
 			targets.forEachTargetAndIn(this, (target, in) -> {
 				final String name = in.matchedName(attrName);
