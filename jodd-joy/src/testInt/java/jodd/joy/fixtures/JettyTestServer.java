@@ -23,57 +23,45 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.joy.fixtures;
 
 import jodd.io.FileUtil;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
-import java.net.URL;
 
-class TestServerBase {
+public class JettyTestServer extends TestServerBase {
 
-	protected File webXmlFile;
+	// ---------------------------------------------------------------- instance
 
-	protected File prepareWebApplication() throws Exception {
-		File webRoot = FileUtil.createTempDirectory("jodd-joy", "test-int");
-		webRoot.deleteOnExit();
+	protected File webRoot;
+	protected Server jetty;
 
-		// web-inf
+	public void start() throws Exception {
+		webRoot = prepareWebApplication();
 
-		File webInfFolder = new File(webRoot, "WEB-INF");
-		webInfFolder.mkdir();
+		jetty = new Server(8174);
 
-		// web.xml
+		WebAppContext webAppContext = new WebAppContext();
+		webAppContext.setContextPath("/");
+		webAppContext.setResourceBase(webRoot.getAbsolutePath());
+		webAppContext.setDescriptor(this.webXmlFile.getAbsolutePath());
 
-		URL webXmlUrl = JoyTomcatTestServer.class.getResource("/web-test-int.xml");
-		File webXmlFile = FileUtil.toFile(webXmlUrl);
-		this.webXmlFile = new File(webInfFolder, "web.xml");
+		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
+		webAppContext.setClassLoader(
+			Thread.currentThread().getContextClassLoader()
+		);
 
-		FileUtil.copyFile(webXmlFile, this.webXmlFile);
+		jetty.setHandler(webAppContext);
 
-		// jsp
+		jetty.start();
+	}
 
-		File jspFolder = new File(webXmlFile.getParent(), "jsp");
-		FileUtil.copyDir(jspFolder, webRoot);
-
-		// lib folder
-
-		File libFolder = new File(webInfFolder, "lib");
-		libFolder.mkdir();
-
-		// classes
-
-		File classes = new File(webInfFolder, "classes");
-		classes.mkdirs();
-
-		// classes/madvoc.props
-
-		URL madvocPropsUrl = JoyTomcatTestServer.class.getResource("/madvoc.props");
-		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
-
-		FileUtil.copyFileToDir(madvocPropsFile, classes);
-
-		return webRoot;
+	public void stop() throws Exception {
+		jetty.stop();
+		jetty.destroy();
+		FileUtil.deleteDir(webRoot);
 	}
 
 }

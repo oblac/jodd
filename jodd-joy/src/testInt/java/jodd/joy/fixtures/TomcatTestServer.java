@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.joy.fixtures;
 
 import jodd.io.FileUtil;
 import org.apache.catalina.startup.Tomcat;
@@ -33,7 +33,7 @@ import java.io.File;
 /**
  * Embedded Tomcat server for integration tests.
  */
-public class JoyTomcatTestServer extends TestServerBase {
+public class TomcatTestServer extends TestServerBase {
 
 	// ---------------------------------------------------------------- instance
 
@@ -48,7 +48,7 @@ public class JoyTomcatTestServer extends TestServerBase {
 		tomcat = new Tomcat();
 		tomcat.setPort(8173);
 		tomcat.setBaseDir(workingDir);
-		tomcat.addWebapp("/", webRoot.getAbsolutePath());
+		tomcat.addWebapp("", webRoot.getAbsolutePath());
 
 		tomcat.start();
 	}

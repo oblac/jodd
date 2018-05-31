@@ -23,46 +23,57 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.joy.fixtures;
 
 import jodd.io.FileUtil;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
+import java.net.URL;
 
-public class JoyJettyTestServer extends TestServerBase {
+public abstract class TestServerBase {
 
-	// ---------------------------------------------------------------- instance
+	protected File webXmlFile;
 
-	protected File webRoot;
-	protected Server jetty;
+	protected File prepareWebApplication() throws Exception {
+		File webRoot = FileUtil.createTempDirectory("jodd-joy", "test-int");
+		webRoot.deleteOnExit();
 
-	public void start() throws Exception {
-		webRoot = prepareWebApplication();
+		// web-inf
 
-		jetty = new Server(8174);
+		File webInfFolder = new File(webRoot, "WEB-INF");
+		webInfFolder.mkdir();
 
-		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setContextPath("/");
-		webAppContext.setResourceBase(webRoot.getAbsolutePath());
-		webAppContext.setDescriptor(this.webXmlFile.getAbsolutePath());
+		// web.xml
 
-		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
-		webAppContext.setClassLoader(
-			Thread.currentThread().getContextClassLoader()
-		);
+		URL webXmlUrl = TomcatTestServer.class.getResource("/web-test-int.xml");
+		File webXmlFile = FileUtil.toFile(webXmlUrl);
+		this.webXmlFile = new File(webInfFolder, "web.xml");
 
+		FileUtil.copyFile(webXmlFile, this.webXmlFile);
 
-		jetty.setHandler(webAppContext);
+		// jsp
 
-		jetty.start();
-	}
+		File jspFolder = new File(webXmlFile.getParent(), "jsp");
+		FileUtil.copyDir(jspFolder, webRoot);
 
-	public void stop() throws Exception {
-		jetty.stop();
-		jetty.destroy();
-		FileUtil.deleteDir(webRoot);
+		// lib folder
+
+		File libFolder = new File(webInfFolder, "lib");
+		libFolder.mkdir();
+
+		// classes
+
+		File classes = new File(webInfFolder, "classes");
+		classes.mkdirs();
+
+		// classes/madvoc.props
+
+		URL madvocPropsUrl = TomcatTestServer.class.getResource("/madvoc.props");
+		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
+
+		FileUtil.copyFileToDir(madvocPropsFile, classes);
+
+		return webRoot;
 	}
 
 }
