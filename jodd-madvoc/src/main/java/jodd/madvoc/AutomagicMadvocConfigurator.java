@@ -31,6 +31,7 @@ import jodd.introspector.MethodDescriptor;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.component.ActionConfigManager;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
 import jodd.madvoc.component.MadvocContainer;
@@ -38,7 +39,6 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.annotation.AnnotationParser;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -60,7 +60,7 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 	private final ClassScanner classScanner;
 
 	@PetiteInject
-	protected MadvocConfig madvocConfig;
+	protected ActionConfigManager actionConfigManager;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -217,15 +217,10 @@ public class AutomagicMadvocConfigurator implements MadvocComponentLifecycle.Ini
 				continue;
 			}
 			// just public methods
-			Method method = methodDescriptor.getMethod();
+			final Method method = methodDescriptor.getMethod();
 
-			boolean hasAnnotation = false;
-			for (AnnotationParser annotationParser : madvocConfig.getAnnotationParsers()) {
-				if (annotationParser.hasAnnotationOn(method)) {
-					hasAnnotation = true;
-					break;
-				}
-			}
+			final boolean hasAnnotation = actionConfigManager.hasActionAnnotationOn(method);
+
 			if (!hasAnnotation) {
 				continue;
 			}
