@@ -58,6 +58,8 @@ public class ActionsManager {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
+	protected boolean detectDuplicatePathsEnabled = true;
+
 	protected int actionsCount;
 	protected boolean asyncMode;
 
@@ -71,6 +73,10 @@ public class ActionsManager {
 		this.pathAliases = new HashMap<>();
 		this.runtimes = new HashMap<>();
 		this.asyncMode = false;
+	}
+
+	public void setDetectDuplicatePathsEnabled(final boolean detectDuplicatePathsEnabled) {
+		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
 	}
 
 	/**
@@ -156,7 +162,7 @@ public class ActionsManager {
 
 		if (routeChunk.value() != null) {
 			// existing chunk
-			if (madvocConfig.isDetectDuplicatePathsEnabled()) {
+			if (detectDuplicatePathsEnabled) {
 				throw new MadvocException("Duplicate action path for " + actionRuntime);
 			}
 		}

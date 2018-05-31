@@ -27,7 +27,6 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.ResultPath;
@@ -51,8 +50,14 @@ public class ResultMapper {
 	@PetiteInject
 	protected ActionsManager actionsManager;
 
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
+	/**
+	 * Default prefix for all result paths.
+	 */
+	protected String resultPathPrefix = null;
+
+	public void setResultPathPrefix(final String resultPathPrefix) {
+		this.resultPathPrefix = resultPathPrefix;
+	}
 
 	/**
 	 * Lookups value as an alias and, if not found, as a default alias.
@@ -188,7 +193,6 @@ public class ResultMapper {
 		}
 
 		if (!absolutePath) {
-			String resultPathPrefix = madvocConfig.getResultPathPrefix();
 			if (resultPathPrefix != null) {
 				path = resultPathPrefix + path;
 			}
@@ -203,8 +207,8 @@ public class ResultMapper {
 	 * on full path is done.
 	 */
 	public String resolveResultPathString(final String path, final String value) {
-		ResultPath resultPath = resolveResultPath(path, value);
-		String result = resultPath.pathValue();
+		final ResultPath resultPath = resolveResultPath(path, value);
+		final String result = resultPath.pathValue();
 
 		return resolveAlias(result);
 	}

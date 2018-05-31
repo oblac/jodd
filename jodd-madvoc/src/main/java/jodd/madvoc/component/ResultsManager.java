@@ -28,7 +28,6 @@ package jodd.madvoc.component;
 import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
@@ -127,16 +126,15 @@ public class ResultsManager {
 	 * based on current {@link jodd.madvoc.ActionRequest action request} and action method
 	 * result object.
 	 */
-	public ActionResult lookup(final ActionRequest actionRequest, Object resultObject) {
+	public ActionResult lookup(final ActionRequest actionRequest, final Object resultObject) {
 
 		ActionResult actionResultHandler = null;
 
 		// + read @RenderWith value on method
 		{
-
 			final ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
+			final Class<? extends ActionResult> actionResultClass = actionRuntime.getActionResult();
 
 			if (actionResultClass != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
@@ -158,9 +156,9 @@ public class ResultsManager {
 
 		// + use action configuration
 		if (actionResultHandler == null) {
-			final ActionConfig actionConfig = actionRequest.getActionRuntime().getActionConfig();
+			final ActionRuntime actionRuntime = actionRequest.getActionRuntime();
 
-			final Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
+			final Class<? extends ActionResult> actionResultClass = actionRuntime.getDefaultActionResult();
 
 			if (actionResultClass != null) {
 				actionResultHandler = lookupAndRegisterIfMissing(actionResultClass);
