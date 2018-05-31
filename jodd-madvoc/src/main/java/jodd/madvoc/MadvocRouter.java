@@ -35,6 +35,7 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.result.ServletDispatcherActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ArraysUtil;
 
@@ -57,9 +58,6 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 			}
 		};
 	}
-
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -311,17 +309,15 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		 * Binds and finalize action runtime configuration.
 		 */
 		public MadvocRouter bind() {
-			final ActionConfig actionConfig = madvocConfig.getActionConfig();
-
 			if (actionMethodString != null) {
 				actionClassMethod = actionsManager.resolveActionMethod(actionClass, actionMethodString);
 			}
 
-			ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionConfig, actionFilters);
+			final ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionFilters);
 
-			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionConfig, actionInterceptors);
+			final ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionInterceptors);
 
-			ActionDefinition actionDefinition;
+			final ActionDefinition actionDefinition;
 			if (resultBasePath != null) {
 				actionDefinition = new ActionDefinition(actionPath, method, resultBasePath);
 			}
@@ -329,15 +325,18 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 				actionDefinition = new ActionDefinition(actionPath, method);
 			}
 
-			ActionRuntime actionRuntime =
-					actionMethodParser.createActionRuntime(
-							actionHandler,
-							actionClass, actionClassMethod,
-							actionResult,
-							actionFilterInstances, actionInterceptorInstances,
-							actionDefinition, async,
-							actionConfig
-							);
+			final ActionRuntime actionRuntime =
+				actionMethodParser.createActionRuntime(
+					actionHandler,
+					actionClass,
+					actionClassMethod,
+					actionResult,
+					ServletDispatcherActionResult.class,
+					actionFilterInstances,
+					actionInterceptorInstances,
+					actionDefinition,
+					async
+				);
 
 			actionsManager.registerActionRuntime(actionRuntime);
 
