@@ -23,15 +23,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.action;
 
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.interceptor.JsonErrorInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.path.RestActionNamingStrategy;
 import jodd.madvoc.result.JsonActionResult;
 
-public class RestActionConfig extends ActionConfig {
+public class RestActionConfig extends DefaultActionConfig {
 
 	public RestActionConfig() {
 		setActionMethodNames("get", "post", "put", "delete", "options");

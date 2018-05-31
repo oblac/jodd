@@ -30,65 +30,15 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 
-/**
- * Action configuration.
- */
-public class ActionConfig {
+public interface ActionConfig {
 
-	private Class<? extends ActionResult> actionResult;
-	private Class<? extends ActionInterceptor>[] interceptors;
-	private Class<? extends ActionFilter>[] filters;
-	private String[] actionMethodNames;
-	private Class<? extends ActionNamingStrategy> namingStrategy;
+	Class<? extends ActionResult> getActionResult();
 
-	public ActionConfig() {
-	}
+	Class<? extends ActionInterceptor>[] getInterceptors();
 
-	public ActionConfig(final ActionConfig parentActionConfig) {
-		this.actionResult = parentActionConfig.getActionResult();
-		this.interceptors = parentActionConfig.getInterceptors();
-		this.filters = parentActionConfig.getFilters();
-		this.actionMethodNames = parentActionConfig.getActionMethodNames();
-		this.namingStrategy = parentActionConfig.getNamingStrategy();
-	}
+	Class<? extends ActionFilter>[] getFilters();
 
-	public Class<? extends ActionResult> getActionResult() {
-		return actionResult;
-	}
+	String[] getActionMethodNames();
 
-	public void setActionResult(final Class<? extends ActionResult> actionResult) {
-		this.actionResult = actionResult;
-	}
-
-	public Class<? extends ActionInterceptor>[] getInterceptors() {
-		return interceptors;
-	}
-
-	public void setInterceptors(final Class<? extends ActionInterceptor>... interceptors) {
-		this.interceptors = interceptors;
-	}
-
-	public Class<? extends ActionFilter>[] getFilters() {
-		return filters;
-	}
-
-	public void setFilters(final Class<? extends ActionFilter>... filters) {
-		this.filters = filters;
-	}
-
-	public String[] getActionMethodNames() {
-		return actionMethodNames;
-	}
-
-	public void setActionMethodNames(final String... actionMethodNames) {
-		this.actionMethodNames = actionMethodNames;
-	}
-
-	public Class<? extends ActionNamingStrategy> getNamingStrategy() {
-		return namingStrategy;
-	}
-
-	public void setNamingStrategy(final Class<? extends ActionNamingStrategy> namingStrategy) {
-		this.namingStrategy = namingStrategy;
-	}
+	Class<? extends ActionNamingStrategy> getNamingStrategy();
 }
