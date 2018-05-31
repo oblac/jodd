@@ -25,26 +25,73 @@
 
 package jodd.joy;
 
-import jodd.http.HttpRequest;
-import jodd.http.HttpResponse;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import jodd.exception.UncheckedException;
+import jodd.joy.fixtures.TomcatTestServer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+class JoySuiteTomcatTest extends JoyTestBase {
 
-class JoySuiteTest extends JoyTestBase {
+	public static boolean isRunning;
+	{
+		port = 8173;
+	}
 
-	@ParameterizedTest
-	@ValueSource(ints = {8173, 8174})
-	void testHello(final int port) {
-		HttpResponse httpResponse =
-			HttpRequest
-				.post("localhost:" + port + "/hello")
-				.form("username", "jodd")
-				.send();
+	/**
+	 * Starts Tomcat after the suite.
+	 */
+	@BeforeAll
+	static void beforeClass() {
+		isRunning = true;
+		startTomcat();
+	}
 
-		assertEquals(200, httpResponse.statusCode());
-		assertEquals("{\"username\":\"jodd\"}", httpResponse.bodyText());
+	/**
+	 * Stop Tomcat after the suite.
+	 */
+	@AfterAll
+	static void afterSuite() {
+		isRunning = false;
+		stopTomcat();
+	}
+
+	// ---------------------------------------------------------------- tomcat
+
+	private static TomcatTestServer server;
+
+	/**
+	 * Starts Tomcat.
+	 */
+	public static void startTomcat() {
+		if (server != null) {
+			return;
+		}
+		server = new TomcatTestServer();
+		try {
+			server.start();
+			System.out.println("Tomcat test server started");
+		} catch (Exception e) {
+			throw new UncheckedException(e);
+		}
+	}
+
+	/**
+	 * Stops Tomcat if not in the suite.
+	 */
+	public static void stopTomcat() {
+		if (server == null) {
+			return;
+		}
+		if (isRunning) {	// dont stop tomcat if it we are still running in the suite!
+			return;
+		}
+		try {
+			server.stop();
+		} catch (Exception ignore) {
+		} finally {
+			System.out.println("Tomcat test server stopped");
+			server = null;
+		}
 	}
 
 }
