@@ -81,6 +81,7 @@ public class JoyProxetta extends JoyBase {
 
 	@Override
 	void stop() {
+		proxyProxetta = null;
 	}
 
 }

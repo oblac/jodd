@@ -29,6 +29,7 @@ import jodd.bridge.ClassPathURLs;
 import jodd.io.findfile.ClassScanner;
 import jodd.typeconverter.Converter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -98,7 +99,7 @@ public class JoyScanner extends JoyBase {
 
 	// ---------------------------------------------------------------- start
 
-	private final ClassScanner classScanner = new ClassScanner();
+	protected ClassScanner classScanner;
 
 	/**
 	 * Configures scanner class finder. Works for all three scanners:
@@ -111,6 +112,20 @@ public class JoyScanner extends JoyBase {
 
 		log.info("SCANNER start ----------");
 
+		classScanner = new ClassScanner() {
+			@Override
+			protected void scanJarFile(final File file) {
+				log.debug("Scanning jar: " + file);
+				super.scanJarFile(file);
+			}
+
+			@Override
+			protected void scanClassPath(final File root) {
+				log.debug("Scanning path: " + root);
+				super.scanClassPath(root);
+			}
+		};
+
 		if (log.isDebugEnabled()) {
 			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
 			log.debug("Scan jars: " + Converter.get().toString(includedJars));
@@ -120,6 +135,8 @@ public class JoyScanner extends JoyBase {
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
 			classScanner.excludeAllEntries(false);
 			classScanner.excludeEntries("ch.qos.logback.*");
+			classScanner.excludeJars("**/tomcat*");
+			classScanner.excludeJars("**/jetty*");
 		}
 		else {
 			classScanner.excludeAllEntries(true);
@@ -138,6 +155,7 @@ public class JoyScanner extends JoyBase {
 
 	@Override
 	public void stop() {
+		classScanner = null;
 	}
 
 	/**

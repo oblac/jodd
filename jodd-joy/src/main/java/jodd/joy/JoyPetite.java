@@ -167,6 +167,7 @@ public class JoyPetite extends JoyBase {
 		if (petiteContainer != null) {
 			petiteContainer.shutdown();
 		}
+		petiteContainer = null;
 	}
 
 	public void printBeans(final int width) {

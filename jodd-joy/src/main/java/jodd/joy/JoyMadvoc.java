@@ -25,11 +25,15 @@
 
 package jodd.joy;
 
-import jodd.joy.madvoc.interceptor.DefaultInterceptorStack;
+import jodd.joy.i18n.I18nInterceptor;
 import jodd.madvoc.AutomagicMadvocConfigurator;
 import jodd.madvoc.WebApp;
+import jodd.madvoc.action.DefaultActionConfig;
+import jodd.madvoc.action.RestActionConfig;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.interceptor.JsonErrorInterceptor;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaSupplier;
@@ -93,10 +97,17 @@ public class JoyMadvoc extends JoyBase {
 
 		log.info("MADVOC start  ----------");
 
-		webApp = webAppSupplier == null ? new PetiteWebApp() : webAppSupplier.get();
+		webApp = webAppSupplier == null ? new PetiteWebApp(petiteSupplier.get()) : webAppSupplier.get();
 
-		webApp.configure(madvocConfig -> madvocConfig.getActionConfig().setInterceptors(DefaultInterceptorStack.class));
-		webApp.withPetiteContainer(petiteSupplier);
+		webApp.withActionConfig(DefaultActionConfig.class, dac -> dac.setInterceptors(
+				I18nInterceptor.class,
+				ServletConfigInterceptor.class
+		));
+		webApp.withActionConfig(RestActionConfig.class, rac -> rac.setInterceptors(
+				JsonErrorInterceptor.class,
+				I18nInterceptor.class,
+				ServletConfigInterceptor.class
+		));
 
 		if (servletContext != null) {
 			webApp.bindServletContext(servletContext);

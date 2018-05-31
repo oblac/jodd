@@ -253,10 +253,17 @@ public class JoyDb extends JoyBase {
 		if (jtxManager != null) {
 			jtxManager.close();
 		}
+		jtxManager = null;
 
 		if (connectionProvider != null) {
 			connectionProvider.close();
 		}
+		connectionProvider = null;
+
+		if (dbOom != null) {
+			dbOom.shutdown();
+		}
+		dbOom = null;
 	}
 
 	public void printEntities(final int width) {
