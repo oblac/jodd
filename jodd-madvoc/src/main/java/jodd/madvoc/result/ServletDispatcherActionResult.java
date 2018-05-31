@@ -54,6 +54,9 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 	@In @MadvocContext
 	protected MadvocConfig madvocConfig;
 
+	protected final String[] defaultViewExtensions = new String[] {".jspf", ".jsp"};
+	protected final String defaultViewPageName = "index";
+
 	/**
 	 * Renders the view by dispatching to the target JSP.
 	 */
@@ -86,10 +89,10 @@ public class ServletDispatcherActionResult extends AbstractTemplateViewActionRes
 		String target;
 
 		if (path.endsWith(StringPool.SLASH)) {
-			path = path + madvocConfig.getDefaultViewPageName();
+			path = path + defaultViewPageName;
 		}
 
-		for (final String ext : madvocConfig.getDefaultViewExtensions()) {
+		for (final String ext : defaultViewExtensions) {
 			target = path + ext;
 
 			if (targetExists(actionRequest, target)) {
