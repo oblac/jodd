@@ -40,6 +40,7 @@ import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
 import jodd.jtx.worker.LeanJtxWorker;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
@@ -233,8 +234,7 @@ public class JoyDb extends JoyBase {
 	protected ProxyAspect createTxProxyAspects(final Class<? extends Annotation>[] annotations) {
 		return new ProxyAspect(
 			AnnotationTxAdvice.class,
-			((ProxyPointcut)
-				methodInfo -> methodInfo.isPublicMethod() && methodInfo.isTopLevelMethod())
+			((ProxyPointcut) MethodInfo::isPublicMethod)
 				.and(MethodWithAnnotationPointcut.of(annotations))
 		);
 	}
