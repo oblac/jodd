@@ -92,6 +92,7 @@ public abstract class HttpBase<T> {
 	}
 
 	public static final String HEADER_ACCEPT = "Accept";
+	public static final String HEADER_AUTHORIZATION = "Authorization";
 	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -267,6 +268,22 @@ public abstract class HttpBase<T> {
 	public Collection<String> headerNames() {
 		return headers.names();
 	}
+
+	/**
+	 * Returns Bearer token or {@code null} if not set.
+	 */
+	public String tokenAuthentication() {
+		final String value = headers.get(HEADER_AUTHORIZATION);
+		if (value == null) {
+			return null;
+		}
+		final int ndx = value.indexOf("Bearer ");
+		if (ndx == -1) {
+			return null;
+		}
+		return value.substring(ndx + 7).trim();
+	}
+
 
 	// ---------------------------------------------------------------- content type
 

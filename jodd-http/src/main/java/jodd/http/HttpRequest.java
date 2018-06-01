@@ -540,17 +540,27 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Enables basic authentication by adding required header.
 	 */
 	public HttpRequest basicAuthentication(final String username, final String password) {
-
 		if (username != null && password != null) {
 			String data = username.concat(StringPool.COLON).concat(password);
 
 			String base64 = Base64.encodeToString(data);
 
-			headerOverwrite("Authorization", "Basic " + base64);
+			headerOverwrite(HEADER_AUTHORIZATION, "Basic " + base64);
 		}
 
 		return this;
 	}
+
+	/**
+	 * Enables token-based authentication.
+	 */
+	public HttpRequest tokenAuthentication(final String token) {
+		if (token != null) {
+			headerOverwrite(HEADER_AUTHORIZATION, "Bearer " + token);
+		}
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- https
 
