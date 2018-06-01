@@ -28,7 +28,7 @@ package jodd.joy.db;
 import java.util.Objects;
 
 /**
- * Abstract entity. It may be used when <code>@DbId</code> annotation is not used.
+ * Abstract entity.
  */
 public abstract class Entity<ID> implements DbEntity<ID> {
 
