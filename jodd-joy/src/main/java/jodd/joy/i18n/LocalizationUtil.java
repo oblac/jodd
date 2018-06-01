@@ -54,7 +54,6 @@ public class LocalizationUtil {
 			if (!isCacheResourceBundles()) {
 				//ResourceBundle.clearCache(classLoader);
 				clearResourceBundleCache();
-				clearTomcatCache();
 			}
 			return super.getBundle(bundleName, locale, classLoader);
 
@@ -132,28 +131,6 @@ s	 */
 	}
 
 	// ---------------------------------------------------------------- util
-
-	/**
-	 * Clears Tomcat cache.
-	 */
-	protected static void clearTomcatCache() {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		Class cl = loader.getClass();
-
-		try {
-			if ("org.apache.catalina.loader.WebappClassLoader".equals(cl.getName())) {
-				clearMap(cl, loader, "resourceEntries");
-			} else {
-				if (log.isDebugEnabled()) {
-					log.debug("Class loader " + cl.getName() + " is not a Tomcat loader");
-				}
-			}
-		} catch (Exception ex) {
-			if (log.isWarnEnabled()) {
-				log.warn("Unable to clear Tomcat cache", ex);
-			}
-		}
-	}
 
 	/**
 	 * Clears resource bundle caches.
