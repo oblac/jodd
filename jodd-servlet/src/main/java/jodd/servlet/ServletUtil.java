@@ -100,8 +100,11 @@ public class ServletUtil {
 		if (header == null) {
 			return null;
 		}
-		String encoded = header.substring(header.indexOf(' ') + 1);
-		String decoded = new String(Base64.decode(encoded));
+		if (!header.contains("Basic ")) {
+			return null;
+		}
+		final String encoded = header.substring(header.indexOf(' ') + 1);
+		final String decoded = new String(Base64.decode(encoded));
 		return decoded.substring(0, decoded.indexOf(':'));
 	}
 
@@ -114,9 +117,28 @@ public class ServletUtil {
 		if (header == null) {
 			return null;
 		}
-		String encoded = header.substring(header.indexOf(' ') + 1);
-		String decoded = new String(Base64.decode(encoded));
+		if (!header.contains("Basic ")) {
+			return null;
+		}
+		final String encoded = header.substring(header.indexOf(' ') + 1);
+		final String decoded = new String(Base64.decode(encoded));
 		return decoded.substring(decoded.indexOf(':') + 1);
+	}
+
+	/**
+	 * Returns Bearer token.
+	 */
+	public static String resolveAuthBearerToken(final HttpServletRequest request) {
+		String header = request.getHeader(HEADER_AUTHORIZATION);
+		if (header == null) {
+			return null;
+		}
+		int ndx = header.indexOf("Bearer ");
+		if (ndx == -1) {
+			return null;
+		}
+
+		return header.substring(ndx + 7).trim();
 	}
 
 	/**
@@ -608,6 +630,19 @@ public class ServletUtil {
 		return paramValues;
 	}
 
+	// ---------------------------------------------------------------- types
+
+	/**
+	 * Returns {@code true} if request has JSON content type.
+	 */
+	public static boolean isJsonRequest(HttpServletRequest servletRequest) {
+		final String contentType = servletRequest.getContentType();
+		if (contentType == null) {
+			return false;
+		}
+
+		return contentType.equals(MimeTypes.MIME_APPLICATION_JSON);
+	}
 
 	// ---------------------------------------------------------------- copy
 
