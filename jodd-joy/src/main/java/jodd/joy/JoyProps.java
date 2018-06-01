@@ -81,7 +81,7 @@ public class JoyProps extends JoyBase {
 	 * If props have been already loaded, does nothing.
 	 */
 	@Override
-	void start() {
+	public void start() {
 		initLogger();
 
 		log.info("PROPS start ----------");
@@ -125,7 +125,7 @@ public class JoyProps extends JoyBase {
 	}
 
 	@Override
-	void stop() {
+	public void stop() {
 		props = null;
 	}
 }

@@ -46,7 +46,7 @@ public class JoyPaths extends JoyBase {
 	}
 
 	@Override
-	void start() {
+	public void start() {
 		initLogger();
 
 		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
@@ -77,6 +77,6 @@ public class JoyPaths extends JoyBase {
 	}
 
 	@Override
-	void stop() {
+	public void stop() {
 	}
 }

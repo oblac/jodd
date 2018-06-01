@@ -110,7 +110,7 @@ public class JoyPetite extends JoyBase {
 	 * this instance of core into the container.
 	 */
 	@Override
-	void start() {
+	public void start() {
 		initLogger();
 
 		log.info("PETITE start  ----------");
@@ -160,7 +160,7 @@ public class JoyPetite extends JoyBase {
 	 * Stops Petite container.
 	 */
 	@Override
-	void stop() {
+	public void stop() {
 		if (log != null) {
 			log.info("PETITE stop");
 		}

@@ -67,7 +67,7 @@ public class JoyProxetta extends JoyBase {
 	 * </ul>
 	 */
 	@Override
-	void start() {
+	public void start() {
 		initLogger();
 
 		log.info("PROXETTA start ----------");
@@ -80,7 +80,7 @@ public class JoyProxetta extends JoyBase {
 	}
 
 	@Override
-	void stop() {
+	public void stop() {
 		proxyProxetta = null;
 	}
 

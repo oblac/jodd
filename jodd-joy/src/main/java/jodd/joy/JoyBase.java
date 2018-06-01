@@ -51,11 +51,11 @@ public abstract class JoyBase {
 	/**
 	 * Starts the Joy component.
 	 */
-	abstract void start();
+	public abstract void start();
 
 	/**
 	 * Stops the Joy component.
 	 */
-	abstract void stop();
+	public abstract void stop();
 
 }
