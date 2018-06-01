@@ -23,20 +23,21 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.madvoc.interceptor;
+package jodd.joy.madvoc;
 
+import jodd.joy.auth.AuthInterceptor;
 import jodd.joy.i18n.I18nInterceptor;
 import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.madvoc.interceptor.JsonErrorInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
-/**
- * Default interceptor stack.
- */
-public class DefaultInterceptorStack extends ActionInterceptorStack {
-
-	public DefaultInterceptorStack() {
+public class JoyRestInterceptorStack extends ActionInterceptorStack {
+	public JoyRestInterceptorStack() {
 		super(
-				I18nInterceptor.class,
-				ServletConfigInterceptor.class);
+			JsonErrorInterceptor.class,
+			AuthInterceptor.class,
+			I18nInterceptor.class,
+			ServletConfigInterceptor.class
+		);
 	}
 }

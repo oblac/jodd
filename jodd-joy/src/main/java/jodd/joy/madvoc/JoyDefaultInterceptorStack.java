@@ -23,7 +23,20 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-/**
- * Common Madvoc interceptors.
- */
-package jodd.joy.madvoc.interceptor;
+package jodd.joy.madvoc;
+
+import jodd.joy.auth.AuthInterceptor;
+import jodd.joy.i18n.I18nInterceptor;
+import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
+
+public class JoyDefaultInterceptorStack extends ActionInterceptorStack {
+
+	public JoyDefaultInterceptorStack() {
+		super(
+			AuthInterceptor.class,
+			I18nInterceptor.class,
+			ServletConfigInterceptor.class
+		);
+	}
+}

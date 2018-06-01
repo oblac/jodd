@@ -23,9 +23,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.madvoc.result;
+package jodd.joy.madvoc;
 
-import jodd.joy.madvoc.action.AppAction;
 import jodd.joy.vtor.VtorUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
