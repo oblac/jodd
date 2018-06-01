@@ -23,75 +23,45 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.joy.servers;
 
-import jodd.exception.UncheckedException;
-import jodd.joy.servers.TomcatTestServer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import jodd.io.FileUtil;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
-class JoySuiteTomcatTest extends JoyTestBase {
+import java.io.File;
 
-	public static boolean isRunning;
-	{
-		port = 8173;
+public class JettyTestServer extends TestServerBase {
+
+	// ---------------------------------------------------------------- instance
+
+	protected File webRoot;
+	protected Server jetty;
+
+	public void start() throws Exception {
+		webRoot = prepareWebApplication();
+
+		jetty = new Server(8174);
+
+		WebAppContext webAppContext = new WebAppContext();
+		webAppContext.setContextPath("/");
+		webAppContext.setResourceBase(webRoot.getAbsolutePath());
+		webAppContext.setDescriptor(this.webXmlFile.getAbsolutePath());
+
+		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
+		webAppContext.setClassLoader(
+			Thread.currentThread().getContextClassLoader()
+		);
+
+		jetty.setHandler(webAppContext);
+
+		jetty.start();
 	}
 
-	/**
-	 * Starts Tomcat after the suite.
-	 */
-	@BeforeAll
-	static void beforeClass() {
-		isRunning = true;
-		startTomcat();
-	}
-
-	/**
-	 * Stop Tomcat after the suite.
-	 */
-	@AfterAll
-	static void afterSuite() {
-		isRunning = false;
-		stopTomcat();
-	}
-
-	// ---------------------------------------------------------------- tomcat
-
-	private static TomcatTestServer server;
-
-	/**
-	 * Starts Tomcat.
-	 */
-	public static void startTomcat() {
-		if (server != null) {
-			return;
-		}
-		server = new TomcatTestServer();
-		try {
-			server.start();
-			System.out.println("Tomcat test server started");
-		} catch (Exception e) {
-			throw new UncheckedException(e);
-		}
-	}
-
-	/**
-	 * Stops Tomcat if not in the suite.
-	 */
-	public static void stopTomcat() {
-		if (server == null) {
-			return;
-		}
-		if (isRunning) {	// dont stop tomcat if it we are still running in the suite!
-			return;
-		}
-		try {
-			server.stop();
-		} catch (Exception ignore) {
-		} finally {
-			System.out.println("Tomcat test server stopped");
-			server = null;
-		}
+	public void stop() throws Exception {
+		jetty.stop();
+		jetty.destroy();
+		FileUtil.deleteDir(webRoot);
 	}
 
 }

@@ -25,100 +25,106 @@
 
 package jodd.joy;
 
-import jodd.exception.UncheckedException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import jodd.http.Cookie;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
+import jodd.json.JsonObject;
+import jodd.json.JsonParser;
+import org.junit.jupiter.api.Test;
 
-public class JoyTestBase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-	public static boolean isRunning;
+public abstract class JoyTestBase {
 
-	/**
-	 * Starts Tomcat after the suite.
-	 */
-	@BeforeAll
-	static void beforeClass() {
-		isRunning = true;
-		startTomcat();
-		startJetty();
+	protected int port;
+	private String localhost() {return "localhost:" + port;}
+
+	@Test
+	void testHello() {
+		HttpResponse httpResponse =
+			HttpRequest
+				.post(localhost() + "/hello")
+				.form("username", "jodd")
+				.send();
+
+		assertEquals(200, httpResponse.statusCode());
+		assertEquals("{\"username\":\"jodd\"}", httpResponse.bodyText());
 	}
 
-	/**
-	 * Stop Tomcat after the suite.
-	 */
-	@AfterAll
-	static void afterSuite() {
-		isRunning = false;
-		stopTomcat();
-		stopJetty();
+	// ---------------------------------------------------------------- auth
+
+	@Test
+	void testLogin_params_wrongUserPass() {
+		HttpResponse httpResponse =
+			HttpRequest
+				.post(localhost() + "/j_login")
+				.form("j_username", "jodd")
+				.form("j_password", "wrong")
+				.send();
+
+		assertEquals(401, httpResponse.statusCode());
+
+		httpResponse =
+			HttpRequest
+				.get(localhost() + "/hello/secret")
+				.send();
+
+		assertEquals(404, httpResponse.statusCode());
 	}
 
-	// ---------------------------------------------------------------- tomcat
+	@Test
+	void testLogin_params_okUserPass_token() {
+		HttpResponse httpResponse =
+			HttpRequest
+				.post("localhost:" + port + "/j_login")
+				.form("j_username", "jodd")
+				.form("j_password", "jodd!")
+				.send();
 
-	private static JoyTomcatTestServer server1;
-	private static JoyJettyTestServer server2;
+		final JsonObject payload = JsonParser.create().parseAsJsonObject(httpResponse.bodyText());
+		final String token = payload.getString("token");
 
-	/**
-	 * Starts Tomcat.
-	 */
-	public static void startTomcat() {
-		if (server1 != null) {
-			return;
-		}
-		server1 = new JoyTomcatTestServer();
-		try {
-			server1.start();
-			System.out.println("Tomcat test server started");
-		} catch (Exception e) {
-			throw new UncheckedException(e);
-		}
-	}
-	public static void startJetty() {
-		if (server2 != null) {
-			return;
-		}
-		server2 = new JoyJettyTestServer();
-		try {
-			server2.start();
-			System.out.println("Tomcat test server started");
-		} catch (Exception e) {
-			throw new UncheckedException(e);
-		}
+		assertNotNull(token);
+
+		assertEquals(200, httpResponse.statusCode());
+
+		httpResponse =
+			HttpRequest
+				.get(localhost() + "/hello/secret")
+				.tokenAuthentication(token)
+				.send();
+
+		assertEquals(200, httpResponse.statusCode());
+
+		final String newToken = httpResponse.tokenAuthentication();
+
+		assertNotEquals(token, newToken);
 	}
 
-	/**
-	 * Stops Tomcat if not in the suite.
-	 */
-	public static void stopTomcat() {
-		if (server1 == null) {
-			return;
-		}
-		if (isRunning) {	// dont stop tomcat if it we are still running in the suite!
-			return;
-		}
-		try {
-			server1.stop();
-		} catch (Exception ignore) {
-		} finally {
-			System.out.println("Tomcat test server stopped");
-			server1 = null;
-		}
+	@Test
+	void testLogin_basic_okUserPass_cookies() {
+		HttpResponse httpResponse =
+			HttpRequest
+				.post("localhost:" + port + "/j_login")
+				.basicAuthentication("jodd", "jodd!")
+				.send();
+
+		final Cookie[] cookies = httpResponse.cookies();
+
+		assertNotNull(cookies);
+
+		assertEquals(200, httpResponse.statusCode());
+
+		httpResponse =
+			HttpRequest
+				.get(localhost() + "/hello/secret")
+				.cookies(cookies)
+				.send();
+
+		assertEquals(200, httpResponse.statusCode());
 	}
 
-	public static void stopJetty() {
-		if (server2 == null) {
-			return;
-		}
-		if (isRunning) {	// dont stop tomcat if it we are still running in the suite!
-			return;
-		}
-		try {
-			server2.stop();
-		} catch (Exception ignore) {
-		} finally {
-			System.out.println("Jetty test server stopped");
-			server2 = null;
-		}
-	}
 
 }

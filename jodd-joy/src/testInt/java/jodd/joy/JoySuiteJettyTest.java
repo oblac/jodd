@@ -26,7 +26,7 @@
 package jodd.joy;
 
 import jodd.exception.UncheckedException;
-import jodd.joy.fixtures.JettyTestServer;
+import jodd.joy.servers.JettyTestServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 

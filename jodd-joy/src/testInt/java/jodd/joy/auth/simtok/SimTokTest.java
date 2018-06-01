@@ -23,45 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.fixtures;
+package jodd.joy.auth.simtok;
 
-import jodd.io.FileUtil;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class JettyTestServer extends TestServerBase {
+class SimTokTest {
 
-	// ---------------------------------------------------------------- instance
+	@Test
+	void testSimTok() {
+		SimTok simTok = SimTok.create().setName("jodd").setUid("173").setDuration(1000);
 
-	protected File webRoot;
-	protected Server jetty;
+		String json = new SimTokCoder().encode(simTok);
 
-	public void start() throws Exception {
-		webRoot = prepareWebApplication();
+		SimTok simTok2 = new SimTokCoder().decode(json);
 
-		jetty = new Server(8174);
-
-		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setContextPath("/");
-		webAppContext.setResourceBase(webRoot.getAbsolutePath());
-		webAppContext.setDescriptor(this.webXmlFile.getAbsolutePath());
-
-		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");
-		webAppContext.setClassLoader(
-			Thread.currentThread().getContextClassLoader()
-		);
-
-		jetty.setHandler(webAppContext);
-
-		jetty.start();
+		assertNotNull(simTok2);
+		assertEquals("jodd", simTok2.getName());
+		assertEquals("173", simTok2.getUid());
 	}
-
-	public void stop() throws Exception {
-		jetty.stop();
-		jetty.destroy();
-		FileUtil.deleteDir(webRoot);
-	}
-
 }

@@ -25,37 +25,25 @@
 
 package jodd.joy.fixtures;
 
-import jodd.io.FileUtil;
-import org.apache.catalina.startup.Tomcat;
+import jodd.joy.auth.AuthAction;
+import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.POST;
+import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.result.JsonResult;
 
-import java.io.File;
+@MadvocAction
+public class MyAuthAction extends AuthAction {
 
-/**
- * Embedded Tomcat server for integration tests.
- */
-public class TomcatTestServer extends TestServerBase {
-
-	// ---------------------------------------------------------------- instance
-
-	protected File webRoot;
-	protected Tomcat tomcat;
-
-	public void start() throws Exception {
-		webRoot = prepareWebApplication();
-
-		String workingDir = System.getProperty("java.io.tmpdir");
-
-		tomcat = new Tomcat();
-		tomcat.setPort(8173);
-		tomcat.setBaseDir(workingDir);
-		tomcat.addWebapp("", webRoot.getAbsolutePath());
-
-		tomcat.start();
+	@Override
+	@POST
+	@RestAction(J_LOGIN_PATH)
+	public JsonResult login() {
+		return super.login();
 	}
 
-	public void stop() throws Exception {
-		tomcat.stop();
-		tomcat.destroy();
-		FileUtil.deleteDir(webRoot);
+	@Override
+	@RestAction(J_LOGOUT_PATH)
+	public JsonResult logout() {
+		return super.logout();
 	}
 }

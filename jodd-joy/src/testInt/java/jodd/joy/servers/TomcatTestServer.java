@@ -23,7 +23,39 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+package jodd.joy.servers;
+
+import jodd.io.FileUtil;
+import org.apache.catalina.startup.Tomcat;
+
+import java.io.File;
+
 /**
- * Base Madvoc action.
+ * Embedded Tomcat server for integration tests.
  */
-package jodd.joy.madvoc.action;
+public class TomcatTestServer extends TestServerBase {
+
+	// ---------------------------------------------------------------- instance
+
+	protected File webRoot;
+	protected Tomcat tomcat;
+
+	public void start() throws Exception {
+		webRoot = prepareWebApplication();
+
+		String workingDir = System.getProperty("java.io.tmpdir");
+
+		tomcat = new Tomcat();
+		tomcat.setPort(8173);
+		tomcat.setBaseDir(workingDir);
+		tomcat.addWebapp("", webRoot.getAbsolutePath());
+
+		tomcat.start();
+	}
+
+	public void stop() throws Exception {
+		tomcat.stop();
+		tomcat.destroy();
+		FileUtil.deleteDir(webRoot);
+	}
+}

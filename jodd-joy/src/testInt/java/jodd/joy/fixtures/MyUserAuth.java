@@ -25,55 +25,46 @@
 
 package jodd.joy.fixtures;
 
-import jodd.io.FileUtil;
+import jodd.joy.auth.AuthInterceptor;
+import jodd.joy.auth.UserAuth;
+import jodd.joy.auth.simtok.SimTok;
+import jodd.joy.auth.simtok.SimTokCoder;
+import jodd.petite.meta.PetiteBean;
 
-import java.io.File;
-import java.net.URL;
+@PetiteBean
+public class MyUserAuth implements UserAuth<SimTok> {
 
-public abstract class TestServerBase {
-
-	protected File webXmlFile;
-
-	protected File prepareWebApplication() throws Exception {
-		File webRoot = FileUtil.createTempDirectory("jodd-joy", "test-int");
-		webRoot.deleteOnExit();
-
-		// web-inf
-
-		File webInfFolder = new File(webRoot, "WEB-INF");
-		webInfFolder.mkdir();
-
-		// web.xml
-
-		URL webXmlUrl = TomcatTestServer.class.getResource("/web-test-int.xml");
-		File webXmlFile = FileUtil.toFile(webXmlUrl);
-		this.webXmlFile = new File(webInfFolder, "web.xml");
-
-		FileUtil.copyFile(webXmlFile, this.webXmlFile);
-
-		// jsp
-
-		File jspFolder = new File(webXmlFile.getParent(), "jsp");
-		FileUtil.copyDir(jspFolder, webRoot);
-
-		// lib folder
-
-		File libFolder = new File(webInfFolder, "lib");
-		libFolder.mkdir();
-
-		// classes
-
-		File classes = new File(webInfFolder, "classes");
-		classes.mkdirs();
-
-		// classes/madvoc.props
-
-		URL madvocPropsUrl = TomcatTestServer.class.getResource("/madvoc.props");
-		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
-
-		FileUtil.copyFileToDir(madvocPropsFile, classes);
-
-		return webRoot;
+	public MyUserAuth() {
+		AuthInterceptor.userAuth = this;
 	}
 
+	@Override
+	public SimTok login(final String principal, final String credentials) {
+		if (!credentials.equals(principal + "!")) {
+			return null;
+		}
+		return SimTok.create().setName(principal).setUid("1");
+	}
+
+	@Override
+	public SimTok validateToken(final String token) {
+		final SimTok simTok = new SimTokCoder().decode(token);
+		if (simTok == null) {
+			return null;
+		}
+		if (simTok.expired()) {
+			return null;
+		}
+		return simTok;
+	}
+
+	@Override
+	public SimTok rotateToken(final SimTok authToken) {
+		return SimTok.from(authToken);
+	}
+
+	@Override
+	public String tokenValue(final SimTok authToken) {
+		return new SimTokCoder().encode(authToken);
+	}
 }

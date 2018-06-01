@@ -23,51 +23,57 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.auth;
+package jodd.joy.servers;
 
-import jodd.petite.meta.PetiteBean;
-import jodd.util.crypt.BCrypt;
+import jodd.io.FileUtil;
 
-/**
- * Encodes and validates passwords using {@link BCrypt}.
- */
-@PetiteBean
-public class PasswordEncoder {
+import java.io.File;
+import java.net.URL;
 
-	protected int saltRounds = 12;
+public abstract class TestServerBase {
 
-	public int getSaltRounds() {
-		return saltRounds;
+	protected File webXmlFile;
+
+	protected File prepareWebApplication() throws Exception {
+		File webRoot = FileUtil.createTempDirectory("jodd-joy", "test-int");
+		webRoot.deleteOnExit();
+
+		// web-inf
+
+		File webInfFolder = new File(webRoot, "WEB-INF");
+		webInfFolder.mkdir();
+
+		// web.xml
+
+		URL webXmlUrl = TomcatTestServer.class.getResource("/web-test-int.xml");
+		File webXmlFile = FileUtil.toFile(webXmlUrl);
+		this.webXmlFile = new File(webInfFolder, "web.xml");
+
+		FileUtil.copyFile(webXmlFile, this.webXmlFile);
+
+		// jsp
+
+		File jspFolder = new File(webXmlFile.getParent(), "jsp");
+		FileUtil.copyDir(jspFolder, webRoot);
+
+		// lib folder
+
+		File libFolder = new File(webInfFolder, "lib");
+		libFolder.mkdir();
+
+		// classes
+
+		File classes = new File(webInfFolder, "classes");
+		classes.mkdirs();
+
+		// classes/madvoc.props
+
+		URL madvocPropsUrl = TomcatTestServer.class.getResource("/madvoc.props");
+		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
+
+		FileUtil.copyFileToDir(madvocPropsFile, classes);
+
+		return webRoot;
 	}
 
-	public void setSaltRounds(final int saltRounds) {
-		this.saltRounds = saltRounds;
-	}
-
-	/**
-	 * Encodes raw passwords using default salt.
-	 */
-	public String encodePassword(final String rawPassword) {
-		if (rawPassword == null) {
-			return null;
-		}
-		return BCrypt.hashpw(rawPassword, BCrypt.gensalt(saltRounds));
-	}
-
-	/**
-	 * Validates if provided password is equal to encoded password.
-	 */
-	public boolean isPasswordValid(final String encodedPassword, final String rawPassword) {
-		return BCrypt.checkpw(rawPassword, encodedPassword);
-	}
-
-	/**
-	 * Encodes passwords.
-	 */
-	public static void main(final String[] args) {
-		PasswordEncoder passwordEncoder = new PasswordEncoder();
-		if (args.length >= 1) {
-			System.out.println(passwordEncoder.encodePassword(args[0]));
-		}
-	}
 }
