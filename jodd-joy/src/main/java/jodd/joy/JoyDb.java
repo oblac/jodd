@@ -133,7 +133,7 @@ public class JoyDb extends JoyBase {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	void start() {
+	public void start() {
 		initLogger();
 
 		if (!databaseEnabled) {
@@ -241,7 +241,7 @@ public class JoyDb extends JoyBase {
 
 
 	@Override
-	void stop() {
+	public void stop() {
 		if (!databaseEnabled) {
 			return;
 		}
