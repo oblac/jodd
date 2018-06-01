@@ -47,6 +47,7 @@ public class ActionRuntime {
 	private final String actionMethod;
 	private final String resultBasePath;
 	private final boolean async;
+	private final boolean auth;
 
 	// scope data
 	private final ScopeData scopeData;
@@ -69,6 +70,7 @@ public class ActionRuntime {
 			final Class<? extends ActionResult> actionResult,
 			final Class<? extends ActionResult> defaultActionResult,
 			final boolean async,
+			final boolean auth,
 			final ScopeData scopeData,
 			final MethodParam[] methodParams
 	) {
@@ -82,6 +84,7 @@ public class ActionRuntime {
 		this.actionResult = actionResult;
 		this.defaultActionResult = defaultActionResult;
 		this.async = async;
+		this.auth = auth;
 
 		this.scopeData = scopeData;
 
@@ -160,6 +163,10 @@ public class ActionRuntime {
 	 */
 	public boolean isAsync() {
 		return async;
+	}
+
+	public boolean isAuthenticated() {
+		return auth;
 	}
 
 	/**

@@ -188,7 +188,7 @@ class ActionRequestRecursionTest {
 				new ActionDefinition("path", "method"),
 				ServletDispatcherActionResult.class,
 				null,
-				false, null, null);
+				false, false, null, null);
 
 		return new MyActionRequest(
 				madvocController, "actionPath", actionRuntime, action, null, null);

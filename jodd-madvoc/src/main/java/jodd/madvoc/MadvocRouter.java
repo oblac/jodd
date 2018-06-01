@@ -162,6 +162,7 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 		Class<? extends ActionFilter>[] actionFilters;
 		Class<? extends ActionInterceptor>[] actionInterceptors;
 		boolean async;
+		boolean auth;
 
 		/**
 		 * Defines action path.
@@ -297,6 +298,11 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 			return this;
 		}
 
+		public ActionBuilder auth(final boolean auth) {
+			this.auth = auth;
+			return this;
+		}
+
 		/**
 		 * Defines result base path.
 		 */
@@ -335,7 +341,8 @@ public abstract class MadvocRouter implements MadvocComponentLifecycle.Start {
 					actionFilterInstances,
 					actionInterceptorInstances,
 					actionDefinition,
-					async
+					async,
+					auth
 				);
 
 			actionsManager.registerActionRuntime(actionRuntime);

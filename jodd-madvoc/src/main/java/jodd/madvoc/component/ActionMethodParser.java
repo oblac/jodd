@@ -44,6 +44,7 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotationValues;
 import jodd.madvoc.meta.Async;
+import jodd.madvoc.meta.Auth;
 import jodd.madvoc.meta.DELETE;
 import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.GET;
@@ -175,6 +176,8 @@ public class ActionMethodParser {
 
 		final boolean async = parseMethodAsyncFlag(actionMethod);
 
+		final boolean auth = parseMethodAuthFlag(actionMethod);
+
 		final Class<? extends ActionResult> actionResult = parseActionResult(actionMethod);
 		final Class<? extends ActionResult> defaultActionResult = actionConfig.getActionResult();
 
@@ -187,7 +190,8 @@ public class ActionMethodParser {
 			actionFilters,
 			actionInterceptors,
 			actionDefinition,
-			async);
+			async,
+			auth);
 	}
 
 	/**
@@ -434,6 +438,20 @@ public class ActionMethodParser {
 		return actionMethod.getAnnotation(Async.class) != null;
 	}
 
+	private boolean parseMethodAuthFlag(final Method actionMethod) {
+		if (actionMethod.getAnnotation(Auth.class) != null) {
+			return true;
+		}
+		final Class declaringClass = actionMethod.getDeclaringClass();
+		if (declaringClass.getAnnotation(Auth.class) != null) {
+			return true;
+		}
+		if (declaringClass.getPackage().getAnnotation(Auth.class) != null) {
+			return true;
+		}
+		return false;
+	}
+
 	// ---------------------------------------------------------------- create action runtime
 
 	/**
@@ -449,7 +467,8 @@ public class ActionMethodParser {
 		final ActionFilter[] filters,
 		final ActionInterceptor[] interceptors,
 		final ActionDefinition actionDefinition,
-		final boolean async)
+		final boolean async,
+		final boolean auth)
 	{
 		if (actionHandler != null) {
 
@@ -463,6 +482,7 @@ public class ActionMethodParser {
 				NoneActionResult.class,
 				NoneActionResult.class,
 				async,
+				auth,
 				null,
 				null);
 
@@ -521,6 +541,7 @@ public class ActionMethodParser {
 				actionResult,
 				defaultActionResult,
 				async,
+				auth,
 				scopeData,
 				params);
 	}

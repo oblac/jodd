@@ -23,41 +23,16 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.filter;
+package jodd.madvoc.meta;
 
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.BaseActionWrapperStack;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * Action filter stack.
- */
-public abstract class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> implements ActionFilter {
-
-	public ActionFilterStack(final Class<? extends ActionFilter>... filterClasses) {
-		super(filterClasses);
-	}
-
-	/**
-	 * Sets filter classes.
-	 */
-	public void setFilters(final Class<? extends ActionFilter>... filters) {
-		this.wrappers = filters;
-	}
-
-	/**
-	 * Returns an array of filters.
-	 */
-	public Class<? extends ActionFilter>[] getFilters() {
-		return getWrappers();
-	}
-
-
-	/**
-	 * Filter is not used since this is just an filter container.
-	 */
-	@Override
-	public final Object filter(final ActionRequest actionRequest) {
-		return apply(actionRequest);
-	}
-
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PACKAGE})
+public @interface Auth {
 }

@@ -150,7 +150,7 @@ class ServletDispatcherResultTest {
 				ClassUtil.findMethod(Action.class, "view"),
 				null, null,
 				new ActionDefinition(actionPath, "GET"),
-				ServletDispatcherActionResult.class, null, false, null, null);
+				ServletDispatcherActionResult.class, null, false, false, null, null);
 
 		return new ActionRequest(madvocController, actionRuntime.getActionPath(), MadvocUtil.splitPathToChunks(actionRuntime.getActionPath()), actionRuntime, action, servletRequest, servletResponse);
 	}
