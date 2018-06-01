@@ -115,16 +115,6 @@ public class EmailFilter {
 	}
 
 	/**
-	 * Defines filter for message id.
-	 *
-	 * @param messageId The Message ID.
-	 * @return this
-	 */
-	public EmailFilter messageId(final int messageId) {
-		return messageId(String.valueOf(messageId));
-	}
-
-	/**
 	 * Defines filter for FROM field.
 	 *
 	 * @param fromAddress The FROM address
