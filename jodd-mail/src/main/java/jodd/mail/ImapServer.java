@@ -31,6 +31,7 @@ import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -49,8 +50,8 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 	 */
 	protected static final int DEFAULT_IMAP_PORT = 143;
 
-	public ImapServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port == -1 ? DEFAULT_IMAP_PORT : port, authenticator);
+	public ImapServer(final String host, final int port, final Authenticator authenticator, final File attachmentStorage) {
+		super(host, port == -1 ? DEFAULT_IMAP_PORT : port, authenticator, attachmentStorage);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 	 */
 	@Override
 	public ReceiveMailSession createSession() {
-		return EmailUtil.createSession(PROTOCOL_IMAP, getSessionProperties(), getAuthenticator());
+		return EmailUtil.createSession(PROTOCOL_IMAP, getSessionProperties(), getAuthenticator(), getAttachmentStorage());
 	}
 
 }

@@ -32,6 +32,7 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.URLName;
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -44,8 +45,8 @@ public class Pop3SslServer extends Pop3Server {
 	protected static final String MAIL_POP3_SOCKET_FACTORY_FALLBACK = "mail.pop3.socketFactory.fallback";
 	protected static final int DEFAULT_SSL_PORT = 995;
 
-	public Pop3SslServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator);
+	public Pop3SslServer(final String host, final int port, final Authenticator authenticator, final File attachmentStorage) {
+		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator, attachmentStorage);
 	}
 
 	@Override

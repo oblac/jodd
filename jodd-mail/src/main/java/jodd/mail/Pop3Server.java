@@ -29,6 +29,7 @@ import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import java.io.File;
 import java.util.Properties;
 
 import static jodd.util.StringPool.TRUE;
@@ -49,8 +50,8 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 	 */
 	protected static final int DEFAULT_POP3_PORT = 110;
 
-	public Pop3Server(final String host, final int port, final Authenticator authenticator) {
-		super(host, port == -1 ? DEFAULT_POP3_PORT : port, authenticator);
+	public Pop3Server(final String host, final int port, final Authenticator authenticator, final File attachmentStorage) {
+		super(host, port == -1 ? DEFAULT_POP3_PORT : port, authenticator, attachmentStorage);
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 	 */
 	@Override
 	public ReceiveMailSession createSession() {
-		return EmailUtil.createSession(PROTOCOL_POP3, getSessionProperties(), getAuthenticator());
+		return EmailUtil.createSession(PROTOCOL_POP3, getSessionProperties(), getAuthenticator(), getAttachmentStorage());
 	}
 
 }

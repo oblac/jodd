@@ -27,6 +27,7 @@ package jodd.mail;
 
 import javax.mail.Authenticator;
 import javax.mail.Session;
+import java.io.File;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -47,6 +48,8 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 */
 	private final Authenticator authenticator;
 
+	private final File attachmentStorage;
+
 	/**
 	 * The {@link MailSession} {@link Properties}.
 	 */
@@ -59,12 +62,13 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 * @param port          The port to use.
 	 * @param authenticator The {@link Authenticator} to use.
 	 */
-	protected MailServer(final String host, final int port, final Authenticator authenticator) {
+	protected MailServer(final String host, final int port, final Authenticator authenticator, final File attachmentStorage) {
 		Objects.requireNonNull(host, "Host cannot be null");
 
 		this.host = host;
 		this.port = port;
 		this.authenticator = authenticator;
+		this.attachmentStorage = attachmentStorage;
 		this.sessionProperties = createSessionProperties();
 	}
 
@@ -123,6 +127,10 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		return sessionProperties;
 	}
 
+	public File getAttachmentStorage() {
+		return attachmentStorage;
+	}
+
 	/**
 	 * Returns new mail server builder.
 	 */
@@ -147,6 +155,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		private int port = -1;
 		private boolean ssl = false;
 		private Authenticator authenticator;
+		private File attachmentStorage;
 
 		/**
 		 * Sets the host.
@@ -180,6 +189,11 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 */
 		public Builder ssl(final boolean ssl) {
 			this.ssl = ssl;
+			return this;
+		}
+
+		public Builder storeAttachmentsIn(final File attachmentStorage) {
+			this.attachmentStorage = attachmentStorage;
 			return this;
 		}
 
@@ -217,9 +231,9 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 */
 		public ImapServer buildImapMailServer() {
 			if (ssl) {
-				return new ImapSslServer(host, port, authenticator);
+				return new ImapSslServer(host, port, authenticator, attachmentStorage);
 			}
-			return new ImapServer(host, port, authenticator);
+			return new ImapServer(host, port, authenticator, attachmentStorage);
 		}
 
 		/**
@@ -230,9 +244,9 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 */
 		public Pop3Server buildPop3MailServer() {
 			if (ssl) {
-				return new Pop3SslServer(host, port, authenticator);
+				return new Pop3SslServer(host, port, authenticator, attachmentStorage);
 			}
-			return new Pop3Server(host, port, authenticator);
+			return new Pop3Server(host, port, authenticator, attachmentStorage);
 		}
 
 		/**
