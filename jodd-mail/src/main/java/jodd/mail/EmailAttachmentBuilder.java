@@ -223,13 +223,13 @@ public class EmailAttachmentBuilder {
 	 * @return {@link EmailAttachment}.
 	 * @throws MailException if issue with {@link DataSource}.
 	 */
-	public EmailAttachment<FileDataSource> buildFileDataSource() throws MailException {
+	public EmailAttachment<FileDataSource> buildFileDataSource(final String messageId, final File attachmentStorage) throws MailException {
 		try {
 			final FileDataSource fds;
 			if (dataSource instanceof FileDataSource) {
 				fds = (FileDataSource) dataSource;
 			} else {
-				final File file = new File(dataSource.getName());
+				final File file = new File(attachmentStorage, messageId);
 				FileUtil.writeStream(file, dataSource.getInputStream());
 				fds = new FileDataSource(file);
 			}

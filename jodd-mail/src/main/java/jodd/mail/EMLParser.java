@@ -124,7 +124,7 @@ public class EMLParser extends EMLProperties<EMLParser> {
 
 		try {
 			final MimeMessage message = new MimeMessage(getSession(), emlContentInputStream);
-			return new ReceivedEmail(message, false);
+			return new ReceivedEmail(message, false, null);
 		} finally {
 			StreamUtil.close(emlContentInputStream);
 		}

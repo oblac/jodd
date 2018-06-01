@@ -37,6 +37,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -165,7 +166,7 @@ public class EmailUtil {
 	 * @param authenticator     Authenticator which contains necessary authentication for server.
 	 * @return {@link ReceiveMailSession}.
 	 */
-	public static ReceiveMailSession createSession(final String protocol, final Properties sessionProperties, final Authenticator authenticator) {
+	public static ReceiveMailSession createSession(final String protocol, final Properties sessionProperties, final Authenticator authenticator, final File attachmentStorage) {
 		final Session session = Session.getInstance(sessionProperties, authenticator);
 		final Store store;
 		try {
@@ -174,7 +175,7 @@ public class EmailUtil {
 			final String errMsg = String.format("Failed to create %s session", protocol);
 			throw new MailException(errMsg, nspex);
 		}
-		return new ReceiveMailSession(session, store);
+		return new ReceiveMailSession(session, store, attachmentStorage);
 	}
 
 }

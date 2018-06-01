@@ -25,12 +25,14 @@
 
 package jodd.mail;
 
+import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
+import java.io.File;
 
 /**
  * Encapsulates {@link Email} receiving session. Prepares and receives {@link Email}s.
@@ -48,6 +50,8 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 */
 	private Folder folder;
 
+	private final File attachmentStorage;
+
 	static {
 		setupSystemMailProperties();
 	}
@@ -58,8 +62,9 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @param session {@link Session}.
 	 * @param store   {@link Store}.
 	 */
-	public ReceiveMailSession(final Session session, final Store store) {
+	public ReceiveMailSession(final Session session, final Store store, final File attachmentStorage) {
 		super(session, store);
+		this.attachmentStorage = attachmentStorage;
 	}
 
 	@Override
@@ -279,13 +284,23 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return array of {@link ReceivedEmail}.
 	 */
 	public ReceivedEmail[] receive(final EmailFilter filter, final Flags flagsToSet) {
+		return receiveMessages(filter, flagsToSet, false);
+	}
+
+	public ReceivedEmail[] receiveEnvelopes() {
+		return receiveEnvelopes(null);
+	}
+
+	public ReceivedEmail[] receiveEnvelopes(final EmailFilter filter) {
+		return receiveMessages(filter, null, true);
+	}
+
+	private ReceivedEmail[] receiveMessages(final EmailFilter filter, final Flags flagsToSet, final boolean envelope) {
 		if (folder == null) {
 			useDefaultFolder();
 		}
 
 		final Message[] messages;
-
-		// todo add FetchProfile option for just headers
 
 		try {
 			if (filter == null) {
@@ -298,6 +313,15 @@ public class ReceiveMailSession extends MailSession<Store> {
 				return ReceivedEmail.EMPTY_ARRAY;
 			}
 
+			if (envelope) {
+				final FetchProfile fetchProfile = new FetchProfile();
+
+				fetchProfile.add(FetchProfile.Item.ENVELOPE);
+				fetchProfile.add(FetchProfile.Item.FLAGS);
+
+				folder.fetch(messages, fetchProfile);
+			}
+
 			// process messages
 
 			final ReceivedEmail[] emails = new ReceivedEmail[messages.length];
@@ -306,7 +330,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 				final Message msg = messages[i];
 
 				// we need to parse message BEFORE flags are set!
-				emails[i] = new ReceivedEmail(msg);
+				emails[i] = new ReceivedEmail(msg, envelope, attachmentStorage);
 
 				if (flagsToSet != null) {
 					emails[i].flags(flagsToSet);

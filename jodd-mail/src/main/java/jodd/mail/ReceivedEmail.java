@@ -37,6 +37,7 @@ import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.util.ByteArrayDataSource;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -50,6 +51,7 @@ import java.util.List;
 public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 
 	public static final ReceivedEmail[] EMPTY_ARRAY = new ReceivedEmail[0];
+	private File attachmentStorage;
 
 	/**
 	 * Static constructor for fluent interface.
@@ -106,7 +108,8 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @param msg {@link Message}
 	 * @param envelope flag if this is an envelope
 	 */
-	public ReceivedEmail(final Message msg, final boolean envelope) {
+	public ReceivedEmail(final Message msg, final boolean envelope, final File attachmentStorage) {
+		this.attachmentStorage = attachmentStorage;
 		try {
 			parseMessage(msg, envelope);
 		} catch (final Exception ex) {
@@ -121,7 +124,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @throws IOException        if there is an error with the content
 	 * @throws MessagingException if there is an error.
 	 */
-	protected void parseMessage(final Message msg) throws MessagingException, IOException {
+	protected void parseMessage(final Message msg, final boolean envelope) throws MessagingException, IOException {
 		// flags
 		flags(msg.getFlags());
 
@@ -159,8 +162,11 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 		headers(msg.getAllHeaders());
 
 		// content
-		processPart(msg);
+		if (!envelope) {
+			processPart(msg);
+		}
 	}
+
 
 	/**
 	 * Process part of the received message. All parts are simply added to the {@link ReceivedEmail},
@@ -178,12 +184,12 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 		} else if (content instanceof Multipart) {
 			processMultipart((Multipart) content);
 		} else if (content instanceof InputStream) {
-			addAttachment(part, (InputStream) content);
+			addAttachment(part, (InputStream) content, attachmentStorage);
 		} else if (content instanceof MimeMessage) {
 			final MimeMessage mimeMessage = (MimeMessage) content;
-			attachedMessage(new ReceivedEmail(mimeMessage, false));
+			attachedMessage(new ReceivedEmail(mimeMessage, false, attachmentStorage));
 		} else {
-			addAttachment(part, part.getInputStream());
+			addAttachment(part, part.getInputStream(), attachmentStorage);
 		}
 	}
 
@@ -405,9 +411,13 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * @return this
 	 * @see #attachment(EmailAttachment)
 	 */
-	private ReceivedEmail addAttachment(final Part part, final InputStream content) throws MessagingException, IOException {
+	private ReceivedEmail addAttachment(final Part part, final InputStream content, final File attachmentStorage) throws MessagingException, IOException {
 		final EmailAttachmentBuilder builder = addAttachmentInfo(part);
 		builder.content(content, part.getContentType());
+		if (attachmentStorage != null) {
+			String name = messageId + "-" + (this.attachments().size() + 1);
+			return storeAttachment(builder.buildFileDataSource(name, attachmentStorage));
+		}
 		return storeAttachment(builder.buildByteArrayDataSource());
 	}
 
