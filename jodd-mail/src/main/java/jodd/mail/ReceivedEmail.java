@@ -66,8 +66,9 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 			// flags
 			.flags(flags())
 
-			// message number
+			// message number and id
 			.messageNumber(messageNumber())
+			.messageId(messageId())
 
 			// from / reply-to
 			.from(from())
@@ -103,10 +104,11 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 * Creates a {@link ReceivedEmail} from a given {@link Message}.
 	 *
 	 * @param msg {@link Message}
+	 * @param envelope flag if this is an envelope
 	 */
-	public ReceivedEmail(final Message msg) {
+	public ReceivedEmail(final Message msg, final boolean envelope) {
 		try {
-			parseMessage(msg);
+			parseMessage(msg, envelope);
 		} catch (final Exception ex) {
 			throw new MailException("Message parsing failed", ex);
 		}
@@ -125,6 +127,11 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 
 		// message number
 		messageNumber(msg.getMessageNumber());
+
+		if (msg instanceof MimeMessage) {
+			messageId(((MimeMessage) msg).getMessageID());
+		}
+
 
 		// single from
 		final Address[] addresses = msg.getFrom();
@@ -174,7 +181,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 			addAttachment(part, (InputStream) content);
 		} else if (content instanceof MimeMessage) {
 			final MimeMessage mimeMessage = (MimeMessage) content;
-			attachedMessage(new ReceivedEmail(mimeMessage));
+			attachedMessage(new ReceivedEmail(mimeMessage, false));
 		} else {
 			addAttachment(part, part.getInputStream());
 		}
@@ -329,6 +336,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	// ---------------------------------------------------------------- additional properties
 
 	private int messageNumber;
+	private String messageId;
 
 	/**
 	 * Returns message number.
@@ -340,6 +348,13 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	}
 
 	/**
+	 * Returns message ID if set by server.
+	 */
+	public String messageId() {
+		return messageId;
+	}
+
+	/**
 	 * Sets message number.
 	 *
 	 * @param messageNumber The message number to set.
@@ -347,6 +362,14 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 */
 	public ReceivedEmail messageNumber(final int messageNumber) {
 		this.messageNumber = messageNumber;
+		return this;
+	}
+
+	/**
+	 * Sets message ID.
+	 */
+	public ReceivedEmail messageId(final String messageId) {
+		this.messageId = messageId;
 		return this;
 	}
 
