@@ -23,65 +23,54 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.auth;
+package jodd.joy.auth.simtok;
 
-import jodd.petite.meta.PetiteInject;
+import jodd.json.JsonParser;
+import jodd.json.JsonSerializer;
+import jodd.util.Base64;
+import jodd.util.RandomString;
+import jodd.util.crypt.BCrypt;
 
 /**
- * Abstract {@link UserAuth} manager as Petite bean.
+ * Simple encode/decoder for simple token.
  */
-public abstract class UserAuthManagerBean<U extends UserAuth> {
+public class SimTokCoder {
 
-	@PetiteInject
-	protected PasswordEncoder passwordEncoder;
+	private static final String SECRET = "Jodd!Joy!secret!" + RandomString.getInstance().randomAlpha(10);
 
-	/**
-	 * Finds {@link UserAuth} object by
-	 * provided username. Note that this can be any user information
-	 * application is using, like e-mail, or any combination.
-	 */
-	public abstract U findUserAuthByUsername(String username);
+	private static final int SALT_ROUNDS = 12;
 
 	/**
-	 * Finds {@link UserAuth} object by
-	 * provided user id.
+	 * Encodes the {@link SimTok} to JSON string.
 	 */
-	public abstract U findUserAuthById(long id);
+	public String encode(final SimTok simTok) {
+		final String json = JsonSerializer.create().serialize(simTok);
 
-	/**
-	 * Logins user. Usually updates some field of user, like last login time etc.
-	 */
-	public abstract void login(U userAuth);
+		final String p1 = Base64.encodeToString("JoddSimTok" + SALT_ROUNDS);
+		final String p2 = Base64.encodeToString(json);
 
-	/**
-	 * Checks users email and password by finding matching user.
-	 */
-	public final U findUser(final String username, final String rawPassword) {
-		U userAuth = findUserAuthByUsername(username);
-		if (userAuth == null) {
-			return null;
-		}
-		if (!passwordEncoder.isPasswordValid(userAuth.getHashedPassword(), rawPassword)) {
-			return null;
-		}
-		return userAuth;
+		final String salt = BCrypt.gensalt(SALT_ROUNDS);
+		final String p3 = BCrypt.hashpw(p1 + "." + p2 + "." + SECRET, salt);
+
+		return p1 + "." + p2 + "." + p3;
 	}
 
 	/**
-	 * Finds an user for given userId and hashed password.
+	 * Decodes the String to the {@link SimTok}.
+	 * Returns {@code null} if decoded token is NOT valid.
 	 */
-	public final U findUser(final long userId, final String hashedPassword) {
-		U userAuth = findUserAuthById(userId);
-		if (userAuth == null) {
-			return null;
-		}
-		if (hashedPassword == null) {
-			return null;
-		}
-		if (!hashedPassword.equals(userAuth.getHashedPassword())) {
-			return null;
-		}
-		return userAuth;
-	}
+	public SimTok decode(final String token) {
+		final int ndx = token.indexOf('.');
+		final String p1 = token.substring(0, ndx);
+		final int ndx2 = token.indexOf('.', ndx + 1);
+		final String p2 = token.substring(ndx + 1, ndx2);
+		final String p3 = token.substring(ndx2 + 1);
 
+		if (!BCrypt.checkpw(p1 + "." + p2 + "." + SECRET, p3)) {
+			return null;
+		}
+
+		final String p2Decoded = Base64.decodeToString(p2);
+		return JsonParser.create().parse(p2Decoded, SimTok.class);
+	}
 }

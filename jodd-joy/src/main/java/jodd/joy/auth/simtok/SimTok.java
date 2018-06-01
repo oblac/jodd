@@ -23,7 +23,68 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+package jodd.joy.auth.simtok;
+
 /**
- * Additional Madvoc results.
+ * Simple Token.
  */
-package jodd.joy.madvoc.result;
+public class SimTok {
+
+	public static SimTok create() {
+		return new SimTok();
+	}
+
+	public static SimTok from(final SimTok simTok) {
+		return new SimTok()
+			.setName(simTok.name)
+			.setUid(simTok.uid);
+	}
+
+	private String name;
+	private String uid;
+	private long until;
+
+	public String getName() {
+		return name;
+	}
+
+	public SimTok setName(final String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public SimTok setUid(final String uid) {
+		this.uid = uid;
+		return this;
+	}
+
+	public long getUntil() {
+		return until;
+	}
+
+	public SimTok setUntil(final long until) {
+		this.until = until;
+		return this;
+	}
+
+	public SimTok setDuration(final long duration) {
+		this.until = System.currentTimeMillis() + duration;
+		return this;
+	}
+
+	// ---------------------------------------------------------------- misc
+
+	/**
+	 * Returns {@code true} if token is expired.
+	 */
+	public boolean expired() {
+		if (until == 0) {
+			return false;
+		}
+		return System.currentTimeMillis() > until;
+	}
+}
