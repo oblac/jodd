@@ -41,7 +41,7 @@ public class RandomString {
 	/**
 	 * Returns default instance of <code>RandomString</code>.
 	 */
-	public static RandomString getInstance() {
+	public static RandomString get() {
 		return INSTANCE;
 	}
 

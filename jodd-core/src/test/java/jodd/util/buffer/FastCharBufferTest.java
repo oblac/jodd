@@ -57,7 +57,7 @@ class FastCharBufferTest extends FastBufferTestBase {
 
 		int loop = 100;
 		while (loop-- > 0) {
-			String s = RandomString.getInstance().randomAlphaNumeric(rnd.nextInt(20));
+			String s = RandomString.get().randomAlphaNumeric(rnd.nextInt(20));
 
 			sb.append(s);
 			fcb.append(s);

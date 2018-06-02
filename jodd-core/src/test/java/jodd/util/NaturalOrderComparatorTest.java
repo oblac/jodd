@@ -247,9 +247,9 @@ class NaturalOrderComparatorTest {
 		int loop = 1000;
 
 		while(loop-- > 0) {
-			String s1 = RandomString.getInstance().randomAscii(2);
-			String s2 = RandomString.getInstance().randomAscii(5);
-			String s3 = RandomString.getInstance().randomAscii(4);
+			String s1 = RandomString.get().randomAscii(2);
+			String s2 = RandomString.get().randomAscii(5);
+			String s3 = RandomString.get().randomAscii(4);
 
 			assertReflexivity(comparator, s1, s2);
 			assertTransitivity(comparator, s1, s2, s3);
@@ -263,9 +263,9 @@ class NaturalOrderComparatorTest {
 		int loop = 1000;
 
 		while(loop-- > 0) {
-			String s1 = RandomString.getInstance().randomNumeric(2);
-			String s2 = RandomString.getInstance().randomNumeric(5);
-			String s3 = RandomString.getInstance().randomNumeric(4);
+			String s1 = RandomString.get().randomNumeric(2);
+			String s2 = RandomString.get().randomNumeric(5);
+			String s3 = RandomString.get().randomNumeric(4);
 
 			assertReflexivity(comparator, s1, s2);
 			assertTransitivity(comparator, s1, s2, s3);

@@ -43,7 +43,7 @@ class BCryptTest {
 	@Test
 	void testBCryptRandom() {
 		for (int rounds = 0; rounds < 1000; rounds++) {
-			String text = RandomString.getInstance().randomAlphaNumeric(10);
+			String text = RandomString.get().randomAlphaNumeric(10);
 
 			String hash = BCrypt.hashpw(text, BCrypt.gensalt(4));
 			assertTrue(BCrypt.checkpw(text, hash));

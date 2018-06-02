@@ -92,7 +92,7 @@ public class CsrfShield {
 		String value;
 		boolean unique;
 		do {
-			value = RandomString.getInstance().randomAlphaNumeric(32);
+			value = RandomString.get().randomAlphaNumeric(32);
 			assureSize(tokenSet);
 			unique = tokenSet.add(new Token(value, timeToLive));
 		} while (!unique);

@@ -104,7 +104,7 @@ class PathUtilTest {
 		void testReadString_with_unknown_path() throws Exception {
 
 			assertThrows(IOException.class, () -> {
-			   PathUtil.readString(new File(BASE_DIR, RandomString.getInstance().randomAlpha(8)).toPath());
+			   PathUtil.readString(new File(BASE_DIR, RandomString.get().randomAlpha(8)).toPath());
 			});
 		}
 

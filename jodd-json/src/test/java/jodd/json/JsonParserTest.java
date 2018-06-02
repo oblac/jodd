@@ -728,7 +728,7 @@ class JsonParserTest {
 
 			assertEquals("12\n3", jsonParser.parse("\"" + "12\\n3" + "\""));
 
-			String big = RandomString.getInstance().randomAlpha(510);
+			String big = RandomString.get().randomAlpha(510);
 
 			String jbig = big + "\\n";
 			String rbig = big + "\n";

@@ -25,17 +25,16 @@
 
 package jodd.util.collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import jodd.util.RandomString;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import jodd.util.RandomString;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SortedArrayListTest {
 
@@ -106,7 +105,7 @@ class SortedArrayListTest {
 
 		ArrayList<String> randomList = new ArrayList<>();
 		for (int i = 0; i < total; i++) {
-			randomList.add(RandomString.getInstance().random(20, 'a', 'z'));
+			randomList.add(RandomString.get().random(20, 'a', 'z'));
 		}
 
 		SortedArrayList<String> sortedList = new SortedArrayList<>(randomList);
@@ -123,6 +122,7 @@ class SortedArrayListTest {
 	@Test
 	void testComparator(){
 		Comparator<String> comparator = new Comparator<String>() {
+			@Override
 			public int compare(String str1, String str2) {
 				if (str1 == null && str2 == null) {
 					return 0;

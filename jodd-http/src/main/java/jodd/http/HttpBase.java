@@ -723,7 +723,7 @@ public abstract class HttpBase<T> {
 			return buffer;
 		}
 
-		String boundary = StringUtil.repeat('-', 10) + RandomString.getInstance().randomAlphaNumeric(10);
+		String boundary = StringUtil.repeat('-', 10) + RandomString.get().randomAlphaNumeric(10);
 
 		for (Map.Entry<String, ?> entry : form) {
 
