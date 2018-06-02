@@ -26,10 +26,10 @@
 package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.Body;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.scope.Body;
 import jodd.madvoc.result.Chain;
 import jodd.madvoc.result.NoResult;
 import jodd.mutable.MutableInteger;

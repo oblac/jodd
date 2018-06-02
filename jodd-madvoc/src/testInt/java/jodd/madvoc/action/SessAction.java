@@ -29,7 +29,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
-import jodd.madvoc.meta.Session;
+import jodd.madvoc.meta.scope.Session;
 
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;

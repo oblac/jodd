@@ -34,8 +34,8 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.madvoc.result.ActionResult;
 
 import java.util.ArrayList;

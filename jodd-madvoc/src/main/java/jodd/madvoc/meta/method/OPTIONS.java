@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.meta.method;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -34,5 +34,5 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface PATCH {
+public @interface OPTIONS {
 }

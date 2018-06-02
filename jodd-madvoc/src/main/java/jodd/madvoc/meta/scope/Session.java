@@ -23,9 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.meta.scope;
 
-import jodd.madvoc.scope.RequestScope;
+import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.SessionScope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -34,11 +35,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for {@link RequestScope}.
+ * Annotation for {@link SessionScope}.
  */
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-@Scope(RequestScope.class)
-public @interface Request {
+@Scope(SessionScope.class)
+public @interface Session {
 }

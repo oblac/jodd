@@ -28,7 +28,7 @@ package jodd.madvoc.result;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.StringPool;
 
 /**

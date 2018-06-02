@@ -23,17 +23,55 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.scope;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.config.Targets;
 
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface GET {
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
+public class HeaderScope implements MadvocScope {
+
+	@Override
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+
+		targets.forEachTargetAndIn(this, (target, in) -> {
+			final Enumeration<String> headerNames = servletRequest.getHeaders(in.name());
+			if (headerNames != null) {
+
+				final List<String> allValues = new ArrayList<>();
+				while (headerNames.hasMoreElements()) {
+					allValues.add(headerNames.nextElement());
+				}
+
+				final Object value;
+
+				if (allValues.size() == 1) {
+					value = allValues.get(0);
+				}
+				else {
+					value = allValues;
+				}
+
+				target.writeValue(in, value, true);
+			}
+		});
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+		final HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+
+		targets.forEachTargetAndOut(this, (target, out) -> {
+			final String value = (String) target.readValue(out);
+			if (value != null) {
+				servletResponse.setHeader(out.name(), value);
+			}
+		});
+	}
 }

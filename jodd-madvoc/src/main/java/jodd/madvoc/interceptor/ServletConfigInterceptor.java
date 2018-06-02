@@ -30,7 +30,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.component.ScopeResolver;
 import jodd.madvoc.config.Targets;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 

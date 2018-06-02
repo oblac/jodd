@@ -27,10 +27,10 @@ package jodd.madvoc.action;
 
 import jodd.introspector.Mapper;
 import jodd.introspector.MapperFunction;
-import jodd.madvoc.meta.Body;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.meta.scope.Body;
 
 @MadvocAction
 public class BodyAction {

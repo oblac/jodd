@@ -28,7 +28,7 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.Request;
+import jodd.madvoc.meta.scope.Request;
 import jodd.madvoc.result.TextResult;
 
 @MadvocAction

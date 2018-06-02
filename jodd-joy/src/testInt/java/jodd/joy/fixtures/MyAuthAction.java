@@ -27,7 +27,7 @@ package jodd.joy.fixtures;
 
 import jodd.joy.auth.AuthAction;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.POST;
+import jodd.madvoc.meta.method.POST;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.result.JsonResult;
 

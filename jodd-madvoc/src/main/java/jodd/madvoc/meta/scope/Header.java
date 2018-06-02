@@ -23,9 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.meta.scope;
 
-import jodd.madvoc.scope.CookieScope;
+import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.HeaderScope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,12 +34,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation for {@link CookieScope}.
- */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(value = RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-@Scope(CookieScope.class)
-public @interface Cookies {
+@Scope(HeaderScope.class)
+public @interface Header {
 }

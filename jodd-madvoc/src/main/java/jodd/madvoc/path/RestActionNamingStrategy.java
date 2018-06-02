@@ -29,7 +29,7 @@ import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.net.HttpMethod;

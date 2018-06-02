@@ -27,10 +27,10 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.JsonBody;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.scope.JsonBody;
 import jodd.madvoc.result.JsonActionResult;
 import jodd.mutable.MutableInteger;
 

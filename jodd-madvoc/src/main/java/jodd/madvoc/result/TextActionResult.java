@@ -29,7 +29,7 @@ import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.StringPool;
 
 import javax.servlet.http.HttpServletResponse;

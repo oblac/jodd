@@ -29,7 +29,7 @@ import jodd.json.JsonObject;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.Request;
+import jodd.madvoc.meta.scope.Request;
 import jodd.madvoc.result.JsonResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;

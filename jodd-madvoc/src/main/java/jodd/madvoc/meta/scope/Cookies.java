@@ -23,26 +23,23 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.action;
+package jodd.madvoc.meta.scope;
 
-import jodd.madvoc.component.MyComponent;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.scope.MadvocContext;
-import jodd.madvoc.result.RawData;
-import jodd.util.CharUtil;
+import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.CookieScope;
 
-@MadvocAction
-public class ComponentAction {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	@In @MadvocContext
-	MyComponent myComponent;
-
-	@Action
-	public RawData view() {
-		String result = myComponent.getString();
-		byte[] bytes = CharUtil.toAsciiByteArray(result.toCharArray());
-		return RawData.of(bytes).asHtml();
-	}
+/**
+ * Annotation for {@link CookieScope}.
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@Scope(CookieScope.class)
+public @interface Cookies {
 }

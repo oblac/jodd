@@ -23,7 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.meta.scope;
+
+import jodd.madvoc.meta.Scope;
+import jodd.madvoc.scope.JsonBodyScope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -31,8 +34,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation for {@link JsonBodyScope}.
+ */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface TRACE {
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@Scope(JsonBodyScope.class)
+public @interface JsonBody {
 }

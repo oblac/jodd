@@ -30,7 +30,7 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringPool;
 

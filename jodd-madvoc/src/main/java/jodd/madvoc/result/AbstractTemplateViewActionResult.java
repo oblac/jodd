@@ -32,7 +32,7 @@ import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.config.ResultPath;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.meta.MadvocContext;
+import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 

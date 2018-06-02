@@ -23,9 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
-
-import jodd.madvoc.scope.BodyScope;
+package jodd.madvoc.meta.method;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,12 +31,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation for {@link BodyScope}.
- */
 @Documented
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-@Scope(BodyScope.class)
-public @interface Body {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface GET {
+
 }

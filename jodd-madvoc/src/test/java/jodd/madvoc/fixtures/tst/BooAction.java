@@ -26,8 +26,8 @@
 package jodd.madvoc.fixtures.tst;
 
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.DELETE;
-import jodd.madvoc.meta.POST;
+import jodd.madvoc.meta.method.DELETE;
+import jodd.madvoc.meta.method.POST;
 
 public class BooAction {
 

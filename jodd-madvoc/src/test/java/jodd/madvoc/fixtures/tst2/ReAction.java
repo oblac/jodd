@@ -27,7 +27,7 @@ package jodd.madvoc.fixtures.tst2;
 
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.POST;
+import jodd.madvoc.meta.method.POST;
 
 @MadvocAction("/re/")
 public class ReAction {
