@@ -29,29 +29,32 @@ import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.util.StringUtil;
+
+import java.util.function.Consumer;
 
 /**
- * Standalone runner for Madvoc web application.
+ * Standalone runner for Joy web application.
  */
-public class StandaloneJoddJoyRunner {
+public class StandaloneJoddJoy {
 
-	public void runWebApp(final Runnable runnable) {
+	public void runJoy(final Consumer<JoddJoy> consumer) {
 		final JoddJoy joddJoy = new JoddJoy();
 
-		joddJoy.start(null);
+		joddJoy.startOnlyBackend();
 
 		joddJoy.withDb(joyDb -> setJtxManager(joyDb.getJtxManager()));
 
 		final JtxTransaction tx = startRwTx();
+		final Print print = new Print();
 		try {
-			System.out.println(StringUtil.repeat('-', 55) + " start");
-			System.out.println("\n\n");
+			print.line("START", 80);
+			print.newLine();
 
-			runnable.run();
+			consumer.accept(joddJoy);
 
-			System.out.println("\n\n");
-			System.out.println(StringUtil.repeat('-', 55) + " end");
+			print.newLine();
+			print.line("END", 80);
+
 			if (tx != null) {
 				tx.commit();
 			}

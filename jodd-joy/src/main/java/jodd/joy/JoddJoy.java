@@ -34,6 +34,7 @@ import jodd.madvoc.WebApp;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.petite.PetiteContainer;
 import jodd.util.Chalk256;
+import jodd.util.function.Consumers;
 
 import javax.servlet.ServletContext;
 import java.util.Objects;
@@ -104,10 +105,17 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- props
 
-	private final JoyProps joyProps = new JoyProps(() -> name);
+	private JoyProps joyProps = new JoyProps(() -> name);
+	private final Consumers<JoyProps> joyPropsConsumers = Consumers.empty();
+
+	public <T extends JoyProps> JoddJoy use(final T joyProps) {
+		Objects.requireNonNull(joyProps);
+		this.joyProps = joyProps;
+		return this;
+	}
 
 	public JoddJoy withProps(final Consumer<JoyProps> propsConsumer) {
-		propsConsumer.accept(joyProps);
+		joyPropsConsumers.add(propsConsumer);
 		return this;
 	}
 
@@ -122,28 +130,43 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- proxetta
 
-	private final JoyProxetta joyProxetta = new JoyProxetta();
+	private JoyProxetta joyProxetta = new JoyProxetta();
+	private final Consumers<JoyProxetta> joyProxettaConsumers = Consumers.empty();
+
+	public <T extends JoyProxetta> JoddJoy use(final T joyProxetta) {
+		Objects.requireNonNull(joyProxetta);
+		this.joyProxetta = joyProxetta;
+		return this;
+	}
 
 	public JoddJoy withProxetta(final Consumer<JoyProxetta> proxettaConsumer) {
-		proxettaConsumer.accept(joyProxetta);
+		joyProxettaConsumers.add(proxettaConsumer);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- db
 
-	private final JoyDb joyDb =
+	private JoyDb joyDb =
 		new JoyDb(
 			() -> joyProxetta,
 			() -> joyScanner);
 
+	private final Consumers<JoyDb> joyDbConsumers = Consumers.empty();
+
+	public <T extends JoyDb> JoddJoy use(final T joyDb) {
+		Objects.requireNonNull(joyDb);
+		this.joyDb = joyDb;
+		return this;
+	}
+
 	public JoddJoy withDb(final Consumer<JoyDb> dbConsumer) {
-		dbConsumer.accept(joyDb);
+		joyDbConsumers.add(dbConsumer);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- petite
 
-	private final JoyPetite joyPetite =
+	private JoyPetite joyPetite =
 		new JoyPetite(
 			joyProxetta::getProxetta,
 			joyProps::getProps,
@@ -151,8 +174,16 @@ public class JoddJoy {
 			() -> joyScanner
 		);
 
+	private final Consumers<JoyPetite> joyPetiteConsumers = Consumers.empty();
+
+	public <T extends JoyPetite> JoddJoy use(final T joyPetite) {
+		Objects.requireNonNull(joyPetite);
+		this.joyPetite = joyPetite;
+		return this;
+	}
+
 	public JoddJoy withPetite(final Consumer<JoyPetite> petiteConsumer) {
-		petiteConsumer.accept(joyPetite);
+		joyPetiteConsumers.add(petiteConsumer);
 		return this;
 	}
 
@@ -184,6 +215,13 @@ public class JoddJoy {
 	private Logger log;
 
 	/**
+	 * Starts the Joy without the web application.
+	 */
+	public void startOnlyBackend() {
+		start(null);
+	}
+
+	/**
 	 * Starts the Joy.
 	 */
 	public void start(final ServletContext servletContext) {
@@ -203,6 +241,13 @@ public class JoddJoy {
 
 		log.info("Ah, Joy!");
 		log.info("Logging using: " + loggerProvider.getClass().getSimpleName());
+
+
+		joyPropsConsumers.accept(joyProps);
+		joyProxettaConsumers.accept(joyProxetta);
+		joyDbConsumers.accept(joyDb);
+		joyPetiteConsumers.accept(joyPetite);
+
 
 		try {
 			joyPaths.start();

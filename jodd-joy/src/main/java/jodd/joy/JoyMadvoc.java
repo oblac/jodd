@@ -141,13 +141,17 @@ public class JoyMadvoc extends JoyBase {
 	 * Prints routes to console.
 	 */
 	protected void printRoutes(final int width) {
+		final ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
+		final List<ActionRuntime> actions = actionsManager.getAllActionRuntimes();
+
+		if (actions.isEmpty()) {
+			return;
+		}
+
 		final Print print = new Print();
 
 		print.line("Routes", width);
 
-		final ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
-
-		final List<ActionRuntime> actions = actionsManager.getAllActionRuntimes();
 		actions.stream()
 			.sorted(Comparator.comparing(
 				actionRuntime -> actionRuntime.getActionPath() + ' ' + actionRuntime.getActionMethod()))

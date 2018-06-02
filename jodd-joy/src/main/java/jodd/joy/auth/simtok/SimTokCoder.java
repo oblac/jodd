@@ -36,7 +36,7 @@ import jodd.util.crypt.BCrypt;
  */
 public class SimTokCoder {
 
-	private static final String SECRET = "Jodd!Joy!secret!" + RandomString.getInstance().randomAlpha(10);
+	private static final String SECRET = "Jodd!Joy!secret!" + RandomString.get().randomAlpha(10);
 
 	private static final int SALT_ROUNDS = 12;
 
