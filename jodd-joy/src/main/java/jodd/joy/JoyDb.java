@@ -45,7 +45,7 @@ import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 import jodd.util.Chalk256;
-import jodd.util.Consumers;
+import jodd.util.function.Consumers;
 
 import java.lang.annotation.Annotation;
 import java.sql.Connection;

@@ -52,7 +52,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.RestAction;
 import jodd.props.Props;
 import jodd.util.ClassConsumer;
-import jodd.util.Consumers;
+import jodd.util.function.Consumers;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;

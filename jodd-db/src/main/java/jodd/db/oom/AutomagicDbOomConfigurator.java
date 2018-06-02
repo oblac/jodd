@@ -29,7 +29,7 @@ import jodd.db.oom.meta.DbTable;
 import jodd.io.findfile.ClassScanner;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.util.Consumers;
+import jodd.util.function.Consumers;
 
 import java.util.function.Consumer;
 

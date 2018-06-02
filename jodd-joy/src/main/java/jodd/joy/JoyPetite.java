@@ -36,8 +36,8 @@ import jodd.props.Props;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
-import jodd.util.Consumers;
 import jodd.util.StringUtil;
+import jodd.util.function.Consumers;
 
 import java.util.ArrayList;
 import java.util.Comparator;

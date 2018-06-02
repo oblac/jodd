@@ -31,8 +31,8 @@ import jodd.io.StreamUtil;
 import jodd.io.ZipUtil;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.Consumers;
 import jodd.util.StringUtil;
+import jodd.util.function.Consumers;
 import jodd.util.inex.InExRules;
 
 import java.io.File;

@@ -27,9 +27,9 @@ package jodd.io.watch;
 
 import jodd.io.FileUtil;
 import jodd.mutable.MutableLong;
-import jodd.util.Consumers;
 import jodd.util.StringPool;
 import jodd.util.Wildcard;
+import jodd.util.function.Consumers;
 
 import java.io.File;
 import java.io.IOException;
