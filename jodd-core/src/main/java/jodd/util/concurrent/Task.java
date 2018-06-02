@@ -37,12 +37,26 @@ import java.util.concurrent.Callable;
 public interface Task {
 
 	/**
+	 * Creates a Task from Runnable.
+	 */
+	public static Task of(final Runnable runnable) {
+		return runnable::run;
+	}
+
+	/**
+	 * Creates a Task from Callable.
+	 */
+	public static Task of(final Callable callable) {
+		return callable::call;
+	}
+
+	/**
 	 * Wraps a task into a runnable.
 	 */
-	public static Runnable runnableOf(final Task task) {
+	public default Runnable toRunnable() {
 		return () -> {
 			try {
-				task.run();
+				run();
 			} catch (Exception e) {
 				throw new UncheckedException(e);
 			}
@@ -52,9 +66,9 @@ public interface Task {
 	/**
 	 * Wraps a task into a callable that returns {@code null}.
 	 */
-	public static Callable callableOf(final Task task) {
+	public default Callable toCallable() {
 		return () -> {
-			task.run();
+			run();
 			return null;
 		};
 	}
@@ -64,5 +78,5 @@ public interface Task {
 	 *
 	 * @throws Exception if unable to execute task
 	 */
-	void run();
+	void run() throws Exception;
 }
