@@ -67,49 +67,59 @@ public class ClassScanner {
 		return new ClassScanner();
 	}
 
+	public ClassScanner() {
+		this.rulesJars = new InExRules<>(WILDCARD_PATH_RULE_MATCHER);
+		this.rulesEntries = new InExRules<>(WILDCARD_RULE_MATCHER);
+
+		excludeJars(SYSTEM_JARS);
+	}
+
 	// ---------------------------------------------------------------- excluded jars
 
 	/**
 	 * Array of system jars that are excluded from the search.
 	 * By default, these paths are common for linux, windows and mac.
 	 */
-	protected static String[] systemJars = new String[] {
+	protected static final String[] SYSTEM_JARS = new String[] {
 		"**/jre/lib/*.jar",
 		"**/jre/lib/ext/*.jar",
 		"**/Java/Extensions/*.jar",
 		"**/Classes/*.jar"
 	};
 
-	protected final InExRules<String, String, String> rulesJars = createJarRules();
+	protected static final String[] COMMONLY_EXCLUDED_JARS = new String[] {
+		"**/tomcat*",
+		"**/jetty*",
+		"**/javafx*",
+		"**/junit*",
+		"**/javax*",
+		"**/org.eclipse.*",
+	};
 
-	/**
-	 * Creates JAR rules. By default, excludes all system jars.
-	 */
-	protected InExRules<String, String, String> createJarRules() {
-		InExRules<String, String, String> rulesJars = new InExRules<>(WILDCARD_PATH_RULE_MATCHER);
-
-		for (String systemJar : systemJars) {
-			rulesJars.exclude(systemJar);
-		}
-
-		return rulesJars;
-	}
+	protected final InExRules<String, String, String> rulesJars;
 
 	/**
 	 * Specify excluded jars.
 	 */
 	public ClassScanner excludeJars(final String... excludedJars) {
-		for (String excludedJar : excludedJars) {
+		for (final String excludedJar : excludedJars) {
 			rulesJars.exclude(excludedJar);
 		}
 		return this;
 	}
 
 	/**
+	 * Exclude some commonly unused jars.
+	 */
+	public ClassScanner excludeCommonJars() {
+		return excludeJars(COMMONLY_EXCLUDED_JARS);
+	}
+
+	/**
 	 * Specify included jars.
 	 */
 	public ClassScanner includeJars(final String... includedJars) {
-		for (String includedJar : includedJars) {
+		for (final String includedJar : includedJars) {
 			rulesJars.include(includedJar);
 		}
 		return this;
@@ -141,19 +151,23 @@ public class ClassScanner {
 
 	// ---------------------------------------------------------------- included entries
 
-	protected final InExRules<String, String, String> rulesEntries = createEntriesRules();
-	protected boolean detectEntriesMode = false;
+	protected static final String[] COMMONLY_EXCLUDED_ENTRIES = new String[] {
+		"java.*",
+		"ch.qos.logback.*",
+		"sun.*",
+		"com.sun.*",
+		"org.eclipse.*",
+	};
 
-	protected InExRules<String, String, String> createEntriesRules() {
-		return new InExRules<>(WILDCARD_RULE_MATCHER);
-	}
+	protected final InExRules<String, String, String> rulesEntries;
+	protected boolean detectEntriesMode = false;
 
 	/**
 	 * Sets included set of names that will be considered during configuration.
 	 * @see InExRules
 	 */
 	public ClassScanner includeEntries(final String... includedEntries) {
-		for (String includedEntry : includedEntries) {
+		for (final String includedEntry : includedEntries) {
 			rulesEntries.include(includedEntry);
 		}
 		return this;
@@ -187,10 +201,17 @@ public class ClassScanner {
 	 * @see InExRules
 	 */
 	public ClassScanner excludeEntries(final String... excludedEntries) {
-		for (String excludedEntry : excludedEntries) {
+		for (final String excludedEntry : excludedEntries) {
 			rulesEntries.exclude(excludedEntry);
 		}
 		return this;
+	}
+
+	/**
+	 * Excludes some commonly skipped packages.
+	 */
+	public ClassScanner excludeCommonEntries() {
+		return excludeEntries(COMMONLY_EXCLUDED_ENTRIES);
 	}
 
 	public ClassScanner detectEntriesMode(final boolean detectMode) {
@@ -242,7 +263,7 @@ public class ClassScanner {
 	 * @see #onEntry(ClassPathEntry)
 	 */
 	protected void scanJarFile(final File file) {
-		ZipFile zipFile;
+		final ZipFile zipFile;
 		try {
 			zipFile = new ZipFile(file);
 		} catch (IOException ioex) {
@@ -253,20 +274,20 @@ public class ClassScanner {
 		}
 		final Enumeration entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
-			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
-			String zipEntryName = zipEntry.getName();
+			final ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+			final String zipEntryName = zipEntry.getName();
 			try {
 				if (StringUtil.endsWithIgnoreCase(zipEntryName, CLASS_FILE_EXT)) {
-					String entryName = prepareEntryName(zipEntryName, true);
-					ClassPathEntry classPathEntry = new ClassPathEntry(entryName, zipFile, zipEntry);
+					final String entryName = prepareEntryName(zipEntryName, true);
+					final ClassPathEntry classPathEntry = new ClassPathEntry(entryName, zipFile, zipEntry);
 					try {
 						scanEntry(classPathEntry);
 					} finally {
 						classPathEntry.closeInputStream();
 					}
 				} else if (includeResources) {
-					String entryName = prepareEntryName(zipEntryName, false);
-					ClassPathEntry classPathEntry = new ClassPathEntry(entryName, zipFile, zipEntry);
+					final String entryName = prepareEntryName(zipEntryName, false);
+					final ClassPathEntry classPathEntry = new ClassPathEntry(entryName, zipFile, zipEntry);
 					try {
 						scanEntry(classPathEntry);
 					} finally {
@@ -293,10 +314,10 @@ public class ClassScanner {
 			rootPath += File.separatorChar;
 		}
 
-		FindFile ff = FindFile.create().includeDirs(false).recursive(true).searchPath(rootPath);
+		final FindFile ff = FindFile.create().includeDirs(false).recursive(true).searchPath(rootPath);
 		File file;
 		while ((file = ff.nextFile()) != null) {
-			String filePath = file.getAbsolutePath();
+			final String filePath = file.getAbsolutePath();
 			try {
 				if (StringUtil.endsWithIgnoreCase(filePath, CLASS_FILE_EXT)) {
 					scanClassFile(filePath, rootPath, file, true);
@@ -429,6 +450,7 @@ public class ClassScanner {
 		}
 
 		private InputStream inputStream;
+		private byte[] inputStreamBytes;
 
 		/**
 		 * Returns entry name.
@@ -461,15 +483,26 @@ public class ClassScanner {
 		 * it in expected way, therefore, class should be loaded to complete the scan.
 		 */
 		public boolean isTypeSignatureInUse(final byte[] bytes) {
-			openInputStream();
-
 			try {
-				byte[] data = StreamUtil.readBytes(inputStream);
-				int index = ArraysUtil.indexOf(data, bytes);
+				final byte[] data = readBytes();
+				final int index = ArraysUtil.indexOf(data, bytes);
 				return index != -1;
 			} catch (IOException ioex) {
 				throw new FindFileException("Read error", ioex);
 			}
+		}
+
+		/**
+		 * Reads stream bytes. Since stream can be read only once, the byte content
+		 * is cached.
+		 */
+		public byte[] readBytes() throws IOException {
+			openInputStream();
+
+			if (inputStreamBytes == null) {
+				inputStreamBytes = StreamUtil.readBytes(inputStream);
+			}
+			return inputStreamBytes;
 		}
 
 		/**
@@ -508,6 +541,7 @@ public class ClassScanner {
 			}
 			StreamUtil.close(inputStream);
 			inputStream = null;
+			inputStreamBytes = null;
 		}
 
 		/**
@@ -540,8 +574,8 @@ public class ClassScanner {
 	 * per one URL will be ignored and loops continues.
 	 */
 	public ClassScanner scan(final URL... urls) {
-		for (URL url : urls) {
-			File file = FileUtil.toContainerFile(url);
+		for (final URL url : urls) {
+			final File file = FileUtil.toContainerFile(url);
 			if (file == null) {
 				if (!ignoreException) {
 					throw new FindFileException("URL is not a valid file: " + url);
@@ -573,7 +607,7 @@ public class ClassScanner {
 	 * Scans provided paths.
 	 */
 	public ClassScanner scan(final String... paths) {
-		for (String path : paths) {
+		for (final String path : paths) {
 			filesToScan.add(new File(path));
 		}
 		return this;
