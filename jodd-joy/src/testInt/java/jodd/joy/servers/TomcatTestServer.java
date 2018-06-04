@@ -43,7 +43,7 @@ public class TomcatTestServer extends TestServerBase {
 	public void start() throws Exception {
 		webRoot = prepareWebApplication();
 
-		String workingDir = System.getProperty("java.io.tmpdir");
+		final String workingDir = System.getProperty("java.io.tmpdir");
 
 		tomcat = new Tomcat();
 		tomcat.setPort(8173);

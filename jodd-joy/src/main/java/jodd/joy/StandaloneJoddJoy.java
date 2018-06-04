@@ -37,12 +37,15 @@ import java.util.function.Consumer;
  */
 public class StandaloneJoddJoy {
 
-	public void runJoy(final Consumer<JoddJoy> consumer) {
+	/**
+	 * Runs JOY in standalone mode, with only backend.
+	 */
+	public void runJoy(final Consumer<JoddJoyRuntime> consumer) {
 		final JoddJoy joddJoy = new JoddJoy();
 
-		joddJoy.startOnlyBackend();
+		final JoddJoyRuntime joyRuntime = joddJoy.startOnlyBackend();
 
-		joddJoy.withDb(joyDb -> setJtxManager(joyDb.getJtxManager()));
+		joddJoy.withDb(joyDb -> setJtxManager(joyRuntime.getJtxManager()));
 
 		final JtxTransaction tx = startRwTx();
 		final Print print = new Print();
@@ -50,7 +53,7 @@ public class StandaloneJoddJoy {
 			print.line("START", 80);
 			print.newLine();
 
-			consumer.accept(joddJoy);
+			consumer.accept(joyRuntime);
 
 			print.newLine();
 			print.line("END", 80);

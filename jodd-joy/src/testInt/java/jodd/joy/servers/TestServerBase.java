@@ -66,9 +66,9 @@ public abstract class TestServerBase {
 		File classes = new File(webInfFolder, "classes");
 		classes.mkdirs();
 
-		// classes/madvoc.props
+		// classes/joy.props
 
-		URL madvocPropsUrl = TomcatTestServer.class.getResource("/madvoc.props");
+		URL madvocPropsUrl = TomcatTestServer.class.getResource("/joy.props");
 		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
 
 		FileUtil.copyFileToDir(madvocPropsFile, classes);

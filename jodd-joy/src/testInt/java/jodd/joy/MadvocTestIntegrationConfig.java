@@ -33,7 +33,7 @@ import jodd.madvoc.AutomagicMadvocConfigurator;
 public class MadvocTestIntegrationConfig extends AutomagicMadvocConfigurator {
 
 	@Override
-	protected void acceptActionClass(Class actionClass) {
+	protected void acceptActionClass(final Class actionClass) {
 		String className = actionClass.getName();
 		if (!className.startsWith("jodd.joy.action.")) {
 			return;

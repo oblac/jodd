@@ -43,7 +43,7 @@ public class JettyTestServer extends TestServerBase {
 
 		jetty = new Server(8174);
 
-		WebAppContext webAppContext = new WebAppContext();
+		final WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setContextPath("/");
 		webAppContext.setResourceBase(webRoot.getAbsolutePath());
 		webAppContext.setDescriptor(this.webXmlFile.getAbsolutePath());

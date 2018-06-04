@@ -33,14 +33,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * <code>AppScanner</code> defines entries that will be included/excluded in
- * scanning process, when configuring Jodd frameworks.
- * By default, scanning entries includes all classes that belongs
- * to the project and to the Jodd.
+ * Tiny JoyScanner kickstart.
  */
-public class JoyScanner extends JoyBase {
+public class JoyScanner extends JoyBase implements JoyScannerConfig {
+
+	// ---------------------------------------------------------------- config
 
 	/**
 	 * Scanning entries that will be examined by various
@@ -63,16 +63,19 @@ public class JoyScanner extends JoyBase {
 	 */
 	private boolean ignoreExceptions;
 
+	@Override
 	public JoyScanner setIncludedEntries(final String... includedEntries) {
 		Collections.addAll(this.includedEntries, includedEntries);
 		return this;
 	}
 
+	@Override
 	public JoyScanner setIncludedJars(final String... includedJars) {
 		Collections.addAll(this.includedJars, includedJars);
 		return this;
 	}
 
+	@Override
 	public JoyScanner setIgnoreExceptions(final boolean ignoreExceptions) {
 		this.ignoreExceptions = ignoreExceptions;
 		return this;
@@ -84,6 +87,7 @@ public class JoyScanner extends JoyBase {
 	 * pass <i>any</i> user-application class, so Jodd can figure out the real
 	 * class path to scan.
 	 */
+	@Override
 	public JoyScanner scanClasspathOf(final Class applicationClass) {
 		appClasses.add(applicationClass);
 		return this;
@@ -92,12 +96,21 @@ public class JoyScanner extends JoyBase {
 	/**
 	 * Shortcut for {@link #scanClasspathOf(Class)}.
 	 */
+	@Override
 	public JoyScanner scanClasspathOf(final Object applicationObject) {
 		return scanClasspathOf(applicationObject.getClass());
 	}
 
+	// ---------------------------------------------------------------- runtime
 
-	// ---------------------------------------------------------------- start
+	/**
+	 * Returns class scanner.
+	 */
+	public ClassScanner getClassScanner() {
+		return Objects.requireNonNull(classScanner);
+	}
+
+	// ---------------------------------------------------------------- lifecycle
 
 	protected ClassScanner classScanner;
 
@@ -134,9 +147,8 @@ public class JoyScanner extends JoyBase {
 
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
 			classScanner.excludeAllEntries(false);
-			classScanner.excludeEntries("ch.qos.logback.*");
-			classScanner.excludeJars("**/tomcat*");
-			classScanner.excludeJars("**/jetty*");
+			classScanner.excludeCommonEntries();
+			classScanner.excludeCommonJars();
 		}
 		else {
 			classScanner.excludeAllEntries(true);
@@ -158,10 +170,4 @@ public class JoyScanner extends JoyBase {
 		classScanner = null;
 	}
 
-	/**
-	 * Returns class scanner.
-	 */
-	public ClassScanner classScanner() {
-		return classScanner;
-	}
 }

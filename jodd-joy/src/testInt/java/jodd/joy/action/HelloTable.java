@@ -25,8 +25,11 @@
 
 package jodd.joy.action;
 
+import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
 
 @DbTable
 public class HelloTable {
+	@DbColumn
+	String name;
 }

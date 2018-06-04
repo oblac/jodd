@@ -104,11 +104,11 @@ public class JoyContextListener implements ServletContextListener {
 		servletContext.addListener(jodd.servlet.RequestContextListener.class);
 
 		if (decoraEnabled) {
-			FilterRegistration filter = servletContext.addFilter("decora", jodd.decora.DecoraServletFilter.class);
+			final FilterRegistration filter = servletContext.addFilter("decora", jodd.decora.DecoraServletFilter.class);
 			filter.addMappingForUrlPatterns(null, true, context);
 		}
 
-		FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
+		final FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
 		filter.addMappingForUrlPatterns(madvocDispatcherTypes, true, context);
 	}
 

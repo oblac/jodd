@@ -31,9 +31,13 @@ import jodd.props.PropsLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
-public class JoyProps extends JoyBase {
+/**
+ * Tiny Joy Props kickstarter.
+ */
+public class JoyProps extends JoyBase implements JoyPropsConfig {
 	protected final Supplier<String> nameSupplier;
 
 	protected Props props;
@@ -42,13 +46,13 @@ public class JoyProps extends JoyBase {
 		this.nameSupplier = nameSupplier;
 	}
 
-	// ---------------------------------------------------------------- getters
+	// ---------------------------------------------------------------- runtime
 
 	/**
 	 * Returns application Props.
 	 */
 	public Props getProps() {
-		return props;
+		return Objects.requireNonNull(props);
 	}
 
 	// ---------------------------------------------------------------- config
@@ -59,11 +63,13 @@ public class JoyProps extends JoyBase {
 	/**
 	 * Adds props files or patterns.
 	 */
+	@Override
 	public JoyProps addPropsFile(final String namePattern) {
 		this.propsNamePatterns.add(namePattern);
 		return this;
 	}
 
+	@Override
 	public JoyProps addPropsProfiles(final String... profiles) {
 		Collections.addAll(propsProfiles, profiles);
 		return this;
@@ -109,7 +115,7 @@ public class JoyProps extends JoyBase {
 
 		PropsLoader.loadFromClasspath(props, patterns);
 
-		log.info("Props is ready: " + props.countTotalProperties() + " properties.");
+		log.info("PROPS is ready: " + props.countTotalProperties() + " properties.");
 	}
 
 	/**

@@ -25,63 +25,23 @@
 
 package jodd.joy;
 
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
+import jodd.db.connection.ConnectionProvider;
+import jodd.db.oom.DbEntityManager;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-import static jodd.joy.JoddJoy.APP_DIR;
+/**
+ * Configuration for {@link JoyDb}.
+ */
+public interface JoyDbConfig {
 
-public class JoyPaths extends JoyBase {
+	JoyDbConfig disableDatabase();
 
-	protected String appDir;
+	JoyDbConfig disableAutoConfiguration();
 
-	// ---------------------------------------------------------------- runtime
+	JoyDbConfig withEntityManager(final Consumer<DbEntityManager> dbEntityManagerConsumer);
 
-	/**
-	 * Returns resolved app dir.
-	 */
-	public String getAppDir() {
-		return Objects.requireNonNull(appDir);
-	}
+	JoyDbConfig withConnectionProvider(final Supplier<ConnectionProvider> connectionProviderSupplier);
 
-	// ---------------------------------------------------------------- lifecycle
-
-	@Override
-	public void start() {
-		initLogger();
-
-		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
-
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
-
-		if (url == null) {
-			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
-		}
-		final String protocol = url.getProtocol();
-
-		if (!protocol.equals("file")) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		final int ndx = appDir.indexOf("WEB-INF");
-
-		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.workingFolder();
-
-		System.setProperty(APP_DIR, appDir);
-
-		log.info("Application folder: " + appDir);
-	}
-
-	@Override
-	public void stop() {
-	}
 }

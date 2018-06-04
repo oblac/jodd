@@ -45,6 +45,7 @@ import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
 import jodd.util.Chalk256;
+import jodd.util.ClassUtil;
 import jodd.util.function.Consumers;
 
 import java.lang.annotation.Annotation;
@@ -54,39 +55,59 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class JoyDb extends JoyBase {
+/**
+ * Tiny JoyDb kickstarter.
+ */
+public class JoyDb extends JoyBase implements JoyDbConfig {
+
+	/**
+	 * Petite bean name for database pool.
+	 */
+	public static final String PETITE_DBPOOL = "dbpool";
 
 	protected final Supplier<JoyScanner> joyScannerSupplier;
 	protected final Supplier<JoyProxetta> joyProxettaSupplier;
+	protected final Supplier<JoyPetite> joyPetiteSupplier;
 
-	protected ConnectionProvider connectionProvider;
 	protected DbOom dbOom;
+	protected ConnectionProvider connectionProvider;
 	protected JtxTransactionManager jtxManager;
 	protected String jtxScopePattern;
 
 	public JoyDb(
+			final Supplier<JoyPetite> joyPetiteSupplier,
 			final Supplier<JoyProxetta> joyProxettaSupplier,
 			final Supplier<JoyScanner> joyScannerSupplier) {
+		this.joyPetiteSupplier = joyPetiteSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.joyProxettaSupplier = joyProxettaSupplier;
 	}
 
-	// ---------------------------------------------------------------- getters
+	// ---------------------------------------------------------------- runtime
+
 	/**
 	 * Returns connection provider once when component is started.
 	 */
 	public ConnectionProvider getConnectionProvider() {
-		return connectionProvider;
+		return Objects.requireNonNull(connectionProvider);
 	}
 
 	/**
-	 * Returns JTX transaction manager.
+	 * Returns JTX transaction manager once when component is started.
 	 */
 	public JtxTransactionManager getJtxManager() {
-		return jtxManager;
+		return Objects.requireNonNull(jtxManager);
+	}
+
+	/**
+	 * Returns {@code true} if database usage is enabled.
+	 */
+	public boolean isDatabaseEnabled() {
+		return databaseEnabled;
 	}
 
 	// ---------------------------------------------------------------- config
@@ -96,31 +117,28 @@ public class JoyDb extends JoyBase {
 	private Supplier<ConnectionProvider> connectionProviderSupplier;
 	private Consumers<DbEntityManager> dbEntityManagerConsumers = Consumers.empty();
 
+	@Override
 	public JoyDb disableDatabase() {
 		databaseEnabled = false;
 		return this;
 	}
 
+	@Override
 	public JoyDb disableAutoConfiguration() {
 		autoConfiguration = false;
 		return this;
 	}
 
+	@Override
 	public JoyDb withEntityManager(final Consumer<DbEntityManager> dbEntityManagerConsumer) {
 		dbEntityManagerConsumers.add(dbEntityManagerConsumer);
 		return this;
 	}
 
+	@Override
 	public JoyDb withConnectionProvider(final Supplier<ConnectionProvider> connectionProviderSupplier) {
 		this.connectionProviderSupplier = connectionProviderSupplier;
 		return this;
-	}
-
-	/**
-	 * Returns {@code true} if database usage is enabled.
-	 */
-	public boolean isDatabaseEnabled() {
-		return databaseEnabled;
 	}
 
 	// ---------------------------------------------------------------- lifecycle
@@ -145,6 +163,8 @@ public class JoyDb extends JoyBase {
 
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
+
+		joyPetiteSupplier.get().getPetiteContainer().addBean(PETITE_DBPOOL, connectionProvider);
 
 		if (connectionProvider instanceof CoreConnectionPool) {
 			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;
@@ -187,10 +207,12 @@ public class JoyDb extends JoyBase {
 				new AutomagicDbOomConfigurator(dbEntityManager, true);
 
 			automagicDbOomConfigurator.registerAsConsumer(
-				joyScannerSupplier.get().classScanner());
+				joyScannerSupplier.get().getClassScanner());
 		}
 
 		dbEntityManagerConsumers.accept(dbEntityManager);
+
+		log.info("DB started");
 	}
 
 	/**
@@ -217,7 +239,7 @@ public class JoyDb extends JoyBase {
 	protected void checkConnectionProvider() {
 		final Connection connection = connectionProvider.getConnection();
 		try {
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			final DatabaseMetaData databaseMetaData = connection.getMetaData();
 			String name = databaseMetaData.getDatabaseProductName();
 			String version = databaseMetaData.getDatabaseProductVersion();
 
@@ -266,23 +288,29 @@ public class JoyDb extends JoyBase {
 		dbOom = null;
 	}
 
+	// ---------------------------------------------------------------- print
+
 	public void printEntities(final int width) {
 		if (!databaseEnabled) {
+			return;
+		}
+
+		final List<DbEntityDescriptor> list = new ArrayList<>();
+		dbOom.entityManager().forEachEntity(list::add);
+
+		if (list.isEmpty()) {
 			return;
 		}
 
 		final Print print = new Print();
 		print.line("Entities", width);
 
-		final List<DbEntityDescriptor> list = new ArrayList<>();
-		dbOom.entityManager().forEachEntity(list::add);
-
 		list.stream()
 			.sorted(Comparator.comparing(DbEntityDescriptor::getEntityName))
 			.forEach(ded -> {
 				print.out(Chalk256.chalk().yellow(), ded.getTableName(), 30);
 				print.space();
-				print.outRight(Chalk256.chalk().yellow(), ded.getEntityName(), width - 30 - 1);
+				print.outRight(Chalk256.chalk().blue(), ClassUtil.getShortClassName(ded.getType(), 2), width - 30 - 1);
 				print.newLine();
 		});
 

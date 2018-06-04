@@ -29,7 +29,7 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
 /**
- * Base class for all Joy components.
+ * Base class for all Joy kickstarters.
  */
 public abstract class JoyBase {
 

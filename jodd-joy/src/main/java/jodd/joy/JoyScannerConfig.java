@@ -25,63 +25,15 @@
 
 package jodd.joy;
 
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
+public interface JoyScannerConfig {
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Objects;
+	JoyScannerConfig setIncludedEntries(final String... includedEntries);
 
-import static jodd.joy.JoddJoy.APP_DIR;
+	JoyScannerConfig setIncludedJars(final String... includedJars);
 
-public class JoyPaths extends JoyBase {
+	JoyScannerConfig setIgnoreExceptions(final boolean ignoreExceptions);
 
-	protected String appDir;
+	JoyScannerConfig scanClasspathOf(final Class applicationClass);
 
-	// ---------------------------------------------------------------- runtime
-
-	/**
-	 * Returns resolved app dir.
-	 */
-	public String getAppDir() {
-		return Objects.requireNonNull(appDir);
-	}
-
-	// ---------------------------------------------------------------- lifecycle
-
-	@Override
-	public void start() {
-		initLogger();
-
-		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
-
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
-
-		if (url == null) {
-			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
-		}
-		final String protocol = url.getProtocol();
-
-		if (!protocol.equals("file")) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		final int ndx = appDir.indexOf("WEB-INF");
-
-		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.workingFolder();
-
-		System.setProperty(APP_DIR, appDir);
-
-		log.info("Application folder: " + appDir);
-	}
-
-	@Override
-	public void stop() {
-	}
+	JoyScannerConfig scanClasspathOf(final Object applicationObject);
 }

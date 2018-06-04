@@ -31,8 +31,12 @@ import jodd.proxetta.impl.ProxyProxetta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class JoyProxetta extends JoyBase {
+/**
+ * Tiny JoyProxetta kickstarter.
+ */
+public class JoyProxetta extends JoyBase implements JoyProxettaConfig {
 
 	protected ProxyProxetta proxyProxetta;
 
@@ -42,7 +46,7 @@ public class JoyProxetta extends JoyBase {
 	 * Returns proxetta once it is created.
 	 */
 	public ProxyProxetta getProxetta() {
-		return proxyProxetta;
+		return Objects.requireNonNull(proxyProxetta);
 	}
 
 	// ---------------------------------------------------------------- config
@@ -52,8 +56,10 @@ public class JoyProxetta extends JoyBase {
 	/**
 	 * Adds a proxy aspect.
 	 */
-	public void addProxyAspect(final ProxyAspect proxyAspect) {
+	@Override
+	public JoyProxetta addProxyAspect(final ProxyAspect proxyAspect) {
 		this.proxyAspects.add(proxyAspect);
+		return this;
 	}
 
 	// ---------------------------------------------------------------- lifecycle
@@ -77,6 +83,8 @@ public class JoyProxetta extends JoyBase {
 		log.debug("Total proxy aspects: " + proxyAspectsArray.length);
 
 		proxyProxetta = Proxetta.proxyProxetta().withAspects(proxyAspectsArray);
+
+		log.info("PROXETTA started");
 	}
 
 	@Override

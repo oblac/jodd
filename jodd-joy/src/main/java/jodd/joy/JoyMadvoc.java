@@ -36,9 +36,6 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaSupplier;
-import jodd.petite.PetiteContainer;
-import jodd.props.Props;
-import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.function.Consumers;
@@ -46,30 +43,43 @@ import jodd.util.function.Consumers;
 import javax.servlet.ServletContext;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Tiny JoyMadvoc kickstarter. It is a special component, as it runs last and performs
+ * the classpath scanning.
+ */
 public class JoyMadvoc extends JoyBase {
 
-	private final Supplier<ProxyProxetta> proxettaSupplier;
-	private final Supplier<PetiteContainer> petiteSupplier;
-	private final Supplier<JoyScanner> scannerSupplier;
+	private final Supplier<JoyProxetta> joyProxettaSupplier;
+	private final Supplier<JoyPetite> joyPetiteSupplier;
+	private final Supplier<JoyScanner> joyScannerSupplier;
+	private final Supplier<JoyProps> joyPropsSupplier;
 	private final Consumers<WebApp> webAppConsumers;
-	private final Supplier<Props> propsSupplier;
+
 	private ServletContext servletContext;
 	private PetiteWebApp webApp;
 	private Supplier<PetiteWebApp> webAppSupplier;
 
 	public JoyMadvoc(
-			final Supplier<PetiteContainer> petiteSupplier,
-			final Supplier<ProxyProxetta> proxettaSupplier,
-			final Supplier<Props> propsSupplier,
-			final Supplier<JoyScanner> scannerSupplier) {
-		this.proxettaSupplier = proxettaSupplier;
-		this.petiteSupplier = petiteSupplier;
-		this.scannerSupplier = scannerSupplier;
-		this.propsSupplier = propsSupplier;
+			final Supplier<JoyPetite> joyPetiteSupplier,
+			final Supplier<JoyProxetta> joyProxettaSupplier,
+			final Supplier<JoyProps> joyPropsSupplier,
+			final Supplier<JoyScanner> joyScannerSupplier) {
+		this.joyProxettaSupplier = joyProxettaSupplier;
+		this.joyPetiteSupplier = joyPetiteSupplier;
+		this.joyScannerSupplier = joyScannerSupplier;
+		this.joyPropsSupplier = joyPropsSupplier;
 		this.webAppConsumers = Consumers.empty();
+	}
+
+	/**
+	 * Defines a web app supplier that creates custom {@link PetiteWebApp}.
+	 */
+	public void setWebAppSupplier(final Supplier<PetiteWebApp> webAppSupplier) {
+		this.webAppSupplier = webAppSupplier;
 	}
 
 	/**
@@ -79,16 +89,17 @@ public class JoyMadvoc extends JoyBase {
 		this.servletContext = servletContext;
 	}
 
-	/**
-	 * Defines optional web app supplier that creates custom {@link PetiteWebApp}.
-	 */
-	public void setWebAppSupplier(final Supplier<PetiteWebApp> webAppSupplier) {
-		this.webAppSupplier = webAppSupplier;
-	}
-
 	public void add(final Consumer<WebApp> webAppConsumer) {
 		this.webAppConsumers.add(webAppConsumer);
 	}
+
+	// ---------------------------------------------------------------- runtime
+
+	public WebApp getWebApp() {
+		return Objects.requireNonNull(webApp);
+	}
+
+	// ---------------------------------------------------------------- lifecycle
 
 	@Override
 	public void start() {
@@ -96,7 +107,7 @@ public class JoyMadvoc extends JoyBase {
 
 		log.info("MADVOC start  ----------");
 
-		webApp = webAppSupplier == null ? new PetiteWebApp(petiteSupplier.get()) : webAppSupplier.get();
+		webApp = webAppSupplier == null ? new PetiteWebApp(joyPetiteSupplier.get().getPetiteContainer()) : webAppSupplier.get();
 
 		webApp.withActionConfig(DefaultActionConfig.class, dac -> dac.setInterceptors(JoyDefaultInterceptorStack.class));
 		webApp.withActionConfig(RestActionConfig.class, rac -> rac.setInterceptors(JoyRestInterceptorStack.class));
@@ -104,16 +115,16 @@ public class JoyMadvoc extends JoyBase {
 		if (servletContext != null) {
 			webApp.bindServletContext(servletContext);
 		}
-		webApp.withParams(propsSupplier.get());
+		webApp.withParams(joyPropsSupplier.get().getProps());
 
-		webApp.registerComponent(new ProxettaSupplier(proxettaSupplier.get()));
+		webApp.registerComponent(new ProxettaSupplier(joyProxettaSupplier.get().getProxetta()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
 
 		// Automagic Madvoc configurator will scan and register ALL!
 		// This way we reduce the startup time and have only one scanning.
 		// Scanning happens in the INIT phase.
 		final AutomagicMadvocConfigurator automagicMadvocConfigurator =
-			new AutomagicMadvocConfigurator(scannerSupplier.get().classScanner()) {
+			new AutomagicMadvocConfigurator(joyScannerSupplier.get().getClassScanner()) {
 				@Override
 				protected String createInfoMessage() {
 					return "Scanning completed in " + elapsed + "ms.";
@@ -135,7 +146,10 @@ public class JoyMadvoc extends JoyBase {
 		if (webApp != null) {
 			webApp.shutdown();
 		}
+		webApp = null;
 	}
+
+	// ---------------------------------------------------------------- print
 
 	/**
 	 * Prints routes to console.
@@ -176,4 +190,5 @@ public class JoyMadvoc extends JoyBase {
 
 		print.line(width);
 	}
+
 }

@@ -50,15 +50,7 @@ public class JoddJoy {
 	/**
 	 * Petite bean name for AppCore (this instance).
 	 */
-	public static final String PETITE_CORE = "core";
-	/**
-	 * Petite bean name for database pool.
-	 */
-	public static final String PETITE_DBPOOL = "dbpool";
-	/**
-	 * Petite bean name for database configuration.
-	 */
-	public static final String PETITE_DB = "db";
+	public static final String PETITE_JOY = "joy";
 	/**
 	 * Petite bean name for {@link JoyScanner} bean.
 	 */
@@ -74,19 +66,44 @@ public class JoddJoy {
 	}
 
 	public JoddJoy() {
+		appName = "joy";
+		joyPaths = new JoyPaths();
 		joyPaths.start();
+
+		joyScanner = new JoyScanner();
+		joyProps = new JoyProps(() -> appName);
+
+		joyProxetta = new JoyProxetta();
+		joyPetite =
+			new JoyPetite(
+				() -> joyProxetta,
+				() -> joyProps,
+				() -> joyScanner
+			);
+
+		joyDb = new JoyDb(
+			() -> joyPetite,
+			() -> joyProxetta,
+			() -> joyScanner);
+
+		joyMadvoc = new JoyMadvoc(
+			() -> joyPetite,
+			() -> joyProxetta,
+			() -> joyProps,
+			() -> joyScanner
+		);
 	}
 
 	// ---------------------------------------------------------------- name
 
-	private String name = "joy";
+	private String appName;
 
 	/**
-	 * Default name used for various components.
+	 * Sets default Joy application name used for various components.
 	 */
-	public JoddJoy setAppName(final String name) {
+	public JoddJoy setApplicationName(final String name) {
 		Objects.requireNonNull(name);
-		this.name = name;
+		this.appName = name;
 		return this;
 	}
 
@@ -94,6 +111,9 @@ public class JoddJoy {
 
 	private Supplier<LoggerProvider> loggerProviderSupplier;
 
+	/**
+	 * Configures the logger provider.
+	 */
 	public JoddJoy withLoggerProvider(final Supplier<LoggerProvider> loggerProviderSupplier) {
 		this.loggerProviderSupplier = loggerProviderSupplier;
 		return this;
@@ -101,101 +121,78 @@ public class JoddJoy {
 
 	// ---------------------------------------------------------------- paths
 
-	private final JoyPaths joyPaths = new JoyPaths();
+	private final JoyPaths joyPaths;
 
 	// ---------------------------------------------------------------- props
 
-	private JoyProps joyProps = new JoyProps(() -> name);
-	private final Consumers<JoyProps> joyPropsConsumers = Consumers.empty();
+	private JoyProps joyProps;
 
-	public <T extends JoyProps> JoddJoy use(final T joyProps) {
-		Objects.requireNonNull(joyProps);
-		this.joyProps = joyProps;
-		return this;
-	}
+	private final Consumers<JoyPropsConfig> joyPropsConsumers = Consumers.empty();
 
-	public JoddJoy withProps(final Consumer<JoyProps> propsConsumer) {
+	/**
+	 * Configures Joy props before Joy is started.
+	 */
+	public JoddJoy withProps(final Consumer<JoyPropsConfig> propsConsumer) {
 		joyPropsConsumers.add(propsConsumer);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- scanner
 
-	private final JoyScanner joyScanner = new JoyScanner();
+	private final JoyScanner joyScanner;
 
-	public JoddJoy withScanner(final Consumer<JoyScanner> scannerConsumer) {
+	/**
+	 * Configures the Joy scanner.
+	 */
+	public JoddJoy withScanner(final Consumer<JoyScannerConfig> scannerConsumer) {
 		scannerConsumer.accept(joyScanner);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- proxetta
 
-	private JoyProxetta joyProxetta = new JoyProxetta();
-	private final Consumers<JoyProxetta> joyProxettaConsumers = Consumers.empty();
+	private JoyProxetta joyProxetta;
+	private final Consumers<JoyProxettaConfig> joyProxettaConsumers = Consumers.empty();
 
-	public <T extends JoyProxetta> JoddJoy use(final T joyProxetta) {
-		Objects.requireNonNull(joyProxetta);
-		this.joyProxetta = joyProxetta;
-		return this;
-	}
-
-	public JoddJoy withProxetta(final Consumer<JoyProxetta> proxettaConsumer) {
+	/**
+	 * Configures the Joy proxetta.
+	 */
+	public JoddJoy withProxetta(final Consumer<JoyProxettaConfig> proxettaConsumer) {
 		joyProxettaConsumers.add(proxettaConsumer);
-		return this;
-	}
-
-	// ---------------------------------------------------------------- db
-
-	private JoyDb joyDb =
-		new JoyDb(
-			() -> joyProxetta,
-			() -> joyScanner);
-
-	private final Consumers<JoyDb> joyDbConsumers = Consumers.empty();
-
-	public <T extends JoyDb> JoddJoy use(final T joyDb) {
-		Objects.requireNonNull(joyDb);
-		this.joyDb = joyDb;
-		return this;
-	}
-
-	public JoddJoy withDb(final Consumer<JoyDb> dbConsumer) {
-		joyDbConsumers.add(dbConsumer);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- petite
 
-	private JoyPetite joyPetite =
-		new JoyPetite(
-			joyProxetta::getProxetta,
-			joyProps::getProps,
-			() -> joyDb,
-			() -> joyScanner
-		);
+	private JoyPetite joyPetite;
 
-	private final Consumers<JoyPetite> joyPetiteConsumers = Consumers.empty();
+	private final Consumers<JoyPetiteConfig> joyPetiteConsumers = Consumers.empty();
 
-	public <T extends JoyPetite> JoddJoy use(final T joyPetite) {
-		Objects.requireNonNull(joyPetite);
-		this.joyPetite = joyPetite;
+	/**
+	 * Configures the Joy petite.
+	 */
+	public JoddJoy withPetite(final Consumer<JoyPetiteConfig> petiteConsumer) {
+		joyPetiteConsumers.add(petiteConsumer);
 		return this;
 	}
 
-	public JoddJoy withPetite(final Consumer<JoyPetite> petiteConsumer) {
-		joyPetiteConsumers.add(petiteConsumer);
+	// ---------------------------------------------------------------- db
+
+	private JoyDb joyDb;
+
+	private final Consumers<JoyDbConfig> joyDbConsumers = Consumers.empty();
+
+	/**
+	 * Configures the Joy db.
+	 */
+	public JoddJoy withDb(final Consumer<JoyDbConfig> dbConsumer) {
+		joyDbConsumers.add(dbConsumer);
 		return this;
 	}
 
 	// ---------------------------------------------------------------- madvoc
 
-	private final JoyMadvoc joyMadvoc =
-		new JoyMadvoc(
-			joyPetite::getPetiteContainer,
-			joyProxetta::getProxetta,
-			joyProps::getProps,
-			() -> joyScanner
-		);
+	private final JoyMadvoc joyMadvoc;
 
 	public JoddJoy withWebApp(final Consumer<WebApp> webAppConsumer) {
 		joyMadvoc.add(webAppConsumer);
@@ -217,14 +214,15 @@ public class JoddJoy {
 	/**
 	 * Starts the Joy without the web application.
 	 */
-	public void startOnlyBackend() {
-		start(null);
+	public JoddJoyRuntime startOnlyBackend() {
+		return start(null);
 	}
 
 	/**
-	 * Starts the Joy.
+	 * Starts the Joy. Returns the {@link JoddJoyRuntime runtime}, set of running
+	 * Joy components.
 	 */
-	public void start(final ServletContext servletContext) {
+	public JoddJoyRuntime start(final ServletContext servletContext) {
 		LoggerProvider loggerProvider = null;
 
 		if (loggerProviderSupplier != null) {
@@ -252,10 +250,14 @@ public class JoddJoy {
 		try {
 			joyPaths.start();
 			joyProps.start();
-			joyScanner.start();
 			joyProxetta.start();
-			joyDb.start();
+			joyScanner.start();
+
 			joyPetite.start();
+			joyPetite.getPetiteContainer().addBean(PETITE_JOY, this);
+			joyPetite.getPetiteContainer().addBean(PETITE_SCANNER, joyScanner);
+
+			joyDb.start();
 
 			joyMadvoc.setServletContext(servletContext);
 			joyMadvoc.start();
@@ -265,7 +267,6 @@ public class JoddJoy {
 			// cleanup things we will not use
 
 			joyScanner.stop();
-			joyProps.stop();
 		}
 		catch (Exception ex) {
 			if (log != null) {
@@ -285,6 +286,18 @@ public class JoddJoy {
 		System.out.println(Chalk256.chalk().yellow().on("Joy") + " is up. Enjoy!");
 
 		log.info("Joy is up. Enjoy!");
+
+		return new JoddJoyRuntime(
+			appName,
+			joyPaths.getAppDir(),
+			joyProps.getProps(),
+			joyProxetta.getProxetta(),
+			joyPetite.getPetiteContainer(),
+			joyDb.isDatabaseEnabled(),
+			joyDb.getConnectionProvider(),
+			joyDb.getJtxManager(),
+			joyMadvoc.getWebApp()
+		);
 	}
 
 	/**
@@ -298,6 +311,7 @@ public class JoddJoy {
 	 * Stops the Joy.
 	 */
 	public void stop() {
+		joyProps.stop();
 		try {
 			joyDb.stop();
 			joyPetite.stop();
