@@ -30,16 +30,15 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.meta.RenderWith;
-import jodd.madvoc.meta.scope.Cookies;
+import jodd.madvoc.meta.scope.Cookie;
 import jodd.madvoc.result.NoneActionResult;
-
-import javax.servlet.http.Cookie;
 
 @MadvocAction
 public class CookieAction {
 
-	@In @Cookies @Out
-	Cookie foo;
+	@In @Cookie
+	@Out
+	javax.servlet.http.Cookie foo;
 
 	@Action("/cookie")
 	@RenderWith(NoneActionResult.class)
