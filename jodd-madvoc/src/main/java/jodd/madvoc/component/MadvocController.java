@@ -68,21 +68,29 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	@PetiteInject
 	protected AsyncActionExecutor asyncActionExecutor;
 
+	protected boolean applyCharacterEncoding = true;
+	protected boolean preventCaching = true;
+	protected String welcomeFile = "/index.jsp";
+
 	/**
 	 * Defines is character encoding has to be set by Madvoc into the request and response.
 	 */
-	protected boolean applyCharacterEncoding = true;
-	/**
-	 * Specifies if Madvoc should add response params to prevent browser caching.
-	 */
-	protected boolean preventCaching = true;
-
 	public void setApplyCharacterEncoding(final boolean applyCharacterEncoding) {
 		this.applyCharacterEncoding = applyCharacterEncoding;
 	}
 
+	/**
+	 * Specifies if Madvoc should add response params to prevent browser caching.
+	 */
 	public void setPreventCaching(final boolean preventCaching) {
 		this.preventCaching = preventCaching;
+	}
+
+	/**
+	 * Sets the welcome file as defined by servlet container.
+	 */
+	public void setWelcomeFile(final String welcomeFile) {
+		this.welcomeFile = welcomeFile;
 	}
 
 	@Override
@@ -129,7 +137,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			if (actionRuntime == null) {
 
 				// special case!
-				if (actionPath.endsWith("/index.jsp")) {
+				if (actionPath.endsWith(welcomeFile)) {
 					actionPath = actionPath.substring(0, actionPath.length() - 9);
 					actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
 					actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
