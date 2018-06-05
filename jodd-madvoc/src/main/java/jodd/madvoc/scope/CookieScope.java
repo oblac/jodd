@@ -30,6 +30,7 @@ import jodd.madvoc.config.Targets;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,6 +68,14 @@ public class CookieScope implements MadvocScope {
 				target.writeValue(in, value, true);
 			}
 		});
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+	}
+
+	@Override
+	public void inject(final Targets targets) {
 	}
 
 	@Override

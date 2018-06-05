@@ -68,6 +68,11 @@ public class ServletContextScope implements MadvocScope {
 	}
 
 	@Override
+	public void inject(final Targets targets) {
+
+	}
+
+	@Override
 	public void outject(final ActionRequest actionRequest, final Targets targets) {
 		final ServletContext context = actionRequest.getHttpServletRequest().getServletContext();
 

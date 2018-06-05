@@ -25,10 +25,13 @@
 
 package jodd.madvoc.scope;
 
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
 import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;
+
+import javax.servlet.ServletContext;
 
 /**
  * Special kind of scope that is used on all targets.
@@ -37,6 +40,16 @@ public class ParamsScope implements MadvocScope {
 
 	@PetiteInject
 	PetiteContainer madpc;
+
+	@Override
+	public void inject(final ActionRequest actionRequest, final Targets targets) {
+
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+
+	}
 
 	@Override
 	public void inject(final Targets targets) {
@@ -56,6 +69,11 @@ public class ParamsScope implements MadvocScope {
 				target.writeValue(propertyName, value, false);
 			}
 		});
+
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
 
 	}
 }

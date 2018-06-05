@@ -35,6 +35,7 @@ import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
@@ -101,6 +102,16 @@ public class RequestScope implements MadvocScope {
 		}
 
 		actionPathMacroInjector.inject(actionRequest, targets);
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+
+	}
+
+	@Override
+	public void inject(final Targets targets) {
+
 	}
 
 	/**

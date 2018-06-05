@@ -29,6 +29,8 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
 import jodd.util.StringUtil;
 
+import javax.servlet.ServletContext;
+
 /**
  * Raw BODY scope.
  */
@@ -42,6 +44,18 @@ public class BodyScope implements MadvocScope {
 		}
 
 		targets.forEachTargetAndIn(this, (target, in) -> target.writeValue(in, body, true));
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+	}
+
+	@Override
+	public void inject(final Targets targets) {
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
 	}
 
 

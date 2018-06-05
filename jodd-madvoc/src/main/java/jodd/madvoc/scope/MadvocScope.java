@@ -40,21 +40,21 @@ public interface MadvocScope {
 	/**
 	 * Injects action request context into the targets.
 	 */
-	public default void inject(final ActionRequest actionRequest, final Targets targets) {}
+	void inject(final ActionRequest actionRequest, final Targets targets);
 
 	/**
 	 * Injects servlet context into the targets.
 	 */
-	public default void inject(final ServletContext servletContext, final Targets targets) {}
+	void inject(final ServletContext servletContext, final Targets targets);
 
 	/**
 	 * Injects general context into the targets.
 	 */
-	public default void inject(final Targets targets) {}
+	void inject(final Targets targets);
 
 	/**
-	 * Outjects targets into action request context..
+	 * Outjects targets into action request context.
 	 */
-	public default void outject(final ActionRequest actionRequest, final Targets targets) {}
+	void outject(final ActionRequest actionRequest, final Targets targets);
 
 }

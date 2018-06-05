@@ -28,6 +28,7 @@ package jodd.madvoc.scope;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -61,6 +62,16 @@ public class HeaderScope implements MadvocScope {
 				target.writeValue(in, value, true);
 			}
 		});
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+
+	}
+
+	@Override
+	public void inject(final Targets targets) {
+
 	}
 
 	@Override

@@ -25,11 +25,15 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.config.Targets;
 import jodd.madvoc.scope.MadvocScope;
 import jodd.madvoc.scope.RequestScope;
 import jodd.petite.PetiteContainer;
 import org.junit.jupiter.api.Test;
+
+import javax.servlet.ServletContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,34 +42,53 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ScopeResolverTest {
 
 	private static class MyScope implements MadvocScope {
+		@Override
+		public void inject(final ActionRequest actionRequest, final Targets targets) {
+
+		}
+
+		@Override
+		public void inject(final ServletContext servletContext, final Targets targets) {
+
+		}
+
+		@Override
+		public void inject(final Targets targets) {
+
+		}
+
+		@Override
+		public void outject(final ActionRequest actionRequest, final Targets targets) {
+
+		}
 	}
 
 	@Test
 	void testScopeRegistration() {
-		ScopeResolver scopeResolver = new ScopeResolver();
+		final ScopeResolver scopeResolver = new ScopeResolver();
 		scopeResolver.madpc = new PetiteContainer();
 		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
 
-		MadvocScope requestScope = scopeResolver.defaultOrScopeType(RequestScope.class);
-		MadvocScope requestScope2 = scopeResolver.defaultOrScopeType(RequestScope.class);
+		final MadvocScope requestScope = scopeResolver.defaultOrScopeType(RequestScope.class);
+		final MadvocScope requestScope2 = scopeResolver.defaultOrScopeType(RequestScope.class);
 
 		assertEquals(requestScope2, requestScope);
 
-		MyScope myScope = scopeResolver.defaultOrScopeType(MyScope.class);
+		final MyScope myScope = scopeResolver.defaultOrScopeType(MyScope.class);
 
 		assertEquals(2, scopeResolver.allScopes.size());
 	}
 
 	@Test
 	void testScopeClassLookup() {
-		ScopeResolver scopeResolver = new ScopeResolver();
+		final ScopeResolver scopeResolver = new ScopeResolver();
 		scopeResolver.madpc = new PetiteContainer();
 		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
 
-		MadvocScope madvocScope = scopeResolver.defaultOrScopeType(MyScope.class);
+		final MadvocScope madvocScope = scopeResolver.defaultOrScopeType(MyScope.class);
 		assertNotNull(madvocScope);
 		assertTrue(madvocScope instanceof MyScope);
-		MadvocScope madvocScope2 = scopeResolver.defaultOrScopeType(MyScope.class);
+		final MadvocScope madvocScope2 = scopeResolver.defaultOrScopeType(MyScope.class);
 
 		assertEquals(madvocScope2, madvocScope);
 	}

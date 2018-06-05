@@ -30,6 +30,8 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.config.Targets;
 import jodd.util.StringUtil;
 
+import javax.servlet.ServletContext;
+
 /**
  * JSON body scope.
  * Assumes that body is a JSON and parses it into the target type.
@@ -54,6 +56,21 @@ public class JsonBodyScope implements MadvocScope {
 				target.writeValue(in, value, true);
 			}
 		});
+	}
+
+	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+
+	}
+
+	@Override
+	public void inject(final Targets targets) {
+
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+
 	}
 
 	/**

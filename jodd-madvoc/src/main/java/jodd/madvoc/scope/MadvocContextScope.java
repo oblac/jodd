@@ -30,6 +30,8 @@ import jodd.madvoc.config.Targets;
 import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;
 
+import javax.servlet.ServletContext;
+
 /**
  * Madvoc context scope.
  */
@@ -44,6 +46,11 @@ public class MadvocContextScope implements MadvocScope {
 	}
 
 	@Override
+	public void inject(final ServletContext servletContext, final Targets targets) {
+
+	}
+
+	@Override
 	public void inject(final Targets targets) {
 		targets.forEachTargetAndIn(this, (target, in) -> {
 			final Object value = madpc.getBean(in.name());
@@ -51,6 +58,11 @@ public class MadvocContextScope implements MadvocScope {
 				target.writeValue(in, value, false);
 			}
 		});
+	}
+
+	@Override
+	public void outject(final ActionRequest actionRequest, final Targets targets) {
+
 	}
 
 }
