@@ -30,7 +30,6 @@ import jodd.db.oom.DbEntityManager;
 import jodd.db.oom.DbOomConfig;
 import jodd.db.oom.DbOomQuery;
 import jodd.db.oom.DbSqlGenerator;
-import jodd.db.oom.dao.GenericDao;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.pool.CoreConnectionPool;
@@ -120,7 +119,6 @@ public class DbOom {
 	private final DbOomConfig dbOomConfig;
 	private final DbEntityManager dbEntityManager;
 	private final DbEntitySql dbEntitySql;
-	private final GenericDao genericDao;
 
 	// ---------------------------------------------------------------- class
 
@@ -138,7 +136,6 @@ public class DbOom {
 		this.dbOomConfig = new DbOomConfig();
 		this.dbEntityManager = new DbEntityManager(dbOomConfig);
 		this.dbEntitySql = new DbEntitySql(this);
-		this.genericDao = new GenericDao(this);
 
 		// static init
 
@@ -208,13 +205,6 @@ public class DbOom {
 	 */
 	public QueryMap queryMap() {
 		return queryMap;
-	}
-
-	/**
-	 * Returns a generic DAO.
-	 */
-	public GenericDao dao() {
-		return genericDao;
 	}
 
 	/**

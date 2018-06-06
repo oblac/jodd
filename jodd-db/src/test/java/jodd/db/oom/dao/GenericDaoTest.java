@@ -57,7 +57,7 @@ class GenericDaoTest extends DbHsqldbTestCase {
 		DbSession session = new DbSession(cp);
 		ThreadDbSessionHolder.set(session);
 
-		GenericDao dao = dbOom.dao();
+		GenericDao dao = new GenericDao(dbOom);
 
 		// save
 
