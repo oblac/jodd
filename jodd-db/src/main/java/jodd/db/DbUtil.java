@@ -90,6 +90,13 @@ public class DbUtil {
 		return -1;
 	}
 
+	public static Object getFirstObject(final ResultSet resultSet) throws SQLException {
+		if (resultSet.next()) {
+			return resultSet.getObject(1);
+		}
+		return null;
+	}
+
 	/**
 	 * Sets prepared statement object using target SQL type.
 	 * Here Jodd makes conversion and not JDBC driver.
