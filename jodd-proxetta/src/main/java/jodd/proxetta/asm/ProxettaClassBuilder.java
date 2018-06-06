@@ -40,6 +40,7 @@ import jodd.proxetta.ProxyAspect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static jodd.asm6.Opcodes.ACC_ABSTRACT;
 import static jodd.asm6.Opcodes.ALOAD;
@@ -220,10 +221,12 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Checks for all public super methods that are not overridden.
 	 */
 	protected void processSuperMethods() {
+
 		for (ClassReader cr : targetClassInfo.superClassReaders) {
 			cr.accept(new EmptyClassVisitor() {
 
 				String declaredClassName;
+				Map<String, String> generics;
 
 				@Override
 				public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {

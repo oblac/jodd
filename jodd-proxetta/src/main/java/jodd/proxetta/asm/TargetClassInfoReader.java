@@ -131,10 +131,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		return annotations;
 	}
 
-	@Override
-	public Map<String, String> getGenerics() {
-		return generics;
-	}
+//	@Override
+//	public Map<String, String> getGenerics() {
+//		return generics;
+//	}
 
 	// ---------------------------------------------------------------- visits
 
@@ -177,7 +177,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		if ((access & AsmUtil.ACC_FINAL) != 0) {
 			return null;	// skip finals
 		}
-		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference);
+		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.generics);
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);
 		allMethodSignatures.add(msign.getCleanSignature());
@@ -280,8 +280,15 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	/**
 	 * Creates method signature from method name.
 	 */
-	protected MethodSignatureVisitor createMethodSignature(final int access, final String methodName, final String description, final String signature, final String[] exceptions, final String classname) {
-		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, exceptions, signature, this);
+	protected MethodSignatureVisitor createMethodSignature(
+			final int access,
+			final String methodName,
+			final String description,
+			final String signature,
+			final String[] exceptions,
+			final String classname,
+			final Map<String, String> declaredTypeGenerics) {
+		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, exceptions, signature, declaredTypeGenerics, this);
 		new SignatureReader(signature != null ? signature : description).accept(v);
 		return v;
 	}
@@ -347,6 +354,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	private class SuperClassVisitor extends EmptyClassVisitor {
 
 		String declaredClassName;
+		Map<String, String> superGeneric;
 
 		@Override
 		public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
@@ -360,6 +368,8 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				}
 			}
 
+			final boolean isInterface = (access & AsmUtil.ACC_INTERFACE) != 0;
+			this.superGeneric = new GenericsReader().parseSignatureForGenerics(signature, isInterface);
 		}
 
 		@Override
@@ -375,7 +385,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				return null;
 			}
 
-			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference);
+			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.superGeneric);
 			if (allMethodSignatures.contains(msign.getCleanSignature())) {		// skip overridden method by some in above classes
 				return null;
 			}

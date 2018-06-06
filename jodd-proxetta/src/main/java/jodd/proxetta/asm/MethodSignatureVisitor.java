@@ -70,12 +70,22 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected String asmMethodSignature;
 	protected AnnotationInfo[] annotations;
 	protected String declaredClassName;
-	protected Map<String, String> generics;
+	protected final Map<String, String> generics;
+	protected final Map<String, String> declaredTypeGeneric;
 
 
 	// ---------------------------------------------------------------- ctors
 
-	public MethodSignatureVisitor(final String methodName, final int access, final String classname, final String description, final String[] exceptions, final String signature, final ClassInfo targetClassInfo) {
+	public MethodSignatureVisitor(
+			final String methodName,
+			final int access,
+			final String classname,
+			final String description,
+			final String[] exceptions,
+			final String signature,
+			final Map<String, String> declaredTypeGenerics,
+			final ClassInfo targetClassInfo) {
+
 		super(new StringBuilder(), (access & Opcodes.ACC_INTERFACE) != 0);
 //		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
@@ -87,6 +97,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.asmMethodSignature = signature;
 		this.generics = new GenericsReader().parseSignatureForGenerics(signature, isInterface);
 		this.exceptionsArray = exceptions;
+		this.declaredTypeGeneric = declaredTypeGenerics;
 
 		this.arguments = new ArrayList<>();
 		this.arguments.add(new TypeInfoImpl('L', null, null, null));
@@ -109,7 +120,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			String retType = decl.substring(ndx);
 
 			StringBuilder methodDeclaration = new StringBuilder(50);
-			methodDeclaration.append(retType).append(' ').append(methodName).append(decl.substring(0, ndx));
+			methodDeclaration.append(retType).append(' ').append(methodName).append(decl, 0, ndx);
 
 			String exceptionsAsString = getExceptionsAsString();
 			if (exceptionsAsString != null) {
@@ -412,7 +423,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			rawTypeName = generics.get(typeName);
 		}
 		else {
-			rawTypeName = targetClassInfo.getGenerics().getOrDefault(typeName, typeName);
+			rawTypeName = declaredTypeGeneric.getOrDefault(typeName, typeName);
 		}
 
 		if (isArray) {
@@ -426,7 +437,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		if (generics.containsKey(typeName)) {
 			return true;
 		}
-		return targetClassInfo.getGenerics().containsKey(typeName);
+		return declaredTypeGeneric.containsKey(typeName);
 	}
 
 	// ---------------------------------------------------------------- toString

@@ -28,6 +28,7 @@ package jodd.proxetta;
 import jodd.asm.TraceSignatureVisitor;
 import jodd.asm6.signature.SignatureReader;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,11 +42,12 @@ public class GenericsReader {
 	 * and value is raw type. Returns an empty map if signature does not define any generics.
 	 */
 	public Map<String, String> parseSignatureForGenerics(final String signature, final boolean isInterface) {
-		Map<String, String> genericsMap = new HashMap<>();
 
 		if (signature == null) {
-			return genericsMap;
+			return Collections.emptyMap();
 		}
+
+		final Map<String, String> genericsMap = new HashMap<>();
 
 		SignatureReader sr = new SignatureReader(signature);
 		StringBuilder sb = new StringBuilder();

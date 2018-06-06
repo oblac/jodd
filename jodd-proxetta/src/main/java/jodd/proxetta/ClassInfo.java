@@ -26,7 +26,6 @@
 package jodd.proxetta;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
 
 /**
  * Various target class information.
@@ -63,11 +62,11 @@ public interface ClassInfo {
 	 */
 	AnnotationInfo[] getAnnotations();
 
-	/**
-	 * Returns a map of generic definitions. Keys are map names and values are
-	 * raw types (after erasure).
-	 */
-	Map<String, String> getGenerics();
+//	/**
+//	 * Returns a map of generic definitions. Keys are map names and values are
+//	 * raw types (after erasure).
+//	 */
+//	Map<String, String> getGenerics();
 
 	// ---------------------------------------------------------------- annotations
 
