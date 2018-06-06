@@ -26,6 +26,7 @@
 package jodd.proxetta;
 
 import jodd.proxetta.advice.DelegateAdvice;
+import jodd.proxetta.fixtures.data.Action;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaFactory;
 import jodd.proxetta.impl.WrapperProxetta;
@@ -33,10 +34,10 @@ import jodd.proxetta.impl.WrapperProxettaFactory;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import org.junit.jupiter.api.Test;
 
+import static jodd.proxetta.ProxyTarget.createArgumentsClassArray;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class GenericsTest {
-
 	public static class Bar<T> {
 	}
 
@@ -83,5 +84,39 @@ class GenericsTest {
 			ex.printStackTrace();
 			fail(ex.toString());
 		}
+	}
+
+	// ---------------------------------------------------------------- misc
+
+	public static class Boo<T> {
+		@Action
+		public void save(T t) {
+		}
+	}
+
+	public static class MyBoo extends Boo<Foo> {
+	}
+
+	public static class LogAdvice implements ProxyAdvice {
+
+		@Override
+		public Object execute() {
+			System.out.println(ProxyTarget.targetMethodName());
+
+			Class[] methodArgsTypes = createArgumentsClassArray();
+
+			System.out.println(methodArgsTypes);
+
+			return ProxyTarget.invoke();
+		}
+	}
+
+	@Test
+	void testExtendingGenerics() {
+		ProxyAspect aspect = new ProxyAspect(LogAdvice.class, new AllMethodsPointcut());
+		ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+		ProxyProxettaFactory builder = proxetta.proxy().setTarget(MyBoo.class);
+		Boo boo = (Boo) builder.newInstance();
+		boo.save(new Foo());
 	}
 }
