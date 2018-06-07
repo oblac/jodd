@@ -30,6 +30,7 @@ import java.util.Objects;
 /**
  * Set of names that represent bean reference for the single injection point.
  * Each injection point can have more then one definition of bean references.
+ * They are used when reference name is not explicitly defined.
  */
 public class BeanReferences {
 

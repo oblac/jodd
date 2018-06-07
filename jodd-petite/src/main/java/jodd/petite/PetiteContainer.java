@@ -309,7 +309,7 @@ public class PetiteContainer extends PetiteBeans {
 	protected Object invokeProvider(final ProviderDefinition provider) {
 		if (provider.method != null) {
 
-			Object bean;
+			final Object bean;
 			if (provider.beanName != null) {
 				// instance factory method
 				bean = getBean(provider.beanName);
