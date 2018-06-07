@@ -34,6 +34,7 @@ import jodd.props.Props;
 
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -218,9 +219,11 @@ public class MadvocContainer {
 	// ---------------------------------------------------------------- params
 
 	public void defineParams(final Props props) {
-		log.debug("Defining Madvoc parameters");
-
 		madpc.defineParameters(props);
+	}
+
+	public void defineParams(final Map params) {
+		madpc.defineParameters(params);
 	}
 
 }

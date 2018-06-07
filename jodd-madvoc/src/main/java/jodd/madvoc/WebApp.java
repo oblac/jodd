@@ -57,6 +57,7 @@ import jodd.util.function.Consumers;
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -89,6 +90,7 @@ public class WebApp {
 
 	protected ServletContext servletContext;
 	private List<Props> propsList = new ArrayList<>();
+	private List<Map<String, Object>> paramsList = new ArrayList<>();
 	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
 	private Consumers<MadvocRouter> madvocRouterConsumers = Consumers.empty();
@@ -99,6 +101,11 @@ public class WebApp {
 	 */
 	public WebApp withParams(final Props props) {
 		propsList.add(props);
+		return this;
+	}
+
+	public WebApp withParams(final Map<String, Object> params) {
+		paramsList.add(params);
 		return this;
 	}
 
@@ -207,8 +214,11 @@ public class WebApp {
 
 		log.debug("Initializing Madvoc WebApp");
 
-		//// props
-		for (Props props : propsList) {
+		//// params & props
+		for (final Map<String, Object> params : paramsList) {
+			madvocContainer.defineParams(params);
+		}
+		for (final Props props : propsList) {
 			madvocContainer.defineParams(props);
 		}
 		propsList = null;
