@@ -50,7 +50,7 @@ public class JoddJoy {
 	/**
 	 * Petite bean name for AppCore (this instance).
 	 */
-	public static final String PETITE_JOY = "joy";
+	public static final String PETITE_CORE = "core";
 	/**
 	 * Petite bean name for {@link JoyScanner} bean.
 	 */
@@ -82,11 +82,13 @@ public class JoddJoy {
 			);
 
 		joyDb = new JoyDb(
+			() -> appName,
 			() -> joyPetite,
 			() -> joyProxetta,
 			() -> joyScanner);
 
 		joyMadvoc = new JoyMadvoc(
+			() -> appName,
 			() -> joyPetite,
 			() -> joyProxetta,
 			() -> joyProps,
@@ -254,8 +256,8 @@ public class JoddJoy {
 			joyScanner.start();
 
 			joyPetite.start();
-			joyPetite.getPetiteContainer().addBean(PETITE_JOY, this);
-			joyPetite.getPetiteContainer().addBean(PETITE_SCANNER, joyScanner);
+			joyPetite.getPetiteContainer().addBean(appName + "." + PETITE_CORE, this);
+			joyPetite.getPetiteContainer().addBean(appName + "." + PETITE_SCANNER, joyScanner);
 
 			joyDb.start();
 

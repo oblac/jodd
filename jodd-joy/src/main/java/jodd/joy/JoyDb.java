@@ -69,6 +69,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 	 */
 	public static final String PETITE_DBPOOL = "dbpool";
 
+	protected final Supplier<String> appNameSupplier;
 	protected final Supplier<JoyScanner> joyScannerSupplier;
 	protected final Supplier<JoyProxetta> joyProxettaSupplier;
 	protected final Supplier<JoyPetite> joyPetiteSupplier;
@@ -79,9 +80,11 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 	protected String jtxScopePattern;
 
 	public JoyDb(
+			final Supplier<String> appNameSupplier,
 			final Supplier<JoyPetite> joyPetiteSupplier,
 			final Supplier<JoyProxetta> joyProxettaSupplier,
 			final Supplier<JoyScanner> joyScannerSupplier) {
+		this.appNameSupplier = appNameSupplier;
 		this.joyPetiteSupplier = joyPetiteSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.joyProxettaSupplier = joyProxettaSupplier;
@@ -164,7 +167,9 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
 
-		joyPetiteSupplier.get().getPetiteContainer().addBean(PETITE_DBPOOL, connectionProvider);
+		final String appName = appNameSupplier.get();
+
+		joyPetiteSupplier.get().getPetiteContainer().addBean(appName + "." + PETITE_DBPOOL, connectionProvider);
 
 		if (connectionProvider instanceof CoreConnectionPool) {
 			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;

@@ -36,6 +36,7 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaSupplier;
+import jodd.props.Props;
 import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.function.Consumers;
@@ -53,6 +54,7 @@ import java.util.function.Supplier;
  */
 public class JoyMadvoc extends JoyBase {
 
+	private final Supplier<String> appNameSupplier;
 	private final Supplier<JoyProxetta> joyProxettaSupplier;
 	private final Supplier<JoyPetite> joyPetiteSupplier;
 	private final Supplier<JoyScanner> joyScannerSupplier;
@@ -64,10 +66,12 @@ public class JoyMadvoc extends JoyBase {
 	private Supplier<PetiteWebApp> webAppSupplier;
 
 	public JoyMadvoc(
+			final Supplier<String> appNameSupplier,
 			final Supplier<JoyPetite> joyPetiteSupplier,
 			final Supplier<JoyProxetta> joyProxettaSupplier,
 			final Supplier<JoyProps> joyPropsSupplier,
 			final Supplier<JoyScanner> joyScannerSupplier) {
+		this.appNameSupplier = appNameSupplier;
 		this.joyProxettaSupplier = joyProxettaSupplier;
 		this.joyPetiteSupplier = joyPetiteSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
@@ -115,7 +119,11 @@ public class JoyMadvoc extends JoyBase {
 		if (servletContext != null) {
 			webApp.bindServletContext(servletContext);
 		}
-		webApp.withParams(joyPropsSupplier.get().getProps());
+
+		final Props allProps = joyPropsSupplier.get().getProps();
+		final String appName = appNameSupplier.get();
+
+		webApp.withParams(allProps.innerMap(appName + ".madvoc."));
 
 		webApp.registerComponent(new ProxettaSupplier(joyProxettaSupplier.get().getProxetta()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
