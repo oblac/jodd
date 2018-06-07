@@ -28,7 +28,6 @@ package jodd.madvoc.component;
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.config.Targets;
 import jodd.madvoc.scope.ParamsScope;
-import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInject;
 
 import javax.servlet.ServletContext;
@@ -37,9 +36,6 @@ import javax.servlet.ServletContext;
  * Context injector for all singleton Madvoc elements, like results and interceptors.
  */
 public class ContextInjectorComponent {
-
-	@PetiteInject
-	protected PetiteContainer madpc;
 
 	@PetiteInject
 	protected ScopeDataInspector scopeDataInspector;
