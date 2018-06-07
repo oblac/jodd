@@ -43,6 +43,7 @@ public class SimTok {
 	private String name;
 	private String uid;
 	private long until;
+	private String payload;
 
 	public String getName() {
 		return name;
@@ -74,6 +75,14 @@ public class SimTok {
 	public SimTok setDuration(final long duration) {
 		this.until = System.currentTimeMillis() + duration;
 		return this;
+	}
+
+	public String getPayload() {
+		return payload;
+	}
+
+	public void setPayload(final String payload) {
+		this.payload = payload;
 	}
 
 	// ---------------------------------------------------------------- misc
