@@ -76,6 +76,7 @@ public class JoddJoy {
 		joyProxetta = new JoyProxetta();
 		joyPetite =
 			new JoyPetite(
+				() -> appName,
 				() -> joyProxetta,
 				() -> joyProps,
 				() -> joyScanner

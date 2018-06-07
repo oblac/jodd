@@ -38,7 +38,6 @@ import jodd.util.StringUtil;
 import jodd.util.function.Consumers;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -46,6 +45,7 @@ import java.util.function.Supplier;
 
 public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 
+	protected final Supplier<String> appNameSupplier;
 	protected final Supplier<JoyScanner> joyScannerSupplier;
 	protected final Supplier<JoyProps> joyPropsSupplier;
 	protected final Supplier<JoyProxetta> joyProxettaSupplier;
@@ -54,9 +54,11 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 	protected boolean isWebApplication = true;
 
 	public JoyPetite(
+			final Supplier<String> appNameSupplier,
 			final Supplier<JoyProxetta> joyProxettaSupplier,
 			final Supplier<JoyProps> joyPropsSupplier,
 			final Supplier<JoyScanner> joyScannerSupplier) {
+		this.appNameSupplier = appNameSupplier;
 		this.joyProxettaSupplier = joyProxettaSupplier;
 		this.joyScannerSupplier = joyScannerSupplier;
 		this.joyPropsSupplier = joyPropsSupplier;
@@ -165,10 +167,27 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 		print.line("Beans", width);
 
 		final List<BeanDefinition> beanDefinitionList = new ArrayList<>();
+		final String appName = appNameSupplier.get();
+		final String prefix = appName + ".";
+
 		petiteContainer.forEachBean(beanDefinitionList::add);
 
 		beanDefinitionList.stream()
-			.sorted(Comparator.comparing(BeanDefinition::name))
+			.sorted((bd1, bd2) -> {
+				if (bd1.name().startsWith(prefix)) {
+					if (bd2.name().startsWith(prefix)) {
+						return bd1.name().compareTo(bd2.name());
+					}
+					return 1;
+				}
+				if (bd2.name().startsWith(prefix)) {
+					if (bd1.name().startsWith(prefix)) {
+						return bd1.name().compareTo(bd2.name());
+					}
+					return -1;
+				}
+				return bd1.name().compareTo(bd2.name());
+			})
 			.forEach(beanDefinition -> {
 				print.out(Chalk256.chalk().yellow(), scopeName(beanDefinition), 10);
 				print.space();
