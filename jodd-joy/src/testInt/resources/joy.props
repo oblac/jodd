@@ -6,10 +6,13 @@ jdbc.username=root
 jdbc.password=root!
 
 # db pool
-dbpool.driver=${jdbc.driverClassName}
-dbpool.url=${jdbc.url}
-dbpool.user=${jdbc.username}
-dbpool.password=${jdbc.password}
-dbpool.maxConnections=50
-dbpool.minConnections=5
-dbpool.waitIfBusy=true
+joy.dbpool.driver=${jdbc.driverClassName}
+joy.dbpool.url=${jdbc.url}
+joy.dbpool.user=${jdbc.username}
+joy.dbpool.password=${jdbc.password}
+joy.dbpool.maxConnections=50
+joy.dbpool.minConnections=5
+joy.dbpool.waitIfBusy=true
+
+# MADVOC
+joy.madvoc.madvocConfig.encoding=UTF-8
