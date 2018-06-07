@@ -135,7 +135,6 @@ class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent.scopeDataInspector = new ScopeDataInspector();
 		im.contextInjectorComponent.scopeResolver = new ScopeResolver();
 		im.contextInjectorComponent.scopeResolver.madpc = madpc;
-		im.contextInjectorComponent.madpc = madpc;
 		return im;
 	}
 
