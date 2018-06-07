@@ -75,11 +75,11 @@ class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- insert
 
-		assertEquals(1, dbOom.gen().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Girl(2, "Sandra", "piano")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(2, "Sandra", "piano")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
-		DbOomQuery q2 = DbOomQuery.query(dbOom.gen().insert(new Girl(3, "Monica", null)));
+		DbOomQuery q2 = DbOomQuery.query(dbOom.entities().insert(new Girl(3, "Monica", null)));
 		q2.setDebugMode();
 		assertEquals("insert into GIRL (ID, NAME) values (:girl.id, :girl.name)", q2.getQueryString());
 		q2.init();
@@ -87,7 +87,7 @@ class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(1, q2.autoClose().executeUpdate());
 		assertTrue(q2.isClosed());
 
-		assertEquals(1, dbOom.gen().insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		DbQuery dq = new DbQuery("select count(*) from GIRL where id>:id");
@@ -674,17 +674,17 @@ class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 
-		DbOomQuery f = dbOom.gen().find(girl).aliasColumnsAs(null).query();
+		DbOomQuery f = dbOom.entities().find(girl).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id)", f.toString());
 		f.init();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1)", f.toString());
 		f.close();
-		f = dbOom.gen().find(badGirl).aliasColumnsAs(null).query();
+		f = dbOom.entities().find(badGirl).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (1=1)", f.toString());
 		f.close();
-		f = dbOom.gen().find(badBoy).aliasColumnsAs(null).query();
+		f = dbOom.entities().find(badBoy).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (1=1)", f.toString());
 		f.close();
@@ -693,17 +693,17 @@ class DbOomTest extends DbHsqldbTestCase {
 		badGirl.fooname = "Anna";
 		badBoy.nejm = "David";
 
-		f = dbOom.gen().find(girl).query();
+		f = dbOom.entities().find(girl).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1 and Girl_.NAME='Monica')", f.toString());
 		f.close();
-		f = dbOom.gen().find(badGirl).query();
+		f = dbOom.entities().find(badGirl).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.NAME='Anna')", f.toString());
 		f.close();
-		f = dbOom.gen().find(badBoy).query();
+		f = dbOom.entities().find(badBoy).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (BadBoy_.NAME='David')", f.toString());
@@ -713,30 +713,30 @@ class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(2);
-		f = dbOom.gen().findById(badGirl).query();
+		f = dbOom.entities().findById(badGirl).query();
 		list = f.autoClose().list(BadGirl.class);
 		assertTrue(f.isClosed());
 		assertEquals(1, list.size());
 		checkBadGirl2((BadGirl) list.get(0));
 
-		f = dbOom.gen().count(badGirl).query();
+		f = dbOom.entities().count(badGirl).query();
 		count = (int) f.autoClose().executeCount();
 		assertEquals(1, count);
 		assertTrue(f.isClosed());
 
 
-		DbSqlGenerator g = dbOom.gen().deleteById(badGirl);
+		DbSqlGenerator g = dbOom.entities().deleteById(badGirl);
 		f = DbOomQuery.query(g).autoClose();
 		f.executeUpdate();
 		assertTrue(f.isClosed());
 
-		f = dbOom.gen().count(badGirl).query();
+		f = dbOom.entities().count(badGirl).query();
 		count = (int) f.autoClose().executeCount();
 		assertEquals(0, count);
 		assertTrue(f.isClosed());
 
 		badGirl.fooid = null;
-		f = dbOom.gen().count(badGirl).query().autoClose();
+		f = dbOom.entities().count(badGirl).query().autoClose();
 		count = (int) f.executeCount();
 		assertEquals(2, count);
 		assertTrue(f.isClosed());
@@ -762,13 +762,13 @@ class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		f = dbOom.gen().findByColumn(BadBoy.class, "girlId", badGirl.fooid).query();
+		f = dbOom.entities().findByColumn(BadBoy.class, "girlId", badGirl.fooid).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
 		f.close();
 
-		f = dbOom.gen().findForeign(BadBoy.class, badGirl).query();
+		f = dbOom.entities().findForeign(BadBoy.class, badGirl).query();
 		f.setDebugMode();
 		f.init();
 		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
@@ -777,8 +777,8 @@ class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		BadGirl bbgg = dbOom.gen().findById(badGirl).query().find(BadGirl.class);
-		bbgg.boys = dbOom.gen().findForeign(BadBoy.class, bbgg).query().list(BadBoy.class);
+		BadGirl bbgg = dbOom.entities().findById(badGirl).query().find(BadGirl.class);
+		bbgg.boys = dbOom.entities().findForeign(BadBoy.class, bbgg).query().list(BadBoy.class);
 
 		assertNotNull(bbgg);
 		assertEquals(3, bbgg.fooid.intValue());
@@ -791,23 +791,23 @@ class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = dbOom.gen().findById(badGirl).query().find(badGirl.getClass());
+		badGirl = dbOom.entities().findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1(badGirl);
 
 		badGirl.fooname = "Ticky";
-		dbOom.gen().update(badGirl).query().executeUpdate();
+		dbOom.entities().update(badGirl).query().executeUpdate();
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = dbOom.gen().findById(badGirl).query().find(badGirl.getClass());
+		badGirl = dbOom.entities().findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1Alt(badGirl);
 
 		badGirl.foospeciality = null;
-		dbOom.gen().updateAll(badGirl).query().executeUpdate();
+		dbOom.entities().updateAll(badGirl).query().executeUpdate();
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = dbOom.gen().findById(badGirl).query().find(badGirl.getClass());
+		badGirl = dbOom.entities().findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1Alt2(badGirl);
 
 

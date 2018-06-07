@@ -75,7 +75,7 @@ class EntityCacheTest extends DbHsqldbTestCase {
 
 		dbSession = new DbThreadSession(cp);
 
-		final DbEntitySql dbEntitySql = dbOom.gen();
+		final DbEntitySql dbEntitySql = dbOom.entities();
 
 		assertEquals(1, dbEntitySql.insert(new Girl2(1, "Anna", "swim")).query().executeUpdate());
 		assertEquals(1, dbEntitySql.insert(new Girl2(2, "Sandra", "piano")).query().executeUpdate());

@@ -166,7 +166,7 @@ class DbOom2Test extends DbH2TestCase {
 		session = new DbThreadSession(cp);
 		dbEntityManager.registerEntity(Girl2.class, true);
 		Girl2 g2 = new Girl2("Gwen");
-		q = dbOom.gen().insert(g2).query();
+		q = dbOom.entities().insert(g2).query();
 		assertEquals("insert into GIRL (NAME) values (:girl2.name)", q.getQueryString());
 		q.setGeneratedColumns("ID");
 		q.executeUpdate();
@@ -175,7 +175,7 @@ class DbOom2Test extends DbH2TestCase {
 		q.close();
 		assertEquals(7, g2.id.intValue());
 
-		g2 = dbOom.gen().findByColumn(Girl2.class, "name", "Gwen").query().find(Girl2.class);
+		g2 = dbOom.entities().findByColumn(Girl2.class, "name", "Gwen").query().find(Girl2.class);
 		assertEquals("Gwen", g2.name);
 		assertNull(g2.speciality);
 		assertNotNull(g2.time);

@@ -114,16 +114,16 @@ class DbHint2Test extends DbHsqldbTestCase {
 
 		// prepare data
 
-		assertEquals(1, dbOom.gen().insert(new Room(1, "Room1")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Room(2, "Room2")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Room(1, "Room1")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Room(2, "Room2")).query().executeUpdate());
 
-		assertEquals(1, dbOom.gen().insert(new Boy4(1, 1, "Oleg")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Boy4(2, 2, "Stephene")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Boy4(3, 2, "Joe")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy4(1, 1, "Oleg")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy4(2, 2, "Stephene")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy4(3, 2, "Joe")).query().executeUpdate());
 
-		assertEquals(1, dbOom.gen().insert(new Girl4(1, 1, "Anna")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Girl4(2, 2, "Sandra")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Girl4(3, 3, "Jossy")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl4(1, 1, "Anna")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl4(2, 2, "Sandra")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl4(3, 3, "Jossy")).query().executeUpdate());
 
 
 		// select

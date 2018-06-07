@@ -147,7 +147,7 @@ class LiveMapperDbTest extends DbBaseTest {
 		tester2.time = Timestamp.valueOf(LocalDateTime.of(2014, 1, 30, 10, 42, 34, 0));
 		tester2.time2 = LocalDateTime.of(2014, 1, 31, 11, 41, 32, 0);
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().insert(tester2));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.entities().insert(tester2));
 		dbOomQuery.setGeneratedKey();
 		int result = dbOomQuery.executeUpdate();
 
@@ -160,7 +160,7 @@ class LiveMapperDbTest extends DbBaseTest {
 	protected void loadEntry(final Tester2 tester2) {
 		DbSession session = new DbSession(connectionPool);
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().findById(Tester2.class, tester2.id));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.entities().findById(Tester2.class, tester2.id));
 		Tester2 tester21 = dbOomQuery.find(Tester2.class);
 
 		assertNotNull(tester21);

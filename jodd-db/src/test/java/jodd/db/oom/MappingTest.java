@@ -131,7 +131,7 @@ class MappingTest extends DbHsqldbTestCase {
 		foo.timestamp.setYear(108);
 		foo.decimal = new Double("34.12");
 		foo.decimal2 = new BigDecimal("1.099");
-		DbOomQuery doq = dbOom.gen().update(foo).query();
+		DbOomQuery doq = dbOom.entities().update(foo).query();
 //		foo.jdt1 = new JulianDate(3000, );
 //		foo.jdt1.setYear(3000);
 //		foo.jdt2.setDay(3);
@@ -139,7 +139,7 @@ class MappingTest extends DbHsqldbTestCase {
 		doq.executeUpdate();
 
 
-		doq = dbOom.query(dbOom.gen().updateColumn(foo, "timestamp2", LocalDateTime.parse("2010-02-02T20:20:20.222")));
+		doq = dbOom.query(dbOom.entities().updateColumn(foo, "timestamp2", LocalDateTime.parse("2010-02-02T20:20:20.222")));
 
 		doq.executeUpdate();
 

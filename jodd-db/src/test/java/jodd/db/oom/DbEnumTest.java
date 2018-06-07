@@ -59,7 +59,7 @@ class DbEnumTest extends DbHsqldbTestCase {
 		e.name = "Ikigami";
 		e.status = Enumerator.STATUS.ONE;
 
-		query = DbOomQuery.query(dbOom.gen().insert(e));
+		query = DbOomQuery.query(dbOom.entities().insert(e));
 		query.executeUpdate();
 
 		session.closeSession();

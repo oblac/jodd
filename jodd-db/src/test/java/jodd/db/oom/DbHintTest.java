@@ -78,9 +78,9 @@ class DbHintTest extends DbHsqldbTestCase {
 
 		// prepare data
 
-		assertEquals(1, dbOom.gen().insert(new Girl(1, "Anna", "swim")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Girl(2, "Sandra", "piano")).query().executeUpdate());
-		assertEquals(1, dbOom.gen().insert(new Boy2(1, "John", 1)).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(1, "Anna", "swim")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(2, "Sandra", "piano")).query().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Boy2(1, "John", 1)).query().executeUpdate());
 
 		// select without hint
 

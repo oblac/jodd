@@ -207,10 +207,12 @@ public class DbOom {
 		return queryMap;
 	}
 
+	// ---------------------------------------------------------------- entity
+
 	/**
 	 * Returns Entity SQL factory.
 	 */
-	public DbEntitySql gen() {
+	public DbEntitySql entities() {
 		return dbEntitySql;
 	}
 

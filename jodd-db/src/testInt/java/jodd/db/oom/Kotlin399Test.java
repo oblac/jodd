@@ -78,7 +78,7 @@ class Kotlin399Test extends DbBaseTest {
 		tester.setName(Tester3.Status.SELECTED);
 		tester.setValue(7);
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().insert(tester));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.entities().insert(tester));
 		dbOomQuery.setGeneratedKey();
 		dbOomQuery.executeUpdate();
 
@@ -91,7 +91,7 @@ class Kotlin399Test extends DbBaseTest {
 
 		Tester33 tester = new Tester33(9, Status33.SELECTED, 3);
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().insert(tester));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.entities().insert(tester));
 		dbOomQuery.setGeneratedKey();
 		dbOomQuery.executeUpdate();
 

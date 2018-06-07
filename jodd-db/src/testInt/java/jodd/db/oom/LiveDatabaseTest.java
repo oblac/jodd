@@ -161,7 +161,7 @@ class LiveDatabaseTest extends DbBaseTest {
 		tester.setName("one");
 		tester.setValue(Integer.valueOf(7));
 
-		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.gen().insert(tester));
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, dbOom.entities().insert(tester));
 		dbOomQuery.setGeneratedKey();
 		dbOomQuery.executeUpdate();
 		assertDb(session, "{1,one,7}");
@@ -173,33 +173,33 @@ class LiveDatabaseTest extends DbBaseTest {
 		assertEquals(1, tester.getId().longValue());
 
 		tester.setName("seven");
-		DbOomQuery.query(session, dbOom.gen().updateAll(tester)).executeUpdate();
+		DbOomQuery.query(session, dbOom.entities().updateAll(tester)).executeUpdate();
 		assertDb(session, "{1,seven,7}");
 
 		tester.setName("SEVEN");
-		DbOomQuery.query(session, dbOom.gen().update(tester)).executeUpdate();
+		DbOomQuery.query(session, dbOom.entities().update(tester)).executeUpdate();
 		assertDb(session, "{1,SEVEN,7}");
 
 		tester.setName("seven");
-		DbOomQuery.query(session, dbOom.gen().updateColumn(tester, "name")).executeUpdate();
+		DbOomQuery.query(session, dbOom.entities().updateColumn(tester, "name")).executeUpdate();
 		assertDb(session, "{1,seven,7}");
 
 		tester = new Tester();
 		tester.setId(Long.valueOf(2));
 		tester.setName("two");
 		tester.setValue(Integer.valueOf(2));
-		DbOomQuery.query(session, dbOom.gen().insert(tester)).executeUpdate();
+		DbOomQuery.query(session, dbOom.entities().insert(tester)).executeUpdate();
 		assertDb(session, "{1,seven,7}{2,two,2}");
 
-		long count = DbOomQuery.query(session, dbOom.gen().count(Tester.class)).executeCount();
+		long count = DbOomQuery.query(session, dbOom.entities().count(Tester.class)).executeCount();
 		assertEquals(2, count);
 
-		tester = DbOomQuery.query(session, dbOom.gen().findById(Tester.class, 2)).find(Tester.class);
+		tester = DbOomQuery.query(session, dbOom.entities().findById(Tester.class, 2)).find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
-				.query(session, dbOom.gen()
+				.query(session, dbOom.entities()
 						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))
 				.find(Tester.class);
@@ -207,7 +207,7 @@ class LiveDatabaseTest extends DbBaseTest {
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
-				.query(session, dbOom.gen()
+				.query(session, dbOom.entities()
 						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.TABLE_REFERENCE))
 				.find(Tester.class);
@@ -215,7 +215,7 @@ class LiveDatabaseTest extends DbBaseTest {
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
-				.query(session, dbOom.gen()
+				.query(session, dbOom.entities()
 						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.TABLE_NAME))
 				.find(Tester.class);
@@ -223,7 +223,7 @@ class LiveDatabaseTest extends DbBaseTest {
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
-				.query(session, dbOom.gen()
+				.query(session, dbOom.entities()
 						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))    // fixes POSTGRESQL
 				.find();
@@ -231,15 +231,15 @@ class LiveDatabaseTest extends DbBaseTest {
 
 		tester = new Tester();
 		tester.setName("seven");
-		tester = DbOomQuery.query(session, dbOom.gen().find(tester)).find(Tester.class);
+		tester = DbOomQuery.query(session, dbOom.entities().find(tester)).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, dbOom.gen().findByColumn(Tester.class, "name", "seven")).find(Tester.class);
+		DbOomQuery.query(session, dbOom.entities().findByColumn(Tester.class, "name", "seven")).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, dbOom.gen().deleteById(Tester.class, 1)).executeUpdate();
+		DbOomQuery.query(session, dbOom.entities().deleteById(Tester.class, 1)).executeUpdate();
 
-		count = DbOomQuery.query(session, dbOom.gen().count(Tester.class)).executeCount();
+		count = DbOomQuery.query(session, dbOom.entities().count(Tester.class)).executeCount();
 		assertEquals(1, count);
 
 		session.closeSession();

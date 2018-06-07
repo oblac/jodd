@@ -54,7 +54,7 @@ class DbNoTableTest extends DbHsqldbTestCase {
 	void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
-		assertEquals(1, dbOom.gen().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
+		assertEquals(1, dbOom.entities().insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		// one

@@ -96,7 +96,7 @@ public class GenericDao {
 		if (!isPersistent(ded, entity)) {
 			final DbQuery q;
 			if (dbOom.config().isKeysGeneratedByDatabase()) {
-				q = query(dbOom.gen().insert(entity));
+				q = query(dbOom.entities().insert(entity));
 				q.setGeneratedKey();
 				q.executeUpdate();
 				long nextId = q.getGeneratedKey();
@@ -104,12 +104,12 @@ public class GenericDao {
 			} else {
 				long nextId = generateNextId(ded);
 				setEntityId(ded, entity, nextId);
-				q = query(dbOom.gen().insert(entity));
+				q = query(dbOom.entities().insert(entity));
 				q.executeUpdate();
 			}
 			q.close();
 		} else {
-			query(dbOom.gen().updateAll(entity)).autoClose().executeUpdate();
+			query(dbOom.entities().updateAll(entity)).autoClose().executeUpdate();
 		}
 		return entity;
 	}
@@ -118,7 +118,7 @@ public class GenericDao {
 	 * Simply inserts object into the database.
 	 */
 	public void save(final Object entity) {
-		DbQuery q = query(dbOom.gen().insert(entity));
+		DbQuery q = query(dbOom.entities().insert(entity));
 		q.autoClose().executeUpdate();
 	}
 
@@ -138,7 +138,7 @@ public class GenericDao {
 	 * Updates single entity.
 	 */
 	public void update(final Object entity) {
-		query(dbOom.gen().updateAll(entity)).autoClose().executeUpdate();
+		query(dbOom.entities().updateAll(entity)).autoClose().executeUpdate();
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class GenericDao {
 	 * Updates single property in database and in the bean.
 	 */
 	public <E> E updateProperty(final E entity, final String name, final Object newValue) {
-		query(dbOom.gen().updateColumn(entity, name, newValue)).autoClose().executeUpdate();
+		query(dbOom.entities().updateColumn(entity, name, newValue)).autoClose().executeUpdate();
 		BeanUtil.declared.setProperty(entity, name, newValue);
 		return entity;
 	}
@@ -165,7 +165,7 @@ public class GenericDao {
 	 */
 	public <E> E updateProperty(final E entity, final String name) {
 		Object value = BeanUtil.declared.getProperty(entity, name);
-		query(dbOom.gen().updateColumn(entity, name, value)).autoClose().executeUpdate();
+		query(dbOom.entities().updateColumn(entity, name, value)).autoClose().executeUpdate();
 		return entity;
 	}
 
@@ -175,14 +175,14 @@ public class GenericDao {
 	 * Finds single entity by its id.
 	 */
 	public <E> E findById(final Class<E> entityType, final long id) {
-		return query(dbOom.gen().findById(entityType, id)).autoClose().find(entityType);
+		return query(dbOom.entities().findById(entityType, id)).autoClose().find(entityType);
 	}
 
 	/**
 	 * Finds single entity by matching property.
 	 */
 	public <E> E findOneByProperty(final Class<E> entityType, final String name, final Object value) {
-		return query(dbOom.gen().findByColumn(entityType, name, value)).autoClose().find(entityType);
+		return query(dbOom.entities().findByColumn(entityType, name, value)).autoClose().find(entityType);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class GenericDao {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E> E findOne(final Object criteria) {
-		return (E) query(dbOom.gen().find(criteria)).autoClose().find(criteria.getClass());
+		return (E) query(dbOom.entities().find(criteria)).autoClose().find(criteria.getClass());
 	}
 
 	/**
@@ -198,14 +198,14 @@ public class GenericDao {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E> List<E> find(final Object criteria) {
-		return query(dbOom.gen().find(criteria)).autoClose().list(criteria.getClass());
+		return query(dbOom.entities().find(criteria)).autoClose().list(criteria.getClass());
 	}
 
 	/**
 	 * Finds list of entities matching given criteria.
 	 */
 	public <E> List<E> find(final Class<E> entityType, final Object criteria) {
-		return query(dbOom.gen().find(entityType, criteria)).autoClose().list(entityType);
+		return query(dbOom.entities().find(entityType, criteria)).autoClose().list(entityType);
 	}
 
 	// ---------------------------------------------------------------- delete
@@ -214,7 +214,7 @@ public class GenericDao {
 	 * Deleted single entity by its id.
 	 */
 	public void deleteById(final Class entityType, final long id) {
-		query(dbOom.gen().deleteById(entityType, id)).autoClose().executeUpdate();
+		query(dbOom.entities().deleteById(entityType, id)).autoClose().executeUpdate();
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class GenericDao {
 	 */
 	public void deleteById(final Object entity) {
 		if (entity != null) {
-			int result = query(dbOom.gen().deleteById(entity)).autoClose().executeUpdate();
+			int result = query(dbOom.entities().deleteById(entity)).autoClose().executeUpdate();
 
 			if (result != 0) {
 				// now reset the ID value
@@ -249,7 +249,7 @@ public class GenericDao {
 	 * Counts number of all entities.
 	 */
 	public long count(final Class entityType) {
-		return query(dbOom.gen().count(entityType)).autoClose().executeCount();
+		return query(dbOom.entities().count(entityType)).autoClose().executeCount();
 	}
 
 
@@ -259,14 +259,14 @@ public class GenericDao {
 	 * Increases a property.
 	 */
 	public void increaseProperty(final Class entityType, final long id, final String name, final Number delta) {
-		query(dbOom.gen().increaseColumn(entityType, id, name, delta, true)).autoClose().executeUpdate();
+		query(dbOom.entities().increaseColumn(entityType, id, name, delta, true)).autoClose().executeUpdate();
 	}
 
 	/**
 	 * Decreases a property.
 	 */
 	public void decreaseProperty(final Class entityType, final long id, final String name, final Number delta) {
-		query(dbOom.gen().increaseColumn(entityType, id, name, delta, false)).autoClose().executeUpdate();
+		query(dbOom.entities().increaseColumn(entityType, id, name, delta, false)).autoClose().executeUpdate();
 	}
 
 	// ---------------------------------------------------------------- related
@@ -275,7 +275,7 @@ public class GenericDao {
 	 * Finds related entity.
 	 */
 	public <E> List<E> findRelated(final Class<E> target, final Object source) {
-		return query(dbOom.gen().findForeign(target, source)).autoClose().list(target);
+		return query(dbOom.entities().findForeign(target, source)).autoClose().list(target);
 	}
 
 	// ---------------------------------------------------------------- list
@@ -284,7 +284,7 @@ public class GenericDao {
 	 * List all entities.
 	 */
 	public <E> List<E> listAll(final Class<E> target) {
-		return query(dbOom.gen().from(target)).autoClose().list(target);
+		return query(dbOom.entities().from(target)).autoClose().list(target);
 	}
 
 }
