@@ -27,7 +27,6 @@ package jodd.db;
 
 import static jodd.db.DbQueryBase.CONCUR_READ_ONLY;
 import static jodd.db.DbQueryBase.DEFAULT_HOLDABILITY;
-import static jodd.db.DbQueryBase.TYPE_FORWARD_ONLY;
 
 /**
  * Db query default configuration.
@@ -45,7 +44,7 @@ public class DbQueryConfig {
 	/**
 	 * Default type.
 	 */
-	private int type = TYPE_FORWARD_ONLY;
+	private QueryScrollType type = QueryScrollType.FORWARD_ONLY;
 	/**
 	 * Default concurrency type.
 	 */
@@ -68,7 +67,7 @@ public class DbQueryConfig {
 		return debug;
 	}
 
-	public void setDebug(boolean debug) {
+	public void setDebug(final boolean debug) {
 		this.debug = debug;
 	}
 
@@ -76,15 +75,15 @@ public class DbQueryConfig {
 		return forcePreparedStatement;
 	}
 
-	public void setForcePreparedStatement(boolean forcePreparedStatement) {
+	public void setForcePreparedStatement(final boolean forcePreparedStatement) {
 		this.forcePreparedStatement = forcePreparedStatement;
 	}
 
-	public int getType() {
+	public QueryScrollType getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(final QueryScrollType type) {
 		this.type = type;
 	}
 
@@ -92,7 +91,7 @@ public class DbQueryConfig {
 		return concurrencyType;
 	}
 
-	public void setConcurrencyType(int concurrencyType) {
+	public void setConcurrencyType(final int concurrencyType) {
 		this.concurrencyType = concurrencyType;
 	}
 
@@ -100,7 +99,7 @@ public class DbQueryConfig {
 		return holdability;
 	}
 
-	public void setHoldability(int holdability) {
+	public void setHoldability(final int holdability) {
 		this.holdability = holdability;
 	}
 
@@ -108,7 +107,7 @@ public class DbQueryConfig {
 		return fetchSize;
 	}
 
-	public void setFetchSize(int fetchSize) {
+	public void setFetchSize(final int fetchSize) {
 		this.fetchSize = fetchSize;
 	}
 
@@ -116,7 +115,7 @@ public class DbQueryConfig {
 		return maxRows;
 	}
 
-	public void setMaxRows(int maxRows) {
+	public void setMaxRows(final int maxRows) {
 		this.maxRows = maxRows;
 	}
 }

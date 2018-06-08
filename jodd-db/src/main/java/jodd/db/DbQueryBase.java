@@ -239,16 +239,16 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			try {
 				if (debug) {
 					if (holdability != DEFAULT_HOLDABILITY) {
-						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type, concurrencyType, holdability);
+						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type.value(), concurrencyType, holdability);
 					} else {
-						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type, concurrencyType);
+						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type.value(), concurrencyType);
 					}
 				}
 				else {
 					if (holdability != DEFAULT_HOLDABILITY) {
-						callableStatement = connection.prepareCall(query.sql, type, concurrencyType, holdability);
+						callableStatement = connection.prepareCall(query.sql, type.value(), concurrencyType, holdability);
 					} else {
-						callableStatement = connection.prepareCall(query.sql, type, concurrencyType);
+						callableStatement = connection.prepareCall(query.sql, type.value(), concurrencyType);
 					}
 				}
 			}
@@ -275,9 +275,9 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 						}
 					} else {
 						if (holdability != DEFAULT_HOLDABILITY) {
-							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type, concurrencyType, holdability);
+							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type.value(), concurrencyType, holdability);
 						} else {
-							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type, concurrencyType);
+							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type.value(), concurrencyType);
 						}
 					}
 				} else {
@@ -289,9 +289,9 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 						}
 					} else {
 						if (holdability != DEFAULT_HOLDABILITY) {
-							preparedStatement = connection.prepareStatement(query.sql, type, concurrencyType, holdability);
+							preparedStatement = connection.prepareStatement(query.sql, type.value(), concurrencyType, holdability);
 						} else {
-							preparedStatement = connection.prepareStatement(query.sql, type, concurrencyType);
+							preparedStatement = connection.prepareStatement(query.sql, type.value(), concurrencyType);
 						}
 					}
 				}
@@ -309,9 +309,9 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 		try {
 			if (holdability != DEFAULT_HOLDABILITY) {
-				statement = connection.createStatement(type, concurrencyType, holdability);
+				statement = connection.createStatement(type.value(), concurrencyType, holdability);
 			} else {
-				statement = connection.createStatement(type, concurrencyType);
+				statement = connection.createStatement(type.value(), concurrencyType);
 			}
 		} catch (SQLException sex) {
 			throw new DbSqlException(this, "Error creating statement", sex);
@@ -445,40 +445,27 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 	// ---------------------------------------------------------------- result set type
 
-	/**
-	 * @see ResultSet#TYPE_FORWARD_ONLY
-	 */
-	public static final int TYPE_FORWARD_ONLY = ResultSet.TYPE_FORWARD_ONLY;
-	/**
-	 * @see ResultSet#TYPE_SCROLL_SENSITIVE
-	 */
-	public static final int TYPE_SCROLL_SENSITIVE = ResultSet.TYPE_SCROLL_SENSITIVE;
-	/**
-	 * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-	 */
-	public static final int TYPE_SCROLL_INSENSITIVE = ResultSet.TYPE_SCROLL_INSENSITIVE;
+	protected QueryScrollType type;
 
-	protected int type;
-
-	public int getType() {
+	public QueryScrollType getType() {
 		return type;
 	}
 
-	public Q setType(final int type) {
+	public Q setType(final QueryScrollType type) {
 		checkCreated();
 		this.type = type;
 		return (Q) this;
 	}
 	public Q typeForwardOnly() {
-		setType(TYPE_FORWARD_ONLY);
+		setType(QueryScrollType.FORWARD_ONLY);
 		return (Q) this;
 	}
 	public Q typeScrollSensitive() {
-		setType(TYPE_SCROLL_SENSITIVE);
+		setType(QueryScrollType.SCROLL_SENSITIVE);
 		return (Q) this;
 	}
 	public Q typeScrollInsensitive() {
-		setType(TYPE_SCROLL_SENSITIVE);
+		setType(QueryScrollType.SCROLL_INSENSITIVE);
 		return (Q) this;
 	}
 
