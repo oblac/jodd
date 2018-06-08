@@ -68,7 +68,7 @@ class WireTest {
 				.excludeEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses")
 				.excludeEntries(
 					"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses",
-					"*Public*", "*Secret*", "*$*", "jodd.petite.proxy.*"));
+					"*Public*", "*Secret*", "*$*", "jodd.petite.proxy.*", "jodd.petite.fixtures.rainbow.*"));
 
 		petiteConfigurator.configure();
 
