@@ -14,6 +14,13 @@ joy.dbpool.maxConnections=50
 joy.dbpool.minConnections=5
 joy.dbpool.waitIfBusy=true
 
+# DB QUERY
+joy.dbquery.debug=true
+joy.dbquery.type=FORWARD_ONLY
+
+# DBOOM
+joy.dboom.tableNames.prefix=jd_
+
 # MADVOC
 [joy.madvoc]
 madvocConfig.encoding=UTF-8

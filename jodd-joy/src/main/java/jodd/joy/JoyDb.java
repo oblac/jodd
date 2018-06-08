@@ -67,7 +67,8 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 	/**
 	 * Petite bean name for database pool.
 	 */
-	public static final String PETITE_DBPOOL = "dbpool";
+	private static final String PETITE_DBPOOL = "dbpool";
+	private static final String PETITE_DBQUERY = "dbquery";
 
 	protected final Supplier<String> appNameSupplier;
 	protected final Supplier<JoyScanner> joyScannerSupplier;
@@ -205,6 +206,8 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 
 		final DbEntityManager dbEntityManager = dbOom.entityManager();
 		dbEntityManager.reset();
+
+		joyPetiteSupplier.get().getPetiteContainer().addBean(appName + "." + PETITE_DBQUERY, dbOom.queryConfig());
 
 		// automatic configuration
 		if (autoConfiguration) {
