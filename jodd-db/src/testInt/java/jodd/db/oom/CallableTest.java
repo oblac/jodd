@@ -26,6 +26,7 @@
 package jodd.db.oom;
 
 import jodd.db.DbCallResult;
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import org.junit.jupiter.api.Test;
@@ -80,7 +81,7 @@ class CallableTest extends DbBaseTest {
 	private void test(final boolean debug) {
 		DbSession session = new DbSession(connectionPool);
 
-		DbQuery dbQuery = new DbQuery(session, "{ :upp = call upper( :str ) }");
+		DbQuery dbQuery = new DbQuery(DbOom.get(), session, "{ :upp = call upper( :str ) }");
 		dbQuery.setDebug(debug);
 
 		dbQuery.setString("str", "some lowercase value");

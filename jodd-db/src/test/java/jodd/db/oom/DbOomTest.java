@@ -90,7 +90,7 @@ class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(1, dbOom.entities().insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
-		DbQuery dq = new DbQuery("select count(*) from GIRL where id>:id");
+		DbQuery dq = DbQuery.query("select count(*) from GIRL where id>:id");
 		dq.setInteger("id", 1);
 		assertEquals(2, dq.executeCount());
 

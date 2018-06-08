@@ -61,7 +61,7 @@ class DbSessionProviderTest extends DbHsqldbTestCase {
 			int availableConnections = cp.getConnectionsCount().getAvailableCount();
 
 			// creates new db query and implicitly open connection
-			DbQuery dbQuery = new DbQuery("select 173 from (VALUES(0))");
+			DbQuery dbQuery = DbQuery.query("select 173 from (VALUES(0))");
 			long value = dbQuery.executeCount();
 			assertEquals(173, value);
 

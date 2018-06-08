@@ -61,9 +61,9 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		assertNotNull(session);
 
 		// insert two records
-		DbQuery query = new DbQuery(session, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
+		DbQuery query = DbQuery.query(session, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
 		assertEquals(1, query.executeUpdate());
-		query = new DbQuery(session, "insert into GIRL values(5, 'Annita', 'bartender')");
+		query = DbQuery.query(session, "insert into GIRL values(5, 'Annita', 'bartender')");
 		assertEquals(1, query.executeUpdate());
 
 		// rollback
@@ -72,7 +72,7 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		// check !!!
 		session = new DbSession(cp);
 
-		DbQuery query2 = new DbQuery(session, "select count(*) from GIRL");
+		DbQuery query2 = DbQuery.query(session, "select count(*) from GIRL");
 		long count = query2.executeCount();
 
 		assertEquals(0, count);
@@ -97,11 +97,11 @@ class DbTransactionTest extends DbHsqldbTestCase {
 		assertNotSame(session1, session2);
 		assertTotals(manager, 2, 1);
 
-		DbQuery query = new DbQuery(session1, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
+		DbQuery query = DbQuery.query(session1, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
 		assertEquals(1, query.executeUpdate());
 		query.close();
 
-		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
+		DbQuery query2 = DbQuery.query(session2, "select count(*) from GIRL");
 		ResultSet rs = query2.execute();
 		if (rs.next()) {
 			assertEquals(1, rs.getInt(1));

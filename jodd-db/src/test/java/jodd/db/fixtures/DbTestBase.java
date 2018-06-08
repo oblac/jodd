@@ -116,15 +116,15 @@ public abstract class DbTestBase {
 	}
 
 	protected int executeUpdate(DbSession session, String sql) {
-		return new DbQuery(session, sql).autoClose().executeUpdate();
+		return DbQuery.query(session, sql).autoClose().executeUpdate();
 	}
 
 	protected void executeUpdate(String sql) {
-		new DbQuery(sql).autoClose().executeUpdate();
+		DbQuery.query(sql).autoClose().executeUpdate();
 	}
 
 	protected long executeCount(DbSession session, String sql) {
-		return new DbQuery(session, sql).autoClose().executeCount();
+		return DbQuery.query(session, sql).autoClose().executeCount();
 	}
 
 }

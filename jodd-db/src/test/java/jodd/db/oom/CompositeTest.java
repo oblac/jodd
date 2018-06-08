@@ -59,24 +59,24 @@ class CompositeTest extends DbHsqldbTestCase {
 		executeUpdate("drop table WIZARD if exists");
 		executeUpdate("drop table USER if exists");
 
-		DbQuery query = new DbQuery(
+		DbQuery query = DbQuery.query(
 				"create table USER (" +
 				"USER_ID	IDENTITY," +
 				"NAME		varchar(20)	not null" +
 				')');
 		query.executeUpdate();
 
-		query = new DbQuery("insert into USER values(1, 'Gandalf')");
+		query = DbQuery.query("insert into USER values(1, 'Gandalf')");
 		query.executeUpdate();
 
-		query = new DbQuery(
+		query = DbQuery.query(
 				"create table WIZARD (" +
 				"WIZARD_ID	IDENTITY," +
 				"LEVEL		INT	not null" +
 				')');
 		query.executeUpdate();
 
-		query = new DbQuery("insert into WIZARD values(1, 7);");
+		query = DbQuery.query("insert into WIZARD values(1, 7);");
 		query.executeUpdate();
 	}
 

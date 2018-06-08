@@ -84,7 +84,7 @@ class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 			assertSame(dbSession, dbSession2);
 
 			// create query, session is get from provider, the very same one
-			DbQuery dbQuery = new DbQuery("SELECT 173 FROM (VALUES(0))");
+			DbQuery dbQuery = DbQuery.query("SELECT 173 FROM (VALUES(0))");
 			long value = dbQuery.executeCount();
 			assertEquals(173, value);
 			assertSame(dbSession, dbQuery.getSession());

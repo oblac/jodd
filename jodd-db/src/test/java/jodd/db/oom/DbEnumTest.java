@@ -51,7 +51,7 @@ class DbEnumTest extends DbHsqldbTestCase {
 
 		String sql = "create table ENUMERATOR(ID int, NAME varchar(20), STATUS int)";
 
-		DbQuery query = new DbQuery(sql);
+		DbQuery query = new DbQuery(DbOom.get(), sql);
 		query.executeUpdate();
 
 		Enumerator e = new Enumerator();

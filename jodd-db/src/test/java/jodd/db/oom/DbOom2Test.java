@@ -63,7 +63,7 @@ class DbOom2Test extends DbH2TestCase {
 				"primary key (ID)" +
 				')';
 
-		DbQuery query = new DbQuery(sql);
+		DbQuery query = DbQuery.query(sql);
 		query.autoClose().executeUpdate();
 		assertTrue(query.isClosed());
 

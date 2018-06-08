@@ -83,7 +83,7 @@ public abstract class DbBaseTest {
 		public final void createTables() {
 			DbSession session = new DbSession(connectionPool);
 
-			DbQuery query = new DbQuery(session, createTableSql());
+			DbQuery query = new DbQuery(DbOom.get(), session, createTableSql());
 			query.executeUpdate();
 
 			session.closeSession();
@@ -93,7 +93,7 @@ public abstract class DbBaseTest {
 		protected void close() {
 			DbSession session = new DbSession(connectionPool);
 
-			DbQuery query = new DbQuery(session, "drop table " + getTableName());
+			DbQuery query = new DbQuery(DbOom.get(), session, "drop table " + getTableName());
 			query.executeUpdate();
 
 			session.closeSession();

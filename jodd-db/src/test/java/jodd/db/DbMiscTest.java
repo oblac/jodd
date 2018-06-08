@@ -61,7 +61,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 		//  play with the query
 
 		String sql = "select * from GIRL where ID = :id";
-		query = new DbQuery(session, sql);
+		query = DbQuery.query(session, sql);
 		query.setDebugMode();
 		query.setInteger("id", 2);
 		ResultSet rs = query.execute();
@@ -85,7 +85,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 		// thread dbsession
 
 		DbSession dbts = new DbThreadSession(cp);
-		DbQuery q = new DbQuery("select count(*) from GIRL");
+		DbQuery q = DbQuery.query("select count(*) from GIRL");
 		assertEquals(3, q.executeCount());
 		dbts.closeSession();
 
@@ -97,7 +97,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 		DbSession session2 = new DbSession(cp);
 
 		session1.beginTransaction(DbTransactionMode.READ_WRITE_TX);
-		query = new DbQuery(session1, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
+		query = DbQuery.query(session1, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
 		assertEquals(1, query.executeUpdate());
 		query.close();
 
@@ -107,7 +107,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 		// phenomenon and do not read uncommitted changes made to rows by other transactions.
 		//
 
-//		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
+//		DbQuery query2 = DbQuery.query()(session2, "select count(*) from GIRL");
 //		assertEquals(0, query2.getOpenResultSetCount());
 //		assertEquals(0, DbQuery.totalOpenResultSetCount);
 
@@ -126,7 +126,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 //
 		session1.rollbackTransaction();
 
-		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
+		DbQuery query2 = DbQuery.query(session2, "select count(*) from GIRL");
 		rs = query2.execute();
 		assertEquals(1, query2.getOpenResultSetCount());
 //		assertEquals(2, DbQuery.totalOpenResultSetCount);
@@ -145,7 +145,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 	@Test
 	void testSetMap() throws SQLException {
 		DbSession session = new DbSession(cp);
-		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = :id");
+		DbQuery dbQuery = DbQuery.query(session, "select * from GIRL where ID = :id");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", Integer.valueOf(1));
 		dbQuery.setMap(map);
@@ -160,7 +160,7 @@ class DbMiscTest extends DbHsqldbTestCase {
 	@Test
 	void testSetObjects() throws SQLException {
 		DbSession session = new DbSession(cp);
-		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = ?");
+		DbQuery dbQuery = DbQuery.query(session, "select * from GIRL where ID = ?");
 		Object[] o = {Integer.valueOf(1)};
 		dbQuery.setObjects(o);
 		ResultSet rs = dbQuery.execute();
