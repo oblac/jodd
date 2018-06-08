@@ -35,7 +35,6 @@ import jodd.petite.fixtures.tst.Loo;
 import jodd.petite.fixtures.tst.Zoo;
 import jodd.petite.fixtures.tst.impl.DefaultIoo;
 import jodd.petite.scope.ProtoScope;
-import jodd.test.DisabledOnJava;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,21 +55,9 @@ class WireTest {
 	}
 
 	@Test
-	@DisabledOnJava(value = 9, description = "Automagic configuration only works with MR-JAR jars as they don't work in exploded mode.")
 	void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
-		AutomagicPetiteConfigurator petiteConfigurator = new AutomagicPetiteConfigurator(pc);
-
-		petiteConfigurator.withScanner(classScanner ->
-			classScanner
-				.excludeAllEntries(true)
-				.includeEntries("jodd.petite.fixtures.*")
-				.excludeEntries("jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst3.*", "jodd.petite.fixtures.tst.Ses")
-				.excludeEntries(
-					"jodd.petite.fixtures.data.*", "jodd.petite.fixtures.tst6.*", "jodd.petite.fixtures.tst.Ses",
-					"*Public*", "*Secret*", "*$*", "jodd.petite.proxy.*", "jodd.petite.fixtures.rainbow.*"));
-
-		petiteConfigurator.configure();
+		pc.registerPetiteBean(Foo.class);
 
 		assertEquals(1, pc.beansCount());
 		assertEquals(1, pc.scopesCount());
