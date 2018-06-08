@@ -163,7 +163,7 @@ public class ActionsManager {
 		if (routeChunk.value() != null) {
 			// existing chunk
 			if (detectDuplicatePathsEnabled) {
-				throw new MadvocException("Duplicate action path for " + actionRuntime);
+				throw new MadvocException("Duplicate action path for [" + actionRuntime + "] occupied by: [" + routeChunk.value() + "]");
 			}
 		}
 		else {
