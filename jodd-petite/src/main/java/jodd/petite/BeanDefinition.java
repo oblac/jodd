@@ -256,7 +256,7 @@ public class BeanDefinition<T> {
 		return "BeanDefinition{" +
 				"name=" + name +
 				", type=" + type +
-				", scope=" + scope.getClass().getSimpleName() +
+				", scope=" + (scope != null ? scope.getClass().getSimpleName() : "N/A") +
 				", wiring=" + wiringMode +
 				'}';
 	}
