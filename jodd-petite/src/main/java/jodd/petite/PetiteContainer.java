@@ -239,7 +239,7 @@ public class PetiteContainer extends PetiteBeans {
 
 		final BeanDefinition def = externalsCache.get(
 			bean.getClass(), () -> {
-				final BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, finalWiringMode, null);
+				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(bean.getClass(), finalWiringMode);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
@@ -256,11 +256,10 @@ public class PetiteContainer extends PetiteBeans {
 
 		final BeanDefinition def = externalsCache.get(
 			bean.getClass(), () -> {
-				final BeanDefinition beanDefinition = new BeanDefinition(null, bean.getClass(), null, wiringMode, null);
+				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(bean.getClass(), wiringMode);
 				initBeanDefinition(beanDefinition);
 				return beanDefinition;
 			});
-
 
 		final BeanData beanData = new BeanData(this, def, bean);
 
@@ -291,10 +290,15 @@ public class PetiteContainer extends PetiteBeans {
 	 * <b>not</b> registered.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E createBean(final Class<E> type, WiringMode wiringMode) {
-		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
-		final BeanDefinition def = new BeanDefinition(null, type, null, wiringMode, null);
-		initBeanDefinition(def);
+	public <E> E createBean(final Class<E> type, final WiringMode wiringMode) {
+		final WiringMode finalWiringMode = petiteConfig.resolveWiringMode(wiringMode);
+
+		final BeanDefinition def = externalsCache.get(
+			type, () -> {
+				final BeanDefinition beanDefinition = createBeandDefinitionForExternalBeans(type, finalWiringMode);
+				initBeanDefinition(beanDefinition);
+				return beanDefinition;
+			});
 
 		final BeanData<E> beanData = new BeanData(this, def);
 		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(beanData);

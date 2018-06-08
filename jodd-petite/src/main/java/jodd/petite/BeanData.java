@@ -152,7 +152,7 @@ public class BeanData<T> {
 		}
 
 		// create instance
-		Object bean;
+		final Object bean;
 		try {
 			bean = beanDefinition.ctor.constructor.newInstance(args);
 		} catch (Exception ex) {

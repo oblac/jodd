@@ -284,9 +284,24 @@ public abstract class PetiteBeans {
 	 * By default returns new instance of {@link jodd.petite.BeanDefinition}.
 	 */
 	protected <T> BeanDefinition createBeanDefinitionForRegistration(
-		final String name, final Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> consumer) {
+			final String name,
+			final Class<T> type,
+			final Scope scope,
+			final WiringMode wiringMode,
+			final Consumer<T> consumer) {
 
 		return new BeanDefinition<>(name, type, scope, wiringMode, consumer);
+	}
+
+	/**
+	 * Creates {@link jodd.petite.BeanDefinition} for all external beans.
+	 */
+	protected <T> BeanDefinition createBeandDefinitionForExternalBeans(
+			final Class<T> type,
+			final WiringMode wiringMode) {
+
+		final String name = resolveBeanName(type);
+		return new BeanDefinition<>(name, type, null, wiringMode, null);
 	}
 
 	/**
