@@ -85,6 +85,31 @@ public class RequestScope implements MadvocScope {
 	 */
 	protected boolean ignoreInvalidUploadFiles = true;
 
+	public void setIgnoreEmptyRequestParams(final boolean ignoreEmptyRequestParams) {
+		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
+	}
+
+	public void setTreatEmptyParamsAsNull(final boolean treatEmptyParamsAsNull) {
+		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
+	}
+
+	public void setInjectAttributes(final boolean injectAttributes) {
+		this.injectAttributes = injectAttributes;
+	}
+
+	public void setInjectParameters(final boolean injectParameters) {
+		this.injectParameters = injectParameters;
+	}
+
+	public void setEncodeGetParams(final boolean encodeGetParams) {
+		this.encodeGetParams = encodeGetParams;
+	}
+
+	public void setIgnoreInvalidUploadFiles(final boolean ignoreInvalidUploadFiles) {
+		this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
+	}
+
+
 	// ---------------------------------------------------------------- inject
 
 	@Override

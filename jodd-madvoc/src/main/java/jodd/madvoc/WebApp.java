@@ -228,7 +228,8 @@ public class WebApp {
 		final MadvocConfig madvocConfig = madvocContainer.requestComponent(MadvocConfig.class);
 
 		madvocConfigConsumers.accept(madvocConfig);
-		configureMadvoc(madvocConfig);
+
+		configured();
 
 		//// components
 		registerMadvocComponents();
@@ -284,13 +285,6 @@ public class WebApp {
 	}
 
 	/**
-	 * Hook for manual Madvoc configuration. No component is registered yet. You can use
-	 * only {@link MadvocConfig} and {@link MadvocContainer}.
-	 */
-	protected void configureMadvoc(final MadvocConfig madvocConfig) {
-	}
-
-	/**
 	 * Registers default Madvoc components.
 	 */
 	protected void registerMadvocComponents() {
@@ -318,6 +312,14 @@ public class WebApp {
 		madvocContainer.registerComponent(ScopeDataInspector.class);
 		madvocContainer.registerComponent(AsyncActionExecutor.class);
 	}
+
+	/**
+	 * Hook for manual Madvoc configuration. No component is registered yet. You can use
+	 * only {@link MadvocConfig} and {@link MadvocContainer}.
+	 */
+	protected void configured() {
+	}
+
 
 	/**
 	 * Called when Madvoc is initialized, at the end of the {@link Init INIT} phase.

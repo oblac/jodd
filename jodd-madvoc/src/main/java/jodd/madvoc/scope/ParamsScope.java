@@ -55,7 +55,7 @@ public class ParamsScope implements MadvocScope {
 	public void inject(final Targets targets) {
 		targets.forEachTarget(target -> {
 			final Class targetType = target.resolveType();
-			final String baseName = targetType.getName();
+			final String baseName = baseNameOf(targetType);
 
 			final ParamManager madvocPetiteParamManager = madpc.paramManager();
 
@@ -69,7 +69,13 @@ public class ParamsScope implements MadvocScope {
 				target.writeValue(propertyName, value, false);
 			}
 		});
+	}
 
+	/**
+	 * Returns base name of the web component for the properties.
+	 */
+	protected String baseNameOf(final Class targetType) {
+		return madpc.resolveBeanName(targetType);
 	}
 
 	@Override

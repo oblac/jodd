@@ -57,7 +57,7 @@ public class MadvocServletFilter implements Filter {
 	 */
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
-		ServletContext servletContext = filterConfig.getServletContext();
+		final ServletContext servletContext = filterConfig.getServletContext();
 
 		madvoc = Madvoc.get(servletContext);
 
@@ -69,7 +69,8 @@ public class MadvocServletFilter implements Filter {
 
 			return;
 		}
-		WebApp webApp = WebApp.get(servletContext);
+
+		final WebApp webApp = WebApp.get(servletContext);
 
 		if (webApp != null) {
 			log = LoggerFactory.getLogger(this.getClass());
