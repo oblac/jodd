@@ -140,4 +140,14 @@ class PropertyTest {
 		assertEquals(123, pojoBean2.getVal2().intValue());
 		assertEquals("${pojo}", pojoBean2.getVal1());
 	}
+
+	@Test
+	void testParam_wireExternal() {
+		PetiteContainer pc = new PetiteContainer();
+		pc.defineParameter("pojoBean2.val1", "123");
+
+		final PojoBean2 pojoBean2 = new PojoBean2();
+		pc.wire(pojoBean2, WiringMode.AUTOWIRE);
+		assertEquals("123", pojoBean2.getVal1());
+	}
 }
