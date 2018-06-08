@@ -64,14 +64,11 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 
 	private static final Logger log = LoggerFactory.getLogger(DbOomQuery.class);
 
-	private final DbOom dbOom;
-
 	// ---------------------------------------------------------------- default ctors
 
 	public DbOomQuery(final DbOom dbOom, final Connection conn, final String sqlString) {
-		super(conn, sqlString);
+		super(dbOom, conn, sqlString);
 		this.sqlgen = null;
-		this.dbOom = dbOom;
 		init(dbOom);
 	}
 
@@ -80,9 +77,8 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	}
 
 	public DbOomQuery(final DbOom dbOom, final DbSession session, final String sqlString) {
-		super(session, sqlString);
+		super(dbOom, session, sqlString);
 		this.sqlgen = null;
-		this.dbOom = dbOom;
 		init(dbOom);
 	}
 
@@ -91,9 +87,8 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	}
 
 	public DbOomQuery(final DbOom dbOom, final String sqlString) {
-		super(sqlString);
+		super(dbOom, sqlString);
 		this.sqlgen = null;
-		this.dbOom = dbOom;
 		init(dbOom);
 	}
 
@@ -106,9 +101,8 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	protected final DbSqlGenerator sqlgen;
 
 	public DbOomQuery(final DbOom dbOom, final Connection conn, final DbSqlGenerator sqlgen) {
-		super(conn, sqlgen.generateQuery());
+		super(dbOom, conn, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
-		this.dbOom = dbOom;
 		init(dbOom);
 	}
 	public static DbOomQuery query(final Connection conn, final DbSqlGenerator sqlgen) {
@@ -116,9 +110,8 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	}
 
 	public DbOomQuery(final DbOom dbOom, final DbSession session, final DbSqlGenerator sqlgen) {
-		super(session, sqlgen.generateQuery());
+		super(dbOom, session, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
-		this.dbOom = dbOom;
 		init(dbOom);
 	}
 	public static DbOomQuery query(final DbSession session, final DbSqlGenerator sqlgen) {
@@ -126,9 +119,8 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	}
 
 	public DbOomQuery(final DbOom dbOom, final DbSqlGenerator sqlgen) {
-		super(sqlgen.generateQuery());
+		super(dbOom, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
-		this.dbOom = dbOom;
 		init(dbOom);
 	}
 	public static DbOomQuery query(final DbSqlGenerator sqlgen) {

@@ -51,16 +51,19 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
 
+	protected final DbOom dbOom;
+
 	// ---------------------------------------------------------------- ctor
 
-	protected DbQueryBase() {
-		this.forcePreparedStatement = DbQuery.Defaults.forcePreparedStatement;
-		this.type = DbQuery.Defaults.type;
-		this.concurrencyType = DbQuery.Defaults.concurrencyType;
-		this.holdability = DbQuery.Defaults.holdability;
-		this.debug = DbQuery.Defaults.debug;
-		this.fetchSize = DbQuery.Defaults.fetchSize;
-		this.maxRows = DbQuery.Defaults.maxRows;
+	protected DbQueryBase(final DbOom dbOom) {
+		this.dbOom = dbOom;
+		this.forcePreparedStatement = dbOom.queryConfig().isForcePreparedStatement();
+		this.type = dbOom.queryConfig().getType();
+		this.concurrencyType = dbOom.queryConfig().getConcurrencyType();
+		this.holdability = dbOom.queryConfig().getHoldability();
+		this.debug = dbOom.queryConfig().isDebug();
+		this.fetchSize = dbOom.queryConfig().getFetchSize();
+		this.maxRows = dbOom.queryConfig().getMaxRows();
 	}
 
 	// ---------------------------------------------------------------- query states
@@ -211,7 +214,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 			return;
 		}
 
-		final DbSessionProvider dbSessionProvider = DbOom.get().sessionProvider();
+		final DbSessionProvider dbSessionProvider = dbOom.sessionProvider();
 
 		this.session = dbSessionProvider.getDbSession();
 	}

@@ -116,6 +116,7 @@ public class DbOom {
 	private final DbSessionProvider dbSessionProvider;
 	private final QueryMap queryMap;
 
+	private final DbQueryConfig dbQueryConfig;
 	private final DbOomConfig dbOomConfig;
 	private final DbEntityManager dbEntityManager;
 	private final DbEntitySql dbEntitySql;
@@ -134,6 +135,7 @@ public class DbOom {
 		this.queryMap = queryMap;
 
 		this.dbOomConfig = new DbOomConfig();
+		this.dbQueryConfig = new DbQueryConfig();
 		this.dbEntityManager = new DbEntityManager(dbOomConfig);
 		this.dbEntitySql = new DbEntitySql(this);
 
@@ -172,11 +174,20 @@ public class DbOom {
 		connectionProvider.close();
 	}
 
+	// ---------------------------------------------------------------- instances
+
 	/**
 	 * Returns DbOom configuration.
 	 */
 	public DbOomConfig config() {
 		return dbOomConfig;
+	}
+
+	/**
+	 * Returns default query configuration.
+	 */
+	public DbQueryConfig queryConfig() {
+		return dbQueryConfig;
 	}
 
 	/**

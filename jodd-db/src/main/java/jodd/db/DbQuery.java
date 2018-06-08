@@ -69,61 +69,44 @@ import java.util.Map;
  */
 public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 
-	public static class Defaults {
-		/**
-		 * Default debug mode.
-		 */
-		public static boolean debug = false;
-		/**
-		 * Enables creation of prepared statements for all queries.
-		 */
-		public static boolean forcePreparedStatement = false;
-		/**
-		 * Default type.
-		 */
-		public static int type = TYPE_FORWARD_ONLY;
-		/**
-		 * Default concurrency type.
-		 */
-		public static int concurrencyType = CONCUR_READ_ONLY;
-		/**
-		 * Default holdability.
-		 */
-		public static int holdability = DEFAULT_HOLDABILITY;
-		/**
-		 * Default value for fetch size.
-		 */
-		public static int fetchSize = 0;
-		/**
-		 * Default value for max rows.
-		 */
-		public static int maxRows = 0;
-	}
-
 	/**
 	 * Creates new query.
 	 */
-	public DbQuery(final Connection conn, final String sqlString) {
+	public DbQuery(final DbOom dbOom, final Connection conn, final String sqlString) {
+		super(dbOom);
 		this.connection = conn;
 		this.sqlString = sqlString;
+	}
+
+	public static DbQuery query(final Connection conn, final String sqlString) {
+		return new DbQuery(DbOom.get(), conn, sqlString);
 	}
 
 	/**
 	 * Creates a new query from {@link DbSession}.
 	 */
-	public DbQuery(final DbSession session, final String sqlString) {
+	public DbQuery(final DbOom dbOom, final DbSession session, final String sqlString) {
+		super(dbOom);
 		initSession(session);
-
 		this.session.attachQuery(this);
 		this.sqlString = sqlString;
+	}
+
+	public static DbQuery query(final DbSession session, final String sqlString) {
+		return new DbQuery(DbOom.get(), session, sqlString);
 	}
 
 	/**
 	 * Creates a new query using default session provider.
 	 */
-	public DbQuery(final String sqlString) {
-		this((DbSession)null, sqlString);
+	public DbQuery(final DbOom dbOom, final String sqlString) {
+		this(dbOom, (DbSession)null, sqlString);
 	}
+
+	public static DbQuery query(final String sqlString) {
+		return new DbQuery(DbOom.get(), sqlString);
+	}
+
 
 	// ---------------------------------------------------------------- additional statement parameters
 
