@@ -26,11 +26,11 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.config.Targets;
 import jodd.madvoc.scope.ParamsScope;
 import jodd.petite.PetiteContainer;
+import jodd.util.StringUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,9 +43,7 @@ class MadvocParamsInjectorTest {
 		webapp.start();
 		PetiteContainer madpc = webapp.madvocContainer().getPetiteContainer();
 
-		MadvocConfig madvocConfig = new MadvocConfig();
-
-		String baseName = FooBean.class.getName();
+		String baseName = StringUtil.uncapitalize(FooBean.class.getSimpleName());
 
 		madpc.defineParameter("foo", "1");
 

@@ -5,7 +5,7 @@ jdbc.url=jdbc:mysql://localhost:3306/jodd_test
 jdbc.username=root
 jdbc.password=root!
 
-# db pool
+# DB POOL
 joy.dbpool.driver=${jdbc.driverClassName}
 joy.dbpool.url=${jdbc.url}
 joy.dbpool.user=${jdbc.username}
@@ -15,4 +15,12 @@ joy.dbpool.minConnections=5
 joy.dbpool.waitIfBusy=true
 
 # MADVOC
-joy.madvoc.madvocConfig.encoding=UTF-8
+[joy.madvoc]
+madvocConfig.encoding=UTF-8
+madvocController.welcomeFile=/index.jsp
+requestScope.injectAttributes=true
+echoFilter.prefixIn=x--->
+joyDefaultInterceptorStack.interceptors=\
+			jodd.joy.auth.AuthInterceptor,\
+			jodd.joy.i18n.I18nInterceptor,\
+			jodd.madvoc.interceptor.ServletConfigInterceptor

@@ -42,7 +42,7 @@ public class MyWebApplication extends PetiteWebApp {
 	}
 
 	@Override
-	protected void configureMadvoc(final MadvocConfig madvocConfig) {
+	protected void configured() {
 		withRegisteredComponent(RootPackages.class, rp -> rp.addRootPackageOf(HelloAction.class));
 	}
 

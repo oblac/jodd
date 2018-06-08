@@ -3,10 +3,10 @@ interceptorManager.requestScopeInjector.injectParameters=true
 
 madvocConfig.pathMacroClass=jodd.madvoc.macro.RegExpPathMacros
 
-jodd.madvoc.AppendingInterceptor.addon=<jodd>
-jodd.madvoc.AppendingInterceptor$Hey.addon=<heyp>
+appendingInterceptor.addon=<jodd>
+appendingInterceptor$Hey.addon=<heyp>
 
-jodd.madvoc.MyInterceptorStack.interceptors=\
+myInterceptorStack.interceptors=\
 	jodd.madvoc.interceptor.ServletConfigInterceptor,\
 	jodd.madvoc.AppendingInterceptor
 
