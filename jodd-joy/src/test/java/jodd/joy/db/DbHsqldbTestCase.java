@@ -25,6 +25,7 @@
 
 package jodd.joy.db;
 
+import jodd.db.DbOom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.jtx.DbJtxTransactionManager;
@@ -85,15 +86,15 @@ public abstract class DbHsqldbTestCase {
 	// ---------------------------------------------------------------- helpers
 
 	protected int executeUpdate(DbSession session, String s) {
-		return new DbQuery(session, s).autoClose().executeUpdate();
+		return new DbQuery(DbOom.get(), session, s).autoClose().executeUpdate();
 	}
 
 	protected void executeUpdate(String sql) {
-		new DbQuery(sql).autoClose().executeUpdate();
+		new DbQuery(DbOom.get(), sql).autoClose().executeUpdate();
 	}
 
 	protected long executeCount(DbSession session, String s) {
-		return new DbQuery(session, s).autoClose().executeCount();
+		return new DbQuery(DbOom.get(), session, s).autoClose().executeCount();
 	}
 
 
