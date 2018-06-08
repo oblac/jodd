@@ -223,6 +223,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 * Performs JDBC initialization of the query. Obtains connection, parses the SQL query string
 	 * and creates statements. Initialization is performed only once, when switching to initialized state.
 	 */
+	@SuppressWarnings("MagicConstant")
 	protected void initializeJdbc() {
 		// connection
 		if (connection == null) {
@@ -238,17 +239,21 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		if (query.callable) {
 			try {
 				if (debug) {
-					if (holdability != DEFAULT_HOLDABILITY) {
-						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type.value(), concurrencyType, holdability);
+					if (holdability != QueryHoldability.DEFAULT) {
+						callableStatement = LogabbleStatementFactory.callable().prepareCall(
+							connection, query.sql, type.value(), concurrencyType.value(), holdability.value());
 					} else {
-						callableStatement = LogabbleStatementFactory.callable().prepareCall(connection, query.sql, type.value(), concurrencyType);
+						callableStatement = LogabbleStatementFactory.callable().prepareCall(
+							connection, query.sql, type.value(), concurrencyType.value());
 					}
 				}
 				else {
-					if (holdability != DEFAULT_HOLDABILITY) {
-						callableStatement = connection.prepareCall(query.sql, type.value(), concurrencyType, holdability);
+					if (holdability != QueryHoldability.DEFAULT) {
+						callableStatement = connection.prepareCall(
+							query.sql, type.value(), concurrencyType.value(), holdability.value());
 					} else {
-						callableStatement = connection.prepareCall(query.sql, type.value(), concurrencyType);
+						callableStatement = connection.prepareCall(
+							query.sql, type.value(), concurrencyType.value());
 					}
 				}
 			}
@@ -274,10 +279,12 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, generatedColumns);
 						}
 					} else {
-						if (holdability != DEFAULT_HOLDABILITY) {
-							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type.value(), concurrencyType, holdability);
+						if (holdability != QueryHoldability.DEFAULT) {
+							preparedStatement = LogabbleStatementFactory.prepared().create(
+								connection, query.sql, type.value(), concurrencyType.value(), holdability.value());
 						} else {
-							preparedStatement = LogabbleStatementFactory.prepared().create(connection, query.sql, type.value(), concurrencyType);
+							preparedStatement = LogabbleStatementFactory.prepared().create(
+								connection, query.sql, type.value(), concurrencyType.value());
 						}
 					}
 				} else {
@@ -288,10 +295,12 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 							preparedStatement = connection.prepareStatement(query.sql, generatedColumns);
 						}
 					} else {
-						if (holdability != DEFAULT_HOLDABILITY) {
-							preparedStatement = connection.prepareStatement(query.sql, type.value(), concurrencyType, holdability);
+						if (holdability != QueryHoldability.DEFAULT) {
+							preparedStatement = connection.prepareStatement(
+								query.sql, type.value(), concurrencyType.value(), holdability.value());
 						} else {
-							preparedStatement = connection.prepareStatement(query.sql, type.value(), concurrencyType);
+							preparedStatement = connection.prepareStatement(
+								query.sql, type.value(), concurrencyType.value());
 						}
 					}
 				}
@@ -308,10 +317,10 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		// statement
 
 		try {
-			if (holdability != DEFAULT_HOLDABILITY) {
-				statement = connection.createStatement(type.value(), concurrencyType, holdability);
+			if (holdability != QueryHoldability.DEFAULT) {
+				statement = connection.createStatement(type.value(), concurrencyType.value(), holdability.value());
 			} else {
-				statement = connection.createStatement(type.value(), concurrencyType);
+				statement = connection.createStatement(type.value(), concurrencyType.value());
 			}
 		} catch (SQLException sex) {
 			throw new DbSqlException(this, "Error creating statement", sex);
@@ -471,71 +480,47 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 
 	// ---------------------------------------------------------------- concurrency
 
-	/**
-	 * @see ResultSet#CONCUR_READ_ONLY
-	 */
-	public static final int CONCUR_READ_ONLY = ResultSet.CONCUR_READ_ONLY;
-	/**
-	 * @see ResultSet#CONCUR_UPDATABLE
-	 */
-	public static final int CONCUR_UPDATABLE = ResultSet.CONCUR_UPDATABLE;
+	protected QueryConcurrencyType concurrencyType;
 
-	protected int concurrencyType;
-
-	public int getConcurrencyType() {
+	public QueryConcurrencyType getConcurrencyType() {
 		return concurrencyType;
 	}
 
-	public Q setConcurrencyType(final int concurrencyType) {
+	public Q setConcurrencyType(final QueryConcurrencyType concurrencyType) {
 		checkCreated();
 		this.concurrencyType = concurrencyType;
 		return (Q) this;
 	}
 	public Q concurrentReadOnly() {
-		setConcurrencyType(CONCUR_READ_ONLY);
+		setConcurrencyType(QueryConcurrencyType.READ_ONLY);
 		return (Q) this;
 	}
 	public Q concurrentUpdatable() {
-		setConcurrencyType(CONCUR_UPDATABLE);
+		setConcurrencyType(QueryConcurrencyType.UPDATABLE);
 		return (Q) this;
 	}
 
 	// ---------------------------------------------------------------- holdability
 
-	/**
-	 * Default holdability. JDBC specification does not specifies default value for holdability.
-	 */
-	public static final int DEFAULT_HOLDABILITY = -1;
+	protected QueryHoldability holdability;
 
-	/**
-	 * @see ResultSet#CLOSE_CURSORS_AT_COMMIT
-	 */
-	public static final int CLOSE_CURSORS_AT_COMMIT = ResultSet.CLOSE_CURSORS_AT_COMMIT;
-
-	/**
-	 * @see ResultSet#HOLD_CURSORS_OVER_COMMIT
-	 */
-	public static final int HOLD_CURSORS_OVER_COMMIT = ResultSet.HOLD_CURSORS_OVER_COMMIT;
-
-	protected int holdability;
-
-	public int getHoldability() {
+	public QueryHoldability getHoldability() {
 		return holdability;
 	}
 
-	public Q setHoldability(final int holdability) {
+	public Q setHoldability(final QueryHoldability holdability) {
 		checkCreated();
 		this.holdability = holdability;
 		return (Q) this;
 	}
 
 	public Q holdCursorsOverCommit() {
-		setHoldability(HOLD_CURSORS_OVER_COMMIT);
+		setHoldability(QueryHoldability.HOLD_CURSORS_OVER_COMMIT);
 		return (Q) this;
 	}
 
 	public Q closeCursorsAtCommit() {
-		setHoldability(CLOSE_CURSORS_AT_COMMIT);
+		setHoldability(QueryHoldability.CLOSE_CURSORS_AT_COMMIT);
 		return (Q) this;
 	}
 

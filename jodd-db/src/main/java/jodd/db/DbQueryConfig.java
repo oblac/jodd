@@ -25,9 +25,6 @@
 
 package jodd.db;
 
-import static jodd.db.DbQueryBase.CONCUR_READ_ONLY;
-import static jodd.db.DbQueryBase.DEFAULT_HOLDABILITY;
-
 /**
  * Db query default configuration.
  */
@@ -48,11 +45,11 @@ public class DbQueryConfig {
 	/**
 	 * Default concurrency type.
 	 */
-	private int concurrencyType = CONCUR_READ_ONLY;
+	private QueryConcurrencyType concurrencyType = QueryConcurrencyType.READ_ONLY;
 	/**
 	 * Default holdability.
 	 */
-	private int holdability = DEFAULT_HOLDABILITY;
+	private QueryHoldability holdability = QueryHoldability.DEFAULT;
 	/**
 	 * Default value for fetch size.
 	 */
@@ -87,19 +84,19 @@ public class DbQueryConfig {
 		this.type = type;
 	}
 
-	public int getConcurrencyType() {
+	public QueryConcurrencyType getConcurrencyType() {
 		return concurrencyType;
 	}
 
-	public void setConcurrencyType(final int concurrencyType) {
+	public void setConcurrencyType(final QueryConcurrencyType concurrencyType) {
 		this.concurrencyType = concurrencyType;
 	}
 
-	public int getHoldability() {
+	public QueryHoldability getHoldability() {
 		return holdability;
 	}
 
-	public void setHoldability(final int holdability) {
+	public void setHoldability(final QueryHoldability holdability) {
 		this.holdability = holdability;
 	}
 
