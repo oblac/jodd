@@ -282,17 +282,29 @@ public class JoddJoy {
 
 		log.info("Joy is up. Enjoy!");
 
-		return new JoddJoyRuntime(
-			appName,
-			joyPaths.getAppDir(),
-			joyProps.getProps(),
-			joyProxetta.getProxetta(),
-			joyPetite.getPetiteContainer(),
-			joyDb.isDatabaseEnabled(),
-			joyDb.getConnectionProvider(),
-			joyDb.getJtxManager(),
-			joyMadvoc.getWebApp()
-		);
+		if (joyDb.isDatabaseEnabled()) {
+			return new JoddJoyRuntime(
+				appName,
+				joyPaths.getAppDir(),
+				joyProps.getProps(),
+				joyProxetta.getProxetta(),
+				joyPetite.getPetiteContainer(),
+				joyMadvoc.getWebApp(),
+				joyDb.isDatabaseEnabled(),
+				joyDb.getConnectionProvider(),
+				joyDb.getJtxManager()
+			);
+		}
+		else {
+			return new JoddJoyRuntime(
+				appName,
+				joyPaths.getAppDir(),
+				joyProps.getProps(),
+				joyProxetta.getProxetta(),
+				joyPetite.getPetiteContainer(),
+				joyMadvoc.getWebApp()
+			);
+		}
 	}
 
 	/**
@@ -315,7 +327,7 @@ public class JoddJoy {
 		}
 
 		if (log != null) {
-			log.info("Joy is stopped! Bye, bye!");
+			log.info("Joy is down. Bye, bye!");
 		}
 	}
 

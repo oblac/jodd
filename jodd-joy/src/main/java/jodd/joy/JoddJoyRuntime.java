@@ -48,15 +48,14 @@ public class JoddJoyRuntime {
 	private final WebApp webApp;
 
 	public JoddJoyRuntime(
-		final String appName,
-		final String appDir,
-		final Props props,
-		final Proxetta proxetta,
-		final PetiteContainer petiteContainer,
-		final boolean databaseEnabled,
-		final ConnectionProvider connectionProvider,
-		final JtxTransactionManager jtxManager,
-		final WebApp webApp) {
+			final String appName,
+			final String appDir,
+			final Props props,
+			final Proxetta proxetta,
+			final PetiteContainer petiteContainer,
+			final WebApp webApp, final boolean databaseEnabled,
+			final ConnectionProvider connectionProvider,
+			final JtxTransactionManager jtxManager) {
 
 		this.appName = appName;
 		this.appDir = appDir;
@@ -67,6 +66,17 @@ public class JoddJoyRuntime {
 		this.connectionProvider = connectionProvider;
 		this.jtxManager = jtxManager;
 		this.webApp = webApp;
+	}
+
+	public JoddJoyRuntime(
+			final String appName,
+			final String appDir,
+			final Props props,
+			final Proxetta proxetta,
+			final PetiteContainer petiteContainer,
+			final WebApp webApp) {
+
+		this(appName, appDir, props, proxetta, petiteContainer, webApp, false, null, null);
 	}
 
 	public Props getProps() {
