@@ -25,14 +25,16 @@
 
 package jodd.proxetta.impl;
 
-import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.Proxetta;
+import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.ProxyAspect;
 
 /**
  * Proxetta that creates wrappers.
  */
 public class WrapperProxetta extends Proxetta<WrapperProxetta, ProxyAspect> {
+
+	protected boolean createTargetInDefaultCtor;
 
 	public WrapperProxetta() {
 		classNameSuffix = ProxettaNames.wrapperClassNameSuffix;
@@ -42,5 +44,14 @@ public class WrapperProxetta extends Proxetta<WrapperProxetta, ProxyAspect> {
 	public WrapperProxettaFactory proxy() {
 		return new WrapperProxettaFactory(this);
 	}
+
+	/**
+	 * Defines if target should be created in ctor, so no additional injection is required.
+	 */
+	public WrapperProxetta setCreateTargetInDefaultCtor(final boolean createTargetInstanceInDefaultCtor) {
+		this.createTargetInDefaultCtor = createTargetInstanceInDefaultCtor;
+		return _this();
+	}
+
 
 }

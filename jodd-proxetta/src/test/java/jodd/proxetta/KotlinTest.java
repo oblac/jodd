@@ -46,9 +46,9 @@ class KotlinTest {
 		final Object service =
 			Proxetta.wrapperProxetta()
 				.withAspect(proxyAspect)
+				.setCreateTargetInDefaultCtor(true)
 				.proxy()
 				.setTarget(Test568Service.class)
-				.setCreateTargetInstanceInDefaultCtor(true)
 				.newInstance();
 
 		// no need to inject since setCreateTargetInstanceInDefaultCtor is set

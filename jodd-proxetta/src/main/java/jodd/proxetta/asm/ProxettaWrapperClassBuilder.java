@@ -32,6 +32,7 @@ import jodd.asm6.MethodVisitor;
 import jodd.asm6.Opcodes;
 import jodd.proxetta.ProxyAspect;
 
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import static jodd.asm6.Opcodes.ACC_ABSTRACT;
@@ -50,7 +51,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	protected final Class targetClassOrInterface;
 	protected final Class targetInterface;
 	protected final String targetFieldName;
-	protected final boolean createTargetInstanceInDefaultCtor;
+	protected final boolean createTargetInDefaultCtor;
 
 	public ProxettaWrapperClassBuilder(
 		final Class targetClassOrInterface,
@@ -61,14 +62,14 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		final String suffix,
 		final String reqProxyClassName,
 		final TargetClassInfoReader targetClassInfoReader,
-		final boolean createTargetInstanceInDefaultCtor
+		final boolean createTargetInDefaultCtor
 		) {
 
 		super(dest, aspects, suffix, reqProxyClassName, targetClassInfoReader);
 		this.targetClassOrInterface = targetClassOrInterface;
 		this.targetInterface = targetInterface;
 		this.targetFieldName = targetFieldName;
-		this.createTargetInstanceInDefaultCtor = createTargetInstanceInDefaultCtor;
+		this.createTargetInDefaultCtor = createTargetInDefaultCtor;
 
 		wd.allowFinalMethods = true;
 	}
@@ -118,7 +119,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		wd.wrapperType = 'L' + name + ';';
 
 
-		if (createTargetInstanceInDefaultCtor) {
+		if (createTargetInDefaultCtor) {
 			// create private, final field
 			final FieldVisitor fv = wd.dest.visitField(AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL, wd.wrapperRef, wd.wrapperType, null, null);
 			fv.visitEnd();
@@ -197,6 +198,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		}
 		// ignore all destination static block
 		if (name.equals(CLINIT)) {
+			return null;
+		}
+
+		// skip all static methods
+		if (Modifier.isStatic(access)) {
 			return null;
 		}
 

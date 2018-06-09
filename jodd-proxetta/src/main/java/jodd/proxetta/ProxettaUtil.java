@@ -80,7 +80,7 @@ public class ProxettaUtil {
 	 */
 	public static Class getTargetWrapperType(final Class wrapperClass) {
 		try {
-			final Field field = wrapperClass.getField(ProxettaNames.wrapperTargetFieldName);
+			final Field field = wrapperClass.getDeclaredField(ProxettaNames.wrapperTargetFieldName);
 			return field.getType();
 		} catch (NoSuchFieldException nsfex) {
 			throw new ProxettaException(nsfex);

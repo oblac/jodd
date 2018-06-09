@@ -40,14 +40,16 @@ import jodd.proxetta.asm.WorkData;
  */
 public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFactory, WrapperProxetta> {
 
+	private final boolean createTargetInDefaultCtor;
+
 	public WrapperProxettaFactory(final WrapperProxetta wrapperProxetta) {
 		super(wrapperProxetta);
+		this.createTargetInDefaultCtor = wrapperProxetta.createTargetInDefaultCtor;
 	}
 
 	protected Class targetClassOrInterface;
 	protected Class targetInterface;
 	protected String targetFieldName = ProxettaNames.wrapperTargetFieldName;
-	protected boolean createTargetInstanceInDefaultCtor = false;
 
 	/**
 	 * Defines class or interface to wrap.
@@ -81,14 +83,6 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 	}
 
 	/**
-	 * Defines if target should be created in ctor, so no additional injection is required.
-	 */
-	public WrapperProxettaFactory setCreateTargetInstanceInDefaultCtor(final boolean createTargetInstanceInDefaultCtor) {
-		this.createTargetInstanceInDefaultCtor = createTargetInstanceInDefaultCtor;
-		return this;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -103,7 +97,7 @@ public class WrapperProxettaFactory extends ProxettaFactory<WrapperProxettaFacto
 						resolveClassNameSuffix(),
 						requestedProxyClassName,
 						targetClassInfoReader,
-						createTargetInstanceInDefaultCtor
+						createTargetInDefaultCtor
 				);
 
 		cr.accept(pcb, 0);
