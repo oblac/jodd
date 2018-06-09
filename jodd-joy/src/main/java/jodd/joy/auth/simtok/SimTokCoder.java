@@ -44,7 +44,7 @@ public class SimTokCoder {
 	 * Encodes the {@link SimTok} to JSON string.
 	 */
 	public String encode(final SimTok simTok) {
-		final String json = JsonSerializer.create().serialize(simTok);
+		final String json = JsonSerializer.create().deep(true).serialize(simTok);
 
 		final String p1 = Base64.encodeToString("JoddSimTok" + SALT_ROUNDS);
 		final String p2 = Base64.encodeToString(json);
