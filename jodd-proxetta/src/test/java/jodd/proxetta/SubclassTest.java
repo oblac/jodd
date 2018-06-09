@@ -100,14 +100,14 @@ class SubclassTest {
 		Foo foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
+		assertEquals(Foo.class.getName() + ProxettaNames.proxyClassNameSuffix, StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		builder = proxyProxetta.proxy();
 		builder.setTarget(Foo.class);
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
+		assertEquals(Foo.class.getName() + ProxettaNames.proxyClassNameSuffix, StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		proxyProxetta.setClassNameSuffix("$$Ppp");
 		builder = proxyProxetta.proxy();
@@ -117,14 +117,14 @@ class SubclassTest {
 		assertNotNull(foo);
 		assertEquals(Foo.class.getName() + "$$Ppp", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
-		proxyProxetta.setClassNameSuffix("$$Proxetta");
+		proxyProxetta.setClassNameSuffix(ProxettaNames.proxyClassNameSuffix);
 		proxyProxetta.setVariableClassName(false);
 		builder = proxyProxetta.proxy().setTarget(Foo.class).setTargetProxyClassName(".Too");
 
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getPackage().getName() + ".Too$$Proxetta", foo.getClass().getName());
+		assertEquals(Foo.class.getPackage().getName() + ".Too" + ProxettaNames.proxyClassNameSuffix, foo.getClass().getName());
 
 		builder = proxyProxetta.proxy();
 		builder.setTarget(Foo.class);
@@ -132,7 +132,7 @@ class SubclassTest {
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals("foo.Foo$$Proxetta", foo.getClass().getName());
+		assertEquals("foo.Foo" + ProxettaNames.proxyClassNameSuffix, foo.getClass().getName());
 
 		proxyProxetta.setClassNameSuffix(null);
 		builder = proxyProxetta.proxy();
@@ -155,7 +155,7 @@ class SubclassTest {
 		Two two = (Two) builder.newInstance();
 
 		assertNotNull(two);
-		assertEquals("foo.Two$$Proxetta", two.getClass().getName());
+		assertEquals("foo.Two" + ProxettaNames.proxyClassNameSuffix, two.getClass().getName());
 	}
 
 	@SuppressWarnings({"CachedNumberConstructorCall", "UnnecessaryBoxing"})
@@ -179,7 +179,7 @@ class SubclassTest {
 		Object object = builder.newInstance();
 
 		assertNotNull(object);
-		assertEquals("foo.Object$$Proxetta", object.getClass().getName());
+		assertEquals("foo.Object" + ProxettaNames.proxyClassNameSuffix, object.getClass().getName());
 
 		//System.out.println("----------list");
 
@@ -188,7 +188,7 @@ class SubclassTest {
 		builder = proxyProxetta.proxy().setTarget(ArrayList.class).setTargetProxyClassName("foo.");
 		List list = (List) builder.newInstance();
 		assertNotNull(list);
-		assertEquals("foo.ArrayList$$Proxetta", list.getClass().getName());
+		assertEquals("foo.ArrayList" + ProxettaNames.proxyClassNameSuffix, list.getClass().getName());
 
 		assertEquals(1, StatCounter.counter);
 		list.add(new Integer(1));
@@ -200,7 +200,7 @@ class SubclassTest {
 		Set set = (Set) builder.newInstance();
 
 		assertNotNull(set);
-		assertEquals("foo.HashSet$$Proxetta", set.getClass().getName());
+		assertEquals("foo.HashSet" + ProxettaNames.proxyClassNameSuffix, set.getClass().getName());
 
 		assertTrue(StatCounter.counter == 4 || StatCounter.counter == 3);
 		set.add(new Integer(1));

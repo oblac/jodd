@@ -37,15 +37,15 @@ public class ProxettaNames {
 	/**
 	 * Proxy class name suffix.
 	 */
-	public static String proxyClassNameSuffix = "$$Proxetta";
+	public static String proxyClassNameSuffix = "$$JoddProxy";
 	/**
 	 * Invoke proxy class name suffix.
 	 */
-	public static String invokeProxyClassNameSuffix = "$$Clonetou";
+	public static String invokeProxyClassNameSuffix = "$$JoddClone";
 	/**
 	 * Wrapper class name suffix.
 	 */
-	public static String wrapperClassNameSuffix = "$$Wraporetto";
+	public static String wrapperClassNameSuffix = "$$JoddWrap";
 	/**
 	 * Prefix for advice method names.
 	 */

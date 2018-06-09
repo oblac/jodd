@@ -71,14 +71,17 @@ class InvReplTest {
 		fbaos.reset();
 
 		one.example2();
-		assertEquals("REPLACED STATIC! one * jodd/proxetta/fixtures/inv/Two * example2 * void example2() * jodd.proxetta.fixtures.inv.One * jodd.proxetta.fixtures.inv.One$$Clonetou!15013static: 4", fbaos.toString());
+		assertEquals(
+			"REPLACED STATIC! one * jodd/proxetta/fixtures/inv/Two * " +
+				"example2 * void example2() * jodd.proxetta.fixtures.inv.One * " +
+				"jodd.proxetta.fixtures.inv.One" + ProxettaNames.invokeProxyClassNameSuffix + "!15013static: 4", fbaos.toString());
 		fbaos.reset();
 
 		one.example3();
 		assertEquals("state = REPLACED ctor!", fbaos.toString());
 		fbaos.reset();
 
-		assertEquals("jodd.proxetta.fixtures.inv.One$$Clonetou", one.getClass().getName());
+		assertEquals("jodd.proxetta.fixtures.inv.One" +  ProxettaNames.invokeProxyClassNameSuffix, one.getClass().getName());
 		assertTrue(one instanceof Serializable);
 
 		Annotation[] anns = one.getClass().getAnnotations();
