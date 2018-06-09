@@ -59,8 +59,6 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 			return super.registerAction(actionClass, actionMethod, actionDefinition);
 		}
 
-		final ProxyProxetta proxetta = proxettaSupplier.get();
-
 		if (actionDefinition == null) {
 			actionDefinition = actionMethodParser.parseActionDefinition(actionClass, actionMethod);
 		}
@@ -70,6 +68,8 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 		Class existing = proxyActionClasses.get(actionClass);
 
 		if (existing == null) {
+			final ProxyProxetta proxetta = proxettaSupplier.get();
+
 			existing = proxetta.proxy().setTarget(actionClass).define();
 
 			proxyActionClasses.put(actionClass, existing);
