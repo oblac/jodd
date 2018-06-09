@@ -40,6 +40,7 @@ import static jodd.props.PropertiesToPropsTestHelper.assertEqualsToPropsFile;
 import static jodd.props.PropertiesToPropsTestHelper.safelyWritePropertiesToProps;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PropsLoaderTest {
 
@@ -162,7 +163,7 @@ class PropsLoaderTest {
 	@Test
 	@DisabledOnJava(value = 9, description = "Classpath loading only works with MR-JAR jars as they don't work in exploded mode.")
 	void testCreateFromClasspath_WithExistingFileThroughPattern() {
-		final Props actual = PropsLoader.createFromClasspath("*jodd/props/data/test.properties");
+		final Props actual = Props.create().loadFromClasspath("*jodd/props/data/test.properties");
 
 		// asserts
 		assertNotNull(actual);
@@ -174,14 +175,14 @@ class PropsLoaderTest {
 	}
 
 	@Test
-	void testCreateFromClasspath_WithNotExistingFileThroughPattern() throws Exception {
+	void testCreateFromClasspath_WithNotExistingFileThroughPattern() {
 
-		final Props actual = PropsLoader.createFromClasspath("*jodd/props/data/test_properties");
+		final Props actual = Props.create().loadFromClasspath("*jodd/props/data/test_properties");
 
 		// asserts
 		assertNotNull(actual);
 		assertEquals(0, actual.countTotalProperties());
-		assertEquals(null, actual.getValue("one"));
+		assertNull(actual.getValue("one"));
 	}
 
 

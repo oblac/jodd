@@ -25,10 +25,13 @@
 
 package jodd.props;
 
+import jodd.core.JoddCore;
+import jodd.exception.UncheckedException;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
@@ -92,6 +95,14 @@ public class Props implements Cloneable {
 	protected String[] activeProfiles;
 
 	protected volatile boolean initialized;
+
+	/**
+	 * Statis ctor.
+	 */
+	public static Props create() {
+		return new Props();
+	}
+
 
 	/**
 	 * Creates new props.
@@ -222,15 +233,16 @@ public class Props implements Cloneable {
 	/**
 	 * Loads props from the string.
 	 */
-	public void load(final String data) {
+	public Props load(final String data) {
 		parse(data);
+		return this;
 	}
 
 	/**
 	 * Loads props from the file. Assumes UTF8 encoding unless
 	 * the file ends with '.properties', than it uses ISO 8859-1.
 	 */
-	public void load(final File file) throws IOException {
+	public Props load(final File file) throws IOException {
 		final String extension = FileNameUtil.getExtension(file.getAbsolutePath());
 		final String data;
 		if (extension.equalsIgnoreCase("properties")) {
@@ -239,39 +251,43 @@ public class Props implements Cloneable {
 			data = FileUtil.readString(file);
 		}
 		parse(data);
+		return this;
 	}
 
 	/**
 	 * Loads properties from the file in provided encoding.
 	 */
-	public void load(final File file, final String encoding) throws IOException {
+	public Props load(final File file, final String encoding) throws IOException {
 		parse(FileUtil.readString(file, encoding));
+		return this;
 	}
 
 	/**
 	 * Loads properties from input stream. Stream is not closed at the end.
 	 */
-	public void load(final InputStream in) throws IOException {
+	public Props load(final InputStream in) throws IOException {
 		final Writer out = new FastCharArrayWriter();
 		StreamUtil.copy(in, out);
 		parse(out.toString());
+		return this;
 	}
 
 	/**
 	 * Loads properties from input stream and provided encoding.
 	 * Stream is not closed at the end.
 	 */
-	public void load(final InputStream in, final String encoding) throws IOException {
+	public Props load(final InputStream in, final String encoding) throws IOException {
 		final Writer out = new FastCharArrayWriter();
 		StreamUtil.copy(in, out, encoding);
 		parse(out.toString());
+		return this;
 	}
 
 	/**
 	 * Loads base properties from the provided java properties.
 	 * Null values are ignored.
 	 */
-	public void load(final Map<?, ?> p) {
+	public Props load(final Map<?, ?> p) {
 		for (final Map.Entry<?, ?> entry : p.entrySet()) {
 			final String name = entry.getKey().toString();
 			final Object value = entry.getValue();
@@ -280,6 +296,7 @@ public class Props implements Cloneable {
 			}
 			data.putBaseProperty(name, value.toString(), false);
 		}
+		return this;
 	}
 
 	/**
@@ -287,7 +304,7 @@ public class Props implements Cloneable {
 	 * Null values are ignored.
 	 */
 	@SuppressWarnings("unchecked")
-	public void load(final Map<?, ?> map, final String prefix) {
+	public Props load(final Map<?, ?> map, final String prefix) {
 		String realPrefix = prefix;
 		realPrefix += '.';
 		for (final Map.Entry entry : map.entrySet()) {
@@ -298,25 +315,53 @@ public class Props implements Cloneable {
 			}
 			data.putBaseProperty(realPrefix + name, value.toString(), false);
 		}
+		return this;
 	}
 
 	/**
 	 * Loads system properties with given prefix.
 	 * If prefix is <code>null</code> it will not be ignored.
 	 */
-	public void loadSystemProperties(final String prefix) {
+	public Props loadSystemProperties(final String prefix) {
 		final Properties environmentProperties = System.getProperties();
 		load(environmentProperties, prefix);
+		return this;
 	}
 
 	/**
 	 * Loads environment properties with given prefix.
 	 * If prefix is <code>null</code> it will not be used.
 	 */
-	public void loadEnvironment(final String prefix) {
+	public Props loadEnvironment(final String prefix) {
 		final Map<String, String> environmentMap = System.getenv();
 		load(environmentMap, prefix);
+		return this;
 	}
+
+	/**
+	 * Loads props and properties from the classpath.
+	 */
+	public Props loadFromClasspath(final String... patterns) {
+		ClassScanner.create()
+			.registerEntryConsumer(entryData -> {
+				String usedEncoding = JoddCore.encoding;
+				if (StringUtil.endsWithIgnoreCase(entryData.name(), ".properties")) {
+					usedEncoding = StringPool.ISO_8859_1;
+				}
+
+				final String encoding = usedEncoding;
+				UncheckedException.runAndWrapException(() -> load(entryData.openInputStream(), encoding));
+			})
+			.includeResources(true)
+			.ignoreException(true)
+			.excludeCommonJars()
+			.excludeAllEntries(true)
+			.includeEntries(patterns)
+			.scanDefaultClasspath()
+			.start();
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- props
 
