@@ -141,7 +141,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 	@Override
 	public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
-		int lastSlash = name.lastIndexOf('/');
+		final int lastSlash = name.lastIndexOf('/');
 		this.thisReference = name;
 		this.superName = superName;
 		this.nextSupername = superName;
@@ -174,9 +174,9 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	@Override
 	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
-		if ((access & AsmUtil.ACC_FINAL) != 0) {
-			return null;	// skip finals
-		}
+//		if ((access & AsmUtil.ACC_FINAL) != 0) {
+//			return null;	// skip finals
+//		}
 		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, exceptions, thisReference, this.generics);
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);

@@ -142,8 +142,11 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	protected void createFirstChainDelegate_Start() {
 		// check invalid access flags
 		int access = msign.getAccessFlags();
-		if ((access & AsmUtil.ACC_FINAL) != 0) {   // detect final
-			throw new ProxettaException("Unable to create proxy for final method: " + msign +". Remove final modifier or change the pointcut definition.");
+		if (!wd.allowFinalMethods) {
+			if ((access & AsmUtil.ACC_FINAL) != 0) {   // detect final
+				throw new ProxettaException(
+					"Unable to create proxy for final method: " + msign + ". Remove final modifier or change the pointcut definition.");
+			}
 		}
 
 		// create proxy methods

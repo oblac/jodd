@@ -57,6 +57,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected final String methodName;
 	protected final String[] exceptionsArray;
 	protected final boolean isStatic;
+	protected final boolean isFinal;
 	protected final ClassInfo targetClassInfo;
 	protected final IntArrayList argumentsOffset;
 	protected final List<TypeInfoImpl> arguments;
@@ -89,6 +90,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		super(new StringBuilder(), (access & Opcodes.ACC_INTERFACE) != 0);
 //		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
+		this.isFinal = (access & Opcodes.ACC_FINAL) != 0;
 		this.methodName = methodName;
 		this.access = access;
 		this.classname = classname;

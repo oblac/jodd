@@ -55,6 +55,7 @@ public final class WorkData {
 	String wrapperRef;
 	String wrapperType;
 	boolean wrapInterface;
+	boolean allowFinalMethods;
 
 	public String thisReference;
 	public boolean proxyApplied;

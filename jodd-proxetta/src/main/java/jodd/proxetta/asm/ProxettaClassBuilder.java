@@ -40,7 +40,6 @@ import jodd.proxetta.ProxyAspect;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static jodd.asm6.Opcodes.ACC_ABSTRACT;
 import static jodd.asm6.Opcodes.ALOAD;
@@ -120,8 +119,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	@Override
 	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
-		MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
+		final MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
 		if (msign == null) {
+			return null;
+		}
+		if (msign.isFinal && !wd.allowFinalMethods) {
 			return null;
 		}
 
@@ -226,7 +228,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			cr.accept(new EmptyClassVisitor() {
 
 				String declaredClassName;
-				Map<String, String> generics;
 
 				@Override
 				public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
