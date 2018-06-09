@@ -42,14 +42,17 @@ class KotlinTest {
 	@Test
 	void testWrapperProxetta_unopen() throws InvocationTargetException, IllegalAccessException {
 		ProxyAspect proxyAspect = ProxyAspect.of(LogProxyAdvice.class, MethodWithAnnotationPointcut.of(Transaction.class));
-		Object service =
+
+		final Object service =
 			Proxetta.wrapperProxetta()
 				.withAspect(proxyAspect)
 				.proxy()
 				.setTarget(Test568Service.class)
+				.setCreateTargetInstanceInDefaultCtor(true)
 				.newInstance();
 
-		ProxettaUtil.injectTargetIntoWrapper(new Test568Service(), service);
+		// no need to inject since setCreateTargetInstanceInDefaultCtor is set
+//		ProxettaUtil.injectTargetIntoWrapper(new Test568Service(), service);
 
 		Method method = jodd.util.ClassUtil.findMethod(service.getClass(), "findMember");
 
