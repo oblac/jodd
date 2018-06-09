@@ -25,6 +25,7 @@
 
 package jodd.joy.action;
 
+import jodd.jtx.meta.ReadOnlyTransaction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.Auth;
 import jodd.madvoc.meta.In;
@@ -43,9 +44,10 @@ public class HelloAction {
 	HelloBean helloBean;
 
 	@In
-	private String username = "";
+	String username = "";
 
 	@Action
+	@ReadOnlyTransaction
 	public JsonResult execute() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("username", username);

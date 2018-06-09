@@ -55,7 +55,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -97,14 +96,14 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 	 * Returns connection provider once when component is started.
 	 */
 	public ConnectionProvider getConnectionProvider() {
-		return Objects.requireNonNull(connectionProvider);
+		return requireStarted(connectionProvider);
 	}
 
 	/**
 	 * Returns JTX transaction manager once when component is started.
 	 */
 	public JtxTransactionManager getJtxManager() {
-		return Objects.requireNonNull(jtxManager);
+		return requireStarted(jtxManager);
 	}
 
 	/**
@@ -123,24 +122,28 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 
 	@Override
 	public JoyDb disableDatabase() {
+		requireNotStarted(connectionProvider);
 		databaseEnabled = false;
 		return this;
 	}
 
 	@Override
 	public JoyDb disableAutoConfiguration() {
+		requireNotStarted(connectionProvider);
 		autoConfiguration = false;
 		return this;
 	}
 
 	@Override
 	public JoyDb withEntityManager(final Consumer<DbEntityManager> dbEntityManagerConsumer) {
+		requireNotStarted(connectionProvider);
 		dbEntityManagerConsumers.add(dbEntityManagerConsumer);
 		return this;
 	}
 
 	@Override
 	public JoyDb withConnectionProvider(final Supplier<ConnectionProvider> connectionProviderSupplier) {
+		requireNotStarted(connectionProvider);
 		this.connectionProviderSupplier = connectionProviderSupplier;
 		return this;
 	}
@@ -192,7 +195,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 		AnnotationTxAdviceSupport.manager = annTxAdviceManager;
 
 		// create proxy
-		joyProxettaSupplier.get().addProxyAspect(createTxProxyAspects(annTxAdviceManager.getAnnotations()));
+		joyProxettaSupplier.get().getProxetta().withAspect(createTxProxyAspects(annTxAdviceManager.getAnnotations()));
 
 
 		final DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);

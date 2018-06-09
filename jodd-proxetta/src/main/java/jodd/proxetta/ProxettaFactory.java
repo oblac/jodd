@@ -248,13 +248,13 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 
 		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
-				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
+				log.debug("Proxy not applied: " + StringUtil.toSafeString(targetClassName));
 			}
 			return null;
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("proxy created " + StringUtil.toSafeString(targetClassName));
+			log.debug("Proxy created " + StringUtil.toSafeString(targetClassName));
 		}
 
 		return result;
@@ -268,7 +268,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 
 		if ((!proxetta.isForced()) && (!isProxyApplied())) {
 			if (log.isDebugEnabled()) {
-				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
+				log.debug("Proxy not applied: " + StringUtil.toSafeString(targetClassName));
 			}
 
 			if (targetClass != null) {
@@ -285,7 +285,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("proxy created " + StringUtil.toSafeString(targetClassName));
+			log.debug("Proxy created: " + StringUtil.toSafeString(targetClassName));
 		}
 
 		try {

@@ -31,7 +31,6 @@ import jodd.props.PropsLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -52,7 +51,7 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 	 * Returns application Props.
 	 */
 	public Props getProps() {
-		return Objects.requireNonNull(props);
+		return requireStarted(props);
 	}
 
 	// ---------------------------------------------------------------- config
@@ -65,12 +64,14 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 	 */
 	@Override
 	public JoyProps addPropsFile(final String namePattern) {
+		requireNotStarted(props);
 		this.propsNamePatterns.add(namePattern);
 		return this;
 	}
 
 	@Override
 	public JoyProps addPropsProfiles(final String... profiles) {
+		requireNotStarted(props);
 		Collections.addAll(propsProfiles, profiles);
 		return this;
 	}

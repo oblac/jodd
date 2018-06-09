@@ -31,7 +31,6 @@ import jodd.util.SystemUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 
 import static jodd.joy.JoddJoy.APP_DIR;
 
@@ -45,7 +44,7 @@ public class JoyPaths extends JoyBase {
 	 * Returns resolved app dir.
 	 */
 	public String getAppDir() {
-		return Objects.requireNonNull(appDir);
+		return requireStarted(appDir);
 	}
 
 	// ---------------------------------------------------------------- lifecycle

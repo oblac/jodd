@@ -33,7 +33,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Tiny JoyScanner kickstart.
@@ -65,18 +64,21 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 
 	@Override
 	public JoyScanner setIncludedEntries(final String... includedEntries) {
+		requireNotStarted(classScanner);
 		Collections.addAll(this.includedEntries, includedEntries);
 		return this;
 	}
 
 	@Override
 	public JoyScanner setIncludedJars(final String... includedJars) {
+		requireNotStarted(classScanner);
 		Collections.addAll(this.includedJars, includedJars);
 		return this;
 	}
 
 	@Override
 	public JoyScanner setIgnoreExceptions(final boolean ignoreExceptions) {
+		requireNotStarted(classScanner);
 		this.ignoreExceptions = ignoreExceptions;
 		return this;
 	}
@@ -89,6 +91,7 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 	 */
 	@Override
 	public JoyScanner scanClasspathOf(final Class applicationClass) {
+		requireNotStarted(classScanner);
 		appClasses.add(applicationClass);
 		return this;
 	}
@@ -98,6 +101,7 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 	 */
 	@Override
 	public JoyScanner scanClasspathOf(final Object applicationObject) {
+		requireNotStarted(classScanner);
 		return scanClasspathOf(applicationObject.getClass());
 	}
 
@@ -107,7 +111,7 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 	 * Returns class scanner.
 	 */
 	public ClassScanner getClassScanner() {
-		return Objects.requireNonNull(classScanner);
+		return requireStarted(classScanner);
 	}
 
 	// ---------------------------------------------------------------- lifecycle

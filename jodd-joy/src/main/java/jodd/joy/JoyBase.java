@@ -58,4 +58,18 @@ public abstract class JoyBase {
 	 */
 	public abstract void stop();
 
+	// ---------------------------------------------------------------- util
+
+	protected void requireNotStarted(final Object object) {
+		if (object != null) {
+			throw new JoyException("Configuration is modified after component is started.");
+		}
+	}
+	protected <T> T requireStarted(final T object) {
+		if (object == null) {
+			throw new JoyException("Component is not started yet and can not be used.");
+		}
+		return object;
+	}
+
 }

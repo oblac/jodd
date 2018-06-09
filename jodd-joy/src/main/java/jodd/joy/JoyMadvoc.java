@@ -44,7 +44,6 @@ import jodd.util.function.Consumers;
 import javax.servlet.ServletContext;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -100,7 +99,7 @@ public class JoyMadvoc extends JoyBase {
 	// ---------------------------------------------------------------- runtime
 
 	public WebApp getWebApp() {
-		return Objects.requireNonNull(webApp);
+		return webApp;
 	}
 
 	// ---------------------------------------------------------------- lifecycle

@@ -39,7 +39,6 @@ import jodd.util.function.Consumers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -70,7 +69,7 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 	 * Returns PetiteContainer once when it is created.
 	 */
 	public PetiteContainer getPetiteContainer() {
-		return Objects.requireNonNull(petiteContainer);
+		return requireStarted(petiteContainer);
 	}
 
 	// ---------------------------------------------------------------- config
@@ -81,18 +80,21 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 
 	@Override
 	public JoyPetite disableAutoConfiguration() {
+		requireNotStarted(petiteContainer);
 		autoConfiguration = false;
 		return this;
 	}
 
 	@Override
 	public JoyPetite disableExternalsCache() {
+		requireNotStarted(petiteContainer);
 		externalsCache = true;
 		return this;
 	}
 
 	@Override
 	public JoyPetite withPetite(final Consumer<PetiteContainer> petiteContainerConsumer) {
+		requireNotStarted(petiteContainer);
 		petiteContainerConsumers.add(petiteContainerConsumer);
 		return this;
 	}
