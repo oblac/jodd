@@ -30,6 +30,7 @@ import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteContainer;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.proxy.example1.ExternalBean;
+import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.test.DisabledOnJava;
 import org.junit.jupiter.api.AfterEach;
@@ -92,8 +93,8 @@ class MixedScope343Test {
 		assertEquals("RUN!" + System.lineSeparator() +
 			"execute now : jodd.petite.proxy.example1.impl.MainPetiteBean" + System.lineSeparator() +
 			"execute now : jodd.petite.proxy.example1.impl.SubPetiteBean" + System.lineSeparator() +
-			"Executing jodd.petite.proxy.example1.impl.SubPetiteBean$$Proxetta" + System.lineSeparator() +
-			"executing jodd.petite.proxy.example1.impl.MainPetiteBean$$Proxetta" + System.lineSeparator() +
+			"Executing jodd.petite.proxy.example1.impl.SubPetiteBean" + ProxettaNames.proxyClassNameSuffix + System.lineSeparator() +
+			"executing jodd.petite.proxy.example1.impl.MainPetiteBean" + ProxettaNames.proxyClassNameSuffix + System.lineSeparator() +
 			"executing non jodd petite bean -> jodd.petite.proxy.example1.ExternalBean" + System.lineSeparator(),
 			outContent.toString());
 	}
