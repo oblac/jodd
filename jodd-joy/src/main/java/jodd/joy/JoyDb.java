@@ -171,9 +171,8 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
 
-		final String appName = appNameSupplier.get();
 
-		joyPetiteSupplier.get().getPetiteContainer().addBean(appName + "." + PETITE_DBPOOL, connectionProvider);
+		joyPetiteSupplier.get().getPetiteContainer().addBean(beanNamePrefix() + PETITE_DBPOOL, connectionProvider);
 
 		if (connectionProvider instanceof CoreConnectionPool) {
 			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;
@@ -210,7 +209,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 		final DbEntityManager dbEntityManager = dbOom.entityManager();
 		dbEntityManager.reset();
 
-		joyPetiteSupplier.get().getPetiteContainer().addBean(appName + "." + PETITE_DBQUERY, dbOom.queryConfig());
+		joyPetiteSupplier.get().getPetiteContainer().addBean(beanNamePrefix() + PETITE_DBQUERY, dbOom.queryConfig());
 
 		// automatic configuration
 		if (autoConfiguration) {
@@ -297,6 +296,11 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 			dbOom.shutdown();
 		}
 		dbOom = null;
+	}
+
+	protected String beanNamePrefix() {
+		final String appName = appNameSupplier.get();
+		return appName + ".";
 	}
 
 	// ---------------------------------------------------------------- print
