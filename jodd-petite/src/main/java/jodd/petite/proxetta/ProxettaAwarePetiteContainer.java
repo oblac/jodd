@@ -30,9 +30,9 @@ import jodd.petite.PetiteConfig;
 import jodd.petite.PetiteContainer;
 import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
+import jodd.proxetta.Proxetta;
+import jodd.proxetta.ProxettaFactory;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.impl.ProxyProxetta;
-import jodd.proxetta.impl.ProxyProxettaFactory;
 
 import java.util.function.Consumer;
 
@@ -41,12 +41,12 @@ import java.util.function.Consumer;
  */
 public class ProxettaAwarePetiteContainer extends PetiteContainer {
 
-	protected final ProxyProxetta proxetta;
+	protected final Proxetta<?, ProxyAspect> proxetta;
 
-	public ProxettaAwarePetiteContainer(final ProxyProxetta proxetta) {
+	public ProxettaAwarePetiteContainer(final Proxetta<?, ProxyAspect> proxetta) {
 		this.proxetta = proxetta;
 	}
-	public ProxettaAwarePetiteContainer(final ProxyProxetta proxetta, final PetiteConfig petiteConfig) {
+	public ProxettaAwarePetiteContainer(final Proxetta<?, ProxyAspect> proxetta, final PetiteConfig petiteConfig) {
 		super(petiteConfig);
 		this.proxetta = proxetta;
 	}
@@ -56,17 +56,30 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(final String name, Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> consumer) {
+	protected <T> BeanDefinition<T> createBeanDefinitionForRegistration(
+			final String name,
+			Class<T> type,
+			final Scope scope,
+			final WiringMode wiringMode,
+			final Consumer<T> consumer)
+	{
 		if (proxetta != null) {
-			Class originalType = type;
+			final Class originalType = type;
 
-			ProxyProxettaFactory builder = proxetta.proxy();
+			final ProxettaFactory builder = proxetta.proxy();
 
 			builder.setTarget(type);
 
 			type = builder.define();
 
-			return new ProxettaBeanDefinition(name, type, scope, wiringMode, originalType, proxetta.getAspects(new ProxyAspect[0]), consumer);
+			return new ProxettaBeanDefinition(
+				name,
+				type,
+				scope,
+				wiringMode,
+				originalType,
+				proxetta.getAspects(new ProxyAspect[0]),
+				consumer);
 		}
 
 		return super.createBeanDefinitionForRegistration(name, type, scope, wiringMode, consumer);

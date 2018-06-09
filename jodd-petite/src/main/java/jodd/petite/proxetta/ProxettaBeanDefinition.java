@@ -42,7 +42,14 @@ public class ProxettaBeanDefinition<T> extends BeanDefinition<T> {
 	public final Class originalTarget;
 
 	public ProxettaBeanDefinition(
-		final String name, final Class<T> type, final Scope scope, final WiringMode wiringMode, final Class originalTarget, final ProxyAspect[] proxyAspects, final Consumer<T> consumer) {
+			final String name,
+			final Class<T> type,
+			final Scope scope,
+			final WiringMode wiringMode,
+			final Class originalTarget,
+			final ProxyAspect[] proxyAspects,
+			final Consumer<T> consumer)
+	{
 		super(name, type, scope, wiringMode, consumer);
 		this.originalTarget = originalTarget;
 		this.proxyAspects = proxyAspects;
