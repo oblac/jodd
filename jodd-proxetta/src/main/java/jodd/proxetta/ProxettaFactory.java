@@ -135,7 +135,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 	/**
 	 * Defines class as a target.
 	 */
-	protected T setTarget(final Class target) {
+	public T setTarget(final Class target) {
 		assertTargetIsNotDefined();
 
 		try {
@@ -220,7 +220,7 @@ public abstract class ProxettaFactory<T extends ProxettaFactory, P extends Proxe
 		}
 
 		// reads information
-		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader(proxetta.getClassLoader());
+		final TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader(proxetta.getClassLoader());
 		classReader.accept(targetClassInfoReader, 0);
 
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
