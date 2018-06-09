@@ -26,7 +26,6 @@
 package jodd.joy;
 
 import jodd.props.Props;
-import jodd.props.PropsLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,7 +97,7 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 		props.loadSystemProperties("sys");
 		props.loadEnvironment("env");
 
-		log.info("Loaded sys&env props: " + props.countTotalProperties() + " properties.");
+		log.debug("Loaded sys&env props: " + props.countTotalProperties() + " properties.");
 
 		props.setActiveProfiles(propsProfiles.toArray(new String[0]));
 
@@ -114,9 +113,15 @@ public class JoyProps extends JoyBase implements JoyPropsConfig {
 
 		log.debug("Loading props from classpath...");
 
-		PropsLoader.loadFromClasspath(props, patterns);
+		final long startTime = System.currentTimeMillis();
 
-		log.info("PROPS is ready: " + props.countTotalProperties() + " properties.");
+		props.loadFromClasspath(patterns);
+
+		log.debug("Props scanning completed in " + (System.currentTimeMillis() - startTime) + "ms.");
+
+		log.debug("Total properties: " + props.countTotalProperties());
+
+		log.info("PROPS OK!");
 	}
 
 	/**

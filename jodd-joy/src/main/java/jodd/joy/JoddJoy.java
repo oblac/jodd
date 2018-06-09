@@ -47,14 +47,6 @@ public class JoddJoy {
 	 * System property: application folder.
 	 */
 	public static final String APP_DIR = "app.dir";
-	/**
-	 * Petite bean name for AppCore (this instance).
-	 */
-	public static final String PETITE_CORE = "core";
-	/**
-	 * Petite bean name for {@link JoyScanner} bean.
-	 */
-	public static final String PETITE_SCANNER = "scanner";
 
 	private static JoddJoy joddJoy;
 
@@ -257,8 +249,8 @@ public class JoddJoy {
 			joyScanner.start();
 
 			joyPetite.start();
-			joyPetite.getPetiteContainer().addBean(appName + "." + PETITE_CORE, this);
-			joyPetite.getPetiteContainer().addBean(appName + "." + PETITE_SCANNER, joyScanner);
+			joyPetite.getPetiteContainer().addBean(appName + ".core",  this);
+			joyPetite.getPetiteContainer().addBean(appName + ".scanner", joyScanner);
 
 			joyDb.start();
 

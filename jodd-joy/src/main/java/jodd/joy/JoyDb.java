@@ -35,11 +35,13 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
+import jodd.db.querymap.QueryMap;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
 import jodd.jtx.worker.LeanJtxWorker;
+import jodd.petite.PetiteContainer;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
@@ -62,12 +64,6 @@ import java.util.function.Supplier;
  * Tiny JoyDb kickstarter.
  */
 public class JoyDb extends JoyBase implements JoyDbConfig {
-
-	/**
-	 * Petite bean name for database pool.
-	 */
-	private static final String PETITE_DBPOOL = "dbpool";
-	private static final String PETITE_DBQUERY = "dbquery";
 
 	protected final Supplier<String> appNameSupplier;
 	protected final Supplier<JoyScanner> joyScannerSupplier;
@@ -168,11 +164,12 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 
 		log.info("DB start ----------");
 
+		final PetiteContainer petiteContainer = joyPetiteSupplier.get().getPetiteContainer();
+
 		// connection pool
 		connectionProvider = createConnectionProviderIfNotSupplied();
 
-
-		joyPetiteSupplier.get().getPetiteContainer().addBean(beanNamePrefix() + PETITE_DBPOOL, connectionProvider);
+		petiteContainer.addBean(beanNamePrefix() + "pool", connectionProvider);
 
 		if (connectionProvider instanceof CoreConnectionPool) {
 			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;
@@ -196,20 +193,28 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 		// create proxy
 		joyProxettaSupplier.get().getProxetta().withAspect(createTxProxyAspects(annTxAdviceManager.getAnnotations()));
 
-
 		final DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
-		// global settings
+		// querymap
+		final long startTime = System.currentTimeMillis();
+
+		final QueryMap queryMap = new DbPropsQueryMap();
+
+		log.debug("Queries loaded in " + (System.currentTimeMillis() - startTime) + "ms.");
+		log.debug("Total queries: " + queryMap.size());
+
+		// dboom
 		dbOom = DbOom.create()
 			.withConnectionProvider(connectionProvider)
 			.withSessionProvider(sessionProvider)
-			.withQueryMap(new DbPropsQueryMap())
+			.withQueryMap(queryMap)
 			.get();
 
 		final DbEntityManager dbEntityManager = dbOom.entityManager();
 		dbEntityManager.reset();
 
-		joyPetiteSupplier.get().getPetiteContainer().addBean(beanNamePrefix() + PETITE_DBQUERY, dbOom.queryConfig());
+		petiteContainer.addBean(beanNamePrefix() + "query", dbOom.queryConfig());
+		petiteContainer.addBean(beanNamePrefix() + "oom", dbOom.config());
 
 		// automatic configuration
 		if (autoConfiguration) {
@@ -222,7 +227,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 
 		dbEntityManagerConsumers.accept(dbEntityManager);
 
-		log.info("DB started");
+		log.info("DB OK!");
 	}
 
 	/**
@@ -300,7 +305,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 
 	protected String beanNamePrefix() {
 		final String appName = appNameSupplier.get();
-		return appName + ".";
+		return appName + ".db.";
 	}
 
 	// ---------------------------------------------------------------- print

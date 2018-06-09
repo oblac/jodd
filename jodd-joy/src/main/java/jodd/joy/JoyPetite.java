@@ -117,7 +117,7 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 			petiteContainer.setExternalsCache(TypeCache.createDefault());
 		}
 
-		log.info("Is web application: " + isWebApplication);
+		log.info("Web application? " + isWebApplication);
 
 		if (!isWebApplication) {
 			// make session scope to act as singleton scope
@@ -136,11 +136,9 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 			automagicPetiteConfigurator.registerAsConsumer(joyScannerSupplier.get().getClassScanner());
 		}
 
-		log.debug("Petite manual configuration started...");
-
 		petiteContainerConsumers.accept(this.petiteContainer);
 
-		log.info("PETITE started");
+		log.info("PETITE OK!");
 	}
 
 	protected ProxettaAwarePetiteContainer createPetiteContainer() {

@@ -167,6 +167,8 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 			.scanDefaultClasspath();
 
 		appClasses.forEach(clazz -> classScanner.scan(ClassPathURLs.of(null, clazz)));
+
+		log.info("SCANNER OK!");
 	}
 
 	@Override

@@ -122,7 +122,7 @@ public class JoyMadvoc extends JoyBase {
 		final Props allProps = joyPropsSupplier.get().getProps();
 		final String appName = appNameSupplier.get();
 
-		webApp.withParams(allProps.innerMap(appName + ".madvoc."));
+		webApp.withParams(allProps.innerMap(beanNamePrefix()));
 
 		webApp.registerComponent(new ProxettaSupplier(joyProxettaSupplier.get().getProxetta()));
 		webApp.registerComponent(ProxettaAwareActionsManager.class);
@@ -143,6 +143,13 @@ public class JoyMadvoc extends JoyBase {
 		webAppConsumers.accept(webApp);
 
 		webApp.start();
+
+		log.info("MADVOC OK!");
+	}
+
+	protected String beanNamePrefix() {
+		final String appName = appNameSupplier.get();
+		return appName + ".madvoc.";
 	}
 
 	@Override

@@ -84,7 +84,7 @@ public class JoyProxetta extends JoyBase implements JoyProxettaConfig {
 
 		proxyProxetta = Proxetta.proxyProxetta().withAspects(proxyAspectsArray);
 
-		log.info("PROXETTA started");
+		log.info("PROXETTA OK!");
 	}
 
 	@Override
