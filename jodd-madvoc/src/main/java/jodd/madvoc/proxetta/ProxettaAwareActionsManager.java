@@ -30,7 +30,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.petite.meta.PetiteInject;
-import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.Proxetta;
 
 import java.lang.reflect.Method;
 
@@ -68,7 +68,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 		Class existing = proxyActionClasses.get(actionClass);
 
 		if (existing == null) {
-			final ProxyProxetta proxetta = proxettaSupplier.get();
+			final Proxetta proxetta = proxettaSupplier.get();
 
 			existing = proxetta.proxy().setTarget(actionClass).define();
 

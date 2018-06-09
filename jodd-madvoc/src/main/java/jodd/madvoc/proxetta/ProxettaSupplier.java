@@ -25,20 +25,20 @@
 
 package jodd.madvoc.proxetta;
 
-import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.Proxetta;
 
 import java.util.function.Supplier;
 
-public class ProxettaSupplier implements Supplier<ProxyProxetta> {
+public class ProxettaSupplier implements Supplier<Proxetta> {
 
-	private final ProxyProxetta proxyProxetta;
+	private final Proxetta proxetta;
 
-	public ProxettaSupplier(final ProxyProxetta proxyProxetta) {
-		this.proxyProxetta = proxyProxetta;
+	public ProxettaSupplier(final Proxetta proxetta) {
+		this.proxetta = proxetta;
 	}
 
 	@Override
-	public ProxyProxetta get() {
-		return proxyProxetta;
+	public Proxetta get() {
+		return proxetta;
 	}
 }
