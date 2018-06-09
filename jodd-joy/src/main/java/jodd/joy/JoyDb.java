@@ -175,7 +175,7 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 			final CoreConnectionPool pool = (CoreConnectionPool) connectionProvider;
 			if (pool.getDriver() == null) {
 				databaseEnabled = false;
-				log.warn("DB configuration not set. DB will be disabled.");
+				log.warn("DB configuration not set (" + beanNamePrefix() + "pool.*). DB will be disabled.");
 				return;
 			}
 		}
@@ -209,6 +209,8 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 			.withSessionProvider(sessionProvider)
 			.withQueryMap(queryMap)
 			.get();
+
+		dbOom.connect();
 
 		final DbEntityManager dbEntityManager = dbOom.entityManager();
 		dbEntityManager.reset();

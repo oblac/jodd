@@ -152,7 +152,8 @@ public class DbOom {
 	}
 
 	/**
-	 * Initializes the DbOom by connecting to the database.
+	 * Initializes the DbOom by connecting to the database. Database will be detected
+	 * and DbOom will be configured to match it.
 	 */
 	public DbOom connect() {
 		connectionProvider.init();
