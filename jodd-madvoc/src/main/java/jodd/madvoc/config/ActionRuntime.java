@@ -77,6 +77,7 @@ public class ActionRuntime {
 		this.actionHandler = actionHandler;
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
+//		this.actionClassMethod = methodOfDeclaredClass(actionClass, actionClassMethod);
 		this.actionPath = actionDefinition.actionPath();
 		this.actionMethod = actionDefinition.actionMethod() == null ? null : actionDefinition.actionMethod().toUpperCase();
 		this.resultBasePath = actionDefinition.resultBasePath();
@@ -92,6 +93,33 @@ public class ActionRuntime {
 		this.interceptors = interceptors;
 		this.methodParams = methodParams;
 	}
+
+/*
+
+	/**
+	 * When wrapper proxy is used, the method will not belong to a type.
+	 * This method finds the corresponding method in the type.
+	private Method methodOfDeclaredClass(final Class type, final Method method) {
+		if (method.getDeclaringClass() == type) {
+			return method;
+		}
+
+		final Method[] allMethods = type.getDeclaredMethods();
+		for (final Method newMethod : allMethods) {
+			if (!newMethod.getName().equals(method.getName())) {
+				continue;
+			}
+			if (!newMethod.getReturnType().equals(method.getReturnType())) {
+				continue;
+			}
+			if (!Arrays.equals(newMethod.getParameterTypes(), method.getParameterTypes())) {
+				continue;
+			}
+			return newMethod;
+		}
+		return method;
+	}
+*/
 
 	// ---------------------------------------------------------------- getters
 

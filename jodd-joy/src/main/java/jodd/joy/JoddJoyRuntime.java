@@ -30,7 +30,7 @@ import jodd.jtx.JtxTransactionManager;
 import jodd.madvoc.WebApp;
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
-import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.Proxetta;
 
 /**
  * A simple collection of all Jodd components, available once when Joy is started.
@@ -40,7 +40,7 @@ public class JoddJoyRuntime {
 	private final Props props;
 	private final String appName;
 	private final String appDir;
-	private final ProxyProxetta proxetta;
+	private final Proxetta proxetta;
 	private final PetiteContainer petiteContainer;
 	private final boolean databaseEnabled;
 	private final ConnectionProvider connectionProvider;
@@ -51,7 +51,7 @@ public class JoddJoyRuntime {
 		final String appName,
 		final String appDir,
 		final Props props,
-		final ProxyProxetta proxetta,
+		final Proxetta proxetta,
 		final PetiteContainer petiteContainer,
 		final boolean databaseEnabled,
 		final ConnectionProvider connectionProvider,
@@ -81,7 +81,7 @@ public class JoddJoyRuntime {
 		return appDir;
 	}
 
-	public ProxyProxetta getProxetta() {
+	public Proxetta getProxetta() {
 		return proxetta;
 	}
 

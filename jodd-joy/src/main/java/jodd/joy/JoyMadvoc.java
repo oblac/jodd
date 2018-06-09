@@ -37,6 +37,7 @@ import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaSupplier;
 import jodd.props.Props;
+import jodd.proxetta.ProxettaUtil;
 import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.function.Consumers;
@@ -193,8 +194,10 @@ public class JoyMadvoc extends JoyBase {
 				print.out(Chalk256.chalk().green(), ar.getActionPath(), 30);
 				print.space();
 
-				final String signature = ClassUtil.getShortClassName(
-						ar.getActionClass(), 2) + '#' + ar.getActionClassMethod().getName();
+				final String signature =
+					ClassUtil.getShortClassName(
+						ProxettaUtil.resolveTargetClass(ar.getActionClass()), 2)
+						+ '#' + ar.getActionClassMethod().getName();
 
 				final int remaining = width - 7 - 1 - 30 - 1;
 				print.outRight(Chalk256.chalk().blue(), signature, remaining);
