@@ -28,17 +28,20 @@ package jodd.db.querymap;
 /**
  * Storage of SQL queries.
  */
-@FunctionalInterface
 public interface QueryMap {
 
 	/**
 	 * Optionally reloads the query map, if implementation allows it.
 	 */
-	default void reload() {}
+	void reload();
 
 	/**
 	 * Returns query for given key. Returns <code>null</code> if query not found.
 	 */
 	String getQuery(String key);
 
+	/**
+	 * Returns total number of queries.
+	 */
+	int size();
 }
