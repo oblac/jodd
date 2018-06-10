@@ -39,6 +39,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static jodd.util.StringPool.CRLF;
 import static jodd.util.StringPool.SPACE;
@@ -998,6 +1001,32 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest acceptJson() {
 		return accept(MimeTypes.MIME_APPLICATION_JSON);
+	}
+
+
+	// ---------------------------------------------------------------- functional/async
+
+	/**
+	 * Sends http request asynchronously using common fork-join pool.
+	 * Note that this is not the right non-blocking call (not a NIO), it is just
+	 * a regular call that is operated in a separate thread.
+	 */
+	public CompletableFuture<HttpResponse> sendAsync() {
+		return CompletableFuture.supplyAsync(this::send);
+	}
+
+	/**
+	 * Syntax sugar.
+	 */
+	public <R> R sendAndReceive(final Function<HttpResponse, R> responseHandler) {
+		return responseHandler.apply(send());
+	}
+
+	/**
+	 * Syntax sugar.
+	 */
+	public void sendAndReceive(final Consumer<HttpResponse> responseHandler) {
+		responseHandler.accept(send());
 	}
 
 }
