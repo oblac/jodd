@@ -27,6 +27,7 @@ package jodd.cache;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.locks.StampedLock;
 
 /**
@@ -127,6 +128,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 */
 	@Override
 	public void put(final K key, final V object, final long timeout) {
+		Objects.requireNonNull(object);
+
 		final long stamp = lock.writeLock();
 
 		try {
@@ -257,17 +260,21 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void remove(final K key) {
+	public V remove(final K key) {
+		V removedValue = null;
 		final long stamp = lock.writeLock();
 		try {
 			CacheObject<K,V> co = cacheMap.remove(key);
+
 			if (co != null) {
 				onRemove(co.key, co.cachedObject);
+				removedValue = co.cachedObject;
 			}
 		}
 		finally {
 			lock.unlockWrite(stamp);
 		}
+		return removedValue;
 	}
 
 	/**

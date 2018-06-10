@@ -71,8 +71,8 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public void remove(final K key) {
-		// ignore
+	public V remove(final K key) {
+		return null;
 	}
 
 	@Override

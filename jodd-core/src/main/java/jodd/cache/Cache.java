@@ -51,6 +51,7 @@ public interface Cache<K, V> {
 	/**
 	 * Adds an object to the cache with specified timeout after which it becomes expired.
 	 * If cache is full, {@link #prune()} is invoked to make room for new object.
+	 * Cached value must be non-null.
 	 */
 	void put(K key, V object, long timeout);
 
@@ -73,9 +74,10 @@ public interface Cache<K, V> {
 	boolean isFull();
 
 	/**
-	 * Removes an object from the cache.
+	 * Removes an object from the cache and returns removed value of {@code null}
+	 * if object was not in the cache or was expired.
 	 */
-	void remove(K key);
+	V remove(K key);
 
 	/**
 	 * Clears current cache.
