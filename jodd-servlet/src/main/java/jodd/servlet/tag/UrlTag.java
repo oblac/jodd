@@ -76,12 +76,12 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 		if (var == null) {
 			JspWriter out = pageContext.getOut();
 			try {
-				out.print(builder.toString());
+				out.print(builder.get());
 			} catch (IOException ioex) {
 				// ignore
 			}
 		} else {
-			pageContext.setAttribute(var, builder.toString());
+			pageContext.setAttribute(var, builder.get());
 		}
 	}
 }
