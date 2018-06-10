@@ -30,6 +30,7 @@ import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.net.HttpMethod;
+import jodd.util.net.MimeTypes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -980,6 +981,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		return httpRequest;
+	}
+
+
+	// ---------------------------------------------------------------- shortcuts
+
+	/**
+	 * Specifies JSON content type.
+	 */
+	public HttpRequest contentTypeJson() {
+		return contentType(MimeTypes.MIME_APPLICATION_JSON);
+	}
+
+	/**
+	 * Accepts JSON content type.
+	 */
+	public HttpRequest acceptJson() {
+		return accept(MimeTypes.MIME_APPLICATION_JSON);
 	}
 
 }
