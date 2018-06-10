@@ -201,10 +201,10 @@ class URLCoderTest {
 
 	@Test
 	void testUrlBuilder() {
-		assertEquals("http://jodd.org", URLCoder.build("http://jodd.org").toString());
-		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build("http://jodd.org").queryParam("param", "jodd&java").toString());
-		assertEquals("http://jodd.org?pa%20ram=jodd%2Bjava", URLCoder.build("http://jodd.org").queryParam("pa ram", "jodd+java").toString());
-		assertEquals("/foo?foo=one&bar=two", URLCoder.build("/foo").queryParam("foo", "one").queryParam("bar", "two").toString());
+		assertEquals("http://jodd.org", URLCoder.build("http://jodd.org").get());
+		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build("http://jodd.org").queryParam("param", "jodd&java").get());
+		assertEquals("http://jodd.org?pa%20ram=jodd%2Bjava", URLCoder.build("http://jodd.org").queryParam("pa ram", "jodd+java").get());
+		assertEquals("/foo?foo=one&bar=two", URLCoder.build("/foo").queryParam("foo", "one").queryParam("bar", "two").get());
 	}
 
 }

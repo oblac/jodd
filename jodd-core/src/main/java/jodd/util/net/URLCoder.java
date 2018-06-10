@@ -480,6 +480,10 @@ public class URLCoder {
 			this.hasParams = url.indexOf(StringPool.QUESTION_MARK) != -1;
 		}
 
+		public Builder queryParam(final String name, final Object value) {
+			return queryParam(name, value.toString());
+		}
+
 		/**
 		 * Appends new query parameter to the url.
 		 */
@@ -499,8 +503,7 @@ public class URLCoder {
 		/**
 		 * Returns full URL.
 		 */
-		@Override
-		public String toString() {
+		public String get() {
 			return url.toString();
 		}
 	}
