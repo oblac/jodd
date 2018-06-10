@@ -51,6 +51,12 @@ public class Print {
 		System.out.print(' ');
 	}
 
+	public void space(int count) {
+		while (count-- > 0) {
+			System.out.print(' ');
+		}
+	}
+
 	public void out(final Chalk256 chalk256, final String string, final int maxLen) {
 		System.out.print(chalk256.on(val(string, maxLen)));
 	}

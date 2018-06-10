@@ -45,6 +45,7 @@ import jodd.util.function.Consumers;
 import javax.servlet.ServletContext;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -172,6 +173,7 @@ public class JoyMadvoc extends JoyBase {
 	protected void printRoutes(final int width) {
 		final ActionsManager actionsManager = webApp.madvocContainer().lookupComponent(ActionsManager.class);
 		final List<ActionRuntime> actions = actionsManager.getAllActionRuntimes();
+		final Map<String, String> aliases = actionsManager.getAllAliases();
 
 		if (actions.isEmpty()) {
 			return;
@@ -204,6 +206,34 @@ public class JoyMadvoc extends JoyBase {
 
 				print.newLine();
 			});
+
+		if (!aliases.isEmpty()) {
+
+			print.line("Aliases", width);
+
+			actions.stream()
+				.sorted(Comparator.comparing(
+					actionRuntime -> actionRuntime.getActionPath() + ' ' + actionRuntime.getActionMethod()))
+				.forEach(ar -> {
+
+					final String actionPath = ar.getActionPath();
+
+					for (Map.Entry<String, String> entry : aliases.entrySet()) {
+						if (entry.getValue().equals(actionPath)) {
+							print.space(8);
+
+							print.out(Chalk256.chalk().green(), entry.getValue(), 30);
+							print.space();
+
+							final int remaining = width - 7 - 1 - 30 - 1;
+							print.outRight(Chalk256.chalk().blue(), entry.getKey(), remaining);
+
+							print.newLine();
+
+						}
+					}
+				});
+		}
 
 		print.line(width);
 	}
