@@ -85,11 +85,11 @@ public class ActionsManager {
 	 * with and without the macro.
 	 */
 	public List<ActionRuntime> getAllActionRuntimes() {
-		List<ActionRuntime> all = new ArrayList<>(actionsCount);
+		return new ArrayList<>(runtimes.values());
+	}
 
-		all.addAll(runtimes.values());
-
-		return all;
+	public Map<String, String> getAllAliases() {
+		return new HashMap<>(pathAliases);
 	}
 
 	/**
