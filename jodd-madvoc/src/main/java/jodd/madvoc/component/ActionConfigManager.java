@@ -55,20 +55,21 @@ public class ActionConfigManager {
 	 * Registers action configuration for given annotation. New {@link ActionConfig} is created
 	 * and stored.
 	 */
-	public void registerActionAnnotation(final Class<? extends Annotation> annotationType) {
+	public void registerAnnotation(final Class<? extends Annotation> annotationType) {
 		final ActionConfiguredBy actionConfiguredBy = annotationType.getAnnotation(ActionConfiguredBy.class);
 
 		if (actionConfiguredBy == null) {
 			throw new MadvocException("Action annotation is missing it's " + ActionConfiguredBy.class.getSimpleName() + " configuration.");
 		}
 
-		registerActionAnnotationAndConfiguration(annotationType, actionConfiguredBy.value());
+		bindAnnotationConfig(annotationType, actionConfiguredBy.value());
 	}
 
 	/**
-	 * Binds action
+	 * Binds action annotation and the action config. This can overwrite the default annotation
+	 * configuration of an annotation.
 	 */
-	public void registerActionAnnotationAndConfiguration(final Class<? extends Annotation> annotationType, final Class<? extends ActionConfig> actionConfigClass) {
+	public void bindAnnotationConfig(final Class<? extends Annotation> annotationType, final Class<? extends ActionConfig> actionConfigClass) {
 		final ActionConfig actionConfig = registerNewActionConfiguration(actionConfigClass);
 
 		actionConfigs.put(annotationType, actionConfig);

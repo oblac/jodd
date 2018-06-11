@@ -284,8 +284,8 @@ public class WebApp {
 		final ActionConfigManager actionConfigManager =
 			madvocContainer.lookupComponent(ActionConfigManager.class);
 
-		actionConfigManager.registerActionAnnotation(Action.class);
-		actionConfigManager.registerActionAnnotation(RestAction.class);
+		actionConfigManager.registerAnnotation(Action.class);
+		actionConfigManager.registerAnnotation(RestAction.class);
 	}
 
 	/**

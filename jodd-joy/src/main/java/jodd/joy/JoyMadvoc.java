@@ -116,8 +116,8 @@ public class JoyMadvoc extends JoyBase {
 		webApp = webAppSupplier == null ? new PetiteWebApp(joyPetiteSupplier.get().getPetiteContainer()) : webAppSupplier.get();
 
 		webApp.withRegisteredComponent(ActionConfigManager.class, acm -> {
-			acm.registerActionAnnotationAndConfiguration(Action.class, JoyActionConfig.class);
-			acm.registerActionAnnotationAndConfiguration(RestAction.class, JoyRestActionConfig.class);
+			acm.bindAnnotationConfig(Action.class, JoyActionConfig.class);
+			acm.bindAnnotationConfig(RestAction.class, JoyRestActionConfig.class);
 		});
 
 		if (servletContext != null) {
