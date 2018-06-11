@@ -47,7 +47,7 @@ public class DefaultActionPathNamingStrategy extends BaseNamingStrategy {
 		final String methodActionPath = actionNames.methodActionPath();
 		final String httpMethod = actionNames.httpMethod();
 
-		// if method path is an absolute path, use it right away.
+		// if method path is an absolute path, use it right away
 
 		if (isAbsolutePath(methodActionPath)) {
 			return createActionDef(methodActionPath, httpMethod, methodActionPath, actionNames);

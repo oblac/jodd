@@ -48,8 +48,20 @@ public class ActionAnnotationValues implements Action {
 
 	private ActionAnnotationValues(final AnnotationParser.Reader reader) {
 		this.annotationType = reader.annotationType();
-		this.value = reader.readString("value", null);
-		this.alias = reader.readString("alias", null);
+
+		String rawValue = reader.readString("value", null);
+		String rawAlias = null;
+
+		if (rawValue != null) {
+			final int ndx = rawValue.indexOf("<");
+			if (ndx != -1) {
+				rawAlias = rawValue.substring(ndx + 1, rawValue.length() - 1);
+				rawValue = rawValue.substring(0, ndx - 1);
+			}
+		}
+
+		this.value = rawValue;
+		this.alias = reader.readString("alias", rawAlias);
 	}
 
 	@Override
