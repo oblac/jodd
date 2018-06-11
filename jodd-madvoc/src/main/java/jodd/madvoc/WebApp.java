@@ -34,6 +34,7 @@ import jodd.madvoc.component.ActionPathRewriter;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.AsyncActionExecutor;
 import jodd.madvoc.component.ContextInjectorComponent;
+import jodd.madvoc.component.FileUploader;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocComponentLifecycle;
@@ -314,6 +315,7 @@ public class WebApp {
 		madvocContainer.registerComponent(ScopeResolver.class);
 		madvocContainer.registerComponent(ScopeDataInspector.class);
 		madvocContainer.registerComponent(AsyncActionExecutor.class);
+		madvocContainer.registerComponent(FileUploader.class);
 	}
 
 	/**

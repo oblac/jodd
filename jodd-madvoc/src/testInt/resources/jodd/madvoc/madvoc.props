@@ -6,8 +6,4 @@ madvocConfig.pathMacroClass=jodd.madvoc.macro.RegExpPathMacros
 appendingInterceptor.addon=<jodd>
 hey.addon=<heyp>
 
-myInterceptorStack.interceptors=\
-	jodd.madvoc.interceptor.ServletConfigInterceptor,\
-	jodd.madvoc.AppendingInterceptor
-
 asyncActionExecutor.foo=3

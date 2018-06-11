@@ -25,8 +25,6 @@
 
 package jodd.madvoc;
 
-import jodd.io.upload.FileUploadFactory;
-import jodd.io.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.util.StringPool;
@@ -49,7 +47,6 @@ public final class MadvocConfig {
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
 		encoding = StringPool.UTF_8;
-		fileUploadFactory = new AdaptiveFileUploadFactory();
 		pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 	}
@@ -71,24 +68,6 @@ public final class MadvocConfig {
 	public void setEncoding(final String encoding) {
 		Objects.requireNonNull(encoding);
 		this.encoding = encoding;
-	}
-
-	// ---------------------------------------------------------------- file upload factory
-
-	private FileUploadFactory fileUploadFactory;
-
-	/**
-	 * Returns file upload factory.
-	 */
-	public FileUploadFactory getFileUploadFactory() {
-		return fileUploadFactory;
-	}
-
-	/**
-	 * Specifies file upload factory.
-	 */
-	public void setFileUploadFactory(final FileUploadFactory fileUploadFactory) {
-		this.fileUploadFactory = fileUploadFactory;
 	}
 
 	// ---------------------------------------------------------------- path macro class
