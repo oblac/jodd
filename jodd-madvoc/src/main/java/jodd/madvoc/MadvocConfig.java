@@ -27,13 +27,11 @@ package jodd.madvoc;
 
 import jodd.io.upload.FileUploadFactory;
 import jodd.io.upload.impl.AdaptiveFileUploadFactory;
-import jodd.madvoc.action.DefaultActionConfig;
 import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.util.StringPool;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import static jodd.util.StringPool.COLON;
 import static jodd.util.StringPool.LEFT_BRACE;
@@ -44,8 +42,7 @@ import static jodd.util.StringPool.RIGHT_BRACE;
  * New custom component that requires configuration may override and enhance this config
  * with new configuration.
  * <p>
- * This class is instantiated in {@link WebApp}. Use {@link WebApp#configure(Consumer)} to change the
- * configuration.
+ * This class is instantiated in {@link WebApp}.
  */
 public final class MadvocConfig {
 
@@ -53,7 +50,6 @@ public final class MadvocConfig {
 	public MadvocConfig() {
 		encoding = StringPool.UTF_8;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
-		defaultActionConfig = DefaultActionConfig.class;
 		pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 	}
@@ -93,18 +89,6 @@ public final class MadvocConfig {
 	 */
 	public void setFileUploadFactory(final FileUploadFactory fileUploadFactory) {
 		this.fileUploadFactory = fileUploadFactory;
-	}
-
-	// ---------------------------------------------------------------- default action config
-
-	private Class<? extends ActionConfig> defaultActionConfig;
-
-	public Class<? extends ActionConfig> getDefaultActionConfig() {
-		return defaultActionConfig;
-	}
-
-	public void setDefaultActionConfig(final Class<? extends ActionConfig> defaultActionConfig) {
-		this.defaultActionConfig = defaultActionConfig;
 	}
 
 	// ---------------------------------------------------------------- path macro class

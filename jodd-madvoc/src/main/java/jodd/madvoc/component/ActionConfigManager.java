@@ -27,7 +27,6 @@ package jodd.madvoc.component;
 
 import jodd.cache.TypeCache;
 import jodd.madvoc.ActionConfig;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotationValues;
@@ -50,11 +49,7 @@ public class ActionConfigManager {
 	private AnnotationParser[] annotationParsers = new AnnotationParser[0];
 
 	@PetiteInject
-	protected MadvocConfig madvocConfig;
-
-	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
-
 
 	/**
 	 * Registers action configuration for given annotation. New {@link ActionConfig} is created
@@ -63,27 +58,36 @@ public class ActionConfigManager {
 	public void registerActionAnnotation(final Class<? extends Annotation> annotationType) {
 		final ActionConfiguredBy actionConfiguredBy = annotationType.getAnnotation(ActionConfiguredBy.class);
 
-		final ActionConfig actionConfig;
+		if (actionConfiguredBy == null) {
+			throw new MadvocException("Action annotation is missing it's " + ActionConfiguredBy.class.getSimpleName() + " configuration.");
+		}
 
-		if (actionConfiguredBy != null) {
-			actionConfig = registerActionConfiguration(actionConfiguredBy.value());
-		}
-		else {
-			actionConfig = createActionConfig(madvocConfig.getDefaultActionConfig());
-		}
+		registerActionAnnotationAndConfiguration(annotationType, actionConfiguredBy.value());
+	}
+
+	/**
+	 * Binds action
+	 */
+	public void registerActionAnnotationAndConfiguration(final Class<? extends Annotation> annotationType, final Class<? extends ActionConfig> actionConfigClass) {
+		final ActionConfig actionConfig = registerNewActionConfiguration(actionConfigClass);
 
 		actionConfigs.put(annotationType, actionConfig);
 
+		for (final AnnotationParser annotationParser : annotationParsers) {
+			if (annotationType.equals(annotationParser.getAnnotationType())) {
+				// parser already exists
+				return;
+			}
+		}
 		annotationParsers = ArraysUtil.append(annotationParsers, new AnnotationParser(annotationType, Action.class));
 	}
+
 
 	/**
 	 * Registers action configuration for given type.
 	 */
-	public ActionConfig registerActionConfiguration(final Class<? extends ActionConfig> actionConfigClass) {
-		final ActionConfig newActionConfig;
-
-		newActionConfig = createActionConfig(actionConfigClass);
+	protected ActionConfig registerNewActionConfiguration(final Class<? extends ActionConfig> actionConfigClass) {
+		final ActionConfig newActionConfig = createActionConfig(actionConfigClass);
 
 		actionConfigs.put(actionConfigClass, newActionConfig);
 
@@ -91,7 +95,7 @@ public class ActionConfigManager {
 	}
 
 	/**
-	 * Lookup for the action configuration. Tupicaly, the input argument is either the action type or annotation type.
+	 * Lookup for the action configuration. Typically, the input argument is either the action type or annotation type.
 	 */
 	public ActionConfig lookup(final Class actionTypeOrAnnotationType) {
 		final ActionConfig actionConfig = actionConfigs.get(actionTypeOrAnnotationType);
@@ -137,7 +141,7 @@ public class ActionConfigManager {
 	protected ActionConfig createActionConfig(final Class<? extends ActionConfig> actionConfigClass) {
 		try {
 			final Constructor<? extends ActionConfig> ctor = actionConfigClass.getDeclaredConstructor();
-			final ActionConfig actionConfig =  ctor.newInstance();
+			final ActionConfig actionConfig = ctor.newInstance();
 
 			contextInjectorComponent.injectContext(actionConfig);
 

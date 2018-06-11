@@ -115,9 +115,9 @@ public class RestActionNamingStrategy extends BaseNamingStrategy {
 			i++;
 		}
 
-		String name = methodName.substring(0, i).toUpperCase();
+		final String name = methodName.substring(0, i).toUpperCase();
 
-		for (HttpMethod httpMethod : HttpMethod.values()) {
+		for (final HttpMethod httpMethod : HttpMethod.values()) {
 			if (httpMethod.equalsName(name)) {
 				return httpMethod.name();
 			}

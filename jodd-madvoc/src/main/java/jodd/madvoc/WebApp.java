@@ -151,6 +151,9 @@ public class WebApp {
 		return this;
 	}
 
+	/**
+	 * Configures the action configurations.
+	 */
 	public <A extends ActionConfig> WebApp withActionConfig(final Class<A> actionConfigType, final Consumer<A> actionConfigConsumer) {
 		withRegisteredComponent(ActionConfigManager.class, acm -> acm.with(actionConfigType, actionConfigConsumer));
 		return this;
@@ -167,7 +170,7 @@ public class WebApp {
 	}
 
 	/**
-	 * Returns {@link MadvocContainer Madvoc container}. It is created very first.
+	 * Returns {@link MadvocContainer Madvoc container} that maintain all Madvoc components.
 	 */
 	public MadvocContainer madvocContainer() {
 		return madvocContainer;
@@ -189,7 +192,7 @@ public class WebApp {
 	}
 
 	/**
-	 * Defines a route using {@link MadvocRouter}.
+	 * Defines a route manually using {@link MadvocRouter}.
 	 */
 	public WebApp router(final Consumer<MadvocRouter> madvocAppConsumer) {
 		madvocRouterConsumers.add(madvocAppConsumer);

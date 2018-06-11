@@ -33,7 +33,7 @@ import jodd.madvoc.result.JsonActionResult;
 public class RestActionConfig extends DefaultActionConfig {
 
 	public RestActionConfig() {
-		setActionMethodNames("get", "post", "put", "delete", "options");
+		setActionMethodNames("get", "post", "put", "delete", "options", "head", "patch", "trace");
 		setNamingStrategy(RestActionNamingStrategy.class);
 		setActionResult(JsonActionResult.class);
 		setFilters();

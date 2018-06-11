@@ -30,15 +30,30 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
 
+/**
+ * Common configuration for actions.
+ */
 public interface ActionConfig {
 
 	Class<? extends ActionResult> getActionResult();
 
+	/**
+	 * Returns the list of interceptors of this action.
+	 */
 	Class<? extends ActionInterceptor>[] getInterceptors();
 
+	/**
+	 * Returns the list of filters over this action.
+	 */
 	Class<? extends ActionFilter>[] getFilters();
 
+	/**
+	 * Returns a list of action method names that can be ignored.
+	 */
 	String[] getActionMethodNames();
 
+	/**
+	 * Returns naming strategy used when created a mapping to an action path.
+	 */
 	Class<? extends ActionNamingStrategy> getNamingStrategy();
 }

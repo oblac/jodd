@@ -31,7 +31,6 @@ import jodd.introspector.MapperFunction;
 import jodd.introspector.MapperFunctionInstances;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionHandler;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionDefinition;
@@ -45,17 +44,17 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotationValues;
 import jodd.madvoc.meta.Async;
 import jodd.madvoc.meta.Auth;
-import jodd.madvoc.meta.method.DELETE;
 import jodd.madvoc.meta.FilteredBy;
-import jodd.madvoc.meta.method.GET;
-import jodd.madvoc.meta.method.HEAD;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.meta.method.DELETE;
+import jodd.madvoc.meta.method.GET;
+import jodd.madvoc.meta.method.HEAD;
 import jodd.madvoc.meta.method.OPTIONS;
 import jodd.madvoc.meta.method.PATCH;
 import jodd.madvoc.meta.method.POST;
 import jodd.madvoc.meta.method.PUT;
-import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.meta.method.TRACE;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.result.ActionResult;
@@ -104,9 +103,6 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected FiltersManager filtersManager;
-
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
 
 	@PetiteInject
 	protected RootPackages rootPackages;
@@ -198,9 +194,6 @@ public class ActionMethodParser {
 	 * Resolves action config.
 	 */
 	protected ActionConfig resolveActionConfig(final ActionAnnotationValues annotationValues) {
-		if (annotationValues == null) {
-			return actionConfigManager.lookup(madvocConfig.getDefaultActionConfig());
-		}
 		return actionConfigManager.lookup(annotationValues.annotationType());
 	}
 
@@ -294,8 +287,7 @@ public class ActionMethodParser {
 	// ---------------------------------------------------------------- readers
 
 	/**
-	 * Reads action path for package. It can be used only if root package is set in
-	 * {@link MadvocConfig madvoc configuration}.
+	 * Reads action path for package.
 	 * If annotation is not set on package-level, class package will be used for
 	 * package action path part.
 	 */

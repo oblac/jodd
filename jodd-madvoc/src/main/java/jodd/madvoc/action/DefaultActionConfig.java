@@ -35,7 +35,8 @@ import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.ServletDispatcherActionResult;
 
 /**
- * Default action configuration.
+ * Default action configuration used for the {@link jodd.madvoc.meta.Action}
+ * annotation.
  */
 public class DefaultActionConfig implements ActionConfig {
 
