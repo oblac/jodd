@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletResponse;
  * It also builds action objects and result paths. It handles initialization of
  * interceptors and results.
  */
-public class MadvocController implements MadvocComponentLifecycle.Ready {
+public class MadvocController extends MadvocControllerCfg implements MadvocComponentLifecycle.Ready{
 
 	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
@@ -66,31 +66,6 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 	@PetiteInject
 	protected AsyncActionExecutor asyncActionExecutor;
-
-	protected boolean applyCharacterEncoding = true;
-	protected boolean preventCaching = true;
-	protected String welcomeFile = "/index.jsp";
-
-	/**
-	 * Defines is character encoding has to be set by Madvoc into the request and response.
-	 */
-	public void setApplyCharacterEncoding(final boolean applyCharacterEncoding) {
-		this.applyCharacterEncoding = applyCharacterEncoding;
-	}
-
-	/**
-	 * Specifies if Madvoc should add response params to prevent browser caching.
-	 */
-	public void setPreventCaching(final boolean preventCaching) {
-		this.preventCaching = preventCaching;
-	}
-
-	/**
-	 * Sets the welcome file as defined by servlet container.
-	 */
-	public void setWelcomeFile(final String welcomeFile) {
-		this.welcomeFile = welcomeFile;
-	}
 
 	@Override
 	public void ready() {

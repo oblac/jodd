@@ -41,32 +41,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Thread pool and executor for Async actions.
  */
-public class AsyncActionExecutor {
+public class AsyncActionExecutor extends AsyncActionExecutorCfg {
 
 	private static final Logger log = LoggerFactory.getLogger(AsyncActionExecutor.class);
 
 	protected ExecutorService executorService;
-
-	private int corePoolSize = 10;
-	private int maximumPoolSize = 200;
-	private long keepAliveTimeMillis = 5000L;
-	private int queueCapacity = 100;
-
-	public void setCorePoolSize(final int corePoolSize) {
-		this.corePoolSize = corePoolSize;
-	}
-
-	public void setMaximumPoolSize(final int maximumPoolSize) {
-		this.maximumPoolSize = maximumPoolSize;
-	}
-
-	public void setKeepAliveTimeMillis(final long keepAliveTimeMillis) {
-		this.keepAliveTimeMillis = keepAliveTimeMillis;
-	}
-
-	public void setQueueCapacity(final int queueCapacity) {
-		this.queueCapacity = queueCapacity;
-	}
 
 	public void start() {
 		executorService = new ThreadPoolExecutor(
@@ -85,11 +64,11 @@ public class AsyncActionExecutor {
 			throw new MadvocException("No action is marked as async!");
 		}
 
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		final HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		log.debug(() -> "Async call to: " + actionRequest);
 
-		AsyncContext asyncContext = servletRequest.startAsync();
+		final AsyncContext asyncContext = servletRequest.startAsync();
 
 		executorService.submit(() -> {
 			try {

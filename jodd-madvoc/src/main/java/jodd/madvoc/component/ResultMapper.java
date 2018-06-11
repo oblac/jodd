@@ -43,21 +43,12 @@ import jodd.util.StringUtil;
  *     <li># - strips words from path (goes 'back')</li>
  * </ul>
  */
-public class ResultMapper {
+public class ResultMapper extends ResultMapperCfg {
 
 	private static final Logger log = LoggerFactory.getLogger(ResultMapper.class);
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
-
-	/**
-	 * Default prefix for all result paths.
-	 */
-	protected String resultPathPrefix = null;
-
-	public void setResultPathPrefix(final String resultPathPrefix) {
-		this.resultPathPrefix = resultPathPrefix;
-	}
 
 	/**
 	 * Lookups value as an alias and, if not found, as a default alias.
@@ -77,7 +68,7 @@ public class ResultMapper {
 	 * Returns resolved alias result value or passed on, if alias doesn't exist.
 	 */
 	protected String resolveAlias(final String value) {
-		StringBuilder result = new StringBuilder(value.length());
+		final StringBuilder result = new StringBuilder(value.length());
 		int i = 0;
 		int len = value.length();
 		while (i < len) {

@@ -42,73 +42,13 @@ import java.util.Enumeration;
 /**
  * The request scope.
  */
-public class RequestScope implements MadvocScope {
+public class RequestScope extends RequestScopeCfg implements MadvocScope {
 
 	@PetiteInject
 	MadvocEncoding madvocEncoding;
 
 	protected final ActionPathMacroInjector actionPathMacroInjector = new ActionPathMacroInjector(this);
 	protected final InstancesInjector instancesInjector = new InstancesInjector(this);
-
-	// ---------------------------------------------------------------- configuration
-
-	// flags
-
-	/**
-	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
-	 */
-	protected boolean ignoreEmptyRequestParams;
-	/**
-	 * Specifies if empty parameters will be injected as <code>null</code> value.
-	 */
-	protected boolean treatEmptyParamsAsNull;
-	/**
-	 * Specifies if attributes will be injected.
-	 */
-	protected boolean injectAttributes = true;
-	/**
-	 * Specifies if parameters will be injected.
-	 */
-	protected boolean injectParameters = true;
-	/**
-	 * Specifies if GET parameters should be encoded. Alternatively, this can be set in container as well.
-	 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
-	 * file communicates the character-encoding choice to the web server,
-	 * and the Tomcat server correctly reads the URL GET parameters correctly.
-	 * On Sun Java System Application Server 8.1, "&lt;parameter-encoding default-charset="UTF-8"/&gt;"
-	 * can be included in the sun-web.xml file.
-	 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
-	 */
-	protected boolean encodeGetParams;
-	/**
-	 * Specifies if invalid and non-existing upload files should be <code>null</code>.
-	 */
-	protected boolean ignoreInvalidUploadFiles = true;
-
-	public void setIgnoreEmptyRequestParams(final boolean ignoreEmptyRequestParams) {
-		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
-	}
-
-	public void setTreatEmptyParamsAsNull(final boolean treatEmptyParamsAsNull) {
-		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
-	}
-
-	public void setInjectAttributes(final boolean injectAttributes) {
-		this.injectAttributes = injectAttributes;
-	}
-
-	public void setInjectParameters(final boolean injectParameters) {
-		this.injectParameters = injectParameters;
-	}
-
-	public void setEncodeGetParams(final boolean encodeGetParams) {
-		this.encodeGetParams = encodeGetParams;
-	}
-
-	public void setIgnoreInvalidUploadFiles(final boolean ignoreInvalidUploadFiles) {
-		this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
-	}
-
 
 	// ---------------------------------------------------------------- inject
 
