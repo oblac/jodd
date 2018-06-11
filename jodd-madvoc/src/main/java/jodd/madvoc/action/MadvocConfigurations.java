@@ -25,7 +25,6 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
@@ -48,9 +47,6 @@ import java.util.List;
  * action results and interceptors. It can be extended as an Madvoc action or used independently.
  */
 public class MadvocConfigurations {
-
-	@In @MadvocContext
-	protected MadvocConfig madvocConfig;
 
 	@In @MadvocContext
 	protected ActionsManager actionsManager;

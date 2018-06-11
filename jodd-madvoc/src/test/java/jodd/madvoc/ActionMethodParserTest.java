@@ -412,9 +412,8 @@ class ActionMethodParserTest extends MadvocTestCase {
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
 
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 		webapp.madvocContainer().lookupComponent(RootPackages.class).addRootPackageOf(this.getClass());
-		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
+		actionsManager.setPathMacroClass(RegExpPathMacros.class);
 
 		actionsManager.registerAction(ReAction.class, "duplo2", null);
 		actionsManager.registerAction(ReAction.class, "duplo1", null);

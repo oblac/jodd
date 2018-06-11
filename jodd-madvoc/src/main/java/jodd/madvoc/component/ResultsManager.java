@@ -29,7 +29,6 @@ import jodd.cache.TypeCache;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.meta.RenderWith;
@@ -49,8 +48,6 @@ public class ResultsManager {
 
 	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
 
 	public ResultsManager() {
 		this.allResults = TypeCache.createDefault();

@@ -27,7 +27,7 @@ package jodd.madvoc.result;
 
 import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.StringPool;
@@ -43,7 +43,7 @@ import java.io.OutputStream;
 public class TextActionResult implements ActionResult {
 
 	@In @MadvocContext
-	protected MadvocConfig madvocConfig;
+	protected MadvocEncoding madvocEncoding;
 
 	@Override
 	public void render(final ActionRequest actionRequest, final Object resultValue) throws Exception {
@@ -65,7 +65,7 @@ public class TextActionResult implements ActionResult {
 		String encoding = response.getCharacterEncoding();
 
 		if (encoding == null) {
-			encoding = madvocConfig.getEncoding();
+			encoding = madvocEncoding.getEncoding();
 		}
 
 		response.setContentType(textResult.contentType());

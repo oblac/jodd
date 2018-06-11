@@ -29,12 +29,13 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.MethodDescriptor;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.config.RouteChunk;
 import jodd.madvoc.config.Routes;
+import jodd.madvoc.macro.PathMacros;
+import jodd.madvoc.macro.RegExpPathMacros;
 import jodd.petite.meta.PetiteInject;
 
 import java.lang.reflect.Method;
@@ -43,6 +44,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static jodd.util.StringPool.COLON;
+import static jodd.util.StringPool.LEFT_BRACE;
+import static jodd.util.StringPool.RIGHT_BRACE;
 import static jodd.util.StringUtil.ifNotNull;
 
 /**
@@ -55,9 +59,6 @@ public class ActionsManager {
 	@PetiteInject
 	protected ActionMethodParser actionMethodParser;
 
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
-
 	protected boolean detectDuplicatePathsEnabled = true;
 
 	protected int actionsCount;
@@ -67,13 +68,47 @@ public class ActionsManager {
 	protected final HashMap<String, ActionRuntime> runtimes;	// another map of all action runtimes
 	protected Map<String, String> pathAliases;					// path aliases
 
+	private Class<? extends PathMacros> pathMacroClass;
+	private String[] pathMacroSeparators;
+
+
 	public ActionsManager() {
-		this.routes = new Routes(() -> madvocConfig);
+		this.routes = new Routes(this);
 
 		this.pathAliases = new HashMap<>();
 		this.runtimes = new HashMap<>();
 		this.asyncMode = false;
+
+		this.pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
+		this.pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
 	}
+
+	/**
+	 * Returns current implementation for path macros.
+	 */
+	public Class<? extends PathMacros> getPathMacroClass() {
+		return pathMacroClass;
+	}
+
+	/**
+	 * Sets implementation for path macros.
+	 */
+	public void setPathMacroClass(final Class<? extends PathMacros> pathMacroClass) {
+		this.pathMacroClass = pathMacroClass;
+	}
+
+
+	public String[] getPathMacroSeparators() {
+		return pathMacroSeparators;
+	}
+
+	/**
+	 * Sets path macro separators.
+	 */
+	public void setPathMacroSeparators(final String... pathMacroSeparators) {
+		this.pathMacroSeparators = pathMacroSeparators;
+	}
+
 
 	public void setDetectDuplicatePathsEnabled(final boolean detectDuplicatePathsEnabled) {
 		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;

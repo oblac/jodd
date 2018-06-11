@@ -26,7 +26,6 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.config.Targets;
 import jodd.madvoc.scope.MadvocScope;
 import jodd.madvoc.scope.RequestScope;
@@ -67,7 +66,7 @@ class ScopeResolverTest {
 	void testScopeRegistration() {
 		final ScopeResolver scopeResolver = new ScopeResolver();
 		scopeResolver.madpc = new PetiteContainer();
-		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
+		scopeResolver.madpc.addBean("madvocEncoding", new MadvocEncoding());
 
 		final MadvocScope requestScope = scopeResolver.defaultOrScopeType(RequestScope.class);
 		final MadvocScope requestScope2 = scopeResolver.defaultOrScopeType(RequestScope.class);
@@ -83,7 +82,7 @@ class ScopeResolverTest {
 	void testScopeClassLookup() {
 		final ScopeResolver scopeResolver = new ScopeResolver();
 		scopeResolver.madpc = new PetiteContainer();
-		scopeResolver.madpc.addBean("madvocConfig", new MadvocConfig());
+		scopeResolver.madpc.addBean("madvocEncoding", new MadvocEncoding());
 
 		final MadvocScope madvocScope = scopeResolver.defaultOrScopeType(MyScope.class);
 		assertNotNull(madvocScope);

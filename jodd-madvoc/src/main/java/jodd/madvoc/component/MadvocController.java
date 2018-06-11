@@ -28,7 +28,6 @@ package jodd.madvoc.component;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.config.ActionRuntime;
@@ -51,7 +50,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
 	@PetiteInject
-	protected MadvocConfig madvocConfig;
+	protected MadvocEncoding madvocEncoding;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -154,7 +153,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			// set character encoding
 			if (!characterEncodingSet && applyCharacterEncoding) {
 
-				final String encoding = madvocConfig.getEncoding();
+				final String encoding = madvocEncoding.getEncoding();
 
 				if (encoding != null) {
 					servletRequest.setCharacterEncoding(encoding);

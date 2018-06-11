@@ -28,7 +28,7 @@ package jodd.madvoc.result;
 import jodd.io.StreamUtil;
 import jodd.json.JsonSerializer;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.net.MimeTypes;
@@ -42,7 +42,7 @@ import java.io.OutputStream;
 public class JsonActionResult implements ActionResult {
 
 	@In @MadvocContext
-	protected MadvocConfig madvocConfig;
+	protected MadvocEncoding madvocEncoding;
 
 	@Override
 	public void render(final ActionRequest actionRequest, final Object resultValue) throws Exception {
@@ -51,7 +51,7 @@ public class JsonActionResult implements ActionResult {
 		String encoding = response.getCharacterEncoding();
 
 		if (encoding == null) {
-			encoding = madvocConfig.getEncoding();
+			encoding = madvocEncoding.getEncoding();
 		}
 
 		response.setContentType(MimeTypes.MIME_APPLICATION_JSON);

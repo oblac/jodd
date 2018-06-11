@@ -42,11 +42,6 @@ public class MyWebApplication extends PetiteWebApp {
 	}
 
 	@Override
-	protected void configured() {
-		withRegisteredComponent(RootPackages.class, rp -> rp.addRootPackageOf(HelloAction.class));
-	}
-
-	@Override
 	protected void registerMadvocComponents() {
 		super.registerMadvocComponents();
 
@@ -56,6 +51,8 @@ public class MyWebApplication extends PetiteWebApp {
 
 	@Override
 	protected void initialized() {
+		withRegisteredComponent(RootPackages.class, rp -> rp.addRootPackageOf(HelloAction.class));
+
 		router(madvoc -> {
 			madvoc
 				.get("/batman")

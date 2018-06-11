@@ -23,44 +23,28 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.result;
+package jodd.madvoc.component;
 
-import jodd.io.StreamUtil;
-import jodd.madvoc.ActionRequest;
-import jodd.servlet.ServletUtil;
+import jodd.util.StringPool;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Objects;
 
-/**
- * Raw results directly writes byte context to the output.
- * Content type and charset encoding (e.g. set by Madvoc) is ignored
- * and new values should be set here. Output is closed after writing.
- */
-public class RawActionResult implements ActionResult<RawData> {
+public class MadvocEncoding {
 
-	@Override
-	public void render(final ActionRequest actionRequest, final RawData resultValue) throws IOException {
-		if (resultValue == null) {
-			return;
-		}
+	private String encoding = StringPool.UTF_8;
 
-		HttpServletResponse response = actionRequest.getHttpServletResponse();
+	/**
+	 * Sets web application character encoding.
+	 */
+	public void setEncoding(final String encoding) {
+		Objects.requireNonNull(encoding);
+		this.encoding = encoding;
+	}
 
-		// reset content type and prepare response
-		// since we are using MadvocResponseWrapper, the charset will be reset as well.
-		ServletUtil.prepareResponse(response, resultValue.downloadFileName(), resultValue.mimeType(), resultValue.contentLength());
-
-		// write out
-		InputStream contentInputStream = resultValue.contentInputStream();
-		OutputStream out = response.getOutputStream();
-
-		StreamUtil.copy(contentInputStream, out);
-
-		out.flush();
-
-		StreamUtil.close(contentInputStream);
+	/**
+	 * Returns character encoding.
+	 */
+	public String getEncoding() {
+		return this.encoding;
 	}
 }

@@ -25,14 +25,12 @@
 
 package jodd.madvoc.config;
 
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.macro.PathMacros;
 import jodd.util.ClassUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-
-import java.util.function.Supplier;
 
 /**
  * Utility that deals with routes and route chunks.
@@ -41,12 +39,12 @@ public class Routes {
 	private static final String ANY_METHOD = StringPool.STAR;
 
 	private final RouteChunk root;
+	private final ActionsManager actionsManager;
 	private RouteChunk anyMethodChunk;
-	private Supplier<MadvocConfig> madvocConfigSupplier;
 
-	public Routes(final Supplier<MadvocConfig> madvocConfigSupplier) {
+	public Routes(final ActionsManager actionsManager) {
 		this.root = new RouteChunk(this, null, StringPool.EMPTY);
-		this.madvocConfigSupplier = madvocConfigSupplier;
+		this.actionsManager = actionsManager;
 	}
 
 	public RouteChunk registerPath(String method, String path) {
@@ -187,7 +185,7 @@ public class Routes {
 
 		PathMacros pathMacros = createPathMacroInstance();
 
-		if (!pathMacros.init(actionPath, madvocConfigSupplier.get().getPathMacroSeparators())) {
+		if (!pathMacros.init(actionPath, actionsManager.getPathMacroSeparators())) {
 			return null;
 		}
 
@@ -199,7 +197,7 @@ public class Routes {
 	 */
 	private PathMacros createPathMacroInstance() {
 		try {
-			return ClassUtil.newInstance(madvocConfigSupplier.get().getPathMacroClass());
+			return ClassUtil.newInstance(actionsManager.getPathMacroClass());
 		} catch (Exception ex) {
 			throw new MadvocException(ex);
 		}

@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.config.InjectionPoint;
 import jodd.madvoc.config.ScopeData;
 import jodd.madvoc.meta.In;
@@ -48,7 +47,7 @@ class ScopeDataInspectorTest {
 		scopeDataInspector.scopeResolver = new ScopeResolver();
 		scopeDataInspector.scopeResolver.madpc = madpc;
 
-		madpc.addBean("madvocConfig", new MadvocConfig());
+		madpc.addBean("madvocEncoding", new MadvocEncoding());
 
 		ScopeData scopeData = scopeDataInspector.inspectClassScopes(Action.class);
 
@@ -75,7 +74,7 @@ class ScopeDataInspectorTest {
 		PetiteContainer madpc = new PetiteContainer();
 		scopeDataInspector.scopeResolver = new ScopeResolver();
 		scopeDataInspector.scopeResolver.madpc = madpc;
-		madpc.addBean("madvocConfig", new MadvocConfig());
+		madpc.addBean("madvocEncoding", new MadvocEncoding());
 
 		ScopeData scopeData = scopeDataInspector.inspectClassScopes(GenAction.class);
 

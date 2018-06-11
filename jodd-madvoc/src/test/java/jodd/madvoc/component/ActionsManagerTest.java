@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.config.ActionDefinition;
@@ -152,8 +151,7 @@ class ActionsManagerTest {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
+		actionsManager.setPathMacroClass(RegExpPathMacros.class);
 
 		actionsManager.registerAction(FooAction.class, "one", new ActionDefinition("/{one:[ab]+}"));
 
@@ -170,8 +168,7 @@ class ActionsManagerTest {
 		webapp.start();
 
 		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
-		MadvocConfig madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
-		madvocConfig.setPathMacroClass(WildcardPathMacros.class);
+		actionsManager.setPathMacroClass(WildcardPathMacros.class);
 
 		actionsManager.registerAction(FooAction.class, "one", new ActionDefinition("/{one:a?a}"));
 

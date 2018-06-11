@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocTestCase;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ActionInterceptorStack;
@@ -123,10 +122,9 @@ class InterceptorsManagerTest extends MadvocTestCase {
 	// ---------------------------------------------------------------- util
 
 	private InterceptorsManager createInterceptorManager() {
-		MadvocConfig madvocConfig = new MadvocConfig();
 		PetiteContainer madpc = new PetiteContainer();
 		madpc.addSelf("madpc");
-		madpc.addBean("madvocConfig", madvocConfig);
+		madpc.addBean("madvocEncoding", new MadvocEncoding());
 
 		InterceptorsManager im = new InterceptorsManager();
 		im.contextInjectorComponent = new ContextInjectorComponent();

@@ -27,7 +27,6 @@ package jodd.madvoc.result;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.component.MadvocController;
@@ -64,8 +63,6 @@ class ServletDispatcherResultTest {
 				return false;
 			}
 		};
-
-		sdr.madvocConfig = webapp.madvocContainer().lookupComponent(MadvocConfig.class);
 
 		ResultMapper resultMapper = webapp.madvocContainer().lookupComponent(ResultMapper.class);
 		BeanUtil.declared.setProperty(sdr, "resultMapper", resultMapper);

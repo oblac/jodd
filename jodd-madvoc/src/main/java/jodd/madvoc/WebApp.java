@@ -43,6 +43,7 @@ import jodd.madvoc.component.MadvocComponentLifecycle.Ready;
 import jodd.madvoc.component.MadvocComponentLifecycle.Start;
 import jodd.madvoc.component.MadvocContainer;
 import jodd.madvoc.component.MadvocController;
+import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.RootPackages;
@@ -95,7 +96,6 @@ public class WebApp {
 	private List<ClassConsumer> madvocComponents = new ArrayList<>();
 	private List<Object> madvocComponentInstances = new ArrayList<>();
 	private Consumers<MadvocRouter> madvocRouterConsumers = Consumers.empty();
-	private Consumers<MadvocConfig> madvocConfigConsumers = Consumers.empty();
 
 	/**
 	 * Defines params to load.
@@ -141,14 +141,6 @@ public class WebApp {
 	public WebApp registerComponent(final Object madvocComponent) {
 		Objects.requireNonNull(madvocComponent);
 		madvocComponentInstances.add(madvocComponent);
-		return this;
-	}
-
-	/**
-	 * Configures the {@link MadvocConfig}.
-	 */
-	public WebApp configure(final Consumer<MadvocConfig> madvocConfigConsumer) {
-		madvocConfigConsumers.add(madvocConfigConsumer);
 		return this;
 	}
 
@@ -227,13 +219,6 @@ public class WebApp {
 		}
 		propsList = null;
 
-		//// config
-		madvocContainer.registerComponent(MadvocConfig.class);
-		final MadvocConfig madvocConfig = madvocContainer.requestComponent(MadvocConfig.class);
-
-		madvocConfigConsumers.accept(madvocConfig);
-
-		configured();
 
 		//// components
 		registerMadvocComponents();
@@ -298,6 +283,8 @@ public class WebApp {
 
 		log.debug("Registering Madvoc WebApp components");
 
+		madvocContainer.registerComponent(MadvocEncoding.class);
+
 		madvocContainer.registerComponentInstance(new ServletContextProvider(servletContext));
 
 		madvocContainer.registerComponent(ActionConfigManager.class);
@@ -317,14 +304,6 @@ public class WebApp {
 		madvocContainer.registerComponent(AsyncActionExecutor.class);
 		madvocContainer.registerComponent(FileUploader.class);
 	}
-
-	/**
-	 * Hook for manual Madvoc configuration. No component is registered yet. You can use
-	 * only {@link MadvocConfig} and {@link MadvocContainer}.
-	 */
-	protected void configured() {
-	}
-
 
 	/**
 	 * Called when Madvoc is initialized, at the end of the {@link Init INIT} phase.

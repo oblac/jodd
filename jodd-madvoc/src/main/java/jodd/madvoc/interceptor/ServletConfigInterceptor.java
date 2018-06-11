@@ -26,8 +26,8 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.component.FileUploader;
+import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.component.ScopeResolver;
 import jodd.madvoc.config.Targets;
 import jodd.madvoc.meta.In;
@@ -54,7 +54,7 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 	protected ScopeResolver scopeResolver;
 
 	@In @MadvocContext
-	protected MadvocConfig madvocConfig;
+	protected MadvocEncoding madvocEncoding;
 
 	@In @MadvocContext
 	protected FileUploader fileUploader;
@@ -69,7 +69,7 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 
 		// detect multipart request
 		if (ServletUtil.isMultipartRequest(servletRequest)) {
-			servletRequest = new MultipartRequestWrapper(servletRequest, fileUploader.get(), madvocConfig.getEncoding());
+			servletRequest = new MultipartRequestWrapper(servletRequest, fileUploader.get(), madvocEncoding.getEncoding());
 			actionRequest.bind(servletRequest);
 		}
 

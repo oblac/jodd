@@ -25,7 +25,7 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionDefinition;
 import jodd.madvoc.config.ActionNames;
 import jodd.madvoc.meta.In;
@@ -42,7 +42,7 @@ import java.lang.reflect.Method;
 public class RestActionNamingStrategy extends BaseNamingStrategy {
 
 	@In @MadvocContext
-	protected MadvocConfig madvocConfig;
+	protected ActionsManager actionsManager;
 
 	protected boolean includeMethodActionPath = true;
 
@@ -67,7 +67,7 @@ public class RestActionNamingStrategy extends BaseNamingStrategy {
 		}
 
 		if (methodActionPath != null) {
-			if (httpMethod == null && methodActionPath.startsWith(madvocConfig.getPathMacroSeparators()[0])) {
+			if (httpMethod == null && methodActionPath.startsWith(actionsManager.getPathMacroSeparators()[0])) {
 				methodActionPath = actionMethod.getName() + StringPool.SLASH + methodActionPath;
 			}
 

@@ -27,7 +27,6 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.BaseActionWrapperStack;
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.MadvocException;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassUtil;
@@ -47,9 +46,6 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 
 	@PetiteInject
 	protected ContextInjectorComponent contextInjectorComponent;
-
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
 
 	protected WrapperManager() {
 		wrappers = new HashMap<>();

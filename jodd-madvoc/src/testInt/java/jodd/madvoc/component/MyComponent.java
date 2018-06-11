@@ -25,7 +25,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.MadvocConfig;
 import jodd.madvoc.meta.MadvocComponent;
 import jodd.petite.meta.PetiteInject;
 
@@ -33,12 +32,12 @@ import jodd.petite.meta.PetiteInject;
 public class MyComponent implements MadvocComponentLifecycle.Init, MadvocComponentLifecycle.Ready, MadvocComponentLifecycle.Start {
 
 	@PetiteInject
-	MadvocConfig madvocConfig;
+	MadvocEncoding madvocEncoding;
 
 	String string = "";
 
 	public String getString() {
-		return string + madvocConfig.getEncoding();
+		return string + madvocEncoding.getEncoding();
 	}
 
 	@Override

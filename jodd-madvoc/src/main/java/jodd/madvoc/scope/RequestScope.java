@@ -27,7 +27,7 @@ package jodd.madvoc.scope;
 
 import jodd.io.upload.FileUpload;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.config.Targets;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
@@ -45,7 +45,7 @@ import java.util.Enumeration;
 public class RequestScope implements MadvocScope {
 
 	@PetiteInject
-	MadvocConfig madvocConfig;
+	MadvocEncoding madvocEncoding;
 
 	protected final ActionPathMacroInjector actionPathMacroInjector = new ActionPathMacroInjector(this);
 	protected final InstancesInjector instancesInjector = new InstancesInjector(this);
@@ -183,7 +183,7 @@ public class RequestScope implements MadvocScope {
 							for (int j = 0; j < paramValues.length; j++) {
 								final String p = paramValues[j];
 								if (p != null) {
-									final String encoding = madvocConfig.getEncoding();
+									final String encoding = madvocEncoding.getEncoding();
 									paramValues[j] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
 								}
 							}
