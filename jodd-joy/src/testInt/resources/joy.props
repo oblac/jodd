@@ -26,8 +26,10 @@ joy.db.oom.tableNames.prefix=jd_
 madvocConfig.encoding=UTF-8
 madvocController.welcomeFile=/index.jsp
 requestScope.injectAttributes=true
-echoFilter.prefixIn=x--->
-joyDefaultInterceptorStack.interceptors=\
-			jodd.joy.auth.AuthInterceptor,\
-			jodd.joy.i18n.I18nInterceptor,\
-			jodd.madvoc.interceptor.ServletConfigInterceptor
+echoInterceptor.prefixIn=x--->
+
+joyActionConfig.interceptors=\
+		jodd.madvoc.interceptor.EchoInterceptor,\
+		jodd.joy.auth.AuthInterceptor,\
+		jodd.joy.i18n.I18nInterceptor,\
+		jodd.madvoc.interceptor.ServletConfigInterceptor

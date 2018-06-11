@@ -25,14 +25,15 @@
 
 package jodd.joy;
 
-import jodd.joy.madvoc.JoyDefaultInterceptorStack;
-import jodd.joy.madvoc.JoyRestInterceptorStack;
+import jodd.joy.madvoc.JoyActionConfig;
+import jodd.joy.madvoc.JoyRestActionConfig;
 import jodd.madvoc.AutomagicMadvocConfigurator;
 import jodd.madvoc.WebApp;
-import jodd.madvoc.action.DefaultActionConfig;
-import jodd.madvoc.action.RestActionConfig;
+import jodd.madvoc.component.ActionConfigManager;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.config.ActionRuntime;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaSupplier;
@@ -114,15 +115,16 @@ public class JoyMadvoc extends JoyBase {
 
 		webApp = webAppSupplier == null ? new PetiteWebApp(joyPetiteSupplier.get().getPetiteContainer()) : webAppSupplier.get();
 
-		webApp.withActionConfig(DefaultActionConfig.class, dac -> dac.setInterceptors(JoyDefaultInterceptorStack.class));
-		webApp.withActionConfig(RestActionConfig.class, rac -> rac.setInterceptors(JoyRestInterceptorStack.class));
+		webApp.withRegisteredComponent(ActionConfigManager.class, acm -> {
+			acm.registerActionAnnotationAndConfiguration(Action.class, JoyActionConfig.class);
+			acm.registerActionAnnotationAndConfiguration(RestAction.class, JoyRestActionConfig.class);
+		});
 
 		if (servletContext != null) {
 			webApp.bindServletContext(servletContext);
 		}
 
 		final Props allProps = joyPropsSupplier.get().getProps();
-		final String appName = appNameSupplier.get();
 
 		webApp.withParams(allProps.innerMap(beanNamePrefix()));
 

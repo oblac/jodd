@@ -27,13 +27,15 @@ package jodd.joy.madvoc;
 
 import jodd.joy.auth.AuthInterceptor;
 import jodd.joy.i18n.I18nInterceptor;
-import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.madvoc.action.RestActionConfig;
+import jodd.madvoc.interceptor.JsonErrorInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
-public class JoyDefaultInterceptorStack extends ActionInterceptorStack {
-
-	public JoyDefaultInterceptorStack() {
-		super(
+public class JoyRestActionConfig extends RestActionConfig {
+	public JoyRestActionConfig() {
+		super();
+		setInterceptors(
+			JsonErrorInterceptor.class,
 			AuthInterceptor.class,
 			I18nInterceptor.class,
 			ServletConfigInterceptor.class
