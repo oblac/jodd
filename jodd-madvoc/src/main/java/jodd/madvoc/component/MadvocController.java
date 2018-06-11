@@ -122,7 +122,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 		while (actionPath != null) {
 			// build action path
-			String httpMethod = servletRequest.getMethod().toUpperCase();
+			final String httpMethod = servletRequest.getMethod().toUpperCase();
 
 			if (log.isDebugEnabled()) {
 				log.debug("Action path: " + httpMethod + " " + actionPath);
@@ -134,11 +134,12 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 
 			// resolve action runtime
 			ActionRuntime actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
+
 			if (actionRuntime == null) {
 
 				// special case!
 				if (actionPath.endsWith(welcomeFile)) {
-					actionPath = actionPath.substring(0, actionPath.length() - 9);
+					actionPath = actionPath.substring(0, actionPath.length() - (welcomeFile.length() - 1));
 					actionPathChunks = MadvocUtil.splitPathToChunks(actionPath);
 					actionRuntime = actionsManager.lookup(httpMethod, actionPathChunks);
 				}
@@ -153,7 +154,7 @@ public class MadvocController implements MadvocComponentLifecycle.Ready {
 			// set character encoding
 			if (!characterEncodingSet && applyCharacterEncoding) {
 
-				String encoding = madvocConfig.getEncoding();
+				final String encoding = madvocConfig.getEncoding();
 
 				if (encoding != null) {
 					servletRequest.setCharacterEncoding(encoding);
