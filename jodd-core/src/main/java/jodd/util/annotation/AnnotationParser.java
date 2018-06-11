@@ -53,6 +53,13 @@ public class AnnotationParser {
 	protected final Annotation defaultAnnotation;
 	protected final Class<? extends Annotation> annotationClass;
 
+	/**
+	 * Returns annotation type of this parser.
+	 */
+	public Class<? extends Annotation> getAnnotationType() {
+		return annotationClass;
+	}
+
 	public AnnotationParser(final Class<? extends Annotation> annotationClass) {
 		this(annotationClass, annotationClass);
 	}
