@@ -27,7 +27,7 @@ package jodd.joy.madvoc;
 
 import jodd.joy.vtor.VtorUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocConfig;
+import jodd.madvoc.component.MadvocEncoding;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.madvoc.result.ActionResult;
@@ -59,7 +59,7 @@ public class VtorJsonActionResult implements ActionResult<String> {
 	public static String jsonResponseContentType = MimeTypes.MIME_APPLICATION_JSON;
 
 	@In @MadvocContext
-	protected MadvocConfig madvocConfig;
+	protected MadvocEncoding madvocEncoding;
 
 
 	@Override
@@ -79,7 +79,7 @@ public class VtorJsonActionResult implements ActionResult<String> {
 		}
 
 		char[] chars = result.toCharArray();
-		byte[] data = CharUtil.toByteArray(chars, madvocConfig.getEncoding());
+		byte[] data = CharUtil.toByteArray(chars, madvocEncoding.getEncoding());
 
 		OutputStream os = response.getOutputStream();
 		os.write(data);

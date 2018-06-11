@@ -23,7 +23,7 @@ joy.db.oom.tableNames.prefix=jd_
 
 # MADVOC
 [joy.madvoc]
-madvocConfig.encoding=UTF-8
+madvocEncoding.encoding=UTF-8
 madvocController.welcomeFile=/index.jsp
 requestScope.injectAttributes=true
 echoInterceptor.prefixIn=x--->
