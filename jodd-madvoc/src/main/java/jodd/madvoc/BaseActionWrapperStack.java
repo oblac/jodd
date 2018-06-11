@@ -30,7 +30,7 @@ package jodd.madvoc;
  */
 public abstract class BaseActionWrapperStack<T extends ActionWrapper> implements ActionWrapper {
 
-	protected Class<? extends T>[] wrappers;
+	protected final Class<? extends T>[] wrappers;
 
 	/**
 	 * Constructs an wrapper stack with the given wrappers.
