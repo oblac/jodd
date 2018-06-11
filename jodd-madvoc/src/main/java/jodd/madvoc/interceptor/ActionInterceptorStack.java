@@ -40,13 +40,6 @@ public abstract class ActionInterceptorStack extends BaseActionWrapperStack<Acti
 	}
 
 	/**
-	 * Sets interceptor classes.
-	 */
-	public void setInterceptors(final Class<? extends ActionInterceptor>... interceptors) {
-		this.wrappers = interceptors;
-	}
-
-	/**
 	 * Returns an array of interceptors.
 	 */
 	public Class<? extends ActionInterceptor>[] getInterceptors() {

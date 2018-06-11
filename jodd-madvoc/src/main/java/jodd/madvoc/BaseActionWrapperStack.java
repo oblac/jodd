@@ -33,13 +33,6 @@ public abstract class BaseActionWrapperStack<T extends ActionWrapper> implements
 	protected Class<? extends T>[] wrappers;
 
 	/**
-	 * Constructs an empty wrapper stack that will be configured later,
-	 * using setter.
-	 */
-	protected BaseActionWrapperStack() {
-	}
-
-	/**
 	 * Constructs an wrapper stack with the given wrappers.
 	 */
 	protected BaseActionWrapperStack(final Class<? extends T>... wrapperClasses) {

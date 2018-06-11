@@ -38,13 +38,6 @@ public abstract class ActionFilterStack extends BaseActionWrapperStack<ActionFil
 	}
 
 	/**
-	 * Sets filter classes.
-	 */
-	public void setFilters(final Class<? extends ActionFilter>... filters) {
-		this.wrappers = filters;
-	}
-
-	/**
 	 * Returns an array of filters.
 	 */
 	public Class<? extends ActionFilter>[] getFilters() {
