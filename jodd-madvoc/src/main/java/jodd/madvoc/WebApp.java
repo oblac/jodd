@@ -155,7 +155,7 @@ public class WebApp {
 	// ---------------------------------------------------------------- main components
 
 	protected final MadvocContainer madvocContainer;
-	protected final Consumers<MadvocContainer> componentConfigs = Consumers.empty();
+	protected Consumers<MadvocContainer> componentConfigs = Consumers.empty();
 
 	public WebApp() {
 		madvocContainer = new MadvocContainer();
@@ -174,13 +174,23 @@ public class WebApp {
 	 * this method does not register component, just operates on an already registered one.
 	 */
 	public <T> WebApp withRegisteredComponent(final Class<T> madvocComponent, final Consumer<T> componentConsumer) {
-		componentConfigs.add(madvocContainer -> {
+		if (componentConfigs == null) {
+			// component is already configured
 			final T component = madvocContainer.lookupComponent(madvocComponent);
-			if (component != null) {
-				componentConsumer.accept(component);
+			if (component == null) {
+				throw new MadvocException("Component not found: " + madvocComponent.getName());
 			}
-
-		});
+			componentConsumer.accept(component);
+		}
+		else {
+			componentConfigs.add(madvocContainer -> {
+				final T component = madvocContainer.lookupComponent(madvocComponent);
+				if (component == null) {
+					throw new MadvocException("Component not found: " + madvocComponent.getName());
+				}
+				componentConsumer.accept(component);
+			});
+		}
 		return this;
 	}
 
@@ -238,6 +248,7 @@ public class WebApp {
 
 		//// component configuration
 		componentConfigs.accept(madvocContainer);
+		componentConfigs = null;
 
 		initialized();
 
