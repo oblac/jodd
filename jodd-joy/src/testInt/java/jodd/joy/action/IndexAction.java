@@ -23,27 +23,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy.fixtures;
+package jodd.joy.action;
 
-import jodd.joy.auth.AuthAction;
+import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.RestAction;
-import jodd.madvoc.meta.method.POST;
-import jodd.madvoc.result.JsonResult;
 
 @MadvocAction
-public class MyAuthAction extends AuthAction {
+public class IndexAction {
 
-	@Override
-	@POST
-	@RestAction("/j_login,<login>")
-	public JsonResult login() {
-		return super.login();
-	}
-
-	@Override
-	@RestAction(value = J_LOGOUT_PATH, alias = "logout")
-	public JsonResult logout() {
-		return super.logout();
+	@Action(alias = "index")
+	public void execute() {
 	}
 }
