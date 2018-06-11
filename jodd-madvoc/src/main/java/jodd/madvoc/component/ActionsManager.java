@@ -205,7 +205,10 @@ public class ActionsManager {
 	 * Registers new path alias.
 	 */
 	public void registerPathAlias(final String alias, final String path) {
-		pathAliases.put(alias, path);
+		final String existing = pathAliases.put(alias, path);
+		if (existing != null) {
+			throw new MadvocException("Duplicated alias detected: [" + alias + "] for paths: " + path + ", " + existing);
+		}
 	}
 
 	/**
