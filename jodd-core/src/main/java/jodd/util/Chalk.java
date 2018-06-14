@@ -31,6 +31,12 @@ package jodd.util;
  */
 public class Chalk<T extends Chalk<T>> {
 
+	/**
+	 * Global flag that disables all the chalks.
+	 * Useful for windows platforms :)
+	 */
+	public static boolean enabled = true;
+
 	protected static final String RESET = "0";
 
 	protected static final String BOLD = "1";
@@ -254,7 +260,11 @@ public class Chalk<T extends Chalk<T>> {
 	 * Returns chalked string.
 	 */
 	public String on(final String string) {
-		StringBuilder sb = new StringBuilder();
+		if (!enabled) {
+			return string;
+		}
+
+		final StringBuilder sb = new StringBuilder();
 
 		if (prefix != null) {
 			sb.append(prefix).append("m");
