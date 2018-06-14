@@ -55,7 +55,7 @@ ext {
 
 	tomcatVersion = '8.0.47'
 	jettyVersion = '9.3.21.v20170918'
-	jmhVersion = '1.20'
+	jmhVersion = '1.21'
 
 	lib = [
 		mail:			[
@@ -555,6 +555,6 @@ def date() {
 
 // --- wrapper ----------------------------------------------------------------
 
-task wrapper(type: Wrapper) {
+wrapper {
 	gradleVersion = '4.8'
 }
