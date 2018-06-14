@@ -38,7 +38,7 @@ public class FastByteBuffer {
 	
 	/**
 	 * Creates a new {@code byte} buffer. The buffer capacity is
-	 * initially 1024 bytes, though its size increases if necessary.
+	 * initially 64 bytes, though its size increases if necessary.
 	 */
 	public FastByteBuffer() {
 		this.buffer = new byte[64];
@@ -46,7 +46,7 @@ public class FastByteBuffer {
 
 	/**
 	 * Creates a new {@code byte} buffer, with a buffer capacity of
-	 * the specified size, in bytes.
+	 * the specified size.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.

@@ -25,140 +25,88 @@
 
 package jodd.util.buffer;
 
+import java.util.Arrays;
+
 /**
- * Fast, fast <code>long</code> buffer.
- * This buffer implementation does not store all data
- * in single array, but in array of chunks.
+ * Faster {@code long} buffer. Works faster for smaller buffer sizes.
+ * After eg. length of 2048 the performances are practically the same.
  */
 public class FastLongBuffer {
 
-	private long[][] buffers = new long[16][];
-	private int buffersCount;
-	private int currentBufferIndex = -1;
-	private long[] currentBuffer;
+	private long[] buffer;
 	private int offset;
-	private int size;
-	private final int minChunkLen;
 
 	/**
-	 * Creates a new <code>long</code> buffer. The buffer capacity is
-	 * initially 1024 bytes, though its size increases if necessary.
+	 * Creates a new {@code long} buffer. The buffer capacity is
+	 * initially 64 longs, though its size increases if necessary.
 	 */
 	public FastLongBuffer() {
-		this.minChunkLen = 1024;
+		this.buffer = new long[64];
 	}
 
 	/**
-	 * Creates a new <code>long</code> buffer, with a buffer capacity of
-	 * the specified size, in bytes.
+	 * Creates a new {@code long} buffer, with a buffer capacity of
+	 * the specified size.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
 	public FastLongBuffer(final int size) {
-		if (size < 0) {
-			throw new IllegalArgumentException("Invalid size: " + size);
-		}
-		this.minChunkLen = size;
+		this.buffer = new long[size];
 	}
 
 	/**
-	 * Prepares next chunk to match new size.
-	 * The minimal length of new chunk is <code>minChunkLen</code>.
+	 * Grows the buffer.
 	 */
-	private void needNewBuffer(final int newSize) {
-		int delta = newSize - size;
-		int newBufferSize = Math.max(minChunkLen, delta);
-
-		currentBufferIndex++;
-		currentBuffer = new long[newBufferSize];
-		offset = 0;
-
-		// add buffer
-		if (currentBufferIndex >= buffers.length) {
-			int newLen = buffers.length << 1;
-			long[][] newBuffers = new long[newLen][];
-			System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
-			buffers = newBuffers;
+	private void grow(final int minCapacity) {
+		final int oldCapacity = buffer.length;
+		int newCapacity = oldCapacity << 1;
+		if (newCapacity - minCapacity < 0) {
+			// special case, min capacity is larger then a grow
+			newCapacity = minCapacity + 512;
 		}
-		buffers[currentBufferIndex] = currentBuffer;
-		buffersCount++;
+		buffer = Arrays.copyOf(buffer, newCapacity);
 	}
 
 	/**
-	 * Appends <code>long</code> array to buffer.
+	 * Appends single {@code long} to buffer.
+	 */
+	public void append(final long element) {
+		if (offset - buffer.length >= 0) {
+			grow(offset);
+		}
+
+		buffer[offset++] = element;
+	}
+
+	/**
+	 * Appends {@code long} array to buffer.
 	 */
 	public FastLongBuffer append(final long[] array, final int off, final int len) {
-		int end = off + len;
-		if ((off < 0)
-				|| (len < 0)
-				|| (end > array.length)) {
-			throw new IndexOutOfBoundsException();
-		}
-		if (len == 0) {
-			return this;
-		}
-		int newSize = size + len;
-		int remaining = len;
-
-		if (currentBuffer != null) {
-			// first try to fill current buffer
-			int part = Math.min(remaining, currentBuffer.length - offset);
-			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
-			remaining -= part;
-			offset += part;
-			size += part;
+		if (offset + len - buffer.length > 0) {
+			grow(offset + len);
 		}
 
-		if (remaining > 0) {
-			// still some data left
-			// ask for new buffer
-			needNewBuffer(newSize);
-
-			// then copy remaining
-			// but this time we are sure that it will fit
-			int part = Math.min(remaining, currentBuffer.length - offset);
-			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
-			offset += part;
-			size += part;
-		}
-
+		System.arraycopy(array, off, buffer, offset, len);
+		offset += len;
 		return this;
 	}
 
 	/**
-	 * Appends <code>long</code> array to buffer.
+	 * Appends {@code long} array to buffer.
 	 */
 	public FastLongBuffer append(final long[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
-	 * Appends single <code>long</code> to buffer.
-	 */
-	public FastLongBuffer append(final long element) {
-		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
-			needNewBuffer(size + 1);
-		}
-
-		currentBuffer[offset] = element;
-		offset++;
-		size++;
-
-		return this;
-	}
-
-	/**
 	 * Appends another fast buffer to this one.
 	 */
 	public FastLongBuffer append(final FastLongBuffer buff) {
-		if (buff.size == 0) {
+		if (buff.offset == 0) {
 			return this;
 		}
-		for (int i = 0; i < buff.currentBufferIndex; i++) {
-			append(buff.buffers[i]);
-		}
-		append(buff.currentBuffer, 0, buff.offset);
+		append(buff.buffer, 0, buff.offset);
 		return this;
 	}
 
@@ -166,121 +114,54 @@ public class FastLongBuffer {
 	 * Returns buffer size.
 	 */
 	public int size() {
-		return size;
+		return offset;
 	}
 
 	/**
 	 * Tests if this buffer has no elements.
 	 */
 	public boolean isEmpty() {
-		return size == 0;
-	}
-
-	/**
-	 * Returns current index of inner <code>long</code> array chunk.
-	 * Represents the index of last used inner array chunk.
-	 */
-	public int index() {
-		return currentBufferIndex;
-	}
-
-	/**
-	 * Returns the offset of last used element in current inner array chunk.
-	 */
-	public int offset() {
-		return offset;
-	}
-
-	/**
-	 * Returns <code>long</code> inner array chunk at given index.
-	 * May be used for iterating inner chunks in fast manner.
-	 */
-	public long[] array(final int index) {
-		return buffers[index];
+		return offset == 0;
 	}
 
 	/**
 	 * Resets the buffer content.
 	 */
 	public void clear() {
-		size = 0;
 		offset = 0;
-		currentBufferIndex = -1;
-		currentBuffer = null;
-		buffersCount = 0;
 	}
 
 	/**
-	 * Creates <code>long</code> array from buffered content.
+	 * Creates {@code long} array from buffered content.
 	 */
 	public long[] toArray() {
-		int pos = 0;
-		long[] array = new long[size];
-
-		if (currentBufferIndex == -1) {
-			return array;
-		}
-
-		for (int i = 0; i < currentBufferIndex; i++) {
-			int len = buffers[i].length;
-			System.arraycopy(buffers[i], 0, array, pos, len);
-			pos += len;
-		}
-
-		System.arraycopy(buffers[currentBufferIndex], 0, array, pos, offset);
-
-		return array;
+		return Arrays.copyOf(buffer, offset);
 	}
 
-    /**
-     * Creates <code>long</code> subarray from buffered content.
-     */
-	public long[] toArray(int start, final int len) {
-		int remaining = len;
-		int pos = 0;
-		long[] array = new long[len];
+	/**
+	 * Creates {@code long} subarray from buffered content.
+	 */
+	public long[] toArray(final int start, final int len) {
+		final long[] array = new long[len];
 
 		if (len == 0) {
 			return array;
 		}
 
-		int i = 0;
-		while (start >= buffers[i].length) {
-			start -= buffers[i].length;
-			i++;
-		}
+		System.arraycopy(buffer, start, array, 0, len);
 
-		while (i < buffersCount) {
-			long[] buf = buffers[i];
-			int c = Math.min(buf.length - start, remaining);
-			System.arraycopy(buf, start, array, pos, c);
-			pos += c;
-			remaining -= c;
-			if (remaining == 0) {
-				break;
-			}
-			start = 0;
-			i++;
-		}
 		return array;
 	}
 
 	/**
-	 * Returns <code>long</code> element at given index.
+	 * Returns {@code long} element at given index.
 	 */
-	public long get(int index) {
-		if ((index >= size) || (index < 0)) {
+	public long get(final int index) {
+		if (index >= offset) {
 			throw new IndexOutOfBoundsException();
 		}
-		int ndx = 0;
-        while (true) {
-			long[] b = buffers[ndx];
-			if (index < b.length) {
-				return b[index];
-			}
-			ndx++;
-			index -= b.length;
-		}
+		return buffer[index];
 	}
+
 
 }

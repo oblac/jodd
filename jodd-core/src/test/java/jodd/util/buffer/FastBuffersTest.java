@@ -31,7 +31,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class FastBuffersTest {
 
@@ -61,67 +65,6 @@ class FastBuffersTest {
 
 		fib.clear();
 		assertEquals(0, fib.size());
-	}
-
-	@Test
-	void testChunks() {
-		FastIntBuffer fib = new FastIntBuffer(2);
-
-		assertEquals(0, fib.size());
-		assertEquals(-1, fib.index());
-		assertEquals(0, fib.offset());
-
-		fib.append(new int[]{1, 2, 3});
-
-		assertEquals(3, fib.size());
-		assertEquals(0, fib.index());
-		assertEquals(3, fib.offset());
-
-		assertTrue(Arrays.equals(new int[]{1, 2, 3}, fib.array(0)));
-
-		fib.append(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
-
-		assertEquals(19, fib.size());
-		assertEquals(1, fib.index());
-		assertEquals(16, fib.array(1).length);
-		assertEquals(16, fib.offset());
-
-		fib.append(100);
-
-		assertEquals(20, fib.size());
-		assertEquals(2, fib.index());
-		assertEquals(2, fib.array(2).length);
-		assertEquals(1, fib.offset());
-	}
-
-	@Test
-	void testInnerBuffers() {
-		FastIntBuffer fib = new FastIntBuffer(1);
-
-		fib.append(new int[2]);
-		assertEquals(2, fib.offset());
-		fib.append(new int[4]);
-		assertEquals(4, fib.offset());
-		fib.append(new int[8]);
-		assertEquals(8, fib.offset());
-		fib.append(new int[16]);
-		assertEquals(16, fib.offset());
-		fib.append(new int[32]);
-		fib.append(new int[64]);
-		fib.append(new int[128]);
-		fib.append(new int[256]);
-		fib.append(new int[512]);
-		fib.append(new int[1024]);
-		fib.append(new int[2048]);
-		fib.append(new int[4096]);
-		fib.append(new int[8192]);
-		fib.append(new int[16384]);
-		fib.append(new int[32768]);
-		fib.append(new int[65536]);
-
-		assertEquals(15, fib.index());
-		assertEquals(131070, fib.size());
-		assertEquals(65536, fib.offset());
 	}
 
 	@Test

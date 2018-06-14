@@ -114,12 +114,7 @@ public class FastCharArrayWriter extends Writer {
 	 * @see CharArrayWriter#writeTo(Writer)
 	 */
 	public void writeTo(final Writer out) throws IOException {
-		int index = buffer.index();
-		for (int i = 0; i < index; i++) {
-			char[] buf = buffer.array(i);
-			out.write(buf);
-		}
-		out.write(buffer.array(index), 0, buffer.offset());
+		out.write(buffer.toArray());
 	}
 
 	/**

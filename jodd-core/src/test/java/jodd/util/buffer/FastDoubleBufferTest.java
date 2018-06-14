@@ -27,6 +27,10 @@ package jodd.util.buffer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -59,72 +63,6 @@ class FastDoubleBufferTest extends FastBufferTestBase {
 		assertEquals(7, buff2.toArray().length);
 	}
 
-	@Test
-	void testChunks() {
-		FastDoubleBuffer buff = new FastDoubleBuffer();
-
-		assertEquals(-1, buff.index());
-		assertEquals(0, buff.offset());
-
-		buff.append(1);
-
-		assertEquals(0, buff.index());
-		assertEquals(1, buff.offset());
-
-		buff.append(2);
-
-		assertEquals(2, buff.offset());
-
-		for (int i = 3; i <= SIZE; i++) {
-			buff.append(i);
-		}
-
-		assertEquals(0, buff.index());
-		assertEquals(SIZE, buff.offset());
-
-		buff.append(SIZE + 1);
-		assertEquals(1, buff.index());
-		assertEquals(1, buff.offset());
-
-		double[] a = buff.array(0);
-
-		for (int i = 1; i <= SIZE; i++) {
-			assertEquals(i, a[i - 1], 0.1);
-		}
-	}
-
-	@Test
-	void testChunksOverflow() {
-		FastDoubleBuffer buff = new FastDoubleBuffer();
-
-		assertEquals(-1, buff.index());
-		assertEquals(0, buff.offset());
-
-		int sum = 0;
-
-		for (int j = 0; j < COUNT; j++) {
-			for (int i = 1; i <= SIZE; i++) {
-				buff.append(i);
-				sum += i;
-			}
-		}
-
-		assertEquals(15, buff.index());
-		assertEquals(1024, buff.offset());
-
-		buff.append(-1);
-		sum--;
-		assertEquals(16, buff.index());
-		assertEquals(1, buff.offset());
-
-		int sum2 = 0;
-
-		for (int i = 0; i < buff.size(); i++) {
-			sum2 += buff.get(i);
-		}
-
-		assertEquals(sum, sum2);
-	}
 
 	@Test
 	void testClear() {
@@ -199,6 +137,23 @@ class FastDoubleBufferTest extends FastBufferTestBase {
 
 		assertEquals(total - SIZE - 1, array.length);
 		assertEquals(SIZE + 2, array[0], 0.1);
+	}
+
+	@Test
+	void testBig() {
+		List<Double> l = new ArrayList<>();
+		FastDoubleBuffer fbf = new FastDoubleBuffer();
+
+		Random rnd = new Random();
+		for (int i = 0; i < 100_000; i++) {
+			int n = rnd.nextInt();
+			l.add((double)n);
+			fbf.append((double)n);
+		}
+
+		for (int i = 0; i < l.size(); i++) {
+			assertEquals(l.get(i).doubleValue(), fbf.get(i));
+		}
 	}
 
 

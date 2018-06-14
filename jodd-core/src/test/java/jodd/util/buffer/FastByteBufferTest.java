@@ -27,6 +27,10 @@ package jodd.util.buffer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -60,73 +64,6 @@ class FastByteBufferTest extends FastBufferTestBase {
 	}
 
 	@Test
-	void testChunks() {
-		FastByteBuffer buff = new FastByteBuffer();
-
-		assertEquals(-1, buff.index());
-		assertEquals(0, buff.offset());
-
-		buff.append((byte)1);
-
-		assertEquals(0, buff.index());
-		assertEquals(1, buff.offset());
-
-		buff.append((byte)2);
-
-		assertEquals(2, buff.offset());
-
-		for (int i = 3; i <= SIZE; i++) {
-			buff.append((byte)i);
-		}
-
-		assertEquals(0, buff.index());
-		assertEquals(SIZE, buff.offset());
-
-		buff.append((byte)(SIZE + 1));
-		assertEquals(1, buff.index());
-		assertEquals(1, buff.offset());
-
-		byte[] a = buff.array(0);
-
-		for (int i = 1; i <= SIZE; i++) {
-			assertEquals((byte)i, a[i - 1]);
-		}
-	}
-
-	@Test
-	void testChunksOverflow() {
-		FastByteBuffer buff = new FastByteBuffer();
-
-		assertEquals(-1, buff.index());
-		assertEquals(0, buff.offset());
-
-		byte sum = 0;
-
-		for (int j = 0; j < COUNT; j++) {
-			for (int i = 1; i <= SIZE; i++) {
-				buff.append((byte)i);
-				sum += i;
-			}
-		}
-
-		assertEquals(15, buff.index());
-		assertEquals(1024, buff.offset());
-
-		buff.append((byte)-1);
-		sum--;
-		assertEquals(16, buff.index());
-		assertEquals(1, buff.offset());
-
-		byte sum2 = 0;
-
-		for (int i = 0; i < buff.size(); i++) {
-			sum2 += buff.get(i);
-		}
-
-		assertEquals(sum, sum2);
-	}
-
-	@Test
 	void testClear() {
 		FastByteBuffer buff = new FastByteBuffer();
 
@@ -153,7 +90,7 @@ class FastByteBufferTest extends FastBufferTestBase {
 
 	@Test
 	void testToArray() {
-		FastByteBuffer buff = new FastByteBuffer();
+		final FastByteBuffer buff = new FastByteBuffer();
 
 		byte sum = 0;
 
@@ -201,6 +138,22 @@ class FastByteBufferTest extends FastBufferTestBase {
 		assertEquals((byte)(SIZE + 2), array[0]);
 	}
 
+	@Test
+	void testBig() {
+		List<Byte> l = new ArrayList<>();
+		FastByteBuffer fbf = new FastByteBuffer();
+
+		Random rnd = new Random();
+		for (int i = 0; i < 100_000; i++) {
+			int n = rnd.nextInt();
+			l.add((byte)n);
+			fbf.append((byte)n);
+		}
+
+		for (int i = 0; i < l.size(); i++) {
+			assertEquals(l.get(i).byteValue(), fbf.get(i));
+		}
+	}
 
 	protected byte[] array(byte... arr) {
 		return arr;

@@ -24,8 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Fast, fast buffers.
- * This buffer implementation does not store all data
- * in single array, but in array of chunks.
+ * Fast buffers.
  */
 package jodd.util.buffer;

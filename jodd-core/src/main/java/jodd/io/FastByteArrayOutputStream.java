@@ -119,12 +119,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @see ByteArrayOutputStream#writeTo(OutputStream)
 	 */
 	public void writeTo(final OutputStream out) throws IOException {
-		int index = buffer.index();
-		for (int i = 0; i < index; i++) {
-			byte[] buf = buffer.array(i);
-			out.write(buf);
-		}
-		out.write(buffer.array(index), 0, buffer.offset());
+		out.write(buffer.toArray());
 	}
 
 	/**
