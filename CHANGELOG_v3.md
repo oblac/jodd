@@ -1,4 +1,4 @@
-# Jodd v3.x Change Log
+# Jodd v3.x Changelog
 
 ## [3.9.1](https://github.com/oblac/jodd/compare/v3.9...3.9.1)
 
