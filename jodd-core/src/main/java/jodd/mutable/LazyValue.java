@@ -25,11 +25,14 @@
 
 package jodd.mutable;
 
+import jodd.util.function.Maybe;
+
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * Holder of a value that is computed lazy.
+ * Holder of a non-null value that is computed lazy.
  */
 public class LazyValue<T> implements Supplier<T> {
 
@@ -56,8 +59,8 @@ public class LazyValue<T> implements Supplier<T> {
 		if (!initialized) {
 			synchronized (this) {
 				if (!initialized) {
-					T t = supplier.get();
-					value = t;
+					final T t = supplier.get();
+					value = Objects.requireNonNull(t);
 					initialized = true;
 					supplier = null;
 					return t;
@@ -72,6 +75,10 @@ public class LazyValue<T> implements Supplier<T> {
 	 */
 	public Optional<T> optional() {
 		return Optional.ofNullable(get());
+	}
+
+	public Maybe<T> maybe() {
+		return Maybe.of(get());
 	}
 
 }
