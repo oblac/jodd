@@ -28,8 +28,7 @@ package jodd.mutable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ValueTest {
 
@@ -37,11 +36,9 @@ class ValueTest {
 	void testValue() {
 		Value<String> str = Value.of(null);
 
-		assertFalse(str.optional().isPresent());
+		assertNull(str.get());
 
 		str.set("123");
-
-		assertTrue(str.optional().isPresent());
 
 		assertEquals("123", str.get());
 

@@ -25,7 +25,6 @@
 
 package jodd.mutable;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -38,13 +37,6 @@ public interface Value<T> extends Supplier<T> {
 	 */
 	public static <R> Value<R> of(final R value) {
 		return new ValueImpl<>(value);
-	}
-
-	/**
-	 * Returns optional wrapper of the value.
-	 */
-	public default Optional<T> optional() {
-		return Optional.ofNullable(get());
 	}
 
 	/**

@@ -28,9 +28,7 @@ package jodd.mutable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LazyValueTest {
 
@@ -39,7 +37,6 @@ class LazyValueTest {
 		LazyValue<String> str = LazyValue.of(() -> "123");
 
 		assertEquals("123", str.get());
-		assertTrue(str.optional().isPresent());
 	}
 
 	@Test
@@ -47,7 +44,6 @@ class LazyValueTest {
 		LazyValue<String> str = LazyValue.of(() -> null);
 
 		assertNull(str.get());
-		assertFalse(str.optional().isPresent());
 	}
 
 }
