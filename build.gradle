@@ -279,6 +279,7 @@ configure(javaModules()) {
 			task "$className"(type: JavaExec, dependsOn: 'build') {
 				main 'org.openjdk.jmh.Main'
 				args =  ['.' + className + '.*']
+//				jvmArgs = ["-XX:+PrintCompilation"]
 				classpath = sourceSets.main.runtimeClasspath + sourceSets.perf.runtimeClasspath
 			}
 		}
