@@ -26,6 +26,7 @@
 package jodd.joy;
 
 import jodd.Jodd;
+import jodd.chalk.Chalk256;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.LoggerProvider;
@@ -33,7 +34,6 @@ import jodd.log.impl.SimpleLogger;
 import jodd.madvoc.WebApp;
 import jodd.madvoc.petite.PetiteWebApp;
 import jodd.petite.PetiteContainer;
-import jodd.util.Chalk256;
 import jodd.util.function.Consumers;
 
 import javax.servlet.ServletContext;

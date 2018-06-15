@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.chalk.Chalk256;
 import jodd.db.DbOom;
 import jodd.db.DbSessionProvider;
 import jodd.db.connection.ConnectionProvider;
@@ -46,7 +47,6 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.pointcuts.MethodWithAnnotationPointcut;
-import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.function.Consumers;
 

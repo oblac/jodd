@@ -26,6 +26,7 @@
 package jodd.util;
 
 import jodd.Jodd;
+import jodd.chalk.Chalk;
 import jodd.test.DisabledOnJava;
 import jodd.util.buffer.FastBuffer;
 import jodd.util.fixtures.subclass.IBase;

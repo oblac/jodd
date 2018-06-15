@@ -23,7 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.chalk;
+
+import jodd.util.StringPool;
 
 /**
  * Chalk allows you to color output going to console.

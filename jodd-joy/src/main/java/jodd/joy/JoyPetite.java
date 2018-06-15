@@ -26,13 +26,13 @@
 package jodd.joy;
 
 import jodd.cache.TypeCache;
+import jodd.chalk.Chalk256;
 import jodd.petite.AutomagicPetiteConfigurator;
 import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteContainer;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
-import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.StringUtil;
 import jodd.util.function.Consumers;

@@ -25,6 +25,7 @@
 
 package jodd.joy;
 
+import jodd.chalk.Chalk256;
 import jodd.joy.madvoc.JoyActionConfig;
 import jodd.joy.madvoc.JoyRestActionConfig;
 import jodd.madvoc.AutomagicMadvocConfigurator;
@@ -39,7 +40,6 @@ import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.proxetta.ProxettaSupplier;
 import jodd.props.Props;
 import jodd.proxetta.ProxettaUtil;
-import jodd.util.Chalk256;
 import jodd.util.ClassUtil;
 import jodd.util.function.Consumers;
 

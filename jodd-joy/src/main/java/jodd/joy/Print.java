@@ -25,7 +25,7 @@
 
 package jodd.joy;
 
-import jodd.util.Chalk256;
+import jodd.chalk.Chalk256;
 import jodd.util.StringUtil;
 
 public class Print {
