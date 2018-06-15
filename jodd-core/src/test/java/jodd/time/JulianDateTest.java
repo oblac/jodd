@@ -23,8 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.time;
 
+import jodd.time.JulianDate;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

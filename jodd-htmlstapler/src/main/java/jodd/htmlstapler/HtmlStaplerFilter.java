@@ -36,8 +36,8 @@ import jodd.log.LoggerFactory;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringPool;
-import jodd.util.TimeUtil;
-import jodd.util.net.MimeTypes;
+import jodd.time.TimeUtil;
+import jodd.net.MimeTypes;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;

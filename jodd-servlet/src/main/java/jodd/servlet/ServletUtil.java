@@ -34,8 +34,8 @@ import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.util.Base64;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.net.MimeTypes;
-import jodd.util.net.URLCoder;
+import jodd.net.MimeTypes;
+import jodd.net.URLCoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;

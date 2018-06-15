@@ -26,7 +26,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.TagWriterUtil;
-import jodd.util.net.HtmlEncoder;
+import jodd.net.HtmlEncoder;
 
 import java.io.IOException;
 

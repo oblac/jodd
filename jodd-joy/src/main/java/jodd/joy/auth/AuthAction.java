@@ -34,7 +34,7 @@ import jodd.madvoc.result.JsonResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
-import jodd.util.net.HttpStatus;
+import jodd.net.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.time;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -31,7 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static jodd.util.TimeUtil.MILLIS_IN_DAY;
+import static jodd.time.TimeUtil.MILLIS_IN_DAY;
 
 /**
  * Julian Date stamp, for high precision calculations. Julian date is a real

@@ -29,7 +29,7 @@ import jodd.http.up.ByteArrayUploadable;
 import jodd.io.FileUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

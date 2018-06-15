@@ -29,7 +29,7 @@ import jodd.exception.ExceptionUtil;
 import jodd.json.JsonSerializer;
 import jodd.madvoc.meta.RenderWith;
 import jodd.util.StringPool;
-import jodd.util.net.HttpStatus;
+import jodd.net.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -25,7 +25,7 @@
 
 package jodd.db.type;
 
-import jodd.util.TimeUtil;
+import jodd.time.TimeUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

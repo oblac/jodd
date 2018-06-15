@@ -26,7 +26,7 @@
 package jodd.mail;
 
 import jodd.io.StreamUtil;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 import org.junit.jupiter.api.Test;
 
 import javax.activation.DataSource;

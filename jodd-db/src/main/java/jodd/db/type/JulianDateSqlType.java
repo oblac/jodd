@@ -25,7 +25,7 @@
 
 package jodd.db.type;
 
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

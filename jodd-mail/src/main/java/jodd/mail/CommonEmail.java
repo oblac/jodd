@@ -26,7 +26,7 @@
 package jodd.mail;
 
 import jodd.util.ArraysUtil;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 
 import javax.activation.DataSource;
 import javax.mail.Address;

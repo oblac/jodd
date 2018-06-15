@@ -27,7 +27,7 @@ package jodd.typeconverter;
 
 
 import jodd.typeconverter.impl.LocalDateTimeConverter;
-import jodd.util.TimeUtil;
+import jodd.time.TimeUtil;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;

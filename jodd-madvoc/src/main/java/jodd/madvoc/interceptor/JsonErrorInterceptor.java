@@ -30,7 +30,7 @@ import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ResponseException;
 import jodd.madvoc.result.JsonResult;
-import jodd.util.net.HttpStatus;
+import jodd.net.HttpStatus;
 
 /**
  * Interceptor of REST actions. Catches exceptions, logs the errors and returns exception information in the body.

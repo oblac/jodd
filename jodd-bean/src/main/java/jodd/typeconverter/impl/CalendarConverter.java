@@ -28,7 +28,7 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.StringUtil;
-import jodd.util.TimeUtil;
+import jodd.time.TimeUtil;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;

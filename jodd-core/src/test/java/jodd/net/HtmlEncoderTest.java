@@ -23,27 +23,40 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.net;
+package jodd.net;
 
-/**
- * Http request methods.
- * See: http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
- */
-public enum HttpMethod {
-	CONNECT,
-	DELETE,
-	GET,
-	HEAD,
-	OPTIONS,
-	PATCH,
-	POST,
-	PUT,
-	TRACE;
+import org.junit.jupiter.api.Test;
 
-	/**
-	 * Returns {@code true} if method name is equal to provided one.
-	 */
-	public boolean equalsName(final String name) {
-		return name().equalsIgnoreCase(name);
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class HtmlEncoderTest {
+
+	@Test
+	void testEncodeText() {
+		String html = "< & \" ' > \r\n \n  \t";
+
+		assertEquals("&lt; &amp; \" ' &gt; \r\n \n  \t", HtmlEncoder.text(html));
+		assertEquals("&lt; &amp; &quot; &#39; &gt; \r\n \n  \t", HtmlEncoder.xml(html));
+
+		html = "";
+		assertEquals("", HtmlEncoder.text(html));
+
+		assertEquals("", HtmlEncoder.text(null));
 	}
+
+	@Test
+	void testEncodeAttribute() {
+		String html = "< & \" ' > \r\n \n  \t";
+
+		assertEquals("< &amp; &quot; ' > \r\n \n  \t", HtmlEncoder.attributeDoubleQuoted(html));
+		assertEquals("< &amp; \" &#39; > \r\n \n  \t", HtmlEncoder.attributeSingleQuoted(html));
+	}
+
+	@Test
+	void testNbsp() {
+		assertEquals(" ", HtmlEncoder.text(" "));
+		assertEquals("&nbsp;", HtmlEncoder.text("\u00a0"));
+		assertEquals("\u00a0", HtmlDecoder.decode("&nbsp;"));
+	}
+
 }

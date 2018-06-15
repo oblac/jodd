@@ -30,7 +30,7 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 import jodd.util.crypt.DigestEngine;
-import jodd.util.net.URLDecoder;
+import jodd.net.URLDecoder;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -30,7 +30,7 @@ import jodd.util.CharArraySequence;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
-import jodd.util.net.HtmlDecoder;
+import jodd.net.HtmlDecoder;
 
 import static jodd.util.CharUtil.equalsOne;
 import static jodd.util.CharUtil.isAlpha;

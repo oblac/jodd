@@ -33,7 +33,7 @@ import jodd.json.fixtures.model.cat.Event;
 import jodd.json.fixtures.model.cat.Performance;
 import jodd.json.fixtures.model.cat.Price;
 import jodd.json.fixtures.model.cat.SeatCategory;
-import jodd.util.TimeUtil;
+import jodd.time.TimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

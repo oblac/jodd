@@ -36,8 +36,8 @@ import jodd.io.upload.MultipartStreamParser;
 import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.TimeUtil;
-import jodd.util.net.MimeTypes;
+import jodd.time.TimeUtil;
+import jodd.net.MimeTypes;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

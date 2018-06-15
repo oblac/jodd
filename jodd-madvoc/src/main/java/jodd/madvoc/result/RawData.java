@@ -29,7 +29,7 @@ import jodd.io.FileNameUtil;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.RenderWith;
 import jodd.util.StringPool;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

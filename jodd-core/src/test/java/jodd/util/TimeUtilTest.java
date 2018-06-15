@@ -25,6 +25,8 @@
 
 package jodd.util;
 
+import jodd.time.JulianDate;
+import jodd.time.TimeUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

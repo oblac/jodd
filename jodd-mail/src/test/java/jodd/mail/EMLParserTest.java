@@ -26,7 +26,7 @@
 package jodd.mail;
 
 import jodd.util.StringPool;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

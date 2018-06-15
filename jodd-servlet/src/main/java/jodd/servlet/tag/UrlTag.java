@@ -26,7 +26,7 @@
 package jodd.servlet.tag;
 
 import jodd.util.StringPool;
-import jodd.util.net.URLCoder;
+import jodd.net.URLCoder;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;

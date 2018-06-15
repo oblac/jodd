@@ -25,7 +25,7 @@
 
 package jodd.lagarto;
 
-import jodd.util.net.HtmlEncoder;
+import jodd.net.HtmlEncoder;
 
 import java.io.IOException;
 

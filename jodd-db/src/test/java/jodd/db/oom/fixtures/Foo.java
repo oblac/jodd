@@ -30,7 +30,7 @@ import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 import jodd.db.type.IntegerSqlType;
 import jodd.mutable.MutableInteger;
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 
 import java.math.BigDecimal;
 import java.sql.Blob;

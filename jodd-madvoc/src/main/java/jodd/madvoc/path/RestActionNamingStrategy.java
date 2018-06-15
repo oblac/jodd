@@ -32,7 +32,7 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
-import jodd.util.net.HttpMethod;
+import jodd.net.HttpMethod;
 
 import java.lang.reflect.Method;
 

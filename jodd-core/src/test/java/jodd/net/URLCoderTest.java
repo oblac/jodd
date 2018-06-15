@@ -23,25 +23,25 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.net;
+package jodd.net;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static jodd.util.net.URLCoder.encodeFragment;
-import static jodd.util.net.URLCoder.encodeHost;
-import static jodd.util.net.URLCoder.encodeHttpUrl;
-import static jodd.util.net.URLCoder.encodePath;
-import static jodd.util.net.URLCoder.encodePathSegment;
-import static jodd.util.net.URLCoder.encodePort;
-import static jodd.util.net.URLCoder.encodeQuery;
-import static jodd.util.net.URLCoder.encodeQueryParam;
-import static jodd.util.net.URLCoder.encodeScheme;
-import static jodd.util.net.URLCoder.encodeUri;
-import static jodd.util.net.URLCoder.encodeUserInfo;
-import static jodd.util.net.URLDecoder.decode;
-import static jodd.util.net.URLDecoder.decodeQuery;
+import static jodd.net.URLCoder.encodeFragment;
+import static jodd.net.URLCoder.encodeHost;
+import static jodd.net.URLCoder.encodeHttpUrl;
+import static jodd.net.URLCoder.encodePath;
+import static jodd.net.URLCoder.encodePathSegment;
+import static jodd.net.URLCoder.encodePort;
+import static jodd.net.URLCoder.encodeQuery;
+import static jodd.net.URLCoder.encodeQueryParam;
+import static jodd.net.URLCoder.encodeScheme;
+import static jodd.net.URLCoder.encodeUri;
+import static jodd.net.URLCoder.encodeUserInfo;
+import static jodd.net.URLDecoder.decode;
+import static jodd.net.URLDecoder.decodeQuery;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

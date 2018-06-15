@@ -56,7 +56,7 @@ import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
 import jodd.json.impl.UUIDJsonSerializer;
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 
 import java.io.File;
 import java.math.BigDecimal;

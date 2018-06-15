@@ -29,8 +29,8 @@ import jodd.util.Base64;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.net.HttpMethod;
-import jodd.util.net.MimeTypes;
+import jodd.net.HttpMethod;
+import jodd.net.MimeTypes;
 
 import java.io.BufferedReader;
 import java.io.IOException;

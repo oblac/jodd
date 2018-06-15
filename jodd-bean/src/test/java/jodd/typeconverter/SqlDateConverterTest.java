@@ -26,7 +26,7 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.SqlDateConverter;
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;

@@ -27,7 +27,7 @@ package jodd.json.impl;
 
 import jodd.json.JsonContext;
 import jodd.json.TypeJsonSerializer;
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 
 /**
  * Serializer for JDateTime.

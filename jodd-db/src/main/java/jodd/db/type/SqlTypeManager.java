@@ -35,7 +35,7 @@ import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
 import jodd.util.ClassUtil;
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

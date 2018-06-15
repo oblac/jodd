@@ -26,7 +26,7 @@
 package jodd.joy.i18n;
 
 import jodd.util.StringUtil;
-import jodd.util.net.HtmlEncoder;
+import jodd.net.HtmlEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;

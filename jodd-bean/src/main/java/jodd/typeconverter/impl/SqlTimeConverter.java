@@ -27,9 +27,9 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
-import jodd.util.JulianDate;
+import jodd.time.JulianDate;
 import jodd.util.StringUtil;
-import jodd.util.TimeUtil;
+import jodd.time.TimeUtil;
 
 import java.sql.Time;
 import java.time.LocalDateTime;

@@ -27,8 +27,8 @@ package jodd.http;
 
 import jodd.util.StringBand;
 import jodd.util.StringPool;
-import jodd.util.net.URLCoder;
-import jodd.util.net.URLDecoder;
+import jodd.net.URLCoder;
+import jodd.net.URLDecoder;
 
 import java.util.Map;
 

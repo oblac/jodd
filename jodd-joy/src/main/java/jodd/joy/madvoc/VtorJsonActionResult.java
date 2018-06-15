@@ -32,7 +32,7 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.scope.MadvocContext;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.CharUtil;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 import jodd.vtor.Violation;
 
 import javax.servlet.http.HttpServletRequest;

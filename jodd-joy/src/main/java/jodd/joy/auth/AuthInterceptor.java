@@ -30,7 +30,7 @@ import jodd.madvoc.config.ActionRuntime;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.JsonResult;
 import jodd.servlet.ServletUtil;
-import jodd.util.net.HttpStatus;
+import jodd.net.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 

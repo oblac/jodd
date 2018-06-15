@@ -27,7 +27,7 @@ package jodd.mail;
 
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
-import jodd.util.net.MimeTypes;
+import jodd.net.MimeTypes;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;

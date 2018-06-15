@@ -26,7 +26,7 @@
 package jodd.util;
 
 import jodd.util.cl.ClassLoaderStrategy;
-import jodd.util.net.URLDecoder;
+import jodd.net.URLDecoder;
 
 import java.io.File;
 import java.io.IOException;
