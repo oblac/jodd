@@ -23,30 +23,26 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.inex;
+package jodd.template;
 
-import jodd.util.Wildcard;
+import java.util.Map;
 
-/**
- * Rule matcher.
- */
-@FunctionalInterface
-public interface InExRuleMatcher<T, R> {
+public class MapTemplateParser extends StringTemplateParser {
 
 	/**
-	 * {@link jodd.util.Wildcard#match(CharSequence, CharSequence) Wilcard} rule matcher.
+	 * Creates new working template context of a map.
 	 */
-	InExRuleMatcher<String, String> WILDCARD_RULE_MATCHER =
-		(value, rule, include) -> Wildcard.match(value, rule);
-	/**
-	 * {@link jodd.util.Wildcard#matchPath(String, String)  Wilcard path} rule matcher.
-	 */
-	InExRuleMatcher<String, String> WILDCARD_PATH_RULE_MATCHER =
-		(value, rule, include) -> Wildcard.matchPath(value, rule);
+	public ContextTemplateParser of(final Map map) {
+		return template -> parseWithMap(template, map);
+	}
 
-	/**
-	 * Matches the value against the rule.
-	 */
-	boolean accept(T value, R rule, boolean include);
-
+	public String parseWithMap(final String template, final Map map) {
+		return super.parse(template, macroName -> {
+			Object value = map.get(macroName);
+			if (value == null) {
+				return null;
+			}
+			return value.toString();
+		});
+	}
 }

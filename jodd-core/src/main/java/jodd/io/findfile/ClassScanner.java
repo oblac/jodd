@@ -33,7 +33,7 @@ import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.function.Consumers;
-import jodd.util.inex.InExRules;
+import jodd.inex.InExRules;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,8 +49,8 @@ import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static jodd.util.inex.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
-import static jodd.util.inex.InExRuleMatcher.WILDCARD_RULE_MATCHER;
+import static jodd.inex.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
+import static jodd.inex.InExRuleMatcher.WILDCARD_RULE_MATCHER;
 
 /**
  * Convenient class path scanner.

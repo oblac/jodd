@@ -28,7 +28,7 @@ package jodd.props;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
-import jodd.util.template.StringTemplateParser;
+import jodd.template.StringTemplateParser;
 
 import java.util.HashMap;
 import java.util.HashSet;

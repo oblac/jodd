@@ -23,26 +23,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.template;
+package jodd.template;
 
-import java.util.Map;
+import java.util.function.Function;
 
-public class MapTemplateParser extends StringTemplateParser {
-
-	/**
-	 * Creates new working template context of a map.
-	 */
-	public ContextTemplateParser of(final Map map) {
-		return template -> parseWithMap(template, map);
-	}
-
-	public String parseWithMap(final String template, final Map map) {
-		return super.parse(template, macroName -> {
-			Object value = map.get(macroName);
-			if (value == null) {
-				return null;
-			}
-			return value.toString();
-		});
-	}
+/**
+ * Context withing string template parser operates.
+ * Curried version of {@link StringTemplateParser#parse(String, Function)}
+ */
+@FunctionalInterface
+public interface ContextTemplateParser {
+	String parse(String template);
 }

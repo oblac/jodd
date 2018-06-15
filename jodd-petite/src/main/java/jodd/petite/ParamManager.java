@@ -34,8 +34,8 @@ import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.meta.PetiteValue;
 import jodd.util.PropertiesUtil;
 import jodd.util.StringPool;
-import jodd.util.template.ContextTemplateParser;
-import jodd.util.template.MapTemplateParser;
+import jodd.template.ContextTemplateParser;
+import jodd.template.MapTemplateParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -30,7 +30,7 @@ import jodd.io.FileUtil;
 import jodd.util.MultiComparator;
 import jodd.util.StringUtil;
 import jodd.util.function.Consumers;
-import jodd.util.inex.InExRules;
+import jodd.inex.InExRules;
 
 import java.io.File;
 import java.net.URI;

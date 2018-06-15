@@ -25,8 +25,8 @@
 
 package jodd.util;
 
-import jodd.util.template.MapTemplateParser;
-import jodd.util.template.StringTemplateParser;
+import jodd.template.MapTemplateParser;
+import jodd.template.StringTemplateParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

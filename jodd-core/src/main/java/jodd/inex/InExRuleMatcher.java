@@ -23,15 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.template;
+package jodd.inex;
 
-import java.util.function.Function;
+import jodd.util.Wildcard;
 
 /**
- * Context withing string template parser operates.
- * Curried version of {@link StringTemplateParser#parse(String, Function)}
+ * Rule matcher.
  */
 @FunctionalInterface
-public interface ContextTemplateParser {
-	String parse(String template);
+public interface InExRuleMatcher<T, R> {
+
+	/**
+	 * {@link jodd.util.Wildcard#match(CharSequence, CharSequence) Wilcard} rule matcher.
+	 */
+	InExRuleMatcher<String, String> WILDCARD_RULE_MATCHER =
+		(value, rule, include) -> Wildcard.match(value, rule);
+	/**
+	 * {@link jodd.util.Wildcard#matchPath(String, String)  Wilcard path} rule matcher.
+	 */
+	InExRuleMatcher<String, String> WILDCARD_PATH_RULE_MATCHER =
+		(value, rule, include) -> Wildcard.matchPath(value, rule);
+
+	/**
+	 * Matches the value against the rule.
+	 */
+	boolean accept(T value, R rule, boolean include);
+
 }

@@ -26,8 +26,8 @@
 package jodd.bean;
 
 import jodd.bean.fixtures.Abean;
-import jodd.util.template.ContextTemplateParser;
-import jodd.util.template.MapTemplateParser;
+import jodd.template.ContextTemplateParser;
+import jodd.template.MapTemplateParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

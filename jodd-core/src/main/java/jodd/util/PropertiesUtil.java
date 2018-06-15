@@ -28,7 +28,7 @@ package jodd.util;
 import jodd.exception.UncheckedException;
 import jodd.io.StreamUtil;
 import jodd.io.findfile.ClassScanner;
-import jodd.util.template.StringTemplateParser;
+import jodd.template.StringTemplateParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

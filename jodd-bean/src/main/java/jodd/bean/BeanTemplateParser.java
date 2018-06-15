@@ -25,8 +25,8 @@
 
 package jodd.bean;
 
-import jodd.util.template.ContextTemplateParser;
-import jodd.util.template.StringTemplateParser;
+import jodd.template.ContextTemplateParser;
+import jodd.template.StringTemplateParser;
 
 /**
  * Bean template is a string template with JSP-alike

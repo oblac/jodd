@@ -25,8 +25,8 @@
 
 package jodd.io.findfile;
 
-import jodd.util.inex.InExRuleMatcher;
-import jodd.util.inex.InExRules;
+import jodd.inex.InExRuleMatcher;
+import jodd.inex.InExRules;
 
 /**
  * {@link FindFile} that matches file names using <code>*</code>, <code>?</code>
