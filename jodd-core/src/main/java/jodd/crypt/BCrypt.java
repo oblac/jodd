@@ -12,7 +12,7 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-package jodd.util.crypt;
+package jodd.crypt;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;

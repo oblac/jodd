@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.crypt;
+package jodd.crypt;
 
 import jodd.util.Base64;
 import jodd.util.StringUtil;

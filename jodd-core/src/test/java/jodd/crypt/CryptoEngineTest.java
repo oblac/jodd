@@ -23,26 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.crypt;
+package jodd.crypt;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class HashEngineTest {
+class CryptoEngineTest {
 
 	@Test
-	void testBcrypt() {
-		HashEngine hashEngine = HashEngine.bcrypt(7);
-		String hash = hashEngine.hash("Jodd");
-		assertTrue(hashEngine.check("Jodd", hash));
+	void testThreefish() {
+		CryptoEngine cryptoEngine = CryptoEngine.threefish("PASSWORD");
+
+		byte[] encrypted = cryptoEngine.encryptString("Jodd");
+
+		assertEquals("Jodd", cryptoEngine.decryptString(encrypted));
 	}
 
 	@Test
-	void testPbk2() {
-		HashEngine hashEngine = HashEngine.pbk2();
-		String hash = hashEngine.hash("Jodd");
-		assertTrue(hashEngine.check("Jodd", hash));
+	void testSymmetrical() {
+		CryptoEngine cryptoEngine = CryptoEngine.pbe3des("PASSWORD");
+
+		byte[] encrypted = cryptoEngine.encryptString("Jodd");
+
+		assertEquals("Jodd", cryptoEngine.decryptString(encrypted));
 	}
+
 
 }

@@ -23,55 +23,53 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.crypt;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PrettyStringBuilderTest {
+class BlockCipherTest {
 
-	@Test
-	void testList() {
-		List<String> l = new ArrayList<>();
-		l.add("One");
-		l.add("Two");
-		assertEquals("(One,Two)", new PrettyStringBuilder().toString(l));
+	static class FooBlockCipher extends BlockCipher {
+
+		protected FooBlockCipher() {
+			super(5 * 8);
+		}
+
+		@Override
+		protected byte[] encryptBlock(byte[] content, int offset) {
+			byte[] encrypted = new byte[blockSizeInBytes];
+			System.arraycopy(content, offset, encrypted, 0, blockSizeInBytes);
+			return encrypted;
+		}
+
+		@Override
+		protected byte[] decryptBlock(byte[] encryptedContent, int offset) {
+			byte[] decrypted = new byte[blockSizeInBytes];
+			System.arraycopy(encryptedContent, offset, decrypted, 0, blockSizeInBytes);
+			return decrypted;
+		}
 	}
 
 	@Test
-	void testMap() {
-		Map<Integer, String> m = new LinkedHashMap<>();
-		m.put(1, "One");
-		m.put(2, "Two");
-		assertEquals("{1:One,2:Two}", new PrettyStringBuilder().toString(m));
+	void testBlock8() {
+		FooBlockCipher cypher = new FooBlockCipher();
+
+		byte[] encrypted = cypher.encrypt("Jodd".getBytes());
+		assertEquals("Jodd", new String(encrypted).substring(0, encrypted.length - 1));
+		byte[] decrypted = cypher.decrypt(encrypted);
+		assertEquals("Jodd", new String(decrypted));
+
+		encrypted = cypher.encrypt("Jo".getBytes());
+		assertEquals("Jo", new String(encrypted).substring(0, encrypted.length - 3));
+		decrypted = cypher.decrypt(encrypted);
+		assertEquals("Jo", new String(decrypted));
+
+		encrypted = cypher.encrypt("Jodder".getBytes());
+		assertEquals("Jodder", new String(encrypted).substring(0, encrypted.length - 4));
+		decrypted = cypher.decrypt(encrypted);
+		assertEquals("Jodder", new String(decrypted));
 	}
 
-	@Test
-	void testArray() {
-		int[] arr = new int[]{1, 2, 3};
-		assertEquals("[1,2,3]", new PrettyStringBuilder().toString(arr));
-	}
-
-	@Test
-	void testMax() {
-		PrettyStringBuilder psb = new PrettyStringBuilder().maxItemsToShow(3);
-		int[] arr = new int[]{1, 2, 3};
-		assertEquals("[1,2,3]", psb.toString(arr));
-		arr = new int[]{1, 2, 3, 4};
-		assertEquals("[1,2,3,...]", psb.toString(arr));
-	}
-
-	@Test
-	void testDeep() {
-		List l = new ArrayList();
-		l.add("One");
-		l.add(new int[]{1, 2,});
-		assertEquals("(One,[1,2])", new PrettyStringBuilder().toString(l));
-	}
 }

@@ -25,11 +25,11 @@
 
 package jodd.joy.auth.simtok;
 
+import jodd.crypt.BCrypt;
 import jodd.json.JsonParser;
 import jodd.json.JsonSerializer;
 import jodd.util.Base64;
 import jodd.util.RandomString;
-import jodd.util.crypt.BCrypt;
 
 /**
  * Simple encode/decoder for simple token.

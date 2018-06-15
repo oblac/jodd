@@ -23,22 +23,50 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.crypt;
+package jodd.crypt;
 
+import jodd.util.MathUtil;
+import jodd.util.RandomString;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PBKDF2HashTest {
+class ThreefishTest {
+
+	Threefish threefish;
+
+	@BeforeEach
+	void setUp() {
+		threefish = new Threefish(Threefish.BLOCK_SIZE_BITS_1024);
+		threefish.init("This is a key message and I feel good", 0x1122334455667788L, 0xFF00FF00AABB9933L);
+
+	}
 
 	@Test
-	void simpleTest() {
-		PBKDF2Hash pbkdf2Hash = new PBKDF2Hash();
+	void testSimple() {
+		String message = "Threefish!";
+		byte[] encrypted = threefish.encryptString(message);
+		String message2 = threefish.decryptString(encrypted);
+		assertEquals(message, message2);
 
-		String hash = pbkdf2Hash.createHash("secret");
+		message = "Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!Jodd was here!";
+		encrypted = threefish.encryptString(message);
+		message2 = threefish.decryptString(encrypted);
 
-		assertFalse(pbkdf2Hash.validatePassword("bad", hash));
-		assertTrue(pbkdf2Hash.validatePassword("secret", hash));
+		assertEquals(message, message2);
+	}
+
+	@Test
+	void testLoop() {
+
+		long reps = 10000;
+		while (reps-- > 0) {
+			String s = RandomString.get().randomAscii(MathUtil.randomInt(1, 1024));
+			byte[] encrypted = threefish.encryptString(s);
+			String s2 = threefish.decryptString(encrypted);
+			assertEquals(s, s2);
+		}
+
 	}
 }

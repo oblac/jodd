@@ -26,11 +26,11 @@
 package jodd.io;
 
 import jodd.core.JoddCore;
+import jodd.crypt.DigestEngine;
+import jodd.net.URLDecoder;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
-import jodd.util.crypt.DigestEngine;
-import jodd.net.URLDecoder;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

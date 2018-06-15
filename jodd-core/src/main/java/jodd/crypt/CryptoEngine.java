@@ -23,31 +23,63 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.crypt;
+package jodd.crypt;
 
-import org.junit.jupiter.api.Test;
+import jodd.util.StringUtil;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * Symmetric encryption engines.
+ */
+public interface CryptoEngine {
 
-class CryptoEngineTest {
+	/**
+	 * Creates new encryptor.
+	 */
+	public static CryptoEngine pbe3des(final String password) {
+		final PBKDF2Encryptor PBKDF2Encryptor = new PBKDF2Encryptor(password);
 
-	@Test
-	void testThreefish() {
-		CryptoEngine cryptoEngine = CryptoEngine.threefish("PASSWORD");
+		return new CryptoEngine() {
+			@Override
+			public byte[] encryptString(final String input) {
+				return PBKDF2Encryptor.encrypt(StringUtil.getBytes(input));
+			}
 
-		byte[] encrypted = cryptoEngine.encryptString("Jodd");
-
-		assertEquals("Jodd", cryptoEngine.decryptString(encrypted));
+			@Override
+			public String decryptString(final byte[] encryptedContent) {
+				return StringUtil.newString(PBKDF2Encryptor.decrypt(encryptedContent));
+			}
+		};
 	}
 
-	@Test
-	void testSymmetrical() {
-		CryptoEngine cryptoEngine = CryptoEngine.pbe3des("PASSWORD");
+	/**
+	 * Creates new {@link Threefish} encryptor.
+	 */
+	public static CryptoEngine threefish(String password) {
+		final Threefish threefish = new Threefish(512);
+		threefish.init(password, 0x1122334455667788L, 0xFF00FF00AABB9933L);
 
-		byte[] encrypted = cryptoEngine.encryptString("Jodd");
+		return new CryptoEngine() {
+			@Override
+			public byte[] encryptString(final String input) {
+				return threefish.encryptString(input);
+			}
 
-		assertEquals("Jodd", cryptoEngine.decryptString(encrypted));
+			@Override
+			public String decryptString(final byte[] encryptedContent) {
+				return threefish.decryptString(encryptedContent);
+			}
+		};
 	}
 
+
+	/**
+	 * Encrypts the input string.
+	 */
+	public byte[] encryptString(String input);
+
+	/**
+	 * Decrypts the encrypted content to string.
+	 */
+	public String decryptString(byte[] encryptedContent);
 
 }

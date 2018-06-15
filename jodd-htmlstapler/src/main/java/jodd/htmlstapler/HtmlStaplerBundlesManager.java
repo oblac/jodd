@@ -25,6 +25,7 @@
 
 package jodd.htmlstapler;
 
+import jodd.crypt.DigestEngine;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.NetUtil;
@@ -39,7 +40,6 @@ import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
-import jodd.util.crypt.DigestEngine;
 
 import java.io.File;
 import java.io.IOException;

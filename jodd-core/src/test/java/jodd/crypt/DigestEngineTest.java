@@ -23,63 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.crypt;
+package jodd.crypt;
 
-import jodd.util.StringUtil;
+import org.junit.jupiter.api.Test;
 
-/**
- * Symmetric encryption engines.
- */
-public interface CryptoEngine {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	/**
-	 * Creates new encryptor.
-	 */
-	public static CryptoEngine pbe3des(final String password) {
-		final PBKDF2Encryptor PBKDF2Encryptor = new PBKDF2Encryptor(password);
+class DigestEngineTest {
 
-		return new CryptoEngine() {
-			@Override
-			public byte[] encryptString(final String input) {
-				return PBKDF2Encryptor.encrypt(StringUtil.getBytes(input));
-			}
-
-			@Override
-			public String decryptString(final byte[] encryptedContent) {
-				return StringUtil.newString(PBKDF2Encryptor.decrypt(encryptedContent));
-			}
-		};
+	@Test
+	void testSha1() {
+		assertEquals("626B0566A836677FA85C6952417E704E727E336C", DigestEngine.sha1().digestString("Jodd"));
 	}
 
-	/**
-	 * Creates new {@link Threefish} encryptor.
-	 */
-	public static CryptoEngine threefish(String password) {
-		final Threefish threefish = new Threefish(512);
-		threefish.init(password, 0x1122334455667788L, 0xFF00FF00AABB9933L);
-
-		return new CryptoEngine() {
-			@Override
-			public byte[] encryptString(final String input) {
-				return threefish.encryptString(input);
-			}
-
-			@Override
-			public String decryptString(final byte[] encryptedContent) {
-				return threefish.decryptString(encryptedContent);
-			}
-		};
+	@Test
+	void testSha256() {
+		assertEquals("D5E94A2DD851E6E2A233EFA00CF26B385A933F26223B00757E189397F8B92530", DigestEngine.sha256().digestString("Jodd"));
 	}
 
+	@Test
+	void testSha512() {
+		assertEquals("ACF65B0C3DE891B2984F461FA12EF4DD205B2DE360F3C834A47368CBDD334687AB5E8405AA910DF8AC6B5631BF1F2CC5133B0D95493A40452EC5B984E4FC31E8", DigestEngine.sha512().digestString("Jodd"));
+	}
 
-	/**
-	 * Encrypts the input string.
-	 */
-	public byte[] encryptString(String input);
-
-	/**
-	 * Decrypts the encrypted content to string.
-	 */
-	public String decryptString(byte[] encryptedContent);
-
+	@Test
+	void testMD5() {
+		assertEquals("5513A194A0D3E46B8D90021B283BE791", DigestEngine.md5().digestString("Jodd"));
+	}
 }
