@@ -32,10 +32,10 @@ import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.petite.def.ValueInjectionPoint;
 import jodd.petite.meta.PetiteValue;
-import jodd.util.PropertiesUtil;
-import jodd.util.StringPool;
 import jodd.template.ContextTemplateParser;
 import jodd.template.MapTemplateParser;
+import jodd.util.PropertiesUtil;
+import jodd.util.StringPool;
 
 import java.util.ArrayList;
 import java.util.HashMap;

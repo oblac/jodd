@@ -25,10 +25,10 @@
 
 package jodd.props;
 
+import jodd.template.StringTemplateParser;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
-import jodd.template.StringTemplateParser;
 
 import java.util.HashMap;
 import java.util.HashSet;

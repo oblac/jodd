@@ -25,13 +25,13 @@
 
 package jodd.bean;
 
+import jodd.inex.InExRuleMatcher;
+import jodd.inex.InExRules;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.inex.InExRuleMatcher;
-import jodd.inex.InExRules;
 
 import java.util.ArrayList;
 import java.util.Map;

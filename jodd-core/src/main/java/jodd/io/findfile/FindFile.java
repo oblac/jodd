@@ -25,12 +25,12 @@
 
 package jodd.io.findfile;
 
+import jodd.inex.InExRules;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.util.MultiComparator;
 import jodd.util.StringUtil;
 import jodd.util.function.Consumers;
-import jodd.inex.InExRules;
 
 import java.io.File;
 import java.net.URI;

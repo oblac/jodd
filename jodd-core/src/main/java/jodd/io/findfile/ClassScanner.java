@@ -25,6 +25,7 @@
 
 package jodd.io.findfile;
 
+import jodd.inex.InExRules;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
@@ -33,7 +34,6 @@ import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.function.Consumers;
-import jodd.inex.InExRules;
 
 import java.io.File;
 import java.io.FileInputStream;

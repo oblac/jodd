@@ -25,8 +25,8 @@
 
 package jodd.json.meta;
 
-import jodd.util.ArraysUtil;
 import jodd.inex.InExRules;
+import jodd.util.ArraysUtil;
 
 import java.util.List;
 
