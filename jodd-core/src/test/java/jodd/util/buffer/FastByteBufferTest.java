@@ -155,6 +155,7 @@ class FastByteBufferTest extends FastBufferTestBase {
 		}
 	}
 
+
 	protected byte[] array(byte... arr) {
 		return arr;
 	}
