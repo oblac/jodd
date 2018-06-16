@@ -179,11 +179,11 @@ abstract class JavaInfo extends HostInfo {
 	public String toString() {
 		return
 			super.toString() +
-			"\nJava Version:       " + getJavaVersion() +
-			"\nJava Vendor:        " + getJavaVendor() +
-			"\nJava Vendor URL:    " + getJavaVendorURL() +
-			"\nJava Spec. Name:    " + getJavaSpecificationName() +
-			"\nJava Spec. Version: " + getJavaSpecificationVersion() +
-			"\nJava Spec. Vendor:  " + getJavaSpecificationVendor();
+			"\nJava version:       " + getJavaVersion() +
+			"\nJava vendor:        " + getJavaVendor() +
+			"\nJava vendor URL:    " + getJavaVendorURL() +
+			"\nJava spec. name:    " + getJavaSpecificationName() +
+			"\nJava spec. version: " + getJavaSpecificationVersion() +
+			"\nJava spec. vendor:  " + getJavaSpecificationVendor();
 	}
 }

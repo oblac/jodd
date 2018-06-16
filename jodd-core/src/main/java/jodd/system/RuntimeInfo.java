@@ -57,7 +57,7 @@ abstract class RuntimeInfo extends OsInfo {
 	/**
 	 * Returns usable memory.
 	 */
-	public final long getUsableMemory(){
+	public final long getAvailableMemory(){
 		return runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
 	}
 
@@ -71,11 +71,11 @@ abstract class RuntimeInfo extends OsInfo {
 	@Override
 	public String toString() {
 		return  super.toString() +
-				"\nMax Memory:       " + Format.humanReadableByteCount(getMaxMemory(), false) +
-				"\nTotal Memory:     " + Format.humanReadableByteCount(getTotalMemory(), false) +
-				"\nFree Memory:      " + Format.humanReadableByteCount(getFreeMemory(), false) +
-				"\nUsable Memory:    " + Format.humanReadableByteCount(getUsableMemory(), false) +
-				"\nPID:              " + getCurrentPID();
+				"\nMax memory:              " + Format.humanReadableByteCount(getMaxMemory(), false) +
+				"\nTotal memory:            " + Format.humanReadableByteCount(getTotalMemory(), false) +
+				"\nFree memory:             " + Format.humanReadableByteCount(getFreeMemory(), false) +
+				"\nAvailableMemory memory:  " + Format.humanReadableByteCount(getAvailableMemory(), false) +
+				"\nProcess ID (PID):        " + getCurrentPID();
 	}
 
 }

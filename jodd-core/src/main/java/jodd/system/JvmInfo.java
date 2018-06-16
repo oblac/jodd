@@ -78,13 +78,13 @@ abstract class JvmInfo extends JavaInfo {
 	@Override
 	public String toString() {
 		return  super.toString() +
-				"\nJavaVM Name:          " + getJvmName() +
-				"\nJavaVM Version:       " + getJvmVersion() +
-				"\nJavaVM Vendor:        " + getJvmVendor() +
-				"\nJavaVM Info:          " + getJvmInfo() +
-				"\nJavaVM Spec. Name:    " + getJvmSpecificationName() +
-				"\nJavaVM Spec. Version: " + getJvmSpecificationVersion() +
-				"\nJavaVM Spec. Vendor:  " + getJvmSpecificationVendor();
+				"\nJVM name:          " + getJvmName() +
+				"\nJVM version:       " + getJvmVersion() +
+				"\nJVM vendor:        " + getJvmVendor() +
+				"\nJVM info:          " + getJvmInfo() +
+				"\nJVM spec. name:    " + getJvmSpecificationName() +
+				"\nJVM spec. version: " + getJvmSpecificationVersion() +
+				"\nJVM spec. vendor:  " + getJvmSpecificationVendor();
 	}
 
 }
