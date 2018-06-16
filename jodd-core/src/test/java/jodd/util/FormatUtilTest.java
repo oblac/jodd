@@ -25,48 +25,30 @@
 
 package jodd.util;
 
-public class Format {
+import org.junit.jupiter.api.Test;
 
-	public static String alignLeftAndPad(final String text, final int size) {
-		int textLength = text.length();
-		if (textLength > size) {
-			return text.substring(0, size);
-		}
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-		final StringBuilder sb = new StringBuilder(size);
-		sb.append(text);
-		while (textLength++ < size) {
-			sb.append(' ');
-		}
-		return sb.toString();
+class FormatUtilTest {
+
+	@Test
+	void testByteSizes_noSi() {
+		assertEquals("10 B", Format.humanReadableByteCount(10, false));
+		assertEquals("1.0 KiB", Format.humanReadableByteCount(1024, false));
+		assertEquals("1.5 KiB", Format.humanReadableByteCount(1024 + 512, false));
 	}
 
-	public static String alignRightAndPad(final String text, final int size) {
-		int textLength = text.length();
-		if (textLength > size) {
-			return text.substring(textLength - size, textLength);
-		}
-
-		final StringBuilder sb = new StringBuilder(size);
-		while (textLength++ < size) {
-			sb.append(' ');
-		}
-		sb.append(text);
-		return sb.toString();
+	@Test
+	void testPadLeft() {
+		assertEquals("123   ", Format.alignLeftAndPad("123", 6));
+		assertEquals("123", Format.alignLeftAndPad("123", 3));
+		assertEquals("12", Format.alignLeftAndPad("123", 2));
 	}
 
-
-
-	/**
-	 * Formats byte size to human readable bytecount.
-	 * https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java/3758880#3758880
-	 */
-	public static String humanReadableByteCount(final long bytes, final boolean useSi) {
-		final int unit = useSi ? 1000 : 1024;
-		if (bytes < unit) return bytes + " B";
-		final int exp = (int) (Math.log(bytes) / Math.log(unit));
-		final String pre = (useSi ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (useSi ? "" : "i");
-		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	@Test
+	void testPadRight() {
+		assertEquals("   123", Format.alignRightAndPad("123", 6));
+		assertEquals("123", Format.alignRightAndPad("123", 3));
+		assertEquals("23", Format.alignRightAndPad("123", 2));
 	}
-
 }
