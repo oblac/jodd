@@ -25,7 +25,7 @@
 
 package jodd.test;
 
-import jodd.util.SystemUtil;
+import jodd.system.SystemUtil;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -46,7 +46,7 @@ public class DisabledOnJavaCondition implements ExecutionCondition {
 			.flatMap(annotatedElement -> findAnnotation(annotatedElement, DisabledOnJava.class))
 			.map(DisabledOnJava::value)
 			.map(javaVersionNumber ->
-				SystemUtil.javaVersionNumber() == javaVersionNumber ?
+				SystemUtil.info().getJavaVersionNumber() == javaVersionNumber ?
 					disabled("Disabled on Java " + javaVersionNumber) :
 					enabled("Enabled on Java " + javaVersionNumber))
 			.orElse(DEFAULT);

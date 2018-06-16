@@ -25,8 +25,8 @@
 
 package jodd.io;
 
+import jodd.system.SystemUtil;
 import jodd.util.StringPool;
-import jodd.util.SystemUtil;
 
 import java.io.File;
 
@@ -984,13 +984,13 @@ public class FileNameUtil {
 	public static String resolveHome(final String path) {
 		if (path.length() == 1) {
 			if (path.charAt(0) == '~') {
-				return SystemUtil.userHome();
+				return SystemUtil.info().getHomeDir();
 			}
 			return path;
 		}
 		if (path.length() >= 2) {
 			if ((path.charAt(0) == '~') && (path.charAt(1) == File.separatorChar)) {
-				return SystemUtil.userHome() + path.substring(1);
+				return SystemUtil.info().getHomeDir() + path.substring(1);
 			}
 		}
 		return path;

@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.system.SystemUtil;
 import jodd.util.RuntimeUtil.ProcessResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,7 @@ class CommandLineTest {
 
 		@BeforeEach
 		void beforeEach() {
-			assumeTrue(SystemUtil.isHostWindows(), "no windows host");
+			assumeTrue(SystemUtil.info().isWindows(), "no windows host");
 		}
 
 		@Test
@@ -108,7 +109,7 @@ class CommandLineTest {
 
 		@BeforeEach
 		void beforeEach() {
-			assumeTrue(SystemUtil.isHostLinux(), "no linux host");
+			assumeTrue(SystemUtil.info().isLinux(), "no linux host");
 		}
 
 		@Test

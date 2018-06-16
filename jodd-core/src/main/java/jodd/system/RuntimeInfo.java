@@ -23,64 +23,59 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.system;
 
-import jodd.system.SystemUtil;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
+import jodd.util.Format;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.lang.management.ManagementFactory;
 
-import static jodd.joy.JoddJoy.APP_DIR;
+abstract class RuntimeInfo extends OsInfo {
 
-public class JoyPaths extends JoyBase {
-
-	protected String appDir;
-
-	// ---------------------------------------------------------------- runtime
+	private Runtime runtime = Runtime.getRuntime();
 
 	/**
-	 * Returns resolved app dir.
+	 * Returns MAX memory.
 	 */
-	public String getAppDir() {
-		return requireStarted(appDir);
+	public final long getMaxMemory(){
+		return runtime.maxMemory();
 	}
 
-	// ---------------------------------------------------------------- lifecycle
+	/**
+	 * Returns TOTAL memory.
+	 */
+	public final long getTotalMemory(){
+		return runtime.totalMemory();
+	}
 
-	@Override
-	public void start() {
-		initLogger();
+	/**
+	 * Returns FREE memory.
+	 */
+	public final long getFreeMemory(){
+		return runtime.freeMemory();
+	}
 
-		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
+	/**
+	 * Returns usable memory.
+	 */
+	public final long getUsableMemory(){
+		return runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
+	}
 
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
-
-		if (url == null) {
-			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
-		}
-		final String protocol = url.getProtocol();
-
-		if (!protocol.equals("file")) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		final int ndx = appDir.indexOf("WEB-INF");
-
-		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.info().getWorkingDir();
-
-		System.setProperty(APP_DIR, appDir);
-
-		log.info("Application folder: " + appDir);
+	/**
+	 * Returns PID of current Java process.
+	 */
+	public final long getCurrentPID() {
+		return Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 	}
 
 	@Override
-	public void stop() {
+	public String toString() {
+		return  super.toString() +
+				"\nMax Memory:       " + Format.humanReadableByteCount(getMaxMemory(), false) +
+				"\nTotal Memory:     " + Format.humanReadableByteCount(getTotalMemory(), false) +
+				"\nFree Memory:      " + Format.humanReadableByteCount(getFreeMemory(), false) +
+				"\nUsable Memory:    " + Format.humanReadableByteCount(getUsableMemory(), false) +
+				"\nPID:              " + getCurrentPID();
 	}
+
 }

@@ -25,7 +25,7 @@
 
 package jodd.joy;
 
-import jodd.util.SystemUtil;
+import jodd.system.SystemUtil;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -68,7 +68,7 @@ public class JoyContextListener implements ServletContextListener {
 	protected JoddJoy createJoy() {
 		final JoddJoy joy = JoddJoy.get();
 
-		if (SystemUtil.isAtLeastJavaVersion(9)) {
+		if (SystemUtil.info().isAtLeastJavaVersion(9)) {
 			joy.withScanner(joyScanner -> joyScanner.scanClasspathOf(this.getClass()));
 		}
 

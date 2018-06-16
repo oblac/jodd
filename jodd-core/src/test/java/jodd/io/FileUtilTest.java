@@ -25,8 +25,8 @@
 
 package jodd.io;
 
+import jodd.system.SystemUtil;
 import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -351,7 +351,7 @@ class FileUtilTest {
 
 		@Test
 		void file_not_exists() throws Exception {
-			final File input = FileUtil.createTempFile("hello", ".jodd", new File(SystemUtil.tempDir()), false);
+			final File input = FileUtil.createTempFile("hello", ".jodd", new File(SystemUtil.info().getTempDir()), false);
 
 			final boolean actual = FileUtil.isExistingFile(input);
 
@@ -384,7 +384,7 @@ class FileUtilTest {
 
 		@Test
 		void folder_not_exists() throws Exception {
-			final File input = new File(SystemUtil.tempDir(), "/folder-does-not-exists");
+			final File input = new File(SystemUtil.info().getTempDir(), "/folder-does-not-exists");
 
 			final boolean actual = FileUtil.isExistingFolder(input);
 

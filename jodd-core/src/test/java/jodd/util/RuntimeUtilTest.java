@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.system.SystemUtil;
 import jodd.util.RuntimeUtil.ProcessResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +57,7 @@ class RuntimeUtilTest {
 		@Test
 		void testRun_on_windows() throws Exception {
 
-			assumeTrue(SystemUtil.isHostWindows(), "no windows host");
+			assumeTrue(SystemUtil.info().isWindows(), "no windows host");
 
 			process = new ProcessBuilder("cmd.exe", "/c", "dir").start();
 
@@ -69,7 +70,7 @@ class RuntimeUtilTest {
 		@Test
 		void testRun_on_linux() throws Exception {
 
-			assumeTrue(SystemUtil.isHostLinux(), "no linux host");
+			assumeTrue(SystemUtil.info().isLinux(), "no linux host");
 
 			process = new ProcessBuilder("bash", "-c", "ls").start();
 

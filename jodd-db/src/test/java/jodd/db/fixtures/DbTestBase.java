@@ -32,7 +32,7 @@ import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.db.querymap.DbPropsQueryMap;
 import jodd.log.LoggerFactory;
-import jodd.util.SystemUtil;
+import jodd.system.SystemUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +50,7 @@ public abstract class DbTestBase {
 	protected void setUp() throws Exception {
 		final DbPropsQueryMap queryMap = new DbPropsQueryMap();
 
-		if (SystemUtil.javaVersionNumber() == 9) {
+		if (SystemUtil.info().isJavaVersion(9)) {
 			queryMap.props().load(this.getClass().getClassLoader().getResourceAsStream("queries.sql.props"));
 		}
 

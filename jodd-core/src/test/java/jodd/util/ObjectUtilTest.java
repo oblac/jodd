@@ -27,6 +27,7 @@ package jodd.util;
 
 import jodd.io.FileUtil;
 import jodd.mutable.MutableInteger;
+import jodd.system.SystemUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,14 +37,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * test class for {@link ObjectUtil}
  */
 class ObjectUtilTest {
 
-    private static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/ObjectUtilTest");
+    private static final File BASE_DIR = new File(SystemUtil.info().getTempDir(), "jodd/ObjectUtilTest");
 
     @BeforeAll
     public static void beforeAll() throws Exception {

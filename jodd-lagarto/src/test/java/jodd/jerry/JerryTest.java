@@ -26,8 +26,8 @@
 package jodd.jerry;
 
 import jodd.io.FileUtil;
+import jodd.system.SystemUtil;
 import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static jodd.jerry.Jerry.jerry;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JerryTest {
 	protected String testDataRoot;
@@ -56,7 +58,7 @@ class JerryTest {
 	void testText1() {
 		String html = readFile("text1.html");
 		String text = jerry(html).$("div.demo-container").text();
-		String sub = (SystemUtil.isHostWindows()) ? "\r\n" : "\n";
+		String sub = (SystemUtil.info().isWindows()) ? "\r\n" : "\n";
 
 		text = StringUtil.remove(text, sub).trim();
 		text = StringUtil.compressChars(text, ' ');

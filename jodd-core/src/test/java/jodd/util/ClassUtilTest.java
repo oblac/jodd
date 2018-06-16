@@ -983,11 +983,10 @@ class ClassUtilTest {
 	@Test
 	void testSimpleClassName() {
 		assertEquals("j.Jodd", ClassUtil.getShortClassName(Jodd.class));
-		assertEquals("j.u.b.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class));
-		assertEquals("j.u.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 2));
-		assertEquals("j.util.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 3));
+		assertEquals("j.b.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class));
+		assertEquals("j.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 2));
+		assertEquals("jodd.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 3));
 		assertEquals("jodd.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 4));
-		assertEquals("jodd.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 5));
 	}
 
 }

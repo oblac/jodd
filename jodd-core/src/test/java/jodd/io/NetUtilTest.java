@@ -25,7 +25,7 @@
 
 package jodd.io;
 
-import jodd.util.SystemUtil;
+import jodd.system.SystemUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -101,7 +101,7 @@ class NetUtilTest {
 		final byte[] expected = new byte[] {74,111,100,100,32,45,32,84,104,101,32,85,110,98,101,97,114,97,98,108,101,32,
 				76,105,103,104,116,110,101,115,115,32,111,102,32,74,97,118,97,32,45,32,-61,-68,-61,-92,-61,-74,-61,-97,-61,-100,-61,-124,-61,-106};
 
-		final File targetFile = new File(SystemUtil.tempDir(), "jodd-info.txt");
+		final File targetFile = new File(SystemUtil.info().getTempDir(), "jodd-info.txt");
 		if (targetFile.exists()) {
 			assumeTrue(targetFile.delete(), "deletion of existing file " + targetFile.getAbsolutePath() + " failed. Abort!");
 		}

@@ -25,9 +25,9 @@
 
 package jodd.io;
 
+import jodd.system.SystemUtil;
 import jodd.util.RandomString;
 import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class PathUtilTest {
 
-	static final File BASE_DIR = new File(SystemUtil.tempDir(), "jodd/" + PathUtilTest.class.getSimpleName());
+	static final File BASE_DIR = new File(SystemUtil.info().getTempDir(), "jodd/" + PathUtilTest.class.getSimpleName());
 
 	@BeforeAll
 	public static void beforeAll() throws Exception {
@@ -168,7 +168,7 @@ class PathUtilTest {
 			assumeTrue(baseDir_Not_Successful.exists());
 			assumeTrue(locked_file.exists());
 
-			assumeTrue(SystemUtil.isHostWindows());   // on windows host, test is successful. on linux host no io-exception is thrown
+			assumeTrue(SystemUtil.info().isWindows());   // on windows host, test is successful. on linux host no io-exception is thrown
 
 			// When you use FileLock, it is purely advisory—acquiring a lock on a file may not stop you from doing anything:
 			// reading, writing, and deleting a file may all be possible even when another process has acquired a lock.

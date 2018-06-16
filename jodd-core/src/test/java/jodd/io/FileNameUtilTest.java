@@ -25,8 +25,8 @@
 
 package jodd.io;
 
+import jodd.system.SystemUtil;
 import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -150,9 +150,9 @@ class FileNameUtilTest {
 	void testResolveHome() {
 		assertEquals("qwe", FileNameUtil.resolveHome("qwe"));
 		assertEquals("", FileNameUtil.resolveHome(""));
-		assertEquals(SystemUtil.userHome(), FileNameUtil.resolveHome("~"));
-		assertEquals(fixpath(SystemUtil.userHome() + "/"), FileNameUtil.resolveHome(fixpath("~/")));
-		assertEquals(fixpath(SystemUtil.userHome() + "/foo"), FileNameUtil.resolveHome(fixpath("~/foo")));
+		assertEquals(SystemUtil.info().getHomeDir(), FileNameUtil.resolveHome("~"));
+		assertEquals(fixpath(SystemUtil.info().getHomeDir() + "/"), FileNameUtil.resolveHome(fixpath("~/")));
+		assertEquals(fixpath(SystemUtil.info().getHomeDir() + "/foo"), FileNameUtil.resolveHome(fixpath("~/foo")));
 	}
 
 	@Test

@@ -23,64 +23,68 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.system;
 
-import jodd.system.SystemUtil;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
+import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+/**
+ * Host information.
+ */
+abstract class HostInfo {
 
-import static jodd.joy.JoddJoy.APP_DIR;
+	private final String HOST_NAME;
+	private final String HOST_ADDRESS;
 
-public class JoyPaths extends JoyBase {
+	public HostInfo() {
+		String hostName;
+		String hostAddress;
 
-	protected String appDir;
+		try {
+			final InetAddress localhost = InetAddress.getLocalHost();
 
-	// ---------------------------------------------------------------- runtime
+			hostName = localhost.getHostName();
+			hostAddress = localhost.getHostAddress();
+		}
+		catch (UnknownHostException uhex) {
+			hostName = "localhost";
+			hostAddress = "127.0.0.1";
+		}
+
+		this.HOST_NAME = hostName;
+		this.HOST_ADDRESS = hostAddress;
+	}
 
 	/**
-	 * Returns resolved app dir.
+	 * Returns host name.
 	 */
-	public String getAppDir() {
-		return requireStarted(appDir);
+	public final String getHostName() {
+		return HOST_NAME;
 	}
 
-	// ---------------------------------------------------------------- lifecycle
+	/**
+	 * Returns host IP address.
+	 */
+	public final String getHostAddress() {
+		return HOST_ADDRESS;
+	}
+
+	// ---------------------------------------------------------------- util
+
+	protected String nosep(final String in) {
+		if (in.endsWith(File.separator)) {
+			return in.substring(0, in.length() - 1);
+		}
+		return in;
+	}
+
+	// ---------------------------------------------------------------- toString
 
 	@Override
-	public void start() {
-		initLogger();
-
-		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
-
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
-
-		if (url == null) {
-			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
-		}
-		final String protocol = url.getProtocol();
-
-		if (!protocol.equals("file")) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		final int ndx = appDir.indexOf("WEB-INF");
-
-		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.info().getWorkingDir();
-
-		System.setProperty(APP_DIR, appDir);
-
-		log.info("Application folder: " + appDir);
+	public String toString() {
+		return  "\nHost name:    " + getHostName() +
+				"\nHost address: " + getHostAddress();
 	}
 
-	@Override
-	public void stop() {
-	}
 }

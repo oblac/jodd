@@ -28,7 +28,7 @@ package jodd.io.upload.impl;
 import jodd.io.upload.FileUpload;
 import jodd.io.upload.FileUploadFactory;
 import jodd.io.upload.MultipartRequestInputStream;
-import jodd.util.SystemUtil;
+import jodd.system.SystemUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 	protected int maxFileSize = 102400; 
 
 	public DiskFileUploadFactory() throws IOException {
-		this(SystemUtil.tempDir());
+		this(SystemUtil.info().getTempDir());
 	}
 
 	public DiskFileUploadFactory(final String destFolder) throws IOException {
@@ -59,7 +59,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 
 	public DiskFileUploadFactory setUploadDir(String destFolder) throws IOException {
 		if (destFolder == null) {
-			destFolder = SystemUtil.tempDir();
+			destFolder = SystemUtil.info().getTempDir();
 		}
 		File destination = new File(destFolder);
 		if (!destination.exists()) {

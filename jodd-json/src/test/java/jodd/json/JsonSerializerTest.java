@@ -32,7 +32,7 @@ import jodd.json.fixtures.model.State;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 import jodd.json.meta.TypeData;
-import jodd.util.SystemUtil;
+import jodd.system.SystemUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -557,28 +557,28 @@ class JsonSerializerTest {
 
 	@Test
 	void testFiles_on_linux() {
-		assumeTrue(SystemUtil.isHostLinux() || SystemUtil.isHostMac(), "no linux host");
+		assumeTrue(SystemUtil.info().isLinux() || SystemUtil.info().isMac(), "no linux host");
 
 		FileMan fileMan = new FileMan();
-		File userHome = new File(SystemUtil.userHome());
+		File userHome = new File(SystemUtil.info().getHomeDir());
 		fileMan.setFile(userHome);
 
 		String json = JsonSerializer.create().serialize(fileMan);
 
-		assertTrue(json.contains(SystemUtil.userHome()));
+		assertTrue(json.contains(SystemUtil.info().getHomeDir()));
 	}
 
 	@Test
 	void testFiles_on_windows() {
-		assumeTrue(SystemUtil.isHostWindows(), "no windows host");
+		assumeTrue(SystemUtil.info().isWindows(), "no windows host");
 
 		FileMan fileMan = new FileMan();
-		File userHome = new File(SystemUtil.userHome());
+		File userHome = new File(SystemUtil.info().getHomeDir());
 		fileMan.setFile(userHome);
 
 		final String json = JsonSerializer.create().serialize(fileMan);
 		// C:\Users\xxxx will be user home on windows hsost;  char '\' is escpaed in json therefore the execution of "String#replace"
-		final String userhome_escpaed = SystemUtil.userHome().replace("\\", "\\\\");
+		final String userhome_escpaed = SystemUtil.info().getHomeDir().replace("\\", "\\\\");
 		assertTrue(json.contains(userhome_escpaed));
 	}
 
@@ -586,11 +586,11 @@ class JsonSerializerTest {
 	void testSerializeSets() {
 		HitList hitList = new HitList();
 
-		hitList.setNames(new HashSet<String>());
+		hitList.setNames(new HashSet<>());
 		hitList.getNames().add("Joe");
 		hitList.getNames().add("Pig");
 
-		hitList.setNumbers(new HashSet<Integer>());
+		hitList.setNumbers(new HashSet<>());
 		hitList.getNumbers().add(173);
 		hitList.getNumbers().add(22);
 

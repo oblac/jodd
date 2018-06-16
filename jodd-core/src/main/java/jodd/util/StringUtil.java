@@ -198,11 +198,11 @@ public class StringUtil {
 		}
 		StringBuilder sb = new StringBuilder(s.length());
 		do {
-			 sb.append(s.substring(c, i));
+			 sb.append(s, c, i);
 			 c = i + sublen;
 		 } while ((i = s.indexOf(sub, c)) != -1);
 		 if (c < s.length()) {
-			 sb.append(s.substring(c, s.length()));
+			 sb.append(s, c, s.length());
 		 }
 		 return sb.toString();
 	}
@@ -1702,7 +1702,7 @@ public class StringUtil {
 				break;
 			}
 			int end = res[1];
-			buf.append(s.substring(start, end));
+			buf.append(s, start, end);
 			buf.append(with[res[0]]);
 			start = end + sub[res[0]].length();
 		}
@@ -1731,7 +1731,7 @@ public class StringUtil {
 				break;
 			}
 			int end = res[1];
-			buf.append(s.substring(start, end));
+			buf.append(s, start, end);
 			buf.append(with[res[0]]);
 			start = end + sub[0].length();
 		}
@@ -2865,7 +2865,7 @@ public class StringUtil {
 			int cutFrom = indexOfNonWhitespace(src, from, to);
 			if (cutFrom != -1) {
 				int cutTo = lastIndexOfNonWhitespace(src, to - 1, from) + 1;
-				str.append(src.substring(cutFrom, cutTo));
+				str.append(src, cutFrom, cutTo);
 			}
 			str.append('\n');
 			from = to;
@@ -2895,7 +2895,7 @@ public class StringUtil {
 				tab_size = tabWidth;
 			}
 			added_chars += tab_size - 1;
-			result.append(line.substring(last_tab_index, tab_index));
+			result.append(line, last_tab_index, tab_index);
 			result.append(repeat(' ', tab_size));
 			last_tab_index = tab_index+1;
 		}

@@ -28,9 +28,9 @@ package jodd.io;
 import jodd.core.JoddCore;
 import jodd.crypt.DigestEngine;
 import jodd.net.URLDecoder;
+import jodd.system.SystemUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.SystemUtil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -70,7 +70,7 @@ public class FileUtil {
 	 * Simple factory for {@link File} objects but with home resolving.
 	 */
 	public static File file(String fileName) {
-		fileName = StringUtil.replace(fileName, USER_HOME, SystemUtil.userHome());
+		fileName = StringUtil.replace(fileName, USER_HOME, SystemUtil.info().getHomeDir());
 		return new File(fileName);
 	}
 

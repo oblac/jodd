@@ -23,9 +23,9 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.system;
 
-import org.junit.jupiter.api.AfterEach;
+import jodd.bean.BeanUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -33,17 +33,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static jodd.util.SystemUtil.HTTP_PROXY_HOST;
-import static jodd.util.SystemUtil.HTTP_PROXY_PASSWORD;
-import static jodd.util.SystemUtil.HTTP_PROXY_PORT;
-import static jodd.util.SystemUtil.HTTP_PROXY_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -66,7 +59,7 @@ class SystemUtilTest {
 
 	@Test
 	void testJrePackages() throws Exception {
-		final String[] actual = SystemUtil.jrePackages();
+		final String[] actual = SystemUtil.info().getJrePackages();
 
 		// asserts
 		assertNotNull(actual);
@@ -78,13 +71,10 @@ class SystemUtilTest {
 	
 		@ParameterizedTest
 		@MethodSource("testdata_testAgainstSystemProperty")
-		void testAgainstSystemProperty(final String methodname, final String expected) throws Throwable {
-			// call method at SystemUtil with method handle
-			MethodHandles.Lookup lookup = MethodHandles.lookup();
-			MethodType methodType = MethodType.methodType(String.class);
-			MethodHandle methodHandle = lookup.findStatic(SystemUtil.class, methodname, methodType);
+		void testAgainstSystemProperty(final String methodname, final String expected) {
+			SystemInfo systemInfo = SystemUtil.info();
 
-			final String actual = (String) methodHandle.invoke();
+			final String actual = BeanUtil.declared.getProperty(systemInfo, methodname);
 
 			// asserts
 			assertNotNull(actual);
@@ -95,63 +85,21 @@ class SystemUtilTest {
 
 			final List<Arguments> params = new ArrayList<>();
 
-			params.add(Arguments.of("userDir", System.getProperty("user.dir")));
+			params.add(Arguments.of("workingDir", System.getProperty("user.dir")));
 			params.add(Arguments.of("userName", System.getProperty("user.name")));
-			params.add(Arguments.of("userHome", System.getProperty("user.home")));
-			params.add(Arguments.of("javaJreHome", System.getProperty("java.home")));
+			params.add(Arguments.of("homeDir", System.getProperty("user.home")));
+			params.add(Arguments.of("javaHomeDir", System.getProperty("java.home")));
 			params.add(Arguments.of("tempDir", System.getProperty("java.io.tmpdir")));
 			params.add(Arguments.of("osName", System.getProperty("os.name")));
 			params.add(Arguments.of("osVersion", System.getProperty("os.version")));
 			params.add(Arguments.of("javaVersion", System.getProperty("java.version")));
 			params.add(Arguments.of("javaSpecificationVersion", System.getProperty("java.specification.version")));
 			params.add(Arguments.of("javaVendor", System.getProperty("java.vendor")));
-			params.add(Arguments.of("systemClassPath", System.getProperty("java.class.path")));
+			//params.add(Arguments.of("systemClasspath", System.getProperty("java.class.path")));
 			params.add(Arguments.of("pathSeparator", System.getProperty("path.separator")));
 			params.add(Arguments.of("fileEncoding", System.getProperty("file.encoding")));
 
 			return params;
-		}
-
-	}
-
-	@Nested
-	class HttpProxy {
-
-		private final String HOST = "myHost";
-		private final String PORT = "8123";
-		private final String USERNAME = "jodd";
-		private final String PASSWORD = "github";
-
-		@AfterEach
-		void clean() {
-			System.getProperties().remove(HTTP_PROXY_HOST);
-			System.getProperties().remove(HTTP_PROXY_PORT);
-			System.getProperties().remove(HTTP_PROXY_USER);
-			System.getProperties().remove(HTTP_PROXY_PASSWORD);
-		}
-		
-		@Test
-		void testSetHttpProxyWithUserAndPassword() {
-
-			SystemUtil.setHttpProxy(HOST, PORT, USERNAME, PASSWORD);
-
-			// asserts
-			assertEquals(HOST, System.getProperties().getProperty(HTTP_PROXY_HOST));
-			assertEquals(PORT, System.getProperties().getProperty(HTTP_PROXY_PORT));
-			assertEquals(USERNAME, System.getProperties().getProperty(HTTP_PROXY_USER));
-			assertEquals(PASSWORD, System.getProperties().getProperty(HTTP_PROXY_PASSWORD));
-		}
-
-		@Test
-		void testSetHttpProxy() {
-
-			SystemUtil.setHttpProxy(HOST, PORT);
-
-			// asserts
-			assertEquals(HOST, System.getProperties().getProperty(HTTP_PROXY_HOST));
-			assertEquals(PORT, System.getProperties().getProperty(HTTP_PROXY_PORT));
-			assertEquals(null, System.getProperties().getProperty(HTTP_PROXY_USER));
-			assertEquals(null, System.getProperties().getProperty(HTTP_PROXY_PASSWORD));
 		}
 
 	}

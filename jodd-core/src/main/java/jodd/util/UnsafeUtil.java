@@ -27,6 +27,7 @@ package jodd.util;
 
 import jodd.bridge.JavaIncompatible;
 import jodd.core.JoddCore;
+import jodd.system.SystemUtil;
 
 /**
  * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
@@ -40,7 +41,7 @@ public class UnsafeUtil {
 	// IMPORTANT - the order of declaration here is important! we need to detect
 	// first the Android, and then to check for the unsafe field.
 
-	private static final boolean IS_ANDROID = SystemUtil.isHostAndroid();
+	private static final boolean IS_ANDROID = SystemUtil.info().isAndroid();
 	private static final boolean HAS_UNSAFE = !IS_ANDROID && UnsafeInternal.hasUnsafe();
 
 	/**

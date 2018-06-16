@@ -23,64 +23,50 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
+package jodd.util;
 
-import jodd.system.SystemUtil;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
+public class Format {
 
-import java.net.MalformedURLException;
-import java.net.URL;
+	public static String alignLeftAndPad(final String text, final int size) {
+		int textLength = text.length();
+		if (textLength > size) {
+			return text.substring(0, size);
+		}
 
-import static jodd.joy.JoddJoy.APP_DIR;
+		final StringBuilder sb = new StringBuilder(size);
+		sb.append(text);
+		while (textLength++ < size) {
+			sb.append(' ');
+		}
+		return sb.toString();
+	}
 
-public class JoyPaths extends JoyBase {
+	public static String alignRightAndPad(final String text, final int size) {
+		int textLength = text.length();
+		if (textLength > size) {
+			return text.substring(size - textLength, textLength);
+		}
 
-	protected String appDir;
+		final StringBuilder sb = new StringBuilder(size);
+		while (textLength++ < size) {
+			sb.append(' ');
+		}
+		sb.append(text);
+		return sb.toString();
+	}
 
-	// ---------------------------------------------------------------- runtime
+
 
 	/**
-	 * Returns resolved app dir.
+	 * Formats byte size to human readable bytecount.
+	 * https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java/3758880#3758880
 	 */
-	public String getAppDir() {
-		return requireStarted(appDir);
+	public static String humanReadableByteCount(final long bytes, final boolean useSi) {
+		final int unit = useSi ? 1000 : 1024;
+		if (bytes < unit) return bytes + " B";
+		final int exp = (int) (Math.log(bytes) / Math.log(unit));
+		final String pre = (useSi ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (useSi ? "" : "i");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 
-	// ---------------------------------------------------------------- lifecycle
-
-	@Override
-	public void start() {
-		initLogger();
-
-		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
-
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
-
-		if (url == null) {
-			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
-		}
-		final String protocol = url.getProtocol();
-
-		if (!protocol.equals("file")) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		final int ndx = appDir.indexOf("WEB-INF");
-
-		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.info().getWorkingDir();
-
-		System.setProperty(APP_DIR, appDir);
-
-		log.info("Application folder: " + appDir);
-	}
-
-	@Override
-	public void stop() {
-	}
 }

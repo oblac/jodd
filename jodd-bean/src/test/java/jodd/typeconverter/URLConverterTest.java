@@ -25,8 +25,8 @@
 
 package jodd.typeconverter;
 
+import jodd.system.SystemUtil;
 import jodd.typeconverter.impl.URLConverter;
-import jodd.util.SystemUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -69,8 +69,8 @@ class URLConverterTest {
 		final List<Arguments> params = new ArrayList<>();
 
 		params.add(Arguments.of(new URL("http://jodd.org/")));
-		params.add(Arguments.of(new File(SystemUtil.tempDir(), "jodd.txt")));
-		params.add(Arguments.of(new File(SystemUtil.tempDir(), "jodd.txt").toURI()));
+		params.add(Arguments.of(new File(SystemUtil.info().getTempDir(), "jodd.txt")));
+		params.add(Arguments.of(new File(SystemUtil.info().getTempDir(), "jodd.txt").toURI()));
 		params.add(Arguments.of("http://jodd.org/"));
 
 		return params;

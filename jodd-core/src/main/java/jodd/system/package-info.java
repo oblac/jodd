@@ -23,64 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.joy;
-
-import jodd.system.SystemUtil;
-import jodd.util.ClassLoaderUtil;
-import jodd.util.StringUtil;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static jodd.joy.JoddJoy.APP_DIR;
-
-public class JoyPaths extends JoyBase {
-
-	protected String appDir;
-
-	// ---------------------------------------------------------------- runtime
-
-	/**
-	 * Returns resolved app dir.
-	 */
-	public String getAppDir() {
-		return requireStarted(appDir);
-	}
-
-	// ---------------------------------------------------------------- lifecycle
-
-	@Override
-	public void start() {
-		initLogger();
-
-		final String resourceName = StringUtil.replaceChar(JoyPaths.class.getName(), '.', '/') + ".class";
-
-		URL url = ClassLoaderUtil.getResourceUrl(resourceName);
-
-		if (url == null) {
-			throw new JoyException("Failed to resolve app dir, missing: " + resourceName);
-		}
-		final String protocol = url.getProtocol();
-
-		if (!protocol.equals("file")) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		final int ndx = appDir.indexOf("WEB-INF");
-
-		appDir = (ndx > 0) ? appDir.substring(0, ndx) : SystemUtil.info().getWorkingDir();
-
-		System.setProperty(APP_DIR, appDir);
-
-		log.info("Application folder: " + appDir);
-	}
-
-	@Override
-	public void stop() {
-	}
-}
+/**
+ * Various system and runtime information in one or two friendly classes.
+ */
+package jodd.system;
