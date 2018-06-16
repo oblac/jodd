@@ -37,6 +37,7 @@ import static jodd.util.StringPool.EMPTY;
 
 /**
  * Various String utilities.
+ * For even more String utilities, see {@link Format}.
  */
 public class StringUtil {
 
@@ -2282,73 +2283,6 @@ public class StringUtil {
 		return StringUtil.newString(StringUtil.getBytes(source, srcCharsetName), newCharsetName);
 	}
 
-	/**
-	 * Escapes a string using java rules.
-	 */
-	public static String escapeJava(final String string) {
-		int strLen = string.length();
-		StringBuilder sb = new StringBuilder(strLen);
-
-		for (int i = 0; i < strLen; i++) {
-			char c = string.charAt(i);
-			switch (c) {
-				case '\b' : sb.append("\\b"); break;
-				case '\t' : sb.append("\\t"); break;
-				case '\n' : sb.append("\\n"); break;
-				case '\f' : sb.append("\\f"); break;
-				case '\r' : sb.append("\\r"); break;
-				case '\"' : sb.append("\\\""); break;
-				case '\\' : sb.append("\\\\"); break;
-				default:
-					if ((c < 32) || (c > 127)) {
-						String hex = Integer.toHexString(c);
-						sb.append("\\u");
-						for (int k = hex.length(); k < 4; k++) {
-							sb.append('0');
-						}
-						sb.append(hex);
-					} else {
-						sb.append(c);
-					}
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * Unescapes a string using java rules.
-	 */
-	public static String unescapeJava(final String str) {
-		char[] chars = str.toCharArray();
-
-		StringBuilder sb = new StringBuilder(str.length());
-		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
-			if (c != '\\') {
-				sb.append(c);
-				continue;
-			}
-			i++;
-			c = chars[i];
-			switch (c) {
-				case 'b': sb.append('\b'); break;
-				case 't': sb.append('\t'); break;
-				case 'n': sb.append('\n'); break;
-				case 'f': sb.append('\f'); break;
-				case 'r': sb.append('\r'); break;
-				case '"': sb.append('\"'); break;
-				case '\\': sb.append('\\'); break;
-				case 'u' :
-					char hex = (char) Integer.parseInt(new String(chars, i + 1, 4), 16);
-					sb.append(hex);
-					i += 4;
-					break;
-				default:
-					throw new IllegalArgumentException("Invalid escaping character: " + c);
-			}
-		}
-		return sb.toString();
-	}
 
 	// ---------------------------------------------------------------- chars
 
@@ -2692,71 +2626,6 @@ public class StringUtil {
 		}
 
 		return s;
-	}
-
-	// ---------------------------------------------------------------- text
-
-	/**
-	 * Formats provided string as paragraph.
-	 */
-	public static String formatParagraph(final String src, final int len, final boolean breakOnWhitespace) {
-		StringBuilder str = new StringBuilder();
-		int total = src.length();
-		int from = 0;
-		while (from < total) {
-			int to = from + len;
-			if (to >= total) {
-				to = total;
-			} else if (breakOnWhitespace) {
-				int ndx = lastIndexOfWhitespace(src, to - 1, from);
-				if (ndx != -1) {
-					to = ndx + 1;
-				}
-			}
-			int cutFrom = indexOfNonWhitespace(src, from, to);
-			if (cutFrom != -1) {
-				int cutTo = lastIndexOfNonWhitespace(src, to - 1, from) + 1;
-				str.append(src, cutFrom, cutTo);
-			}
-			str.append('\n');
-			from = to;
-		}
-		return str.toString();
-	}
-
-	/**
-	 * Converts all tabs on a line to spaces according to the provided tab width.
-	 * This is not a simple tab to spaces replacement, since the resulting
-	 * indentation remains the same.
-	 */
-	public static String convertTabsToSpaces(final String line, final int tabWidth) {
-		int tab_index, tab_size;
-		int last_tab_index = 0;
-		int added_chars = 0;
-
-		if (tabWidth == 0) {
-			return remove(line, '\t');
-		}
-
-		StringBuilder result = new StringBuilder();
-
-		while ((tab_index = line.indexOf('\t', last_tab_index)) != -1) {
-			tab_size = tabWidth - ((tab_index + added_chars) % tabWidth);
-			if (tab_size == 0) {
-				tab_size = tabWidth;
-			}
-			added_chars += tab_size - 1;
-			result.append(line, last_tab_index, tab_index);
-			result.append(repeat(' ', tab_size));
-			last_tab_index = tab_index+1;
-		}
-
-		if (last_tab_index == 0) {
-			return line;
-		}
-
-		result.append(line.substring(last_tab_index));
-		return result.toString();
 	}
 
 	// ---------------------------------------------------------------- case change

@@ -117,4 +117,65 @@ class FormatTest {
 		assertEquals("user__name", Format.fromCamelCase("user__name", '_'));
 	}
 
+
+	@Test
+	void testFormatPara() {
+		String txt = "123 567 90AB";
+		String p = Format.formatParagraph(txt, 6, false);
+		assertEquals("123 56\n7 90AB\n", p);
+
+		p = Format.formatParagraph(txt, 4, false);
+		assertEquals("123\n567\n90AB\n", p);
+
+		txt = "123  67 90AB";
+		p = Format.formatParagraph(txt, 4, false);
+		assertEquals("123\n67\n90AB\n", p);
+
+		txt = "123 567 90AB";
+		p = Format.formatParagraph(txt, 6, true);
+		assertEquals("123\n567\n90AB\n", p);
+
+		txt = "123  67 90AB";
+		p = Format.formatParagraph(txt, 4, true);
+		assertEquals("123\n67\n90AB\n", p);
+		txt = "123  67 90ABCDE";
+		p = Format.formatParagraph(txt, 4, true);
+		assertEquals("123\n67\n90AB\nCDE\n", p);
+
+		txt = "1234567";
+		p = Format.formatParagraph(txt, 4, true);
+		assertEquals("1234\n567\n", p);
+		p = Format.formatParagraph(txt, 4, false);
+		assertEquals("1234\n567\n", p);
+
+	}
+
+	@Test
+	void testTabsToSpaces() {
+		String s = Format.convertTabsToSpaces("q\tqa\t", 3);
+		assertEquals("q  qa ", s);
+
+		s = Format.convertTabsToSpaces("q\tqa\t", 0);
+		assertEquals("qqa", s);
+	}
+
+
+	@Test
+	void testJavaEscapes() {
+		String from = "\r\t\b\f\n\\\"asd\u0111q\u0173aa\u0ABC\u0abc";
+		String to = "\\r\\t\\b\\f\\n\\\\\\\"asd\\u0111q\\u0173aa\\u0abc\\u0abc";
+
+		assertEquals(to, Format.escapeJava(from));
+		assertEquals(from, Format.unescapeJava(to));
+
+		try {
+			Format.unescapeJava("\\r\\t\\b\\f\\q");
+			fail("error");
+		} catch (IllegalArgumentException e) {
+			// ignore
+		}
+	}
+
+
+
 }
