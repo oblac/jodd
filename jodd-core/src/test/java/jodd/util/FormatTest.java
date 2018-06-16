@@ -86,4 +86,35 @@ class FormatTest {
 		assertEquals("{1,4}", Format.toPrettyString(list));
 	}
 
+	@Test
+	void testToCamelCase() {
+		assertEquals("oneTwoThree", Format.toCamelCase("one two   three", false, ' '));
+		assertEquals("OneTwo.Three", Format.toCamelCase("one two. three", true, ' '));
+		assertEquals("OneTwoThree", Format.toCamelCase("One-two-three", true, '-'));
+
+		assertEquals("userName", Format.toCamelCase("user_name", false, '_'));
+		assertEquals("UserName", Format.toCamelCase("user_name", true, '_'));
+		assertEquals("user", Format.toCamelCase("user", false, '_'));
+		assertEquals("User", Format.toCamelCase("user", true, '_'));
+	}
+
+	@Test
+	void testFromCamelCase() {
+		assertEquals("one two three", Format.fromCamelCase("oneTwoThree", ' '));
+		assertEquals("one-two-three", Format.fromCamelCase("oneTwoThree", '-'));
+		assertEquals("one. two. three", Format.fromCamelCase("one.Two.Three", ' '));
+
+		assertEquals("user_name", Format.fromCamelCase("userName", '_'));
+		assertEquals("user_name", Format.fromCamelCase("UserName", '_'));
+		assertEquals("user_name", Format.fromCamelCase("USER_NAME", '_'));
+		assertEquals("user_name", Format.fromCamelCase("user_name", '_'));
+		assertEquals("user", Format.fromCamelCase("user", '_'));
+		assertEquals("user", Format.fromCamelCase("User", '_'));
+		assertEquals("user", Format.fromCamelCase("USER", '_'));
+		assertEquals("user", Format.fromCamelCase("_user", '_'));
+		assertEquals("user", Format.fromCamelCase("_User", '_'));
+		assertEquals("_user", Format.fromCamelCase("__user", '_'));
+		assertEquals("user__name", Format.fromCamelCase("user__name", '_'));
+	}
+
 }

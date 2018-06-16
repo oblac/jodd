@@ -25,8 +25,8 @@
 
 package jodd.db.oom.naming;
 
+import jodd.util.Format;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
 /**
  * Naming strategy for converting entity names
@@ -101,7 +101,7 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 		}
 
 		if (splitCamelCase) {
-			String convertedTableName = StringUtil.fromCamelCase(entityName, separatorChar);
+			String convertedTableName = Format.fromCamelCase(entityName, separatorChar);
 			tableName.append(convertedTableName);
 		} else {
 			tableName.append(entityName);

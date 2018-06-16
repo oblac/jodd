@@ -983,36 +983,6 @@ class StringUtilTest {
 		assertEquals("123", StringUtil.maxCommonPrefix("123456", "123"));
 	}
 
-	@Test
-	void testToCamelCase() {
-		assertEquals("oneTwoThree", StringUtil.toCamelCase("one two   three", false, ' '));
-		assertEquals("OneTwo.Three", StringUtil.toCamelCase("one two. three", true, ' '));
-		assertEquals("OneTwoThree", StringUtil.toCamelCase("One-two-three", true, '-'));
-
-		assertEquals("userName", StringUtil.toCamelCase("user_name", false, '_'));
-		assertEquals("UserName", StringUtil.toCamelCase("user_name", true, '_'));
-		assertEquals("user", StringUtil.toCamelCase("user", false, '_'));
-		assertEquals("User", StringUtil.toCamelCase("user", true, '_'));
-	}
-
-	@Test
-	void testFromCamelCase() {
-		assertEquals("one two three", StringUtil.fromCamelCase("oneTwoThree", ' '));
-		assertEquals("one-two-three", StringUtil.fromCamelCase("oneTwoThree", '-'));
-		assertEquals("one. two. three", StringUtil.fromCamelCase("one.Two.Three", ' '));
-
-		assertEquals("user_name", StringUtil.fromCamelCase("userName", '_'));
-		assertEquals("user_name", StringUtil.fromCamelCase("UserName", '_'));
-		assertEquals("user_name", StringUtil.fromCamelCase("USER_NAME", '_'));
-		assertEquals("user_name", StringUtil.fromCamelCase("user_name", '_'));
-		assertEquals("user", StringUtil.fromCamelCase("user", '_'));
-		assertEquals("user", StringUtil.fromCamelCase("User", '_'));
-		assertEquals("user", StringUtil.fromCamelCase("USER", '_'));
-		assertEquals("user", StringUtil.fromCamelCase("_user", '_'));
-		assertEquals("user", StringUtil.fromCamelCase("_User", '_'));
-		assertEquals("_user", StringUtil.fromCamelCase("__user", '_'));
-		assertEquals("user__name", StringUtil.fromCamelCase("user__name", '_'));
-	}
 
 	@Test
 	void testJavaEscapes() {

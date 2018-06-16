@@ -25,7 +25,7 @@
 
 package jodd.db.oom.naming;
 
-import jodd.util.StringUtil;
+import jodd.util.Format;
 
 /**
  * Naming strategy for converting property names
@@ -42,7 +42,7 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 		StringBuilder tableName = new StringBuilder(propertyName.length() * 2);
 
 		if (splitCamelCase) {
-			String convertedTableName = StringUtil.fromCamelCase(propertyName, separatorChar);
+			String convertedTableName = Format.fromCamelCase(propertyName, separatorChar);
 			tableName.append(convertedTableName);
 		} else {
 			tableName.append(propertyName);
