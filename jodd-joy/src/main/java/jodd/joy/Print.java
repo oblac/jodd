@@ -26,6 +26,7 @@
 package jodd.joy;
 
 import jodd.chalk.Chalk256;
+import jodd.util.Format;
 import jodd.util.StringUtil;
 
 public class Print {
@@ -58,34 +59,10 @@ public class Print {
 	}
 
 	public void out(final Chalk256 chalk256, final String string, final int maxLen) {
-		System.out.print(chalk256.on(val(string, maxLen)));
+		System.out.print(chalk256.on(Format.alignLeftAndPad(string, maxLen)));
 	}
 	public void outRight(final Chalk256 chalk256, final String string, final int maxLen) {
-		System.out.print(chalk256.on(valRight(string, maxLen)));
-	}
-
-	private String val(final String value, final int len) {
-		if (value.length() > len) {
-			return value.substring(value.length() - len);
-		}
-
-		if (value.length() == len) {
-			return value;
-		}
-
-		return value + StringUtil.repeat(' ', len - value.length());
-	}
-
-	private String valRight(final String value, final int len) {
-		if (value.length() > len) {
-			return value.substring(value.length() - len);
-		}
-
-		if (value.length() == len) {
-			return value;
-		}
-
-		return StringUtil.repeat(' ', len - value.length()) + value;
+		System.out.print(chalk256.on(Format.alignRightAndPad(string, maxLen)));
 	}
 
 }
