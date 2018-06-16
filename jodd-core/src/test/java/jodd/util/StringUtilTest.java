@@ -27,11 +27,9 @@ package jodd.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import static jodd.util.ArraysUtil.array;
@@ -802,34 +800,6 @@ class StringUtilTest {
 		assertEquals("3", StringUtil.toSafeString(Long.valueOf(3)));
 	}
 
-	@Test
-	void testToPrettyString() {
-		assertEquals(StringPool.NULL, StringUtil.toPrettyString(null));
-
-		assertEquals("[A,B]", StringUtil.toPrettyString(new String[]{"A", "B"}));
-		assertEquals("[1,2]", StringUtil.toPrettyString(new int[]{1,2}));
-		assertEquals("[1,2]", StringUtil.toPrettyString(new long[]{1,2}));
-		assertEquals("[1,2]", StringUtil.toPrettyString(new short[]{1,2}));
-		assertEquals("[1,2]", StringUtil.toPrettyString(new byte[]{1,2}));
-		assertEquals("[1.0,2.0]", StringUtil.toPrettyString(new double[]{1,2}));
-		assertEquals("[1.0,2.0]", StringUtil.toPrettyString(new float[]{1,2}));
-		assertEquals("[true,false]", StringUtil.toPrettyString(new boolean[] {true, false}));
-
-		try {
-			StringUtil.toPrettyString(new char[]{'a','b'});
-			fail("error");
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-
-		assertEquals("[[1,2],[3,4]]", StringUtil.toPrettyString(new int[][] {{1, 2}, {3, 4}}));
-
-		List<Integer> list = new ArrayList<>();
-		list.add(1);
-		list.add(4);
-
-		assertEquals("{1,4}", StringUtil.toPrettyString(list));
-	}
 
 	@Test
 	void testCapitalize() {

@@ -27,9 +27,13 @@ package jodd.util;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
 
-class FormatUtilTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+class FormatTest {
 
 	@Test
 	void testByteSizes_noSi() {
@@ -51,4 +55,35 @@ class FormatUtilTest {
 		assertEquals("123", Format.alignRightAndPad("123", 3));
 		assertEquals("23", Format.alignRightAndPad("123", 2));
 	}
+
+
+	@Test
+	void testToPrettyString() {
+		assertEquals(StringPool.NULL, Format.toPrettyString(null));
+
+		assertEquals("[A,B]", Format.toPrettyString(new String[]{"A", "B"}));
+		assertEquals("[1,2]", Format.toPrettyString(new int[]{1,2}));
+		assertEquals("[1,2]", Format.toPrettyString(new long[]{1,2}));
+		assertEquals("[1,2]", Format.toPrettyString(new short[]{1,2}));
+		assertEquals("[1,2]", Format.toPrettyString(new byte[]{1,2}));
+		assertEquals("[1.0,2.0]", Format.toPrettyString(new double[]{1,2}));
+		assertEquals("[1.0,2.0]", Format.toPrettyString(new float[]{1,2}));
+		assertEquals("[true,false]", Format.toPrettyString(new boolean[] {true, false}));
+
+		try {
+			Format.toPrettyString(new char[]{'a','b'});
+			fail("error");
+		} catch (IllegalArgumentException e) {
+			// ignore
+		}
+
+		assertEquals("[[1,2],[3,4]]", Format.toPrettyString(new int[][] {{1, 2}, {3, 4}}));
+
+		List<Integer> list = new ArrayList<>();
+		list.add(1);
+		list.add(4);
+
+		assertEquals("{1,4}", Format.toPrettyString(list));
+	}
+
 }
