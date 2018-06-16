@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -40,38 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
 
 /*
- 1
- FastBufferBenchmark.fastBuffer         1  thrpt    2  78337.407          ops/ms
- FastBufferBenchmark.outputStream       1  thrpt    2  66574.613          ops/ms
- 64
- FastBufferBenchmark.fastBuffer        64  thrpt    2  29520.367          ops/ms
- FastBufferBenchmark.outputStream      64  thrpt    2   5702.094          ops/ms
- 65
- FastBufferBenchmark.fastBuffer        65  thrpt    2  7598.382          ops/ms
- FastBufferBenchmark.outputStream      65  thrpt    2  5040.590          ops/ms
- 128
- FastBufferBenchmark.fastBuffer       128  thrpt    2  4668.539          ops/ms
- FastBufferBenchmark.outputStream     128  thrpt    2  3898.102          ops/ms
- 129
- FastBufferBenchmark.fastBuffer       129  thrpt    2  4035.519          ops/ms
- FastBufferBenchmark.outputStream     129  thrpt    2  3487.195          ops/ms
- 256
- FastBufferBenchmark.fastBuffer       256  thrpt    2  2300.108          ops/ms
- FastBufferBenchmark.outputStream     256  thrpt    2  2012.312          ops/ms
- 257
- FastBufferBenchmark.fastBuffer       257  thrpt    2  2177.609          ops/ms
- FastBufferBenchmark.outputStream     257  thrpt    2  1878.996          ops/ms
- 512
- FastBufferBenchmark.fastBuffer       512  thrpt    2  1184.921          ops/ms
- FastBufferBenchmark.outputStream     512  thrpt    2  1034.150          ops/ms
- 513
- FastBufferBenchmark.fastBuffer       513  thrpt    2  1067.237          ops/ms
- FastBufferBenchmark.outputStream     513  thrpt    2   949.810          ops/ms
- 1024
- FastBufferBenchmark.fastBuffer      1024  thrpt    2  588.293          ops/ms
- FastBufferBenchmark.outputStream    1024  thrpt    2  519.904          ops/ms
-
- ...
+ THE TEST WITH PREVIOUS IMPLEMENTATION THAT SHOWS THAT IT MAKE NO SENSE TO HAVE IT.
 
  1 MB
  FastBufferBenchmark.fastBuffer    1048576  thrpt    2  24842.200          ops/min
@@ -105,27 +74,52 @@ import java.util.concurrent.TimeUnit;
  FastBufferBenchmark.outputStream  536870912  thrpt    2  28.819          ops/min
  */
 
+
 /**
- * This is a benchmark for previous implementation.
+ Benchmark                         (size)   Mode  Cnt      Score      Error   Units
+ FastBufferBenchmark.fastBuffer         1  thrpt    3  79324.336 ± 5717.098  ops/ms
+ FastBufferBenchmark.fastBuffer        33  thrpt    3  43391.056 ± 1624.374  ops/ms
+ FastBufferBenchmark.fastBuffer        64  thrpt    3  30362.627 ± 7105.192  ops/ms
+ FastBufferBenchmark.fastBuffer        65  thrpt    3   7308.389 ±  567.833  ops/ms
+ FastBufferBenchmark.fastBuffer       128  thrpt    3   4466.231 ±  397.316  ops/ms
+ FastBufferBenchmark.fastBuffer       129  thrpt    3   3984.090 ±  436.589  ops/ms
+ FastBufferBenchmark.fastBuffer       256  thrpt    3   2203.161 ±  102.874  ops/ms
+ FastBufferBenchmark.fastBuffer       257  thrpt    3   2078.249 ±  240.826  ops/ms
+ FastBufferBenchmark.fastBuffer       512  thrpt    3   1125.737 ±  152.728  ops/ms
+ FastBufferBenchmark.fastBuffer       513  thrpt    3   1008.258 ±  153.849  ops/ms
+ FastBufferBenchmark.fastBuffer      1024  thrpt    3    553.377 ±  111.084  ops/ms
+ FastBufferBenchmark.fastBuffer      2048  thrpt    3    273.436 ±   43.738  ops/ms
+ FastBufferBenchmark.outputStream       1  thrpt    3  68489.943 ± 4079.964  ops/ms
+ FastBufferBenchmark.outputStream      33  thrpt    3   9579.040 ±  373.262  ops/ms
+ FastBufferBenchmark.outputStream      64  thrpt    3   5876.755 ±  958.445  ops/ms
+ FastBufferBenchmark.outputStream      65  thrpt    3   5171.245 ±  488.868  ops/ms
+ FastBufferBenchmark.outputStream     128  thrpt    3   4008.639 ±  260.015  ops/ms
+ FastBufferBenchmark.outputStream     129  thrpt    3   3687.005 ±  148.731  ops/ms
+ FastBufferBenchmark.outputStream     256  thrpt    3   2074.286 ±   96.801  ops/ms
+ FastBufferBenchmark.outputStream     257  thrpt    3   1925.055 ±  219.249  ops/ms
+ FastBufferBenchmark.outputStream     512  thrpt    3   1067.137 ±  132.376  ops/ms
+ FastBufferBenchmark.outputStream     513  thrpt    3    967.751 ±  100.224  ops/ms
+ FastBufferBenchmark.outputStream    1024  thrpt    3    532.129 ±   41.634  ops/ms
+ FastBufferBenchmark.outputStream    2048  thrpt    3    261.490 ±   22.416  ops/ms
  */
 @Fork(1)
 @Warmup(iterations = 5)
-@Measurement(iterations = 2)
+@Measurement(iterations = 3)
 @State(Scope.Benchmark)
-@BenchmarkMode(Mode.Throughput) @OutputTimeUnit(TimeUnit.MINUTES)
+@BenchmarkMode(Mode.Throughput) @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class FastBufferBenchmark {
 
-	@Param({"419430400"})
+	@Param({"1", "33", "64", "65", "128", "129", "256", "257", "512", "513", "1024", "2048"})
 	public int size;
 
-//	@Benchmark
-//	public byte[] fastBuffer() {
-//		final FastByteBuffer fastBuffer = new FastByteBuffer();
-//		for (int i = 0; i < size; i++) {
-//			fastBuffer.append((byte) i);
-//		}
-//		return fastBuffer.toArray();
-//	}
+	@Benchmark
+	public byte[] fastBuffer() {
+		final FastByteBuffer fastBuffer = new FastByteBuffer();
+		for (int i = 0; i < size; i++) {
+			fastBuffer.append((byte) i);
+		}
+		return fastBuffer.toArray();
+	}
 
 	@Benchmark
 	public byte[] outputStream() {

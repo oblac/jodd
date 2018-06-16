@@ -25,7 +25,7 @@
 
 package jodd.crypt;
 
-import jodd.util.buffer.FastByteBuffer;
+import jodd.buffer.FastByteBuffer;
 
 /**
  * Generic block chipher.

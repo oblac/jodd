@@ -36,7 +36,7 @@ import jodd.mutable.MutableBoolean;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
-import jodd.util.buffer.FastCharBuffer;
+import jodd.buffer.FastCharBuffer;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;

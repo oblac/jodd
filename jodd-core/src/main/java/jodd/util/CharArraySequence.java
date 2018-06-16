@@ -27,7 +27,7 @@ package jodd.util;
 
 /**
  * Simple {@code CharSequence} wrapper of the char array.
- * For {@code Appendable} version use {@link jodd.util.buffer.FastCharBuffer}.
+ * For {@code Appendable} version use {@link jodd.buffer.FastCharBuffer}.
  */
 public class CharArraySequence implements CharSequence {
 

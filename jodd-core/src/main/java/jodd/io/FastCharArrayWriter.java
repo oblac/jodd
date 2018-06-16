@@ -25,7 +25,7 @@
 
 package jodd.io;
 
-import jodd.util.buffer.FastCharBuffer;
+import jodd.buffer.FastCharBuffer;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;

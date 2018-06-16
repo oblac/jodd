@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,27 +37,27 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class FastFloatBufferTest extends FastBufferTestBase {
+class FastIntBufferTest extends FastBufferTestBase {
 
 	@Test
 	void testAppend() {
-		FastFloatBuffer buff = new FastFloatBuffer(3);
+		FastIntBuffer buff = new FastIntBuffer(3);
 
 		buff.append(buff);
 		buff.append(173);
-		buff.append(array(8, 98));
+		buff.append(array(8,98));
 
-		assertArrayEquals(array((float)173, (float)8, (float)98), buff.toArray(), 0.1f);
+		assertArrayEquals(array(173, 8, 98), buff.toArray());
 
 		buff.append(buff);
 
-		assertArrayEquals(array((float)173, (float)8, (float)98, (float)173, (float)8, (float)98), buff.toArray(), 0.1f);
+		assertArrayEquals(array(173, 8, 98, 173, 8, 98), buff.toArray());
 
 		buff.append(array(173, 5, 3), 1, 1);
 
-		assertArrayEquals(array((float)173, (float)8, (float)98, (float)173, (float)8, (float)98, (float)5), buff.toArray(), 0.1f);
+		assertArrayEquals(array(173, 8, 98, 173, 8, 98, 5), buff.toArray());
 
-		FastFloatBuffer buff2 = new FastFloatBuffer(3);
+		FastIntBuffer buff2 = new FastIntBuffer(3);
 		buff2.append(buff);
 
 		assertEquals(7, buff2.toArray().length);
@@ -65,7 +65,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 
 	@Test
 	void testClear() {
-		FastFloatBuffer buff = new FastFloatBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		assertTrue(buff.isEmpty());
 
@@ -83,14 +83,14 @@ class FastFloatBufferTest extends FastBufferTestBase {
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 
-		float[] arr = buff.toArray();
+		int[] arr = buff.toArray();
 
 		assertEquals(0, arr.length);
 	}
 
 	@Test
 	void testToArray() {
-		FastFloatBuffer buff = new FastFloatBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		int sum = 0;
 
@@ -104,9 +104,9 @@ class FastFloatBufferTest extends FastBufferTestBase {
 		buff.append(173);
 		sum += 173;
 
-		float[] array = buff.toArray();
+		int[] array = buff.toArray();
 		int sum2 = 0;
-		for (double l : array) {
+		for (int l : array) {
 			sum2 += l;
 		}
 
@@ -115,7 +115,7 @@ class FastFloatBufferTest extends FastBufferTestBase {
 
 		array = buff.toArray(1, buff.size() - 2);
 		sum2 = 0;
-		for (double l : array) {
+		for (int l : array) {
 			sum2 += l;
 		}
 
@@ -124,38 +124,41 @@ class FastFloatBufferTest extends FastBufferTestBase {
 
 	@Test
 	void testToSubArray() {
-		FastFloatBuffer buff = new FastFloatBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
-		int total = SIZE + (SIZE / 2);
+		int total = SIZE + (SIZE/2);
 
 		for (int i = 1; i <= total; i++) {
 			buff.append(i);
 		}
 
-		float[] array = buff.toArray(SIZE + 1, total - SIZE - 1);
+		int[] array = buff.toArray(SIZE + 1, total - SIZE  - 1);
 
 		assertEquals(total - SIZE - 1, array.length);
-		assertEquals(SIZE + 2, array[0], 0.1);
+		assertEquals(SIZE + 2, array[0]);
 	}
 
 	@Test
 	void testBig() {
-		List<Float> l = new ArrayList<>();
-		FastFloatBuffer fbf = new FastFloatBuffer();
+		List<Integer> l = new ArrayList<>();
+		FastIntBuffer fbf = new FastIntBuffer();
 
 		Random rnd = new Random();
 		for (int i = 0; i < 100_000; i++) {
 			int n = rnd.nextInt();
-			l.add((float)n);
-			fbf.append((float)n);
+			l.add(n);
+			fbf.append(n);
 		}
 
 		for (int i = 0; i < l.size(); i++) {
-			assertEquals(l.get(i).floatValue(), fbf.get(i));
+			assertEquals(l.get(i).intValue(), fbf.get(i));
 		}
 	}
 
-	protected float[] array(float... arr) {
+
+
+	protected int[] array(int... arr) {
 		return arr;
 	}
+
 }

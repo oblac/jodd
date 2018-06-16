@@ -23,36 +23,38 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
+
+import jodd.util.CharArraySequence;
 
 import java.util.Arrays;
 
 /**
- * Faster {@code float} buffer. Works faster for smaller buffer sizes.
+ * Faster {@code char} buffer. Works faster for smaller buffer sizes.
  * After eg. length of 2048 the performances are practically the same.
  */
-public class FastFloatBuffer {
+public class FastCharBuffer implements CharSequence, Appendable {
 
-	private float[] buffer;
+	private char[] buffer;
 	private int offset;
 
 	/**
-	 * Creates a new {@code float} buffer. The buffer capacity is
-	 * initially 64 floats, though its size increases if necessary.
+	 * Creates a new {@code char} buffer. The buffer capacity is
+	 * initially 64 chars, though its size increases if necessary.
 	 */
-	public FastFloatBuffer() {
-		this.buffer = new float[64];
+	public FastCharBuffer() {
+		this.buffer = new char[64];
 	}
 
 	/**
-	 * Creates a new {@code float} buffer, with a buffer capacity of
-	 * the specified size.
+	 * Creates a new {@code char} buffer, with a buffer capacity of
+	 * the specified size, in chars.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastFloatBuffer(final int size) {
-		this.buffer = new float[size];
+	public FastCharBuffer(final int size) {
+		this.buffer = new char[size];
 	}
 
 	/**
@@ -69,20 +71,22 @@ public class FastFloatBuffer {
 	}
 
 	/**
-	 * Appends single {@code float} to buffer.
+	 * Appends single {@code char} to buffer.
 	 */
-	public void append(final float element) {
+	@Override
+	public FastCharBuffer append(final char element) {
 		if (offset - buffer.length >= 0) {
 			grow(offset);
 		}
 
 		buffer[offset++] = element;
+		return this;
 	}
 
 	/**
-	 * Appends {@code float} array to buffer.
+	 * Appends {@code char} array to buffer.
 	 */
-	public FastFloatBuffer append(final float[] array, final int off, final int len) {
+	public FastCharBuffer append(final char[] array, final int off, final int len) {
 		if (offset + len - buffer.length > 0) {
 			grow(offset + len);
 		}
@@ -93,16 +97,16 @@ public class FastFloatBuffer {
 	}
 
 	/**
-	 * Appends {@code float} array to buffer.
+	 * Appends {@code char} array to buffer.
 	 */
-	public FastFloatBuffer append(final float[] array) {
+	public FastCharBuffer append(final char[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastFloatBuffer append(final FastFloatBuffer buff) {
+	public FastCharBuffer append(final FastCharBuffer buff) {
 		if (buff.offset == 0) {
 			return this;
 		}
@@ -114,6 +118,11 @@ public class FastFloatBuffer {
 	 * Returns buffer size.
 	 */
 	public int size() {
+		return offset;
+	}
+
+	@Override
+	public int length() {
 		return offset;
 	}
 
@@ -132,17 +141,17 @@ public class FastFloatBuffer {
 	}
 
 	/**
-	 * Creates {@code float} array from buffered content.
+	 * Creates {@code char} array from buffered content.
 	 */
-	public float[] toArray() {
+	public char[] toArray() {
 		return Arrays.copyOf(buffer, offset);
 	}
 
 	/**
-	 * Creates {@code float} subarray from buffered content.
+	 * Creates {@code char} subarray from buffered content.
 	 */
-	public float[] toArray(final int start, final int len) {
-		final float[] array = new float[len];
+	public char[] toArray(final int start, final int len) {
+		final char[] array = new char[len];
 
 		if (len == 0) {
 			return array;
@@ -154,13 +163,46 @@ public class FastFloatBuffer {
 	}
 
 	/**
-	 * Returns {@code float} element at given index.
+	 * Returns {@code char} element at given index.
 	 */
-	public float get(final int index) {
+	public char get(final int index) {
 		if (index >= offset) {
 			throw new IndexOutOfBoundsException();
 		}
 		return buffer[index];
 	}
 
+	/**
+	 * Appends character sequence to buffer.
+	 */
+	@Override
+	public FastCharBuffer append(final CharSequence csq) {
+		append(csq, 0, csq.length());
+		return this;
+	}
+
+	/**
+	 * Appends character sequence to buffer.
+	 */
+	@Override
+	public FastCharBuffer append(final CharSequence csq, final int start, final int end) {
+		for (int i = start; i < end; i++) {
+			append(csq.charAt(i));
+		}
+		return this;
+	}
+	@Override
+	public char charAt(final int index) {
+		return get(index);
+	}
+
+	@Override
+	public CharSequence subSequence(final int start, final int end) {
+		return new CharArraySequence(buffer, start, end - start);
+	}
+
+	@Override
+	public String toString() {
+		return new String(toArray());
+	}
 }

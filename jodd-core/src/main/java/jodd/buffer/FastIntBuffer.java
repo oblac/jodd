@@ -23,36 +23,36 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
 import java.util.Arrays;
 
 /**
- * Faster {@code long} buffer. Works faster for smaller buffer sizes.
+ * Faster {@code int} buffer. Works faster for smaller buffer sizes.
  * After eg. length of 2048 the performances are practically the same.
  */
-public class FastLongBuffer {
+public class FastIntBuffer {
 
-	private long[] buffer;
+	private int[] buffer;
 	private int offset;
 
 	/**
-	 * Creates a new {@code long} buffer. The buffer capacity is
-	 * initially 64 longs, though its size increases if necessary.
+	 * Creates a new {@code int} buffer. The buffer capacity is
+	 * initially 64 ints, though its size increases if necessary.
 	 */
-	public FastLongBuffer() {
-		this.buffer = new long[64];
+	public FastIntBuffer() {
+		this.buffer = new int[64];
 	}
 
 	/**
-	 * Creates a new {@code long} buffer, with a buffer capacity of
+	 * Creates a new {@code int} buffer, with a buffer capacity of
 	 * the specified size.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastLongBuffer(final int size) {
-		this.buffer = new long[size];
+	public FastIntBuffer(final int size) {
+		this.buffer = new int[size];
 	}
 
 	/**
@@ -69,9 +69,9 @@ public class FastLongBuffer {
 	}
 
 	/**
-	 * Appends single {@code long} to buffer.
+	 * Appends single {@code int} to buffer.
 	 */
-	public void append(final long element) {
+	public void append(final int element) {
 		if (offset - buffer.length >= 0) {
 			grow(offset);
 		}
@@ -80,9 +80,9 @@ public class FastLongBuffer {
 	}
 
 	/**
-	 * Appends {@code long} array to buffer.
+	 * Appends {@code int} array to buffer.
 	 */
-	public FastLongBuffer append(final long[] array, final int off, final int len) {
+	public FastIntBuffer append(final int[] array, final int off, final int len) {
 		if (offset + len - buffer.length > 0) {
 			grow(offset + len);
 		}
@@ -93,16 +93,16 @@ public class FastLongBuffer {
 	}
 
 	/**
-	 * Appends {@code long} array to buffer.
+	 * Appends {@code int} array to buffer.
 	 */
-	public FastLongBuffer append(final long[] array) {
+	public FastIntBuffer append(final int[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastLongBuffer append(final FastLongBuffer buff) {
+	public FastIntBuffer append(final FastIntBuffer buff) {
 		if (buff.offset == 0) {
 			return this;
 		}
@@ -132,17 +132,17 @@ public class FastLongBuffer {
 	}
 
 	/**
-	 * Creates {@code long} array from buffered content.
+	 * Creates {@code int} array from buffered content.
 	 */
-	public long[] toArray() {
+	public int[] toArray() {
 		return Arrays.copyOf(buffer, offset);
 	}
 
 	/**
-	 * Creates {@code long} subarray from buffered content.
+	 * Creates {@code int} subarray from buffered content.
 	 */
-	public long[] toArray(final int start, final int len) {
-		final long[] array = new long[len];
+	public int[] toArray(final int start, final int len) {
+		final int[] array = new int[len];
 
 		if (len == 0) {
 			return array;
@@ -154,9 +154,9 @@ public class FastLongBuffer {
 	}
 
 	/**
-	 * Returns {@code long} element at given index.
+	 * Returns {@code int} element at given index.
 	 */
-	public long get(final int index) {
+	public int get(final int index) {
 		if (index >= offset) {
 			throw new IndexOutOfBoundsException();
 		}

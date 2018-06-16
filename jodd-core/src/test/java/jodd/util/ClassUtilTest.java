@@ -26,9 +26,9 @@
 package jodd.util;
 
 import jodd.Jodd;
+import jodd.buffer.FastBuffer;
 import jodd.chalk.Chalk;
 import jodd.test.DisabledOnJava;
-import jodd.util.buffer.FastBuffer;
 import jodd.util.fixtures.subclass.IBase;
 import jodd.util.fixtures.subclass.IExtra;
 import jodd.util.fixtures.subclass.IOne;
@@ -986,8 +986,8 @@ class ClassUtilTest {
 		assertEquals("j.u.b.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class));
 		assertEquals("j.u.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 2));
 		assertEquals("j.util.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 3));
-		assertEquals("jodd.util.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 4));
-		assertEquals("jodd.util.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 5));
+		assertEquals("jodd.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 4));
+		assertEquals("jodd.buffer.FastBuffer", ClassUtil.getShortClassName(FastBuffer.class, 5));
 	}
 
 }

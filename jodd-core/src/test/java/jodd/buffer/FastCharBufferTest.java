@@ -23,12 +23,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
+import jodd.util.RandomString;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -37,27 +36,56 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class FastByteBufferTest extends FastBufferTestBase {
+class FastCharBufferTest extends FastBufferTestBase {
+
+	@Test
+	void testAppendString() {
+		FastCharBuffer fcb = new FastCharBuffer(10);
+
+		fcb.append("12345678");
+		fcb.append("ABCDEFGH");
+
+		assertEquals("12345678ABCDEFGH", fcb.toString());
+	}
+
+	@Test
+	void testRandomAppends() {
+		StringBuilder sb = new StringBuilder(10);
+		FastCharBuffer fcb = new FastCharBuffer(10);
+
+		Random rnd = new Random();
+
+		int loop = 100;
+		while (loop-- > 0) {
+			String s = RandomString.get().randomAlphaNumeric(rnd.nextInt(20));
+
+			sb.append(s);
+			fcb.append(s);
+		}
+
+		assertEquals(sb.toString(), fcb.toString());
+	}
+
 
 	@Test
 	void testAppend() {
-		FastByteBuffer buff = new FastByteBuffer(3);
+		FastCharBuffer buff = new FastCharBuffer(3);
 
 		buff.append(buff);
-		buff.append((byte)173);
-		buff.append(array((byte)8,(byte)98));
+		buff.append((char)173);
+		buff.append(array((char)8,(char)98));
 
-		assertArrayEquals(array((byte)173, (byte)8, (byte)98), buff.toArray());
+		assertArrayEquals(array((char)173, (char)8, (char)98), buff.toArray());
 
 		buff.append(buff);
 
-		assertArrayEquals(array((byte)173, (byte)8, (byte)98, (byte)173, (byte)8, (byte)98), buff.toArray());
+		assertArrayEquals(array((char)173, (char)8, (char)98, (char)173, (char)8, (char)98), buff.toArray());
 
-		buff.append(array((byte)173, (byte)5, (byte)3), 1, 1);
+		buff.append(array((char)173, (char)5, (char)3), 1, 1);
 
-		assertArrayEquals(array((byte)173, (byte)8, (byte)98, (byte)173, (byte)8, (byte)98, (byte)5), buff.toArray());
+		assertArrayEquals(array((char)173, (char)8, (char)98, (char)173, (char)8, (char)98, (char)5), buff.toArray());
 
-		FastByteBuffer buff2 = new FastByteBuffer(3);
+		FastCharBuffer buff2 = new FastCharBuffer(3);
 		buff2.append(buff);
 
 		assertEquals(7, buff2.toArray().length);
@@ -65,11 +93,11 @@ class FastByteBufferTest extends FastBufferTestBase {
 
 	@Test
 	void testClear() {
-		FastByteBuffer buff = new FastByteBuffer();
+		FastCharBuffer buff = new FastCharBuffer();
 
 		assertTrue(buff.isEmpty());
 
-		buff.append((byte)1);
+		buff.append((char)1);
 
 		assertFalse(buff.isEmpty());
 
@@ -83,30 +111,30 @@ class FastByteBufferTest extends FastBufferTestBase {
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 
-		byte[] arr = buff.toArray();
+		char[] arr = buff.toArray();
 
 		assertEquals(0, arr.length);
 	}
 
 	@Test
 	void testToArray() {
-		final FastByteBuffer buff = new FastByteBuffer();
+		FastCharBuffer buff = new FastCharBuffer();
 
-		byte sum = 0;
+		int sum = 0;
 
 		for (int j = 0; j < COUNT; j++) {
 			for (int i = 1; i <= SIZE; i++) {
-				buff.append((byte)i);
+				buff.append((char)i);
 				sum += i;
 			}
 		}
 
-		buff.append((byte)173);
+		buff.append((char)173);
 		sum += 173;
 
-		byte[] array = buff.toArray();
-		byte sum2 = 0;
-		for (byte l : array) {
+		char[] array = buff.toArray();
+		int sum2 = 0;
+		for (char l : array) {
 			sum2 += l;
 		}
 
@@ -115,49 +143,33 @@ class FastByteBufferTest extends FastBufferTestBase {
 
 		array = buff.toArray(1, buff.size() - 2);
 		sum2 = 0;
-		for (byte l : array) {
+		for (char l : array) {
 			sum2 += l;
 		}
 
-		assertEquals(sum - (byte)1 - (byte)173, sum2);
+		assertEquals(sum - 1 - 173, sum2);
 	}
 
 	@Test
 	void testToSubArray() {
-		FastByteBuffer buff = new FastByteBuffer();
+		FastCharBuffer buff = new FastCharBuffer();
 
 		int total = SIZE + (SIZE/2);
 
 		for (int i = 1; i <= total; i++) {
-			buff.append((byte)i);
+			buff.append((char)i);
 		}
 
-		byte[] array = buff.toArray(SIZE + 1, total - SIZE  - 1);
+		char[] array = buff.toArray(SIZE + 1, total - SIZE  - 1);
 
 		assertEquals(total - SIZE - 1, array.length);
-		assertEquals((byte)(SIZE + 2), array[0]);
-	}
-
-	@Test
-	void testBig() {
-		List<Byte> l = new ArrayList<>();
-		FastByteBuffer fbf = new FastByteBuffer();
-
-		Random rnd = new Random();
-		for (int i = 0; i < 100_000; i++) {
-			int n = rnd.nextInt();
-			l.add((byte)n);
-			fbf.append((byte)n);
-		}
-
-		for (int i = 0; i < l.size(); i++) {
-			assertEquals(l.get(i).byteValue(), fbf.get(i));
-		}
+		assertEquals(SIZE + 2, array[0]);
 	}
 
 
-	protected byte[] array(byte... arr) {
+	protected char[] array(char... arr) {
 		return arr;
 	}
+
 
 }

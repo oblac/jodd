@@ -28,7 +28,7 @@ package jodd.http;
 import jodd.http.up.Uploadable;
 import jodd.io.StreamUtil;
 import jodd.util.StringPool;
-import jodd.util.buffer.FastByteBuffer;
+import jodd.buffer.FastByteBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;

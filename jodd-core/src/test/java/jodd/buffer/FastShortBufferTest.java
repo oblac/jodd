@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,40 +37,39 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class FastDoubleBufferTest extends FastBufferTestBase {
+class FastShortBufferTest  extends FastBufferTestBase {
 
 	@Test
 	void testAppend() {
-		FastDoubleBuffer buff = new FastDoubleBuffer(3);
+		FastShortBuffer buff = new FastShortBuffer(3);
 
 		buff.append(buff);
-		buff.append(173);
-		buff.append(array(8, 98));
+		buff.append((short) 173);
+		buff.append(array((short)8,(short)98));
 
-		assertArrayEquals(array((double)173, (double)8, (double)98), buff.toArray(), 0.1);
+		assertArrayEquals(array((short)173, (short)8, (short)98), buff.toArray());
 
 		buff.append(buff);
 
-		assertArrayEquals(array((double)173, (double)8, (double)98, (double)173, (double)8, (double)98), buff.toArray(), 0.1);
+		assertArrayEquals(array((short)173, (short)8, (short)98, (short)173, (short)8, (short)98), buff.toArray());
 
-		buff.append(array(173, 5, 3), 1, 1);
+		buff.append(array((short)173, (short)5, (short)3), 1, 1);
 
-		assertArrayEquals(array((double)173, (double)8, (double)98, (double)173, (double)8, (double)98, (double)5), buff.toArray(), 0.1);
+		assertArrayEquals(array((short)173, (short)8, (short)98, (short)173, (short)8, (short)98, (short)5), buff.toArray());
 
-		FastDoubleBuffer buff2 = new FastDoubleBuffer(3);
+		FastShortBuffer buff2 = new FastShortBuffer(3);
 		buff2.append(buff);
 
 		assertEquals(7, buff2.toArray().length);
 	}
 
-
 	@Test
 	void testClear() {
-		FastDoubleBuffer buff = new FastDoubleBuffer();
+		FastShortBuffer buff = new FastShortBuffer();
 
 		assertTrue(buff.isEmpty());
 
-		buff.append(1);
+		buff.append((short)1);
 
 		assertFalse(buff.isEmpty());
 
@@ -84,30 +83,30 @@ class FastDoubleBufferTest extends FastBufferTestBase {
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 
-		double[] arr = buff.toArray();
+		short[] arr = buff.toArray();
 
 		assertEquals(0, arr.length);
 	}
 
 	@Test
 	void testToArray() {
-		FastDoubleBuffer buff = new FastDoubleBuffer();
+		FastShortBuffer buff = new FastShortBuffer();
 
 		int sum = 0;
 
 		for (int j = 0; j < COUNT; j++) {
 			for (int i = 1; i <= SIZE; i++) {
-				buff.append(i);
+				buff.append((short)i);
 				sum += i;
 			}
 		}
 
-		buff.append(173);
+		buff.append((short)173);
 		sum += 173;
 
-		double[] array = buff.toArray();
+		short[] array = buff.toArray();
 		int sum2 = 0;
-		for (double l : array) {
+		for (short l : array) {
 			sum2 += l;
 		}
 
@@ -116,7 +115,7 @@ class FastDoubleBufferTest extends FastBufferTestBase {
 
 		array = buff.toArray(1, buff.size() - 2);
 		sum2 = 0;
-		for (double l : array) {
+		for (short l : array) {
 			sum2 += l;
 		}
 
@@ -125,39 +124,40 @@ class FastDoubleBufferTest extends FastBufferTestBase {
 
 	@Test
 	void testToSubArray() {
-		FastDoubleBuffer buff = new FastDoubleBuffer();
+		FastShortBuffer buff = new FastShortBuffer();
 
-		int total = SIZE + (SIZE / 2);
+		int total = SIZE + (SIZE/2);
 
 		for (int i = 1; i <= total; i++) {
-			buff.append(i);
+			buff.append((short)i);
 		}
 
-		double[] array = buff.toArray(SIZE + 1, total - SIZE - 1);
+		short[] array = buff.toArray(SIZE + 1, total - SIZE  - 1);
 
 		assertEquals(total - SIZE - 1, array.length);
-		assertEquals(SIZE + 2, array[0], 0.1);
+		assertEquals(SIZE + 2, array[0]);
 	}
 
 	@Test
 	void testBig() {
-		List<Double> l = new ArrayList<>();
-		FastDoubleBuffer fbf = new FastDoubleBuffer();
+		List<Short> l = new ArrayList<>();
+		FastShortBuffer fbf = new FastShortBuffer();
 
 		Random rnd = new Random();
 		for (int i = 0; i < 100_000; i++) {
 			int n = rnd.nextInt();
-			l.add((double)n);
-			fbf.append((double)n);
+			l.add((short)n);
+			fbf.append((short)n);
 		}
 
 		for (int i = 0; i < l.size(); i++) {
-			assertEquals(l.get(i).doubleValue(), fbf.get(i));
+			assertEquals(l.get(i).shortValue(), fbf.get(i));
 		}
 	}
 
 
-	protected double[] array(double... arr) {
+	protected short[] array(short... arr) {
 		return arr;
 	}
+
 }

@@ -23,36 +23,40 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.RandomAccess;
 
 /**
- * Faster {@code double} buffer. Works faster for smaller buffer sizes.
+ * Faster Objects buffer. Works faster for smaller buffer sizes.
  * After eg. length of 2048 the performances are practically the same.
  */
-public class FastDoubleBuffer {
+@SuppressWarnings("unchecked")
+public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 
-	private double[] buffer;
+	private E[] buffer;
 	private int offset;
 
 	/**
-	 * Creates a new {@code double} buffer. The buffer capacity is
-	 * initially 64 doubles, though its size increases if necessary.
+	 * Creates a new {@code byte} buffer. The buffer capacity is
+	 * initially 64 bytes, though its size increases if necessary.
 	 */
-	public FastDoubleBuffer() {
-		this.buffer = new double[64];
+	public FastBuffer() {
+		this.buffer = (E[]) new Object[64];
 	}
 
 	/**
-	 * Creates a new {@code double} buffer, with a buffer capacity of
+	 * Creates a new {@code byte} buffer, with a buffer capacity of
 	 * the specified size.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastDoubleBuffer(final int size) {
-		this.buffer = new double[size];
+	public FastBuffer(final int size) {
+		this.buffer = (E[]) new Object[size];
 	}
 
 	/**
@@ -69,9 +73,9 @@ public class FastDoubleBuffer {
 	}
 
 	/**
-	 * Appends single {@code double} to buffer.
+	 * Appends single {@code byte} to buffer.
 	 */
-	public void append(final double element) {
+	public void append(final E element) {
 		if (offset - buffer.length >= 0) {
 			grow(offset);
 		}
@@ -80,9 +84,9 @@ public class FastDoubleBuffer {
 	}
 
 	/**
-	 * Appends {@code double} array to buffer.
+	 * Appends {@code byte} array to buffer.
 	 */
-	public FastDoubleBuffer append(final double[] array, final int off, final int len) {
+	public FastBuffer append(final E[] array, final int off, final int len) {
 		if (offset + len - buffer.length > 0) {
 			grow(offset + len);
 		}
@@ -93,16 +97,16 @@ public class FastDoubleBuffer {
 	}
 
 	/**
-	 * Appends {@code double} array to buffer.
+	 * Appends {@code byte} array to buffer.
 	 */
-	public FastDoubleBuffer append(final double[] array) {
+	public FastBuffer append(final E[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastDoubleBuffer append(final FastDoubleBuffer buff) {
+	public FastBuffer append(final FastBuffer<E> buff) {
 		if (buff.offset == 0) {
 			return this;
 		}
@@ -132,36 +136,73 @@ public class FastDoubleBuffer {
 	}
 
 	/**
-	 * Creates {@code double} array from buffered content.
+	 * Creates {@code byte} array from buffered content.
 	 */
-	public double[] toArray() {
+	public E[] toArray() {
 		return Arrays.copyOf(buffer, offset);
 	}
 
 	/**
-	 * Creates {@code double} subarray from buffered content.
+	 * Creates {@code byte} subarray from buffered content.
 	 */
-	public double[] toArray(final int start, final int len) {
-		final double[] array = new double[len];
+	public E[] toArray(final int start, final int len) {
+		final Object[] array = new Object[len];
 
 		if (len == 0) {
-			return array;
+			return (E[]) array;
 		}
 
 		System.arraycopy(buffer, start, array, 0, len);
 
-		return array;
+		return (E[]) array;
 	}
 
 	/**
-	 * Returns {@code double} element at given index.
+	 * Returns {@code byte} element at given index.
 	 */
-	public double get(final int index) {
+	public E get(final int index) {
 		if (index >= offset) {
 			throw new IndexOutOfBoundsException();
 		}
 		return buffer[index];
 	}
 
+	/**
+	 * Adds element to buffer.
+	 */
+	public void add(final E element) {
+		append(element);
+	}
 
+	/**
+	 * Returns an iterator over buffer elements.
+	 */
+	@Override
+	public Iterator<E> iterator() {
+		return new Iterator<E>() {
+			int iteratorIndex;
+
+			@Override
+			public boolean hasNext() {
+				return iteratorIndex < offset;
+			}
+
+			@Override
+			public E next() {
+				if (iteratorIndex >= offset) {
+					throw new NoSuchElementException();
+				}
+				final E result = buffer[iteratorIndex];
+
+				iteratorIndex++;
+
+				return result;
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
 }

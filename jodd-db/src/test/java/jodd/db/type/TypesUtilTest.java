@@ -26,7 +26,7 @@
 package jodd.db.type;
 
 import jodd.db.fixtures.JDBCTypesFixture;
-import jodd.util.buffer.FastIntBuffer;
+import jodd.buffer.FastIntBuffer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

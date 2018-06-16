@@ -1,6 +1,6 @@
 package jodd.db.fixtures;
 
-import jodd.util.buffer.FastIntBuffer;
+import jodd.buffer.FastIntBuffer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

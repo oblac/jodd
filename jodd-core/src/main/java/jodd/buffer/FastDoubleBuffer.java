@@ -23,36 +23,36 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util.buffer;
+package jodd.buffer;
 
 import java.util.Arrays;
 
 /**
- * Faster {@code boolean} buffer. Works faster for smaller buffer sizes.
+ * Faster {@code double} buffer. Works faster for smaller buffer sizes.
  * After eg. length of 2048 the performances are practically the same.
  */
-public class FastBooleanBuffer {
+public class FastDoubleBuffer {
 
-	private boolean[] buffer;
+	private double[] buffer;
 	private int offset;
 
 	/**
-	 * Creates a new {@code boolean} buffer. The buffer capacity is
-	 * initially 64 booleans, though its size increases if necessary.
+	 * Creates a new {@code double} buffer. The buffer capacity is
+	 * initially 64 doubles, though its size increases if necessary.
 	 */
-	public FastBooleanBuffer() {
-		this.buffer = new boolean[64];
+	public FastDoubleBuffer() {
+		this.buffer = new double[64];
 	}
 
 	/**
-	 * Creates a new {@code boolean} buffer, with a buffer capacity of
+	 * Creates a new {@code double} buffer, with a buffer capacity of
 	 * the specified size.
 	 *
 	 * @param size the initial size.
 	 * @throws IllegalArgumentException if size is negative.
 	 */
-	public FastBooleanBuffer(final int size) {
-		this.buffer = new boolean[size];
+	public FastDoubleBuffer(final int size) {
+		this.buffer = new double[size];
 	}
 
 	/**
@@ -69,9 +69,9 @@ public class FastBooleanBuffer {
 	}
 
 	/**
-	 * Appends single {@code boolean} to buffer.
+	 * Appends single {@code double} to buffer.
 	 */
-	public void append(final boolean element) {
+	public void append(final double element) {
 		if (offset - buffer.length >= 0) {
 			grow(offset);
 		}
@@ -80,9 +80,9 @@ public class FastBooleanBuffer {
 	}
 
 	/**
-	 * Appends {@code boolean} array to buffer.
+	 * Appends {@code double} array to buffer.
 	 */
-	public FastBooleanBuffer append(final boolean[] array, final int off, final int len) {
+	public FastDoubleBuffer append(final double[] array, final int off, final int len) {
 		if (offset + len - buffer.length > 0) {
 			grow(offset + len);
 		}
@@ -93,16 +93,16 @@ public class FastBooleanBuffer {
 	}
 
 	/**
-	 * Appends {@code boolean} array to buffer.
+	 * Appends {@code double} array to buffer.
 	 */
-	public FastBooleanBuffer append(final boolean[] array) {
+	public FastDoubleBuffer append(final double[] array) {
 		return append(array, 0, array.length);
 	}
 
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	public FastBooleanBuffer append(final FastBooleanBuffer buff) {
+	public FastDoubleBuffer append(final FastDoubleBuffer buff) {
 		if (buff.offset == 0) {
 			return this;
 		}
@@ -132,17 +132,17 @@ public class FastBooleanBuffer {
 	}
 
 	/**
-	 * Creates {@code boolean} array from buffered content.
+	 * Creates {@code double} array from buffered content.
 	 */
-	public boolean[] toArray() {
+	public double[] toArray() {
 		return Arrays.copyOf(buffer, offset);
 	}
 
 	/**
-	 * Creates {@code boolean} subarray from buffered content.
+	 * Creates {@code double} subarray from buffered content.
 	 */
-	public boolean[] toArray(final int start, final int len) {
-		final boolean[] array = new boolean[len];
+	public double[] toArray(final int start, final int len) {
+		final double[] array = new double[len];
 
 		if (len == 0) {
 			return array;
@@ -154,9 +154,9 @@ public class FastBooleanBuffer {
 	}
 
 	/**
-	 * Returns {@code boolean} element at given index.
+	 * Returns {@code double} element at given index.
 	 */
-	public boolean get(final int index) {
+	public double get(final int index) {
 		if (index >= offset) {
 			throw new IndexOutOfBoundsException();
 		}

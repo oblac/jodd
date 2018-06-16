@@ -26,4 +26,4 @@
 /**
  * Fast buffers.
  */
-package jodd.util.buffer;
+package jodd.buffer;
