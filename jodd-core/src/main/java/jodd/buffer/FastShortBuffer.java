@@ -28,8 +28,7 @@ package jodd.buffer;
 import java.util.Arrays;
 
 /**
- * Faster {@code short} buffer. Works faster for smaller buffer sizes.
- * After eg. length of 2048 the performances are practically the same.
+ * Faster {@code short} buffer.
  */
 public class FastShortBuffer {
 

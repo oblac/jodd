@@ -107,7 +107,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3)
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput) @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class FastBufferBenchmark {
+public class FastByteBufferBenchmark {
 
 	@Param({"1", "33", "64", "65", "128", "129", "256", "257", "512", "513", "1024", "2048"})
 	public int size;

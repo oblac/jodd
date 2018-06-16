@@ -30,8 +30,7 @@ import jodd.util.CharArraySequence;
 import java.util.Arrays;
 
 /**
- * Faster {@code char} buffer. Works faster for smaller buffer sizes.
- * After eg. length of 2048 the performances are practically the same.
+ * Faster {@code char} buffer.
  */
 public class FastCharBuffer implements CharSequence, Appendable {
 
@@ -201,6 +200,10 @@ public class FastCharBuffer implements CharSequence, Appendable {
 		return new CharArraySequence(buffer, start, end - start);
 	}
 
+	/**
+	 * Returns a String of the char buffer.
+	 * Please use {@code StringBuilder} instead, it is faster.
+	 */
 	@Override
 	public String toString() {
 		return new String(toArray());

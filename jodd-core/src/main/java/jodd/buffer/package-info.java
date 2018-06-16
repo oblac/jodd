@@ -24,6 +24,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 /**
- * Fast buffers.
+ * Faster primitive and object buffers.
  */
 package jodd.buffer;

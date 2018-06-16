@@ -31,8 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.RandomAccess;
 
 /**
- * Faster Objects buffer. Works faster for smaller buffer sizes.
- * After eg. length of 2048 the performances are practically the same.
+ * Faster Objects buffer.
  */
 @SuppressWarnings("unchecked")
 public class FastBuffer<E> implements RandomAccess, Iterable<E> {
