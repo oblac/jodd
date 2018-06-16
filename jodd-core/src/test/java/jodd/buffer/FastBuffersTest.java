@@ -28,12 +28,9 @@ package jodd.buffer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -142,30 +139,6 @@ class FastBuffersTest {
 		fcb2.append(fcb);
 
 		assertEquals("qASzxcvPOIUY1AB123412345678QWER", fcb2.toString());
-	}
-
-	@Test
-	void testIterator() {
-		FastBuffer<String> fb = new FastBuffer<>();
-		for (int i = 0; i < 100; i++) {
-			fb.append(String.valueOf(i));
-		}
-
-		assertEquals("23", fb.get(23));
-
-		Iterator<String> it = fb.iterator();
-
-		for (int i = 0; i < 100; i++) {
-			assertTrue(it.hasNext());
-			assertEquals(String.valueOf(i), it.next());
-		}
-		assertFalse(it.hasNext());
-
-		try {
-			it.next();
-			fail("error");
-		} catch (NoSuchElementException nseex) {
-		}
 	}
 
 }
