@@ -25,7 +25,6 @@
 
 package jodd.util;
 
-import jodd.Jodd;
 import jodd.io.StreamGobbler;
 
 import java.io.ByteArrayOutputStream;
@@ -33,63 +32,13 @@ import java.io.ByteArrayOutputStream;
 /**
  * Runtime utilities.
  */
-public class RuntimeUtil {
+public class ProcessRunner {
 
 	public static final String ERROR_PREFIX = "err> ";
 	public static final String OUTPUT_PREFIX = "out> ";
 
-	// ---------------------------------------------------------------- memory
-
-	/**
-	 * Returns the amount of available memory (free memory plus never allocated memory) in bytes.
-	 */
-	public static long availableMemory() {
-		return Runtime.getRuntime().freeMemory() + (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory());
-	}
-
-	/**
-	 * Returns the amount of available memory in percents.
-	 */
-	public static float availableMemoryPercent() {
-		return availableMemory() * 100.0f / Runtime.getRuntime().maxMemory();
-	}
-
-	/**
-	 * Compacts memory as much as possible by allocating huge memory block
-	 * and then forcing garbage collection.
-	 */
-	public static void compactMemory() {
-		try {
-			final byte[][] unused = new byte[128][];
-			for(int i = unused.length; i-- != 0;) {
-				unused[i] = new byte[2000000000];
-			}
-		} catch(OutOfMemoryError ignore) {
-		}
-		System.gc();
-	}
-
-	// ---------------------------------------------------------------- location
-
-	/**
-	 * Returns location of the class. If class is not in a jar, it's classpath
-	 * is returned; otherwise the jar location.
-	 */
-	public static String classLocation(final Class clazz) {
-		return clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
-	}
-
-	/**
-	 * Returns Jodd {@link #classLocation(Class) location}.
-	 * @see #classLocation
-	 */
-	public static String joddLocation() {
-		return classLocation(Jodd.class);
-	}
-
-	// ---------------------------------------------------------------- process
-
 	public static class ProcessResult {
+
 		private final int exitCode;
 		private final String output;
 
@@ -117,15 +66,15 @@ public class RuntimeUtil {
 	 * Executes a process and returns the process output and exit code.
 	 */
 	public static ProcessResult run(final Process process) throws InterruptedException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, OUTPUT_PREFIX);
-		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), baos, ERROR_PREFIX);
+		final StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), baos, OUTPUT_PREFIX);
+		final StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), baos, ERROR_PREFIX);
 
 		outputGobbler.start();
 		errorGobbler.start();
 
-		int result = process.waitFor();
+		final int result = process.waitFor();
 
 		outputGobbler.waitFor();
 		errorGobbler.waitFor();

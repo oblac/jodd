@@ -25,6 +25,8 @@
 
 package jodd.util;
 
+import jodd.io.StreamGobbler;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jodd.io.StreamGobbler;
-
-import static jodd.util.RuntimeUtil.ERROR_PREFIX;
-import static jodd.util.RuntimeUtil.OUTPUT_PREFIX;
+import static jodd.util.ProcessRunner.ERROR_PREFIX;
+import static jodd.util.ProcessRunner.OUTPUT_PREFIX;
 
 /**
  * Simple user-friendly wrapper over {@code ProcessBuilder}. Has the following:
@@ -167,7 +167,7 @@ public class CommandLine {
 	/**
 	 * Runs command and returns process result.
 	 */
-	public RuntimeUtil.ProcessResult run() {
+	public ProcessRunner.ProcessResult run() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		out = err = baos;
@@ -218,10 +218,10 @@ public class CommandLine {
 		outputGobbler.waitFor();
 		errorGobbler.waitFor();
 
-		return new RuntimeUtil.ProcessResult(result, baos.toString());
+		return new ProcessRunner.ProcessResult(result, baos.toString());
 	}
 
-	private RuntimeUtil.ProcessResult writeException(final ByteArrayOutputStream baos, final Exception ex) {
+	private ProcessRunner.ProcessResult writeException(final ByteArrayOutputStream baos, final Exception ex) {
 		try {
 			baos.write(errPrefix.getBytes());
 		}
@@ -230,6 +230,6 @@ public class CommandLine {
 
 		ex.printStackTrace(new PrintStream(baos));
 
-		return new RuntimeUtil.ProcessResult(-1, baos.toString());
+		return new ProcessRunner.ProcessResult(-1, baos.toString());
 	}
 }

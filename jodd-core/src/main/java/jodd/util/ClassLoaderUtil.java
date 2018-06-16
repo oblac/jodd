@@ -25,6 +25,7 @@
 
 package jodd.util;
 
+import jodd.Jodd;
 import jodd.bridge.ClassPathURLs;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
@@ -404,6 +405,24 @@ public class ClassLoaderUtil {
 	 */
 	public static Class loadClass(final String className, final ClassLoader classLoader) throws ClassNotFoundException {
 		return ClassLoaderStrategy.get().loadClass(className, classLoader);
+	}
+
+	// ---------------------------------------------------------------- class location
+
+	/**
+	 * Returns location of the class. If class is not in a jar, it's classpath
+	 * is returned; otherwise the jar location.
+	 */
+	public static String classLocation(final Class clazz) {
+		return clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+	}
+
+	/**
+	 * Returns Jodd {@link #classLocation(Class) location}.
+	 * @see #classLocation
+	 */
+	public static String joddLocation() {
+		return classLocation(Jodd.class);
 	}
 
 }

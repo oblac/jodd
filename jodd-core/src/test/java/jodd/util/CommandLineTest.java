@@ -26,7 +26,7 @@
 package jodd.util;
 
 import jodd.system.SystemUtil;
-import jodd.util.RuntimeUtil.ProcessResult;
+import jodd.util.ProcessRunner.ProcessResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

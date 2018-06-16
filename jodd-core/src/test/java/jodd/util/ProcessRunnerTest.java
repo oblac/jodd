@@ -26,7 +26,7 @@
 package jodd.util;
 
 import jodd.system.SystemUtil;
-import jodd.util.RuntimeUtil.ProcessResult;
+import jodd.util.ProcessRunner.ProcessResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,15 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Tests for class {@link RuntimeUtil}.
+ * Tests for class {@link ProcessRunner}.
  */
-class RuntimeUtilTest {
-
-	@Test
-	void testJoddLocation() {
-		String loc = RuntimeUtil.joddLocation();
-		assertTrue(loc.contains("jodd"));
-	}
+class ProcessRunnerTest {
 
 	@Nested
 	@DisplayName("tests for RuntimeUtil#run")
@@ -61,7 +55,7 @@ class RuntimeUtilTest {
 
 			process = new ProcessBuilder("cmd.exe", "/c", "dir").start();
 
-			ProcessResult processResult = RuntimeUtil.run(process);
+			ProcessResult processResult = ProcessRunner.run(process);
 
 			// asserts
 			doAsserts(processResult);
@@ -74,7 +68,7 @@ class RuntimeUtilTest {
 
 			process = new ProcessBuilder("bash", "-c", "ls").start();
 
-			ProcessResult processResult = RuntimeUtil.run(process);
+			ProcessResult processResult = ProcessRunner.run(process);
 
 			// asserts
 			doAsserts(processResult);
@@ -103,24 +97,4 @@ class RuntimeUtilTest {
 		}
 
 	}
-
-	@Test
-	void testAvailableMemoryPercent() {
-
-		final float actual = RuntimeUtil.availableMemoryPercent();
-
-		// asserts
-		assertTrue(actual >= 0);
-		assertTrue(actual <= 100);
-	}
-
-	@Test
-	void testAvailableMemory() {
-
-		final long actual = RuntimeUtil.availableMemory();
-
-		// asserts
-		assertTrue(actual >= 0);
-	}
-
 }
