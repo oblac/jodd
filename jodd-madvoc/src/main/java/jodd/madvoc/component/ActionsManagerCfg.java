@@ -37,6 +37,7 @@ abstract class ActionsManagerCfg {
 	protected boolean detectDuplicatePathsEnabled;
 	protected Class<? extends PathMacros> pathMacroClass;
 	protected String[] pathMacroSeparators;
+	protected boolean strictRoutePaths = false;
 
 	public ActionsManagerCfg() {
 		this.detectDuplicatePathsEnabled = true;
@@ -69,10 +70,22 @@ abstract class ActionsManagerCfg {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
+	public boolean isDetectDuplicatePathsEnabled() {
+		return detectDuplicatePathsEnabled;
+	}
 
 	public void setDetectDuplicatePathsEnabled(final boolean detectDuplicatePathsEnabled) {
 		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
 	}
 
+	public boolean isStrictRoutePaths() {
+		return strictRoutePaths;
+	}
 
+	/**
+	 * Defines if the router should trim parts of the path to match the action path.
+	 */
+	public void setStrictRoutePaths(final boolean strictRoutePaths) {
+		this.strictRoutePaths = strictRoutePaths;
+	}
 }

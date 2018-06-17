@@ -75,11 +75,15 @@ public class Routes {
 
 	public ActionRuntime lookup(final String method, final String[] pathChunks) {
 		while (true) {
-			ActionRuntime actionRuntime = _lookup(method, pathChunks);
+			final ActionRuntime actionRuntime = _lookup(method, pathChunks);
 			if (actionRuntime != null) {
 				return actionRuntime;
 			}
 
+			if (actionsManager.isStrictRoutePaths()) {
+				return null;
+			}
+			// special
 			final String lastPath = pathChunks[pathChunks.length - 1];
 			final int lastNdx = lastPath.lastIndexOf('.');
 			if (lastNdx == -1) {
