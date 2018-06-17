@@ -37,12 +37,13 @@ abstract class ActionsManagerCfg {
 	protected boolean detectDuplicatePathsEnabled;
 	protected Class<? extends PathMacros> pathMacroClass;
 	protected String[] pathMacroSeparators;
-	protected boolean strictRoutePaths = false;
+	protected boolean strictRoutePaths;
 
 	public ActionsManagerCfg() {
 		this.detectDuplicatePathsEnabled = true;
 		this.pathMacroClass = RegExpPathMacros.class; //WildcardPathMacros.class;
 		this.pathMacroSeparators = new String[] {LEFT_BRACE, COLON, RIGHT_BRACE};
+		this.strictRoutePaths = false;
 	}
 
 	/**
