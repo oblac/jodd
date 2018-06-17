@@ -28,7 +28,6 @@ package jodd.db;
 import jodd.bean.BeanUtil;
 import jodd.db.type.SqlType;
 import jodd.db.type.SqlTypeManager;
-import jodd.util.collection.IntArrayList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +46,6 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -122,14 +120,14 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	public Q clearParameters() {
 		init();
 		if (preparedStatement == null) {
-			return (Q) this;
+			return _this();
 		}
 		try {
 			preparedStatement.clearParameters();
 		} catch (SQLException sex) {
 			throw new DbSqlException(sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -152,20 +150,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throw new DbSqlException(this, "Failed to set null to parameter: " + index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setNull(final String param, final int type) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setNull(positions.get(i), type);
+			for (final int position : positions) {
+				preparedStatement.setNull(position, type);
 			}
 		} catch (SQLException sex) {
 			throw new DbSqlException(this, "Failed to set null to parameter: " + param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setNull(final int index, final int type, final String typeName) {
@@ -175,20 +173,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throw new DbSqlException(this, "Failed to set null to parameter: " + index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setNull(final String param, final int value, final String typeName) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setNull(positions.get(i), value, typeName);
+			for (final int position : positions) {
+				preparedStatement.setNull(position, value, typeName);
 			}
 		} catch (SQLException sex) {
 			throw new DbSqlException(this, "Failed to set null to parameter: " + param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- int
@@ -200,20 +198,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setInteger(final String param, final int value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setInt(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setInt(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outInteger(final int index) {
@@ -232,7 +230,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setInteger(index, value.intValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setInteger(final String param, final Number value) {
@@ -242,7 +240,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setInteger(param, value.intValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- boolean
@@ -254,20 +252,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setBoolean(final String param, final boolean value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setBoolean(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setBoolean(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outBoolean(final int index) {
@@ -286,7 +284,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setBoolean(index, value.booleanValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setBoolean(final String param, final Boolean value) {
@@ -296,7 +294,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setBoolean(param, value.booleanValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- long
@@ -308,20 +306,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setLong(final String param, final long value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setLong(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setLong(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- Long
@@ -333,7 +331,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setLong(index, value.longValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setLong(final String param, final Number value) {
@@ -343,7 +341,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setLong(param, value.longValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outLong(final int index) {
@@ -362,20 +360,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setByte(final String param, final byte value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setByte(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setByte(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outByte(final int index) {
@@ -394,7 +392,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setByte(index, value.byteValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setByte(final String param, final Number value) {
@@ -404,7 +402,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setByte(param, value.byteValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- bytes[]
@@ -416,20 +414,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setBytes(final String param, final byte[] value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setBytes(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setBytes(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -442,20 +440,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setDouble(final String param, final double value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setDouble(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setDouble(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outDouble(final int index) {
@@ -474,7 +472,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setDouble(index, value.doubleValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setDouble(final String param, final Number value) {
@@ -484,7 +482,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setDouble(param, value.doubleValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -497,20 +495,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setFloat(final String param, final float value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setFloat(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setFloat(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outFloat(final int index) {
@@ -529,7 +527,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setFloat(index, value.floatValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setFloat(final String param, final Number value) {
@@ -539,7 +537,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setFloat(param, value.floatValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -552,21 +550,21 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setShort(final String param, final short value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				int index = positions.get(i);
+			for (final int position : positions) {
+				final int index = position;
 				preparedStatement.setShort(index, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- Short
@@ -578,7 +576,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setShort(index, value.shortValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setShort(final String param, final Number value) {
@@ -588,7 +586,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setShort(param, value.shortValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- string
@@ -600,20 +598,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setString(final String param, final String value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setString(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setString(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q outString(final int index) {
@@ -633,20 +631,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setDate(final String param, final Date value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setDate(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setDate(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -659,20 +657,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setTime(final String param, final Time value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setTime(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setTime(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- timestamp
@@ -684,20 +682,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setTimestamp(final String param, final Timestamp value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setTimestamp(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setTimestamp(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -710,20 +708,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setBigDecimal(final String param, final BigDecimal value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setBigDecimal(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setBigDecimal(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- big integer
@@ -735,7 +733,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setLong(index, value.longValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setBigInteger(final String param, final BigInteger value) {
@@ -745,7 +743,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		else {
 			setLong(param, value.longValue());
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -759,20 +757,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setURL(final String param, final URL value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setURL(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setURL(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -785,20 +783,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setBlob(final String param, final Blob value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setBlob(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setBlob(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -811,20 +809,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setClob(final String param, final Clob value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setClob(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setClob(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- Array
@@ -836,20 +834,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setArray(final String param, final Array value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setArray(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setArray(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -862,20 +860,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setRef(final String param, final Ref value) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setRef(positions.get(i), value);
+			for (final int position : positions) {
+				preparedStatement.setRef(position, value);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -888,20 +886,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (IOException | SQLException ioex) {
 			throwSetParamError(index, ioex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setAsciiStream(final String param, final InputStream stream) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setAsciiStream(positions.get(i), stream, stream.available());
+			for (final int position : positions) {
+				preparedStatement.setAsciiStream(position, stream, stream.available());
 			}
 		} catch (IOException | SQLException ioex) {
 			throwSetParamError(param, ioex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setAsciiStream(final int index, final InputStream stream, final int length) {
@@ -911,20 +909,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setAsciiStream(final String param, final InputStream stream, final int length) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setAsciiStream(positions.get(i), stream, length);
+			for (final int position : positions) {
+				preparedStatement.setAsciiStream(position, stream, length);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setCharacterStream(final int index, final Reader reader, final int length) {
@@ -934,20 +932,20 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	public Q setCharacterStream(final String param, final Reader reader, final int length) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setCharacterStream(positions.get(i), reader, length);
+			for (final int position : positions) {
+				preparedStatement.setCharacterStream(position, reader, length);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -956,27 +954,28 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	/**
 	 * Sets bean parameters from bean. Non-existing bean properties are ignored.
 	 */
-	public Q setBean(String beanName, final Object bean) {
+	public Q setBean(final String beanName, final Object bean) {
 		if (bean == null) {
-			return (Q) this;
+			return _this();
 		}
 		init();
-		beanName += '.';
-		Iterator it = query.iterateNamedParameters();
+		final String beanNamePrefix = beanName + '.';
 
-		while (it.hasNext()) {
-			String paramName = (String) it.next();
+		query.forEachNamedParameter(p -> {
+			final String paramName = p.name;
 
-			if (paramName.startsWith(beanName)) {
-				String propertyName = paramName.substring(beanName.length());
+			if (paramName.startsWith(beanNamePrefix)) {
+				final String propertyName = paramName.substring(beanNamePrefix.length());
 
 				if (BeanUtil.declared.hasRootProperty(bean, propertyName)) {
-					Object value = BeanUtil.declared.getProperty(bean, propertyName);
+					final Object value = BeanUtil.declared.getProperty(bean, propertyName);
 					setObject(paramName, value);
 				}
 			}
-		}
-		return (Q) this;
+
+		});
+
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- map
@@ -986,15 +985,14 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setMap(final Map parameters) {
 		if (parameters == null) {
-			return (Q) this;
+			return _this();
 		}
 		init();
-		Iterator it = query.iterateNamedParameters();
-		while (it.hasNext()) {
-			String paramName = (String) it.next();
+		query.forEachNamedParameter(p -> {
+			final String paramName = p.name;
 			setObject(paramName, parameters.get(paramName));
-		}
-		return (Q) this;
+		});
+		return _this();
 	}
 
 
@@ -1012,7 +1010,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1022,15 +1020,15 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setObject(final String param, final Object object, final int targetSqlType) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setObject(positions.get(i), object, targetSqlType);
+			for (final int position : positions) {
+				preparedStatement.setObject(position, object, targetSqlType);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1054,10 +1052,10 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
     void setObject(final String param, final Object object, final int targetSqlType, final int scale) {
 		initPrepared();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setObject(positions.get(i), object, targetSqlType, scale);
+			for (final int position : positions) {
+				preparedStatement.setObject(position, object, targetSqlType, scale);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
@@ -1073,7 +1071,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setObject(final int index, final Object value) {
 		setObject(index, value, null, Types.OTHER);
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1089,9 +1087,9 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		init();
 		if (value == null) {
 			setNull(index, Types.NULL);
-			return (Q) this;
+			return _this();
 		}
-		SqlType sqlType;
+		final SqlType sqlType;
 		if (sqlTypeClass != null) {
 			sqlType = SqlTypeManager.get().lookupSqlType(sqlTypeClass);
 		} else {
@@ -1106,7 +1104,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1114,7 +1112,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setObject(final String param, final Object value) {
 		setObject(param, value, null, Types.OTHER);
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1122,11 +1120,11 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setObject(final String param, final Object value, final Class<? extends SqlType> sqlTypeClass, final int dbSqlType) {
 		init();
-		IntArrayList positions = query.getNamedParameterIndices(param);
-		for (int i = 0; i < positions.size(); i++) {
-			setObject(positions.get(i), value, sqlTypeClass, dbSqlType);
+		final int[] positions = query.getNamedParameterIndices(param);
+		for (final int position : positions) {
+			setObject(position, value, sqlTypeClass, dbSqlType);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -1137,10 +1135,10 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setObjects(final Object... objects) {
 		int index = 1;
-		for (Object object : objects) {
+		for (final Object object : objects) {
 			setObject(index++, object);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1154,7 +1152,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		for (int i = 0; i < names.length; i++) {
 			setObject(names[i], values[i]);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- batch
@@ -1164,10 +1162,10 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setBatch(final String name, final int[] array, int startingIndex) {
 		init();
-		int batchSize = query.getBatchParameterSize(name);
+		final int batchSize = query.getBatchParameterSize(name);
 
 		for (int i = 1; i <= batchSize; i++) {
-			String paramName = name + '.' + i;
+			final String paramName = name + '.' + i;
 
 			if (startingIndex < array.length) {
 				setInteger(paramName, array[startingIndex]);
@@ -1176,17 +1174,17 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 			}
 			startingIndex++;
 		}
-		return (Q) this;
+		return _this();
 	}
 	/**
 	 * Sets batch parameters with given array of values.
 	 */
 	public Q setBatch(final String name, final long[] array, int startingIndex) {
 		init();
-		int batchSize = query.getBatchParameterSize(name);
+		final int batchSize = query.getBatchParameterSize(name);
 
 		for (int i = 1; i <= batchSize; i++) {
-			String paramName = name + '.' + i;
+			final String paramName = name + '.' + i;
 
 			if (startingIndex < array.length) {
 				setLong(paramName, array[startingIndex]);
@@ -1195,7 +1193,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 			}
 			startingIndex++;
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -1203,10 +1201,10 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	 */
 	public Q setBatch(final String name, final Object[] array, int startingIndex) {
 		init();
-		int batchSize = query.getBatchParameterSize(name);
+		final int batchSize = query.getBatchParameterSize(name);
 
 		for (int i = 1; i <= batchSize; i++) {
-			String paramName = name + '.' + i;
+			final String paramName = name + '.' + i;
 
 			if (startingIndex < array.length) {
 				setObject(paramName, array[startingIndex]);
@@ -1215,7 +1213,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 			}
 			startingIndex++;
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- utils
@@ -1240,19 +1238,19 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 	private Q registerOutParameter(final String param, final int type) {
 		initCallable();
-		IntArrayList positions = query.getNamedParameterIndices(param);
+		final int[] positions = query.getNamedParameterIndices(param);
 		try {
-			for (int i = 0; i < positions.size(); i++) {
-				callableStatement.registerOutParameter(positions.get(i), type);
+			for (final int position : positions) {
+				callableStatement.registerOutParameter(position, type);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- close
@@ -1263,7 +1261,7 @@ public class DbQuery<Q extends DbQuery> extends DbQueryBase<Q> {
 	@Override
 	public Q autoClose() {
 		super.autoClose();
-		return (Q) this;
+		return _this();
 	}
 
 }

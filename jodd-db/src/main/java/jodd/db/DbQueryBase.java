@@ -66,6 +66,12 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		this.maxRows = dbOom.queryConfig().getMaxRows();
 	}
 
+	@SuppressWarnings("unchecked")
+	protected Q _this() {
+		return (Q) this;
+	}
+
+
 	// ---------------------------------------------------------------- query states
 
 	/**
@@ -183,7 +189,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q forcePreparedStatement() {
 		checkCreated();
 		forcePreparedStatement = true;
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- initialization
@@ -351,7 +357,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 */
 	public Q autoClose() {
 		autoClose = true;
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -390,7 +396,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 		if (sex != null) {
 			throw new DbSqlException("Close associated ResultSets error", sex);
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -463,19 +469,19 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q setType(final QueryScrollType type) {
 		checkCreated();
 		this.type = type;
-		return (Q) this;
+		return _this();
 	}
 	public Q typeForwardOnly() {
 		setType(QueryScrollType.FORWARD_ONLY);
-		return (Q) this;
+		return _this();
 	}
 	public Q typeScrollSensitive() {
 		setType(QueryScrollType.SCROLL_SENSITIVE);
-		return (Q) this;
+		return _this();
 	}
 	public Q typeScrollInsensitive() {
 		setType(QueryScrollType.SCROLL_INSENSITIVE);
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- concurrency
@@ -489,15 +495,15 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q setConcurrencyType(final QueryConcurrencyType concurrencyType) {
 		checkCreated();
 		this.concurrencyType = concurrencyType;
-		return (Q) this;
+		return _this();
 	}
 	public Q concurrentReadOnly() {
 		setConcurrencyType(QueryConcurrencyType.READ_ONLY);
-		return (Q) this;
+		return _this();
 	}
 	public Q concurrentUpdatable() {
 		setConcurrencyType(QueryConcurrencyType.UPDATABLE);
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- holdability
@@ -511,17 +517,17 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q setHoldability(final QueryHoldability holdability) {
 		checkCreated();
 		this.holdability = holdability;
-		return (Q) this;
+		return _this();
 	}
 
 	public Q holdCursorsOverCommit() {
 		setHoldability(QueryHoldability.HOLD_CURSORS_OVER_COMMIT);
-		return (Q) this;
+		return _this();
 	}
 
 	public Q closeCursorsAtCommit() {
 		setHoldability(QueryHoldability.CLOSE_CURSORS_AT_COMMIT);
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- debug mode
@@ -535,11 +541,11 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q setDebug(final boolean debug) {
 		checkCreated();
 		this.debug = debug;
-		return (Q) this;
+		return _this();
 	}
 	public Q setDebugMode() {
 		setDebug(true);
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -560,7 +566,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q setGeneratedColumns(final String... columns) {
 		checkCreated();
 		generatedColumns = columns;
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -569,7 +575,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	 */
 	public Q setGeneratedKey() {
 		setGeneratedColumns();
-		return (Q) this;
+		return _this();
 	}
 
 	/**
@@ -578,7 +584,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 	public Q resetGeneratedColumns() {
 		checkCreated();
 		generatedColumns = null;
-		return (Q) this;
+		return _this();
 	}
 
 
@@ -610,7 +616,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 				throw new DbSqlException(this, "Unable to set fetch size: " + fetchSize, sex);
 			}
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	protected int maxRows;
@@ -638,7 +644,7 @@ abstract class DbQueryBase<Q extends DbQueryBase> implements AutoCloseable {
 				throw new DbSqlException(this, "Unable to set max rows: " + maxRows, sex);
 			}
 		}
-		return (Q) this;
+		return _this();
 	}
 
 	// ---------------------------------------------------------------- execute

@@ -416,7 +416,7 @@ public class DbOomQuery extends DbQuery<DbOomQuery> {
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, final int max, final boolean close) {
-		Set<T> result = new LinkedHashSet<>(initialCollectionSize(max));
+		final Set<T> result = new LinkedHashSet<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {

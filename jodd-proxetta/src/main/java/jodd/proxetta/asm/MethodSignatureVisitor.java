@@ -29,6 +29,7 @@ import jodd.asm.AsmUtil;
 import jodd.asm.TraceSignatureVisitor;
 import jodd.asm6.Opcodes;
 import jodd.asm6.signature.SignatureVisitor;
+import jodd.buffer.FastIntBuffer;
 import jodd.proxetta.AnnotationInfo;
 import jodd.proxetta.ClassInfo;
 import jodd.proxetta.GenericsReader;
@@ -37,7 +38,6 @@ import jodd.proxetta.ProxettaException;
 import jodd.proxetta.TypeInfo;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.util.collection.IntArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected final boolean isStatic;
 	protected final boolean isFinal;
 	protected final ClassInfo targetClassInfo;
-	protected final IntArrayList argumentsOffset;
+	protected final FastIntBuffer argumentsOffset;
 	protected final List<TypeInfoImpl> arguments;
 	protected final int access;
 	protected final String description;
@@ -104,8 +104,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.arguments = new ArrayList<>();
 		this.arguments.add(new TypeInfoImpl('L', null, null, null));
 
-		this.argumentsOffset = new IntArrayList();
-		this.argumentsOffset.add(0);
+		this.argumentsOffset = new FastIntBuffer();
+		this.argumentsOffset.append(0);
 
 		this.annotations = NO_ANNOTATIONS;
 	}
@@ -342,7 +342,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			arguments.add(typeInfo);
 
 			argumentsCount++;
-			argumentsOffset.add(argumentsWords + 1);
+			argumentsOffset.append(argumentsWords + 1);
 
 			if ((type == 'D') || (type == 'J')) {
 				argumentsWords += 2;
