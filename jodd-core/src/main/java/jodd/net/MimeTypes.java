@@ -60,9 +60,9 @@ public class MimeTypes {
 	private static final HashMap<String, String> MIME_TYPE_MAP;	// extension -> mime-type map
 
 	static {
-		Properties mimes = new Properties();
+		final Properties mimes = new Properties();
 
-		InputStream is = MimeTypes.class.getResourceAsStream(MimeTypes.class.getSimpleName() + ".properties");
+		final InputStream is = MimeTypes.class.getResourceAsStream(MimeTypes.class.getSimpleName() + ".properties");
 		if (is == null) {
 			throw new IllegalStateException("Mime types file missing");
 		}
@@ -78,10 +78,10 @@ public class MimeTypes {
 
 		MIME_TYPE_MAP = new HashMap<>(mimes.size() * 2);
 
-		Enumeration keys = mimes.propertyNames();
+		final Enumeration keys = mimes.propertyNames();
 		while (keys.hasMoreElements()) {
 			String mimeType = (String) keys.nextElement();
-			String extensions = mimes.getProperty(mimeType);
+			final String extensions = mimes.getProperty(mimeType);
 
 			if (mimeType.startsWith("/")) {
 				mimeType = "application" + mimeType;
@@ -95,9 +95,9 @@ public class MimeTypes {
 				mimeType = "video" + mimeType.substring(1);
 			}
 
-			String[] allExtensions = StringUtil.splitc(extensions, ' ');
+			final String[] allExtensions = StringUtil.splitc(extensions, ' ');
 
-			for (String extension : allExtensions) {
+			for (final String extension : allExtensions) {
 				if (MIME_TYPE_MAP.put(extension, mimeType) != null) {
 					throw new IllegalArgumentException("Duplicated extension: " + extension);
 				}
@@ -138,16 +138,16 @@ public class MimeTypes {
 	 * @param useWildcard if set, mime types are wildcard patterns
 	 */
 	public static String[] findExtensionsByMimeTypes(String mimeType, final boolean useWildcard) {
-		ArrayList<String> extensions = new ArrayList<>();
+		final ArrayList<String> extensions = new ArrayList<>();
 
 		mimeType = mimeType.toLowerCase();
-		String[] mimeTypes = StringUtil.splitc(mimeType, ", ");
+		final String[] mimeTypes = StringUtil.splitc(mimeType, ", ");
 
-		for (Map.Entry<String, String> entry : MIME_TYPE_MAP.entrySet()) {
-			String entryExtension = entry.getKey();
-			String entryMimeType = entry.getValue().toLowerCase();
+		for (final Map.Entry<String, String> entry : MIME_TYPE_MAP.entrySet()) {
+			final String entryExtension = entry.getKey();
+			final String entryMimeType = entry.getValue().toLowerCase();
 
-			int matchResult = useWildcard ?
+			final int matchResult = useWildcard ?
 					Wildcard.matchOne(entryMimeType, mimeTypes) :
 					StringUtil.equalsOne(entryMimeType, mimeTypes);
 
@@ -161,5 +161,12 @@ public class MimeTypes {
 		}
 
 		return extensions.toArray(new String[0]);
+	}
+
+	/**
+	 * Returns {@code true} if given value is one of the registered MIME extensions.
+	 */
+	public static boolean isRegisteredExtension(final String extension) {
+		return MIME_TYPE_MAP.containsKey(extension);
 	}
 }

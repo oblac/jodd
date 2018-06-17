@@ -38,6 +38,7 @@ abstract class ActionsManagerCfg {
 	protected Class<? extends PathMacros> pathMacroClass;
 	protected String[] pathMacroSeparators;
 	protected boolean strictRoutePaths;
+	protected String[] pathExtensionsToStrip = new String[]{"htm", "html"};
 
 	public ActionsManagerCfg() {
 		this.detectDuplicatePathsEnabled = true;
@@ -88,5 +89,13 @@ abstract class ActionsManagerCfg {
 	 */
 	public void setStrictRoutePaths(final boolean strictRoutePaths) {
 		this.strictRoutePaths = strictRoutePaths;
+	}
+
+	public String[] getPathExtensionsToStrip() {
+		return pathExtensionsToStrip;
+	}
+
+	public void setPathExtensionsToStrip(final String... pathExtensionsToStrip) {
+		this.pathExtensionsToStrip = pathExtensionsToStrip;
 	}
 }

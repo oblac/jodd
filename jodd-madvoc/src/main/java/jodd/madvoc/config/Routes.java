@@ -83,12 +83,19 @@ public class Routes {
 			if (actionsManager.isStrictRoutePaths()) {
 				return null;
 			}
-			// special
+
+			// special case
 			final String lastPath = pathChunks[pathChunks.length - 1];
 			final int lastNdx = lastPath.lastIndexOf('.');
 			if (lastNdx == -1) {
 				return null;
 			}
+			final String pathExtension = lastPath.substring(lastNdx + 1);
+
+			if (StringUtil.equalsOne(pathExtension, actionsManager.getPathExtensionsToStrip()) == -1) {
+				return null;
+			}
+
 			pathChunks[pathChunks.length - 1] = lastPath.substring(0, lastNdx);
 		}
 	}
