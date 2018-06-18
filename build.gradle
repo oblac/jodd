@@ -39,7 +39,7 @@ version = '5.0.0'
 // --- properties -------------------------------------------------------------
 
 buildscript {
-	ext.kotlin_version = '1.2.50'
+	ext.kotlin_version = '1.2.41'
 	repositories {
 		mavenCentral()
 	}
@@ -75,6 +75,7 @@ ext {
 		log_log4j2_core:     'org.apache.logging.log4j:log4j-core:[2.8,2.9)',
 
 		junit5:			'org.junit.jupiter:junit-jupiter-engine:5.2.0',
+		junit5_api:		'org.junit.jupiter:junit-jupiter-api:5.2.0',
 		junit5_params:	'org.junit.jupiter:junit-jupiter-params:5.2.0',
 		junit5_console: 'org.junit.platform:junit-platform-console:1.2.0',
 		mockito:		'org.mockito:mockito-core:2.12.0',
