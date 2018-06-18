@@ -158,4 +158,33 @@ class CliParamTest {
 		out.clear();
 	}
 
+	@Test
+	void testThreeParams() {
+		final List<String> out = new ArrayList<>();
+		final Cli cli = new Cli();
+
+		cli.param()
+			.with(v -> out.addAll(Arrays.asList(v)));
+		cli.param()
+			.with(v -> out.addAll(Arrays.asList(v)));
+		cli.param()
+			.with(v -> out.addAll(Arrays.asList(v)));
+
+		cli.accept();
+		assertEquals("[]", out.toString());
+
+		cli.accept("123");
+		assertEquals("[123]", out.toString());
+		out.clear();
+
+		cli.accept("123", "456");
+		assertEquals("[123, 456]", out.toString());
+		out.clear();
+
+		cli.accept("123", "456", "789");
+		assertEquals("[123, 456, 789]", out.toString());
+		out.clear();
+	}
+
+
 }

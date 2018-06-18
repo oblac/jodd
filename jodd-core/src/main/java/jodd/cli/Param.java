@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 public class Param {
 	String label;
 	int required = 0;
-	int optional = 0;
+	int optional = 1;
 	String description;
 	Consumer<String[]> consumer;
 
@@ -39,18 +39,20 @@ public class Param {
 		return this;
 	}
 
+	public Param optional(final int optional) {
+		this.optional = optional;
+		return this;
+	}
+
 	public Param required() {
 		this.required = 1;
+		this.optional = 0;
 		return this;
 	}
 
 	public Param optional() {
+		this.required = 0;
 		this.optional = 1;
-		return this;
-	}
-
-	public Param optional(final int optional) {
-		this.optional = optional;
 		return this;
 	}
 
@@ -74,7 +76,6 @@ public class Param {
 		this.description = description;
 		return this;
 	}
-
 
 	public Param with(final Consumer<String[]> consumer) {
 		this.consumer = consumer;

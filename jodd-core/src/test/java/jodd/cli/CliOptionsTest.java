@@ -55,7 +55,8 @@ class CliOptionsTest {
 			.hasArg()
 			.with(out::add);
 
-		cli.param();
+		cli.param()
+			.with(arr -> out.add(arr[0]));
 
 		return cli;
 	}

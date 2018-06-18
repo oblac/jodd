@@ -140,7 +140,13 @@ public class Cli implements Consumer<String[]> {
 
 					final Option option = findOptionWithShortName(argShortName, value);
 					option.consumer.accept(option.hasArg ? value : argShortName);
+					// mark argument as consumed
 					args[i] = null;
+					if (option.hasArg) {
+						// mark value as consumed
+						i++;
+						args[i] = null;
+					}
 					continue;
 				}
 			}
