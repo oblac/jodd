@@ -25,45 +25,19 @@
 
 signing {
 	required { isAdminRelease }
-	sign configurations.archives
+	sign publishing.publications
 }
 
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
+			afterEvaluate {
+				artifact sourcesJar
+				artifact javadocJar
+			}
 
 			customizePom(pom, project)
-
-			artifact sourcesJar
-			artifact javadocJar
-
-			if (isAdminRelease) {
-				// sign the pom
-				pom.withXml {
-					def pomFile = file("${project.buildDir}/generated-pom.xml")
-					writeTo(pomFile)
-					def pomAscFile = signing.sign(pomFile).signatureFiles[0]
-					artifact(pomAscFile) {
-						classifier = null
-						extension = 'pom.asc'
-					}
-					pomFile.delete()
-				}
-
-				// sign the artifacts
-				project.tasks.signArchives.signatureFiles.each {
-					artifact(it) {
-						def matcher = it.file =~ /-(sources|javadoc|jre9)\.jar\.asc$/
-						if (matcher.find()) {
-							classifier = matcher.group(1)
-						} else {
-							classifier = null
-						}
-						extension = 'jar.asc'
-					}
-				}
-			}
 		}
 	}
 	repositories {
@@ -76,15 +50,6 @@ publishing {
 				}
 			}
 		}
-	}
-}
-
-model {
-	tasks.publishMavenJavaPublicationToMavenLocal {
-		dependsOn(project.tasks.signArchives)
-	}
-	tasks.publishMavenJavaPublicationToMavenRepository {
-		dependsOn(project.tasks.signArchives)
 	}
 }
 

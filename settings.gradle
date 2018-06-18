@@ -1,3 +1,5 @@
+enableFeaturePreview('STABLE_PUBLISHING')
+
 include 'distribution'
 
 include 'jodd-all'
