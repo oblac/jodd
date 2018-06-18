@@ -94,15 +94,14 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
   /** The separator to append before the next visited class or inner class type. */
   private String separator = "";
 
-  // jodd: commented
-
+// jodd: removed
 //  /**
 //   * Constructs a new {@link TraceSignatureVisitor}.
 //   *
 //   * @param accessFlags for class type signatures, the access flags of the class.
 //   */
 //  public TraceSignatureVisitor(final int accessFlags) {
-//    super(Opcodes.ASM6);
+//    super(Opcodes.ASM7_EXPERIMENTAL);
 //    this.isInterface = (accessFlags & Opcodes.ACC_INTERFACE) != 0;
 //    this.declaration = new StringBuilder();
 //  }

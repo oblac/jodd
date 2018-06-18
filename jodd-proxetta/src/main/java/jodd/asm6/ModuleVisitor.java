@@ -38,8 +38,8 @@ package jodd.asm6;
  */
 public abstract class ModuleVisitor {
   /**
-   * The ASM API version implemented by this visitor. The value of this field must be {@link
-   * Opcodes#ASM6}.
+   * The ASM API version implemented by this visitor. The value of this field must be one of {@link
+   * Opcodes#ASM6} or {@link Opcodes#ASM7_EXPERIMENTAL}.
    */
   protected final int api;
 
@@ -49,7 +49,8 @@ public abstract class ModuleVisitor {
   /**
    * Constructs a new {@link ModuleVisitor}.
    *
-   * @param api the ASM API version implemented by this visitor. Must be {@link Opcodes#ASM6}.
+   * @param api the ASM API version implemented by this visitor. Must be one of {@link Opcodes#ASM6}
+   *     or {@link Opcodes#ASM7_EXPERIMENTAL}.
    */
   public ModuleVisitor(final int api) {
     this(api, null);
@@ -58,12 +59,13 @@ public abstract class ModuleVisitor {
   /**
    * Constructs a new {@link ModuleVisitor}.
    *
-   * @param api the ASM API version implemented by this visitor. Must be {@link Opcodes#ASM6}.
+   * @param api the ASM API version implemented by this visitor. Must be one of {@link Opcodes#ASM6}
+   *     or {@link Opcodes#ASM7_EXPERIMENTAL}.
    * @param moduleVisitor the module visitor to which this visitor must delegate method calls. May
    *     be null.
    */
   public ModuleVisitor(final int api, final ModuleVisitor moduleVisitor) {
-    if (api != Opcodes.ASM6) {
+    if (api != Opcodes.ASM6 && api != Opcodes.ASM7_EXPERIMENTAL) {
       throw new IllegalArgumentException();
     }
     this.api = api;

@@ -38,11 +38,22 @@ package jodd.asm6;
  */
 final class MethodWriter extends MethodVisitor {
 
+  /** Indicates that nothing must be computed. */
+  static final int COMPUTE_NOTHING = 0;
+
   /**
-   * Indicates that all the stack map frames must be computed. In this case the maximum stack size
-   * and the maximum number of local variables is also computed.
+   * Indicates that the maximum stack size and the maximum number of local variables must be
+   * computed, from scratch.
    */
-  static final int COMPUTE_ALL_FRAMES = 3;
+  static final int COMPUTE_MAX_STACK_AND_LOCAL = 1;
+
+  /**
+   * Indicates that the maximum stack size and the maximum number of local variables must be
+   * computed, from the existing stack map frames. This can be done more efficiently than with the
+   * control flow graph algorithm used for {@link #COMPUTE_MAX_STACK_AND_LOCAL}, by using a linear
+   * scan of the bytecode instructions.
+   */
+  static final int COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES = 2;
 
   /**
    * Indicates that the stack map frames of type F_INSERT must be computed. The other frames are not
@@ -50,16 +61,13 @@ final class MethodWriter extends MethodVisitor {
    * the F_INSERT frames, together with the bytecode instructions between a F_NEW and a F_INSERT
    * frame - and without any knowledge of the type hierarchy (by definition of F_INSERT).
    */
-  static final int COMPUTE_INSERTED_FRAMES = 2;
+  static final int COMPUTE_INSERTED_FRAMES = 3;
 
   /**
-   * Indicates that the maximum stack size and the maximum number of local variables must be
-   * computed.
+   * Indicates that all the stack map frames must be computed. In this case the maximum stack size
+   * and the maximum number of local variables is also computed.
    */
-  static final int COMPUTE_MAX_STACK_AND_LOCAL = 1;
-
-  /** Indicates that nothing must be computed. */
-  static final int COMPUTE_NOTHING = 0;
+  static final int COMPUTE_ALL_FRAMES = 4;
 
   /** Indicates that {@link #STACK_SIZE_DELTA} is not applicable (not constant or never used). */
   private static final int NA = 0;
@@ -375,13 +383,13 @@ final class MethodWriter extends MethodVisitor {
   // Other method_info attributes:
 
   /** The number_of_exceptions field of the Exceptions attribute. */
-  final int numberOfExceptions;
+  private final int numberOfExceptions;
 
   /** The exception_index_table array of the Exceptions attribute, or <tt>null</tt>. */
-  final int[] exceptionIndexTable;
+  private final int[] exceptionIndexTable;
 
   /** The signature_index field of the Signature attribute. */
-  final int signatureIndex;
+  private final int signatureIndex;
 
   /**
    * The last runtime visible annotation of this method. The previous ones can be accessed with the
@@ -471,11 +479,12 @@ final class MethodWriter extends MethodVisitor {
 
   /**
    * The current basic block, i.e. the basic block of the last visited instruction. When {@link
-   * #compute} is equal to {@link #COMPUTE_ALL_FRAMES}, this field is <tt>null</tt> for unreachable
-   * code. When {@link #compute} is equal to {@link #COMPUTE_INSERTED_FRAMES}, this field stays
+   * #compute} is equal to {@link #COMPUTE_MAX_STACK_AND_LOCAL} or {@link #COMPUTE_ALL_FRAMES}, this
+   * field is <tt>null</tt> for unreachable code. When {@link #compute} is equal to {@link
+   * #COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES} or {@link #COMPUTE_INSERTED_FRAMES}, this field stays
    * unchanged throughout the whole method (i.e. the whole code is seen as a single basic block;
-   * indeed, the existing frames are sufficient by hypothesis to compute any intermediate frame
-   * without using any control flow graph).
+   * indeed, the existing frames are sufficient by hypothesis to compute any intermediate frame -
+   * and the maximum stack size as well - without using any control flow graph).
    */
   private Label currentBasicBlock;
 
@@ -483,7 +492,10 @@ final class MethodWriter extends MethodVisitor {
    * The relative stack size after the last visited instruction. This size is relative to the
    * beginning of {@link #currentBasicBlock}, i.e. the true stack size after the last visited
    * instruction is equal to the {@link Label#inputStackSize} of the current basic block plus {@link
-   * #relativeStackSize}.
+   * #relativeStackSize}. When {@link #compute} is equal to {@link
+   * #COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES}, {@link #currentBasicBlock} is always the start of
+   * the method, so this relative size is also equal to the absolute stack size after the last
+   * visited instruction.
    */
   private int relativeStackSize;
 
@@ -491,7 +503,10 @@ final class MethodWriter extends MethodVisitor {
    * The maximum relative stack size after the last visited instruction. This size is relative to
    * the beginning of {@link #currentBasicBlock}, i.e. the true maximum stack size after the last
    * visited instruction is equal to the {@link Label#inputStackSize} of the current basic block
-   * plus {@link #maxRelativeStackSize}.
+   * plus {@link #maxRelativeStackSize}.When {@link #compute} is equal to {@link
+   * #COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES}, {@link #currentBasicBlock} is always the start of
+   * the method, so this relative size is also equal to the absolute maximum stack size after the
+   * last visited instruction.
    */
   private int maxRelativeStackSize;
 
@@ -519,8 +534,8 @@ final class MethodWriter extends MethodVisitor {
    */
   private int[] currentFrame;
 
-  /** The number of subroutines in this method. */
-  private int numSubroutines;
+  /** Whether this method contains subroutines. */
+  private boolean hasSubroutines;
 
   // -----------------------------------------------------------------------------------------------
   // Other miscellaneous status fields
@@ -538,16 +553,17 @@ final class MethodWriter extends MethodVisitor {
   private int lastBytecodeOffset;
 
   /**
-   * The offset in bytes in {@link #getSource} from which the method_info for this method (excluding
-   * its first 6 bytes) must be copied, or 0.
+   * The offset in bytes in {@link SymbolTable#getSource} from which the method_info for this method
+   * (excluding its first 6 bytes) must be copied, or 0.
    */
-  int sourceOffset;
+  private int sourceOffset;
 
   /**
-   * The length in bytes in {@link #getSource} which must be copied to get the method_info for this
-   * method (excluding its first 6 bytes for access_flags, name_index and descriptor_index).
+   * The length in bytes in {@link SymbolTable#getSource} which must be copied to get the
+   * method_info for this method (excluding its first 6 bytes for access_flags, name_index and
+   * descriptor_index).
    */
-  int sourceLength;
+  private int sourceLength;
 
   // -----------------------------------------------------------------------------------------------
   // Constructor and accessors
@@ -602,10 +618,6 @@ final class MethodWriter extends MethodVisitor {
       firstBasicBlock = new Label();
       visitLabel(firstBasicBlock);
     }
-  }
-
-  ClassReader getSource() {
-    return symbolTable.getSource();
   }
 
   boolean hasFrames() {
@@ -834,6 +846,13 @@ final class MethodWriter extends MethodVisitor {
 
       previousFrameOffset = code.length;
       ++stackMapTableNumberOfEntries;
+    }
+
+    if (compute == COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES) {
+      relativeStackSize = nStack;
+      if (nStack > maxRelativeStackSize) {
+        maxRelativeStackSize = relativeStackSize;
+      }
     }
 
     maxStack = Math.max(maxStack, nStack);
@@ -1138,12 +1157,15 @@ final class MethodWriter extends MethodVisitor {
         }
       } else if (compute == COMPUTE_INSERTED_FRAMES) {
         currentBasicBlock.frame.execute(baseOpcode, 0, null, null);
+      } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES) {
+        // No need to update maxRelativeStackSize (the stack size delta is always negative).
+        relativeStackSize += STACK_SIZE_DELTA[baseOpcode];
       } else {
         if (baseOpcode == Opcodes.JSR) {
           // Record the fact that 'label' designates a subroutine, if not already done.
           if ((label.flags & Label.FLAG_SUBROUTINE_START) == 0) {
             label.flags |= Label.FLAG_SUBROUTINE_START;
-            ++numSubroutines;
+            hasSubroutines = true;
           }
           currentBasicBlock.flags |= Label.FLAG_SUBROUTINE_CALLER;
           // Note that, by construction in this method, a block which calls a subroutine has at
@@ -1244,6 +1266,11 @@ final class MethodWriter extends MethodVisitor {
         lastBasicBlock.nextBasicBlock = label;
       }
       lastBasicBlock = label;
+    } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES && currentBasicBlock == null) {
+      // This case should happen only once, for the visitLabel call in the constructor. Indeed, if
+      // compute is equal to COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES, currentBasicBlock stays
+      // unchanged.
+      currentBasicBlock = label;
     }
   }
 
@@ -1340,7 +1367,7 @@ final class MethodWriter extends MethodVisitor {
           addSuccessorToCurrentBasicBlock(Edge.JUMP, label);
           label.getCanonicalInstance().flags |= Label.FLAG_JUMP_TARGET;
         }
-      } else {
+      } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL) {
         // No need to update maxRelativeStackSize (the stack size delta is always negative).
         --relativeStackSize;
         // Add all the labels as successors of the current basic block.
@@ -1513,6 +1540,8 @@ final class MethodWriter extends MethodVisitor {
       computeAllFrames();
     } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL) {
       computeMaxStackAndLocal();
+    } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES) {
+      this.maxStack = maxRelativeStackSize;
     } else {
       this.maxStack = maxStack;
       this.maxLocals = maxLocals;
@@ -1648,26 +1677,31 @@ final class MethodWriter extends MethodVisitor {
     }
 
     // Complete the control flow graph with the successor blocks of subroutines, if needed.
-    if (numSubroutines > 0) {
+    if (hasSubroutines) {
       // First step: find the subroutines. This step determines, for each basic block, to which
       // subroutine(s) it belongs. Start with the main "subroutine":
-      int subroutineId = 0;
-      firstBasicBlock.markSubroutine(subroutineId, numSubroutines);
-      // Then, loop over all the basic blocks to find those that belong to real subroutines.
-      Label basicBlock = firstBasicBlock;
-      while (basicBlock != null) {
-        if ((basicBlock.flags & Label.FLAG_SUBROUTINE_START) != 0
-            && (basicBlock.flags & Label.FLAG_SUBROUTINE_BODY) == 0) {
-          // If this subroutine has not been marked yet, find its basic blocks.
-          subroutineId += 1;
-          basicBlock.markSubroutine(subroutineId, numSubroutines);
+      short numSubroutines = 1;
+      firstBasicBlock.markSubroutine(numSubroutines);
+      // Then, mark the subroutines called by the main subroutine, then the subroutines called by
+      // those called by the main subroutine, etc.
+      for (short currentSubroutine = 1; currentSubroutine <= numSubroutines; ++currentSubroutine) {
+        Label basicBlock = firstBasicBlock;
+        while (basicBlock != null) {
+          if ((basicBlock.flags & Label.FLAG_SUBROUTINE_CALLER) != 0
+              && basicBlock.subroutineId == currentSubroutine) {
+            Label jsrTarget = basicBlock.outgoingEdges.nextEdge.successor;
+            if (jsrTarget.subroutineId == 0) {
+              // If this subroutine has not been marked yet, find its basic blocks.
+              jsrTarget.markSubroutine(++numSubroutines);
+            }
+          }
+          basicBlock = basicBlock.nextBasicBlock;
         }
-        basicBlock = basicBlock.nextBasicBlock;
       }
       // Second step: find the successors in the control flow graph of each subroutine basic block
       // 'r' ending with a RET instruction. These successors are the virtual successors of the basic
       // blocks ending with JSR instructions (see {@link #visitJumpInsn)} that can reach 'r'.
-      basicBlock = firstBasicBlock;
+      Label basicBlock = firstBasicBlock;
       while (basicBlock != null) {
         if ((basicBlock.flags & Label.FLAG_SUBROUTINE_CALLER) != 0) {
           // By construction, jsr targets are stored in the second outgoing edge of basic blocks
@@ -1685,7 +1719,7 @@ final class MethodWriter extends MethodVisitor {
     // graph, and add these blocks to the list of blocks to process (if not already done).
     Label listOfBlocksToProcess = firstBasicBlock;
     listOfBlocksToProcess.nextListElement = Label.EMPTY_LIST;
-    int maxStackSize = 0;
+    int maxStackSize = maxStack;
     while (listOfBlocksToProcess != Label.EMPTY_LIST) {
       // Remove a basic block from the list of blocks to process. Note that we don't reset
       // basicBlock.nextListElement to null on purpose, to make sure we don't reprocess already
@@ -1720,7 +1754,7 @@ final class MethodWriter extends MethodVisitor {
         outgoingEdge = outgoingEdge.nextEdge;
       }
     }
-    this.maxStack = Math.max(maxStack, maxStackSize);
+    this.maxStack = maxStackSize;
   }
 
   @Override
@@ -1757,10 +1791,9 @@ final class MethodWriter extends MethodVisitor {
       nextBasicBlock.resolve(code.data, code.length);
       lastBasicBlock.nextBasicBlock = nextBasicBlock;
       lastBasicBlock = nextBasicBlock;
-    } else {
+      currentBasicBlock = null;
+    } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL) {
       currentBasicBlock.outputStackMax = (short) maxRelativeStackSize;
-    }
-    if (compute != COMPUTE_INSERTED_FRAMES) {
       currentBasicBlock = null;
     }
   }
@@ -1945,6 +1978,70 @@ final class MethodWriter extends MethodVisitor {
   // -----------------------------------------------------------------------------------------------
 
   /**
+   * Returns whether the attributes of this method can be copied from the attributes of the given
+   * method (assuming there is no method visitor between the given ClassReader and this
+   * MethodWriter). This method should only be called just after this MethodWriter has been created,
+   * and before any content is visited. It returns true if the attributes corresponding to the
+   * constructor arguments (at most a Signature, an Exception, a Deprecated and a Synthetic
+   * attribute) are the same as the corresponding attributes in the given method.
+   *
+   * @param source the source ClassReader from which the attributes of this method might be copied.
+   * @param methodInfoOffset the offset in 'source.b' of the method_info JVMS structure from which
+   *     the attributes of this method might be copied.
+   * @param methodInfoLength the length in 'source.b' of the method_info JVMS structure from which
+   *     the attributes of this method might be copied.
+   * @param hasSyntheticAttribute whether the method_info JVMS structure from which the attributes
+   *     of this method might be copied contains a Synthetic attribute.
+   * @param hasDeprecatedAttribute whether the method_info JVMS structure from which the attributes
+   *     of this method might be copied contains a Deprecated attribute.
+   * @param signatureIndex the constant pool index contained in the Signature attribute of the
+   *     method_info JVMS structure from which the attributes of this method might be copied, or 0.
+   * @param exceptionsOffset the offset in 'source.b' of the Exceptions attribute of the method_info
+   *     JVMS structure from which the attributes of this method might be copied, or 0.
+   * @return whether the attributes of this method can be copied from the attributes of the
+   *     method_info JVMS structure in 'source.b', between 'methodInfoOffset' and 'methodInfoOffset'
+   *     + 'methodInfoLength'.
+   */
+  boolean canCopyMethodAttributes(
+      final ClassReader source,
+      final int methodInfoOffset,
+      final int methodInfoLength,
+      final boolean hasSyntheticAttribute,
+      final boolean hasDeprecatedAttribute,
+      final int signatureIndex,
+      final int exceptionsOffset) {
+    if (source != symbolTable.getSource()
+        || signatureIndex != this.signatureIndex
+        || hasDeprecatedAttribute != ((accessFlags & Opcodes.ACC_DEPRECATED) != 0)) {
+      return false;
+    }
+    boolean needSyntheticAttribute =
+        symbolTable.getMajorVersion() < Opcodes.V1_5 && (accessFlags & Opcodes.ACC_SYNTHETIC) != 0;
+    if (hasSyntheticAttribute != needSyntheticAttribute) {
+      return false;
+    }
+    if (exceptionsOffset == 0) {
+      if (numberOfExceptions != 0) {
+        return false;
+      }
+    } else if (source.readUnsignedShort(exceptionsOffset) == numberOfExceptions) {
+      int currentExceptionOffset = exceptionsOffset + 2;
+      for (int i = 0; i < numberOfExceptions; ++i) {
+        if (source.readUnsignedShort(currentExceptionOffset) != exceptionIndexTable[i]) {
+          return false;
+        }
+        currentExceptionOffset += 2;
+      }
+    }
+    // Don't copy the attributes yet, instead store their location in the source class reader so
+    // they can be copied later, in {@link #putMethodInfo}. Note that we skip the 6 header bytes
+    // of the method_info JVMS structure.
+    this.sourceOffset = methodInfoOffset + 6;
+    this.sourceLength = methodInfoLength - 6;
+    return true;
+  }
+
+  /**
    * Returns the size of the method_info JVMS structure generated by this MethodWriter. Also add the
    * names of the attributes of this method in the constant pool.
    *
@@ -2086,7 +2183,7 @@ final class MethodWriter extends MethodVisitor {
     output.putShort(accessFlags & ~mask).putShort(nameIndex).putShort(descriptorIndex);
     // If this method_info must be copied from an existing one, copy it now and return early.
     if (sourceOffset != 0) {
-      output.putByteArray(getSource().b, sourceOffset, sourceLength);
+      output.putByteArray(symbolTable.getSource().b, sourceOffset, sourceLength);
       return;
     }
     // For ease of reference, we use here the same attribute order as in Section 4.7 of the JVMS.

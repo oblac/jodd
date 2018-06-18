@@ -749,6 +749,9 @@ class Frame {
           case Symbol.CONSTANT_METHOD_HANDLE_TAG:
             push(REFERENCE_KIND | symbolTable.addType("java/lang/invoke/MethodHandle"));
             break;
+          case Symbol.CONSTANT_DYNAMIC_TAG:
+            push(symbolTable, argSymbol.value);
+            break;
           default:
             throw new AssertionError();
         }

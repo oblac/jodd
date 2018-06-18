@@ -48,15 +48,6 @@ final class Context {
   /** The buffer used to read strings in the constant pool. */
   char[] charBuffer;
 
-  /**
-   * The start offsets in {@link ClassReader#b} of each element of the bootstrap_methods array (in
-   * the BootstrapMethod attribute).
-   *
-   * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.23">JVMS
-   *     4.7.23</a>
-   */
-  int[] bootstrapMethodOffsets;
-
   // Information about the current method, i.e. the one read in the current (or latest) call
   // to {@link ClassReader#readMethod()}.
 

@@ -45,6 +45,11 @@ public class ClassWriter extends ClassVisitor {
    * #visitMethod} method will be ignored, and computed automatically from the signature and the
    * bytecode of each method.
    *
+   * <p><b>Note:</b> for classes whose version is {@link Opcodes#V1_7} of more, this option requires
+   * valid stack map frames. The maximum stack size is then computed from these frames, and from the
+   * bytecode instructions in between. If stack map frames are not present or must be recomputed,
+   * used {@link #COMPUTE_FRAMES} instead.
+   *
    * @see #ClassWriter(int)
    */
   public static final int COMPUTE_MAXS = 1;
@@ -116,10 +121,10 @@ public class ClassWriter extends ClassVisitor {
   private MethodWriter lastMethod;
 
   /** The number_of_classes field of the InnerClasses attribute, or 0. */
-  private int numberOfClasses;
+  private int numberOfInnerClasses;
 
   /** The 'classes' array of the InnerClasses attribute, or <tt>null</tt>. */
-  private ByteVector classes;
+  private ByteVector innerClasses;
 
   /** The class_index field of the EnclosingMethod attribute, or 0. */
   private int enclosingClassIndex;
@@ -162,6 +167,15 @@ public class ClassWriter extends ClassVisitor {
 
   /** The Module attribute of this class, or <tt>null</tt>. */
   private ModuleWriter moduleWriter;
+
+  /** The host_class_index field of the NestHost attribute, or 0. */
+  private int nestHostClassIndex;
+
+  /** The number_of_classes field of the NestMembers attribute, or 0. */
+  private int numberOfNestMemberClasses;
+
+  /** The 'classes' array of the NestMembers attribute, or <tt>null</tt>. */
+  private ByteVector nestMemberClasses;
 
   /**
    * The first non standard attribute of this class. The next ones can be accessed with the {@link
@@ -257,6 +271,9 @@ public class ClassWriter extends ClassVisitor {
         this.interfaces[i] = symbolTable.addConstantClass(interfaces[i]).index;
       }
     }
+    if (compute == MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL && (version & 0xFFFF) >= Opcodes.V1_7) {
+      compute = MethodWriter.COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES;
+    }
   }
 
   @Override
@@ -278,6 +295,11 @@ public class ClassWriter extends ClassVisitor {
             symbolTable.addConstantModule(name).index,
             access,
             version == null ? 0 : symbolTable.addConstantUtf8(version));
+  }
+
+  @Override
+  public void visitNestHostExperimental(final String nestHost) {
+    nestHostClassIndex = symbolTable.addConstantClass(nestHost).index;
   }
 
   @Override
@@ -333,10 +355,19 @@ public class ClassWriter extends ClassVisitor {
   }
 
   @Override
+  public void visitNestMemberExperimental(final String nestMember) {
+    if (nestMemberClasses == null) {
+      nestMemberClasses = new ByteVector();
+    }
+    ++numberOfNestMemberClasses;
+    nestMemberClasses.putShort(symbolTable.addConstantClass(nestMember).index);
+  }
+
+  @Override
   public final void visitInnerClass(
       final String name, final String outerName, final String innerName, final int access) {
-    if (classes == null) {
-      classes = new ByteVector();
+    if (innerClasses == null) {
+      innerClasses = new ByteVector();
     }
     // Section 4.7.6 of the JVMS states "Every CONSTANT_Class_info entry in the constant_pool table
     // which represents a class or interface C that is not a package member must have exactly one
@@ -346,12 +377,12 @@ public class ClassWriter extends ClassVisitor {
     // the info field. This trick allows duplicate detection in O(1) time.
     Symbol nameSymbol = symbolTable.addConstantClass(name);
     if (nameSymbol.info == 0) {
-      ++numberOfClasses;
-      classes.putShort(nameSymbol.index);
-      classes.putShort(outerName == null ? 0 : symbolTable.addConstantClass(outerName).index);
-      classes.putShort(innerName == null ? 0 : symbolTable.addConstantUtf8(innerName));
-      classes.putShort(access);
-      nameSymbol.info = numberOfClasses;
+      ++numberOfInnerClasses;
+      innerClasses.putShort(nameSymbol.index);
+      innerClasses.putShort(outerName == null ? 0 : symbolTable.addConstantClass(outerName).index);
+      innerClasses.putShort(innerName == null ? 0 : symbolTable.addConstantUtf8(innerName));
+      innerClasses.putShort(access);
+      nameSymbol.info = numberOfInnerClasses;
     } else {
       // Compare the inner classes entry nameSymbol.info - 1 with the arguments of this method and
       // throw an exception if there is a difference?
@@ -428,9 +459,9 @@ public class ClassWriter extends ClassVisitor {
     }
     // For ease of reference, we use here the same attribute order as in Section 4.7 of the JVMS.
     int attributesCount = 0;
-    if (classes != null) {
+    if (innerClasses != null) {
       ++attributesCount;
-      size += 8 + classes.length;
+      size += 8 + innerClasses.length;
       symbolTable.addConstantUtf8(Constants.INNER_CLASSES);
     }
     if (enclosingClassIndex != 0) {
@@ -495,6 +526,16 @@ public class ClassWriter extends ClassVisitor {
       attributesCount += moduleWriter.getAttributeCount();
       size += moduleWriter.computeAttributesSize();
     }
+    if (nestHostClassIndex != 0) {
+      ++attributesCount;
+      size += 8;
+      symbolTable.addConstantUtf8(Constants.NEST_HOST);
+    }
+    if (nestMemberClasses != null) {
+      ++attributesCount;
+      size += 8 + nestMemberClasses.length;
+      symbolTable.addConstantUtf8(Constants.NEST_MEMBERS);
+    }
     if (firstAttribute != null) {
       attributesCount += firstAttribute.getAttributeCount();
       size += firstAttribute.computeAttributesSize(symbolTable);
@@ -535,12 +576,12 @@ public class ClassWriter extends ClassVisitor {
     }
     // For ease of reference, we use here the same attribute order as in Section 4.7 of the JVMS.
     result.putShort(attributesCount);
-    if (classes != null) {
+    if (innerClasses != null) {
       result
           .putShort(symbolTable.addConstantUtf8(Constants.INNER_CLASSES))
-          .putInt(classes.length + 2)
-          .putShort(numberOfClasses)
-          .putByteArray(classes.data, 0, classes.length);
+          .putInt(innerClasses.length + 2)
+          .putShort(numberOfInnerClasses)
+          .putByteArray(innerClasses.data, 0, innerClasses.length);
     }
     if (enclosingClassIndex != 0) {
       result
@@ -594,34 +635,63 @@ public class ClassWriter extends ClassVisitor {
     if (moduleWriter != null) {
       moduleWriter.putAttributes(result);
     }
+    if (nestHostClassIndex != 0) {
+      result
+          .putShort(symbolTable.addConstantUtf8(Constants.NEST_HOST))
+          .putInt(2)
+          .putShort(nestHostClassIndex);
+    }
+    if (nestMemberClasses != null) {
+      result
+          .putShort(symbolTable.addConstantUtf8(Constants.NEST_MEMBERS))
+          .putInt(nestMemberClasses.length + 2)
+          .putShort(numberOfNestMemberClasses)
+          .putByteArray(nestMemberClasses.data, 0, nestMemberClasses.length);
+    }
     if (firstAttribute != null) {
       firstAttribute.putAttributes(symbolTable, result);
     }
 
-    // Third step: do a ClassReader->ClassWriter round trip if the generated class contains ASM
-    // specific instructions due to large forward jumps.
+    // Third step: replace the ASM specific instructions, if any.
     if (hasAsmInstructions) {
-      Attribute[] attributes = getAttributePrototypes();
-      firstField = null;
-      lastField = null;
-      firstMethod = null;
-      lastMethod = null;
-      lastRuntimeVisibleAnnotation = null;
-      lastRuntimeInvisibleAnnotation = null;
-      lastRuntimeVisibleTypeAnnotation = null;
-      lastRuntimeInvisibleTypeAnnotation = null;
-      moduleWriter = null;
-      firstAttribute = null;
-      compute = hasFrames ? MethodWriter.COMPUTE_INSERTED_FRAMES : MethodWriter.COMPUTE_NOTHING;
-      new ClassReader(result.data, 0, /* checkClassVersion = */ false)
-          .accept(
-              this,
-              attributes,
-              (hasFrames ? ClassReader.EXPAND_FRAMES : 0) | ClassReader.EXPAND_ASM_INSNS);
-      return toByteArray();
+      return replaceAsmInstructions(result.data, hasFrames);
     } else {
       return result.data;
     }
+  }
+
+  /**
+   * Returns the equivalent of the given class file, with the ASM specific instructions replaced
+   * with standard ones. This is done with a ClassReader -&gt; ClassWriter round trip.
+   *
+   * @param classFile a class file containing ASM specific instructions, generated by this
+   *     ClassWriter.
+   * @param hasFrames whether there is at least one stack map frames in 'classFile'.
+   * @return an equivalent of 'classFile', with the ASM specific instructions replaced with standard
+   *     ones.
+   */
+  private byte[] replaceAsmInstructions(final byte[] classFile, final boolean hasFrames) {
+    Attribute[] attributes = getAttributePrototypes();
+    firstField = null;
+    lastField = null;
+    firstMethod = null;
+    lastMethod = null;
+    lastRuntimeVisibleAnnotation = null;
+    lastRuntimeInvisibleAnnotation = null;
+    lastRuntimeVisibleTypeAnnotation = null;
+    lastRuntimeInvisibleTypeAnnotation = null;
+    moduleWriter = null;
+    nestHostClassIndex = 0;
+    numberOfNestMemberClasses = 0;
+    nestMemberClasses = null;
+    firstAttribute = null;
+    compute = hasFrames ? MethodWriter.COMPUTE_INSERTED_FRAMES : MethodWriter.COMPUTE_NOTHING;
+    new ClassReader(classFile, 0, /* checkClassVersion = */ false)
+        .accept(
+            this,
+            attributes,
+            (hasFrames ? ClassReader.EXPAND_FRAMES : 0) | ClassReader.EXPAND_ASM_INSNS);
+    return toByteArray();
   }
 
   /**
@@ -766,6 +836,27 @@ public class ClassWriter extends ClassVisitor {
       final String descriptor,
       final boolean isInterface) {
     return symbolTable.addConstantMethodHandle(tag, owner, name, descriptor, isInterface).index;
+  }
+
+  /**
+   * Adds a dynamic constant reference to the constant pool of the class being build. Does nothing
+   * if the constant pool already contains a similar item. <i>This method is intended for {@link
+   * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
+   *
+   * @param name name of the invoked method.
+   * @param descriptor field descriptor of the constant type.
+   * @param bootstrapMethodHandle the bootstrap method.
+   * @param bootstrapMethodArguments the bootstrap method constant arguments.
+   * @return the index of a new or already existing dynamic constant reference item.
+   */
+  public int newConstantDynamic(
+      final String name,
+      final String descriptor,
+      final Handle bootstrapMethodHandle,
+      final Object... bootstrapMethodArguments) {
+    return symbolTable.addConstantDynamic(
+            name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments)
+        .index;
   }
 
   /**

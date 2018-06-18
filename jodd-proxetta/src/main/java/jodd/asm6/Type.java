@@ -79,35 +79,36 @@ public class Type {
   private static final int INTERNAL = 12;
 
   /** The descriptors of the primitive types. */
-  private static final char[] PRIMITIVE_DESCRIPTORS =
-      new char[] {'V', 'Z', 'C', 'B', 'S', 'I', 'F', 'J', 'D'};
+  private static final String PRIMITIVE_DESCRIPTORS = "VZCBSIFJD";
 
   /** The <tt>void</tt> type. */
-  public static final Type VOID_TYPE = new Type(VOID, PRIMITIVE_DESCRIPTORS, VOID, 1);
+  public static final Type VOID_TYPE = new Type(VOID, PRIMITIVE_DESCRIPTORS, VOID, VOID + 1);
 
   /** The <tt>boolean</tt> type. */
-  public static final Type BOOLEAN_TYPE = new Type(BOOLEAN, PRIMITIVE_DESCRIPTORS, BOOLEAN, 1);
+  public static final Type BOOLEAN_TYPE =
+      new Type(BOOLEAN, PRIMITIVE_DESCRIPTORS, BOOLEAN, BOOLEAN + 1);
 
   /** The <tt>char</tt> type. */
-  public static final Type CHAR_TYPE = new Type(CHAR, PRIMITIVE_DESCRIPTORS, CHAR, 1);
+  public static final Type CHAR_TYPE = new Type(CHAR, PRIMITIVE_DESCRIPTORS, CHAR, CHAR + 1);
 
   /** The <tt>byte</tt> type. */
-  public static final Type BYTE_TYPE = new Type(BYTE, PRIMITIVE_DESCRIPTORS, BYTE, 1);
+  public static final Type BYTE_TYPE = new Type(BYTE, PRIMITIVE_DESCRIPTORS, BYTE, BYTE + 1);
 
   /** The <tt>short</tt> type. */
-  public static final Type SHORT_TYPE = new Type(SHORT, PRIMITIVE_DESCRIPTORS, SHORT, 1);
+  public static final Type SHORT_TYPE = new Type(SHORT, PRIMITIVE_DESCRIPTORS, SHORT, SHORT + 1);
 
   /** The <tt>int</tt> type. */
-  public static final Type INT_TYPE = new Type(INT, PRIMITIVE_DESCRIPTORS, INT, 1);
+  public static final Type INT_TYPE = new Type(INT, PRIMITIVE_DESCRIPTORS, INT, INT + 1);
 
   /** The <tt>float</tt> type. */
-  public static final Type FLOAT_TYPE = new Type(FLOAT, PRIMITIVE_DESCRIPTORS, FLOAT, 1);
+  public static final Type FLOAT_TYPE = new Type(FLOAT, PRIMITIVE_DESCRIPTORS, FLOAT, FLOAT + 1);
 
   /** The <tt>long</tt> type. */
-  public static final Type LONG_TYPE = new Type(LONG, PRIMITIVE_DESCRIPTORS, LONG, 1);
+  public static final Type LONG_TYPE = new Type(LONG, PRIMITIVE_DESCRIPTORS, LONG, LONG + 1);
 
   /** The <tt>double</tt> type. */
-  public static final Type DOUBLE_TYPE = new Type(DOUBLE, PRIMITIVE_DESCRIPTORS, DOUBLE, 1);
+  public static final Type DOUBLE_TYPE =
+      new Type(DOUBLE, PRIMITIVE_DESCRIPTORS, DOUBLE, DOUBLE + 1);
 
   // -----------------------------------------------------------------------------------------------
   // Fields
@@ -125,25 +126,25 @@ public class Type {
    * {@link #OBJECT} and {@link #INTERNAL} types, and a field or method descriptor in the other
    * cases.
    *
-   * <p>For {@link #OBJECT} types, this field also contains the descriptor: the {@link #valueLength}
-   * chars after {@link #valueOffset} contain the internal name, and the {@link #valueLength} + 2
-   * chars after {@link #valueOffset} - 1 contain the descriptor.
+   * <p>For {@link #OBJECT} types, this field also contains the descriptor: the characters in
+   * [{@link #valueBegin},{@link #valueEnd}) contain the internal name, and those in [{@link
+   * #valueBegin} - 1, {@link #valueEnd} + 1) contain the descriptor.
    */
-  private final char[] valueBuffer;
+  private final String valueBuffer;
 
   /**
-   * The offset of the value of this Java field or method type in {@link #valueBuffer}. This value
-   * is an internal name for {@link #OBJECT} and {@link #INTERNAL} types, and a field or method
-   * descriptor in the other cases.
+   * The beginning index, inclusive, of the value of this Java field or method type in {@link
+   * #valueBuffer}. This value is an internal name for {@link #OBJECT} and {@link #INTERNAL} types,
+   * and a field or method descriptor in the other cases.
    */
-  private final int valueOffset;
+  private final int valueBegin;
 
   /**
-   * The length of the value of this Java field or method type in {@link #valueBuffer}. This value
-   * is an internal name for {@link #OBJECT} and {@link #INTERNAL} types, and a field or method
-   * descriptor in the other cases.
+   * The end index, exclusive, of the value of this Java field or method type in {@link
+   * #valueBuffer}. This value is an internal name for {@link #OBJECT} and {@link #INTERNAL} types,
+   * and a field or method descriptor in the other cases.
    */
-  private final int valueLength;
+  private final int valueEnd;
 
   // -----------------------------------------------------------------------------------------------
   // Constructors
@@ -154,15 +155,16 @@ public class Type {
    *
    * @param sort the sort of this type, see {@link #sort}.
    * @param valueBuffer a buffer containing the value of this field or method type.
-   * @param valueOffset the offset of the value of this field or method type in valueBuffer.
-   * @param valueLength the length of the value of this field or method type.
+   * @param valueBegin the beginning index, inclusive, of the value of this field or method type in
+   *     valueBuffer.
+   * @param valueEnd tne end index, exclusive, of the value of this field or method type in
+   *     valueBuffer.
    */
-  private Type(
-      final int sort, final char[] valueBuffer, final int valueOffset, final int valueLength) {
+  private Type(final int sort, final String valueBuffer, final int valueBegin, final int valueEnd) {
     this.sort = sort;
     this.valueBuffer = valueBuffer;
-    this.valueOffset = valueOffset;
-    this.valueLength = valueLength;
+    this.valueBegin = valueBegin;
+    this.valueEnd = valueEnd;
   }
 
   /**
@@ -172,8 +174,7 @@ public class Type {
    * @return the {@link Type} corresponding to the given type descriptor.
    */
   public static Type getType(final String typeDescriptor) {
-    final char[] valueBuffer = typeDescriptor.toCharArray();
-    return getType(valueBuffer, 0, valueBuffer.length);
+    return getType(typeDescriptor, 0, typeDescriptor.length());
   }
 
   /**
@@ -183,8 +184,8 @@ public class Type {
    * @return the {@link Type} corresponding to the given internal name.
    */
   public static Type getObjectType(final String internalName) {
-    final char[] valueBuffer = internalName.toCharArray();
-    return new Type(valueBuffer[0] == '[' ? ARRAY : INTERNAL, valueBuffer, 0, valueBuffer.length);
+    return new Type(
+        internalName.charAt(0) == '[' ? ARRAY : INTERNAL, internalName, 0, internalName.length());
   }
 
   /**
@@ -195,8 +196,7 @@ public class Type {
    * @return the {@link Type} corresponding to the given method descriptor.
    */
   public static Type getMethodType(final String methodDescriptor) {
-    final char[] valueBuffer = methodDescriptor.toCharArray();
-    return new Type(METHOD, valueBuffer, 0, valueBuffer.length);
+    return new Type(METHOD, methodDescriptor, 0, methodDescriptor.length());
   }
 
   /**
@@ -274,17 +274,16 @@ public class Type {
    */
   public static Type[] getArgumentTypes(final String methodDescriptor) {
     // First step: compute the number of argument types in methodDescriptor.
-    final char[] valueBuffer = methodDescriptor.toCharArray();
     int numArgumentTypes = 0;
     // Skip the first character, which is always a '('.
     int currentOffset = 1;
     // Parse the argument types, one at a each loop iteration.
-    while (valueBuffer[currentOffset] != ')') {
-      while (valueBuffer[currentOffset] == '[') {
+    while (methodDescriptor.charAt(currentOffset) != ')') {
+      while (methodDescriptor.charAt(currentOffset) == '[') {
         currentOffset++;
       }
-      if (valueBuffer[currentOffset++] == 'L') {
-        while (valueBuffer[currentOffset++] != ';') {
+      if (methodDescriptor.charAt(currentOffset++) == 'L') {
+        while (methodDescriptor.charAt(currentOffset++) != ';') {
           // Skip the argument descriptor content.
         }
       }
@@ -297,19 +296,18 @@ public class Type {
     currentOffset = 1;
     // Parse and create the argument types, one at each loop iteration.
     int currentArgumentTypeIndex = 0;
-    while (valueBuffer[currentOffset] != ')') {
+    while (methodDescriptor.charAt(currentOffset) != ')') {
       final int currentArgumentTypeOffset = currentOffset;
-      while (valueBuffer[currentOffset] == '[') {
+      while (methodDescriptor.charAt(currentOffset) == '[') {
         currentOffset++;
       }
-      if (valueBuffer[currentOffset++] == 'L') {
-        while (valueBuffer[currentOffset++] != ';') {
+      if (methodDescriptor.charAt(currentOffset++) == 'L') {
+        while (methodDescriptor.charAt(currentOffset++) != ';') {
           // Skip the argument descriptor content.
         }
       }
       argumentTypes[currentArgumentTypeIndex++] =
-          getType(
-              valueBuffer, currentArgumentTypeOffset, currentOffset - currentArgumentTypeOffset);
+          getType(methodDescriptor, currentArgumentTypeOffset, currentOffset);
     }
     return argumentTypes;
   }
@@ -336,21 +334,20 @@ public class Type {
    * @return the {@link Type} corresponding to the return type of the given method descriptor.
    */
   public static Type getReturnType(final String methodDescriptor) {
-    final char[] valueBuffer = methodDescriptor.toCharArray();
     // Skip the first character, which is always a '('.
     int currentOffset = 1;
     // Skip the argument types, one at a each loop iteration.
-    while (valueBuffer[currentOffset] != ')') {
-      while (valueBuffer[currentOffset] == '[') {
+    while (methodDescriptor.charAt(currentOffset) != ')') {
+      while (methodDescriptor.charAt(currentOffset) == '[') {
         currentOffset++;
       }
-      if (valueBuffer[currentOffset++] == 'L') {
-        while (valueBuffer[currentOffset++] != ';') {
+      if (methodDescriptor.charAt(currentOffset++) == 'L') {
+        while (methodDescriptor.charAt(currentOffset++) != ';') {
           // Skip the argument descriptor content.
         }
       }
     }
-    return getType(valueBuffer, currentOffset + 1, valueBuffer.length - currentOffset - 1);
+    return getType(methodDescriptor, currentOffset + 1, methodDescriptor.length());
   }
 
   /**
@@ -408,13 +405,15 @@ public class Type {
    * Returns the {@link Type} corresponding to the given field or method descriptor.
    *
    * @param descriptorBuffer a buffer containing the field or method descriptor.
-   * @param descriptorOffset the offset of the field or method descriptor in descriptorBuffer.
-   * @param descriptorLength the length of the field or method descriptor.
+   * @param descriptorBegin the beginning index, inclusive, of the field or method descriptor in
+   *     descriptorBuffer.
+   * @param descriptorEnd the end index, exclusive, of the field or method descriptor in
+   *     descriptorBuffer.
    * @return the {@link Type} corresponding to the given type descriptor.
    */
   private static Type getType(
-      final char[] descriptorBuffer, final int descriptorOffset, final int descriptorLength) {
-    switch (descriptorBuffer[descriptorOffset]) {
+      final String descriptorBuffer, final int descriptorBegin, final int descriptorEnd) {
+    switch (descriptorBuffer.charAt(descriptorBegin)) {
       case 'V':
         return VOID_TYPE;
       case 'Z':
@@ -434,11 +433,11 @@ public class Type {
       case 'D':
         return DOUBLE_TYPE;
       case '[':
-        return new Type(ARRAY, descriptorBuffer, descriptorOffset, descriptorLength);
+        return new Type(ARRAY, descriptorBuffer, descriptorBegin, descriptorEnd);
       case 'L':
-        return new Type(OBJECT, descriptorBuffer, descriptorOffset + 1, descriptorLength - 2);
+        return new Type(OBJECT, descriptorBuffer, descriptorBegin + 1, descriptorEnd - 1);
       case '(':
-        return new Type(METHOD, descriptorBuffer, descriptorOffset, descriptorLength);
+        return new Type(METHOD, descriptorBuffer, descriptorBegin, descriptorEnd);
       default:
         throw new IllegalArgumentException();
     }
@@ -467,7 +466,7 @@ public class Type {
    */
   public int getDimensions() {
     int numDimensions = 1;
-    while (valueBuffer[valueOffset + numDimensions] == '[') {
+    while (valueBuffer.charAt(valueBegin + numDimensions) == '[') {
       numDimensions++;
     }
     return numDimensions;
@@ -481,7 +480,7 @@ public class Type {
    */
   public Type getElementType() {
     final int numDimensions = getDimensions();
-    return getType(valueBuffer, valueOffset + numDimensions, valueLength - numDimensions);
+    return getType(valueBuffer, valueBegin + numDimensions, valueEnd);
   }
 
   /**
@@ -518,7 +517,7 @@ public class Type {
         return stringBuilder.toString();
       case OBJECT:
       case INTERNAL:
-        return new String(valueBuffer, valueOffset, valueLength).replace('/', '.');
+        return valueBuffer.substring(valueBegin, valueEnd).replace('/', '.');
       default:
         throw new AssertionError();
     }
@@ -532,7 +531,7 @@ public class Type {
    * @return the internal name of the class corresponding to this object type.
    */
   public String getInternalName() {
-    return new String(valueBuffer, valueOffset, valueLength);
+    return valueBuffer.substring(valueBegin, valueEnd);
   }
 
   /**
@@ -579,15 +578,15 @@ public class Type {
    */
   public String getDescriptor() {
     if (sort == OBJECT) {
-      return new String(valueBuffer, valueOffset - 1, valueLength + 2);
+      return valueBuffer.substring(valueBegin - 1, valueEnd + 1);
     } else if (sort == INTERNAL) {
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append('L');
-      stringBuilder.append(valueBuffer, valueOffset, valueLength);
+      stringBuilder.append(valueBuffer, valueBegin, valueEnd);
       stringBuilder.append(';');
       return stringBuilder.toString();
     } else {
-      return new String(valueBuffer, valueOffset, valueLength);
+      return valueBuffer.substring(valueBegin, valueEnd);
     }
   }
 
@@ -616,13 +615,13 @@ public class Type {
    */
   private void appendDescriptor(final StringBuilder stringBuilder) {
     if (sort == OBJECT) {
-      stringBuilder.append(valueBuffer, valueOffset - 1, valueLength + 2);
+      stringBuilder.append(valueBuffer, valueBegin - 1, valueEnd + 1);
     } else if (sort == INTERNAL) {
       stringBuilder.append('L');
-      stringBuilder.append(valueBuffer, valueOffset, valueLength);
+      stringBuilder.append(valueBuffer, valueBegin, valueEnd);
       stringBuilder.append(';');
     } else {
-      stringBuilder.append(valueBuffer, valueOffset, valueLength);
+      stringBuilder.append(valueBuffer, valueBegin, valueEnd);
     }
   }
 
@@ -863,16 +862,16 @@ public class Type {
     if ((sort == INTERNAL ? OBJECT : sort) != (other.sort == INTERNAL ? OBJECT : other.sort)) {
       return false;
     }
-    int start = valueOffset;
-    int end = start + valueLength;
-    int otherStart = other.valueOffset;
-    int otherEnd = otherStart + other.valueLength;
+    int begin = valueBegin;
+    int end = valueEnd;
+    int otherBegin = other.valueBegin;
+    int otherEnd = other.valueEnd;
     // Compare the values.
-    if (end - start != otherEnd - otherStart) {
+    if (end - begin != otherEnd - otherBegin) {
       return false;
     }
-    for (int i = start, j = otherStart; i < end; i++, j++) {
-      if (valueBuffer[i] != other.valueBuffer[j]) {
+    for (int i = begin, j = otherBegin; i < end; i++, j++) {
+      if (valueBuffer.charAt(i) != other.valueBuffer.charAt(j)) {
         return false;
       }
     }
@@ -888,8 +887,8 @@ public class Type {
   public int hashCode() {
     int hashCode = 13 * (sort == INTERNAL ? OBJECT : sort);
     if (sort >= ARRAY) {
-      for (int i = valueOffset, end = valueOffset + valueLength; i < end; i++) {
-        hashCode = 17 * (hashCode + valueBuffer[i]);
+      for (int i = valueBegin, end = valueEnd; i < end; i++) {
+        hashCode = 17 * (hashCode + valueBuffer.charAt(i));
       }
     }
     return hashCode;
