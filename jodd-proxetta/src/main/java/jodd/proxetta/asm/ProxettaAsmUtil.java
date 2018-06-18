@@ -33,6 +33,7 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxettaNames;
 import jodd.proxetta.TypeInfo;
+import jodd.system.SystemUtil;
 import jodd.util.ClassUtil;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
@@ -96,6 +97,18 @@ public class ProxettaAsmUtil {
 	public static final String INIT = "<init>";
 	public static final String CLINIT = "<clinit>";
 	public static final String DESC_VOID = "()V";
+
+	// ---------------------------------------------------------------- versions
+
+	/**
+	 * Resolves Java version from current version.
+	 */
+	public static int resolveJavaVersion(final int version) {
+		final int javaVersionNumber = SystemUtil.info().getJavaVersionNumber();
+		final int platformVersion = javaVersionNumber - 8 + 52;
+
+		return version > platformVersion ? version : platformVersion;
+	}
 
 	// ---------------------------------------------------------------- misc
 

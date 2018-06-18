@@ -107,7 +107,8 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 				//interfaces = null;
 			}
 		}
-		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, interfaces);
+		final int v = ProxettaAsmUtil.resolveJavaVersion(version);
+		wd.dest.visit(v, access, wd.thisReference, signature, wd.superName, interfaces);
 
 		wd.proxyAspects = new ProxyAspectData[aspects.length];
 		for (int i = 0; i < aspects.length; i++) {

@@ -67,7 +67,8 @@ public class InvokeClassBuilder extends ClassAdapter {
 		wd.init(name, superName, suffix, reqProxyClassName);
 
 		// write destination class
-		super.visit(version, access, wd.thisReference, signature, wd.superName, interfaces);
+		final int v = ProxettaAsmUtil.resolveJavaVersion(version);
+		super.visit(v, access, wd.thisReference, signature, wd.superName, interfaces);
 	}
 
 	@Override

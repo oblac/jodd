@@ -100,7 +100,8 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		access &= ~AsmUtil.ACC_ABSTRACT;
 
 		// write destination class
-		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, null);
+		final int v = ProxettaAsmUtil.resolveJavaVersion(version);
+		wd.dest.visit(v, access, wd.thisReference, signature, wd.superName, null);
 
 		wd.proxyAspects = new ProxyAspectData[aspects.length];
 		for (int i = 0; i < aspects.length; i++) {
