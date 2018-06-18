@@ -20,5 +20,5 @@ dependencies {
 	testCompile lib.postgresql
 	testCompile lib.mssql
 	testCompile lib.mockito
-	testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+	testCompile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
