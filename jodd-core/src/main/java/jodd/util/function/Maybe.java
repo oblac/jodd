@@ -72,10 +72,17 @@ public interface Maybe<T> extends Iterable<T> {
 	Stream<T> stream();
 
 	/**
+	 * Use a maybe of given value if this one is NOTHING.
+	 */
+	Maybe<T> or(T otherValue);
+	/**
 	 * Use give maybe if this one is NOTHING.
 	 */
 	Maybe<T> or(Maybe<T> maybe);
 
+	/**
+	 * Use supplied value if this one is NOTHING.
+	 */
 	Maybe<T> or​(Supplier<? extends Maybe<? extends T>> supplier);
 
 	/**
@@ -122,6 +129,11 @@ public interface Maybe<T> extends Iterable<T> {
 			@Override
 			public Stream<T> stream() {
 				return Stream.empty();
+			}
+
+			@Override
+			public Maybe<T> or(final T otherValue) {
+				return Maybe.of(otherValue);
 			}
 
 			@Override
@@ -211,6 +223,11 @@ public interface Maybe<T> extends Iterable<T> {
 		@Override
 		public Stream<T> stream() {
 			return Stream.of(value);
+		}
+
+		@Override
+		public Maybe<T> or(final T otherValue) {
+			return this;
 		}
 
 		@Override
