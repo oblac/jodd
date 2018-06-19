@@ -7,6 +7,10 @@ All notable changes to Jodd project are documented here.
 
 Minor fixes.
 
+### New Features
+
++ **core*** - added the `Maybe.or(T)` method.
+
 ### Bug Fixes
 
 + **cli** - fixed the behaviour of parameters
