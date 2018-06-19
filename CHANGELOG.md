@@ -10,6 +10,7 @@ Minor fixes.
 ### New Features
 
 + **core*** - added the `Maybe.or(T)` method.
++ **mail** - added `receive()` and fluent builder.
 
 ### Bug Fixes
 

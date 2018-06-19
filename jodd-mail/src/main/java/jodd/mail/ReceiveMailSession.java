@@ -33,6 +33,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import java.io.File;
+import java.util.function.Consumer;
 
 /**
  * Encapsulates {@link Email} receiving session. Prepares and receives {@link Email}s.
@@ -48,7 +49,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	/**
 	 * The current folder.
 	 */
-	private Folder folder;
+	Folder folder;
 
 	private final File attachmentStorage;
 
@@ -114,6 +115,17 @@ public class ReceiveMailSession extends MailSession<Store> {
 			}
 		} catch (final MessagingException msgexc) {
 			throw new MailException("Failed to connect to folder: " + folderName, msgexc);
+		}
+	}
+
+	/**
+	 * Just returns a folder, w/o opening.
+	 */
+	public Folder getFolder(final String folder) {
+		try {
+			return getService().getFolder(folder);
+		} catch (MessagingException e) {
+			throw new MailException("Folder not found: " + folder, e);
 		}
 	}
 
@@ -199,6 +211,15 @@ public class ReceiveMailSession extends MailSession<Store> {
 		}
 	}
 
+	// ---------------------------------------------------------------- receive builder
+
+	/**
+	 * Defines the process of received email in an fluent way.
+	 */
+	public ReceiverBuilder receive() {
+		return new ReceiverBuilder(this);
+	}
+
 	// ---------------------------------------------------------------- receive emails
 
 	/**
@@ -207,10 +228,9 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * unseen.
 	 *
 	 * @return array of {@link ReceivedEmail}s.
-	 * @see #receive(EmailFilter, Flags)
 	 */
 	public ReceivedEmail[] receiveEmail() {
-		return receive(null, null);
+		return receiveMessages(null, null, false, null);
 	}
 
 	/**
@@ -220,10 +240,9 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 *
 	 * @param filter {@link EmailFilter}
 	 * @return array of {@link ReceivedEmail}s.
-	 * @see #receive(EmailFilter, Flags)
 	 */
 	public ReceivedEmail[] receiveEmail(final EmailFilter filter) {
-		return receive(filter, null);
+		return receiveMessages(filter, null, false, null);
 	}
 
 	/**
@@ -242,12 +261,11 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 *
 	 * @param filter {@link EmailFilter}
 	 * @return array of {@link ReceivedEmail}s.
-	 * @see #receive(EmailFilter, Flags)
 	 */
 	public ReceivedEmail[] receiveEmailAndMarkSeen(final EmailFilter filter) {
 		final Flags flags = new Flags();
 		flags.add(Flags.Flag.SEEN);
-		return receive(filter, flags);
+		return receiveMessages(filter, flags, false, null);
 	}
 
 	/**
@@ -265,26 +283,12 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 *
 	 * @param filter {@link EmailFilter}
 	 * @return array of {@link ReceivedEmail}s.
-	 * @see #receive(EmailFilter, Flags) s
 	 */
 	public ReceivedEmail[] receiveEmailAndDelete(final EmailFilter filter) {
 		final Flags flags = new Flags();
 		flags.add(Flags.Flag.SEEN);
 		flags.add(Flags.Flag.DELETED);
-		return receive(filter, flags);
-	}
-
-	/**
-	 * Receives all emails that match given {@link EmailFilter} and set given {@link Flags}.
-	 * Both filter and flags to set are optional. If flags to set is not provided, it forces 'seen'
-	 * flag to be unset.
-	 *
-	 * @param filter     {@link EmailFilter filter}
-	 * @param flagsToSet {@link Flags} to filter on
-	 * @return array of {@link ReceivedEmail}.
-	 */
-	public ReceivedEmail[] receive(final EmailFilter filter, final Flags flagsToSet) {
-		return receiveMessages(filter, flagsToSet, false);
+		return receiveMessages(filter, flags, false, null);
 	}
 
 	public ReceivedEmail[] receiveEnvelopes() {
@@ -292,10 +296,10 @@ public class ReceiveMailSession extends MailSession<Store> {
 	}
 
 	public ReceivedEmail[] receiveEnvelopes(final EmailFilter filter) {
-		return receiveMessages(filter, null, true);
+		return receiveMessages(filter, null, true, null);
 	}
 
-	private ReceivedEmail[] receiveMessages(final EmailFilter filter, final Flags flagsToSet, final boolean envelope) {
+	ReceivedEmail[] receiveMessages(final EmailFilter filter, final Flags flagsToSet, final boolean envelope, final Consumer<Message[]> processedMessageConsumer) {
 		if (folder == null) {
 			useDefaultFolder();
 		}
@@ -342,6 +346,10 @@ public class ReceiveMailSession extends MailSession<Store> {
 				}
 			}
 
+			if (processedMessageConsumer != null) {
+				processedMessageConsumer.accept(messages);
+			}
+
 			return emails;
 		} catch (final MessagingException msgexc) {
 			throw new MailException("Failed to fetch messages", msgexc);
@@ -384,4 +392,5 @@ public class ReceiveMailSession extends MailSession<Store> {
 		closeFolderIfOpened();
 		super.close();
 	}
+
 }

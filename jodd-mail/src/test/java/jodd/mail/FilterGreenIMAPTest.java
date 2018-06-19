@@ -111,7 +111,7 @@ class FilterGreenIMAPTest {
 
 			session.open();
 
-			receivedEmails2 = session.receiveEmail(EmailFilter.filter().messageId(receivedEmails[0].messageId()));
+			receivedEmails2 = session.receive().filter(EmailFilter.filter().messageId(receivedEmails[0].messageId())).get();
 
 			session.close();
 		}
