@@ -107,11 +107,10 @@ public class ReceiveMailSession extends MailSession<Store> {
 
 		try {
 			this.folder = getService().getFolder(folderName);
-
 			try {
-				openFolder(Folder.READ_WRITE, folderName);
+				folder.open(Folder.READ_WRITE);
 			} catch (final MailException ignore) {
-				openFolder(Folder.READ_ONLY, folderName);
+				folder.open(Folder.READ_ONLY);
 			}
 		} catch (final MessagingException msgexc) {
 			throw new MailException("Failed to connect to folder: " + folderName, msgexc);
@@ -130,14 +129,6 @@ public class ReceiveMailSession extends MailSession<Store> {
 	}
 
 	// ---------------------------------------------------------------- open
-
-	private void openFolder(final int mode, final String folderNameForErr) throws MailException {
-		try {
-			folder.open(mode);
-		} catch (final MessagingException msgexc) {
-			throw new MailException("Failed to open folder: " + folderNameForErr, msgexc);
-		}
-	}
 
 	/**
 	 * Opens default folder: DEFAULT_FOLDER.
