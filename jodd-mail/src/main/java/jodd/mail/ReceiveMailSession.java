@@ -50,6 +50,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * The current folder.
 	 */
 	Folder folder;
+	String folderName;
 
 	private final File attachmentStorage;
 
@@ -76,10 +77,10 @@ public class ReceiveMailSession extends MailSession<Store> {
 	// ---------------------------------------------------------------- folders
 
 	/**
-	 * Returns array of all {@link Folder}s as {@link String}s. You can use these names in
+	 * Returns array of all {@link Folder}s as {@code String}s. You can use these names in
 	 * {@link #useFolder(String)} method.
 	 *
-	 * @return array of all {@link Folder}s as {@link String}s.
+	 * @return array of all {@link Folder}s as {@code String}s.
 	 */
 	public String[] getAllFolders() {
 		final Folder[] folders;
@@ -103,9 +104,10 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @param folderName Folder to open
 	 */
 	public void useFolder(final String folderName) {
-		closeFolderIfOpened();
+		closeFolderIfOpened(folder);
 
 		try {
+			this.folderName = folderName;
 			this.folder = getService().getFolder(folderName);
 			try {
 				folder.open(Folder.READ_WRITE);
@@ -134,8 +136,19 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * Opens default folder: DEFAULT_FOLDER.
 	 */
 	public void useDefaultFolder() {
-		closeFolderIfOpened();
+		closeFolderIfOpened(folder);
 		useFolder(DEFAULT_FOLDER);
+	}
+
+	private void useAndOpenFolderIfNotSet() {
+		if (folder == null) {
+			if (folderName != null) {
+				useFolder(folderName);
+			}
+			else {
+				useDefaultFolder();
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------- message count
@@ -146,9 +159,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return The number of messages.
 	 */
 	public int getMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+		useAndOpenFolderIfNotSet();
 		try {
 			return folder.getMessageCount();
 		} catch (final MessagingException msgexc) {
@@ -162,9 +173,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return The number of new message.
 	 */
 	public int getNewMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+		useAndOpenFolderIfNotSet();
 		try {
 			return folder.getNewMessageCount();
 		} catch (final MessagingException msgexc) {
@@ -176,9 +185,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * Returns the number of unread messages.
 	 */
 	public int getUnreadMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+		useAndOpenFolderIfNotSet();
 		try {
 			return folder.getUnreadMessageCount();
 		} catch (final MessagingException msgexc) {
@@ -192,9 +199,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return The number of deleted messages.
 	 */
 	public int getDeletedMessageCount() {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+		useAndOpenFolderIfNotSet();
 		try {
 			return folder.getDeletedMessageCount();
 		} catch (final MessagingException msgexc) {
@@ -291,9 +296,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	}
 
 	ReceivedEmail[] receiveMessages(final EmailFilter filter, final Flags flagsToSet, final boolean envelope, final Consumer<Message[]> processedMessageConsumer) {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+		useAndOpenFolderIfNotSet();
 
 		final Message[] messages;
 
@@ -341,6 +344,13 @@ public class ReceiveMailSession extends MailSession<Store> {
 				processedMessageConsumer.accept(messages);
 			}
 
+			// if messages were marked to be deleted, we need to expunge the folder
+			if (flagsToSet != null) {
+				if (flagsToSet.contains(Flags.Flag.DELETED)) {
+					folder.expunge();
+				}
+			}
+
 			return emails;
 		} catch (final MessagingException msgexc) {
 			throw new MailException("Failed to fetch messages", msgexc);
@@ -354,9 +364,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * Updates the email flags on the server.
 	 */
 	public void updateEmailFlags(final ReceivedEmail receivedEmail) {
-		if (folder == null) {
-			useDefaultFolder();
-		}
+		useAndOpenFolderIfNotSet();
 		try {
 			folder.setFlags(new int[] {receivedEmail.messageNumber()}, receivedEmail.flags(),true);
 		} catch (MessagingException mex) {
@@ -369,7 +377,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	/**
 	 * Closes folder if opened and expunge deleted messages.
 	 */
-	protected void closeFolderIfOpened() {
+	protected void closeFolderIfOpened(final Folder folder) {
 		if (folder != null) {
 			try {
 				folder.close(true);
@@ -380,7 +388,9 @@ public class ReceiveMailSession extends MailSession<Store> {
 
 	@Override
 	public void close() {
-		closeFolderIfOpened();
+		closeFolderIfOpened(folder);
+		folder = null;
+		folderName = null;
 		super.close();
 	}
 
