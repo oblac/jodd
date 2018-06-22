@@ -51,6 +51,11 @@ public interface Maybe<T> extends Iterable<T> {
 		return just(value);
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	static <T> Maybe<T> of(final Optional<T> optionalValue) {
+		return optionalValue.map(Maybe::of).orElseGet(Maybe::nothing);
+	}
+
 	/**
 	 * Returns {@code true} if value is present.
 	 */
@@ -62,9 +67,15 @@ public interface Maybe<T> extends Iterable<T> {
 	boolean isNothing();
 
 	/**
+	 * Takes a default value and a function. If the Maybe value is Nothing, the function returns the default value.
+	 * Otherwise, it applies the function to the value inside the Just and returns the result.
+	 */
+	<V> V maybe(V defaultValue, Function<T, V> function);
+
+	/**
 	 * Consumes value if present.
 	 */
-	void consume(Consumer<T> consumer);
+	void consumeJust(Consumer<T> consumer);
 
 	/**
 	 * Returns empty or single-element stream.
@@ -75,6 +86,7 @@ public interface Maybe<T> extends Iterable<T> {
 	 * Use a maybe of given value if this one is NOTHING.
 	 */
 	Maybe<T> or(T otherValue);
+
 	/**
 	 * Use give maybe if this one is NOTHING.
 	 */
@@ -118,7 +130,12 @@ public interface Maybe<T> extends Iterable<T> {
 			}
 
 			@Override
-			public void consume(final Consumer<T> consumer) {
+			public <V> V maybe(final V defaultValue, final Function<T, V> function) {
+				return defaultValue;
+			}
+
+			@Override
+			public void consumeJust(final Consumer<T> consumer) {
 			}
 
 			@Override
@@ -211,7 +228,12 @@ public interface Maybe<T> extends Iterable<T> {
 		}
 
 		@Override
-		public void consume(final Consumer<T> consumer) {
+		public <V> V maybe(final V defaultValue, final Function<T, V> function) {
+			return function.apply(value);
+		}
+
+		@Override
+		public void consumeJust(final Consumer<T> consumer) {
 			consumer.accept(value);
 		}
 

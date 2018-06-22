@@ -42,7 +42,7 @@ class MaybeTest {
 		assertFalse(maybe.isNothing());
 
 		MutableInteger mi = new MutableInteger();
-		maybe.consume(mi::set);
+		maybe.consumeJust(mi::set);
 		assertEquals(173, mi.value);
 
 		Maybe<String> newMaybe = maybe.map(String::valueOf);
@@ -58,7 +58,7 @@ class MaybeTest {
 		assertTrue(maybe.isNothing());
 
 		MutableInteger mi = new MutableInteger();
-		maybe.consume(mi::set);
+		maybe.consumeJust(mi::set);
 		assertEquals(0, mi.value);
 
 		Maybe<String> newMaybe = maybe.map(String::valueOf);

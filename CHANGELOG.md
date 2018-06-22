@@ -5,7 +5,7 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.0...master)
 
-Minor fixes.
+Minor fixes and improvements.
 
 ### New Features
 
