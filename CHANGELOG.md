@@ -2,8 +2,12 @@
 
 All notable changes to Jodd project are documented here.
 
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.1...master)
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.0...master)
+(work in progress :)
+
+
+## [v5.0.1](https://github.com/oblac/jodd/compare/v5.0.0...v5.0.1)
 
 Minor fixes and improvements.
 
@@ -18,7 +22,7 @@ Minor fixes and improvements.
 + **cli** - fixed the behaviour of parameters
 
 
-## [v5.0](https://github.com/oblac/jodd/compare/v4.3.2...v5.0.0)
+## [v5](https://github.com/oblac/jodd/compare/v4.3.2...v5.0.0)
 
 Welcome to Jodd 5.
 
