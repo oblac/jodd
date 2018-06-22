@@ -28,12 +28,13 @@ package jodd.cli;
 import java.util.function.Consumer;
 
 public class Option {
+
 	String label;
 	String shortName;
 	String longName;
 	String description;
 	boolean hasArg;
-	String argName;
+	String argLabel;
 	Consumer<String> consumer;
 
 	public Option shortName(final String shortName) {
@@ -62,9 +63,9 @@ public class Option {
 		return this;
 	}
 
-	public Option hasArg(final String argName) {
+	public Option hasArg(final String argLabel) {
 		this.hasArg = true;
-		this.argName = argName;
+		this.argLabel = argLabel;
 		return this;
 	}
 
@@ -78,4 +79,18 @@ public class Option {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		String out = "";
+		if (shortName != null) {
+			out += "-" + shortName;
+		}
+		if (longName != null) {
+			if (!out.isEmpty()) {
+				out += " | ";
+			}
+			out += "--" + longName;
+		}
+		return out;
+	}
 }

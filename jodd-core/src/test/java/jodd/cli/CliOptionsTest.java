@@ -106,4 +106,28 @@ class CliOptionsTest {
 		cli.accept("-A", "123");
 		assertEquals("[123]", out.toString());
 	}
+
+	@Test
+	void testOptionWithValue() {
+		final List<String> out = new ArrayList<>();
+		final Cli cli = new Cli();
+
+		cli.option()
+			.shortName("a")
+			.hasArg()
+			.with(out::add);
+
+		cli.option()
+			.longName("foo")
+			.hasArg()
+			.with(out::add);
+
+		cli.accept("-a", "1", "--foo", "F");
+		assertEquals("[1, F]", out.toString());
+		out.clear();
+
+		cli.accept("-a=1", "--foo=F");
+		assertEquals("[1, F]", out.toString());
+		out.clear();
+	}
 }

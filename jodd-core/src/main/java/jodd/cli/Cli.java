@@ -46,48 +46,54 @@ public class Cli implements Consumer<String[]> {
 		return param;
 	}
 
-	private Option findOptionWithLongName(final String longName) {
+	private boolean consumeOptionWithLongName(final String input, final String valueToConsume) {
 		for (final Option option : options) {
-			if (longName.equals(option.longName)) {
-				return option;
-			}
-		}
-		throw new CliException("Unknown option: " + longName);
-	}
-	private Option findOptionWithLongName(final String longName, final String valueToConsume) {
-		for (final Option option : options) {
-			if (longName.equals(option.longName)) {
+			if (input.equals(option.longName)) {
 				if (option.hasArg && valueToConsume == null) {
-					throw new CliException("Option value not provided for: " + longName);
+					throw new CliException("Option value not provided for: " + input);
 				}
-				return option;
+				option.consumer.accept(option.hasArg ? valueToConsume : input);
+				return option.hasArg;
+			}
+
+			if (option.longName != null && input.startsWith(option.longName + "=")) {
+				option.consumer.accept(input.substring(option.longName.length() + 1));
+				return false;
 			}
 		}
-		throw new CliException("Unknown option: " + longName);
+
+		throw new CliException("Unknown option: " + input);
 	}
-	private Option findOptionWithShortName(final String shortName) {
+
+	private boolean consumeOptionWithShortName(final String input, final String valueToConsume) {
 		for (final Option option : options) {
-			if (shortName.equals(option.shortName)) {
-				return option;
-			}
-		}
-		throw new CliException("Unknown option: " + shortName);
-	}
-	private Option findOptionWithShortName(final String shortName, final String valueToConsume) {
-		for (final Option option : options) {
-			if (shortName.equals(option.shortName)) {
-				if (option.hasArg && valueToConsume == null) {
-					throw new CliException("Option value not provided for: " + shortName);
+			if (input.equals(option.shortName)) {
+				if (option.hasArg) {
+					if (valueToConsume == null) {
+						throw new CliException("Option value not provided for: " + input);
+					}
+					option.consumer.accept(valueToConsume);
+					return true;
 				}
-				return option;
+				else {
+					option.consumer.accept(input);
+					return false;
+				}
+			}
+
+			if (option.shortName != null && input.startsWith(option.shortName + "=")) {
+				option.consumer.accept(input.substring(option.shortName.length() + 1));
+				return false;
 			}
 		}
-		throw new CliException("Unknown option: " + shortName);
+		throw new CliException("Unknown option: " + input);
 	}
-	private Option findOptionWithShortNameAndNoArguments(final String shortName) {
+
+	private void consumeOptionWithShortNameAndNoArguments(final String shortName) {
 		for (final Option option : options) {
 			if (shortName.equals(option.shortName) && !option.hasArg) {
-				return option;
+				option.consumer.accept(shortName);
+				return;
 			}
 		}
 		throw new CliException("Unknown option: " + shortName);
@@ -95,6 +101,8 @@ public class Cli implements Consumer<String[]> {
 
 	@Override
 	public void accept(final String... args) {
+		assertConfigurationIsValid();
+
 		boolean dontParseOptionsAnyMore = false;
 		int i;
 		int paramsIndex = 0;
@@ -116,8 +124,8 @@ public class Cli implements Consumer<String[]> {
 				if (arg.startsWith("--")) {
 					final String argLongName = arg.substring(2);
 
-					final Option option = findOptionWithLongName(argLongName, value);
-					option.consumer.accept(option.hasArg ? value : argLongName);
+					consumeOptionWithLongName(argLongName, value);
+
 					args[i] = null;
 					continue;
 				}
@@ -126,24 +134,23 @@ public class Cli implements Consumer<String[]> {
 				if (arg.startsWith("-")) {
 					final String argShortName = arg.substring(1);
 
-					if (argShortName.length() > 1) {
+					if (argShortName.length() > 1 && argShortName.charAt(1) != '=') {
 						// compressed options
 						final char[] allShortNames = argShortName.toCharArray();
 						for (final char c : allShortNames) {
 							final String argName = String.valueOf(c);
-							final Option option = findOptionWithShortNameAndNoArguments(argName);
-							option.consumer.accept(argName);
+							consumeOptionWithShortNameAndNoArguments(argName);
 						}
 						args[i] = null;
 						continue;
 					}
 
-					final Option option = findOptionWithShortName(argShortName, value);
-					option.consumer.accept(option.hasArg ? value : argShortName);
+					final boolean valueConsumed = consumeOptionWithShortName(argShortName, value);
+
 					// mark argument as consumed
 					args[i] = null;
-					if (option.hasArg) {
-						// mark value as consumed
+					if (valueConsumed) {
+						// mark value as consumed, too
 						i++;
 						args[i] = null;
 					}
@@ -192,8 +199,14 @@ public class Cli implements Consumer<String[]> {
 				throw new CliException("Parameter required: " + param.label);
 			}
 		}
+	}
 
-
+	private void assertConfigurationIsValid() {
+		for (final Option option : options) {
+			if (option.consumer == null) {
+				throw new CliException("Option has no registered consumer: " + option);
+			}
+		}
 	}
 
 }
