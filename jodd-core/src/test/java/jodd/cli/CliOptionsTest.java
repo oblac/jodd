@@ -122,6 +122,8 @@ class CliOptionsTest {
 			.hasArg()
 			.with(out::add);
 
+		cli.printUsage("cmd");
+
 		cli.accept("-a", "1", "--foo", "F");
 		assertEquals("[1, F]", out.toString());
 		out.clear();

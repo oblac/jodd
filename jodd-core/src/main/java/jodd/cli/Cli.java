@@ -209,4 +209,25 @@ public class Cli implements Consumer<String[]> {
 		}
 	}
 
+	/**
+	 * Prints the usage line.
+	 */
+	public void printUsage(final String commandName) {
+		final StringBuilder usage = new StringBuilder(commandName);
+
+		for (final Option option : options) {
+			if (option.shortName != null) {
+				usage.append(" [-").append(option.shortName).append("]");
+			} else if (option.longName != null) {
+				usage.append(" [--").append(option.longName).append("]");
+			}
+		}
+
+		for (final Param param : params) {
+			usage.append(" ").append(param.label);
+		}
+
+		System.out.println(usage);
+	}
+
 }
