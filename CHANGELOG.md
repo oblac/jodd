@@ -11,6 +11,7 @@ Minor fixes.
 
 + **core*** - added the `Maybe.or(T)` method.
 + **mail** - added `receive()` and fluent builder.
++ **cli*** - parse values bundled with options (e.g. `--name=value`)
 
 ### Bug Fixes
 

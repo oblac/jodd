@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CliParamTest {
 
@@ -184,6 +185,31 @@ class CliParamTest {
 		cli.accept("123", "456", "789");
 		assertEquals("[123, 456, 789]", out.toString());
 		out.clear();
+	}
+
+	@Test
+	void testTwoAndOne() {
+		final List<String> out = new ArrayList<>();
+		final Cli cli = new Cli();
+
+		cli.param()
+			.required(2)
+			.optional(1)
+			.with(v -> out.addAll(Arrays.asList(v)));
+
+		cli.accept("1", "2");
+		assertEquals("[1, 2]", out.toString());
+		out.clear();
+
+		cli.accept("1", "2", "3");
+		assertEquals("[1, 2, 3]", out.toString());
+		out.clear();
+
+		cli.accept("1", "2", "3", "4");
+		assertEquals("[1, 2, 3]", out.toString());
+		out.clear();
+
+		assertThrows(CliException.class, () -> cli.accept("1"));
 	}
 
 
