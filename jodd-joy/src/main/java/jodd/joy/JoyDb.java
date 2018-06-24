@@ -329,12 +329,10 @@ public class JoyDb extends JoyBase implements JoyDbConfig {
 
 		list.stream()
 			.sorted(Comparator.comparing(DbEntityDescriptor::getEntityName))
-			.forEach(ded -> {
-				print.out(Chalk256.chalk().yellow(), ded.getTableName(), 30);
-				print.space();
-				print.outRight(Chalk256.chalk().blue(), ClassUtil.getShortClassName(ded.getType(), 2), width - 30 - 1);
-				print.newLine();
-		});
+			.forEach(ded -> print.outLeftRightNewLine(
+				Chalk256.chalk().yellow(), ded.getTableName(),
+				Chalk256.chalk().blue(),   ClassUtil.getShortClassName(ded.getType(), 2),
+				width));
 
 		print.line(width);
 	}

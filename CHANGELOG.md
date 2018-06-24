@@ -6,6 +6,10 @@ All notable changes to Jodd project are documented here.
 
 (work in progress :)
 
+### Bug Fixes
+
++ **joy** - better output of the Joy configuration that does not cut of the values.  
+
 
 ## [v5.0.1](https://github.com/oblac/jodd/compare/v5.0.0...v5.0.1)
 

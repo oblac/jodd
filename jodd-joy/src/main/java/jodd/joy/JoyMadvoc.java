@@ -195,18 +195,16 @@ public class JoyMadvoc extends JoyBase {
 				print.out(Chalk256.chalk().yellow(), actionMethod == null ? "*" : actionMethod, 7);
 				print.space();
 
-				print.out(Chalk256.chalk().green(), ar.getActionPath(), 30);
-				print.space();
-
 				final String signature =
 					ClassUtil.getShortClassName(
 						ProxettaUtil.resolveTargetClass(ar.getActionClass()), 2)
 						+ '#' + ar.getActionClassMethod().getName();
 
-				final int remaining = width - 7 - 1 - 30 - 1;
-				print.outRight(Chalk256.chalk().blue(), signature, remaining);
-
-				print.newLine();
+				print.outLeftRightNewLine(
+					Chalk256.chalk().green(), ar.getActionPath(),
+					Chalk256.chalk().blue(), signature,
+					width - 7 - 1
+				);
 			});
 
 		if (!aliases.isEmpty()) {
@@ -220,18 +218,15 @@ public class JoyMadvoc extends JoyBase {
 
 					final String actionPath = ar.getActionPath();
 
-					for (Map.Entry<String, String> entry : aliases.entrySet()) {
+					for (final Map.Entry<String, String> entry : aliases.entrySet()) {
 						if (entry.getValue().equals(actionPath)) {
 							print.space(8);
 
-							print.out(Chalk256.chalk().green(), entry.getValue(), 30);
-							print.space();
-
-							final int remaining = width - 7 - 1 - 30 - 1;
-							print.outRight(Chalk256.chalk().blue(), entry.getKey(), remaining);
-
-							print.newLine();
-
+							print.outLeftRightNewLine(
+								Chalk256.chalk().green(), entry.getValue(),
+								Chalk256.chalk().blue(), entry.getKey(),
+								width - 8
+							);
 						}
 					}
 				});

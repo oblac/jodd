@@ -192,13 +192,12 @@ public class JoyPetite extends JoyBase implements JoyPetiteConfig {
 				print.out(Chalk256.chalk().yellow(), scopeName(beanDefinition), 10);
 				print.space();
 
-				print.out(Chalk256.chalk().green(), beanDefinition.name(), 30);
-				print.space();
 
-				final int remaining = width - 10 - 1 - 30 - 1;
-				print.outRight(Chalk256.chalk().blue(), ClassUtil.getShortClassName(beanDefinition.type(), 2), remaining);
-
-				print.newLine();
+				print.outLeftRightNewLine(
+					Chalk256.chalk().green(), beanDefinition.name(),
+					Chalk256.chalk().blue(), ClassUtil.getShortClassName(beanDefinition.type(), 2),
+					width - 10 - 1
+				);
 			});
 
 		print.line(width);

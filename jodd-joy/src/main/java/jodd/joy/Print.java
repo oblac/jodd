@@ -29,6 +29,9 @@ import jodd.chalk.Chalk256;
 import jodd.util.Format;
 import jodd.util.StringUtil;
 
+/**
+ * Print utility for printing values in columns.
+ */
 public class Print {
 
 	public void line(final int width) {
@@ -58,11 +61,44 @@ public class Print {
 		}
 	}
 
+	public void out(final Chalk256 chalk256, final String string) {
+		System.out.print(chalk256.on(string));
+	}
 	public void out(final Chalk256 chalk256, final String string, final int maxLen) {
 		System.out.print(chalk256.on(Format.alignLeftAndPad(string, maxLen)));
 	}
-	public void outRight(final Chalk256 chalk256, final String string, final int maxLen) {
-		System.out.print(chalk256.on(Format.alignRightAndPad(string, maxLen)));
+
+	public void outLeftRightNewLine(
+			final Chalk256 chalk256Left,
+			final String stringLeft,
+			final Chalk256 chalk256Right,
+			String stringRight,
+			final int width) {
+
+		final int leftLen = stringLeft.length();
+		final int rightLen = stringRight.length();
+		final int availWidth = width - 1;     // space delimiter
+
+		int delta = leftLen + rightLen - availWidth;
+
+		if (delta > 0) {
+			// cut the right side
+			if (stringRight.length() >= delta + 3) {
+				stringRight = stringRight.substring(delta + 3);
+				stringRight = "..." + stringRight;
+			}
+			else {
+				stringRight = "";
+			}
+		}
+
+		out(chalk256Left, stringLeft);
+		space();
+		while (delta++ < 0) {
+			space();
+		}
+		out(chalk256Right, stringRight);
+		newLine();
 	}
 
 }
