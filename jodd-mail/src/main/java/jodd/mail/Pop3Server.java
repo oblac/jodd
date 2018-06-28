@@ -79,7 +79,7 @@ public class Pop3Server extends MailServer<ReceiveMailSession> {
 	 * {@inheritDoc}
 	 *
 	 * @return {@link ReceiveMailSession}
-	 * @see EmailUtil#createSession(String, Properties, Authenticator)
+	 * @see EmailUtil#createSession(String, Properties, Authenticator, File)
 	 */
 	@Override
 	public ReceiveMailSession createSession() {

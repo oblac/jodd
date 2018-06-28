@@ -25,12 +25,12 @@
 
 package jodd.http;
 
+import jodd.net.HttpMethod;
+import jodd.net.MimeTypes;
 import jodd.util.Base64;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.net.HttpMethod;
-import jodd.net.MimeTypes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -481,8 +481,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected String queryEncoding = Defaults.queryEncoding;
 
 	/**
-	 * Defines encoding for query parameters. Default value is
-	 * copied from {@link Defaults#queryEncoding}.
+	 * Defines encoding for query parameters.
 	 */
 	public HttpRequest queryEncoding(final String encoding) {
 		this.queryEncoding = encoding;
