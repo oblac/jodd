@@ -26,6 +26,7 @@
 package jodd.joy;
 
 import jodd.system.SystemUtil;
+import jodd.util.ClassUtil;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -48,19 +49,52 @@ import static javax.servlet.DispatcherType.REQUEST;
 public class JoyContextListener implements ServletContextListener {
 
 	protected boolean decoraEnabled = false;
-	protected String context = "/*";
-	private EnumSet<DispatcherType> madvocDispatcherTypes = EnumSet.of(REQUEST);
+	protected String contextPath = "/*";
+	protected EnumSet<DispatcherType> madvocDispatcherTypes = EnumSet.of(REQUEST);
+
+	/**
+	 * Alternative way for registering Joy listeners.
+	 * Sometimes servlet container does not allow adding new listener
+	 * from already added listener. This method therefore registers
+	 * the listener <i>before</i> container actually called the
+	 * callback methods.
+	 */
+	public static void registerInServletContext(
+			final ServletContext servletContext,
+			final Class<? extends JoyContextListener> joyContextListenerClass
+	) {
+		try {
+			final JoyContextListener joyContextListener =
+				ClassUtil.newInstance(joyContextListenerClass);
+
+			joyContextListener.createJoyAndInitServletContext(servletContext);
+		} catch (Exception e) {
+			throw new JoyException(e);
+		}
+
+		servletContext.addListener(joyContextListenerClass);
+	}
 
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
 		final ServletContext servletContext = sce.getServletContext();
 
-		final JoddJoy joy = createJoy();
-
-		configureServletContext(servletContext);
-
-		joy.start(servletContext);
+		createJoyAndInitServletContext(servletContext).start(servletContext);
 	}
+
+	private JoddJoy createJoyAndInitServletContext(final ServletContext servletContext) {
+		JoddJoy joy = (JoddJoy) servletContext.getAttribute(JoddJoy.class.getName());
+
+		if (joy == null) {
+			joy = createJoy();
+
+			configureServletContext(servletContext);
+		}
+
+		servletContext.setAttribute(JoddJoy.class.getName(), joy);
+		return joy;
+	}
+
 
 	/**
 	 * Creates {@link JoddJoy}. This is a place where to configure the app.
@@ -85,31 +119,31 @@ public class JoyContextListener implements ServletContextListener {
 	/**
 	 * Defines Madvoc servlet context.
 	 */
-	protected void setMadvocContext(final String context) {
+	protected void setMadvocContextPath(final String context) {
 		Objects.requireNonNull(context);
-		this.context = context;
+		this.contextPath = context;
 	}
 
 	/**
-	 * Defines enum set for the filter.
+	 * Defines enum set of dispatcher types for the filter.
 	 */
-	protected void runMadvocOn(final EnumSet<DispatcherType> dispatcherTypeEnumSet) {
+	protected void mapMadvocFilterFor(final EnumSet<DispatcherType> dispatcherTypeEnumSet) {
 		this.madvocDispatcherTypes = dispatcherTypeEnumSet;
 	}
 
 	/**
 	 * Configures servlet context.
 	 */
-	protected void configureServletContext(final ServletContext servletContext) {
+	private void configureServletContext(final ServletContext servletContext) {
 		servletContext.addListener(jodd.servlet.RequestContextListener.class);
 
 		if (decoraEnabled) {
 			final FilterRegistration filter = servletContext.addFilter("decora", jodd.decora.DecoraServletFilter.class);
-			filter.addMappingForUrlPatterns(null, true, context);
+			filter.addMappingForUrlPatterns(null, true, contextPath);
 		}
 
 		final FilterRegistration filter = servletContext.addFilter("madvoc", jodd.madvoc.MadvocServletFilter.class);
-		filter.addMappingForUrlPatterns(madvocDispatcherTypes, true, context);
+		filter.addMappingForUrlPatterns(madvocDispatcherTypes, true, contextPath);
 	}
 
 	@Override
