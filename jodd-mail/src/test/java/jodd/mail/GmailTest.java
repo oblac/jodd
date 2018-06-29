@@ -25,16 +25,16 @@
 
 package jodd.mail;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.mail.Flags;
 import java.util.Arrays;
 
-@Ignore("Requires Gmail")
-class GoogleTest {
+class GmailTest {
 
 	@Test
+	@Disabled("Requires Gmail")
 	void testGoogle_receiveUnseen() {
 		ImapServer imapServer = MailServer.create()
 			.host("imap.gmail.com")
