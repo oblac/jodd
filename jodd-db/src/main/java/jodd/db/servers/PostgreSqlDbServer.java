@@ -45,6 +45,9 @@ public class PostgreSqlDbServer implements DbServer {
 		// (probably for historic reasons)
 		dbOomConfig.getTableNames().setLowercase(true);
 		dbOomConfig.getColumnNames().setLowercase(true);
+
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('\"');
 	}
 
 	@Override

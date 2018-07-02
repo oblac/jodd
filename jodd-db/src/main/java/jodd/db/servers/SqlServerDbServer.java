@@ -42,6 +42,9 @@ public class SqlServerDbServer implements DbServer {
 	public void accept(final DbOomConfig dbOomConfig) {
 		dbOomConfig.setUpdateAcceptsTableAlias(false);
 		dbOomConfig.setUpdateablePrimaryKey(false);
+
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('\"');
 	}
 
 	@Override

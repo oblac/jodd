@@ -41,6 +41,9 @@ public class SQLiteDbServer implements DbServer {
 	@Override
 	public void accept(final DbOomConfig dbOomConfig) {
 		dbOomConfig.setUpdateAcceptsTableAlias(false);
+
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('\"');
 	}
 
 	@Override

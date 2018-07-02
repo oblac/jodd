@@ -47,6 +47,9 @@ public class MySqlDbServer implements DbServer {
 
 		// Column and index names are not case sensitive on any platform, nor are column aliases.
 		dbOomConfig.getColumnNames().setLowercase(true);
+
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('`');
 	}
 
 	@Override

@@ -44,6 +44,8 @@ public class Db2DbServer implements DbServer {
 
 	@Override
 	public void accept(final DbOomConfig dbOomConfig) {
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('\"');
 	}
 
 	@Override

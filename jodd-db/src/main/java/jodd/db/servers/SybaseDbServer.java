@@ -40,6 +40,8 @@ public class SybaseDbServer implements DbServer {
 
 	@Override
 	public void accept(final DbOomConfig dbOomConfig) {
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('\"');
 	}
 
 	@Override

@@ -37,6 +37,8 @@ abstract class BaseNamingStrategy {
 	protected boolean changeCase = true;
 	protected boolean uppercase = true;
 	protected boolean strictAnnotationNames = true;
+	protected boolean alwaysQuoteNames = false;
+	protected char quoteChar = 0;
 
 	public boolean isSplitCamelCase() {
 		return splitCamelCase;
@@ -111,10 +113,32 @@ abstract class BaseNamingStrategy {
 		this.strictAnnotationNames = strictAnnotationNames;
 	}
 
+	public boolean isAlwaysQuoteNames() {
+		return alwaysQuoteNames;
+	}
+
+	/**
+	 * Defines if all table and column names should be quoted.
+	 */
+	public void setAlwaysQuoteNames(final boolean alwaysQuoteNames) {
+		this.alwaysQuoteNames = alwaysQuoteNames;
+	}
+
+	public char getQuoteChar() {
+		return quoteChar;
+	}
+
+	/**
+	 * Defines quote char.
+	 */
+	public void setQuoteChar(final char quoteChar) {
+		this.quoteChar = quoteChar;
+	}
+
 	// ---------------------------------------------------------------- util methods
 
 	protected static StringBuilder toUppercase(final StringBuilder string) {
-		int strLen = string.length();
+		final int strLen = string.length();
 
 		for (int i = 0; i < strLen; i++) {
 			char c = string.charAt(i);
@@ -128,7 +152,7 @@ abstract class BaseNamingStrategy {
 	}
 
 	protected static StringBuilder toLowercase(final StringBuilder string) {
-		int strLen = string.length();
+		final int strLen = string.length();
 
 		for (int i = 0; i < strLen; i++) {
 			char c = string.charAt(i);

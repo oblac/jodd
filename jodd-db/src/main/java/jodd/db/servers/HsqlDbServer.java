@@ -47,6 +47,9 @@ public class HsqlDbServer implements DbServer {
 		// in the database as the case-normal form.
 		dbOomConfig.getTableNames().setUppercase(true);
 		dbOomConfig.getColumnNames().setUppercase(true);
+
+		// quote character
+		dbOomConfig.getColumnNames().setQuoteChar('\"');
 	}
 
 	@Override
