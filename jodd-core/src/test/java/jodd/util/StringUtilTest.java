@@ -1148,4 +1148,22 @@ class StringUtilTest {
 		assertEquals(StringPool.EMPTY, StringUtil.ifNotNull(null, str -> str + "It doesn't matter!"));
 		assertEquals("Jodd makes fun!", StringUtil.ifNotNull("Jodd", input -> input + " makes fun!"));
 	}
+
+	@Test
+	void testDetectQuoteChar() {
+		assertEquals(0, StringUtil.detectQuoteChar(""));
+		assertEquals(0, StringUtil.detectQuoteChar("d"));
+		assertEquals(0, StringUtil.detectQuoteChar("de"));
+		assertEquals(0, StringUtil.detectQuoteChar("der"));
+		assertEquals(0, StringUtil.detectQuoteChar("\"ded"));
+		assertEquals(0, StringUtil.detectQuoteChar("de\""));
+		assertEquals(0, StringUtil.detectQuoteChar("\""));
+
+		assertEquals('"', StringUtil.detectQuoteChar("\"\""));
+		assertEquals('"', StringUtil.detectQuoteChar("\"test\""));
+		assertEquals('\'', StringUtil.detectQuoteChar("''"));
+		assertEquals('\'', StringUtil.detectQuoteChar("'test'"));
+		assertEquals('`', StringUtil.detectQuoteChar("``"));
+		assertEquals('`', StringUtil.detectQuoteChar("`test`"));
+	}
 }
