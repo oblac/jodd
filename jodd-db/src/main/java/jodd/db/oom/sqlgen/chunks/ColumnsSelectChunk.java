@@ -231,24 +231,23 @@ public class ColumnsSelectChunk extends SqlChunk {
 				templateData.lastColumnDec = dec;
 
 				if (useTableReference) {
-					appendColumnName(out, ded, dec.getColumnName());
+					appendColumnName(out, ded, dec);
 				} else {
-					appendAlias(out, ded, dec.getColumnName());
+					appendAlias(out, ded, dec);
 				}
 				count++;
 			}
 		} else {
-			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
-			templateData.lastColumnDec = dec;
-			String columnName = dec == null ? null : dec.getColumnName();
-			//String columnName = ded.getColumnName(columnRef);
-			if (columnName == null) {
+			final DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
+			if (dec == null) {
 				throw new DbSqlBuilderException("Invalid column reference: " + tableRef + '.' + columnRef);
 			}
+
+			templateData.lastColumnDec = dec;
 			if (useTableReference) {
-				appendColumnName(out, ded, columnName);
+				appendColumnName(out, ded, dec);
 			} else {
-				appendAlias(out, ded, columnName);
+				appendAlias(out, ded, dec);
 			}
 		}
 	}
@@ -256,29 +255,29 @@ public class ColumnsSelectChunk extends SqlChunk {
 	/**
 	 * Appends alias.
 	 */
-	protected void appendAlias(final StringBuilder query, final DbEntityDescriptor ded, final String column) {
+	protected void appendAlias(final StringBuilder query, final DbEntityDescriptor ded, final DbEntityColumnDescriptor dec) {
 		String tableName = ded.getTableName();
 
 		final ColumnAliasType columnAliasType = templateData.getColumnAliasType();
 
 		if (columnAliasType == null || columnAliasType == ColumnAliasType.TABLE_REFERENCE) {
 			templateData.registerColumnDataForTableRef(tableRef, tableName);
-			query.append(tableRef).append(columnAliasSeparator).append(column);
+			query.append(tableRef).append(columnAliasSeparator).append(dec.getColumnName());
 		} else
 		if (columnAliasType == ColumnAliasType.COLUMN_CODE) {
-			String code = templateData.registerColumnDataForColumnCode(tableName, column);
+			String code = templateData.registerColumnDataForColumnCode(tableName, dec.getColumnName());
 			query.append(code);
 		} else
 		if (columnAliasType == ColumnAliasType.TABLE_NAME) {
-			query.append(tableName).append(columnAliasSeparator).append(column);
+			query.append(tableName).append(columnAliasSeparator).append(dec.getColumnName());
 		}
 	}
 
 	/**
 	 * Simply appends column name with optional table reference and alias.
 	 */
-	protected void appendColumnName(final StringBuilder query, final DbEntityDescriptor ded, final String column) {
-		query.append(resolveTable(tableRef, ded)).append('.').append(column);
+	protected void appendColumnName(final StringBuilder query, final DbEntityDescriptor ded, final DbEntityColumnDescriptor dec) {
+		query.append(resolveTable(tableRef, ded)).append('.').append(dec.getColumnName());
 		
 		if (templateData.getColumnAliasType() != null) {     // create column aliases
 			final String tableName = ded.getTableName();
@@ -287,14 +286,14 @@ public class ColumnsSelectChunk extends SqlChunk {
 
 			switch (templateData.getColumnAliasType()) {
 				case TABLE_NAME:
-					query.append(tableName).append(columnAliasSeparator).append(column);
+					query.append(tableName).append(columnAliasSeparator).append(dec.getColumnName());
 					break;
 				case TABLE_REFERENCE:
 					templateData.registerColumnDataForTableRef(tableRef, tableName);
-					query.append(tableRef).append(columnAliasSeparator).append(column);
+					query.append(tableRef).append(columnAliasSeparator).append(dec.getColumnName());
 					break;
 				case COLUMN_CODE:
-					final String code = templateData.registerColumnDataForColumnCode(tableName, column);
+					final String code = templateData.registerColumnDataForColumnCode(tableName, dec.getColumnName());
 					query.append(code);
 					break;
 			}
