@@ -26,6 +26,7 @@
 package jodd.db.oom;
 
 import jodd.db.type.SqlType;
+import jodd.util.StringUtil;
 
 /**
  * Column descriptors.
@@ -34,19 +35,35 @@ public class DbEntityColumnDescriptor implements Comparable {
 
 	protected final DbEntityDescriptor dbEntityDescriptor;
 	protected final String columnName;
+	protected final String columnNameForQuery;
 	protected final String propertyName;
 	protected final Class propertyType;
 	protected final boolean isId;
 	protected final Class<? extends SqlType> sqlTypeClass;
 	protected int dbSqlType = SqlType.DB_SQLTYPE_UNKNOWN;
 
-	public DbEntityColumnDescriptor(final DbEntityDescriptor ded, final String columnName, final String fieldName, final Class fieldType, final boolean isId, final Class<? extends SqlType> sqlTypeClass) {
+	public DbEntityColumnDescriptor(
+			final DbEntityDescriptor ded,
+			final String columnName,
+			final String fieldName,
+			final Class fieldType,
+			final boolean isId,
+			final Class<? extends SqlType> sqlTypeClass) {
+
 		this.dbEntityDescriptor = ded;
-		this.columnName = columnName;
 		this.propertyName = fieldName;
 		this.propertyType = fieldType;
 		this.isId = isId;
 		this.sqlTypeClass = sqlTypeClass;
+
+		this.columnNameForQuery = columnName;
+
+		if (StringUtil.detectQuoteChar(columnNameForQuery) != 0) {
+			this.columnName = StringUtil.substring(columnNameForQuery, 1, -1);
+		}
+		else {
+			this.columnName = columnNameForQuery;
+		}
 	}
 
 	/**
@@ -61,6 +78,13 @@ public class DbEntityColumnDescriptor implements Comparable {
 	 */
 	public String getColumnName() {
 		return columnName;
+	}
+
+	/**
+	 * Returns column name to be used in the generated sql.
+	 */
+	public String getColumnNameForQuery() {
+		return columnNameForQuery;
 	}
 
 	/**
