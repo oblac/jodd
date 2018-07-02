@@ -48,7 +48,7 @@ public class DbMetaUtil {
 	 */
 	public static String resolveTableName(final Class<?> type, final TableNamingStrategy tableNamingStrategy) {
 		String tableName = null;
-		DbTable dbTable = type.getAnnotation(DbTable.class);
+		final DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
 			tableName = dbTable.value().trim();
 		}
@@ -67,7 +67,7 @@ public class DbMetaUtil {
 	 */
 	public static String resolveSchemaName(final Class<?> type, final String defaultSchemaName) {
 		String schemaName = null;
-		DbTable dbTable = type.getAnnotation(DbTable.class);
+		final DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
 			schemaName = dbTable.schema().trim();
 		}
