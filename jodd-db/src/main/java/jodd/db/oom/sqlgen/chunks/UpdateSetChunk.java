@@ -96,7 +96,7 @@ public class UpdateSetChunk extends SqlChunk {
 
 			//out.append(table).append('.');
 
-			out.append(dec.getColumnName()).append('=');
+			out.append(dec.getColumnNameForQuery()).append('=');
 
 			String propertyName = typeName + '.' + property;
 			defineParameter(out, propertyName, value, dec);

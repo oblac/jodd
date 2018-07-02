@@ -97,13 +97,13 @@ public class InsertChunk extends SqlChunk {
 				val.append(',').append(' ');
 			}
 			size++;
-			col.append(dec.getColumnName());
+			col.append(dec.getColumnNameForQuery());
 
-			String propertyName = typeName + '.' + property;
+			final String propertyName = typeName + '.' + property;
 			defineParameter(val, propertyName, value, dec);
 		}
 
-		out.append("insert into ").append(ded.getTableName()).append(" (")
+		out.append("insert into ").append(ded.getTableNameForQuery()).append(" (")
 				.append(col).append(") values (").append(val).append(')');
 	}
 

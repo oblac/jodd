@@ -129,7 +129,7 @@ public class MatchChunk extends SqlChunk {
 				out.append(AND);
 			}
 			count++;
-			out.append(table).append('.').append(dec.getColumnName()).append('=');
+			out.append(table).append('.').append(dec.getColumnNameForQuery()).append('=');
 
 			String propertyName = objectRef != null ? objectRef : typeName;
 			propertyName += '.' + property;

@@ -85,12 +85,12 @@ public class ReferenceChunk extends SqlChunk {
 	@Override
 	public void process(final StringBuilder out) {
 
-		DbEntityDescriptor ded;
+		final DbEntityDescriptor ded;
 
 		if (tableRef != null) {
 			ded = lookupTableRef(tableRef);
 
-			String tableName = resolveTable(tableRef, ded);
+			final String tableName = resolveTable(tableRef, ded);
 
 			out.append(tableName);
 		} else {
@@ -105,19 +105,16 @@ public class ReferenceChunk extends SqlChunk {
 			out.append(ded.getIdColumnName());
 		} else if (columnRef != null) {
 			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
-
 			templateData.lastColumnDec = dec;
 
-			String column = dec == null ? null : dec.getColumnName();
-			//String column = ded.getColumnName(columnRef);
-			if (column == null) {
-				throw new DbSqlBuilderException("Invalid column reference: " + tableRef + '.' + columnRef);
+			if (dec == null) {
+				throw new DbSqlBuilderException("Invalid column reference: [" + tableRef + '.' + columnRef + "]");
 			}
 
 			if (tableRef != null) {
 				out.append('.');
 			}
-			out.append(column);
+			out.append(dec.getColumnNameForQuery());
 		}
 	}
 

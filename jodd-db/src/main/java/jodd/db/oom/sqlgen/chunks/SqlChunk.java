@@ -202,7 +202,7 @@ public abstract class SqlChunk {
 	protected DbEntityDescriptor findColumnRef(final String columnRef) {
 		DbEntityDescriptor ded = templateData.findTableDescriptorByColumnRef(columnRef);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid column reference: " + columnRef);
+			throw new DbSqlBuilderException("Invalid column reference: [" + columnRef + "]");
 		}
 		return ded;
 	}
@@ -217,7 +217,7 @@ public abstract class SqlChunk {
 		if (tableAlias != null) {
 			return tableAlias;
 		}
-		return ded.getTableName();
+		return ded.getTableNameForQuery();
 	}
 
 	/**
