@@ -6,10 +6,15 @@ All notable changes to Jodd project are documented here.
 
 (work in progress :)
 
+
+
+## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
+
 ### New Features
 
 + **dboom** - added detection of the quote names in annotations.
 + **dboom** - Added flags to column and table naming strategies for quote chars.
+
 
 
 ## [v5.0.2](https://github.com/oblac/jodd/compare/v5.0.1...v5.0.2)
