@@ -76,50 +76,49 @@ public class HTTPProxySocketFactory extends SocketFactory {
 		int proxyPort = proxy.getProxyPort();
 
 		try {
-
 			socket = new Socket(proxyAddress, proxyPort);
-			String hostport = "CONNECT " + host + ":" + port;
-			String proxyLine;
+			String hostport = host + ":" + port;
+			String proxyLine = "";
 			String username = proxy.getProxyUsername();
 
-			if (username == null) {
-				proxyLine = "";
-			} else {
+			if (username != null) {
 				String password = proxy.getProxyPassword();
 				proxyLine =
-						"\r\nProxy-Authorization: Basic "
-						+ Base64.encodeToString((username + ":" + password));
+						"Proxy-Authorization: Basic " +
+						Base64.encodeToString((username + ":" + password)) + "\r\n";
 			}
+
 			socket.getOutputStream().write(
-					(hostport + " HTTP/1.1\r\nHost: "
-					+ hostport + proxyLine + "\r\n\r\n").getBytes("UTF-8"));
+					("CONNECT " + hostport + " HTTP/1.1\r\n" +
+					 "Host: " + hostport + "\r\n" +
+                     proxyLine +
+                     "\r\n"
+                    ).getBytes("UTF-8")
+            );
 
 			InputStream in = socket.getInputStream();
 			StringBuilder recv = new StringBuilder(100);
 			int nlchars = 0;
 
-			while (true) {
-				int i =  in.read();
-				if (i == -1) {
-					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
-				}
+            do {
+                int i = in.read();
+                if (i == -1) {
+                    throw new HttpException(ProxyInfo.ProxyType.HTTP, "Invalid response");
+                }
 
-				char c = (char) i;
-				recv.append(c);
-				if (recv.length() > 1024) {
-					throw new HttpException(ProxyInfo.ProxyType.HTTP, "Received header longer then 1024 chars");
-				}
-				if ((nlchars == 0 || nlchars == 2) && c == '\r') {
-					nlchars++;
-				} else if ((nlchars == 1 || nlchars == 3) && c == '\n') {
-					nlchars++;
-				} else {
-					nlchars = 0;
-				}
-				if (nlchars == 4) {
-					break;
-				}
-			}
+                char c = (char) i;
+                recv.append(c);
+                if (recv.length() > 1024) {
+                    throw new HttpException(ProxyInfo.ProxyType.HTTP, "Received header longer then 1024 chars");
+                }
+                if ((nlchars == 0 || nlchars == 2) && c == '\r') {
+                    nlchars++;
+                } else if ((nlchars == 1 || nlchars == 3) && c == '\n') {
+                    nlchars++;
+                } else {
+                    nlchars = 0;
+                }
+            } while (nlchars != 4);
 
 			String recvStr = recv.toString();
 
