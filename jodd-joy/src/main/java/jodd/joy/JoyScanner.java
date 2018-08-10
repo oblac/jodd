@@ -53,6 +53,11 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 	private List<String> includedJars = new ArrayList<>();
 
 	/**
+	 * Excluded jars.
+	 */
+	private List<String> excludedJars = new ArrayList<>();
+
+	/**
 	 * List of APP classes.
 	 */
 	private List<Class> appClasses = new ArrayList<>();
@@ -73,6 +78,13 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 	public JoyScanner setIncludedJars(final String... includedJars) {
 		requireNotStarted(classScanner);
 		Collections.addAll(this.includedJars, includedJars);
+		return this;
+	}
+
+	@Override
+	public JoyScanner setExcludedJars(final String... excludedJars) {
+		requireNotStarted(classScanner);
+		Collections.addAll(this.excludedJars, excludedJars);
 		return this;
 	}
 
@@ -146,15 +158,20 @@ public class JoyScanner extends JoyBase implements JoyScannerConfig {
 		if (log.isDebugEnabled()) {
 			log.debug("Scan entries: " + Converter.get().toString(includedEntries));
 			log.debug("Scan jars: " + Converter.get().toString(includedJars));
+			log.debug("Scan exclude jars: " + Converter.get().toString(excludedJars));
 			log.debug("Scan ignore exception: " + ignoreExceptions);
 		}
 
+		classScanner.excludeCommonEntries();
+		classScanner.excludeCommonJars();
+		classScanner.excludeJars(excludedJars.toArray(new String[0]));
+
 		if (includedEntries.isEmpty() && includedJars.isEmpty()) {
+			// nothing was explicitly included
 			classScanner.excludeAllEntries(false);
-			classScanner.excludeCommonEntries();
-			classScanner.excludeCommonJars();
 		}
 		else {
+			// something was included by user
 			classScanner.excludeAllEntries(true);
 			includedEntries.add("jodd.*");
 		}

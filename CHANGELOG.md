@@ -2,11 +2,13 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.2...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.3...master)
 
 (work in progress :)
 
+### New Features
 
++ **joy** - added excluded jars
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 

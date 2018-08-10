@@ -94,6 +94,8 @@ public class ClassScanner {
 		"**/junit*",
 		"**/javax*",
 		"**/org.eclipse.*",
+		"**/ant*",
+		"**/idea_rt.jar",
 	};
 
 	protected final InExRules<String, String, String> rulesJars;

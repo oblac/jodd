@@ -31,6 +31,8 @@ public interface JoyScannerConfig {
 
 	JoyScannerConfig setIncludedJars(final String... includedJars);
 
+	JoyScannerConfig setExcludedJars(final String... includedJars);
+
 	JoyScannerConfig setIgnoreExceptions(final boolean ignoreExceptions);
 
 	JoyScannerConfig scanClasspathOf(final Class applicationClass);
