@@ -36,20 +36,7 @@ import static jodd.util.StringPool.TRUE;
 /**
  * Represents simple plain SMTP server for sending emails.
  */
-public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSession> {
-
-	public static final String MAIL_HOST = "mail.host";
-	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
-	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
-	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
-	public static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
-	public static final String MAIL_SMTP_FROM = "mail.smtp.from";
-
-	public static final String MAIL_SMTP_CONNECTIONTIMEOUT = "mail.smtp.connectiontimeout";
-	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
-	public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
-	public static final String MAIL_DEBUG = "mail.debug";
-	public static final String MAIL_MIME_ADDRESS_STRICT = "mail.mime.address.strict";
+public class SmtpServer extends MailServer<SendMailSession> {
 
 	protected static final String PROTOCOL_SMTP = "smtp";
 
@@ -58,80 +45,38 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	 */
 	protected static final int DEFAULT_SMTP_PORT = 25;
 
-	/**
-	 * Whether debug mode is enabled.
-	 */
-	protected boolean debug = false;
-
-	/**
-	 * Whether strict address checking is turned on.
-	 */
-	protected boolean strictAddress = true;
-
-	/**
-	 * Connection timeout.
-	 */
-	private int timeout = 0;
-
 	// ---------------------------------------------------------------- create
 
-	@SuppressWarnings("unchecked")
-	protected T _this() {
-		return (T) this;
-	}
+	public SmtpServer(
+			final String host,
+			final int port,
+			final Authenticator authenticator,
+			final int timeout,
+			final boolean strictAddress,
+			final boolean debug) {
 
-	public SmtpServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port == -1 ? DEFAULT_SMTP_PORT : port, authenticator, null);
-	}
-
-	// ---------------------------------------------------------------- builder
-
-	/**
-	 * Defines timeout value in milliseconds for all mail-related operations.
-	 *
-	 * @param timeout timeout value in milliseconds.
-	 * @return this
-	 */
-	public T timeout(final int timeout) {
-		this.timeout = timeout;
-		return _this();
-	}
-
-	/**
-	 * Enable or disable debug mode.
-	 *
-	 * @param debug {@code true} to turn on debugging. By default, this is {@code false}.
-	 * @return this
-	 */
-	public T debugMode(final boolean debug) {
-		this.debug = debug;
-		return _this();
-	}
-
-
-	/**
-	 * Disables the strict address.
-	 *
-	 * @param strictAddress {@code true} if strict address checking should be be turned on. By default, this is {@code true}.
-	 * @return this
-	 */
-	public T strictAddress(final boolean strictAddress) {
-		this.strictAddress = strictAddress;
-		return _this();
+		super(
+			host,
+			port == -1 ? DEFAULT_SMTP_PORT : port,
+			authenticator,
+			null,
+			timeout,
+			strictAddress,
+			debug);
 	}
 
 	// ---------------------------------------------------------------- properties
 
 	@Override
 	protected Properties createSessionProperties() {
-		final Properties props = new Properties();
+		final Properties props = super.createSessionProperties();
 
 		props.setProperty(MAIL_TRANSPORT_PROTOCOL, PROTOCOL_SMTP);
-		props.setProperty(MAIL_HOST, getHost());
-		props.setProperty(MAIL_SMTP_HOST, getHost());
-		props.setProperty(MAIL_SMTP_PORT, String.valueOf(getPort()));
+		props.setProperty(MAIL_HOST, host);
+		props.setProperty(MAIL_SMTP_HOST, host);
+		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
 
-		if (getAuthenticator() != null) {
+		if (authenticator != null) {
 			props.setProperty(MAIL_SMTP_AUTH, TRUE);
 		}
 
@@ -140,14 +85,6 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 			props.put(MAIL_SMTP_CONNECTIONTIMEOUT, timeoutValue);
 			props.put(MAIL_SMTP_TIMEOUT, timeoutValue);
 			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
-		}
-
-		if (debug) {
-			props.put(MAIL_DEBUG, "true");
-		}
-
-		if (!strictAddress) {
-			props.put(MAIL_MIME_ADDRESS_STRICT, "false");
 		}
 
 		return props;
@@ -160,7 +97,7 @@ public class SmtpServer<T extends SmtpServer<T>> extends MailServer<SendMailSess
 	 */
 	@Override
 	public SendMailSession createSession() {
-		final Session session = Session.getInstance(getSessionProperties(), getAuthenticator());
+		final Session session = Session.getInstance(createSessionProperties(), authenticator);
 		final Transport mailTransport;
 		try {
 			mailTransport = getTransport(session);

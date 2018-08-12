@@ -33,21 +33,28 @@ import java.util.Properties;
 /**
  * Secure SMTP server (STARTTLS) for sending emails.
  */
-public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
-
-	public static final String MAIL_SMTP_STARTTLS_REQUIRED = "mail.smtp.starttls.required";
-	public static final String MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
-	public static final String MAIL_SMTP_SOCKET_FACTORY_PORT = "mail.smtp.socketFactory.port";
-	public static final String MAIL_SMTP_SOCKET_FACTORY_CLASS = "mail.smtp.socketFactory.class";
-	public static final String MAIL_SMTP_SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
+public class SmtpSslServer extends SmtpServer {
 
 	/**
 	 * Default SMTP SSL port.
 	 */
 	protected static final int DEFAULT_SSL_PORT = 465;
 
-	public SmtpSslServer(final String host, final int port, final Authenticator authenticator) {
-		super(host, port == -1 ? DEFAULT_SSL_PORT : port, authenticator);
+	public SmtpSslServer(final String host,
+	                     final int port,
+						 final Authenticator authenticator,
+						 final int timeout,
+						 final boolean strictAddress,
+						 final boolean debug
+		) {
+
+		super(
+			host,
+			port == -1 ? DEFAULT_SSL_PORT : port,
+			authenticator,
+			timeout,
+			strictAddress,
+			debug);
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -97,16 +104,16 @@ public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
 
 		props.setProperty(MAIL_SMTP_STARTTLS_ENABLE, StringPool.TRUE);
 
-		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_PORT, String.valueOf(getPort()));
+		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_PORT, String.valueOf(port));
 
-		props.setProperty(MAIL_SMTP_PORT, String.valueOf(getPort()));
+		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
 
 		if (!plaintextOverTLS) {
 			props.setProperty(MAIL_SMTP_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
 		}
 
 		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
-		props.setProperty(MAIL_HOST, getHost());
+		props.setProperty(MAIL_HOST, host);
 
 		return props;
 	}
