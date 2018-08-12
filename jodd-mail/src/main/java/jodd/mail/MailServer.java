@@ -38,7 +38,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
 	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 	public static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
-	public static final String MAIL_SMTP_FROM = "mail.smtp.from";
+	//public static final String MAIL_SMTP_FROM = "mail.smtp.from";
 
 	public static final String MAIL_SMTP_CONNECTIONTIMEOUT = "mail.smtp.connectiontimeout";
 	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
@@ -101,34 +101,22 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 */
 	protected final int timeout;
 
+	protected final Properties customProperties;
+
 	/**
 	 * {@link MailServer} defined with its host, port and {@link Authenticator}.
-	 *
-	 * @param host          The host to use.
-	 * @param port          The port to use.
-	 * @param authenticator The {@link Authenticator} to use.
-	 * @param attachmentStorage folder where to store attachments.
-	 * @param timeout       Connection timeout, or 0 if not specified.
-	 * @param debugMode     Debug mode.
 	 */
-	protected MailServer(
-			final String host,
-			final int port,
-			final Authenticator authenticator,
-			final File attachmentStorage,
-			final int timeout,
-			final boolean strictAddress,
-			final boolean debugMode
-	) {
-		Objects.requireNonNull(host, "Host cannot be null");
+	protected MailServer(final Builder builder, final int defaultPort) {
+		Objects.requireNonNull(builder.host, "Host cannot be null");
 
-		this.host = host;
-		this.port = port;
-		this.authenticator = authenticator;
-		this.attachmentStorage = attachmentStorage;
-		this.timeout = timeout;
-		this.strictAddress = strictAddress;
-		this.debugMode = debugMode;
+		this.host = builder.host;
+		this.port = builder.port == -1 ? defaultPort : builder.port;
+		this.authenticator = builder.authenticator;
+		this.attachmentStorage = builder.attachmentStorage;
+		this.timeout = builder.timeout;
+		this.strictAddress = builder.strictAddress;
+		this.debugMode = builder.debug;
+		this.customProperties = builder.customProperties;
 	}
 
 	/**
@@ -147,6 +135,8 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 	 */
 	protected Properties createSessionProperties() {
 		final Properties props = new Properties();
+
+		props.putAll(customProperties);
 
 		if (debugMode) {
 			props.put(MAIL_DEBUG, "true");
@@ -187,6 +177,7 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		private boolean debug;
 		private int timeout = 0;
 		private boolean strictAddress = true;
+		private Properties customProperties = new Properties();
 
 		/**
 		 * Sets the host.
@@ -289,6 +280,11 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 			return this;
 		}
 
+		public Builder property(final String name, final String value) {
+			this.customProperties.put(name, value);
+			return this;
+		}
+
 		// ---------------------------------------------------------------- build
 
 		/**
@@ -298,9 +294,9 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 */
 		public ImapServer buildImapMailServer() {
 			if (ssl) {
-				return new ImapSslServer(host, port, authenticator, attachmentStorage, timeout, strictAddress, debug);
+				return new ImapSslServer(this);
 			}
-			return new ImapServer(host, port, authenticator, attachmentStorage, timeout, strictAddress, debug);
+			return new ImapServer(this);
 		}
 
 		/**
@@ -311,9 +307,9 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 */
 		public Pop3Server buildPop3MailServer() {
 			if (ssl) {
-				return new Pop3SslServer(host, port, authenticator, attachmentStorage, timeout, strictAddress, debug);
+				return new Pop3SslServer(this);
 			}
-			return new Pop3Server(host, port, authenticator, attachmentStorage, timeout, strictAddress, debug);
+			return new Pop3Server(this);
 		}
 
 		/**
@@ -324,9 +320,9 @@ public abstract class MailServer<MailSessionImpl extends MailSession> {
 		 */
 		public SmtpServer buildSmtpMailServer() {
 			if (ssl) {
-				return new SmtpSslServer(host, port, authenticator, timeout, strictAddress, debug);
+				return new SmtpSslServer(this);
 			}
-			return new SmtpServer(host, port, authenticator, timeout, strictAddress, debug);
+			return new SmtpServer(this);
 		}
 	}
 }

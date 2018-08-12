@@ -25,7 +25,6 @@
 
 package jodd.mail;
 
-import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -47,22 +46,11 @@ public class SmtpServer extends MailServer<SendMailSession> {
 
 	// ---------------------------------------------------------------- create
 
-	public SmtpServer(
-			final String host,
-			final int port,
-			final Authenticator authenticator,
-			final int timeout,
-			final boolean strictAddress,
-			final boolean debug) {
-
-		super(
-			host,
-			port == -1 ? DEFAULT_SMTP_PORT : port,
-			authenticator,
-			null,
-			timeout,
-			strictAddress,
-			debug);
+	public SmtpServer(final Builder builder) {
+		super(builder, DEFAULT_SMTP_PORT);
+	}
+	protected SmtpServer(final Builder builder, final int defaultPort) {
+		super(builder, defaultPort);
 	}
 
 	// ---------------------------------------------------------------- properties

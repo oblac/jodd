@@ -27,11 +27,9 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 
-import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
-import java.io.File;
 import java.util.Properties;
 
 /**
@@ -46,24 +44,13 @@ public class ImapServer extends MailServer<ReceiveMailSession> {
 	 */
 	protected static final int DEFAULT_IMAP_PORT = 143;
 
-	public ImapServer(
-			final String host,
-			final int port,
-			final Authenticator authenticator,
-			final File attachmentStorage,
-			final int timeout,
-			final boolean strictAddress,
-			final boolean debugMode) {
-
-		super(
-			host,
-			port == -1 ? DEFAULT_IMAP_PORT : port,
-			authenticator,
-			attachmentStorage,
-			timeout,
-			strictAddress,
-			debugMode);
+	public ImapServer(final Builder builder) {
+		super(builder, DEFAULT_IMAP_PORT);
 	}
+	protected ImapServer(final Builder builder, final int defaultPort) {
+		super(builder, defaultPort);
+	}
+
 
 	@Override
 	protected Properties createSessionProperties() {

@@ -28,11 +28,9 @@ package jodd.mail;
 import com.sun.mail.imap.IMAPSSLStore;
 import jodd.util.StringPool;
 
-import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.URLName;
-import java.io.File;
 import java.util.Properties;
 
 /**
@@ -45,23 +43,8 @@ public class ImapSslServer extends ImapServer {
 	 */
 	protected static final int DEFAULT_SSL_PORT = 993;
 
-	public ImapSslServer(
-			final String host,
-			final int port,
-			final Authenticator authenticator,
-			final File attachmentStorage,
-			final int timeout,
-			final boolean strictAddress,
-			final boolean debugMode
-	) {
-		super(
-			host,
-			port == -1 ? DEFAULT_SSL_PORT : port,
-			authenticator,
-			attachmentStorage,
-			timeout,
-			strictAddress,
-			debugMode);
+	public ImapSslServer(final Builder builder) {
+		super(builder, DEFAULT_SSL_PORT);
 	}
 
 	@Override

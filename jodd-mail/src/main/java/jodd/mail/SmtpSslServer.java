@@ -27,7 +27,6 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 
-import javax.mail.Authenticator;
 import java.util.Properties;
 
 /**
@@ -40,21 +39,8 @@ public class SmtpSslServer extends SmtpServer {
 	 */
 	protected static final int DEFAULT_SSL_PORT = 465;
 
-	public SmtpSslServer(final String host,
-	                     final int port,
-						 final Authenticator authenticator,
-						 final int timeout,
-						 final boolean strictAddress,
-						 final boolean debug
-		) {
-
-		super(
-			host,
-			port == -1 ? DEFAULT_SSL_PORT : port,
-			authenticator,
-			timeout,
-			strictAddress,
-			debug);
+	public SmtpSslServer(final Builder builder) {
+		super(builder, DEFAULT_SSL_PORT);
 	}
 
 	// ---------------------------------------------------------------- properties

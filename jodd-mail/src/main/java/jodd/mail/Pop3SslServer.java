@@ -28,11 +28,9 @@ package jodd.mail;
 import com.sun.mail.pop3.POP3SSLStore;
 import jodd.util.StringPool;
 
-import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.URLName;
-import java.io.File;
 import java.util.Properties;
 
 /**
@@ -42,23 +40,8 @@ public class Pop3SslServer extends Pop3Server {
 
 	protected static final int DEFAULT_SSL_PORT = 995;
 
-	public Pop3SslServer(
-			final String host,
-			final int port,
-			final Authenticator authenticator,
-			final File attachmentStorage,
-			final int timeout,
-			final boolean strictAddress,
-			final boolean debugMode) {
-
-		super(
-			host,
-			port == -1 ? DEFAULT_SSL_PORT : port,
-			authenticator,
-			attachmentStorage,
-			timeout,
-			strictAddress,
-			debugMode);
+	public Pop3SslServer(final Builder builder) {
+		super(builder, DEFAULT_SSL_PORT);
 	}
 
 	@Override

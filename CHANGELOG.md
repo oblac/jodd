@@ -6,9 +6,18 @@ All notable changes to Jodd project are documented here.
 
 (work in progress :)
 
+### Bug fixes
+
++ **mail** - fixed unused `debug` and `timeout`. 
+
+### Breaking changes
+
++ **mail** - `debug` and `timeout` are now applied before creating the mail server.
+
 ### New Features
 
-+ **joy** - added excluded jars
++ **joy** - added excluded jars for faster scanning.
++ **mail** - added custom properties.
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 
