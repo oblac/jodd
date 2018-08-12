@@ -50,7 +50,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 	protected ProxyInfo proxy = ProxyInfo.directProxy();
 	protected String secureEnabledProtocols = System.getProperty("https.protocols");
-	protected String sslProtocol = "SSL";
+	protected String sslProtocol = "TLSv1.1";
 
 	/**
 	 * Defines proxy to use for created sockets.
@@ -69,16 +69,16 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Returns current ssl protocol used
+	 * Returns current SSL protocol used.
 	 */
 	public String getSslProtocol() {
 		return sslProtocol;
 	}
 
 	/**
-	 * Sets default SSL protocol to use. One of "SSL", "TLSv1.2", "TLSv1.1", "TLSv1"
+	 * Sets default SSL protocol to use. One of "SSL", "TLSv1.2", "TLSv1.1", "TLSv1".
 	 */
-	public SocketHttpConnectionProvider setSslProtocol(String sslProtocol) {
+	public SocketHttpConnectionProvider setSslProtocol(final String sslProtocol) {
 		this.sslProtocol = sslProtocol;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 */
 	@Override
 	public HttpConnection createHttpConnection(final HttpRequest httpRequest) throws IOException {
-		SocketHttpConnection httpConnection;
+		final SocketHttpConnection httpConnection;
 
 		final boolean https = httpRequest.protocol().equalsIgnoreCase("https");
 
