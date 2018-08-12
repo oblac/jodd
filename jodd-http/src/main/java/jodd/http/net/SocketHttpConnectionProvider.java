@@ -50,6 +50,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 	protected ProxyInfo proxy = ProxyInfo.directProxy();
 	protected String secureEnabledProtocols = System.getProperty("https.protocols");
+	protected String sslProtocol = "TLSv1.1";
 
 	/**
 	 * Defines proxy to use for created sockets.
@@ -68,13 +69,28 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
+	 * Returns current SSL protocol used.
+	 */
+	public String getSslProtocol() {
+		return sslProtocol;
+	}
+
+	/**
+	 * Sets default SSL protocol to use. One of "SSL", "TLSv1.2", "TLSv1.1", "TLSv1".
+	 */
+	public SocketHttpConnectionProvider setSslProtocol(final String sslProtocol) {
+		this.sslProtocol = sslProtocol;
+		return this;
+	}
+
+	/**
 	 * Creates new connection from current {@link jodd.http.HttpRequest request}.
 	 *
 	 * @see #createSocket(String, int, int)
 	 */
 	@Override
 	public HttpConnection createHttpConnection(final HttpRequest httpRequest) throws IOException {
-		SocketHttpConnection httpConnection;
+		final SocketHttpConnection httpConnection;
 
 		final boolean https = httpRequest.protocol().equalsIgnoreCase("https");
 
@@ -215,7 +231,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	protected SSLSocketFactory getDefaultSSLSocketFactory(final boolean trustAllCertificates) throws IOException {
 		if (trustAllCertificates) {
 			try {
-				SSLContext sc = SSLContext.getInstance("SSL");
+				SSLContext sc = SSLContext.getInstance(sslProtocol);
 				sc.init(null, TrustManagers.TRUST_ALL_CERTS, new java.security.SecureRandom());
 				return sc.getSocketFactory();
 			}
