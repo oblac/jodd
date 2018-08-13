@@ -572,7 +572,6 @@ class JsonSerializerTest {
 		json = new JsonSerializer().excludeNulls(true).serialize(map);
 		assertEquals("{\"b\":{}}", json);
 
-		map.put("b", new HashMap<>());
 		json = new JsonSerializer().excludeNulls(true).onValue(value -> {
 			if (value instanceof Map) {
 				if (((Map)value).isEmpty()) {
@@ -581,6 +580,36 @@ class JsonSerializerTest {
 			}
 			return null;
 		}).serialize(map);
+		assertEquals("{}", json);
+	}
+
+	@Test
+	void testExcludeNullEmpty() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("a", null);
+
+		map.put("b", new HashMap<>());
+
+		String json = new JsonSerializer().excludeNulls(true).serialize(map);
+		assertEquals("{\"b\":{}}", json);
+
+		json = new JsonSerializer().excludeNulls(true).excludeEmpty(true).serialize(map);
+		assertEquals("{}", json);
+
+		map.put("c", new ArrayList<>());
+		json = new JsonSerializer().excludeNulls(true).excludeEmpty(true).serialize(map);
+		assertEquals("{}", json);
+
+		map.put("d", new int[0]);
+		json = new JsonSerializer().excludeNulls(true).excludeEmpty(true).serialize(map);
+		assertEquals("{}", json);
+
+		map.put("e", new HashSet<>());
+		json = new JsonSerializer().excludeNulls(true).excludeEmpty(true).serialize(map);
+		assertEquals("{}", json);
+
+		map.put("f", new Object[0]);
+		json = new JsonSerializer().excludeNulls(true).excludeEmpty(true).serialize(map);
 		assertEquals("{}", json);
 	}
 

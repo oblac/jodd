@@ -33,9 +33,14 @@ public class JsonArraySerializer implements TypeJsonSerializer<JsonArray> {
 
 	@Override
 	public boolean serialize(final JsonContext jsonContext, final JsonArray jsonArray) {
+		final int length = jsonArray.size();
+
+		if (length == 0 && jsonContext.isExcludeEmpty()) {
+			return true;
+		}
+
 		jsonContext.writeOpenArray();
 
-		int length = jsonArray.size();
 		int count = 0;
 
 		for (int i = 0; i < length; i++) {

@@ -20,7 +20,8 @@ All notable changes to Jodd project are documented here.
 
 + **joy** - added excluded jars for faster scanning.
 + **mail** - added custom properties.
-+ **json** - added `onValue` callback.
++ **json** - added `onValue` callback for JSON serializer.
++ **json** - added `excludeEmpty` flag for JSON serializer.
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 

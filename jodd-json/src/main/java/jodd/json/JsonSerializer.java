@@ -112,6 +112,7 @@ public class JsonSerializer {
 	protected Class[] excludedTypes = Defaults.excludedTypes;
 	protected String[] excludedTypeNames = Defaults.excludedTypeNames;
 	protected boolean excludeNulls = false;
+	protected boolean excludeEmpty = false;
 	protected Function<Object, TypeJsonSerializer> serializerResolver = null;
 
 	/**
@@ -264,6 +265,11 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer excludeNulls(final boolean excludeNulls) {
 		this.excludeNulls = excludeNulls;
+		return this;
+	}
+
+	public JsonSerializer excludeEmpty(final boolean excludeEmpty) {
+		this.excludeEmpty = excludeEmpty;
 		return this;
 	}
 

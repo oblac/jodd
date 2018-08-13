@@ -48,6 +48,7 @@ public class JsonContext extends JsonWriter {
 	protected int bagSize = 0;
 	protected final Path path;
 	protected final boolean excludeNulls;
+	protected final boolean excludeEmpty;
 	protected final Function<Object, TypeJsonSerializer> serializerResolver;
 
 	public JsonContext(final JsonSerializer jsonSerializer, final Appendable appendable) {
@@ -56,6 +57,7 @@ public class JsonContext extends JsonWriter {
 		this.bag = new ArrayList<>();
 		this.path = new Path();
 		this.excludeNulls = jsonSerializer.excludeNulls;
+		this.excludeEmpty = jsonSerializer.excludeEmpty;
 		this.serializerResolver = jsonSerializer.serializerResolver;
 	}
 
@@ -71,6 +73,10 @@ public class JsonContext extends JsonWriter {
 	 */
 	public boolean isExcludeNulls() {
 		return excludeNulls;
+	}
+
+	public boolean isExcludeEmpty() {
+		return excludeEmpty;
 	}
 
 	// ---------------------------------------------------------------- path and value context

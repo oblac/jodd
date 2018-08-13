@@ -35,6 +35,10 @@ public class FloatArrayJsonSerializer implements TypeJsonSerializer<float[]> {
 
 	@Override
 	public boolean serialize(final JsonContext jsonContext, final float[] array) {
+		if (array.length == 0 && jsonContext.isExcludeEmpty()) {
+			return true;
+		}
+
 		jsonContext.writeOpenArray();
 
 		for (int i = 0; i < array.length; i++) {

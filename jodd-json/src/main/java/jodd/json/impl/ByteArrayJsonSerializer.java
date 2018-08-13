@@ -35,6 +35,10 @@ public class ByteArrayJsonSerializer implements TypeJsonSerializer<byte[]> {
 
 	@Override
 	public boolean serialize(final JsonContext jsonContext, final byte[] array) {
+		if (array.length == 0 && jsonContext.isExcludeEmpty()) {
+			return true;
+		}
+
 		jsonContext.writeOpenArray();
 
 		for (int i = 0; i < array.length; i++) {
