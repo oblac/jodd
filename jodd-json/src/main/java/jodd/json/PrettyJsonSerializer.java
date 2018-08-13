@@ -69,7 +69,7 @@ public class PrettyJsonSerializer extends JsonSerializer {
 
 	@Override
 	public JsonContext createJsonContext(final Appendable appendable) {
-		return new JsonContext(this, appendable, excludeNulls, strictStringEncoding) {
+		return new JsonContext(this, appendable) {
 			@Override
 			public void writeOpenArray() {
 				deep++;
