@@ -25,9 +25,9 @@
 
 package jodd.json;
 
+import jodd.buffer.FastCharBuffer;
 import jodd.inex.InExRules;
 import jodd.util.ArraysUtil;
-import jodd.buffer.FastCharBuffer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -312,6 +312,6 @@ public class JsonSerializer {
 	 * Creates new JSON context.
 	 */
 	public JsonContext createJsonContext(final Appendable appendable) {
-		return new JsonContext(this, appendable, excludeNulls, strictStringEncoding);
+		return new JsonContext(this, appendable);
 	}
 }

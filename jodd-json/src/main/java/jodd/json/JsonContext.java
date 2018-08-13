@@ -48,12 +48,12 @@ public class JsonContext extends JsonWriter {
 	protected final Path path;
 	protected final boolean excludeNulls;
 
-	public JsonContext(final JsonSerializer jsonSerializer, final Appendable appendable, final boolean excludeNulls, final boolean strictStringEncoding) {
-		super(appendable, strictStringEncoding);
+	public JsonContext(final JsonSerializer jsonSerializer, final Appendable appendable) {
+		super(appendable, jsonSerializer.strictStringEncoding);
 		this.jsonSerializer = jsonSerializer;
 		this.bag = new ArrayList<>();
 		this.path = new Path();
-		this.excludeNulls = excludeNulls;
+		this.excludeNulls = jsonSerializer.excludeNulls;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class JsonContext extends JsonWriter {
 	}
 
 	/**
-	 * Returns <code>true</code> if null values have to be excluded.
+	 * Returns <code>true</code> if <code>null</code> values have to be excluded.
 	 */
 	public boolean isExcludeNulls() {
 		return excludeNulls;
