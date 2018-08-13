@@ -268,6 +268,9 @@ public class JsonSerializer {
 		return this;
 	}
 
+	/**
+	 * Excludes empty maps and collections.
+	 */
 	public JsonSerializer excludeEmpty(final boolean excludeEmpty) {
 		this.excludeEmpty = excludeEmpty;
 		return this;
