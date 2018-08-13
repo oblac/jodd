@@ -125,6 +125,27 @@ public class ReferencesResolver {
 		return reference;
 	}
 
+	public BeanReferences readReferenceFromAnnotation(final FieldDescriptor fieldDescriptor) {
+		final PetiteInject ref = fieldDescriptor.getField().getAnnotation(PetiteInject.class);
+
+		if (ref == null) {
+			return null;
+		}
+
+		BeanReferences reference = null;
+
+		String name = ref.value().trim();
+		if (name.length() != 0) {
+			reference = BeanReferences.of(name);
+		}
+
+		//reference = updateReferencesWithDefaultsIfNeeded(propertyDescriptor, reference);
+
+		reference = reference.removeDuplicateNames();
+
+		return reference;
+	}
+
 	/**
 	 * Extracts references from method or constructor annotation.
 	 */

@@ -18,6 +18,9 @@ All notable changes to Jodd project are documented here.
 
 + **joy** - added excluded jars for faster scanning.
 + **mail** - added custom properties.
++ **petite** - allow injection in the private fields of super types.
+
+
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 
