@@ -32,6 +32,7 @@ import jodd.util.Wildcard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static jodd.util.StringPool.NULL;
 
@@ -47,6 +48,7 @@ public class JsonContext extends JsonWriter {
 	protected int bagSize = 0;
 	protected final Path path;
 	protected final boolean excludeNulls;
+	protected final Function<Object, TypeJsonSerializer> serializerResolver;
 
 	public JsonContext(final JsonSerializer jsonSerializer, final Appendable appendable) {
 		super(appendable, jsonSerializer.strictStringEncoding);
@@ -54,6 +56,7 @@ public class JsonContext extends JsonWriter {
 		this.bag = new ArrayList<>();
 		this.path = new Path();
 		this.excludeNulls = jsonSerializer.excludeNulls;
+		this.serializerResolver = jsonSerializer.serializerResolver;
 	}
 
 	/**
@@ -172,24 +175,33 @@ public class JsonContext extends JsonWriter {
 
 		TypeJsonSerializer typeJsonSerializer = null;
 
-		// + read paths map
+		// callback
 
-		if (jsonSerializer.pathSerializersMap != null) {
-			typeJsonSerializer = jsonSerializer.pathSerializersMap.get(path);
+		if (serializerResolver != null) {
+			typeJsonSerializer = serializerResolver.apply(object);
 		}
-
-		Class type = object.getClass();
-
-		// + read types map
-
-		if (jsonSerializer.typeSerializersMap != null) {
-			typeJsonSerializer = jsonSerializer.typeSerializersMap.lookup(type);
-		}
-
-		// + globals
 
 		if (typeJsonSerializer == null) {
-			typeJsonSerializer = TypeJsonSerializerMap.get().lookup(type);
+
+			// + read paths map
+
+			if (jsonSerializer.pathSerializersMap != null) {
+				typeJsonSerializer = jsonSerializer.pathSerializersMap.get(path);
+			}
+
+			final Class type = object.getClass();
+
+			// + read local types map
+
+			if (jsonSerializer.typeSerializersMap != null) {
+				typeJsonSerializer = jsonSerializer.typeSerializersMap.lookup(type);
+			}
+
+			// + globals
+
+			if (typeJsonSerializer == null) {
+				typeJsonSerializer = TypeJsonSerializerMap.get().lookup(type);
+			}
 		}
 
 		return typeJsonSerializer.serialize(this, object);

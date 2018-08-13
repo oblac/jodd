@@ -31,6 +31,7 @@ import jodd.util.ArraysUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * JSON serializer.
@@ -111,6 +112,7 @@ public class JsonSerializer {
 	protected Class[] excludedTypes = Defaults.excludedTypes;
 	protected String[] excludedTypeNames = Defaults.excludedTypeNames;
 	protected boolean excludeNulls = false;
+	protected Function<Object, TypeJsonSerializer> serializerResolver = null;
 
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
@@ -270,6 +272,15 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer strictStringEncoding(final boolean strictStringEncoding) {
 		this.strictStringEncoding = strictStringEncoding;
+		return this;
+	}
+
+	/**
+	 * Defines callback for value serialization. It defines the instance of {@link TypeJsonSerializer}
+	 * to be used with the value. If {@code null} is returned, default serializer will be resolved.
+	 */
+	public JsonSerializer onValue(final Function<Object, TypeJsonSerializer> function) {
+		this.serializerResolver = function;
 		return this;
 	}
 

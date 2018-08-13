@@ -8,16 +8,19 @@ All notable changes to Jodd project are documented here.
 
 ### Bug fixes
 
-+ **mail** - fixed unused `debug` and `timeout`. 
++ **mail** - fixed unused `debug` and `timeout`.
++ **http** - secure connection was sending `CONNECT` string twice.
 
 ### Breaking changes
 
 + **mail** - `debug` and `timeout` are now applied before creating the mail server.
++ **http** - default security has been set to `TLSv1.1`.
 
 ### New Features
 
 + **joy** - added excluded jars for faster scanning.
 + **mail** - added custom properties.
++ **json** - added `onValue` callback.
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 

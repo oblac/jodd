@@ -29,6 +29,7 @@ import jodd.json.fixtures.JsonParsers;
 import jodd.json.fixtures.model.FileMan;
 import jodd.json.fixtures.model.HitList;
 import jodd.json.fixtures.model.State;
+import jodd.json.impl.EmptyJsonSerializer;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 import jodd.json.meta.TypeData;
@@ -553,6 +554,34 @@ class JsonSerializerTest {
 		state.setId(1);
 		json = new JsonSerializer().excludeNulls(true).serialize(map);
 		assertEquals("{\"one\":{\"id\":1}}", json);
+	}
+
+
+	@Test
+	void testExcludeNullCollections() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("a", null);
+
+		String json = new JsonSerializer().serialize(map);
+		assertEquals("{\"a\":null}", json);
+
+		json = new JsonSerializer().excludeNulls(true).serialize(map);
+		assertEquals("{}", json);
+
+		map.put("b", new HashMap<>());
+		json = new JsonSerializer().excludeNulls(true).serialize(map);
+		assertEquals("{\"b\":{}}", json);
+
+		map.put("b", new HashMap<>());
+		json = new JsonSerializer().excludeNulls(true).onValue(value -> {
+			if (value instanceof Map) {
+				if (((Map)value).isEmpty()) {
+					return new EmptyJsonSerializer();
+				}
+			}
+			return null;
+		}).serialize(map);
+		assertEquals("{}", json);
 	}
 
 	@Test
