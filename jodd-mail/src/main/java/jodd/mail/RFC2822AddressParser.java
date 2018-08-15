@@ -280,8 +280,7 @@ public class RFC2822AddressParser {
 	}
 
 	/**
-	 * Parses email address. Returns {@code null} if parsing fails for some reason.
-	 * Returns {@link ParsedAddress parsed address}, that might be valid or note.
+	 * Parses email address. Returns {@link ParsedAddress parsed address}, that might be valid or not.
 	 */
 	public ParsedAddress parse(String email) {
 		email = email.trim();
@@ -327,7 +326,7 @@ public class RFC2822AddressParser {
 	public InternetAddress parseToInternetAddress(final String email) {
 		final ParsedAddress parsedAddress = parse(email);
 
-		if (parsedAddress == null) {
+		if (!parsedAddress.isValid()) {
 			return null;
 		}
 
@@ -340,7 +339,7 @@ public class RFC2822AddressParser {
 	public EmailAddress parseToEmailAddress(final String email) {
 		final ParsedAddress parsedAddress = parse(email);
 
-		if (parsedAddress == null) {
+		if (!parsedAddress.isValid()) {
 			return null;
 		}
 

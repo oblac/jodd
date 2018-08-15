@@ -34,9 +34,11 @@ import jodd.vtor.ValidationConstraintContext;
  */
 public class EmailConstraint implements ValidationConstraint<Email> {
 
+	@Override
 	public void configure(final Email annotation) {
 	}
 
+	@Override
 	public boolean isValid(final ValidationConstraintContext vcc, final Object value) {
 		if (value == null) {
 			return true;
@@ -44,7 +46,7 @@ public class EmailConstraint implements ValidationConstraint<Email> {
 
 		RFC2822AddressParser.ParsedAddress address = RFC2822AddressParser.LOOSE.parse(value.toString());
 
-		if (address == null) {
+		if (!address.isValid()) {
 			return false;
 		}
 

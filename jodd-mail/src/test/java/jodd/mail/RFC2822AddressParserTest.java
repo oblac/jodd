@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RFC2822AddressParserTest {
@@ -122,6 +123,12 @@ class RFC2822AddressParserTest {
 		assertFalse(new RFC2822AddressParser().parse(".me@example.com").isValid());
 		assertFalse(new RFC2822AddressParser().parse("me@example..com").isValid());
 		assertFalse(new RFC2822AddressParser().parse("me\\@example.com").isValid());
+	}
+
+	@Test
+	void testInvalidEmailReturnsNull() {
+		assertNull(new RFC2822AddressParser().parseToEmailAddress("xxxx"));
+		assertNull(new RFC2822AddressParser().parseToInternetAddress("xxxx"));
 	}
 
 }
