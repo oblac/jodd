@@ -34,7 +34,9 @@ import jodd.util.ClassUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Resolves properties.
@@ -50,38 +52,51 @@ public class PropertyResolver {
 	/**
 	 * Resolves all properties for given type.
 	 */
-	public PropertyInjectionPoint[] resolve(final Class type, final boolean autowire) {
+	public PropertyInjectionPoint[] resolve(Class type, final boolean autowire) {
+		final List<PropertyInjectionPoint> list = new ArrayList<>();
+		final Set<String> usedPropertyNames = new HashSet<>();
+
 		// lookup fields
-		ClassDescriptor cd = ClassIntrospector.get().lookup(type);
-		List<PropertyInjectionPoint> list = new ArrayList<>();
-		PropertyDescriptor[] allPropertyDescriptors = cd.getAllPropertyDescriptors();
+		while (type != Object.class) {
 
-		for (PropertyDescriptor propertyDescriptor : allPropertyDescriptors) {
+			final ClassDescriptor cd = ClassIntrospector.get().lookup(type);
+			final PropertyDescriptor[] allPropertyDescriptors = cd.getAllPropertyDescriptors();
 
-			if (propertyDescriptor.isGetterOnly()) {
-				continue;
-			}
+			for (PropertyDescriptor propertyDescriptor : allPropertyDescriptors) {
 
-			Class propertyType = propertyDescriptor.getType();
-			if (ClassUtil.isTypeOf(propertyType, Collection.class)) {
-				continue;
-			}
-
-			BeanReferences reference = referencesResolver.readReferenceFromAnnotation(propertyDescriptor);
-
-			if (reference == null) {
-				if (!autowire) {
+				if (propertyDescriptor.isGetterOnly()) {
 					continue;
 				}
-				else {
-					reference = referencesResolver.buildDefaultReference(propertyDescriptor);
+
+				if (usedPropertyNames.contains(propertyDescriptor.getName())) {
+					continue;
 				}
+
+				Class propertyType = propertyDescriptor.getType();
+				if (ClassUtil.isTypeOf(propertyType, Collection.class)) {
+					continue;
+				}
+
+				BeanReferences reference = referencesResolver.readReferenceFromAnnotation(propertyDescriptor);
+
+				if (reference == null) {
+					if (!autowire) {
+						continue;
+					} else {
+						reference = referencesResolver.buildDefaultReference(propertyDescriptor);
+					}
+				}
+
+				list.add(new PropertyInjectionPoint(propertyDescriptor, reference));
+
+				usedPropertyNames.add(propertyDescriptor.getName());
 			}
 
-			list.add(new PropertyInjectionPoint(propertyDescriptor, reference));
+			// go to the supertype
+			type = type.getSuperclass();
 		}
 
-		PropertyInjectionPoint[] fields;
+		final PropertyInjectionPoint[] fields;
 
 		if (list.isEmpty()) {
 			fields = PropertyInjectionPoint.EMPTY;

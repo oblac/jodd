@@ -22,6 +22,9 @@ All notable changes to Jodd project are documented here.
 + **mail** - added custom properties.
 + **json** - added `onValue` callback for JSON serializer.
 + **json** - added `excludeEmpty` flag for JSON serializer.
++ **petite** - allow injection in the private fields of super types.
+
+
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 
