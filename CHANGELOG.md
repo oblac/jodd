@@ -8,6 +8,7 @@ All notable changes to Jodd project are documented here.
 
 ### Bug fixes
 
++ **core** - fixed special cases in `NaturalOrderComparator`, making rules a bit more strict.  
 + **mail** - fixed unused `debug` and `timeout`.
 + **mail** - `RFC2822AddressParser` methods `parseToXxx()` now returns `null` for invalid emails.
 + **http** - secure connection was sending `CONNECT` string twice.

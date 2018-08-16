@@ -51,56 +51,83 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 
 	protected final boolean ignoreCase;
 	protected final boolean ignoreAccents;
+	protected final boolean skipSpaces;
 
 	public NaturalOrderComparator() {
-		this(false, true);
+		this(false, true, true);
 	}
 
-	public NaturalOrderComparator(final boolean ignoreCase, final boolean ignoreAccents) {
+	public NaturalOrderComparator(final boolean ignoreCase, final boolean ignoreAccents, final boolean skipSpaces) {
 		this.ignoreCase = ignoreCase;
 		this.ignoreAccents = ignoreAccents;
+		this.skipSpaces = skipSpaces;
 	}
 
 	/**
 	 * Compare digits at certain position in two strings.
 	 * The longest run of digits wins. That aside, the greatest
 	 * value wins.
+	 * @return if numbers are different, only 1 element is returned.
 	 */
-	protected int compareDigits(final String str1, int ndx1, final String str2, int ndx2) {
-		int bias = 0;
+	protected int[] compareDigits(final String str1, int ndx1, final String str2, int ndx2) {
+		// iterate all digits in the first string
 
-		while (true) {
-			char char1 = charAt(str1, ndx1);
-			char char2 = charAt(str2, ndx2);
-
-			boolean isDigitChar1 = CharUtil.isDigit(char1);
-			boolean isDigitChar2 = CharUtil.isDigit(char2);
-
-			if (!isDigitChar1 && !isDigitChar2) {
-				return bias;
-			}
-			if (!isDigitChar1) {
-				return -1;
-			}
-			if (!isDigitChar2) {
-				return 1;
-			}
-
-			if (char1 < char2) {
-				if (bias == 0) {
-					bias = -1;
-				}
-			} else if (char1 > char2) {
-				if (bias == 0) {
-					bias = 1;
-				}
-			} else if (char1 == 0 && char2 == 0) {
-				return bias;
-			}
-
+		int zeroCount1 = 0;
+		while (charAt(str1, ndx1) == '0') {
+			zeroCount1++;
 			ndx1++;
+		}
+
+		int len1 = 0;
+		while (true) {
+			final char char1 = charAt(str1, ndx1);
+			final boolean isDigitChar1 = CharUtil.isDigit(char1);
+			if (!isDigitChar1) {
+				break;
+			}
+			len1++;
+			ndx1++;
+		}
+
+		// iterate all digits in the second string and compare with the first
+
+		int zeroCount2 = 0;
+		while (charAt(str2, ndx2) == '0') {
+			zeroCount2++;
 			ndx2++;
 		}
+
+		int len2 = 0;
+
+		int ndx1_new = ndx1 - len1;
+		int equalNumbers = 0;
+
+		while (true) {
+			final char char2 = charAt(str2, ndx2);
+			final boolean isDigitChar2 = CharUtil.isDigit(char2);
+			if (!isDigitChar2) {
+				break;
+			}
+			if (equalNumbers == 0 && (ndx1_new < ndx1)) {
+				equalNumbers = charAt(str1, ndx1_new++) - char2;
+			}
+			len2++;
+			ndx2++;
+		}
+
+		// compare
+
+		if (len1 != len2) {
+			// numbers are not equals size
+			return new int[] {len1 - len2};
+		}
+
+		if (equalNumbers != 0) {
+			return new int[] {equalNumbers};
+		}
+
+		// numbers are equal, but number of zeros is different
+		return new int[] {0, zeroCount1 - zeroCount2, ndx1, ndx2};
 	}
 
 	@Override
@@ -120,108 +147,54 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 		}
 
 		int ndx1 = 0, ndx2 = 0;
-		int zeroCount1, zeroCount2;
-		int zerosDelta = 0;
-		int lastAllZerosResult = 0;
 		char char1, char2;
-
-		int result;
+		int lastZeroDifference = 0;
 
 		while (true) {
-			// only count the number of zeroes leading the last number compared
-			zeroCount1 = zeroCount2 = 0;
-
 			char1 = charAt(str1, ndx1);
 			char2 = charAt(str2, ndx2);
 
-			// skip over leading spaces or zeros in both strings
-
-			while (Character.isSpaceChar(char1) || char1 == '0') {
-				if (char1 == '0') {
-					zeroCount1++;
-				} else {
-					zeroCount1 = 0;		// counts only last 0 prefixes, space char interrupts the array of 0s
+			// skip over spaces in both strings
+			if (skipSpaces) {
+				while (Character.isSpaceChar(char1)) {
+					ndx1++;
+					char1 = charAt(str1, ndx1);
 				}
-				ndx1++;
-				char1 = charAt(str1, ndx1);
-			}
 
-			while (Character.isSpaceChar(char2) || char2 == '0') {
-				if (char2 == '0') {
-					zeroCount2++;
-				} else {
-					zeroCount2 = 0;
+				while (Character.isSpaceChar(char2)) {
+					ndx2++;
+					char2 = charAt(str2, ndx2);
 				}
-				ndx2++;
-				char2 = charAt(str2, ndx2);
 			}
 
-			if (zeroCount1 > 0 || zeroCount2 > 0) {
-				zerosDelta = zeroCount1 - zeroCount2;
-			}
+			// check for numbers
 
-			// process remaining digits
-
-			boolean isDigitChar1 = CharUtil.isDigit(char1);
-			boolean isDigitChar2 = CharUtil.isDigit(char2);
+			final boolean isDigitChar1 = CharUtil.isDigit(char1);
+			final boolean isDigitChar2 = CharUtil.isDigit(char2);
 
 			if (isDigitChar1 && isDigitChar2) {
-				result = compareDigits(str1, ndx1, str2, ndx2);
-				if (result != 0) {
+				// numbers detected!
+
+				final int[] result = compareDigits(str1, ndx1, str2, ndx2);
+
+				if (result[0] != 0) {
 					// not equals, return
-					return result;
+					return result[0];
 				}
-				// if numbers are equal
-				if (zeroCount1 != zeroCount2) {
-					return zerosDelta;
+
+				// equals, save zero difference if not already saved
+				if (lastZeroDifference == 0) {
+					lastZeroDifference = result[1];
 				}
+
+				ndx1 = result[2];
+				ndx2 = result[3];
+				continue;
 			}
 
 			if (char1 == 0 && char2 == 0) {
 				// both strings end; the strings are the same
-				if (lastAllZerosResult == 0) {
-					return zerosDelta;
-				}
-				return lastAllZerosResult;
-			}
-
-			// check when one of the numbers is just zeros; as the other
-			// string is still a number
-			if (isDigitChar1 || isDigitChar2) {
-				if (zeroCount1 > 0 && zeroCount2 > 0) {
-					if (zeroCount1 != zeroCount2) {
-						return -zerosDelta;
-					}
-				}
-			}
-
-			// check if both numbers are zeros
-			if (zerosDelta != 0) {
-				// so we really have both number with at least one zero?
-				if (zeroCount1 > 0 && zeroCount2 > 0) {
-					lastAllZerosResult = zerosDelta;
-				} else {
-					// one of the number is empty strings
-					// the other char defines the order!
-
-
-					if (zeroCount1 > 0) {
-						if (char2 > '0') {
-							return -zerosDelta;
-						} else {
-							return zerosDelta;
-						}
-					} else if (zeroCount2 > 0) {
-						if (char1 > '0') {
-							return -zerosDelta;
-						}
-						else  {
-							return zerosDelta;
-						}
-					}
-
-					return 0;
-				}
+				return lastZeroDifference;
 			}
 
 			// compare chars
@@ -252,7 +225,7 @@ public class NaturalOrderComparator<T> implements Comparator<T>, Serializable {
 	 */
 	private char fixAccent(final char c) {
 		for (int i = 0; i < ACCENT_CHARS.length; i+=2) {
-			char accentChar = ACCENT_CHARS[i];
+			final char accentChar = ACCENT_CHARS[i];
 			if (accentChar == c) {
 				return ACCENT_CHARS[i + 1];
 			}

@@ -33,7 +33,7 @@ import java.util.Comparator;
 
 public class FileNameComparator implements Comparator<File>, Serializable {
 	protected final int order;
-	protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true, true);
+	protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true, true, true);
 
 	public FileNameComparator(final boolean ascending) {
 		if (ascending) {

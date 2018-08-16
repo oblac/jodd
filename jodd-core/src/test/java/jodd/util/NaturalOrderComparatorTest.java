@@ -51,7 +51,7 @@ class NaturalOrderComparatorTest {
 		assertEquals("a", array[1]);
 
 		array = new String[] {"a", "A"};
-		Arrays.sort(array, new NaturalOrderComparator<>(false, false));
+		Arrays.sort(array, new NaturalOrderComparator<>(false, false, true));
 		assertEquals("A", array[0]);
 		assertEquals("a", array[1]);
 	}
@@ -124,8 +124,8 @@ class NaturalOrderComparatorTest {
 			"pic4",
 			"pic 4 else",
 			"pic 5",
-			"pic 5 something",
 			"pic05",
+			"pic 5 something",
 			"pic 6",
 			"pic   7",
 			"pic100",
@@ -152,7 +152,7 @@ class NaturalOrderComparatorTest {
 	}
 
 	private void assertListOrderByShuffling(String[] strings, boolean ignoreCase) {
-		Comparator<String> c = new NaturalOrderComparator<>(ignoreCase, true);
+		Comparator<String> c = new NaturalOrderComparator<>(ignoreCase, true, true);
 		assertListOrder(c, strings);
 	}
 
@@ -351,6 +351,30 @@ class NaturalOrderComparatorTest {
 
 		assertListOrderByShuffling(list, true);
 	}
+
+	@Test
+	void testTransitivity() {
+		String x = "1-79";
+		String y = "0";
+		String z = "00001";
+
+		NaturalOrderComparator<String> comparator = new NaturalOrderComparator<>();
+
+		assertTrue(comparator.compare(y, z) < 0);
+		assertTrue(comparator.compare(z, x) < 0);
+		assertTrue(comparator.compare(y, x) < 0);
+	}
+
+	@Test
+	void testSpecialCase1() {
+		assertTrue(new NaturalOrderComparator<>().compare("1.2.10", "1.2.10.5") < 0);
+	}
+
+	@Test
+	void testSpecialCase2() {
+		assertTrue(new NaturalOrderComparator<>().compare("00", "05782") < 0);
+	}
+
 
 	private void assertReflexivity(NaturalOrderComparator<String> comparator, String s1, String s2) {
 		int one = comparator.compare(s1, s2);
