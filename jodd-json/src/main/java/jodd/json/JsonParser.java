@@ -278,12 +278,25 @@ public class JsonParser extends JsonParserBase {
 
 	/**
 	 * Sets local class meta-data name.
+	 * <p>
+	 * Note that by using the class meta-data name you may expose a security hole in case untrusted source
+	 * manages to specify a class that is accessible through class loader and exposes set of methods and/or fields,
+	 * access of which opens an actual security hole. Such classes are known as “deserialization gadget”s.
+	 *
+	 * Because of this, use of "default typing" is not encouraged in general, and in particular is recommended against
+	 * if the source of content is not trusted. Conversely, default typing may be used for processing content in
+	 * cases where both ends (sender and receiver) are controlled by same entity.
 	 */
 	public JsonParser setClassMetadataName(final String name) {
 		classMetadataName = name;
 		return this;
 	}
 
+	/**
+	 * Sets usage of default class meta-data name.
+	 * Using it may introduce a security hole, see {@link #setClassMetadataName(String)} for more details.
+	 * @see #setClassMetadataName(String)
+	 */
 	public JsonParser withClassMetadata(final boolean useMetadata) {
 		if (useMetadata) {
 			classMetadataName = Defaults.DEFAULT_CLASS_METADATA_NAME;
