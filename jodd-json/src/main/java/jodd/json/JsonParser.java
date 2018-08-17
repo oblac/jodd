@@ -36,6 +36,7 @@ import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -307,6 +308,26 @@ public class JsonParser extends JsonParserBase {
 		return this;
 	}
 
+	/**
+	 * Adds a {@link jodd.util.Wildcard wildcard} pattern for white-listing classes.
+	 * @see #setClassMetadataName(String)
+	 */
+	public JsonParser allowClass(final String classPattern) {
+		if (super.classnameWhitelist == null) {
+			super.classnameWhitelist = new ArrayList<>();
+		}
+		classnameWhitelist.add(classPattern);
+		return this;
+	}
+
+	/**
+	 * Removes the whitelist of allowed classes.
+	 * @see #setClassMetadataName(String)
+	 */
+	public JsonParser allowAllClasses() {
+		classnameWhitelist = null;
+		return this;
+	}
 
 	// ---------------------------------------------------------------- parse
 

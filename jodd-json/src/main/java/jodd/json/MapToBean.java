@@ -32,6 +32,7 @@ import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
+import jodd.util.Wildcard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -69,6 +70,8 @@ public class MapToBean {
 			}
 		}
 		else {
+			checkClassName(jsonParser.classnameWhitelist, className);
+
 			try {
 				targetType = ClassLoaderUtil.loadClass(className);
 			} catch (ClassNotFoundException cnfex) {
@@ -143,6 +146,17 @@ public class MapToBean {
 		}
 
 		return target;
+	}
+
+	private void checkClassName(final List<String> classnameWhitelist, final String className) {
+		if (classnameWhitelist == null) {
+			return;
+		}
+		classnameWhitelist.forEach(pattern -> {
+			if (!Wildcard.equalsOrMatch(className, pattern)) {
+				throw new JsonException("Class can't be loaded as it is not whitelisted: " + className);
+			}
+		});
 	}
 
 	/**

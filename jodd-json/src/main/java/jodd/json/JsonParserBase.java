@@ -55,6 +55,7 @@ public abstract class JsonParserBase {
 
 	protected Supplier<Map> mapSupplier = HASMAP_SUPPLIER;
 	protected Supplier<List> listSupplier = ARRAYLIST_SUPPLIER;
+	protected List<String> classnameWhitelist;
 
 	/**
 	 * Creates new instance of {@link jodd.json.MapToBean}.

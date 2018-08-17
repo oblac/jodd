@@ -62,6 +62,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -708,6 +709,37 @@ class JSONDeserializerTest {
 			assertEquals(2.0f, point.y, DELTA);
 		});
 	}
+
+	@Test
+	void testPointWithException() {
+		JsonParser.Defaults.classMetadataName = "__class";
+		JsonSerializer.Defaults.classMetadataName = "__class";
+
+		JsonParsers.forEachParser(jsonParser -> {
+			jsonParser.allowClass("notAllowed");
+			final String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));
+			assertThrows(JsonException.class, () -> {
+				jsonParser.parse(json);
+			});
+			jsonParser.allowAllClasses();
+		});
+	}
+
+	@Test
+	void testPointWithoutExceptionWhitelisted() {
+		JsonParser.Defaults.classMetadataName = "__class";
+		JsonSerializer.Defaults.classMetadataName = "__class";
+
+		JsonParsers.forEachParser(jsonParser -> {
+			jsonParser.allowClass("*.Point?D*");
+			String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));
+			Point2D.Float point = jsonParser.parse(json);
+			assertEquals(1.0f, point.x, DELTA);
+			assertEquals(2.0f, point.y, DELTA);
+			jsonParser.allowAllClasses();
+		});
+	}
+
 
 	@Test
 	void testUnixEpoch() {

@@ -24,6 +24,7 @@ All notable changes to Jodd project are documented here.
 + **mail** - added custom properties.
 + **json** - added `onValue` callback for JSON serializer.
 + **json** - added `excludeEmpty` flag for JSON serializer.
++ **json** - added `allowClass` for whitelisting class names.
 + **petite** - allow injection in the private fields of super types.
 
 
