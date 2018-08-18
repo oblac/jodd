@@ -2,9 +2,13 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.3...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.4...master)
 
 (work in progress :)
+
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.3...v5.0.4)
+
+Many little improvements plus one important fix for `jodd-mail`. Sorry for any inconvenience.
 
 ### Bug fixes
 
