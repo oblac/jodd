@@ -178,8 +178,8 @@ public class FileUtil {
 	/**
 	 * @see #mkdirs(File)
 	 */
-	public static void mkdirs(final String dirs) throws IOException {
-		mkdirs(file(dirs));
+	public static File mkdirs(final String dirs) throws IOException {
+		return mkdirs(file(dirs));
 	}
 
 	/**
@@ -188,19 +188,19 @@ public class FileUtil {
 	 * @param dirs Directories to make.
 	 * @throws IOException if cannot create directory.
 	 */
-	public static void mkdirs(final File dirs) throws IOException {
+	public static File mkdirs(final File dirs) throws IOException {
 		if (dirs.exists()) {
 			checkIsDirectory(dirs);
-			return;
+			return dirs;
 		}
-		checkCreateDirectory(dirs);
+		return checkCreateDirectory(dirs);
 	}
 
 	/**
 	 * @see #mkdir(File)
 	 */
-	public static void mkdir(final String dir) throws IOException {
-		mkdir(file(dir));
+	public static File mkdir(final String dir) throws IOException {
+		return mkdir(file(dir));
 	}
 
 	/**
@@ -208,12 +208,12 @@ public class FileUtil {
 	 *
 	 * @throws IOException if cannot create directory.
 	 */
-	public static void mkdir(final File dir) throws IOException {
+	public static File mkdir(final File dir) throws IOException {
 		if (dir.exists()) {
 			checkIsDirectory(dir);
-			return;
+			return dir;
 		}
-		checkCreateDirectory(dir);
+		return checkCreateDirectory(dir);
 	}
 
 	// ---------------------------------------------------------------- touch
@@ -1609,10 +1609,11 @@ public class FileUtil {
 	 * @param dir Directory
 	 * @throws IOException if directory cannot be created.
 	 */
-	private static void checkCreateDirectory(final File dir) throws IOException {
+	private static File checkCreateDirectory(final File dir) throws IOException {
 		if (!dir.mkdirs()) {
 			throw new IOException(MSG_CANT_CREATE + dir);
 		}
+		return dir;
 	}
 
 	/**
