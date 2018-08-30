@@ -78,7 +78,7 @@ ext {
 		junit5_api:		'org.junit.jupiter:junit-jupiter-api:5.2.0',
 		junit5_params:	'org.junit.jupiter:junit-jupiter-params:5.2.0',
 		junit5_console: 'org.junit.platform:junit-platform-console:1.2.0',
-		mockito:		'org.mockito:mockito-core:2.12.0',
+		mockito:		'org.mockito:mockito-core:2.21.0',
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
