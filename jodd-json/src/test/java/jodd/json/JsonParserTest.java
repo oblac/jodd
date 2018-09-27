@@ -905,4 +905,19 @@ class JsonParserTest {
 			assertEquals("field4", entries.get(3).getKey());
 		});
 	}
+
+	@Test
+	void testLazyParserSupportEscapedDoubleQuotes() {
+		String json = "{ \"values\": [{ \"value\": \"foo\\\"bar\" }]}";
+
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> object = jsonParser.parse(json);
+
+			List<Map.Entry<String, Object>> entries = object.entrySet().stream().collect(Collectors.toList());
+
+			assertEquals(1, entries.size());
+			assertEquals("values", entries.get(0).getKey());
+			assertEquals("foo\"bar", ((List<Map<String, String>>) entries.get(0).getValue()).get(0).get("value"));
+		});
+	}
 }
