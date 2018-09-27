@@ -607,7 +607,7 @@ public class JsonParser extends JsonParserBase {
 			final char c = input[ndx];
 
 			if (insideString) {
-				if (c == '\"') {
+				if (c == '\"' && (ndx == 0 || input[ndx - 1] != '\\')) {
 					insideString = false;
 				}
 			}
@@ -867,7 +867,7 @@ public class JsonParser extends JsonParserBase {
 				// if string is 19 chars and longer, it can be over the limit
 				BigInteger bigInteger = new BigInteger(value);
 
-				if (isGreaterThenLong(bigInteger)) {
+				if (isGreaterThanLong(bigInteger)) {
 					return bigInteger;
 				}
 				longNumber = bigInteger.longValue();
@@ -883,7 +883,7 @@ public class JsonParser extends JsonParserBase {
 		return Long.valueOf(longNumber);
 	}
 
-	private static boolean isGreaterThenLong(final BigInteger bigInteger) {
+	private static boolean isGreaterThanLong(final BigInteger bigInteger) {
 		if (bigInteger.compareTo(MAX_LONG) > 0) {
 			return true;
 		}
