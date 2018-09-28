@@ -219,12 +219,10 @@ public class SendMailSession extends MailSession<Transport> {
 		} else {
 			final MimeMultipart multipart = new MimeMultipart();
 
-			if (totalMessages > 1) {
-				final MimeMultipart msgMultipart = new MimeMultipart(ALTERNATIVE);
-				multipart.addBodyPart(getBaseBodyPart(msgMultipart));
-				for (final EmailMessage emailMessage : messages) {
-					msgMultipart.addBodyPart(getBodyPart(emailMessage, attachments));
-				}
+			final MimeMultipart msgMultipart = new MimeMultipart(ALTERNATIVE);
+			multipart.addBodyPart(getBaseBodyPart(msgMultipart));
+			for (final EmailMessage emailMessage : messages) {
+				msgMultipart.addBodyPart(getBodyPart(emailMessage, attachments));
 			}
 
 			addAnyAttachments(attachments, multipart);

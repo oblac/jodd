@@ -211,6 +211,31 @@ class SendMailTest {
 		assertEmail(email);
 	}
 
+	@Test
+	void testHtmlAndOneAttachment() throws MessagingException, IOException {
+		Email email = Email.create()
+			.from("inf0@jodd.org")
+			.to("ig0r@gmail.com")
+			.subject("test6")
+			.textMessage("Hello!")
+			.attachment(EmailAttachment.with().content(BYTES_11_15, APPLICATION_ZIP));
+
+		Message message = createMessage(email);
+
+		// wrapper
+		final MimeMultipart multipart = (MimeMultipart) message.getContent();
+		assertEquals(2, multipart.getCount());
+
+		// inner content #1
+		MimeBodyPart mimeBodyPart = (MimeBodyPart) multipart.getBodyPart(0);
+		final MimeMultipart mimeMultipart = (MimeMultipart) mimeBodyPart.getContent();
+		assertEquals(1, mimeMultipart.getCount());
+
+		MimeBodyPart bodyPart = (MimeBodyPart) mimeMultipart.getBodyPart(0);
+		assertEquals("Hello!", bodyPart.getContent());
+	}
+
+
 	// ---------------------------------------------------------------- util
 
 	private void assertEmail(final Email email) throws MessagingException, IOException {
