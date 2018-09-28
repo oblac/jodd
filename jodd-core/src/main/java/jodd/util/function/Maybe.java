@@ -88,6 +88,12 @@ public interface Maybe<T> extends Iterable<T> {
 	Maybe<T> or(T otherValue);
 
 	/**
+	 * Use a maybe of given value if this one is NOTHING. Given value is not computed unless
+	 * it is needed.
+	 */
+	Maybe<T> or(Supplier<T> lazyValue);
+
+	/**
 	 * Use give maybe if this one is NOTHING.
 	 */
 	Maybe<T> or(Maybe<T> maybe);
@@ -151,6 +157,11 @@ public interface Maybe<T> extends Iterable<T> {
 			@Override
 			public Maybe<T> or(final T otherValue) {
 				return Maybe.of(otherValue);
+			}
+
+			@Override
+			public Maybe<T> or(final Supplier<T> otherValueSupplier) {
+				return Maybe.of(otherValueSupplier.get());
 			}
 
 			@Override
@@ -249,6 +260,11 @@ public interface Maybe<T> extends Iterable<T> {
 
 		@Override
 		public Maybe<T> or(final T otherValue) {
+			return this;
+		}
+
+		@Override
+		public Maybe<T> or(final Supplier<T> otherValueSupplier) {
 			return this;
 		}
 
