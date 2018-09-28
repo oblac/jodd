@@ -227,7 +227,14 @@ public class ZipUtil {
 				}
 			}
 
-			File file = (destDir != null) ? new File(destDir, entryName) : new File(entryName);
+			final File file = (destDir != null) ? new File(destDir, entryName) : new File(entryName);
+
+			// check for Zip slip FLAW
+			final File rootDir = destDir != null ? destDir : new File(".");
+			if (!FileUtil.isAncestor(rootDir, file, true)) {
+				throw new IOException("Unzipping");
+			}
+
 			if (entry.isDirectory()) {
 				if (!file.mkdirs()) {
 					if (!file.isDirectory()) {
