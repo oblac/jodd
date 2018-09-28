@@ -41,6 +41,7 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class FileUtilTest {
@@ -262,6 +263,33 @@ class FileUtilTest {
 		String content163 = FileUtil.readString(new File(utfdataRoot, "utf-16le.txt"), "UTF-16LE");
 		content163 = content163.replace("\r\n", "\n");
 		assertEquals(content, content163);
+	}
+
+	@Test
+	void testIsAncestor() {
+		File folder = new File("/foo/bar");
+		File file = new File(folder, "foo.txt");
+
+		assertTrue(FileUtil.isAncestor(folder, folder, false));
+		assertFalse(FileUtil.isAncestor(folder, folder, true));
+
+		assertTrue(FileUtil.isAncestor(folder, file, false));
+		assertTrue(FileUtil.isAncestor(folder, file, true));
+
+		file = new File(folder, "../foo.txt");
+
+		assertFalse(FileUtil.isAncestor(folder, file, false));
+		assertFalse(FileUtil.isAncestor(folder, file, true));
+
+		file = new File(folder, "bar/../../../foo.txt");
+
+		assertFalse(FileUtil.isAncestor(folder, file, false));
+		assertFalse(FileUtil.isAncestor(folder, file, true));
+
+		file = new File(folder, "bar/car/../foo.txt");
+
+		assertTrue(FileUtil.isAncestor(folder, file, false));
+		assertTrue(FileUtil.isAncestor(folder, file, true));
 	}
 
 	@ParameterizedTest (name = "{index} : FileUtil#{0}")
