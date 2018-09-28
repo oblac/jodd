@@ -6,10 +6,15 @@ All notable changes to Jodd project are documented here.
 
 (work in progress :)
 
+### Bug fixes
+
++ **json** - fixed particular case with lazy parsing and escaped chars.
++ **mail** - fixed special case with 1 body and 1 attachment.
+
 ### New Features
 
 + **core** - `FileUtil.mkdirs` return created folder.
-
++ **email** - added new method for unsetting the email flags in builder. 
 
 ## [5.0.4](https://github.com/oblac/jodd/compare/v5.0.3...v5.0.4)
 

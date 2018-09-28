@@ -226,7 +226,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return array of {@link ReceivedEmail}s.
 	 */
 	public ReceivedEmail[] receiveEmail() {
-		return receiveMessages(null, null, false, null);
+		return receiveMessages(null, null, null, false, null);
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return array of {@link ReceivedEmail}s.
 	 */
 	public ReceivedEmail[] receiveEmail(final EmailFilter filter) {
-		return receiveMessages(filter, null, false, null);
+		return receiveMessages(filter, null, null, false, null);
 	}
 
 	/**
@@ -259,9 +259,9 @@ public class ReceiveMailSession extends MailSession<Store> {
 	 * @return array of {@link ReceivedEmail}s.
 	 */
 	public ReceivedEmail[] receiveEmailAndMarkSeen(final EmailFilter filter) {
-		final Flags flags = new Flags();
-		flags.add(Flags.Flag.SEEN);
-		return receiveMessages(filter, flags, false, null);
+		final Flags flagsToSet = new Flags();
+		flagsToSet.add(Flags.Flag.SEEN);
+		return receiveMessages(filter, flagsToSet, null, false, null);
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 		final Flags flags = new Flags();
 		flags.add(Flags.Flag.SEEN);
 		flags.add(Flags.Flag.DELETED);
-		return receiveMessages(filter, flags, false, null);
+		return receiveMessages(filter, flags, null, false, null);
 	}
 
 	public ReceivedEmail[] receiveEnvelopes() {
@@ -292,10 +292,18 @@ public class ReceiveMailSession extends MailSession<Store> {
 	}
 
 	public ReceivedEmail[] receiveEnvelopes(final EmailFilter filter) {
-		return receiveMessages(filter, null, true, null);
+		return receiveMessages(filter, null, null, true, null);
 	}
 
-	ReceivedEmail[] receiveMessages(final EmailFilter filter, final Flags flagsToSet, final boolean envelope, final Consumer<Message[]> processedMessageConsumer) {
+	/**
+	 * The main email receiving method.
+	 */
+	ReceivedEmail[] receiveMessages(
+			final EmailFilter filter,
+			final Flags flagsToSet,
+			final Flags flagsToUnset,
+			final boolean envelope,
+			final Consumer<Message[]> processedMessageConsumer) {
 		useAndOpenFolderIfNotSet();
 
 		final Message[] messages;
@@ -333,6 +341,11 @@ public class ReceiveMailSession extends MailSession<Store> {
 				if (flagsToSet != null) {
 					emails[i].flags(flagsToSet);
 					msg.setFlags(flagsToSet, true);
+				}
+
+				if (flagsToUnset != null) {
+					emails[i].flags().remove(flagsToUnset);
+					msg.setFlags(flagsToUnset, false);
 				}
 
 				if (flagsToSet == null && !emails[i].isSeen()) {

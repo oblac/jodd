@@ -31,6 +31,8 @@ import org.junit.jupiter.api.Test;
 import javax.mail.Flags;
 import java.util.Arrays;
 
+import static jodd.mail.EmailFilter.filter;
+
 class GmailTest {
 
 	@Test
@@ -38,6 +40,7 @@ class GmailTest {
 	void testGoogle_receiveUnseen() {
 		ImapServer imapServer = MailServer.create()
 			.host("imap.gmail.com")
+			.port(993)
 			.ssl(true)
 			.auth("gmail_username", "gmail_password")
 			.buildImapMailServer();
@@ -45,7 +48,13 @@ class GmailTest {
 		ReceiveMailSession session = imapServer.createSession();
 		session.open();
 
-		ReceivedEmail[] mails = session.receiveEmailAndMarkSeen(EmailFilter.filter().flag(Flags.Flag.SEEN, false));
+		ReceivedEmail[] mails = session.receive()
+			.filter(filter().flag(Flags.Flag.SEEN, false))
+			.unmark(Flags.Flag.SEEN)
+			.fromFolder("INBOX")
+			.get();
+
+		System.out.println(mails.length);
 
 		Arrays.stream(mails).map(CommonEmail::subject).forEach(System.out::println);
 

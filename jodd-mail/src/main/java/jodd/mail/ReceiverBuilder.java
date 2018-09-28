@@ -35,8 +35,8 @@ public class ReceiverBuilder {
 
 	private final ReceiveMailSession session;
 	private EmailFilter filter;
-	private boolean markSeen;
-	private boolean markDeleted;
+	private Flags flagsToSet = new Flags();
+	private Flags flagsToUnset = new Flags();
 	private boolean envelopeOnly;
 	private String targetFolder;
 	private String fromFolder;
@@ -57,7 +57,23 @@ public class ReceiverBuilder {
 	 * Marks messages as seen after receiving them.
 	 */
 	public ReceiverBuilder markSeen() {
-		this.markSeen = true;
+		this.flagsToSet.add(Flags.Flag.SEEN);
+		return this;
+	}
+
+	/**
+	 * Marks message with given flag.
+	 */
+	public ReceiverBuilder mark(final Flags.Flag flagToSet) {
+		this.flagsToSet.add(flagToSet);
+		return this;
+	}
+
+	/**
+	 * Unmarks a message with given flag.
+	 */
+	public ReceiverBuilder unmark(final Flags.Flag flagToUnset) {
+		this.flagsToUnset.add(flagToUnset);
 		return this;
 	}
 
@@ -65,7 +81,7 @@ public class ReceiverBuilder {
 	 * Deletes messages upon receiving.
 	 */
 	public ReceiverBuilder markDeleted() {
-		this.markDeleted = true;
+		this.flagsToSet.add(Flags.Flag.DELETED);
 		return this;
 	}
 
@@ -81,7 +97,7 @@ public class ReceiverBuilder {
 	 * Defines target folder where message will be moved.
 	 */
 	public ReceiverBuilder moveToFolder(final String targetFolder) {
-		this.markDeleted = true;
+		this.markDeleted();
 		this.targetFolder = targetFolder;
 		return this;
 	}
@@ -102,15 +118,7 @@ public class ReceiverBuilder {
 			session.useFolder(fromFolder);
 		}
 
-		final Flags flags = new Flags();
-		if (markSeen) {
-			flags.add(Flags.Flag.SEEN);
-		}
-		if (markDeleted) {
-			flags.add(Flags.Flag.DELETED);
-		}
-
-		return session.receiveMessages(filter, flags, envelopeOnly, messages -> {
+		return session.receiveMessages(filter, flagsToSet, flagsToUnset, envelopeOnly, messages -> {
 			if (targetFolder != null) {
 				try {
 					session.folder.copyMessages(messages, session.getFolder(targetFolder));
