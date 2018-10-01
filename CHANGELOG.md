@@ -2,14 +2,19 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.4...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.5...master)
 
 (work in progress :)
+
+## [5.0.5](https://github.com/oblac/jodd/compare/v5.0.4...v5.0.5)
+
+Just refreshing with some bug fixes and few new features.
 
 ### Bug fixes
 
 + **json** - fixed particular case with lazy parsing and escaped chars.
 + **mail** - fixed special case with 1 body and 1 attachment.
++ **core** - fixed Zip slip vulnerability.
 
 ### New Features
 
