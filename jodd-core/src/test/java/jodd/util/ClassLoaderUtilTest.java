@@ -176,6 +176,6 @@ class ClassLoaderUtilTest {
 
 		assertNotNull(url);
 
-		assertEquals("/META-INF/resources/webjars/jquery/2.1.1/jquery.js", jqueryName.get());
+		assertEquals("/META-INF/resources/webjars/jquery/2.2.4/jquery.js", jqueryName.get());
 	}
 }
