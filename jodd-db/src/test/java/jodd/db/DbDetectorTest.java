@@ -2,6 +2,7 @@ package jodd.db;
 
 import jodd.db.servers.*;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,6 +26,18 @@ class DbDetectorTest {
 		// asserts
 		assertNotNull(actual);
 		assertTrue(expected.getClass().isAssignableFrom(actual.getClass()));
+	}
+
+	@Test
+	void testDetectDatabaseForSpecialDB2Case() throws SQLException {
+		final Connection connection = createMockConnection("DB2/", 55, 77);
+		Mockito.when(connection.getMetaData().getDatabaseProductName()).thenThrow(new SQLException("Mock Exception .. explicitly set for database: DB2 ... for special DB2 case"));
+
+		final DbServer actual = new DbDetector().detectDatabase(connection);
+
+		// asserts
+		assertNotNull(actual);
+		assertTrue(Db2DbServer.class.isAssignableFrom(actual.getClass()));
 	}
 
 	private static Stream<Arguments> createTestData() throws SQLException {
