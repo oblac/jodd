@@ -28,6 +28,9 @@ package jodd.mail;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import jodd.io.FileUtil;
+import jodd.system.SystemUtil;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -35,6 +38,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 class AttachmentStorageTest {
 
@@ -43,11 +47,28 @@ class AttachmentStorageTest {
 	private static final String PWD = "pwd";
 	private static final String LOCALHOST = "localhost";
 
-	@Test
-	void testAttachmentStorage() throws Exception {
-		final GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
+	GreenMail greenMail;
+
+	@BeforeEach
+	void startGreenMailInstance() {
+		greenMail = new GreenMail(ServerSetupTest.ALL);;
 		greenMail.setUser(GREEN_MAIL_COM, GREEN, PWD);
 		greenMail.start();
+	}
+
+	@AfterEach
+	void stopGreenMailInstance() {
+		if (greenMail != null) {
+			greenMail.stop();
+		}
+	}
+
+	@Test
+	void testAttachmentStorage() throws Exception {
+		// storing files with its message-id as file name fails on windows because value of the message-id consists of brackets
+		//		file names with brackets are not valid on window hosts
+		// see https://tools.ietf.org/html/rfc5322#section-3.6.4
+		assumeFalse(SystemUtil.info().isWindows(), "test will be skipped on windows hosts");
 
 		final SmtpServer smtpServer = MailServer.create()
 			.host(LOCALHOST)
@@ -129,8 +150,6 @@ class AttachmentStorageTest {
 
 			session.close();
 		}
-
-		greenMail.stop();
 
 		assertEquals(100, receivedEmails.length);
 		File[] allFiles = attFolder.listFiles();

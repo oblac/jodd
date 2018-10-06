@@ -29,7 +29,7 @@ import jodd.db.DbTransactionMode;
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransactionMode;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

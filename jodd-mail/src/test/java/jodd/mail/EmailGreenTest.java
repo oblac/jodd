@@ -26,6 +26,9 @@ package jodd.mail;
 
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.activation.DataSource;
@@ -54,12 +57,24 @@ class EmailGreenTest {
 	private static final byte[] BYTES_10_11_12 = {10, 11, 12};
 	private static final String NO_NAME_STREAM = "<no-name>.octet-stream";
 
-	@Test
-	void testInlineAttachmentAfterSending() {
-		final GreenMail greenMail = new GreenMail(ServerSetupTest.ALL);
+	GreenMail greenMail;
+
+	@BeforeEach
+	void startGreenMailInstance() {
+		greenMail = new GreenMail(ServerSetupTest.ALL);;
 		greenMail.setUser(GREEN_MAIL_COM, GREEN, PWD);
 		greenMail.start();
+	}
 
+	@AfterEach
+	void stopGreenMailInstance() {
+		if (greenMail != null) {
+			greenMail.stop();
+		}
+	}
+
+	@Test
+	void testInlineAttachmentAfterSending() {
 		// create Email
 		final Email sentEmail = Email.create()
 			.from("Jodd", "jodd@use.me")
@@ -131,8 +146,6 @@ class EmailGreenTest {
 		checkTo(receivedEmail);
 
 		checkAttachments(sentEmail.attachments(), receivedEmail.attachments());
-
-		greenMail.stop();
 	}
 
 	private void checkFrom(final CommonEmail email) {
