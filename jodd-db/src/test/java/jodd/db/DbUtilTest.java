@@ -188,6 +188,47 @@ class DbUtilTest {
 	}
 
 	@Nested
+	@DisplayName("tests for getFirstObject(ResultSet resultSet)")
+	class GetFirstObject {
+
+		@Test
+		void getFirstObject_with_empty_resultset() throws SQLException {
+			final Object expected = null;
+
+			ResultSet mock = Mockito.mock(ResultSet.class);
+			Mockito.when(mock.next()).thenReturn(Boolean.FALSE);
+
+			final Object actual = DbUtil.getFirstObject(mock);
+
+			// asserts
+			assertEquals(expected, actual);
+
+			// Mock verify
+			Mockito.verify(mock, Mockito.times(1)).next();
+			Mockito.verify(mock, Mockito.times(0)).getLong(0);
+		}
+
+		@Test
+		void getFirstObject_with_filled_resultset() throws SQLException {
+			final Object expected = "Hi Jodd!";
+
+			ResultSet mock = Mockito.mock(ResultSet.class);
+			Mockito.when(mock.next()).thenReturn(Boolean.TRUE);
+			Mockito.when(mock.getObject(1)).thenReturn(expected);
+
+			final Object actual = DbUtil.getFirstObject(mock);
+
+			// asserts
+			assertEquals(expected, actual);
+
+			// Mock verify
+			Mockito.verify(mock, Mockito.times(1)).next();
+			Mockito.verify(mock, Mockito.times(1)).getObject(1);
+		}
+
+	}
+
+	@Nested
 	@DisplayName("tests for setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType)")
 	class SetPreparedStatementObject {
 
