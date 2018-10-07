@@ -25,15 +25,19 @@
 
 package jodd.io;
 
+import jodd.system.SystemInfo;
 import jodd.system.SystemUtil;
+import jodd.util.RandomString;
 import jodd.util.StringUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({"SimplifiableJUnitAssertion"})
 class FileNameUtilTest {
@@ -161,6 +165,40 @@ class FileNameUtilTest {
 		assertEquals(fixpath("../../b/c"), FileNameUtil.relativePath("/m/n/o/a/b/c", "/m/n/o/a/x/y/"));
 		assertEquals(fixpath("stuff/xyz.dat"), FileNameUtil.relativePath("/var/data/stuff/xyz.dat", "/var/data/"));
 		assertEquals(fixpath("../../../a/b/c"), FileNameUtil.relativePath("/a/b/c", "/m/n/o"));
+	}
+
+	@Test
+	void testSplit() {
+		final String dir = new SystemInfo().getTempDir();
+		final String extension = ".tmp";
+		final String filename = "jodd_" + RandomString.get().random(8, "abcdefkhutidnmpo1234567890") + extension;
+
+		final String[] actual = FileNameUtil.split(new File(dir, filename).getAbsolutePath());
+
+		// asserts
+		assertNotNull(actual);
+		assertEquals(4, actual.length);
+		int indexOf = dir.indexOf(File.separator) + 1;
+		assertEquals(dir.substring(0, indexOf), actual[0]);
+		assertEquals(dir.substring(indexOf), actual[1]);
+		assertEquals(filename.substring(0, filename.length() - extension.length()), actual[2]);
+		assertEquals("tmp", actual[3]);
+
+	}
+
+	@ParameterizedTest
+	@MethodSource("createTestData_testEqualsOnSystem")
+	void testEqualsOnSystem(final boolean expected, final String filename1, final String filename2) {
+		assertEquals(expected, FileNameUtil.equalsOnSystem(filename1, filename2));
+	}
+
+	private static Stream<Arguments> createTestData_testEqualsOnSystem() {
+		return Stream.of(
+				Arguments.of(true, "jodd_makes_fun.git", "jodd_MAKES_fUn.GiT"),
+				Arguments.of(false, "jodd.tmp", "j0dd.tmp"),
+				Arguments.of(true, null, null),
+				Arguments.of(false, "jodd.tmp", null)
+		);
 	}
 
 	private static String fixpath(String path) {
