@@ -194,7 +194,7 @@ class FileNameUtilTest {
 
 	private static Stream<Arguments> createTestData_testEqualsOnSystem() {
 		return Stream.of(
-				Arguments.of(true, "jodd_makes_fun.git", "jodd_MAKES_fUn.GiT"),
+				Arguments.of(SystemUtil.info().isWindows(), "jodd_makes_fun.git", "jodd_MAKES_fUn.GiT"),
 				Arguments.of(false, "jodd.tmp", "j0dd.tmp"),
 				Arguments.of(true, null, null),
 				Arguments.of(false, "jodd.tmp", null)
