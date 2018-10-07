@@ -6,7 +6,7 @@ All notable changes to Jodd project are documented here.
 
 (work in progress :)
 
-## [5.0.5](https://github.com/oblac/jodd/compare/v5.0.4...v5.0.5)
+## [v5.0.5](https://github.com/oblac/jodd/compare/v5.0.4...v5.0.5)
 
 Just refreshing with some bug fixes and few new features.
 
@@ -21,7 +21,7 @@ Just refreshing with some bug fixes and few new features.
 + **core** - `FileUtil.mkdirs` return created folder.
 + **email** - added new method for unsetting the email flags in builder. 
 
-## [5.0.4](https://github.com/oblac/jodd/compare/v5.0.3...v5.0.4)
+## [v5.0.4](https://github.com/oblac/jodd/compare/v5.0.3...v5.0.4)
 
 Many little improvements plus one important fix for `jodd-mail`. Sorry for any inconvenience.
 
