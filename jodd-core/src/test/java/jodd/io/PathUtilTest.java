@@ -33,6 +33,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import java.io.File;
 import java.io.IOException;
@@ -164,11 +166,10 @@ class PathUtilTest {
 		}
 
 		@Test
+		@EnabledOnOs({OS.WINDOWS})  // on windows host, test is successful. on linux host no io-exception is thrown
 		void testDeleteFileTree_not_successful() throws Exception {
 			assumeTrue(baseDir_Not_Successful.exists());
 			assumeTrue(locked_file.exists());
-
-			assumeTrue(SystemUtil.info().isWindows());   // on windows host, test is successful. on linux host no io-exception is thrown
 
 			// When you use FileLock, it is purely advisory—acquiring a lock on a file may not stop you from doing anything:
 			// reading, writing, and deleting a file may all be possible even when another process has acquired a lock.

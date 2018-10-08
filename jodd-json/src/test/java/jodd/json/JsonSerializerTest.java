@@ -35,6 +35,8 @@ import jodd.json.meta.JsonAnnotationManager;
 import jodd.json.meta.TypeData;
 import jodd.system.SystemUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,7 +54,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class JsonSerializerTest {
 
@@ -614,9 +615,8 @@ class JsonSerializerTest {
 	}
 
 	@Test
+	@EnabledOnOs(value = {OS.AIX, OS.LINUX, OS.MAC, OS.SOLARIS})
 	void testFiles_on_linux() {
-		assumeTrue(SystemUtil.info().isLinux() || SystemUtil.info().isMac(), "no linux host");
-
 		FileMan fileMan = new FileMan();
 		File userHome = new File(SystemUtil.info().getHomeDir());
 		fileMan.setFile(userHome);
@@ -627,9 +627,8 @@ class JsonSerializerTest {
 	}
 
 	@Test
+	@EnabledOnOs(value = {OS.WINDOWS})
 	void testFiles_on_windows() {
-		assumeTrue(SystemUtil.info().isWindows(), "no windows host");
-
 		FileMan fileMan = new FileMan();
 		File userHome = new File(SystemUtil.info().getHomeDir());
 		fileMan.setFile(userHome);
