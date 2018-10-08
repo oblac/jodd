@@ -25,19 +25,22 @@
 
 package jodd.io;
 
-import jodd.system.SystemInfo;
-import jodd.system.SystemUtil;
-import jodd.util.RandomString;
-import jodd.util.StringUtil;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import jodd.system.SystemUtil;
+import jodd.util.StringUtil;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @SuppressWarnings({"SimplifiableJUnitAssertion"})
 class FileNameUtilTest {
@@ -167,23 +170,36 @@ class FileNameUtilTest {
 		assertEquals(fixpath("../../../a/b/c"), FileNameUtil.relativePath("/a/b/c", "/m/n/o"));
 	}
 
-	@Test
-	void testSplit() {
-		final String dir = new SystemInfo().getTempDir();
-		final String extension = ".tmp";
-		final String filename = "jodd_" + RandomString.get().random(8, "abcdefkhutidnmpo1234567890") + extension;
+	@Nested
+	@DisplayName(value = "tests for method split(String filename)")
+	class Split {
+		@Test
+		void filename_with_windows_syntax() {
+			final String filename = "c:\\temp\\jodd\\io\\a_very_stupid_filename.tmp.xml";
+			final String[] actual = FileNameUtil.split(filename);
 
-		final String[] actual = FileNameUtil.split(new File(dir, filename).getAbsolutePath());
+			// asserts
+			assertNotNull(actual);
+			assertEquals(4, actual.length);
+			assertEquals("c:\\", actual[0]);
+			assertEquals("temp\\jodd\\io\\", actual[1]);
+			assertEquals("a_very_stupid_filename.tmp", actual[2]);
+			assertEquals("xml", actual[3]);
+		}
 
-		// asserts
-		assertNotNull(actual);
-		assertEquals(4, actual.length);
-		int indexOf = dir.indexOf(File.separator) + 1;
-		assertEquals(dir.substring(0, indexOf), actual[0]);
-		assertEquals(dir.substring(indexOf), actual[1]);
-		assertEquals(filename.substring(0, filename.length() - extension.length()), actual[2]);
-		assertEquals("tmp", actual[3]);
+		@Test
+		void filename_with_unix_syntax() {
+			final String filename = "/tmp/jodd/io/a_very_stupid_filename.tmp.xml";
+			final String[] actual = FileNameUtil.split(filename);
 
+			// asserts
+			assertNotNull(actual);
+			assertEquals(4, actual.length);
+			assertEquals("/", actual[0]);
+			assertEquals("tmp/jodd/io/", actual[1]);
+			assertEquals("a_very_stupid_filename.tmp", actual[2]);
+			assertEquals("xml", actual[3]);
+		}
 	}
 
 	@ParameterizedTest
