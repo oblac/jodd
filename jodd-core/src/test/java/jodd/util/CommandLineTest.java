@@ -25,19 +25,18 @@
 
 package jodd.util;
 
-import jodd.system.SystemUtil;
 import jodd.util.ProcessRunner.ProcessResult;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Tests for {@link CommandLine}.
@@ -46,12 +45,8 @@ class CommandLineTest {
 
 	@Nested
 	@DisplayName("tests for CommandLine#run on windows hosts")
+	@EnabledOnOs(value = {OS.WINDOWS})
 	class Run_on_windows {
-
-		@BeforeEach
-		void beforeEach() {
-			assumeTrue(SystemUtil.info().isWindows(), "no windows host");
-		}
 
 		@Test
 		void testRun() throws Exception {
@@ -105,12 +100,8 @@ class CommandLineTest {
 
 	@Nested
 	@DisplayName("tests for CommandLine#run on linux hosts")
+	@EnabledOnOs(value = {OS.AIX, OS.LINUX, OS.MAC, OS.SOLARIS})
 	class Run_on_linux {
-
-		@BeforeEach
-		void beforeEach() {
-			assumeTrue(SystemUtil.info().isLinux(), "no linux host");
-		}
 
 		@Test
 		void testRun() throws Exception {
