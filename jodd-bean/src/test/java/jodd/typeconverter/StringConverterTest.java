@@ -25,17 +25,27 @@
 
 package jodd.typeconverter;
 
-import jodd.typeconverter.impl.StringConverter;
-import org.junit.jupiter.api.Test;
-
-import static jodd.typeconverter.TypeConverterTestHelper.*;
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
+import static jodd.typeconverter.TypeConverterTestHelper.arrc;
+import static jodd.typeconverter.TypeConverterTestHelper.arrd;
+import static jodd.typeconverter.TypeConverterTestHelper.arrf;
+import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
+import static jodd.typeconverter.TypeConverterTestHelper.arrs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.sql.Clob;
+import java.sql.SQLException;
+
+import jodd.typeconverter.impl.StringConverter;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class StringConverterTest {
 
 	@Test
-	void testStringConverter() {
+	void testStringConverter() throws SQLException {
 		StringConverter stringConverter = new StringConverter();
 
 		assertNull(stringConverter.convert(null));
@@ -44,7 +54,20 @@ class StringConverterTest {
 		assertEquals("65,66", stringConverter.convert(arrb(65, 66)));
 		assertEquals("Ab", stringConverter.convert(arrc('A', 'b')));
 		assertEquals("One,two", stringConverter.convert(arrs("One", "two")));
-		assertEquals("123", stringConverter.convert(Integer.valueOf(123)));
+		assertEquals("123", stringConverter.convert(123));
 		assertEquals("java.lang.String", stringConverter.convert(String.class));
+		assertEquals("123,456", stringConverter.convert(arri(123,456)));
+		assertEquals("123,456", stringConverter.convert(arrl(123L,456L)));
+		assertEquals("777777.6,-32321.7", stringConverter.convert(arrf(777777.6f, -32321.7F)));
+		assertEquals("777777.6676732,-32321.700985", stringConverter.convert(arrd(777777.6676732D, -32321.700985D)));
+		assertEquals("12,-66", stringConverter.convert(arrs(12,-66)));
+		assertEquals("true,false,true", stringConverter.convert(arrl(true,false,true)));
+		{
+			// Clob via Mock
+			final Clob mock = Mockito.mock(Clob.class);
+			Mockito.when(mock.length()).thenReturn(123456789L);
+			Mockito.when(mock.getSubString(Mockito.eq(1L), Mockito.eq(123456789))).thenReturn("Hello there :-)");
+			assertEquals("Hello there :-)", stringConverter.convert(mock));
+		}
 	}
 }
