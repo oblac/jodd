@@ -33,8 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -942,6 +946,42 @@ class PropsTest extends BasePropsTest {
 		props.load("text=line1\\\n   line2\\\r\n   line3\\\r   line4");
 
 		assertEquals("line1|   line2|   line3|   line4", props.getValue("text"));
+	}
+
+	@Test
+	void testLoad_with_file_props() throws IOException, URISyntaxException {
+		final File src = readDataToFile("test2.props");
+		final Props actual = new Props().load(src);
+
+		// asserts
+		assertEquals(3, actual.countTotalProperties());
+	}
+
+	@Test
+	void testLoad_with_file_properties() throws IOException, URISyntaxException {
+		final File src = readDataToFile("test.properties");
+		final Props actual = new Props().load(src);
+
+		// asserts
+		assertEquals(3, actual.countTotalProperties());
+	}
+
+	@Test
+	void testLoad_with_file_and_encoding() throws IOException, URISyntaxException {
+		final File src = readDataToFile("test2.props");
+		final Props actual = new Props().load(src, StandardCharsets.UTF_8.name());
+
+		// asserts
+		assertEquals(3, actual.countTotalProperties());
+	}
+
+	@Test
+	void testLoad_with_inputstream() throws IOException {
+		try (final InputStream is = readDataToInputstream("test2.props")) {
+			final Props actual = new Props().load(is);
+			// asserts
+			assertEquals(3, actual.countTotalProperties());
+		}
 	}
 
 	@Nested
