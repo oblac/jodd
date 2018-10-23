@@ -156,7 +156,7 @@ abstract class JavaInfo extends HostInfo {
 			return Integer.parseInt(JAVA_VERSION.substring(2, index));
 		} else {
 			final int index = JAVA_VERSION.indexOf('.');
-			return Integer.parseInt(JAVA_VERSION.substring(0, index));
+			return Integer.parseInt(index == -1 ? JAVA_VERSION : JAVA_VERSION.substring(0, index));
 		}
 	}
 
