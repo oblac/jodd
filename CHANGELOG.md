@@ -4,7 +4,13 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.5...master)
 
-(work in progress :)
+### New features
+
++ **bean** - added special support for inner `Supplier` for `BeanUtil`.
+
+### Bug fixes
+
++ **core** - fixed `java.version` parsing under Java 11.
 
 ## [v5.0.5](https://github.com/oblac/jodd/compare/v5.0.4...v5.0.5)
 
@@ -16,7 +22,7 @@ Just refreshing with some bug fixes and few new features.
 + **mail** - fixed special case with 1 body and 1 attachment.
 + **core** - fixed Zip slip vulnerability.
 
-### New Features
+### New features
 
 + **core** - `FileUtil.mkdirs` return created folder.
 + **email** - added new method for unsetting the email flags in builder. 
@@ -37,7 +43,7 @@ Many little improvements plus one important fix for `jodd-mail`. Sorry for any i
 + **mail** - `debug` and `timeout` are now applied before creating the mail server.
 + **http** - default security has been set to `TLSv1.1`.
 
-### New Features
+### New features
 
 + **joy** - added excluded jars for faster scanning.
 + **mail** - added custom properties.
@@ -50,7 +56,7 @@ Many little improvements plus one important fix for `jodd-mail`. Sorry for any i
 
 ## [v5.0.3](https://github.com/oblac/jodd/compare/v5.0.2...v5.0.3)
 
-### New Features
+### New features
 
 + **dboom** - added detection of the quote names in annotations.
 + **dboom** - Added flags to column and table naming strategies for quote chars.
@@ -61,11 +67,11 @@ Many little improvements plus one important fix for `jodd-mail`. Sorry for any i
 
 One minor fix and one important change for the bootstrap usages.
 
-### New Features
+### New features
 
 + **joy** - added static method for registering joy servlet context listener.
 
-### Bug Fixes
+### Bug fixes
 
 + **joy** - better output of the Joy configuration that does not cut of the values.  
 
@@ -75,13 +81,13 @@ One minor fix and one important change for the bootstrap usages.
 
 Minor fixes and improvements.
 
-### New Features
+### New features
 
 + **core*** - added the `Maybe.or(T)` method.
 + **mail** - added `receive()` and fluent builder.
 + **cli*** - parse values bundled with options (e.g. `--name=value`)
 
-### Bug Fixes
+### Bug fixes
 
 + **cli** - fixed the behaviour of parameters
 
