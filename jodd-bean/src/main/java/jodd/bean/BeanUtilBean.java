@@ -76,7 +76,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		while ((dotNdx = indexOfDot(name)) != -1) {
 			bp.last = false;
 			bp.setName(name.substring(0, dotNdx));
-			bp.setBean(getIndexProperty(bp));
+			bp.updateBean(getIndexProperty(bp));
 			name = name.substring(dotNdx + 1);
 		}
 		bp.last = true;
@@ -89,12 +89,12 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		while ((dotNdx = indexOfDot(name)) != -1) {
 			bp.last = false;
 			bp.setName(name.substring(0, dotNdx));
-			String temp = bp.name;
+			final String temp = bp.name;
 			if (!hasIndexProperty(bp)) {
 				return false;
 			}
 			bp.setName(temp);
-			bp.setBean(getIndexProperty(bp));
+			bp.updateBean(getIndexProperty(bp));
 			name = name.substring(dotNdx + 1);
 		}
 		bp.last = true;

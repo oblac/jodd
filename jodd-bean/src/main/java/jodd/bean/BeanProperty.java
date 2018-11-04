@@ -31,6 +31,8 @@ import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 
+import java.util.function.Supplier;
+
 /**
  * Represents a bean named property. Contains two information:
  * <ol>
@@ -72,11 +74,23 @@ class BeanProperty {
 	/**
 	 * Sets new bean instance.
 	 */
-	public void setBean(final Object bean) {
+	private void setBean(final Object bean) {
 		this.bean = bean;
 		this.cd = (bean == null ? null : introspector.lookup(bean.getClass()));
 		this.first = false;
 		this.updateProperty = true;
+	}
+
+	/**
+	 * Updates the bean. Detects special case of suppliers.
+	 */
+	public void updateBean(final Object bean) {
+		this.setBean(bean);
+
+		if (this.cd != null && this.cd.isSupplier()) {
+			final Object newBean = ((Supplier)this.bean).get();
+			setBean(newBean);
+		}
 	}
 
 	// ---------------------------------------------------------------- simple properties
