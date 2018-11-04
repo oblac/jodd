@@ -46,7 +46,7 @@ class BeanProperty {
 	BeanProperty(final BeanUtilBean beanUtilBean, final Object bean, final String propertyName) {
 		this.introspector = beanUtilBean.introspector;
 		setName(propertyName);
-		setBean(bean);
+		updateBean(bean);
 		this.last = true;
 		this.first = true;
 		this.fullName = bean.getClass().getSimpleName() + '#' + propertyName;

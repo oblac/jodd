@@ -33,3 +33,5 @@ joyActionConfig.interceptors=\
 		jodd.joy.auth.AuthInterceptor,\
 		jodd.joy.i18n.I18nInterceptor,\
 		jodd.madvoc.interceptor.ServletConfigInterceptor
+
+fileUploader.maxFileSize=10000
