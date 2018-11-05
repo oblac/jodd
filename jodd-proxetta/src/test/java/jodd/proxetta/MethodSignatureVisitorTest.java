@@ -25,7 +25,7 @@
 
 package jodd.proxetta;
 
-import jodd.asm6.ClassReader;
+import jodd.asm7.ClassReader;
 import jodd.proxetta.asm.MethodSignatureVisitor;
 import jodd.proxetta.fixtures.TargetClassInfoReaderFixture;
 import jodd.proxetta.fixtures.data.FooAnn;

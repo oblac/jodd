@@ -26,9 +26,9 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm6.Label;
-import jodd.asm6.MethodVisitor;
-import jodd.asm6.Type;
+import jodd.asm7.Label;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Type;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
 import jodd.proxetta.InvokeReplacer;
@@ -37,15 +37,15 @@ import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTargetReplacement;
 import jodd.util.StringPool;
 
-import static jodd.asm6.Opcodes.ALOAD;
-import static jodd.asm6.Opcodes.ASTORE;
-import static jodd.asm6.Opcodes.DUP;
-import static jodd.asm6.Opcodes.INVOKEINTERFACE;
-import static jodd.asm6.Opcodes.INVOKESPECIAL;
-import static jodd.asm6.Opcodes.INVOKESTATIC;
-import static jodd.asm6.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm6.Opcodes.NEW;
-import static jodd.asm6.Opcodes.POP;
+import static jodd.asm7.Opcodes.ALOAD;
+import static jodd.asm7.Opcodes.ASTORE;
+import static jodd.asm7.Opcodes.DUP;
+import static jodd.asm7.Opcodes.INVOKEINTERFACE;
+import static jodd.asm7.Opcodes.INVOKESPECIAL;
+import static jodd.asm7.Opcodes.INVOKESTATIC;
+import static jodd.asm7.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm7.Opcodes.NEW;
+import static jodd.asm7.Opcodes.POP;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;

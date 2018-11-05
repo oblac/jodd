@@ -27,7 +27,7 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
 import jodd.asm.EmptyAnnotationVisitor;
-import jodd.asm6.AnnotationVisitor;
+import jodd.asm7.AnnotationVisitor;
 import jodd.proxetta.AnnotationInfo;
 
 import java.util.ArrayList;

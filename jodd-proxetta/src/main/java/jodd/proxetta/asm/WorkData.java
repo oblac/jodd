@@ -25,7 +25,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm6.ClassVisitor;
+import jodd.asm7.ClassVisitor;
 import jodd.util.StringPool;
 
 import java.util.ArrayList;

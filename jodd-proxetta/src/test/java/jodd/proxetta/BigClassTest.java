@@ -25,7 +25,7 @@
 
 package jodd.proxetta;
 
-import jodd.asm6.Type;
+import jodd.asm7.Type;
 import jodd.bridge.DefineClass;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;

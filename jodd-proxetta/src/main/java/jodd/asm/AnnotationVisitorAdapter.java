@@ -25,7 +25,7 @@
 
 package jodd.asm;
 
-import jodd.asm6.AnnotationVisitor;
+import jodd.asm7.AnnotationVisitor;
 
 /**
  * Annotation visitor adapter.

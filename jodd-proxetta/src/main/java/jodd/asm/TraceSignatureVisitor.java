@@ -27,8 +27,8 @@
 // THE POSSIBILITY OF SUCH DAMAGE.
 package jodd.asm;
 
-import jodd.asm6.Opcodes;
-import jodd.asm6.signature.SignatureVisitor;
+import jodd.asm7.Opcodes;
+import jodd.asm7.signature.SignatureVisitor;
 
 /**
  * A {@link SignatureVisitor} that builds the Java generic type declaration corresponding to the

@@ -26,7 +26,7 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyMethodVisitor;
-import jodd.asm6.Label;
+import jodd.asm7.Label;
 import jodd.util.ArraysUtil;
 
 /**

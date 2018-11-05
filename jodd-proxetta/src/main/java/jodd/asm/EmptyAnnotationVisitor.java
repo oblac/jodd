@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm6.AnnotationVisitor;
-import jodd.asm6.Opcodes;
+import jodd.asm7.AnnotationVisitor;
+import jodd.asm7.Opcodes;
 
 /**
  * Empty annotation visitor.

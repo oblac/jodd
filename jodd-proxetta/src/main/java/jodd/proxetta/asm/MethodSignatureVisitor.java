@@ -27,8 +27,8 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
 import jodd.asm.TraceSignatureVisitor;
-import jodd.asm6.Opcodes;
-import jodd.asm6.signature.SignatureVisitor;
+import jodd.asm7.Opcodes;
+import jodd.asm7.signature.SignatureVisitor;
 import jodd.buffer.FastIntBuffer;
 import jodd.proxetta.AnnotationInfo;
 import jodd.proxetta.ClassInfo;

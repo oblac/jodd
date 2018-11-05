@@ -25,8 +25,8 @@
 
 package jodd.asm;
 
-import jodd.asm6.MethodVisitor;
-import jodd.asm6.Opcodes;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Opcodes;
 
 /**
  * An empty MethodVisitor that delegates to another MethodVisitor. This class
@@ -36,6 +36,6 @@ import jodd.asm6.Opcodes;
 public abstract class MethodAdapter extends MethodVisitor {
 
 	protected MethodAdapter(final MethodVisitor mv) {
-		super(Opcodes.ASM6, mv);
+		super(Opcodes.ASM7, mv);
 	}
 }

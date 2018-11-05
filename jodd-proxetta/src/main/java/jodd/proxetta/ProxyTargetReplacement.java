@@ -26,19 +26,19 @@
 package jodd.proxetta;
 
 import jodd.asm.AsmUtil;
-import jodd.asm6.MethodVisitor;
-import jodd.asm6.Opcodes;
-import jodd.asm6.Type;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Opcodes;
+import jodd.asm7.Type;
 import jodd.proxetta.asm.ProxettaAsmUtil;
 import jodd.util.ClassLoaderUtil;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
-import static jodd.asm6.Opcodes.AASTORE;
-import static jodd.asm6.Opcodes.ANEWARRAY;
-import static jodd.asm6.Opcodes.DUP;
-import static jodd.asm6.Opcodes.POP;
+import static jodd.asm7.Opcodes.AASTORE;
+import static jodd.asm7.Opcodes.ANEWARRAY;
+import static jodd.asm7.Opcodes.DUP;
+import static jodd.asm7.Opcodes.POP;
 import static jodd.proxetta.asm.ProxettaAsmUtil.checkArgumentIndex;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadMethodArgumentAsObject;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadMethodArgumentClass;

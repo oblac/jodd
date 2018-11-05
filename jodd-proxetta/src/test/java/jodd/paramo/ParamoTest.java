@@ -26,7 +26,7 @@
 package jodd.paramo;
 
 import jodd.asm.TraceSignatureVisitor;
-import jodd.asm6.signature.SignatureReader;
+import jodd.asm7.signature.SignatureReader;
 import jodd.paramo.fixtures.Foo;
 import jodd.paramo.fixtures.Generic;
 import jodd.paramo.fixtures.NonGeneric;

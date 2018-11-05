@@ -26,18 +26,18 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.MethodAdapter;
-import jodd.asm6.Label;
-import jodd.asm6.MethodVisitor;
+import jodd.asm7.Label;
+import jodd.asm7.MethodVisitor;
 import jodd.proxetta.ProxettaException;
 
-import static jodd.asm6.Opcodes.BIPUSH;
-import static jodd.asm6.Opcodes.ICONST_0;
-import static jodd.asm6.Opcodes.ICONST_1;
-import static jodd.asm6.Opcodes.ICONST_2;
-import static jodd.asm6.Opcodes.ICONST_3;
-import static jodd.asm6.Opcodes.ICONST_4;
-import static jodd.asm6.Opcodes.ICONST_5;
-import static jodd.asm6.Opcodes.SIPUSH;
+import static jodd.asm7.Opcodes.BIPUSH;
+import static jodd.asm7.Opcodes.ICONST_0;
+import static jodd.asm7.Opcodes.ICONST_1;
+import static jodd.asm7.Opcodes.ICONST_2;
+import static jodd.asm7.Opcodes.ICONST_3;
+import static jodd.asm7.Opcodes.ICONST_4;
+import static jodd.asm7.Opcodes.ICONST_5;
+import static jodd.asm7.Opcodes.SIPUSH;
 
 /**
  * Method adapter that tracks history of previous instructions.

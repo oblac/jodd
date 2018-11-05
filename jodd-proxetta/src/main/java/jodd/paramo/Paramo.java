@@ -25,7 +25,7 @@
 
 package jodd.paramo;
 
-import jodd.asm6.ClassReader;
+import jodd.asm7.ClassReader;
 import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
 

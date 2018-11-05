@@ -26,21 +26,21 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm6.ClassVisitor;
-import jodd.asm6.FieldVisitor;
-import jodd.asm6.MethodVisitor;
-import jodd.asm6.Opcodes;
+import jodd.asm7.ClassVisitor;
+import jodd.asm7.FieldVisitor;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Opcodes;
 import jodd.proxetta.ProxyAspect;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import static jodd.asm6.Opcodes.ACC_ABSTRACT;
-import static jodd.asm6.Opcodes.ACC_NATIVE;
-import static jodd.asm6.Opcodes.ALOAD;
-import static jodd.asm6.Opcodes.GETFIELD;
-import static jodd.asm6.Opcodes.INVOKEINTERFACE;
-import static jodd.asm6.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm7.Opcodes.ACC_ABSTRACT;
+import static jodd.asm7.Opcodes.ACC_NATIVE;
+import static jodd.asm7.Opcodes.ALOAD;
+import static jodd.asm7.Opcodes.GETFIELD;
+import static jodd.asm7.Opcodes.INVOKEINTERFACE;
+import static jodd.asm7.Opcodes.INVOKEVIRTUAL;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadVirtualMethodArguments;

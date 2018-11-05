@@ -26,8 +26,8 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyClassVisitor;
-import jodd.asm6.MethodVisitor;
-import jodd.asm6.Type;
+import jodd.asm7.MethodVisitor;
+import jodd.asm7.Type;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;

@@ -25,8 +25,8 @@
 
 package jodd.proxetta;
 
-import jodd.asm6.ClassReader;
-import jodd.asm6.ClassWriter;
+import jodd.asm7.ClassReader;
+import jodd.asm7.ClassWriter;
 import jodd.bridge.DefineClass;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
