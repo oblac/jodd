@@ -25,12 +25,6 @@
 
 package jodd.db.oom;
 
-import static jodd.db.oom.DbBaseTest.DB_NAME;
-import static jodd.db.oom.DbBaseTest.dbhost;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.sql.Date;
-
 import jodd.db.DbCallResult;
 import jodd.db.DbOom;
 import jodd.db.DbQuery;
@@ -42,6 +36,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Date;
+
+import static jodd.db.oom.DbBaseTest.DB_NAME;
+import static jodd.db.oom.DbBaseTest.dbhost;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DbCallResultPostgresqlTest {
 
@@ -63,6 +63,8 @@ class DbCallResultPostgresqlTest {
 		try (final DbSession dbSession = new DbSession(connectionPool)) {
 			final DbOom dbOom = DbOom.create().withConnectionProvider(connectionPool).get(); // not shutdown after creating function!
 			new DbQuery(dbOom, dbSession, "CREATE OR REPLACE function test_float (r_value real) returns real as $$ begin  return r_value ; end;  $$ LANGUAGE 'plpgsql' VOLATILE;").executeUpdate();
+			dbSession.closeSession();
+			dbOom.shutdown();
 		}
 
 	}

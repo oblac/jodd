@@ -117,7 +117,7 @@ public abstract class DbBaseTest {
 
 		@Override
 		public final void initConnectionPool(final CoreConnectionPool connectionPool) {
-			connectionPool.setDriver("com.mysql.jdbc.Driver");
+			connectionPool.setDriver("com.mysql.cj.jdbc.Driver");
 			connectionPool.setUrl("jdbc:mysql://" + dbhost() + ":3306/" + DB_NAME);
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
