@@ -7,6 +7,7 @@ All notable changes to Jodd project are documented here.
 ### New features
 
 + **bean** - added special support for inner `Supplier` for `BeanUtil`.
++ **proxetta** - updated to ASM7.
 
 ### Bug fixes
 
