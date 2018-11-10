@@ -61,6 +61,28 @@ public class EMLComposer extends EMLProperties<EMLComposer> {
 		return ost.getEml();
 	}
 
+
+	/**
+	 * Creates EML string from given {@link ReceivedEmail}.
+	 *
+	 * @param receivedEmail {@link ReceivedEmail} from which to create EML {@link String}.
+	 * @return {@link String} with EML content.
+	 */
+	public String compose(final ReceivedEmail receivedEmail) {
+		Message msg = receivedEmail.originalMessage();
+
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		try {
+			msg.writeTo(outputStream);
+		} catch (IOException | MessagingException e) {
+			throw new MailException(e);
+		}
+
+		return outputStream.toString();
+	}
+
+
 	/**
 	 * Special transport that writes message into the {@link OutputStream}.
 	 */
