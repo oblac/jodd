@@ -65,6 +65,9 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	@Override
 	public ReceivedEmail clone() {
 		return create()
+			//original message
+			.originalMessage(originalMessage())
+
 			// flags
 			.flags(flags())
 
@@ -110,6 +113,7 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 	 */
 	public ReceivedEmail(final Message msg, final boolean envelope, final File attachmentStorage) {
 		this.attachmentStorage = attachmentStorage;
+		this.originalMessage = msg;
 		try {
 			parseMessage(msg, envelope);
 		} catch (final Exception ex) {
@@ -261,6 +265,30 @@ public class ReceivedEmail extends CommonEmail<ReceivedEmail> {
 			return dispositionId != null && dispositionId.equalsIgnoreCase("inline");
 		}
 		return false;
+	}
+
+	// ---------------------------------------------------------------- original message
+
+	/**
+	 * {@link Message} for this {@link ReceivedEmail}.
+	 */
+	private Message originalMessage;
+
+	/**
+	 * @return {@link Message}
+	 */
+	public Message originalMessage() {
+		return originalMessage;
+	}
+
+	/**
+	 * Sets the original message.
+	 *
+	 * @param originalMessage {@link Message} to set.
+	 */
+	public ReceivedEmail originalMessage(final Message originalMessage) {
+		this.originalMessage = originalMessage;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- flags
