@@ -4,6 +4,13 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.6...master)
 
+### New features
+
++ **http** - added `EMLComposer.compose` for `ReceivedEmail`.
+
+### Bug fixes
+
++ **http** - fixed issue with re-reading the request. 
 
 ## [v5.0.6](https://github.com/oblac/jodd/compare/v5.0.5...master)
 

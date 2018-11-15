@@ -400,4 +400,13 @@ class HttpRequestTest {
 
 		assertEquals(body, receivedBody);
 	}
+
+	@Test
+	void testHttpRequestSlash() {
+		HttpRequest request = HttpRequest.post("/");
+		request.contentType("application/x-www-form-urlencoded");
+		HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
+
+		assertEquals(request.toString(), request1.toString());
+	}
 }

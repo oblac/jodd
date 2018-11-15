@@ -25,10 +25,11 @@
 
 package jodd.http;
 
-import jodd.util.StringBand;
-import jodd.util.StringPool;
 import jodd.net.URLCoder;
 import jodd.net.URLDecoder;
+import jodd.util.StringBand;
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import java.util.Map;
 
@@ -87,7 +88,11 @@ public class HttpUtil {
 	 */
 	public static HttpMultiMap<String> parseQuery(final String query, final boolean decode) {
 
-		HttpMultiMap<String> queryMap = HttpMultiMap.newCaseInsensitiveMap();
+		final HttpMultiMap<String> queryMap = HttpMultiMap.newCaseInsensitiveMap();
+
+		if (StringUtil.isBlank(query)) {
+			return queryMap;
+		}
 
 		int ndx, ndx2 = 0;
 		while (true) {

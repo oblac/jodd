@@ -962,9 +962,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return null;
 		}
 
-		HttpRequest httpRequest = new HttpRequest();
+		final HttpRequest httpRequest = new HttpRequest();
+		httpRequest.headers.clear();
 
-		String line;
+		final String line;
 		try {
 			line = reader.readLine();
 		} catch (IOException ioex) {

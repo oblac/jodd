@@ -33,11 +33,11 @@ import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
 import jodd.io.upload.FileUpload;
 import jodd.io.upload.MultipartStreamParser;
+import jodd.net.MimeTypes;
+import jodd.time.TimeUtil;
 import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import jodd.time.TimeUtil;
-import jodd.net.MimeTypes;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -919,7 +919,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected void readHeaders(final BufferedReader reader) {
 		while (true) {
-			String line;
+			final String line;
 			try {
 				line = reader.readLine();
 			} catch (IOException ioex) {
