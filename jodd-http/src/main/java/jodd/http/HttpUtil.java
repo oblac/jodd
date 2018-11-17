@@ -94,37 +94,35 @@ public class HttpUtil {
 			return queryMap;
 		}
 
-		int ndx, ndx2 = 0;
-		while (true) {
-			ndx = query.indexOf('=', ndx2);
-			if (ndx == -1) {
-				if (ndx2 < query.length()) {
-					queryMap.add(query.substring(ndx2), null);
-				}
-				break;
-			}
-			String name = query.substring(ndx2, ndx);
-			if (decode) {
-				name = URLDecoder.decodeQuery(name);
-			}
-
-			ndx2 = ndx + 1;
-
-			ndx = query.indexOf('&', ndx2);
-
+		int lastNdx = 0;
+		while (lastNdx < query.length()) {
+			int ndx = query.indexOf('&', lastNdx);
 			if (ndx == -1) {
 				ndx = query.length();
 			}
 
-			String value = query.substring(ndx2, ndx);
+			final String paramAndValue = query.substring(lastNdx, ndx);
 
-			if (decode) {
-				value = URLDecoder.decodeQuery(value);
+			ndx = paramAndValue.indexOf('=');
+
+			if (ndx == -1) {
+				queryMap.add(paramAndValue, null);
 			}
+			else {
+				String name = paramAndValue.substring(0, ndx);
+				if (decode) {
+					name = URLDecoder.decodeQuery(name);
+				}
 
-			queryMap.add(name, value);
+				String value = paramAndValue.substring(ndx + 1);
 
-			ndx2 = ndx + 1;
+				if (decode) {
+					value = URLDecoder.decodeQuery(value);
+				}
+
+				queryMap.add(name, value);
+			}
+			lastNdx += paramAndValue.length() + 1;
 		}
 
 		return queryMap;

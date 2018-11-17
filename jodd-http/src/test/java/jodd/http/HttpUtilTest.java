@@ -29,6 +29,7 @@ import jodd.util.StringPool;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HttpUtilTest {
 
@@ -122,6 +123,37 @@ class HttpUtilTest {
 
 		map.add("ddd", "four");
 		assertEquals("ccc&ddd=four", HttpUtil.buildQuery(map, StringPool.UTF_8));
+	}
+
+	@Test
+	void testParseQuery() {
+		HttpMultiMap<String> map = HttpUtil.parseQuery("a=b", false);
+
+		assertEquals(1, map.size());
+		assertEquals("b", map.get("a"));
+
+
+		map = HttpUtil.parseQuery("a=b&c=d", false);
+
+		assertEquals(2, map.size());
+		assertEquals("b", map.get("a"));
+		assertEquals("d", map.get("c"));
+	}
+
+	@Test
+	void testParseQuery_specialCase() {
+		HttpMultiMap<String> map = HttpUtil.parseQuery("a&b", false);
+
+		assertEquals(2, map.size());
+		assertNull(map.get("a"));
+		assertNull(map.get("b"));
+
+
+		map = HttpUtil.parseQuery("a&c=d", false);
+
+		assertEquals(2, map.size());
+		assertNull(map.get("a"));
+		assertEquals("d", map.get("c"));
 	}
 
 }

@@ -10,7 +10,8 @@ All notable changes to Jodd project are documented here.
 
 ### Bug fixes
 
-+ **http** - fixed issue with re-reading the request. 
++ **http** - fixed an issue with re-reading the request.
++ **http** - fixed an issue with query param parsing. 
 
 ## [v5.0.6](https://github.com/oblac/jodd/compare/v5.0.5...master)
 

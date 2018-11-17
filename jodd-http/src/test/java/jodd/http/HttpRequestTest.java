@@ -409,4 +409,13 @@ class HttpRequestTest {
 
 		assertEquals(request.toString(), request1.toString());
 	}
+
+	@Test
+	void testHttpRequestReRead() {
+		HttpRequest request = HttpRequest.post("http://127.0.0.1:8086/test");
+		request.form("a", null);
+		request.form("b", "aaa");
+		HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
+		assertEquals(request.toString(), request1.toString());
+	}
 }
