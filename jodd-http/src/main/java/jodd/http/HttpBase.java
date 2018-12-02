@@ -653,15 +653,18 @@ public abstract class HttpBase<T> {
 	 * that will be encoded in {@link Defaults#bodyEncoding default body encoding}.
 	 */
 	public T bodyText(final String body, final String mediaType) {
-		return bodyText(body, mediaType, Defaults.bodyEncoding);
+		return bodyText(body, mediaType, charset != null ? charset : Defaults.bodyEncoding);
 	}
 	/**
 	 * Defines {@link #bodyText(String, String, String) body text content}
 	 * that will be encoded as {@link Defaults#bodyMediaType default body media type}
-	 * in {@link Defaults#bodyEncoding default body encoding}.
+	 * in {@link Defaults#bodyEncoding default body encoding} if missing.
 	 */
 	public T bodyText(final String body) {
-		return bodyText(body, Defaults.bodyMediaType, Defaults.bodyEncoding);
+		return bodyText(
+			body,
+			mediaType != null ? mediaType : Defaults.bodyMediaType,
+			charset != null ? charset : Defaults.bodyEncoding);
 	}
 
 	/**

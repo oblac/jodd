@@ -29,6 +29,7 @@ import jodd.io.FastCharArrayWriter;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.io.upload.FileUpload;
+import jodd.net.MimeTypes;
 import jodd.util.ClassLoaderUtil;
 import org.junit.jupiter.api.Test;
 
@@ -417,5 +418,14 @@ class HttpRequestTest {
 		request.form("b", "aaa");
 		HttpRequest request1 = HttpRequest.readFrom(new ByteArrayInputStream(request.toByteArray()));
 		assertEquals(request.toString(), request1.toString());
+	}
+
+	@Test
+	void testHttpRequestContentSetOrder() {
+		final HttpRequest request = HttpRequest.get("http://127.0.0.1:8086/test");
+
+		request.contentTypeJson().bodyText("{}");
+
+		assertEquals(MimeTypes.MIME_APPLICATION_JSON, request.mediaType());
 	}
 }

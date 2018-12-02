@@ -10,6 +10,7 @@ All notable changes to Jodd project are documented here.
 
 ### Bug fixes
 
++ **http** - allowing `contentTypeJson` to be used in any order.
 + **http** - fixed an issue with re-reading the request.
 + **http** - fixed an issue with query param parsing. 
 
