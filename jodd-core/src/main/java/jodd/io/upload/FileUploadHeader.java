@@ -108,7 +108,7 @@ public class FileUploadHeader {
 			return StringPool.EMPTY;
 		}
 		start += token.length();
-		return dataHeader.substring(start);
+		return dataHeader.substring(start).trim();
 	}
 
 	private String getContentDisposition(final String dataHeader) {
