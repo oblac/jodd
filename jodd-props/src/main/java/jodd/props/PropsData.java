@@ -305,7 +305,7 @@ public class PropsData implements Cloneable {
 						extractMap(target, map, profiles, wildcardPatterns, prefix);
 					}
 
-					final int ndx = profile.indexOf('.');
+					final int ndx = profile.lastIndexOf('.');
 					if (ndx == -1) {
 						break;
 					}
