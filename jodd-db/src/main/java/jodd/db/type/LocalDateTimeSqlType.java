@@ -27,6 +27,7 @@ package jodd.db.type;
 
 import jodd.time.TimeUtil;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,7 +51,11 @@ public class LocalDateTimeSqlType extends SqlType<LocalDateTime> {
 			st.setString(index, value.toString());
 			return;
 		}
-		st.setLong(index, TimeUtil.toMilliseconds(value));
+		if (dbSqlType == Types.INTEGER) {
+			st.setLong(index, TimeUtil.toMilliseconds(value));
+		}
+
+		st.setObject(index, value);
 	}
 
 	@Override
@@ -69,12 +74,17 @@ public class LocalDateTimeSqlType extends SqlType<LocalDateTime> {
 			}
 			return LocalDateTime.parse(string);
 		}
+		if (dbSqlType == Types.INTEGER) {
+			long time = rs.getLong(index);
 
-		long time = rs.getLong(index);
-
-		if (time == 0 && rs.wasNull()) {
-			return null;
+			if (time == 0 && rs.wasNull()) {
+				return null;
+			}
+			return TimeUtil.fromMilliseconds(time);
 		}
-		return TimeUtil.fromMilliseconds(time);
+
+		Date date = (Date) rs.getObject(index);
+
+		return TimeUtil.fromMilliseconds(date.getTime());
 	}
 }
