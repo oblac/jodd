@@ -633,6 +633,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected int timeout = -1;
 	protected int connectTimeout = -1;
 	protected boolean followRedirects = false;
+	protected int maxRedirects = 50;
 
 	/**
 	 * Defines the socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or,
@@ -694,6 +695,22 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public boolean isFollowRedirects() {
 		return this.followRedirects;
 	}
+
+	/**
+	 * Sets the max number of redirects, used when {@link #followRedirects} is enabled.
+	 */
+	public HttpRequest maxRedirects(final int maxRedirects) {
+		this.maxRedirects = maxRedirects;
+		return this;
+	}
+
+	/**
+	 * Returns max number of redirects, used when {@link #followRedirects} is enabled.
+	 */
+	public int maxRedirects() {
+		return this.maxRedirects;
+	}
+
 
 	// ---------------------------------------------------------------- send
 
@@ -831,10 +848,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return _send();
 		}
 
-		while (true) {
-			HttpResponse httpResponse = _send();
+		int redirects = this.maxRedirects;
 
-			int statusCode = httpResponse.statusCode();
+		while (redirects > 0) {
+			redirects--;
+
+			final HttpResponse httpResponse = _send();
+
+			final int statusCode = httpResponse.statusCode();
 
 			if (HttpStatus.isRedirect(statusCode)) {
 				_reset();
@@ -844,6 +865,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			return httpResponse;
 		}
+
+		throw new HttpException("Max number of redirects exceeded: " + this.maxRedirects);
 	}
 
 	/**
@@ -860,7 +883,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// sends data
-		HttpResponse httpResponse;
+		final HttpResponse httpResponse;
 		try {
 			OutputStream outputStream = httpConnection.getOutputStream();
 
