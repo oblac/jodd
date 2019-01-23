@@ -9,6 +9,10 @@ All notable changes to Jodd project are documented here.
 + **http** - added `EMLComposer.compose` for `ReceivedEmail`.
 + **http** - added max number of redirects, defaulting to 50.
 
+### Breaking changes
+
++ **db** - `GenericDao` uses generic id, not `long` anymore.
+
 ### Bug fixes
 
 + **props** - fixed conversion to `Map`.

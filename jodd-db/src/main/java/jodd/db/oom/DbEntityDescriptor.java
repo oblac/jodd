@@ -300,7 +300,7 @@ public class DbEntityDescriptor<E> {
 	 * Returns ID value for given entity instance.
 	 */
 	public Object getIdValue(final E object) {
-		String propertyName = getIdPropertyName();
+		final String propertyName = getIdPropertyName();
 		return BeanUtil.declared.getProperty(object, propertyName);
 	}
 
@@ -308,7 +308,7 @@ public class DbEntityDescriptor<E> {
 	 * Sets ID value for given entity.
 	 */
 	public void setIdValue(final E object, final Object value) {
-		String propertyName = getIdPropertyName();
+		final String propertyName = getIdPropertyName();
 		BeanUtil.declared.setProperty(object, propertyName, value);
 	}
 

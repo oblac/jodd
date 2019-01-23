@@ -161,11 +161,11 @@ public class DbEntitySql {
 	/**
 	 * Creates DELETE query that deletes entity by ID.
 	 */
-	public DbSqlBuilder deleteById(final Object entityType, final long id) {
+	public DbSqlBuilder deleteById(final Object entityType, final Object id) {
 		final String tableRef = createTableRefName(entityType);
 		return sql().
 			$(DELETE_FROM).table(entityType, null, tableRef).
-			$(WHERE).refId(tableRef).$(EQUALS).columnValue(Long.valueOf(id));
+			$(WHERE).refId(tableRef).$(EQUALS).columnValue(id);
 	}
 
 	// ---------------------------------------------------------------- from
@@ -265,10 +265,10 @@ public class DbEntitySql {
 	/**
 	 * Creates SELECT criteria for the entity matched by id.
 	 */
-	public DbSqlBuilder findById(final Object entityType, final long id) {
+	public DbSqlBuilder findById(final Object entityType, final Object id) {
 		final String tableRef = createTableRefName(entityType);
 		return sql().$(SELECT).column(tableRef).$(FROM).table(entityType, tableRef)
-				.$(WHERE).refId(tableRef).$(EQUALS).columnValue(Long.valueOf(id));
+				.$(WHERE).refId(tableRef).$(EQUALS).columnValue(id);
 	}
 
 	// ---------------------------------------------------------------- count
@@ -303,13 +303,13 @@ public class DbEntitySql {
 	/**
 	 * Creates UPDATE that increases/decreases column by some delta value.
 	 */
-	public DbSqlBuilder increaseColumn(final Class entity, final long id, final String columnRef, final Number delta, final boolean increase) {
+	public DbSqlBuilder increaseColumn(final Class entity, final Object id, final String columnRef, final Number delta, final boolean increase) {
 		final String tableRef = createTableRefName(entity);
 
 		return sql().$(UPDATE).table(entity, null, tableRef).$(SET)
 				.ref(null, columnRef).$(EQUALS).ref(null, columnRef)
 				.$(increase ? StringPool.PLUS : StringPool.DASH)
-				.columnValue(delta).$(WHERE).refId(tableRef).$(EQUALS).columnValue(Long.valueOf(id));
+				.columnValue(delta).$(WHERE).refId(tableRef).$(EQUALS).columnValue(id);
 	}
 
 

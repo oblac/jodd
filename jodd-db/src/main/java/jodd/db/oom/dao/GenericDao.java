@@ -31,7 +31,6 @@ import jodd.db.DbQuery;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomException;
 
-import java.util.Collection;
 import java.util.List;
 
 import static jodd.db.oom.DbOomQuery.query;
@@ -53,13 +52,13 @@ public class GenericDao {
 	 * Returns <code>true</code> if entity is persistent.
 	 */
 	protected <E> boolean isPersistent(final DbEntityDescriptor<E> ded, final E entity) {
-		Object key = ded.getIdValue(entity);
+		final Object key = ded.getIdValue(entity);
 
 		if (key == null) {
 			return false;
 		}
 		if (key instanceof Number) {
-			long value = ((Number)key).longValue();
+			final long value = ((Number)key).longValue();
 
 			if (value == 0) {
 				return false;
@@ -71,14 +70,14 @@ public class GenericDao {
 	/**
 	 * Sets new ID value for entity.
 	 */
-	protected <E> void setEntityId(final DbEntityDescriptor<E> ded, final E entity, final long newValue) {
-		ded.setIdValue(entity, Long.valueOf(newValue));
+	protected <E, ID> void setEntityId(final DbEntityDescriptor<E> ded, final E entity, final ID newIdValue) {
+		ded.setIdValue(entity, newIdValue);
 	}
 
 	/**
 	 * Generates next id for given type.
 	 */
-	protected long generateNextId(final DbEntityDescriptor ded) {
+	protected <ID> ID generateNextId(final DbEntityDescriptor dbEntityDescriptor) {
 		throw new UnsupportedOperationException("Use Joy");
 	}
 
@@ -87,8 +86,8 @@ public class GenericDao {
 	 * Otherwise, entity will be inserted into the database.
 	 */
 	public <E> E store(final E entity) {
-		Class type = entity.getClass();
-		DbEntityDescriptor ded = dbOom.entityManager().lookupType(type);
+		final Class type = entity.getClass();
+		final DbEntityDescriptor ded = dbOom.entityManager().lookupType(type);
 
 		if (ded == null) {
 			throw new DbOomException("Not an entity: " + type);
@@ -99,16 +98,18 @@ public class GenericDao {
 				q = query(dbOom.entities().insert(entity));
 				q.setGeneratedKey();
 				q.executeUpdate();
-				long nextId = q.getGeneratedKey();
+				final Object nextId = q.getGeneratedKey();
 				setEntityId(ded, entity, nextId);
-			} else {
-				long nextId = generateNextId(ded);
+			}
+			else {
+				final Object nextId = generateNextId(ded);
 				setEntityId(ded, entity, nextId);
 				q = query(dbOom.entities().insert(entity));
 				q.executeUpdate();
 			}
 			q.close();
-		} else {
+		}
+		else {
 			query(dbOom.entities().updateAll(entity)).autoClose().executeUpdate();
 		}
 		return entity;
@@ -118,7 +119,7 @@ public class GenericDao {
 	 * Simply inserts object into the database.
 	 */
 	public void save(final Object entity) {
-		DbQuery q = query(dbOom.entities().insert(entity));
+		final DbQuery q = query(dbOom.entities().insert(entity));
 		q.autoClose().executeUpdate();
 	}
 
@@ -126,8 +127,8 @@ public class GenericDao {
 	 * Inserts bunch of objects into the database.
 	 * @see #save(Object)
 	 */
-	public void saveAll(final Collection entities) {
-		for (Object entity: entities) {
+	public void saveAll(final Iterable entities) {
+		for (final Object entity: entities) {
 			save(entity);
 		}
 	}
@@ -145,8 +146,8 @@ public class GenericDao {
 	 * Updates all entities.
 	 * @see #update(Object)
 	 */
-	public void updateAll(final Collection entities) {
-		for (Object entity : entities) {
+	public void updateAll(final Iterable entities) {
+		for (final Object entity : entities) {
 			update(entity);
 		}
 	}
@@ -174,7 +175,7 @@ public class GenericDao {
 	/**
 	 * Finds single entity by its id.
 	 */
-	public <E> E findById(final Class<E> entityType, final long id) {
+	public <E, ID> E findById(final Class<E> entityType, final ID id) {
 		return query(dbOom.entities().findById(entityType, id)).autoClose().find(entityType);
 	}
 
@@ -213,7 +214,7 @@ public class GenericDao {
 	/**
 	 * Deleted single entity by its id.
 	 */
-	public void deleteById(final Class entityType, final long id) {
+	public <ID> void deleteById(final Class entityType, final ID id) {
 		query(dbOom.entities().deleteById(entityType, id)).autoClose().executeUpdate();
 	}
 
@@ -235,10 +236,10 @@ public class GenericDao {
 	}
 
 	/**
-	 * Deletes all objects by their id.
+	 * Deletes all objects by their ids.
 	 */
-	public void deleteAllById(final Collection objects) {
-		for (Object entity : objects) {
+	public void deleteAllById(final Iterable objects) {
+		for (final Object entity : objects) {
 			deleteById(entity);
 		}
 	}
@@ -258,14 +259,14 @@ public class GenericDao {
 	/**
 	 * Increases a property.
 	 */
-	public void increaseProperty(final Class entityType, final long id, final String name, final Number delta) {
+	public <ID> void increaseProperty(final Class entityType, final ID id, final String name, final Number delta) {
 		query(dbOom.entities().increaseColumn(entityType, id, name, delta, true)).autoClose().executeUpdate();
 	}
 
 	/**
 	 * Decreases a property.
 	 */
-	public void decreaseProperty(final Class entityType, final long id, final String name, final Number delta) {
+	public <ID> void decreaseProperty(final Class entityType, final ID id, final String name, final Number delta) {
 		query(dbOom.entities().increaseColumn(entityType, id, name, delta, false)).autoClose().executeUpdate();
 	}
 
