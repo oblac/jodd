@@ -7,6 +7,7 @@ All notable changes to Jodd project are documented here.
 ### New features
 
 + **http** - added `EMLComposer.compose` for `ReceivedEmail`.
++ **http** - added max number of redirects, defaulting to 50.
 
 ### Bug fixes
 
