@@ -81,7 +81,7 @@ public abstract class ArgsTestBase {
 				.query("user.username", "Frank")
 				.send();
 
-		assertEquals("Hello Frank, you are number  or .", response.bodyText().trim());
+		assertEquals("Hello Frank, you are number 3 or 1.", response.bodyText().trim());
 	}
 
 	@Test
