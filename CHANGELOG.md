@@ -12,6 +12,7 @@ All notable changes to Jodd project are documented here.
 ### Breaking changes
 
 + **db** - `GenericDao` uses generic id, not `long` anymore.
++ **madvoc** - empty parameters are `null` now.
 
 ### Bug fixes
 

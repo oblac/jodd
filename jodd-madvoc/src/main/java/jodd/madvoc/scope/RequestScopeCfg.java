@@ -36,7 +36,7 @@ abstract class RequestScopeCfg {
 	/**
 	 * Specifies if empty parameters will be injected as <code>null</code> value.
 	 */
-	protected boolean treatEmptyParamsAsNull;
+	protected boolean treatEmptyParamsAsNull = true;
 	/**
 	 * Specifies if attributes will be injected.
 	 */

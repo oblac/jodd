@@ -58,6 +58,21 @@ public abstract class ArgsTestBase {
 	}
 
 	@Test
+	public void testArgs2_noValue() {
+		ArgsAction.User.counter = 0;
+		HttpResponse response;
+		response = HttpRequest.get("localhost:8173/args.world.html")
+				.query("who", "")
+				.query("name", "Jupiter")
+				.query("hello.id", "1")
+				.query("id", "3")
+				.query("muti", "7")
+				.send();
+
+		assertEquals("**null+Jupiter+1+3**Jupiter**bye-true-7**8**jojo", response.bodyText().trim());
+	}
+
+	@Test
 	public void testArgs3() {
 		ArgsAction.User.counter = 0;
 		HttpResponse response;
@@ -66,7 +81,7 @@ public abstract class ArgsTestBase {
 				.query("user.username", "Frank")
 				.send();
 
-		assertEquals("Hello Frank, you are number 3 or 1.", response.bodyText().trim());
+		assertEquals("Hello Frank, you are number  or .", response.bodyText().trim());
 	}
 
 	@Test
