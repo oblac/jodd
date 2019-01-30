@@ -150,13 +150,20 @@ abstract class JavaInfo extends HostInfo {
 	// ---------------------------------------------------------------- java checks
 
 	private int detectJavaVersionNumber() {
-		if (JAVA_VERSION.startsWith("1.")) {
+		String javaVersion = JAVA_VERSION;
+
+		final int lastDashNdx = javaVersion.lastIndexOf('-');
+		if (lastDashNdx != -1) {
+			javaVersion = javaVersion.substring(0, lastDashNdx);
+		}
+
+		if (javaVersion.startsWith("1.")) {
 			// up to java 8
-			final int index = JAVA_VERSION.indexOf('.', 2);
-			return Integer.parseInt(JAVA_VERSION.substring(2, index));
+			final int index = javaVersion.indexOf('.', 2);
+			return Integer.parseInt(javaVersion.substring(2, index));
 		} else {
-			final int index = JAVA_VERSION.indexOf('.');
-			return Integer.parseInt(index == -1 ? JAVA_VERSION : JAVA_VERSION.substring(0, index));
+			final int index = javaVersion.indexOf('.');
+			return Integer.parseInt(index == -1 ? javaVersion : javaVersion.substring(0, index));
 		}
 	}
 

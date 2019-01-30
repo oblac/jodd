@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class SystemUtilTest {
 
 	@Test
-	void testGet_with_unknown_key() throws Exception {
+	void testGet_with_unknown_key() {
 		final String key = "jodd_makes_fun";
 		final String def = "yeah - really!";
 
@@ -57,8 +57,20 @@ class SystemUtilTest {
 		assertEquals(def, actual);
 	}
 
+	@Test()
+	void testJavaVersion() {
+		final String javaVersion = System.getProperty("java.version");
+
+		System.setProperty("java.version", "9-Ubuntu");
+
+		final int javaVersionNumber = new JavaInfo(){}.getJavaVersionNumber();
+		assertEquals(9, javaVersionNumber);
+
+		System.setProperty("java.version", javaVersion);
+	}
+
 	@Test
-	void testJrePackages() throws Exception {
+	void testJrePackages() {
 		final String[] actual = SystemUtil.info().getJrePackages();
 
 		// asserts
