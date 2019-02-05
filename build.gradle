@@ -33,13 +33,13 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '5.0.8-' + date()
-version = '5.0.7'
+version = '5.0.8-' + date()
+//version = '5.0.7'
 
 // --- properties -------------------------------------------------------------
 
 buildscript {
-	ext.kotlin_version = '1.2.41'
+	ext.kotlin_version = '1.3.20'
 	repositories {
 		mavenCentral()
 	}
@@ -215,11 +215,11 @@ configure(javaModules()) {
 	compileJava.options.fork = true
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = 'sources'
+		archiveClassifier = 'sources'
 		from sourceSets.main.allSource
 	}
 	task javadocJar(type: Jar, dependsOn: javadoc) {
-		classifier = 'javadoc'
+		archiveClassifier = 'javadoc'
 		from javadoc.destinationDir
 	}
 
@@ -340,8 +340,8 @@ configure(javaModules()) {
 
 		executionData fileTree("${buildDir}/jacoco/").include("*.exec")
 		//sourceSets sourceSets.main
-		sourceDirectories = sourceSets.main.java
-		classDirectories = sourceSets.main.output.classesDirs
+		sourceDirectories.from = files(sourceSets.main.java.srcDirs)
+		classDirectories.from = files(sourceSets.main.output.classesDirs)
 
 		reports {
 			html.enabled true
@@ -475,8 +475,8 @@ task codeCoverageReport(type: JacocoReport) {
 		srcdirs += it.sourceSets.main.java
 		classdirs += it.sourceSets.main.output.classesDirs
 	}
-	sourceDirectories = srcdirs
-	classDirectories = classdirs
+	sourceDirectories.from = srcdirs
+	classDirectories.from = classdirs
 
 	reports {
 		xml.enabled true
@@ -561,5 +561,5 @@ static def date() {
 // --- wrapper ----------------------------------------------------------------
 
 wrapper {
-	gradleVersion = '4.10.2'
+	gradleVersion = '5.2'
 }
