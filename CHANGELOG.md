@@ -2,7 +2,9 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.6...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.7...master)
+
+## [v5.0.7](https://github.com/oblac/jodd/compare/v5.0.6...v5.0.7)
 
 ### New features
 
@@ -23,7 +25,7 @@ All notable changes to Jodd project are documented here.
 + **http** - fixed an issue with query param parsing.
 + **core** - fixed up Java version parsing.
 
-## [v5.0.6](https://github.com/oblac/jodd/compare/v5.0.5...master)
+## [v5.0.6](https://github.com/oblac/jodd/compare/v5.0.5...v5.0.6)
 
 ### New features
 
@@ -47,7 +49,7 @@ Just refreshing with some bug fixes and few new features.
 ### New features
 
 + **core** - `FileUtil.mkdirs` return created folder.
-+ **email** - added new method for unsetting the email flags in builder. 
++ **email** - added new method for unsetting the email flags in builder.
 
 ## [v5.0.4](https://github.com/oblac/jodd/compare/v5.0.3...v5.0.4)
 
@@ -55,7 +57,7 @@ Many little improvements plus one important fix for `jodd-mail`. Sorry for any i
 
 ### Bug fixes
 
-+ **core** - fixed special cases in `NaturalOrderComparator`, making rules a bit more strict.  
++ **core** - fixed special cases in `NaturalOrderComparator`, making rules a bit more strict.
 + **mail** - fixed unused `debug` and `timeout`.
 + **mail** - `RFC2822AddressParser` methods `parseToXxx()` now returns `null` for invalid emails.
 + **http** - secure connection was sending `CONNECT` string twice.
@@ -95,7 +97,7 @@ One minor fix and one important change for the bootstrap usages.
 
 ### Bug fixes
 
-+ **joy** - better output of the Joy configuration that does not cut of the values.  
++ **joy** - better output of the Joy configuration that does not cut of the values.
 
 
 
@@ -119,7 +121,7 @@ Minor fixes and improvements.
 
 Welcome to Jodd 5.
 
-Version 5 contains a great number of new features, changes, bug fixes and performance improvements. It's all new Jodd: slick as before, just better. 
+Version 5 contains a great number of new features, changes, bug fixes and performance improvements. It's all new Jodd: slick as before, just better.
 
 High-five!
 
