@@ -23,6 +23,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+buildscript {
+	ext.kotlin_version = '1.3.20'
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+plugins {
+}
+
 description = '''
 
 	Jodd is an open-source Java utility library and set of micro frameworks.
@@ -37,16 +49,6 @@ version = '5.0.8-' + date()
 //version = '5.0.7'
 
 // --- properties -------------------------------------------------------------
-
-buildscript {
-	ext.kotlin_version = '1.3.20'
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-	}
-}
 
 ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
@@ -226,11 +228,9 @@ configure(javaModules()) {
 	// integration tests + performances
 
 	sourceSets {
-		perf {
-			java {
-				compileClasspath += main.output
-				runtimeClasspath += main.output
-			}
+		jmh {
+			compileClasspath += sourceSets.test.runtimeClasspath
+			runtimeClasspath += sourceSets.test.runtimeClasspath
 		}
 		testInt {
 			java {
@@ -243,14 +243,12 @@ configure(javaModules()) {
 	configurations {
 		testIntCompile.extendsFrom testCompile
 		testIntRuntime.extendsFrom testRuntime
-
-		perfCompile.extendsFrom testCompile
-		perfRuntime.extendsFrom testRuntime
 	}
 
 	dependencies {
-		perfCompile "org.openjdk.jmh:jmh-core:${jmhVersion}"
-		perfCompile "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
+		jmhCompile project
+		jmhImplementation "org.openjdk.jmh:jmh-core:${jmhVersion}"
+		jmhImplementation "org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}"
 	}
 
 	idea {
@@ -265,13 +263,22 @@ configure(javaModules()) {
 		}
 	}
 
-	task perf(type:JavaExec, dependsOn: 'compile') {
+	task jmh(type:JavaExec, dependsOn: build) {
 		group 'Verification'
-		description 'Execute ALL benchmarks.'
+		description 'Execute JMH benchmarks.'
 
 		main 'org.openjdk.jmh.Main'
-		classpath = sourceSets.perf.runtimeClasspath
+		classpath =
+				sourceSets.main.runtimeClasspath +
+				sourceSets.jmh.compileClasspath +
+				sourceSets.jmh.runtimeClasspath
+
+		def include = project.properties.get('include', '');
+
+		args include
 	}
+	// Hook jmhClasses task to run after classes to make sure benchmarks are compiled with the rest of the code
+	classes.finalizedBy(jmhClasses)
 
 	tasks.addRule("Pattern: <ClassName>Benchmark : Run benchmark.") { String className ->
 		if (className.endsWith("Benchmark")) {
@@ -281,7 +288,7 @@ configure(javaModules()) {
 				main 'org.openjdk.jmh.Main'
 				args =  ['.' + className + '.*']
 //				jvmArgs = ["-XX:+PrintCompilation"]
-				classpath = sourceSets.main.runtimeClasspath + sourceSets.perf.runtimeClasspath
+				classpath = sourceSets.main.runtimeClasspath + sourceSets.jmh.runtimeClasspath
 			}
 		}
 	}
@@ -423,6 +430,7 @@ task clean(type: Delete) {
 	description 'Cleans everything.'
 
 	delete buildDir
+	dependsOn javaModules().clean
 }
 
 task javadocAll(type: Javadoc) {
