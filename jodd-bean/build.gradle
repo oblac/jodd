@@ -4,6 +4,8 @@ ext.moduleDescription = 'Jodd BeanUtil is fast and powerful bean manipulation li
 
 dependencies {
 	compile project(':jodd-core')
+
+	jmhCompile 'commons-beanutils:commons-beanutils-core:1.8.3'
 	
 	testCompile project(':jodd-core').sourceSets.test.output
 	testCompile lib.junit5
