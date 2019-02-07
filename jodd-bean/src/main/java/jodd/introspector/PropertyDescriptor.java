@@ -180,10 +180,12 @@ public class PropertyDescriptor extends Descriptor {
 				type = fieldDescriptor.getRawType();
 			}
 			else if (readMethodDescriptor != null) {
-				type = readMethodDescriptor.getGetterRawType();
+				type = getGetter(true).getGetterRawType();
+				//type = readMethodDescriptor.getGetterRawType();
 			}
 			else if (writeMethodDescriptor != null) {
-				type = writeMethodDescriptor.getSetterRawType();
+				type = getSetter(true).getSetterRawType();
+				//type = writeMethodDescriptor.getSetterRawType();
 			}
 		}
 
@@ -216,12 +218,12 @@ public class PropertyDescriptor extends Descriptor {
 	protected Getter createGetter(final boolean declared) {
 		if (readMethodDescriptor != null) {
 			if (readMethodDescriptor.matchDeclared(declared)) {
-				return readMethodDescriptor;
+				return Getter.of(readMethodDescriptor);
 			}
 		}
 		if (fieldDescriptor != null) {
 			if (fieldDescriptor.matchDeclared(declared)) {
-				return fieldDescriptor;
+				return Getter.of(fieldDescriptor);
 			}
 		}
 		return null;
@@ -249,12 +251,12 @@ public class PropertyDescriptor extends Descriptor {
 	protected Setter createSetter(final boolean declared) {
 		if (writeMethodDescriptor != null) {
 			if (writeMethodDescriptor.matchDeclared(declared)) {
-				return writeMethodDescriptor;
+				return Setter.of(writeMethodDescriptor);
 			}
 		}
 		if (fieldDescriptor != null) {
 			if (fieldDescriptor.matchDeclared(declared)) {
-				return fieldDescriptor;
+				return Setter.of(fieldDescriptor);
 			}
 		}
 		return null;

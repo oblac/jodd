@@ -28,6 +28,7 @@ package jodd.petite.def;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.introspector.Setter;
 import jodd.petite.PetiteException;
 import jodd.util.ClassUtil;
 
@@ -61,7 +62,7 @@ public class SetInjectionPoint<T> {
 		FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
 
 		if (writeMethodDescriptor != null) {
-			targetClass = writeMethodDescriptor.getSetterRawComponentType();
+			targetClass = Setter.of(writeMethodDescriptor).getSetterRawComponentType();
 		}
 		if (targetClass == null && fieldDescriptor != null) {
 			targetClass = fieldDescriptor.getRawComponentType();

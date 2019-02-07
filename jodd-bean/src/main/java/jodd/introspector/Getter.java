@@ -32,6 +32,57 @@ import java.lang.reflect.InvocationTargetException;
  */
 public interface Getter {
 
+	static Getter of(final MethodDescriptor methodDescriptor) {
+
+		return new Getter() {
+
+			@Override
+			public Object invokeGetter(final Object target) throws InvocationTargetException, IllegalAccessException {
+				return methodDescriptor.method.invoke(target);
+			}
+
+			@Override
+			public Class getGetterRawType() {
+				return methodDescriptor.getRawReturnType();
+			}
+
+			@Override
+			public Class getGetterRawComponentType() {
+				return methodDescriptor.getRawReturnComponentType();
+			}
+
+			@Override
+			public Class getGetterRawKeyComponentType() {
+				return methodDescriptor.getRawReturnKeyComponentType();
+			}
+		};
+	}
+
+	static Getter of(final FieldDescriptor fieldDescriptor) {
+		return new Getter() {
+
+			@Override
+			public Object invokeGetter(final Object target) throws IllegalAccessException {
+				return fieldDescriptor.field.get(target);
+			}
+
+			@Override
+			public Class getGetterRawType() {
+				return fieldDescriptor.getRawType();
+			}
+
+			@Override
+			public Class getGetterRawComponentType() {
+				return fieldDescriptor.getRawComponentType();
+			}
+
+			@Override
+			public Class getGetterRawKeyComponentType() {
+				return fieldDescriptor.getRawKeyComponentType();
+			}
+		};
+	}
+
 	Object invokeGetter(Object target) throws InvocationTargetException, IllegalAccessException;
 
 	Class getGetterRawType();

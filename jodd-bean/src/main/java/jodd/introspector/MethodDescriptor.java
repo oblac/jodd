@@ -27,7 +27,6 @@ package jodd.introspector;
 
 import jodd.util.ClassUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -35,7 +34,7 @@ import java.lang.reflect.Type;
  * Method descriptor. Holds additional method data,
  * that might be specific to implementation class.
  */
-public class MethodDescriptor extends Descriptor implements Getter, Setter {
+public class MethodDescriptor extends Descriptor {
 
 	private static final MethodParamDescriptor[] NO_PARAMS = new MethodParamDescriptor[0];
 
@@ -47,13 +46,15 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	protected final MethodParamDescriptor[] parameters;
 	protected final MapperFunction mapperFunction;
 
+//	protected final Function getterFunction;
+
 	public MethodDescriptor(final ClassDescriptor classDescriptor, final Method method) {
 		super(classDescriptor, ClassUtil.isPublic(method));
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
 		this.rawReturnType = ClassUtil.getRawType(returnType, classDescriptor.getType());
 
-		Class[] componentTypes = ClassUtil.getComponentTypes(returnType, classDescriptor.getType());
+		final Class[] componentTypes = ClassUtil.getComponentTypes(returnType, classDescriptor.getType());
 		if (componentTypes != null) {
 			this.rawReturnComponentType = componentTypes[componentTypes.length - 1];
 			this.rawReturnKeyComponentType = componentTypes[0];
@@ -99,6 +100,25 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 				parameters[i] = new MethodParamDescriptor(parameterType, rawParameterType, rawParameterComponentType);
 			}
 		}
+
+//		try {
+//			MethodHandles.Lookup lookup = MethodHandles.lookup();
+//			CallSite callSite = LambdaMetafactory.metafactory(lookup,
+//				"apply",
+//				MethodType.methodType(Function.class),
+//				MethodType.methodType(Object.class, Object.class),
+//				lookup.findVirtual(
+//					classDescriptor.getType(),
+//					method.getName(),
+//					MethodType.methodType(method.getReturnType())),
+//				MethodType.methodType(method.getReturnType(), classDescriptor.type)
+//			);
+//
+//			this.getterFunction = (Function) callSite.getTarget().invokeExact();
+//		}
+//		catch (Throwable ex) {
+//			throw new IllegalArgumentException(ex);
+//		}
 	}
 
 	/**
@@ -161,51 +181,6 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	 */
 	public int getParameterCount() {
 		return parameters.length;
-	}
-
-	// ---------------------------------------------------------------- getter/setter
-
-	@Override
-	public Object invokeGetter(final Object target) throws InvocationTargetException, IllegalAccessException {
-		return method.invoke(target, null);
-	}
-
-	@Override
-	public Class getGetterRawType() {
-		return getRawReturnType();
-	}
-
-	@Override
-	public Class getGetterRawComponentType() {
-		return getRawReturnComponentType();
-	}
-
-	@Override
-	public Class getGetterRawKeyComponentType() {
-		return getRawReturnKeyComponentType();
-	}
-
-	@Override
-	public void invokeSetter(final Object target, final Object argument) throws IllegalAccessException, InvocationTargetException {
-		method.invoke(target, argument);
-	}
-
-	@Override
-	public Class getSetterRawType() {
-		return getParameters()[0].getRawType();
-	}
-
-	@Override
-	public Class getSetterRawComponentType() {
-		return getParameters()[0].getRawComponentType();
-	}
-
-	/**
-	 * Returns {@link MapperFunction} if defined, or {@code null} otherwise.
-	 */
-	@Override
-	public MapperFunction getMapperFunction() {
-		return mapperFunction;
 	}
 
 	// ---------------------------------------------------------------- toString

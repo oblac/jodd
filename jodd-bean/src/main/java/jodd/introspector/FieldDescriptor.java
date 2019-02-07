@@ -34,7 +34,7 @@ import java.lang.reflect.Type;
  * Field descriptor. Holds additional field data,
  * that might be specific to implementation class.
  */
-public class FieldDescriptor extends Descriptor implements Getter, Setter {
+public class FieldDescriptor extends Descriptor {
 
 	protected final Field field;
 	protected final Type type;
@@ -120,48 +120,6 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	 */
 	public Class[] resolveRawComponentTypes() {
 		return ClassUtil.getComponentTypes(type, classDescriptor.getType());
-	}
-
-	// ---------------------------------------------------------------- getter/setter
-
-	@Override
-	public Object invokeGetter(final Object target) throws IllegalAccessException {
-		return field.get(target);
-	}
-
-	@Override
-	public Class getGetterRawType() {
-		return getRawType();
-	}
-
-	@Override
-	public Class getGetterRawComponentType() {
-		return getRawComponentType();
-	}
-
-	@Override
-	public Class getGetterRawKeyComponentType() {
-		return getRawKeyComponentType();
-	}
-
-	@Override
-	public void invokeSetter(final Object target, final Object argument) throws IllegalAccessException {
-		field.set(target, argument);
-	}
-
-	@Override
-	public Class getSetterRawType() {
-		return getRawType();
-	}
-
-	@Override
-	public Class getSetterRawComponentType() {
-		return getRawComponentType();
-	}
-
-	@Override
-	public MapperFunction getMapperFunction() {
-		return mapperFunction;
 	}
 
 	// ---------------------------------------------------------------- toString

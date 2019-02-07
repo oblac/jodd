@@ -152,16 +152,16 @@ class IntrospectorGenericsTest {
 		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md4));
 		assertEquals(List.class, md4.getRawReturnType());
 		assertEquals(Byte.class, md4.getRawReturnComponentType());
-		assertEquals(List.class, md4.getSetterRawType());
-		assertEquals(Long.class, md4.getSetterRawComponentType());
+		assertEquals(List.class, Setter.of(md4).getSetterRawType());
+		assertEquals(Long.class, Setter.of(md4).getSetterRawComponentType());
 
 		MethodDescriptor md5 = cd.getMethodDescriptor("m5", new Class[] {List.class}, true);
 		assertNotNull(md5);
 		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md5));
 		assertEquals(List.class, md5.getRawReturnType());
 		assertEquals(Object.class, md5.getRawReturnComponentType());
-		assertEquals(List.class, md5.getSetterRawType());
-		assertEquals(Object.class, md5.getSetterRawComponentType());
+		assertEquals(List.class, Setter.of(md5).getSetterRawType());
+		assertEquals(Object.class, Setter.of(md5).getSetterRawComponentType());
 
 
 		// impl
@@ -192,8 +192,8 @@ class IntrospectorGenericsTest {
 		assertArrayEquals(new Class[] {List.class}, getRawParameterTypes(md5));
 		assertEquals(List.class, md5.getRawReturnType());
 		assertEquals(Integer.class, md5.getRawReturnComponentType());
-		assertEquals(List.class, md5.getSetterRawType());
-		assertEquals(Integer.class, md5.getSetterRawComponentType());
+		assertEquals(List.class, Setter.of(md5).getSetterRawType());
+		assertEquals(Integer.class, Setter.of(md5).getSetterRawComponentType());
 	}
 
 	private Class[] getRawParameterTypes(MethodDescriptor md) {
