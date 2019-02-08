@@ -86,6 +86,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest host(final String host) {
 		this.host = host;
+		if (headers.contains(HEADER_HOST)) {
+			headerOverwrite(HEADER_HOST, host);
+		}
 		return this;
 	}
 
@@ -174,19 +177,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		if (ndx != 0) {
 
-			host = destination.substring(0, ndx);
+			String hostToSet = destination.substring(0, ndx);
 			destination = destination.substring(ndx);
 
 			// port
 
-			ndx = host.indexOf(':');
+			ndx = hostToSet.indexOf(':');
 
 			if (ndx == -1) {
 				port = Defaults.DEFAULT_PORT;
 			} else {
-				port = Integer.parseInt(host.substring(ndx + 1));
-				host = host.substring(0, ndx);
+				port = Integer.parseInt(hostToSet.substring(ndx + 1));
+				hostToSet = hostToSet.substring(0, ndx);
 			}
+
+			host(hostToSet);
 		}
 
 		// path + query
