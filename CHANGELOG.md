@@ -4,6 +4,15 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.7...master)
 
+### Breaking changes
+
++ **bean** - method/field descriptors are no longer getter/setters.
+
+### Bug fixes
+
++ **http** - fixed particular case of changing the host value.
+
+
 ## [v5.0.7](https://github.com/oblac/jodd/compare/v5.0.6...v5.0.7)
 
 ### New features
@@ -25,6 +34,7 @@ All notable changes to Jodd project are documented here.
 + **http** - fixed an issue with query param parsing.
 + **core** - fixed up Java version parsing.
 
+
 ## [v5.0.6](https://github.com/oblac/jodd/compare/v5.0.5...v5.0.6)
 
 ### New features
@@ -35,6 +45,7 @@ All notable changes to Jodd project are documented here.
 ### Bug fixes
 
 + **core** - fixed `java.version` parsing under Java 11.
+
 
 ## [v5.0.5](https://github.com/oblac/jodd/compare/v5.0.4...v5.0.5)
 
@@ -50,6 +61,7 @@ Just refreshing with some bug fixes and few new features.
 
 + **core** - `FileUtil.mkdirs` return created folder.
 + **email** - added new method for unsetting the email flags in builder.
+
 
 ## [v5.0.4](https://github.com/oblac/jodd/compare/v5.0.3...v5.0.4)
 
