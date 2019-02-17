@@ -105,8 +105,8 @@ public class Routes {
 		// 1 - match method
 		if (method != null) {
 			method = method.toUpperCase();
-			RouteChunk methodChunk = root.findOrCreateChild(method);
-			ActionRuntime actionRuntime = lookupFrom(methodChunk, pathChunks);
+			final RouteChunk methodChunk = root.findOrCreateChild(method);
+			final ActionRuntime actionRuntime = lookupFrom(methodChunk, pathChunks);
 			if (actionRuntime != null) {
 				return actionRuntime;
 			}
@@ -114,7 +114,7 @@ public class Routes {
 
 		// 2 - match all methods
 		if (anyMethodChunk != null) {
-			ActionRuntime actionRuntime = lookupFrom(anyMethodChunk, pathChunks);
+			final ActionRuntime actionRuntime = lookupFrom(anyMethodChunk, pathChunks);
 			if (actionRuntime != null) {
 				return actionRuntime;
 			}
@@ -164,18 +164,36 @@ public class Routes {
 		}
 
 		// matched, scan children
-		RouteChunk[] children = chunk.children();
+		final RouteChunk[] children = chunk.children();
 
 		if (children == null) {
 			return null;
 		}
 
-		for (RouteChunk child : children) {
-			ActionRuntime matched = match(child, path, ndx + 1);
 
-			if (matched != null) {
-				return matched;
+		ActionRuntime matchedRuntime = null;
+
+		for (final RouteChunk child : children) {
+			final ActionRuntime match = match(child, path, ndx + 1);
+
+			if (match != null) {
+				if (matchedRuntime == null) {
+					matchedRuntime = match;
+				}
+				else {
+					// already matched
+					if (matchedRuntime.getRouteChunk().hasMacrosOnPath()) {
+						if (!match.getRouteChunk().hasMacrosOnPath()) {
+							// previous match IS macro; and current one is NOT
+							matchedRuntime = match;
+						}
+					}
+				}
 			}
+		}
+
+		if (matchedRuntime != null) {
+			return matchedRuntime;
 		}
 
 		return null;

@@ -11,7 +11,7 @@ All notable changes to Jodd project are documented here.
 ### Bug fixes
 
 + **http** - fixed particular case of changing the host value.
-
++ **madovc** - the matched path chunk with non-macros will win over the path chunk with macros. 
 
 ## [v5.0.7](https://github.com/oblac/jodd/compare/v5.0.6...v5.0.7)
 

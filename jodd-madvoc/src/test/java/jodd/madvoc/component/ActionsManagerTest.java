@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class ActionsManagerTest {
@@ -178,4 +179,23 @@ class ActionsManagerTest {
 		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/aab"));
 		assertNull(actionRuntime);
 	}
+
+	@Test
+	void testActionPathMacros_679() {
+		WebApp webapp = new WebApp();
+		webapp.start();
+
+		ActionsManager actionsManager = webapp.madvocContainer().lookupComponent(ActionsManager.class);
+		actionsManager.setPathMacroClass(RegExpPathMacros.class);
+
+		ActionRuntime a1 = actionsManager.registerAction(FooAction.class, "one", new ActionDefinition("/hello/{id}"));
+		ActionRuntime a2 = actionsManager.registerAction(FooAction.class, "two", new ActionDefinition("/hello/default"));
+
+		ActionRuntime actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/hello/123"));
+		assertSame(a1, actionRuntime);
+
+		actionRuntime = actionsManager.routes.lookup(null, MadvocUtil.splitPathToChunks("/hello/default"));
+		assertSame(a2, actionRuntime);
+	}
+
 }
