@@ -2,7 +2,13 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.7...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.8...master)
+
+## [v5.0.8](https://github.com/oblac/jodd/compare/v5.0.7...5.0.8)
+
+### New features
+
++ **json** - added `strictTypes` flag for `JsonParser`.
 
 ### Breaking changes
 

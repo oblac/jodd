@@ -56,6 +56,12 @@ public abstract class JsonParserBase {
 	protected Supplier<Map> mapSupplier = HASMAP_SUPPLIER;
 	protected Supplier<List> listSupplier = ARRAYLIST_SUPPLIER;
 	protected List<String> classnameWhitelist;
+	protected boolean strictTypes;
+
+	public JsonParserBase(final boolean strictTypes) {
+		this.strictTypes = strictTypes;
+	}
+
 
 	/**
 	 * Creates new instance of {@link jodd.json.MapToBean}.
@@ -102,9 +108,9 @@ public abstract class JsonParserBase {
 			return mapSupplier.get();
 		}
 
-		ClassDescriptor cd = ClassIntrospector.get().lookup(targetType);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(targetType);
 
-		CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
+		final CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
 		if (ctorDescriptor == null) {
 			throw new JsonException("Default ctor not found for: " + targetType.getName());
 		}
@@ -143,7 +149,7 @@ public abstract class JsonParserBase {
 	 * Converts type of the given value.
 	 */
 	protected Object convertType(final Object value, final Class targetType) {
-		Class valueClass = value.getClass();
+		final Class valueClass = value.getClass();
 
 		if (valueClass == targetType) {
 			return value;
@@ -153,6 +159,9 @@ public abstract class JsonParserBase {
 			return TypeConverterManager.get().convertType(value, targetType);
 		}
 		catch (Exception ex) {
+			if (!strictTypes) {
+				return null;
+			}
 			throw new JsonException("Type conversion failed", ex);
 		}
 	}

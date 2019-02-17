@@ -85,6 +85,8 @@ public class JsonParser extends JsonParserBase {
 		 * correct object type. If <code>null</code>, class information is not used.
 		 */
 		public static String classMetadataName = null;
+
+		public static boolean strictTypes = true;
 	}
 
 	/**
@@ -128,6 +130,7 @@ public class JsonParser extends JsonParserBase {
 	private final JsonAnnotationManager jsonAnnotationManager;
 
 	public JsonParser() {
+		super(Defaults.strictTypes);
 		this.text = new char[512];
 		this.jsonAnnotationManager = JsonAnnotationManager.get();
 	}
@@ -167,6 +170,15 @@ public class JsonParser extends JsonParserBase {
 	 */
 	public JsonParser looseMode(final boolean looseMode) {
 		this.looseMode = looseMode;
+		return this;
+	}
+
+	/**
+	 * Defines if type conversion is strict. If not, all exceptions will be
+	 * caught and replaced with {@code null}.
+	 */
+	public JsonParser strictTypes(final boolean strictTypes) {
+		this.strictTypes = strictTypes;
 		return this;
 	}
 
