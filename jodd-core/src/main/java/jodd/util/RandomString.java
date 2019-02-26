@@ -25,8 +25,7 @@
 
 package jodd.util;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.security.SecureRandom;
 
 /**
  * Class that generates random strings.
@@ -45,28 +44,21 @@ public class RandomString {
 		return INSTANCE;
 	}
 
-	protected final Random rnd;
+	protected final SecureRandom rnd;
 
 	/**
 	 * Creates new random string.
 	 */
 	public RandomString() {
-		this(ThreadLocalRandom.current());
-	}
-
-	/**
-	 * Creates new random string with given random object,
-	 * so random strings can be repeated.
-	 */
-	public RandomString(final Random rnd) {
-		this.rnd = rnd;
+		this.rnd = new SecureRandom();
 	}
 
 	/**
 	 * Creates new random string with given seed.
 	 */
 	public RandomString(final long seed) {
-		this.rnd = new Random(seed);
+		this();
+		this.rnd.setSeed(seed);
 	}
 
 	// ---------------------------------------------------------------- string
@@ -79,7 +71,7 @@ public class RandomString {
 		if (count == 0) {
 			return StringPool.EMPTY;
 		}
-		char[] result = new char[count];
+		final char[] result = new char[count];
 		while (count-- > 0) {
 			result[count] = chars[rnd.nextInt(chars.length)];
 		}
@@ -104,8 +96,8 @@ public class RandomString {
 		if (count == 0) {
 			return StringPool.EMPTY;
 		}
-		char[] result = new char[count];
-		int len = end - start + 1;
+		final char[] result = new char[count];
+		final int len = end - start + 1;
 		while (count-- > 0) {
 			result[count] = (char) (rnd.nextInt(len) + start);
 		}
@@ -139,7 +131,7 @@ public class RandomString {
 		}
 		int i = 0;
 		int len = 0;
-		int[] lens = new int[ranges.length];
+		final int[] lens = new int[ranges.length];
 		while (i < ranges.length) {
 			int gap = ranges[i + 1] - ranges[i] + 1;
 			len += gap;
@@ -147,7 +139,7 @@ public class RandomString {
 			i += 2;
 		}
 
-		char[] result = new char[count];
+		final char[] result = new char[count];
 		while (count-- > 0) {
 			char c = 0;
 			int r = rnd.nextInt(len);
