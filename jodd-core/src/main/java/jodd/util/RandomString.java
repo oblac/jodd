@@ -53,14 +53,6 @@ public class RandomString {
 		this.rnd = new SecureRandom();
 	}
 
-	/**
-	 * Creates new random string with given seed.
-	 */
-	public RandomString(final long seed) {
-		this();
-		this.rnd.setSeed(seed);
-	}
-
 	// ---------------------------------------------------------------- string
 
 	/**

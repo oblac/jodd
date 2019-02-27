@@ -27,23 +27,9 @@ package jodd.util;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class RandomStringTest {
-
-	@Test
-	void testRepeatableSequence() {
-		RandomString randomString = new RandomString(123);
-
-		String rnd = randomString.randomAlpha(2);
-
-		RandomString randomString2 = new RandomString(123);
-
-		String rnd2 = randomString2.randomAlpha(2);
-
-		assertEquals(rnd, rnd2);
-	}
 
 	@Test
 	void testRandomBase64() {
