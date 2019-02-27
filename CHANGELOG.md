@@ -2,7 +2,13 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.8...master)
+## [v5.0.9](https://github.com/oblac/jodd/compare/v5.0.8...master)
+
+### Bug fixes
+
++ **core** - removed usage of `Random`.
++ **dboom** - removed using aspects for `Loggable` connections.
+
 
 ## [v5.0.8](https://github.com/oblac/jodd/compare/v5.0.7...5.0.8)
 
@@ -17,7 +23,8 @@ All notable changes to Jodd project are documented here.
 ### Bug fixes
 
 + **http** - fixed particular case of changing the host value.
-+ **madovc** - the matched path chunk with non-macros will win over the path chunk with macros. 
++ **madvoc** - the matched path chunk with non-macros will win over the path chunk with macros. 
+
 
 ## [v5.0.7](https://github.com/oblac/jodd/compare/v5.0.6...v5.0.7)
 
