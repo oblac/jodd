@@ -8,7 +8,6 @@ dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
 	compile project(':jodd-jtx')
-	compile project(':jodd-proxetta')
 	compile project(':jodd-props')
 	compile project(':jodd-log')
 
