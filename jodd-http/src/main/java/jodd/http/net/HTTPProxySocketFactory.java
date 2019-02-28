@@ -27,6 +27,7 @@ package jodd.http.net;
 
 import jodd.http.HttpException;
 import jodd.http.ProxyInfo;
+import jodd.http.Sockets;
 import jodd.util.Base64;
 
 import javax.net.SocketFactory;
@@ -45,9 +46,11 @@ import java.util.regex.Pattern;
 public class HTTPProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
+	private final int connectionTimeout;
 
-	public HTTPProxySocketFactory(final ProxyInfo proxy) {
+	public HTTPProxySocketFactory(final ProxyInfo proxy, final int connectionTimeout) {
 		this.proxy = proxy;
+		this.connectionTimeout = connectionTimeout;
 	}
 
 	@Override
@@ -72,11 +75,11 @@ public class HTTPProxySocketFactory extends SocketFactory {
 
 	private Socket createHttpProxySocket(final String host, final int port) {
 		Socket socket = null;
-		String proxyAddress = proxy.getProxyAddress();
-		int proxyPort = proxy.getProxyPort();
+		final String proxyAddress = proxy.getProxyAddress();
+		final int proxyPort = proxy.getProxyPort();
 
 		try {
-			socket = new Socket(proxyAddress, proxyPort);
+			socket = Sockets.connect(proxyAddress, proxyPort, connectionTimeout);
 			String hostport = host + ":" + port;
 			String proxyLine = "";
 			String username = proxy.getProxyUsername();

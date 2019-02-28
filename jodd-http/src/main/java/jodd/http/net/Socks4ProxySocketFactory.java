@@ -27,6 +27,7 @@ package jodd.http.net;
 
 import jodd.http.HttpException;
 import jodd.http.ProxyInfo;
+import jodd.http.Sockets;
 
 import javax.net.SocketFactory;
 import java.io.InputStream;
@@ -42,9 +43,11 @@ import java.net.Socket;
 public class Socks4ProxySocketFactory extends SocketFactory {
 
 	private final ProxyInfo proxy;
+	private final int connectionTimeout;
 
-	public Socks4ProxySocketFactory(final ProxyInfo proxy) {
+	public Socks4ProxySocketFactory(final ProxyInfo proxy, final int connectionTimeout) {
 		this.proxy = proxy;
+		this.connectionTimeout = connectionTimeout;
 	}
 
 	@Override
@@ -72,14 +75,16 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 	 */
 	private Socket createSocks4ProxySocket(final String host, final int port) {
 		Socket socket = null;
-		String proxyHost = proxy.getProxyAddress();
-		int proxyPort = proxy.getProxyPort();
-		String user = proxy.getProxyUsername();
+		final String proxyHost = proxy.getProxyAddress();
+		final int proxyPort = proxy.getProxyPort();
+		final String user = proxy.getProxyUsername();
 
 		try {
-			socket = new Socket(proxyHost, proxyPort);
-			InputStream in = socket.getInputStream();
-			OutputStream out = socket.getOutputStream();
+			socket = Sockets.connect(proxyHost, proxyPort, connectionTimeout);
+
+			final InputStream in = socket.getInputStream();
+			final OutputStream out = socket.getOutputStream();
+
 			socket.setTcpNoDelay(true);
 
 			byte[] buf = new byte[1024];

@@ -30,6 +30,7 @@ import jodd.http.HttpConnectionProvider;
 import jodd.http.HttpException;
 import jodd.http.HttpRequest;
 import jodd.http.ProxyInfo;
+import jodd.http.Sockets;
 import jodd.util.StringUtil;
 
 import javax.net.SocketFactory;
@@ -133,7 +134,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 * Creates a socket using socket factory.
 	 */
 	protected Socket createSocket(final String host, final int port, final int connectionTimeout) throws IOException {
-		SocketFactory socketFactory = getSocketFactory(proxy, false, false);
+		final SocketFactory socketFactory = getSocketFactory(proxy, false, false, connectionTimeout);
 
 		if (connectionTimeout < 0) {
 			return socketFactory.createSocket(host, port);
@@ -155,9 +156,9 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		final String host, final int port, final int connectionTimeout,
 		final boolean trustAll, final boolean verifyHttpsHost) throws IOException {
 
-		SocketFactory socketFactory = getSocketFactory(proxy, true, trustAll);
+		final SocketFactory socketFactory = getSocketFactory(proxy, true, trustAll, connectionTimeout);
 
-		Socket socket;
+		final Socket socket;
 
 		if (connectionTimeout < 0) {
 			socket = socketFactory.createSocket(host, port);
@@ -178,9 +179,9 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			// connection timeout), then have the SSLSocketFactory wrap
 			// the already-connected socket.
 			//
-			socket = new Socket();
+			socket = Sockets.connect(host, port, connectionTimeout);
 			//sock.setSoTimeout(readTimeout);
-			socket.connect(new InetSocketAddress(host, port), connectionTimeout);
+			//socket.connect(new InetSocketAddress(host, port), connectionTimeout);
 
 			// continue to wrap this plain socket with ssl socket...
 		}
@@ -246,7 +247,12 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Returns socket factory based on proxy type and SSL requirements.
 	 */
-	protected SocketFactory getSocketFactory(final ProxyInfo proxy, final boolean ssl, final boolean trustAllCertificates) throws IOException {
+	protected SocketFactory getSocketFactory(
+			final ProxyInfo proxy,
+			final boolean ssl,
+			final boolean trustAllCertificates,
+			final int connectionTimeout) throws IOException {
+
 		switch (proxy.getProxyType()) {
 			case NONE:
 				if (ssl) {
@@ -256,11 +262,11 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 					return SocketFactory.getDefault();
 				}
 			case HTTP:
-				return new HTTPProxySocketFactory(proxy);
+				return new HTTPProxySocketFactory(proxy, connectionTimeout);
 			case SOCKS4:
-				return new Socks4ProxySocketFactory(proxy);
+				return new Socks4ProxySocketFactory(proxy, connectionTimeout);
 			case SOCKS5:
-				return new Socks5ProxySocketFactory(proxy);
+				return new Socks5ProxySocketFactory(proxy, connectionTimeout);
 			default:
 				return null;
 		}
