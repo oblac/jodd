@@ -2,12 +2,16 @@
 
 All notable changes to Jodd project are documented here.
 
-## [v5.0.9](https://github.com/oblac/jodd/compare/v5.0.8...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.9...master)
+
+
+## [v5.0.9](https://github.com/oblac/jodd/compare/v5.0.8...v5.0.9)
 
 ### Bug fixes
 
 + **core** - removed usage of `Random`.
 + **dboom** - removed using aspects for `Loggable` connections.
++ **http** - use `connectionTimeout` to timeout proxy sockets, too. 
 
 
 ## [v5.0.8](https://github.com/oblac/jodd/compare/v5.0.7...5.0.8)
