@@ -30,7 +30,6 @@ import jodd.io.StreamUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -165,8 +164,7 @@ public class HttpTunnel {
 			HttpRequest request = HttpRequest.readFrom(socketInput);
 
 			// open client socket to target
-			Socket clientSocket = new Socket();
-			clientSocket.connect(new InetSocketAddress(targetHost, targetPort));
+			final Socket clientSocket = Sockets.connect(targetHost, targetPort);
 
 			// do request
 			request.host(targetHost);
