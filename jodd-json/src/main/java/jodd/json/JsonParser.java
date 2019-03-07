@@ -609,7 +609,7 @@ public class JsonParser extends JsonParserBase {
 
 	/**
 	 * Skips over complete object. It is not parsed, just skipped. It will be
-	 * parsed later, but oonly if required.
+	 * parsed later, but only if required.
 	 */
 	private void skipObject() {
 		int bracketCount = 1;
@@ -619,26 +619,32 @@ public class JsonParser extends JsonParserBase {
 			final char c = input[ndx];
 
 			if (insideString) {
-				if (c == '\"' && (ndx == 0 || input[ndx - 1] != '\\')) {
+				if (c == '\"' && notPrecededByEvenNumberOfBackslashes()) {
 					insideString = false;
 				}
-			}
-			else {
-				if (c == '\"') {
-					insideString = true;
-				}
-				if (c == '{') {
-					bracketCount++;
-				} else if (c == '}') {
-					bracketCount--;
-					if (bracketCount == 0) {
-						ndx++;
-						return;
-					}
+			} else if (c == '\"') {
+				insideString = true;
+			} else if (c == '{') {
+				bracketCount++;
+			} else if (c == '}') {
+				bracketCount--;
+				if (bracketCount == 0) {
+					ndx++;
+					return;
 				}
 			}
 			ndx++;
 		}
+	}
+
+	private boolean notPrecededByEvenNumberOfBackslashes() {
+		int pos = ndx;
+		int count = 0;
+		while (pos > 0 && input[pos - 1] == '\\') {
+			count++;
+			pos--;
+		}
+		return count  % 2 == 0;
 	}
 
 	// ---------------------------------------------------------------- string
