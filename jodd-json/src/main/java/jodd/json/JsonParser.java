@@ -125,7 +125,7 @@ public class JsonParser extends JsonParserBase {
 	protected boolean looseMode = Defaults.loose;
 	protected Class rootType;
 	protected MapToBean mapToBean;
-	private boolean notFirstObject = false;
+	private boolean notFirstObject;
 
 	private final JsonAnnotationManager jsonAnnotationManager;
 
@@ -142,6 +142,7 @@ public class JsonParser extends JsonParserBase {
 		this.ndx = 0;
 		this.textLen = 0;
 		this.path = new Path();
+		this.notFirstObject = false;
 		if (useAltPaths) {
 			path.altPath = new Path();
 		}
