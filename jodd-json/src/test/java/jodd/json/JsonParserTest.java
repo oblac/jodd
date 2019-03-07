@@ -920,4 +920,19 @@ class JsonParserTest {
 			assertEquals("foo\"bar", ((List<Map<String, String>>) entries.get(0).getValue()).get(0).get("value"));
 		});
 	}
+
+	@Test
+	void testLazyParserSupportTrailingEscapedBackslash() {
+		String json = "{ \"foo\":{\"value\":\"\\\\\"} }";
+
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> object = jsonParser.parse(json);
+
+			List<Map.Entry<String, Object>> entries = object.entrySet().stream().collect(Collectors.toList());
+
+			assertEquals(1, entries.size());
+			assertEquals("foo", entries.get(0).getKey());
+			assertEquals("\\", ((Map<String, String>) entries.get(0).getValue()).get("value"));
+		});
+	}
 }
