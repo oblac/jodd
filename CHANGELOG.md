@@ -10,7 +10,8 @@ All notable changes to Jodd project are documented here.
 ### New features
 
 + **decora** - added `decora.cache` flag that caches decorator content
-+ **decora** added methods on `DecoraManager` to register the decorator content or files.
++ **decora** - added methods on `DecoraManager` to register the decorator content or files.
++ **json** - internal improvements (thanx to [Gatling](https://gatling.io) !)
 
 ### Bug fixes
 
