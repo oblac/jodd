@@ -32,8 +32,8 @@ import jodd.util.StringUtil;
  */
 public final class Path implements Cloneable {
 
-	protected CharSequence[] paths = new CharSequence[8];
-	protected int index = 0;
+	protected CharSequence[] paths;
+	protected int index;
 	protected Path altPath;
 
 	/**
@@ -47,16 +47,18 @@ public final class Path implements Cloneable {
 	}
 
 	public Path() {
+		paths = new CharSequence[8];
 	}
 
 	/**
 	 * Creates path from given path elements.
 	 */
 	public Path(final CharSequence... fields) {
-		if (fields.length >= paths.length) {
+		if (fields.length >= 8) {
 			paths = fields;
 		}
 		else {
+			paths = new CharSequence[8];
 			System.arraycopy(fields, 0, paths, 0, fields.length);
 			index = fields.length;
 		}
