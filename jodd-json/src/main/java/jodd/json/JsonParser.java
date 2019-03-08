@@ -897,9 +897,9 @@ public class JsonParser extends JsonParserBase {
 		}
 
 		if ((longNumber >= Integer.MIN_VALUE) && (longNumber <= Integer.MAX_VALUE)) {
-			return Integer.valueOf((int) longNumber);
+			return (int) longNumber;
 		}
-		return Long.valueOf(longNumber);
+		return longNumber;
 	}
 
 	private static boolean isGreaterThanLong(final BigInteger bigInteger) {
