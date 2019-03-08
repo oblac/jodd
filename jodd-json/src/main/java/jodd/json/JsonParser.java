@@ -903,13 +903,7 @@ public class JsonParser extends JsonParserBase {
 	}
 
 	private static boolean isGreaterThanLong(final BigInteger bigInteger) {
-		if (bigInteger.compareTo(MAX_LONG) > 0) {
-			return true;
-		}
-		if (bigInteger.compareTo(MIN_LONG) < 0) {
-			return true;
-		}
-		return false;
+		return bigInteger.compareTo(MAX_LONG) > 0 || bigInteger.compareTo(MIN_LONG) < 0;
 	}
 
 	private static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
