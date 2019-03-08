@@ -14,22 +14,17 @@
 
 package jodd.json;
 
-import jodd.util.collection.MapEntry;
 
 import java.lang.reflect.Array;
 import java.util.AbstractMap;
-import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -40,8 +35,7 @@ import java.util.function.Supplier;
  */
 public class LazyMap extends AbstractMap {
 
-	private final boolean delayMap;
-	private Map map;
+	private LinkedHashMap map;
 	private int size;
 	private Object[] keys;
 	private Object[] values;
@@ -49,27 +43,6 @@ public class LazyMap extends AbstractMap {
 	public LazyMap() {
 		keys = new Object[5];
 		values = new Object[5];
-		this.delayMap = false;
-	}
-
-	public LazyMap(final int initialSize) {
-		keys = new Object[initialSize];
-		values = new Object[initialSize];
-		this.delayMap = false;
-	}
-
-	public LazyMap(final int initialSize, final boolean delayMap) {
-		keys = new Object[initialSize];
-		values = new Object[initialSize];
-		this.delayMap = delayMap;
-	}
-
-	public LazyMap(final List keys, final List values, final boolean delayMap) {
-		this.keys = array(Object.class, keys);
-		this.values = array(Object.class, values);
-		this.size = this.keys.length;
-		this.delayMap = delayMap;
-
 	}
 
 	@Override
@@ -88,43 +61,47 @@ public class LazyMap extends AbstractMap {
 	}
 
 	@Override
-	public Set<Entry<Object, Object>> entrySet() {
-		if (map != null) map.entrySet();
-
-		if (delayMap) {
-
-			return new FakeMapEntrySet(size, keys, values);
-		}
+	public Set<Map.Entry<Object, Object>> entrySet() {
 		buildIfNeeded();
 		return map.entrySet();
 	}
 
 	@Override
 	public int size() {
-		if (map == null) {
-			return size;
-		}
-		return map.size();
+		return map == null ? size : map.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		if (map == null) {
-			return size == 0;
-		}
-		return map.isEmpty();
+		return map == null ? size == 0 : map.isEmpty();
 	}
 
 	@Override
 	public boolean containsValue(final Object value) {
-		if (map == null) {
-			throw new RuntimeException("wrong type of map");
+		// don't load map if they are just a few entries
+		if (map == null && size < 5) {
+			for (int index = 0; index < size; index++) {
+				if (values[index].equals(value)) {
+					return true;
+				}
+			}
+			return false;
 		}
+		buildIfNeeded();
 		return map.containsValue(value);
 	}
 
 	@Override
 	public boolean containsKey(final Object key) {
+		// don't load map if they are just a few entries
+		if (map == null && size < 5) {
+			for (int index = 0; index < size; index++) {
+				if (keys[index].equals(key)) {
+					return true;
+				}
+			}
+			return false;
+		}
 		buildIfNeeded();
 		return map.containsKey(key);
 	}
@@ -155,7 +132,6 @@ public class LazyMap extends AbstractMap {
 
 	@Override
 	public Object remove(final Object key) {
-
 		buildIfNeeded();
 		return map.remove(key);
 
@@ -178,19 +154,13 @@ public class LazyMap extends AbstractMap {
 
 	@Override
 	public Set keySet() {
-		if (map == null) {
-			return set(size, keys);
-		}
-		return map.keySet();
+		return map == null ? set(size, keys) : map.keySet();
 
 	}
 
 	@Override
 	public Collection values() {
-		if (map == null) {
-			return Arrays.asList(values);
-		}
-		return map.values();
+		return map == null ? Arrays.asList(values) : map.values();
 
 	}
 
@@ -214,34 +184,8 @@ public class LazyMap extends AbstractMap {
 
 	@Override
 	protected Object clone() {
-		if (map == null) {
-			return null;
-		}
-		if (map instanceof LinkedHashMap) {
-			return ((LinkedHashMap) map).clone();
-		}
-		return copy(this);
+		return map == null ? null : map.clone();
 	}
-
-	public LazyMap clearAndCopy() {
-		final LazyMap map = new LazyMap(size);
-		for (int index = 0; index < size; index++) {
-			map.put(keys[index], values[index]);
-		}
-		size = 0;
-		return map;
-	}
-
-	public static <K, V> Map<K, V> copy(final Map<K, V> map) {
-		if (map instanceof LinkedHashMap) {
-			return new LinkedHashMap<>(map);
-		}
-		if (map instanceof ConcurrentHashMap) {
-			return new ConcurrentHashMap<>(map);
-		}
-		return new HashMap<>(map);
-	}
-
 
 	// ---------------------------------------------------------------- utils
 
@@ -259,11 +203,6 @@ public class LazyMap extends AbstractMap {
 		return set;
 	}
 
-	private static <V> V[] array(final Class<V> cls, final Collection<V> collection) {
-		final Object newInstance = Array.newInstance(cls, collection.size());
-		return collection.toArray((V[]) newInstance);
-	}
-
 	private static <V> V[] grow(final V[] array) {
 		final Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length * 2);
 		System.arraycopy(array, 0, newArray, 0, array.length);
@@ -277,27 +216,5 @@ public class LazyMap extends AbstractMap {
 			list.add((V) Array.get(array, index));
 		}
 		return list;
-	}
-
-	private static class FakeMapEntrySet extends AbstractSet<Entry<Object, Object>> {
-		Map.Entry<Object, Object>[] array;
-
-		public FakeMapEntrySet(final int size, final Object[] keys, final Object[] values) {
-			array = new Map.Entry[size];
-
-			for (int index = 0; index < size; index++) {
-				array[index] = new MapEntry(keys[index], values[index]);
-			}
-		}
-
-		@Override
-		public Iterator<Entry<Object, Object>> iterator() {
-			return list(this.array).iterator();
-		}
-
-		@Override
-		public int size() {
-			return array.length;
-		}
 	}
 }
