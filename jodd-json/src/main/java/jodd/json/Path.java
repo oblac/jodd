@@ -27,6 +27,8 @@ package jodd.json;
 
 import jodd.util.StringUtil;
 
+import java.util.Objects;
+
 /**
  * Path to a property from JSON root.
  */
@@ -176,7 +178,7 @@ public final class Path implements Cloneable {
 			Object o1 = path1.paths[i];
 			Object o2 = paths[i];
 
-			if (!(o1 == null ? o2 == null : o1.equals(o2))) {
+			if (!Objects.equals(o1, o2)) {
 				return false;
 			}
 		}
