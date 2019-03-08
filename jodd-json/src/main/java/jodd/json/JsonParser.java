@@ -800,7 +800,7 @@ public class JsonParser extends JsonParserBase {
 
 	// ---------------------------------------------------------------- un-quoted
 
-	private final static char[] UNQOUTED_DELIMETERS = ",:[]{}\\\"'".toCharArray();
+	private final static char[] UNQUOTED_DELIMETERS = ",:[]{}\\\"'".toCharArray();
 
 	/**
 	 * Parses un-quoted string content.
@@ -811,7 +811,7 @@ public class JsonParser extends JsonParserBase {
 		while (true) {
 			final char c = input[ndx];
 
-			if (c <= ' ' || CharUtil.equalsOne(c, UNQOUTED_DELIMETERS)) {
+			if (c <= ' ' || CharUtil.equalsOne(c, UNQUOTED_DELIMETERS)) {
 				final int currentNdx = ndx;
 
 				// done
