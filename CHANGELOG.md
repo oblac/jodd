@@ -2,7 +2,19 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.9...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.10...master)
+
+
+## [v5.0.10](https://github.com/oblac/jodd/compare/v5.0.9...v5.0.10)
+
+### New features
+
++ **decora** - added `decora.cache` flag that caches decorator content
++ **decora** added methods on `DecoraManager` to register the decorator content or files.
+
+### Bug fixes
+
++ **json** - fixed issue with parsing slashes in lazy mode.
 
 
 ## [v5.0.9](https://github.com/oblac/jodd/compare/v5.0.8...v5.0.9)
