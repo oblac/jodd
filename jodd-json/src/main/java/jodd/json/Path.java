@@ -42,10 +42,7 @@ public final class Path implements Cloneable {
 	 * Parses input dot-separated string that represents a path.
 	 */
 	public static Path parse(final String path) {
-		if (path == null) {
-			return new Path();
-		}
-		return new Path(StringUtil.splitc(path, '.'));
+		return path == null ? new Path() : new Path(StringUtil.splitc(path, '.'));
 	}
 
 	public Path() {
