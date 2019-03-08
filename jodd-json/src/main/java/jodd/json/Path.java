@@ -34,9 +34,9 @@ import java.util.Objects;
  */
 public final class Path implements Cloneable {
 
-	protected CharSequence[] paths;
-	protected int index;
-	protected Path altPath;
+	private CharSequence[] paths;
+	private int index;
+	Path altPath;
 
 	/**
 	 * Parses input dot-separated string that represents a path.
