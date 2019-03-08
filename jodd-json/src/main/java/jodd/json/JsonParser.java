@@ -192,7 +192,7 @@ public class JsonParser extends JsonParserBase {
 	 */
 	public JsonParser lazy(final boolean lazy) {
 		this.lazy = lazy;
-		this.mapSupplier = lazy ? LAZYMAP_SUPPLIER : HASMAP_SUPPLIER;
+		this.mapSupplier = lazy ? LAZYMAP_SUPPLIER : HASHMAP_SUPPLIER;
 		this.listSupplier = lazy ? LAZYLIST_SUPPLIER : ARRAYLIST_SUPPLIER;
 		return this;
 	}
