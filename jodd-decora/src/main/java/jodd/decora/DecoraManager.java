@@ -25,14 +25,34 @@
 
 package jodd.decora;
 
+import jodd.io.FileUtil;
+
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Decora manager defines if some request should be decorated and resolves decorators paths.
  */
 public class DecoraManager {
 
+	private static DecoraManager DECORA_MANAGER;
+
+	/**
+	 * Returns Decora manager.
+	 */
+	public static DecoraManager get() {
+		return Objects.requireNonNull(DECORA_MANAGER, "Only one instance of DecoraManager should be used.");
+	}
+
 	public static final String DEFAULT_DECORATOR = "/decora/main.jsp";
+
+	public DecoraManager() {
+		DECORA_MANAGER = this;
+	}
 
 	// ---------------------------------------------------------------- properties
 
@@ -44,6 +64,49 @@ public class DecoraManager {
 
 	public void setDecorateErrorPages(final boolean decorateErrorPages) {
 		this.decorateErrorPages = decorateErrorPages;
+	}
+
+	// ---------------------------------------------------------------- cache
+
+	protected Map<String, char[]> contentMap;
+	protected Map<String, File> filesMap;
+
+	public DecoraManager registerDecorator(final String path, final char[] content) {
+		if (contentMap == null) {
+			contentMap = new HashMap<>();
+		}
+		contentMap.put(path, content);
+		return this;
+	}
+	public DecoraManager registerDecorator(final String path, final File decorator) {
+		if (filesMap == null) {
+			filesMap = new HashMap<>();
+		}
+		filesMap.put(path, decorator);
+		return this;
+	}
+
+	/**
+	 * Lookups the decorator for given decorator path.
+	 * Returns {@code null} if decorator is not registered, indicating that content should be
+	 * read using the dispatcher.
+	 */
+	public char[] lookupDecoratorContent(final String path) {
+		if (contentMap != null) {
+			final char[] data = contentMap.get(path);
+			if (data != null) {
+				return data;
+			}
+			final File file = filesMap.get(path);
+			if (file != null) {
+				try {
+					return FileUtil.readChars(file);
+				} catch (IOException e) {
+					throw new DecoraException("Unable to read Decrator files", e);
+				}
+			}
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------- check

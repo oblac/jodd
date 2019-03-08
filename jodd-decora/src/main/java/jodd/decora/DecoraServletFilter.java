@@ -31,6 +31,7 @@ import jodd.log.LoggerFactory;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 import jodd.servlet.wrapper.LastModifiedData;
+import jodd.typeconverter.Converter;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ClassUtil;
 
@@ -57,9 +58,11 @@ public class DecoraServletFilter implements Filter {
 
 	public static final String PARAM_DECORA_MANAGER = "decora.manager";
 	public static final String PARAM_DECORA_PARSER = "decora.parser";
+	public static final String PARAM_DECORA_CACHE = "decora.cache";
 
 	protected DecoraManager decoraManager;
 	protected DecoraParser decoraParser;
+	protected boolean cached = false;
 
 	/**
 	 * Creates Decora manager. Override to provide custom decora manager.
@@ -81,11 +84,14 @@ public class DecoraServletFilter implements Filter {
 	 */
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
-		String decoraManagerClass = filterConfig.getInitParameter(PARAM_DECORA_MANAGER);
+
+		//
+
+		final String decoraManagerClass = filterConfig.getInitParameter(PARAM_DECORA_MANAGER);
 
 		if (decoraManagerClass != null) {
 			try {
-				Class decoraManagerType = ClassLoaderUtil.loadClass(decoraManagerClass);
+				final Class decoraManagerType = ClassLoaderUtil.loadClass(decoraManagerClass);
 				decoraManager = (DecoraManager) ClassUtil.newInstance(decoraManagerType);
 			} catch (Exception ex) {
 				log.error("Unable to load Decora manager class: " + decoraManagerClass, ex);
@@ -95,11 +101,13 @@ public class DecoraServletFilter implements Filter {
 			decoraManager = createDecoraManager();
 		}
 
-		String decoraParserClass = filterConfig.getInitParameter(PARAM_DECORA_PARSER);
+		//
+
+		final String decoraParserClass = filterConfig.getInitParameter(PARAM_DECORA_PARSER);
 
 		if (decoraParserClass != null) {
 			try {
-				Class decoraParserType = ClassLoaderUtil.loadClass(decoraParserClass);
+				final Class decoraParserType = ClassLoaderUtil.loadClass(decoraParserClass);
 				decoraParser = (DecoraParser) ClassUtil.newInstance(decoraParserType);
 			} catch (Exception ex) {
 				log.error("Unable to load Decora parser class: " + decoraParserClass, ex);
@@ -107,6 +115,14 @@ public class DecoraServletFilter implements Filter {
 			}
 		} else {
 			decoraParser = createDecoraParser();
+		}
+
+		//
+
+		final String decoraCache = filterConfig.getInitParameter(PARAM_DECORA_CACHE);
+
+		if (decoraCache != null) {
+			cached = Converter.get().toBoolean(decoraCache, false);
 		}
 	}
 
@@ -133,13 +149,13 @@ public class DecoraServletFilter implements Filter {
 			return;
 		}
 
-		HttpServletRequest decoraRequest = wrapRequest(request);
+		final HttpServletRequest decoraRequest = wrapRequest(request);
 
 		/* PROCESS PAGE */
 
 		final LastModifiedData lastModifiedData = new LastModifiedData();
 
-		DecoraResponseWrapper pageWrapper = new DecoraResponseWrapper(request, response, lastModifiedData, decoraManager);
+		final DecoraResponseWrapper pageWrapper = new DecoraResponseWrapper(request, response, lastModifiedData, decoraManager);
 
 		filterChain.doFilter(decoraRequest, pageWrapper);
 
@@ -148,7 +164,7 @@ public class DecoraServletFilter implements Filter {
 			return;
 		}
 
-		char[] pageContent = pageWrapper.getBufferContentAsChars();
+		final char[] pageContent = pageWrapper.getBufferContentAsChars();
 
 		if (pageContent == null || pageContent.length == 0) {
 			// no page content
@@ -161,17 +177,27 @@ public class DecoraServletFilter implements Filter {
 
 		// content was buffered, so try to decorate it
 
-		String actionPath = DispatcherUtil.getServletPath(request);
-		String decoratorPath = decoraManager.resolveDecorator(request, actionPath);
+		final String actionPath = DispatcherUtil.getServletPath(request);
+		final String decoratorPath = decoraManager.resolveDecorator(request, actionPath);
 
 		if (decoratorPath != null) {
-			BufferResponseWrapper decoratorWrapper = new BufferResponseWrapper(response, lastModifiedData);
 
-			DispatcherUtil.forward(decoraRequest, decoratorWrapper, decoratorPath);
+			char[] decoraContent = decoraManager.lookupDecoratorContent(decoratorPath);
 
-			char[] decoraContent = decoratorWrapper.getBufferedChars();
+			if (decoraContent == null) {
 
-			Writer writer = servletResponse.getWriter();
+				final BufferResponseWrapper decoratorWrapper = new BufferResponseWrapper(response, lastModifiedData);
+
+				DispatcherUtil.forward(decoraRequest, decoratorWrapper, decoratorPath);
+
+				decoraContent = decoratorWrapper.getBufferedChars();
+
+				if (cached) {
+					decoraManager.registerDecorator(decoratorPath, decoraContent);
+				}
+			}
+
+			final Writer writer = servletResponse.getWriter();
 
 			decoraParser.decorate(writer, pageContent, decoraContent);
 
@@ -193,11 +219,11 @@ public class DecoraServletFilter implements Filter {
 
         if (!decorated) {
 			if (pageWrapper.isBufferStreamBased()) {
-				ServletOutputStream outputStream = response.getOutputStream();
+				final ServletOutputStream outputStream = response.getOutputStream();
 				outputStream.write(pageWrapper.getBufferedBytes());
 				outputStream.flush();
 			} else {
-				PrintWriter writer = response.getWriter();
+				final PrintWriter writer = response.getWriter();
 				writer.append(CharBuffer.wrap(pageWrapper.getBufferedChars()));
 				writer.flush();
 			}
