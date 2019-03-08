@@ -47,13 +47,13 @@ import java.util.function.Supplier;
  */
 public abstract class JsonParserBase {
 
-	protected static final Supplier<Map> HASMAP_SUPPLIER = LinkedHashMap::new;
+	protected static final Supplier<Map> HASHMAP_SUPPLIER = LinkedHashMap::new;
 	protected static final Supplier<Map> LAZYMAP_SUPPLIER = LazyMap::new;
 
 	protected static final Supplier<List> ARRAYLIST_SUPPLIER = ArrayList::new;
 	protected static final Supplier<List> LAZYLIST_SUPPLIER = LazyList::new;
 
-	protected Supplier<Map> mapSupplier = HASMAP_SUPPLIER;
+	protected Supplier<Map> mapSupplier = HASHMAP_SUPPLIER;
 	protected Supplier<List> listSupplier = ARRAYLIST_SUPPLIER;
 	protected List<String> classnameWhitelist;
 	protected boolean strictTypes;
