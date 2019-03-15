@@ -29,15 +29,12 @@ import jodd.core.JoddCore;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
-import javax.mail.Authenticator;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -176,6 +173,25 @@ public class EmailUtil {
 			throw new MailException(errMsg, nspex);
 		}
 		return new ReceiveMailSession(session, store, attachmentStorage);
+	}
+
+	/**
+	 * Check whether flags is a empty flags
+	 * @param flags a flags of message to check
+	 * @return whether the flags is empty
+	 */
+	public static boolean isEmptyFlags(Flags flags) {
+		if (flags == null) return true;
+		Flags.Flag[] systemFlags = flags.getSystemFlags();
+		if (systemFlags == null || systemFlags.length == 0) {
+			return true;
+		}
+		String[] userFlags = flags.getUserFlags();
+		if (userFlags == null || userFlags.length == 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
