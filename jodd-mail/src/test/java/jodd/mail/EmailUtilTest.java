@@ -30,10 +30,10 @@ import jodd.net.MimeTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.mail.Flags;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EmailUtilTest {
 
@@ -65,6 +65,23 @@ class EmailUtilTest {
 		contentType = "TEXT/PLAIN; charset=US-ASCII; name=example.eml";
 		assertEquals(MimeTypes.MIME_TEXT_PLAIN.toUpperCase(), EmailUtil.extractMimeType(contentType));
 		assertEquals(StringPool.US_ASCII, EmailUtil.extractEncoding(contentType));
+	}
+
+	@Test
+	void testIsEmptyFlags() {
+		Flags flags = new Flags();
+		flags.add(Flags.Flag.DELETED);
+		assertTrue(!EmailUtil.isEmptyFlags(flags));
+
+		flags = new Flags();
+		flags.add("userFlag");
+		assertTrue(!EmailUtil.isEmptyFlags(flags));
+
+		flags = new Flags();
+		assertTrue(EmailUtil.isEmptyFlags(flags));
+
+		flags = null;
+		assertTrue(EmailUtil.isEmptyFlags(flags));
 	}
 
 }
