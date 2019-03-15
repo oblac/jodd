@@ -338,17 +338,17 @@ public class ReceiveMailSession extends MailSession<Store> {
 				// we need to parse message BEFORE flags are set!
 				emails[i] = new ReceivedEmail(msg, envelope, attachmentStorage);
 
-				if (flagsToSet != null) {
+				if (!EmailUtil.isEmptyFlags(flagsToSet)) {
 					emails[i].flags(flagsToSet);
 					msg.setFlags(flagsToSet, true);
 				}
 
-				if (flagsToUnset != null) {
+				if (!EmailUtil.isEmptyFlags(flagsToUnset)) {
 					emails[i].flags().remove(flagsToUnset);
 					msg.setFlags(flagsToUnset, false);
 				}
 
-				if (flagsToSet == null && !emails[i].isSeen()) {
+				if (EmailUtil.isEmptyFlags(flagsToSet) && !emails[i].isSeen()) {
 					msg.setFlag(Flags.Flag.SEEN, false);
 				}
 			}
@@ -358,7 +358,7 @@ public class ReceiveMailSession extends MailSession<Store> {
 			}
 
 			// if messages were marked to be deleted, we need to expunge the folder
-			if (flagsToSet != null) {
+			if (!EmailUtil.isEmptyFlags(flagsToSet)) {
 				if (flagsToSet.contains(Flags.Flag.DELETED)) {
 					folder.expunge();
 				}
