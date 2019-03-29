@@ -415,7 +415,7 @@ public class HtmlStaplerBundlesManager {
 	 * exist it will not be recreated!
 	 */
 	protected void createBundle(final String contextPath, final String actionPath, final String bundleId, final List<String>sources) throws IOException {
-		File bundleFile = createBundleFile(bundleId);
+		final File bundleFile = createBundleFile(bundleId);
 		if (bundleFile.exists()) {
 			return;
 		}
@@ -427,17 +427,7 @@ public class HtmlStaplerBundlesManager {
 			}
 			String content;
 			if (isExternalResource(src)) {
-				try {
-					content = NetUtil.downloadString(src, localFilesEncoding);
-				} catch (IOException ioex) {
-					if (notFoundExceptionEnabled) {
-						throw ioex;
-					}
-					if (log.isWarnEnabled()) {
-						log.warn("Download failed: " + src + "; " + ioex.getMessage());
-					}
-					content = null;
-				}
+				content = downloadString(src);
 			} else {
 				if (!downloadLocal) {
 					// load local resource from file system
@@ -482,17 +472,7 @@ public class HtmlStaplerBundlesManager {
 						localUrl += contextPath + FileNameUtil.getPath(actionPath) + '/' + src;
 					}
 
-					try {
-						content = NetUtil.downloadString(localUrl, localFilesEncoding);
-					} catch (IOException ioex) {
-						if (notFoundExceptionEnabled) {
-							throw ioex;
-						}
-						if (log.isWarnEnabled()) {
-							log.warn("Download failed: " + localUrl + "; " + ioex.getMessage());
-						}
-						content = null;
-					}
+					content = downloadString(localUrl);
 				}
 
 				if (content != null) {
@@ -513,6 +493,22 @@ public class HtmlStaplerBundlesManager {
 		if (log.isInfoEnabled()) {
 			log.info("Bundle created: " + bundleId);
 		}
+	}
+
+	private String downloadString(final String localUrl) throws IOException {
+		String content;
+		try {
+			content = NetUtil.downloadString(localUrl, localFilesEncoding);
+		} catch (IOException ioex) {
+			if (notFoundExceptionEnabled) {
+				throw ioex;
+			}
+			if (log.isWarnEnabled()) {
+				log.warn("Download failed: " + localUrl + "; " + ioex.getMessage());
+			}
+			content = null;
+		}
+		return content;
 	}
 
 	/**
@@ -556,7 +552,7 @@ public class HtmlStaplerBundlesManager {
 			mirrors.clear();
 		}
 
-		FindFile ff = new FindFile();
+		final FindFile ff = new FindFile();
 		ff.includeDirs(false);
 		ff.searchPath(new File(bundleFolder, staplerPath));
 
@@ -587,19 +583,26 @@ public class HtmlStaplerBundlesManager {
 	 * Returns the content with all relative URLs fixed.
 	 */
 	protected String fixCssRelativeUrls(final String content, final String src) {
+		final String path = FileNameUtil.getPath(src);
 
-		String path = FileNameUtil.getPath(src);
+		final Matcher matcher = CSS_URL_PATTERN.matcher(content);
 
-		Matcher matcher = CSS_URL_PATTERN.matcher(content);
-
-		StringBuilder sb = new StringBuilder(content.length());
+		final StringBuilder sb = new StringBuilder(content.length());
 
 		int start = 0;
 
 		while (matcher.find()) {
-			sb.append(content.substring(start, matcher.start()));
+			sb.append(content, start, matcher.start());
 
-			String url = fixRelativeUrl(matcher.group(1), path);
+			final String matchedUrl = StringUtil.removeChars(matcher.group(1), "'\"");
+
+			final String url;
+			if (matchedUrl.startsWith("https://") || matchedUrl.startsWith("http://") || matchedUrl.startsWith("data://")) {
+				url = "url('" + matchedUrl + "')";
+			}
+			else {
+				url = fixRelativeUrl(matchedUrl, path);
+			}
 
 			sb.append(url);
 
@@ -615,11 +618,8 @@ public class HtmlStaplerBundlesManager {
 	 * For a given URL (optionally quoted), produces CSS URL
 	 * where relative paths are fixed and prefixed with offsetPath.
 	 */
-	protected String fixRelativeUrl(String url, final String offsetPath) {
-
-		url = StringUtil.removeChars(url, "'\"");   // remove quotes
-
-		StringBuilder res = new StringBuilder();
+	protected String fixRelativeUrl(final String url, final String offsetPath) {
+		final StringBuilder res = new StringBuilder();
 		res.append("url('");
 
 		if (!url.startsWith(StringPool.SLASH)) {
