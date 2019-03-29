@@ -57,14 +57,19 @@ public class Methods {
 	 */
 	protected HashMap<String, MethodDescriptor[]> inspectMethods() {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
-		Class type = classDescriptor.getType();
 
-		Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
+		if (classDescriptor.isSystemClass()) {
+			scanAccessible = false;
+		}
 
-		HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
+		final Class type = classDescriptor.getType();
 
-		for (Method method : methods) {
-			String methodName = method.getName();
+		final Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
+
+		final HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
+
+		for (final Method method : methods) {
+			final String methodName = method.getName();
 
 			MethodDescriptor[] mds = map.get(methodName);
 
@@ -97,12 +102,12 @@ public class Methods {
 	 * Returns <code>null</code> if method is not found.
 	 */
 	public MethodDescriptor getMethodDescriptor(final String name, final Class[] paramTypes) {
-		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+		final MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
 		}
 		for (MethodDescriptor methodDescriptor : methodDescriptors) {
-			Method m = methodDescriptor.getMethod();
+			final Method m = methodDescriptor.getMethod();
 			if (ClassUtil.compareParameters(m.getParameterTypes(), paramTypes)) {
 				return methodDescriptor;
 			}
@@ -117,7 +122,7 @@ public class Methods {
 	 * @see #getMethodDescriptor(String, Class[])
 	 */
 	public MethodDescriptor getMethodDescriptor(final String name) {
-		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+		final MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
 		}
@@ -139,20 +144,15 @@ public class Methods {
 	 */
 	public MethodDescriptor[] getAllMethodDescriptors() {
 		if (allMethods == null) {
-			List<MethodDescriptor> allMethodsList = new ArrayList<>();
+			final List<MethodDescriptor> allMethodsList = new ArrayList<>();
 
 			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
 				Collections.addAll(allMethodsList, methodDescriptors);
 			}
 
-			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[0]);
+			final MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[0]);
 
-			Arrays.sort(allMethods, new Comparator<MethodDescriptor>() {
-				@Override
-				public int compare(final MethodDescriptor md1, final MethodDescriptor md2) {
-					return md1.getMethod().getName().compareTo(md2.getMethod().getName());
-				}
-			});
+			Arrays.sort(allMethods, Comparator.comparing(md -> md.getMethod().getName()));
 
 			this.allMethods = allMethods;
 		}

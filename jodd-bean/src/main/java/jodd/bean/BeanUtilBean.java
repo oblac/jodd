@@ -116,7 +116,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		}
 
 		// try: getter
-		Getter getter = bp.getGetter(isDeclared);
+		final Getter getter = bp.getGetter(isDeclared);
 		if (getter != null) {
 			return true;
 		}

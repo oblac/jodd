@@ -25,8 +25,8 @@
 
 package jodd.util;
 
-import jodd.util.cl.ClassLoaderStrategy;
 import jodd.net.URLDecoder;
+import jodd.util.cl.ClassLoaderStrategy;
 
 import java.io.File;
 import java.io.IOException;
@@ -398,12 +398,12 @@ public class ClassUtil {
 	 * methods are returned.
 	 */
 	public static Method[] getSupportedMethods(final Class clazz, final Class limit) {
-		ArrayList<Method> supportedMethods = new ArrayList<>();
-		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
-			Method[] methods = c.getDeclaredMethods();
-			for (Method method : methods) {
+		final ArrayList<Method> supportedMethods = new ArrayList<>();
+		for (Class c = clazz; c != limit && c!= null; c = c.getSuperclass()) {
+			final Method[] methods = c.getDeclaredMethods();
+			for (final Method method : methods) {
 				boolean found = false;
-				for (Method supportedMethod : supportedMethods) {
+				for (final Method supportedMethod : supportedMethods) {
 					if (compareSignatures(method, supportedMethod)) {
 						found = true;
 						break;
@@ -423,12 +423,12 @@ public class ClassUtil {
 	}
 
 	public static Field[] getSupportedFields(final Class clazz, final Class limit) {
-		ArrayList<Field> supportedFields = new ArrayList<>();
-		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
-			Field[] fields = c.getDeclaredFields();
-			for (Field field : fields) {
+		final ArrayList<Field> supportedFields = new ArrayList<>();
+		for (Class c = clazz; c != limit && c!= null; c = c.getSuperclass()) {
+			final Field[] fields = c.getDeclaredFields();
+			for (final Field field : fields) {
 				boolean found = false;
-				for (Field supportedField : supportedFields) {
+				for (final Field supportedField : supportedFields) {
 					if (compareSignatures(field, supportedField)) {
 						found = true;
 						break;

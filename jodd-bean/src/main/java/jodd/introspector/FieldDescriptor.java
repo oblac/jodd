@@ -36,6 +36,8 @@ import java.lang.reflect.Type;
  */
 public class FieldDescriptor extends Descriptor {
 
+	public static final FieldDescriptor[] EMPTY_ARRAY = new FieldDescriptor[0];
+
 	protected final Field field;
 	protected final Type type;
 	protected final Class rawType;
@@ -53,7 +55,7 @@ public class FieldDescriptor extends Descriptor {
 		this.type = field.getGenericType();
 		this.rawType = ClassUtil.getRawType(type, classDescriptor.getType());
 
-		Class[] componentTypes = ClassUtil.getComponentTypes(type, classDescriptor.getType());
+		final Class[] componentTypes = ClassUtil.getComponentTypes(type, classDescriptor.getType());
 		if (componentTypes != null) {
 			this.rawComponentType = componentTypes[componentTypes.length - 1];
 			this.rawKeyComponentType = componentTypes[0];

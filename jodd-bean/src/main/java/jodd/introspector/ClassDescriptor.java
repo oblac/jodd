@@ -76,6 +76,9 @@ public class ClassDescriptor {
 
 		interfaces = ClassUtil.resolveAllInterfaces(type);
 		superclasses = ClassUtil.resolveAllSuperclasses(type);
+
+		isSystemClass = type.getName().startsWith("java.") &&
+			!type.getName().startsWith("java.awt.geom.");
 	}
 
 	/**
@@ -168,6 +171,17 @@ public class ClassDescriptor {
 	public boolean isSupplier() {
 		return isSupplier;
 	}
+
+	private boolean isSystemClass;
+
+	/**
+	 * Returns <code>true</code> is class is a system class and should not
+	 * expose fields or declared methods.
+	 */
+	public boolean isSystemClass() {
+		return isSystemClass;
+	}
+
 	// ---------------------------------------------------------------- fields
 
 	private Fields fields;
@@ -187,7 +201,7 @@ public class ClassDescriptor {
 	 * Returns field descriptor.
 	 */
 	public FieldDescriptor getFieldDescriptor(final String name, final boolean declared) {
-		FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
+		final FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
 
 		if (fieldDescriptor != null) {
 			if (!fieldDescriptor.matchDeclared(declared)) {
@@ -224,7 +238,7 @@ public class ClassDescriptor {
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
 	public MethodDescriptor getMethodDescriptor(final String name, final boolean declared) {
-		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
+		final MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
 
 		if ((methodDescriptor != null) && methodDescriptor.matchDeclared(declared)) {
 			return methodDescriptor;
@@ -238,7 +252,7 @@ public class ClassDescriptor {
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
 	public MethodDescriptor getMethodDescriptor(final String name, final Class[] params, final boolean declared) {
-		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
+		final MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
 
 		if ((methodDescriptor != null) && methodDescriptor.matchDeclared(declared)) {
 			return methodDescriptor;
