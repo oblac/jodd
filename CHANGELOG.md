@@ -4,9 +4,13 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.10...master)
 
+### Breaking changes
+
++ **bean** - internals of Java system classes are no longer accessible.
+
 ### Bug fixes
 
-+ **bean** - fixed issue access system classes.
++ **stapler** - fixed issue with absolute urls in CSS.
 
 
 ## [v5.0.10](https://github.com/oblac/jodd/compare/v5.0.9...v5.0.10)
