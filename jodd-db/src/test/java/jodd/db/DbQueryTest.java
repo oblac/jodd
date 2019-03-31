@@ -94,5 +94,17 @@ class DbQueryTest {
 		doTestDoubleNamedParam(dbp, "x", 1, 4);
 
 		assertTrue(dbp.prepared);
+
+		assertEquals("aa ::xxx aaa ::x aaa",
+				dbp.prepare("aa ::xxx aaa ::x aaa"));
+		assertEquals("aa bbb::xxx aaa ::", dbp.prepare("aa bbb::xxx aaa ::"));
+
+		assertEquals("aa ? aaa ::x", dbp.prepare("aa :xxx aaa ::x"));
+		doTestSingleNamedParam(dbp, "xxx", 1);
+
+		assertEquals("aa ? aaa ::", dbp.prepare("aa :xxx aaa ::"));
+		doTestSingleNamedParam(dbp, "xxx", 1);
+
+		assertTrue(dbp.prepared);
 	}
 }

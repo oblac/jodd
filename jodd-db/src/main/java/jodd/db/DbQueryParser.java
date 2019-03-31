@@ -142,6 +142,19 @@ class DbQueryParser {
 			else if (c == '\'') {
 				inQuote = true;
 			}
+			else if (c == ':' && index + 1 < stringLength
+					&& sqlString.charAt(index + 1) == ':') {
+				// don't treat '::foo' sequence as named parameter; skip this
+				// chunk
+				int right = StringUtil.indexOfChars(sqlString,
+						SQL_SEPARATORS, index + 2);
+				if (right < 0) {
+					right = stringLength;
+				}
+				pureSql.append(sqlString.substring(index, right));
+				index = right;
+				continue;
+			}
 			else if (c == ':') {
 				int right = StringUtil.indexOfChars(sqlString, SQL_SEPARATORS, index + 1);
 				boolean batch = false;
