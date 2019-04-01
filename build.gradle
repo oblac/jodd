@@ -45,8 +45,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '5.0.11-' + date()
-//version = '5.0.10'
+//version = '5.0.11-' + date()
+version = '5.0.11'
 
 // --- properties -------------------------------------------------------------
 

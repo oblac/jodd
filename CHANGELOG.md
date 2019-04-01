@@ -4,12 +4,15 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.10...master)
 
+## [v5.0.11](https://github.com/oblac/jodd/compare/v5.0.10...v5.0.11)
+
 ### Breaking changes
 
 + **bean** - internals of Java system classes are no longer accessible.
 
 ### Bug fixes
 
++ **db** - fixed special case of double columns, used in PostgreSQL.
 + **stapler** - fixed issue with absolute urls in CSS.
 
 
