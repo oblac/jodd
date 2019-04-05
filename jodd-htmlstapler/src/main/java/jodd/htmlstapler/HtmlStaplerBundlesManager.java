@@ -597,7 +597,7 @@ public class HtmlStaplerBundlesManager {
 			final String matchedUrl = StringUtil.removeChars(matcher.group(1), "'\"");
 
 			final String url;
-			if (matchedUrl.startsWith("https://") || matchedUrl.startsWith("http://") || matchedUrl.startsWith("data://")) {
+			if (matchedUrl.startsWith("https://") || matchedUrl.startsWith("http://") || matchedUrl.startsWith("data:")) {
 				url = "url('" + matchedUrl + "')";
 			}
 			else {

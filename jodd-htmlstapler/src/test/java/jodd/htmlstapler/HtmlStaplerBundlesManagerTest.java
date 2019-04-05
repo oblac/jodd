@@ -68,5 +68,11 @@ class HtmlStaplerBundlesManagerTest {
 
 		fixedCss = hsbm.fixCssRelativeUrls("@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');", "/");
 		assertEquals("@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');", fixedCss);
+
+		fixedCss = hsbm.fixCssRelativeUrls("background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhE);", "/");
+		assertEquals("background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhE');", fixedCss);
+
+		fixedCss = hsbm.fixCssRelativeUrls("background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhE');", "/");
+		assertEquals("background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhE');", fixedCss);
 	}
 }
