@@ -17,11 +17,9 @@ package jodd.json;
 
 import java.lang.reflect.Array;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -39,7 +37,7 @@ public class LazyMap extends AbstractMap {
 	private Object[] keys;
 	private Object[] values;
 
-	public LazyMap() {
+	LazyMap() {
 		keys = new Object[5];
 		values = new Object[5];
 	}
@@ -188,7 +186,7 @@ public class LazyMap extends AbstractMap {
 
 	// ---------------------------------------------------------------- utils
 
-	private static <V> Set<V> set(final int size, final V... array) {
+	private static <V> Set<V> set(final int size, final V[] array) {
 		int index = 0;
 		final Set<V> set = new HashSet<>();
 
@@ -203,17 +201,9 @@ public class LazyMap extends AbstractMap {
 	}
 
 	private static <V> V[] grow(final V[] array) {
-		final Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length * 2);
+		@SuppressWarnings("unchecked")
+		final V[] newArray = (V[]) Array.newInstance(array.getClass().getComponentType(), array.length * 2);
 		System.arraycopy(array, 0, newArray, 0, array.length);
-		return (V[]) newArray;
-	}
-
-	private static <V> List<V> list(final V... array) {
-		final int length = array.length;
-		final List<V> list = new ArrayList<>();
-		for (int index = 0; index < length; index++) {
-			list.add((V) Array.get(array, index));
-		}
-		return list;
+		return newArray;
 	}
 }
