@@ -18,7 +18,6 @@ package jodd.json;
 import java.lang.reflect.Array;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -160,8 +159,8 @@ public class LazyMap extends AbstractMap {
 
 	@Override
 	public Collection values() {
-		return map == null ? Arrays.asList(values) : map.values();
-
+		buildIfNeeded();
+		return map.values();
 	}
 
 	@Override

@@ -935,4 +935,18 @@ class JsonParserTest {
 			assertEquals("\\", ((Map<String, String>) entries.get(0).getValue()).get("value"));
 		});
 	}
+
+	@Test
+	void testLazyParserValuesDoesntReturnSuppliers() {
+		String json = "{ \"foo\":{\"bar\":\"value\"} }";
+
+		JsonParsers.forEachParser(jsonParser -> {
+			Map<String, Object> object = jsonParser.parse(json);
+
+			object.values().forEach(value -> {
+				Map<String, String> inner = (Map<String, String>) value;
+				assertEquals("value", inner.values().iterator().next());
+			});
+		});
+	}
 }
