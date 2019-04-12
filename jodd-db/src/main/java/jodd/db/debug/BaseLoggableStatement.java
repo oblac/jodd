@@ -32,6 +32,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -91,25 +94,26 @@ public abstract class BaseLoggableStatement<S extends Statement> implements Stat
 	}
 
 	/**
-	 * Saves the parameter value <code>obj</code> for the specified <code>position</code>
-	 * for use in logging output.
+	 * Saves the parameter value <code>obj</code> for the specified
+	 * <code>position</code> for use in logging output.
 	 *
 	 * @param position position (starting at 1) of the parameter to save
-	 * @param obj java.lang.Object the parameter value to save
+	 * @param obj      java.lang.Object the parameter value to save
 	 */
 	protected void saveQueryParamValue(final int position, final Object obj) {
 		final String strValue;
 		if (obj instanceof String || obj instanceof Date) {
-			strValue = "'" + obj + '\'';        // if we have a String or Date, include '' in the saved value
-		}
-		else if (obj == null) {
-			strValue = "<null>";				// convert null to the string null
-		}
-		else {
-			strValue = Converter.get().toString(obj);	// all other objects (includes all Numbers, arrays, etc)
+			strValue = "'" + obj + '\''; // if we have a String or Date, include '' in the saved value
+		} else if (obj instanceof LocalDateTime || obj instanceof LocalDate || obj instanceof LocalTime) {
+			strValue = "'" + Converter.get().toString(obj) + '\''; // time as string with '
+		} else if (obj == null) {
+			strValue = "<null>"; // convert null to the string null
+		} else {
+			strValue = Converter.get().toString(obj); // all other objects (includes all Numbers, arrays, etc)
 		}
 
-		// if we are setting a position larger than current size of parameterValues, first make it larger
+		// if we are setting a position larger than current size of parameterValues,
+		// first make it larger
 		if (parameterValues == null) {
 			parameterValues = new ArrayList<>();
 		}
@@ -120,9 +124,7 @@ public abstract class BaseLoggableStatement<S extends Statement> implements Stat
 		parameterValues.set(position, strValue);
 	}
 
-
 	// ---------------------------------------------------------------- statement
-
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
