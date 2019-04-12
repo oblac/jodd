@@ -2,7 +2,16 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.10...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.12...master)
+
+## [v5.0.12](https://github.com/oblac/jodd/compare/v5.0.11...v5.0.12)
+
+### Bug fixes
+
++ **db** - fixed empty checking for numberic fields
++ **db** - debug log works better for dates
++ **json** - fixed lazy map
++ **stapler** - fixed issue with data urls in CSS
 
 ## [v5.0.11](https://github.com/oblac/jodd/compare/v5.0.10...v5.0.11)
 
