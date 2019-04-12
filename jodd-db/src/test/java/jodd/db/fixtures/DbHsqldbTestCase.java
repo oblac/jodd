@@ -44,8 +44,9 @@ public abstract class DbHsqldbTestCase extends DbTestBase {
 
 	@Override
 	protected void initDb(final DbSession session) {
-
+		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
+
 		String sql = "create table GIRL (" +
 				"ID			integer		not null," +
 				"NAME		varchar(20)	not null," +
@@ -54,7 +55,6 @@ public abstract class DbHsqldbTestCase extends DbTestBase {
 				')';
 		executeUpdate(session, sql);
 
-		executeUpdate(session, "drop table BOY if exists");
 		sql = "create table BOY (" +
 				"ID			integer	not null," +
 				"GIRL_ID		integer	null," +
