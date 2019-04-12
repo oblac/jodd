@@ -249,15 +249,16 @@ public abstract class SqlChunk {
 
 		// special case for ID column
 		if (dec.isId() && value instanceof Number) {
-			if (((Number) value).intValue() == 0) {
+			final double d = ((Number) value).doubleValue();
+			if (d == 0.0d) {
 				return true;
 			}
 		}
 
 		// special case for primitives
 		if (dec.getPropertyType().isPrimitive()) {
-			int n = ((Number) value).intValue();
-			if (n == 0) {
+			final double d = ((Number) value).doubleValue();
+			if (d == 0) {
 				return true;
 			}
 		}
