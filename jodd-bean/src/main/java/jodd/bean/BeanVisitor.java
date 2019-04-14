@@ -32,6 +32,7 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -64,6 +65,10 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Defines if null values should be ignored.
 	 */
 	protected boolean ignoreNullValues;
+	/**
+	 * Defines if empty string should be ignored.
+	 */
+	protected boolean ignoreEmptyString;
 	/**
 	 * Defines if fields should be included.
 	 */
@@ -162,6 +167,10 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 
 			if (value == null && ignoreNullValues) {
+				continue;
+			}
+
+			if (value instanceof String && StringUtil.isEmpty((String) value)) {
 				continue;
 			}
 
