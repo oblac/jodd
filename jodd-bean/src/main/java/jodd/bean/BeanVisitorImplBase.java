@@ -104,6 +104,14 @@ public abstract class BeanVisitorImplBase<T> extends BeanVisitor {
 	}
 
 	/**
+	 * Defines if <code>empty string</code> should be ignored.
+	 */
+	public T ignoreEmptyString(final boolean ignoreEmptyString) {
+		this.ignoreEmptyString = ignoreEmptyString;
+		return _this();
+	}
+
+	/**
 	 * Defines if all properties should be copied (when set to <code>true</code>)
 	 * or only public (when set to <code>false</code>, default).
 	 */

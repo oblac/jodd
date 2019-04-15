@@ -654,4 +654,16 @@ class BeanCopyTest {
 		assertEquals(43, beanDest.child.number);
 	}
 
+	@Test
+	void testIgnoreEmptyString() {
+		FooBean source = new FooBean();
+		source.setFooString("");
+
+		FooBean target = new FooBean();
+
+		BeanCopy.from(source).ignoreEmptyString(true).to(target).copy();
+		String s = BeanUtil.pojo.getProperty(target, "fooString");
+		assertNull(target.getFooString());
+	}
+
 }
