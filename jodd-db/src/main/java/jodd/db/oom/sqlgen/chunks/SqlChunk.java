@@ -257,9 +257,16 @@ public abstract class SqlChunk {
 
 		// special case for primitives
 		if (dec.getPropertyType().isPrimitive()) {
-			final double d = ((Number) value).doubleValue();
-			if (d == 0) {
-				return true;
+			if (char.class == dec.getPropertyType()) {
+				final Character c = ((Character) value);
+				if ('\u0000' == c.charValue()) {
+					return true;
+				}
+			} else {
+				final double d = ((Number) value).doubleValue();
+				if (d == 0) {
+					return true;
+				}
 			}
 		}
 

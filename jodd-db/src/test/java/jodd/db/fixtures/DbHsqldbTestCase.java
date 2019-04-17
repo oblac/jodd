@@ -46,6 +46,8 @@ public abstract class DbHsqldbTestCase extends DbTestBase {
 	protected void initDb(final DbSession session) {
 		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
+		executeUpdate(session, "drop table ENTITY if exists");
+		executeUpdate(session, "drop table ENTITY_CHAR if exists");
 
 		String sql = "create table GIRL (" +
 				"ID			integer		not null," +
@@ -64,13 +66,20 @@ public abstract class DbHsqldbTestCase extends DbTestBase {
 				')';
 		executeUpdate(session, sql);
 
-		executeUpdate(session, "drop table ENTITY if exists");
 		sql = "create table ENTITY (" +
 			"ID			integer	not null," +
 			"NAME	varchar(20)	null," +
 			"VALUE	double  	null," +
 			"primary key (ID)" +
 			')';
+		executeUpdate(session, sql);
+
+		sql = "create table ENTITY_CHAR (" +
+				"ID			integer	not null," +
+				"NAME	varchar(20)	null," +
+				"VALUE	varchar(1) 	null," +
+				"primary key (ID)" +
+				')';
 		executeUpdate(session, sql);
 	}
 
