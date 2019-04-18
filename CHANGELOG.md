@@ -8,7 +8,7 @@ All notable changes to Jodd project are documented here.
 
 ### Bug fixes
 
-+ **db** - fixed empty checking for numberic fields
++ **db** - fixed empty checking for numberic and char fields
 + **db** - debug log works better for dates
 + **json** - fixed lazy map
 + **stapler** - fixed issue with data urls in CSS
