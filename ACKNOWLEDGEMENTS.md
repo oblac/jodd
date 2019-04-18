@@ -4,7 +4,7 @@
    
 Jodd is bundled with the following 3rd party sources:
 
-+ [ASM v6.0](http://asm.ow2.org), BSD license
++ [ASM v6.2](http://asm.ow2.org), BSD license
 + [BCrypt v0.4](http://www.mindrot.org/projects/jBCrypt/), ISC/BSD licence
 + [NanoHTTPD v1.25](https://github.com/NanoHttpd/nanohttpd), BSD license 
 
