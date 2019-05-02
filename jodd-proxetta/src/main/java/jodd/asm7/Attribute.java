@@ -104,14 +104,14 @@ public class Attribute {
    * ClassReader.
    *
    * @param classReader the class that contains the attribute to be read.
-   * @param offset index of the first byte of the attribute's content in {@link ClassReader#b}. The
-   *     6 attribute header bytes (attribute_name_index and attribute_length) are not taken into
+   * @param offset index of the first byte of the attribute's content in {@link ClassReader}. The 6
+   *     attribute header bytes (attribute_name_index and attribute_length) are not taken into
    *     account here.
    * @param length the length of the attribute's content (excluding the 6 attribute header bytes).
    * @param charBuffer the buffer to be used to call the ClassReader methods requiring a
    *     'charBuffer' parameter.
    * @param codeAttributeOffset index of the first byte of content of the enclosing Code attribute
-   *     in {@link ClassReader#b}, or -1 if the attribute to be read is not a code attribute. The 6
+   *     in {@link ClassReader}, or -1 if the attribute to be read is not a code attribute. The 6
    *     attribute header bytes (attribute_name_index and attribute_length) are not taken into
    *     account here.
    * @param labels the labels of the method's code, or {@literal null} if the attribute to be read
@@ -127,7 +127,7 @@ public class Attribute {
       final Label[] labels) {
     Attribute attribute = new Attribute(type);
     attribute.content = new byte[length];
-    System.arraycopy(classReader.b, offset, attribute.content, 0, length);
+    System.arraycopy(classReader.classFileBuffer, offset, attribute.content, 0, length);
     return attribute;
   }
 
@@ -228,6 +228,42 @@ public class Attribute {
   }
 
   /**
+   * Returns the total size in bytes of all the attributes that correspond to the given field,
+   * method or class access flags and signature. This size includes the 6 header bytes
+   * (attribute_name_index and attribute_length) per attribute. Also adds the attribute type names
+   * to the constant pool.
+   *
+   * @param symbolTable where the constants used in the attributes must be stored.
+   * @param accessFlags some field, method or class access flags.
+   * @param signatureIndex the constant pool index of a field, method of class signature.
+   * @return the size of all the attributes in bytes. This size includes the size of the attribute
+   *     headers.
+   */
+  static int computeAttributesSize(
+      final SymbolTable symbolTable, final int accessFlags, final int signatureIndex) {
+    int size = 0;
+    // Before Java 1.5, synthetic fields are represented with a Synthetic attribute.
+    if ((accessFlags & Opcodes.ACC_SYNTHETIC) != 0
+        && symbolTable.getMajorVersion() < Opcodes.V1_5) {
+      // Synthetic attributes always use 6 bytes.
+      symbolTable.addConstantUtf8(Constants.SYNTHETIC);
+      size += 6;
+    }
+    if (signatureIndex != 0) {
+      // Signature attributes always use 8 bytes.
+      symbolTable.addConstantUtf8(Constants.SIGNATURE);
+      size += 8;
+    }
+    // ACC_DEPRECATED is ASM specific, the ClassFile format uses a Deprecated attribute instead.
+    if ((accessFlags & Opcodes.ACC_DEPRECATED) != 0) {
+      // Deprecated attributes always use 6 bytes.
+      symbolTable.addConstantUtf8(Constants.DEPRECATED);
+      size += 6;
+    }
+    return size;
+  }
+
+  /**
    * Puts all the attributes of the attribute list that begins with this attribute, in the given
    * byte vector. This includes the 6 header bytes (attribute_name_index and attribute_length) per
    * attribute.
@@ -277,6 +313,37 @@ public class Attribute {
       output.putShort(symbolTable.addConstantUtf8(attribute.type)).putInt(attributeContent.length);
       output.putByteArray(attributeContent.data, 0, attributeContent.length);
       attribute = attribute.nextAttribute;
+    }
+  }
+
+  /**
+   * Puts all the attributes that correspond to the given field, method or class access flags and
+   * signature, in the given byte vector. This includes the 6 header bytes (attribute_name_index and
+   * attribute_length) per attribute.
+   *
+   * @param symbolTable where the constants used in the attributes must be stored.
+   * @param accessFlags some field, method or class access flags.
+   * @param signatureIndex the constant pool index of a field, method of class signature.
+   * @param output where the attributes must be written.
+   */
+  static void putAttributes(
+      final SymbolTable symbolTable,
+      final int accessFlags,
+      final int signatureIndex,
+      final ByteVector output) {
+    // Before Java 1.5, synthetic fields are represented with a Synthetic attribute.
+    if ((accessFlags & Opcodes.ACC_SYNTHETIC) != 0
+        && symbolTable.getMajorVersion() < Opcodes.V1_5) {
+      output.putShort(symbolTable.addConstantUtf8(Constants.SYNTHETIC)).putInt(0);
+    }
+    if (signatureIndex != 0) {
+      output
+          .putShort(symbolTable.addConstantUtf8(Constants.SIGNATURE))
+          .putInt(2)
+          .putShort(signatureIndex);
+    }
+    if ((accessFlags & Opcodes.ACC_DEPRECATED) != 0) {
+      output.putShort(symbolTable.addConstantUtf8(Constants.DEPRECATED)).putInt(0);
     }
   }
 

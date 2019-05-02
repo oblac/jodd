@@ -4,6 +4,10 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.12...master)
 
+### New Features
+
++ **proxetta** - updated to ASM 7.1.
+
 ### Bug fixes
 
 + **core** - `MimeTypes` return extensions in correct order.

@@ -65,8 +65,8 @@ public abstract class AnnotationVisitor {
    *     calls. May be null.
    */
   public AnnotationVisitor(final int api, final AnnotationVisitor annotationVisitor) {
-    if (api != Opcodes.ASM6 && api != Opcodes.ASM5 && api != Opcodes.ASM4 && api != Opcodes.ASM7) {
-      throw new IllegalArgumentException();
+    if (api != Opcodes.ASM7 && api != Opcodes.ASM6 && api != Opcodes.ASM5 && api != Opcodes.ASM4) {
+      throw new IllegalArgumentException("Unsupported api " + api);
     }
     this.api = api;
     this.av = annotationVisitor;

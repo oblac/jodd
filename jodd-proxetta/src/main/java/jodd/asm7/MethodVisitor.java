@@ -78,8 +78,8 @@ public abstract class MethodVisitor {
    *     be null.
    */
   public MethodVisitor(final int api, final MethodVisitor methodVisitor) {
-    if (api != Opcodes.ASM6 && api != Opcodes.ASM5 && api != Opcodes.ASM4 && api != Opcodes.ASM7) {
-      throw new IllegalArgumentException();
+    if (api != Opcodes.ASM7 && api != Opcodes.ASM6 && api != Opcodes.ASM5 && api != Opcodes.ASM4) {
+      throw new IllegalArgumentException("Unsupported api " + api);
     }
     this.api = api;
     this.mv = methodVisitor;
@@ -395,14 +395,8 @@ public abstract class MethodVisitor {
   @Deprecated
   public void visitMethodInsn(
       final int opcode, final String owner, final String name, final String descriptor) {
-    if (api >= Opcodes.ASM5) {
-      boolean isInterface = opcode == Opcodes.INVOKEINTERFACE;
-      visitMethodInsn(opcode, owner, name, descriptor, isInterface);
-      return;
-    }
-    if (mv != null) {
-      mv.visitMethodInsn(opcode, owner, name, descriptor);
-    }
+    int opcodeAndSource = opcode | (api < Opcodes.ASM5 ? Opcodes.SOURCE_DEPRECATED : 0);
+    visitMethodInsn(opcodeAndSource, owner, name, descriptor, opcode == Opcodes.INVOKEINTERFACE);
   }
 
   /**
@@ -422,15 +416,15 @@ public abstract class MethodVisitor {
       final String name,
       final String descriptor,
       final boolean isInterface) {
-    if (api < Opcodes.ASM5) {
+    if (api < Opcodes.ASM5 && (opcode & Opcodes.SOURCE_DEPRECATED) == 0) {
       if (isInterface != (opcode == Opcodes.INVOKEINTERFACE)) {
-        throw new IllegalArgumentException("INVOKESPECIAL/STATIC on interfaces requires ASM5");
+        throw new UnsupportedOperationException("INVOKESPECIAL/STATIC on interfaces requires ASM5");
       }
       visitMethodInsn(opcode, owner, name, descriptor);
       return;
     }
     if (mv != null) {
-      mv.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+      mv.visitMethodInsn(opcode & ~Opcodes.SOURCE_MASK, owner, name, descriptor, isInterface);
     }
   }
 

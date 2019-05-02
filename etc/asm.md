@@ -3,7 +3,7 @@ Jodd and ASM
 
 | Jodd version  | ASM version   |
 | ------------- |:-------------:|
-| 5.0           | 6.2           |
+| 5.0           | 7.1           |
 | 4.4           | 6.1.1         |
 | 4.0           | 6.0           |
 | 3.5.2         | 5.0.1         |
@@ -18,7 +18,7 @@ in order to minimize the size of the library.
 Changes
 -------
 
-+ package is renamed to: `jodd.asm6`.
++ package is renamed to: `jodd.asm7`.
 + `SignatureWriter` class is removed as not used.
 + some JavaDoc links fixed or removed.
 + `TraceSignatureVisitor` is added and modified (from `asm-util`). 

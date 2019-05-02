@@ -54,9 +54,9 @@ public class SignatureReader {
    * Makes the given visitor visit the signature of this {@link SignatureReader}. This signature is
    * the one specified in the constructor (see {@link #SignatureReader}). This method is intended to
    * be called on a {@link SignatureReader} that was created using a <i>ClassSignature</i> (such as
-   * the <code>signature</code> parameter of the {@link org.objectweb.asm.ClassVisitor#visit}
+   * the <code>signature</code> parameter of the {@link ClassVisitor#visit}
    * method) or a <i>MethodSignature</i> (such as the <code>signature</code> parameter of the {@link
-   * org.objectweb.asm.ClassVisitor#visitMethod} method).
+   * ClassVisitor#visitMethod} method).
    *
    * @param signatureVistor the visitor that must visit this signature.
    */
@@ -131,8 +131,8 @@ public class SignatureReader {
    * the one specified in the constructor (see {@link #SignatureReader}). This method is intended to
    * be called on a {@link SignatureReader} that was created using a <i>JavaTypeSignature</i>, such
    * as the <code>signature</code> parameter of the {@link
-   * org.objectweb.asm.ClassVisitor#visitField} or {@link
-   * org.objectweb.asm.MethodVisitor#visitLocalVariable} methods.
+   * ClassVisitor#visitField} or {@link
+   * MethodVisitor#visitLocalVariable} methods.
    *
    * @param signatureVisitor the visitor that must visit this signature.
    */
