@@ -4,6 +4,11 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.12...master)
 
+### Bug fixes
+
++ **core** - `MimeTypes` return extensions in correct order.
++ **db** - fix for primitives in `SqlChunk`.
+
 ## [v5.0.12](https://github.com/oblac/jodd/compare/v5.0.11...v5.0.12)
 
 ### Bug fixes

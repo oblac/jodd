@@ -34,7 +34,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 /**
- * JDateTime sql type stores JDateTime data as number of milliseconds passed from 1970.
+ * JulianDate sql type stores JulianDate data as number of milliseconds passed from 1970.
  */
 public class JulianDateSqlType extends SqlType<JulianDate> {
 
@@ -54,13 +54,13 @@ public class JulianDateSqlType extends SqlType<JulianDate> {
 	@Override
 	public JulianDate get(final ResultSet rs, final int index, final int dbSqlType) throws SQLException {
 		if (dbSqlType == Types.TIMESTAMP) {
-			Timestamp timestamp = rs.getTimestamp(index);
+			final Timestamp timestamp = rs.getTimestamp(index);
 			if (timestamp == null) {
 				return null;
 			}
 			return JulianDate.of(timestamp.getTime());
 		}
-		long time = rs.getLong(index);
+		final long time = rs.getLong(index);
 
 		if (time == 0 && rs.wasNull()) {
 			return null;

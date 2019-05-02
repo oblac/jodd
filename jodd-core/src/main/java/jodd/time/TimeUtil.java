@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -66,6 +67,13 @@ public class TimeUtil {
 	}
 
 	/**
+	 * Converts local date time to Calendar and setting time to midnight.
+	 */
+	public static Calendar toCalendar(final LocalDate localDate) {
+		return GregorianCalendar.from(ZonedDateTime.of(localDate, LocalTime.MIDNIGHT, ZoneId.systemDefault()));
+	}
+
+	/**
 	 * Converts local date time to epoh milliseconds.
 	 */
 	public static long toMilliseconds(final LocalDateTime localDateTime) {
@@ -75,14 +83,14 @@ public class TimeUtil {
 	/**
 	 * Converts local date time to epoh milliseconds assuming start of the day as time point.
 	 */
-	public static long toMilliseconds(LocalDate localDate) {
+	public static long toMilliseconds(final LocalDate localDate) {
 		return toMilliseconds(localDate.atStartOfDay());
 	}
 
 
 	public static LocalDateTime fromCalendar(final Calendar calendar) {
-		TimeZone tz = calendar.getTimeZone();
-		ZoneId zid = tz == null ? ZoneId.systemDefault() : tz.toZoneId();
+		final TimeZone tz = calendar.getTimeZone();
+		final ZoneId zid = tz == null ? ZoneId.systemDefault() : tz.toZoneId();
 		return LocalDateTime.ofInstant(calendar.toInstant(), zid);
 	}
 

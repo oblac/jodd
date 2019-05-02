@@ -25,8 +25,8 @@
 
 package jodd.mail;
 
-import jodd.util.StringPool;
 import jodd.net.MimeTypes;
+import jodd.util.StringPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -108,10 +108,6 @@ class EMLParserTest {
 		assertEquals("Example <from@example.com>", email.from().toString());
 		assertEquals("to@example.com", email.to()[0].toString());
 		assertEquals("test", email.subject());
-
-//		jdt = new JDateTime(2010, 3, 27, 12, 9, 46, 0);
-//		jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
-//		assertEquals(jdt.convertToDate(), email.sentDate());
 
 		headers = email.headers();
 		assertEquals("1.0", headers.get("MIME-Version"));

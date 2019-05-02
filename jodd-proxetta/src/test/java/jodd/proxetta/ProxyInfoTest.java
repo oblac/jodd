@@ -44,9 +44,9 @@ class ProxyInfoTest {
 
 		DateDao dateDateProxy = (DateDao) proxetta.proxy().setTarget(DateDao.class).newInstance();
 
-		LocalDateTime jDateTime = dateDateProxy.currentTime();
+		LocalDateTime localDateTime = dateDateProxy.currentTime();
 
-		assertNotNull(jDateTime);
+		assertNotNull(localDateTime);
 	}
 
 	private ProxyAspect[] aspects() {

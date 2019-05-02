@@ -53,7 +53,7 @@ _Use what you like._
 
 **Utilities**:
 
-+ `jodd-core` - contains many utilities, including `JDateTime`.
++ `jodd-core` - contains many every-day utilities.
 + `jodd-bean` - our infamous `BeanUtil`, type inspectors and converters.
 + `jodd-props` - is the super-replacement for Java `Properties`.
 + `jodd-servlet` - with many servlet utilities, including nice tag library.

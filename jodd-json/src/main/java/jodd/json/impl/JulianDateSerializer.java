@@ -29,14 +29,16 @@ import jodd.json.JsonContext;
 import jodd.json.TypeJsonSerializer;
 import jodd.time.JulianDate;
 
+import java.time.format.DateTimeFormatter;
+
 /**
- * Serializer for JDateTime.
+ * Serializer for JulianDate.
  */
 public class JulianDateSerializer implements TypeJsonSerializer<JulianDate> {
 
 	@Override
 	public boolean serialize(final JsonContext jsonContext, final JulianDate value) {
-		jsonContext.writeString(value.toLocalDateTime().toString());
+		jsonContext.writeString(value.toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 		return true;
 	}
 }
