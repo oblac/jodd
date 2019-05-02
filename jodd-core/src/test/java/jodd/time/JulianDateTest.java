@@ -25,11 +25,11 @@
 
 package jodd.time;
 
-import jodd.time.JulianDate;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -61,4 +61,27 @@ class JulianDateTest {
 		JulianDate jdt3 = new JulianDate(2440600, 0.10000001);
 		assertTrue(ldt.isEqual(jdt3.toLocalDateTime()));
 	}
+
+	@Test
+	void testSetGetMillis() {
+		for (int i = 0; i < 1000; i++) {
+			JulianDate jdt = JulianDate.of(2003, 2, 28, 23, 59, 59, i);
+			assertEquals(i, jdt.toLocalDateTime().getNano()/1000000);
+		}
+	}
+
+
+	@Test
+	void testSet999Millis() {
+		JulianDate jdt = JulianDate.of(2003, 2, 28, 23, 59, 59, 999);
+		assertEquals("2003-02-28T23:59:59.999", jdt.toLocalDateTime().format(ISO_LOCAL_DATE_TIME));
+
+		jdt = JulianDate.of(2003, 2, 28, 23, 59, 60, 0);
+		assertEquals("2003-03-01T00:00:00", jdt.toLocalDateTime().format(ISO_LOCAL_DATE_TIME));
+
+		// this used to be a problem
+		jdt = JulianDate.of(2003, 2, 28, 23, 59, 59, 999);        // 12 fraction digits  - last working
+		assertEquals("2003-02-28T23:59:59.999", jdt.toLocalDateTime().format(ISO_LOCAL_DATE_TIME));
+	}
+
 }

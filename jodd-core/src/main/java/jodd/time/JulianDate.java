@@ -160,6 +160,10 @@ public class JulianDate implements Serializable, Cloneable {
 		return new JulianDate(jd, frac + 0.5);
 	}
 
+	public static JulianDate now() {
+		return of(LocalDateTime.now());
+	}
+
 	/**
 	 * Integer part of the Julian Date (JD).
 	 */
@@ -344,7 +348,7 @@ public class JulianDate implements Serializable, Cloneable {
 	// ---------------------------------------------------------------- math
 
 	/**
-	 * Adds a JD to current instance.
+	 * Adds two JD and returns a new instance.
 	 */
 	public JulianDate add(final JulianDate jds) {
 		int i = this.integer + jds.integer;
@@ -353,7 +357,7 @@ public class JulianDate implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Adds a double to current instance.
+	 * Adds a double delta value and returns a new instance.
 	 */
 	public JulianDate add(final double delta) {
 		return new JulianDate(this.integer, this.fraction + delta);
@@ -361,7 +365,7 @@ public class JulianDate implements Serializable, Cloneable {
 
 
 	/**
-	 * Subtracts a JD from current instance.
+	 * Subtracts a JD from current instance and returns a new instance.
 	 */
 	public JulianDate sub(final JulianDate jds) {
 		int i = this.integer - jds.integer;
@@ -370,7 +374,7 @@ public class JulianDate implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Subtracts a double from current instance.
+	 * Subtracts a double from current instance and returns a new instance.
 	 */
 	public JulianDate sub(final double delta) {
 		return new JulianDate(this.integer, this.fraction - delta);
