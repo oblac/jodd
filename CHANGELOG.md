@@ -7,6 +7,7 @@ All notable changes to Jodd project are documented here.
 ### Bug fixes
 
 + **core** - `MimeTypes` return extensions in correct order.
++ **http** - fixes special case when server returns `null` for chunked encoding.
 + **db** - fix for primitives in `SqlChunk`.
 
 ## [v5.0.12](https://github.com/oblac/jodd/compare/v5.0.11...v5.0.12)

@@ -825,9 +825,9 @@ public abstract class HttpBase<T> {
 	 * Useful for debugging.
 	 */
 	public String toString(final boolean fullResponse) {
-		Buffer buffer = buffer(fullResponse);
+		final Buffer buffer = buffer(fullResponse);
 
-		StringWriter stringWriter = new StringWriter();
+		final StringWriter stringWriter = new StringWriter();
 
 		try {
 			buffer.writeTo(stringWriter);
@@ -843,7 +843,7 @@ public abstract class HttpBase<T> {
 	 * Returns byte array of request or response.
 	 */
 	public byte[] toByteArray() {
-		Buffer buffer = buffer(true);
+		final Buffer buffer = buffer(true);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
 
@@ -903,7 +903,7 @@ public abstract class HttpBase<T> {
 	 * Sends request or response to output stream.
 	 */
 	public void sendTo(final OutputStream out) throws IOException {
-		Buffer buffer = buffer(true);
+		final Buffer buffer = buffer(true);
 
 		if (httpProgressListener == null) {
 			buffer.writeTo(out);
@@ -981,11 +981,19 @@ public abstract class HttpBase<T> {
 		if (isChunked) {
 
 			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+
 			try {
 				while (true) {
-					String line = reader.readLine();
+					final String line = reader.readLine();
 
-					int len = Integer.parseInt(line, 16);
+					int len = 0;
+					if (line != null) {
+						try {
+							len = Integer.parseInt(line, 16);
+						} catch (NumberFormatException nfex) {
+							throw new HttpException("Invalid chunk length: " + line);
+						}
+					}
 
 					if (len > 0) {
 						StreamUtil.copy(reader, fastCharArrayWriter, len);
