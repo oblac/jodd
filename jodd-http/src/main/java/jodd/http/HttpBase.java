@@ -980,19 +980,17 @@ public abstract class HttpBase<T> {
 		// chunked encoding
 		if (isChunked) {
 
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+			final FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
 
 			try {
 				while (true) {
 					final String line = reader.readLine();
 
-					int len = 0;
-					if (line != null) {
-						try {
-							len = Integer.parseInt(line, 16);
-						} catch (NumberFormatException nfex) {
-							throw new HttpException("Invalid chunk length: " + line);
-						}
+					final int len;
+					try {
+						len = Integer.parseInt(line, 16);
+					} catch (NumberFormatException nfex) {
+						throw new HttpException("Invalid chunk length: " + line);
 					}
 
 					if (len > 0) {
