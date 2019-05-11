@@ -960,8 +960,8 @@ public class ClassUtil {
 			return Object.class;
 		}
 		if (type instanceof GenericArrayType) {
-			Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
-			Class<?> rawType = getRawType(genericComponentType, implClass);
+			final Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
+			final Class<?> rawType = getRawType(genericComponentType, implClass);
 			// this is sort of stupid, but there seems no other way (consider don't creating new instances each time)...
 			return Array.newInstance(rawType, 0).getClass();
 		}
