@@ -12,7 +12,9 @@ All notable changes to Jodd project are documented here.
 
 + **core** - `MimeTypes` return extensions in correct order.
 + **http** - fixes special case when server returns `null` for chunked encoding.
++ **http** - fixed `SSLSocketHttpConnectionProvider` that was being ignored.
 + **db** - fix for primitives in `SqlChunk`.
++ **proxetta** - fixed an issue when generics were defined in declaration of supertype.
 
 ## [v5.0.12](https://github.com/oblac/jodd/compare/v5.0.11...v5.0.12)
 

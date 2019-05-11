@@ -134,7 +134,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 * Creates a socket using socket factory.
 	 */
 	protected Socket createSocket(final String host, final int port, final int connectionTimeout) throws IOException {
-		final SocketFactory socketFactory = getSocketFactory(proxy, false, false, connectionTimeout);
+		final SocketFactory socketFactory = resolveSocketFactory(proxy, false, false, connectionTimeout);
 
 		if (connectionTimeout < 0) {
 			return socketFactory.createSocket(host, port);
@@ -156,7 +156,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		final String host, final int port, final int connectionTimeout,
 		final boolean trustAll, final boolean verifyHttpsHost) throws IOException {
 
-		final SocketFactory socketFactory = getSocketFactory(proxy, true, trustAll, connectionTimeout);
+		final SocketFactory socketFactory = resolveSocketFactory(proxy, true, trustAll, connectionTimeout);
 
 		final Socket socket;
 
@@ -247,7 +247,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Returns socket factory based on proxy type and SSL requirements.
 	 */
-	protected SocketFactory getSocketFactory(
+	protected SocketFactory resolveSocketFactory(
 			final ProxyInfo proxy,
 			final boolean ssl,
 			final boolean trustAllCertificates,
@@ -268,7 +268,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			case SOCKS5:
 				return new Socks5ProxySocketFactory(proxy, connectionTimeout);
 			default:
-				return null;
+				throw new HttpException("Invalid proxy type " + proxy.getProxyType());
 		}
 	}
 }
