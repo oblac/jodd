@@ -30,18 +30,22 @@ package jodd.asm;
 import jodd.asm7.Opcodes;
 import jodd.asm7.signature.SignatureVisitor;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A {@link SignatureVisitor} that builds the Java generic type declaration corresponding to the
  * signature it visits.
- *
+ * <p>
  * Changes made by Igor (http://jodd.org):
  * <ul>
- *    <li>removed <code>final</code> for the class</li>
- *    <li>some <code>private</code> scopes made <code>protected</code></li>
- *    <li>public constructor change to accept <code>boolean</code></li>
- *    <li>use <code>AsmUtil</code> constants</li>
- *    <li>use <code>StringBuilder</code> instead of <code>StringBuffer</code></li>
- *    <li>getExceptions() and getReturnType() removed</li>
+ * <li>removed <code>final</code> for the class</li>
+ * <li>some <code>private</code> scopes made <code>protected</code></li>
+ * <li>public constructor change to accept <code>boolean</code></li>
+ * <li>use <code>AsmUtil</code> constants</li>
+ * <li>use <code>StringBuilder</code> instead of <code>StringBuffer</code></li>
+ * <li>getExceptions() and getReturnType() removed</li>
  * </ul>
  *
  * @author Eugene Kuleshov
@@ -52,6 +56,22 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
   private static final String COMMA_SEPARATOR = ", ";
   private static final String EXTENDS_SEPARATOR = " extends ";
   private static final String IMPLEMENTS_SEPARATOR = " implements ";
+
+  private static final Map<Character, String> BASE_TYPES;
+
+  static {
+    HashMap<Character, String> baseTypes = new HashMap<>();
+    baseTypes.put('Z', "boolean");
+    baseTypes.put('B', "byte");
+    baseTypes.put('C', "char");
+    baseTypes.put('S', "short");
+    baseTypes.put('I', "int");
+    baseTypes.put('J', "long");
+    baseTypes.put('F', "float");
+    baseTypes.put('D', "double");
+    baseTypes.put('V', "void");
+    BASE_TYPES = Collections.unmodifiableMap(baseTypes);
+  }
 
   /** Whether the visited signature is a class signature of a Java interface. */
   protected final boolean isInterface;                              // jodd: protected
@@ -101,13 +121,13 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
 //   * @param accessFlags for class type signatures, the access flags of the class.
 //   */
 //  public TraceSignatureVisitor(final int accessFlags) {
-//    super(Opcodes.ASM7_EXPERIMENTAL);
+//    super(Opcodes.ASM7);
 //    this.isInterface = (accessFlags & Opcodes.ACC_INTERFACE) != 0;
 //    this.declaration = new StringBuilder();
 //  }
 
   protected TraceSignatureVisitor(final StringBuilder stringBuilder) {   // jodd: protected
-    super(Opcodes.ASM6);
+    super(Opcodes.ASM7);
     this.isInterface = false;
     this.declaration = stringBuilder;
   }
@@ -115,7 +135,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
   // jodd: added the variant of the ctor
 
   public TraceSignatureVisitor(final StringBuilder stringBuilder, final boolean isInterface) {
-    super(Opcodes.ASM6);
+    super(Opcodes.ASM7);
     this.isInterface = isInterface;
     this.declaration = stringBuilder;
   }
@@ -200,37 +220,11 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
 
   @Override
   public void visitBaseType(final char descriptor) {
-    switch (descriptor) {
-      case 'V':
-        declaration.append("void");
-        break;
-      case 'B':
-        declaration.append("byte");
-        break;
-      case 'J':
-        declaration.append("long");
-        break;
-      case 'Z':
-        declaration.append("boolean");
-        break;
-      case 'I':
-        declaration.append("int");
-        break;
-      case 'S':
-        declaration.append("short");
-        break;
-      case 'C':
-        declaration.append("char");
-        break;
-      case 'F':
-        declaration.append("float");
-        break;
-      case 'D':
-        declaration.append("double");
-        break;
-      default:
-        throw new IllegalArgumentException();
+    String baseType = BASE_TYPES.get(descriptor);
+    if (baseType == null) {
+      throw new IllegalArgumentException();
     }
+    declaration.append(baseType);
     endType();
   }
 
@@ -317,7 +311,11 @@ public class TraceSignatureVisitor extends SignatureVisitor {       // jodd: no 
 
   // -----------------------------------------------------------------------------------------------
 
-  /** @return the Java generic type declaration corresponding to the visited signature. */
+  /**
+   * Returns the Java generic type declaration corresponding to the visited signature.
+   *
+   * @return the Java generic type declaration corresponding to the visited signature.
+   */
   public String getDeclaration() {
     return declaration.toString();
   }
