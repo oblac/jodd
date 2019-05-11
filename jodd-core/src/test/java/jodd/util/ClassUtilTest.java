@@ -28,6 +28,8 @@ package jodd.util;
 import jodd.Jodd;
 import jodd.buffer.FastByteBuffer;
 import jodd.chalk.Chalk;
+import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.test.DisabledOnJava;
 import jodd.util.fixtures.subclass.IBase;
 import jodd.util.fixtures.subclass.IExtra;
@@ -392,6 +394,11 @@ class ClassUtilTest {
 	public static class ConcreteClass2 extends BaseClass2<String> {
 	}
 
+	public static class BaseClass3<A extends Number & Serializable> {
+		public A[] array1;
+		public void foo(A[] as){}
+	}
+
 	@Test
 	void testGetFieldConcreteType() throws NoSuchFieldException {
 		Field f1 = BaseClass.class.getField("f1");
@@ -426,6 +433,23 @@ class ClassUtilTest {
 		assertEquals(Integer.class, ClassUtil.getRawType(f2.getGenericType(), ConcreteClass2.class));
 		assertEquals(Integer.class, ClassUtil.getRawType(f2.getGenericType(), BaseClass2.class));
 	}
+
+	@Test
+	void testRawType_noConcreteClass() throws Exception {
+		Field array1 = BaseClass2.class.getField("array1");
+		assertEquals(Object[].class, ClassUtil.getRawType(array1.getGenericType(), BaseClass2.class));
+	}
+
+	@Test
+	void testRawType_bounded() throws Exception {
+		Field array1 = BaseClass3.class.getField("array1");
+		assertEquals(Number[].class, ClassUtil.getRawType(array1.getGenericType(), BaseClass3.class));
+
+		Method foo = ClassUtil.findMethod(BaseClass3.class, "foo");
+
+		MethodDescriptor mi = ClassIntrospector.get().lookup(BaseClass3.class).getMethodDescriptor("foo", true);
+	}
+
 
 	// ---------------------------------------------------------------- test raw
 
