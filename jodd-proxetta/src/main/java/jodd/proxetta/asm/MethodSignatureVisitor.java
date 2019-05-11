@@ -81,13 +81,29 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			final String methodName,
 			final int access,
 			final String classname,
-			final String description,
+			String description,
 			final String[] exceptions,
-			final String signature,
+			String signature,
 			final Map<String, String> declaredTypeGenerics,
 			final ClassInfo targetClassInfo) {
 
 		super(new StringBuilder(), (access & Opcodes.ACC_INTERFACE) != 0);
+
+		if (signature != null && signature.startsWith("(") && !declaredTypeGenerics.isEmpty()) {
+			// special case when we can replace the signature
+			// as generic types are defined in declaration in superclass
+			// e.g.: Foo extends Bar<Long>
+
+			String newSignature = signature;
+
+			for (Map.Entry<String, String> entry : declaredTypeGenerics.entrySet()) {
+				newSignature = StringUtil.replace(newSignature, "T" + entry.getKey() + ";", entry.getValue());
+			}
+
+			description = AsmUtil.removeGenericsFromSignature(newSignature);
+			signature = null;
+		}
+
 //		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
 		this.isFinal = (access & Opcodes.ACC_FINAL) != 0;

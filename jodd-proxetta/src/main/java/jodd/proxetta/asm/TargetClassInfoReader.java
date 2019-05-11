@@ -197,9 +197,9 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			classAnnotations = null;
 		}
 
-		List<String> superList = new ArrayList<>();
+		final List<String> superList = new ArrayList<>();
 
-		Set<String> allInterfaces = new HashSet<>();
+		final Set<String> allInterfaces = new HashSet<>();
 
 		if (nextInterfaces != null) {
 			allInterfaces.addAll(nextInterfaces);
@@ -221,7 +221,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 			superList.add(nextSupername);
 			superClassReaders.add(cr);	// remember the super class reader
-			cr.accept(new SuperClassVisitor(), 0);
+			cr.accept(new SuperClassVisitor(this), 0);
 
 			if (cr.getInterfaces() != null) {
 				Collections.addAll(allInterfaces, cr.getInterfaces());
@@ -250,7 +250,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 					StreamUtil.close(inputStream);
 				}
 				superClassReaders.add(cr);				// remember the super class reader
-				cr.accept(new SuperClassVisitor(), 0);
+				cr.accept(new SuperClassVisitor(this), 0);
 
 				if (cr.getInterfaces() != null) {
 					for (String newInterface : cr.getInterfaces()) {
@@ -352,6 +352,11 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	// ---------------------------------------------------------------- super class visitor
 
 	private class SuperClassVisitor extends EmptyClassVisitor {
+		private final Map<String, String> topGenerics;
+
+		public SuperClassVisitor(final TargetClassInfoReader topClass) {
+			topGenerics = topClass.generics;
+		}
 
 		String declaredClassName;
 		Map<String, String> superGeneric;
@@ -370,6 +375,18 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 			final boolean isInterface = (access & AsmUtil.ACC_INTERFACE) != 0;
 			this.superGeneric = new GenericsReader().parseSignatureForGenerics(signature, isInterface);
+
+			// modify super generics with top generics.
+
+			int index = 0;
+			for (final Map.Entry<String, String> entry : superGeneric.entrySet()) {
+				final String newValue = this.topGenerics.get(declaredClassName + ":" + index);
+				if (newValue != null) {
+					entry.setValue(newValue);
+				}
+				index++;
+			}
+
 		}
 
 		@Override

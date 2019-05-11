@@ -25,6 +25,7 @@
 
 package jodd.proxetta;
 
+import jodd.introspector.ClassIntrospector;
 import jodd.proxetta.advice.DelegateAdvice;
 import jodd.proxetta.fixtures.data.Action;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -85,6 +86,56 @@ class GenericsTest {
 			fail(ex.toString());
 		}
 	}
+
+	// ---------------------------------------------------------------- daos
+
+
+	public static class JoyDao<T, Id> {
+		public T foo(Id[] val) {
+			return null;
+		}
+	}
+	public static class RoomDao extends JoyDao<RoomDao, Long>{
+	}
+	public static class IncompleteDao<T> extends JoyDao<T, Long> {}
+	public static class FinalDao extends IncompleteDao<RoomDao> {}
+
+	@Test
+	void testClassesWithGenericsAsReturnValueProxy_array1() {
+		RoomDao dao;
+		try {
+			ProxyAspect aspect = new ProxyAspect(LogAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(RoomDao.class);
+			dao = (RoomDao) builder.newInstance();
+
+			ClassIntrospector.get().lookup(dao.getClass()).getAllMethodDescriptors();
+			dao.foo(null);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			fail(ex.toString());
+		}
+	}
+
+	@Test
+	void testClassesWithGenericsAsReturnValueProxy_array2() {
+		FinalDao dao;
+		try {
+			ProxyAspect aspect = new ProxyAspect(LogAdvice.class, new AllMethodsPointcut());
+			ProxyProxetta proxetta = Proxetta.proxyProxetta().withAspects(aspect);
+			ProxyProxettaFactory builder = proxetta.proxy().setTarget(FinalDao.class);
+			dao = (FinalDao) builder.newInstance();
+
+			ClassIntrospector.get().lookup(dao.getClass()).getAllMethodDescriptors();
+			dao.foo(null);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			fail(ex.toString());
+		}
+	}
+
 
 	// ---------------------------------------------------------------- misc
 

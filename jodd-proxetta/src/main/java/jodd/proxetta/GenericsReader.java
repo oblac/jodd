@@ -29,13 +29,19 @@ import jodd.asm.TraceSignatureVisitor;
 import jodd.asm7.signature.SignatureReader;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Collector of generics information from the signature.
  */
 public class GenericsReader {
+
+	final Map<String, String> genericsMap;
+
+	public GenericsReader() {
+		this.genericsMap = new LinkedHashMap<>();
+	}
 
 	/**
 	 * Parses signature for generic information and returns a map where key is generic name
@@ -47,12 +53,21 @@ public class GenericsReader {
 			return Collections.emptyMap();
 		}
 
-		final Map<String, String> genericsMap = new HashMap<>();
+		final int indexOfBracket = signature.indexOf("<");
+		final String declaringClass;
+		if (indexOfBracket > 0) {
+			declaringClass = signature.substring(1, indexOfBracket) + ":";
+		}
+		else {
+			declaringClass = null;
+		}
 
-		SignatureReader sr = new SignatureReader(signature);
-		StringBuilder sb = new StringBuilder();
+		final SignatureReader sr = new SignatureReader(signature);
+		final StringBuilder sb = new StringBuilder();
+
 		TraceSignatureVisitor v = new TraceSignatureVisitor(sb, isInterface) {
 			String genericName;
+			int classTypeCounter = 0;
 
 			@Override
 			public void visitFormalTypeParameter(final String name) {
@@ -62,9 +77,15 @@ public class GenericsReader {
 
 			@Override
 			public void visitClassType(final String name) {
+				classTypeCounter++;
+
 				if (genericName != null) {
 					genericsMap.put(genericName, 'L' + name + ';');
 					genericName = null;
+				} else {
+					if (declaringClass != null) {
+						genericsMap.put(declaringClass + (classTypeCounter - 1), 'L' + name + ';');
+					}
 				}
 				super.visitClassType(name);
 			}
