@@ -395,17 +395,19 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
-	 * @see #find(String)
+	 * @deprecated use {@link #s(String)} instead.
 	 */
 	public Jerry $(final String cssSelector) {
-		return find(cssSelector);
+		return s(cssSelector);
 	}
 
 	/**
-	 * Shortcut for <code>context.find(css)</code>.
+	 * Selects nodes.
+	 *
+	 * @see #find(String)
 	 */
-	public static Jerry $(final String cssSelector, final Jerry context) {
-		return context.find(cssSelector);
+	public Jerry s(final String cssSelector) {
+		return find(cssSelector);
 	}
 
 	/**

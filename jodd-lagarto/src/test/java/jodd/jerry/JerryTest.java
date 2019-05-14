@@ -608,7 +608,7 @@ class JerryTest {
 		String htmlOK = readFile("filter2-ok.html");
 
 		Jerry doc = jerry(html);
-		doc.$("li").filter(($this, index) -> Jerry.$("strong", $this).length() == 1).css("background-color", "red");
+		doc.$("li").filter(($this, index) -> $this.find("strong").length() == 1).css("background-color", "red");
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
