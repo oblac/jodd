@@ -69,7 +69,7 @@ class StuckTest {
 
 		// parse
 		try {
-			doc.$("a").each(($this, index) -> {
+			doc.s("a").each(($this, index) -> {
 				assertEquals("Go to Database Directory", $this.html().trim());
 				return false;
 			});

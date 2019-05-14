@@ -149,23 +149,23 @@ class ParsingProblemsTest {
 		assertEquals(19, document.getErrors().size());
 
 		Jerry doc = Jerry.jerry(FileUtil.readString(file));
-		assertEquals(16, doc.$("td.NavBarCell1").size());
-		assertEquals(2, doc.$("table td.NavBarCell1Rev").size());
+		assertEquals(16, doc.s("td.NavBarCell1").size());
+		assertEquals(2, doc.s("table td.NavBarCell1Rev").size());
 
-		assertEquals(1, doc.$("dl").size());
-		assertEquals(1564, doc.$("dd").size());
-		assertEquals(1564, doc.$("dt").size());
-		assertEquals(3144, doc.$("dt a").size());
+		assertEquals(1, doc.s("dl").size());
+		assertEquals(1564, doc.s("dd").size());
+		assertEquals(1564, doc.s("dt").size());
+		assertEquals(3144, doc.s("dt a").size());
 
 		// http://docs.oracle.com/javase/6/docs/api/index-files/index-4.html
 		file = new File(testDataRoot, "index-4-eng.html");
 		doc = Jerry.jerry(FileUtil.readString(file));
 
-		assertEquals(16, doc.$("td.NavBarCell1").size());
-		assertEquals(2, doc.$("table td.NavBarCell1Rev").size());
+		assertEquals(16, doc.s("td.NavBarCell1").size());
+		assertEquals(2, doc.s("table td.NavBarCell1Rev").size());
 
 		final StringBuilder sb = new StringBuilder();
-		doc.$("td.NavBarCell1").each(($this, index) -> {
+		doc.s("td.NavBarCell1").each(($this, index) -> {
 			sb.append("---\n");
 			sb.append($this.text().trim());
 			sb.append('\n');
@@ -255,8 +255,8 @@ class ParsingProblemsTest {
 
 		final StringBuilder result = new StringBuilder();
 
-		jerry.$("cfg\\:test").each(($this, index) -> {
-			result.append($this.$("cfg\\:node").text());
+		jerry.s("cfg\\:test").each(($this, index) -> {
+			result.append($this.s("cfg\\:node").text());
 			return true;
 		});
 
@@ -290,7 +290,7 @@ class ParsingProblemsTest {
 			throw ex;
 		}
 
-		Element script = (Element) jerry.$("script").get(0);
+		Element script = (Element) jerry.s("script").get(0);
 
 		assertEquals("script", script.getNodeName());
 		assertEquals(6, script.getAttributesCount());

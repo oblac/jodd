@@ -51,7 +51,7 @@ class JerryMiscTest {
 		String html = "<html><body><div>&#1054;&#1076;&#1112;&#1072;&#1074;&#1080; &#1089;&#1077;</div></body></html>";
 
 		Jerry doc = Jerry.jerry(html);
-		Jerry div = doc.$("div");
+		Jerry div = doc.s("div");
 
 		assertEquals(9, div.text().length());
 		assertEquals("Одјави се", div.text());
@@ -63,7 +63,7 @@ class JerryMiscTest {
 		String html = "<html><body><div></div></body></html>";
 
 		Jerry doc = Jerry.jerry(html);
-		Jerry div = doc.$("div");
+		Jerry div = doc.s("div");
 		assertEquals(0, div.text().length());
 		div.text("Одјави се");
 		assertEquals(9, div.text().length());
@@ -79,7 +79,7 @@ class JerryMiscTest {
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -94,7 +94,7 @@ class JerryMiscTest {
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -109,7 +109,7 @@ class JerryMiscTest {
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -120,24 +120,24 @@ class JerryMiscTest {
 	void testNullForEmpty() {
 		Jerry doc = Jerry.jerry().parse("<html></html>");
 
-		assertNull(doc.$("#not-a-valid-id").attr("someAttribute"));
+		assertNull(doc.s("#not-a-valid-id").attr("someAttribute"));
 
-		assertNull(doc.$("#not-a-valid-id").css("name"));
+		assertNull(doc.s("#not-a-valid-id").css("name"));
 
-		assertNull(doc.$("#not-a-valid-id").html());
+		assertNull(doc.s("#not-a-valid-id").html());
 	}
 
 	@Test
 	void testFirstNotDirectly() {
 		Jerry doc = Jerry.jerry().parse("<html><div>one</div><p>two</p><div>three</div><p>four</p></html>");
 
-		assertEquals(2, doc.$("div").size());
-		assertEquals(2, doc.$("p").size());
-		assertEquals("one", doc.$("div").first().text());
-		assertEquals("two", doc.$("p").first().text());
+		assertEquals(2, doc.s("div").size());
+		assertEquals(2, doc.s("p").size());
+		assertEquals("one", doc.s("div").first().text());
+		assertEquals("two", doc.s("p").first().text());
 
-		assertEquals("four", doc.$("p").last().text());
-		assertEquals("three", doc.$("div").last().text());
+		assertEquals("four", doc.s("p").last().text());
+		assertEquals("three", doc.s("div").last().text());
 	}
 
 	@Test
@@ -174,7 +174,7 @@ class JerryMiscTest {
 	void testHtmlNodesOwner() {
 		Jerry doc = Jerry.jerry().parse("<div>1<div id='x'>2</div>3</div>");
 
-		doc.$("#x").html("<span>wow</span>");
+		doc.s("#x").html("<span>wow</span>");
 
 		assertEquals("<div>1<div id=\"x\"><span>wow</span></div>3</div>", doc.html());
 
@@ -191,10 +191,10 @@ class JerryMiscTest {
 	void testContains() {
 		Jerry doc = Jerry.jerry().parse("<body>aaa<p>foo 401(k) bar</p>xxx</body>");
 
-		Jerry p = doc.$("p:contains('401(k)')");
+		Jerry p = doc.s("p:contains('401(k)')");
 		assertEquals(1, p.size());
 
-		p = doc.$("p:contains('402(k)')");
+		p = doc.s("p:contains('402(k)')");
 		assertEquals(0, p.size());
 	}
 
@@ -204,7 +204,7 @@ class JerryMiscTest {
 
 		Jerry doc = Jerry.jerry().parse("<body><p jodd-attr='1'>found</p><p>not found</p></body>");
 
-		Jerry p = doc.$("p:jjjjj");
+		Jerry p = doc.s("p:jjjjj");
 		assertEquals(1, p.size());
 		assertEquals("found", p.text());
 	}
@@ -227,7 +227,7 @@ class JerryMiscTest {
 
 		Jerry doc = Jerry.jerry().parse("<body><p>not found</p><div>This!</div></body>");
 
-		Jerry p = doc.$(":super-fn(3)");
+		Jerry p = doc.s(":super-fn(3)");
 		assertEquals(1, p.size());
 		assertEquals("This!", p.text());
 	}
@@ -257,7 +257,7 @@ class JerryMiscTest {
 		j.attr("id", "test");
 		assertEquals("1<span>2</span>3<span></span>4", j.html());
 
-		j.$("*").attr("id", "test");
+		j.s("*").attr("id", "test");
 
 		assertEquals("1<span id=\"test\">2</span>3<span id=\"test\"></span>4", j.html());
 	}
@@ -266,7 +266,7 @@ class JerryMiscTest {
 	void testCustomerDetails() {
 		Jerry doc = Jerry.jerry("<p>to<br>{customerDetails}</p>");
 
-		doc.$("p").each(($this, index) -> {
+		doc.s("p").each(($this, index) -> {
 			String innerHtml = $this.html();
 			innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
 			$this.html(innerHtml);
@@ -345,13 +345,13 @@ class JerryMiscTest {
 
 		Jerry $ = Jerry.jerry(html);
 
-		$.$("body").html("");
+		$.s("body").html("");
 		assertEquals("<html><body></body></html>", $.html());
 
-		$.$("body").append("");
+		$.s("body").append("");
 		assertEquals("<html><body></body></html>", $.html());
 
-		$.$("body").before("");
+		$.s("body").before("");
 		assertEquals("<html><body></body></html>", $.html());
 	}
 
@@ -360,12 +360,12 @@ class JerryMiscTest {
 		String html = "<head><title>test &amp; blah</title><body><h1>test &amp; blah<b>bold</b></h1></body>";
 
 		Jerry doc = Jerry.jerry(html);
-		Jerry title = doc.$("title");
+		Jerry title = doc.s("title");
 
 		assertEquals("test &amp; blah", title.eq(0).html());
 		assertEquals("test & blah", title.eq(0).text());
 
-		Jerry h1 = doc.$("h1");
+		Jerry h1 = doc.s("h1");
 		assertEquals("test &amp; blah<b>bold</b>", h1.eq(0).html());
 		assertEquals("test & blahbold", h1.eq(0).text());
 	}

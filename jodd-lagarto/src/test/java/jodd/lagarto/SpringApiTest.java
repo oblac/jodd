@@ -60,7 +60,7 @@ class SpringApiTest {
 		Jerry doc = jerryParser.parse(content);
 
 		// parse
-		doc.$("a").each(($this, index) -> {
+		doc.s("a").each(($this, index) -> {
 			assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
 			return false;
 		});
@@ -77,7 +77,7 @@ class SpringApiTest {
 		Jerry doc = jerryParser.parse(content);
 
 		// parse
-		doc.$("a").each(($this, index) -> {
+		doc.s("a").each(($this, index) -> {
 			assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
 			return false;
 		});

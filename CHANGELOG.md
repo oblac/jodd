@@ -2,11 +2,17 @@
 
 All notable changes to Jodd project are documented here.
 
-## [n/a](https://github.com/oblac/jodd/compare/v5.0.12...master)
+## [n/a](https://github.com/oblac/jodd/compare/v5.0.13...master)
+
+## [v5.0.13](https://github.com/oblac/jodd/compare/v5.0.12...v5.0.13)
 
 ### New Features
 
 + **proxetta** - updated to ASM 7.1.
+
+### Breaking changes
+
++ **jerry** - method `$()` deprecated (and will be removed soon). 
 
 ### Bug fixes
 
@@ -15,6 +21,7 @@ All notable changes to Jodd project are documented here.
 + **http** - fixed `SSLSocketHttpConnectionProvider` that was being ignored.
 + **db** - fix for primitives in `SqlChunk`.
 + **proxetta** - fixed an issue when generics were defined in declaration of supertype.
+
 
 ## [v5.0.12](https://github.com/oblac/jodd/compare/v5.0.11...v5.0.12)
 

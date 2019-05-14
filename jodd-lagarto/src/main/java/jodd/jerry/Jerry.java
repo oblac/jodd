@@ -395,10 +395,10 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
-	 * @deprecated use {@link #s(String)} instead.
+	 * @deprecated use {@link #s(String)} instead as the name is not supported in new VMs.
 	 */
 	public Jerry $(final String cssSelector) {
-		return s(cssSelector);
+		return find(cssSelector);
 	}
 
 	/**

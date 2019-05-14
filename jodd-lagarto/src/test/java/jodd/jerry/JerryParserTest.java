@@ -45,7 +45,7 @@ class JerryParserTest {
 
 		Jerry doc = jerryParser.parse("<xml>   <book isbn='123'> <name>Foo<br></name>   </book></xml>");
 
-		Jerry name = doc.$("book name");
+		Jerry name = doc.s("book name");
 
 		assertEquals("Foo", name.text());
 
@@ -60,7 +60,7 @@ class JerryParserTest {
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -75,7 +75,7 @@ class JerryParserTest {
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -90,7 +90,7 @@ class JerryParserTest {
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
-		Jerry book = doc.$("book");
+		Jerry book = doc.s("book");
 
 		book.append("<br>");
 
@@ -113,7 +113,7 @@ class JerryParserTest {
 		assertNotNull(divNode.getAttribute("myattr"));
 		assertNotNull(divNode.getAttribute("myAttr"));
 
-		Element divNode2 = (Element) doc.$("div[myattr=aaa]").nodes[0];
+		Element divNode2 = (Element) doc.s("div[myattr=aaa]").nodes[0];
 		assertSame(divNode, divNode2);
 
 		assertEquals("<div id=\"one\" myattr=\"aaa\">xxx</div>", doc.html());
@@ -130,8 +130,8 @@ class JerryParserTest {
 
 		assertEquals("<dIV id=\"one\" myAttr=\"aaa\">xxx</dIV>", doc.html());
 
-		assertEquals(0, doc.$("div[myattr=aaa]").nodes.length);
-		divNode2 = (Element) doc.$("dIV[myAttr=aaa]").nodes[0];
+		assertEquals(0, doc.s("div[myattr=aaa]").nodes.length);
+		divNode2 = (Element) doc.s("dIV[myAttr=aaa]").nodes[0];
 		assertSame(divNode, divNode2);
 	}
 }
