@@ -1249,7 +1249,7 @@ public class Jerry implements Iterable<Jerry> {
 
 			// process all input elements
 
-			singleForm.$("input").each(($inputTag, index) -> {
+			singleForm.s("input").each(($inputTag, index) -> {
 
 				String type = $inputTag.attr("type");
 
@@ -1297,10 +1297,10 @@ public class Jerry implements Iterable<Jerry> {
 
 			// process all select elements
 
-			singleForm.$("select").each(($selectTag, index) -> {
+			singleForm.s("select").each(($selectTag, index) -> {
 				final String name = $selectTag.attr("name");
 
-				$selectTag.$("option").each(($optionTag, index1) -> {
+				$selectTag.s("option").each(($optionTag, index1) -> {
 					if ($optionTag.nodes[0].hasAttribute("selected")) {
 						String tagValue = $optionTag.attr("value");
 
@@ -1323,7 +1323,7 @@ public class Jerry implements Iterable<Jerry> {
 
 			// process all text areas
 
-			singleForm.$("textarea").each(($textarea, index) -> {
+			singleForm.s("textarea").each(($textarea, index) -> {
 				String name = $textarea.attr("name");
 				String value = $textarea.text();
 
