@@ -189,7 +189,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 		// wrap plain socket in an SSL socket
 
-		SSLSocket sslSocket;
+		final SSLSocket sslSocket;
 
 		if (socket instanceof SSLSocket) {
 			sslSocket = (SSLSocket) socket;

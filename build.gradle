@@ -24,7 +24,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 buildscript {
-	ext.kotlin_version = '1.3.20'
+	ext.kotlin_version = '1.3.31'
 	repositories {
 		mavenCentral()
 	}
