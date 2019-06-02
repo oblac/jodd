@@ -4,6 +4,11 @@ All notable changes to Jodd project are documented here.
 
 ## [n/a](https://github.com/oblac/jodd/compare/v5.0.13...master)
 
+### New Features
+
++ **json** - added type parser map.
+
+
 ## [v5.0.13](https://github.com/oblac/jodd/compare/v5.0.12...v5.0.13)
 
 ### New Features
