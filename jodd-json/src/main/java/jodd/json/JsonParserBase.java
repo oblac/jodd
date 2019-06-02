@@ -155,6 +155,12 @@ public abstract class JsonParserBase {
 			return value;
 		}
 
+		final TypeJsonParser typeJsonParser = TypeJsonParserMap.get().lookup(targetType);
+
+		if (typeJsonParser != null) {
+			return typeJsonParser.parse(value);
+		}
+
 		try {
 			return TypeConverterManager.get().convertType(value, targetType);
 		}
