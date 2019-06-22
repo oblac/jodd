@@ -35,18 +35,19 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ParamoTest {
 
-	private String[] resolveParameterNames(MethodParameter[] methodParameters) {
-		String[] result = new String[methodParameters.length];
+	private String[] resolveParameterNames(final MethodParameter[] methodParameters) {
+		final String[] result = new String[methodParameters.length];
 		for (
 				int i = 0, methodParametersLength = methodParameters.length;
 				i < methodParametersLength; i++) {
-			MethodParameter methodParameter = methodParameters[i];
+			final MethodParameter methodParameter = methodParameters[i];
 
 			result[i] = methodParameter.getName();
 		}
@@ -55,56 +56,65 @@ class ParamoTest {
 
 	@Test
 	void testConstructor() throws NoSuchMethodException {
-		Constructor c = Foo.class.getConstructor(String.class);
-		MethodParameter[] mps = Paramo.resolveParameters(c);
-		String[] s = resolveParameterNames(mps);
+		final Constructor c = Foo.class.getConstructor(String.class);
+		final MethodParameter[] mps = Paramo.resolveParameters(c);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(1, s.length);
 		assertEquals("something", s[0]);
+		assertEquals(String.class, mps[0].getParameter().getType());
 	}
 
 	@Test
 	void testOneParam() throws NoSuchMethodException {
-		Method m = Foo.class.getMethod("one", String.class);
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+		final Method m = Foo.class.getMethod("one", String.class);
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(1, s.length);
 		assertEquals("foo", s[0]);
+		assertEquals(String.class, mps[0].getParameter().getType());
 	}
 
 	@Test
 	void testTwoParams() throws NoSuchMethodException {
-		Method m = Foo.class.getMethod("two", String.class, String.class);
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+		final Method m = Foo.class.getMethod("two", String.class, String.class);
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(2, s.length);
 		assertEquals("username", s[0]);
 		assertEquals("password", s[1]);
+
+		assertEquals(String.class, mps[0].getParameter().getType());
+		assertEquals(String.class, mps[1].getParameter().getType());
 	}
 
 	@Test
 	void testNoParams() throws NoSuchMethodException {
-		Method m = Foo.class.getMethod("hello");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
+		final Method m = Foo.class.getMethod("hello");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertNotNull(mps);
 		assertEquals(0, mps.length);
 	}
 
 	@Test
 	void testArray() throws NoSuchMethodException {
-		Method m = Foo.class.getMethod("array", String.class, Integer[].class, float[].class);
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+		final Method m = Foo.class.getMethod("array", String.class, Integer[].class, float[].class);
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(3, s.length);
 		assertEquals("foo", s[0]);
 		assertEquals("ints", s[1]);
 		assertEquals("floats", s[2]);
+
+		assertEquals(String.class, mps[0].getParameter().getType());
+		assertEquals(Integer[].class, mps[1].getParameter().getType());
+		assertEquals(float[].class, mps[2].getParameter().getType());
 	}
 
 	@Test
-	void testPrimitives() throws NoSuchMethodException {
-		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primitives");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+	void testPrimitives() {
+		final Method m = ClassUtil.findDeclaredMethod(Foo.class, "primitives");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(8, s.length);
 		assertEquals("i", s[0]);
 		assertEquals("l", s[1]);
@@ -114,23 +124,32 @@ class ParamoTest {
 		assertEquals("b", s[5]);
 		assertEquals("c", s[6]);
 		assertEquals("y", s[7]);
+
+		assertEquals(int.class, mps[0].getParameter().getType());
+		assertEquals(long.class, mps[1].getParameter().getType());
+		assertEquals(float.class, mps[2].getParameter().getType());
+		assertEquals(double.class, mps[3].getParameter().getType());
+		assertEquals(short.class, mps[4].getParameter().getType());
+		assertEquals(boolean.class, mps[5].getParameter().getType());
+		assertEquals(char.class, mps[6].getParameter().getType());
+		assertEquals(byte.class, mps[7].getParameter().getType());
 	}
 
 	@Test
-	void testPrimitivesArrays1() throws NoSuchMethodException {
-		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr1");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+	void testPrimitivesArrays1() {
+		final Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr1");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(2, s.length);
 		assertEquals("one", s[0]);
 		assertEquals("two", s[1]);
 	}
 
 	@Test
-	void testPrimitivesArrays2() throws NoSuchMethodException {
-		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr2");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+	void testPrimitivesArrays2() {
+		final Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarr2");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(6, s.length);
 		assertEquals("i", s[0]);
 		assertEquals("l", s[1]);
@@ -141,10 +160,10 @@ class ParamoTest {
 	}
 
 	@Test
-	void testPrimitivesArrays3() throws NoSuchMethodException {
-		Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
-		String[] s = resolveParameterNames(mps);
+	void testPrimitivesArrays3() {
+		final Method m = ClassUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
+		final String[] s = resolveParameterNames(mps);
 		assertEquals(3, s.length);
 		assertEquals("s", s[0]);
 		assertEquals("y", s[1]);
@@ -153,8 +172,8 @@ class ParamoTest {
 
 	@Test
 	void testNonGeneric() {
-		Method m = ClassUtil.findDeclaredMethod(NonGeneric.class, "one");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
+		final Method m = ClassUtil.findDeclaredMethod(NonGeneric.class, "one");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(2, mps.length);
 		assertEquals("foo", mps[0].getName());
 		assertEquals("Ljava/util/Map;", mps[0].getSignature());
@@ -181,17 +200,19 @@ class ParamoTest {
 
 	@Test
 	void testGenericsWildcards() {
-		Method m = ClassUtil.findDeclaredMethod(Generic.class, "three");
-		MethodParameter[] mps = Paramo.resolveParameters(m);
+		final Method m = ClassUtil.findDeclaredMethod(Generic.class, "three");
+		final MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(3, mps.length);
 
 		assertEquals("comparable", mps[0].getName());
 		assertEquals("Ljava/lang/Comparable<*>;", mps[0].getSignature());
+		assertEquals(Comparable.class, mps[0].getParameter().getType());
 		assertEquals("(java.lang.Comparable<?>)", resolveSignature(mps[0].getSignature()));
 
 
 		assertEquals("iterator", mps[1].getName());
 		assertEquals("Ljava/util/Iterator<+Ljava/lang/CharSequence;>;", mps[1].getSignature());
+		assertEquals(Iterator.class, mps[1].getParameter().getType());
 		assertEquals("(java.util.Iterator<? extends java.lang.CharSequence>)", resolveSignature(mps[1].getSignature()));
 
 
@@ -201,9 +222,9 @@ class ParamoTest {
 	}
 
 
-	private String resolveSignature(String signature) {
-		SignatureReader signatureReader = new SignatureReader("(" + signature + ")V");
-		StringBuilder sb = new StringBuilder();
+	private String resolveSignature(final String signature) {
+		final SignatureReader signatureReader = new SignatureReader("(" + signature + ")V");
+		final StringBuilder sb = new StringBuilder();
 		signatureReader.accept(new TraceSignatureVisitor(sb, true));
 		return sb.toString();
 	}

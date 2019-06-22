@@ -30,6 +30,7 @@ import jodd.asm7.MethodVisitor;
 import jodd.asm7.Type;
 
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,12 +66,19 @@ final class MethodFinder extends EmptyClassVisitor {
 	private final Class declaringClass;
 	private final String methodName;
 	private final Class[] parameterTypes;
+	private final Parameter[] parameters;
 	private ParamExtractor paramExtractor;
 
-	MethodFinder(final Class declaringClass, final String methodName, final Class[] parameterTypes) {
+	MethodFinder(
+			final Class declaringClass,
+			final String methodName,
+			final Class[] parameterTypes,
+			final Parameter[] parameters)
+	{
 		this.declaringClass = declaringClass;
 		this.methodName = methodName;
 		this.parameterTypes = parameterTypes;
+		this.parameters = parameters;
 		this.paramExtractor = null;
 	}
 
@@ -83,15 +91,15 @@ final class MethodFinder extends EmptyClassVisitor {
 			return null;				// different method
 		}
 
-		Type[] argumentTypes = Type.getArgumentTypes(desc);
+		final Type[] argumentTypes = Type.getArgumentTypes(desc);
 		int dwordsCount = 0;
-		for (Type t : argumentTypes) {
+		for (final Type t : argumentTypes) {
 			if (t.getClassName().equals(TYPE_LONG) || t.getClassName().equals(TYPE_DOUBLE)) {
 				dwordsCount++;
 			}
 		}
 
-		int paramCount = argumentTypes.length;
+		final int paramCount = argumentTypes.length;
 		if (paramCount != this.parameterTypes.length) {
 			return null;				// different number of params
 		}
@@ -102,7 +110,10 @@ final class MethodFinder extends EmptyClassVisitor {
 			}
 		}
 
-		this.paramExtractor = new ParamExtractor((Modifier.isStatic(access) ? 0 : 1), argumentTypes.length + dwordsCount);
+		this.paramExtractor = new ParamExtractor(
+			(Modifier.isStatic(access) ? 0 : 1),
+			argumentTypes.length + dwordsCount,
+			parameters);
 		return paramExtractor;
 	}
 
@@ -112,8 +123,8 @@ final class MethodFinder extends EmptyClassVisitor {
 	boolean isEqualTypeName(final Type argumentType, final Class paramType) {
 		String s = argumentType.getClassName();
 		if (s.endsWith(ARRAY)) {		// arrays detected
-			String prefix = s.substring(0, s.length() - 2);
-			String bytecodeSymbol = primitives.get(prefix);
+			final String prefix = s.substring(0, s.length() - 2);
+			final String bytecodeSymbol = primitives.get(prefix);
 			if (bytecodeSymbol != null) {
 				s = '[' + bytecodeSymbol;
 			} else {
