@@ -279,11 +279,11 @@ configure(javaModules()) {
 	}
 
 	task copyLicense(type: Copy) {
-		from file("$projectDir/LICENSE")
-		into file("$buildDir/META-INF/LICENSE")
+		from file("$rootProject.projectDir/LICENSE")
+		into file("$projectDir/src/main/resources/META-INF/")
 	}
 
-	build {
+	jar {
 		dependsOn copyLicense
 	}
 
