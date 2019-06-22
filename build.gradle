@@ -45,7 +45,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '5.0.14-' + date()
+version = '5.1.0-' + date()
 //version = '5.0.13'
 
 // --- properties -------------------------------------------------------------
@@ -277,6 +277,16 @@ configure(javaModules()) {
 
 		args include
 	}
+
+	task copyLicense(type: Copy) {
+		from file("$projectDir/LICENSE")
+		into file("$buildDir/META-INF/LICENSE")
+	}
+
+	build {
+		dependsOn copyLicense
+	}
+
 	// Hook jmhClasses task to run after classes to make sure benchmarks are compiled with the rest of the code
 	classes.finalizedBy(jmhClasses)
 
@@ -569,5 +579,5 @@ static def date() {
 // --- wrapper ----------------------------------------------------------------
 
 wrapper {
-	gradleVersion = '5.2'
+	gradleVersion = '5.4.1'
 }
