@@ -46,8 +46,8 @@ public abstract class PathResult {
 
 	public <T> PathResult(final Class<T> target, final Consumer<T> consumer) {
 		this.path = null;
-		Methref<T> methref = wrapTargetToMethref(target);
-		consumer.accept(methref.to());
+		final Methref<T> methref = wrapTargetToMethref(target);
+		consumer.accept(methref.get());
 		this.methref = methref;
 		this.target = target;
 	}
@@ -57,7 +57,7 @@ public abstract class PathResult {
 	 * (proxified target) so user can choose the method.
 	 */
 	protected <T> Methref<T> wrapTargetToMethref(final Class<T> target) {
-		return Methref.on(target);
+		return Methref.of(target);
 	}
 
 	/**

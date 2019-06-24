@@ -42,7 +42,8 @@ class MethrefJava8Test {
 
 	public static class Chuck implements Foo {
 
-		public void hello(int i) {
+		@Override
+		public void hello(final int i) {
 			System.out.println(i);
 		}
 
@@ -53,19 +54,19 @@ class MethrefJava8Test {
 
 	public static class Sara extends Chuck {
 		@Override
-		public void hello(int i) {
+		public void hello(final int i) {
 			super.hello(i);
 		}
 	}
 
 	@Test
 	void testMethrefOnInterfaceWithDefaultMethod() {
-		Methref<Sara> methref = Methref.on(Sara.class);
+		final Methref<Sara> methref = Methref.of(Sara.class);
 
-		methref.to().hello(123);
+		methref.get().hello(123);
 		assertEquals("hello", methref.ref());
 
-		methref.to().nerd();
+		methref.get().nerd();
 		assertEquals("nerd", methref.ref());
 
 //		methref.to().hey();

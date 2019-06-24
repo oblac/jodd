@@ -57,7 +57,7 @@ public class Pathref<C> {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public Pathref(final Class<C> target) {
-		C proxy = createProxyObject(target);
+		final C proxy = createProxyObject(target);
 
 		this.instance = proxy;
 
@@ -67,7 +67,7 @@ public class Pathref<C> {
 	}
 
 	private Pathref(final Class<C> target, final Pathref root) {
-		C proxy = createProxyObject(target);
+		final C proxy = createProxyObject(target);
 
         this.instance = proxy;
 
@@ -90,11 +90,11 @@ public class Pathref<C> {
 			cache.put(target, proxyClass);
 		}
 
-		C proxy;
+		final C proxy;
 
 		try {
 			proxy = (C) ClassUtil.newInstance(proxyClass);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new PathrefException(ex);
 		}
 
@@ -121,7 +121,7 @@ public class Pathref<C> {
 	/**
 	 * Static factory, for convenient use.
 	 */
-	public static <T> Pathref<T> on(final Class<T> target) {
+	public static <T> Pathref<T> of(final Class<T> target) {
 		return new Pathref<>(target);
 	}
 
@@ -132,14 +132,14 @@ public class Pathref<C> {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T continueWith(final Object currentInstance, final String methodName, final Class<T> target) {
-		Class currentClass = currentInstance.getClass();
+		final Class currentClass = currentInstance.getClass();
 
-		Method method;
+		final Method method;
 
 		try {
 			method = currentClass.getDeclaredMethod(methodName);
 		}
-		catch (NoSuchMethodException e) {
+		catch (final NoSuchMethodException e) {
 			throw new PathrefException("Not a getter: " + methodName, e);
 		}
 
@@ -147,7 +147,7 @@ public class Pathref<C> {
 			throw new PathrefException("Not a getter: " + methodName);
 		}
 
-		String getterName = ClassUtil.getBeanPropertyGetterName(method);
+		final String getterName = ClassUtil.getBeanPropertyGetterName(method);
 
 		append(getterName);
 
@@ -165,15 +165,15 @@ public class Pathref<C> {
 					if (index >= 0) {
 						append("[" + index + "]");
 					}
-					return new Pathref<>(componentType, Pathref.this).to();
+					return new Pathref<>(componentType, Pathref.this).get();
 				}
 			};
 		}
 
 		try {
-			return new Pathref<>(target, this).to();
+			return new Pathref<>(target, this).get();
 		}
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			return null;
 		}
 	}
@@ -182,7 +182,7 @@ public class Pathref<C> {
 	 * Returns proxy instance of target class, so methods can be called
 	 * immediately after (fluent interface).
 	 */
-	public C to() {
+	public C get() {
 		path = StringPool.EMPTY;
 		return instance;
 	}
@@ -230,10 +230,10 @@ public class Pathref<C> {
 
 	protected void injectPathRef(final Pathref pathref, final Object instance) {
 		try {
-			Field f = instance.getClass().getDeclaredField("$__pathref$0");
+			final Field f = instance.getClass().getDeclaredField("$__pathref$0");
 			f.setAccessible(true);
 			f.set(instance, pathref);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new PathrefException("Pathref field not found", ex);
 		}
 	}

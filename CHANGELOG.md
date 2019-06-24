@@ -6,7 +6,14 @@ All notable changes to Jodd project are documented here.
 
 ### New Features
 
++ **madvoc** - added `@In.defaultValue()`
 + **json** - added type parser map.
++ **methref** - added counter for methref detection.
+
+### Breaking changes
+
++ **methref** - methods `on()` and `to()` renamed to `of()` and `get()`. 
++ **pathref** - methods `on()` and `to()` renamed to `of()` and `get()`.
 
 
 ## [v5.0.13](https://github.com/oblac/jodd/compare/v5.0.12...v5.0.13)
