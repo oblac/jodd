@@ -87,6 +87,19 @@ public class Targets {
 		}
 	}
 
+	public void forEachTargetAndIn(final BiConsumer<Target, InjectionPoint> biConsumer) {
+		for (final Target target : targets) {
+			final ScopeData scopeData = target.scopeData();
+
+			if (scopeData.in() == null) {
+				continue;
+			}
+			for (final InjectionPoint in : scopeData.in()) {
+				biConsumer.accept(target, in);
+			}
+		}
+	}
+
 	/**
 	 * Iterates all targets and for each target iterates all OUT injection points of given scope.
 	 */
@@ -176,11 +189,11 @@ public class Targets {
 				return ClassUtil.newInstance(type);
 			} else {
 				// member class
-				Constructor ctor = type.getDeclaredConstructor(type.getDeclaringClass());
+				final Constructor ctor = type.getDeclaredConstructor(type.getDeclaringClass());
 				ctor.setAccessible(true);
 				return ctor.newInstance(action);
 			}
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new MadvocException(ex);
 		}
 	}

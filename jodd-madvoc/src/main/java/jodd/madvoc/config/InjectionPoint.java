@@ -33,12 +33,20 @@ public class InjectionPoint {
 	private final String name;               // property name
 	private final String targetName;         // real property name, if different from 'name'
 	private final MadvocScope scope;         // dedicated scope instance
+	private final String defaultValue;
 
-	public InjectionPoint(final Class type, final String name, final String targetName, final MadvocScope scope) {
+	public InjectionPoint(
+		final Class type,
+		final String name,
+		final String targetName,
+		final MadvocScope scope,
+		final String defaultValue)
+	{
 		this.type = type;
 		this.name = name;
 		this.targetName = targetName;
 		this.scope = scope;
+		this.defaultValue = defaultValue;
 	}
 
 	/**
@@ -67,6 +75,13 @@ public class InjectionPoint {
 	 */
 	public String targetName() {
 		return targetName != null ? targetName : name;
+	}
+
+	/**
+	 * Returns default value or {@code null} if not set.
+	 */
+	public String defaultValue() {
+		return defaultValue;
 	}
 
 	/**

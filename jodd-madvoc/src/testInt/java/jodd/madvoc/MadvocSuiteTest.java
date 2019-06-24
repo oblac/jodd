@@ -62,7 +62,7 @@ class MadvocSuiteTest {
 	/**
 	 * Starts Tomcat.
 	 */
-	protected static void startTomcat(String webXmlFileName) {
+	protected static void startTomcat(final String webXmlFileName) {
 		if (server != null) {
 			return;
 		}
@@ -70,7 +70,7 @@ class MadvocSuiteTest {
 		try {
 			server.start();
 			System.out.println("Tomcat test server started");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UncheckedException(e);
 		}
 	}
@@ -87,7 +87,7 @@ class MadvocSuiteTest {
 		}
 		try {
 			server.stop();
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 		} finally {
 			System.out.println("Tomcat test server stopped");
 			server = null;
@@ -144,6 +144,8 @@ class MadvocSuiteTest {
 	class ComponentTest extends ComponentTestBase {}
 	@Nested
 	class CookieTest extends CookieTestBase {}
+	@Nested
+	class DefaultTest extends DefaultTestBase {}
 	@Nested
 	class DefaultViewActionTest extends DefaultViewActionTestBase {}
 }

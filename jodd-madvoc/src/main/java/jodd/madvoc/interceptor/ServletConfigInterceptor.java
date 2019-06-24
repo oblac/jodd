@@ -93,6 +93,16 @@ public class ServletConfigInterceptor implements ActionInterceptor {
 		scopeResolver.forEachScope(madvocScope -> madvocScope.inject(servletContext, targets));
 		scopeResolver.forEachScope(madvocScope -> madvocScope.inject(actionRequest, targets));
 
+		// insert all default values
+		targets.forEachTargetAndIn((target, injectionPoint) -> {
+			final String defaultValue = injectionPoint.defaultValue();
+			if (!defaultValue.isEmpty()) {
+				final Object value = target.readValue(injectionPoint);
+				if (value == null) {
+					target.writeValue(injectionPoint, defaultValue, true);
+				}
+			}
+		});
 	}
 
 	/**

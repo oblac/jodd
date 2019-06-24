@@ -23,27 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc.action;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.In;
+import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.RenderWith;
+import jodd.madvoc.result.TextActionResult;
 
-/**
- * Marks fields and setters where injection should be performed.
- */
-@Documented
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-public @interface In {
+@MadvocAction
+public class DefaultAction {
 
-	/**
-	 * Specifies non-default parameter name.
-	 */
-	String value() default "";
+	@In(defaultValue = "173")
+	@Out
+	Integer foo;
 
-	String defaultValue() default "";
+	@In
+	@Out
+	String bar;
+
+	@Action
+	@RenderWith(TextActionResult.class)
+	public String view() {
+		return foo + bar;
+	}
 
 }

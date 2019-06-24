@@ -23,27 +23,23 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.madvoc.meta;
+package jodd.madvoc;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
+import org.junit.jupiter.api.Test;
 
-/**
- * Marks fields and setters where injection should be performed.
- */
-@Documented
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-public @interface In {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	/**
-	 * Specifies non-default parameter name.
-	 */
-	String value() default "";
+abstract class DefaultTestBase {
 
-	String defaultValue() default "";
+	@Test
+	void testDefault() {
+		final HttpResponse response;
+
+		response = HttpRequest.get("localhost:8173/default").send();
+
+		assertEquals("173null", response.bodyText());
+	}
 
 }

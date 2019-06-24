@@ -102,14 +102,14 @@ public class ScopeDataInspector {
 		InjectionPoint[] outs = null;
 
 		if (in != null) {
-			final InjectionPoint scopeDataIn = buildInjectionPoint(in.value(), name, type, scope);
+			final InjectionPoint scopeDataIn = buildInjectionPoint(in.value(), in.defaultValue(), name, type, scope);
 			if (scopeDataIn != null) {
 				count++;
 				ins = new InjectionPoint[]{scopeDataIn};
 			}
 		}
 		if (out != null) {
-			final InjectionPoint scopeDataOut = buildInjectionPoint(out.value(), name, type, scope);
+			final InjectionPoint scopeDataOut = buildInjectionPoint(out.value(), null, name, type, scope);
 			if (scopeDataOut != null) {
 				count++;
 				outs = new InjectionPoint[]{scopeDataOut};
@@ -163,6 +163,7 @@ public class ScopeDataInspector {
 	 */
 	protected InjectionPoint buildInjectionPoint(
 			final String annotationValue,
+			final String defaultValue,
 			final String propertyName,
 			final Class propertyType,
 			final Class<? extends MadvocScope> scope) {
@@ -178,10 +179,10 @@ public class ScopeDataInspector {
 			name = propertyName;
 			targetName = null;
 		}
-		return new InjectionPoint(propertyType, name, targetName, scopeResolver.defaultOrScopeType(scope));
+		return new InjectionPoint(propertyType, name, targetName, scopeResolver.defaultOrScopeType(scope), defaultValue);
 	}
 
-	private TypeCache<ScopeData> scopeDataTypeCache = TypeCache.createDefault();
+	private final TypeCache<ScopeData> scopeDataTypeCache = TypeCache.createDefault();
 
 	/**
 	 * Cached version of {@link #inspectClassScopes(Class)}. Use it in runtime when
@@ -197,14 +198,14 @@ public class ScopeDataInspector {
 	 * For cached version, use {@link #inspectClassScopesWithCache(Class)}.
 	 */
 	public ScopeData inspectClassScopes(final Class actionClass) {
-		ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
+		final ClassDescriptor cd = ClassIntrospector.get().lookup(actionClass);
 
-		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+		final PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
-		List<InjectionPoint> listIn = new ArrayList<>(allProperties.length);
-		List<InjectionPoint> listOut = new ArrayList<>(allProperties.length);
+		final List<InjectionPoint> listIn = new ArrayList<>(allProperties.length);
+		final List<InjectionPoint> listOut = new ArrayList<>(allProperties.length);
 
-		for (PropertyDescriptor pd : allProperties) {
+		for (final PropertyDescriptor pd : allProperties) {
 			// collect annotations
 
 			Class<? extends MadvocScope> scope = null;
@@ -212,7 +213,7 @@ public class ScopeDataInspector {
 			Out out = null;
 
 			if (pd.getFieldDescriptor() != null) {
-				Field field = pd.getFieldDescriptor().getField();
+				final Field field = pd.getFieldDescriptor().getField();
 
 				in = field.getAnnotation(In.class);
 				out = field.getAnnotation(Out.class);
@@ -220,7 +221,7 @@ public class ScopeDataInspector {
 			}
 
 			if (pd.getWriteMethodDescriptor() != null) {
-				Method method = pd.getWriteMethodDescriptor().getMethod();
+				final Method method = pd.getWriteMethodDescriptor().getMethod();
 				if (in == null) {
 					in = method.getAnnotation(In.class);
 				}
@@ -233,7 +234,7 @@ public class ScopeDataInspector {
 			}
 
 			if (pd.getReadMethodDescriptor() != null) {
-				Method method = pd.getReadMethodDescriptor().getMethod();
+				final Method method = pd.getReadMethodDescriptor().getMethod();
 				if (in == null) {
 					in = method.getAnnotation(In.class);
 				}
@@ -247,12 +248,12 @@ public class ScopeDataInspector {
 
 			// inspect all
 
-			final InjectionPoint ii = in == null ? null : buildInjectionPoint(in.value(), pd.getName(), pd.getType(), scope);
+			final InjectionPoint ii = in == null ? null : buildInjectionPoint(in.value(), in.defaultValue(), pd.getName(), pd.getType(), scope);
 			if (ii != null) {
 				listIn.add(ii);
 			}
 
-			final InjectionPoint oi = out == null ? null : buildInjectionPoint(out.value(), pd.getName(), pd.getType(), scope);
+			final InjectionPoint oi = out == null ? null : buildInjectionPoint(out.value(), null, pd.getName(), pd.getType(), scope);
 			if (oi != null) {
 				listOut.add(oi);
 			}
