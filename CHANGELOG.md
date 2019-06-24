@@ -14,6 +14,7 @@ All notable changes to Jodd project are documented here.
 
 + **methref** - methods `on()` and `to()` renamed to `of()` and `get()`. 
 + **pathref** - methods `on()` and `to()` renamed to `of()` and `get()`.
++ **jerry** - removed `$()` method in favor of `s()` - graal compatible.
 
 
 ## [v5.0.13](https://github.com/oblac/jodd/compare/v5.0.12...v5.0.13)
